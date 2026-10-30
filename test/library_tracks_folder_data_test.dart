@@ -1,7 +1,7 @@
 import 'dart:collection';
 import 'package:sistrum/models/track.dart';
 import 'package:sistrum/providers/library_collections_provider.dart';
-import 'package:sistrum/screens/library/library_tracks_folder_data.dart';
+import 'package:sistrum/screens/library/browse/library_tracks_folder_data.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 class _ReadCountingList<T> extends ListBase<T> {

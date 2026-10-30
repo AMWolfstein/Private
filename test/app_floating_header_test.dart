@@ -8,15 +8,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:liquid_glass_easy/liquid_glass_easy.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
-import 'package:sistrum/services/library/cover_palette.dart';
+import 'package:sistrum/services/library/covers/cover_palette.dart';
 import 'package:sistrum/theme/app_glass_levels.dart';
 import 'package:sistrum/theme/app_theme.dart';
 import 'package:sistrum/widgets/header/album_detail_header.dart';
 import 'package:sistrum/widgets/primitives/app_sliver_header.dart';
-import 'package:sistrum/widgets/collection_scaffold.dart';
-import 'package:sistrum/widgets/glass/app_backdrop_groups.dart';
-import 'package:sistrum/widgets/glass/app_chrome.dart';
-import 'package:sistrum/widgets/glass/app_floating_header.dart';
+import 'package:sistrum/widgets/collection/collection_scaffold.dart';
+import 'package:sistrum/widgets/glass/chrome/app_backdrop_groups.dart';
+import 'package:sistrum/widgets/glass/chrome/app_chrome.dart';
+import 'package:sistrum/widgets/glass/chrome/app_floating_header.dart';
 import 'package:sistrum/providers/cover_palette_provider.dart';
 
 Widget maybeGroups(bool groups, Widget child) =>

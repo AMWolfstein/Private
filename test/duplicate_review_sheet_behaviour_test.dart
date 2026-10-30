@@ -10,8 +10,8 @@ import 'package:sistrum/models/local_library_item.dart';
 import 'package:sistrum/providers/library_database_provider.dart';
 import 'package:sistrum/providers/local_library_provider.dart';
 import 'package:sistrum/providers/settings_provider.dart';
-import 'package:sistrum/services/library/library_database.dart';
-import 'package:sistrum/services/library/library_schema.dart';
+import 'package:sistrum/services/library/database/library_database.dart';
+import 'package:sistrum/services/library/database/library_schema.dart';
 import 'package:sistrum/theme/app_theme.dart';
 import 'package:sistrum/widgets/sheets/duplicate_review_sheet.dart';
 

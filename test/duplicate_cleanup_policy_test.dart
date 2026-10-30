@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sistrum/services/library/library_database.dart';
-import 'package:sistrum/utils/duplicate_cleanup_policy.dart';
+import 'package:sistrum/services/library/database/library_database.dart';
+import 'package:sistrum/utils/scan/duplicate_cleanup_policy.dart';
 
 IsrcDuplicateEntry _entry(String id) {
   return IsrcDuplicateEntry(

@@ -1,6 +1,6 @@
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sistrum/services/playback/music_player_service.dart';
+import 'package:sistrum/services/playback/music_player/music_player_service.dart';
 
 import 'support/music_player_harness.dart';
 

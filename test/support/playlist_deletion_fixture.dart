@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:sqflite/sqflite.dart';
 import 'package:sistrum/models/track.dart';
 import 'package:sistrum/providers/library_collections_provider.dart';
-import 'package:sistrum/services/library/library_collections_database.dart';
+import 'package:sistrum/services/library/collections/library_collections_database.dart';
 
 class PlaylistDeletionDatabase implements LibraryCollectionsDatabase {
   PlaylistDeletionDatabase(this.owner);

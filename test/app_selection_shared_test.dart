@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sistrum/widgets/glass/app_selection_shared.dart';
+import 'package:sistrum/widgets/glass/selection/app_selection_shared.dart';
 
 class _Probe extends StatelessWidget {
   const _Probe();

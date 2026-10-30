@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/models/track.dart';
-import 'package:sistrum/screens/library/collection_track_tile.dart';
+import 'package:sistrum/screens/library/collections/collection_track_tile.dart';
 
 Track _track({String? coverUrl}) => Track(
   id: 't',

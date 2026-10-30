@@ -3,7 +3,7 @@ import 'dart:io';
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
-import 'package:sistrum/widgets/cached_cover_image.dart';
+import 'package:sistrum/widgets/cover/cached_cover_image.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

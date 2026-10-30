@@ -9,7 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/providers/player_metadata_controller.dart';
 import 'package:sistrum/l10n/app_localizations.dart';
-import 'package:sistrum/services/playback/audio_route_info.dart';
+import 'package:sistrum/services/playback/audio/audio_route_info.dart';
 import 'package:sistrum/widgets/sheets/audio_info_sheet.dart';
 
 const _route = MethodChannel('com.amwolfstein.sistrum/audio_route');

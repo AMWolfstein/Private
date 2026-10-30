@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sistrum/utils/detail_page_route.dart';
+import 'package:sistrum/utils/layout/detail_page_route.dart';
 
 void main() {
   test('album identity ignores case and surrounding spaces', () {

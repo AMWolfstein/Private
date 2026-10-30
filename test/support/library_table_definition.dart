@@ -1,4 +1,4 @@
-import 'package:sistrum/services/library/library_schema.dart';
+import 'package:sistrum/services/library/database/library_schema.dart';
 
 import 'sqlite_process_database.dart';
 

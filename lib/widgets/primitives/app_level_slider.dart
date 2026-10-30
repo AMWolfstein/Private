@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:liquid_glass_easy/liquid_glass_easy.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
-import 'package:sistrum/widgets/glass/app_glass_thumb.dart';
+import 'package:sistrum/widgets/glass/thumb/app_glass_thumb.dart';
 
 /// An iOS-style slider: a thin rounded track and a white shadowed knob.
 ///

@@ -13,11 +13,11 @@ import 'package:sistrum/models/settings.dart';
 import 'package:sistrum/providers/library_collections_provider.dart';
 import 'package:sistrum/providers/local_library_provider.dart';
 import 'package:sistrum/providers/settings_provider.dart';
-import 'package:sistrum/screens/library/library_section_tab.dart';
+import 'package:sistrum/screens/library/section_tab/library_section_tab.dart';
 import 'package:sistrum/widgets/library/library_track_selection_bar.dart';
 import 'package:sistrum/widgets/primitives/app_alert_dialog.dart';
 import 'package:sistrum/widgets/library/library_selection_playback_actions.dart';
-import 'package:sistrum/services/library/library_database.dart';
+import 'package:sistrum/services/library/database/library_database.dart';
 import 'support/library_table_definition.dart';
 import 'support/material_test_theme.dart';
 

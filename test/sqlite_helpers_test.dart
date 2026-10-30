@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
-import 'package:sistrum/services/library/sqlite_helpers.dart';
+import 'package:sistrum/services/library/database/sqlite_helpers.dart';
 
 class _RecordingExecutor extends Fake implements DatabaseExecutor {
   final statements = <String>[];
@@ -146,30 +146,33 @@ void main() {
       expect(await pragma(db, 'foreign_keys'), 0);
     });
 
-    test('an existing schema keeps auto-vacuum and follows foreign keys', () async {
-      final first = await openAppDatabase(
-        'existing.db',
-        version: 1,
-        onCreate: createTable,
-        onUpgrade: (_, _, _) async {},
-        incrementalAutoVacuum: false,
-      );
-      expect(await pragma(first, 'auto_vacuum'), 0);
-      await first.close();
+    test(
+      'an existing schema keeps auto-vacuum and follows foreign keys',
+      () async {
+        final first = await openAppDatabase(
+          'existing.db',
+          version: 1,
+          onCreate: createTable,
+          onUpgrade: (_, _, _) async {},
+          incrementalAutoVacuum: false,
+        );
+        expect(await pragma(first, 'auto_vacuum'), 0);
+        await first.close();
 
-      final reopened = await openAppDatabase(
-        'existing.db',
-        version: 1,
-        onCreate: createTable,
-        onUpgrade: (_, _, _) async {},
-        foreignKeys: true,
-      );
-      addTearDown(reopened.close);
+        final reopened = await openAppDatabase(
+          'existing.db',
+          version: 1,
+          onCreate: createTable,
+          onUpgrade: (_, _, _) async {},
+          foreignKeys: true,
+        );
+        addTearDown(reopened.close);
 
-      expect(await pragma(reopened, 'auto_vacuum'), 0);
-      expect(await pragma(reopened, 'foreign_keys'), 1);
-      expect(await pragma(reopened, 'journal_mode'), 'wal');
-    });
+        expect(await pragma(reopened, 'auto_vacuum'), 0);
+        expect(await pragma(reopened, 'foreign_keys'), 1);
+        expect(await pragma(reopened, 'journal_mode'), 'wal');
+      },
+    );
   });
 
   group('FTS5 search query', () {
@@ -204,36 +207,41 @@ void main() {
   });
 
   group('trigram FTS5 index', () {
-    test('probes the runtime, builds the index and drops its probe table', () async {
-      final db = _RecordingExecutor();
+    test(
+      'probes the runtime, builds the index and drops its probe table',
+      () async {
+        final db = _RecordingExecutor();
 
-      final created = await createTrigramFtsIndex(
-        db,
-        ftsTable: 'library_fts',
-        contentTable: 'library',
-        triggerPrefix: 'library_fts',
-      );
+        final created = await createTrigramFtsIndex(
+          db,
+          ftsTable: 'library_fts',
+          contentTable: 'library',
+          triggerPrefix: 'library_fts',
+        );
 
-      expect(created, isTrue);
-      expect(
-        db.statements.any(
-          (sql) =>
-              sql.contains('CREATE VIRTUAL TABLE temp.') &&
-              sql.contains("tokenize='trigram'"),
-        ),
-        isTrue,
-      );
-      expect(
-        db.statements.any((sql) => sql.contains('DROP TABLE IF EXISTS temp.')),
-        isTrue,
-      );
-      expect(
-        db.statements.where((sql) => sql.startsWith('CREATE TRIGGER')).length,
-        3,
-      );
-      expect(db.inserts.single, contains('VALUES (?)'));
-      expect(db.inserts.single, contains('library_fts'));
-    });
+        expect(created, isTrue);
+        expect(
+          db.statements.any(
+            (sql) =>
+                sql.contains('CREATE VIRTUAL TABLE temp.') &&
+                sql.contains("tokenize='trigram'"),
+          ),
+          isTrue,
+        );
+        expect(
+          db.statements.any(
+            (sql) => sql.contains('DROP TABLE IF EXISTS temp.'),
+          ),
+          isTrue,
+        );
+        expect(
+          db.statements.where((sql) => sql.startsWith('CREATE TRIGGER')).length,
+          3,
+        );
+        expect(db.inserts.single, contains('VALUES (?)'));
+        expect(db.inserts.single, contains('library_fts'));
+      },
+    );
 
     test('a failed index creation removes every partial object', () async {
       final db = _FailingIndexExecutor();
@@ -247,13 +255,13 @@ void main() {
 
       expect(created, isFalse);
       expect(
-        db.statements.where((sql) => sql.startsWith('DROP TRIGGER IF EXISTS')).length,
+        db.statements
+            .where((sql) => sql.startsWith('DROP TRIGGER IF EXISTS'))
+            .length,
         3,
       );
       expect(
-        db.statements.any(
-          (sql) => sql == 'DROP TABLE IF EXISTS library_fts',
-        ),
+        db.statements.any((sql) => sql == 'DROP TABLE IF EXISTS library_fts'),
         isTrue,
       );
     });

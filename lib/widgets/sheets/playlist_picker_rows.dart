@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sistrum/providers/library_collections_provider.dart';
-import 'package:sistrum/widgets/cached_cover_image.dart';
+import 'package:sistrum/widgets/cover/cached_cover_image.dart';
 
 class PlaylistPickerRow extends StatelessWidget {
   const PlaylistPickerRow({

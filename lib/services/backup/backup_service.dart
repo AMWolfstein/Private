@@ -7,9 +7,9 @@ import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:sistrum/constants/app_info.dart';
 import 'package:sistrum/services/native/native_data_jobs.dart';
-import 'package:sistrum/services/user_profile_store.dart';
-import 'package:sistrum/utils/best_effort_delete.dart';
-import 'package:sistrum/utils/logger.dart';
+import 'package:sistrum/services/platform/user_profile_store.dart';
+import 'package:sistrum/utils/files/best_effort_delete.dart';
+import 'package:sistrum/utils/logging/logger.dart';
 
 Future<void> _writeBackupMetadataInBackground(
   String path,

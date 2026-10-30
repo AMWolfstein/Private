@@ -4,9 +4,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/providers/library_database_provider.dart';
 import 'package:sistrum/providers/library_tag_credits_provider.dart';
 import 'package:sistrum/providers/local_library_provider.dart';
-import 'package:sistrum/services/library/album_completeness.dart';
-import 'package:sistrum/services/library/library_database.dart';
-import 'package:sistrum/services/library/library_tag_credits.dart';
+import 'package:sistrum/services/library/browse/album_completeness.dart';
+import 'package:sistrum/services/library/database/library_database.dart';
+import 'package:sistrum/services/library/browse/library_tag_credits.dart';
 
 typedef LibraryBrowseRequest = ({
   bool artists,

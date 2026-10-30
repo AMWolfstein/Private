@@ -1,5 +1,5 @@
-import 'package:sistrum/utils/audio_format_utils.dart';
-import 'package:sistrum/utils/lookup_text.dart';
+import 'package:sistrum/utils/playback/audio_format_utils.dart';
+import 'package:sistrum/utils/text/lookup_text.dart';
 
 class LocalLibraryItem {
   static const legacySourceId = 'legacy';

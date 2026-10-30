@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sistrum/utils/string_utils.dart';
+import 'package:sistrum/utils/text/string_utils.dart';
 
 /// Rolls only the changed digits, keeping the timeline labels steady in width.
 class AppPlaybackTime extends StatefulWidget {

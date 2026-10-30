@@ -5,8 +5,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/widgets/primitives/app_bottom_sheet.dart';
-import 'package:sistrum/widgets/glass/app_glass_surface.dart';
-import 'package:sistrum/widgets/app_metadata_row.dart';
+import 'package:sistrum/widgets/glass/thumb/app_glass_surface.dart';
+import 'package:sistrum/widgets/collection/app_metadata_row.dart';
 import 'package:sistrum/widgets/player/player_artwork.dart';
 
 /// Uses Sistrum's TrackInfoView layout: artwork header, then selectable values

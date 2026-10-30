@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sistrum/utils/progress_stream_poller.dart';
+import 'package:sistrum/utils/playback/progress_stream_poller.dart';
 
 ProgressStreamPoller<int> _poller({
   Stream<int> Function()? stream,

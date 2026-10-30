@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/providers/theme_provider.dart';
-import 'package:sistrum/services/custom_font_service.dart';
+import 'package:sistrum/services/platform/custom_font_service.dart';
 
 class CustomFontSetting extends ConsumerStatefulWidget {
   const CustomFontSetting({super.key});

@@ -12,11 +12,11 @@ import 'package:sistrum/models/local_library_item.dart';
 import 'package:sistrum/models/settings.dart';
 import 'package:sistrum/providers/library_browse_provider.dart';
 import 'package:sistrum/providers/settings_provider.dart';
-import 'package:sistrum/screens/library/local_album_screen.dart';
+import 'package:sistrum/screens/library/local_album/local_album_screen.dart';
 import 'package:sistrum/screens/library/app_library_screen.dart';
-import 'package:sistrum/services/library/embedded_cover_resolver.dart';
+import 'package:sistrum/services/library/covers/embedded_cover_resolver.dart';
 import 'package:sistrum/theme/app_theme.dart';
-import 'package:sistrum/widgets/cached_cover_image.dart';
+import 'package:sistrum/widgets/cover/cached_cover_image.dart';
 import 'package:sistrum/widgets/library/local_library_artwork_builder.dart';
 import 'package:sistrum/widgets/header/app_artist_header.dart';
 
@@ -267,9 +267,7 @@ void main() {
           tester,
           () =>
               tester
-                  .widget<AppArtistSurface>(
-                    find.byType(AppArtistSurface),
-                  )
+                  .widget<AppArtistSurface>(find.byType(AppArtistSurface))
                   .imageSource ==
               preview,
         );

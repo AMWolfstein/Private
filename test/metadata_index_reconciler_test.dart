@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/models/local_library_item.dart';
-import 'package:sistrum/services/library/metadata_index_reconciler.dart';
+import 'package:sistrum/services/library/metadata/metadata_index_reconciler.dart';
 
 void main() {
   late Directory tempDir;

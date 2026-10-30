@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/providers/metadata_editor_controller.dart';
 import 'package:sistrum/models/metadata_separators.dart';
-import 'package:sistrum/services/library/library_tag_credits.dart';
+import 'package:sistrum/services/library/browse/library_tag_credits.dart';
 
 void main() {
   test('save snapshots preserve empty tags and explicit track/disc totals', () {

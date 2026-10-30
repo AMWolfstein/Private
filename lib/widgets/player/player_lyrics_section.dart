@@ -1,11 +1,11 @@
 import 'package:flutter/services.dart' show HapticFeedback;
-import 'package:sistrum/utils/lyric_models.dart';
+import 'package:sistrum/utils/lyrics/lyric_models.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/providers/player_metadata_controller.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/providers/settings_provider.dart';
-import 'package:sistrum/utils/playback_seek_preview.dart';
+import 'package:sistrum/utils/playback/playback_seek_preview.dart';
 import 'package:sistrum/widgets/primitives/app_loading_indicator.dart';
 import 'package:sistrum/widgets/player/player_lyrics.dart';
 import 'package:sistrum/widgets/lyrics/lyrics_text_scale.dart';

@@ -7,10 +7,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/theme/app_theme.dart';
 import 'package:sistrum/widgets/primitives/app_switch.dart';
-import 'package:sistrum/widgets/glass/app_chrome.dart';
-import 'package:sistrum/widgets/glass/app_chrome_controls.dart';
-import 'package:sistrum/widgets/glass/app_selection_pill.dart';
-import 'package:sistrum/widgets/glass/app_selection_foreground.dart';
+import 'package:sistrum/widgets/glass/chrome/app_chrome.dart';
+import 'package:sistrum/widgets/glass/chrome/app_chrome_controls.dart';
+import 'package:sistrum/widgets/glass/selection/app_selection_pill.dart';
+import 'package:sistrum/widgets/glass/selection/app_selection_foreground.dart';
 
 void _maskCullingTests() {
   for (final direction in TextDirection.values) {

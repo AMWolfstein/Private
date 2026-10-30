@@ -4,7 +4,7 @@ import 'dart:typed_data';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/models/automix_options.dart';
 import 'package:sistrum/models/settings.dart';
-import 'package:sistrum/services/playback/automix_analysis.dart';
+import 'package:sistrum/services/playback/automix/automix_analysis.dart';
 
 Uint8List drumPattern(double bpm, {double phase = 0.17, bool fade = false}) {
   const sampleRate = 11025;

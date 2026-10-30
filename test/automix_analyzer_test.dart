@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sistrum/services/playback/automix_analysis.dart';
-import 'package:sistrum/services/playback/automix_analyzer.dart';
+import 'package:sistrum/services/playback/automix/automix_analysis.dart';
+import 'package:sistrum/services/playback/automix/automix_analyzer.dart';
 
 class WindowAnalyzer extends AutoMixAnalyzer {
   final calls = <double>[];

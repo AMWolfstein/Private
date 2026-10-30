@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sistrum/services/playback/playback_policies.dart';
+import 'package:sistrum/services/playback/core/playback_policies.dart';
 
 void main() {
   group('PlayHistory', () {

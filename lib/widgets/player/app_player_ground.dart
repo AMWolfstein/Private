@@ -7,8 +7,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/providers/cover_palette_provider.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/theme/app_glass_levels.dart';
-import 'package:sistrum/utils/cover_file_image.dart';
-import 'package:sistrum/widgets/glass/app_artwork_ground.dart';
+import 'package:sistrum/utils/cover/cover_file_image.dart';
+import 'package:sistrum/widgets/glass/artwork/app_artwork_ground.dart';
 import 'package:sistrum/widgets/player/app_player_background.dart';
 
 /// The cover at [source] (a file path or URL) as an image provider.
@@ -56,8 +56,7 @@ class AppPlayerGround extends ConsumerStatefulWidget {
   final Widget child;
 
   @override
-  ConsumerState<AppPlayerGround> createState() =>
-      _AppPlayerGroundState();
+  ConsumerState<AppPlayerGround> createState() => _AppPlayerGroundState();
 }
 
 class _AppPlayerGroundState extends ConsumerState<AppPlayerGround>

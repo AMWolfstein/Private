@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sistrum/l10n/l10n.dart';
-import 'package:sistrum/utils/playback_seek_preview.dart';
-import 'package:sistrum/utils/string_utils.dart';
+import 'package:sistrum/utils/playback/playback_seek_preview.dart';
+import 'package:sistrum/utils/text/string_utils.dart';
 import 'package:sistrum/widgets/player/app_player_slider.dart';
 
 /// Previews scrubbing locally and seeks once when the gesture ends.

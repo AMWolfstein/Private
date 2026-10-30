@@ -7,9 +7,9 @@ import 'package:sistrum/providers/music_player_provider.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/theme/app_theme.dart';
 import 'package:sistrum/widgets/player/mini_player.dart';
-import 'package:sistrum/widgets/glass/app_backdrop_groups.dart';
-import 'package:sistrum/widgets/glass/app_glass_surface.dart';
-import 'package:sistrum/widgets/glass/app_chrome_controls.dart';
+import 'package:sistrum/widgets/glass/chrome/app_backdrop_groups.dart';
+import 'package:sistrum/widgets/glass/thumb/app_glass_surface.dart';
+import 'package:sistrum/widgets/glass/chrome/app_chrome_controls.dart';
 
 /// Deliberate vertical drags minimize the chrome until the page returns to its
 /// top. Horizontal rows, programmatic scrolling and bounce must not minimize it.

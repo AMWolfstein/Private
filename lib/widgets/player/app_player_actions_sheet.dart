@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/providers/library_collections_provider.dart';
 import 'package:sistrum/providers/music_player_provider.dart';
-import 'package:sistrum/services/library/cover_palette.dart';
+import 'package:sistrum/services/library/covers/cover_palette.dart';
 import 'package:sistrum/theme/app_theme.dart';
 import 'package:sistrum/widgets/primitives/app_context_menu.dart';
 import 'package:sistrum/providers/cover_palette_provider.dart';
@@ -74,9 +74,7 @@ class AppPlayerActionsSheet extends ConsumerWidget {
           _action(
             context,
             'favorite',
-            loved
-                ? context.l10n.appFavorited
-                : context.l10n.appFavorite,
+            loved ? context.l10n.appFavorited : context.l10n.appFavorite,
             loved ? CupertinoIcons.heart_fill : CupertinoIcons.heart,
             selected: loved,
           ),
@@ -164,10 +162,7 @@ class AppPlayerActionsSheet extends ConsumerWidget {
 
 /// Reuse the cached cover palette; no per-frame background capture is needed.
 class _AppPlayerMenuSurface extends StatelessWidget {
-  const _AppPlayerMenuSurface({
-    required this.mediaItem,
-    required this.child,
-  });
+  const _AppPlayerMenuSurface({required this.mediaItem, required this.child});
 
   final MediaItem mediaItem;
   final Widget child;

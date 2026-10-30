@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/theme/app_theme.dart';
-import 'package:sistrum/widgets/glass/app_glass_surface.dart';
+import 'package:sistrum/widgets/glass/thumb/app_glass_surface.dart';
 import 'package:sistrum/widgets/settings/settings_group.dart';
 
 /// The standard search field used by top-level app surfaces.

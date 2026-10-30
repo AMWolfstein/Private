@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/theme/app_theme.dart';
 import 'package:sistrum/widgets/primitives/app_alert_dialog.dart';
-import 'package:sistrum/widgets/glass/app_chrome.dart';
+import 'package:sistrum/widgets/glass/chrome/app_chrome.dart';
 
 void main() {
   for (final brightness in Brightness.values) {

@@ -2,10 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
-import 'package:sistrum/services/library/cover_palette.dart';
+import 'package:sistrum/services/library/covers/cover_palette.dart';
 import 'package:sistrum/theme/app_icons.dart';
-import 'package:sistrum/widgets/glass/app_glass_surface.dart';
-import 'package:sistrum/widgets/glass/app_floating_header.dart';
+import 'package:sistrum/widgets/glass/thumb/app_glass_surface.dart';
+import 'package:sistrum/widgets/glass/chrome/app_floating_header.dart';
 
 class HeaderFilledButton extends StatelessWidget {
   const HeaderFilledButton({

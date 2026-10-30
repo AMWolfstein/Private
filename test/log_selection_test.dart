@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/l10n/l10n.dart';
-import 'package:sistrum/screens/settings/log_page.dart';
-import 'package:sistrum/utils/logger.dart';
-import 'package:sistrum/utils/log_entry.dart';
+import 'package:sistrum/screens/settings/logs/log_page.dart';
+import 'package:sistrum/utils/logging/logger.dart';
+import 'package:sistrum/utils/logging/log_entry.dart';
 
 void main() {
   setUp(() => SharedPreferences.setMockInitialValues({}));

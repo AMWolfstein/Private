@@ -1,5 +1,5 @@
 import 'package:sistrum/services/native/native_channel.dart';
-import 'package:sistrum/utils/logger.dart';
+import 'package:sistrum/utils/logging/logger.dart';
 
 final _log = AppLogger('PlatformBridge');
 

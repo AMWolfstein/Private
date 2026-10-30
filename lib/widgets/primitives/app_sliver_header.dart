@@ -2,9 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/theme/app_tokens.dart';
-import 'package:sistrum/utils/adaptive_layout.dart';
-import 'package:sistrum/utils/app_bar_layout.dart';
-import 'package:sistrum/widgets/glass/app_floating_header.dart';
+import 'package:sistrum/utils/layout/adaptive_layout.dart';
+import 'package:sistrum/utils/layout/app_bar_layout.dart';
+import 'package:sistrum/widgets/glass/chrome/app_floating_header.dart';
 import 'package:sistrum/widgets/header/header_controls.dart';
 
 /// The collapsing header used by every top-level tab and every settings-style
@@ -68,8 +68,7 @@ class AppSliverHeader extends ConsumerWidget {
         : tokens.headerExpandedHeight;
     final maxHeight = expandedHeight + topPadding;
 
-    final opaque =
-        appHeaderMaterial(context, ref) == AppHeaderMaterial.opaque;
+    final opaque = appHeaderMaterial(context, ref) == AppHeaderMaterial.opaque;
     final leading = this.leading;
 
     return SliverAppBar(

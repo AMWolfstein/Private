@@ -1,7 +1,7 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:sistrum/providers/library_browse_provider.dart';
-import 'package:sistrum/services/library/library_browse_store.dart';
-import 'package:sistrum/services/library/library_schema.dart';
+import 'package:sistrum/services/library/browse/library_browse_store.dart';
+import 'package:sistrum/services/library/database/library_schema.dart';
 
 /// Real schema17 local rows, album ties and an unavailable source. The history
 /// read fixture keeps the same named columns and covering album index as the

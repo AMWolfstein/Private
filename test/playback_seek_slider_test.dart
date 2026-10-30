@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/theme/app_theme.dart';
-import 'package:sistrum/utils/playback_seek_preview.dart';
+import 'package:sistrum/utils/playback/playback_seek_preview.dart';
 import 'package:sistrum/widgets/player/playback_seek_slider.dart';
 
 void main() {

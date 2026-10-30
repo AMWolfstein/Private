@@ -4,7 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/navigation/app_screens.dart';
 import 'package:sistrum/navigation/detail_navigation.dart';
-import 'package:sistrum/services/library/library_tag_credits.dart';
+import 'package:sistrum/services/library/browse/library_tag_credits.dart';
 
 import 'support/material_test_theme.dart';
 

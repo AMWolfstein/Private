@@ -2,7 +2,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sistrum/screens/settings/cache_directory_tools.dart';
+import 'package:sistrum/screens/settings/cache/cache_directory_tools.dart';
 
 void main() {
   late Directory root;

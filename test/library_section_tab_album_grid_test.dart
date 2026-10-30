@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sistrum/screens/library/local_album_screen.dart';
+import 'package:sistrum/screens/library/local_album/local_album_screen.dart';
 
 import 'support/library_section_harness.dart';
 

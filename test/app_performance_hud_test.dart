@@ -10,7 +10,7 @@ import 'package:sistrum/providers/settings_provider.dart';
 import 'package:sistrum/screens/settings/about_page.dart';
 import 'package:sistrum/services/glass/app_glass_auto_probe.dart';
 import 'package:sistrum/theme/app_theme.dart';
-import 'package:sistrum/widgets/glass/app_performance_hud.dart';
+import 'package:sistrum/widgets/glass/debug/app_performance_hud.dart';
 
 void main() {
   setUp(() {

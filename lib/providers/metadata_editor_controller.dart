@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:sistrum/models/metadata_separators.dart';
-import 'package:sistrum/services/library/library_tag_credits.dart';
-import 'package:sistrum/utils/string_utils.dart';
+import 'package:sistrum/services/library/browse/library_tag_credits.dart';
+import 'package:sistrum/utils/text/string_utils.dart';
 
 /// Editable tags and request generations, independent of sheet navigation.
 class MetadataEditorController {

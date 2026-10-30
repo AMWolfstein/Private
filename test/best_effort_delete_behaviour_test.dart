@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sistrum/utils/best_effort_delete.dart';
+import 'package:sistrum/utils/files/best_effort_delete.dart';
 
 void main() {
   late Directory root;

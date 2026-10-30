@@ -7,14 +7,14 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:liquid_glass_easy/liquid_glass_easy.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/theme/app_theme.dart';
-import 'package:sistrum/widgets/glass/app_artwork_glass.dart';
-import 'package:sistrum/widgets/glass/app_artwork_glass_render.dart';
-import 'package:sistrum/widgets/glass/app_artwork_ground.dart';
-import 'package:sistrum/widgets/glass/app_artwork_page_ground.dart';
-import 'package:sistrum/widgets/glass/app_backdrop_groups.dart';
-import 'package:sistrum/widgets/glass/app_chrome.dart';
-import 'package:sistrum/widgets/glass/app_glass_surface.dart';
-import 'package:sistrum/widgets/glass/app_floating_header.dart';
+import 'package:sistrum/widgets/glass/artwork/app_artwork_glass.dart';
+import 'package:sistrum/widgets/glass/artwork/app_artwork_glass_render.dart';
+import 'package:sistrum/widgets/glass/artwork/app_artwork_ground.dart';
+import 'package:sistrum/widgets/glass/artwork/app_artwork_page_ground.dart';
+import 'package:sistrum/widgets/glass/chrome/app_backdrop_groups.dart';
+import 'package:sistrum/widgets/glass/chrome/app_chrome.dart';
+import 'package:sistrum/widgets/glass/thumb/app_glass_surface.dart';
+import 'package:sistrum/widgets/glass/chrome/app_floating_header.dart';
 import 'package:sistrum/widgets/player/app_player_ground.dart';
 import 'package:sistrum/widgets/primitives/app_context_menu.dart';
 
@@ -191,10 +191,7 @@ void main() {
     expect(await pump(level: AppGlassLevel.flat), isNull);
     expect(find.bySubtype<BackdropFilter>(), findsNothing);
     // High contrast blocks Auto's glass (the default quality) the same way.
-    expect(
-      await pump(level: AppGlassLevel.liquid, highContrast: true),
-      isNull,
-    );
+    expect(await pump(level: AppGlassLevel.liquid, highContrast: true), isNull);
     // Lite: the ground without the shader.
     expect((await pump(level: AppGlassLevel.lite))!.refracts, isFalse);
     // Level 1 on full glass: still no refraction.
@@ -205,10 +202,7 @@ void main() {
     // Full glass, Levels 2-5, on Impeller: the shader.
     for (final clarity in [2, 3, 4, 5]) {
       expect(
-        (await pump(
-          level: AppGlassLevel.liquid,
-          clarity: clarity,
-        ))!.refracts,
+        (await pump(level: AppGlassLevel.liquid, clarity: clarity))!.refracts,
         isTrue,
         reason: 'level $clarity',
       );
@@ -495,10 +489,7 @@ void main() {
     final ground = _playerGround(tester);
     await _settle(tester, () => ground.hasGround);
     expect(AppGroundBudget.bytes, greaterThan(0));
-    expect(
-      AppGroundBudget.bytes,
-      lessThanOrEqualTo(AppGroundBudget.maxBytes),
-    );
+    expect(AppGroundBudget.bytes, lessThanOrEqualTo(AppGroundBudget.maxBytes));
     await tester.pumpWidget(const SizedBox());
     expect(AppGroundBudget.bytes, 0);
     expect(AppGroundBudget.owners, 0);
@@ -524,10 +515,7 @@ void main() {
         ..show(await ground1536())
         ..markPainted();
     }
-    expect(
-      AppGroundBudget.bytes,
-      lessThanOrEqualTo(AppGroundBudget.maxBytes),
-    );
+    expect(AppGroundBudget.bytes, lessThanOrEqualTo(AppGroundBudget.maxBytes));
     expect(pages.first.hasGround, isFalse);
     expect(pages.last.hasGround, isTrue);
     for (final page in pages) {

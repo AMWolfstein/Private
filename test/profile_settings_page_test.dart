@@ -4,7 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/l10n/app_localizations.dart';
 import 'package:sistrum/providers/user_profile_provider.dart';
 import 'package:sistrum/screens/settings/profile_settings_page.dart';
-import 'package:sistrum/services/user_profile_store.dart';
+import 'package:sistrum/services/platform/user_profile_store.dart';
 
 /// Records the profile the page saves instead of writing it to disk.
 class _FakeProfile extends UserProfileNotifier {

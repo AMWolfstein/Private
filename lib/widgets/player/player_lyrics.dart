@@ -14,9 +14,9 @@ import 'package:sistrum/providers/music_player_provider.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/theme/app_theme.dart';
 import 'package:sistrum/theme/app_tokens.dart';
-import 'package:sistrum/utils/lyrics_parser.dart';
-import 'package:sistrum/utils/lyric_models.dart';
-import 'package:sistrum/utils/synced_lyrics_scroll.dart';
+import 'package:sistrum/utils/lyrics/lyrics_parser.dart';
+import 'package:sistrum/utils/lyrics/lyric_models.dart';
+import 'package:sistrum/utils/lyrics/synced_lyrics_scroll.dart';
 import 'package:sistrum/widgets/lyrics/aligned_lyric_pronunciation.dart';
 import 'package:sistrum/widgets/lyrics/lyric_gap_indicator.dart';
 import 'package:sistrum/widgets/lyrics/lyric_scroll_motion.dart';
@@ -1558,10 +1558,7 @@ Widget _withLyricSupplements(
       line.romanization?.trim().isNotEmpty != true) {
     return withSupplements(primary);
   }
-  final primaryStyle = _appLyricStyle(
-    context,
-    background: line.isBackground,
-  );
+  final primaryStyle = _appLyricStyle(context, background: line.isBackground);
   final pronunciationStyle = supplements
       .firstWhere((supplement) => !supplement.$4)
       .$2;
@@ -1846,10 +1843,7 @@ class _WordHighlightedLyricLineState
 
   @override
   Widget build(BuildContext context) {
-    final style = _appLyricStyle(
-      context,
-      background: widget.line.isBackground,
-    );
+    final style = _appLyricStyle(context, background: widget.line.isBackground);
     final primary = widget.line.hasWordTiming
         ? _buildTimedText(widget.line.text, widget.line.words, style)
         : Text(

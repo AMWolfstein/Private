@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/models/automix_options.dart';
 import 'package:sistrum/models/settings.dart';
-import 'package:sistrum/services/playback/automix_analysis.dart';
+import 'package:sistrum/services/playback/automix/automix_analysis.dart';
 
 void main() {
   test(

@@ -10,11 +10,11 @@ import 'package:sistrum/theme/app_tokens.dart';
 import 'package:sistrum/theme/app_theme.dart';
 import 'package:sistrum/navigation/app_screens.dart';
 import 'package:sistrum/navigation/now_playing_route.dart';
-import 'package:sistrum/utils/string_utils.dart';
+import 'package:sistrum/utils/text/string_utils.dart';
 import 'package:sistrum/widgets/status/audio_quality_badges.dart';
-import 'package:sistrum/widgets/overflow_marquee.dart';
+import 'package:sistrum/widgets/animation/overflow_marquee.dart';
 import 'package:sistrum/widgets/player/player_artwork.dart';
-import 'package:sistrum/widgets/glass/app_glass_surface.dart';
+import 'package:sistrum/widgets/glass/thumb/app_glass_surface.dart';
 
 class MiniPlayer extends ConsumerStatefulWidget {
   const MiniPlayer({super.key, this.compact = false, this.bottomPadding = 8});

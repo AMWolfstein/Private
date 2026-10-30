@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sistrum/services/library/library_collections_read.dart';
-import 'package:sistrum/services/library/library_collections_schema.dart';
+import 'package:sistrum/services/library/collections/library_collections_read.dart';
+import 'package:sistrum/services/library/collections/library_collections_schema.dart';
 
 import 'support/sqlite_process_database.dart';
 
@@ -49,24 +49,30 @@ void main() {
 
   tearDown(() => db.close());
 
-  test('the snapshot holds loved songs, playlists, members and artists', () async {
-    final snapshot = await readDartSnapshot(db);
-    expect(snapshot.lovedRows.map((row) => row['track_key']), ['loved-a']);
-    expect(snapshot.playlistRows.map((row) => row['id']), ['p1']);
-    expect(
-      snapshot.playlistTrackRows.map((row) => row['track_key']),
-      ['track-1', 'track-2'],
-    );
-    expect(snapshot.favoriteArtistRows.map((row) => row['artist_key']), [
-      'artist',
-    ]);
-  });
+  test(
+    'the snapshot holds loved songs, playlists, members and artists',
+    () async {
+      final snapshot = await readDartSnapshot(db);
+      expect(snapshot.lovedRows.map((row) => row['track_key']), ['loved-a']);
+      expect(snapshot.playlistRows.map((row) => row['id']), ['p1']);
+      expect(snapshot.playlistTrackRows.map((row) => row['track_key']), [
+        'track-1',
+        'track-2',
+      ]);
+      expect(snapshot.favoriteArtistRows.map((row) => row['artist_key']), [
+        'artist',
+      ]);
+    },
+  );
 
-  test('a playlist without a cover gets its first track as the preview', () async {
-    final snapshot = await readDartSnapshot(db);
-    final playlist = snapshot.playlistRows.single;
-    expect(playlist['preview_track_json'], _previewJson);
-  });
+  test(
+    'a playlist without a cover gets its first track as the preview',
+    () async {
+      final snapshot = await readDartSnapshot(db);
+      final playlist = snapshot.playlistRows.single;
+      expect(playlist['preview_track_json'], _previewJson);
+    },
+  );
 
   test('a playlist with a cover has no preview track', () async {
     await db.update(

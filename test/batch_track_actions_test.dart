@@ -9,10 +9,10 @@ import 'package:sistrum/models/local_library_item.dart';
 import 'package:sistrum/models/unified_library_item.dart';
 import 'package:sistrum/widgets/library/batch_track_actions.dart';
 import 'package:sistrum/theme/app_theme.dart';
-import 'package:sistrum/utils/logger.dart';
+import 'package:sistrum/utils/logging/logger.dart';
 import 'package:sistrum/widgets/primitives/app_alert_dialog.dart';
 import 'package:sistrum/widgets/selection/batch_progress_dialog.dart';
-import 'package:sistrum/services/library/library_database.dart';
+import 'package:sistrum/services/library/database/library_database.dart';
 
 UnifiedLibraryItem _item(String path) => UnifiedLibraryItem(
   LocalLibraryItem(

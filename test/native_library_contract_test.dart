@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sistrum/services/library/library_row_mapper.dart';
-import 'package:sistrum/utils/path_match_keys.dart';
+import 'package:sistrum/services/library/database/library_row_mapper.dart';
+import 'package:sistrum/utils/files/path_match_keys.dart';
 
 void main() {
   test(

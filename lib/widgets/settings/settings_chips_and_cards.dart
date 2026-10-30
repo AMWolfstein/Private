@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sistrum/theme/app_icons.dart';
 import 'package:sistrum/theme/app_tokens.dart';
-import 'package:sistrum/widgets/glass/app_chrome.dart';
+import 'package:sistrum/widgets/glass/chrome/app_chrome.dart';
 
 /// How a [SettingsChoiceChip] stacks its icon and label.
 enum SettingsChipLayout {

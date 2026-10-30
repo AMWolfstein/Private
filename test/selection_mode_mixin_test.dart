@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sistrum/screens/library/selection_mode_mixin.dart';
+import 'package:sistrum/screens/library/shared/selection_mode_mixin.dart';
 
 class _Host extends StatefulWidget {
   const _Host();

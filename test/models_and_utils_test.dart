@@ -7,12 +7,12 @@ import 'package:sistrum/models/settings.dart';
 import 'package:sistrum/models/theme_settings.dart';
 import 'package:sistrum/models/track.dart';
 import 'package:sistrum/providers/library_collections_provider.dart';
-import 'package:sistrum/services/library/library_database.dart';
-import 'package:sistrum/utils/audio_format_utils.dart';
-import 'package:sistrum/utils/file_access.dart';
+import 'package:sistrum/services/library/database/library_database.dart';
+import 'package:sistrum/utils/playback/audio_format_utils.dart';
+import 'package:sistrum/utils/files/file_access.dart';
 import 'package:sistrum/widgets/library/local_song_file_actions.dart';
-import 'package:sistrum/utils/path_match_keys.dart';
-import 'package:sistrum/utils/string_utils.dart';
+import 'package:sistrum/utils/files/path_match_keys.dart';
+import 'package:sistrum/utils/text/string_utils.dart';
 
 void main() {
   group('Finalized SAF audio names', () {});

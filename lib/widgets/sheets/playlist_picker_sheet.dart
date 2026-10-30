@@ -5,10 +5,10 @@ import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/models/track.dart';
 import 'package:sistrum/providers/library_collections_provider.dart';
 import 'package:sistrum/theme/app_theme.dart';
-import 'package:sistrum/utils/logger.dart';
+import 'package:sistrum/utils/logging/logger.dart';
 import 'package:sistrum/widgets/primitives/app_action_button.dart';
 import 'package:sistrum/widgets/primitives/app_bottom_sheet.dart';
-import 'package:sistrum/widgets/glass/app_chrome.dart';
+import 'package:sistrum/widgets/glass/chrome/app_chrome.dart';
 import 'package:sistrum/widgets/sheets/playlist_picker_name_prompt.dart';
 import 'package:sistrum/widgets/sheets/playlist_picker_rows.dart';
 

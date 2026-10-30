@@ -11,11 +11,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sistrum/models/settings.dart';
 import 'package:sistrum/providers/local_library_provider.dart';
 import 'package:sistrum/providers/settings_provider.dart';
-import 'package:sistrum/services/library/library_database.dart';
+import 'package:sistrum/services/library/database/library_database.dart';
 import 'package:sistrum/services/native/native_data_jobs.dart';
 import 'package:sistrum/services/native/library_scan_bridge.dart';
-import 'package:sistrum/services/notification_service.dart';
-import 'package:sistrum/utils/local_library_scan_prefs.dart';
+import 'package:sistrum/services/platform/notification_service.dart';
+import 'package:sistrum/utils/scan/local_library_scan_prefs.dart';
 
 /// Scan jobs reach the backend as `runNativeDataJob` requests; these tests
 /// hold them open through their own channel handler.
@@ -397,10 +397,7 @@ void main() {
       messenger.setMockMethodCallHandler(backend, (call) async {
         if (_isScanJob(call)) {
           final response = Completer<String>();
-          scans.add((
-            _jobRequest(call)['folder_path'] as String,
-            response,
-          ));
+          scans.add((_jobRequest(call)['folder_path'] as String, response));
           return response.future;
         }
         if (call.method == 'getLibraryScanProgress') {
@@ -633,7 +630,9 @@ void main() {
       await library.startSourceScan('reconnect');
       expect(scans, hasLength(1));
       database.countOverride = 7;
-      scans.single.$2.complete(jsonEncode({'committed': true, 'scanned_count': 0, 'deleted_count': 0}));
+      scans.single.$2.complete(
+        jsonEncode({'committed': true, 'scanned_count': 0, 'deleted_count': 0}),
+      );
       await active;
       await clearing;
       await Future<void>.delayed(Duration.zero);
@@ -711,7 +710,9 @@ void main() {
       await _waitFor(() => scans.length == 1);
       await library.cancelScan();
       database.countOverride = 7;
-      scans.single.$2.complete(jsonEncode({'committed': true, 'scanned_count': 0, 'deleted_count': 0}));
+      scans.single.$2.complete(
+        jsonEncode({'committed': true, 'scanned_count': 0, 'deleted_count': 0}),
+      );
       await active;
       final state = container.read(localLibraryProvider);
       expect(state.totalCount, 7);

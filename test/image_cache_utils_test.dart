@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sistrum/utils/image_cache_utils.dart';
+import 'package:sistrum/utils/cover/image_cache_utils.dart';
 
 Future<int> _cacheWidth(
   WidgetTester tester, {

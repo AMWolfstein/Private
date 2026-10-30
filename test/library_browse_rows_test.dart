@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sistrum/services/library/library_browse_rows.dart';
+import 'package:sistrum/services/library/browse/library_browse_rows.dart';
 
 Map<String, dynamic> _row({
   Object? explicit = 0,
@@ -44,16 +44,20 @@ void main() {
   });
 
   test('integer flags become booleans for explicit, ReplayGain and lyrics', () {
-    final on = queueTrackRowToJson(
-      _row(explicit: 1, hasReplayGain: 1, hasLyrics: 1),
-    )['item'] as Map<String, dynamic>;
+    final on =
+        queueTrackRowToJson(
+              _row(explicit: 1, hasReplayGain: 1, hasLyrics: 1),
+            )['item']
+            as Map<String, dynamic>;
     expect(on['explicit'], isTrue);
     expect(on['hasReplayGain'], isTrue);
     expect(on['hasLyrics'], isTrue);
 
-    final off = queueTrackRowToJson(
-      _row(explicit: 0, hasReplayGain: 0, hasLyrics: 0),
-    )['item'] as Map<String, dynamic>;
+    final off =
+        queueTrackRowToJson(
+              _row(explicit: 0, hasReplayGain: 0, hasLyrics: 0),
+            )['item']
+            as Map<String, dynamic>;
     expect(off['explicit'], isFalse);
     expect(off['hasReplayGain'], isFalse);
     expect(off['hasLyrics'], isFalse);

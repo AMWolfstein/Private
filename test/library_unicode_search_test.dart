@@ -1,12 +1,12 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sistrum/services/library/library_row_mapper.dart';
-import 'package:sistrum/services/library/library_database_models.dart';
-import 'package:sistrum/services/library/library_browse_store.dart';
-import 'package:sistrum/services/library/library_genres.dart';
-import 'package:sistrum/services/library/library_tag_credits.dart';
-import 'package:sistrum/services/library/library_schema.dart';
-import 'package:sistrum/services/library/library_search.dart';
-import 'package:sistrum/services/library/sqlite_helpers.dart';
+import 'package:sistrum/services/library/database/library_row_mapper.dart';
+import 'package:sistrum/services/library/database/library_database_models.dart';
+import 'package:sistrum/services/library/browse/library_browse_store.dart';
+import 'package:sistrum/services/library/browse/library_genres.dart';
+import 'package:sistrum/services/library/browse/library_tag_credits.dart';
+import 'package:sistrum/services/library/database/library_schema.dart';
+import 'package:sistrum/services/library/browse/library_search.dart';
+import 'package:sistrum/services/library/database/sqlite_helpers.dart';
 
 import 'support/sqlite_process_database.dart';
 

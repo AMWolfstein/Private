@@ -13,7 +13,7 @@ import 'package:sistrum/services/audio_analysis/audio_analysis_parsing.dart';
 import 'package:sistrum/services/audio_analysis/audio_analysis_store.dart';
 import 'package:sistrum/services/native/media_file_bridge.dart';
 import 'package:sistrum/services/native/native_data_jobs.dart';
-import 'package:sistrum/utils/best_effort_delete.dart';
+import 'package:sistrum/utils/files/best_effort_delete.dart';
 
 /// Records of one analysis run and its spectrogram, kept apart from the card.
 class GeneratedSpectrogram {

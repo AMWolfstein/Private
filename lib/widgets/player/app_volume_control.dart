@@ -5,10 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/widgets/player/app_player_slider.dart';
-import 'package:sistrum/utils/logger.dart';
+import 'package:sistrum/utils/logging/logger.dart';
 import 'package:volume_controller/volume_controller.dart';
-import 'package:sistrum/services/playback/music_playback_deck.dart';
-import 'package:sistrum/services/playback/system_volume_service.dart';
+import 'package:sistrum/services/playback/core/music_playback_deck.dart';
+import 'package:sistrum/services/playback/audio/system_volume_service.dart';
 
 final usbVolumeProvider = StreamProvider.autoDispose<UsbVolumeState?>((ref) {
   final events = StreamController<UsbVolumeState?>();
@@ -45,8 +45,7 @@ class AppVolumeControl extends ConsumerStatefulWidget {
   final Color foreground;
 
   @override
-  ConsumerState<AppVolumeControl> createState() =>
-      _AppVolumeControlState();
+  ConsumerState<AppVolumeControl> createState() => _AppVolumeControlState();
 }
 
 class _AppVolumeControlState extends ConsumerState<AppVolumeControl> {

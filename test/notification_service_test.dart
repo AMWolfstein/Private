@@ -4,7 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/l10n/app_localizations.dart';
-import 'package:sistrum/services/notification_service.dart';
+import 'package:sistrum/services/platform/notification_service.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();

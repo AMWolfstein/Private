@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sistrum/utils/logger.dart';
+import 'package:sistrum/utils/logging/logger.dart';
 
 Map<String, dynamic> _batch(String? message, int nextIndex) => {
   'logs': [

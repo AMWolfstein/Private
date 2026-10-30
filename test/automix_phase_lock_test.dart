@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sistrum/services/playback/automix_phase_lock.dart';
+import 'package:sistrum/services/playback/automix/automix_phase_lock.dart';
 
 void main() {
   void samples(AutoMixPhaseLock lock, List<double?> errors) {

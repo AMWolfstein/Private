@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/providers/music_player_provider.dart';
-import 'package:sistrum/utils/synced_lyrics_scroll.dart';
+import 'package:sistrum/utils/lyrics/synced_lyrics_scroll.dart';
 
 /// Playback controls the fill; a gentle pulse accompanies instrumental gaps.
 class LyricGapIndicator extends ConsumerStatefulWidget {

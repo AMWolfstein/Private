@@ -5,8 +5,8 @@ import 'package:sistrum/models/track.dart';
 import 'package:sistrum/providers/library_collections_provider.dart';
 import 'package:sistrum/providers/music_player_provider.dart';
 import 'package:sistrum/providers/playback_notification_provider.dart';
-import 'package:sistrum/services/playback/music_player_runtime.dart';
-import 'package:sistrum/services/playback/playback_notification.dart';
+import 'package:sistrum/services/playback/music_player/music_player_runtime.dart';
+import 'package:sistrum/services/playback/notification/playback_notification.dart';
 
 import 'support/library_section_harness.dart';
 

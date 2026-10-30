@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sistrum/services/library/library_folder_selection.dart';
+import 'package:sistrum/services/library/scan/library_folder_selection.dart';
 
 void main() {
   group('libraryFolderDisplayPath', () {

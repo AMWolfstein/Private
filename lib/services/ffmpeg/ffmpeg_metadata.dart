@@ -8,7 +8,7 @@ import 'package:sistrum/services/ffmpeg/audio_metadata_mapper.dart';
 import 'package:sistrum/services/ffmpeg/ffmpeg_models.dart';
 import 'package:sistrum/services/ffmpeg/ffmpeg_support.dart';
 import 'package:sistrum/services/native/native_data_jobs.dart';
-import 'package:sistrum/utils/logger.dart';
+import 'package:sistrum/utils/logging/logger.dart';
 
 final _log = AppLogger('FFmpeg');
 

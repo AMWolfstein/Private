@@ -6,7 +6,7 @@ import 'package:sistrum/providers/library_collections_provider.dart';
 import 'package:sistrum/providers/library_search_provider.dart';
 import 'package:sistrum/providers/local_library_provider.dart';
 import 'package:sistrum/providers/settings_provider.dart';
-import 'package:sistrum/services/library/library_search.dart';
+import 'package:sistrum/services/library/browse/library_search.dart';
 
 class _Settings extends SettingsNotifier {
   @override

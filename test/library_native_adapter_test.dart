@@ -4,9 +4,9 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/services/native/library_scan_bridge.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:sistrum/services/library/library_native_adapter.dart';
-import 'package:sistrum/services/library/library_row_mapper.dart';
-import 'package:sistrum/services/library/sqlite_native_snapshot.dart';
+import 'package:sistrum/services/library/database/library_native_adapter.dart';
+import 'package:sistrum/services/library/database/library_row_mapper.dart';
+import 'package:sistrum/services/library/database/sqlite_native_snapshot.dart';
 
 import 'support/library_native_fixture.dart';
 import 'support/sqlite_process_database.dart';

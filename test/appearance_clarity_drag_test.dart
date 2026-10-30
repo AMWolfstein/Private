@@ -9,11 +9,11 @@ import 'package:sistrum/models/app_glass.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/providers/settings_provider.dart';
 import 'package:sistrum/providers/theme_provider.dart';
-import 'package:sistrum/screens/settings/appearance_settings_page.dart';
+import 'package:sistrum/screens/settings/appearance/appearance_settings_page.dart';
 import 'package:sistrum/services/glass/app_glass_auto_probe.dart';
 import 'package:sistrum/theme/app_theme.dart';
 import 'package:sistrum/app.dart';
-import 'package:sistrum/widgets/glass/app_chrome.dart';
+import 'package:sistrum/widgets/glass/chrome/app_chrome.dart';
 
 final _levelCalls = <(int, bool)>[];
 var _outsideBuilds = 0;

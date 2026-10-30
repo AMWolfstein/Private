@@ -6,8 +6,8 @@ import 'package:sistrum/models/local_library_item.dart';
 import 'package:sistrum/models/settings.dart';
 import 'package:sistrum/providers/local_library_provider.dart';
 import 'package:sistrum/providers/settings_provider.dart';
-import 'package:sistrum/screens/library/local_artist_providers.dart';
-import 'package:sistrum/services/library/library_database.dart';
+import 'package:sistrum/screens/library/local_artist/local_artist_providers.dart';
+import 'package:sistrum/services/library/database/library_database.dart';
 
 class _Settings extends SettingsNotifier {
   @override

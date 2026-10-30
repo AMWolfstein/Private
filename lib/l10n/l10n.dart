@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sistrum/l10n/app_localizations.dart';
-import 'package:sistrum/utils/user_facing_error.dart';
+import 'package:sistrum/utils/text/user_facing_error.dart';
 
 export 'package:sistrum/l10n/app_localizations.dart';
 

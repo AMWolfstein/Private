@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sistrum/utils/lyric_models.dart';
+import 'package:sistrum/utils/lyrics/lyric_models.dart';
 import 'package:sistrum/widgets/lyrics/aligned_lyric_pronunciation.dart';
 
 const _primaryStyle = TextStyle(fontSize: 34, height: 1.3);

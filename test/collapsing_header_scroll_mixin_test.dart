@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sistrum/screens/library/collapsing_header_scroll_mixin.dart';
+import 'package:sistrum/screens/library/shared/collapsing_header_scroll_mixin.dart';
 
 class _Screen extends StatefulWidget {
   const _Screen();
@@ -15,7 +15,8 @@ class _ScreenState extends State<_Screen> with CollapsingHeaderScrollMixin {
     body: ListView.builder(
       controller: scrollController,
       itemCount: 100,
-      itemBuilder: (_, index) => SizedBox(height: 50, child: Text('Item $index')),
+      itemBuilder: (_, index) =>
+          SizedBox(height: 50, child: Text('Item $index')),
     ),
   );
 }

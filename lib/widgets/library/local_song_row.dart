@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sistrum/widgets/primitives/app_context_menu.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/widgets/library/track_card.dart';
-import 'package:sistrum/widgets/cached_cover_image.dart';
+import 'package:sistrum/widgets/cover/cached_cover_image.dart';
 
 /// Shared local song layout. Albums supply a number instead of artwork.
 class LocalSongRow extends StatelessWidget {

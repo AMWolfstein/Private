@@ -4,7 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/l10n/app_localizations.dart';
 import 'package:sistrum/providers/music_player_provider.dart';
 import 'package:sistrum/providers/player_metadata_controller.dart';
-import 'package:sistrum/utils/playback_seek_preview.dart';
+import 'package:sistrum/utils/playback/playback_seek_preview.dart';
 import 'package:sistrum/widgets/player/player_playback_controls.dart';
 
 /// Records which transport action the controls asked for.

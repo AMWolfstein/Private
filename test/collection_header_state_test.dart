@@ -10,13 +10,13 @@ import 'package:sistrum/models/track.dart';
 import 'package:sistrum/providers/library_collections_provider.dart';
 import 'package:sistrum/providers/local_library_provider.dart';
 import 'package:sistrum/providers/music_player_provider.dart';
-import 'package:sistrum/screens/library/library_collection_tracks_screen.dart';
-import 'package:sistrum/screens/library/local_album_screen.dart';
+import 'package:sistrum/screens/library/collections/library_collection_tracks_screen.dart';
+import 'package:sistrum/screens/library/local_album/local_album_screen.dart';
 import 'package:sistrum/theme/app_theme.dart';
 import 'package:sistrum/widgets/header/album_detail_header.dart';
 import 'package:sistrum/widgets/library/album_track_tile.dart';
-import 'package:sistrum/widgets/animation_skeletons.dart';
-import 'package:sistrum/widgets/collection_scaffold.dart';
+import 'package:sistrum/widgets/animation/animation_skeletons.dart';
+import 'package:sistrum/widgets/collection/collection_scaffold.dart';
 import 'package:sistrum/widgets/library/local_song_row.dart';
 import 'package:sistrum/widgets/header/header_controls.dart';
 

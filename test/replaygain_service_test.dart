@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/services/ffmpeg/ffmpeg_models.dart';
-import 'package:sistrum/services/playback/replaygain_write_result.dart';
+import 'package:sistrum/services/playback/audio/replaygain_write_result.dart';
 import 'package:sistrum/widgets/library/batch_track_actions.dart';
 
 Matcher written() => isA<ReplayGainWriteResult>().having(

@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/services/backup/backup_service.dart';
 import 'package:sistrum/widgets/player/player_details_sheet.dart';
-import 'package:sistrum/utils/ordered_range_selection.dart';
+import 'package:sistrum/utils/playback/ordered_range_selection.dart';
 
 void main() {
   group('issue 542 utility behavior', () {

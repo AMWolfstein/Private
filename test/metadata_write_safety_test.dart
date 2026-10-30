@@ -5,10 +5,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/services/ffmpeg/ffmpeg_metadata.dart';
 import 'package:sistrum/services/ffmpeg/ffmpeg_replaygain.dart';
-import 'package:sistrum/services/library/metadata_cover_resources.dart';
-import 'package:sistrum/services/library/metadata_edit_result.dart';
+import 'package:sistrum/services/library/metadata/metadata_cover_resources.dart';
+import 'package:sistrum/services/library/metadata/metadata_edit_result.dart';
 import 'package:sistrum/services/native/media_file_bridge.dart';
-import 'package:sistrum/services/library/track_metadata_persistence.dart';
+import 'package:sistrum/services/library/metadata/track_metadata_persistence.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();

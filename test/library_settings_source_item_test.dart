@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/l10n/app_localizations.dart';
-import 'package:sistrum/screens/settings/library_settings_source_item.dart';
-import 'package:sistrum/services/library/library_database.dart';
+import 'package:sistrum/screens/settings/library/library_settings_source_item.dart';
+import 'package:sistrum/services/library/database/library_database.dart';
 
 LibrarySourceSettingsItem _item({
   LocalLibrarySource? source,

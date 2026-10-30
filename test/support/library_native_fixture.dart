@@ -1,7 +1,8 @@
 import 'package:sqflite/sqflite.dart';
-import 'package:sistrum/services/library/library_row_mapper.dart';
-import 'package:sistrum/services/library/library_schema.dart';
-import 'package:sistrum/services/library/sqlite_helpers.dart' as sqlite;
+import 'package:sistrum/services/library/database/library_row_mapper.dart';
+import 'package:sistrum/services/library/database/library_schema.dart';
+import 'package:sistrum/services/library/database/sqlite_helpers.dart'
+    as sqlite;
 
 Map<String, dynamic> nativeLibraryTrack(
   String id, {

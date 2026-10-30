@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sistrum/l10n/l10n.dart';
-import 'package:sistrum/services/library/deleted_library_files.dart';
+import 'package:sistrum/services/library/scan/deleted_library_files.dart';
 import 'package:sistrum/widgets/primitives/app_alert_dialog.dart';
 
 String trackDeletionResultMessage(

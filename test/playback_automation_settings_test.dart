@@ -8,7 +8,7 @@ import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/models/settings.dart';
 import 'package:sistrum/models/theme_settings.dart';
 import 'package:sistrum/providers/settings_provider.dart';
-import 'package:sistrum/screens/settings/playback_settings_page.dart';
+import 'package:sistrum/screens/settings/playback/playback_settings_page.dart';
 import 'package:sistrum/screens/settings/settings_search_catalog.dart';
 import 'support/material_test_theme.dart';
 import 'package:sistrum/theme/app_theme.dart';

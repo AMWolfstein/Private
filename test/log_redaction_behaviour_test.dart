@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sistrum/utils/log_redaction.dart';
+import 'package:sistrum/utils/logging/log_redaction.dart';
 
 void main() {
   group('truncateLogText', () {

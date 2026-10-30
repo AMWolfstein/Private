@@ -10,11 +10,11 @@ import 'package:sistrum/providers/settings_provider.dart';
 import 'package:liquid_glass_easy/liquid_glass_easy.dart';
 import 'package:sistrum/theme/app_glass_levels.dart';
 import 'package:sistrum/theme/app_theme.dart';
-import 'package:sistrum/widgets/glass/app_liquid_backdrop.dart';
+import 'package:sistrum/widgets/glass/thumb/app_liquid_backdrop.dart';
 import 'package:sistrum/widgets/primitives/app_switch.dart';
-import 'package:sistrum/widgets/glass/app_glass_surface.dart';
-import 'package:sistrum/widgets/glass/app_chrome_controls.dart';
-import 'package:sistrum/widgets/glass/app_selection_pill.dart';
+import 'package:sistrum/widgets/glass/thumb/app_glass_surface.dart';
+import 'package:sistrum/widgets/glass/chrome/app_chrome_controls.dart';
+import 'package:sistrum/widgets/glass/selection/app_selection_pill.dart';
 
 class _Settings extends SettingsNotifier {
   @override
@@ -341,10 +341,7 @@ void main() {
       expect(spec.blurSigma, greaterThanOrEqualTo(6), reason: '${spec.level}');
     }
     for (var i = 1; i < kAppGlassLevels.length; i++) {
-      final (before, after) = (
-        kAppGlassLevels[i - 1],
-        kAppGlassLevels[i],
-      );
+      final (before, after) = (kAppGlassLevels[i - 1], kAppGlassLevels[i]);
       expect(after.blurSigma, lessThanOrEqualTo(before.blurSigma));
       expect(after.tint, lessThanOrEqualTo(before.tint));
       expect(after.clearFill, greaterThan(before.clearFill));

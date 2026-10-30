@@ -2,7 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/l10n/app_localizations.dart';
 import 'package:sistrum/models/settings.dart';
-import 'package:sistrum/services/playback/music_playback_deck.dart';
+import 'package:sistrum/services/playback/core/music_playback_deck.dart';
 import 'package:sistrum/widgets/sheets/audio_info_facts.dart';
 
 AudioInfoFacts _facts(AppLocalizations l10n, Map<String, dynamic> metadata) =>

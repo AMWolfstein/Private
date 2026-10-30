@@ -4,8 +4,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sistrum/services/update_checker.dart';
-import 'package:sistrum/utils/logger.dart';
+import 'package:sistrum/services/platform/update_checker.dart';
+import 'package:sistrum/utils/logging/logger.dart';
 
 Map<String, Object?> release(String version) => {
   'tag_name': 'v$version',

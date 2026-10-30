@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sistrum/widgets/glass/app_glass_warmup.dart';
+import 'package:sistrum/widgets/glass/thumb/app_glass_warmup.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();

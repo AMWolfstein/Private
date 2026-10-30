@@ -2,9 +2,9 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/services.dart';
-import 'package:sistrum/services/library/metadata_edit_result.dart';
+import 'package:sistrum/services/library/metadata/metadata_edit_result.dart';
 import 'package:sistrum/services/native/native_channel.dart';
-import 'package:sistrum/utils/logger.dart';
+import 'package:sistrum/utils/logging/logger.dart';
 
 final _log = AppLogger('PlatformBridge');
 

@@ -1,6 +1,6 @@
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sistrum/utils/release_date_display.dart';
+import 'package:sistrum/utils/layout/release_date_display.dart';
 
 void main() {
   setUpAll(() => initializeDateFormatting('en'));

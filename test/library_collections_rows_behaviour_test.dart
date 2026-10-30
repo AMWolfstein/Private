@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/models/library_collections.dart';
 import 'package:sistrum/models/track.dart';
-import 'package:sistrum/services/library/library_collections_rows.dart';
+import 'package:sistrum/services/library/collections/library_collections_rows.dart';
 
 String _trackJson(String id) => jsonEncode(
   Track(

@@ -3,11 +3,11 @@ import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/models/local_library_item.dart';
 import 'package:sistrum/navigation/app_screens.dart';
 import 'package:sistrum/navigation/shell_navigation.dart';
-import 'package:sistrum/services/library/library_tag_credits.dart';
-import 'package:sistrum/services/library/library_database.dart';
+import 'package:sistrum/services/library/browse/library_tag_credits.dart';
+import 'package:sistrum/services/library/database/library_database.dart';
 import 'package:sistrum/widgets/primitives/app_bottom_sheet.dart';
-import 'package:sistrum/utils/detail_page_route.dart';
-import 'package:sistrum/utils/logger.dart';
+import 'package:sistrum/utils/layout/detail_page_route.dart';
+import 'package:sistrum/utils/logging/logger.dart';
 
 /// Opens the artist named by a credit. A comma, "&" or "feat." splits the
 /// credit into artists (see [TagCreditRules]); one artist opens directly,

@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sistrum/utils/audio_quality_badge_policy.dart';
+import 'package:sistrum/utils/scan/audio_quality_badge_policy.dart';
 
 void main() {
   group('standard Library audio quality labels', () {

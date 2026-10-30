@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sistrum/services/library/library_scan_notifications.dart';
-import 'package:sistrum/services/notification_service.dart';
+import 'package:sistrum/services/library/scan/library_scan_notifications.dart';
+import 'package:sistrum/services/platform/notification_service.dart';
 
 class _FakeNotifications implements NotificationService {
   final calls = <String>[];

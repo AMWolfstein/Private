@@ -4,7 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sistrum/l10n/app_localizations.dart';
 import 'package:sistrum/providers/settings_provider.dart';
-import 'package:sistrum/screens/settings/lyrics_settings_page.dart';
+import 'package:sistrum/screens/settings/playback/lyrics_settings_page.dart';
 import 'package:sistrum/widgets/primitives/app_switch.dart';
 
 import 'support/library_section_harness.dart';

@@ -15,10 +15,10 @@ import 'package:sistrum/theme/app_tokens.dart';
 import 'package:sistrum/theme/app_theme.dart';
 import 'package:sistrum/widgets/primitives/app_bottom_sheet.dart';
 import 'package:sistrum/widgets/primitives/app_search_field.dart';
-import 'package:sistrum/widgets/glass/app_glass_surface.dart';
-import 'package:sistrum/widgets/glass/app_chrome_controls.dart';
+import 'package:sistrum/widgets/glass/thumb/app_glass_surface.dart';
+import 'package:sistrum/widgets/glass/chrome/app_chrome_controls.dart';
 import 'package:sistrum/widgets/primitives/app_sliver_header.dart';
-import 'package:sistrum/widgets/collection_scaffold.dart';
+import 'package:sistrum/widgets/collection/collection_scaffold.dart';
 import 'package:sistrum/widgets/selection/selection_action_button.dart';
 import 'package:sistrum/widgets/selection/selection_bottom_bar.dart';
 import 'package:sistrum/widgets/settings/settings_chips_and_cards.dart';
@@ -76,8 +76,14 @@ Widget _hostSliver(Widget sliver) {
 void main() {
   group('AppTokens', () {
     test('is registered on both themes', () {
-      expect(MaterialTestTheme.light().extension<AppTokens>(), AppTokens.standard);
-      expect(MaterialTestTheme.dark().extension<AppTokens>(), AppTokens.standard);
+      expect(
+        MaterialTestTheme.light().extension<AppTokens>(),
+        AppTokens.standard,
+      );
+      expect(
+        MaterialTestTheme.dark().extension<AppTokens>(),
+        AppTokens.standard,
+      );
       expect(
         MaterialTestTheme.dark(isAmoled: true).extension<AppTokens>(),
         AppTokens.standard,
@@ -547,7 +553,8 @@ void main() {
 
     testWidgets('sheet shape comes from the token scale', (tester) async {
       final shape =
-          MaterialTestTheme.light().bottomSheetTheme.shape! as RoundedRectangleBorder;
+          MaterialTestTheme.light().bottomSheetTheme.shape!
+              as RoundedRectangleBorder;
       final radius = shape.borderRadius.resolve(TextDirection.ltr).topLeft.x;
 
       expect(radius, AppTokens.standard.radiusSheet);

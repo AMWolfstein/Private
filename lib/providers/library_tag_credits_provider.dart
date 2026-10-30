@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/providers/local_library_provider.dart';
 import 'package:sistrum/providers/settings_provider.dart';
-import 'package:sistrum/services/library/library_tag_credits.dart';
+import 'package:sistrum/services/library/browse/library_tag_credits.dart';
 
 /// The tag credits table, shared so every screen reads one derived copy.
 final libraryTagCreditsCacheProvider = Provider<LibraryTagCreditsCache>(

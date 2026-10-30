@@ -6,7 +6,7 @@ import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/models/theme_settings.dart';
 import 'package:sistrum/providers/theme_provider.dart';
 import 'package:sistrum/theme/app_theme.dart';
-import 'package:sistrum/utils/lyric_models.dart';
+import 'package:sistrum/utils/lyrics/lyric_models.dart';
 import 'package:sistrum/widgets/lyrics/lyrics_size_setting.dart';
 import 'package:sistrum/widgets/lyrics/lyrics_text_scale.dart';
 import 'package:sistrum/widgets/player/player_lyrics.dart';

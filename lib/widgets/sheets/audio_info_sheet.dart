@@ -1,5 +1,5 @@
 import 'package:sistrum/services/native/media_file_bridge.dart';
-import 'package:sistrum/services/playback/playback_equalizer.dart';
+import 'package:sistrum/services/playback/audio/playback_equalizer.dart';
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart' show CupertinoButton;
@@ -7,9 +7,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sistrum/providers/player_metadata_controller.dart';
 import 'package:sistrum/l10n/l10n.dart';
-import 'package:sistrum/services/playback/audio_route_info.dart';
-import 'package:sistrum/services/playback/music_playback_deck.dart';
-import 'package:sistrum/services/playback/music_player_service.dart';
+import 'package:sistrum/services/playback/audio/audio_route_info.dart';
+import 'package:sistrum/services/playback/core/music_playback_deck.dart';
+import 'package:sistrum/services/playback/music_player/music_player_service.dart';
 import 'package:sistrum/theme/app_tokens.dart';
 import 'package:sistrum/widgets/primitives/app_bottom_sheet.dart';
 import 'package:sistrum/widgets/audio_analysis/audio_analysis_widget.dart';

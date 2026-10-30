@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sistrum/utils/local_library_scan_prefs.dart';
+import 'package:sistrum/utils/scan/local_library_scan_prefs.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();

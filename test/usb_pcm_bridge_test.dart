@@ -1,6 +1,6 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sistrum/services/playback/usb_pcm_bridge.dart';
+import 'package:sistrum/services/playback/audio/usb_pcm_bridge.dart';
 
 void main() {
   test('tickets are unique across every user of one bridge', () {

@@ -9,17 +9,17 @@ import 'package:share_plus/share_plus.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/models/local_library_item.dart';
 import 'package:sistrum/providers/local_library_provider.dart';
-import 'package:sistrum/services/library/deleted_library_files.dart';
+import 'package:sistrum/services/library/scan/deleted_library_files.dart';
 import 'package:sistrum/services/ffmpeg/ffmpeg_cue.dart';
 import 'package:sistrum/services/ffmpeg/ffmpeg_models.dart';
-import 'package:sistrum/services/library/library_database.dart';
-import 'package:sistrum/services/library/library_database_models.dart';
+import 'package:sistrum/services/library/database/library_database.dart';
+import 'package:sistrum/services/library/database/library_database_models.dart';
 import 'package:sistrum/services/native/cue_sheet_bridge.dart';
 import 'package:sistrum/services/native/media_file_bridge.dart';
-import 'package:sistrum/utils/best_effort_delete.dart';
-import 'package:sistrum/utils/file_access.dart';
-import 'package:sistrum/services/library/metadata_edit_result.dart';
-import 'package:sistrum/utils/path_match_keys.dart';
+import 'package:sistrum/utils/files/best_effort_delete.dart';
+import 'package:sistrum/utils/files/file_access.dart';
+import 'package:sistrum/services/library/metadata/metadata_edit_result.dart';
+import 'package:sistrum/utils/files/path_match_keys.dart';
 import 'package:sistrum/widgets/primitives/app_alert_dialog.dart';
 
 bool isCueSong(LocalLibraryItem item) =>

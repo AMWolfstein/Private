@@ -4,8 +4,8 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/models/library_collections.dart';
 import 'package:sistrum/models/track.dart';
-import 'package:sistrum/services/library/library_collections_database.dart';
-import 'package:sistrum/services/library/library_collections_hydration.dart';
+import 'package:sistrum/services/library/collections/library_collections_database.dart';
+import 'package:sistrum/services/library/collections/library_collections_hydration.dart';
 
 import 'support/caller_yield_probe.dart';
 

@@ -11,7 +11,7 @@ import 'package:sistrum/models/settings.dart';
 import 'package:sistrum/models/theme_settings.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/providers/theme_provider.dart';
-import 'package:sistrum/screens/settings/appearance_settings_page.dart';
+import 'package:sistrum/screens/settings/appearance/appearance_settings_page.dart';
 import 'package:sistrum/app.dart';
 import 'package:sistrum/theme/app_theme.dart';
 
@@ -48,10 +48,7 @@ void main() {
       expect(ThemeSettings.fromJson({}).appGlassOutlines, isTrue);
       const settings = ThemeSettings(appGlassOutlines: false);
       expect(ThemeSettings.fromJson(settings.toJson()), settings);
-      expect(
-        settings.copyWith(useSystemFont: true).appGlassOutlines,
-        isFalse,
-      );
+      expect(settings.copyWith(useSystemFont: true).appGlassOutlines, isFalse);
       expect(settings, isNot(const ThemeSettings()));
     },
   );
@@ -89,10 +86,7 @@ void main() {
       for (final accent in AppAccent.values.where(
         (accent) => accent != AppAccent.red,
       )) {
-        final scheme = AppTheme.build(
-          brightness,
-          accent: accent,
-        ).colorScheme;
+        final scheme = AppTheme.build(brightness, accent: accent).colorScheme;
         expect(
           contrast(scheme.primary, scheme.surface),
           greaterThanOrEqualTo(4.5),
@@ -236,9 +230,7 @@ void main() {
       expect(savedGlass(prefs)['glassClarityLevel'], 5);
       final context = tester.element(slider);
       expect(
-        ProviderScope.containerOf(
-          context,
-        ).read(appGlassClarityLevelProvider),
+        ProviderScope.containerOf(context).read(appGlassClarityLevelProvider),
         5,
       );
       // Crystal on full glass is the one costly combination.

@@ -11,11 +11,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sistrum/providers/settings_provider.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/screens/local_guide_pages.dart';
-import 'package:sistrum/services/library/library_folder_selection.dart';
+import 'package:sistrum/services/library/scan/library_folder_selection.dart';
 import 'package:sistrum/constants/language_choices.dart';
-import 'package:sistrum/utils/adaptive_layout.dart';
+import 'package:sistrum/utils/layout/adaptive_layout.dart';
 import 'package:sistrum/widgets/shell/scroll_edge_fade.dart';
-import 'package:sistrum/utils/logger.dart';
+import 'package:sistrum/utils/logging/logger.dart';
 import 'package:sistrum/providers/local_library_provider.dart';
 import 'package:sistrum/screens/setup_step_layout.dart';
 

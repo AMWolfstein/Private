@@ -14,7 +14,7 @@ import 'package:sistrum/models/settings.dart';
 import 'package:sistrum/providers/settings_provider.dart';
 import 'package:sistrum/providers/local_library_provider.dart';
 import 'package:sistrum/providers/music_player_provider.dart';
-import 'package:sistrum/screens/library/local_artist_screen.dart';
+import 'package:sistrum/screens/library/local_artist/local_artist_screen.dart';
 import 'package:sistrum/widgets/library/track_metadata_edit_sheet.dart';
 import 'package:sistrum/theme/app_theme.dart';
 import 'package:sistrum/widgets/library/local_song_menu.dart';

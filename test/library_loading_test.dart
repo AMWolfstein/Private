@@ -9,7 +9,7 @@ import 'package:sistrum/models/settings.dart';
 import 'package:sistrum/providers/local_library_provider.dart';
 import 'package:sistrum/providers/library_collections_provider.dart';
 import 'package:sistrum/providers/settings_provider.dart';
-import 'package:sistrum/services/library/library_database.dart';
+import 'package:sistrum/services/library/database/library_database.dart';
 
 class _Settings extends SettingsNotifier {
   @override
@@ -143,10 +143,7 @@ void main() {
         libraryCollectionsProvider.overrideWith(() => collections),
         settingsProvider.overrideWith(_Settings.new),
         localLibraryProvider.overrideWith(
-          () => library = _Library(
-            database,
-            (path) => probe(path),
-          ),
+          () => library = _Library(database, (path) => probe(path)),
         ),
       ],
     );

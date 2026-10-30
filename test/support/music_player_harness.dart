@@ -5,15 +5,15 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/models/settings.dart';
 import 'package:sistrum/services/storage/app_state_database.dart';
-import 'package:sistrum/services/playback/autoplay_personalization.dart';
-import 'package:sistrum/services/playback/listening_statistics.dart';
-import 'package:sistrum/services/playback/music_playback_deck.dart';
-import 'package:sistrum/services/playback/playback_handler.dart';
-import 'package:sistrum/services/playback/music_player_service.dart';
-import 'package:sistrum/services/playback/music_player_session_restore.dart';
-import 'package:sistrum/services/library/source_deletion_events.dart';
-import 'package:sistrum/services/playback/music_player_runtime.dart';
-import 'package:sistrum/services/library/library_database.dart';
+import 'package:sistrum/services/playback/autoplay/autoplay_personalization.dart';
+import 'package:sistrum/services/playback/stats/listening_statistics.dart';
+import 'package:sistrum/services/playback/core/music_playback_deck.dart';
+import 'package:sistrum/services/playback/core/playback_handler.dart';
+import 'package:sistrum/services/playback/music_player/music_player_service.dart';
+import 'package:sistrum/services/playback/music_player/music_player_session_restore.dart';
+import 'package:sistrum/services/library/scan/source_deletion_events.dart';
+import 'package:sistrum/services/playback/music_player/music_player_runtime.dart';
+import 'package:sistrum/services/library/database/library_database.dart';
 
 /// Fake playback collaborators shared by the music player tests. They are
 /// copied from `music_player_runtime_test.dart`, which keeps its own private

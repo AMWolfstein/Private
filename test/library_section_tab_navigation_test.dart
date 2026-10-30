@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/l10n/app_localizations.dart';
-import 'package:sistrum/screens/library/library_section_tab.dart';
+import 'package:sistrum/screens/library/section_tab/library_section_tab.dart';
 import 'package:sistrum/widgets/primitives/app_alert_dialog.dart';
 
 import 'support/library_section_harness.dart';

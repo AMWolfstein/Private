@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sistrum/widgets/animation_indicators.dart';
+import 'package:sistrum/widgets/animation/animation_indicators.dart';
 
 void main() {
   testWidgets('a selected checkbox shows its check mark', (tester) async {

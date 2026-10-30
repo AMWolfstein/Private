@@ -6,7 +6,7 @@ import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/models/equalizer_settings.dart';
 import 'package:sistrum/providers/equalizer_provider.dart';
 import 'package:sistrum/screens/equalizer_screen.dart';
-import 'package:sistrum/services/playback/playback_equalizer.dart';
+import 'package:sistrum/services/playback/audio/playback_equalizer.dart';
 import 'package:sistrum/theme/app_theme.dart';
 import 'package:sistrum/widgets/primitives/app_level_slider.dart';
 

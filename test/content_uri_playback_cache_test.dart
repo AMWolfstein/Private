@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sistrum/services/playback/content_uri_playback_cache.dart';
+import 'package:sistrum/services/playback/core/content_uri_playback_cache.dart';
 
 void main() {
   late Directory directory;

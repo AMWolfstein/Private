@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sistrum/services/library/library_browse_order.dart';
-import 'package:sistrum/services/library/library_database_models.dart';
+import 'package:sistrum/services/library/browse/library_browse_order.dart';
+import 'package:sistrum/services/library/database/library_database_models.dart';
 
 void main() {
   group('queue track order terms', () {

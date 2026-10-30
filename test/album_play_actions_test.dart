@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sistrum/theme/app_theme.dart';
-import 'package:sistrum/services/library/cover_palette.dart';
+import 'package:sistrum/services/library/covers/cover_palette.dart';
 import 'package:sistrum/widgets/header/album_play_actions.dart';
 import 'package:sistrum/widgets/header/header_controls.dart';
 

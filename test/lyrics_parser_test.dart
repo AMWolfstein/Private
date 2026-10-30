@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sistrum/utils/lyrics_parser.dart';
+import 'package:sistrum/utils/lyrics/lyrics_parser.dart';
 
 String _tag(String kind, int time, String text) =>
     '[x-$kind:$time:${base64.encode(utf8.encode(text))}]';
@@ -411,16 +411,24 @@ ${_tag('romaji', 1009, 'Romanized')}
     );
     expect(parsed.writers, 'Someone');
     expect(parsed.plainText, 'Chorus line');
-    expect(parsed.lines.map((line) => line.time.inMilliseconds), [10000, 40000]);
+    expect(parsed.lines.map((line) => line.time.inMilliseconds), [
+      10000,
+      40000,
+    ]);
   });
 
   test('repeated timestamps shift word timing per occurrence', () {
     final parsed = LyricsParser.parse(
       '[00:10.000][01:10.000]<00:10.000>a <00:10.500>b',
     );
-    expect(parsed.lines.map((line) => line.time.inMilliseconds), [10000, 70000]);
+    expect(parsed.lines.map((line) => line.time.inMilliseconds), [
+      10000,
+      70000,
+    ]);
     expect(
-      parsed.lines.map((line) => line.words.map((word) => word.time.inMilliseconds)),
+      parsed.lines.map(
+        (line) => line.words.map((word) => word.time.inMilliseconds),
+      ),
       [
         [10000, 10500],
         [70000, 70500],
@@ -429,15 +437,13 @@ ${_tag('romaji', 1009, 'Romanized')}
   });
 
   test('line timestamps cap at 64 occurrences', () {
-    final raw =
-        '${List.generate(70, (i) => '[$i:00.000]').join()}Chorus';
+    final raw = '${List.generate(70, (i) => '[$i:00.000]').join()}Chorus';
     final parsed = LyricsParser.parse(raw);
     expect(parsed.lines, hasLength(64));
   });
 
   test('word tags cap at 256 per line', () {
-    final raw =
-        '[00:00]${List.generate(300, (i) => '<00:00.500>w$i').join()}';
+    final raw = '[00:00]${List.generate(300, (i) => '<00:00.500>w$i').join()}';
     final parsed = LyricsParser.parse(raw);
     final line = parsed.lines.single;
     expect(line.words, hasLength(256));

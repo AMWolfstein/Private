@@ -4,11 +4,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/navigation/shell_navigation.dart';
 import 'package:sistrum/providers/cover_palette_provider.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
-import 'package:sistrum/services/library/cover_palette.dart';
+import 'package:sistrum/services/library/covers/cover_palette.dart';
 import 'package:sistrum/theme/app_glass_levels.dart';
 import 'package:sistrum/theme/app_theme.dart';
-import 'package:sistrum/widgets/glass/app_artwork_page_ground.dart';
-import 'package:sistrum/widgets/glass/app_floating_header.dart';
+import 'package:sistrum/widgets/glass/artwork/app_artwork_page_ground.dart';
+import 'package:sistrum/widgets/glass/chrome/app_floating_header.dart';
 import 'package:sistrum/widgets/header/header_controls.dart';
 import 'package:sistrum/widgets/player/app_player_ground.dart';
 
@@ -190,8 +190,7 @@ class AppArtistHeader extends StatelessWidget {
           return Consumer(
             builder: (context, ref, flexibleSpace) {
               final opaque =
-                  appHeaderMaterial(context, ref) ==
-                  AppHeaderMaterial.opaque;
+                  appHeaderMaterial(context, ref) == AppHeaderMaterial.opaque;
               return _toolbar(
                 context,
                 expandedHeight: expandedHeight,

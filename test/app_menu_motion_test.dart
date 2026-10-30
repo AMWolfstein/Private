@@ -4,9 +4,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/theme/app_theme.dart';
-import 'package:sistrum/widgets/glass/app_chrome.dart';
+import 'package:sistrum/widgets/glass/chrome/app_chrome.dart';
 import 'package:sistrum/widgets/primitives/app_context_menu.dart';
-import 'package:sistrum/widgets/glass/app_squircle_border.dart';
+import 'package:sistrum/widgets/glass/selection/app_squircle_border.dart';
 
 void main() {
   setUp(() => SharedPreferences.setMockInitialValues({}));

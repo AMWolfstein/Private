@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/models/settings.dart';
-import 'package:sistrum/services/playback/playback_normalization.dart';
+import 'package:sistrum/services/playback/audio/playback_normalization.dart';
 
 void main() {
   test('updated gain replaces the cached volume for the same URI', () async {

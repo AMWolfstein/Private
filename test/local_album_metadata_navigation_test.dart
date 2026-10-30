@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/models/local_library_item.dart';
 import 'package:sistrum/providers/playback_provider.dart';
-import 'package:sistrum/screens/library/local_album_screen.dart';
+import 'package:sistrum/screens/library/local_album/local_album_screen.dart';
 import 'support/material_test_theme.dart';
 import 'package:sistrum/theme/app_theme.dart';
 import 'package:sistrum/widgets/library/album_track_tile.dart';

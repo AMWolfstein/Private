@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sistrum/services/library/sqlite_helpers.dart';
-import 'package:sistrum/utils/path_match_keys.dart';
+import 'package:sistrum/services/library/database/sqlite_helpers.dart';
+import 'package:sistrum/utils/files/path_match_keys.dart';
 import 'package:sqflite/sqflite.dart';
 
 class _RecordingBatch implements Batch {

@@ -9,19 +9,19 @@ import 'package:sistrum/providers/user_profile_provider.dart';
 import 'package:sistrum/screens/settings/profile_settings_page.dart';
 import 'package:sistrum/screens/settings/about_page.dart';
 import 'package:sistrum/screens/settings/updates_page.dart';
-import 'package:sistrum/screens/settings/appearance_settings_page.dart';
-import 'package:sistrum/screens/settings/backup_restore_page.dart';
-import 'package:sistrum/screens/settings/cache_management_page.dart';
-import 'package:sistrum/screens/settings/library_settings_page.dart';
-import 'package:sistrum/screens/settings/log_page.dart';
-import 'package:sistrum/screens/settings/lyrics_settings_page.dart';
-import 'package:sistrum/screens/settings/playback_settings_page.dart';
+import 'package:sistrum/screens/settings/appearance/appearance_settings_page.dart';
+import 'package:sistrum/screens/settings/backup/backup_restore_page.dart';
+import 'package:sistrum/screens/settings/cache/cache_management_page.dart';
+import 'package:sistrum/screens/settings/library/library_settings_page.dart';
+import 'package:sistrum/screens/settings/logs/log_page.dart';
+import 'package:sistrum/screens/settings/playback/lyrics_settings_page.dart';
+import 'package:sistrum/screens/settings/playback/playback_settings_page.dart';
 import 'package:sistrum/screens/settings/settings_search_catalog.dart';
 import 'package:sistrum/theme/app_tokens.dart';
 import 'package:sistrum/theme/app_theme.dart';
-import 'package:sistrum/utils/adaptive_layout.dart';
-import 'package:sistrum/utils/nav_bar_inset.dart';
-import 'package:sistrum/widgets/animation_utils.dart';
+import 'package:sistrum/utils/layout/adaptive_layout.dart';
+import 'package:sistrum/utils/layout/nav_bar_inset.dart';
+import 'package:sistrum/widgets/animation/animation_utils.dart';
 import 'package:sistrum/widgets/primitives/app_search_field.dart';
 import 'package:sistrum/widgets/primitives/app_sliver_header.dart';
 import 'package:sistrum/widgets/settings/settings_group.dart';
@@ -228,9 +228,9 @@ class _SettingsTabState extends ConsumerState<SettingsTab> {
     final destination = targetLabel == null
         ? page
         : SettingsSearchHighlightScope(targetLabel: targetLabel, child: page);
-    await Navigator.of(context).push(
-      slidePageRoute<void>(page: AppSettingsTheme(child: destination)),
-    );
+    await Navigator.of(
+      context,
+    ).push(slidePageRoute<void>(page: AppSettingsTheme(child: destination)));
     if (!mounted) return;
 
     // A route's focus scope remembers its previously focused child. Keep the

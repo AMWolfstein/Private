@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/providers/library_browse_provider.dart';
-import 'package:sistrum/screens/library/library_browse_artwork.dart';
+import 'package:sistrum/screens/library/shared/library_browse_artwork.dart';
 
 void main() {
   testWidgets('an entry without artwork shows the album fallback', (

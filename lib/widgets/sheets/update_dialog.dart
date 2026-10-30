@@ -9,10 +9,10 @@ import 'package:open_filex/open_filex.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sistrum/constants/app_info.dart';
 import 'package:sistrum/l10n/l10n.dart';
-import 'package:sistrum/services/notification_service.dart';
-import 'package:sistrum/services/update_checker.dart';
-import 'package:sistrum/utils/logger.dart';
-import 'package:sistrum/utils/string_utils.dart';
+import 'package:sistrum/services/platform/notification_service.dart';
+import 'package:sistrum/services/platform/update_checker.dart';
+import 'package:sistrum/utils/logging/logger.dart';
+import 'package:sistrum/utils/text/string_utils.dart';
 import 'package:sistrum/widgets/primitives/app_alert_dialog.dart';
 import 'package:url_launcher/url_launcher.dart';
 

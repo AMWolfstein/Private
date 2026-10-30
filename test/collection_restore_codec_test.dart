@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sistrum/services/library/collection_restore_codec.dart';
+import 'package:sistrum/services/library/collections/collection_restore_codec.dart';
 
 void main() {
   test(
@@ -51,31 +51,28 @@ void main() {
     );
   });
 
-  test(
-    'invalid typed fields still reject the restore before publication',
-    () {
-      for (final input in <Map<String, dynamic>>[
-        {
-          'loved': [
-            {'key': 7, 'track': <String, dynamic>{}},
-          ],
-        },
-        {
-          'playlists': [
-            {'id': 'p', 'coverImagePath': false},
-          ],
-        },
-        {
-          'favoriteArtists': [
-            {'key': 'a', 'addedAt': 1},
-          ],
-        },
-      ]) {
-        expect(
-          () => collectionRestoreCommands(input, 'now').toList(),
-          throwsA(isA<TypeError>()),
-        );
-      }
-    },
-  );
+  test('invalid typed fields still reject the restore before publication', () {
+    for (final input in <Map<String, dynamic>>[
+      {
+        'loved': [
+          {'key': 7, 'track': <String, dynamic>{}},
+        ],
+      },
+      {
+        'playlists': [
+          {'id': 'p', 'coverImagePath': false},
+        ],
+      },
+      {
+        'favoriteArtists': [
+          {'key': 'a', 'addedAt': 1},
+        ],
+      },
+    ]) {
+      expect(
+        () => collectionRestoreCommands(input, 'now').toList(),
+        throwsA(isA<TypeError>()),
+      );
+    }
+  });
 }

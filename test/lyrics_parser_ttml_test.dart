@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sistrum/utils/lyrics_parser.dart';
+import 'package:sistrum/utils/lyrics/lyrics_parser.dart';
 
 const _ttmlNamespace = 'xmlns="http://www.w3.org/ns/ttml"';
 

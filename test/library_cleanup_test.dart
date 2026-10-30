@@ -2,9 +2,9 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:sistrum/services/library/library_cleanup.dart';
-import 'package:sistrum/services/library/library_schema.dart';
-import 'package:sistrum/utils/file_access.dart';
+import 'package:sistrum/services/library/scan/library_cleanup.dart';
+import 'package:sistrum/services/library/database/library_schema.dart';
+import 'package:sistrum/utils/files/file_access.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'support/sqlite_process_database.dart';

@@ -9,12 +9,12 @@ import 'package:sistrum/providers/library_search_provider.dart';
 import 'package:sistrum/providers/music_player_provider.dart';
 import 'package:sistrum/providers/playback_provider.dart';
 import 'package:sistrum/navigation/app_screens.dart';
-import 'package:sistrum/services/library/library_database.dart';
+import 'package:sistrum/services/library/database/library_database.dart';
 import 'package:sistrum/widgets/library/batch_track_actions.dart';
-import 'package:sistrum/services/library/library_search.dart';
+import 'package:sistrum/services/library/browse/library_search.dart';
 import 'package:sistrum/widgets/library/local_track_batch_actions.dart';
 import 'package:sistrum/widgets/primitives/app_choice_chip.dart';
-import 'package:sistrum/widgets/cached_cover_image.dart';
+import 'package:sistrum/widgets/cover/cached_cover_image.dart';
 import 'package:sistrum/widgets/library/library_track_selection_bar.dart';
 import 'package:sistrum/widgets/library/library_selection_playback_actions.dart';
 import 'package:sistrum/widgets/selection/selection_bottom_bar.dart';
@@ -247,7 +247,8 @@ class _LibrarySearchResultsState extends ConsumerState<LibrarySearchResults> {
             ),
           );
         case LibrarySearchKind.albums:
-          final rows = await ref.read(libraryDatabaseProvider)
+          final rows = await ref
+              .read(libraryDatabaseProvider)
               .getBrowseLocalAlbumRowsByKey(hit.id);
           if (!mounted) return;
           await Navigator.of(context).push(

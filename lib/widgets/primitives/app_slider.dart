@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:liquid_glass_easy/liquid_glass_easy.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
-import 'package:sistrum/widgets/glass/app_glass_thumb.dart';
+import 'package:sistrum/widgets/glass/thumb/app_glass_thumb.dart';
 
 /// A Material [Slider] whose thumb turns into liquid glass while touched.
 ///
@@ -141,10 +141,7 @@ class _AppSliderState extends ConsumerState<AppSlider>
                   AppSlider._overlayShape
                       .getPreferredSize(true, widget.divisions != null)
                       .width
-                      .clamp(
-                        AppSlider.restThumbSize.width,
-                        double.infinity,
-                      ) /
+                      .clamp(AppSlider.restThumbSize.width, double.infinity) /
                   2;
               // Discrete sliders keep the thumb half a (rounded) track
               // height inside the ends, as Slider._calcThumbCenter does.

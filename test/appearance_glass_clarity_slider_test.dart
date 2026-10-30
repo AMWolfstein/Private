@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sistrum/l10n/app_localizations.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/providers/settings_provider.dart';
-import 'package:sistrum/screens/settings/appearance_glass_clarity_slider.dart';
+import 'package:sistrum/screens/settings/appearance/appearance_glass_clarity_slider.dart';
 import 'package:sistrum/theme/app_theme.dart';
 
 import 'support/library_section_harness.dart';

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart' show CupertinoColors;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
-import 'package:sistrum/widgets/glass/app_glass_thumb.dart';
+import 'package:sistrum/widgets/glass/thumb/app_glass_thumb.dart';
 
 /// One switch style for settings, extension controls and editing sheets.
 /// Sistrum keeps its wide oval thumb even when glass or motion is disabled.

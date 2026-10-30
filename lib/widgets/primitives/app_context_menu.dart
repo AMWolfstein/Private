@@ -8,8 +8,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/theme/app_glass_levels.dart';
 import 'package:sistrum/theme/app_theme.dart';
-import 'package:sistrum/widgets/glass/app_artwork_ground.dart';
-import 'package:sistrum/widgets/glass/app_chrome.dart';
+import 'package:sistrum/widgets/glass/artwork/app_artwork_ground.dart';
+import 'package:sistrum/widgets/glass/chrome/app_chrome.dart';
 
 /// Bounds of the tapped control or row, in the root overlay's coordinates.
 Rect? appMenuAnchor(BuildContext context) {
@@ -215,9 +215,7 @@ class _MenuSurface extends ConsumerWidget {
           ? const Color(0xff414141)
           : Colors.white,
       tintOpacity: dark
-          ? appGlassClarity(
-              ref.watch(appGlassClarityLevelProvider),
-            ).menuOpacity
+          ? appGlassClarity(ref.watch(appGlassClarityLevelProvider)).menuOpacity
           : 0.80,
       child: child,
     );

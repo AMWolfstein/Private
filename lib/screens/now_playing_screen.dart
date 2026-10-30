@@ -1,6 +1,6 @@
 import 'package:sistrum/screens/equalizer_screen.dart';
 import 'package:sistrum/screens/lyrics_share_screen.dart';
-import 'package:sistrum/utils/lyric_models.dart';
+import 'package:sistrum/utils/lyrics/lyric_models.dart';
 import 'dart:async';
 
 import 'package:audio_service/audio_service.dart';
@@ -19,11 +19,11 @@ import 'package:sistrum/providers/settings_provider.dart';
 import 'package:sistrum/providers/theme_provider.dart';
 import 'package:sistrum/models/theme_settings.dart';
 import 'package:sistrum/navigation/now_playing_route.dart';
-import 'package:sistrum/screens/library/local_album_screen.dart';
+import 'package:sistrum/screens/library/local_album/local_album_screen.dart';
 import 'package:sistrum/theme/app_theme.dart';
 import 'package:sistrum/navigation/detail_navigation.dart';
-import 'package:sistrum/utils/playback_seek_preview.dart';
-import 'package:sistrum/utils/logger.dart';
+import 'package:sistrum/utils/playback/playback_seek_preview.dart';
+import 'package:sistrum/utils/logging/logger.dart';
 import 'package:sistrum/widgets/primitives/app_bottom_sheet.dart';
 import 'package:sistrum/widgets/status/audio_output_button.dart';
 import 'package:sistrum/widgets/lyrics/lyrics_screen_awake.dart';
@@ -39,7 +39,7 @@ import 'package:sistrum/widgets/settings/settings_group.dart';
 import 'package:sistrum/widgets/settings/settings_item_rows.dart';
 import 'package:sistrum/widgets/player/app_player_background.dart';
 import 'package:sistrum/widgets/player/app_player_ground.dart';
-import 'package:sistrum/widgets/glass/app_artwork_contrast.dart';
+import 'package:sistrum/widgets/glass/artwork/app_artwork_contrast.dart';
 import 'package:sistrum/widgets/player/app_player_actions_sheet.dart';
 import 'package:sistrum/widgets/primitives/app_context_menu.dart';
 

@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sistrum/utils/int_utils.dart';
+import 'package:sistrum/utils/text/int_utils.dart';
 
 void main() {
   test('readPositiveInt accepts positive numbers and truncates them', () {

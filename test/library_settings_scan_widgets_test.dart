@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/l10n/app_localizations.dart';
-import 'package:sistrum/screens/settings/library_settings_scan_widgets.dart';
+import 'package:sistrum/screens/settings/library/library_settings_scan_widgets.dart';
 
 Future<void> _pump(WidgetTester tester, Widget child) async {
   tester.view.physicalSize = const Size(390, 844);

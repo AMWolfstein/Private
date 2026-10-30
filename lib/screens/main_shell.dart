@@ -14,22 +14,22 @@ import 'package:sistrum/screens/main_shell_tabs.dart';
 import 'package:sistrum/screens/settings/settings_tab.dart';
 import 'package:sistrum/services/native/native_device.dart';
 import 'package:sistrum/navigation/shell_navigation.dart';
-import 'package:sistrum/services/playback/music_playback_deck.dart';
-import 'package:sistrum/services/notification_service.dart';
-import 'package:sistrum/services/update_checker.dart';
+import 'package:sistrum/services/playback/core/music_playback_deck.dart';
+import 'package:sistrum/services/platform/notification_service.dart';
+import 'package:sistrum/services/platform/update_checker.dart';
 import 'package:sistrum/widgets/sheets/update_dialog.dart';
-import 'package:sistrum/widgets/animation_utils.dart';
+import 'package:sistrum/widgets/animation/animation_utils.dart';
 import 'package:sistrum/widgets/player/mini_player.dart';
 import 'package:sistrum/widgets/shell/lazy_tab_view.dart';
-import 'package:sistrum/widgets/glass/app_backdrop_groups.dart';
+import 'package:sistrum/widgets/glass/chrome/app_backdrop_groups.dart';
 import 'package:sistrum/widgets/shell/app_bottom_bar.dart';
-import 'package:sistrum/widgets/glass/app_glass_surface.dart';
-import 'package:sistrum/widgets/glass/app_chrome_controls.dart';
-import 'package:sistrum/widgets/glass/app_chrome_adaptivity.dart';
-import 'package:sistrum/widgets/glass/app_floating_header.dart';
+import 'package:sistrum/widgets/glass/thumb/app_glass_surface.dart';
+import 'package:sistrum/widgets/glass/chrome/app_chrome_controls.dart';
+import 'package:sistrum/widgets/glass/chrome/app_chrome_adaptivity.dart';
+import 'package:sistrum/widgets/glass/chrome/app_floating_header.dart';
 import 'package:sistrum/theme/app_theme.dart';
 import 'package:sistrum/widgets/selection/selection_bottom_bar.dart';
-import 'package:sistrum/utils/adaptive_layout.dart';
+import 'package:sistrum/utils/layout/adaptive_layout.dart';
 
 class MainShell extends ConsumerStatefulWidget {
   /// Builds the Search tab in the background after the first frame. Tests turn

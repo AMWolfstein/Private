@@ -6,7 +6,7 @@ import 'dart:typed_data';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/models/automix_options.dart';
 import 'package:sistrum/services/audio_analysis/audio_analysis_jobs.dart';
-import 'package:sistrum/services/playback/automix_effect_renderer.dart';
+import 'package:sistrum/services/playback/automix/automix_effect_renderer.dart';
 
 void main() {
   late Directory temporary;

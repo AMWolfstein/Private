@@ -6,14 +6,14 @@ import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/models/track.dart';
 import 'package:sistrum/providers/library_collections_provider.dart';
 import 'package:sistrum/providers/local_library_provider.dart';
-import 'package:sistrum/screens/library/library_collection_tracks_screen.dart';
+import 'package:sistrum/screens/library/collections/library_collection_tracks_screen.dart';
 import 'package:sistrum/theme/app_theme.dart';
 import 'package:sistrum/widgets/header/album_detail_header.dart';
 import 'package:sistrum/widgets/header/album_play_actions.dart';
-import 'package:sistrum/widgets/collection_scaffold.dart';
+import 'package:sistrum/widgets/collection/collection_scaffold.dart';
 import 'package:sistrum/widgets/library/local_collection_actions.dart';
 import 'package:sistrum/widgets/header/app_artist_header.dart';
-import 'package:sistrum/widgets/glass/app_chrome_controls.dart';
+import 'package:sistrum/widgets/glass/chrome/app_chrome_controls.dart';
 import 'package:sistrum/widgets/header/header_controls.dart';
 
 const _track = Track(
@@ -109,10 +109,7 @@ void main() {
         final playlist = actions.trailingAction! as HeaderCircleButton;
         expect(loved.tonal, isTrue);
         expect(playlist.tonal, isTrue);
-        expect(
-          loved.iconColor,
-          AppTheme.build(brightness).colorScheme.error,
-        );
+        expect(loved.iconColor, AppTheme.build(brightness).colorScheme.error);
         final l10n = tester.element(find.byType(LocalCollectionActions)).l10n;
         await tester.tap(find.byTooltip(l10n.trackOptionRemoveFromLoved));
         await tester.pumpAndSettle();

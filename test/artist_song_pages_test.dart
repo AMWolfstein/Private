@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sistrum/screens/library/artist_song_pages.dart';
+import 'package:sistrum/screens/library/local_artist/artist_song_pages.dart';
 
 Widget _pages(int count) => MaterialApp(
   home: Scaffold(

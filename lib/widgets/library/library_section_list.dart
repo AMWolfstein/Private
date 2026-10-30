@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:sistrum/widgets/pinned_section_sliver_list.dart';
+import 'package:sistrum/widgets/collection/pinned_section_sliver_list.dart';
 
 final _letterPattern = RegExp(r'[\p{L}]', unicode: true);
 final _monthFormatters = <String, DateFormat>{};

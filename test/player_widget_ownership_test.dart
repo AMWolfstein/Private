@@ -9,7 +9,7 @@ import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/models/track.dart';
 import 'package:sistrum/providers/music_player_provider.dart';
 import 'package:sistrum/navigation/now_playing_route.dart';
-import 'package:sistrum/utils/playback_seek_preview.dart';
+import 'package:sistrum/utils/playback/playback_seek_preview.dart';
 import 'package:sistrum/widgets/status/audio_quality_badges.dart';
 import 'package:sistrum/widgets/player/app_player_layout.dart';
 import 'package:sistrum/theme/app_theme.dart';

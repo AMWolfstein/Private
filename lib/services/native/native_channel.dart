@@ -4,8 +4,8 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
-import 'package:sistrum/utils/best_effort_delete.dart';
-import 'package:sistrum/utils/logger.dart';
+import 'package:sistrum/utils/files/best_effort_delete.dart';
+import 'package:sistrum/utils/logging/logger.dart';
 
 /// The one method channel into the native backend.
 const nativeBackendChannel = MethodChannel('com.amwolfstein.sistrum/backend');

@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sistrum/utils/file_access.dart';
+import 'package:sistrum/utils/files/file_access.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();

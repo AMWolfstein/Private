@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sistrum/utils/adaptive_layout.dart';
+import 'package:sistrum/utils/layout/adaptive_layout.dart';
 
 /// Background fill for grouped cards, matching the Settings group look. Blends a
 /// translucent overlay over the surface so it stays visible on AMOLED (pure

@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:sistrum/screens/library/library_browse_refresh_policy.dart';
-import 'package:sistrum/services/library/library_database.dart';
+import 'package:sistrum/screens/library/shared/library_browse_refresh_policy.dart';
+import 'package:sistrum/services/library/database/library_database.dart';
 
 void main() {
   const empty = LibraryBrowseCounts(

@@ -7,7 +7,7 @@ import 'package:sistrum/models/settings.dart';
 import 'package:sistrum/models/metadata_separators.dart';
 import 'package:sistrum/models/tag_credit_settings.dart';
 import 'package:sistrum/models/automix_options.dart';
-import 'package:sistrum/utils/logger.dart';
+import 'package:sistrum/utils/logging/logger.dart';
 
 const _settingsKey = 'app_settings';
 const _settingsCorruptBackupKey = 'app_settings_corrupt_backup';
@@ -487,7 +487,10 @@ class SettingsNotifier extends Notifier<AppSettings> {
   void addArtistDelimiter(String token) {
     final trimmed = token.trim();
     final current = state.tagCredits;
-    final offered = [...kArtistDelimiterChoices, ...current.customArtistDelimiters];
+    final offered = [
+      ...kArtistDelimiterChoices,
+      ...current.customArtistDelimiters,
+    ];
     if (!TagCreditSettings.isValidDelimiter(trimmed, offered)) return;
     _updateTagCredits(
       (c) => c.copyWith(
@@ -500,7 +503,10 @@ class SettingsNotifier extends Notifier<AppSettings> {
   void addGenreDelimiter(String token) {
     final trimmed = token.trim();
     final current = state.tagCredits;
-    final offered = [...kGenreDelimiterChoices, ...current.customGenreDelimiters];
+    final offered = [
+      ...kGenreDelimiterChoices,
+      ...current.customGenreDelimiters,
+    ];
     if (!TagCreditSettings.isValidDelimiter(trimmed, offered)) return;
     _updateTagCredits(
       (c) => c.copyWith(

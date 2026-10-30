@@ -1,6 +1,6 @@
 import 'package:audio_service/audio_service.dart';
-import 'package:sistrum/utils/int_utils.dart';
-import 'package:sistrum/utils/string_utils.dart';
+import 'package:sistrum/utils/text/int_utils.dart';
+import 'package:sistrum/utils/text/string_utils.dart';
 
 /// One queue entry. This is the serialized queue representation, so it lives
 /// outside the player engine: queue restoration decodes it without importing

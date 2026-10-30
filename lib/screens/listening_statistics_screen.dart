@@ -3,10 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:sistrum/l10n/l10n.dart';
-import 'package:sistrum/services/playback/listening_statistics.dart';
-import 'package:sistrum/utils/adaptive_layout.dart';
-import 'package:sistrum/utils/nav_bar_inset.dart';
-import 'package:sistrum/widgets/animation_skeletons.dart' show SkeletonBox;
+import 'package:sistrum/services/playback/stats/listening_statistics.dart';
+import 'package:sistrum/utils/layout/adaptive_layout.dart';
+import 'package:sistrum/utils/layout/nav_bar_inset.dart';
+import 'package:sistrum/widgets/animation/animation_skeletons.dart'
+    show SkeletonBox;
 import 'package:sistrum/widgets/primitives/app_alert_dialog.dart';
 import 'package:sistrum/widgets/primitives/app_choice_chip.dart';
 import 'package:sistrum/widgets/primitives/app_sliver_header.dart';

@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sistrum/services/library/library_collections_schema.dart';
+import 'package:sistrum/services/library/collections/library_collections_schema.dart';
 
 import 'support/sqlite_process_database.dart';
 

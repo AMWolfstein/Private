@@ -10,18 +10,18 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/models/settings.dart';
 import 'package:sistrum/providers/music_player_provider.dart';
 import 'package:sistrum/services/storage/app_state_database.dart';
-import 'package:sistrum/services/playback/autoplay_personalization.dart';
-import 'package:sistrum/services/playback/listening_statistics.dart';
-import 'package:sistrum/services/playback/music_playback_deck.dart';
-import 'package:sistrum/services/playback/playback_handler.dart';
-import 'package:sistrum/services/playback/music_player_service.dart';
-import 'package:sistrum/services/playback/music_player_session_restore.dart';
-import 'package:sistrum/services/playback/playback_notification.dart';
-import 'package:sistrum/services/library/source_deletion_events.dart';
-import 'package:sistrum/utils/file_access.dart';
-import 'package:sistrum/utils/logger.dart';
-import 'package:sistrum/services/playback/music_player_runtime.dart';
-import 'package:sistrum/services/library/library_database.dart';
+import 'package:sistrum/services/playback/autoplay/autoplay_personalization.dart';
+import 'package:sistrum/services/playback/stats/listening_statistics.dart';
+import 'package:sistrum/services/playback/core/music_playback_deck.dart';
+import 'package:sistrum/services/playback/core/playback_handler.dart';
+import 'package:sistrum/services/playback/music_player/music_player_service.dart';
+import 'package:sistrum/services/playback/music_player/music_player_session_restore.dart';
+import 'package:sistrum/services/playback/notification/playback_notification.dart';
+import 'package:sistrum/services/library/scan/source_deletion_events.dart';
+import 'package:sistrum/utils/files/file_access.dart';
+import 'package:sistrum/utils/logging/logger.dart';
+import 'package:sistrum/services/playback/music_player/music_player_runtime.dart';
+import 'package:sistrum/services/library/database/library_database.dart';
 
 class _Deck implements MusicPlaybackDeck {
   @override

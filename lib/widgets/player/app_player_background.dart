@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sistrum/services/library/cover_palette.dart';
+import 'package:sistrum/services/library/covers/cover_palette.dart';
 import 'package:sistrum/providers/cover_palette_provider.dart';
 
 /// Height of the player's full-bleed artwork on a [screen]: [aspectRatio]

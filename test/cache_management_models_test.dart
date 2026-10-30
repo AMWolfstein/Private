@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sistrum/screens/settings/cache_management_models.dart';
+import 'package:sistrum/screens/settings/cache/cache_management_models.dart';
 
 DirectoryStats _stats(int bytes) =>
     DirectoryStats(fileCount: 1, totalSizeBytes: bytes);

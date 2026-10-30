@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/theme/app_theme.dart';
-import 'package:sistrum/utils/adaptive_layout.dart';
+import 'package:sistrum/utils/layout/adaptive_layout.dart';
 import 'package:sistrum/widgets/primitives/app_switch.dart';
-import 'package:sistrum/widgets/glass/app_glass_surface.dart';
-import 'package:sistrum/widgets/glass/app_chrome_controls.dart';
+import 'package:sistrum/widgets/glass/thumb/app_glass_surface.dart';
+import 'package:sistrum/widgets/glass/chrome/app_chrome_controls.dart';
 
 void main() {
   testWidgets('glass and controls share tablet layout coordinates', (

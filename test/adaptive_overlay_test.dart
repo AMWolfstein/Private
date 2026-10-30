@@ -6,7 +6,7 @@ import 'package:sistrum/theme/app_theme.dart';
 import 'package:sistrum/widgets/primitives/app_alert_dialog.dart';
 import 'package:sistrum/widgets/primitives/app_bottom_sheet.dart';
 import 'package:sistrum/widgets/primitives/app_choice_chip.dart';
-import 'package:sistrum/widgets/glass/app_chrome.dart';
+import 'package:sistrum/widgets/glass/chrome/app_chrome.dart';
 
 Widget _app(ThemeData theme, Widget home) => ProviderScope(
   child: MaterialApp(

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/l10n/app_localizations.dart';
-import 'package:sistrum/services/update_checker.dart';
+import 'package:sistrum/services/platform/update_checker.dart';
 import 'package:sistrum/theme/app_theme.dart';
 import 'package:sistrum/widgets/sheets/update_dialog.dart';
 

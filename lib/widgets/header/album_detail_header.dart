@@ -7,10 +7,10 @@ import 'package:flutter/rendering.dart' show RenderProxySliver;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/providers/cover_palette_provider.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
-import 'package:sistrum/services/library/cover_palette.dart';
+import 'package:sistrum/services/library/covers/cover_palette.dart';
 import 'package:sistrum/theme/app_tokens.dart';
-import 'package:sistrum/widgets/glass/app_artwork_page_ground.dart';
-import 'package:sistrum/widgets/glass/app_floating_header.dart';
+import 'package:sistrum/widgets/glass/artwork/app_artwork_page_ground.dart';
+import 'package:sistrum/widgets/glass/chrome/app_floating_header.dart';
 import 'package:sistrum/widgets/header/header_controls.dart';
 
 part 'album_detail_header_parts.dart';
@@ -157,9 +157,7 @@ class AlbumDetailHeader extends StatelessWidget {
               ),
               flexibleSpace: opaque
                   ? null
-                  : AppHeaderBacking(
-                      visible: immersive ? titleVisible : null,
-                    ),
+                  : AppHeaderBacking(visible: immersive ? titleVisible : null),
               title: AnimatedOpacity(
                 opacity: titleVisible ? 1 : 0,
                 duration: const Duration(milliseconds: 180),
@@ -194,9 +192,7 @@ class AlbumDetailHeader extends StatelessWidget {
               actionsPadding: EdgeInsetsDirectional.only(
                 end: kAppHeaderEdgeGap,
               ),
-              actions: [
-                AppHeaderActions(actions: appBarActions ?? const []),
-              ],
+              actions: [AppHeaderActions(actions: appBarActions ?? const [])],
             ),
           ),
         );
@@ -211,10 +207,7 @@ class AlbumDetailHeader extends StatelessWidget {
       ];
       // The header controls' ground: the cover under this gradient.
       final artwork = AppGroundAnchor(
-        layout: AppGroundLayout(
-          stops: const [0, 0.48, 1],
-          colors: gradient,
-        ),
+        layout: AppGroundLayout(stops: const [0, 0.48, 1], colors: gradient),
         child: Stack(
           fit: StackFit.expand,
           children: [

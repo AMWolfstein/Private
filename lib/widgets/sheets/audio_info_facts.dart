@@ -2,12 +2,12 @@ import 'dart:math' as math;
 
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/models/settings.dart';
-import 'package:sistrum/services/playback/audio_route_info.dart';
-import 'package:sistrum/services/playback/music_playback_deck.dart';
-import 'package:sistrum/services/playback/playback_equalizer.dart';
-import 'package:sistrum/services/playback/playback_handler.dart';
-import 'package:sistrum/utils/int_utils.dart';
-import 'package:sistrum/utils/string_utils.dart';
+import 'package:sistrum/services/playback/audio/audio_route_info.dart';
+import 'package:sistrum/services/playback/core/music_playback_deck.dart';
+import 'package:sistrum/services/playback/audio/playback_equalizer.dart';
+import 'package:sistrum/services/playback/core/playback_handler.dart';
+import 'package:sistrum/utils/text/int_utils.dart';
+import 'package:sistrum/utils/text/string_utils.dart';
 
 class AudioInfoSection {
   const AudioInfoSection(this.title, this.facts);

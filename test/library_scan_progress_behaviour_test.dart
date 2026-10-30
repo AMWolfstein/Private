@@ -1,6 +1,6 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sistrum/services/library/library_scan_progress.dart';
+import 'package:sistrum/services/library/scan/library_scan_progress.dart';
 import 'package:sistrum/services/native/native_channel.dart';
 
 const _progressStream = EventChannel(

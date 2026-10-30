@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sistrum/utils/app_bar_layout.dart';
+import 'package:sistrum/utils/layout/app_bar_layout.dart';
 
 void main() {
   for (final (padding, expected) in [(0.0, 0.0), (10.0, 10.0), (59.0, 24.0)]) {

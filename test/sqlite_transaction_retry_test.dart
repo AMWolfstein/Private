@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:sistrum/services/library/sqlite_helpers.dart';
+import 'package:sistrum/services/library/database/sqlite_helpers.dart';
 
 class _SqliteError extends DatabaseException {
   _SqliteError(super.message, this.code);

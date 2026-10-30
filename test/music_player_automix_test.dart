@@ -7,18 +7,18 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sistrum/services/playback/automix_analysis.dart';
-import 'package:sistrum/services/playback/automix_analyzer.dart';
-import 'package:sistrum/services/playback/music_player_service.dart';
-import 'package:sistrum/services/playback/music_playback_deck.dart';
-import 'package:sistrum/services/playback/music_haptics.dart';
+import 'package:sistrum/services/playback/automix/automix_analysis.dart';
+import 'package:sistrum/services/playback/automix/automix_analyzer.dart';
+import 'package:sistrum/services/playback/music_player/music_player_service.dart';
+import 'package:sistrum/services/playback/core/music_playback_deck.dart';
+import 'package:sistrum/services/playback/core/music_haptics.dart';
 import 'package:sistrum/models/settings.dart';
-import 'package:sistrum/services/playback/playback_notification.dart';
+import 'package:sistrum/services/playback/notification/playback_notification.dart';
 import 'package:sistrum/models/automix_options.dart';
-import 'package:sistrum/services/playback/automix_effect_renderer.dart';
-import 'package:sistrum/services/playback/automix_status.dart';
-import 'package:sistrum/services/playback/system_volume_service.dart';
-import 'package:sistrum/services/playback/music_player_autoplay.dart';
+import 'package:sistrum/services/playback/automix/automix_effect_renderer.dart';
+import 'package:sistrum/services/playback/automix/automix_status.dart';
+import 'package:sistrum/services/playback/audio/system_volume_service.dart';
+import 'package:sistrum/services/playback/autoplay/music_player_autoplay.dart';
 
 class _EffectRenderer extends AutoMixEffectRenderer {
   final tails = <RenderedMixTail>[];

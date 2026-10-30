@@ -6,11 +6,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/l10n/app_localizations.dart';
 import 'package:sistrum/providers/music_player_provider.dart';
-import 'package:sistrum/services/playback/music_player_service.dart';
-import 'package:sistrum/services/playback/music_player_runtime.dart';
+import 'package:sistrum/services/playback/music_player/music_player_service.dart';
+import 'package:sistrum/services/playback/music_player/music_player_runtime.dart';
 import 'package:sistrum/theme/app_theme.dart';
 import 'package:sistrum/widgets/primitives/app_snack_bar.dart';
-import 'package:sistrum/widgets/glass/app_chrome.dart';
+import 'package:sistrum/widgets/glass/chrome/app_chrome.dart';
 import 'package:sistrum/widgets/player/playback_feedback.dart';
 
 void main() {
@@ -34,9 +34,7 @@ void main() {
           child: MaterialApp(
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
-            theme: AppTheme.build(
-              sistrum ? Brightness.dark : Brightness.light,
-            ),
+            theme: AppTheme.build(sistrum ? Brightness.dark : Brightness.light),
             builder: (_, child) =>
                 AppScaffoldMessenger(child: PlaybackFeedback(child: child!)),
             home: const Scaffold(body: SizedBox.expand()),

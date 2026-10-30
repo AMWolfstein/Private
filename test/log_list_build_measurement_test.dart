@@ -3,9 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sistrum/l10n/l10n.dart';
-import 'package:sistrum/screens/settings/log_page.dart';
-import 'package:sistrum/utils/logger.dart';
-import 'package:sistrum/utils/log_entry.dart';
+import 'package:sistrum/screens/settings/logs/log_page.dart';
+import 'package:sistrum/utils/logging/logger.dart';
+import 'package:sistrum/utils/logging/log_entry.dart';
 
 import 'support/material_test_theme.dart';
 

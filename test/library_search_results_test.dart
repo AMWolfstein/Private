@@ -11,8 +11,8 @@ import 'package:sistrum/models/local_library_item.dart';
 import 'package:sistrum/models/unified_library_item.dart';
 import 'package:sistrum/providers/library_search_provider.dart';
 import 'package:sistrum/providers/playback_provider.dart';
-import 'package:sistrum/services/library/library_search.dart';
-import 'package:sistrum/services/playback/music_player_service.dart';
+import 'package:sistrum/services/library/browse/library_search.dart';
+import 'package:sistrum/services/playback/music_player/music_player_service.dart';
 import 'package:sistrum/theme/app_theme.dart';
 import 'package:sistrum/widgets/library/library_search_results.dart';
 import 'package:sistrum/widgets/library/track_card.dart';
@@ -273,9 +273,7 @@ void main() {
               ),
             ],
             child: MaterialApp(
-              theme: sistrum
-                  ? AppTheme.build(Brightness.dark)
-                  : ThemeData(),
+              theme: sistrum ? AppTheme.build(Brightness.dark) : ThemeData(),
               localizationsDelegates: AppLocalizations.localizationsDelegates,
               supportedLocales: AppLocalizations.supportedLocales,
               home: Scaffold(

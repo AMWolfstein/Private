@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sistrum/services/library/metadata_edit_result.dart';
+import 'package:sistrum/services/library/metadata/metadata_edit_result.dart';
 
 void main() {
   test('a native method completes the edit', () {

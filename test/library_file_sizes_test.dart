@@ -1,9 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sistrum/services/library/library_database_models.dart';
-import 'package:sistrum/services/library/library_file_sizes.dart';
-import 'package:sistrum/services/library/library_browse_store.dart';
+import 'package:sistrum/services/library/database/library_database_models.dart';
+import 'package:sistrum/services/library/scan/library_file_sizes.dart';
+import 'package:sistrum/services/library/browse/library_browse_store.dart';
 
 import 'support/library_paging_fixture.dart';
 import 'support/sqlite_process_database.dart';

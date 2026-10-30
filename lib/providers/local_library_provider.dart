@@ -8,19 +8,19 @@ import 'package:sistrum/models/local_library_item.dart';
 import 'package:sistrum/providers/settings_provider.dart';
 import 'package:sistrum/providers/library_collections_provider.dart';
 import 'package:sistrum/providers/library_database_provider.dart';
-import 'package:sistrum/services/library/library_cleanup.dart';
-import 'package:sistrum/services/library/library_database.dart';
-import 'package:sistrum/services/library/library_mutation_ports.dart';
-import 'package:sistrum/services/library/library_scan_progress.dart';
-import 'package:sistrum/services/library/library_scan_notifications.dart';
+import 'package:sistrum/services/library/scan/library_cleanup.dart';
+import 'package:sistrum/services/library/database/library_database.dart';
+import 'package:sistrum/services/library/database/library_mutation_ports.dart';
+import 'package:sistrum/services/library/scan/library_scan_progress.dart';
+import 'package:sistrum/services/library/scan/library_scan_notifications.dart';
 import 'package:sistrum/services/native/library_scan_bridge.dart';
 import 'package:sistrum/services/native/media_file_bridge.dart';
-import 'package:sistrum/services/notification_service.dart';
+import 'package:sistrum/services/platform/notification_service.dart';
 import 'package:sistrum/services/native/native_data_jobs.dart';
-import 'package:sistrum/utils/best_effort_delete.dart';
-import 'package:sistrum/utils/logger.dart';
-import 'package:sistrum/utils/file_access.dart';
-import 'package:sistrum/utils/local_library_scan_prefs.dart';
+import 'package:sistrum/utils/files/best_effort_delete.dart';
+import 'package:sistrum/utils/logging/logger.dart';
+import 'package:sistrum/utils/files/file_access.dart';
+import 'package:sistrum/utils/scan/local_library_scan_prefs.dart';
 
 final _log = AppLogger('LocalLibrary');
 
@@ -175,9 +175,7 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState>
         final requestId = _nativeLibraryRequestId;
         if (requestId != null) {
           unawaited(
-            NativeDataJobs.cancel(requestId).catchError((
-              Object error,
-            ) {
+            NativeDataJobs.cancel(requestId).catchError((Object error) {
               _log.w('Failed to cancel disposed library ingestion: $error');
             }),
           );
@@ -1226,9 +1224,8 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState>
     }
   }
 
-  void _startProgressPolling() => _progressPolling.start(
-    useStream: Platform.isAndroid,
-  );
+  void _startProgressPolling() =>
+      _progressPolling.start(useStream: Platform.isAndroid);
 
   Future<void> _handleLibraryScanProgress(Map<String, dynamic> progress) async {
     final sample = readLibraryScanProgress(

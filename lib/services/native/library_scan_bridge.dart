@@ -6,7 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sistrum/services/native/native_channel.dart';
-import 'package:sistrum/utils/best_effort_delete.dart';
+import 'package:sistrum/utils/files/best_effort_delete.dart';
 
 class LibraryScanNDJSONFile {
   final File file;

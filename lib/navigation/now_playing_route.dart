@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sistrum/services/app_orientation.dart';
+import 'package:sistrum/services/platform/app_orientation.dart';
 import 'package:sistrum/theme/app_theme.dart';
 
 /// Hero tag shared by the mini player artwork and the full player artwork so

@@ -9,7 +9,7 @@ import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/theme/app_theme.dart';
 import 'package:sistrum/widgets/status/audio_quality_badges.dart';
 import 'package:sistrum/widgets/player/mini_player.dart';
-import 'package:sistrum/widgets/overflow_marquee.dart';
+import 'package:sistrum/widgets/animation/overflow_marquee.dart';
 
 void main() {
   const longTitle = 'A long song title with enough words to leave the viewport';
@@ -296,14 +296,10 @@ void main() {
                   (ref) => const Stream.empty(),
                 ),
                 lowEndDeviceProvider.overrideWithValue(true),
-                appGlassQualityProvider.overrideWithValue(
-                  AppGlassQuality.auto,
-                ),
+                appGlassQualityProvider.overrideWithValue(AppGlassQuality.auto),
               ],
               child: MaterialApp(
-                theme: sistrum
-                    ? AppTheme.build(Brightness.light)
-                    : ThemeData(),
+                theme: sistrum ? AppTheme.build(Brightness.light) : ThemeData(),
                 localizationsDelegates: AppLocalizations.localizationsDelegates,
                 supportedLocales: AppLocalizations.supportedLocales,
                 home: Scaffold(

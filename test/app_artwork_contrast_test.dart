@@ -4,7 +4,7 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sistrum/widgets/glass/app_artwork_contrast.dart';
+import 'package:sistrum/widgets/glass/artwork/app_artwork_contrast.dart';
 import 'support/pump_until.dart';
 
 void main() {
@@ -244,20 +244,14 @@ void main() {
     await sample();
     final before = AppArtworkContrast.debugReadbackCount(capture);
     await sample();
-    expect(
-      AppArtworkContrast.debugReadbackCount(capture),
-      greaterThan(before),
-    );
+    expect(AppArtworkContrast.debugReadbackCount(capture), greaterThan(before));
     tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.paused);
     final paused = AppArtworkContrast.debugReadbackCount(capture);
     await sample();
     expect(AppArtworkContrast.debugReadbackCount(capture), paused);
     tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
     await sample();
-    expect(
-      AppArtworkContrast.debugReadbackCount(capture),
-      greaterThan(paused),
-    );
+    expect(AppArtworkContrast.debugReadbackCount(capture), greaterThan(paused));
     await tester.pumpWidget(const SizedBox());
   });
 

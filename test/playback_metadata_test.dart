@@ -1,6 +1,6 @@
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sistrum/services/playback/playback_metadata.dart';
+import 'package:sistrum/services/playback/core/playback_metadata.dart';
 
 MediaItem _item(Map<String, dynamic>? extras) =>
     MediaItem(id: 'item', title: 'Title', extras: extras);

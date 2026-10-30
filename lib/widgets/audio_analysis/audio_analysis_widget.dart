@@ -19,8 +19,8 @@ import 'package:sistrum/widgets/primitives/app_choice_chip.dart';
 import 'package:path/path.dart' as p;
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/services/native/native_data_jobs.dart';
-import 'package:sistrum/utils/logger.dart';
-import 'package:sistrum/utils/string_utils.dart';
+import 'package:sistrum/utils/logging/logger.dart';
+import 'package:sistrum/utils/text/string_utils.dart';
 
 export 'package:sistrum/services/audio_analysis/audio_analysis_parsing.dart';
 

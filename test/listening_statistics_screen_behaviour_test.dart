@@ -5,7 +5,7 @@ import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/models/settings.dart';
 import 'package:sistrum/providers/settings_provider.dart';
 import 'package:sistrum/screens/listening_statistics_screen.dart';
-import 'package:sistrum/services/playback/listening_statistics.dart';
+import 'package:sistrum/services/playback/stats/listening_statistics.dart';
 import 'package:sistrum/theme/app_theme.dart';
 import 'package:sistrum/widgets/settings/settings_item_rows.dart';
 
@@ -18,7 +18,6 @@ class _Settings extends SettingsNotifier {
 
   @override
   AppSettings build() => const AppSettings();
-
 }
 
 const _alpha = ListeningTrack(

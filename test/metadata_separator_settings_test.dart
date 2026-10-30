@@ -7,7 +7,7 @@ import 'package:sistrum/models/metadata_separators.dart';
 import 'package:sistrum/models/settings.dart';
 import 'package:sistrum/models/tag_credit_settings.dart';
 import 'package:sistrum/providers/settings_provider.dart';
-import 'package:sistrum/screens/settings/metadata_separator_settings_page.dart';
+import 'package:sistrum/screens/settings/library/metadata_separator_settings_page.dart';
 import 'package:sistrum/theme/app_theme.dart';
 import 'package:sistrum/widgets/primitives/app_bottom_sheet.dart';
 import 'package:sistrum/widgets/primitives/app_choice_chip.dart';

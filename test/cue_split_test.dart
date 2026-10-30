@@ -7,7 +7,7 @@ import 'package:sistrum/l10n/app_localizations.dart';
 import 'package:sistrum/providers/local_library_provider.dart';
 import 'package:sistrum/services/ffmpeg/ffmpeg_cue.dart';
 import 'package:sistrum/services/ffmpeg/ffmpeg_models.dart';
-import 'package:sistrum/services/library/library_database_models.dart';
+import 'package:sistrum/services/library/database/library_database_models.dart';
 import 'package:sistrum/widgets/library/local_song_file_actions.dart';
 
 class _ScanLibrary extends LocalLibraryNotifier {

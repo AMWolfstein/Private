@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sistrum/services/library/library_tag_credits.dart';
+import 'package:sistrum/services/library/browse/library_tag_credits.dart';
 import 'support/sqlite_process_database.dart';
 
 const _rules = TagCreditRules();
