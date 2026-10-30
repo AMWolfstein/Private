@@ -47,6 +47,9 @@ class _SetupScreenState extends ConsumerState<SetupScreen>
   bool _isLoading = false;
   int _androidSdkVersion = 0;
 
+  /// Tips the guide had before it was merged into one page; only old drafts
+  /// still count in these steps.
+  static const _fivePageGuideCount = 5;
   int get _storageStep => 2 + localGuidePageCount;
   int get _totalSteps => _storageStep + (_androidSdkVersion >= 33 ? 2 : 1);
 
@@ -84,10 +87,19 @@ class _SetupScreenState extends ConsumerState<SetupScreen>
           // Version 1 drafts used 2/3 for permissions and ended in a
           // download-folder step.
           if (version != 2 && version != 3 && savedStep >= 2) {
-            savedStep += localGuidePageCount;
+            savedStep += _fivePageGuideCount;
           }
           // Version 3 drafts (English-only build) had no language step at 1.
           if (version == 3 && savedStep >= 1) savedStep += 1;
+          // Drafts from before version 4 counted the guide as five pages:
+          // steps 2-6 were its tips and later steps came after them.
+          if (version != 4) {
+            if (savedStep >= 2 && savedStep <= 6) {
+              savedStep = 2;
+            } else if (savedStep >= 7) {
+              savedStep -= _fivePageGuideCount - localGuidePageCount;
+            }
+          }
           _currentStep = savedStep.clamp(0, _totalSteps - 1);
           _notificationPermissionSkipped = draft['skipNotifications'] == true;
           _storageSkipped = draft['skipStorage'] == true;
@@ -127,7 +139,7 @@ class _SetupScreenState extends ConsumerState<SetupScreen>
   Future<void> _saveProgress({int? step}) async {
     final draft = jsonEncode({
       'step': step ?? _currentStep,
-      'version': 2,
+      'version': 4,
       'skipNotifications': _notificationPermissionSkipped,
       'skipStorage': _storageSkipped,
     });
