@@ -71,7 +71,11 @@ void main() {
       (_, _) {},
     );
     addTearDown(subscription.close);
-    await Future<void>.delayed(const Duration(milliseconds: 20));
+    // The item arrives through a stream and the notification is posted in a
+    // microtask, so wait for it rather than for a fixed time.
+    for (var turn = 0; turn < 500 && runtime.configured == 0; turn++) {
+      await Future<void>.delayed(Duration.zero);
+    }
 
     expect(runtime.configured, 1);
     final notification = runtime.presentation!;
