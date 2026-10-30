@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/models/metadata_separators.dart';
 import 'package:sistrum/models/tag_credit_settings.dart';
+import 'package:sistrum/services/library/library_tag_credits.dart';
 import 'package:sistrum/providers/settings_provider.dart';
 import 'package:sistrum/utils/nav_bar_inset.dart';
 import 'package:sistrum/widgets/primitives/app_alert_dialog.dart';
@@ -26,6 +27,7 @@ class MetadataSeparatorSettingsPage extends ConsumerWidget {
     final credits = ref.watch(settingsProvider.select((s) => s.tagCredits));
     final notifier = ref.read(settingsProvider.notifier);
     final l10n = context.l10n;
+    final rules = TagCreditRules.fromSettings(credits);
     return Scaffold(
       body: CustomScrollView(
         slivers: [
@@ -42,6 +44,8 @@ class MetadataSeparatorSettingsPage extends ConsumerWidget {
           SliverToBoxAdapter(
             child: _DelimiterSection(
               caption: l10n.tagSeparatorsArtistsFields,
+              field: TagCreditField.artist,
+              rules: rules,
               choices: kArtistDelimiterChoices,
               custom: credits.customArtistDelimiters,
               selected: credits.artistDelimiters,
@@ -59,6 +63,8 @@ class MetadataSeparatorSettingsPage extends ConsumerWidget {
           ),
           SliverToBoxAdapter(
             child: _DelimiterSection(
+              field: TagCreditField.genre,
+              rules: rules,
               choices: kGenreDelimiterChoices,
               custom: credits.customGenreDelimiters,
               selected: credits.genreDelimiters,
@@ -91,6 +97,8 @@ class MetadataSeparatorSettingsPage extends ConsumerWidget {
 class _DelimiterSection extends StatelessWidget {
   const _DelimiterSection({
     this.caption,
+    required this.field,
+    required this.rules,
     required this.choices,
     required this.custom,
     required this.selected,
@@ -105,6 +113,8 @@ class _DelimiterSection extends StatelessWidget {
 
   /// The fields a section covers, when its header alone does not say.
   final String? caption;
+  final TagCreditField field;
+  final TagCreditRules rules;
   final List<String> choices;
   final List<String> custom;
   final List<String> selected;
@@ -156,8 +166,10 @@ class _DelimiterSection extends StatelessWidget {
               title: l10n.tagSeparatorsSaveWith,
               subtitle: saveWith.isEmpty
                   ? l10n.metadataSeparatorSource
-                  : formatMetadataTagValue(
+                  : formatTagCreditsForSave(
                       '$saveWithLabel A, $saveWithLabel B',
+                      field,
+                      rules,
                       saveWith,
                     ),
               showDivider: false,
@@ -167,7 +179,12 @@ class _DelimiterSection extends StatelessWidget {
                   useRootNavigator: true,
                   title: l10n.tagSeparatorsSaveWith,
                   builder: (_) =>
-                      _SeparatorPicker(label: saveWithLabel, current: saveWith),
+                      _SeparatorPicker(
+                        label: saveWithLabel,
+                        current: saveWith,
+                        field: field,
+                        rules: rules,
+                      ),
                 );
                 if (value != null && context.mounted) onSaveWith(value);
               },
@@ -433,9 +450,16 @@ class _AddDelimiterSheetState extends State<_AddDelimiterSheet> {
 
 /// Picks one save-time separator; the custom field takes any 1-16 characters.
 class _SeparatorPicker extends StatefulWidget {
-  const _SeparatorPicker({required this.label, required this.current});
+  const _SeparatorPicker({
+    required this.label,
+    required this.current,
+    required this.field,
+    required this.rules,
+  });
   final String label;
   final String current;
+  final TagCreditField field;
+  final TagCreditRules rules;
 
   @override
   State<_SeparatorPicker> createState() => _SeparatorPickerState();
@@ -540,8 +564,10 @@ class _SeparatorPickerState extends State<_SeparatorPicker> {
                           ),
                           const SizedBox(height: 8),
                           Text(
-                            formatMetadataTagValue(
+                            formatTagCreditsForSave(
                               example,
+                              widget.field,
+                              widget.rules,
                               valid ? separator : '',
                             ),
                           ),

@@ -61,21 +61,6 @@ class MetadataSeparators {
         'composer': separator,
       });
 
-  Map<String, String> get writerFields => {
-    for (final entry in toJson().entries)
-      if (entry.value.isNotEmpty) '${entry.key}_separator': entry.value,
-  };
-}
-
-// Commas and semicolons delimit provider lists. Never split band-name words,
-// ampersands, or slashes (AC/DC, R&B, Florence and the Machine).
-final _metadataListSeparator = RegExp(r'\s*[,;]\s*');
-
-String formatMetadataTagValue(String value, String separator) {
-  if (MetadataSeparators.validSeparator(separator).isEmpty) return value;
-  return value
-      .split(_metadataListSeparator)
-      .map((part) => part.trim())
-      .where((part) => part.isNotEmpty)
-      .join(separator);
+  /// The separator for a tag field, using the shared value for name fields.
+  String forField(String field) => field == 'genre' ? genre : names;
 }

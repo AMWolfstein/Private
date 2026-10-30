@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:sistrum/models/metadata_separators.dart';
 import 'package:sistrum/services/ffmpeg/ffmpeg_metadata.dart';
 import 'package:sistrum/services/library/metadata_cover_resources.dart';
 import 'package:sistrum/services/library/metadata_edit_result.dart';
@@ -190,27 +189,7 @@ class MetadataPersistenceService {
     if (metadata.containsKey('disc_number')) {
       tags['DISCNUMBER'] = index('disc');
     }
-    // Per-field separators: format list values here, then pass the keys on so
-    // the Vorbis mapper writes a joined artist tag instead of splitting it.
-    final separators = MetadataSeparators.fromJson({
-      for (final field in MetadataSeparators.fields)
-        field: metadata['${field}_separator'] ?? '',
-    });
-    if (separators.isDefault) return tags;
-    final selected = separators.toJson();
-    for (final entry in const {
-      'ARTIST': 'artist',
-      'ALBUMARTIST': 'album_artist',
-      'COMPOSER': 'composer',
-      'GENRE': 'genre',
-    }.entries) {
-      if (!tags.containsKey(entry.key)) continue;
-      tags[entry.key] = formatMetadataTagValue(
-        tags[entry.key]!,
-        selected[entry.value] ?? '',
-      );
-    }
-    return {...tags, ...separators.writerFields};
+    return tags;
   }
 
   static Future<String?> _embed(

@@ -182,23 +182,24 @@ void main() {
   );
 
   test(
-    'separators reach native tags and the FFmpeg fallback without touching other fields',
+    'formatted name fields reach native tags and the FFmpeg fallback unchanged',
     () async {
+      // The editor joins the names before saving, so no separator keys arrive.
       final tags = {
         'title': 'Title, unchanged',
-        'artist': 'A, B',
+        'artist': 'A / B',
         'album_artist': 'C; D',
-        'composer': 'E, F',
-        'genre': 'Rock, Pop',
-        'artist_separator': ' / ',
-        'composer_separator': ' | ',
-        'genre_separator': '; ',
+        'composer': 'E | F',
+        'genre': 'Rock; Pop',
       };
       final service = MetadataPersistenceService(
         covers: covers,
         edit: (_, metadata) async {
-          expect(metadata['artist'], 'A, B');
-          expect(metadata['artist_separator'], ' / ');
+          expect(metadata['artist'], 'A / B');
+          expect(
+            metadata.keys.where((key) => key.endsWith('_separator')),
+            isEmpty,
+          );
           return MetadataEditResult.decode({'method': 'ffmpeg'});
         },
         read: (_) async => throw StateError('Reader unavailable'),
@@ -208,7 +209,10 @@ void main() {
           expect(metadata['COMPOSER'], 'E | F');
           expect(metadata['GENRE'], 'Rock; Pop');
           expect(metadata['TITLE'], 'Title, unchanged');
-          expect(metadata['artist_separator'], ' / ');
+          expect(
+            metadata.keys.where((key) => key.endsWith('_separator')),
+            isEmpty,
+          );
           return path;
         },
       );

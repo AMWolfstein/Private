@@ -18,6 +18,7 @@ import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/models/track.dart';
 import 'package:sistrum/providers/local_library_provider.dart';
 import 'package:sistrum/providers/settings_provider.dart';
+import 'package:sistrum/providers/library_tag_credits_provider.dart';
 import 'package:sistrum/widgets/library/track_metadata_edit_sheet.dart';
 import 'package:sistrum/providers/library_database_provider.dart';
 import 'package:sistrum/utils/file_access.dart';
@@ -252,6 +253,7 @@ Future<bool> editLocalSongMetadata(
   }
   final library = ref.read(localLibraryProvider.notifier);
   final metadataSeparators = ref.read(settingsProvider).metadataSeparators;
+  final tagCreditRules = ref.read(tagCreditRulesProvider);
   Map<String, dynamic> tags = {};
   try {
     tags = await MediaFileBridge.readFileMetadata(item.filePath);
@@ -295,9 +297,12 @@ Future<bool> editLocalSongMetadata(
       filePath: item.filePath,
       durationMs: (item.duration ?? 0) * 1000,
       metadataSeparators: metadataSeparators,
+      tagCreditRules: tagCreditRules,
     ),
   );
   if (saved != true) return false;
+  // The saved names changed under the credits table; rebuild it on next read.
+  ref.read(libraryTagCreditsCacheProvider).invalidate();
   final index = await MetadataIndexReconciler(
     upsert: ref.read(libraryDatabaseProvider).upsert,
   ).reconcile(item);

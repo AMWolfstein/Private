@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:sistrum/models/metadata_separators.dart';
+import 'package:sistrum/services/library/library_tag_credits.dart';
 import 'package:sistrum/utils/string_utils.dart';
 
 /// Editable tags and request generations, independent of sheet navigation.
@@ -94,8 +95,11 @@ class MetadataEditorController {
     return filled;
   }
 
+  /// Tags to write. Name fields are joined with the Save with separators here,
+  /// so every writer stores the same text and none splits it again.
   Map<String, String> buildMetadataTags({
     MetadataSeparators separators = const MetadataSeparators(),
+    TagCreditRules rules = const TagCreditRules(),
     bool onlyChanged = false,
   }) {
     final tags = values;
@@ -103,7 +107,17 @@ class MetadataEditorController {
     tags['disc_total'] = tags.remove('total_discs')!;
     tags['compilation'] =
         tags['album_type']!.trim().toLowerCase() == 'compilation' ? '1' : '0';
-    tags.addAll(separators.writerFields);
+    for (final field in TagCreditField.values) {
+      final key = field.dbName;
+      final value = tags[key];
+      if (value == null) continue;
+      tags[key] = formatTagCreditsForSave(
+        value,
+        field,
+        rules,
+        separators.forField(key),
+      );
+    }
     if (!onlyChanged) return tags;
     final changedKeys = {..._changed};
     for (final (numberKey, totalKey) in [
@@ -135,7 +149,6 @@ class MetadataEditorController {
       changed['compilation'] = tags['compilation']!;
     }
     if (explicit != _initialExplicit) changed['explicit'] = tags['explicit']!;
-    changed.addAll(separators.writerFields);
     return changed;
   }
 

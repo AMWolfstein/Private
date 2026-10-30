@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/models/metadata_separators.dart';
 import 'package:sistrum/models/settings.dart';
 import 'package:sistrum/services/ffmpeg/audio_metadata_mapper.dart';
+import 'package:sistrum/services/library/library_tag_credits.dart';
 
 void main() {
   test(
@@ -30,8 +31,9 @@ void main() {
   );
 
   test(
-    'formats lists without splitting names or altering unrelated fields',
+    'formats names without splitting band names or changing other fields',
     () {
+      const rules = TagCreditRules();
       for (final name in [
         'AC/DC',
         'R&B',
@@ -39,13 +41,35 @@ void main() {
         'Simon & Garfunkel',
         'Malcolm X',
       ]) {
-        expect(formatMetadataTagValue(name, '; '), name);
+        expect(
+          formatTagCreditsForSave(name, TagCreditField.artist, rules, '; '),
+          name,
+        );
       }
-      expect(formatMetadataTagValue(' A, B ; C ', '; '), 'A; B; C');
-      expect(formatMetadataTagValue(' A, B ', ''), ' A, B ');
+      expect(
+        formatTagCreditsForSave(
+          ' A, B ; C ',
+          TagCreditField.artist,
+          rules,
+          '; ',
+        ),
+        'A; B; C',
+      );
+      expect(
+        formatTagCreditsForSave(' A, B ', TagCreditField.artist, rules, ''),
+        ' A, B ',
+      );
       for (final invalid in ['\n', '\x00', 'abcdefghijklmnopq']) {
         expect(MetadataSeparators.fromJson({'artist': invalid}).artist, '');
-        expect(formatMetadataTagValue('A, B', invalid), 'A, B');
+        expect(
+          formatTagCreditsForSave(
+            'A, B',
+            TagCreditField.artist,
+            rules,
+            invalid,
+          ),
+          'A, B',
+        );
       }
     },
   );
