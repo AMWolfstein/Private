@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Keep the complete mark inside Android 12's splash icon mask. -->
+<!-- The foreground already keeps the mark inside the adaptive-icon safe zone,
+     which also fits Android 12's splash icon mask. -->
 <inset xmlns:android="http://schemas.android.com/apk/res/android"
     android:drawable="@drawable/ic_launcher_foreground"
-    android:inset="16%" />
+    android:inset="0%" />
