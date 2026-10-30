@@ -42,6 +42,25 @@ class MetadataSeparators {
   MetadataSeparators withField(String field, String separator) =>
       MetadataSeparators.fromJson({...toJson(), field: separator});
 
+  /// The one value shared by artist, album artist and composer in settings.
+  /// Settings saved before the shared value kept three; the first non-empty
+  /// one stands for all of them.
+  String get names {
+    for (final value in [artist, albumArtist, composer]) {
+      if (value.isNotEmpty) return value;
+    }
+    return '';
+  }
+
+  /// Writes [separator] to artist, album artist and composer together.
+  MetadataSeparators withNames(String separator) =>
+      MetadataSeparators.fromJson({
+        ...toJson(),
+        'artist': separator,
+        'album_artist': separator,
+        'composer': separator,
+      });
+
   Map<String, String> get writerFields => {
     for (final entry in toJson().entries)
       if (entry.value.isNotEmpty) '${entry.key}_separator': entry.value,

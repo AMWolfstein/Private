@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sistrum/models/app_glass.dart';
 import 'package:sistrum/models/settings.dart';
 import 'package:sistrum/models/metadata_separators.dart';
+import 'package:sistrum/models/tag_credit_settings.dart';
 import 'package:sistrum/models/automix_options.dart';
 import 'package:sistrum/utils/logger.dart';
 
@@ -440,6 +441,127 @@ class SettingsNotifier extends Notifier<AppSettings> {
       metadataSeparators: state.metadataSeparators.withField(field, separator),
     );
     _saveSettings();
+  }
+
+  /// Save-time separator shared by artist, album artist and composer.
+  void setMetadataNamesSeparator(String separator) {
+    if (MetadataSeparators.validSeparator(separator) != separator) return;
+    state = state.copyWith(
+      metadataSeparators: state.metadataSeparators.withNames(separator),
+    );
+    _saveSettings();
+  }
+
+  void toggleArtistDelimiter(String token) => _updateTagCredits(
+    (c) => c.copyWith(
+      artistDelimiters: _toggledDelimiter(c.artistDelimiters, token),
+    ),
+  );
+
+  void toggleGenreDelimiter(String token) => _updateTagCredits(
+    (c) => c.copyWith(
+      genreDelimiters: _toggledDelimiter(c.genreDelimiters, token),
+    ),
+  );
+
+  /// Selects every offered artist delimiter; when all are already selected,
+  /// returns the section to its defaults.
+  void toggleAllArtistDelimiters() => _updateTagCredits((c) {
+    final offered = [...kArtistDelimiterChoices, ...c.customArtistDelimiters];
+    final allSelected = offered.every(c.artistDelimiters.contains);
+    return c.copyWith(
+      artistDelimiters: allSelected ? kArtistDelimiterDefaults : offered,
+    );
+  });
+
+  void toggleAllGenreDelimiters() => _updateTagCredits((c) {
+    final offered = [...kGenreDelimiterChoices, ...c.customGenreDelimiters];
+    final allSelected = offered.every(c.genreDelimiters.contains);
+    return c.copyWith(
+      genreDelimiters: allSelected ? kGenreDelimiterDefaults : offered,
+    );
+  });
+
+  /// Adds a custom artist delimiter and selects it. Invalid or duplicate
+  /// values are ignored.
+  void addArtistDelimiter(String token) {
+    final trimmed = token.trim();
+    final current = state.tagCredits;
+    final offered = [...kArtistDelimiterChoices, ...current.customArtistDelimiters];
+    if (!TagCreditSettings.isValidDelimiter(trimmed, offered)) return;
+    _updateTagCredits(
+      (c) => c.copyWith(
+        customArtistDelimiters: [...c.customArtistDelimiters, trimmed],
+        artistDelimiters: [...c.artistDelimiters, trimmed],
+      ),
+    );
+  }
+
+  void addGenreDelimiter(String token) {
+    final trimmed = token.trim();
+    final current = state.tagCredits;
+    final offered = [...kGenreDelimiterChoices, ...current.customGenreDelimiters];
+    if (!TagCreditSettings.isValidDelimiter(trimmed, offered)) return;
+    _updateTagCredits(
+      (c) => c.copyWith(
+        customGenreDelimiters: [...c.customGenreDelimiters, trimmed],
+        genreDelimiters: [...c.genreDelimiters, trimmed],
+      ),
+    );
+  }
+
+  /// Removes a custom artist delimiter. When that leaves nothing selected,
+  /// the section falls back to its defaults so it never splits on nothing.
+  void removeCustomArtistDelimiter(String token) => _updateTagCredits((c) {
+    final selected = c.artistDelimiters.where((t) => t != token).toList();
+    return c.copyWith(
+      customArtistDelimiters: c.customArtistDelimiters
+          .where((t) => t != token)
+          .toList(),
+      artistDelimiters: selected.isEmpty ? kArtistDelimiterDefaults : selected,
+    );
+  });
+
+  void removeCustomGenreDelimiter(String token) => _updateTagCredits((c) {
+    final selected = c.genreDelimiters.where((t) => t != token).toList();
+    return c.copyWith(
+      customGenreDelimiters: c.customGenreDelimiters
+          .where((t) => t != token)
+          .toList(),
+      genreDelimiters: selected.isEmpty ? kGenreDelimiterDefaults : selected,
+    );
+  });
+
+  void addKeepTogether(String name) {
+    final trimmed = name.trim();
+    final existing = state.tagCredits.keepTogether;
+    if (trimmed.isEmpty || trimmed.length > 100) return;
+    if (existing.any((n) => n.toLowerCase() == trimmed.toLowerCase())) return;
+    if (existing.length >= 200) return;
+    _updateTagCredits(
+      (c) => c.copyWith(keepTogether: [...c.keepTogether, trimmed]),
+    );
+  }
+
+  void removeKeepTogether(String name) => _updateTagCredits(
+    (c) => c.copyWith(
+      keepTogether: c.keepTogether.where((n) => n != name).toList(),
+    ),
+  );
+
+  void _updateTagCredits(TagCreditSettings Function(TagCreditSettings) change) {
+    state = state.copyWith(tagCredits: change(state.tagCredits));
+    _saveSettings();
+  }
+
+  /// Toggling off the last selected delimiter is ignored: a section never
+  /// splits on nothing.
+  static List<String> _toggledDelimiter(List<String> selected, String token) {
+    if (selected.contains(token)) {
+      if (selected.length == 1) return selected;
+      return selected.where((t) => t != token).toList();
+    }
+    return [...selected, token];
   }
 
   void setLocalLibraryAutoScan(String mode) {

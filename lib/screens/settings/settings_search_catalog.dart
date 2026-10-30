@@ -164,7 +164,16 @@ class SettingsSearchCatalog {
             'genre',
             'album artist',
             'edit metadata',
+            'split',
+            'chip',
+            'feat',
           ],
+        ),
+        SettingsSearchEntry(
+          icon: Icons.group_work_outlined,
+          title: l10n.tagKeepTogether,
+          subtitle: l10n.tagKeepTogetherDescription,
+          keywords: const ['keep together', 'split', 'name', 'separator'],
         ),
         SettingsSearchEntry(
           icon: Icons.refresh,
