@@ -2,6 +2,15 @@ cmake_minimum_required(VERSION 3.22.1)
 project(sistrum_audio LANGUAGES C CXX)
 
 include(FetchContent)
+# Offline builds: point SISTRUM_FLAC_SOURCE_DIR, SISTRUM_OBOE_SOURCE_DIR or
+# SISTRUM_WAVPACK_SOURCE_DIR at an unpacked copy of the pinned release below to
+# skip its download. Unset, the pinned URL and checksum are used.
+foreach(dep IN ITEMS FLAC OBOE WAVPACK)
+    if(DEFINED ENV{SISTRUM_${dep}_SOURCE_DIR})
+        set(FETCHCONTENT_SOURCE_DIR_${dep} "$ENV{SISTRUM_${dep}_SOURCE_DIR}"
+            CACHE PATH "Local ${dep} source" FORCE)
+    endif()
+endforeach()
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
 set(BUILD_TESTING OFF CACHE BOOL "" FORCE)
