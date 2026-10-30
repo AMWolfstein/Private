@@ -59,7 +59,6 @@ class MetadataSeparatorSettingsPage extends ConsumerWidget {
           ),
           SliverToBoxAdapter(
             child: _DelimiterSection(
-              caption: l10n.tagSeparatorsGenre,
               choices: kGenreDelimiterChoices,
               custom: credits.customGenreDelimiters,
               selected: credits.genreDelimiters,
@@ -91,7 +90,7 @@ class MetadataSeparatorSettingsPage extends ConsumerWidget {
 /// One section: a chip grid of delimiters followed by the Save with row.
 class _DelimiterSection extends StatelessWidget {
   const _DelimiterSection({
-    required this.caption,
+    this.caption,
     required this.choices,
     required this.custom,
     required this.selected,
@@ -104,7 +103,8 @@ class _DelimiterSection extends StatelessWidget {
     required this.onSaveWith,
   });
 
-  final String caption;
+  /// The fields a section covers, when its header alone does not say.
+  final String? caption;
   final List<String> choices;
   final List<String> custom;
   final List<String> selected;
@@ -124,10 +124,11 @@ class _DelimiterSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Padding(
-          padding: const EdgeInsets.fromLTRB(24, 0, 24, 12),
-          child: Text(caption, style: Theme.of(context).textTheme.bodyMedium),
-        ),
+        if (caption case final caption?)
+          Padding(
+            padding: const EdgeInsets.fromLTRB(24, 0, 24, 12),
+            child: Text(caption, style: Theme.of(context).textTheme.bodyMedium),
+          ),
         _ChipGrid(
           children: [
             AppChoiceChip(
@@ -165,10 +166,8 @@ class _DelimiterSection extends StatelessWidget {
                   context: context,
                   useRootNavigator: true,
                   title: l10n.tagSeparatorsSaveWith,
-                  builder: (_) => _SeparatorPicker(
-                    label: saveWithLabel,
-                    current: saveWith,
-                  ),
+                  builder: (_) =>
+                      _SeparatorPicker(label: saveWithLabel, current: saveWith),
                 );
                 if (value != null && context.mounted) onSaveWith(value);
               },
@@ -258,8 +257,7 @@ class _ChipGrid extends StatelessWidget {
           spacing: _gap,
           runSpacing: _gap,
           children: [
-            for (final child in children)
-              SizedBox(width: cell, child: child),
+            for (final child in children) SizedBox(width: cell, child: child),
           ],
         );
       },
@@ -274,10 +272,8 @@ class _ChipLabel extends StatelessWidget {
   final String text;
 
   @override
-  Widget build(BuildContext context) => FittedBox(
-    fit: BoxFit.scaleDown,
-    child: Text(text, maxLines: 1),
-  );
+  Widget build(BuildContext context) =>
+      FittedBox(fit: BoxFit.scaleDown, child: Text(text, maxLines: 1));
 }
 
 class _KeepTogetherSection extends StatefulWidget {

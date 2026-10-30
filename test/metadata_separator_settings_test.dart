@@ -3,110 +3,200 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sistrum/l10n/app_localizations.dart';
+import 'package:sistrum/models/metadata_separators.dart';
 import 'package:sistrum/models/settings.dart';
+import 'package:sistrum/models/tag_credit_settings.dart';
 import 'package:sistrum/providers/settings_provider.dart';
 import 'package:sistrum/screens/settings/metadata_separator_settings_page.dart';
 import 'package:sistrum/theme/app_theme.dart';
 import 'package:sistrum/widgets/primitives/app_bottom_sheet.dart';
-import 'package:sistrum/widgets/settings/settings_group.dart';
+import 'package:sistrum/widgets/primitives/app_choice_chip.dart';
 
 class _Settings extends SettingsNotifier {
   @override
   AppSettings build() => const AppSettings();
 }
 
+Finder _chip(String label) =>
+    find.descendant(of: find.byType(AppChoiceChip), matching: find.text(label));
+
+final _pageScrollable = find
+    .descendant(
+      of: find.byType(CustomScrollView),
+      matching: find.byType(Scrollable),
+    )
+    .first;
+
+/// Moves [element] to [alignment] of its scroll view, clear of the pinned
+/// header at the top and the bottom edge in a short landscape window.
+Future<void> _center(
+  WidgetTester tester,
+  Element element, [
+  double alignment = 0.5,
+]) async {
+  await Scrollable.ensureVisible(element, alignment: alignment);
+  await tester.pumpAndSettle();
+}
+
+/// Scrolls the page back to the top, then down to the section [header], and
+/// leaves the header a third of the way down so the section's rows are built.
+/// The page is a lazy sliver list: rows far from view do not exist yet.
+Future<void> _showSection(WidgetTester tester, String header) async {
+  tester.state<ScrollableState>(_pageScrollable).position.jumpTo(0);
+  await tester.pumpAndSettle();
+  final target = find.text(header);
+  await tester.scrollUntilVisible(target, 120, scrollable: _pageScrollable);
+  await _center(tester, target.evaluate().first, 0.3);
+}
+
+/// Taps the first match of [finder], or the last one with [last], after
+/// centring it. A page row not built yet is scrolled to first.
+Future<void> _tap(
+  WidgetTester tester,
+  Finder finder, {
+  bool last = false,
+}) async {
+  if (finder.evaluate().isEmpty) {
+    await tester.scrollUntilVisible(finder, 120, scrollable: _pageScrollable);
+  }
+  final matches = finder.evaluate().toList();
+  final element = last ? matches.last : matches.first;
+  await _center(tester, element);
+  await tester.tap(find.byElementPredicate((e) => identical(e, element)));
+  await tester.pumpAndSettle();
+}
+
 void main() {
   setUp(() => SharedPreferences.setMockInitialValues({}));
-  for (final sistrum in [true]) {
-    for (final size in [const Size(390, 844), const Size(844, 390)]) {
-      testWidgets(
-        'separator preview, save, cancel and reset ($sistrum, $size)',
-        (tester) async {
-          tester.view.physicalSize = size;
-          tester.view.devicePixelRatio = 1;
-          addTearDown(tester.view.reset);
-          final container = ProviderContainer(
-            overrides: [settingsProvider.overrideWith(_Settings.new)],
-          );
-          addTearDown(container.dispose);
-          await tester.pumpWidget(
-            UncontrolledProviderScope(
-              container: container,
-              child: MaterialApp(
-                theme: ThemeData(extensions: [if (sistrum) const AppTheme()]),
-                localizationsDelegates: AppLocalizations.localizationsDelegates,
-                supportedLocales: AppLocalizations.supportedLocales,
-                home: const MetadataSeparatorSettingsPage(),
-              ),
-            ),
-          );
-          await tester.pumpAndSettle();
-          Future<void> tap(String text) async {
-            final target = find.text(text).last;
-            await tester.ensureVisible(target);
-            await tester.pumpAndSettle();
-            await tester.tap(target);
-            await tester.pumpAndSettle();
-          }
 
-          await tap('Artist');
-          expect(find.byType(AppSheetHandle).hitTestable(), findsOneWidget);
-          expect(
-            find.descendant(
-              of: find.byType(AppBottomSheet),
-              matching: find.byType(SettingsGroup),
-            ),
-            findsOneWidget,
-          );
-          await tap('Semicolon (;)');
-          expect(find.text('Artist A; Artist B'), findsOneWidget);
-          await tap('Save');
-          expect(
-            container.read(settingsProvider).metadataSeparators.artist,
-            '; ',
-          );
-          expect(container.read(settingsProvider).metadataSeparators.genre, '');
-          await tap('Artist');
-          await tap('Custom separator');
-          await tester.enterText(find.byType(TextField), ' | ');
-          await tester.pumpAndSettle();
-          tester.view.viewInsets = FakeViewPadding(
-            bottom: size.height > size.width ? 300 : 150,
-          );
-          await tester.pumpAndSettle();
-          expect(find.byType(AppSheetHandle).hitTestable(), findsOneWidget);
-          expect(tester.takeException(), isNull);
-          expect(find.text('Artist A | Artist B'), findsOneWidget);
-          await tap('Save');
-          tester.view.viewInsets = const FakeViewPadding();
-          await tester.pumpAndSettle();
-          expect(
-            container.read(settingsProvider).metadataSeparators.artist,
-            ' | ',
-          );
-          await tap('Artist');
-          await tap('Slash (/)');
-          // Dismissing a draft must not overwrite the saved preference.
-          await tester.fling(
-            find.byType(AppSheetHandle),
-            Offset(0, size.height * 0.6),
-            1200,
-          );
-          await tester.pumpAndSettle();
-          expect(
-            container.read(settingsProvider).metadataSeparators.artist,
-            ' | ',
-          );
-          await tap('Artist');
-          await tap('Keep source formatting');
-          await tap('Save');
-          expect(
-            container.read(settingsProvider).metadataSeparators.isDefault,
-            isTrue,
-          );
-          expect(tester.takeException(), isNull);
-        },
+  for (final size in [const Size(390, 844), const Size(844, 390)]) {
+    testWidgets('chips, All, Save with and Keep together ($size)', (
+      tester,
+    ) async {
+      tester.view.physicalSize = size;
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.reset);
+      final container = ProviderContainer(
+        overrides: [settingsProvider.overrideWith(_Settings.new)],
       );
-    }
+      addTearDown(container.dispose);
+      await tester.pumpWidget(
+        UncontrolledProviderScope(
+          container: container,
+          child: MaterialApp(
+            theme: ThemeData(extensions: const [AppTheme()]),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: const MetadataSeparatorSettingsPage(),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      TagCreditSettings credits() =>
+          container.read(settingsProvider).tagCredits;
+
+      // Defaults are selected from the start.
+      expect(credits().artistDelimiters, kArtistDelimiterDefaults);
+      expect(credits().genreDelimiters, kGenreDelimiterDefaults);
+
+      // A selected chip turns off; an unselected one turns on.
+      await _showSection(tester, 'Artists');
+      await _tap(tester, _chip(','));
+      expect(credits().artistDelimiters, isNot(contains(',')));
+      await _tap(tester, _chip('/'));
+      expect(credits().artistDelimiters, contains('/'));
+
+      // The last selected genre delimiter cannot be turned off. Genre sits
+      // below Artists, so its chips are the last matches for shared symbols.
+      await _showSection(tester, 'Genre');
+      await _tap(tester, _chip('،'), last: true);
+      expect(credits().genreDelimiters, [';']);
+      await _tap(tester, _chip(';'), last: true);
+      expect(credits().genreDelimiters, [';']);
+
+      // All selects every offered artist delimiter; a second tap restores the
+      // defaults.
+      await _showSection(tester, 'Artists');
+      await _tap(tester, _chip('All'));
+      expect(credits().artistDelimiters, kArtistDelimiterChoices);
+      await _tap(tester, _chip('All'));
+      expect(credits().artistDelimiters, kArtistDelimiterDefaults);
+
+      // Save with on Artists writes one value to the three name fields.
+      await _tap(tester, find.text('Save with'));
+      await _tap(tester, find.text('Semicolon (;)'));
+      await _tap(tester, find.text('Save'), last: true);
+      final separators = container.read(settingsProvider).metadataSeparators;
+      expect(separators.artist, '; ');
+      expect(separators.albumArtist, '; ');
+      expect(separators.composer, '; ');
+      expect(separators.genre, '');
+
+      // Keep together: a name is added, then removed.
+      await _showSection(tester, 'Keep together');
+      final keepField = find.byType(TextField);
+      await _tap(tester, keepField, last: true);
+      await tester.enterText(keepField.last, 'Tyler, The Creator');
+      await tester.pump();
+      await _tap(tester, find.byTooltip('Add name'));
+      expect(credits().keepTogether, ['Tyler, The Creator']);
+      await _tap(tester, find.byTooltip('Remove name'));
+      expect(credits().keepTogether, isEmpty);
+
+      // Add separator: the new chip is selected straight away.
+      await _showSection(tester, 'Artists');
+      await _tap(tester, _chip('Add separator'));
+      final sheetField = find.descendant(
+        of: find.byType(AppBottomSheet),
+        matching: find.byType(TextField),
+      );
+      await tester.enterText(sheetField, '|');
+      await tester.pump();
+      await _tap(tester, find.text('Save'), last: true);
+      expect(credits().customArtistDelimiters, ['|']);
+      expect(credits().artistDelimiters, contains('|'));
+      expect(tester.takeException(), isNull);
+    });
   }
+
+  testWidgets('dismissing the Save with sheet keeps the saved separator', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(390, 844);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    final container = ProviderContainer(
+      overrides: [settingsProvider.overrideWith(_Settings.new)],
+    );
+    addTearDown(container.dispose);
+    container.read(settingsProvider.notifier).setMetadataNamesSeparator(' | ');
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: container,
+        child: MaterialApp(
+          theme: ThemeData(extensions: const [AppTheme()]),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: const MetadataSeparatorSettingsPage(),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    await _tap(tester, find.text('Save with'));
+    await _tap(tester, find.text('Slash (/)'));
+    await tester.fling(find.byType(AppSheetHandle), const Offset(0, 600), 1200);
+    await tester.pumpAndSettle();
+    expect(container.read(settingsProvider).metadataSeparators.artist, ' | ');
+  });
+
+  test('the Artists separator is shared across the name fields', () {
+    const separators = MetadataSeparators(artist: '; ', genre: ', ');
+    expect(separators.names, '; ');
+    final shared = separators.withNames(' / ');
+    expect(shared.artist, ' / ');
+    expect(shared.albumArtist, ' / ');
+    expect(shared.composer, ' / ');
+    expect(shared.genre, ', ');
+  });
 }
