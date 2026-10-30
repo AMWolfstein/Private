@@ -30,7 +30,6 @@ Future<void> _pumpGuide(
               currentIndex: currentIndex,
             ).single,
           ),
-          ),
         ),
       ),
     ),
