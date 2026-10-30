@@ -1,0 +1,680 @@
+{
+  "assessments": {
+    "cross_module_architecture": 94.0,
+    "high_level_elegance": 86.0,
+    "package_organization": 87.0,
+    "design_coherence": 88.0,
+    "abstraction_fitness": 93.0,
+    "error_consistency": 90.0,
+    "contract_coherence": 91.0,
+    "api_surface_coherence": 96.0,
+    "type_safety": 94.0,
+    "authorization_consistency": 100.0,
+    "logic_clarity": 93.0,
+    "low_level_elegance": 89.0,
+    "mid_level_elegance": 88.0,
+    "naming_quality": 92.0,
+    "ai_generated_debt": 90.0,
+    "test_strategy": 92.0,
+    "dependency_health": 100.0,
+    "initialization_coupling": 96.0,
+    "convention_outlier": 100.0,
+    "incomplete_migration": 100.0
+  },
+  "findings": [
+    {
+      "dimension": "high_level_elegance",
+      "identifier": "audio_analysis_backend_owned_by_widget_state",
+      "summary": "Audio analysis backend ownership remains split between widget State and the service package",
+      "related_files": [
+        "lib/widgets/audio_analysis/audio_analysis_widget.dart",
+        "lib/widgets/audio_analysis/audio_analysis_models.dart",
+        "lib/services/audio_analysis/audio_analysis_jobs.dart",
+        "lib/services/audio_analysis/audio_analysis_cache.dart"
+      ],
+      "evidence": [
+        "AudioAnalysisCard State implements _loadFromCache/_saveToCache and source-mtime validation at lines 418-485, while services/audio_analysis/audio_analysis_cache.dart owns only cache budgeting/eviction.",
+        "The same State implements _runAnalysis (line 544), SAF staging, _generateSpectrogram (line 670), FFprobe metadata extraction (line 898) and full-stream level analysis (line 998), in addition to widget lifecycle and build.",
+        "AudioAnalysisData is a part of the widget library, so the operation result model is also bound to the presentation library. Changing analysis inputs, storage or execution policy requires editing the widget implementation despite the focused service package."
+      ],
+      "suggestion": "Move the existing analysis operation and cache read/write methods, together with their plain result records, into the existing services/audio_analysis package as a concrete analysis runner. Keep image display/disposal, user actions and setState in the card. Reuse AudioAnalysisJobs and AudioAnalysisCache directly; do not introduce an interface/factory family. This relocates existing responsibilities and removes backend protocols from State.",
+      "confidence": "high",
+      "impact_scope": "subsystem",
+      "fix_scope": "multi_file_refactor",
+      "root_cause_cluster": "non_widget_behavior_owned_by_presentation"
+    },
+    {
+      "dimension": "package_organization",
+      "identifier": "persistence_services_placed_under_widgets",
+      "summary": "Metadata persistence and device probe storage are placed in widget directories",
+      "related_files": [
+        "lib/widgets/library/track_metadata_persistence.dart",
+        "lib/services/library/metadata_cover_resources.dart",
+        "lib/services/library/metadata_index_reconciler.dart",
+        "lib/widgets/glass/app_glass_auto_probe.dart",
+        "lib/providers/runtime_profile_provider.dart",
+        "lib/main.dart"
+      ],
+      "evidence": [
+        "track_metadata_persistence.dart contains a framework-free MetadataPersistenceService that performs native tag edits, FFmpeg fallback, SAF writeback and resource cleanup; it contains no widget. The closely related cover-resource and index-reconciliation services already live in services/library.",
+        "app_glass_auto_probe.dart contains AppGlassAutoResult/Step, JSON encoding, SharedPreferences persistence and frame-window sampling, while the actual host widget is separately implemented in app_glass_auto_probe_host.dart.",
+        "runtime_profile_provider.dart imports the widgets/glass file to type state and call saveGlassAutoResult; main.dart imports it to bootstrap persisted probe results. Thus the misplaced file is already serving application/runtime code rather than just widgets."
+      ],
+      "suggestion": "Move track_metadata_persistence.dart into services/library and update its sheet/test imports. Move the non-widget auto-glass probe module into a focused runtime/service location (or keep its data with models/app_glass.dart and its persistence/sampler in one service file), updating the provider, bootstrap and host imports. Preserve the existing implementations and public names; add no forwarding barrels.",
+      "confidence": "high",
+      "impact_scope": "subsystem",
+      "fix_scope": "multi_file_refactor",
+      "root_cause_cluster": "non_widget_behavior_owned_by_presentation"
+    },
+    {
+      "dimension": "error_consistency",
+      "identifier": "saf_copy_discards_failure_cause",
+      "summary": "SAF temp-copy failures lose their causes before reaching callers",
+      "related_files": [
+        "lib/services/native/media_file_bridge.dart",
+        "android/app/src/main/kotlin/com/amwolfstein/sistrum/MainActivitySafIo.kt",
+        "lib/widgets/audio_analysis/audio_analysis_widget.dart",
+        "lib/widgets/library/batch_track_actions.dart"
+      ],
+      "evidence": [
+        "copyUriToTemp catches SecurityException and all other Exceptions, logs their messages and returns null; safCopyToTemp returns that null as a successful channel response.",
+        "MediaFileBridge.copyContentUriToTemp exposes Future<String?> without an error reason. _runAnalysis replaces null with Exception(\"Failed to copy SAF file for analysis\"), and ReplayGain returns storageFailed without its error field. Permission denial, missing media and storage/provider I/O failures become indistinguishable."
+      ],
+      "suggestion": "Have the native safCopyToTemp channel handler return a PlatformException with a stable storage failure code and the original cause/message on copy failure; return a non-null path on success. Preserve that exception in ReplayGainWriteResult.error and let analysis retain it.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "contract_coherence",
+      "identifier": "backup_failure_reason_contract_not_preserved",
+      "summary": "Backup parsing reports unsupported and corrupt native archives as unreadable",
+      "related_files": [
+        "lib/services/backup/backup_service.dart",
+        "lib/screens/settings/backup_restore_page.dart",
+        "rust_backend/crates/mobile/src/native_backup/archive.rs",
+        "rust_backend/crates/mobile/src/data_jobs.rs"
+      ],
+      "evidence": [
+        "BackupParseFailure.unsupportedVersion is documented for incompatible backup versions and has a dedicated localized UI message, but no parse branch constructs that reason.",
+        "archive::read rejects invalid magic, versions other than 3 and malformed metadata through Result errors; data_jobs wraps those as NativeDataJobError::Operation. _parseArchiveNative maps only Dart FormatException to corruptArchive and all other exceptions to unreadable, so readable incompatible/corrupt ZIP backups receive the storage-read-failure message."
+      ],
+      "suggestion": "Carry a small explicit backup failure code from the native reader across the channel and map it to unsupportedVersion, corruptArchive or unreadable in BackupService; separate native version rejection from malformed metadata.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "type_safety",
+      "identifier": "failed_replaygain_result_accepts_null",
+      "summary": "The failed ReplayGain constructor permits a value that reports success",
+      "related_files": [
+        "lib/services/playback/replaygain_write_result.dart",
+        "lib/widgets/library/batch_track_actions.dart"
+      ],
+      "evidence": [
+        "ReplayGainWriteResult.failure is ReplayGainWriteFailure?, and const ReplayGainWriteResult.failed(this.failure, {this.error}) therefore accepts null.",
+        "isWritten is defined as failure == null. Consequently ReplayGainWriteResult.failed(null) is a legal failed-constructor call that batch code treats as a written result. Existing call sites pass enum values, so this is a public type-contract hole rather than evidence of a current failed write being marked successful."
+      ],
+      "suggestion": "Declare the failed constructor parameter non-null explicitly: const ReplayGainWriteResult.failed(ReplayGainWriteFailure failure, {this.error}) : failure = failure.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "logic_clarity",
+      "identifier": "browse_page_stored_twice",
+      "summary": "AsyncData pages run the same cache update twice",
+      "related_files": [
+        "lib/screens/library/library_section_tab.dart"
+      ],
+      "evidence": [
+        "At lines 269-274, _resolveLibraryBrowsePageData calls storePage(value.asData.value), then value.whenOrNull(data: storePage). For AsyncData both calls receive the same page.",
+        "storePage performs cache lookup, stale-request traversal, mutation and trimming, so these are duplicate side effects rather than alternative fallbacks."
+      ],
+      "suggestion": "Keep the direct asData path once; remove the subsequent whenOrNull dispatch. This also retains the existing behavior for previous data exposed by asData.",
+      "confidence": "high",
+      "impact_scope": "module",
+      "fix_scope": "local_refactor"
+    },
+    {
+      "dimension": "mid_level_elegance",
+      "identifier": "browse_track_mapper_drops_lyrics",
+      "summary": "Browse paging loses the lyrics-presence field at the database/domain seam",
+      "related_files": [
+        "lib/services/library/library_browse_store.dart",
+        "lib/services/library/library_browse_rows.dart",
+        "lib/services/library/library_row_mapper.dart",
+        "lib/models/local_library_item.dart"
+      ],
+      "evidence": [
+        "_queueTrackUnionSql selects has_replaygain but never has_lyrics; queueTrackRowToJson also omits hasLyrics.",
+        "LocalLibraryItem.fromJson interprets missing hasLyrics as false, while LibraryRowMapper.decode explicitly maps has_lyrics. Thus the same stored song has different domain metadata depending on whether it was read through trackPage or the canonical mapper.",
+        "test/library_schema_test.dart verifies canonical round-tripping with hasLyrics=true; the browse-store fixture does not set that flag."
+      ],
+      "suggestion": "Select l.has_lyrics in the track query and use LibraryRowMapper.decode for shared track fields in queueTrackRowToJson, adding only actual browse-specific fields. Add a browse-page check with hasLyrics=true to verify parity.",
+      "confidence": "high",
+      "impact_scope": "module",
+      "fix_scope": "local_refactor"
+    },
+    {
+      "dimension": "low_level_elegance",
+      "identifier": "metadata_filter_chip_repetition",
+      "summary": "The metadata filter sheet repeats the same chip behavior for every option",
+      "related_files": [
+        "lib/screens/library/library_section_tab.dart"
+      ],
+      "evidence": [
+        "_showFilterSheet repeats AppChoiceChip label/selected/onSelected subtrees from the metadata section through the completeness filters (roughly lines 537-688). Each option repeats its mode string in selection and callback.",
+        "The same method already uses a compact sortChip(label, mode) helper for its sort options, demonstrating that the repeated state wiring is unnecessary."
+      ],
+      "suggestion": "Mirror the existing sortChip helper with a local metadataChip(label, mode) helper, or iterate a local list of (label, mode) records. Keep option order and localized labels in the sheet while defining selection/callback wiring once.",
+      "confidence": "medium",
+      "impact_scope": "module",
+      "fix_scope": "local_refactor"
+    },
+    {
+      "dimension": "naming_quality",
+      "identifier": "download_named_snapshot_fallback",
+      "summary": "Snapshot-retention parameters misleadingly describe active downloads",
+      "related_files": [
+        "lib/screens/library/library_browse_refresh_policy.dart",
+        "lib/screens/library/library_section_tab.dart",
+        "test/library_browse_refresh_policy_test.dart"
+      ],
+      "evidence": [
+        "resolveLibraryBrowseCountsSnapshot accepts activeDownloadFallback and shouldRetainLibraryBrowsePageSnapshot accepts activeDownloadFallbackAvailable, but neither observes a download.",
+        "Their caller passes nonEmptyFallback and nonEmptyFallback != null, representing an in-memory snapshot. Tests describe the same mechanism as both a download refresh and in-memory history."
+      ],
+      "suggestion": "Rename the parameters to nonEmptyFallback and nonEmptyFallbackAvailable (or snapshotFallback equivalents) and update the download/history test descriptions to describe local browse snapshot retention.",
+      "confidence": "high",
+      "impact_scope": "module",
+      "fix_scope": "local_refactor"
+    },
+    {
+      "dimension": "ai_generated_debt",
+      "identifier": "single_source_union_scaffolding",
+      "summary": "Local-only browse SQL retains unnecessary multi-source assembly scaffolding",
+      "related_files": [
+        "lib/services/library/library_browse_store.dart"
+      ],
+      "evidence": [
+        "counts and _getUnfilteredQueueCounts each allocate parts, add exactly one SQL string and join with UNION ALL; their outer SELECT then SUMs the one aggregate row (lines 68-93 and 117-137).",
+        "_queueTrackUnionSql and _queueAlbumUnionSql likewise add only one bounded local query before joining parts. There is no branch that contributes a second source."
+      ],
+      "suggestion": "Return the bounded local SQL string directly from the track/album builders. Execute each count aggregate directly and remove its one-element parts list and outer SUM layer, preserving the existing COALESCE behavior.",
+      "confidence": "high",
+      "impact_scope": "module",
+      "fix_scope": "local_refactor"
+    },
+    {
+      "dimension": "test_strategy",
+      "identifier": "sql_fixtures_parse_source_format",
+      "summary": "Two SQL behavior fixtures depend on the formatting of production Dart source",
+      "related_files": [
+        "test/album_completeness_query_test.dart",
+        "test/replaygain_library_filter_test.dart",
+        "test/library_schema_test.dart"
+      ],
+      "evidence": [
+        "album_completeness_query_test.dart _definition and replaygain_library_filter_test.dart _tableDefinition read library_schema.dart and extract CREATE TABLE with a regex requiring a newline before the closing parenthesis, then force-unwrap the match.",
+        "These behavior tests fail on a harmless one-line SQL declaration or equivalent extraction into a helper, and run the uninterpolated Dart string rather than executing schema creation. library_schema_test.dart already demonstrates executing LibrarySchema.create against SqliteProcessDatabase instead."
+      ],
+      "suggestion": "Use LibrarySchema.create with the existing SqliteProcessDatabase helper to prepare these fixtures, and run their actual predicates/page queries against that database. Remove the source-reading regex helpers and retain the existing result assertions.",
+      "confidence": "high"
+    }
+  ],
+  "dimension_notes": {
+    "cross_module_architecture": {
+      "evidence": [
+        "Inspected the current local Dart import/export/part graph: no multi-file strongly connected component was found, and no service imports a provider, widget or screen.",
+        "PlaybackHandler lets music_player_runtime.dart depend on a stable handler surface; LibrarySourceSink and LibraryRemovalSink let services accept notifier operations without provider imports.",
+        "runtime_profile_provider.dart imports non-widget probe data/persistence from widgets/glass/app_glass_auto_probe.dart, an isolated inversion in the package roles rather than a dependency cycle."
+      ],
+      "impact_scope": "subsystem",
+      "fix_scope": "multi_file_refactor",
+      "confidence": "high",
+      "issues_preventing_higher_score": "The runtime profile provider still reaches into widgets/glass for persisted probe state; UI-owned analysis workflows also leave some backend ownership implicit. These are limited exceptions to otherwise coherent dependency direction."
+    },
+    "high_level_elegance": {
+      "evidence": [
+        "services/playback, services/library, services/native, services/storage and services/backup have recognizable capability ownership; providers expose application state, and AppScreens isolates screen construction from navigation.",
+        "AudioAnalysisCard State still owns cache JSON validation, SAF temp copies, FFprobe inspection, FFmpeg execution, native/isolate spectral-cutoff work and cache writes in addition to rendering (audio_analysis_widget.dart:370-1050).",
+        "The existing services/audio_analysis directory owns job scheduling, cache budget and parsing but not the actual complete analysis operation, splitting one backend capability across layers."
+      ],
+      "impact_scope": "subsystem",
+      "fix_scope": "multi_file_refactor",
+      "confidence": "high",
+      "issues_preventing_higher_score": "Audio analysis is a material ownership exception: developers extending the backend must edit widget State alongside the service package."
+    },
+    "package_organization": {
+      "evidence": [
+        "Root lib contains app.dart and main.dart, both legitimate composition entry points; most reusable widgets and domain services have meaningful subdirectories.",
+        "widgets/library/track_metadata_persistence.dart defines MetadataPersistenceService, requests/results and native/FFmpeg/SAF writeback logic without defining a widget or importing Flutter. Its MetadataCoverResources and MetadataIndexReconciler collaborators live in services/library.",
+        "widgets/glass/app_glass_auto_probe.dart defines the persisted result, SharedPreferences read/write and frame sampler; providers/runtime_profile_provider.dart and main.dart import it for non-widget behavior."
+      ],
+      "impact_scope": "subsystem",
+      "fix_scope": "multi_file_refactor",
+      "confidence": "high",
+      "issues_preventing_higher_score": "Several concrete non-widget services remain under widgets even though focused service/model homes already exist; this makes placement less predictive."
+    },
+    "design_coherence": {
+      "evidence": [
+        "LibraryCollectionsNotifier centralizes mutation ordering in _mutate, while AudioAnalysisJobs centralizes owned-session cancellation and serialization instead of duplicating those policies per command.",
+        "MusicPlayerHandler separates queue, playback, media and source operations into parts of one private state machine; the runtime and concrete handler have distinct lifecycle roles.",
+        "AudioAnalysisCard State mixes cache validation/persistence, SAF staging, native process coordination and presentation; _generateSpectrogram performs temp-file management, process-result checks, native/isolate cutoff calculation and image decoding before returning to UI state."
+      ],
+      "impact_scope": "subsystem",
+      "fix_scope": "multi_file_refactor",
+      "confidence": "high",
+      "issues_preventing_higher_score": "Backend and presentation responsibilities remain entangled in audio analysis. This is the same ownership defect reported under high_level_elegance, rather than an additional independent defect."
+    },
+    "abstraction_fitness": {
+      "evidence": [
+        "PlaybackHandler, LibrarySourceSink, LibraryRemovalSink and AppScreens each enforce an actual dependency boundary; single implementations are justified by wiring rather than gratuitous interface families.",
+        "AudioAnalysisJobs adds serialized native execution, owned cancellation and generation checks; PlaybackSessionWriter and the collections _mutate helper similarly encapsulate real policies.",
+        "MusicAutoMix uses a fairly wide AutoMixHost surface mirrored by _HandlerAutoMixHost (music_player_automix.dart:20-53 and music_player_hooks.dart:48-121); this has legitimate private-state isolation value but still requires navigating an extensive forwarding surface for transition changes."
+      ],
+      "impact_scope": "subsystem",
+      "fix_scope": "multi_file_refactor",
+      "confidence": "medium",
+      "issues_preventing_higher_score": "AutoMixHost exposes many individual handler facts/actions and its adapter mirrors them. The boundary has a concrete isolation purpose, so this is modest navigation cost rather than a recommendation to remove the interface."
+    },
+    "error_consistency": {
+      "evidence": [
+        "Typed update and write outcomes are systemic positives; the SAF copy path still returns null for actual I/O failure and loses the reason before user-facing handling."
+      ],
+      "issues_preventing_higher_score": "The native SAF copy boundary swallows failure causes despite neighboring typed write outcomes."
+    },
+    "contract_coherence": {
+      "evidence": [
+        "Scan completion is checked before exposing a result, and deletion helpers document their confirmed-absence semantics. BackupParseFailure promises distinctions that native parsing does not retain."
+      ],
+      "issues_preventing_higher_score": "Unsupported/corrupt native archive failures violate the advertised BackupParseFailure reason contract."
+    },
+    "api_surface_coherence": {
+      "evidence": [
+        "Sibling library scans use a common return model and named options. MediaFileBridge.pickSafTree returns a protocol map with an optional failure callback, while editFileMetadata and openContentUriPlaybackLease return decoded classes; callers still need to know tree/stat response keys."
+      ],
+      "issues_preventing_higher_score": "A small amount of bridge protocol knowledge remains in callers through map-shaped tree/stat/metadata responses. This is API friction, not a demonstrated runtime defect."
+    },
+    "type_safety": {
+      "evidence": [
+        "Immutable typed domain models and enums dominate the inspected surfaces. ReplayGainWriteResult.failed alone permits null in its failure discriminant, making its declared failed variant capable of reporting success."
+      ],
+      "issues_preventing_higher_score": "The failure constructor does not enforce its non-null failure invariant."
+    },
+    "authorization_consistency": {
+      "evidence": [
+        "Absolute/canonical directory grants refuse root access and are scoped and released. SAF probes check read permission and retain unknown states. Manifest FileProvider access is URI-grant based and internal components are unexported. No inconsistent authorization defect was observed in these inspected paths."
+      ],
+      "issues_preventing_higher_score": "No material issue found in the reviewed authorization boundaries."
+    },
+    "logic_clarity": {
+      "evidence": [
+        "cleanupMissingLibraryRows advances a stable ID cursor, preserves unreadable paths, and rechecks file_path before deletion (lib/services/library/library_cleanup.dart).",
+        "MusicAutoMix preparation checks its generation after asynchronous source, deck and analysis work (lib/services/playback/music_player_automix.dart).",
+        "_resolveLibraryBrowsePageData stores an AsyncData page through both asData and whenOrNull (lib/screens/library/library_section_tab.dart:269-274)."
+      ],
+      "impact_scope": "module",
+      "fix_scope": "local_refactor",
+      "confidence": "high",
+      "issues_preventing_higher_score": "An ordinary AsyncData page runs the same cache mutation and pruning twice."
+    },
+    "low_level_elegance": {
+      "evidence": [
+        "LibraryRowMapper uses a single column table for ordinary encode/decode fields; localMetadataAfterEdit uses compact tag maps rather than field-by-field branching.",
+        "MetadataEditorController keeps text-change tracking and paired track/disc fields together with clear local state.",
+        "_showFilterSheet in lib/screens/library/library_section_tab.dart:412-750 repeats metadata chip construction for each option, although sort options already share sortChip."
+      ],
+      "impact_scope": "module",
+      "fix_scope": "local_refactor",
+      "confidence": "high",
+      "issues_preventing_higher_score": "Metadata filter options repeat the same selected-state and callback structure across a long nested widget body."
+    },
+    "mid_level_elegance": {
+      "evidence": [
+        "MetadataPersistenceService.save snapshots metadata, holds a cover lease and returns MetadataSaveResult; MetadataIndexReconciler separately publishes reread tags with MetadataIndexResult.",
+        "LibraryNativeAdapter keeps native staging detached and publishes through the owning SQLite connection with cancellation and source checks.",
+        "Browse trackPage uses queueTrackRowToJson instead of LibraryRowMapper.decode; its SELECT and mapper omit has_lyrics/hasLyrics, which the canonical mapper preserves."
+      ],
+      "impact_scope": "module",
+      "fix_scope": "local_refactor",
+      "confidence": "high",
+      "issues_preventing_higher_score": "A track with has_lyrics=1 becomes hasLyrics=false through browse paging, while the canonical decode preserves true."
+    },
+    "naming_quality": {
+      "evidence": [
+        "MetadataIndexReconciler, MetadataSaveRequest, deleteReplacedLibraryScanRows and cleanupMissingLibraryRows describe their operations precisely.",
+        "MetadataEditorController distinguishes buildMetadataTags, invalidateLookup and isCurrent without generic domain-operation names.",
+        "library_browse_refresh_policy.dart calls an ordinary in-memory fallback activeDownloadFallback; its caller uses nonEmptyFallback, and its tests mix download and history terminology."
+      ],
+      "impact_scope": "module",
+      "fix_scope": "local_refactor",
+      "confidence": "high",
+      "issues_preventing_higher_score": "activeDownloadFallback and activeDownloadFallbackAvailable describe no download state and obscure the snapshot-retention condition."
+    },
+    "ai_generated_debt": {
+      "evidence": [
+        "Metadata, cleanup and AutoMix comments mostly explain constraints such as incomplete reads, cancellation, source identity and decoder limitations rather than restating syntax.",
+        "The sampled metadata services use typed outcomes and purposeful resource cleanup, with no pervasive defensive checks around pure expressions.",
+        "LibraryBrowseStore counts, _getUnfilteredQueueCounts, _queueTrackUnionSql and _queueAlbumUnionSql each construct a one-element parts list and join it with UNION ALL; count methods then sum their single aggregate result."
+      ],
+      "impact_scope": "module",
+      "fix_scope": "local_refactor",
+      "confidence": "high",
+      "issues_preventing_higher_score": "Four browse SQL paths retain one-element UNION-building machinery, including redundant aggregation layers in the two count queries."
+    },
+    "test_strategy": {
+      "evidence": [
+        "Read tests exercise actual queue and runtime algorithms with controllable decks and completion barriers; settings persistence tests gate writes with completers and verify failure behavior.",
+        "Library schema tests use actual SQLite and production schema methods; native_library_staging_test runs actual NativeDataJobs and checks isolation, cleanup, integrity and orphan keys.",
+        "Two SQL behavior test fixtures still extract table declarations from source with formatting-sensitive regexes."
+      ],
+      "issues_preventing_higher_score": "The SQL fixture source extraction is unnecessary implementation coupling despite the otherwise substantial behavioral portfolio."
+    },
+    "dependency_health": {
+      "evidence": [
+        "pubspec.yaml separates networking, transport, media-service integration, SQL storage, native metadata editing and UI dependencies into distinct responsibilities. Imports confirm actual usage, including CupertinoIcons font use through Flutter rather than direct package imports.",
+        "The audioplayers_android override has an explicit proxy-descriptor preservation purpose; audio_service and audioplayers implement different background-session and playback duties. xml remains used by the documented synchronous lyric compatibility parser.",
+        "Inspected pubspec.lock and vendored plugin manifests; no concrete unused direct dependency, conflicting constraint or redundant interchangeable stack was established."
+      ],
+      "issues_preventing_higher_score": "No supported defect found in the inspected dependency declarations and uses."
+    },
+    "initialization_coupling": {
+      "evidence": [
+        "LibraryDatabase and AppStateDatabase defer opening storage through SingleFlightInitializer, rather than opening at top level. UsbPcmBridge defers the native broadcast stream until first use.",
+        "main explicitly initializes bindings, waits for Android activity attachment and configures playback/settings before creating the app container; these are framework/bootstrap responsibilities.",
+        "MusicPlayerRuntime uses injected dependencies, guards duplicate initialization and supports cleanup/retry; tests explicitly cover pending disposal and failed initialization.",
+        "LogBuffer._internal immediately sends setLoggingEnabled on first access and suppresses failures. Thus the first logging call implicitly performs a native-channel initialization attempt, although normal app startup establishes bindings first."
+      ],
+      "issues_preventing_higher_score": "LogBuffer construction still hides a native-channel side effect behind ordinary logging. Moving that one-time enable call to the explicit startup path would make its lifecycle clearer; no observed production boot-order failure is claimed."
+    },
+    "convention_outlier": {
+      "evidence": [
+        "Inspected providers consistently use Riverpod declarations and typed controller/state ownership; models use normal Dart naming and generated serialization is kept in .g.dart files.",
+        "Split screen/service implementation files use part/part of where private library state is shared; independent services use ordinary imports. Those differences match Dart library requirements and responsibilities.",
+        "AppScreens interface and its screen-side implementation are explicitly wired by provider override; this is a consistent navigation boundary rather than a divergent export convention."
+      ],
+      "issues_preventing_higher_score": "No supported convention defect found in the inspected sibling modules."
+    },
+    "incomplete_migration": {
+      "evidence": [
+        "AppStateDatabase explicitly drops retired online/search tables when upgrading older state; persisted legacy source IDs and path aliases have active compatibility purposes.",
+        "LyricsParser documents and implements fallback for missing native plugins and XML documents exceeding native nesting limits. Native and Dart parser fixtures test the shared contract, so dual parsers have current callers and distinct compatibility needs.",
+        "Library schema version ownership is explicit, and the inspected code has no deprecated-but-called API or abandoned migration TODO. Residual Go-named logging identifiers label native logs as Native in user-facing output and do not create dual runtime paths."
+      ],
+      "issues_preventing_higher_score": "No supported incomplete migration defect found; observed compatibility paths are active and bounded."
+    }
+  },
+  "dimension_judgment": {
+    "cross_module_architecture": {
+      "dimension_character": "Dependency direction is reliably coherent in the inspected Dart code: services stay below providers and presentation, and explicit handler/mutation contracts avoid cycles. The few upward-looking dependencies arise from non-widget code placed under widgets rather than pervasive architectural backreferences.",
+      "score_rationale": "A cycle-free current local dependency graph, service isolation and explicit playback lifetime ownership support a strong assessment. The runtime profile provider reaching into widgets for persisted probe behavior and the split audio backend ownership keep it below exemplary."
+    },
+    "high_level_elegance": {
+      "dimension_character": "Most major areas have recognizable, domain-aligned ownership, and the navigation and playback boundaries can be explained without reconstructing historical implementation choices. Audio analysis is a substantial exception because the widget remains the execution engine for the backend capability.",
+      "score_rationale": "Clear library, playback, native and storage packages make the overall system understandable. The analysis workflow spanning State and the service package creates enough ownership ambiguity to pull this toward the lower end of strong quality."
+    },
+    "package_organization": {
+      "dimension_character": "The directory structure generally predicts where functionality belongs, with clean app entry points and focused service/widget subdirectories. A small but meaningful set of non-widget persistence and runtime-probe components are located in presentation folders despite existing service/model peers.",
+      "score_rationale": "The established package layout serves navigation well across most of the app. Metadata persistence and auto-glass probe placement introduce concrete search and ownership friction, although these are localized moves rather than a repository-wide restructuring need."
+    },
+    "design_coherence": {
+      "dimension_character": "The code usually centralizes lifecycle and ordering policies in focused collaborators, and complex playback behavior has purposeful seams. Design quality becomes less focused in audio analysis, where presentation state owns several independent resource and execution protocols.",
+      "score_rationale": "The mutation serializer, job coordinator and explicit playback runtime show consistent deliberate design. AudioAnalysisCard responsibility accumulation prevents a higher score, but that isolated concern does not justify treating every large stateful widget or complex domain algorithm as a defect."
+    },
+    "abstraction_fitness": {
+      "dimension_character": "Most abstractions inspected earn their cost by containing native API volatility, ordering writes, managing cancellation or reversing dependencies. The code favors concrete collaborators; the widest host adapters have understandable isolation purposes rather than serving as ceremonial layers.",
+      "score_rationale": "The handler contract, mutation ports and serialized jobs provide demonstrable leverage and are excluded from thin-wrapper complaints by the rubric. AutoMix host forwarding adds limited navigation overhead, leaving this strong while short of friction-free."
+    },
+    "error_consistency": {
+      "dimension_character": "Errors are usually explicit domain outcomes or typed exceptions with retained context, and destructive cleanup treats uncertainty conservatively. The SAF copy boundary is an isolated but user-visible exception that erases diagnostic context across several retained operations.",
+      "score_rationale": "Typed update, metadata and ReplayGain outcomes make most behavior predictable. The copy path prevents callers from preserving or distinguishing the underlying storage failure, placing this below exemplary while keeping the overall judgment strong."
+    },
+    "contract_coherence": {
+      "dimension_character": "Most inspected APIs honor precise completion and absence contracts, with scan and file-stat boundaries explicitly validated. Backup parsing exposes richer reason semantics than its native integration actually delivers.",
+      "score_rationale": "The supported scan and storage contracts make the code generally trustworthy. The backup reason mismatch affects an advertised public enum and its UI behavior, but is localized to one failure boundary."
+    },
+    "api_surface_coherence": {
+      "dimension_character": "Public service APIs are generally narrow, asynchronous where I/O requires it, and use named options for variation. A few native bridge methods still expose response maps alongside typed result classes, adding minor caller knowledge requirements.",
+      "score_rationale": "Sibling scans and focused mutation interfaces establish coherent patterns. Map-shaped native responses make the surface somewhat less uniform, without supporting a concrete behavioral defect in this dimension."
+    },
+    "type_safety": {
+      "dimension_character": "The inspected domain models and operation outcomes use explicit immutable types and enums, with dynamic data concentrated at serialization boundaries. One result constructor fails to enforce the invariant that differentiates its success and failure variants.",
+      "score_rationale": "Strong model typing and validated scan payloads support a high assessment. The nullable failed-constructor parameter is a real but isolated type hole, with no inspected caller currently passing null."
+    },
+    "authorization_consistency": {
+      "dimension_character": "Authorization is expressed as Android resource permissions and scoped local-backend access. The inspected code consistently validates directory grants, releases them, checks SAF read access and limits exported storage components.",
+      "score_rationale": "The observed resource boundaries apply coherent permission and lifetime rules, including conservative provider-failure handling. No supported inconsistency was found that would warrant a defect or score deduction."
+    },
+    "logic_clarity": {
+      "dimension_character": "Control flow is generally explicit: cancellation, missing data and storage races have visible guards and explanatory constraints. The sampled paths are traceable, with one clear redundant cache-update path.",
+      "score_rationale": "Stable paging and repeated generation checks make complicated asynchronous work understandable. The duplicate page-store dispatch prevents an exemplary assessment, but does not indicate pervasive opaque branching."
+    },
+    "low_level_elegance": {
+      "dimension_character": "Small services and controllers generally have proportionate internals, explicit resource ownership and useful local helpers. The library filter sheet is a conspicuous pocket of repetitive construction that makes its actual option set harder to scan.",
+      "score_rationale": "Mapping tables, bounded mutations and direct helpers support strong local craft. Repeated metadata-chip selection/callback bodies in one large sheet introduce avoidable editing friction and pull the score below the strongest range."
+    },
+    "mid_level_elegance": {
+      "dimension_character": "Most integration seams express lifecycle and outcomes clearly, particularly metadata persistence and native scan publication. SQLite-to-domain translation is less consistent: a separate browse adapter silently drops a domain field.",
+      "score_rationale": "Explicit save/index outcomes and transactional publication substantially reduce orchestration surprises. The divergent track adapter requires callers to understand which read path populated a LocalLibraryItem, weakening an otherwise solid set of seams."
+    },
+    "naming_quality": {
+      "dimension_character": "Names usually expose the relevant music, metadata and storage concepts and allow readers to predict responsibility. One refresh-policy seam retains download-era vocabulary that does not describe the local snapshot it receives.",
+      "score_rationale": "Specific domain verbs and coherent model/controller names make navigation reliable. The misleading fallback parameter and related test descriptions introduce a small but concrete conceptual detour rather than broad naming ambiguity."
+    },
+    "ai_generated_debt": {
+      "dimension_character": "Most sampled code is purposeful and its comments explain real constraints. Browse SQL retains formulaic multi-source assembly scaffolding around a single local query, making the implementation noisier than its current behavior requires.",
+      "score_rationale": "Useful comments and explicit operation-specific code keep generated-style noise localized. Repeated one-element UNION assembly and redundant outer aggregation are unnecessary ceremony, but the evidence does not support treating this as pervasive debt."
+    },
+    "test_strategy": {
+      "dimension_character": "The portfolio is broad and predominantly tests observable behavior, including failure, cancellation and cross-module native/database behavior. A small pair of SQL fixtures unnecessarily couples behavioral verification to Dart source formatting.",
+      "score_rationale": "Controlled async dependencies, real SQLite and native integration checks support strong change confidence. The formatting-sensitive SQL extraction is isolated but adds avoidable fragility, keeping this below exemplary."
+    },
+    "dependency_health": {
+      "dimension_character": "The inspected dependency set has clear production responsibilities and no established interchangeable duplicate stack. Native media requirements explain its larger plugins and local Android patches.",
+      "score_rationale": "Actual imports and font usage account for the direct dependencies inspected, while the local override states its required behavior. No concrete dependency defect was found to warrant a deduction; this does not assert an external vulnerability or freshness audit."
+    },
+    "initialization_coupling": {
+      "dimension_character": "Initialization is generally explicit, lazy and guarded, with substantial tests for retry and lifetime boundaries. The principal small exception is that first access to the log buffer also attempts to enable native logging.",
+      "score_rationale": "Lazy storage, lazy USB event subscriptions and explicit binding/activity bootstrap make order dependencies predictable. Hidden first-use native work in LogBuffer adds minor lifecycle friction, although failure is caught and no production initialization bug was established."
+    },
+    "convention_outlier": {
+      "dimension_character": "The inspected modules follow consistent Dart naming and framework conventions. Different import/part and controller patterns reflect real library or lifecycle distinctions rather than arbitrary islands.",
+      "score_rationale": "Provider, service, model and navigation examples provide coherent precedents for developers. No concrete inconsistency with navigation or behavioral impact was found, so no unsupported style deduction is applied."
+    },
+    "incomplete_migration": {
+      "dimension_character": "Observed legacy support is intentional and active rather than an abandoned transition. Current code explicitly handles persisted compatibility and documents the remaining native/Dart parser boundary.",
+      "score_rationale": "Retired state tables are removed and compatibility branches have tested purposes. Internal historical names alone do not establish incomplete migration; no stale shim or deprecated active API was supported by inspection."
+    }
+  },
+  "context_updates": {
+    "error_consistency": [
+      {
+        "header": "UpdateChecker.checkForUpdate preserves failures in UpdateCheckException and distinguishes verified no-update responses from unverified cached data.",
+        "description": "New: UpdateChecker.checkForUpdate preserves failures in UpdateCheckException and distinguishes verified no-update responses from unverified cached data.",
+        "positive": true,
+        "settled": true
+      },
+      {
+        "header": "BackupParseException preserves its cause; MetadataEditResult and ReplayGainWriteResult give user-visible operations explicit outcomes.",
+        "description": "New: BackupParseException preserves its cause; MetadataEditResult and ReplayGainWriteResult give user-visible operations explicit outcomes.",
+        "positive": true,
+        "settled": true
+      },
+      {
+        "header": "fileExistenceByPath preserves unknown provider/permission states during destructive cleanup.",
+        "description": "New: fileExistenceByPath preserves unknown provider/permission states during destructive cleanup.",
+        "positive": true,
+        "settled": true
+      },
+      {
+        "header": "Kotlin channel exceptions cross into Dart as PlatformException, whereas metadata write outcomes are decoded from response objects.",
+        "description": "New: Kotlin channel exceptions cross into Dart as PlatformException, whereas metadata write outcomes are decoded from response objects.",
+        "settled": true
+      }
+    ],
+    "contract_coherence": [
+      {
+        "header": "LibraryScanBridge validates output paths, row/error counts, cancellation and file existence before returning a completed scan.",
+        "description": "New: LibraryScanBridge validates output paths, row/error counts, cancellation and file existence before returning a completed scan.",
+        "positive": true,
+        "settled": true
+      },
+      {
+        "header": "fileStat and fileExistenceByPath distinguish missing files from inaccessible storage, with boundary tests.",
+        "description": "New: fileStat and fileExistenceByPath distinguish missing files from inaccessible storage, with boundary tests.",
+        "positive": true,
+        "settled": true
+      },
+      {
+        "header": "BackupParseFailure exposes separate unsupportedVersion, corruptArchive, notBackupArchive and unreadable outcomes to the restore UI.",
+        "description": "New: BackupParseFailure exposes separate unsupportedVersion, corruptArchive, notBackupArchive and unreadable outcomes to the restore UI.",
+        "settled": true
+      }
+    ],
+    "api_surface_coherence": [
+      {
+        "header": "LibrarySourceSink and LibraryRemovalSink expose narrow typed asynchronous mutation APIs.",
+        "description": "New: LibrarySourceSink and LibraryRemovalSink expose narrow typed asynchronous mutation APIs.",
+        "positive": true,
+        "settled": true
+      },
+      {
+        "header": "folder and SAF scan entry points share the same LibraryScanNDJSONFile return type and named scan options.",
+        "description": "New: folder and SAF scan entry points share the same LibraryScanNDJSONFile return type and named scan options.",
+        "positive": true,
+        "settled": true
+      },
+      {
+        "header": "file access helpers consistently accept local paths or content URIs and centralize the translation.",
+        "description": "New: file access helpers consistently accept local paths or content URIs and centralize the translation.",
+        "positive": true,
+        "settled": true
+      },
+      {
+        "header": "MediaFileBridge still exposes map-shaped SAF tree/stat/metadata responses while typed edit and playback-lease results are decoded at the bridge.",
+        "description": "New: MediaFileBridge still exposes map-shaped SAF tree/stat/metadata responses while typed edit and playback-lease results are decoded at the bridge.",
+        "settled": true
+      }
+    ],
+    "type_safety": [
+      {
+        "header": "LocalLibraryItem and PlayableMedia have explicit immutable field types and centralized serialization.",
+        "description": "New: LocalLibraryItem and PlayableMedia have explicit immutable field types and centralized serialization.",
+        "positive": true,
+        "settled": true
+      },
+      {
+        "header": "MetadataEditOutcome, BackupParseFailure, UpdateInstallKind and ReplayGainWriteFailure encode domain outcomes as enums.",
+        "description": "New: MetadataEditOutcome, BackupParseFailure, UpdateInstallKind and ReplayGainWriteFailure encode domain outcomes as enums.",
+        "positive": true,
+        "settled": true
+      },
+      {
+        "header": "channel and JSON boundaries use dynamic maps, then cast/validate into domain models; scan result validation checks finite integral counts.",
+        "description": "New: channel and JSON boundaries use dynamic maps, then cast/validate into domain models; scan result validation checks finite integral counts.",
+        "settled": true
+      }
+    ],
+    "authorization_consistency": [
+      {
+        "header": "RustCoreBackend canonicalizes absolute granted directories, refuses filesystem-root grants, and releases operation scopes in finally/use blocks.",
+        "description": "New: RustCoreBackend canonicalizes absolute granted directories, refuses filesystem-root grants, and releases operation scopes in finally/use blocks.",
+        "positive": true,
+        "settled": true
+      },
+      {
+        "header": "SAF library probes check read grants and preserve unknown provider state; their tests cover transient failure and retry.",
+        "description": "New: SAF library probes check read grants and preserve unknown provider state; their tests cover transient failure and retry.",
+        "positive": true,
+        "settled": true
+      },
+      {
+        "header": "manifest marks the app FileProvider unexported with explicit URI grants, and internal storage/background components unexported.",
+        "description": "New: manifest marks the app FileProvider unexported with explicit URI grants, and internal storage/background components unexported.",
+        "positive": true,
+        "settled": true
+      },
+      {
+        "header": "This is an offline single-user Android app, so protected resources are filesystem/SAF/USB permissions rather than account roles or web route authentication.",
+        "description": "New: This is an offline single-user Android app, so protected resources are filesystem/SAF/USB permissions rather than account roles or web route authentication.",
+        "settled": true
+      }
+    ],
+    "logic_clarity": [
+      {
+        "header": "Observed strengths",
+        "description": "cleanupMissingLibraryRows advances a stable ID cursor, preserves unreadable paths, and rechecks file_path before deletion (lib/services/library/library_cleanup.dart).",
+        "positive": true,
+        "settled": true
+      },
+      {
+        "header": "Implementation characteristic",
+        "description": "MusicAutoMix preparation checks its generation after asynchronous source, deck and analysis work (lib/services/playback/music_player_automix.dart).",
+        "positive": true,
+        "settled": true
+      }
+    ],
+    "low_level_elegance": [
+      {
+        "header": "Observed strengths",
+        "description": "LibraryRowMapper uses a single column table for ordinary encode/decode fields; localMetadataAfterEdit uses compact tag maps rather than field-by-field branching.",
+        "positive": true,
+        "settled": true
+      },
+      {
+        "header": "Implementation characteristic",
+        "description": "MetadataEditorController keeps text-change tracking and paired track/disc fields together with clear local state.",
+        "positive": true,
+        "settled": true
+      }
+    ],
+    "mid_level_elegance": [
+      {
+        "header": "Observed strengths",
+        "description": "MetadataPersistenceService.save snapshots metadata, holds a cover lease and returns MetadataSaveResult; MetadataIndexReconciler separately publishes reread tags with MetadataIndexResult.",
+        "positive": true,
+        "settled": true
+      },
+      {
+        "header": "Implementation characteristic",
+        "description": "LibraryNativeAdapter keeps native staging detached and publishes through the owning SQLite connection with cancellation and source checks.",
+        "positive": true,
+        "settled": true
+      }
+    ],
+    "naming_quality": [
+      {
+        "header": "Observed strengths",
+        "description": "MetadataIndexReconciler, MetadataSaveRequest, deleteReplacedLibraryScanRows and cleanupMissingLibraryRows describe their operations precisely.",
+        "positive": true,
+        "settled": true
+      },
+      {
+        "header": "Implementation characteristic",
+        "description": "MetadataEditorController distinguishes buildMetadataTags, invalidateLookup and isCurrent without generic domain-operation names.",
+        "positive": true,
+        "settled": true
+      }
+    ],
+    "ai_generated_debt": [
+      {
+        "header": "Observed strengths",
+        "description": "Metadata, cleanup and AutoMix comments mostly explain constraints such as incomplete reads, cancellation, source identity and decoder limitations rather than restating syntax.",
+        "positive": true,
+        "settled": true
+      },
+      {
+        "header": "Implementation characteristic",
+        "description": "The sampled metadata services use typed outcomes and purposeful resource cleanup, with no pervasive defensive checks around pure expressions.",
+        "positive": true,
+        "settled": true
+      }
+    ]
+  },
+  "review_method": {
+    "runner": "native Codex subagents",
+    "blind": true,
+    "packet_path": "/workspace/Private/.desloppify/review_packet_blind.json",
+    "packet_sha256": "5ca4832c0e1ce74857bb4c911f73a080b58792a65c0ccb616705e603b3cba347",
+    "reviewed_commit": "0af12fcbec6bff69a0d6eb44d2dc5ee35c1795bf",
+    "date": "2026-10-30T06:54:48.631207+00:00",
+    "note": "CLI Codex runner failed authentication; independent native reviewers had no prior scores. Supported manual override will mark scores provisional."
+  }
+}

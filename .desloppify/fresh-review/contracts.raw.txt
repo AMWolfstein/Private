@@ -1,0 +1,290 @@
+{
+  "phase1_summary": {
+    "error_consistency": {
+      "positives": [
+        "New: UpdateChecker.checkForUpdate preserves failures in UpdateCheckException and distinguishes verified no-update responses from unverified cached data.",
+        "New: BackupParseException preserves its cause; MetadataEditResult and ReplayGainWriteResult give user-visible operations explicit outcomes.",
+        "New: fileExistenceByPath preserves unknown provider/permission states during destructive cleanup."
+      ],
+      "neutral": [
+        "New: Kotlin channel exceptions cross into Dart as PlatformException, whereas metadata write outcomes are decoded from response objects."
+      ],
+      "defects": [
+        "SAF temporary-copy failures are logged natively and returned as null; downstream analysis replaces them with a generic exception and ReplayGain has no original cause."
+      ]
+    },
+    "contract_coherence": {
+      "positives": [
+        "New: LibraryScanBridge validates output paths, row/error counts, cancellation and file existence before returning a completed scan.",
+        "New: fileStat and fileExistenceByPath distinguish missing files from inaccessible storage, with boundary tests."
+      ],
+      "neutral": [
+        "New: BackupParseFailure exposes separate unsupportedVersion, corruptArchive, notBackupArchive and unreadable outcomes to the restore UI."
+      ],
+      "defects": [
+        "Native backup archive validation failures cross as exceptions, then _parseArchiveNative labels all non-FormatException failures unreadable; unsupportedVersion is never emitted."
+      ]
+    },
+    "api_surface_coherence": {
+      "positives": [
+        "New: LibrarySourceSink and LibraryRemovalSink expose narrow typed asynchronous mutation APIs.",
+        "New: folder and SAF scan entry points share the same LibraryScanNDJSONFile return type and named scan options.",
+        "New: file access helpers consistently accept local paths or content URIs and centralize the translation."
+      ],
+      "neutral": [
+        "New: MediaFileBridge still exposes map-shaped SAF tree/stat/metadata responses while typed edit and playback-lease results are decoded at the bridge."
+      ],
+      "defects": []
+    },
+    "type_safety": {
+      "positives": [
+        "New: LocalLibraryItem and PlayableMedia have explicit immutable field types and centralized serialization.",
+        "New: MetadataEditOutcome, BackupParseFailure, UpdateInstallKind and ReplayGainWriteFailure encode domain outcomes as enums."
+      ],
+      "neutral": [
+        "New: channel and JSON boundaries use dynamic maps, then cast/validate into domain models; scan result validation checks finite integral counts."
+      ],
+      "defects": [
+        "ReplayGainWriteResult.failed infers a nullable failure parameter from the nullable field, permitting failed(null), which isWritten reports as success."
+      ]
+    },
+    "authorization_consistency": {
+      "positives": [
+        "New: RustCoreBackend canonicalizes absolute granted directories, refuses filesystem-root grants, and releases operation scopes in finally/use blocks.",
+        "New: SAF library probes check read grants and preserve unknown provider state; their tests cover transient failure and retry.",
+        "New: manifest marks the app FileProvider unexported with explicit URI grants, and internal storage/background components unexported."
+      ],
+      "neutral": [
+        "New: This is an offline single-user Android app, so protected resources are filesystem/SAF/USB permissions rather than account roles or web route authentication."
+      ],
+      "defects": []
+    }
+  },
+  "context_updates": {
+    "error_consistency": [
+      {
+        "header": "UpdateChecker.checkForUpdate preserves failures in UpdateCheckException and distinguishes verified no-update responses from unverified cached data.",
+        "description": "New: UpdateChecker.checkForUpdate preserves failures in UpdateCheckException and distinguishes verified no-update responses from unverified cached data.",
+        "positive": true,
+        "settled": true
+      },
+      {
+        "header": "BackupParseException preserves its cause; MetadataEditResult and ReplayGainWriteResult give user-visible operations explicit outcomes.",
+        "description": "New: BackupParseException preserves its cause; MetadataEditResult and ReplayGainWriteResult give user-visible operations explicit outcomes.",
+        "positive": true,
+        "settled": true
+      },
+      {
+        "header": "fileExistenceByPath preserves unknown provider/permission states during destructive cleanup.",
+        "description": "New: fileExistenceByPath preserves unknown provider/permission states during destructive cleanup.",
+        "positive": true,
+        "settled": true
+      },
+      {
+        "header": "Kotlin channel exceptions cross into Dart as PlatformException, whereas metadata write outcomes are decoded from response objects.",
+        "description": "New: Kotlin channel exceptions cross into Dart as PlatformException, whereas metadata write outcomes are decoded from response objects.",
+        "settled": true
+      }
+    ],
+    "contract_coherence": [
+      {
+        "header": "LibraryScanBridge validates output paths, row/error counts, cancellation and file existence before returning a completed scan.",
+        "description": "New: LibraryScanBridge validates output paths, row/error counts, cancellation and file existence before returning a completed scan.",
+        "positive": true,
+        "settled": true
+      },
+      {
+        "header": "fileStat and fileExistenceByPath distinguish missing files from inaccessible storage, with boundary tests.",
+        "description": "New: fileStat and fileExistenceByPath distinguish missing files from inaccessible storage, with boundary tests.",
+        "positive": true,
+        "settled": true
+      },
+      {
+        "header": "BackupParseFailure exposes separate unsupportedVersion, corruptArchive, notBackupArchive and unreadable outcomes to the restore UI.",
+        "description": "New: BackupParseFailure exposes separate unsupportedVersion, corruptArchive, notBackupArchive and unreadable outcomes to the restore UI.",
+        "settled": true
+      }
+    ],
+    "api_surface_coherence": [
+      {
+        "header": "LibrarySourceSink and LibraryRemovalSink expose narrow typed asynchronous mutation APIs.",
+        "description": "New: LibrarySourceSink and LibraryRemovalSink expose narrow typed asynchronous mutation APIs.",
+        "positive": true,
+        "settled": true
+      },
+      {
+        "header": "folder and SAF scan entry points share the same LibraryScanNDJSONFile return type and named scan options.",
+        "description": "New: folder and SAF scan entry points share the same LibraryScanNDJSONFile return type and named scan options.",
+        "positive": true,
+        "settled": true
+      },
+      {
+        "header": "file access helpers consistently accept local paths or content URIs and centralize the translation.",
+        "description": "New: file access helpers consistently accept local paths or content URIs and centralize the translation.",
+        "positive": true,
+        "settled": true
+      },
+      {
+        "header": "MediaFileBridge still exposes map-shaped SAF tree/stat/metadata responses while typed edit and playback-lease results are decoded at the bridge.",
+        "description": "New: MediaFileBridge still exposes map-shaped SAF tree/stat/metadata responses while typed edit and playback-lease results are decoded at the bridge.",
+        "settled": true
+      }
+    ],
+    "type_safety": [
+      {
+        "header": "LocalLibraryItem and PlayableMedia have explicit immutable field types and centralized serialization.",
+        "description": "New: LocalLibraryItem and PlayableMedia have explicit immutable field types and centralized serialization.",
+        "positive": true,
+        "settled": true
+      },
+      {
+        "header": "MetadataEditOutcome, BackupParseFailure, UpdateInstallKind and ReplayGainWriteFailure encode domain outcomes as enums.",
+        "description": "New: MetadataEditOutcome, BackupParseFailure, UpdateInstallKind and ReplayGainWriteFailure encode domain outcomes as enums.",
+        "positive": true,
+        "settled": true
+      },
+      {
+        "header": "channel and JSON boundaries use dynamic maps, then cast/validate into domain models; scan result validation checks finite integral counts.",
+        "description": "New: channel and JSON boundaries use dynamic maps, then cast/validate into domain models; scan result validation checks finite integral counts.",
+        "settled": true
+      }
+    ],
+    "authorization_consistency": [
+      {
+        "header": "RustCoreBackend canonicalizes absolute granted directories, refuses filesystem-root grants, and releases operation scopes in finally/use blocks.",
+        "description": "New: RustCoreBackend canonicalizes absolute granted directories, refuses filesystem-root grants, and releases operation scopes in finally/use blocks.",
+        "positive": true,
+        "settled": true
+      },
+      {
+        "header": "SAF library probes check read grants and preserve unknown provider state; their tests cover transient failure and retry.",
+        "description": "New: SAF library probes check read grants and preserve unknown provider state; their tests cover transient failure and retry.",
+        "positive": true,
+        "settled": true
+      },
+      {
+        "header": "manifest marks the app FileProvider unexported with explicit URI grants, and internal storage/background components unexported.",
+        "description": "New: manifest marks the app FileProvider unexported with explicit URI grants, and internal storage/background components unexported.",
+        "positive": true,
+        "settled": true
+      },
+      {
+        "header": "This is an offline single-user Android app, so protected resources are filesystem/SAF/USB permissions rather than account roles or web route authentication.",
+        "description": "New: This is an offline single-user Android app, so protected resources are filesystem/SAF/USB permissions rather than account roles or web route authentication.",
+        "settled": true
+      }
+    ]
+  },
+  "dimension_judgment": {
+    "error_consistency": {
+      "dimension_character": "Errors are usually explicit domain outcomes or typed exceptions with retained context, and destructive cleanup treats uncertainty conservatively. The SAF copy boundary is an isolated but user-visible exception that erases diagnostic context across several retained operations.",
+      "score_rationale": "Typed update, metadata and ReplayGain outcomes make most behavior predictable. The copy path prevents callers from preserving or distinguishing the underlying storage failure, placing this below exemplary while keeping the overall judgment strong."
+    },
+    "contract_coherence": {
+      "dimension_character": "Most inspected APIs honor precise completion and absence contracts, with scan and file-stat boundaries explicitly validated. Backup parsing exposes richer reason semantics than its native integration actually delivers.",
+      "score_rationale": "The supported scan and storage contracts make the code generally trustworthy. The backup reason mismatch affects an advertised public enum and its UI behavior, but is localized to one failure boundary."
+    },
+    "api_surface_coherence": {
+      "dimension_character": "Public service APIs are generally narrow, asynchronous where I/O requires it, and use named options for variation. A few native bridge methods still expose response maps alongside typed result classes, adding minor caller knowledge requirements.",
+      "score_rationale": "Sibling scans and focused mutation interfaces establish coherent patterns. Map-shaped native responses make the surface somewhat less uniform, without supporting a concrete behavioral defect in this dimension."
+    },
+    "type_safety": {
+      "dimension_character": "The inspected domain models and operation outcomes use explicit immutable types and enums, with dynamic data concentrated at serialization boundaries. One result constructor fails to enforce the invariant that differentiates its success and failure variants.",
+      "score_rationale": "Strong model typing and validated scan payloads support a high assessment. The nullable failed-constructor parameter is a real but isolated type hole, with no inspected caller currently passing null."
+    },
+    "authorization_consistency": {
+      "dimension_character": "Authorization is expressed as Android resource permissions and scoped local-backend access. The inspected code consistently validates directory grants, releases them, checks SAF read access and limits exported storage components.",
+      "score_rationale": "The observed resource boundaries apply coherent permission and lifetime rules, including conservative provider-failure handling. No supported inconsistency was found that would warrant a defect or score deduction."
+    }
+  },
+  "dimension_notes": {
+    "error_consistency": {
+      "evidence": [
+        "Typed update and write outcomes are systemic positives; the SAF copy path still returns null for actual I/O failure and loses the reason before user-facing handling."
+      ],
+      "issues_preventing_higher_score": "The native SAF copy boundary swallows failure causes despite neighboring typed write outcomes."
+    },
+    "contract_coherence": {
+      "evidence": [
+        "Scan completion is checked before exposing a result, and deletion helpers document their confirmed-absence semantics. BackupParseFailure promises distinctions that native parsing does not retain."
+      ],
+      "issues_preventing_higher_score": "Unsupported/corrupt native archive failures violate the advertised BackupParseFailure reason contract."
+    },
+    "api_surface_coherence": {
+      "evidence": [
+        "Sibling library scans use a common return model and named options. MediaFileBridge.pickSafTree returns a protocol map with an optional failure callback, while editFileMetadata and openContentUriPlaybackLease return decoded classes; callers still need to know tree/stat response keys."
+      ],
+      "issues_preventing_higher_score": "A small amount of bridge protocol knowledge remains in callers through map-shaped tree/stat/metadata responses. This is API friction, not a demonstrated runtime defect."
+    },
+    "type_safety": {
+      "evidence": [
+        "Immutable typed domain models and enums dominate the inspected surfaces. ReplayGainWriteResult.failed alone permits null in its failure discriminant, making its declared failed variant capable of reporting success."
+      ],
+      "issues_preventing_higher_score": "The failure constructor does not enforce its non-null failure invariant."
+    },
+    "authorization_consistency": {
+      "evidence": [
+        "Absolute/canonical directory grants refuse root access and are scoped and released. SAF probes check read permission and retain unknown states. Manifest FileProvider access is URI-grant based and internal components are unexported. No inconsistent authorization defect was observed in these inspected paths."
+      ],
+      "issues_preventing_higher_score": "No material issue found in the reviewed authorization boundaries."
+    }
+  },
+  "assessments": {
+    "error_consistency": 90.0,
+    "contract_coherence": 91.0,
+    "api_surface_coherence": 96.0,
+    "type_safety": 94.0,
+    "authorization_consistency": 100.0
+  },
+  "findings": [
+    {
+      "dimension": "error_consistency",
+      "identifier": "saf_copy_discards_failure_cause",
+      "summary": "SAF temp-copy failures lose their causes before reaching callers",
+      "related_files": [
+        "lib/services/native/media_file_bridge.dart",
+        "android/app/src/main/kotlin/com/amwolfstein/sistrum/MainActivitySafIo.kt",
+        "lib/widgets/audio_analysis/audio_analysis_widget.dart",
+        "lib/widgets/library/batch_track_actions.dart"
+      ],
+      "evidence": [
+        "copyUriToTemp catches SecurityException and all other Exceptions, logs their messages and returns null; safCopyToTemp returns that null as a successful channel response.",
+        "MediaFileBridge.copyContentUriToTemp exposes Future<String?> without an error reason. _runAnalysis replaces null with Exception(\"Failed to copy SAF file for analysis\"), and ReplayGain returns storageFailed without its error field. Permission denial, missing media and storage/provider I/O failures become indistinguishable."
+      ],
+      "suggestion": "Have the native safCopyToTemp channel handler return a PlatformException with a stable storage failure code and the original cause/message on copy failure; return a non-null path on success. Preserve that exception in ReplayGainWriteResult.error and let analysis retain it.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "contract_coherence",
+      "identifier": "backup_failure_reason_contract_not_preserved",
+      "summary": "Backup parsing reports unsupported and corrupt native archives as unreadable",
+      "related_files": [
+        "lib/services/backup/backup_service.dart",
+        "lib/screens/settings/backup_restore_page.dart",
+        "rust_backend/crates/mobile/src/native_backup/archive.rs",
+        "rust_backend/crates/mobile/src/data_jobs.rs"
+      ],
+      "evidence": [
+        "BackupParseFailure.unsupportedVersion is documented for incompatible backup versions and has a dedicated localized UI message, but no parse branch constructs that reason.",
+        "archive::read rejects invalid magic, versions other than 3 and malformed metadata through Result errors; data_jobs wraps those as NativeDataJobError::Operation. _parseArchiveNative maps only Dart FormatException to corruptArchive and all other exceptions to unreadable, so readable incompatible/corrupt ZIP backups receive the storage-read-failure message."
+      ],
+      "suggestion": "Carry a small explicit backup failure code from the native reader across the channel and map it to unsupportedVersion, corruptArchive or unreadable in BackupService; separate native version rejection from malformed metadata.",
+      "confidence": "high"
+    },
+    {
+      "dimension": "type_safety",
+      "identifier": "failed_replaygain_result_accepts_null",
+      "summary": "The failed ReplayGain constructor permits a value that reports success",
+      "related_files": [
+        "lib/services/playback/replaygain_write_result.dart",
+        "lib/widgets/library/batch_track_actions.dart"
+      ],
+      "evidence": [
+        "ReplayGainWriteResult.failure is ReplayGainWriteFailure?, and const ReplayGainWriteResult.failed(this.failure, {this.error}) therefore accepts null.",
+        "isWritten is defined as failure == null. Consequently ReplayGainWriteResult.failed(null) is a legal failed-constructor call that batch code treats as a written result. Existing call sites pass enum values, so this is a public type-contract hole rather than evidence of a current failed write being marked successful."
+      ],
+      "suggestion": "Declare the failed constructor parameter non-null explicitly: const ReplayGainWriteResult.failed(ReplayGainWriteFailure failure, {this.error}) : failure = failure.",
+      "confidence": "high"
+    }
+  ]
+}

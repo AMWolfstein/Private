@@ -1,0 +1,248 @@
+{
+  "assessments": {
+    "logic_clarity": 93.0,
+    "low_level_elegance": 89.0,
+    "mid_level_elegance": 88.0,
+    "naming_quality": 92.0,
+    "ai_generated_debt": 90.0
+  },
+  "dimension_notes": {
+    "logic_clarity": {
+      "evidence": [
+        "cleanupMissingLibraryRows advances a stable ID cursor, preserves unreadable paths, and rechecks file_path before deletion (lib/services/library/library_cleanup.dart).",
+        "MusicAutoMix preparation checks its generation after asynchronous source, deck and analysis work (lib/services/playback/music_player_automix.dart).",
+        "_resolveLibraryBrowsePageData stores an AsyncData page through both asData and whenOrNull (lib/screens/library/library_section_tab.dart:269-274)."
+      ],
+      "impact_scope": "module",
+      "fix_scope": "local_refactor",
+      "confidence": "high",
+      "issues_preventing_higher_score": "An ordinary AsyncData page runs the same cache mutation and pruning twice."
+    },
+    "low_level_elegance": {
+      "evidence": [
+        "LibraryRowMapper uses a single column table for ordinary encode/decode fields; localMetadataAfterEdit uses compact tag maps rather than field-by-field branching.",
+        "MetadataEditorController keeps text-change tracking and paired track/disc fields together with clear local state.",
+        "_showFilterSheet in lib/screens/library/library_section_tab.dart:412-750 repeats metadata chip construction for each option, although sort options already share sortChip."
+      ],
+      "impact_scope": "module",
+      "fix_scope": "local_refactor",
+      "confidence": "high",
+      "issues_preventing_higher_score": "Metadata filter options repeat the same selected-state and callback structure across a long nested widget body."
+    },
+    "mid_level_elegance": {
+      "evidence": [
+        "MetadataPersistenceService.save snapshots metadata, holds a cover lease and returns MetadataSaveResult; MetadataIndexReconciler separately publishes reread tags with MetadataIndexResult.",
+        "LibraryNativeAdapter keeps native staging detached and publishes through the owning SQLite connection with cancellation and source checks.",
+        "Browse trackPage uses queueTrackRowToJson instead of LibraryRowMapper.decode; its SELECT and mapper omit has_lyrics/hasLyrics, which the canonical mapper preserves."
+      ],
+      "impact_scope": "module",
+      "fix_scope": "local_refactor",
+      "confidence": "high",
+      "issues_preventing_higher_score": "A track with has_lyrics=1 becomes hasLyrics=false through browse paging, while the canonical decode preserves true."
+    },
+    "naming_quality": {
+      "evidence": [
+        "MetadataIndexReconciler, MetadataSaveRequest, deleteReplacedLibraryScanRows and cleanupMissingLibraryRows describe their operations precisely.",
+        "MetadataEditorController distinguishes buildMetadataTags, invalidateLookup and isCurrent without generic domain-operation names.",
+        "library_browse_refresh_policy.dart calls an ordinary in-memory fallback activeDownloadFallback; its caller uses nonEmptyFallback, and its tests mix download and history terminology."
+      ],
+      "impact_scope": "module",
+      "fix_scope": "local_refactor",
+      "confidence": "high",
+      "issues_preventing_higher_score": "activeDownloadFallback and activeDownloadFallbackAvailable describe no download state and obscure the snapshot-retention condition."
+    },
+    "ai_generated_debt": {
+      "evidence": [
+        "Metadata, cleanup and AutoMix comments mostly explain constraints such as incomplete reads, cancellation, source identity and decoder limitations rather than restating syntax.",
+        "The sampled metadata services use typed outcomes and purposeful resource cleanup, with no pervasive defensive checks around pure expressions.",
+        "LibraryBrowseStore counts, _getUnfilteredQueueCounts, _queueTrackUnionSql and _queueAlbumUnionSql each construct a one-element parts list and join it with UNION ALL; count methods then sum their single aggregate result."
+      ],
+      "impact_scope": "module",
+      "fix_scope": "local_refactor",
+      "confidence": "high",
+      "issues_preventing_higher_score": "Four browse SQL paths retain one-element UNION-building machinery, including redundant aggregation layers in the two count queries."
+    }
+  },
+  "dimension_judgment": {
+    "logic_clarity": {
+      "dimension_character": "Control flow is generally explicit: cancellation, missing data and storage races have visible guards and explanatory constraints. The sampled paths are traceable, with one clear redundant cache-update path.",
+      "score_rationale": "Stable paging and repeated generation checks make complicated asynchronous work understandable. The duplicate page-store dispatch prevents an exemplary assessment, but does not indicate pervasive opaque branching."
+    },
+    "low_level_elegance": {
+      "dimension_character": "Small services and controllers generally have proportionate internals, explicit resource ownership and useful local helpers. The library filter sheet is a conspicuous pocket of repetitive construction that makes its actual option set harder to scan.",
+      "score_rationale": "Mapping tables, bounded mutations and direct helpers support strong local craft. Repeated metadata-chip selection/callback bodies in one large sheet introduce avoidable editing friction and pull the score below the strongest range."
+    },
+    "mid_level_elegance": {
+      "dimension_character": "Most integration seams express lifecycle and outcomes clearly, particularly metadata persistence and native scan publication. SQLite-to-domain translation is less consistent: a separate browse adapter silently drops a domain field.",
+      "score_rationale": "Explicit save/index outcomes and transactional publication substantially reduce orchestration surprises. The divergent track adapter requires callers to understand which read path populated a LocalLibraryItem, weakening an otherwise solid set of seams."
+    },
+    "naming_quality": {
+      "dimension_character": "Names usually expose the relevant music, metadata and storage concepts and allow readers to predict responsibility. One refresh-policy seam retains download-era vocabulary that does not describe the local snapshot it receives.",
+      "score_rationale": "Specific domain verbs and coherent model/controller names make navigation reliable. The misleading fallback parameter and related test descriptions introduce a small but concrete conceptual detour rather than broad naming ambiguity."
+    },
+    "ai_generated_debt": {
+      "dimension_character": "Most sampled code is purposeful and its comments explain real constraints. Browse SQL retains formulaic multi-source assembly scaffolding around a single local query, making the implementation noisier than its current behavior requires.",
+      "score_rationale": "Useful comments and explicit operation-specific code keep generated-style noise localized. Repeated one-element UNION assembly and redundant outer aggregation are unnecessary ceremony, but the evidence does not support treating this as pervasive debt."
+    }
+  },
+  "context_updates": {
+    "logic_clarity": [
+      {
+        "header": "Observed strengths",
+        "description": "cleanupMissingLibraryRows advances a stable ID cursor, preserves unreadable paths, and rechecks file_path before deletion (lib/services/library/library_cleanup.dart).",
+        "positive": true,
+        "settled": true
+      },
+      {
+        "header": "Implementation characteristic",
+        "description": "MusicAutoMix preparation checks its generation after asynchronous source, deck and analysis work (lib/services/playback/music_player_automix.dart).",
+        "positive": true,
+        "settled": true
+      }
+    ],
+    "low_level_elegance": [
+      {
+        "header": "Observed strengths",
+        "description": "LibraryRowMapper uses a single column table for ordinary encode/decode fields; localMetadataAfterEdit uses compact tag maps rather than field-by-field branching.",
+        "positive": true,
+        "settled": true
+      },
+      {
+        "header": "Implementation characteristic",
+        "description": "MetadataEditorController keeps text-change tracking and paired track/disc fields together with clear local state.",
+        "positive": true,
+        "settled": true
+      }
+    ],
+    "mid_level_elegance": [
+      {
+        "header": "Observed strengths",
+        "description": "MetadataPersistenceService.save snapshots metadata, holds a cover lease and returns MetadataSaveResult; MetadataIndexReconciler separately publishes reread tags with MetadataIndexResult.",
+        "positive": true,
+        "settled": true
+      },
+      {
+        "header": "Implementation characteristic",
+        "description": "LibraryNativeAdapter keeps native staging detached and publishes through the owning SQLite connection with cancellation and source checks.",
+        "positive": true,
+        "settled": true
+      }
+    ],
+    "naming_quality": [
+      {
+        "header": "Observed strengths",
+        "description": "MetadataIndexReconciler, MetadataSaveRequest, deleteReplacedLibraryScanRows and cleanupMissingLibraryRows describe their operations precisely.",
+        "positive": true,
+        "settled": true
+      },
+      {
+        "header": "Implementation characteristic",
+        "description": "MetadataEditorController distinguishes buildMetadataTags, invalidateLookup and isCurrent without generic domain-operation names.",
+        "positive": true,
+        "settled": true
+      }
+    ],
+    "ai_generated_debt": [
+      {
+        "header": "Observed strengths",
+        "description": "Metadata, cleanup and AutoMix comments mostly explain constraints such as incomplete reads, cancellation, source identity and decoder limitations rather than restating syntax.",
+        "positive": true,
+        "settled": true
+      },
+      {
+        "header": "Implementation characteristic",
+        "description": "The sampled metadata services use typed outcomes and purposeful resource cleanup, with no pervasive defensive checks around pure expressions.",
+        "positive": true,
+        "settled": true
+      }
+    ]
+  },
+  "findings": [
+    {
+      "dimension": "logic_clarity",
+      "identifier": "browse_page_stored_twice",
+      "summary": "AsyncData pages run the same cache update twice",
+      "related_files": [
+        "lib/screens/library/library_section_tab.dart"
+      ],
+      "evidence": [
+        "At lines 269-274, _resolveLibraryBrowsePageData calls storePage(value.asData.value), then value.whenOrNull(data: storePage). For AsyncData both calls receive the same page.",
+        "storePage performs cache lookup, stale-request traversal, mutation and trimming, so these are duplicate side effects rather than alternative fallbacks."
+      ],
+      "suggestion": "Keep the direct asData path once; remove the subsequent whenOrNull dispatch. This also retains the existing behavior for previous data exposed by asData.",
+      "confidence": "high",
+      "impact_scope": "module",
+      "fix_scope": "local_refactor"
+    },
+    {
+      "dimension": "mid_level_elegance",
+      "identifier": "browse_track_mapper_drops_lyrics",
+      "summary": "Browse paging loses the lyrics-presence field at the database/domain seam",
+      "related_files": [
+        "lib/services/library/library_browse_store.dart",
+        "lib/services/library/library_browse_rows.dart",
+        "lib/services/library/library_row_mapper.dart",
+        "lib/models/local_library_item.dart"
+      ],
+      "evidence": [
+        "_queueTrackUnionSql selects has_replaygain but never has_lyrics; queueTrackRowToJson also omits hasLyrics.",
+        "LocalLibraryItem.fromJson interprets missing hasLyrics as false, while LibraryRowMapper.decode explicitly maps has_lyrics. Thus the same stored song has different domain metadata depending on whether it was read through trackPage or the canonical mapper.",
+        "test/library_schema_test.dart verifies canonical round-tripping with hasLyrics=true; the browse-store fixture does not set that flag."
+      ],
+      "suggestion": "Select l.has_lyrics in the track query and use LibraryRowMapper.decode for shared track fields in queueTrackRowToJson, adding only actual browse-specific fields. Add a browse-page check with hasLyrics=true to verify parity.",
+      "confidence": "high",
+      "impact_scope": "module",
+      "fix_scope": "local_refactor"
+    },
+    {
+      "dimension": "low_level_elegance",
+      "identifier": "metadata_filter_chip_repetition",
+      "summary": "The metadata filter sheet repeats the same chip behavior for every option",
+      "related_files": [
+        "lib/screens/library/library_section_tab.dart"
+      ],
+      "evidence": [
+        "_showFilterSheet repeats AppChoiceChip label/selected/onSelected subtrees from the metadata section through the completeness filters (roughly lines 537-688). Each option repeats its mode string in selection and callback.",
+        "The same method already uses a compact sortChip(label, mode) helper for its sort options, demonstrating that the repeated state wiring is unnecessary."
+      ],
+      "suggestion": "Mirror the existing sortChip helper with a local metadataChip(label, mode) helper, or iterate a local list of (label, mode) records. Keep option order and localized labels in the sheet while defining selection/callback wiring once.",
+      "confidence": "medium",
+      "impact_scope": "module",
+      "fix_scope": "local_refactor"
+    },
+    {
+      "dimension": "naming_quality",
+      "identifier": "download_named_snapshot_fallback",
+      "summary": "Snapshot-retention parameters misleadingly describe active downloads",
+      "related_files": [
+        "lib/screens/library/library_browse_refresh_policy.dart",
+        "lib/screens/library/library_section_tab.dart",
+        "test/library_browse_refresh_policy_test.dart"
+      ],
+      "evidence": [
+        "resolveLibraryBrowseCountsSnapshot accepts activeDownloadFallback and shouldRetainLibraryBrowsePageSnapshot accepts activeDownloadFallbackAvailable, but neither observes a download.",
+        "Their caller passes nonEmptyFallback and nonEmptyFallback != null, representing an in-memory snapshot. Tests describe the same mechanism as both a download refresh and in-memory history."
+      ],
+      "suggestion": "Rename the parameters to nonEmptyFallback and nonEmptyFallbackAvailable (or snapshotFallback equivalents) and update the download/history test descriptions to describe local browse snapshot retention.",
+      "confidence": "high",
+      "impact_scope": "module",
+      "fix_scope": "local_refactor"
+    },
+    {
+      "dimension": "ai_generated_debt",
+      "identifier": "single_source_union_scaffolding",
+      "summary": "Local-only browse SQL retains unnecessary multi-source assembly scaffolding",
+      "related_files": [
+        "lib/services/library/library_browse_store.dart"
+      ],
+      "evidence": [
+        "counts and _getUnfilteredQueueCounts each allocate parts, add exactly one SQL string and join with UNION ALL; their outer SELECT then SUMs the one aggregate row (lines 68-93 and 117-137).",
+        "_queueTrackUnionSql and _queueAlbumUnionSql likewise add only one bounded local query before joining parts. There is no branch that contributes a second source."
+      ],
+      "suggestion": "Return the bounded local SQL string directly from the track/album builders. Execute each count aggregate directly and remove its one-element parts list and outer SUM layer, preserving the existing COALESCE behavior.",
+      "confidence": "high",
+      "impact_scope": "module",
+      "fix_scope": "local_refactor"
+    }
+  ]
+}

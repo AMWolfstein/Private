@@ -1,0 +1,171 @@
+{
+  "assessments": {
+    "cross_module_architecture": 94.0,
+    "high_level_elegance": 86.0,
+    "package_organization": 87.0,
+    "design_coherence": 88.0,
+    "abstraction_fitness": 93.0
+  },
+  "dimension_notes": {
+    "cross_module_architecture": {
+      "evidence": [
+        "Inspected the current local Dart import/export/part graph: no multi-file strongly connected component was found, and no service imports a provider, widget or screen.",
+        "PlaybackHandler lets music_player_runtime.dart depend on a stable handler surface; LibrarySourceSink and LibraryRemovalSink let services accept notifier operations without provider imports.",
+        "runtime_profile_provider.dart imports non-widget probe data/persistence from widgets/glass/app_glass_auto_probe.dart, an isolated inversion in the package roles rather than a dependency cycle."
+      ],
+      "impact_scope": "subsystem",
+      "fix_scope": "multi_file_refactor",
+      "confidence": "high",
+      "issues_preventing_higher_score": "The runtime profile provider still reaches into widgets/glass for persisted probe state; UI-owned analysis workflows also leave some backend ownership implicit. These are limited exceptions to otherwise coherent dependency direction."
+    },
+    "high_level_elegance": {
+      "evidence": [
+        "services/playback, services/library, services/native, services/storage and services/backup have recognizable capability ownership; providers expose application state, and AppScreens isolates screen construction from navigation.",
+        "AudioAnalysisCard State still owns cache JSON validation, SAF temp copies, FFprobe inspection, FFmpeg execution, native/isolate spectral-cutoff work and cache writes in addition to rendering (audio_analysis_widget.dart:370-1050).",
+        "The existing services/audio_analysis directory owns job scheduling, cache budget and parsing but not the actual complete analysis operation, splitting one backend capability across layers."
+      ],
+      "impact_scope": "subsystem",
+      "fix_scope": "multi_file_refactor",
+      "confidence": "high",
+      "issues_preventing_higher_score": "Audio analysis is a material ownership exception: developers extending the backend must edit widget State alongside the service package."
+    },
+    "package_organization": {
+      "evidence": [
+        "Root lib contains app.dart and main.dart, both legitimate composition entry points; most reusable widgets and domain services have meaningful subdirectories.",
+        "widgets/library/track_metadata_persistence.dart defines MetadataPersistenceService, requests/results and native/FFmpeg/SAF writeback logic without defining a widget or importing Flutter. Its MetadataCoverResources and MetadataIndexReconciler collaborators live in services/library.",
+        "widgets/glass/app_glass_auto_probe.dart defines the persisted result, SharedPreferences read/write and frame sampler; providers/runtime_profile_provider.dart and main.dart import it for non-widget behavior."
+      ],
+      "impact_scope": "subsystem",
+      "fix_scope": "multi_file_refactor",
+      "confidence": "high",
+      "issues_preventing_higher_score": "Several concrete non-widget services remain under widgets even though focused service/model homes already exist; this makes placement less predictive."
+    },
+    "design_coherence": {
+      "evidence": [
+        "LibraryCollectionsNotifier centralizes mutation ordering in _mutate, while AudioAnalysisJobs centralizes owned-session cancellation and serialization instead of duplicating those policies per command.",
+        "MusicPlayerHandler separates queue, playback, media and source operations into parts of one private state machine; the runtime and concrete handler have distinct lifecycle roles.",
+        "AudioAnalysisCard State mixes cache validation/persistence, SAF staging, native process coordination and presentation; _generateSpectrogram performs temp-file management, process-result checks, native/isolate cutoff calculation and image decoding before returning to UI state."
+      ],
+      "impact_scope": "subsystem",
+      "fix_scope": "multi_file_refactor",
+      "confidence": "high",
+      "issues_preventing_higher_score": "Backend and presentation responsibilities remain entangled in audio analysis. This is the same ownership defect reported under high_level_elegance, rather than an additional independent defect."
+    },
+    "abstraction_fitness": {
+      "evidence": [
+        "PlaybackHandler, LibrarySourceSink, LibraryRemovalSink and AppScreens each enforce an actual dependency boundary; single implementations are justified by wiring rather than gratuitous interface families.",
+        "AudioAnalysisJobs adds serialized native execution, owned cancellation and generation checks; PlaybackSessionWriter and the collections _mutate helper similarly encapsulate real policies.",
+        "MusicAutoMix uses a fairly wide AutoMixHost surface mirrored by _HandlerAutoMixHost (music_player_automix.dart:20-53 and music_player_hooks.dart:48-121); this has legitimate private-state isolation value but still requires navigating an extensive forwarding surface for transition changes."
+      ],
+      "impact_scope": "subsystem",
+      "fix_scope": "multi_file_refactor",
+      "confidence": "medium",
+      "issues_preventing_higher_score": "AutoMixHost exposes many individual handler facts/actions and its adapter mirrors them. The boundary has a concrete isolation purpose, so this is modest navigation cost rather than a recommendation to remove the interface."
+    }
+  },
+  "dimension_judgment": {
+    "cross_module_architecture": {
+      "dimension_character": "Dependency direction is reliably coherent in the inspected Dart code: services stay below providers and presentation, and explicit handler/mutation contracts avoid cycles. The few upward-looking dependencies arise from non-widget code placed under widgets rather than pervasive architectural backreferences.",
+      "score_rationale": "A cycle-free current local dependency graph, service isolation and explicit playback lifetime ownership support a strong assessment. The runtime profile provider reaching into widgets for persisted probe behavior and the split audio backend ownership keep it below exemplary."
+    },
+    "high_level_elegance": {
+      "dimension_character": "Most major areas have recognizable, domain-aligned ownership, and the navigation and playback boundaries can be explained without reconstructing historical implementation choices. Audio analysis is a substantial exception because the widget remains the execution engine for the backend capability.",
+      "score_rationale": "Clear library, playback, native and storage packages make the overall system understandable. The analysis workflow spanning State and the service package creates enough ownership ambiguity to pull this toward the lower end of strong quality."
+    },
+    "package_organization": {
+      "dimension_character": "The directory structure generally predicts where functionality belongs, with clean app entry points and focused service/widget subdirectories. A small but meaningful set of non-widget persistence and runtime-probe components are located in presentation folders despite existing service/model peers.",
+      "score_rationale": "The established package layout serves navigation well across most of the app. Metadata persistence and auto-glass probe placement introduce concrete search and ownership friction, although these are localized moves rather than a repository-wide restructuring need."
+    },
+    "design_coherence": {
+      "dimension_character": "The code usually centralizes lifecycle and ordering policies in focused collaborators, and complex playback behavior has purposeful seams. Design quality becomes less focused in audio analysis, where presentation state owns several independent resource and execution protocols.",
+      "score_rationale": "The mutation serializer, job coordinator and explicit playback runtime show consistent deliberate design. AudioAnalysisCard responsibility accumulation prevents a higher score, but that isolated concern does not justify treating every large stateful widget or complex domain algorithm as a defect."
+    },
+    "abstraction_fitness": {
+      "dimension_character": "Most abstractions inspected earn their cost by containing native API volatility, ordering writes, managing cancellation or reversing dependencies. The code favors concrete collaborators; the widest host adapters have understandable isolation purposes rather than serving as ceremonial layers.",
+      "score_rationale": "The handler contract, mutation ports and serialized jobs provide demonstrable leverage and are excluded from thin-wrapper complaints by the rubric. AutoMix host forwarding adds limited navigation overhead, leaving this strong while short of friction-free."
+    }
+  },
+  "findings": [
+    {
+      "dimension": "high_level_elegance",
+      "identifier": "audio_analysis_backend_owned_by_widget_state",
+      "summary": "Audio analysis backend ownership remains split between widget State and the service package",
+      "related_files": [
+        "lib/widgets/audio_analysis/audio_analysis_widget.dart",
+        "lib/widgets/audio_analysis/audio_analysis_models.dart",
+        "lib/services/audio_analysis/audio_analysis_jobs.dart",
+        "lib/services/audio_analysis/audio_analysis_cache.dart"
+      ],
+      "evidence": [
+        "AudioAnalysisCard State implements _loadFromCache/_saveToCache and source-mtime validation at lines 418-485, while services/audio_analysis/audio_analysis_cache.dart owns only cache budgeting/eviction.",
+        "The same State implements _runAnalysis (line 544), SAF staging, _generateSpectrogram (line 670), FFprobe metadata extraction (line 898) and full-stream level analysis (line 998), in addition to widget lifecycle and build.",
+        "AudioAnalysisData is a part of the widget library, so the operation result model is also bound to the presentation library. Changing analysis inputs, storage or execution policy requires editing the widget implementation despite the focused service package."
+      ],
+      "suggestion": "Move the existing analysis operation and cache read/write methods, together with their plain result records, into the existing services/audio_analysis package as a concrete analysis runner. Keep image display/disposal, user actions and setState in the card. Reuse AudioAnalysisJobs and AudioAnalysisCache directly; do not introduce an interface/factory family. This relocates existing responsibilities and removes backend protocols from State.",
+      "confidence": "high",
+      "impact_scope": "subsystem",
+      "fix_scope": "multi_file_refactor",
+      "root_cause_cluster": "non_widget_behavior_owned_by_presentation"
+    },
+    {
+      "dimension": "package_organization",
+      "identifier": "persistence_services_placed_under_widgets",
+      "summary": "Metadata persistence and device probe storage are placed in widget directories",
+      "related_files": [
+        "lib/widgets/library/track_metadata_persistence.dart",
+        "lib/services/library/metadata_cover_resources.dart",
+        "lib/services/library/metadata_index_reconciler.dart",
+        "lib/widgets/glass/app_glass_auto_probe.dart",
+        "lib/providers/runtime_profile_provider.dart",
+        "lib/main.dart"
+      ],
+      "evidence": [
+        "track_metadata_persistence.dart contains a framework-free MetadataPersistenceService that performs native tag edits, FFmpeg fallback, SAF writeback and resource cleanup; it contains no widget. The closely related cover-resource and index-reconciliation services already live in services/library.",
+        "app_glass_auto_probe.dart contains AppGlassAutoResult/Step, JSON encoding, SharedPreferences persistence and frame-window sampling, while the actual host widget is separately implemented in app_glass_auto_probe_host.dart.",
+        "runtime_profile_provider.dart imports the widgets/glass file to type state and call saveGlassAutoResult; main.dart imports it to bootstrap persisted probe results. Thus the misplaced file is already serving application/runtime code rather than just widgets."
+      ],
+      "suggestion": "Move track_metadata_persistence.dart into services/library and update its sheet/test imports. Move the non-widget auto-glass probe module into a focused runtime/service location (or keep its data with models/app_glass.dart and its persistence/sampler in one service file), updating the provider, bootstrap and host imports. Preserve the existing implementations and public names; add no forwarding barrels.",
+      "confidence": "high",
+      "impact_scope": "subsystem",
+      "fix_scope": "multi_file_refactor",
+      "root_cause_cluster": "non_widget_behavior_owned_by_presentation"
+    }
+  ],
+  "context_updates": [
+    {
+      "dimension": "cross_module_architecture",
+      "header": "Explicit downward dependency boundaries",
+      "description": "Current Dart imports/exports/parts have no multi-file strongly connected component; services do not import providers, widgets or screens. PlaybackHandler and library mutation ports preserve dependency direction.",
+      "positive": true,
+      "settled": true
+    },
+    {
+      "dimension": "high_level_elegance",
+      "header": "Domain service capabilities",
+      "description": "Library, playback, native, backup and storage services have distinct named homes, and AppScreens makes screen construction a composition concern.",
+      "positive": true,
+      "settled": true
+    },
+    {
+      "dimension": "package_organization",
+      "header": "Focused domain and presentation folders",
+      "description": "App/bootstrap are the only lib root Dart files; service and widget subfolders mostly group concrete capabilities.",
+      "positive": true,
+      "settled": true
+    },
+    {
+      "dimension": "design_coherence",
+      "header": "Centralized lifecycle and write ordering",
+      "description": "AudioAnalysisJobs scopes native cancellation and serialization; LibraryCollectionsNotifier._mutate serializes persistence and publication.",
+      "positive": true,
+      "settled": true
+    },
+    {
+      "dimension": "abstraction_fitness",
+      "header": "Interfaces with concrete boundary value",
+      "description": "PlaybackHandler, LibrarySourceSink/RemovalSink and AppScreens provide useful dependency inversion; job and session helpers carry real policy.",
+      "positive": true,
+      "settled": true
+    }
+  ]
+}

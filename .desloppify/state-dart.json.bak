@@ -8,12 +8,12 @@
   "strict_score": 76.0,
   "verified_strict_score": 94.9,
   "stats": {
-    "total": 561,
+    "total": 560,
     "auto_resolved": 250,
     "deferred": 0,
     "false_positive": 0,
     "fixed": 87,
-    "open": 224,
+    "open": 223,
     "triaged_out": 0,
     "wontfix": 0,
     "by_tier": {
@@ -40,7 +40,7 @@
         "deferred": 0,
         "false_positive": 0,
         "fixed": 9,
-        "open": 220,
+        "open": 219,
         "triaged_out": 0,
         "wontfix": 0
       },
@@ -19652,9 +19652,9 @@
       "origin": "scan",
       "lang": "dart",
       "zone": "production",
-      "suppressed": false,
-      "suppressed_at": null,
-      "suppression_pattern": null
+      "suppressed": true,
+      "suppressed_at": "2026-10-29T22:07:31+00:00",
+      "suppression_pattern": "orphaned::lib/widgets/library/track_metadata_edit_cover.dart"
     },
     "orphaned::lib/services/library/library_database_queries.dart": {
       "id": "orphaned::lib/services/library/library_database_queries.dart",
@@ -21354,26 +21354,17 @@
         "Delegation Density": 90.0,
         "Definition Directness": 80.0,
         "Type Discipline": 85.0
-      },
-      "needs_review_refresh": true,
-      "refresh_reason": "review_issue_fixed",
-      "stale_since": "2026-10-29T10:13:12+00:00"
+      }
     },
     "ai_generated_debt": {
       "score": 88.0,
       "source": "holistic",
-      "assessed_at": "2026-10-29T06:58:25+00:00",
-      "needs_review_refresh": true,
-      "refresh_reason": "review_issue_fixed",
-      "stale_since": "2026-10-29T14:09:12+00:00"
+      "assessed_at": "2026-10-29T06:58:25+00:00"
     },
     "api_surface_coherence": {
       "score": 72.0,
       "source": "holistic",
-      "assessed_at": "2026-10-29T06:58:25+00:00",
-      "needs_review_refresh": true,
-      "refresh_reason": "review_issue_fixed",
-      "stale_since": "2026-10-29T09:14:43+00:00"
+      "assessed_at": "2026-10-29T06:58:25+00:00"
     },
     "authorization_consistency": {
       "score": 90.0,
@@ -21383,130 +21374,82 @@
     "contract_coherence": {
       "score": 84.0,
       "source": "holistic",
-      "assessed_at": "2026-10-29T06:58:25+00:00",
-      "needs_review_refresh": true,
-      "refresh_reason": "review_issue_fixed",
-      "stale_since": "2026-10-29T09:14:43+00:00"
+      "assessed_at": "2026-10-29T06:58:25+00:00"
     },
     "convention_outlier": {
       "score": 78.0,
       "source": "holistic",
-      "assessed_at": "2026-10-29T06:58:25+00:00",
-      "needs_review_refresh": true,
-      "refresh_reason": "review_issue_fixed",
-      "stale_since": "2026-10-29T15:42:06+00:00"
+      "assessed_at": "2026-10-29T06:58:25+00:00"
     },
     "cross_module_architecture": {
       "score": 72.0,
       "source": "holistic",
-      "assessed_at": "2026-10-29T06:58:25+00:00",
-      "needs_review_refresh": true,
-      "refresh_reason": "review_issue_fixed",
-      "stale_since": "2026-10-29T14:07:54+00:00"
+      "assessed_at": "2026-10-29T06:58:25+00:00"
     },
     "dependency_health": {
       "score": 78.0,
       "source": "holistic",
-      "assessed_at": "2026-10-29T06:58:25+00:00",
-      "needs_review_refresh": true,
-      "refresh_reason": "review_issue_fixed",
-      "stale_since": "2026-10-29T14:07:56+00:00"
+      "assessed_at": "2026-10-29T06:58:25+00:00"
     },
     "design_coherence": {
       "score": 62.0,
       "source": "holistic",
-      "assessed_at": "2026-10-29T06:58:25+00:00",
-      "needs_review_refresh": true,
-      "refresh_reason": "review_issue_fixed",
-      "stale_since": "2026-10-29T15:42:04+00:00"
+      "assessed_at": "2026-10-29T06:58:25+00:00"
     },
     "error_consistency": {
       "score": 62.0,
       "source": "holistic",
-      "assessed_at": "2026-10-29T06:58:25+00:00",
-      "needs_review_refresh": true,
-      "refresh_reason": "review_issue_fixed",
-      "stale_since": "2026-10-29T14:32:44+00:00"
+      "assessed_at": "2026-10-29T06:58:25+00:00"
     },
     "high_level_elegance": {
       "score": 74.0,
       "source": "holistic",
-      "assessed_at": "2026-10-29T06:58:25+00:00",
-      "needs_review_refresh": true,
-      "refresh_reason": "review_issue_fixed",
-      "stale_since": "2026-10-29T15:53:18+00:00"
+      "assessed_at": "2026-10-29T06:58:25+00:00"
     },
     "incomplete_migration": {
       "score": 86.0,
       "source": "holistic",
-      "assessed_at": "2026-10-29T06:58:25+00:00",
-      "needs_review_refresh": true,
-      "refresh_reason": "review_issue_fixed",
-      "stale_since": "2026-10-29T14:07:49+00:00"
+      "assessed_at": "2026-10-29T06:58:25+00:00"
     },
     "initialization_coupling": {
       "score": 72.0,
       "source": "holistic",
-      "assessed_at": "2026-10-29T06:58:25+00:00",
-      "needs_review_refresh": true,
-      "refresh_reason": "review_issue_fixed",
-      "stale_since": "2026-10-29T15:00:45+00:00"
+      "assessed_at": "2026-10-29T06:58:25+00:00"
     },
     "logic_clarity": {
       "score": 82.0,
       "source": "holistic",
-      "assessed_at": "2026-10-29T06:58:25+00:00",
-      "needs_review_refresh": true,
-      "refresh_reason": "review_issue_fixed",
-      "stale_since": "2026-10-29T09:14:45+00:00"
+      "assessed_at": "2026-10-29T06:58:25+00:00"
     },
     "low_level_elegance": {
       "score": 62.0,
       "source": "holistic",
-      "assessed_at": "2026-10-29T06:58:25+00:00",
-      "needs_review_refresh": true,
-      "refresh_reason": "review_issue_fixed",
-      "stale_since": "2026-10-29T10:13:16+00:00"
+      "assessed_at": "2026-10-29T06:58:25+00:00"
     },
     "mid_level_elegance": {
       "score": 64.0,
       "source": "holistic",
-      "assessed_at": "2026-10-29T06:58:25+00:00",
-      "needs_review_refresh": true,
-      "refresh_reason": "review_issue_fixed",
-      "stale_since": "2026-10-29T15:53:19+00:00"
+      "assessed_at": "2026-10-29T06:58:25+00:00"
     },
     "naming_quality": {
       "score": 72.0,
       "source": "holistic",
-      "assessed_at": "2026-10-29T06:58:25+00:00",
-      "needs_review_refresh": true,
-      "refresh_reason": "review_issue_fixed",
-      "stale_since": "2026-10-29T15:53:21+00:00"
+      "assessed_at": "2026-10-29T06:58:25+00:00"
     },
     "package_organization": {
       "score": 55.0,
       "source": "holistic",
-      "assessed_at": "2026-10-29T06:58:25+00:00",
-      "needs_review_refresh": true,
-      "refresh_reason": "review_issue_fixed",
-      "stale_since": "2026-10-29T15:53:27+00:00"
+      "assessed_at": "2026-10-29T06:58:25+00:00"
     },
     "test_strategy": {
       "score": 72.0,
       "source": "holistic",
-      "assessed_at": "2026-10-29T06:58:25+00:00",
-      "needs_review_refresh": true,
-      "refresh_reason": "review_issue_fixed",
-      "stale_since": "2026-10-29T14:07:51+00:00"
+      "assessed_at": "2026-10-29T06:58:25+00:00"
     },
     "type_safety": {
       "score": 80.0,
       "source": "holistic",
-      "assessed_at": "2026-10-29T06:58:25+00:00",
-      "needs_review_refresh": true,
-      "refresh_reason": "review_issue_fixed",
-      "stale_since": "2026-10-29T08:15:24+00:00"
+      "assessed_at": "2026-10-29T06:58:25+00:00"
     }
   },
   "scan_history": [
@@ -35765,18 +35708,18 @@
   },
   "dimension_scores": {
     "Code quality": {
-      "score": 98.3,
-      "strict": 94.7,
-      "verified_strict_score": 98.3,
+      "score": 98.4,
+      "strict": 94.9,
+      "verified_strict_score": 98.4,
       "checks": 533,
-      "failing": 13,
+      "failing": 12,
       "tier": 3,
       "detectors": {
         "orphaned": {
           "potential": 377,
-          "pass_rate": 0.9981432360742706,
-          "failing": 1,
-          "weighted_failures": 0.7
+          "pass_rate": 1.0,
+          "failing": 0,
+          "weighted_failures": 0.0
         },
         "flat_dirs": {
           "potential": 33,
@@ -36499,6 +36442,13 @@
       "timestamp": "2026-10-29T22:05:45+00:00",
       "command": "suppress",
       "pattern": "orphaned::lib/widgets/header/album_detail_header_parts.dart",
+      "attestation": "I have actually verified these are part files of their parent libraries, so the zero-importer result is a false positive, and I am not gaming the score by suppressing without checking.",
+      "affected": 1
+    },
+    {
+      "timestamp": "2026-10-29T22:05:45+00:00",
+      "command": "suppress",
+      "pattern": "orphaned::lib/widgets/library/track_metadata_edit_cover.dart",
       "attestation": "I have actually verified these are part files of their parent libraries, so the zero-importer result is a false positive, and I am not gaming the score by suppressing without checking.",
       "affected": 1
     }

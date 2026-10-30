@@ -1,0 +1,182 @@
+{
+  "assessments": {
+    "test_strategy": 92.0,
+    "dependency_health": 100.0,
+    "initialization_coupling": 96.0,
+    "convention_outlier": 100.0,
+    "incomplete_migration": 100.0
+  },
+  "findings": [
+    {
+      "dimension": "test_strategy",
+      "identifier": "sql_fixtures_parse_source_format",
+      "summary": "Two SQL behavior fixtures depend on the formatting of production Dart source",
+      "related_files": [
+        "test/album_completeness_query_test.dart",
+        "test/replaygain_library_filter_test.dart",
+        "test/library_schema_test.dart"
+      ],
+      "evidence": [
+        "album_completeness_query_test.dart _definition and replaygain_library_filter_test.dart _tableDefinition read library_schema.dart and extract CREATE TABLE with a regex requiring a newline before the closing parenthesis, then force-unwrap the match.",
+        "These behavior tests fail on a harmless one-line SQL declaration or equivalent extraction into a helper, and run the uninterpolated Dart string rather than executing schema creation. library_schema_test.dart already demonstrates executing LibrarySchema.create against SqliteProcessDatabase instead."
+      ],
+      "suggestion": "Use LibrarySchema.create with the existing SqliteProcessDatabase helper to prepare these fixtures, and run their actual predicates/page queries against that database. Remove the source-reading regex helpers and retain the existing result assertions.",
+      "confidence": "high"
+    }
+  ],
+  "dimension_notes": {
+    "test_strategy": {
+      "evidence": [
+        "Read tests exercise actual queue and runtime algorithms with controllable decks and completion barriers; settings persistence tests gate writes with completers and verify failure behavior.",
+        "Library schema tests use actual SQLite and production schema methods; native_library_staging_test runs actual NativeDataJobs and checks isolation, cleanup, integrity and orphan keys.",
+        "Two SQL behavior test fixtures still extract table declarations from source with formatting-sensitive regexes."
+      ],
+      "issues_preventing_higher_score": "The SQL fixture source extraction is unnecessary implementation coupling despite the otherwise substantial behavioral portfolio."
+    },
+    "dependency_health": {
+      "evidence": [
+        "pubspec.yaml separates networking, transport, media-service integration, SQL storage, native metadata editing and UI dependencies into distinct responsibilities. Imports confirm actual usage, including CupertinoIcons font use through Flutter rather than direct package imports.",
+        "The audioplayers_android override has an explicit proxy-descriptor preservation purpose; audio_service and audioplayers implement different background-session and playback duties. xml remains used by the documented synchronous lyric compatibility parser.",
+        "Inspected pubspec.lock and vendored plugin manifests; no concrete unused direct dependency, conflicting constraint or redundant interchangeable stack was established."
+      ],
+      "issues_preventing_higher_score": "No supported defect found in the inspected dependency declarations and uses."
+    },
+    "initialization_coupling": {
+      "evidence": [
+        "LibraryDatabase and AppStateDatabase defer opening storage through SingleFlightInitializer, rather than opening at top level. UsbPcmBridge defers the native broadcast stream until first use.",
+        "main explicitly initializes bindings, waits for Android activity attachment and configures playback/settings before creating the app container; these are framework/bootstrap responsibilities.",
+        "MusicPlayerRuntime uses injected dependencies, guards duplicate initialization and supports cleanup/retry; tests explicitly cover pending disposal and failed initialization.",
+        "LogBuffer._internal immediately sends setLoggingEnabled on first access and suppresses failures. Thus the first logging call implicitly performs a native-channel initialization attempt, although normal app startup establishes bindings first."
+      ],
+      "issues_preventing_higher_score": "LogBuffer construction still hides a native-channel side effect behind ordinary logging. Moving that one-time enable call to the explicit startup path would make its lifecycle clearer; no observed production boot-order failure is claimed."
+    },
+    "convention_outlier": {
+      "evidence": [
+        "Inspected providers consistently use Riverpod declarations and typed controller/state ownership; models use normal Dart naming and generated serialization is kept in .g.dart files.",
+        "Split screen/service implementation files use part/part of where private library state is shared; independent services use ordinary imports. Those differences match Dart library requirements and responsibilities.",
+        "AppScreens interface and its screen-side implementation are explicitly wired by provider override; this is a consistent navigation boundary rather than a divergent export convention."
+      ],
+      "issues_preventing_higher_score": "No supported convention defect found in the inspected sibling modules."
+    },
+    "incomplete_migration": {
+      "evidence": [
+        "AppStateDatabase explicitly drops retired online/search tables when upgrading older state; persisted legacy source IDs and path aliases have active compatibility purposes.",
+        "LyricsParser documents and implements fallback for missing native plugins and XML documents exceeding native nesting limits. Native and Dart parser fixtures test the shared contract, so dual parsers have current callers and distinct compatibility needs.",
+        "Library schema version ownership is explicit, and the inspected code has no deprecated-but-called API or abandoned migration TODO. Residual Go-named logging identifiers label native logs as Native in user-facing output and do not create dual runtime paths."
+      ],
+      "issues_preventing_higher_score": "No supported incomplete migration defect found; observed compatibility paths are active and bounded."
+    }
+  },
+  "phase_1_summary": {
+    "test_strategy": {
+      "positive": [
+        "New: extensive behavior-oriented unit/widget tests across playback, persistence, scanning and collections.",
+        "New: real SQLite schema execution and device-side native integration tests.",
+        "New: completer-controlled race and failure tests avoid guessed delays in important runtime cases."
+      ],
+      "neutral": [
+        "New: host SQL tests sometimes use a Python SQLite subprocess. Tests/builds were not executed."
+      ],
+      "defects": [
+        "Two SQL fixtures extract production CREATE TABLE strings using formatting-sensitive regexes."
+      ]
+    },
+    "dependency_health": {
+      "positive": [
+        "New: direct dependencies have concrete distinct production uses.",
+        "New: local Android override states a specific required patch purpose."
+      ],
+      "neutral": [
+        "New: native media functionality requires FFmpeg and locally vendored audio plugins."
+      ],
+      "defects": []
+    },
+    "initialization_coupling": {
+      "positive": [
+        "New: explicit framework bootstrap, lazy storage/native streams, single-flight initialization, injected playback lifecycle and retry handling."
+      ],
+      "neutral": [
+        "New: process-level singleton defaults coexist with injectable runtime dependencies.",
+        "New: first LogBuffer access attempts native logging enablement and catches failure."
+      ],
+      "defects": []
+    },
+    "convention_outlier": {
+      "positive": [
+        "New: consistent Dart naming, Riverpod provider patterns and generated-code separation."
+      ],
+      "neutral": [
+        "New: part files share private library state while independent modules use imports."
+      ],
+      "defects": []
+    },
+    "incomplete_migration": {
+      "positive": [
+        "New: retired state tables are explicitly removed and current parser fallback has documented runtime purposes."
+      ],
+      "neutral": [
+        "New: old persisted IDs/path aliases remain for real compatibility; Go terminology remains internally in native logging."
+      ],
+      "defects": []
+    }
+  },
+  "context_updates": [
+    {
+      "dimension": "test_strategy",
+      "header": "Behavioral verification spans host and native boundaries",
+      "description": "Playback/persistence tests use controllable dependencies, database tests execute SQLite, and device integration tests call actual NativeDataJobs and validate cleanup/integrity.",
+      "positive": true,
+      "settled": true
+    },
+    {
+      "dimension": "dependency_health",
+      "header": "Distinct media dependencies serve different jobs",
+      "description": "audioplayers provides playback transport, audio_service provides the background media session, and FFmpeg performs metadata/audio processing; their coexistence is purposeful.",
+      "positive": true,
+      "settled": true
+    },
+    {
+      "dimension": "initialization_coupling",
+      "header": "Effects generally start explicitly or lazily",
+      "description": "Storage uses single-flight lazy getters, native USB events are lazy, and app bootstrap establishes bindings and Android activity attachment before services.",
+      "positive": true,
+      "settled": true
+    },
+    {
+      "dimension": "convention_outlier",
+      "header": "Dart library splits follow responsibility",
+      "description": "part files share private implementation state while independent services use imports, with consistent Dart names and Riverpod provider declarations.",
+      "positive": true,
+      "settled": true
+    },
+    {
+      "dimension": "incomplete_migration",
+      "header": "Compatibility paths have present purposes",
+      "description": "Legacy IDs support persisted data; the Dart lyrics parser supports missing native plugins and valid XML beyond native parser limits; retired online state tables are explicitly removed.",
+      "positive": true,
+      "settled": true
+    }
+  ],
+  "dimension_judgment": {
+    "test_strategy": {
+      "dimension_character": "The portfolio is broad and predominantly tests observable behavior, including failure, cancellation and cross-module native/database behavior. A small pair of SQL fixtures unnecessarily couples behavioral verification to Dart source formatting.",
+      "score_rationale": "Controlled async dependencies, real SQLite and native integration checks support strong change confidence. The formatting-sensitive SQL extraction is isolated but adds avoidable fragility, keeping this below exemplary."
+    },
+    "dependency_health": {
+      "dimension_character": "The inspected dependency set has clear production responsibilities and no established interchangeable duplicate stack. Native media requirements explain its larger plugins and local Android patches.",
+      "score_rationale": "Actual imports and font usage account for the direct dependencies inspected, while the local override states its required behavior. No concrete dependency defect was found to warrant a deduction; this does not assert an external vulnerability or freshness audit."
+    },
+    "initialization_coupling": {
+      "dimension_character": "Initialization is generally explicit, lazy and guarded, with substantial tests for retry and lifetime boundaries. The principal small exception is that first access to the log buffer also attempts to enable native logging.",
+      "score_rationale": "Lazy storage, lazy USB event subscriptions and explicit binding/activity bootstrap make order dependencies predictable. Hidden first-use native work in LogBuffer adds minor lifecycle friction, although failure is caught and no production initialization bug was established."
+    },
+    "convention_outlier": {
+      "dimension_character": "The inspected modules follow consistent Dart naming and framework conventions. Different import/part and controller patterns reflect real library or lifecycle distinctions rather than arbitrary islands.",
+      "score_rationale": "Provider, service, model and navigation examples provide coherent precedents for developers. No concrete inconsistency with navigation or behavioral impact was found, so no unsupported style deduction is applied."
+    },
+    "incomplete_migration": {
+      "dimension_character": "Observed legacy support is intentional and active rather than an abandoned transition. Current code explicitly handles persisted compatibility and documents the remaining native/Dart parser boundary.",
+      "score_rationale": "Retired state tables are removed and compatibility branches have tested purposes. Internal historical names alone do not establish incomplete migration; no stale shim or deprecated active API was supported by inspection."
+    }
+  }
+}

@@ -42,30 +42,28 @@
     "mode": "execution"
   },
   "narrative": {
-    "phase": "stagnation",
-    "headline": "All T1 items cleared!",
+    "phase": "refinement",
+    "headline": "Crossed 90% strict! (11 review work items \u2014 run `desloppify show review --status open`)",
     "dimensions": {
       "lowest_dimensions": [
         {
+          "name": "Test health",
+          "strict": 75.1,
+          "failing": 79,
+          "impact": 0.0
+        },
+        {
+          "name": "High elegance",
+          "strict": 86.0,
+          "failing": 1,
+          "impact": 0.0,
+          "subjective": true,
+          "impact_description": "re-review to improve"
+        },
+        {
           "name": "Structure nav",
-          "strict": 55.0,
-          "failing": 0,
-          "impact": 0.0,
-          "subjective": true,
-          "impact_description": "re-review to improve"
-        },
-        {
-          "name": "Design coherence",
-          "strict": 62.0,
-          "failing": 0,
-          "impact": 0.0,
-          "subjective": true,
-          "impact_description": "re-review to improve"
-        },
-        {
-          "name": "Error consistency",
-          "strict": 62.0,
-          "failing": 0,
+          "strict": 87.0,
+          "failing": 1,
           "impact": 0.0,
           "subjective": true,
           "impact_description": "re-review to improve"
@@ -88,9 +86,9 @@
         },
         {
           "name": "Code quality",
-          "lenient": 98.4,
-          "strict": 94.9,
-          "gap": 3.5,
+          "lenient": 98.2,
+          "strict": 94.6,
+          "gap": 3.6,
           "wontfix_count": 0
         }
       ],
@@ -104,106 +102,6 @@
           "name": "Duplication",
           "strict": 99.3,
           "stuck_scans": 5
-        },
-        {
-          "name": "Abstraction fit",
-          "strict": 72.0,
-          "stuck_scans": 5
-        },
-        {
-          "name": "AI generated debt",
-          "strict": 88.0,
-          "stuck_scans": 5
-        },
-        {
-          "name": "API coherence",
-          "strict": 72.0,
-          "stuck_scans": 5
-        },
-        {
-          "name": "Auth consistency",
-          "strict": 90.0,
-          "stuck_scans": 5
-        },
-        {
-          "name": "Contracts",
-          "strict": 84.0,
-          "stuck_scans": 5
-        },
-        {
-          "name": "Convention drift",
-          "strict": 78.0,
-          "stuck_scans": 5
-        },
-        {
-          "name": "Cross-module arch",
-          "strict": 72.0,
-          "stuck_scans": 5
-        },
-        {
-          "name": "Dep health",
-          "strict": 78.0,
-          "stuck_scans": 5
-        },
-        {
-          "name": "Design coherence",
-          "strict": 62.0,
-          "stuck_scans": 5
-        },
-        {
-          "name": "Error consistency",
-          "strict": 62.0,
-          "stuck_scans": 5
-        },
-        {
-          "name": "High elegance",
-          "strict": 74.0,
-          "stuck_scans": 5
-        },
-        {
-          "name": "Stale migration",
-          "strict": 86.0,
-          "stuck_scans": 5
-        },
-        {
-          "name": "Init coupling",
-          "strict": 72.0,
-          "stuck_scans": 5
-        },
-        {
-          "name": "Logic clarity",
-          "strict": 82.0,
-          "stuck_scans": 5
-        },
-        {
-          "name": "Low elegance",
-          "strict": 62.0,
-          "stuck_scans": 5
-        },
-        {
-          "name": "Mid elegance",
-          "strict": 64.0,
-          "stuck_scans": 5
-        },
-        {
-          "name": "Naming quality",
-          "strict": 72.0,
-          "stuck_scans": 5
-        },
-        {
-          "name": "Structure nav",
-          "strict": 55.0,
-          "stuck_scans": 5
-        },
-        {
-          "name": "Test strategy",
-          "strict": 72.0,
-          "stuck_scans": 5
-        },
-        {
-          "name": "Type safety",
-          "strict": 80.0,
-          "stuck_scans": 5
         }
       ]
     },
@@ -211,8 +109,8 @@
       {
         "type": "reorganize",
         "detector": "flat_dirs",
-        "count": 8,
-        "description": "8 flat_dirs issues \u2014 create subdirectories and use `desloppify move`",
+        "count": 10,
+        "description": "10 flat_dirs issues \u2014 create subdirectories and use `desloppify move`",
         "command": "desloppify show flat_dirs --status open",
         "impact": 0.0,
         "dimension": "Code quality",
@@ -233,13 +131,13 @@
       {
         "type": "refactor",
         "detector": "structural",
-        "count": 44,
-        "description": "44 structural work items \u2014 review large files \u2014 split only when responsibilities are clearly separable",
+        "count": 68,
+        "description": "68 structural work items \u2014 review large files \u2014 split only when responsibilities are clearly separable",
         "command": "desloppify show structural --status open",
         "impact": 0.0,
         "dimension": "File health",
         "priority": 3,
-        "lane": "refactor"
+        "lane": "refactor_0"
       },
       {
         "type": "refactor",
@@ -250,7 +148,7 @@
         "impact": 0.0,
         "dimension": "Duplication",
         "priority": 4,
-        "lane": "refactor"
+        "lane": "refactor_0"
       },
       {
         "type": "refactor",
@@ -271,19 +169,30 @@
       {
         "type": "refactor",
         "detector": "signature",
-        "count": 45,
-        "description": "45 signature work items \u2014 consolidate inconsistent function signatures",
+        "count": 82,
+        "description": "82 signature work items \u2014 consolidate inconsistent function signatures",
         "command": "desloppify show signature --status open",
         "impact": 0.0,
         "dimension": "Unknown",
         "priority": 6,
-        "lane": "refactor"
+        "lane": "refactor_0"
+      },
+      {
+        "type": "refactor",
+        "detector": "review",
+        "count": 11,
+        "description": "11 review work items need investigation \u2014 run `desloppify show review --status open` to see them",
+        "command": "desloppify show review --status open",
+        "impact": 0.0,
+        "dimension": "Unknown",
+        "priority": 7,
+        "lane": "refactor_1"
       }
     ],
     "strategy": {
       "fixer_leverage": {
         "auto_fixable_count": 0,
-        "total_count": 223,
+        "total_count": 321,
         "coverage": 0.0,
         "impact_ratio": 0.0,
         "recommendation": "none"
@@ -294,18 +203,27 @@
             1,
             2
           ],
-          "file_count": 12,
+          "file_count": 14,
           "total_impact": 0.0,
           "automation": "manual",
           "run_first": false
         },
-        "refactor": {
+        "refactor_0": {
           "actions": [
             3,
             4,
             6
           ],
-          "file_count": 88,
+          "file_count": 133,
+          "total_impact": 0.0,
+          "automation": "manual",
+          "run_first": false
+        },
+        "refactor_1": {
+          "actions": [
+            7
+          ],
+          "file_count": 1,
           "total_impact": 0.0,
           "automation": "manual",
           "run_first": false
@@ -321,14 +239,14 @@
         }
       },
       "can_parallelize": true,
-      "hint": "3 independent workstreams, safe to parallelize. Rescan after each phase to verify."
+      "hint": "4 independent workstreams, safe to parallelize. Rescan after each phase to verify. Review: 11 issue(s) \u2014 `desloppify show review --status open`."
     },
     "tools": {
       "fixers": [],
       "move": {
         "available": true,
         "relevant": true,
-        "reason": "4 single-use files + 8 flat directories",
+        "reason": "4 single-use files + 10 flat directories",
         "usage": "desloppify move <source> <dest> [--dry-run]"
       },
       "plan": {
@@ -343,18 +261,18 @@
       }
     },
     "debt": {
-      "overall_gap": 0.7,
+      "overall_gap": 0.6,
       "wontfix_count": 0,
       "worst_dimension": "File health",
       "worst_gap": 7.3,
-      "trend": "growing"
+      "trend": "stable"
     },
-    "milestone": "All T1 items cleared!",
+    "milestone": "Crossed 90% strict!",
     "primary_action": {
       "command": "desloppify show flat_dirs --status open",
-      "description": "8 flat_dirs issues \u2014 create subdirectories and use `desloppify move`"
+      "description": "10 flat_dirs issues \u2014 create subdirectories and use `desloppify move`"
     },
-    "why_now": "3 independent workstreams, safe to parallelize. Rescan after each phase to verify.",
+    "why_now": "4 independent workstreams, safe to parallelize. Rescan after each phase to verify. Review: 11 issue(s) \u2014 `desloppify show review --status open`.",
     "verification_step": {
       "command": "desloppify scan",
       "reason": "revalidate after changes"
@@ -362,18 +280,35 @@
     "risk_flags": [],
     "strict_target": {
       "target": 85.0,
-      "current": 76.0,
-      "gap": 9.0,
-      "state": "below",
+      "current": 90.1,
+      "gap": -5.1,
+      "state": "above",
       "warning": null
     },
-    "reminders": [],
+    "reminders": [
+      {
+        "type": "review_issues_pending",
+        "message": "11 review work item(s) need investigation. Run `desloppify show review --status open` to see the work queue.",
+        "command": "desloppify show review --status open",
+        "priority": 1,
+        "severity": "high"
+      },
+      {
+        "type": "review_not_run",
+        "message": "Mechanical checks look good! Run a subjective design review to catch issues linters miss: desloppify review --prepare",
+        "command": "desloppify review --prepare",
+        "priority": 3,
+        "severity": "low"
+      }
+    ],
     "reminder_history": {
       "zone_classification": 3,
       "report_scores": 9,
       "feedback_nudge": 3,
       "stagnant_nudge": 22,
-      "wontfix_growing": 3
+      "wontfix_growing": 3,
+      "review_issues_pending": 1,
+      "review_not_run": 1
     }
   },
   "agent_notes": [
@@ -393,7 +328,7 @@
       {
         "name": "auto/test_coverage-transitive_only",
         "description": "Fix 27 test coverage issues",
-        "item_count": 26
+        "item_count": 22
       },
       {
         "name": "auto/stale-review",
@@ -416,13 +351,13 @@
         "item_count": 4
       }
     ],
-    "total_ordered": 33,
+    "total_ordered": 36,
     "total_skipped": 0,
     "plan_overrides_narrative": true
   },
-  "overall_score": 77.1,
+  "overall_score": 91.1,
   "objective_score": 94.9,
-  "strict_score": 76.0,
+  "strict_score": 90.1,
   "scorecard_dimensions": [
     {
       "name": "File health",
@@ -435,10 +370,10 @@
     },
     {
       "name": "AI generated debt",
-      "score": 88.0,
-      "strict": 88.0,
+      "score": 90.0,
+      "strict": 90.0,
       "checks": 10,
-      "failing": 0,
+      "failing": 1,
       "tier": 4,
       "subjective": true,
       "placeholder": false,
@@ -448,8 +383,8 @@
     },
     {
       "name": "API coherence",
-      "score": 72.0,
-      "strict": 72.0,
+      "score": 96.0,
+      "strict": 96.0,
       "checks": 10,
       "failing": 0,
       "tier": 4,
@@ -461,8 +396,8 @@
     },
     {
       "name": "Abstraction fit",
-      "score": 72.0,
-      "strict": 72.0,
+      "score": 93.0,
+      "strict": 93.0,
       "checks": 10,
       "failing": 0,
       "tier": 4,
@@ -474,8 +409,8 @@
     },
     {
       "name": "Auth consistency",
-      "score": 90.0,
-      "strict": 90.0,
+      "score": 100.0,
+      "strict": 100.0,
       "checks": 10,
       "failing": 0,
       "tier": 4,
@@ -487,17 +422,17 @@
     },
     {
       "name": "Code quality",
-      "score": 98.4,
-      "strict": 94.9,
+      "score": 98.2,
+      "strict": 94.6,
       "checks": 533,
-      "failing": 12,
+      "failing": 14,
       "tier": 3,
       "subjective": false
     },
     {
       "name": "Convention drift",
-      "score": 78.0,
-      "strict": 78.0,
+      "score": 100.0,
+      "strict": 100.0,
       "checks": 10,
       "failing": 0,
       "tier": 4,
@@ -509,8 +444,8 @@
     },
     {
       "name": "Cross-module arch",
-      "score": 72.0,
-      "strict": 72.0,
+      "score": 94.0,
+      "strict": 94.0,
       "checks": 10,
       "failing": 0,
       "tier": 4,
@@ -522,8 +457,8 @@
     },
     {
       "name": "Dep health",
-      "score": 78.0,
-      "strict": 78.0,
+      "score": 100.0,
+      "strict": 100.0,
       "checks": 10,
       "failing": 0,
       "tier": 4,
@@ -535,8 +470,8 @@
     },
     {
       "name": "Design coherence",
-      "score": 62.0,
-      "strict": 62.0,
+      "score": 88.0,
+      "strict": 88.0,
       "checks": 10,
       "failing": 0,
       "tier": 4,
@@ -557,10 +492,10 @@
     },
     {
       "name": "Elegance",
-      "score": 66.7,
-      "strict": 66.7,
+      "score": 87.7,
+      "strict": 87.7,
       "checks": 30,
-      "failing": 0,
+      "failing": 3,
       "tier": 4,
       "subjective": true,
       "placeholder": false,
@@ -572,10 +507,10 @@
     },
     {
       "name": "Error consistency",
-      "score": 62.0,
-      "strict": 62.0,
+      "score": 90.0,
+      "strict": 90.0,
       "checks": 10,
-      "failing": 0,
+      "failing": 1,
       "tier": 4,
       "subjective": true,
       "placeholder": false,
@@ -585,8 +520,8 @@
     },
     {
       "name": "Init coupling",
-      "score": 72.0,
-      "strict": 72.0,
+      "score": 96.0,
+      "strict": 96.0,
       "checks": 10,
       "failing": 0,
       "tier": 4,
@@ -598,10 +533,10 @@
     },
     {
       "name": "Naming quality",
-      "score": 72.0,
-      "strict": 72.0,
+      "score": 92.0,
+      "strict": 92.0,
       "checks": 10,
-      "failing": 0,
+      "failing": 1,
       "tier": 4,
       "subjective": true,
       "placeholder": false,
@@ -620,8 +555,8 @@
     },
     {
       "name": "Stale migration",
-      "score": 86.0,
-      "strict": 86.0,
+      "score": 100.0,
+      "strict": 100.0,
       "checks": 10,
       "failing": 0,
       "tier": 4,
@@ -633,10 +568,10 @@
     },
     {
       "name": "Structure nav",
-      "score": 55.0,
-      "strict": 55.0,
+      "score": 87.0,
+      "strict": 87.0,
       "checks": 10,
-      "failing": 0,
+      "failing": 1,
       "tier": 4,
       "subjective": true,
       "placeholder": false,
@@ -655,10 +590,10 @@
     },
     {
       "name": "Test strategy",
-      "score": 72.0,
-      "strict": 72.0,
+      "score": 92.0,
+      "strict": 92.0,
       "checks": 10,
-      "failing": 0,
+      "failing": 1,
       "tier": 4,
       "subjective": true,
       "placeholder": false,
@@ -670,10 +605,10 @@
   "subjective_measures": [
     {
       "name": "AI generated debt",
-      "score": 88.0,
-      "strict": 88.0,
+      "score": 90.0,
+      "strict": 90.0,
       "checks": 10,
-      "failing": 0,
+      "failing": 1,
       "tier": 4,
       "subjective": true,
       "placeholder": false,
@@ -683,8 +618,8 @@
     },
     {
       "name": "API coherence",
-      "score": 72.0,
-      "strict": 72.0,
+      "score": 96.0,
+      "strict": 96.0,
       "checks": 10,
       "failing": 0,
       "tier": 4,
@@ -696,8 +631,8 @@
     },
     {
       "name": "Abstraction fit",
-      "score": 72.0,
-      "strict": 72.0,
+      "score": 93.0,
+      "strict": 93.0,
       "checks": 10,
       "failing": 0,
       "tier": 4,
@@ -709,8 +644,8 @@
     },
     {
       "name": "Auth consistency",
-      "score": 90.0,
-      "strict": 90.0,
+      "score": 100.0,
+      "strict": 100.0,
       "checks": 10,
       "failing": 0,
       "tier": 4,
@@ -722,8 +657,8 @@
     },
     {
       "name": "Convention drift",
-      "score": 78.0,
-      "strict": 78.0,
+      "score": 100.0,
+      "strict": 100.0,
       "checks": 10,
       "failing": 0,
       "tier": 4,
@@ -735,8 +670,8 @@
     },
     {
       "name": "Cross-module arch",
-      "score": 72.0,
-      "strict": 72.0,
+      "score": 94.0,
+      "strict": 94.0,
       "checks": 10,
       "failing": 0,
       "tier": 4,
@@ -748,8 +683,8 @@
     },
     {
       "name": "Dep health",
-      "score": 78.0,
-      "strict": 78.0,
+      "score": 100.0,
+      "strict": 100.0,
       "checks": 10,
       "failing": 0,
       "tier": 4,
@@ -761,8 +696,8 @@
     },
     {
       "name": "Design coherence",
-      "score": 62.0,
-      "strict": 62.0,
+      "score": 88.0,
+      "strict": 88.0,
       "checks": 10,
       "failing": 0,
       "tier": 4,
@@ -774,10 +709,10 @@
     },
     {
       "name": "Elegance",
-      "score": 66.7,
-      "strict": 66.7,
+      "score": 87.7,
+      "strict": 87.7,
       "checks": 30,
-      "failing": 0,
+      "failing": 3,
       "tier": 4,
       "subjective": true,
       "placeholder": false,
@@ -789,10 +724,10 @@
     },
     {
       "name": "Error consistency",
-      "score": 62.0,
-      "strict": 62.0,
+      "score": 90.0,
+      "strict": 90.0,
       "checks": 10,
-      "failing": 0,
+      "failing": 1,
       "tier": 4,
       "subjective": true,
       "placeholder": false,
@@ -802,8 +737,8 @@
     },
     {
       "name": "Init coupling",
-      "score": 72.0,
-      "strict": 72.0,
+      "score": 96.0,
+      "strict": 96.0,
       "checks": 10,
       "failing": 0,
       "tier": 4,
@@ -815,10 +750,10 @@
     },
     {
       "name": "Naming quality",
-      "score": 72.0,
-      "strict": 72.0,
+      "score": 92.0,
+      "strict": 92.0,
       "checks": 10,
-      "failing": 0,
+      "failing": 1,
       "tier": 4,
       "subjective": true,
       "placeholder": false,
@@ -828,8 +763,8 @@
     },
     {
       "name": "Stale migration",
-      "score": 86.0,
-      "strict": 86.0,
+      "score": 100.0,
+      "strict": 100.0,
       "checks": 10,
       "failing": 0,
       "tier": 4,
@@ -841,10 +776,10 @@
     },
     {
       "name": "Structure nav",
-      "score": 55.0,
-      "strict": 55.0,
+      "score": 87.0,
+      "strict": 87.0,
       "checks": 10,
-      "failing": 0,
+      "failing": 1,
       "tier": 4,
       "subjective": true,
       "placeholder": false,
@@ -854,10 +789,10 @@
     },
     {
       "name": "Test strategy",
-      "score": 72.0,
-      "strict": 72.0,
+      "score": 92.0,
+      "strict": 92.0,
       "checks": 10,
-      "failing": 0,
+      "failing": 1,
       "tier": 4,
       "subjective": true,
       "placeholder": false,
