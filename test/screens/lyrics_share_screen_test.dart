@@ -38,6 +38,37 @@ void main() {
     );
   });
 
+  testWidgets('each shared lyric line takes its own direction', (tester) async {
+    tester.view.physicalSize = const Size(1170, 2532);
+    tester.view.devicePixelRatio = 3;
+    addTearDown(tester.view.reset);
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: AppTheme.build(Brightness.dark),
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        home: const Scaffold(
+          body: LyricsShareCard(
+            title: 'Track',
+            artist: '',
+            artUri: null,
+            background: LyricsCardBackground.dark,
+            lines: [
+              (text: 'مرحبا بالعالم', background: false),
+              (text: 'Hello world', background: false),
+            ],
+          ),
+        ),
+      ),
+    );
+    final arabic = tester.widget<Text>(find.text('مرحبا بالعالم'));
+    final english = tester.widget<Text>(find.text('Hello world'));
+    expect(arabic.textDirection, TextDirection.rtl);
+    expect(arabic.textAlign, TextAlign.start);
+    expect(english.textDirection, TextDirection.ltr);
+    expect(english.textAlign, TextAlign.start);
+  });
+
   testWidgets('selection is limited and required before sharing', (
     tester,
   ) async {

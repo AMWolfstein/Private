@@ -2,6 +2,7 @@ import 'dart:ui' show ImageFilter;
 
 import 'package:flutter/material.dart';
 import 'package:sistrum/services/library/covers/cover_palette.dart';
+import 'package:sistrum/utils/lyrics/lyric_direction.dart';
 import 'package:sistrum/widgets/player/artwork/player_artwork.dart';
 
 /// Story-sized lyric cards stay short, like quoting a song rather than
@@ -147,8 +148,10 @@ class LyricsShareCard extends StatelessWidget {
                                       ),
                                     )
                                   : Column(
+                                      // Stretch so each line's start edge is
+                                      // its own direction's side, not the card's.
                                       crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                          CrossAxisAlignment.stretch,
                                       children: [
                                         for (final line in lines)
                                           Padding(
@@ -157,6 +160,11 @@ class LyricsShareCard extends StatelessWidget {
                                             ),
                                             child: Text(
                                               line.text,
+                                              textAlign: TextAlign.start,
+                                              textDirection: lyricLineDirection(
+                                                line.text,
+                                                Directionality.of(context),
+                                              ),
                                               style: TextStyle(
                                                 color: line.background
                                                     ? secondary
