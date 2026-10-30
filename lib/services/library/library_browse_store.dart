@@ -180,7 +180,13 @@ class LibraryBrowseStore {
       '''
       SELECT artist_key, MIN(artist_name) AS artist_name,
         MAX(NULLIF(cover_url, '')) AS cover_url,
-        MAX(NULLIF(cover_path, '')) AS cover_path,
+        (
+          SELECT NULLIF(newest.cover_path, '')
+          FROM ${LibrarySchema.visibleView} newest
+          WHERE newest.album_artist_norm = artist_key
+            AND NULLIF(newest.cover_path, '') IS NOT NULL
+          ORDER BY newest.sort_added DESC LIMIT 1
+        ) AS cover_path,
         MAX(sample_file_path) AS sample_file_path,
         COUNT(*) AS track_count
       FROM (

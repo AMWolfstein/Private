@@ -107,9 +107,11 @@ class _LocalArtistScreenState extends ConsumerState<LocalArtistScreen> {
           artistName: album.artist,
           coverPath: album.cover,
           loadTracks: () async =>
-              (await ref.read(libraryDatabaseProvider).getBrowseLocalAlbumRowsByKey(
-                album.key,
-              )).map(LocalLibraryItem.fromJson).toList(),
+              (await ref
+                      .read(libraryDatabaseProvider)
+                      .getBrowseLocalAlbumRowsByKey(album.key))
+                  .map(LocalLibraryItem.fromJson)
+                  .toList(),
         ),
       ),
     );
@@ -159,7 +161,12 @@ class _LocalArtistScreenState extends ConsumerState<LocalArtistScreen> {
                 ) ==
                 true);
     final isPlaying = inArtist && ref.watch(playbackPlayingProvider);
+    final newestCover = ref
+        .watch(localArtistCoverProvider(widget.artistName))
+        .asData
+        ?.value;
     final cover =
+        newestCover ??
         widget.coverPath ??
         albums?.entries.firstOrNull?.cover ??
         tracks?.items.firstOrNull?.coverPath;
@@ -390,9 +397,7 @@ class _LocalArtistScreenState extends ConsumerState<LocalArtistScreen> {
                                           context,
                                           ref,
                                           track,
-                                          anchor: appMenuAnchor(
-                                            buttonContext,
-                                          ),
+                                          anchor: appMenuAnchor(buttonContext),
                                         ),
                                       ),
                                     ),

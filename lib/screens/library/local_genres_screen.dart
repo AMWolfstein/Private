@@ -4,6 +4,7 @@ import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/models/local_library_item.dart';
 import 'package:sistrum/providers/local_library_provider.dart';
 import 'package:sistrum/providers/playback_provider.dart';
+import 'package:sistrum/providers/settings_provider.dart';
 import 'package:sistrum/services/library/library_genres.dart';
 import 'package:sistrum/widgets/primitives/app_sliver_header.dart';
 import 'package:sistrum/widgets/library/local_song_menu.dart';
@@ -22,10 +23,12 @@ final genrePageLoaderProvider =
       final version = ref.watch(
         localLibraryProvider.select((state) => state.loadedIndexVersion),
       );
+      final split = ref.watch(settingsProvider.select((s) => s.tagSplit));
       return (request) async =>
           LibraryGenres(
             await ref.read(libraryDatabaseProvider).database,
             tagCache: tagCache,
+            split: split,
           ).page(
             genre: request.genre,
             offset: request.offset,

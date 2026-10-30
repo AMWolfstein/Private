@@ -47,6 +47,28 @@ class LocalArtistTracks {
   final Object? error;
 }
 
+/// The artist's picture: the artwork of the most recently added song that has
+/// one. Null when none of the artist's songs has artwork.
+final localArtistCoverProvider = FutureProvider.autoDispose
+    .family<String?, String>((ref, artist) async {
+      ref.watch(localLibraryProvider.select((s) => s.loadedIndexVersion));
+      final page = await ref
+          .read(libraryDatabaseProvider)
+          .getBrowseTrackPage(
+            LibraryBrowseDbQuery(
+              albumArtist: artist,
+              limit: _artistPageSize,
+              sortMode: 'added',
+              includeSingleTrackAlbums: true,
+            ),
+          );
+      for (final row in page.rows) {
+        final cover = _decodeArtistTrack(row).coverPath;
+        if (cover != null && cover.isNotEmpty) return cover;
+      }
+      return null;
+    });
+
 final localArtistTracksProvider = AsyncNotifierProvider.autoDispose
     .family<LocalArtistTracksNotifier, LocalArtistTracks, String>(
       LocalArtistTracksNotifier.new,
