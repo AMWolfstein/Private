@@ -1,7 +1,7 @@
 {
   "version": 8,
   "created": "2026-10-29T06:01:52+00:00",
-  "updated": "2026-10-30T23:30:42+00:00",
+  "updated": "2026-10-30T23:31:15+00:00",
   "queue_order": [
     "subjective::abstraction_fitness",
     "subjective::ai_generated_debt",
@@ -333,7 +333,7 @@
       "issue_id": "test_coverage::lib/screens/local_guide_pages.dart::transitive_only",
       "created_at": "2026-10-29T06:01:52+00:00",
       "cluster": "transitive-behaviour-tests",
-      "updated_at": "2026-10-30T23:30:42+00:00"
+      "updated_at": "2026-10-30T23:31:15+00:00"
     },
     "test_coverage::lib/widgets/scroll_edge_fade.dart::transitive_only": {
       "issue_id": "test_coverage::lib/widgets/scroll_edge_fade.dart::transitive_only",
@@ -375,7 +375,7 @@
       "issue_id": "test_coverage::lib/screens/listening_statistics_screen.dart::transitive_only",
       "created_at": "2026-10-29T06:01:52+00:00",
       "cluster": "transitive-behaviour-tests",
-      "updated_at": "2026-10-30T23:30:42+00:00"
+      "updated_at": "2026-10-30T23:31:15+00:00"
     },
     "test_coverage::lib/providers/playback_notification_provider.dart::transitive_only": {
       "issue_id": "test_coverage::lib/providers/playback_notification_provider.dart::transitive_only",
@@ -549,7 +549,7 @@
       "issue_id": "test_coverage::lib/widgets/sheets/duplicate_review_sheet.dart::transitive_only",
       "created_at": "2026-10-29T18:55:17+00:00",
       "cluster": "transitive-behaviour-tests",
-      "updated_at": "2026-10-30T23:30:42+00:00"
+      "updated_at": "2026-10-30T23:31:15+00:00"
     },
     "test_coverage::lib/widgets/status/disc_separator_chip.dart::transitive_only": {
       "issue_id": "test_coverage::lib/widgets/status/disc_separator_chip.dart::transitive_only",
@@ -561,7 +561,7 @@
       "issue_id": "test_coverage::lib/services/audio_analysis/audio_analysis_parsing.dart::transitive_only",
       "created_at": "2026-10-29T18:55:17+00:00",
       "cluster": "transitive-behaviour-tests",
-      "updated_at": "2026-10-30T23:30:42+00:00"
+      "updated_at": "2026-10-30T23:31:15+00:00"
     },
     "test_coverage::lib/screens/library/selection_mode_mixin.dart::transitive_only": {
       "issue_id": "test_coverage::lib/screens/library/selection_mode_mixin.dart::transitive_only",
@@ -633,13 +633,13 @@
       "issue_id": "subjective::abstraction_fitness",
       "created_at": "2026-10-29T18:55:17+00:00",
       "cluster": "auto/stale-review",
-      "updated_at": "2026-10-30T23:30:42+00:00"
+      "updated_at": "2026-10-30T23:31:15+00:00"
     },
     "subjective::ai_generated_debt": {
       "issue_id": "subjective::ai_generated_debt",
       "created_at": "2026-10-29T18:55:17+00:00",
       "cluster": "auto/stale-review",
-      "updated_at": "2026-10-30T23:30:42+00:00"
+      "updated_at": "2026-10-30T23:31:15+00:00"
     },
     "subjective::api_surface_coherence": {
       "issue_id": "subjective::api_surface_coherence",
@@ -651,13 +651,13 @@
       "issue_id": "subjective::contract_coherence",
       "created_at": "2026-10-29T18:55:17+00:00",
       "cluster": "auto/stale-review",
-      "updated_at": "2026-10-30T23:30:42+00:00"
+      "updated_at": "2026-10-30T23:31:15+00:00"
     },
     "subjective::convention_outlier": {
       "issue_id": "subjective::convention_outlier",
       "created_at": "2026-10-29T18:55:17+00:00",
       "cluster": "auto/stale-review",
-      "updated_at": "2026-10-30T23:30:42+00:00"
+      "updated_at": "2026-10-30T23:31:15+00:00"
     },
     "subjective::cross_module_architecture": {
       "issue_id": "subjective::cross_module_architecture",
@@ -675,19 +675,19 @@
       "issue_id": "subjective::design_coherence",
       "created_at": "2026-10-29T18:55:17+00:00",
       "cluster": "auto/stale-review",
-      "updated_at": "2026-10-30T23:30:42+00:00"
+      "updated_at": "2026-10-30T23:31:15+00:00"
     },
     "subjective::error_consistency": {
       "issue_id": "subjective::error_consistency",
       "created_at": "2026-10-29T18:55:17+00:00",
       "cluster": "auto/stale-review",
-      "updated_at": "2026-10-30T23:30:42+00:00"
+      "updated_at": "2026-10-30T23:31:15+00:00"
     },
     "subjective::high_level_elegance": {
       "issue_id": "subjective::high_level_elegance",
       "created_at": "2026-10-29T18:55:17+00:00",
       "cluster": "auto/stale-review",
-      "updated_at": "2026-10-30T23:30:42+00:00"
+      "updated_at": "2026-10-30T23:31:15+00:00"
     },
     "subjective::incomplete_migration": {
       "issue_id": "subjective::incomplete_migration",
@@ -705,49 +705,49 @@
       "issue_id": "subjective::logic_clarity",
       "created_at": "2026-10-29T18:55:17+00:00",
       "cluster": "auto/stale-review",
-      "updated_at": "2026-10-30T23:30:42+00:00"
+      "updated_at": "2026-10-30T23:31:15+00:00"
     },
     "subjective::low_level_elegance": {
       "issue_id": "subjective::low_level_elegance",
       "created_at": "2026-10-29T18:55:17+00:00",
       "cluster": "auto/stale-review",
-      "updated_at": "2026-10-30T23:30:42+00:00"
+      "updated_at": "2026-10-30T23:31:15+00:00"
     },
     "subjective::mid_level_elegance": {
       "issue_id": "subjective::mid_level_elegance",
       "created_at": "2026-10-29T18:55:17+00:00",
       "cluster": "auto/stale-review",
-      "updated_at": "2026-10-30T23:30:42+00:00"
+      "updated_at": "2026-10-30T23:31:15+00:00"
     },
     "subjective::naming_quality": {
       "issue_id": "subjective::naming_quality",
       "created_at": "2026-10-29T18:55:17+00:00",
       "cluster": "auto/stale-review",
-      "updated_at": "2026-10-30T23:30:42+00:00"
+      "updated_at": "2026-10-30T23:31:15+00:00"
     },
     "subjective::package_organization": {
       "issue_id": "subjective::package_organization",
       "created_at": "2026-10-29T18:55:17+00:00",
       "cluster": "auto/stale-review",
-      "updated_at": "2026-10-30T23:30:42+00:00"
+      "updated_at": "2026-10-30T23:31:15+00:00"
     },
     "subjective::test_strategy": {
       "issue_id": "subjective::test_strategy",
       "created_at": "2026-10-29T18:55:17+00:00",
       "cluster": "auto/stale-review",
-      "updated_at": "2026-10-30T23:30:42+00:00"
+      "updated_at": "2026-10-30T23:31:15+00:00"
     },
     "subjective::type_safety": {
       "issue_id": "subjective::type_safety",
       "created_at": "2026-10-29T18:55:17+00:00",
       "cluster": "auto/stale-review",
-      "updated_at": "2026-10-30T23:30:42+00:00"
+      "updated_at": "2026-10-30T23:31:15+00:00"
     },
     "structural::lib/services/playback/music_player_service.dart": {
       "issue_id": "structural::lib/services/playback/music_player_service.dart",
       "created_at": "2026-10-29T20:35:47+00:00",
       "cluster": "playback-service-split",
-      "updated_at": "2026-10-30T23:30:42+00:00"
+      "updated_at": "2026-10-30T23:31:15+00:00"
     },
     "structural::lib/providers/library_collections_provider.dart": {
       "issue_id": "structural::lib/providers/library_collections_provider.dart",
@@ -2511,11 +2511,17 @@
     }
   },
   "promoted_ids": [],
-  "plan_start_scores": {},
+  "plan_start_scores": {
+    "strict": 89.8,
+    "overall": 91.9,
+    "objective": 98.1,
+    "verified": 97.9
+  },
   "refresh_state": {
     "_subjective_migration_pruned": true,
     "lifecycle_phase": "plan",
-    "subjective_review_completed_at_scan_count": 6
+    "subjective_review_completed_at_scan_count": 6,
+    "postflight_scan_completed_at_scan_count": 22
   },
   "execution_log": [
     {
@@ -6626,6 +6632,51 @@
       "detail": {
         "changes": true
       }
+    },
+    {
+      "timestamp": "2026-10-30T23:31:15+00:00",
+      "action": "reconcile",
+      "issue_ids": [],
+      "cluster_name": null,
+      "actor": "system",
+      "note": null,
+      "detail": {
+        "superseded_count": 0,
+        "pruned_count": 0,
+        "resurfaced_count": 0,
+        "clusters_completed_count": 0
+      }
+    },
+    {
+      "timestamp": "2026-10-30T23:31:15+00:00",
+      "action": "auto_cluster",
+      "issue_ids": [],
+      "cluster_name": null,
+      "actor": "system",
+      "note": null,
+      "detail": {
+        "changes": true
+      }
+    },
+    {
+      "timestamp": "2026-10-30T23:31:15+00:00",
+      "action": "seed_start_scores",
+      "issue_ids": [],
+      "cluster_name": null,
+      "actor": "system",
+      "note": null,
+      "detail": {}
+    },
+    {
+      "timestamp": "2026-10-30T23:31:15+00:00",
+      "action": "complete_postflight_scan",
+      "issue_ids": [],
+      "cluster_name": null,
+      "actor": "system",
+      "note": null,
+      "detail": {
+        "scan_count": 22
+      }
     }
   ],
   "epic_triage_meta": {
@@ -6951,7 +7002,7 @@
     "review::.::holistic::type_safety::failed_replaygain_result_accepts_null"
   ],
   "commit_tracking_branch": null,
-  "scan_count_at_plan_start": 20,
+  "scan_count_at_plan_start": 22,
   "previous_plan_start_scores": {
     "strict": 76.0,
     "overall": 77.0,
