@@ -369,11 +369,15 @@ class ReplayGainService {
 
     try {
       if (isSaf) {
-        safTempPath = await MediaFileBridge.copyContentUriToTemp(filePath);
-        if (safTempPath == null || safTempPath.isEmpty) {
-          _log.w('Failed to copy SAF file to temp for ReplayGain update');
-          return const ReplayGainWriteResult.failed(
+        try {
+          safTempPath = await MediaFileBridge.copyContentUriToTempOrThrow(
+            filePath,
+          );
+        } catch (e) {
+          _log.w('Failed to copy SAF file to temp for ReplayGain update: $e');
+          return ReplayGainWriteResult.failed(
             ReplayGainWriteFailure.storageFailed,
+            error: e,
           );
         }
         workingPath = safTempPath;

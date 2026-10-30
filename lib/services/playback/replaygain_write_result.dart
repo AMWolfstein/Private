@@ -18,11 +18,12 @@ enum ReplayGainWriteFailure {
 
 /// Outcome of a ReplayGain tag change on a single file.
 final class ReplayGainWriteResult {
-  const ReplayGainWriteResult.written()
-    : failure = null,
-      error = null;
+  const ReplayGainWriteResult.written() : failure = null, error = null;
 
-  const ReplayGainWriteResult.failed(this.failure, {this.error});
+  const ReplayGainWriteResult.failed(
+    ReplayGainWriteFailure this.failure, {
+    this.error,
+  });
 
   final ReplayGainWriteFailure? failure;
   final Object? error;

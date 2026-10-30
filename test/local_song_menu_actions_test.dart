@@ -572,7 +572,9 @@ void main() {
     expect(find.byType(LocalArtistScreen), findsOneWidget);
   });
 
-  testWidgets('go to artist splits a featured credit', (tester) async {
+  testWidgets('go to artist offers each name of a featured credit', (
+    tester,
+  ) async {
     await mount(
       tester,
       item: LocalLibraryItem(
@@ -589,8 +591,17 @@ void main() {
     await tester.ensureVisible(find.text(l10n.appGoToArtist));
     await tester.pumpAndSettle();
     await tester.tap(find.text(l10n.appGoToArtist));
+    // A credit that splits into several names asks which artist to open.
+    final picker = find.byType(ListTile);
+    await pumpUntil(
+      tester,
+      find.descendant(of: picker, matching: find.text('Guest')),
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(
+      find.descendant(of: picker, matching: find.text('Artist')),
+    );
     await pumpUntil(tester, find.byType(LocalArtistScreen));
-    // A featured credit navigates to the primary artist, not the whole credit.
     expect(
       tester
           .widget<LocalArtistScreen>(find.byType(LocalArtistScreen))

@@ -8,7 +8,7 @@ import 'package:sistrum/models/settings.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/providers/settings_provider.dart';
 import 'package:sistrum/screens/settings/about_page.dart';
-import 'package:sistrum/widgets/glass/app_glass_auto_probe.dart';
+import 'package:sistrum/services/glass/app_glass_auto_probe.dart';
 import 'package:sistrum/theme/app_theme.dart';
 import 'package:sistrum/widgets/glass/app_performance_hud.dart';
 
@@ -291,7 +291,9 @@ void main() {
     await tester.tap(
       find.byKey(const ValueKey('sistrum-performance-hud-sampler')),
     );
-    await tester.tap(find.byKey(const ValueKey('sistrum-performance-hud-band')));
+    await tester.tap(
+      find.byKey(const ValueKey('sistrum-performance-hud-band')),
+    );
     await tester.pump();
     expect(container.read(settingsProvider).barSamplerDisabled, true);
     expect(container.read(settingsProvider).headerBandBlurDisabled, true);

@@ -4,7 +4,7 @@ import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/providers/settings_provider.dart';
 import 'package:sistrum/models/app_glass.dart';
-import 'package:sistrum/widgets/glass/app_glass_auto_probe.dart';
+import 'package:sistrum/services/glass/app_glass_auto_probe.dart';
 import 'package:sistrum/widgets/glass/app_chrome.dart';
 import 'package:sistrum/widgets/primitives/app_slider.dart';
 

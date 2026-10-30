@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:sistrum/services/audio_analysis/audio_analysis_store.dart';
 import 'package:sistrum/widgets/audio_analysis/audio_analysis_widget.dart';
 
 void main() {

@@ -18,15 +18,13 @@ import 'package:sistrum/widgets/library/library_track_selection_bar.dart';
 import 'package:sistrum/widgets/primitives/app_alert_dialog.dart';
 import 'package:sistrum/widgets/library/library_selection_playback_actions.dart';
 import 'package:sistrum/services/library/library_database.dart';
+import 'support/library_table_definition.dart';
 import 'support/material_test_theme.dart';
-
-String _definition(String file, String table) => RegExp(
-  'CREATE TABLE $table\\s*\\([\\s\\S]*?\\n\\s*\\)',
-).firstMatch(File(file).readAsStringSync())!.group(0)!;
 
 // Execute the actual page/count queries with their bound parameters in SQLite.
 // Schema/bootstrap calls are isolated from this fixed inventory fixture.
 Set<String>? _visibleTrackIds;
+String? _libraryTable;
 
 class _QueryFixture {
   Future<List<Map<String, Object?>>> rawQuery(
@@ -76,10 +74,7 @@ if data['visibleIds'] is not None:
 print(json.dumps([dict(row) for row in db.execute(data['sql'], data['args'])]))
 ''',
       jsonEncode({
-        'library': _definition(
-          'lib/services/library/library_schema.dart',
-          'library',
-        ),
+        'library': _libraryTable,
         'sql': sql,
         'visibleIds': _visibleTrackIds?.toList(),
         'args': arguments ?? [],
@@ -139,6 +134,9 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   setUp(() async {
     _visibleTrackIds = null;
+    _libraryTable ??= await TestWidgetsFlutterBinding.instance.runAsync(
+      libraryTableDefinition,
+    );
     SharedPreferences.setMockInitialValues({});
     final previousFactory = databaseFactoryOrNull;
     databaseFactory = databaseFactorySqflitePlugin;

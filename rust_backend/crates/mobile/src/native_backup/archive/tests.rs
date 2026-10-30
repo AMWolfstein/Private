@@ -84,8 +84,40 @@ fn only_format_version_three_is_read() {
     for version in [2, 4] {
         let meta = metadata(version, json!({}));
         let (_dir, request) = fixture(&[("metadata.json", &meta)]);
-        assert!(read(&request, &|| Ok(())).is_err());
+        assert_eq!(
+            read(&request, &|| Ok(())).unwrap()["failure"],
+            "unsupported_version"
+        );
     }
+}
+
+#[test]
+fn malformed_archives_report_corruption_not_a_version() {
+    let (_dir, missing) = fixture(&[("other.txt", b"x")]);
+    assert_eq!(
+        read(&missing, &|| Ok(())).unwrap()["failure"],
+        "corrupt_archive"
+    );
+    let (_dir, not_json) = fixture(&[("metadata.json", b"{")]);
+    assert_eq!(
+        read(&not_json, &|| Ok(())).unwrap()["failure"],
+        "corrupt_archive"
+    );
+    let wrong_magic = serde_json::to_vec(&json!({
+        "magic": "other", "format_version": 3, "data": {},
+    }))
+    .unwrap();
+    let (_dir, request) = fixture(&[("metadata.json", &wrong_magic)]);
+    assert_eq!(
+        read(&request, &|| Ok(())).unwrap()["failure"],
+        "corrupt_archive"
+    );
+    let bad_profile = metadata(3, json!({"profile": {"name": 4}}));
+    let (_dir, request) = fixture(&[("metadata.json", &bad_profile)]);
+    assert_eq!(
+        read(&request, &|| Ok(())).unwrap()["failure"],
+        "corrupt_archive"
+    );
 }
 
 #[test]
@@ -145,11 +177,13 @@ fn invalid_profile_or_missing_photo_leaves_no_staging() {
         Value::Null,
         json!({"name": 4}),
         json!({"name": "Listener", "photo": "../outside"}),
-        json!({"name": "Listener", "photo": PHOTO_ENTRY}),
     ] {
         let meta = metadata(3, json!({"profile": profile}));
         let (_dir, request) = fixture(&[("metadata.json", &meta)]);
-        assert!(read(&request, &|| Ok(())).is_err());
+        assert_eq!(
+            read(&request, &|| Ok(())).unwrap()["failure"],
+            "corrupt_archive"
+        );
         assert_eq!(
             fs::read_dir(request["temporary_directory"].as_str().unwrap())
                 .unwrap()
@@ -157,6 +191,20 @@ fn invalid_profile_or_missing_photo_leaves_no_staging() {
             0
         );
     }
+    // A named photo whose entry is absent is an unreadable archive, not corrupt
+    // metadata, and still leaves no staging behind.
+    let meta = metadata(
+        3,
+        json!({"profile": {"name": "Listener", "photo": PHOTO_ENTRY}}),
+    );
+    let (_dir, request) = fixture(&[("metadata.json", &meta)]);
+    assert!(read(&request, &|| Ok(())).is_err());
+    assert_eq!(
+        fs::read_dir(request["temporary_directory"].as_str().unwrap())
+            .unwrap()
+            .count(),
+        0
+    );
 }
 
 #[test]

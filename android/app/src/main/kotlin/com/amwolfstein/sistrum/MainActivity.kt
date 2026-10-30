@@ -858,10 +858,20 @@ class MainActivity: FlutterFragmentActivity() {
 
                         "safCopyToTemp" -> {
                             val uriStr = call.argument<String>("uri") ?: ""
-                            val tempPath = withContext(Dispatchers.IO) {
-                                copyUriToTemp(Uri.parse(uriStr))
+                            try {
+                                val tempPath = withContext(Dispatchers.IO) {
+                                    copyUriToTempOrThrow(Uri.parse(uriStr))
+                                }
+                                if (tempPath == null) {
+                                    result.error("saf_copy_failed", "No stream for $uriStr", null)
+                                } else {
+                                    result.success(tempPath)
+                                }
+                            } catch (e: SecurityException) {
+                                result.error("saf_permission_denied", e.message, null)
+                            } catch (e: Exception) {
+                                result.error("saf_copy_failed", e.message, null)
                             }
-                            result.success(tempPath)
                         }
                         "safOpenPlaybackLease" -> {
                             val uriStr = call.argument<String>("uri") ?: ""

@@ -338,6 +338,10 @@ class BackupService {
         'input_path': path,
         'temporary_directory': temporary.path,
       });
+      final rejection = result['failure'] as String?;
+      if (rejection != null) {
+        throw BackupParseException(_nativeRejectionReason(rejection));
+      }
       stagingPath = result['temporary_directory_path'] as String?;
       if (result['published'] != true || stagingPath == null) {
         throw const FormatException('Incomplete native backup staging');
@@ -371,6 +375,7 @@ class BackupService {
       if (stagingPath != null) {
         await deleteBestEffort(Directory(stagingPath), recursive: true);
       }
+      if (error is BackupParseException) rethrow;
       _log.w('Backup archive native parse failed: $error');
       throw BackupParseException(
         error is FormatException
@@ -380,6 +385,15 @@ class BackupService {
       );
     }
   }
+
+  /// Maps the reason the native reader gives for an archive it read but will
+  /// not restore.
+  static BackupParseFailure _nativeRejectionReason(String code) =>
+      switch (code) {
+        'unsupported_version' => BackupParseFailure.unsupportedVersion,
+        'corrupt_archive' => BackupParseFailure.corruptArchive,
+        _ => throw FormatException('Unknown backup rejection: $code'),
+      };
 
   /// [collectionsJson] is the trusted JSON object from the collection export
   /// worker. Its empty placeholder in metadata retains the normal key order.

@@ -20,26 +20,26 @@ void main() {
     singleTrackCount: 4,
   );
 
-  test('keeps cached counts when a download refresh returns empty', () {
+  test('keeps cached counts when a refresh returns empty', () {
     final resolved = resolveLibraryBrowseCountsSnapshot(
       current: empty,
       cached: cached,
-      activeDownloadFallback: fallback,
+      nonEmptyFallback: fallback,
     );
 
     expect(identical(resolved, cached), isTrue);
   });
 
-  test('uses in-memory history when no page cache exists yet', () {
+  test('uses the in-memory snapshot when no page cache exists yet', () {
     final resolved = resolveLibraryBrowseCountsSnapshot(
       current: empty,
-      activeDownloadFallback: fallback,
+      nonEmptyFallback: fallback,
     );
 
     expect(identical(resolved, fallback), isTrue);
   });
 
-  test('allows a legitimate empty refresh without an active fallback', () {
+  test('allows a legitimate empty refresh without a snapshot fallback', () {
     final resolved = resolveLibraryBrowseCountsSnapshot(
       current: empty,
       cached: cached,
@@ -50,7 +50,7 @@ void main() {
       shouldRetainLibraryBrowsePageSnapshot(
         currentIsEmpty: true,
         cachedHasContent: true,
-        activeDownloadFallbackAvailable: false,
+        nonEmptyFallbackAvailable: false,
       ),
       isFalse,
     );
@@ -61,7 +61,7 @@ void main() {
       shouldRetainLibraryBrowsePageSnapshot(
         currentIsEmpty: true,
         cachedHasContent: true,
-        activeDownloadFallbackAvailable: true,
+        nonEmptyFallbackAvailable: true,
       ),
       isTrue,
     );
@@ -69,7 +69,7 @@ void main() {
       shouldRetainLibraryBrowsePageSnapshot(
         currentIsEmpty: false,
         cachedHasContent: true,
-        activeDownloadFallbackAvailable: true,
+        nonEmptyFallbackAvailable: true,
       ),
       isFalse,
     );

@@ -13,7 +13,7 @@ import 'package:sistrum/providers/metadata_editor_controller.dart';
 import 'package:sistrum/services/library/metadata_cover_resources.dart';
 import 'package:sistrum/theme/app_icons.dart';
 import 'package:sistrum/theme/app_theme.dart';
-import 'package:sistrum/widgets/library/track_metadata_persistence.dart';
+import 'package:sistrum/services/library/track_metadata_persistence.dart';
 import 'package:sistrum/widgets/primitives/app_action_button.dart';
 import 'package:sistrum/widgets/primitives/app_bottom_sheet.dart';
 import 'package:sistrum/widgets/primitives/app_snack_bar.dart';

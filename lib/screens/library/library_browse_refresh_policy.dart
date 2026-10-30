@@ -8,20 +8,19 @@ bool browseLibraryCountsHaveContent(LibraryBrowseCounts counts) =>
 LibraryBrowseCounts resolveLibraryBrowseCountsSnapshot({
   required LibraryBrowseCounts current,
   LibraryBrowseCounts? cached,
-  LibraryBrowseCounts? activeDownloadFallback,
+  LibraryBrowseCounts? nonEmptyFallback,
 }) {
-  if (browseLibraryCountsHaveContent(current) ||
-      activeDownloadFallback == null) {
+  if (browseLibraryCountsHaveContent(current) || nonEmptyFallback == null) {
     return current;
   }
   if (cached != null && browseLibraryCountsHaveContent(cached)) {
     return cached;
   }
-  return activeDownloadFallback;
+  return nonEmptyFallback;
 }
 
 bool shouldRetainLibraryBrowsePageSnapshot({
   required bool currentIsEmpty,
   required bool cachedHasContent,
-  required bool activeDownloadFallbackAvailable,
-}) => currentIsEmpty && cachedHasContent && activeDownloadFallbackAvailable;
+  required bool nonEmptyFallbackAvailable,
+}) => currentIsEmpty && cachedHasContent && nonEmptyFallbackAvailable;

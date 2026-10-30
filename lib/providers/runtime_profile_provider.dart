@@ -2,7 +2,7 @@ import 'dart:ui' as ui;
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/models/app_glass.dart';
-import 'package:sistrum/widgets/glass/app_glass_auto_probe.dart';
+import 'package:sistrum/services/glass/app_glass_auto_probe.dart';
 import 'package:sistrum/providers/settings_provider.dart';
 import 'package:sistrum/providers/theme_provider.dart';
 
@@ -94,8 +94,7 @@ final appGlassAutoResultProvider =
 final appGlassAutoStepProvider = Provider<AppGlassAutoStep>((ref) {
   final measured = ref.watch(appGlassAutoResultProvider)?.step;
   if (measured != null) return measured;
-  return ref.watch(appAutoDeviceGlassLevelProvider) ==
-          AppGlassLevel.liquid
+  return ref.watch(appAutoDeviceGlassLevelProvider) == AppGlassLevel.liquid
       ? AppGlassAutoStep.full
       : AppGlassAutoStep.lite;
 });
@@ -112,18 +111,19 @@ enum AppGlassAutoStatus {
   measured,
 }
 
-final appGlassAutoStatusProvider =
-    Provider.family<AppGlassAutoStatus, bool>((ref, highContrast) {
-      if (ref.watch(appGlassQualityProvider) != AppGlassQuality.auto ||
-          ref.watch(appGlassContrastBlockedProvider(highContrast)) ||
-          ref.watch(appAutoDeviceGlassLevelProvider) ==
-              AppGlassLevel.flat) {
-        return AppGlassAutoStatus.device;
-      }
-      return ref.watch(appGlassAutoResultProvider)?.done ?? false
-          ? AppGlassAutoStatus.measured
-          : AppGlassAutoStatus.measuring;
-    });
+final appGlassAutoStatusProvider = Provider.family<AppGlassAutoStatus, bool>((
+  ref,
+  highContrast,
+) {
+  if (ref.watch(appGlassQualityProvider) != AppGlassQuality.auto ||
+      ref.watch(appGlassContrastBlockedProvider(highContrast)) ||
+      ref.watch(appAutoDeviceGlassLevelProvider) == AppGlassLevel.flat) {
+    return AppGlassAutoStatus.device;
+  }
+  return ref.watch(appGlassAutoResultProvider)?.done ?? false
+      ? AppGlassAutoStatus.measured
+      : AppGlassAutoStatus.measuring;
+});
 
 final appGlassLevelProvider = Provider<AppGlassLevel>((ref) {
   return switch (ref.watch(appGlassQualityProvider)) {

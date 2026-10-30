@@ -192,7 +192,7 @@ void main() {
           ],
         };
       }
-      if (returnSong && sql.contains('SUM(all_count)')) {
+      if (returnSong && sql.contains('AS all_count')) {
         return {
           'columns': ['all_count', 'single_count', 'album_count'],
           'rows': [
@@ -428,9 +428,10 @@ void main() {
     final l10n = AppLocalizations.of(
       tester.element(find.byType(LibrarySectionTab)),
     );
-    final create = find.widgetWithText(
-      TextButton,
-      l10n.collectionCreatePlaylist,
+    // TextButton.icon builds a TextButton subtype, so match by subtype.
+    final create = find.ancestor(
+      of: find.text(l10n.collectionCreatePlaylist),
+      matching: find.bySubtype<TextButton>(),
     );
     expect(create, findsOneWidget);
     final rect = tester.getRect(create);

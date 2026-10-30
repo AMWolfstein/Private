@@ -53,7 +53,7 @@ class LibraryBrowseStore {
     final usesCursor =
         request.cursor != null &&
         request.cursor!.values.length == orderTerms.length;
-    final unionSql = _queueTrackUnionSql(
+    final querySql = _queueTrackSql(
       request,
       args,
       orderTerms: orderTerms,
@@ -62,7 +62,7 @@ class LibraryBrowseStore {
     final rows = await _db.rawQuery(
       '''
       SELECT *
-      FROM ($unionSql)
+      FROM ($querySql)
       ORDER BY ${queueOrderBy(orderTerms)}
       LIMIT ? ${usesCursor ? '' : 'OFFSET ?'}
       ''',
@@ -78,12 +78,10 @@ class LibraryBrowseStore {
     await _ensureCredits(request);
     final fastCounts = await _getUnfilteredQueueCounts(request);
     if (fastCounts != null) return fastCounts;
-    final parts = <String>[];
     final args = <Object?>[];
-
     final where = <String>[];
     _appendBrowseLocalFilters(where, args, request);
-    parts.add('''
+    final rows = await _db.rawQuery('''
         SELECT
           COUNT(*) AS all_count,
           COUNT(DISTINCT CASE WHEN ${isAlbumCompletenessFilter(request.metadata) ? '1' : 'grouped.album_total_tracks != 1'} THEN l.album_key END) AS album_count,
@@ -95,14 +93,6 @@ class LibraryBrowseStore {
           GROUP BY album_key
         ) grouped ON grouped.album_key = l.album_key
         ${where.isEmpty ? '' : 'WHERE ${where.join(' AND ')}'}
-      ''');
-
-    final rows = await _db.rawQuery('''
-      SELECT
-        COALESCE(SUM(all_count), 0) AS all_count,
-        COALESCE(SUM(single_count), 0) AS single_count,
-        COALESCE(SUM(album_count), 0) AS album_count
-      FROM (${parts.join(' UNION ALL ')})
       ''', args);
     final row = rows.isNotEmpty ? rows.first : const <String, Object?>{};
 
@@ -127,26 +117,17 @@ class LibraryBrowseStore {
       return null;
     }
 
-    final parts = <String>[];
-    parts.add('''
-        SELECT
-          COALESCE(SUM(track_count), 0) AS all_count,
-          COALESCE(SUM(CASE WHEN album_total_tracks != 1 THEN 1 ELSE 0 END), 0) AS album_count,
-          COALESCE(SUM(CASE WHEN album_total_tracks = 1 THEN track_count ELSE 0 END), 0) AS single_count
-        FROM (
-          SELECT l.album_key, COUNT(*) AS track_count,
-            MAX(COALESCE(l.total_tracks, 0)) AS album_total_tracks
-          FROM ${LibrarySchema.visibleView} l
-          GROUP BY l.album_key
-        )
-      ''');
-
     final rows = await _db.rawQuery('''
       SELECT
-        COALESCE(SUM(all_count), 0) AS all_count,
-        COALESCE(SUM(album_count), 0) AS album_count,
-        COALESCE(SUM(single_count), 0) AS single_count
-      FROM (${parts.join(' UNION ALL ')})
+        COALESCE(SUM(track_count), 0) AS all_count,
+        COALESCE(SUM(CASE WHEN album_total_tracks != 1 THEN 1 ELSE 0 END), 0) AS album_count,
+        COALESCE(SUM(CASE WHEN album_total_tracks = 1 THEN track_count ELSE 0 END), 0) AS single_count
+      FROM (
+        SELECT l.album_key, COUNT(*) AS track_count,
+          MAX(COALESCE(l.total_tracks, 0)) AS album_total_tracks
+        FROM ${LibrarySchema.visibleView} l
+        GROUP BY l.album_key
+      )
     ''');
     final row = rows.isEmpty ? const <String, Object?>{} : rows.first;
     return LibraryBrowseCounts(
@@ -163,7 +144,7 @@ class LibraryBrowseStore {
     final usesCursor =
         request.cursor != null &&
         request.cursor!.values.length == orderTerms.length;
-    final unionSql = _queueAlbumUnionSql(
+    final querySql = _queueAlbumSql(
       request,
       args,
       orderTerms: orderTerms,
@@ -172,7 +153,7 @@ class LibraryBrowseStore {
     final rows = await _db.rawQuery(
       '''
       SELECT *
-      FROM ($unionSql)
+      FROM ($querySql)
       ORDER BY ${queueOrderBy(orderTerms)}
       LIMIT ? ${usesCursor ? '' : 'OFFSET ?'}
       ''',
@@ -232,13 +213,12 @@ class LibraryBrowseStore {
     ''', args);
   }
 
-  String _queueTrackUnionSql(
+  String _queueTrackSql(
     LibraryBrowseDbQuery request,
     List<Object?> args, {
     required List<QueueOrderTerm> orderTerms,
     required bool usesCursor,
   }) {
-    final parts = <String>[];
     final where = <String>[];
     _appendBrowseLocalFilters(where, args, request);
     if (request.filterMode == 'singles') {
@@ -285,6 +265,7 @@ class LibraryBrowseStore {
           l.bitrate,
           l.format,
           l.has_replaygain,
+          l.has_lyrics,
           CASE WHEN l.audio_metadata_scan_version >= $libraryAudioMetadataScanVersion
             THEN 1 ELSE 0 END AS replaygain_metadata_scan_version,
           l.track_name_norm AS sort_track,
@@ -298,20 +279,16 @@ class LibraryBrowseStore {
         ${sizeJoin(request.sortMode, 'l')}
         ${where.isEmpty ? '' : 'WHERE ${where.join(' AND ')}'}
         ''';
-    parts.add(
-      _boundedQueuePart(
-        selectSql,
-        request,
-        args,
-        orderTerms,
-        usesCursor: usesCursor,
-      ),
+    return _boundedQueuePart(
+      selectSql,
+      request,
+      args,
+      orderTerms,
+      usesCursor: usesCursor,
     );
-
-    return parts.join(' UNION ALL ');
   }
 
-  String _queueAlbumUnionSql(
+  String _queueAlbumSql(
     LibraryBrowseDbQuery request,
     List<Object?> args, {
     required List<QueueOrderTerm> orderTerms,
@@ -337,7 +314,6 @@ class LibraryBrowseStore {
     final completenessColumns = assessesCompleteness
         ? 'ac.album_completeness, ac.album_present_tracks, ac.album_expected_tracks,'
         : 'NULL AS album_completeness, NULL AS album_present_tracks, NULL AS album_expected_tracks,';
-    final parts = <String>[];
     final albumKey = unfiltered ? 'l.album_key' : 'c.album_key';
     final where = <String>[];
     _appendBrowseLocalFilters(
@@ -384,17 +360,13 @@ class LibraryBrowseStore {
         ${unfiltered ? 'HAVING $albumKey IS NOT NULL ${includeSingles ? '' : 'AND MAX(COALESCE(l.total_tracks, 0)) != 1'}' : 'HAVING 1'}
         ${releaseDatedOnly ? "AND MAX($releaseOrder) != ''" : ''}
         ''';
-    parts.add(
-      _boundedQueuePart(
-        selectSql,
-        request,
-        args,
-        orderTerms,
-        usesCursor: usesCursor,
-      ),
+    return _boundedQueuePart(
+      selectSql,
+      request,
+      args,
+      orderTerms,
+      usesCursor: usesCursor,
     );
-
-    return parts.join(' UNION ALL ');
   }
 
   void _appendBrowseLocalFilters(

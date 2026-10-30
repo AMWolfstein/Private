@@ -23,6 +23,7 @@ Map<String, dynamic> queueTrackRowToJson(Map<String, dynamic> row) {
     'format': row['format'],
     'hasReplayGain':
         row['has_replaygain'] == 1 || row['has_replaygain'] == true,
+    'hasLyrics': row['has_lyrics'] == 1 || row['has_lyrics'] == true,
     'genre': row['genre'],
     'composer': row['composer'],
     'label': row['label'],

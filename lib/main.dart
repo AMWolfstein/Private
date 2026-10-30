@@ -18,7 +18,7 @@ import 'package:sistrum/providers/local_library_provider.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/providers/settings_provider.dart';
 import 'package:sistrum/providers/theme_provider.dart';
-import 'package:sistrum/widgets/glass/app_glass_auto_probe.dart';
+import 'package:sistrum/services/glass/app_glass_auto_probe.dart';
 import 'package:sistrum/services/notification_service.dart';
 import 'package:sistrum/services/native/native_device.dart';
 import 'package:sistrum/services/storage/app_state_database.dart';
@@ -114,20 +114,20 @@ void main() {
 
       final container = ProviderContainer(
         overrides: [
-            appScreensProvider.overrideWithValue(const AppScreenBuilders()),
-            lowEndDeviceProvider.overrideWithValue(
-              runtimeProfile.disableOverscrollEffects,
-            ),
-            // The RAM tiers describe Android hardware. Other platforms keep
-            // the existing full material by default.
-            deviceSupportsLiquidGlassProvider.overrideWithValue(
-              !Platform.isAndroid || runtimeProfile.enableBackdropBlur,
-            ),
-            initialSettingsProvider.overrideWithValue(bootstrapSettings),
-            initialThemeSettingsProvider.overrideWithValue(bootstrapTheme),
-            initialGlassAutoResultProvider.overrideWithValue(
-              loadGlassAutoResult(prefs, build: appGlassAutoBuild()),
-            ),
+          appScreensProvider.overrideWithValue(const AppScreenBuilders()),
+          lowEndDeviceProvider.overrideWithValue(
+            runtimeProfile.disableOverscrollEffects,
+          ),
+          // The RAM tiers describe Android hardware. Other platforms keep
+          // the existing full material by default.
+          deviceSupportsLiquidGlassProvider.overrideWithValue(
+            !Platform.isAndroid || runtimeProfile.enableBackdropBlur,
+          ),
+          initialSettingsProvider.overrideWithValue(bootstrapSettings),
+          initialThemeSettingsProvider.overrideWithValue(bootstrapTheme),
+          initialGlassAutoResultProvider.overrideWithValue(
+            loadGlassAutoResult(prefs, build: appGlassAutoBuild()),
+          ),
         ],
       );
       runApp(

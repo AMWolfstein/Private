@@ -4,7 +4,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
-import 'package:sistrum/widgets/glass/app_glass_auto_probe.dart';
+import 'package:sistrum/services/glass/app_glass_auto_probe.dart';
 
 /// Lets Auto glass measure the device instead of trusting its class alone.
 ///
@@ -27,8 +27,7 @@ class AppGlassAutoProbeHost extends ConsumerStatefulWidget {
       _AppGlassAutoProbeHostState();
 }
 
-class _AppGlassAutoProbeHostState
-    extends ConsumerState<AppGlassAutoProbeHost> {
+class _AppGlassAutoProbeHostState extends ConsumerState<AppGlassAutoProbeHost> {
   AppGlassAutoSampler? _sampler;
 
   void _sync(bool measuring) {

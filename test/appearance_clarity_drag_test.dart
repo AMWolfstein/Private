@@ -10,7 +10,7 @@ import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/providers/settings_provider.dart';
 import 'package:sistrum/providers/theme_provider.dart';
 import 'package:sistrum/screens/settings/appearance_settings_page.dart';
-import 'package:sistrum/widgets/glass/app_glass_auto_probe.dart';
+import 'package:sistrum/services/glass/app_glass_auto_probe.dart';
 import 'package:sistrum/theme/app_theme.dart';
 import 'package:sistrum/app.dart';
 import 'package:sistrum/widgets/glass/app_chrome.dart';
@@ -130,10 +130,7 @@ void main() {
       expect(value, value.roundToDouble());
       seen.add(value);
       // Only the preview follows the thumb.
-      expect(
-        tester.widget<AppGlassPanel>(preview).clarityLevel,
-        value.round(),
-      );
+      expect(tester.widget<AppGlassPanel>(preview).clarityLevel, value.round());
       expect(container.read(appGlassClarityLevelProvider), 3);
     }
     expect(seen, containsAll([2.0, 4.0, 5.0]));

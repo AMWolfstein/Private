@@ -147,16 +147,18 @@ class _LibrarySectionTabState extends ConsumerState<LibrarySectionTab> {
     LibraryBrowseDbCursor? cursor;
     try {
       do {
-        final page = await ref.read(libraryDatabaseProvider).getBrowseTrackPage(
-          LibraryBrowseDbQuery(
-            limit: 500,
-            quality: _filterQuality,
-            format: _filterFormat,
-            metadata: _filterMetadata,
-            sortMode: _sortMode,
-            cursor: cursor,
-          ),
-        );
+        final page = await ref
+            .read(libraryDatabaseProvider)
+            .getBrowseTrackPage(
+              LibraryBrowseDbQuery(
+                limit: 500,
+                quality: _filterQuality,
+                format: _filterFormat,
+                metadata: _filterMetadata,
+                sortMode: _sortMode,
+                cursor: cursor,
+              ),
+            );
         for (final row in page.rows) {
           if (row['source'] != 'local') continue;
           final item = LocalLibraryItem.fromEnvelope(row);
@@ -218,7 +220,7 @@ class _LibrarySectionTabState extends ConsumerState<LibrarySectionTab> {
         final resolved = resolveLibraryBrowseCountsSnapshot(
           current: counts,
           cached: cached,
-          activeDownloadFallback: nonEmptyFallback,
+          nonEmptyFallback: nonEmptyFallback,
         );
         _browseLibraryCountsCache[request] = resolved;
         _trimLibraryBrowseCountsCache();
@@ -247,7 +249,7 @@ class _LibrarySectionTabState extends ConsumerState<LibrarySectionTab> {
       if (shouldRetainLibraryBrowsePageSnapshot(
         currentIsEmpty: data.isEmpty,
         cachedHasContent: cached != null && !cached.isEmpty,
-        activeDownloadFallbackAvailable: nonEmptyFallback != null,
+        nonEmptyFallbackAvailable: nonEmptyFallback != null,
       )) {
         return;
       }
@@ -266,12 +268,9 @@ class _LibrarySectionTabState extends ConsumerState<LibrarySectionTab> {
       _trimLibraryBrowsePageDataCache(protectedRequest: request);
     }
 
-    if (value != null) {
-      final liveData = value.asData?.value;
-      if (liveData != null) {
-        storePage(liveData);
-      }
-      value.whenOrNull(data: storePage);
+    final liveData = value?.asData?.value;
+    if (liveData != null) {
+      storePage(liveData);
     }
 
     final pages = <_LibraryBrowsePageData>[];
@@ -422,6 +421,12 @@ class _LibrarySectionTabState extends ConsumerState<LibrarySectionTab> {
       builder: (context) => AppScrollableSheet(
         builder: (context, scrollController) => StatefulBuilder(
           builder: (context, setSheetState) {
+            Widget metadataChip(String label, String? mode) => AppChoiceChip(
+              label: Text(label),
+              selected: tempMetadata == mode,
+              onSelected: (_) => setSheetState(() => tempMetadata = mode),
+            );
+
             Widget sortChip(String label, String mode) => AppChoiceChip(
               label: Text(label),
               selected: tempSortMode == mode,
@@ -532,160 +537,70 @@ class _LibrarySectionTabState extends ConsumerState<LibrarySectionTab> {
                       spacing: 8,
                       runSpacing: 8,
                       children: [
-                        AppChoiceChip(
-                          label: Text(context.l10n.libraryFilterAll),
-                          selected: tempMetadata == null,
-                          onSelected: (_) =>
-                              setSheetState(() => tempMetadata = null),
+                        metadataChip(context.l10n.libraryFilterAll, null),
+                        metadataChip(
+                          context.l10n.libraryFilterMetadataComplete,
+                          'complete',
                         ),
-                        AppChoiceChip(
-                          label: Text(
-                            context.l10n.libraryFilterMetadataComplete,
-                          ),
-                          selected: tempMetadata == 'complete',
-                          onSelected: (_) =>
-                              setSheetState(() => tempMetadata = 'complete'),
+                        metadataChip(
+                          context.l10n.libraryFilterMetadataMissingAny,
+                          'missing-any',
                         ),
-                        AppChoiceChip(
-                          label: Text(
-                            context.l10n.libraryFilterMetadataMissingAny,
-                          ),
-                          selected: tempMetadata == 'missing-any',
-                          onSelected: (_) =>
-                              setSheetState(() => tempMetadata = 'missing-any'),
+                        metadataChip(
+                          context.l10n.libraryFilterMetadataMissingYear,
+                          'missing-year',
                         ),
-                        AppChoiceChip(
-                          label: Text(
-                            context.l10n.libraryFilterMetadataMissingYear,
-                          ),
-                          selected: tempMetadata == 'missing-year',
-                          onSelected: (_) => setSheetState(
-                            () => tempMetadata = 'missing-year',
-                          ),
+                        metadataChip(
+                          context.l10n.libraryFilterMetadataMissingGenre,
+                          'missing-genre',
                         ),
-                        AppChoiceChip(
-                          label: Text(
-                            context.l10n.libraryFilterMetadataMissingGenre,
-                          ),
-                          selected: tempMetadata == 'missing-genre',
-                          onSelected: (_) => setSheetState(
-                            () => tempMetadata = 'missing-genre',
-                          ),
+                        metadataChip(
+                          context.l10n.libraryFilterMetadataMissingAlbumArtist,
+                          'missing-album-artist',
                         ),
-                        AppChoiceChip(
-                          label: Text(
-                            context
-                                .l10n
-                                .libraryFilterMetadataMissingAlbumArtist,
-                          ),
-                          selected: tempMetadata == 'missing-album-artist',
-                          onSelected: (_) => setSheetState(
-                            () => tempMetadata = 'missing-album-artist',
-                          ),
+                        metadataChip(
+                          context.l10n.libraryFilterMetadataMissingTrackNumber,
+                          'missing-track-number',
                         ),
-                        AppChoiceChip(
-                          label: Text(
-                            context
-                                .l10n
-                                .libraryFilterMetadataMissingTrackNumber,
-                          ),
-                          selected: tempMetadata == 'missing-track-number',
-                          onSelected: (_) => setSheetState(
-                            () => tempMetadata = 'missing-track-number',
-                          ),
+                        metadataChip(
+                          context.l10n.libraryFilterMetadataMissingDiscNumber,
+                          'missing-disc-number',
                         ),
-                        AppChoiceChip(
-                          label: Text(
-                            context.l10n.libraryFilterMetadataMissingDiscNumber,
-                          ),
-                          selected: tempMetadata == 'missing-disc-number',
-                          onSelected: (_) => setSheetState(
-                            () => tempMetadata = 'missing-disc-number',
-                          ),
+                        metadataChip(
+                          context.l10n.libraryFilterMetadataMissingArtist,
+                          'missing-artist',
                         ),
-                        AppChoiceChip(
-                          label: Text(
-                            context.l10n.libraryFilterMetadataMissingArtist,
-                          ),
-                          selected: tempMetadata == 'missing-artist',
-                          onSelected: (_) => setSheetState(
-                            () => tempMetadata = 'missing-artist',
-                          ),
+                        metadataChip(
+                          context.l10n.libraryFilterMetadataIncorrectIsrcFormat,
+                          'incorrect-isrc-format',
                         ),
-                        AppChoiceChip(
-                          label: Text(
-                            context
-                                .l10n
-                                .libraryFilterMetadataIncorrectIsrcFormat,
-                          ),
-                          selected: tempMetadata == 'incorrect-isrc-format',
-                          onSelected: (_) => setSheetState(
-                            () => tempMetadata = 'incorrect-isrc-format',
-                          ),
+                        metadataChip(
+                          context.l10n.libraryFilterMetadataMissingIsrc,
+                          'missing-isrc',
                         ),
-                        AppChoiceChip(
-                          label: Text(
-                            context.l10n.libraryFilterMetadataMissingIsrc,
-                          ),
-                          selected: tempMetadata == 'missing-isrc',
-                          onSelected: (_) => setSheetState(
-                            () => tempMetadata = 'missing-isrc',
-                          ),
+                        metadataChip(
+                          context.l10n.libraryFilterMetadataMissingLabel,
+                          'missing-label',
                         ),
-                        AppChoiceChip(
-                          label: Text(
-                            context.l10n.libraryFilterMetadataMissingLabel,
-                          ),
-                          selected: tempMetadata == 'missing-label',
-                          onSelected: (_) => setSheetState(
-                            () => tempMetadata = 'missing-label',
-                          ),
+                        metadataChip(
+                          context.l10n.libraryFilterMetadataMissingLyrics,
+                          'missing-lyrics',
                         ),
-                        AppChoiceChip(
-                          label: Text(
-                            context.l10n.libraryFilterMetadataMissingLyrics,
-                          ),
-                          selected: tempMetadata == 'missing-lyrics',
-                          onSelected: (_) => setSheetState(
-                            () => tempMetadata = 'missing-lyrics',
-                          ),
+                        metadataChip(
+                          context.l10n.libraryFilterMetadataHasReplayGain,
+                          'has-replaygain',
                         ),
-                        AppChoiceChip(
-                          label: Text(
-                            context.l10n.libraryFilterMetadataHasReplayGain,
-                          ),
-                          selected: tempMetadata == 'has-replaygain',
-                          onSelected: (_) => setSheetState(
-                            () => tempMetadata = 'has-replaygain',
-                          ),
+                        metadataChip(
+                          context.l10n.libraryFilterMetadataMissingReplayGain,
+                          'missing-replaygain',
                         ),
-                        AppChoiceChip(
-                          label: Text(
-                            context.l10n.libraryFilterMetadataMissingReplayGain,
-                          ),
-                          selected: tempMetadata == 'missing-replaygain',
-                          onSelected: (_) => setSheetState(
-                            () => tempMetadata = 'missing-replaygain',
-                          ),
+                        metadataChip(
+                          context.l10n.libraryFilterIncompleteAlbums,
+                          incompleteAlbumFilter,
                         ),
-                        AppChoiceChip(
-                          label: Text(
-                            context.l10n.libraryFilterIncompleteAlbums,
-                          ),
-                          selected: tempMetadata == incompleteAlbumFilter,
-                          onSelected: (_) => setSheetState(
-                            () => tempMetadata = incompleteAlbumFilter,
-                          ),
-                        ),
-                        AppChoiceChip(
-                          label: Text(
-                            context.l10n.libraryAlbumCompletenessUnknown,
-                          ),
-                          selected:
-                              tempMetadata == unknownAlbumCompletenessFilter,
-                          onSelected: (_) => setSheetState(
-                            () => tempMetadata = unknownAlbumCompletenessFilter,
-                          ),
+                        metadataChip(
+                          context.l10n.libraryAlbumCompletenessUnknown,
+                          unknownAlbumCompletenessFilter,
                         ),
                       ],
                     ),
@@ -701,23 +616,56 @@ class _LibrarySectionTabState extends ConsumerState<LibrarySectionTab> {
                     Wrap(
                       spacing: 8,
                       children: [
-                        sortChip(context.l10n.libraryFilterSortLatest, 'latest'),
-                        sortChip(context.l10n.libraryFilterSortOldest, 'oldest'),
+                        sortChip(
+                          context.l10n.libraryFilterSortLatest,
+                          'latest',
+                        ),
+                        sortChip(
+                          context.l10n.libraryFilterSortOldest,
+                          'oldest',
+                        ),
                         // Playlists have no file size of their own.
                         if (widget.librarySection != 'playlists') ...[
-                          sortChip(context.l10n.libraryFilterSortSizeLargest, 'size-desc'),
-                          sortChip(context.l10n.libraryFilterSortSizeSmallest, 'size-asc'),
+                          sortChip(
+                            context.l10n.libraryFilterSortSizeLargest,
+                            'size-desc',
+                          ),
+                          sortChip(
+                            context.l10n.libraryFilterSortSizeSmallest,
+                            'size-asc',
+                          ),
                         ],
                         sortChip(context.l10n.searchSortTitleAZ, 'a-z'),
                         sortChip(context.l10n.searchSortTitleZA, 'z-a'),
                         sortChip(context.l10n.searchSortArtistAZ, 'artist-asc'),
-                        sortChip(context.l10n.searchSortArtistZA, 'artist-desc'),
-                        sortChip(context.l10n.libraryFilterSortAlbumAsc, 'album-asc'),
-                        sortChip(context.l10n.libraryFilterSortAlbumDesc, 'album-desc'),
-                        sortChip(context.l10n.searchSortDateNewest, 'release-newest'),
-                        sortChip(context.l10n.searchSortDateOldest, 'release-oldest'),
-                        sortChip(context.l10n.libraryFilterSortGenreAsc, 'genre-asc'),
-                        sortChip(context.l10n.libraryFilterSortGenreDesc, 'genre-desc'),
+                        sortChip(
+                          context.l10n.searchSortArtistZA,
+                          'artist-desc',
+                        ),
+                        sortChip(
+                          context.l10n.libraryFilterSortAlbumAsc,
+                          'album-asc',
+                        ),
+                        sortChip(
+                          context.l10n.libraryFilterSortAlbumDesc,
+                          'album-desc',
+                        ),
+                        sortChip(
+                          context.l10n.searchSortDateNewest,
+                          'release-newest',
+                        ),
+                        sortChip(
+                          context.l10n.searchSortDateOldest,
+                          'release-oldest',
+                        ),
+                        sortChip(
+                          context.l10n.libraryFilterSortGenreAsc,
+                          'genre-asc',
+                        ),
+                        sortChip(
+                          context.l10n.libraryFilterSortGenreDesc,
+                          'genre-desc',
+                        ),
                       ],
                     ),
                     const SizedBox(height: 24),

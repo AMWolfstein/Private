@@ -8,7 +8,7 @@ import 'package:sistrum/services/ffmpeg/ffmpeg_replaygain.dart';
 import 'package:sistrum/services/library/metadata_cover_resources.dart';
 import 'package:sistrum/services/library/metadata_edit_result.dart';
 import 'package:sistrum/services/native/media_file_bridge.dart';
-import 'package:sistrum/widgets/library/track_metadata_persistence.dart';
+import 'package:sistrum/services/library/track_metadata_persistence.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -39,7 +39,8 @@ void main() {
       for (final path in [m4a.path, mp3.path]) {
         final service = MetadataPersistenceService(
           covers: covers,
-          edit: (_, _) async => MetadataEditResult.decode({'success': true, 'method': 'ffmpeg'}),
+          edit: (_, _) async =>
+              MetadataEditResult.decode({'success': true, 'method': 'ffmpeg'}),
           read: (_) async => {},
         );
         final result = await service.save(

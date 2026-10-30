@@ -1,28 +1,22 @@
 import 'dart:async';
-import 'dart:convert';
-import 'dart:io';
 import 'dart:math' as math;
 import 'dart:ui' as ui;
 import 'package:ffmpeg_kit_flutter_new_audio/ffmpeg_kit.dart';
 import 'package:ffmpeg_kit_flutter_new_audio/ffmpeg_session.dart';
-import 'package:ffmpeg_kit_flutter_new_audio/ffprobe_kit.dart';
-import 'package:ffmpeg_kit_flutter_new_audio/return_code.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:sistrum/services/native/media_file_bridge.dart';
 import 'package:sistrum/theme/app_theme.dart';
 import 'package:sistrum/services/audio_analysis/audio_analysis_jobs.dart';
-import 'package:sistrum/services/audio_analysis/audio_analysis_cache.dart';
 import 'package:sistrum/services/audio_analysis/audio_analysis_parsing.dart';
-import 'package:sistrum/utils/best_effort_delete.dart';
+import 'package:sistrum/services/audio_analysis/audio_analysis_runner.dart';
+import 'package:sistrum/services/audio_analysis/audio_analysis_store.dart';
 import 'package:sistrum/widgets/settings/settings_group.dart';
 import 'package:sistrum/widgets/primitives/app_content_card.dart';
 import 'package:sistrum/widgets/primitives/app_choice_chip.dart';
 import 'package:path/path.dart' as p;
-import 'package:path_provider/path_provider.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/services/native/native_data_jobs.dart';
 import 'package:sistrum/utils/logger.dart';
@@ -30,29 +24,8 @@ import 'package:sistrum/utils/string_utils.dart';
 
 export 'package:sistrum/services/audio_analysis/audio_analysis_parsing.dart';
 
-part 'audio_analysis_models.dart';
 part 'audio_analysis_info_card.dart';
 part 'audio_analysis_spectrogram.dart';
-
-/// Decodes a cached spectrogram image, returning null when the bytes are not a
-/// complete image.
-///
-/// `decodeImageFromList` reports a truncated PNG as an unhandled async error
-/// and never completes its callback, so the cache path must use a codec whose
-/// failure can be caught (and the damaged file dropped).
-@visibleForTesting
-Future<ui.Image?> decodeCachedSpectrogramBytes(Uint8List bytes) async {
-  try {
-    final codec = await ui.instantiateImageCodec(bytes);
-    try {
-      return (await codec.getNextFrame()).image;
-    } finally {
-      codec.dispose();
-    }
-  } catch (_) {
-    return null;
-  }
-}
 
 final _log = AppLogger('AudioAnalysis');
 
@@ -111,6 +84,12 @@ class _AudioAnalysisCardState extends State<AudioAnalysisCard> {
   }
 
   final _nativeAnalysisRequests = <String>{};
+
+  late final _runner = AudioAnalysisRunner(
+    jobs: _analysisJobs,
+    nativeRequests: _nativeAnalysisRequests,
+    checkRequest: _checkAnalysisRequest,
+  );
 
   void _cancelNativeAnalysis() {
     for (final request in _nativeAnalysisRequests) {
@@ -202,18 +181,20 @@ class _AudioAnalysisCardState extends State<AudioAnalysisCard> {
   Future<void> _tryLoadFromCache() async {
     final expectedPath = widget.filePath;
     final requestId = _spectrogramRequestId;
-    final releaseCache = _cacheBudget.retain(_cacheKey(expectedPath));
+    final releaseCache = audioAnalysisCacheBudget.retain(
+      audioAnalysisCacheKey(expectedPath),
+    );
     bool isCurrentRequest() =>
         mounted &&
         widget.filePath == expectedPath &&
         requestId == _spectrogramRequestId;
 
     try {
-      final cached = await _loadFromCache(expectedPath);
+      final cached = await loadAudioAnalysisFromCache(expectedPath);
       if (cached != null && isCurrentRequest()) {
         final unsupported = unsupportedAudioAnalysisCodecLabel(cached.codec);
         if (unsupported != null) {
-          await _clearCache(expectedPath);
+          await clearAudioAnalysisCache(expectedPath);
           if (isCurrentRequest()) {
             setState(() {
               _unsupportedCodec = unsupported;
@@ -226,7 +207,7 @@ class _AudioAnalysisCardState extends State<AudioAnalysisCard> {
           _data = cached;
           _checkingCache = false;
         });
-        var image = await _loadSpectrogramFromCache(
+        var image = await loadSpectrogramFromCache(
           expectedPath,
           channel: _spectrogramChannel,
         );
@@ -249,7 +230,7 @@ class _AudioAnalysisCardState extends State<AudioAnalysisCard> {
       // Missing or unreadable cache entries fall back to the Analyze action.
     } finally {
       releaseCache();
-      unawaited(_trimCache());
+      unawaited(trimAudioAnalysisCache());
     }
     if (isCurrentRequest()) {
       setState(() => _checkingCache = false);
@@ -265,7 +246,7 @@ class _AudioAnalysisCardState extends State<AudioAnalysisCard> {
     final sourcePath = filePath ?? widget.filePath;
     final data = analysisData ?? _data;
     final channel = _spectrogramChannel;
-    final artifact = await _generateSpectrogramForFile(
+    final artifact = await _runner.generateSpectrogramForFile(
       sourcePath,
       requestId: requestId,
       channel: channel,
@@ -273,14 +254,16 @@ class _AudioAnalysisCardState extends State<AudioAnalysisCard> {
       sampleRate: data?.sampleRate,
       channels: data?.channels,
     );
-    await _saveSpectrogramToCache(sourcePath, artifact.image, channel: channel);
+    await saveSpectrogramToCache(sourcePath, artifact.image, channel: channel);
     return artifact.image;
   }
 
   Future<void> _analyze({bool forceRefresh = false}) async {
     if (_analyzing) return;
     final sourcePath = widget.filePath;
-    final releaseCache = _cacheBudget.retain(_cacheKey(sourcePath));
+    final releaseCache = audioAnalysisCacheBudget.retain(
+      audioAnalysisCacheKey(sourcePath),
+    );
     final requestId = ++_spectrogramRequestId;
     _analysisJobs.invalidate();
     _cancelNativeAnalysis();
@@ -298,10 +281,12 @@ class _AudioAnalysisCardState extends State<AudioAnalysisCard> {
 
     try {
       if (forceRefresh) {
-        await _clearCache(sourcePath);
+        await clearAudioAnalysisCache(sourcePath);
       }
 
-      final cached = forceRefresh ? null : await _loadFromCache(sourcePath);
+      final cached = forceRefresh
+          ? null
+          : await loadAudioAnalysisFromCache(sourcePath);
       _checkAnalysisRequest(requestId);
       AudioAnalysisData data;
       ui.Image? image;
@@ -312,16 +297,16 @@ class _AudioAnalysisCardState extends State<AudioAnalysisCard> {
           throw UnsupportedAudioAnalysisCodecException(unsupported);
         }
         data = cached;
-        image = await _loadSpectrogramFromCache(
+        image = await loadSpectrogramFromCache(
           sourcePath,
           channel: _spectrogramChannel,
         );
       } else {
-        final result = await _runAnalysis(sourcePath, requestId);
+        final result = await _runner.runAnalysis(sourcePath, requestId);
         data = result.data;
         image = result.spectrogramImage;
-        await _saveToCache(sourcePath, data);
-        await _saveSpectrogramToCache(
+        await saveAudioAnalysisToCache(sourcePath, data);
+        await saveSpectrogramToCache(
           sourcePath,
           image,
           channel: _spectrogramChannel,
@@ -363,414 +348,7 @@ class _AudioAnalysisCardState extends State<AudioAnalysisCard> {
       }
     } finally {
       releaseCache();
-      unawaited(_trimCache());
-    }
-  }
-
-  static Future<void> _clearCache(String filePath) async {
-    try {
-      final dir = await _cacheDir();
-      final key = _cacheKey(filePath);
-      final jsonFile = File('${dir.path}/$key.json');
-      if (await jsonFile.exists()) {
-        await jsonFile.delete();
-      }
-      await for (final entity in dir.list()) {
-        if (entity is! File) continue;
-        final name = entity.path.replaceAll('\\', '/').split('/').last;
-        final isCombined = name == '$key.png';
-        final isChannel = name.startsWith('${key}_ch') && name.endsWith('.png');
-        if (isCombined || isChannel) {
-          await entity.delete();
-        }
-      }
-    } catch (_) {}
-  }
-
-  static String _cacheKey(String filePath) {
-    var hash = 0xcbf29ce484222325;
-    for (final byte in utf8.encode(filePath)) {
-      hash ^= byte;
-      hash = (hash * 0x100000001b3) & 0x7FFFFFFFFFFFFFFF;
-    }
-    return hash.toRadixString(16);
-  }
-
-  static Future<Directory> _cacheDir() async {
-    final appSupport = await getApplicationSupportDirectory();
-    final dir = Directory('${appSupport.path}/audio_analysis_cache');
-    if (!await dir.exists()) {
-      await dir.create(recursive: true);
-    }
-    return dir;
-  }
-
-  static final _cacheBudget = AudioAnalysisCache();
-
-  static Future<void> _trimCache() async {
-    try {
-      await _cacheBudget.trim(await _cacheDir());
-    } catch (_) {
-      // Cache maintenance must not interrupt the selected track's analysis.
-    }
-  }
-
-  Future<AudioAnalysisData?> _loadFromCache(String filePath) async {
-    try {
-      final dir = await _cacheDir();
-      final key = _cacheKey(filePath);
-      final file = File('${dir.path}/$key.json');
-      if (!await file.exists()) return null;
-
-      final json = Map<String, dynamic>.from(
-        jsonDecode(await file.readAsString()) as Map,
-      );
-      if (json['cacheVersion'] != AudioAnalysisData.cacheVersion) {
-        return null;
-      }
-      final cachedSize = json['fileSize'] as int;
-      final cachedModified = (json['fileModified'] as num?)?.toInt() ?? 0;
-
-      if (!filePath.startsWith('content://')) {
-        final stat = await File(filePath).stat();
-        if (stat.size != cachedSize) return null;
-        if (cachedModified > 0 &&
-            stat.modified.millisecondsSinceEpoch != cachedModified) {
-          return null;
-        }
-      } else {
-        final stat = await MediaFileBridge.safStat(filePath);
-        final currentSize = (stat['size'] as num?)?.toInt() ?? 0;
-        if (currentSize > 0 && currentSize != cachedSize) return null;
-        final currentModified = (stat['modified'] as num?)?.toInt() ?? 0;
-        if (cachedModified > 0 &&
-            currentModified > 0 &&
-            currentModified != cachedModified) {
-          return null;
-        }
-      }
-
-      final data = AudioAnalysisData.fromJson(json);
-      await file.setLastModified(DateTime.now());
-      return data;
-    } catch (_) {
-      return null;
-    }
-  }
-
-  static Future<void> _saveToCache(
-    String filePath,
-    AudioAnalysisData data,
-  ) async {
-    try {
-      final dir = await _cacheDir();
-      final key = _cacheKey(filePath);
-      final file = File('${dir.path}/$key.json');
-      final json = data.toJson();
-      json['fileModified'] = await _sourceModified(filePath);
-      await file.writeAsString(jsonEncode(json));
-    } catch (_) {}
-  }
-
-  static Future<int> _sourceModified(String filePath) async {
-    try {
-      if (filePath.startsWith('content://')) {
-        final stat = await MediaFileBridge.safStat(filePath);
-        return (stat['modified'] as num?)?.toInt() ?? 0;
-      }
-      return (await File(filePath).stat()).modified.millisecondsSinceEpoch;
-    } catch (_) {
-      return 0;
-    }
-  }
-
-  static Future<void> _saveSpectrogramToCache(
-    String filePath,
-    ui.Image image, {
-    required int channel,
-  }) async {
-    try {
-      final dir = await _cacheDir();
-      final key = _cacheKey(filePath);
-      final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
-      if (byteData != null) {
-        final file = File(
-          '${dir.path}/${_spectrogramCacheFileName(key, channel)}',
-        );
-        await file.writeAsBytes(byteData.buffer.asUint8List());
-        await _cacheBudget.trim(dir);
-      }
-    } catch (_) {}
-  }
-
-  static String _spectrogramCacheFileName(String key, int channel) =>
-      channel < 0 ? '$key.png' : '${key}_ch$channel.png';
-
-  static Future<ui.Image?> _loadSpectrogramFromCache(
-    String filePath, {
-    required int channel,
-  }) async {
-    File? file;
-    try {
-      final dir = await _cacheDir();
-      final key = _cacheKey(filePath);
-      file = File('${dir.path}/${_spectrogramCacheFileName(key, channel)}');
-      if (!await file.exists()) return null;
-
-      final image = await decodeCachedSpectrogramBytes(
-        await file.readAsBytes(),
-      );
-      if (image != null) return image;
-      // A truncated PNG (app killed during the write) must not wedge the card:
-      // drop it so the next analysis regenerates it.
-      try {
-        await file.delete();
-      } catch (_) {
-        // The cache trim retries an unreadable entry later.
-      }
-      return null;
-    } catch (_) {
-      if (file != null) {
-        try {
-          await file.delete();
-        } catch (_) {
-          // The cache trim retries an unreadable entry later.
-        }
-      }
-      return null;
-    }
-  }
-
-  Future<_AudioAnalysisRunResult> _runAnalysis(
-    String filePath,
-    int requestId, {
-    String? sourcePath,
-  }) async {
-    _checkAnalysisRequest(requestId);
-    String workingPath = filePath;
-    String? tempCopy;
-    if (filePath.startsWith('content://')) {
-      tempCopy = await MediaFileBridge.copyContentUriToTemp(filePath);
-      if (tempCopy == null) {
-        throw Exception('Failed to copy SAF file for analysis');
-      }
-      workingPath = tempCopy;
-    }
-
-    try {
-      _checkAnalysisRequest(requestId);
-      final info = await _getMediaInfo(workingPath);
-      _checkAnalysisRequest(requestId);
-      final unsupported = unsupportedAudioAnalysisCodecLabel(info.codecName);
-      if (unsupported != null) {
-        throw UnsupportedAudioAnalysisCodecException(unsupported);
-      }
-      _GeneratedSpectrogram? spectrogram;
-      try {
-        final effectiveDuration = info.totalSamples > 0 && info.sampleRate > 0
-            ? info.totalSamples / info.sampleRate
-            : info.duration;
-        spectrogram = await _generateSpectrogram(
-          workingPath,
-          requestId: requestId,
-          channel: -1,
-          includeCutoffPlane: true,
-          durationSeconds: effectiveDuration,
-          sampleRate: info.sampleRate,
-          channels: info.channels,
-        );
-        _checkAnalysisRequest(requestId);
-        final spectralCutoffHz = spectrogram.cutoffFrequencyHz;
-        final levelMetrics = await _runFullStreamLevelAnalysis(
-          workingPath,
-          requestId: requestId,
-          durationSeconds: effectiveDuration,
-        );
-        if (levelMetrics == null) {
-          throw Exception('FFmpeg level analysis returned no usable metrics');
-        }
-        final peakAmplitude = levelMetrics.peakDb;
-        final rmsLevel = levelMetrics.rmsDb;
-        final dynamicRange = peakAmplitude - rmsLevel;
-
-        return _AudioAnalysisRunResult(
-          data: AudioAnalysisData(
-            filePath: sourcePath ?? filePath,
-            fileSize: info.fileSize,
-            codec: info.codec,
-            container: info.container,
-            decodedSampleFormat: info.decodedSampleFormat,
-            sampleRate: info.sampleRate,
-            channels: info.channels,
-            channelLayout: info.channelLayout,
-            bitsPerSample: info.bitsPerSample,
-            duration: info.duration,
-            bitrate: info.bitrate,
-            bitDepth: info.bitsPerSample > 0
-                ? '${info.bitsPerSample}-bit'
-                : 'N/A',
-            dynamicRange: dynamicRange,
-            peakAmplitude: peakAmplitude,
-            rmsLevel: rmsLevel,
-            integratedLufs: levelMetrics.integratedLufs,
-            truePeakDb: levelMetrics.truePeakDb,
-            clippingSamples: levelMetrics.clippingSamples,
-            spectralCutoffHz: spectralCutoffHz,
-            channelStats: levelMetrics.channelStats,
-            totalSamples: info.totalSamples,
-          ),
-          spectrogramImage: spectrogram.image,
-        );
-      } catch (_) {
-        spectrogram?.image.dispose();
-        rethrow;
-      }
-    } finally {
-      if (tempCopy != null) {
-        await deleteBestEffort(File(tempCopy));
-      }
-    }
-  }
-
-  Future<_GeneratedSpectrogram> _generateSpectrogramForFile(
-    String filePath, {
-    required int requestId,
-    required int channel,
-    double? durationSeconds,
-    int? sampleRate,
-    int? channels,
-  }) async {
-    _checkAnalysisRequest(requestId);
-    String workingPath = filePath;
-    String? tempCopy;
-    if (filePath.startsWith('content://')) {
-      tempCopy = await MediaFileBridge.copyContentUriToTemp(filePath);
-      if (tempCopy == null) {
-        throw Exception('Failed to copy SAF file for spectrogram');
-      }
-      workingPath = tempCopy;
-    }
-
-    try {
-      return await _generateSpectrogram(
-        workingPath,
-        requestId: requestId,
-        channel: channel,
-        durationSeconds: durationSeconds,
-        sampleRate: sampleRate,
-        channels: channels,
-      );
-    } finally {
-      if (tempCopy != null) {
-        await deleteBestEffort(File(tempCopy));
-      }
-    }
-  }
-
-  Future<_GeneratedSpectrogram> _generateSpectrogram(
-    String inputPath, {
-    required int requestId,
-    required int channel,
-    bool includeCutoffPlane = false,
-    double? durationSeconds,
-    int? sampleRate,
-    int? channels,
-  }) async {
-    final tempDir = await getTemporaryDirectory();
-    final rawPath =
-        '${tempDir.path}/analysis_spectrum_'
-        '${DateTime.now().microsecondsSinceEpoch}_${channel + 1}.rgba';
-    final cutoffPath = includeCutoffPlane ? '$rawPath.cutoff.gray' : null;
-
-    try {
-      _checkAnalysisRequest(requestId);
-      final session = await _analysisJobs.run(
-        buildAudioSpectrogramArguments(
-          inputPath: inputPath,
-          outputPath: rawPath,
-          cutoffOutputPath: cutoffPath,
-          channel: channel,
-          durationSeconds: durationSeconds,
-          sampleRate: sampleRate,
-          channels: channels,
-        ),
-      );
-
-      final returnCode = await session.getReturnCode();
-      if (!ReturnCode.isSuccess(returnCode)) {
-        final logs = await session.getLogsAsString();
-        throw Exception('FFmpeg spectrogram failed: $logs');
-      }
-
-      final expectedLength = audioSpectrogramWidth * audioSpectrogramHeight * 4;
-      final rawBytes = await File(rawPath).readAsBytes();
-      if (rawBytes.length < expectedLength) {
-        throw Exception(
-          'Incomplete spectrogram output '
-          '(${rawBytes.length}/$expectedLength bytes)',
-        );
-      }
-      final rgba = rawBytes.length == expectedLength
-          ? rawBytes
-          : Uint8List.sublistView(rawBytes, 0, expectedLength);
-      double? cutoffFrequencyHz;
-      if (cutoffPath != null) {
-        final expectedCutoffLength =
-            audioSpectralAnalysisWidth * audioSpectrogramHeight;
-        final cutoffLength = await File(cutoffPath).length();
-        if (cutoffLength != expectedCutoffLength) {
-          throw Exception(
-            'Incomplete spectral cutoff output '
-            '($cutoffLength/$expectedCutoffLength bytes)',
-          );
-        }
-        _checkAnalysisRequest(requestId);
-        final nativeRequest = 'spectral-$rawPath';
-        _nativeAnalysisRequests.add(nativeRequest);
-        try {
-          try {
-            final result = await NativeDataJobs.run({
-              'operation': 'spectral_cutoff',
-              'path': cutoffPath,
-              'width': audioSpectralAnalysisWidth,
-              'height': audioSpectrogramHeight,
-              'max_frequency': (sampleRate ?? 0) / 2,
-            }, requestId: nativeRequest);
-            cutoffFrequencyHz = (result['cutoff'] as num?)?.toDouble();
-          } on MissingPluginException {
-            cutoffFrequencyHz = await compute(
-              estimateEffectiveSpectralCutoffFileInIsolate,
-              SpectralCutoffFileParams(
-                path: cutoffPath,
-                width: audioSpectralAnalysisWidth,
-                height: audioSpectrogramHeight,
-                maxFrequencyHz: (sampleRate ?? 0) / 2,
-              ),
-            );
-          }
-        } finally {
-          _nativeAnalysisRequests.remove(nativeRequest);
-        }
-        _checkAnalysisRequest(requestId);
-      }
-      final completer = Completer<ui.Image>();
-      ui.decodeImageFromPixels(
-        rgba,
-        audioSpectrogramWidth,
-        audioSpectrogramHeight,
-        ui.PixelFormat.rgba8888,
-        completer.complete,
-      );
-      return _GeneratedSpectrogram(
-        image: await completer.future,
-        rgba: rgba,
-        cutoffFrequencyHz: cutoffFrequencyHz,
-      );
-    } finally {
-      await deleteBestEffort(File(rawPath));
-      if (cutoffPath != null) {
-        await deleteBestEffort(File(cutoffPath));
-      }
+      unawaited(trimAudioAnalysisCache());
     }
   }
 
@@ -849,7 +427,9 @@ class _AudioAnalysisCardState extends State<AudioAnalysisCard> {
 
     final previousChannel = _spectrogramChannel;
     final sourcePath = widget.filePath;
-    final releaseCache = _cacheBudget.retain(_cacheKey(sourcePath));
+    final releaseCache = audioAnalysisCacheBudget.retain(
+      audioAnalysisCacheKey(sourcePath),
+    );
     final requestId = ++_spectrogramRequestId;
     setState(() {
       _spectrogramChannel = channel;
@@ -858,9 +438,9 @@ class _AudioAnalysisCardState extends State<AudioAnalysisCard> {
 
     ui.Image? image;
     try {
-      image = await _loadSpectrogramFromCache(sourcePath, channel: channel);
+      image = await loadSpectrogramFromCache(sourcePath, channel: channel);
       if (image == null) {
-        final artifact = await _generateSpectrogramForFile(
+        final artifact = await _runner.generateSpectrogramForFile(
           sourcePath,
           requestId: requestId,
           channel: channel,
@@ -869,7 +449,7 @@ class _AudioAnalysisCardState extends State<AudioAnalysisCard> {
           channels: data.channels,
         );
         image = artifact.image;
-        await _saveSpectrogramToCache(sourcePath, image, channel: channel);
+        await saveSpectrogramToCache(sourcePath, image, channel: channel);
       }
 
       if (!mounted || requestId != _spectrogramRequestId) {
@@ -891,166 +471,9 @@ class _AudioAnalysisCardState extends State<AudioAnalysisCard> {
       }
     } finally {
       releaseCache();
-      unawaited(_trimCache());
+      unawaited(trimAudioAnalysisCache());
     }
   }
-
-  Future<_MediaInfo> _getMediaInfo(String filePath) async {
-    final session = await FFprobeKit.getMediaInformation(filePath);
-    final info = session.getMediaInformation();
-
-    if (info == null) {
-      throw Exception('Failed to get media information');
-    }
-
-    int fileSize = 0;
-    try {
-      fileSize = await File(filePath).length();
-    } catch (_) {}
-
-    final streams = info.getStreams();
-    final audioStream = streams.firstWhere(
-      (s) => s.getAllProperties()?['codec_type'] == 'audio',
-      orElse: () => throw Exception('No audio stream found'),
-    );
-
-    final props = audioStream.getAllProperties() ?? {};
-    final infoProps = info.getAllProperties() ?? {};
-    final codecName = props['codec_name']?.toString().toLowerCase() ?? '';
-    final codecLongName = props['codec_long_name']?.toString() ?? '';
-    final decodedSampleFormat = props['sample_fmt']?.toString() ?? '';
-    final formatName = infoProps['format_name']?.toString() ?? '';
-    final formatLongName = infoProps['format_long_name']?.toString() ?? '';
-    final sampleRate =
-        int.tryParse(props['sample_rate']?.toString() ?? '') ?? 0;
-    final channels = int.tryParse(props['channels']?.toString() ?? '') ?? 0;
-    final channelLayout =
-        props['channel_layout']?.toString() ??
-        props['ch_layout']?.toString() ??
-        '';
-    final streamDuration = double.tryParse(props['duration']?.toString() ?? '');
-    final containerDuration = double.tryParse(info.getDuration() ?? '');
-    final duration =
-        (streamDuration != null && streamDuration > 0
-            ? streamDuration
-            : containerDuration) ??
-        0;
-    final streamBitrate = int.tryParse(props['bit_rate']?.toString() ?? '');
-    final containerBitrate = int.tryParse(info.getBitrate() ?? '');
-    final bitrate =
-        streamBitrate ??
-        containerBitrate ??
-        (duration > 0 && fileSize > 0 ? (fileSize * 8 / duration).round() : 0);
-
-    final canReportStoredBitDepth = audioCodecHasStoredBitDepth(codecName);
-
-    int bitsPerSample = 0;
-    if (canReportStoredBitDepth) {
-      bitsPerSample =
-          int.tryParse(props['bits_per_raw_sample']?.toString() ?? '') ?? 0;
-      if (bitsPerSample == 0) {
-        bitsPerSample =
-            int.tryParse(props['bits_per_sample']?.toString() ?? '') ?? 0;
-      }
-    }
-
-    if (bitsPerSample == 0 && canReportStoredBitDepth) {
-      final sampleFmt = props['sample_fmt']?.toString() ?? '';
-      if (sampleFmt.contains('16') ||
-          sampleFmt == 's16' ||
-          sampleFmt == 's16p') {
-        bitsPerSample = 16;
-      } else if (sampleFmt.contains('32') ||
-          sampleFmt == 'flt' ||
-          sampleFmt == 'fltp') {
-        bitsPerSample = 32;
-      } else if (sampleFmt.contains('24') || sampleFmt == 's24') {
-        bitsPerSample = 24;
-      }
-    }
-
-    return _MediaInfo(
-      fileSize: fileSize,
-      codecName: codecName,
-      codec: formatAudioCodecLabel(codecName, codecLongName),
-      container: formatAudioContainerLabel(formatName, formatLongName),
-      decodedSampleFormat: decodedSampleFormat,
-      sampleRate: sampleRate,
-      channels: channels,
-      channelLayout: channelLayout,
-      bitsPerSample: bitsPerSample,
-      duration: duration,
-      bitrate: bitrate,
-      totalSamples: estimateAudioTotalSamples(
-        props: props,
-        duration: duration,
-        sampleRate: sampleRate,
-        channels: channels,
-      ),
-    );
-  }
-
-
-
-
-
-
-  Future<_LevelMetrics?> _runFullStreamLevelAnalysis(
-    String inputPath, {
-    required int requestId,
-    required double durationSeconds,
-  }) async {
-    final tempDir = await getTemporaryDirectory();
-    final metadataFile = File(
-      '${tempDir.path}/analysis_metrics_'
-      '${DateTime.now().microsecondsSinceEpoch}.txt',
-    );
-    try {
-      _checkAnalysisRequest(requestId);
-      final session = await _analysisJobs.run(
-        buildAudioMetricsArguments(
-          inputPath: inputPath,
-          metadataPath: metadataFile.path,
-          durationSeconds: durationSeconds,
-        ),
-      );
-
-      final returnCode = await session.getReturnCode();
-      if (!ReturnCode.isSuccess(returnCode)) {
-        return null;
-      }
-
-      final metadata = await metadataFile.exists()
-          ? await metadataFile.readAsString()
-          : '';
-      final metadataSummary = parseAudioAnalysisMetadata(metadata);
-      final logs = metadataSummary == null
-          ? await session.getAllLogsAsString() ?? ''
-          : '';
-      final summary = metadataSummary ?? parseAudioAstatsSummary(logs);
-      if (summary == null) return null;
-      final channelStats = metadataSummary?.channelStats.isNotEmpty == true
-          ? metadataSummary!.channelStats
-          : parseAudioAnalysisChannelStats(logs);
-      final clippingSamples = channelStats.fold<int>(0, (sum, stats) {
-        if (stats.peakDb == null || stats.peakDb! < -0.1) return sum;
-        return sum + stats.peakCount;
-      });
-      return _LevelMetrics(
-        peakDb: summary.peakDb,
-        rmsDb: summary.rmsDb,
-        integratedLufs: metadataSummary?.integratedLufs,
-        truePeakDb: metadataSummary?.truePeakDb,
-        clippingSamples: clippingSamples,
-        channelStats: channelStats,
-      );
-    } finally {
-      await deleteBestEffort(metadataFile);
-    }
-  }
-
-
-
 
   @override
   Widget build(BuildContext context) {

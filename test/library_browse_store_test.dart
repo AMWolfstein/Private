@@ -547,6 +547,17 @@ void main() {
     expect(_tracks(missing).toSet(), {'local:l1'});
   });
 
+  test('browse track rows carry the lyrics flag', () async {
+    await db.update('library', {'has_lyrics': 1}, where: "id = 'l1'");
+    final page = await store.trackPage(const LibraryBrowseDbQuery());
+    final lyrics = {
+      for (final row in page.rows)
+        (row['item'] as Map)['id']: (row['item'] as Map)['hasLyrics'],
+    };
+    expect(lyrics['l1'], isTrue);
+    expect(lyrics['l2'], isFalse);
+  });
+
   test(
     'local FTS input matches LIKE fallback and escapes literal search',
     () async {

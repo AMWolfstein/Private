@@ -4,12 +4,7 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/services/library/library_database.dart';
 
-String _tableDefinition(String path, String table) {
-  final source = File(path).readAsStringSync();
-  return RegExp(
-    'CREATE TABLE $table\\s*\\([\\s\\S]*?\\n\\s*\\)',
-  ).firstMatch(source)!.group(0)!;
-}
+import 'support/library_table_definition.dart';
 
 void main() {
   test(
@@ -18,6 +13,7 @@ void main() {
       final localPredicate = missingReplayGainSqlPredicate(
         hasReplayGainExpr: 'has_replaygain',
       );
+      final library = await libraryTableDefinition();
       // Use the production table definitions and filter predicates with real
       // SQLite. This catches missing schema columns and NULL/default semantics.
       final result = await Process.run('python3', [
@@ -50,10 +46,7 @@ for table, version, known, predicate in [
 print('library passed')
 ''',
         jsonEncode({
-          'library': _tableDefinition(
-            'lib/services/library/library_schema.dart',
-            'library',
-          ),
+          'library': library,
           'localPredicate': localPredicate,
           'scanVersion': LibraryDatabase.audioMetadataScanVersion,
         }),

@@ -133,50 +133,68 @@ internal fun MainActivity.copyUriToTemp(
     fallbackExt: String? = null,
     displayName: String? = null,
 ): String? {
-        try {
-            val nameHint = (
-                displayName
-                    ?: try { DocumentFile.fromSingleUri(this, uri)?.name } catch (_: Exception) { null }
-                    ?: uri.lastPathSegment
-                    ?: ""
-            ).lowercase(Locale.ROOT)
-            val extFromName = extFromFileName(nameHint)
-            // The MIME type only matters when the name has no extension.
-            val extFromMime = if (extFromName.isNotBlank()) "" else extFromMimeType(
-                try { contentResolver.getType(uri) } catch (_: Exception) { null },
-            )
-            val ext = if (extFromName.isNotBlank()) extFromName else if (extFromMime.isNotBlank()) extFromMime else (fallbackExt ?: "")
-            val suffix = ext.ifBlank { ".tmp" }
-            val tempFile = coreBackend.createTemporaryMediaFile(this, "saf_", suffix)
-            return copyToTemporaryMediaFile(tempFile) {
-                contentResolver.openInputStream(uri)
-            }?.absolutePath
-        } catch (e: SecurityException) {
-            // SAF permission denied - try MediaStore fallback for Samsung One UI
-            // which may return MediaStore URIs from SAF tree traversal
-            if (isMediaStoreUri(uri)) {
-                android.util.Log.d(
-                    "Sistrum",
-                    "SAF denied for MediaStore URI, trying MediaStore fallback: $uri",
-                )
-                val result = copyMediaStoreUriToTemp(uri, fallbackExt)
-                if (result != null) {
-                    return result
-                }
-            }
-            android.util.Log.w(
-                "Sistrum",
-                "SAF read denied for $uri: ${e.message}",
-            )
-            return null
-        } catch (e: Exception) {
-            android.util.Log.w(
-                "Sistrum",
-                "Failed copying SAF uri $uri to temp: ${e.message}",
-            )
-            return null
-        }
+    return try {
+        copyUriToTempOrThrow(uri, fallbackExt, displayName)
+    } catch (e: SecurityException) {
+        android.util.Log.w(
+            "Sistrum",
+            "SAF read denied for $uri: ${e.message}",
+        )
+        null
+    } catch (e: Exception) {
+        android.util.Log.w(
+            "Sistrum",
+            "Failed copying SAF uri $uri to temp: ${e.message}",
+        )
+        null
     }
+}
+
+/**
+ * Copies [uri] to a temp media file. A provider failure is rethrown with its
+ * cause, so the channel can report why the copy failed; a null return means
+ * the provider opened no stream. A denied MediaStore URI first tries the
+ * MediaStore read in [copyMediaStoreUriToTemp].
+ */
+internal fun MainActivity.copyUriToTempOrThrow(
+    uri: Uri,
+    fallbackExt: String? = null,
+    displayName: String? = null,
+): String? {
+    try {
+        val nameHint = (
+            displayName
+                ?: try { DocumentFile.fromSingleUri(this, uri)?.name } catch (_: Exception) { null }
+                ?: uri.lastPathSegment
+                ?: ""
+        ).lowercase(Locale.ROOT)
+        val extFromName = extFromFileName(nameHint)
+        // The MIME type only matters when the name has no extension.
+        val extFromMime = if (extFromName.isNotBlank()) "" else extFromMimeType(
+            try { contentResolver.getType(uri) } catch (_: Exception) { null },
+        )
+        val ext = if (extFromName.isNotBlank()) extFromName else if (extFromMime.isNotBlank()) extFromMime else (fallbackExt ?: "")
+        val suffix = ext.ifBlank { ".tmp" }
+        val tempFile = coreBackend.createTemporaryMediaFile(this, "saf_", suffix)
+        return copyToTemporaryMediaFile(tempFile) {
+            contentResolver.openInputStream(uri)
+        }?.absolutePath
+    } catch (e: SecurityException) {
+        // SAF permission denied - try MediaStore fallback for Samsung One UI
+        // which may return MediaStore URIs from SAF tree traversal
+        if (isMediaStoreUri(uri)) {
+            android.util.Log.d(
+                "Sistrum",
+                "SAF denied for MediaStore URI, trying MediaStore fallback: $uri",
+            )
+            val result = copyMediaStoreUriToTemp(uri, fallbackExt)
+            if (result != null) {
+                return result
+            }
+        }
+        throw e
+    }
+}
 
     /**
      * Fallback for Samsung One UI: read a MediaStore content URI using

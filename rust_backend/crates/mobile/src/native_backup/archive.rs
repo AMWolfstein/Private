@@ -9,7 +9,7 @@ use std::{
     io::{BufWriter, Read, Write},
     path::Path,
 };
-use zip::{CompressionMethod, ZipArchive, ZipWriter, write::SimpleFileOptions};
+use zip::{CompressionMethod, ZipArchive, ZipWriter, result::ZipError, write::SimpleFileOptions};
 
 const MAX_COVER_BYTES: u64 = 20 << 20;
 const MAX_ALL_COVERS_BYTES: u64 = 256 << 20;
@@ -211,29 +211,42 @@ fn ordered_covers(metadata: &[u8]) -> Result<Vec<(String, Value)>, String> {
         .map_err(|e| err("backup covers", e))
 }
 
+/// A readable archive that Flutter cannot restore. [code] is `unsupported_version`
+/// or `corrupt_archive`; the result is a success so the reason crosses intact.
+fn rejected(code: &str) -> Value {
+    json!({"failure": code})
+}
+
 pub(super) fn read(request: &Value, check: Check<'_>) -> Result<Value, String> {
     let mut archive = ZipArchive::new(regular_file(required(request, "input_path")?)?)
         .map_err(|e| err("open backup archive", e))?;
     let mut metadata = Vec::new();
     {
-        let mut entry = archive
-            .by_name("metadata.json")
-            .map_err(|e| err("backup metadata", e))?;
+        let mut entry = match archive.by_name("metadata.json") {
+            Ok(entry) => entry,
+            Err(ZipError::FileNotFound) => return Ok(rejected("corrupt_archive")),
+            Err(e) => return Err(err("backup metadata", e)),
+        };
         if !entry.is_file() || entry.size() > MAX_METADATA_BYTES {
-            return Err("Missing or oversized backup metadata".into());
+            return Ok(rejected("corrupt_archive"));
         }
         let expected = entry.size();
         let size = copy_checked(&mut entry, &mut metadata, MAX_METADATA_BYTES, check)?;
         if size != expected {
-            return Err("Incomplete backup metadata".into());
+            return Ok(rejected("corrupt_archive"));
         }
     }
-    let root: Value =
-        serde_json::from_slice(&metadata).map_err(|e| err("backup metadata JSON", e))?;
-    let version = root["format_version"].as_u64();
-    if !is_accepted_backup_magic(&root["magic"]) || version != Some(3) || !root["data"].is_object()
-    {
-        return Err("Invalid or unsupported backup metadata".into());
+    let Ok(root) = serde_json::from_slice::<Value>(&metadata) else {
+        return Ok(rejected("corrupt_archive"));
+    };
+    if !is_accepted_backup_magic(&root["magic"]) {
+        return Ok(rejected("corrupt_archive"));
+    }
+    if root["format_version"].as_u64() != Some(3) {
+        return Ok(rejected("unsupported_version"));
+    }
+    if !root["data"].is_object() {
+        return Ok(rejected("corrupt_archive"));
     }
     let temporary = output_path(request, "temporary_directory")?;
     let staging = tempfile::Builder::new()
@@ -244,7 +257,10 @@ pub(super) fn read(request: &Value, check: Check<'_>) -> Result<Value, String> {
     std::fs::write(&metadata_path, &metadata).map_err(|e| err("stage backup metadata", e))?;
     let mut covers = Map::new();
     let mut cover_bytes = 0;
-    for (key, cover) in ordered_covers(&metadata)? {
+    let Ok(covers_in_order) = ordered_covers(&metadata) else {
+        return Ok(rejected("corrupt_archive"));
+    };
+    for (key, cover) in covers_in_order {
         check()?;
         if !cover.is_object() {
             continue;
@@ -267,11 +283,11 @@ pub(super) fn read(request: &Value, check: Check<'_>) -> Result<Value, String> {
     }
     let profile_photo_path = if let Some(profile) = root["data"].get("profile") {
         if !profile.is_object() || !profile["name"].is_string() {
-            return Err("Invalid profile".into());
+            return Ok(rejected("corrupt_archive"));
         }
         if !profile["photo"].is_null() {
             if profile["photo"] != PHOTO_ENTRY {
-                return Err("Invalid profile photo entry".into());
+                return Ok(rejected("corrupt_archive"));
             }
             let path = staging.path().join("profile.png");
             extract(&mut archive, PHOTO_ENTRY, &path, MAX_PHOTO_BYTES, check)?;

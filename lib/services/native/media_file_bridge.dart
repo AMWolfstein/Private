@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/services.dart';
 import 'package:sistrum/services/library/metadata_edit_result.dart';
 import 'package:sistrum/services/native/native_channel.dart';
 import 'package:sistrum/utils/logger.dart';
@@ -133,11 +134,29 @@ class MediaFileBridge {
     return nativeInvokeMap('safStat', {'uri': uri});
   }
 
+  /// Copies a SAF document to a temporary file. A refused or failed copy throws
+  /// the native [PlatformException]: `saf_permission_denied` or `saf_copy_failed`.
+  static Future<String> copyContentUriToTempOrThrow(String uri) async {
+    final path = await nativeBackendChannel.invokeMethod<String>(
+      'safCopyToTemp',
+      {'uri': uri},
+    );
+    if (path == null || path.isEmpty) {
+      throw PlatformException(
+        code: 'saf_copy_failed',
+        message: 'No temporary copy was made for $uri',
+      );
+    }
+    return path;
+  }
+
+  /// [copyContentUriToTempOrThrow] for callers that only need a path or null.
   static Future<String?> copyContentUriToTemp(String uri) async {
-    final result = await nativeBackendChannel.invokeMethod('safCopyToTemp', {
-      'uri': uri,
-    });
-    return result as String?;
+    try {
+      return await copyContentUriToTempOrThrow(uri);
+    } on PlatformException {
+      return null;
+    }
   }
 
   static Future<ContentUriPlaybackLease?> openContentUriPlaybackLease(
@@ -235,9 +254,8 @@ class MediaFileBridge {
   static Future<MetadataEditResult> editFileMetadata(
     String filePath,
     Map<String, String> metadata,
-  ) async => MetadataEditResult.decode(
-    await _editFileMetadataRaw(filePath, metadata),
-  );
+  ) async =>
+      MetadataEditResult.decode(await _editFileMetadataRaw(filePath, metadata));
 
   static Future<T> _withMediaFileAccess<T>(
     Iterable<String> paths,
