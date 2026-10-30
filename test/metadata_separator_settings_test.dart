@@ -159,13 +159,15 @@ void main() {
 
       // Keep together: a name is added, then removed.
       await _showSection(tester, 'Keep together');
-      final keepField = find.byType(TextField);
-      await _tap(tester, keepField, last: true);
-      await tester.enterText(keepField.last, 'Tyler, The Creator');
+      await _tap(tester, find.text('Keep together'));
+      expect(sheet, findsOneWidget);
+      final keepField = inSheet(find.byType(TextField));
+      await _tap(tester, keepField);
+      await tester.enterText(keepField, 'Tyler, The Creator');
       await tester.pump();
-      await _tap(tester, find.byTooltip('Add name'));
+      await _tap(tester, inSheet(find.byTooltip('Add name')));
       expect(credits().keepTogether, ['Tyler, The Creator']);
-      await _tap(tester, find.byTooltip('Remove name'));
+      await _tap(tester, inSheet(find.byTooltip('Remove name')));
       expect(credits().keepTogether, isEmpty);
       expect(tester.takeException(), isNull);
     });

@@ -50,8 +50,15 @@ class MetadataSeparatorSettingsPage extends ConsumerWidget {
                 SettingsItem(
                   title: l10n.tagSeparatorsGenre,
                   subtitle: _summary(credits.genreDelimiters),
-                  showDivider: false,
                   onTap: () => _openSection(context, artists: false),
+                ),
+                SettingsItem(
+                  title: l10n.tagKeepTogether,
+                  subtitle: credits.keepTogether.isEmpty
+                      ? null
+                      : credits.keepTogether.join(' · '),
+                  showDivider: false,
+                  onTap: () => _openKeepTogether(context),
                 ),
               ],
             ),
@@ -94,13 +101,6 @@ class MetadataSeparatorSettingsPage extends ConsumerWidget {
               ),
             ),
           ),
-          SliverToBoxAdapter(
-            child: _KeepTogetherSection(
-              names: credits.keepTogether,
-              onAdd: notifier.addKeepTogether,
-              onRemove: notifier.removeKeepTogether,
-            ),
-          ),
           const SliverToBoxAdapter(child: SizedBox(height: 32)),
           const NavBarSliverSpacer(),
         ],
@@ -109,6 +109,14 @@ class MetadataSeparatorSettingsPage extends ConsumerWidget {
   }
 
   static String _summary(List<String> delimiters) => delimiters.join('   ');
+
+  Future<void> _openKeepTogether(BuildContext context) =>
+      showAppBottomSheet<void>(
+        context: context,
+        useRootNavigator: true,
+        title: context.l10n.tagKeepTogether,
+        builder: (_) => const _KeepTogetherSheet(),
+      );
 
   Future<void> _openSection(BuildContext context, {required bool artists}) {
     final l10n = context.l10n;
@@ -360,22 +368,16 @@ class _ChipLabel extends StatelessWidget {
       FittedBox(fit: BoxFit.scaleDown, child: Text(text, maxLines: 1));
 }
 
-class _KeepTogetherSection extends StatefulWidget {
-  const _KeepTogetherSection({
-    required this.names,
-    required this.onAdd,
-    required this.onRemove,
-  });
-
-  final List<String> names;
-  final ValueChanged<String> onAdd;
-  final ValueChanged<String> onRemove;
+/// Names that are never split: a list with remove buttons, and an add field.
+/// Changes apply as they are made, like the chips.
+class _KeepTogetherSheet extends ConsumerStatefulWidget {
+  const _KeepTogetherSheet();
 
   @override
-  State<_KeepTogetherSection> createState() => _KeepTogetherSectionState();
+  ConsumerState<_KeepTogetherSheet> createState() => _KeepTogetherSheetState();
 }
 
-class _KeepTogetherSectionState extends State<_KeepTogetherSection> {
+class _KeepTogetherSheetState extends ConsumerState<_KeepTogetherSheet> {
   final _field = TextEditingController();
 
   @override
@@ -384,69 +386,79 @@ class _KeepTogetherSectionState extends State<_KeepTogetherSection> {
     super.dispose();
   }
 
-  void _submit() {
-    final name = _field.text.trim();
-    if (name.isEmpty || _duplicate(name)) return;
-    widget.onAdd(name);
-    _field.clear();
-    setState(() {});
+  bool _duplicate(List<String> names, String name) {
+    final key = name.toLowerCase();
+    return names.any((n) => n.toLowerCase() == key);
   }
 
-  bool _duplicate(String name) {
-    final key = name.toLowerCase();
-    return widget.names.any((n) => n.toLowerCase() == key);
+  void _submit(List<String> names) {
+    final name = _field.text.trim();
+    if (name.isEmpty || _duplicate(names, name)) return;
+    ref.read(settingsProvider.notifier).addKeepTogether(name);
+    _field.clear();
+    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
+    final names = ref.watch(
+      settingsProvider.select((s) => s.tagCredits.keepTogether),
+    );
+    final notifier = ref.read(settingsProvider.notifier);
     final typed = _field.text.trim();
-    final duplicate = typed.isNotEmpty && _duplicate(typed);
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        SettingsSectionHeader(title: l10n.tagKeepTogether),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(24, 0, 24, 12),
-          child: Text(
-            l10n.tagKeepTogetherDescription,
-            style: Theme.of(context).textTheme.bodySmall,
-          ),
-        ),
-        if (widget.names.isNotEmpty)
-          SettingsGroup(
-            children: [
-              for (var i = 0; i < widget.names.length; i++)
-                SettingsItem(
-                  title: widget.names[i],
-                  trailing: IconButton(
-                    icon: const Icon(Icons.close),
-                    tooltip: l10n.tagKeepTogetherRemoveTooltip,
-                    onPressed: () => widget.onRemove(widget.names[i]),
-                  ),
-                  showDivider: i != widget.names.length - 1,
-                ),
-            ],
-          ),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
-          child: TextField(
-            controller: _field,
-            textInputAction: TextInputAction.done,
-            onChanged: (_) => setState(() {}),
-            onSubmitted: (_) => _submit(),
-            decoration: InputDecoration(
-              hintText: l10n.tagKeepTogetherHint,
-              errorText: duplicate ? l10n.tagKeepTogetherDuplicate : null,
-              suffixIcon: IconButton(
-                icon: const Icon(Icons.add),
-                tooltip: l10n.tagKeepTogetherAdd,
-                onPressed: duplicate || typed.isEmpty ? null : _submit,
+    final duplicate = typed.isNotEmpty && _duplicate(names, typed);
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(0, 8, 0, 24),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(24, 0, 24, 12),
+              child: Text(
+                l10n.tagKeepTogetherDescription,
+                style: Theme.of(context).textTheme.bodySmall,
               ),
             ),
-          ),
+            if (names.isNotEmpty)
+              SettingsGroup(
+                children: [
+                  for (var i = 0; i < names.length; i++)
+                    SettingsItem(
+                      title: names[i],
+                      trailing: IconButton(
+                        icon: const Icon(Icons.close),
+                        tooltip: l10n.tagKeepTogetherRemoveTooltip,
+                        onPressed: () => notifier.removeKeepTogether(names[i]),
+                      ),
+                      showDivider: i != names.length - 1,
+                    ),
+                ],
+              ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
+              child: TextField(
+                controller: _field,
+                textInputAction: TextInputAction.done,
+                onChanged: (_) => setState(() {}),
+                onSubmitted: (_) => _submit(names),
+                decoration: InputDecoration(
+                  hintText: l10n.tagKeepTogetherHint,
+                  errorText: duplicate ? l10n.tagKeepTogetherDuplicate : null,
+                  suffixIcon: IconButton(
+                    icon: const Icon(Icons.add),
+                    tooltip: l10n.tagKeepTogetherAdd,
+                    onPressed: duplicate || typed.isEmpty
+                        ? null
+                        : () => _submit(names),
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
-      ],
+      ),
     );
   }
 }

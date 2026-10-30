@@ -88,8 +88,9 @@ menus, format/bitrate/quality sheets, encoding services or converted-file public
 Keep local tag/cover/lyrics editing, ReplayGain and CUE splitting as separate operations.
 Artwork probing and FFmpeg processing for those retained features remain supported.
 
-Tag separators live under Local Library settings as a list of two rows: Artists (artist,
-album artist, composer) and Genre. Each row opens a sheet with a grid of separator chips (four
+Tag separators live under Local Library settings as a list of rows: Artists (artist,
+album artist, composer), Genre and Keep together, each of the first two opening a sheet with
+its chips and Keep together opening a sheet of names that are never split. Each row opens a sheet with a grid of separator chips (four
 per row) with defaults, All (selects every chip; when all are selected it resets to the
 defaults), and an Add separator field that Save adds; a section is never empty. A Save with
 group (Artists, Genre) picks the separator that joins names when Edit Metadata saves tags. Keep together lists names that are never split.
