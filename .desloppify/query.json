@@ -1,1007 +1,218 @@
 {
-  "command": "scan",
-  "overall_score": 91.9,
-  "objective_score": 97.9,
-  "strict_score": 90.1,
-  "verified_strict_score": 97.7,
-  "prev_overall_score": 91.9,
-  "prev_objective_score": 97.9,
-  "prev_strict_score": 90.1,
-  "prev_verified_strict_score": 97.7,
-  "profile": "full",
-  "noise_budget": 10,
-  "noise_global_budget": 0,
-  "hidden_by_detector": {
-    "signature": 93,
-    "structural": 59,
-    "dupes": 31,
-    "orphaned": 9,
-    "boilerplate_duplication": 8,
-    "flat_dirs": 2
-  },
-  "hidden_total": 202,
-  "diff": {
-    "new": 0,
-    "auto_resolved": 20,
-    "reopened": 9,
-    "total_current": 271,
-    "suspect_detectors": [
-      "review"
-    ],
-    "chronic_reopeners": [],
-    "skipped_other_lang": 0,
-    "resolved_out_of_scope": 0,
-    "ignored": 19,
-    "ignore_patterns": 29,
-    "raw_issues": 272,
-    "suppressed_pct": 7.0
-  },
-  "stats": {
-    "total": 706,
-    "auto_resolved": 354,
-    "deferred": 2,
-    "false_positive": 9,
-    "fixed": 98,
-    "open": 243,
-    "triaged_out": 0,
-    "wontfix": 0,
+  "command": "show",
+  "query": "flat_dirs",
+  "status_filter": "open",
+  "total": 10,
+  "summary": {
     "by_tier": {
-      "1": {
-        "auto_resolved": 0,
-        "deferred": 0,
-        "false_positive": 0,
-        "fixed": 26,
-        "open": 0,
-        "triaged_out": 0,
-        "wontfix": 0
-      },
-      "2": {
-        "auto_resolved": 19,
-        "deferred": 1,
-        "false_positive": 0,
-        "fixed": 43,
-        "open": 0,
-        "triaged_out": 0,
-        "wontfix": 0
-      },
-      "3": {
-        "auto_resolved": 334,
-        "deferred": 1,
-        "false_positive": 9,
-        "fixed": 9,
-        "open": 243,
-        "triaged_out": 0,
-        "wontfix": 0
-      },
-      "4": {
-        "auto_resolved": 1,
-        "deferred": 0,
-        "false_positive": 0,
-        "fixed": 20,
-        "open": 0,
-        "triaged_out": 0,
-        "wontfix": 0
-      }
-    }
+      "T3": 10
+    },
+    "by_detector": {
+      "flat_dirs": 10
+    },
+    "files": 10
   },
-  "open_scope": {
-    "in_scope": 243,
-    "out_of_scope": 0,
-    "global": 243
-  },
-  "warnings": [
-    "9 issues reopened \u2014 was a previous fix reverted?"
-  ],
-  "dimension_scores": {
-    "Code quality": {
-      "score": 98.1,
-      "strict": 97.9,
-      "verified_strict_score": 96.6,
-      "checks": 437,
-      "failing": 12,
-      "tier": 3,
-      "detectors": {
-        "orphaned": {
-          "potential": 396,
-          "pass_rate": 1.0,
-          "failing": 0,
-          "weighted_failures": 0.0
-        },
-        "flat_dirs": {
-          "potential": 41,
-          "pass_rate": 0.7951219512195122,
-          "failing": 12,
-          "weighted_failures": 8.4
+  "by_file": {
+    "integration_test": [
+      {
+        "id": "flat_dirs::integration_test",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Directory overload: 25 files, 0 child dirs (combined 25) \u2014 consider grouping by domain",
+        "detail": {
+          "file_count": 25,
+          "child_dir_count": 0,
+          "combined_score": 25,
+          "kind": "overload",
+          "parent_sibling_count": 0,
+          "wrapper_item_count": 0,
+          "sparse_child_count": 0,
+          "sparse_child_ratio": 0.0,
+          "sparse_child_file_threshold": 0
         }
       }
-    },
-    "Security": {
-      "score": 100.0,
-      "strict": 99.7,
-      "verified_strict_score": 100.0,
-      "checks": 792,
-      "failing": 0,
-      "tier": 4,
-      "detectors": {
-        "cycles": {
-          "potential": 396,
-          "pass_rate": 1.0,
-          "failing": 0,
-          "weighted_failures": 0.0
-        },
-        "security": {
-          "potential": 396,
-          "pass_rate": 1.0,
-          "failing": 0,
-          "weighted_failures": 0.0
+    ],
+    "lib": [
+      {
+        "id": "flat_dirs::lib",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Directory overload: 2 files, 10 child dirs (combined 32) \u2014 consider grouping by domain",
+        "detail": {
+          "file_count": 2,
+          "child_dir_count": 10,
+          "combined_score": 32,
+          "kind": "overload",
+          "parent_sibling_count": 0,
+          "wrapper_item_count": 0,
+          "sparse_child_count": 0,
+          "sparse_child_ratio": 0.0,
+          "sparse_child_file_threshold": 0
         }
       }
-    },
-    "File health": {
-      "score": 95.1,
-      "strict": 88.0,
-      "verified_strict_score": 95.1,
-      "checks": 396,
-      "failing": 28,
-      "tier": 3,
-      "detectors": {
-        "structural": {
-          "potential": 396,
-          "pass_rate": 0.9505050505050506,
-          "failing": 28,
-          "weighted_failures": 19.59999999999999
+    ],
+    "lib/screens/library": [
+      {
+        "id": "flat_dirs::lib/screens/library",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Directory overload: 28 files, 0 child dirs (combined 28) \u2014 consider grouping by domain",
+        "detail": {
+          "file_count": 28,
+          "child_dir_count": 0,
+          "combined_score": 28,
+          "kind": "overload",
+          "parent_sibling_count": 0,
+          "wrapper_item_count": 0,
+          "sparse_child_count": 0,
+          "sparse_child_ratio": 0.0,
+          "sparse_child_file_threshold": 0
         }
       }
-    },
-    "Duplication": {
-      "score": 99.2,
-      "strict": 98.4,
-      "verified_strict_score": 99.2,
-      "checks": 3231,
-      "failing": 59,
-      "tier": 3,
-      "detectors": {
-        "dupes": {
-          "potential": 3205,
-          "pass_rate": 0.9961622464898595,
-          "failing": 41,
-          "weighted_failures": 12.300000000000008
-        },
-        "boilerplate_duplication": {
-          "potential": 26,
-          "pass_rate": 0.5153846153846156,
-          "failing": 18,
-          "weighted_failures": 12.599999999999996
+    ],
+    "lib/screens/settings": [
+      {
+        "id": "flat_dirs::lib/screens/settings",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Directory overload: 20 files, 0 child dirs (combined 20) \u2014 consider grouping by domain",
+        "detail": {
+          "file_count": 20,
+          "child_dir_count": 0,
+          "combined_score": 20,
+          "kind": "overload",
+          "parent_sibling_count": 0,
+          "wrapper_item_count": 0,
+          "sparse_child_count": 0,
+          "sparse_child_ratio": 0.0,
+          "sparse_child_file_threshold": 0
         }
       }
-    },
-    "Test health": {
-      "score": 100.0,
-      "strict": 73.2,
-      "verified_strict_score": 100.0,
-      "checks": 5156,
-      "failing": 0,
-      "tier": 4,
-      "detectors": {
-        "test_coverage": {
-          "potential": 5156,
-          "pass_rate": 1.0,
-          "failing": 0,
-          "weighted_failures": 0.0
+    ],
+    "lib/services": [
+      {
+        "id": "flat_dirs::lib/services",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Directory overload: 6 files, 8 child dirs (combined 30) \u2014 consider grouping by domain",
+        "detail": {
+          "file_count": 6,
+          "child_dir_count": 8,
+          "combined_score": 30,
+          "kind": "overload",
+          "parent_sibling_count": 0,
+          "wrapper_item_count": 0,
+          "sparse_child_count": 0,
+          "sparse_child_ratio": 0.0,
+          "sparse_child_file_threshold": 0
         }
       }
-    },
-    "Abstraction fit": {
-      "score": 93.0,
-      "strict": 93.0,
-      "verified_strict_score": 93.0,
-      "checks": 10,
-      "failing": 0,
-      "tier": 4,
-      "detectors": {
-        "subjective_assessment": {
-          "potential": 10,
-          "pass_rate": 0.93,
-          "failing": 0,
-          "weighted_failures": 0.7,
-          "assessment_score": 93.0,
-          "placeholder": false,
-          "dimension_key": "abstraction_fitness",
-          "configured_weight": 8.0,
-          "components": []
+    ],
+    "lib/services/library": [
+      {
+        "id": "flat_dirs::lib/services/library",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Directory overload: 48 files, 0 child dirs (combined 48) \u2014 consider grouping by domain",
+        "detail": {
+          "file_count": 48,
+          "child_dir_count": 0,
+          "combined_score": 48,
+          "kind": "overload",
+          "parent_sibling_count": 0,
+          "wrapper_item_count": 0,
+          "sparse_child_count": 0,
+          "sparse_child_ratio": 0.0,
+          "sparse_child_file_threshold": 0
         }
       }
-    },
-    "AI generated debt": {
-      "score": 90.0,
-      "strict": 90.0,
-      "verified_strict_score": 90.0,
-      "checks": 10,
-      "failing": 0,
-      "tier": 4,
-      "detectors": {
-        "subjective_assessment": {
-          "potential": 10,
-          "pass_rate": 0.9,
-          "failing": 0,
-          "weighted_failures": 1.0,
-          "assessment_score": 90.0,
-          "placeholder": false,
-          "dimension_key": "ai_generated_debt",
-          "configured_weight": 1.0,
-          "components": []
+    ],
+    "lib/services/playback": [
+      {
+        "id": "flat_dirs::lib/services/playback",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Directory overload: 40 files, 0 child dirs (combined 40) \u2014 consider grouping by domain",
+        "detail": {
+          "file_count": 40,
+          "child_dir_count": 0,
+          "combined_score": 40,
+          "kind": "overload",
+          "parent_sibling_count": 0,
+          "wrapper_item_count": 0,
+          "sparse_child_count": 0,
+          "sparse_child_ratio": 0.0,
+          "sparse_child_file_threshold": 0
         }
       }
-    },
-    "API coherence": {
-      "score": 96.0,
-      "strict": 96.0,
-      "verified_strict_score": 96.0,
-      "checks": 10,
-      "failing": 0,
-      "tier": 4,
-      "detectors": {
-        "subjective_assessment": {
-          "potential": 10,
-          "pass_rate": 0.96,
-          "failing": 0,
-          "weighted_failures": 0.4,
-          "assessment_score": 96.0,
-          "placeholder": false,
-          "dimension_key": "api_surface_coherence",
-          "configured_weight": 1.0,
-          "components": []
+    ],
+    "lib/utils": [
+      {
+        "id": "flat_dirs::lib/utils",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Directory overload: 32 files, 0 child dirs (combined 32) \u2014 consider grouping by domain",
+        "detail": {
+          "file_count": 32,
+          "child_dir_count": 0,
+          "combined_score": 32,
+          "kind": "overload",
+          "parent_sibling_count": 0,
+          "wrapper_item_count": 0,
+          "sparse_child_count": 0,
+          "sparse_child_ratio": 0.0,
+          "sparse_child_file_threshold": 0
         }
       }
-    },
-    "Auth consistency": {
-      "score": 100.0,
-      "strict": 100.0,
-      "verified_strict_score": 100.0,
-      "checks": 10,
-      "failing": 0,
-      "tier": 4,
-      "detectors": {
-        "subjective_assessment": {
-          "potential": 10,
-          "pass_rate": 1.0,
-          "failing": 0,
-          "weighted_failures": 0.0,
-          "assessment_score": 100.0,
-          "placeholder": false,
-          "dimension_key": "authorization_consistency",
-          "configured_weight": 1.0,
-          "components": []
+    ],
+    "lib/widgets": [
+      {
+        "id": "flat_dirs::lib/widgets",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Directory overload: 8 files, 12 child dirs (combined 44) \u2014 consider grouping by domain",
+        "detail": {
+          "file_count": 8,
+          "child_dir_count": 12,
+          "combined_score": 44,
+          "kind": "overload",
+          "parent_sibling_count": 0,
+          "wrapper_item_count": 0,
+          "sparse_child_count": 0,
+          "sparse_child_ratio": 0.0,
+          "sparse_child_file_threshold": 0
         }
       }
-    },
-    "Contracts": {
-      "score": 91.0,
-      "strict": 91.0,
-      "verified_strict_score": 91.0,
-      "checks": 10,
-      "failing": 0,
-      "tier": 4,
-      "detectors": {
-        "subjective_assessment": {
-          "potential": 10,
-          "pass_rate": 0.91,
-          "failing": 0,
-          "weighted_failures": 0.9,
-          "assessment_score": 91.0,
-          "placeholder": false,
-          "dimension_key": "contract_coherence",
-          "configured_weight": 12.0,
-          "components": []
+    ],
+    "lib/widgets/glass": [
+      {
+        "id": "flat_dirs::lib/widgets/glass",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Directory overload: 20 files, 0 child dirs (combined 20) \u2014 consider grouping by domain",
+        "detail": {
+          "file_count": 20,
+          "child_dir_count": 0,
+          "combined_score": 20,
+          "kind": "overload",
+          "parent_sibling_count": 0,
+          "wrapper_item_count": 0,
+          "sparse_child_count": 0,
+          "sparse_child_ratio": 0.0,
+          "sparse_child_file_threshold": 0
         }
-      }
-    },
-    "Convention drift": {
-      "score": 100.0,
-      "strict": 100.0,
-      "verified_strict_score": 100.0,
-      "checks": 10,
-      "failing": 0,
-      "tier": 4,
-      "detectors": {
-        "subjective_assessment": {
-          "potential": 10,
-          "pass_rate": 1.0,
-          "failing": 0,
-          "weighted_failures": 0.0,
-          "assessment_score": 100.0,
-          "placeholder": false,
-          "dimension_key": "convention_outlier",
-          "configured_weight": 1.0,
-          "components": []
-        }
-      }
-    },
-    "Cross-module arch": {
-      "score": 94.0,
-      "strict": 94.0,
-      "verified_strict_score": 94.0,
-      "checks": 10,
-      "failing": 0,
-      "tier": 4,
-      "detectors": {
-        "subjective_assessment": {
-          "potential": 10,
-          "pass_rate": 0.94,
-          "failing": 0,
-          "weighted_failures": 0.6,
-          "assessment_score": 94.0,
-          "placeholder": false,
-          "dimension_key": "cross_module_architecture",
-          "configured_weight": 1.0,
-          "components": []
-        }
-      }
-    },
-    "Dep health": {
-      "score": 100.0,
-      "strict": 100.0,
-      "verified_strict_score": 100.0,
-      "checks": 10,
-      "failing": 0,
-      "tier": 4,
-      "detectors": {
-        "subjective_assessment": {
-          "potential": 10,
-          "pass_rate": 1.0,
-          "failing": 0,
-          "weighted_failures": 0.0,
-          "assessment_score": 100.0,
-          "placeholder": false,
-          "dimension_key": "dependency_health",
-          "configured_weight": 1.0,
-          "components": []
-        }
-      }
-    },
-    "Design coherence": {
-      "score": 88.0,
-      "strict": 88.0,
-      "verified_strict_score": 88.0,
-      "checks": 10,
-      "failing": 0,
-      "tier": 4,
-      "detectors": {
-        "subjective_assessment": {
-          "potential": 10,
-          "pass_rate": 0.88,
-          "failing": 0,
-          "weighted_failures": 1.2,
-          "assessment_score": 88.0,
-          "placeholder": false,
-          "dimension_key": "design_coherence",
-          "configured_weight": 10.0,
-          "components": []
-        }
-      }
-    },
-    "Error consistency": {
-      "score": 90.0,
-      "strict": 90.0,
-      "verified_strict_score": 90.0,
-      "checks": 10,
-      "failing": 0,
-      "tier": 4,
-      "detectors": {
-        "subjective_assessment": {
-          "potential": 10,
-          "pass_rate": 0.9,
-          "failing": 0,
-          "weighted_failures": 1.0,
-          "assessment_score": 90.0,
-          "placeholder": false,
-          "dimension_key": "error_consistency",
-          "configured_weight": 3.0,
-          "components": []
-        }
-      }
-    },
-    "High elegance": {
-      "score": 86.0,
-      "strict": 86.0,
-      "verified_strict_score": 86.0,
-      "checks": 10,
-      "failing": 0,
-      "tier": 4,
-      "detectors": {
-        "subjective_assessment": {
-          "potential": 10,
-          "pass_rate": 0.86,
-          "failing": 0,
-          "weighted_failures": 1.4,
-          "assessment_score": 86.0,
-          "placeholder": false,
-          "dimension_key": "high_level_elegance",
-          "configured_weight": 22.0,
-          "components": []
-        }
-      }
-    },
-    "Stale migration": {
-      "score": 100.0,
-      "strict": 100.0,
-      "verified_strict_score": 100.0,
-      "checks": 10,
-      "failing": 0,
-      "tier": 4,
-      "detectors": {
-        "subjective_assessment": {
-          "potential": 10,
-          "pass_rate": 1.0,
-          "failing": 0,
-          "weighted_failures": 0.0,
-          "assessment_score": 100.0,
-          "placeholder": false,
-          "dimension_key": "incomplete_migration",
-          "configured_weight": 1.0,
-          "components": []
-        }
-      }
-    },
-    "Init coupling": {
-      "score": 96.0,
-      "strict": 96.0,
-      "verified_strict_score": 96.0,
-      "checks": 10,
-      "failing": 0,
-      "tier": 4,
-      "detectors": {
-        "subjective_assessment": {
-          "potential": 10,
-          "pass_rate": 0.96,
-          "failing": 0,
-          "weighted_failures": 0.4,
-          "assessment_score": 96.0,
-          "placeholder": false,
-          "dimension_key": "initialization_coupling",
-          "configured_weight": 1.0,
-          "components": []
-        }
-      }
-    },
-    "Logic clarity": {
-      "score": 93.0,
-      "strict": 93.0,
-      "verified_strict_score": 93.0,
-      "checks": 10,
-      "failing": 0,
-      "tier": 4,
-      "detectors": {
-        "subjective_assessment": {
-          "potential": 10,
-          "pass_rate": 0.93,
-          "failing": 0,
-          "weighted_failures": 0.7,
-          "assessment_score": 93.0,
-          "placeholder": false,
-          "dimension_key": "logic_clarity",
-          "configured_weight": 6.0,
-          "components": []
-        }
-      }
-    },
-    "Low elegance": {
-      "score": 89.0,
-      "strict": 89.0,
-      "verified_strict_score": 89.0,
-      "checks": 10,
-      "failing": 0,
-      "tier": 4,
-      "detectors": {
-        "subjective_assessment": {
-          "potential": 10,
-          "pass_rate": 0.89,
-          "failing": 0,
-          "weighted_failures": 1.1,
-          "assessment_score": 89.0,
-          "placeholder": false,
-          "dimension_key": "low_level_elegance",
-          "configured_weight": 12.0,
-          "components": []
-        }
-      }
-    },
-    "Mid elegance": {
-      "score": 88.0,
-      "strict": 88.0,
-      "verified_strict_score": 88.0,
-      "checks": 10,
-      "failing": 0,
-      "tier": 4,
-      "detectors": {
-        "subjective_assessment": {
-          "potential": 10,
-          "pass_rate": 0.88,
-          "failing": 0,
-          "weighted_failures": 1.2,
-          "assessment_score": 88.0,
-          "placeholder": false,
-          "dimension_key": "mid_level_elegance",
-          "configured_weight": 22.0,
-          "components": []
-        }
-      }
-    },
-    "Naming quality": {
-      "score": 92.0,
-      "strict": 92.0,
-      "verified_strict_score": 92.0,
-      "checks": 10,
-      "failing": 0,
-      "tier": 4,
-      "detectors": {
-        "subjective_assessment": {
-          "potential": 10,
-          "pass_rate": 0.92,
-          "failing": 0,
-          "weighted_failures": 0.8,
-          "assessment_score": 92.0,
-          "placeholder": false,
-          "dimension_key": "naming_quality",
-          "configured_weight": 2.0,
-          "components": []
-        }
-      }
-    },
-    "Structure nav": {
-      "score": 87.0,
-      "strict": 87.0,
-      "verified_strict_score": 87.0,
-      "checks": 10,
-      "failing": 0,
-      "tier": 4,
-      "detectors": {
-        "subjective_assessment": {
-          "potential": 10,
-          "pass_rate": 0.87,
-          "failing": 0,
-          "weighted_failures": 1.3,
-          "assessment_score": 87.0,
-          "placeholder": false,
-          "dimension_key": "package_organization",
-          "configured_weight": 5.0,
-          "components": []
-        }
-      }
-    },
-    "Test strategy": {
-      "score": 92.0,
-      "strict": 92.0,
-      "verified_strict_score": 92.0,
-      "checks": 10,
-      "failing": 0,
-      "tier": 4,
-      "detectors": {
-        "subjective_assessment": {
-          "potential": 10,
-          "pass_rate": 0.92,
-          "failing": 0,
-          "weighted_failures": 0.8,
-          "assessment_score": 92.0,
-          "placeholder": false,
-          "dimension_key": "test_strategy",
-          "configured_weight": 1.0,
-          "components": []
-        }
-      }
-    },
-    "Type safety": {
-      "score": 94.0,
-      "strict": 94.0,
-      "verified_strict_score": 94.0,
-      "checks": 10,
-      "failing": 0,
-      "tier": 4,
-      "detectors": {
-        "subjective_assessment": {
-          "potential": 10,
-          "pass_rate": 0.94,
-          "failing": 0,
-          "weighted_failures": 0.6,
-          "assessment_score": 94.0,
-          "placeholder": false,
-          "dimension_key": "type_safety",
-          "configured_weight": 12.0,
-          "components": []
-        }
-      }
-    }
-  },
-  "score_breakdown": {
-    "overall_score": 91.9,
-    "mechanical_fraction": 0.25,
-    "subjective_fraction": 0.75,
-    "mechanical_avg": 97.91666666666667,
-    "subjective_avg": 89.8780487804878,
-    "entries": [
-      {
-        "name": "Code quality",
-        "pool": "mechanical",
-        "score": 98.1,
-        "checks": 437.0,
-        "sample_factor": 1.0,
-        "configured_weight": 1.0,
-        "effective_weight": 1.0,
-        "pool_share": 0.16666666666666666,
-        "overall_per_point": 0.041666666666666664,
-        "overall_contribution": 4.0874999999999995,
-        "overall_drag": 0.0791666666666669
-      },
-      {
-        "name": "Security",
-        "pool": "mechanical",
-        "score": 100.0,
-        "checks": 792.0,
-        "sample_factor": 1.0,
-        "configured_weight": 1.0,
-        "effective_weight": 1.0,
-        "pool_share": 0.16666666666666666,
-        "overall_per_point": 0.041666666666666664,
-        "overall_contribution": 4.166666666666666,
-        "overall_drag": 0.0
-      },
-      {
-        "name": "File health",
-        "pool": "mechanical",
-        "score": 95.1,
-        "checks": 396.0,
-        "sample_factor": 1.0,
-        "configured_weight": 2.0,
-        "effective_weight": 2.0,
-        "pool_share": 0.3333333333333333,
-        "overall_per_point": 0.08333333333333333,
-        "overall_contribution": 7.924999999999999,
-        "overall_drag": 0.40833333333333377
-      },
-      {
-        "name": "Duplication",
-        "pool": "mechanical",
-        "score": 99.2,
-        "checks": 3231.0,
-        "sample_factor": 1.0,
-        "configured_weight": 1.0,
-        "effective_weight": 1.0,
-        "pool_share": 0.16666666666666666,
-        "overall_per_point": 0.041666666666666664,
-        "overall_contribution": 4.133333333333333,
-        "overall_drag": 0.033333333333333215
-      },
-      {
-        "name": "Test health",
-        "pool": "mechanical",
-        "score": 100.0,
-        "checks": 5156.0,
-        "sample_factor": 1.0,
-        "configured_weight": 1.0,
-        "effective_weight": 1.0,
-        "pool_share": 0.16666666666666666,
-        "overall_per_point": 0.041666666666666664,
-        "overall_contribution": 4.166666666666666,
-        "overall_drag": 0.0
-      },
-      {
-        "name": "Abstraction fit",
-        "pool": "subjective",
-        "score": 93.0,
-        "checks": 0.0,
-        "sample_factor": 1.0,
-        "configured_weight": 8.0,
-        "effective_weight": 8.0,
-        "pool_share": 0.06504065040650407,
-        "overall_per_point": 0.04878048780487805,
-        "overall_contribution": 4.536585365853659,
-        "overall_drag": 0.34146341463414637
-      },
-      {
-        "name": "AI generated debt",
-        "pool": "subjective",
-        "score": 90.0,
-        "checks": 0.0,
-        "sample_factor": 1.0,
-        "configured_weight": 1.0,
-        "effective_weight": 1.0,
-        "pool_share": 0.008130081300813009,
-        "overall_per_point": 0.006097560975609756,
-        "overall_contribution": 0.5487804878048781,
-        "overall_drag": 0.06097560975609756
-      },
-      {
-        "name": "API coherence",
-        "pool": "subjective",
-        "score": 96.0,
-        "checks": 0.0,
-        "sample_factor": 1.0,
-        "configured_weight": 1.0,
-        "effective_weight": 1.0,
-        "pool_share": 0.008130081300813009,
-        "overall_per_point": 0.006097560975609756,
-        "overall_contribution": 0.5853658536585367,
-        "overall_drag": 0.024390243902439025
-      },
-      {
-        "name": "Auth consistency",
-        "pool": "subjective",
-        "score": 100.0,
-        "checks": 0.0,
-        "sample_factor": 1.0,
-        "configured_weight": 1.0,
-        "effective_weight": 1.0,
-        "pool_share": 0.008130081300813009,
-        "overall_per_point": 0.006097560975609756,
-        "overall_contribution": 0.6097560975609756,
-        "overall_drag": 0.0
-      },
-      {
-        "name": "Contracts",
-        "pool": "subjective",
-        "score": 91.0,
-        "checks": 0.0,
-        "sample_factor": 1.0,
-        "configured_weight": 12.0,
-        "effective_weight": 12.0,
-        "pool_share": 0.0975609756097561,
-        "overall_per_point": 0.07317073170731708,
-        "overall_contribution": 6.658536585365854,
-        "overall_drag": 0.6585365853658538
-      },
-      {
-        "name": "Convention drift",
-        "pool": "subjective",
-        "score": 100.0,
-        "checks": 0.0,
-        "sample_factor": 1.0,
-        "configured_weight": 1.0,
-        "effective_weight": 1.0,
-        "pool_share": 0.008130081300813009,
-        "overall_per_point": 0.006097560975609756,
-        "overall_contribution": 0.6097560975609756,
-        "overall_drag": 0.0
-      },
-      {
-        "name": "Cross-module arch",
-        "pool": "subjective",
-        "score": 94.0,
-        "checks": 0.0,
-        "sample_factor": 1.0,
-        "configured_weight": 1.0,
-        "effective_weight": 1.0,
-        "pool_share": 0.008130081300813009,
-        "overall_per_point": 0.006097560975609756,
-        "overall_contribution": 0.5731707317073171,
-        "overall_drag": 0.03658536585365854
-      },
-      {
-        "name": "Dep health",
-        "pool": "subjective",
-        "score": 100.0,
-        "checks": 0.0,
-        "sample_factor": 1.0,
-        "configured_weight": 1.0,
-        "effective_weight": 1.0,
-        "pool_share": 0.008130081300813009,
-        "overall_per_point": 0.006097560975609756,
-        "overall_contribution": 0.6097560975609756,
-        "overall_drag": 0.0
-      },
-      {
-        "name": "Design coherence",
-        "pool": "subjective",
-        "score": 88.0,
-        "checks": 0.0,
-        "sample_factor": 1.0,
-        "configured_weight": 10.0,
-        "effective_weight": 10.0,
-        "pool_share": 0.08130081300813008,
-        "overall_per_point": 0.06097560975609756,
-        "overall_contribution": 5.365853658536585,
-        "overall_drag": 0.7317073170731707
-      },
-      {
-        "name": "Error consistency",
-        "pool": "subjective",
-        "score": 90.0,
-        "checks": 0.0,
-        "sample_factor": 1.0,
-        "configured_weight": 3.0,
-        "effective_weight": 3.0,
-        "pool_share": 0.024390243902439025,
-        "overall_per_point": 0.01829268292682927,
-        "overall_contribution": 1.6463414634146343,
-        "overall_drag": 0.1829268292682927
-      },
-      {
-        "name": "High elegance",
-        "pool": "subjective",
-        "score": 86.0,
-        "checks": 0.0,
-        "sample_factor": 1.0,
-        "configured_weight": 22.0,
-        "effective_weight": 22.0,
-        "pool_share": 0.17886178861788618,
-        "overall_per_point": 0.13414634146341464,
-        "overall_contribution": 11.536585365853659,
-        "overall_drag": 1.878048780487805
-      },
-      {
-        "name": "Stale migration",
-        "pool": "subjective",
-        "score": 100.0,
-        "checks": 0.0,
-        "sample_factor": 1.0,
-        "configured_weight": 1.0,
-        "effective_weight": 1.0,
-        "pool_share": 0.008130081300813009,
-        "overall_per_point": 0.006097560975609756,
-        "overall_contribution": 0.6097560975609756,
-        "overall_drag": 0.0
-      },
-      {
-        "name": "Init coupling",
-        "pool": "subjective",
-        "score": 96.0,
-        "checks": 0.0,
-        "sample_factor": 1.0,
-        "configured_weight": 1.0,
-        "effective_weight": 1.0,
-        "pool_share": 0.008130081300813009,
-        "overall_per_point": 0.006097560975609756,
-        "overall_contribution": 0.5853658536585367,
-        "overall_drag": 0.024390243902439025
-      },
-      {
-        "name": "Logic clarity",
-        "pool": "subjective",
-        "score": 93.0,
-        "checks": 0.0,
-        "sample_factor": 1.0,
-        "configured_weight": 6.0,
-        "effective_weight": 6.0,
-        "pool_share": 0.04878048780487805,
-        "overall_per_point": 0.03658536585365854,
-        "overall_contribution": 3.4024390243902443,
-        "overall_drag": 0.25609756097560976
-      },
-      {
-        "name": "Low elegance",
-        "pool": "subjective",
-        "score": 89.0,
-        "checks": 0.0,
-        "sample_factor": 1.0,
-        "configured_weight": 12.0,
-        "effective_weight": 12.0,
-        "pool_share": 0.0975609756097561,
-        "overall_per_point": 0.07317073170731708,
-        "overall_contribution": 6.51219512195122,
-        "overall_drag": 0.8048780487804879
-      },
-      {
-        "name": "Mid elegance",
-        "pool": "subjective",
-        "score": 88.0,
-        "checks": 0.0,
-        "sample_factor": 1.0,
-        "configured_weight": 22.0,
-        "effective_weight": 22.0,
-        "pool_share": 0.17886178861788618,
-        "overall_per_point": 0.13414634146341464,
-        "overall_contribution": 11.804878048780488,
-        "overall_drag": 1.6097560975609757
-      },
-      {
-        "name": "Naming quality",
-        "pool": "subjective",
-        "score": 92.0,
-        "checks": 0.0,
-        "sample_factor": 1.0,
-        "configured_weight": 2.0,
-        "effective_weight": 2.0,
-        "pool_share": 0.016260162601626018,
-        "overall_per_point": 0.012195121951219513,
-        "overall_contribution": 1.1219512195121952,
-        "overall_drag": 0.0975609756097561
-      },
-      {
-        "name": "Structure nav",
-        "pool": "subjective",
-        "score": 87.0,
-        "checks": 0.0,
-        "sample_factor": 1.0,
-        "configured_weight": 5.0,
-        "effective_weight": 5.0,
-        "pool_share": 0.04065040650406504,
-        "overall_per_point": 0.03048780487804878,
-        "overall_contribution": 2.652439024390244,
-        "overall_drag": 0.39634146341463417
-      },
-      {
-        "name": "Test strategy",
-        "pool": "subjective",
-        "score": 92.0,
-        "checks": 0.0,
-        "sample_factor": 1.0,
-        "configured_weight": 1.0,
-        "effective_weight": 1.0,
-        "pool_share": 0.008130081300813009,
-        "overall_per_point": 0.006097560975609756,
-        "overall_contribution": 0.5609756097560976,
-        "overall_drag": 0.04878048780487805
-      },
-      {
-        "name": "Type safety",
-        "pool": "subjective",
-        "score": 94.0,
-        "checks": 0.0,
-        "sample_factor": 1.0,
-        "configured_weight": 12.0,
-        "effective_weight": 12.0,
-        "pool_share": 0.0975609756097561,
-        "overall_per_point": 0.07317073170731708,
-        "overall_contribution": 6.878048780487806,
-        "overall_drag": 0.4390243902439025
       }
     ]
   },
-  "subjective_integrity": {
-    "status": "disabled",
-    "target_score": 85.0,
-    "matched_count": 0,
-    "matched_dimensions": [],
-    "reset_dimensions": []
+  "total_matching": 12,
+  "hidden": {
+    "by_detector": {
+      "flat_dirs": 2
+    },
+    "total": 2
   },
-  "score_confidence": {
-    "status": "full",
-    "confidence": 1.0,
-    "detectors": [],
-    "dimensions": []
-  },
-  "potentials": {
-    "dart": {
-      "structural": 396,
-      "flat_dirs": 41,
-      "single_use": 0,
-      "cycles": 396,
-      "orphaned": 396,
-      "signature": 103,
-      "test_coverage": 5156,
-      "security": 396,
-      "subjective_review": 20,
-      "boilerplate_duplication": 26,
-      "dupes": 3205,
-      "stale_wontfix": 0
-    }
-  },
-  "scan_coverage": {
-    "dart": {
-      "status": "full",
-      "confidence": 1.0,
-      "detectors": {
-        "security": {
-          "detector": "security",
-          "status": "full",
-          "confidence": 1.0,
-          "summary": "Security coverage complete for enabled detectors.",
-          "impact": "",
-          "remediation": "",
-          "tool": "",
-          "reason": ""
-        }
-      },
-      "warnings": [],
-      "updated_at": "2026-10-30T14:31:04+00:00"
-    }
-  },
-  "zone_distribution": {
-    "test": 398,
-    "production": 395,
-    "generated": 19,
-    "script": 1,
-    "vendor": 1
-  },
+  "noise_budget": 10,
+  "noise_global_budget": 0,
   "narrative": {
     "phase": "stagnation",
     "headline": "All T1 and T2 items cleared!",
@@ -1049,7 +260,7 @@
       "stagnant_dimensions": [
         {
           "name": "Code quality",
-          "strict": 96.5,
+          "strict": 97.9,
           "stuck_scans": 5
         },
         {
@@ -1315,16 +526,7 @@
       "state": "above",
       "warning": null
     },
-    "reminders": [
-      {
-        "type": "report_scores",
-        "message": "ALWAYS share ALL scores with the user: overall, objective, and strict, plus every dimension score (lenient + strict), including subjective dimensions. The goal is to maximize strict scores.",
-        "command": null,
-        "no_decay": true,
-        "priority": 3,
-        "severity": "low"
-      }
-    ],
+    "reminders": [],
     "reminder_history": {
       "zone_classification": 3,
       "report_scores": 17,
@@ -1617,12 +819,5 @@
       "execute": "openrouter:x-ai/grok-4.20-beta",
       "review": "openrouter:google/gemini-3.1-pro-preview"
     }
-  },
-  "plan": {
-    "active": true,
-    "focus": null,
-    "total_ordered": 14,
-    "total_skipped": 11,
-    "plan_overrides_narrative": true
   }
 }
