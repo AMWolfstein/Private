@@ -97,7 +97,8 @@ group (Artists, Genre) picks the separator that joins names when Edit Metadata s
 The library reads credits through a derived TEMP table `library_tag_credits` (item_id, field,
 name, name_key, position, built by `LibraryTagCreditsCache` from the visible view with the
 same rules), so artist and genre pages, search, and the discography shelves agree with the
-settings. Artist and album artist credits make the Artists list and artist pages; Albums
+settings. Track-artist credits make the Artists list and artist pages; album-artist credits make a
+separate Album Artists list, placed directly below Artists in the overview. Albums
 uses album-artist credits, and Appears On sits directly below Singles for releases where the
 artist is credited on a track but owns no track of the release. Go to Artist and Go to Composer
 in the song menu open one name directly, or a picker when a credit splits into several names.
