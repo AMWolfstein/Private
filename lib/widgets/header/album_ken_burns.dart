@@ -80,17 +80,21 @@ class _AlbumKenBurnsState extends ConsumerState<AlbumKenBurns>
         });
         final child = RepaintBoundary(child: widget.child);
         if (!_allowed) return child;
-        return AnimatedBuilder(
-          animation: _controller,
-          child: child,
-          builder: (context, child) {
-            final turn = _controller.value * 2 * math.pi;
-            return Transform(
-              alignment: Alignment.center,
-              transform: kenBurnsMatrix(turn, constraints.biggest),
-              child: child,
-            );
-          },
+        // The zoom stays inside the cover's box; unclipped, the enlarged
+        // cover paints over the title below it.
+        return ClipRect(
+          child: AnimatedBuilder(
+            animation: _controller,
+            child: child,
+            builder: (context, child) {
+              final turn = _controller.value * 2 * math.pi;
+              return Transform(
+                alignment: Alignment.center,
+                transform: kenBurnsMatrix(turn, constraints.biggest),
+                child: child,
+              );
+            },
+          ),
         );
       },
     );

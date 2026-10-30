@@ -86,6 +86,14 @@ void main() {
     final second = _transform(tester);
     expect(first, isNotNull);
     expect(second, isNot(equals(first)));
+    // The zoom stays inside the cover's box instead of painting over the
+    // content below it.
+    final clip = find.descendant(
+      of: find.byType(AlbumKenBurns),
+      matching: find.byType(ClipRect),
+    );
+    expect(clip, findsOneWidget);
+    expect(tester.getRect(clip), tester.getRect(find.byType(AlbumKenBurns)));
   });
 
   testWidgets('stands still with the setting off, no glass or reduced motion', (
