@@ -2,36 +2,17 @@
   "command": "show",
   "query": "flat_dirs",
   "status_filter": "open",
-  "total": 10,
+  "total": 3,
   "summary": {
     "by_tier": {
-      "T3": 10
+      "T3": 3
     },
     "by_detector": {
-      "flat_dirs": 10
+      "flat_dirs": 3
     },
-    "files": 10
+    "files": 3
   },
   "by_file": {
-    "integration_test": [
-      {
-        "id": "flat_dirs::integration_test",
-        "tier": 3,
-        "confidence": "medium",
-        "summary": "Directory overload: 25 files, 0 child dirs (combined 25) \u2014 consider grouping by domain",
-        "detail": {
-          "file_count": 25,
-          "child_dir_count": 0,
-          "combined_score": 25,
-          "kind": "overload",
-          "parent_sibling_count": 0,
-          "wrapper_item_count": 0,
-          "sparse_child_count": 0,
-          "sparse_child_ratio": 0.0,
-          "sparse_child_file_threshold": 0
-        }
-      }
-    ],
     "lib": [
       {
         "id": "flat_dirs::lib",
@@ -51,16 +32,16 @@
         }
       }
     ],
-    "lib/screens/library": [
+    "lib/widgets/player": [
       {
-        "id": "flat_dirs::lib/screens/library",
+        "id": "flat_dirs::lib/widgets/player",
         "tier": 3,
         "confidence": "medium",
-        "summary": "Directory overload: 28 files, 0 child dirs (combined 28) \u2014 consider grouping by domain",
+        "summary": "Directory overload: 27 files, 0 child dirs (combined 27) \u2014 consider grouping by domain",
         "detail": {
-          "file_count": 28,
+          "file_count": 27,
           "child_dir_count": 0,
-          "combined_score": 28,
+          "combined_score": 27,
           "kind": "overload",
           "parent_sibling_count": 0,
           "wrapper_item_count": 0,
@@ -70,130 +51,16 @@
         }
       }
     ],
-    "lib/screens/settings": [
+    "test": [
       {
-        "id": "flat_dirs::lib/screens/settings",
+        "id": "flat_dirs::test",
         "tier": 3,
         "confidence": "medium",
-        "summary": "Directory overload: 20 files, 0 child dirs (combined 20) \u2014 consider grouping by domain",
+        "summary": "Directory overload: 360 files, 1 child dirs (combined 363) \u2014 consider grouping by domain",
         "detail": {
-          "file_count": 20,
-          "child_dir_count": 0,
-          "combined_score": 20,
-          "kind": "overload",
-          "parent_sibling_count": 0,
-          "wrapper_item_count": 0,
-          "sparse_child_count": 0,
-          "sparse_child_ratio": 0.0,
-          "sparse_child_file_threshold": 0
-        }
-      }
-    ],
-    "lib/services": [
-      {
-        "id": "flat_dirs::lib/services",
-        "tier": 3,
-        "confidence": "medium",
-        "summary": "Directory overload: 6 files, 8 child dirs (combined 30) \u2014 consider grouping by domain",
-        "detail": {
-          "file_count": 6,
-          "child_dir_count": 8,
-          "combined_score": 30,
-          "kind": "overload",
-          "parent_sibling_count": 0,
-          "wrapper_item_count": 0,
-          "sparse_child_count": 0,
-          "sparse_child_ratio": 0.0,
-          "sparse_child_file_threshold": 0
-        }
-      }
-    ],
-    "lib/services/library": [
-      {
-        "id": "flat_dirs::lib/services/library",
-        "tier": 3,
-        "confidence": "medium",
-        "summary": "Directory overload: 48 files, 0 child dirs (combined 48) \u2014 consider grouping by domain",
-        "detail": {
-          "file_count": 48,
-          "child_dir_count": 0,
-          "combined_score": 48,
-          "kind": "overload",
-          "parent_sibling_count": 0,
-          "wrapper_item_count": 0,
-          "sparse_child_count": 0,
-          "sparse_child_ratio": 0.0,
-          "sparse_child_file_threshold": 0
-        }
-      }
-    ],
-    "lib/services/playback": [
-      {
-        "id": "flat_dirs::lib/services/playback",
-        "tier": 3,
-        "confidence": "medium",
-        "summary": "Directory overload: 40 files, 0 child dirs (combined 40) \u2014 consider grouping by domain",
-        "detail": {
-          "file_count": 40,
-          "child_dir_count": 0,
-          "combined_score": 40,
-          "kind": "overload",
-          "parent_sibling_count": 0,
-          "wrapper_item_count": 0,
-          "sparse_child_count": 0,
-          "sparse_child_ratio": 0.0,
-          "sparse_child_file_threshold": 0
-        }
-      }
-    ],
-    "lib/utils": [
-      {
-        "id": "flat_dirs::lib/utils",
-        "tier": 3,
-        "confidence": "medium",
-        "summary": "Directory overload: 32 files, 0 child dirs (combined 32) \u2014 consider grouping by domain",
-        "detail": {
-          "file_count": 32,
-          "child_dir_count": 0,
-          "combined_score": 32,
-          "kind": "overload",
-          "parent_sibling_count": 0,
-          "wrapper_item_count": 0,
-          "sparse_child_count": 0,
-          "sparse_child_ratio": 0.0,
-          "sparse_child_file_threshold": 0
-        }
-      }
-    ],
-    "lib/widgets": [
-      {
-        "id": "flat_dirs::lib/widgets",
-        "tier": 3,
-        "confidence": "medium",
-        "summary": "Directory overload: 8 files, 12 child dirs (combined 44) \u2014 consider grouping by domain",
-        "detail": {
-          "file_count": 8,
-          "child_dir_count": 12,
-          "combined_score": 44,
-          "kind": "overload",
-          "parent_sibling_count": 0,
-          "wrapper_item_count": 0,
-          "sparse_child_count": 0,
-          "sparse_child_ratio": 0.0,
-          "sparse_child_file_threshold": 0
-        }
-      }
-    ],
-    "lib/widgets/glass": [
-      {
-        "id": "flat_dirs::lib/widgets/glass",
-        "tier": 3,
-        "confidence": "medium",
-        "summary": "Directory overload: 20 files, 0 child dirs (combined 20) \u2014 consider grouping by domain",
-        "detail": {
-          "file_count": 20,
-          "child_dir_count": 0,
-          "combined_score": 20,
+          "file_count": 360,
+          "child_dir_count": 1,
+          "combined_score": 363,
           "kind": "overload",
           "parent_sibling_count": 0,
           "wrapper_item_count": 0,
@@ -204,13 +71,7 @@
       }
     ]
   },
-  "total_matching": 12,
-  "hidden": {
-    "by_detector": {
-      "flat_dirs": 2
-    },
-    "total": 2
-  },
+  "total_matching": 3,
   "noise_budget": 10,
   "noise_global_budget": 0,
   "narrative": {
@@ -225,16 +86,14 @@
           "impact": 0.0
         },
         {
-          "name": "High elegance",
-          "strict": 86.0,
-          "failing": 0,
-          "impact": 0.0,
-          "subjective": true,
-          "impact_description": "re-review to improve"
+          "name": "File health",
+          "strict": 85.5,
+          "failing": 28,
+          "impact": 0.0
         },
         {
-          "name": "Structure nav",
-          "strict": 87.0,
+          "name": "High elegance",
+          "strict": 86.0,
           "failing": 0,
           "impact": 0.0,
           "subjective": true,
@@ -252,15 +111,22 @@
         {
           "name": "File health",
           "lenient": 95.1,
-          "strict": 88.0,
-          "gap": 7.1,
+          "strict": 85.5,
+          "gap": 9.6,
+          "wontfix_count": 0
+        },
+        {
+          "name": "Code quality",
+          "lenient": 98.3,
+          "strict": 96.8,
+          "gap": 1.5,
           "wontfix_count": 0
         }
       ],
       "stagnant_dimensions": [
         {
           "name": "Code quality",
-          "strict": 97.9,
+          "strict": 96.8,
           "stuck_scans": 5
         },
         {
@@ -269,13 +135,8 @@
           "stuck_scans": 5
         },
         {
-          "name": "File health",
-          "strict": 88.0,
-          "stuck_scans": 5
-        },
-        {
           "name": "Duplication",
-          "strict": 98.4,
+          "strict": 98.2,
           "stuck_scans": 5
         },
         {
@@ -388,13 +249,24 @@
     "actions": [
       {
         "type": "reorganize",
-        "detector": "flat_dirs",
-        "count": 12,
-        "description": "12 flat_dirs issues \u2014 create subdirectories and use `desloppify move`",
-        "command": "desloppify show flat_dirs --status open",
+        "detector": "orphaned",
+        "count": 9,
+        "description": "9 orphaned issues \u2014 delete dead files or relocate with `desloppify move`",
+        "command": "desloppify show orphaned --status open",
         "impact": 0.0,
         "dimension": "Code quality",
         "priority": 1,
+        "lane": "restructure"
+      },
+      {
+        "type": "reorganize",
+        "detector": "flat_dirs",
+        "count": 3,
+        "description": "3 flat_dirs issues \u2014 create subdirectories and use `desloppify move`",
+        "command": "desloppify show flat_dirs --status open",
+        "impact": 0.0,
+        "dimension": "Code quality",
+        "priority": 2,
         "lane": "restructure"
       },
       {
@@ -405,7 +277,7 @@
         "command": "desloppify show structural --status open",
         "impact": 0.0,
         "dimension": "File health",
-        "priority": 2,
+        "priority": 3,
         "lane": "refactor"
       },
       {
@@ -416,7 +288,7 @@
         "command": "desloppify show dupes --status open",
         "impact": 0.0,
         "dimension": "Duplication",
-        "priority": 3,
+        "priority": 4,
         "lane": "refactor"
       },
       {
@@ -427,7 +299,7 @@
         "command": "desloppify show signature --status open",
         "impact": 0.0,
         "dimension": "Unknown",
-        "priority": 4,
+        "priority": 5,
         "lane": "refactor"
       },
       {
@@ -438,7 +310,7 @@
         "command": "desloppify show boilerplate_duplication --status open",
         "impact": 0.0,
         "dimension": "Duplication",
-        "priority": 5,
+        "priority": 6,
         "lane": "refactor"
       }
     ],
@@ -453,7 +325,8 @@
       "lanes": {
         "restructure": {
           "actions": [
-            1
+            1,
+            2
           ],
           "file_count": 12,
           "total_impact": 0.0,
@@ -462,12 +335,12 @@
         },
         "refactor": {
           "actions": [
-            2,
             3,
             4,
-            5
+            5,
+            6
           ],
-          "file_count": 144,
+          "file_count": 145,
           "total_impact": 0.0,
           "automation": "manual",
           "run_first": false
@@ -481,7 +354,7 @@
       "move": {
         "available": true,
         "relevant": true,
-        "reason": "12 flat directories",
+        "reason": "9 orphaned files + 3 flat directories",
         "usage": "desloppify move <source> <dest> [--dry-run]"
       },
       "plan": {
@@ -496,16 +369,16 @@
       }
     },
     "debt": {
-      "overall_gap": 1.4,
+      "overall_gap": 1.5,
       "wontfix_count": 0,
       "worst_dimension": "Test health",
       "worst_gap": 26.8,
-      "trend": "stable"
+      "trend": "growing"
     },
     "milestone": "All T1 and T2 items cleared!",
     "primary_action": {
-      "command": "desloppify show flat_dirs --status open",
-      "description": "12 flat_dirs issues \u2014 create subdirectories and use `desloppify move`"
+      "command": "desloppify show orphaned --status open",
+      "description": "9 orphaned issues \u2014 delete dead files or relocate with `desloppify move`"
     },
     "why_now": "2 independent workstreams, safe to parallelize. Rescan after each phase to verify.",
     "verification_step": {
@@ -516,20 +389,20 @@
       {
         "type": "wontfix_gap",
         "severity": "medium",
-        "message": "Strict/lenient gap is 1.4 pts with 0 wontfix issues"
+        "message": "Strict/lenient gap is 1.5 pts with 0 wontfix issues"
       }
     ],
     "strict_target": {
       "target": 85.0,
-      "current": 90.1,
-      "gap": -5.1,
+      "current": 89.9,
+      "gap": -4.9,
       "state": "above",
       "warning": null
     },
     "reminders": [],
     "reminder_history": {
       "zone_classification": 3,
-      "report_scores": 17,
+      "report_scores": 18,
       "feedback_nudge": 3,
       "stagnant_nudge": 22,
       "wontfix_growing": 3,
