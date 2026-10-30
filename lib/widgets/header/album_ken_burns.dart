@@ -15,10 +15,20 @@ const kAlbumKenBurnsPeriod = Duration(seconds: 28);
 /// (for example, the player shows lyrics), while its route is covered, and
 /// once the page is scrolled past the cover.
 class AlbumKenBurns extends ConsumerStatefulWidget {
-  const AlbumKenBurns({super.key, required this.child, this.active = true});
+  const AlbumKenBurns({
+    super.key,
+    required this.child,
+    this.active = true,
+    this.ownLayer = true,
+  });
 
   final Widget child;
   final bool active;
+
+  /// Keeps the cover on its own layer so only the transform changes per
+  /// frame. Turn it off under a fade mask (the immersive player): a separate
+  /// layer under a moving transform can escape the mask, leaving a hard edge.
+  final bool ownLayer;
 
   @override
   ConsumerState<AlbumKenBurns> createState() => _AlbumKenBurnsState();
@@ -84,7 +94,9 @@ class _AlbumKenBurnsState extends ConsumerState<AlbumKenBurns>
         WidgetsBinding.instance.addPostFrameCallback((_) {
           if (mounted) _sync();
         });
-        final child = RepaintBoundary(child: widget.child);
+        final child = widget.ownLayer
+            ? RepaintBoundary(child: widget.child)
+            : widget.child;
         if (!_allowed) return child;
         // The zoom stays inside the cover's box; unclipped, the enlarged
         // cover paints over the title below it.

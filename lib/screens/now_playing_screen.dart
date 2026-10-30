@@ -443,6 +443,8 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
                     artwork: immersive
                         ? AlbumKenBurns(
                             active: _currentPage == 0,
+                            // The background fades this cover with a mask.
+                            ownLayer: false,
                             child: PlayerArtworkDragRegion(
                               child: PlayerTransitionArtwork(
                                 artworkKey: _immersiveArtworkKey,

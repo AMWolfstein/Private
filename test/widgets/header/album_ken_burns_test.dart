@@ -138,6 +138,36 @@ void main() {
     expect(_transform(tester), isNotNull);
   });
 
+  testWidgets('drifts without its own layer when asked, under a fade mask', (
+    tester,
+  ) async {
+    Widget host({required bool ownLayer}) => ProviderScope(
+      overrides: [
+        settingsProvider.overrideWith(() => _Settings(const AppSettings())),
+      ],
+      child: MaterialApp(
+        home: Scaffold(
+          body: AlbumKenBurns(
+            ownLayer: ownLayer,
+            child: const ColoredBox(color: Colors.red),
+          ),
+        ),
+      ),
+    );
+    Finder layer() => find.descendant(
+      of: find.byType(AlbumKenBurns),
+      matching: find.byType(RepaintBoundary),
+    );
+    await tester.pumpWidget(host(ownLayer: true));
+    await tester.pump(const Duration(seconds: 2));
+    expect(layer(), findsWidgets);
+
+    await tester.pumpWidget(host(ownLayer: false));
+    await tester.pump(const Duration(seconds: 2));
+    expect(_transform(tester), isNotNull);
+    expect(layer(), findsNothing);
+  });
+
   testWidgets('stops once the page is scrolled past the cover', (tester) async {
     final controller = ScrollController();
     addTearDown(controller.dispose);
