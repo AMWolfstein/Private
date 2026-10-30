@@ -73,9 +73,13 @@ class PlayerPlaybackControls extends ConsumerWidget {
                   child: Column(
                     children: [
                       if (showLyrics)
-                        PlayerLyricStrip(
-                          lyrics: metadata.lyrics,
-                          color: colorScheme.onSurface.withValues(alpha: 0.8),
+                        // Lyrics arrive after the controls are built.
+                        ListenableBuilder(
+                          listenable: metadata,
+                          builder: (context, _) => PlayerLyricStrip(
+                            lyrics: metadata.lyrics,
+                            color: colorScheme.onSurface.withValues(alpha: 0.8),
+                          ),
                         ),
                       SliderTheme(
                         data: SliderThemeData(

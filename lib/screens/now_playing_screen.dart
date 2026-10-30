@@ -93,7 +93,7 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
         unawaited(
           _trackMetadata.load(
             next.value,
-            inspectUnresolvedContentUri: _currentPage == 1,
+            inspectUnresolvedContentUri: _lyricsWanted,
           ),
         );
       },
@@ -109,9 +109,19 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
     });
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
-      unawaited(_trackMetadata.load(ref.read(currentMediaItemProvider).value));
+      unawaited(
+        _trackMetadata.load(
+          ref.read(currentMediaItemProvider).value,
+          inspectUnresolvedContentUri: _lyricsWanted,
+        ),
+      );
     });
   }
+
+  /// Lyrics are read from an unresolved SAF document only when they show:
+  /// on the lyrics page, or above the seek bar when that strip is on.
+  bool get _lyricsWanted =>
+      _currentPage == 1 || ref.read(settingsProvider).lyricsAboveSeekBar;
 
   @override
   void didChangeDependencies() {

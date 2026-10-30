@@ -51,7 +51,9 @@ void main() {
     expect(text.textDirection, TextDirection.rtl);
   });
 
-  testWidgets('plain lyrics without timing show no strip', (tester) async {
+  testWidgets('plain lyrics keep the strip space but show no text', (
+    tester,
+  ) async {
     const plain = ParsedLyrics(
       synced: false,
       wordSynced: false,
@@ -62,5 +64,18 @@ void main() {
     await _pump(tester, plain, position);
     expect(find.text('Verse'), findsNothing);
     expect(find.byType(Text), findsNothing);
+    expect(
+      tester.getSize(find.byType(PlayerLyricStrip)).height,
+      kPlayerLyricStripHeight,
+    );
+  });
+
+  testWidgets('a song without lyrics keeps the strip space', (tester) async {
+    final position = ValueNotifier(const Duration(seconds: 2));
+    await _pump(tester, ParsedLyrics.empty, position);
+    expect(
+      tester.getSize(find.byType(PlayerLyricStrip)).height,
+      kPlayerLyricStripHeight,
+    );
   });
 }
