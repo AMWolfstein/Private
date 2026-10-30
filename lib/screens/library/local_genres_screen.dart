@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/models/local_library_item.dart';
 import 'package:sistrum/providers/local_library_provider.dart';
+import 'package:sistrum/providers/library_tag_credits_provider.dart';
 import 'package:sistrum/providers/playback_provider.dart';
 import 'package:sistrum/services/library/library_genres.dart';
 import 'package:sistrum/widgets/primitives/app_sliver_header.dart';
@@ -16,16 +17,16 @@ final genrePageLoaderProvider =
     Provider<Future<List<Map<String, dynamic>>> Function(GenrePageRequest)>((
       ref,
     ) {
-      // One tag cache per library version; the provider rebuilds with the
-      // version, so a scan drops the cached tags with it (PERF-402).
-      final tagCache = LibraryGenreTagCache();
       final version = ref.watch(
         localLibraryProvider.select((state) => state.loadedIndexVersion),
       );
+      final credits = ref.watch(libraryTagCreditsCacheProvider);
+      final rules = ref.watch(tagCreditRulesProvider);
       return (request) async =>
           LibraryGenres(
             await ref.read(libraryDatabaseProvider).database,
-            tagCache: tagCache,
+            credits: credits,
+            rules: rules,
           ).page(
             genre: request.genre,
             offset: request.offset,

@@ -2,7 +2,7 @@ import 'package:sqflite/sqflite.dart';
 import 'package:sistrum/models/metadata_separators.dart';
 import 'package:sistrum/models/tag_credit_settings.dart';
 import 'package:sistrum/services/library/library_schema.dart';
-import 'package:sistrum/utils/lookup_text.dart';
+import 'package:sistrum/services/library/sqlite_helpers.dart' as sqlite;
 
 /// The tag a credit comes from. [dbName] is stored in the credits table.
 enum TagCreditField {
@@ -80,7 +80,7 @@ List<String> splitTagCredits(
   for (final part in text.split(pattern)) {
     final name = _restore(_stripStrayBrackets(part.trim()), kept).trim();
     if (name.isEmpty) continue;
-    if (seen.add(normalizeLookupText(name))) names.add(name);
+    if (seen.add(sqlite.normalizeSearchText(name))) names.add(name);
   }
   return names;
 }
@@ -230,7 +230,7 @@ class LibraryTagCreditsCache {
                 'item_id': id,
                 'field': field.dbName,
                 'name': names[i],
-                'name_key': normalizeLookupText(names[i]),
+                'name_key': sqlite.normalizeSearchText(names[i]),
                 'position': i,
               });
             }

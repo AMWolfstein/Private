@@ -3,6 +3,7 @@ import 'package:sistrum/services/library/library_row_mapper.dart';
 import 'package:sistrum/services/library/library_database_models.dart';
 import 'package:sistrum/services/library/library_browse_store.dart';
 import 'package:sistrum/services/library/library_genres.dart';
+import 'package:sistrum/services/library/library_tag_credits.dart';
 import 'package:sistrum/services/library/library_schema.dart';
 import 'package:sistrum/services/library/library_search.dart';
 import 'package:sistrum/services/library/sqlite_helpers.dart';
@@ -55,9 +56,15 @@ void main() {
         expect(stored['match_key'], matchKey);
         expect(stored['search_text'], 'café élise été élise');
         expect(stored['sort_genre'], ';;électro;;;rock;;');
-        final genres = LibraryGenres(db);
-        expect((await genres.page(genre: 'ÉLECTRO')).single['id'], 'unicode');
-        expect((await genres.page(genre: 'rock')).single['id'], 'unicode');
+        final genres = LibraryGenres(db, credits: LibraryTagCreditsCache());
+        expect(
+          (await genres.page(genre: 'ÉLECTRO', libraryVersion: 1)).single['id'],
+          'unicode',
+        );
+        expect(
+          (await genres.page(genre: 'rock', libraryVersion: 1)).single['id'],
+          'unicode',
+        );
 
         for (final fts in [false, if (localFts) true]) {
           final search = LibrarySearchStore(db, localFts: fts);
