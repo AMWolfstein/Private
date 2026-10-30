@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/providers/settings_provider.dart';
 import 'package:sistrum/providers/theme_provider.dart';
-import 'package:sistrum/models/app_glass.dart';
+import 'package:sistrum/core/models/app_glass.dart';
 import 'package:sistrum/utils/layout/nav_bar_inset.dart';
 import 'package:sistrum/widgets/settings/settings_group.dart';
 import 'package:sistrum/widgets/settings/settings_search_highlight.dart';

@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:sistrum/theme/app_theme.dart';
+import 'package:sistrum/core/theme/app_theme.dart';
 
 /// A single tonal selection inside a sheet, without a second glass layer.
 class AppChoiceChip extends StatelessWidget {

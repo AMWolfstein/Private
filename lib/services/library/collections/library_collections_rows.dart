@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:sistrum/models/library_collections.dart';
-import 'package:sistrum/models/track.dart';
+import 'package:sistrum/core/models/library_collections.dart';
+import 'package:sistrum/core/models/track.dart';
 
 const _workerJsonThreshold = 64 * 1024;
 

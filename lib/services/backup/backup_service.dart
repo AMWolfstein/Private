@@ -5,7 +5,7 @@ import 'dart:isolate';
 import 'package:flutter/foundation.dart' show visibleForTesting;
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
-import 'package:sistrum/constants/app_info.dart';
+import 'package:sistrum/core/constants/app_info.dart';
 import 'package:sistrum/services/native/native_data_jobs.dart';
 import 'package:sistrum/services/platform/user_profile_store.dart';
 import 'package:sistrum/utils/files/best_effort_delete.dart';

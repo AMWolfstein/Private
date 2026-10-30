@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart' show visibleForTesting;
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:sistrum/models/library_collections.dart';
+import 'package:sistrum/core/models/library_collections.dart';
 import 'package:sistrum/services/library/collections/collection_restore_codec.dart';
 import 'package:sistrum/services/library/collections/collection_track_batch.dart';
 import 'package:sistrum/services/library/collections/library_collections_models.dart';

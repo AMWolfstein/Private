@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sistrum/models/theme_settings.dart';
+import 'package:sistrum/core/models/theme_settings.dart';
 
 final initialThemeSettingsProvider = Provider<ThemeSettings>(
   (ref) => const ThemeSettings(),
@@ -76,10 +76,7 @@ class ThemeNotifier extends Notifier<ThemeSettings> {
       await prefs.setString(kCustomFontIdKey, snapshot.customFontId);
       await prefs.setString(kCustomFontNameKey, snapshot.customFontName);
       await prefs.setDouble(kLyricsTextScaleKey, snapshot.lyricsTextScale);
-      await prefs.setBool(
-        kAppGlassOutlinesKey,
-        snapshot.appGlassOutlines,
-      );
+      await prefs.setBool(kAppGlassOutlinesKey, snapshot.appGlassOutlines);
     } catch (e) {
       debugPrint('Error saving theme settings: $e');
     }

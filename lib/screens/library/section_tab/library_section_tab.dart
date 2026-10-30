@@ -1,4 +1,4 @@
-import 'package:sistrum/models/local_library_item.dart';
+import 'package:sistrum/core/models/local_library_item.dart';
 import 'package:sistrum/widgets/library/library_fast_scroller.dart';
 import 'package:sistrum/widgets/library/library_section_list.dart';
 import 'package:sistrum/widgets/library/playlist_name_dialog.dart';
@@ -10,9 +10,9 @@ import 'package:flutter/material.dart';
 import 'package:sistrum/widgets/primitives/app_alert_dialog.dart';
 import 'package:sistrum/widgets/primitives/app_choice_chip.dart';
 import 'package:sistrum/widgets/library/local_track_batch_actions.dart';
-import 'package:sistrum/navigation/shell_navigation.dart';
+import 'package:sistrum/core/navigation/shell_navigation.dart';
 import 'package:sistrum/widgets/status/error_card.dart';
-import 'package:sistrum/theme/app_tokens.dart';
+import 'package:sistrum/core/theme/app_tokens.dart';
 import 'package:sistrum/widgets/primitives/app_bottom_sheet.dart';
 import 'package:sistrum/widgets/primitives/app_sliver_header.dart';
 import 'package:sistrum/widgets/header/album_play_actions.dart'
@@ -28,8 +28,8 @@ import 'package:sistrum/utils/layout/nav_bar_inset.dart';
 import 'package:sistrum/utils/files/file_access.dart';
 import 'package:sistrum/utils/scan/library_format_filters.dart';
 import 'package:sistrum/utils/playback/ordered_range_selection.dart';
-import 'package:sistrum/models/track.dart';
-import 'package:sistrum/models/unified_library_item.dart';
+import 'package:sistrum/core/models/track.dart';
+import 'package:sistrum/core/models/unified_library_item.dart';
 import 'package:sistrum/providers/library_collections_provider.dart';
 import 'package:sistrum/providers/settings_provider.dart';
 import 'package:sistrum/providers/local_library_provider.dart';
@@ -47,7 +47,7 @@ import 'package:sistrum/screens/library/collections/library_collection_tracks_sc
 import 'package:sistrum/screens/library/local_album/local_album_screen.dart';
 import 'package:sistrum/screens/library/app_library_screen.dart';
 import 'package:sistrum/screens/library/shared/library_browse_refresh_policy.dart';
-import 'package:sistrum/navigation/detail_navigation.dart';
+import 'package:sistrum/core/navigation/detail_navigation.dart';
 import 'package:sistrum/widgets/animation/animation_utils.dart';
 import 'package:sistrum/widgets/animation/animation_indicators.dart';
 import 'package:sistrum/widgets/selection/selection_bottom_bar.dart';

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:sistrum/models/library_collections.dart';
-import 'package:sistrum/models/local_library_item.dart';
-import 'package:sistrum/navigation/app_screens.dart';
+import 'package:sistrum/core/models/library_collections.dart';
+import 'package:sistrum/core/models/local_library_item.dart';
+import 'package:sistrum/core/navigation/app_screens.dart';
 import 'package:sistrum/screens/library/collections/library_collection_tracks_screen.dart';
 import 'package:sistrum/screens/library/local_album/local_album_screen.dart';
 import 'package:sistrum/screens/library/local_artist/local_artist_screen.dart';

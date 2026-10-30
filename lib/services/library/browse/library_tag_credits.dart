@@ -1,6 +1,6 @@
 import 'package:sqflite/sqflite.dart';
-import 'package:sistrum/models/metadata_separators.dart';
-import 'package:sistrum/models/tag_credit_settings.dart';
+import 'package:sistrum/core/models/metadata_separators.dart';
+import 'package:sistrum/core/models/tag_credit_settings.dart';
 import 'package:sistrum/services/library/database/library_schema.dart';
 import 'package:sistrum/services/library/database/sqlite_helpers.dart'
     as sqlite;

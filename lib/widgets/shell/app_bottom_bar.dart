@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/providers/music_player_provider.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
-import 'package:sistrum/theme/app_theme.dart';
+import 'package:sistrum/core/theme/app_theme.dart';
 import 'package:sistrum/widgets/player/mini_player.dart';
 import 'package:sistrum/widgets/glass/chrome/app_backdrop_groups.dart';
 import 'package:sistrum/widgets/glass/thumb/app_glass_surface.dart';

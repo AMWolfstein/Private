@@ -10,7 +10,7 @@ import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/services/playback/audio/audio_route_info.dart';
 import 'package:sistrum/services/playback/core/music_playback_deck.dart';
 import 'package:sistrum/services/playback/music_player/music_player_service.dart';
-import 'package:sistrum/theme/app_tokens.dart';
+import 'package:sistrum/core/theme/app_tokens.dart';
 import 'package:sistrum/widgets/primitives/app_bottom_sheet.dart';
 import 'package:sistrum/widgets/audio_analysis/audio_analysis_widget.dart';
 import 'package:sistrum/widgets/settings/settings_item_rows.dart';

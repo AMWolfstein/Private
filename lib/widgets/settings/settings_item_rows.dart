@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter/material.dart';
-import 'package:sistrum/theme/app_icons.dart';
-import 'package:sistrum/theme/app_theme.dart';
-import 'package:sistrum/theme/app_tokens.dart';
+import 'package:sistrum/core/theme/app_icons.dart';
+import 'package:sistrum/core/theme/app_theme.dart';
+import 'package:sistrum/core/theme/app_tokens.dart';
 import 'package:sistrum/widgets/primitives/app_switch.dart';
 import 'package:sistrum/widgets/settings/settings_search_highlight.dart';
 

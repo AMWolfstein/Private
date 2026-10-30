@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/l10n/l10n.dart';
-import 'package:sistrum/models/track.dart';
+import 'package:sistrum/core/models/track.dart';
 import 'package:sistrum/providers/library_collections_provider.dart';
 
 /// "dd/MM/yyyy" or "MM/yyyy" formatting for a backend release date string.

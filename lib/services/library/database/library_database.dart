@@ -1,6 +1,6 @@
 import 'package:sistrum/services/native/library_scan_bridge.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:sistrum/models/local_library_item.dart';
+import 'package:sistrum/core/models/local_library_item.dart';
 import 'package:sistrum/utils/logging/logger.dart';
 import 'package:sistrum/utils/playback/audio_format_utils.dart';
 import 'package:sistrum/services/library/browse/library_browse_store.dart';

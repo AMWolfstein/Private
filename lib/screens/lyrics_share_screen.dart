@@ -8,7 +8,7 @@ import 'package:flutter/rendering.dart' show RenderRepaintBoundary;
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart' show ShareParams, SharePlus, XFile;
 import 'package:sistrum/l10n/l10n.dart';
-import 'package:sistrum/theme/app_tokens.dart';
+import 'package:sistrum/core/theme/app_tokens.dart';
 import 'package:sistrum/services/library/covers/cover_palette.dart';
 import 'package:sistrum/utils/lyrics/lyric_models.dart';
 import 'package:sistrum/widgets/header/header_controls.dart';

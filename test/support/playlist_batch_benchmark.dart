@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'dart:isolate';
 
-import 'package:sistrum/models/library_collections.dart';
-import 'package:sistrum/models/track.dart';
+import 'package:sistrum/core/models/library_collections.dart';
+import 'package:sistrum/core/models/track.dart';
 
 Future<List<Track>> playlistBatchFixture(int count) => Isolate.run(
   () => List.generate(

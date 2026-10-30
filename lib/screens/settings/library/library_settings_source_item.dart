@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sistrum/widgets/primitives/app_switch.dart';
 import 'package:sistrum/l10n/l10n.dart';
-import 'package:sistrum/models/library_scan_failure.dart';
+import 'package:sistrum/core/models/library_scan_failure.dart';
 import 'package:sistrum/services/library/database/library_database.dart';
 import 'package:sistrum/widgets/primitives/app_bottom_sheet.dart';
 import 'package:sistrum/widgets/settings/settings_group.dart';

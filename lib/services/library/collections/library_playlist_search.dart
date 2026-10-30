@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:sistrum/models/library_collections.dart';
+import 'package:sistrum/core/models/library_collections.dart';
 import 'package:sistrum/services/library/browse/library_search.dart';
 
 typedef PlaylistSearchEntry = ({

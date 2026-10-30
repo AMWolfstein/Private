@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:audio_service/audio_service.dart';
 import 'package:audioplayers/audioplayers.dart';
-import 'package:sistrum/models/playable_media.dart';
-import 'package:sistrum/models/settings.dart';
+import 'package:sistrum/core/models/playable_media.dart';
+import 'package:sistrum/core/models/settings.dart';
 import 'package:sistrum/services/playback/automix/automix_analysis.dart';
 import 'package:sistrum/services/playback/automix/automix_analyzer.dart';
 import 'package:sistrum/services/playback/automix/automix_effect_renderer.dart';

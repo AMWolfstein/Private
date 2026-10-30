@@ -1,4 +1,4 @@
-import 'package:sistrum/models/local_library_item.dart';
+import 'package:sistrum/core/models/local_library_item.dart';
 import 'package:sistrum/services/library/database/library_database_models.dart';
 import 'package:sistrum/services/library/database/sqlite_helpers.dart'
     as sqlite;

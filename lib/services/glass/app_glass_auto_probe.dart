@@ -3,7 +3,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sistrum/constants/app_info.dart';
+import 'package:sistrum/core/constants/app_info.dart';
 
 /// Where Auto glass settled after measuring this device's raster times.
 /// Each step only ever lowers the device-class choice.
@@ -137,10 +137,7 @@ class AppGlassAutoSampler {
   }
 
   /// The step after measuring [current] at [p90], or null to keep it.
-  static AppGlassAutoStep? stepDown(
-    AppGlassAutoStep current,
-    double p90,
-  ) {
+  static AppGlassAutoStep? stepDown(AppGlassAutoStep current, double p90) {
     if (p90 <= thresholdMs) return null;
     return switch (current) {
       AppGlassAutoStep.full => AppGlassAutoStep.lite,

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:sistrum/theme/app_theme.dart';
-import 'package:sistrum/theme/app_tokens.dart';
+import 'package:sistrum/core/theme/app_theme.dart';
+import 'package:sistrum/core/theme/app_tokens.dart';
 import 'package:sistrum/widgets/sheets/audio_info_facts.dart';
 
 /// Sistrum sheets are glass, so a settings cell color would vanish into them;

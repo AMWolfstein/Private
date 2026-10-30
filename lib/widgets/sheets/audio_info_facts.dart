@@ -1,7 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:sistrum/l10n/l10n.dart';
-import 'package:sistrum/models/settings.dart';
+import 'package:sistrum/core/models/settings.dart';
 import 'package:sistrum/services/playback/audio/audio_route_info.dart';
 import 'package:sistrum/services/playback/core/music_playback_deck.dart';
 import 'package:sistrum/services/playback/audio/playback_equalizer.dart';

@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:sistrum/models/library_collections.dart';
+import 'package:sistrum/core/models/library_collections.dart';
 import 'package:sistrum/services/library/collections/library_collections_database.dart';
 import 'package:sistrum/services/library/collections/library_collections_rows.dart';
 import 'package:sistrum/services/library/collections/library_collections_worker.dart';

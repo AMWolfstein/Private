@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/l10n/l10n.dart';
-import 'package:sistrum/models/unified_library_item.dart';
+import 'package:sistrum/core/models/unified_library_item.dart';
 import 'package:sistrum/providers/music_player_provider.dart';
 import 'package:sistrum/widgets/sheets/playlist_picker_sheet.dart';
 import 'package:sistrum/widgets/selection/selection_action_button.dart';

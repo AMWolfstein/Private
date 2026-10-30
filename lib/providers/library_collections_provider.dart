@@ -3,8 +3,8 @@ import 'dart:io';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path/path.dart' as p;
-import 'package:sistrum/models/library_collections.dart';
-import 'package:sistrum/models/track.dart';
+import 'package:sistrum/core/models/library_collections.dart';
+import 'package:sistrum/core/models/track.dart';
 import 'package:sistrum/services/ffmpeg/ffmpeg_metadata.dart';
 import 'package:sistrum/services/ffmpeg/ffmpeg_probe.dart';
 import 'package:sistrum/services/library/collections/library_collections_database.dart';
@@ -14,7 +14,7 @@ import 'package:sistrum/services/library/collections/library_collections_restore
 import 'package:sistrum/services/library/collections/collection_track_batch.dart';
 import 'package:sistrum/utils/logging/logger.dart';
 
-export 'package:sistrum/models/library_collections.dart';
+export 'package:sistrum/core/models/library_collections.dart';
 export 'package:sistrum/services/library/collections/library_collections_playlist_covers.dart'
     show PlaylistCoverProbe, PlaylistCoverResize;
 

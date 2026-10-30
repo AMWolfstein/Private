@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:audio_service/audio_service.dart';
 import 'package:audio_session/audio_session.dart';
-import 'package:sistrum/models/settings.dart';
+import 'package:sistrum/core/models/settings.dart';
 import 'package:sistrum/services/native/media_file_bridge.dart';
 import 'package:sistrum/services/storage/app_state_database.dart';
 import 'package:sistrum/services/playback/autoplay/autoplay_personalization.dart';

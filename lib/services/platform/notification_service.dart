@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:sistrum/constants/app_info.dart';
+import 'package:sistrum/core/constants/app_info.dart';
 import 'package:sistrum/l10n/app_localizations.dart';
 import 'package:sistrum/services/native/native_background_work.dart';
 import 'package:sistrum/utils/text/string_utils.dart';

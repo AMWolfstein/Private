@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:liquid_glass_easy/liquid_glass_easy.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
-import 'package:sistrum/theme/app_theme.dart';
+import 'package:sistrum/core/theme/app_theme.dart';
 
 /// Glass lenses and capture views currently mounted.
 int glassLenses() =>
@@ -28,8 +28,7 @@ Future<void> pumpGlassControl(
     ProviderScope(
       key: UniqueKey(),
       overrides: [
-        if (glass)
-          appShaderFiltersSupportedProvider.overrideWithValue(true),
+        if (glass) appShaderFiltersSupportedProvider.overrideWithValue(true),
         appGlassLevelProvider.overrideWithValue(
           level ?? (liquid ? AppGlassLevel.liquid : AppGlassLevel.flat),
         ),

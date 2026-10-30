@@ -3,14 +3,14 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/l10n/l10n.dart';
-import 'package:sistrum/models/automix_options.dart';
+import 'package:sistrum/core/models/automix_options.dart';
 import 'package:sistrum/providers/settings_provider.dart';
 import 'package:sistrum/screens/equalizer_screen.dart';
 import 'package:sistrum/services/playback/core/music_playback_deck.dart';
 import 'package:sistrum/services/playback/music_player/music_player_service.dart'
     show resetAutoplayLearning;
 import 'package:sistrum/utils/layout/nav_bar_inset.dart';
-import 'package:sistrum/widgets/player/app_volume_control.dart';
+import 'package:sistrum/widgets/player/controls/app_volume_control.dart';
 import 'package:sistrum/widgets/primitives/app_alert_dialog.dart';
 import 'package:sistrum/widgets/primitives/app_bottom_sheet.dart';
 import 'package:sistrum/widgets/primitives/app_slider.dart';

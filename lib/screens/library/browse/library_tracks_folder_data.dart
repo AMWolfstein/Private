@@ -1,4 +1,4 @@
-import 'package:sistrum/models/track.dart';
+import 'package:sistrum/core/models/track.dart';
 import 'package:sistrum/providers/library_collections_provider.dart';
 
 /// Collection providers replace their track list when its contents change.

@@ -11,7 +11,7 @@ import 'package:sistrum/widgets/animation/animation_skeletons.dart'
 import 'package:sistrum/widgets/primitives/app_alert_dialog.dart';
 import 'package:sistrum/widgets/primitives/app_choice_chip.dart';
 import 'package:sistrum/widgets/primitives/app_sliver_header.dart';
-import 'package:sistrum/widgets/player/player_artwork.dart';
+import 'package:sistrum/widgets/player/artwork/player_artwork.dart';
 import 'package:sistrum/widgets/settings/settings_item_rows.dart';
 
 final listeningSummaryProvider = FutureProvider.autoDispose

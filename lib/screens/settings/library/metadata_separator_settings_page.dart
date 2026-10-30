@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/l10n/l10n.dart';
-import 'package:sistrum/models/metadata_separators.dart';
-import 'package:sistrum/models/tag_credit_settings.dart';
+import 'package:sistrum/core/models/metadata_separators.dart';
+import 'package:sistrum/core/models/tag_credit_settings.dart';
 import 'package:sistrum/services/library/browse/library_tag_credits.dart';
 import 'package:sistrum/providers/settings_provider.dart';
 import 'package:sistrum/utils/layout/nav_bar_inset.dart';

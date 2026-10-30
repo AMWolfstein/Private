@@ -3,8 +3,8 @@ import 'dart:convert';
 
 import 'package:crypto/crypto.dart';
 import 'package:flutter/foundation.dart';
-import 'package:sistrum/models/library_collections.dart';
-import 'package:sistrum/models/track.dart';
+import 'package:sistrum/core/models/library_collections.dart';
+import 'package:sistrum/core/models/track.dart';
 import 'package:sistrum/services/library/collections/library_collections_database.dart';
 import 'package:sistrum/services/library/collections/library_collections_hydration.dart';
 import 'package:sistrum/services/library/collections/library_playlist_search.dart';

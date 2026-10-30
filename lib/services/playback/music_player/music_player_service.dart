@@ -24,8 +24,8 @@ import 'package:sistrum/services/playback/core/playback_policies.dart';
 import 'package:sistrum/services/playback/core/music_playback_deck.dart';
 import 'package:sistrum/services/playback/autoplay/autoplay_personalization.dart';
 import 'package:sistrum/services/playback/automix/automix_analyzer.dart';
-import 'package:sistrum/models/playable_media.dart';
-import 'package:sistrum/models/settings.dart';
+import 'package:sistrum/core/models/playable_media.dart';
+import 'package:sistrum/core/models/settings.dart';
 import 'package:sistrum/services/playback/automix/automix_effect_renderer.dart';
 import 'package:sistrum/services/playback/automix/automix_status.dart';
 import 'package:sistrum/utils/cover/playback_artwork.dart';
@@ -33,7 +33,7 @@ import 'package:sistrum/services/library/covers/embedded_cover_resolver.dart';
 import 'package:sistrum/services/library/database/library_database.dart';
 import 'package:sistrum/utils/logging/logger.dart';
 
-export 'package:sistrum/models/playable_media.dart';
+export 'package:sistrum/core/models/playable_media.dart';
 export '../core/playback_metadata.dart';
 
 part 'music_player_events.dart';

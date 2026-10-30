@@ -7,7 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:sistrum/l10n/l10n.dart';
-import 'package:sistrum/models/local_library_item.dart';
+import 'package:sistrum/core/models/local_library_item.dart';
 import 'package:sistrum/providers/local_library_provider.dart';
 import 'package:sistrum/services/library/scan/deleted_library_files.dart';
 import 'package:sistrum/services/ffmpeg/ffmpeg_cue.dart';

@@ -6,8 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
-import 'package:sistrum/theme/app_glass_levels.dart';
-import 'package:sistrum/theme/app_theme.dart';
+import 'package:sistrum/core/theme/app_glass_levels.dart';
+import 'package:sistrum/core/theme/app_theme.dart';
 import 'package:sistrum/widgets/glass/artwork/app_artwork_ground.dart';
 import 'package:sistrum/widgets/glass/chrome/app_chrome.dart';
 

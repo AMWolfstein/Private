@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:sistrum/navigation/shell_navigation.dart';
+import 'package:sistrum/core/navigation/shell_navigation.dart';
 import 'package:sistrum/screens/library/section_tab/library_section_tab.dart';
 
 class TabNavigator extends StatefulWidget {

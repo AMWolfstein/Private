@@ -16,7 +16,7 @@ import 'package:sistrum/widgets/settings/settings_item_rows.dart';
 import 'package:sistrum/widgets/settings/settings_chips_and_cards.dart';
 import 'package:sistrum/widgets/primitives/app_sliver_header.dart';
 import 'package:sistrum/screens/settings/library/metadata_separator_settings_page.dart';
-import 'package:sistrum/theme/app_theme.dart';
+import 'package:sistrum/core/theme/app_theme.dart';
 import 'package:sistrum/utils/layout/nav_bar_inset.dart';
 import 'package:sistrum/widgets/animation/animation_utils.dart';
 import 'package:sistrum/screens/settings/library/library_settings_scan_widgets.dart';

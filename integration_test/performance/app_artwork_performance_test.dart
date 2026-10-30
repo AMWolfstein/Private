@@ -8,16 +8,16 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sistrum/providers/player_metadata_controller.dart';
 import 'package:sistrum/l10n/l10n.dart';
-import 'package:sistrum/models/settings.dart';
-import 'package:sistrum/models/track.dart';
+import 'package:sistrum/core/models/settings.dart';
+import 'package:sistrum/core/models/track.dart';
 import 'package:sistrum/providers/library_collections_provider.dart';
 import 'package:sistrum/providers/music_player_provider.dart';
 import 'package:sistrum/providers/settings_provider.dart';
-import 'package:sistrum/theme/app_theme.dart';
+import 'package:sistrum/core/theme/app_theme.dart';
 import 'package:sistrum/utils/playback/playback_seek_preview.dart';
-import 'package:sistrum/widgets/player/app_player_layout.dart';
-import 'package:sistrum/widgets/player/player_artwork.dart';
-import 'package:sistrum/widgets/player/app_volume_control.dart';
+import 'package:sistrum/widgets/player/layout/app_player_layout.dart';
+import 'package:sistrum/widgets/player/artwork/player_artwork.dart';
+import 'package:sistrum/widgets/player/controls/app_volume_control.dart';
 
 import 'performance_probe.dart';
 

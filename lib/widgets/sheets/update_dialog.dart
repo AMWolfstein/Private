@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:open_filex/open_filex.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:sistrum/constants/app_info.dart';
+import 'package:sistrum/core/constants/app_info.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/services/platform/notification_service.dart';
 import 'package:sistrum/services/platform/update_checker.dart';

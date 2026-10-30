@@ -1,6 +1,6 @@
 import 'package:audio_service/audio_service.dart';
-import 'package:sistrum/models/playable_media.dart';
-import 'package:sistrum/models/settings.dart';
+import 'package:sistrum/core/models/playable_media.dart';
+import 'package:sistrum/core/models/settings.dart';
 
 /// Gain and rate the player applies to the current track.
 class PlaybackProcessing {

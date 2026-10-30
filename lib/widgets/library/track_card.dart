@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sistrum/l10n/l10n.dart';
-import 'package:sistrum/theme/app_tokens.dart';
+import 'package:sistrum/core/theme/app_tokens.dart';
 import 'package:sistrum/widgets/animation/animation_indicators.dart';
 
 /// How a [TrackCard] paints its container.

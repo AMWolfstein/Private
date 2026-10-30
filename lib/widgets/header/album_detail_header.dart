@@ -8,7 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/providers/cover_palette_provider.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/services/library/covers/cover_palette.dart';
-import 'package:sistrum/theme/app_tokens.dart';
+import 'package:sistrum/core/theme/app_tokens.dart';
 import 'package:sistrum/widgets/glass/artwork/app_artwork_page_ground.dart';
 import 'package:sistrum/widgets/glass/chrome/app_floating_header.dart';
 import 'package:sistrum/widgets/header/header_controls.dart';

@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:path_provider/path_provider.dart';
-import 'package:sistrum/models/local_library_item.dart';
+import 'package:sistrum/core/models/local_library_item.dart';
 import 'package:sistrum/services/library/metadata/library_edited_metadata.dart';
 import 'package:sistrum/services/native/media_file_bridge.dart';
 import 'package:sistrum/utils/logging/logger.dart';

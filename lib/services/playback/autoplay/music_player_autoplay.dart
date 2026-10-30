@@ -4,8 +4,8 @@ import 'dart:math';
 
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter/foundation.dart' show compute;
-import 'package:sistrum/models/local_library_item.dart';
-import 'package:sistrum/models/playable_media.dart';
+import 'package:sistrum/core/models/local_library_item.dart';
+import 'package:sistrum/core/models/playable_media.dart';
 import 'package:sistrum/services/library/database/library_database.dart';
 import 'package:sistrum/services/playback/autoplay/autoplay_personalization.dart';
 import 'package:sistrum/services/playback/music_player/music_player_runtime.dart';

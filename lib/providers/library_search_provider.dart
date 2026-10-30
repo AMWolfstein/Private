@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:sistrum/models/local_library_item.dart';
-import 'package:sistrum/models/unified_library_item.dart';
+import 'package:sistrum/core/models/local_library_item.dart';
+import 'package:sistrum/core/models/unified_library_item.dart';
 import 'package:sistrum/providers/library_collections_provider.dart';
 import 'package:sistrum/providers/library_database_provider.dart';
 import 'package:sistrum/providers/library_tag_credits_provider.dart';

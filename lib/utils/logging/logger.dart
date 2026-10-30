@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:logger/logger.dart';
 import 'package:device_info_plus/device_info_plus.dart';
-import 'package:sistrum/constants/app_info.dart';
+import 'package:sistrum/core/constants/app_info.dart';
 import 'package:sistrum/services/platform/native_log_source.dart';
 import 'package:sistrum/utils/logging/log_entry.dart';
 import 'package:sistrum/utils/logging/log_redaction.dart';

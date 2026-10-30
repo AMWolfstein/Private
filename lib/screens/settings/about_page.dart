@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:sistrum/constants/app_info.dart';
+import 'package:sistrum/core/constants/app_info.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/providers/settings_provider.dart';
-import 'package:sistrum/theme/app_icons.dart';
+import 'package:sistrum/core/theme/app_icons.dart';
 import 'package:sistrum/utils/layout/adaptive_layout.dart';
 import 'package:sistrum/utils/layout/nav_bar_inset.dart';
 import 'package:sistrum/widgets/settings/settings_group.dart';

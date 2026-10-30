@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sistrum/widgets/primitives/app_snack_bar.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:sistrum/models/track.dart';
+import 'package:sistrum/core/models/track.dart';
 import 'package:sistrum/providers/library_collections_provider.dart';
 import 'package:sistrum/providers/music_player_provider.dart';
 import 'package:sistrum/providers/playback_provider.dart';

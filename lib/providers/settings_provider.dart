@@ -2,11 +2,11 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sistrum/models/app_glass.dart';
-import 'package:sistrum/models/settings.dart';
-import 'package:sistrum/models/metadata_separators.dart';
-import 'package:sistrum/models/tag_credit_settings.dart';
-import 'package:sistrum/models/automix_options.dart';
+import 'package:sistrum/core/models/app_glass.dart';
+import 'package:sistrum/core/models/settings.dart';
+import 'package:sistrum/core/models/metadata_separators.dart';
+import 'package:sistrum/core/models/tag_credit_settings.dart';
+import 'package:sistrum/core/models/automix_options.dart';
 import 'package:sistrum/utils/logging/logger.dart';
 
 const _settingsKey = 'app_settings';

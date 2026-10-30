@@ -3,7 +3,7 @@ import 'dart:convert';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sistrum/models/equalizer_settings.dart';
+import 'package:sistrum/core/models/equalizer_settings.dart';
 import 'package:sistrum/services/playback/audio/playback_equalizer.dart';
 
 class EqualizerState {

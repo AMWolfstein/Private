@@ -1,4 +1,4 @@
-import 'package:sistrum/models/local_library_item.dart';
+import 'package:sistrum/core/models/local_library_item.dart';
 import 'package:sistrum/services/library/covers/embedded_cover_resolver.dart';
 import 'package:sistrum/services/library/database/library_mutation_ports.dart';
 import 'package:sistrum/utils/files/file_access.dart';

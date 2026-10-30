@@ -2,7 +2,7 @@ import 'dart:ui' show ImageFilter;
 
 import 'package:flutter/material.dart';
 import 'package:sistrum/services/library/covers/cover_palette.dart';
-import 'package:sistrum/widgets/player/player_artwork.dart';
+import 'package:sistrum/widgets/player/artwork/player_artwork.dart';
 
 /// Story-sized lyric cards stay short, like quoting a song rather than
 /// reproducing its lyrics.

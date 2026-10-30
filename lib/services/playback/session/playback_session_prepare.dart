@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:sistrum/models/playable_media.dart';
+import 'package:sistrum/core/models/playable_media.dart';
 import 'package:sistrum/utils/cover/playback_artwork.dart';
 
 /// Resolve a saved queue in bounded groups, retaining its original order even

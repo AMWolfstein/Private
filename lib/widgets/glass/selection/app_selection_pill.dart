@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:liquid_glass_easy/liquid_glass_easy.dart';
-import 'package:sistrum/theme/app_glass_levels.dart';
+import 'package:sistrum/core/theme/app_glass_levels.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/widgets/glass/thumb/app_liquid_backdrop.dart';
 import 'package:sistrum/widgets/glass/selection/app_selection_foreground.dart';

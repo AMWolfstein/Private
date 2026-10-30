@@ -8,7 +8,7 @@ import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:sistrum/theme/app_theme.dart';
+import 'package:sistrum/core/theme/app_theme.dart';
 import 'package:sistrum/services/audio_analysis/audio_analysis_jobs.dart';
 import 'package:sistrum/services/audio_analysis/audio_analysis_parsing.dart';
 import 'package:sistrum/services/audio_analysis/audio_analysis_runner.dart';

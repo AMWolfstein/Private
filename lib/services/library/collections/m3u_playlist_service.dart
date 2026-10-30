@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
-import 'package:sistrum/models/track.dart';
+import 'package:sistrum/core/models/track.dart';
 import 'package:sistrum/services/native/native_data_jobs.dart';
 
 String _buildM3uInBackground(List<Map<String, dynamic>> entries) =>

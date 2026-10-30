@@ -1,4 +1,4 @@
-import 'package:sistrum/models/local_library_item.dart';
+import 'package:sistrum/core/models/local_library_item.dart';
 import 'package:sistrum/utils/text/string_utils.dart';
 
 /// Refresh editable tags while retaining the scanned file identity and audio facts.

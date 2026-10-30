@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:sistrum/theme/app_icons.dart';
-import 'package:sistrum/theme/app_theme.dart';
+import 'package:sistrum/core/theme/app_icons.dart';
+import 'package:sistrum/core/theme/app_theme.dart';
 import 'package:sistrum/widgets/glass/thumb/app_glass_surface.dart';
 
 /// Shared sheet actions follow the selected design on every platform.

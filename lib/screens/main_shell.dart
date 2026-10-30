@@ -13,7 +13,7 @@ import 'package:sistrum/screens/listening_statistics_screen.dart';
 import 'package:sistrum/screens/main_shell_tabs.dart';
 import 'package:sistrum/screens/settings/settings_tab.dart';
 import 'package:sistrum/services/native/native_device.dart';
-import 'package:sistrum/navigation/shell_navigation.dart';
+import 'package:sistrum/core/navigation/shell_navigation.dart';
 import 'package:sistrum/services/playback/core/music_playback_deck.dart';
 import 'package:sistrum/services/platform/notification_service.dart';
 import 'package:sistrum/services/platform/update_checker.dart';
@@ -27,7 +27,7 @@ import 'package:sistrum/widgets/glass/thumb/app_glass_surface.dart';
 import 'package:sistrum/widgets/glass/chrome/app_chrome_controls.dart';
 import 'package:sistrum/widgets/glass/chrome/app_chrome_adaptivity.dart';
 import 'package:sistrum/widgets/glass/chrome/app_floating_header.dart';
-import 'package:sistrum/theme/app_theme.dart';
+import 'package:sistrum/core/theme/app_theme.dart';
 import 'package:sistrum/widgets/selection/selection_bottom_bar.dart';
 import 'package:sistrum/utils/layout/adaptive_layout.dart';
 

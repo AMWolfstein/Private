@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sistrum/theme/app_theme.dart';
+import 'package:sistrum/core/theme/app_theme.dart';
 
 /// One inline surface, matching the metadata groups and dialog controls.
 class AppContentCard extends StatelessWidget {

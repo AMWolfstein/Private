@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:sistrum/theme/app_tokens.dart';
+import 'package:sistrum/core/theme/app_tokens.dart';
 import 'package:sistrum/utils/layout/adaptive_layout.dart';
 import 'package:sistrum/utils/layout/app_bar_layout.dart';
 import 'package:sistrum/widgets/glass/chrome/app_floating_header.dart';

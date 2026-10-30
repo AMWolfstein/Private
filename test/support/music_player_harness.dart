@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:audio_session/audio_session.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sistrum/models/settings.dart';
+import 'package:sistrum/core/models/settings.dart';
 import 'package:sistrum/services/storage/app_state_database.dart';
 import 'package:sistrum/services/playback/autoplay/autoplay_personalization.dart';
 import 'package:sistrum/services/playback/stats/listening_statistics.dart';
