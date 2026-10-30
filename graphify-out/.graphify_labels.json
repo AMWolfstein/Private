@@ -116,7 +116,6 @@
   "538": "Localization and asset dead-code review (R1)",
   "540": "music_player_runtime_test.dart",
   "541": "Test-support entrypoints and orphan helpers (R3)",
-  "543": "libusb_bos_descriptor",
   "544": "Vendored plugin dead-code review (N3)",
   "545": "Backup/collection persistence audit",
   "546": "Artwork and non-engine presentation lifecycle",
