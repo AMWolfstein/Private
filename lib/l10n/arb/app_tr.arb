@@ -202,18 +202,6 @@
   "metadataSeparatorCustom": "Özel ayırıcı",
   "metadataSeparatorPreview": "Önizleme",
   "metadataSeparatorInvalid": "1–16 karakter kullanın; satır sonu veya denetim karakteri olmasın.",
-  "optionsDetailedLogging": "Detaylı Günlükleme",
-  "@optionsDetailedLogging": {
-    "description": "Enable verbose logs for debugging"
-  },
-  "optionsDetailedLoggingOn": "Detaylı günlük kayıt ediliyor",
-  "@optionsDetailedLoggingOn": {
-    "description": "Status when logging enabled"
-  },
-  "optionsDetailedLoggingOff": "Hata bildirmek için aç",
-  "@optionsDetailedLoggingOff": {
-    "description": "Status when logging disabled"
-  },
   "settingDisabled": "Devre Dışı",
   "@settingDisabled": {
     "description": "Extension status - inactive"
@@ -2372,7 +2360,6 @@
   "profileSaveError": "Profiliniz kaydedilemedi. Lütfen tekrar deneyin.",
   "motionArtwork": "Hareketli kapak resmi",
   "listeningStats": "Dinleme istatistikleri",
-  "listeningStatsRecord": "Dinlemeyi kaydet",
   "listeningStatsDescription": "Yalnızca bu cihazda, şimdiden itibaren saklanır. Yalnızca yerleşik oynatıcıyı kaydeder; duraklatma, arabelleğe alma ve ileri sarma dinleme süresine eklenmez. 30 saniyeden sonra bir oynatma sayılır.",
   "listeningStatsEmpty": "Dinleme özetinizi başlatmak için yerleşik oynatıcıyla müzik çalın. Önceki dinleme verileri geri getirilemez.",
   "listeningStatsDays": "{days} gün",

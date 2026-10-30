@@ -59,4 +59,37 @@ void main() {
     });
     await expectLater(source.getSince(0), throwsA(isA<PlatformException>()));
   });
+
+  test('reads the app logcat text on the existing backend channel', () async {
+    messenger.setMockMethodCallHandler(channel, (call) async {
+      expect(call.method, 'getAppLogcat');
+      return 'raw line';
+    });
+    final result = await source.readAppLogcat();
+    expect(result, isA<NativeLogcatText>());
+    expect((result as NativeLogcatText).text, 'raw line');
+  });
+
+  test('reports logcat transport failures as a typed result', () async {
+    messenger.setMockMethodCallHandler(channel, (_) async {
+      throw PlatformException(code: 'unavailable', message: 'no logcat');
+    });
+    final result = await source.readAppLogcat();
+    expect(result, isA<NativeLogcatUnavailable>());
+    expect((result as NativeLogcatUnavailable).reason, 'no logcat');
+  });
+
+  test('parses threadtime logcat lines into log rows', () {
+    const text =
+        '--------- beginning of main\n'
+        '01-02 03:04:05.006  1234  1234 E Sistrum : boom\n'
+        'java.lang.IllegalStateException: x\n'
+        '01-02 03:04:06.100  1234  1300 W flutter : careful\n';
+    final entries = parseAppLogcat(text, now: DateTime(2026, 10, 30));
+    expect(entries.map((e) => (e.level, e.tag, e.message)).toList(), [
+      ('ERROR', 'Sistrum', 'boom\njava.lang.IllegalStateException: x'),
+      ('WARN', 'flutter', 'careful'),
+    ]);
+    expect(entries.first.timestamp, DateTime(2026, 1, 2, 3, 4, 5, 6));
+  });
 }

@@ -174,18 +174,6 @@
   "metadataSeparatorCustom": "自定义分隔符",
   "metadataSeparatorPreview": "预览",
   "metadataSeparatorInvalid": "请使用 1–16 个字符，且不包含换行或控制字符。",
-  "optionsDetailedLogging": "详细日志",
-  "@optionsDetailedLogging": {
-    "description": "Enable verbose logs for debugging"
-  },
-  "optionsDetailedLoggingOn": "正在记录详细日志",
-  "@optionsDetailedLoggingOn": {
-    "description": "Status when logging enabled"
-  },
-  "optionsDetailedLoggingOff": "为错误报告启用",
-  "@optionsDetailedLoggingOff": {
-    "description": "Status when logging disabled"
-  },
   "settingDisabled": "禁用",
   "@settingDisabled": {
     "description": "Extension status - inactive"
@@ -2252,7 +2240,6 @@
   "profileSaveError": "无法保存你的个人资料，请重试。",
   "motionArtwork": "动态封面",
   "listeningStats": "收听统计",
-  "listeningStatsRecord": "记录收听",
   "listeningStatsDescription": "从现在开始仅存储在本设备上。仅记录内置播放器的播放；暂停、缓冲和拖动进度不计入收听时长。播放满 30 秒即计为一次播放。",
   "listeningStatsEmpty": "使用内置播放器播放音乐，即可开始你的收听回顾。之前的收听记录无法恢复。",
   "listeningStatsDays": "{days} 天",

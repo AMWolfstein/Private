@@ -202,18 +202,6 @@
   "metadataSeparatorCustom": "Separador personalizado",
   "metadataSeparatorPreview": "Pré-visualização",
   "metadataSeparatorInvalid": "Use de 1 a 16 caracteres, sem quebras de linha ou caracteres de controle.",
-  "optionsDetailedLogging": "Registro detalhado",
-  "@optionsDetailedLogging": {
-    "description": "Enable verbose logs for debugging"
-  },
-  "optionsDetailedLoggingOn": "Registros detalhados estão sendo gravados",
-  "@optionsDetailedLoggingOn": {
-    "description": "Status when logging enabled"
-  },
-  "optionsDetailedLoggingOff": "Habilitar para relatórios de erros",
-  "@optionsDetailedLoggingOff": {
-    "description": "Status when logging disabled"
-  },
   "settingDisabled": "Desabilitado",
   "@settingDisabled": {
     "description": "Extension status - inactive"
@@ -2370,7 +2358,6 @@
   "profileSaveError": "Could not save your profile. Please try again.",
   "motionArtwork": "Capa animada",
   "listeningStats": "Estatísticas de escuta",
-  "listeningStatsRecord": "Registrar escuta",
   "listeningStatsDescription": "Armazenado somente neste dispositivo, a partir de agora. Registra apenas o player integrado; pausas, buffering e avanços não contam como tempo de escuta. Uma reprodução conta após 30 segundos.",
   "listeningStatsEmpty": "Reproduza músicas com o player integrado para começar seu resumo de escuta. Escutas anteriores não podem ser recuperadas.",
   "listeningStatsDays": "{days} dias",

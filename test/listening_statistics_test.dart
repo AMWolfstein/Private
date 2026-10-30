@@ -70,7 +70,7 @@ void main() {
     },
   );
 
-  test('splits midnight and excludes disabled collection', () async {
+  test('splits midnight across days', () async {
     var elapsed = Duration.zero;
     final start = DateTime(2026, 10, 1, 23, 59, 50);
     final writes = <ListeningDelta>[];
@@ -81,8 +81,6 @@ void main() {
     );
     recorder.update(_one, playing: true);
     elapsed += const Duration(seconds: 20);
-    recorder.setEnabled(false);
-    elapsed += const Duration(hours: 1);
     await recorder.flush();
     expect(writes.map((e) => e.day), ['2026-10-01', '2026-10-02']);
     expect(writes.map((e) => e.milliseconds), [10000, 10000]);

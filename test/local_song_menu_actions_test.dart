@@ -295,7 +295,8 @@ void main() {
       tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(channel, (
         call,
       ) async {
-        calls.add(call.method);
+        // Logger plumbing is always on; it is not part of the CUE flow.
+        if (call.method != 'setLoggingEnabled') calls.add(call.method);
         if (call.method == 'parseCueSheet') {
           return {
             'audio_path': '/audio.flac',

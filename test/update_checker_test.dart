@@ -31,9 +31,7 @@ void main() {
   setUp(() {
     SharedPreferences.setMockInitialValues({});
     LogBuffer().clear();
-    LogBuffer.loggingEnabled = true;
   });
-  tearDown(() => LogBuffer.loggingEnabled = false);
 
   for (final (abi, asset) in [
     ('arm64-v8a', 'arm64'),

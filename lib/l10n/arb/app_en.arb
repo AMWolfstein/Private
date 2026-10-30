@@ -268,18 +268,6 @@
   "metadataSeparatorCustom": "Custom separator",
   "metadataSeparatorPreview": "Preview",
   "metadataSeparatorInvalid": "Use 1–16 characters without line breaks or control characters.",
-  "optionsDetailedLogging": "Detailed Logging",
-  "@optionsDetailedLogging": {
-    "description": "Enable verbose logs for debugging"
-  },
-  "optionsDetailedLoggingOn": "Detailed logs are being recorded",
-  "@optionsDetailedLoggingOn": {
-    "description": "Status when logging enabled"
-  },
-  "optionsDetailedLoggingOff": "Enable for bug reports",
-  "@optionsDetailedLoggingOff": {
-    "description": "Status when logging disabled"
-  },
   "settingDisabled": "Disabled",
   "@settingDisabled": {
     "description": "Extension status - inactive"
@@ -695,6 +683,10 @@
   "logFilterLevel": "Level",
   "@logFilterLevel": {
     "description": "Filter by log level"
+  },
+  "logFilterFull": "Full",
+  "@logFilterFull": {
+    "description": "Log level filter option that shows every log entry"
   },
   "logFilterSection": "Filter",
   "@logFilterSection": {
@@ -2690,8 +2682,7 @@
   "profileSaveError": "Could not save your profile. Please try again.",
   "motionArtwork": "Animated artwork",
   "motionArtworkSubtitle": "Slowly drift album covers on album pages",
-  "listeningStats": "Listening statistics",
-  "listeningStatsRecord": "Record listening",
+  "listeningStats": "Insights",
   "listeningStatsDescription": "Stored only on this device, starting now. Records the built-in player only; pauses, buffering and seeking add no listening time. A play counts after 30 seconds.",
   "listeningStatsEmpty": "Play music with the built-in player to start your listening recap. Earlier listening cannot be recovered.",
   "listeningStatsDays": "{days} days",

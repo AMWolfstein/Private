@@ -97,14 +97,16 @@ class _AlbumKenBurnsState extends ConsumerState<AlbumKenBurns>
   }
 }
 
-/// Scale 1.04 to 1.10 with a pan of at most 0.6 % by 0.5 % of the size, so
-/// the cover's edges never show (a 1.04 zoom hides 2 % per side).
+/// Starts at the natural size (scale 1.00) and zooms slowly to 1.06. The pan
+/// is limited to the extra cover the zoom reveals on each side, so the edges
+/// never show; at 1.00 there is no extra cover, so there is no pan either.
 Matrix4 kenBurnsMatrix(double turn, Size size) {
-  final scale = 1.07 + 0.03 * math.sin(turn);
+  final scale = 1.03 - 0.03 * math.cos(turn);
+  final slack = (scale - 1) / 2;
   return Matrix4.identity()
     ..translateByDouble(
-      size.width * 0.006 * math.sin(turn * 0.5 + 1),
-      size.height * 0.005 * math.cos(turn * 0.5),
+      size.width * slack * 0.8 * math.sin(turn * 0.5 + 1),
+      size.height * slack * 0.8 * math.cos(turn * 0.5),
       0,
       1,
     )

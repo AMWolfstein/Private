@@ -202,18 +202,6 @@
   "metadataSeparatorCustom": "Pemisah kustom",
   "metadataSeparatorPreview": "Pratinjau",
   "metadataSeparatorInvalid": "Gunakan 1–16 karakter tanpa baris baru atau karakter kontrol.",
-  "optionsDetailedLogging": "Logging Mendetail",
-  "@optionsDetailedLogging": {
-    "description": "Enable verbose logs for debugging"
-  },
-  "optionsDetailedLoggingOn": "Log mendetail sedang direkam",
-  "@optionsDetailedLoggingOn": {
-    "description": "Status when logging enabled"
-  },
-  "optionsDetailedLoggingOff": "Hidupkan untuk laporan bug",
-  "@optionsDetailedLoggingOff": {
-    "description": "Status when logging disabled"
-  },
   "settingDisabled": "Mati",
   "@settingDisabled": {
     "description": "Extension status - inactive"
@@ -2405,7 +2393,6 @@
   "profileSaveError": "Tidak dapat menyimpan profil Anda. Coba lagi.",
   "motionArtwork": "Artwork bergerak",
   "listeningStats": "Statistik mendengarkan",
-  "listeningStatsRecord": "Catat waktu mendengarkan",
   "listeningStatsDescription": "Disimpan hanya di perangkat ini, mulai sekarang. Hanya mencatat player bawaan; pause, buffering, dan seek tidak menambah waktu dengar. Pemutaran dihitung setelah 30 detik.",
   "listeningStatsEmpty": "Putar musik dengan player bawaan untuk memulai ringkasan mendengarkan. Riwayat sebelumnya tidak dapat dipulihkan.",
   "listeningStatsDays": "{days} hari",

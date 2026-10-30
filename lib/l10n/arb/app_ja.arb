@@ -202,18 +202,6 @@
   "metadataSeparatorCustom": "カスタム区切り文字",
   "metadataSeparatorPreview": "プレビュー",
   "metadataSeparatorInvalid": "改行や制御文字を含まない 1～16 文字を使用してください。",
-  "optionsDetailedLogging": "詳細ログ",
-  "@optionsDetailedLogging": {
-    "description": "Enable verbose logs for debugging"
-  },
-  "optionsDetailedLoggingOn": "詳細なログを記録しています",
-  "@optionsDetailedLoggingOn": {
-    "description": "Status when logging enabled"
-  },
-  "optionsDetailedLoggingOff": "バグレポートを有効",
-  "@optionsDetailedLoggingOff": {
-    "description": "Status when logging disabled"
-  },
   "settingDisabled": "無効",
   "@settingDisabled": {
     "description": "Extension status - inactive"
@@ -2371,7 +2359,6 @@
   "profileSaveError": "Could not save your profile. Please try again.",
   "motionArtwork": "動くアートワーク",
   "listeningStats": "再生統計",
-  "listeningStatsRecord": "再生を記録",
   "listeningStatsDescription": "今から、この端末にのみ保存されます。内蔵プレイヤーでの再生のみを記録し、一時停止、バッファリング、シークでは再生時間に加算されません。30 秒経過すると再生として数えられます。",
   "listeningStatsEmpty": "内蔵プレイヤーで音楽を再生すると、再生の振り返りが始まります。それ以前の再生は復元できません。",
   "listeningStatsDays": "{days} 日",

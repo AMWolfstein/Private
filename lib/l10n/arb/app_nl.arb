@@ -202,18 +202,6 @@
   "metadataSeparatorCustom": "Aangepast scheidingsteken",
   "metadataSeparatorPreview": "Voorbeeld",
   "metadataSeparatorInvalid": "Gebruik 1–16 tekens zonder regeleinden of besturingstekens.",
-  "optionsDetailedLogging": "Detailed Logging",
-  "@optionsDetailedLogging": {
-    "description": "Enable verbose logs for debugging"
-  },
-  "optionsDetailedLoggingOn": "Detailed logs are being recorded",
-  "@optionsDetailedLoggingOn": {
-    "description": "Status when logging enabled"
-  },
-  "optionsDetailedLoggingOff": "Enable for bug reports",
-  "@optionsDetailedLoggingOff": {
-    "description": "Status when logging disabled"
-  },
   "settingDisabled": "Disabled",
   "@settingDisabled": {
     "description": "Extension status - inactive"
@@ -2370,7 +2358,6 @@
   "profileSaveError": "Could not save your profile. Please try again.",
   "motionArtwork": "Geanimeerde hoes",
   "listeningStats": "Luisterstatistieken",
-  "listeningStatsRecord": "Luisteren registreren",
   "listeningStatsDescription": "Alleen vanaf nu op dit toestel opgeslagen. Registreert alleen de ingebouwde speler; pauzes, buffering en zoeken tellen niet mee. Een keer afspelen telt na 30 seconden.",
   "listeningStatsEmpty": "Speel muziek af met de ingebouwde speler om je luisteroverzicht te starten. Eerder luisteren kan niet worden hersteld.",
   "listeningStatsDays": "{days} dagen",

@@ -59,32 +59,42 @@ class _ArtistSongPagesState extends State<ArtistSongPages> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 for (var page = 0; page < count; page++)
-                  Semantics(
-                    label: '${page + 1} / $count',
-                    selected: _page == page,
-                    button: true,
-                    child: GestureDetector(
-                      key: ValueKey('artist-popular-dot-$page'),
-                      behavior: HitTestBehavior.opaque,
-                      onTap: () => _pages.animateToPage(
-                        page,
-                        duration: const Duration(milliseconds: 250),
-                        curve: Curves.easeOut,
-                      ),
-                      // The painted dot stays 8dp; the touch target is 48dp.
-                      child: SizedBox(
-                        width: 48,
-                        height: 48,
-                        child: Center(
-                          child: Container(
-                            width: 8,
-                            height: 8,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: _page == page
-                                  ? Theme.of(context).colorScheme.primary
-                                  : Theme.of(context).colorScheme.onSurface
-                                        .withValues(alpha: 0.25),
+                  // Each dot takes 16dp of layout (8dp dot, 8dp gap). The
+                  // 48dp touch target overflows that slot, so the dots stay
+                  // close together and each is still easy to tap.
+                  SizedBox(
+                    width: 16,
+                    height: 48,
+                    child: OverflowBox(
+                      maxWidth: 48,
+                      maxHeight: 48,
+                      child: Semantics(
+                        label: '${page + 1} / $count',
+                        selected: _page == page,
+                        button: true,
+                        child: GestureDetector(
+                          key: ValueKey('artist-popular-dot-$page'),
+                          behavior: HitTestBehavior.opaque,
+                          onTap: () => _pages.animateToPage(
+                            page,
+                            duration: const Duration(milliseconds: 250),
+                            curve: Curves.easeOut,
+                          ),
+                          child: SizedBox(
+                            width: 48,
+                            height: 48,
+                            child: Center(
+                              child: Container(
+                                width: 8,
+                                height: 8,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: _page == page
+                                      ? Theme.of(context).colorScheme.primary
+                                      : Theme.of(context).colorScheme.onSurface
+                                            .withValues(alpha: 0.25),
+                                ),
+                              ),
                             ),
                           ),
                         ),

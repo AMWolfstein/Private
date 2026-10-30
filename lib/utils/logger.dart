@@ -14,7 +14,11 @@ const int _maxBufferedLogMessageLength = 4000;
 class LogBuffer extends ChangeNotifier {
   static final LogBuffer _instance = LogBuffer._internal();
   factory LogBuffer() => _instance;
-  LogBuffer._internal();
+  LogBuffer._internal() {
+    // Detailed logging is always on, so the native backend records every
+    // level from startup; Dart keeps all entries as well.
+    _nativeLogs.setLoggingEnabled(true).catchError((_) {});
+  }
 
   static const int maxEntries = 500;
   static const _nativeLogs = NativeLogSource();
@@ -25,13 +29,6 @@ class LogBuffer extends ChangeNotifier {
   bool _isFetchingGoLogs = false;
   int _goLogGeneration = 0;
   Future<void>? _pendingGoLogClear;
-
-  static bool _loggingEnabled = false;
-  static bool get loggingEnabled => _loggingEnabled;
-  static set loggingEnabled(bool value) {
-    _loggingEnabled = value;
-    _nativeLogs.setLoggingEnabled(value).catchError((_) {});
-  }
 
   List<LogEntry> get entries => _entries.toList();
   int get length => _entries.length;
@@ -50,10 +47,6 @@ class LogBuffer extends ChangeNotifier {
   }
 
   bool _append(LogEntry entry) {
-    if (!_loggingEnabled && entry.level != 'ERROR' && entry.level != 'FATAL') {
-      return false;
-    }
-
     final sanitizedMessage = truncateLogText(
       redactSensitiveText(entry.message),
       maxLength: _maxBufferedLogMessageLength,
@@ -113,15 +106,11 @@ class LogBuffer extends ChangeNotifier {
       if (generation != _goLogGeneration) return;
       final logs = result['logs'] as List<dynamic>? ?? [];
       final nextIndex = result['next_index'] as int? ?? _lastGoLogIndex;
-      final keepNonErrorLogs = _loggingEnabled;
       final entries = <LogEntry>[];
 
       for (final log in logs.whereType<Map<Object?, Object?>>()) {
         final logMap = Map<String, dynamic>.from(log);
         final level = logMap['level'] as String? ?? 'INFO';
-        if (!keepNonErrorLogs && level != 'ERROR' && level != 'FATAL') {
-          continue;
-        }
 
         final timestamp = logMap['timestamp'] as String? ?? '';
         final tag = logMap['tag'] as String? ?? 'Native';
@@ -302,11 +291,7 @@ class BufferedOutput extends LogOutput {
 
   @override
   void output(OutputEvent event) {
-    if (kDebugMode &&
-        (LogBuffer.loggingEnabled ||
-            event.level == Level.warning ||
-            event.level == Level.error ||
-            event.level == Level.fatal)) {
+    if (kDebugMode) {
       for (final line in event.lines) {
         debugPrint(truncateLogText(redactSensitiveText(line)));
       }
@@ -372,10 +357,6 @@ class AppLogger {
   }
 
   void _addToBuffer(String level, String message, {String? error}) {
-    if (!LogBuffer.loggingEnabled && level != 'ERROR' && level != 'FATAL') {
-      return;
-    }
-
     LogBuffer().add(
       LogEntry(
         timestamp: DateTime.now(),

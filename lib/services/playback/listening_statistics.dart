@@ -135,7 +135,6 @@ class ListeningRecorder {
   Duration? _lastElapsed;
   DateTime? _lastDate;
   bool _playing = false;
-  bool _enabled = true;
   bool _clearing = false;
   int _sessionMilliseconds = 0;
   bool _counted = false;
@@ -156,13 +155,6 @@ class ListeningRecorder {
     _lastDate = now();
   }
 
-  void setEnabled(bool enabled) {
-    checkpoint();
-    _enabled = enabled;
-    _lastElapsed = elapsed();
-    _lastDate = now();
-  }
-
   void checkpoint() {
     final end = elapsed();
     final date = now();
@@ -171,11 +163,7 @@ class ListeningRecorder {
     _lastElapsed = end;
     _lastDate = date;
     final track = _track;
-    if (!_enabled ||
-        _clearing ||
-        !_playing ||
-        track == null ||
-        previous == null) {
+    if (_clearing || !_playing || track == null || previous == null) {
       return;
     }
     var time = (end - previous).inMilliseconds;

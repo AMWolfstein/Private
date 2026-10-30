@@ -15,7 +15,6 @@ import 'package:sistrum/screens/settings/settings_tab.dart';
 import 'package:sistrum/services/native/native_device.dart';
 import 'package:sistrum/navigation/shell_navigation.dart';
 import 'package:sistrum/services/playback/music_playback_deck.dart';
-import 'package:sistrum/services/playback/listening_statistics.dart';
 import 'package:sistrum/services/notification_service.dart';
 import 'package:sistrum/services/update_checker.dart';
 import 'package:sistrum/widgets/sheets/update_dialog.dart';
@@ -75,7 +74,6 @@ class _MainShellState extends ConsumerState<MainShell>
     );
     final settings = ref.read(settingsProvider);
     playback.configure(settings);
-    listeningRecorder.setEnabled(settings.listeningStatisticsEnabled);
   }
 
   @override
@@ -330,10 +328,6 @@ class _MainShellState extends ConsumerState<MainShell>
     ref.listen(settingsProvider, (_, settings) {
       ref.read(musicPlayerRuntimeProvider).configure(settings);
     });
-    ref.listen(
-      settingsProvider.select((s) => s.listeningStatisticsEnabled),
-      (_, enabled) => listeningRecorder.setEnabled(enabled),
-    );
     final heroAnimationsEnabled = ref.watch(
       settingsProvider.select((s) => s.heroAnimationsEnabled),
     );

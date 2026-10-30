@@ -72,9 +72,9 @@ void main() {
       final dx = m.storage[12].abs();
       final dy = m.storage[13].abs();
       // Scale about the centre: each side hides (scale - 1) / 2 of the size.
-      expect(scale, inInclusiveRange(1.04, 1.10));
-      expect(dx + 0, lessThan((scale - 1) / 2 * size.width));
-      expect(dy, lessThan((scale - 1) / 2 * size.height));
+      expect(scale, inInclusiveRange(1.00, 1.06));
+      expect(dx.abs(), lessThanOrEqualTo((scale - 1) / 2 * size.width));
+      expect(dy.abs(), lessThanOrEqualTo((scale - 1) / 2 * size.height));
     }
   });
 

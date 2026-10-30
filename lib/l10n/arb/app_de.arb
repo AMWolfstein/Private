@@ -202,18 +202,6 @@
   "metadataSeparatorCustom": "Benutzerdefiniertes Trennzeichen",
   "metadataSeparatorPreview": "Vorschau",
   "metadataSeparatorInvalid": "Verwende 1–16 Zeichen ohne Zeilenumbrüche oder Steuerzeichen.",
-  "optionsDetailedLogging": "Detaillierte Protokollierung",
-  "@optionsDetailedLogging": {
-    "description": "Enable verbose logs for debugging"
-  },
-  "optionsDetailedLoggingOn": "Detaillierte Logs werden aufgezeichnet",
-  "@optionsDetailedLoggingOn": {
-    "description": "Status when logging enabled"
-  },
-  "optionsDetailedLoggingOff": "Für Fehlerberichte aktivieren",
-  "@optionsDetailedLoggingOff": {
-    "description": "Status when logging disabled"
-  },
   "settingDisabled": "Deaktiviert",
   "@settingDisabled": {
     "description": "Extension status - inactive"
@@ -2371,7 +2359,6 @@
   "profileSaveError": "Could not save your profile. Please try again.",
   "motionArtwork": "Animiertes Cover",
   "listeningStats": "Hörstatistiken",
-  "listeningStatsRecord": "Hören aufzeichnen",
   "listeningStatsDescription": "Nur auf diesem Gerät gespeichert, ab jetzt. Zeichnet nur den integrierten Player auf; Pausen, Pufferung und Spulen addieren keine Hörzeit. Ein Abspielvorgang zählt ab 30 Sekunden.",
   "listeningStatsEmpty": "Spiele Musik mit dem integrierten Player, um deinen Hörrückblick zu starten. Frühere Hörzeit kann nicht wiederhergestellt werden.",
   "listeningStatsDays": "{days} Tage",

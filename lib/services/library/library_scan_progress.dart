@@ -40,17 +40,22 @@ LibraryScanProgressSample? readLibraryScanProgress({
       progress['is_complete'] == true) {
     return null;
   }
-  final nextProgress = (progress['progress_pct'] as num?)?.toDouble() ?? 0;
+  final nextProgress = _numField(progress['progress_pct'])?.toDouble() ?? 0;
   final normalized = ((nextProgress * 10).round() / 10).clamp(0.0, 100.0);
+  final currentFile = progress['current_file'];
   return LibraryScanProgressSample(
     progress: normalized,
     displayProgress: normalized >= 100.0 ? 99.0 : normalized,
-    currentFile: progress['current_file'] as String?,
-    totalFiles: (progress['total_files'] as num?)?.toInt() ?? 0,
-    scannedFiles: (progress['scanned_files'] as num?)?.toInt() ?? 0,
-    errorCount: (progress['error_count'] as num?)?.toInt() ?? 0,
+    currentFile: currentFile is String ? currentFile : null,
+    totalFiles: _numField(progress['total_files'])?.toInt() ?? 0,
+    scannedFiles: _numField(progress['scanned_files'])?.toInt() ?? 0,
+    errorCount: _numField(progress['error_count'])?.toInt() ?? 0,
   );
 }
+
+/// A field from native progress that is not a number counts as absent. A wrong
+/// type from the native side must not crash the scan UI.
+num? _numField(Object? value) => value is num ? value : null;
 
 /// Streams native scan progress, falling back to polling. Owns the timing
 /// and fallback policy; the caller decides what a snapshot changes.

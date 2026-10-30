@@ -202,18 +202,6 @@
   "metadataSeparatorCustom": "Власний роздільник",
   "metadataSeparatorPreview": "Попередній перегляд",
   "metadataSeparatorInvalid": "Використовуйте від 1 до 16 символів без переносів рядків і службових символів.",
-  "optionsDetailedLogging": "Детальне журналювання",
-  "@optionsDetailedLogging": {
-    "description": "Enable verbose logs for debugging"
-  },
-  "optionsDetailedLoggingOn": "Ведеться детальний журнал",
-  "@optionsDetailedLoggingOn": {
-    "description": "Status when logging enabled"
-  },
-  "optionsDetailedLoggingOff": "Увімкнути для звітів про помилки",
-  "@optionsDetailedLoggingOff": {
-    "description": "Status when logging disabled"
-  },
   "settingDisabled": "Вимкнені",
   "@settingDisabled": {
     "description": "Extension status - inactive"
@@ -2373,7 +2361,6 @@
   "profileSaveError": "Не вдалося зберегти ваш профіль. Будь ласка, спробуйте ще раз.",
   "motionArtwork": "Анімовані обкладинки",
   "listeningStats": "Статистика прослуховувань",
-  "listeningStatsRecord": "Записувати прослуховування",
   "listeningStatsDescription": "Зберігається лише на цьому пристрої, починаючи зараз. Записує лише вбудований плеєр; паузи, буферизація та перемотування не додають часу. Відтворення зараховується після 30 секунд.",
   "listeningStatsEmpty": "Відтворіть музику вбудованим плеєром, щоб почати ваш підсумок прослуховувань. Раніше прослухане відновити не вдасться.",
   "listeningStatsDays": "{days} дн.",

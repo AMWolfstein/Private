@@ -202,18 +202,6 @@
   "metadataSeparatorCustom": "Séparateur personnalisé",
   "metadataSeparatorPreview": "Aperçu",
   "metadataSeparatorInvalid": "Utilisez 1 à 16 caractères, sans saut de ligne ni caractère de contrôle.",
-  "optionsDetailedLogging": "Journalisation détaillée",
-  "@optionsDetailedLogging": {
-    "description": "Enable verbose logs for debugging"
-  },
-  "optionsDetailedLoggingOn": "Des journaux détaillés sont enregistrés",
-  "@optionsDetailedLoggingOn": {
-    "description": "Status when logging enabled"
-  },
-  "optionsDetailedLoggingOff": "Activer pour les rapports de bogues",
-  "@optionsDetailedLoggingOff": {
-    "description": "Status when logging disabled"
-  },
   "settingDisabled": "Désactivée",
   "@settingDisabled": {
     "description": "Extension status - inactive"
@@ -2371,7 +2359,6 @@
   "profileSaveError": "Impossible d'enregistrer votre profil. Veuillez réessayer.",
   "motionArtwork": "Pochettes animées",
   "listeningStats": "Statistiques d'écoute",
-  "listeningStatsRecord": "Enregistrer l'écoute",
   "listeningStatsDescription": "Stocké uniquement sur cet appareil, à partir de maintenant. N'enregistre que le lecteur intégré ; les pauses, la mise en mémoire tampon et la navigation ne comptent pas comme temps d'écoute. Une lecture compte après 30 secondes.",
   "listeningStatsEmpty": "Lisez de la musique avec le lecteur intégré pour commencer votre récapitulatif d'écoute. L'écoute antérieure ne peut pas être récupérée.",
   "listeningStatsDays": "{days} jours",

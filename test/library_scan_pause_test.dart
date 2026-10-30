@@ -28,7 +28,8 @@ void main() {
   setUp(() {
     calls = <String>[];
     messenger.setMockMethodCallHandler(backend, (call) async {
-      calls.add(call.method);
+      // Logger plumbing is always on; it is not part of the scan under test.
+      if (call.method != 'setLoggingEnabled') calls.add(call.method);
       return null;
     });
   });

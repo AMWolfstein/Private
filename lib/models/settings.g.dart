@@ -59,7 +59,6 @@ AppSettings _$AppSettingsFromJson(Map<String, dynamic> json) => AppSettings(
   autoplayPersonalization: json['autoplayPersonalization'] as bool? ?? true,
   isFirstLaunch: json['isFirstLaunch'] as bool? ?? true,
   libraryFilterMode: json['libraryFilterMode'] as String? ?? 'all',
-  enableLogging: json['enableLogging'] as bool? ?? false,
   heroAnimationsEnabled: json['heroAnimationsEnabled'] as bool? ?? true,
   animatedAlbumArtwork: json['animatedAlbumArtwork'] as bool? ?? true,
   checkForUpdates: json['checkForUpdates'] as bool? ?? true,
@@ -74,8 +73,6 @@ AppSettings _$AppSettingsFromJson(Map<String, dynamic> json) => AppSettings(
       : glassClarityLevelFromJson(json['glassClarityLevel']),
   locale: json['locale'] == null ? 'system' : appLocaleFromJson(json['locale']),
   keepScreenOnLyrics: json['keepScreenOnLyrics'] as bool? ?? true,
-  listeningStatisticsEnabled:
-      json['listeningStatisticsEnabled'] as bool? ?? true,
   localLibraryShowDuplicates:
       json['localLibraryShowDuplicates'] as bool? ?? true,
   localLibraryAutoScan: json['localLibraryAutoScan'] as String? ?? 'off',
@@ -111,7 +108,6 @@ Map<String, dynamic> _$AppSettingsToJson(AppSettings instance) =>
       'autoplayPersonalization': instance.autoplayPersonalization,
       'isFirstLaunch': instance.isFirstLaunch,
       'libraryFilterMode': instance.libraryFilterMode,
-      'enableLogging': instance.enableLogging,
       'heroAnimationsEnabled': instance.heroAnimationsEnabled,
       'animatedAlbumArtwork': instance.animatedAlbumArtwork,
       'checkForUpdates': instance.checkForUpdates,
@@ -124,7 +120,6 @@ Map<String, dynamic> _$AppSettingsToJson(AppSettings instance) =>
       'glassClarityLevel': instance.glassClarityLevel,
       'locale': instance.locale,
       'keepScreenOnLyrics': instance.keepScreenOnLyrics,
-      'listeningStatisticsEnabled': instance.listeningStatisticsEnabled,
       'localLibraryShowDuplicates': instance.localLibraryShowDuplicates,
       'localLibraryAutoScan': instance.localLibraryAutoScan,
       'hasCompletedTutorial': instance.hasCompletedTutorial,

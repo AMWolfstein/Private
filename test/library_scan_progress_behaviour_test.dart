@@ -82,6 +82,18 @@ void main() {
       expect(read(snapshot(), isFinalizing: true), isNull);
       expect(read(snapshot(complete: true)), isNull);
     });
+
+    test('a wrong-typed native field is treated as absent, not a crash', () {
+      final sample = read(
+        snapshot(file: 7, total: 'ten', scanned: true, errors: [1]),
+      );
+
+      expect(sample, isNotNull);
+      expect(sample!.currentFile, isNull);
+      expect(sample.totalFiles, 0);
+      expect(sample.scannedFiles, 0);
+      expect(sample.errorCount, 0);
+    });
   });
 
   group('LibraryScanProgressPolling', () {

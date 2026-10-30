@@ -7,7 +7,6 @@ import 'package:sistrum/providers/settings_provider.dart';
 import 'package:sistrum/screens/listening_statistics_screen.dart';
 import 'package:sistrum/services/playback/listening_statistics.dart';
 import 'package:sistrum/theme/app_theme.dart';
-import 'package:sistrum/widgets/primitives/app_switch.dart';
 import 'package:sistrum/widgets/settings/settings_item_rows.dart';
 
 typedef _Period = ({int days, int year});
@@ -20,8 +19,6 @@ class _Settings extends SettingsNotifier {
   @override
   AppSettings build() => const AppSettings();
 
-  @override
-  void setListeningStatisticsEnabled(bool enabled) => changes.add(enabled);
 }
 
 const _alpha = ListeningTrack(
@@ -190,16 +187,13 @@ void main() {
     expect(find.text(en.listeningStatsLoadError), findsOneWidget);
   });
 
-  testWidgets('the recording switch reports the new value', (tester) async {
+  testWidgets('recording is always on, so no recording switch is shown', (
+    tester,
+  ) async {
     await pumpScreen(tester, summary: (_) async => _summary);
 
-    final toggle = find.descendant(
-      of: find.byType(SettingsSwitchItem),
-      matching: find.byType(AppSwitch),
-    );
-    await tester.tap(toggle);
-    await tester.pumpAndSettle();
-    expect(settingChanges, [false]);
+    expect(find.byType(SettingsSwitchItem), findsNothing);
+    expect(settingChanges, isEmpty);
   });
 
   testWidgets('clear asks for confirmation and cancel keeps the statistics', (

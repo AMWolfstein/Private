@@ -129,8 +129,6 @@ class SettingsNotifier extends Notifier<AppSettings> {
             : loaded;
       }
     }
-
-    LogBuffer.loggingEnabled = state.enableLogging;
   }
 
   Future<void> _saveSettings({bool throwOnFailure = false}) {
@@ -195,8 +193,6 @@ class SettingsNotifier extends Notifier<AppSettings> {
       if (identical(state, candidate)) state = current;
       rethrow;
     }
-
-    LogBuffer.loggingEnabled = state.enableLogging;
   }
 
   void setPlaybackNormalization(bool enabled) {
@@ -333,11 +329,6 @@ class SettingsNotifier extends Notifier<AppSettings> {
     _saveSettings();
   }
 
-  void setListeningStatisticsEnabled(bool enabled) {
-    state = state.copyWith(listeningStatisticsEnabled: enabled);
-    _saveSettings();
-  }
-
   Future<void> setFirstLaunchComplete() async {
     // The router leaves setup as soon as this flag changes. Persist the final
     // setup settings and both completion flags together before entering Home.
@@ -368,12 +359,6 @@ class SettingsNotifier extends Notifier<AppSettings> {
       _saveSettingsFuture = null;
       saved.complete();
     }
-  }
-
-  void setEnableLogging(bool enabled) {
-    state = state.copyWith(enableLogging: enabled);
-    _saveSettings();
-    LogBuffer.loggingEnabled = enabled;
   }
 
   void setHeroAnimationsEnabled(bool enabled) {

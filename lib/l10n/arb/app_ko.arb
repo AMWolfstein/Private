@@ -202,18 +202,6 @@
   "metadataSeparatorCustom": "사용자 지정 구분자",
   "metadataSeparatorPreview": "미리보기",
   "metadataSeparatorInvalid": "줄바꿈이나 제어 문자 없이 1–16자를 사용하세요.",
-  "optionsDetailedLogging": "상세 로깅",
-  "@optionsDetailedLogging": {
-    "description": "Enable verbose logs for debugging"
-  },
-  "optionsDetailedLoggingOn": "상세한 로그가 기록되고 있습니다",
-  "@optionsDetailedLoggingOn": {
-    "description": "Status when logging enabled"
-  },
-  "optionsDetailedLoggingOff": "버그 보고서 활성화",
-  "@optionsDetailedLoggingOff": {
-    "description": "Status when logging disabled"
-  },
   "settingDisabled": "비활성화됨",
   "@settingDisabled": {
     "description": "Extension status - inactive"
@@ -2373,7 +2361,6 @@
   "profileSaveError": "프로필을 저장할 수 없습니다. 다시 시도하세요",
   "motionArtwork": "애니메이션 아트워크",
   "listeningStats": "청취 통계",
-  "listeningStatsRecord": "청취 기록",
   "listeningStatsDescription": "지금부터 이 기기에만 저장됩니다. 내장 플레이어의 재생만 기록하며, 일시정지, 버퍼링, 탐색은 청취 시간에 더해지지 않습니다. 30초 이상 재생하면 한 번으로 집계됩니다.",
   "listeningStatsEmpty": "내장 플레이어로 음악을 재생하면 청취 요약이 시작됩니다. 이전 청취 기록은 복구할 수 없습니다.",
   "listeningStatsDays": "{days}일",

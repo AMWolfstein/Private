@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:sistrum/l10n/l10n.dart';
-import 'package:sistrum/providers/settings_provider.dart';
 import 'package:sistrum/services/playback/listening_statistics.dart';
 import 'package:sistrum/utils/adaptive_layout.dart';
 import 'package:sistrum/utils/nav_bar_inset.dart';
@@ -12,7 +11,6 @@ import 'package:sistrum/widgets/primitives/app_alert_dialog.dart';
 import 'package:sistrum/widgets/primitives/app_choice_chip.dart';
 import 'package:sistrum/widgets/primitives/app_sliver_header.dart';
 import 'package:sistrum/widgets/player/player_artwork.dart';
-import 'package:sistrum/widgets/settings/settings_group.dart';
 import 'package:sistrum/widgets/settings/settings_item_rows.dart';
 
 final listeningSummaryProvider = FutureProvider.autoDispose
@@ -101,25 +99,6 @@ class _ListeningStatisticsScreenState
               sliver: SliverMainAxisGroup(
                 slivers: [
                   const SliverToBoxAdapter(child: ListeningRewindEntry()),
-                  SliverToBoxAdapter(
-                    child: SettingsGroup(
-                      children: [
-                        SettingsSwitchItem(
-                          icon: Icons.insights_outlined,
-                          title: context.l10n.listeningStatsRecord,
-                          subtitle: context.l10n.listeningStatsDescription,
-                          value: ref
-                              .watch(settingsProvider)
-                              .listeningStatisticsEnabled,
-                          enabled: !_clearing,
-                          onChanged: (value) => ref
-                              .read(settingsProvider.notifier)
-                              .setListeningStatisticsEnabled(value),
-                          showDivider: false,
-                        ),
-                      ],
-                    ),
-                  ),
                   SliverPadding(
                     padding: const EdgeInsets.all(16),
                     sliver: SliverToBoxAdapter(

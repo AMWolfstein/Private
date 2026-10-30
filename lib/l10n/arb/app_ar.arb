@@ -202,18 +202,6 @@
   "metadataSeparatorCustom": "فاصل مخصص",
   "metadataSeparatorPreview": "معاينة",
   "metadataSeparatorInvalid": "استخدم من 1 إلى 16 حرفًا بدون فواصل أسطر أو محارف تحكم.",
-  "optionsDetailedLogging": "تسجيل تفصيلي",
-  "@optionsDetailedLogging": {
-    "description": "Enable verbose logs for debugging"
-  },
-  "optionsDetailedLoggingOn": "يتم تسجيل السجلات التفصيلية",
-  "@optionsDetailedLoggingOn": {
-    "description": "Status when logging enabled"
-  },
-  "optionsDetailedLoggingOff": "تمكين لتقارير الأخطاء",
-  "@optionsDetailedLoggingOff": {
-    "description": "Status when logging disabled"
-  },
   "settingDisabled": "معطَّل",
   "@settingDisabled": {
     "description": "Extension status - inactive"
@@ -2371,7 +2359,6 @@
   "profileSaveError": "Could not save your profile. Please try again.",
   "motionArtwork": "الصور المتحركة",
   "listeningStats": "إحصاءات الاستماع",
-  "listeningStatsRecord": "تسجيل الاستماع",
   "listeningStatsDescription": "تُخزَّن على هذا الجهاز فقط، ابتداءً من الآن. تُسجَّل بيانات المشغّل المدمج فقط؛ الإيقاف المؤقت والتخزين المؤقت والتقديم لا تضيف وقت استماع. تُحتسب مرة التشغيل بعد 30 ثانية.",
   "listeningStatsEmpty": "شغّل موسيقى بالمشغّل المدمج لبدء ملخص استماعك. لا يمكن استرداد الاستماع السابق.",
   "listeningStatsDays": "{days} يومًا",

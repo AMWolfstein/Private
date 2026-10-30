@@ -365,11 +365,6 @@ class SettingsSearchCatalog {
       ],
       logs = [
         SettingsSearchEntry(
-          icon: Icons.bug_report,
-          title: l10n.optionsDetailedLogging,
-          keywords: const ['debug logs', 'diagnostics'],
-        ),
-        SettingsSearchEntry(
           icon: Icons.filter_list,
           title: l10n.logFilterLevel,
           subtitle: l10n.logFilterBySeverity,

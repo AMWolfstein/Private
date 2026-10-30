@@ -835,10 +835,8 @@ void main() {
       expect(recorder.updates, beforeMetadata + 1);
       expect(recorder.latestTrack?.title, 'Revised');
       expect(recorder.latestTrack?.artist, 'Guest');
-      recorder.setEnabled(false);
       elapsed += const Duration(seconds: 25);
       await recorder.flush();
-      recorder.setEnabled(true);
       elapsed += const Duration(seconds: 5);
       await recorder.flush();
       handler.mediaItem.add(const MediaItem(id: 'two', title: 'Two'));
@@ -846,7 +844,12 @@ void main() {
       elapsed += const Duration(seconds: 10);
       await recorder.flush();
       final one = writes.where((delta) => delta.track.key == 'one').toList();
-      expect(one.fold<int>(0, (sum, delta) => sum + delta.milliseconds), 80000);
+      // Playing: 0-5s, 25-50s, 60-70s, 70-105s, 105-130s, 130-135s = 105s.
+      // Buffering (5-25s), the pause (50-60s) and the seek accrue nothing.
+      expect(
+        one.fold<int>(0, (sum, delta) => sum + delta.milliseconds),
+        105000,
+      );
       expect(one.fold<int>(0, (sum, delta) => sum + delta.plays), 2);
       expect(one.first.day, '2026-10-01');
       expect(one.first.milliseconds, 5000);

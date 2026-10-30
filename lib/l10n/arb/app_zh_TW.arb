@@ -202,18 +202,6 @@
   "metadataSeparatorCustom": "自訂分隔符號",
   "metadataSeparatorPreview": "預覽",
   "metadataSeparatorInvalid": "請使用 1–16 個字元，且不含換行或控制字元。",
-  "optionsDetailedLogging": "詳細日誌",
-  "@optionsDetailedLogging": {
-    "description": "Enable verbose logs for debugging"
-  },
-  "optionsDetailedLoggingOn": "詳細日誌將被記錄",
-  "@optionsDetailedLoggingOn": {
-    "description": "Status when logging enabled"
-  },
-  "optionsDetailedLoggingOff": "開啟以供錯誤回報使用",
-  "@optionsDetailedLoggingOff": {
-    "description": "Status when logging disabled"
-  },
   "settingDisabled": "已停用",
   "@settingDisabled": {
     "description": "Extension status - inactive"
@@ -2370,7 +2358,6 @@
   "profileSaveError": "Could not save your profile. Please try again.",
   "motionArtwork": "動態封面",
   "listeningStats": "聆聽統計",
-  "listeningStatsRecord": "記錄聆聽",
   "listeningStatsDescription": "從現在開始僅儲存在此裝置上。只記錄內建播放器的播放；暫停、緩衝與拖曳不計入聆聽時間。播放超過 30 秒才會計為一次播放。",
   "listeningStatsEmpty": "使用內建播放器播放音樂，即可開始你的聆聽回顧。先前的聆聽紀錄無法復原。",
   "listeningStatsDays": "{days} 天",

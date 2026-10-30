@@ -73,7 +73,6 @@ class AppSettings {
 
   final String libraryFilterMode;
 
-  final bool enableLogging;
   final bool heroAnimationsEnabled;
 
   /// Slow Ken Burns drift on album cover headers.
@@ -108,7 +107,6 @@ class AppSettings {
   @JsonKey(fromJson: appLocaleFromJson)
   final String locale;
   final bool keepScreenOnLyrics;
-  final bool listeningStatisticsEnabled;
 
   final bool localLibraryShowDuplicates;
   final String
@@ -146,7 +144,6 @@ class AppSettings {
     this.isFirstLaunch = true,
 
     this.libraryFilterMode = 'all',
-    this.enableLogging = false,
     this.heroAnimationsEnabled = true,
     this.animatedAlbumArtwork = true,
     this.checkForUpdates = true,
@@ -159,7 +156,6 @@ class AppSettings {
     this.glassClarityLevel = kDefaultGlassClarityLevel,
     this.locale = 'system',
     this.keepScreenOnLyrics = true,
-    this.listeningStatisticsEnabled = true,
     this.localLibraryShowDuplicates = true,
     this.localLibraryAutoScan = 'off',
     this.hasCompletedTutorial = false,
@@ -194,7 +190,6 @@ class AppSettings {
     bool? isFirstLaunch,
 
     String? libraryFilterMode,
-    bool? enableLogging,
     bool? heroAnimationsEnabled,
     bool? animatedAlbumArtwork,
     bool? checkForUpdates,
@@ -207,7 +202,6 @@ class AppSettings {
     int? glassClarityLevel,
     String? locale,
     bool? keepScreenOnLyrics,
-    bool? listeningStatisticsEnabled,
     bool? localLibraryShowDuplicates,
     String? localLibraryAutoScan,
     bool? hasCompletedTutorial,
@@ -247,7 +241,6 @@ class AppSettings {
       isFirstLaunch: isFirstLaunch ?? this.isFirstLaunch,
 
       libraryFilterMode: libraryFilterMode ?? this.libraryFilterMode,
-      enableLogging: enableLogging ?? this.enableLogging,
       heroAnimationsEnabled:
           heroAnimationsEnabled ?? this.heroAnimationsEnabled,
       animatedAlbumArtwork: animatedAlbumArtwork ?? this.animatedAlbumArtwork,
@@ -264,8 +257,6 @@ class AppSettings {
       glassClarityLevel: glassClarityLevel ?? this.glassClarityLevel,
       locale: locale ?? this.locale,
       keepScreenOnLyrics: keepScreenOnLyrics ?? this.keepScreenOnLyrics,
-      listeningStatisticsEnabled:
-          listeningStatisticsEnabled ?? this.listeningStatisticsEnabled,
       localLibraryShowDuplicates:
           localLibraryShowDuplicates ?? this.localLibraryShowDuplicates,
       localLibraryAutoScan: localLibraryAutoScan ?? this.localLibraryAutoScan,

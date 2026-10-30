@@ -202,18 +202,6 @@
   "metadataSeparatorCustom": "कस्टम विभाजक",
   "metadataSeparatorPreview": "पूर्वावलोकन",
   "metadataSeparatorInvalid": "1–16 अक्षर उपयोग करें, बिना नई पंक्ति या नियंत्रण अक्षरों के।",
-  "optionsDetailedLogging": "Detailed Logging",
-  "@optionsDetailedLogging": {
-    "description": "Enable verbose logs for debugging"
-  },
-  "optionsDetailedLoggingOn": "Detailed logs are being recorded",
-  "@optionsDetailedLoggingOn": {
-    "description": "Status when logging enabled"
-  },
-  "optionsDetailedLoggingOff": "Enable for bug reports",
-  "@optionsDetailedLoggingOff": {
-    "description": "Status when logging disabled"
-  },
   "settingDisabled": "Disabled",
   "@settingDisabled": {
     "description": "Extension status - inactive"
@@ -2370,7 +2358,6 @@
   "profileSaveError": "Could not save your profile. Please try again.",
   "motionArtwork": "एनिमेटेड आर्टवर्क",
   "listeningStats": "सुनने के आँकड़े",
-  "listeningStatsRecord": "सुनना रिकॉर्ड करें",
   "listeningStatsDescription": "केवल इसी डिवाइस पर, अभी से सहेजे जाते हैं। केवल बिल्ट-इन प्लेयर रिकॉर्ड होता है; रोकना, बफ़रिंग और सीक करने से सुनने का समय नहीं जुड़ता। 30 सेकंड के बाद एक प्ले गिना जाता है।",
   "listeningStatsEmpty": "अपना सुनने का सार शुरू करने के लिए बिल्ट-इन प्लेयर से संगीत चलाएँ। पहले का सुनना वापस नहीं लाया जा सकता।",
   "listeningStatsDays": "{days} दिन",

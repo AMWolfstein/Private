@@ -92,9 +92,6 @@ void main() {
     tester,
   ) async {
     await mount(tester);
-    final previousLogging = LogBuffer.loggingEnabled;
-    LogBuffer.loggingEnabled = true;
-    addTearDown(() => LogBuffer.loggingEnabled = previousLogging);
     final calls = <String>[];
     final firstWrite = Completer<Map<String, Object?>>();
     tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(channel, (

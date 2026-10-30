@@ -34,6 +34,7 @@ import org.json.JSONObject
 import java.io.File
 import java.util.LinkedHashMap
 import java.util.UUID
+import java.util.concurrent.TimeUnit
 
 class MainActivity: FlutterFragmentActivity() {
     // Mirrors audio_service's AudioServiceFragmentActivity: the shared engine
@@ -68,6 +69,7 @@ class MainActivity: FlutterFragmentActivity() {
         "setScreenAwake",
         "getBackendImplementations",
         "ensureInstallMarker",
+        "getAppLogcat",
 
         "readFileMetadata",
         "editFileMetadata",
@@ -107,6 +109,34 @@ class MainActivity: FlutterFragmentActivity() {
 
         "exitApp",
     )
+    /**
+     * Raw `logcat -d` output for this process only. Needs no READ_LOGS permission because
+     * logcat restricts non-privileged readers to their own pid. Returns "" on any failure.
+     */
+    private fun readAppLogcat(): String {
+        return try {
+            val pid = android.os.Process.myPid()
+            val process = ProcessBuilder("logcat", "-d", "-v", "threadtime", "--pid=$pid")
+                .redirectErrorStream(true)
+                .start()
+            val output = process.inputStream.bufferedReader().use { it.readText() }
+            if (!process.waitFor(APP_LOGCAT_TIMEOUT_SECONDS, TimeUnit.SECONDS)) {
+                process.destroyForcibly()
+                android.util.Log.w("Sistrum", "App logcat read timed out")
+                ""
+            } else if (process.exitValue() != 0) {
+                android.util.Log.w("Sistrum", "App logcat exited with ${process.exitValue()}")
+                ""
+            } else {
+                output
+            }
+        } catch (error: Exception) {
+            android.util.Log.w("Sistrum", "App logcat read failed", error)
+            ""
+        }
+    }
+
+    private val APP_LOGCAT_TIMEOUT_SECONDS = 5L
     private var libraryStorageReceiver: BroadcastReceiver? = null
 
 
@@ -660,6 +690,12 @@ class MainActivity: FlutterFragmentActivity() {
                                 window.clearFlags(flag)
                             }
                             result.success(null)
+                        }
+
+                        "getAppLogcat" -> {
+                            // Read off the main thread; failures return "" and are logged natively.
+                            val text = withContext(Dispatchers.IO) { readAppLogcat() }
+                            result.success(text)
                         }
 
                         "ensureInstallMarker" -> {

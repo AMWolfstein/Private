@@ -141,18 +141,6 @@
   "metadataSeparatorCustom": "Separador personalizado",
   "metadataSeparatorPreview": "Pré-visualização",
   "metadataSeparatorInvalid": "Use de 1 a 16 caracteres, sem quebras de linha nem caracteres de controlo.",
-  "optionsDetailedLogging": "Detailed Logging",
-  "@optionsDetailedLogging": {
-    "description": "Enable verbose logs for debugging"
-  },
-  "optionsDetailedLoggingOn": "Detailed logs are being recorded",
-  "@optionsDetailedLoggingOn": {
-    "description": "Status when logging enabled"
-  },
-  "optionsDetailedLoggingOff": "Enable for bug reports",
-  "@optionsDetailedLoggingOff": {
-    "description": "Status when logging disabled"
-  },
   "settingDisabled": "Disabled",
   "@settingDisabled": {
     "description": "Extension status - inactive"
@@ -1655,7 +1643,6 @@
   "profileSaveError": "Não foi possível guardar o seu perfil. Tente novamente.",
   "motionArtwork": "Capa animada",
   "listeningStats": "Estatísticas de audição",
-  "listeningStatsRecord": "Registar audição",
   "listeningStatsDescription": "Guardado apenas neste dispositivo, a partir de agora. Regista apenas o player integrado; pausas, buffering e avanços não contam como tempo de audição. Uma reprodução conta após 30 segundos.",
   "listeningStatsEmpty": "Reproduza música com o player integrado para começar o seu resumo de audição. Audições anteriores não podem ser recuperadas.",
   "listeningStatsDays": "{days} dias",

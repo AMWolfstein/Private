@@ -202,18 +202,6 @@
   "metadataSeparatorCustom": "Свой разделитель",
   "metadataSeparatorPreview": "Предпросмотр",
   "metadataSeparatorInvalid": "Используйте от 1 до 16 символов без переводов строк и управляющих символов.",
-  "optionsDetailedLogging": "Подробный лог",
-  "@optionsDetailedLogging": {
-    "description": "Enable verbose logs for debugging"
-  },
-  "optionsDetailedLoggingOn": "Ведутся подробные логи",
-  "@optionsDetailedLoggingOn": {
-    "description": "Status when logging enabled"
-  },
-  "optionsDetailedLoggingOff": "Включить для отчётов об ошибках",
-  "@optionsDetailedLoggingOff": {
-    "description": "Status when logging disabled"
-  },
   "settingDisabled": "Выключено",
   "@settingDisabled": {
     "description": "Extension status - inactive"
@@ -2372,7 +2360,6 @@
   "profileSaveError": "Не удалось сохранить ваш профиль. Пожалуйста, попробуйте еще раз.",
   "motionArtwork": "Анимированные обложки",
   "listeningStats": "Статистика прослушивания",
-  "listeningStatsRecord": "Записывать прослушивание",
   "listeningStatsDescription": "Хранится только на этом устройстве, начиная с текущего момента. Записывается только встроенный плеер; паузы, буферизация и перемотка не добавляют время. Воспроизведение засчитывается после 30 секунд.",
   "listeningStatsEmpty": "Слушайте музыку во встроенном плеере, чтобы начать свою сводку. Прошлое прослушивание восстановить нельзя.",
   "listeningStatsDays": "{days} дн.",

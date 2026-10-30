@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:sistrum/providers/settings_provider.dart';
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
 import 'package:sistrum/widgets/primitives/app_alert_dialog.dart';
 import 'package:sistrum/widgets/primitives/app_bottom_sheet.dart';
@@ -15,6 +15,7 @@ import 'package:sistrum/widgets/primitives/app_search_field.dart';
 import 'package:sistrum/utils/ordered_range_selection.dart';
 import 'package:sistrum/utils/adaptive_layout.dart';
 import 'package:sistrum/screens/settings/log_entry_tile.dart';
+import 'package:sistrum/services/native_log_source.dart';
 
 class LogPage extends ConsumerStatefulWidget {
   const LogPage({super.key});
@@ -33,8 +34,22 @@ class _LogPageState extends ConsumerState<LogPage> {
   bool _selectionMode = false;
   final Set<LogEntry> _selectedEntries = <LogEntry>{};
   LogEntry? _selectionAnchor;
+  static const _nativeLogSource = NativeLogSource();
+  List<LogEntry> _logcatEntries = const <LogEntry>[];
+  bool _logcatLoading = false;
+  int _logcatRequest = 0;
 
-  final List<String> _levels = ['ALL', 'DEBUG', 'INFO', 'WARN', 'ERROR'];
+  // FULL shows this app's own logcat output (read when FULL is selected),
+  // with no level restriction. ALL and the level filters apply to the
+  // in-memory LogBuffer as before.
+  final List<String> _levels = [
+    'FULL',
+    'ALL',
+    'DEBUG',
+    'INFO',
+    'WARN',
+    'ERROR',
+  ];
 
   @override
   void initState() {
@@ -56,7 +71,8 @@ class _LogPageState extends ConsumerState<LogPage> {
   void _onLogUpdate() {
     if (mounted) {
       if (_selectionMode) {
-        final currentEntries = LogBuffer().entries.toSet();
+        final currentEntries =
+            (_fullSelected ? _logcatEntries : LogBuffer().entries).toSet();
         _selectedEntries.removeWhere(
           (entry) => !currentEntries.contains(entry),
         );
@@ -108,9 +124,75 @@ class _LogPageState extends ConsumerState<LogPage> {
     }
   }
 
+  bool get _levelFiltered =>
+      _selectedLevel != 'ALL' && _selectedLevel != 'FULL';
+
+  bool get _fullSelected => _selectedLevel == 'FULL';
+
+  String _levelLabel(BuildContext context, String level) =>
+      level == 'FULL' ? context.l10n.logFilterFull : level;
+
+  void _selectLevel(String level) {
+    final switchingSource = (level == 'FULL') != _fullSelected;
+    setState(() {
+      _selectedLevel = level;
+      if (level != 'FULL') {
+        // Drop an in-flight logcat read so its result cannot land later.
+        _logcatRequest++;
+        _logcatLoading = false;
+      }
+      if (switchingSource) {
+        _selectionMode = false;
+        _selectedEntries.clear();
+        _selectionAnchor = null;
+      }
+    });
+    if (level == 'FULL') _loadAppLogcat();
+  }
+
+  Future<void> _loadAppLogcat() async {
+    final request = ++_logcatRequest;
+    setState(() => _logcatLoading = true);
+    final result = await _nativeLogSource.readAppLogcat();
+    if (!mounted || request != _logcatRequest) return;
+    var entries = <LogEntry>[];
+    switch (result) {
+      case NativeLogcatText(:final text):
+        entries = parseAppLogcat(text, now: DateTime.now());
+      case NativeLogcatUnavailable(:final reason):
+        if (kDebugMode) debugPrint('Could not read app logcat: $reason');
+    }
+    setState(() {
+      _logcatEntries = entries;
+      _logcatLoading = false;
+      // Loaded rows are new objects, so an old selection cannot match them.
+      _selectionMode = false;
+      _selectedEntries.clear();
+      _selectionAnchor = null;
+    });
+    if (_autoScroll && _scrollController.hasClients) {
+      final generation = ++_autoScrollGeneration;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _scrollToLatestLog(generation);
+      });
+    }
+  }
+
   List<LogEntry> get _filteredLogs {
+    if (_fullSelected) {
+      final query = _searchQuery.toLowerCase();
+      if (query.isEmpty) return _logcatEntries;
+      return _logcatEntries
+          .where(
+            (entry) =>
+                entry.message.toLowerCase().contains(query) ||
+                entry.tag.toLowerCase().contains(query) ||
+                (entry.error?.toLowerCase().contains(query) ?? false),
+          )
+          .toList();
+    }
     return LogBuffer().filter(
-      level: _selectedLevel,
+      level: _levelFiltered ? _selectedLevel : null,
       search: _searchQuery.isEmpty ? null : _searchQuery,
     );
   }
@@ -271,7 +353,7 @@ class _LogPageState extends ConsumerState<LogPage> {
           children: [
             for (final level in _levels)
               SettingsItem(
-                title: level,
+                title: _levelLabel(context, level),
                 trailing: level == _selectedLevel
                     ? Icon(Icons.check, color: colorScheme.primary)
                     : null,
@@ -282,7 +364,7 @@ class _LogPageState extends ConsumerState<LogPage> {
         ),
       ),
     );
-    if (level != null && mounted) setState(() => _selectedLevel = level);
+    if (level != null && mounted) _selectLevel(level);
   }
 
   Color _getLevelColor(String level, ColorScheme colorScheme) {
@@ -304,7 +386,6 @@ class _LogPageState extends ConsumerState<LogPage> {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final logs = _filteredLogs;
-    final settings = ref.watch(settingsProvider);
 
     return PopScope(
       canPop: !_selectionMode,
@@ -414,25 +495,6 @@ class _LogPageState extends ConsumerState<LogPage> {
             ),
 
             SliverToBoxAdapter(
-              child: SettingsGroup(
-                children: [
-                  SettingsSwitchItem(
-                    icon: Icons.bug_report,
-                    title: context.l10n.optionsDetailedLogging,
-                    subtitle: settings.enableLogging
-                        ? context.l10n.optionsDetailedLoggingOn
-                        : context.l10n.optionsDetailedLoggingOff,
-                    value: settings.enableLogging,
-                    onChanged: (value) => ref
-                        .read(settingsProvider.notifier)
-                        .setEnableLogging(value),
-                    showDivider: false,
-                  ),
-                ],
-              ),
-            ),
-
-            SliverToBoxAdapter(
               child: SettingsSectionHeader(
                 title: context.l10n.logFilterSection,
               ),
@@ -480,11 +542,11 @@ class _LogPageState extends ConsumerState<LogPage> {
                             padding: const EdgeInsets.symmetric(horizontal: 14),
                           ),
                           label: Text(
-                            _selectedLevel,
+                            _levelLabel(context, _selectedLevel),
                             style: TextStyle(
-                              color: _selectedLevel == 'ALL'
-                                  ? null
-                                  : _getLevelColor(_selectedLevel, colorScheme),
+                              color: _levelFiltered
+                                  ? _getLevelColor(_selectedLevel, colorScheme)
+                                  : null,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
@@ -520,7 +582,7 @@ class _LogPageState extends ConsumerState<LogPage> {
 
             SliverToBoxAdapter(
               child: SettingsSectionHeader(
-                title: _selectedLevel != 'ALL' || _searchQuery.isNotEmpty
+                title: _levelFiltered || _searchQuery.isNotEmpty
                     ? context.l10n.logEntriesFiltered(logs.length)
                     : context.l10n.logEntries(logs.length),
               ),
@@ -530,7 +592,14 @@ class _LogPageState extends ConsumerState<LogPage> {
               child: _LogSummaryCard(logs: LogBuffer().entries),
             ),
 
-            logs.isEmpty
+            _fullSelected && _logcatLoading
+                ? const SliverToBoxAdapter(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(vertical: 48),
+                      child: Center(child: CircularProgressIndicator()),
+                    ),
+                  )
+                : logs.isEmpty
                 ? SliverToBoxAdapter(
                     child: SettingsGroup(
                       children: [

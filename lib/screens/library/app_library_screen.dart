@@ -4,7 +4,6 @@ import 'package:sistrum/services/library/library_database.dart';
 import 'package:sistrum/widgets/library/library_fast_scroller.dart';
 import 'package:sistrum/widgets/library/library_section_list.dart';
 import 'package:sistrum/screens/listening_rewind_screen.dart';
-import 'package:sistrum/providers/settings_provider.dart';
 import 'dart:async';
 import 'package:sistrum/screens/library/local_genres_screen.dart';
 
@@ -287,10 +286,7 @@ class _AppLibraryScreenState extends ConsumerState<AppLibraryScreen> {
           else
             AppSliverHeader.page(title: title, actions: actions),
           ...[
-            if (_overview &&
-                ref.watch(
-                  settingsProvider.select((s) => s.listeningStatisticsEnabled),
-                ))
+            if (_overview)
               SliverToBoxAdapter(
                 child: ListeningRewindBanner(
                   margin: EdgeInsets.fromLTRB(
