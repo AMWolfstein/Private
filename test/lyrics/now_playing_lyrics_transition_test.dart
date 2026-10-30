@@ -174,7 +174,12 @@ void main() {
             ThemeSettings(playerView: playerView),
           ),
           initialSettingsProvider.overrideWithValue(
-            AppSettings(glassClarityLevel: glassLevel),
+            // The immersive drift repeats forever, so it would keep these
+            // player animations from settling.
+            AppSettings(
+              glassClarityLevel: glassLevel,
+              animatedAlbumArtwork: false,
+            ),
           ),
           if (controller != null)
             musicPlayerControllerProvider.overrideWithValue(controller),
