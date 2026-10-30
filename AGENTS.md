@@ -33,9 +33,8 @@ circular back button in Sistrum.
 
 Settings no longer include the obsolete output-folder Files & Folders page or the
 download-era Metadata page. Music scanning stays under Local Library; local per-file tag
-editing remains supported. Per-field tag separators (artist, album artist, composer, genre;
-empty keeps the tag) live under Local Library settings as Tag separators and apply when local
-tags are saved; Artist Tag Mode is removed entirely (UI, preferences and writer plumbing: do not restore it). Local Library settings have no Default view or Audio quality
+editing remains supported. Tag separators (see Tag separators below) live under Local Library settings and apply when
+local tags are saved; Artist Tag Mode is removed entirely (UI, preferences and writer plumbing: do not restore it). Local Library settings have no Default view or Audio quality
 label-mode options: do not restore their preferences, pickers, search entries or tab-reset
 behavior. Library badges use the standard measured/stored bitrate policy, with codec
 fallback for legacy lossy files. Audio playback uses only the built-in player, including on old
@@ -89,10 +88,18 @@ menus, format/bitrate/quality sheets, encoding services or converted-file public
 Keep local tag/cover/lyrics editing, ReplayGain and CUE splitting as separate operations.
 Artwork probing and FFmpeg processing for those retained features remain supported.
 
-Tag separators (artist, album artist, composer, genre) live under Local Library settings and
-apply only when local tags are saved via Edit Metadata; do not restore the download-era
-Metadata page or Artist Tag Mode for them. There is no read-side tag splitting: tags are
-shown as stored.
+Tag separators live under Local Library settings in two sections: Artists (artist, album
+artist, composer) and Genre. Each section is a grid of separator chips (four per row) with
+defaults, All (selects every chip; when all are selected it resets to the defaults), and Add
+separator for a custom one; a section is never empty. Save with picks the separator that
+joins names when Edit Metadata saves tags. Keep together lists names that are never split.
+The library reads credits through a derived TEMP table `library_tag_credits` (item_id, field,
+name, name_key, position, built by `LibraryTagCreditsCache` from the visible view with the
+same rules), so artist and genre pages, search, and the discography shelves agree with the
+settings. Artist and album artist credits make the Artists list and artist pages; Albums
+uses album-artist credits, and Appears On sits directly below Singles for releases where the
+artist is credited on a track but owns no track of the release. Go to Artist and Go to Composer
+in the song menu open one name directly, or a picker when a credit splits into several names.
 Artist pictures use the artwork of the artist's most recently added song that has one.
 
 Appearance exposes Player view with Normal view (the default inset artwork) and Immersive
