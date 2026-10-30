@@ -260,13 +260,7 @@
   "@metadataSeparators": {
     "description": "Local Library settings entry and page title for per-field tag separators"
   },
-  "metadataSeparatorsDescription": "Choose the separators that split artist and genre names in your library. Save with joins the names again when Edit Metadata saves tags. Keep together names are never split.",
-  "metadataSeparatorSource": "Keep source formatting",
-  "metadataSeparatorComma": "Comma (,)",
-  "metadataSeparatorSemicolon": "Semicolon (;)",
-  "metadataSeparatorSlash": "Slash (/)",
-  "metadataSeparatorCustom": "Custom separator",
-  "metadataSeparatorPreview": "Preview",
+  "metadataSeparatorsDescription": "Choose the separators that split artist and genre names in your library. Keep together names are never split.",
   "metadataSeparatorInvalid": "Use 1–16 characters without line breaks or control characters.",
   "tagSeparatorsArtists": "Artists",
   "tagSeparatorsArtistsFields": "Artist, Album Artist, Composer",
@@ -277,8 +271,6 @@
   "tagSeparatorsDuplicate": "This separator is already in the list.",
   "tagSeparatorsRemoveTitle": "Remove separator?",
   "tagSeparatorsRemoveMessage": "It is removed from this section. Tags you already saved are not changed.",
-  "tagSeparatorsSaveWith": "Save with",
-  "tagSeparatorsSaveWithDescription": "The separator that joins names when you save tags with Edit Metadata.",
   "tagKeepTogether": "Keep together",
   "tagKeepTogetherDescription": "Names listed here are never split, even when they contain a separator.",
   "tagKeepTogetherHint": "Name, for example Tyler, The Creator",

@@ -18,14 +18,32 @@ void main() {
       ]);
       expect(_artist('Daft Punk'), ['Daft Punk']);
       expect(_artist('Featurette and Lift Up'), ['Featurette and Lift Up']);
-      expect(_artist('Lift with Me'), ['Lift with Me']);
     });
 
-    test('symbols that are not selected stay inside a name', () {
-      expect(_artist('AC/DC'), ['AC/DC']);
-      // & is a default delimiter, so it splits a credit on a fresh install.
+    test('every chip splits by default; Keep together protects a name', () {
+      // All is the default, so symbols and words such as x and with split.
+      expect(_artist('AC/DC'), ['AC', 'DC']);
       expect(_artist('Simon & Garfunkel'), ['Simon', 'Garfunkel']);
-      expect(_artist('Malcolm X'), ['Malcolm X']);
+      expect(_artist('Lift with Me'), ['Lift', 'Me']);
+      expect(_artist('Malcolm X'), ['Malcolm']);
+
+      const kept = TagCreditRules(
+        keepTogether: ['AC/DC', 'Lift with Me', 'Malcolm X'],
+      );
+      expect(_artist('AC/DC', rules: kept), ['AC/DC']);
+      expect(_artist('Lift with Me', rules: kept), ['Lift with Me']);
+      expect(_artist('Malcolm X, Amr Diab', rules: kept), [
+        'Malcolm X',
+        'Amr Diab',
+      ]);
+    });
+
+    test('a symbol that is not selected stays inside a name', () {
+      const commaOnly = TagCreditRules(artistDelimiters: [',']);
+      expect(_artist('AC/DC', rules: commaOnly), ['AC/DC']);
+      expect(_artist('Simon & Garfunkel', rules: commaOnly), [
+        'Simon & Garfunkel',
+      ]);
     });
 
     test('a selected word delimiter splits only as a whole word', () {

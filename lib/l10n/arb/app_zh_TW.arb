@@ -194,13 +194,6 @@
   },
   "replayGainUnsupportedDecoder": "Some tracks could not be analyzed because their audio codec is not supported by the ReplayGain decoder. Their files were not changed.",
   "metadataSeparators": "標籤分隔符號",
-  "metadataSeparatorsDescription": "選擇使用「編輯中繼資料」儲存標籤時，以逗號或分號分隔的值如何合併。自訂歌手分隔符號會寫入單一合併的標籤。包含 & 或 / 的名稱會保留。",
-  "metadataSeparatorSource": "保留原始格式",
-  "metadataSeparatorComma": "逗號 (,)",
-  "metadataSeparatorSemicolon": "分號 (;)",
-  "metadataSeparatorSlash": "斜線 (/)",
-  "metadataSeparatorCustom": "自訂分隔符號",
-  "metadataSeparatorPreview": "預覽",
   "metadataSeparatorInvalid": "請使用 1–16 個字元，且不含換行或控制字元。",
   "settingDisabled": "已停用",
   "@settingDisabled": {

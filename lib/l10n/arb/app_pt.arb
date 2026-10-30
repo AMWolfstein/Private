@@ -133,13 +133,6 @@
   "replayGainBatchSuccess": "ReplayGain adicionado a {success} de {total} faixas",
   "replayGainUnsupportedDecoder": "Algumas faixas não puderam ser analisadas porque o codec de áudio não é suportado pelo descodificador ReplayGain. Os seus ficheiros não foram alterados.",
   "metadataSeparators": "Separadores de tags",
-  "metadataSeparatorsDescription": "Escolha como os valores separados por vírgula ou ponto e vírgula são unidos ao guardar tags com Editar metadados. Separadores de artista personalizados gravam uma única tag unida. Nomes que contenham & ou / são preservados.",
-  "metadataSeparatorSource": "Manter formatação original",
-  "metadataSeparatorComma": "Vírgula (,)",
-  "metadataSeparatorSemicolon": "Ponto e vírgula (;)",
-  "metadataSeparatorSlash": "Barra (/)",
-  "metadataSeparatorCustom": "Separador personalizado",
-  "metadataSeparatorPreview": "Pré-visualização",
   "metadataSeparatorInvalid": "Use de 1 a 16 caracteres, sem quebras de linha nem caracteres de controlo.",
   "settingDisabled": "Disabled",
   "@settingDisabled": {

@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sistrum/l10n/app_localizations.dart';
-import 'package:sistrum/core/models/metadata_separators.dart';
 import 'package:sistrum/core/models/settings.dart';
 import 'package:sistrum/core/models/tag_credit_settings.dart';
 import 'package:sistrum/providers/settings_provider.dart';
@@ -70,9 +69,7 @@ void main() {
   setUp(() => SharedPreferences.setMockInitialValues({}));
 
   for (final size in [const Size(390, 844), const Size(844, 390)]) {
-    testWidgets('section sheets and Keep together ($size)', (
-      tester,
-    ) async {
+    testWidgets('section sheets and Keep together ($size)', (tester) async {
       tester.view.physicalSize = size;
       tester.view.devicePixelRatio = 1;
       addTearDown(tester.view.reset);
@@ -112,18 +109,20 @@ void main() {
         findsOneWidget,
       );
 
-      // A selected chip turns off; an unselected one turns on.
+      // Every artist chip starts selected: All is the default.
+      expect(kArtistDelimiterDefaults, kArtistDelimiterChoices);
+
+      // A selected chip turns off; tapping it again turns it back on.
       await _tap(tester, inSheet(_chip(',')));
       expect(credits().artistDelimiters, isNot(contains(',')));
-      await _tap(tester, inSheet(_chip('/')));
-      expect(credits().artistDelimiters, contains('/'));
+      await _tap(tester, inSheet(_chip(',')));
+      expect(credits().artistDelimiters, contains(','));
 
-      // All selects every offered artist delimiter; a second tap restores the
-      // defaults.
+      // All selects every offered artist delimiter again.
+      await _tap(tester, inSheet(_chip('/')));
+      expect(credits().artistDelimiters, isNot(contains('/')));
       await _tap(tester, inSheet(_chip('All')));
       expect(credits().artistDelimiters, kArtistDelimiterChoices);
-      await _tap(tester, inSheet(_chip('All')));
-      expect(credits().artistDelimiters, kArtistDelimiterDefaults);
 
       // Add separator: Save adds the typed separator, selected, and closes.
       final sheetField = inSheet(find.byType(TextField));
@@ -160,14 +159,4 @@ void main() {
       expect(tester.takeException(), isNull);
     });
   }
-
-  test('the Artists separator is shared across the name fields', () {
-    const separators = MetadataSeparators(artist: '; ', genre: ', ');
-    expect(separators.names, '; ');
-    final shared = separators.withNames(' / ');
-    expect(shared.artist, ' / ');
-    expect(shared.albumArtist, ' / ');
-    expect(shared.composer, ' / ');
-    expect(shared.genre, ', ');
-  });
 }

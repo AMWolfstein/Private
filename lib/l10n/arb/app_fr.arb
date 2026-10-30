@@ -194,13 +194,6 @@
   },
   "replayGainUnsupportedDecoder": "Certaines pistes n'ont pas pu être analysées car leur codec audio n'est pas pris en charge par le décodeur ReplayGain. Leurs fichiers n'ont pas été modifiés.",
   "metadataSeparators": "Séparateurs de tags",
-  "metadataSeparatorsDescription": "Choisissez comment les valeurs séparées par des virgules ou des points-virgules sont jointes lorsque vous enregistrez les tags avec Modifier les métadonnées. Les séparateurs d'artistes personnalisés écrivent un seul tag joint. Les noms contenant & ou / sont conservés.",
-  "metadataSeparatorSource": "Conserver le format source",
-  "metadataSeparatorComma": "Virgule (,)",
-  "metadataSeparatorSemicolon": "Point-virgule (;)",
-  "metadataSeparatorSlash": "Barre oblique (/)",
-  "metadataSeparatorCustom": "Séparateur personnalisé",
-  "metadataSeparatorPreview": "Aperçu",
   "metadataSeparatorInvalid": "Utilisez 1 à 16 caractères, sans saut de ligne ni caractère de contrôle.",
   "settingDisabled": "Désactivée",
   "@settingDisabled": {

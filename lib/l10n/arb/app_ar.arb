@@ -194,13 +194,6 @@
   },
   "replayGainUnsupportedDecoder": "Some tracks could not be analyzed because their audio codec is not supported by the ReplayGain decoder. Their files were not changed.",
   "metadataSeparators": "فواصل الوسوم",
-  "metadataSeparatorsDescription": "اختر كيفية دمج القيم المفصولة بفاصلة أو فاصلة منقوطة عند حفظ الوسوم عبر تعديل البيانات الوصفية. فواصل الفنان المخصصة تكتب وسمًا مدمجًا واحدًا. الأسماء التي تحتوي على & أو / تُحفظ كما هي.",
-  "metadataSeparatorSource": "الحفاظ على التنسيق الأصلي",
-  "metadataSeparatorComma": "فاصلة (,)",
-  "metadataSeparatorSemicolon": "فاصلة منقوطة (;)",
-  "metadataSeparatorSlash": "شرطة مائلة (/)",
-  "metadataSeparatorCustom": "فاصل مخصص",
-  "metadataSeparatorPreview": "معاينة",
   "metadataSeparatorInvalid": "استخدم من 1 إلى 16 حرفًا بدون فواصل أسطر أو محارف تحكم.",
   "settingDisabled": "معطَّل",
   "@settingDisabled": {

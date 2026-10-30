@@ -166,13 +166,6 @@
   },
   "replayGainUnsupportedDecoder": "部分曲目无法分析，因为其音频编解码器不受 ReplayGain 解码器支持。这些文件未被更改。",
   "metadataSeparators": "标签分隔符",
-  "metadataSeparatorsDescription": "选择使用 Edit Metadata 保存标签时，以逗号或分号分隔的值如何合并。自定义艺术家分隔符会写入一个合并后的标签。包含 & 或 / 的名称会被保留。",
-  "metadataSeparatorSource": "保留原始格式",
-  "metadataSeparatorComma": "逗号 (,)",
-  "metadataSeparatorSemicolon": "分号 (;)",
-  "metadataSeparatorSlash": "斜杠 (/)",
-  "metadataSeparatorCustom": "自定义分隔符",
-  "metadataSeparatorPreview": "预览",
   "metadataSeparatorInvalid": "请使用 1–16 个字符，且不包含换行或控制字符。",
   "settingDisabled": "禁用",
   "@settingDisabled": {

@@ -194,13 +194,6 @@
   },
   "replayGainUnsupportedDecoder": "Some tracks could not be analyzed because their audio codec is not supported by the ReplayGain decoder. Their files were not changed.",
   "metadataSeparators": "Tagscheidingstekens",
-  "metadataSeparatorsDescription": "Kies hoe waarden die door komma's of puntkomma's zijn gescheiden worden samengevoegd wanneer je tags opslaat met Metadata bewerken. Aangepaste artiestscheidingstekens schrijven één samengevoegde tag. Namen met & of / blijven behouden.",
-  "metadataSeparatorSource": "Oorspronkelijke opmaak behouden",
-  "metadataSeparatorComma": "Komma (,)",
-  "metadataSeparatorSemicolon": "Puntkomma (;)",
-  "metadataSeparatorSlash": "Schuine streep (/)",
-  "metadataSeparatorCustom": "Aangepast scheidingsteken",
-  "metadataSeparatorPreview": "Voorbeeld",
   "metadataSeparatorInvalid": "Gebruik 1–16 tekens zonder regeleinden of besturingstekens.",
   "settingDisabled": "Disabled",
   "@settingDisabled": {

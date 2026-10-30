@@ -194,13 +194,6 @@
   },
   "replayGainUnsupportedDecoder": "Some tracks could not be analyzed because their audio codec is not supported by the ReplayGain decoder. Their files were not changed.",
   "metadataSeparators": "Tag-Trennzeichen",
-  "metadataSeparatorsDescription": "Lege fest, wie durch Komma oder Semikolon getrennte Werte beim Speichern von Tags über Metadaten bearbeiten verbunden werden. Benutzerdefinierte Künstlertrennzeichen schreiben einen zusammengeführten Tag. Namen mit & oder / bleiben erhalten.",
-  "metadataSeparatorSource": "Originalformatierung beibehalten",
-  "metadataSeparatorComma": "Komma (,)",
-  "metadataSeparatorSemicolon": "Semikolon (;)",
-  "metadataSeparatorSlash": "Schrägstrich (/)",
-  "metadataSeparatorCustom": "Benutzerdefiniertes Trennzeichen",
-  "metadataSeparatorPreview": "Vorschau",
   "metadataSeparatorInvalid": "Verwende 1–16 Zeichen ohne Zeilenumbrüche oder Steuerzeichen.",
   "settingDisabled": "Deaktiviert",
   "@settingDisabled": {

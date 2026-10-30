@@ -194,13 +194,6 @@
   },
   "replayGainUnsupportedDecoder": "Bazı parçalar, ses kodekleri ReplayGain çözücüsü tarafından desteklenmediği için analiz edilemedi. Dosyaları değiştirilmedi.",
   "metadataSeparators": "Etiket ayırıcıları",
-  "metadataSeparatorsDescription": "Düzenle ile etiketleri kaydettiğinizde virgül veya noktalı virgülle ayrılmış değerlerin nasıl birleştirileceğini seçin. Özel sanatçı ayırıcıları tek bir birleşik etiket yazar. & veya / içeren adlar korunur.",
-  "metadataSeparatorSource": "Kaynak biçimini koru",
-  "metadataSeparatorComma": "Virgül (,)",
-  "metadataSeparatorSemicolon": "Noktalı virgül (;)",
-  "metadataSeparatorSlash": "Eğik çizgi (/)",
-  "metadataSeparatorCustom": "Özel ayırıcı",
-  "metadataSeparatorPreview": "Önizleme",
   "metadataSeparatorInvalid": "1–16 karakter kullanın; satır sonu veya denetim karakteri olmasın.",
   "settingDisabled": "Devre Dışı",
   "@settingDisabled": {

@@ -194,13 +194,6 @@
   },
   "replayGainUnsupportedDecoder": "Some tracks could not be analyzed because their audio codec is not supported by the ReplayGain decoder. Their files were not changed.",
   "metadataSeparators": "टैग विभाजक",
-  "metadataSeparatorsDescription": "Edit Metadata से टैग सहेजते समय अल्पविराम या सेमीकोलन से अलग किए गए मान कैसे जुड़ेंगे, यह चुनें। कस्टम कलाकार विभाजक एक जुड़ा हुआ टैग लिखता है। & या / वाले नाम सुरक्षित रहते हैं।",
-  "metadataSeparatorSource": "स्रोत फ़ॉर्मैटिंग रखें",
-  "metadataSeparatorComma": "अल्पविराम (,)",
-  "metadataSeparatorSemicolon": "सेमीकोलन (;)",
-  "metadataSeparatorSlash": "स्लैश (/)",
-  "metadataSeparatorCustom": "कस्टम विभाजक",
-  "metadataSeparatorPreview": "पूर्वावलोकन",
   "metadataSeparatorInvalid": "1–16 अक्षर उपयोग करें, बिना नई पंक्ति या नियंत्रण अक्षरों के।",
   "settingDisabled": "Disabled",
   "@settingDisabled": {

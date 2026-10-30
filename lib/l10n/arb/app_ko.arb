@@ -194,13 +194,6 @@
   },
   "replayGainUnsupportedDecoder": "일부 트랙은 리플레이게인 디코더에서 지원하지 않는 오디오 코덱을 사용하기 때문에 분석할 수 없습니다. 해당 파일은 변경되지 않았습니다",
   "metadataSeparators": "태그 구분자",
-  "metadataSeparatorsDescription": "메타데이터 편집으로 태그를 저장할 때 쉼표 또는 세미콜론으로 구분된 값을 어떻게 합칠지 선택합니다. 사용자 지정 아티스트 구분자는 합쳐진 태그 하나로 기록합니다. & 또는 /가 포함된 이름은 그대로 유지됩니다.",
-  "metadataSeparatorSource": "원본 형식 유지",
-  "metadataSeparatorComma": "쉼표 (,)",
-  "metadataSeparatorSemicolon": "세미콜론 (;)",
-  "metadataSeparatorSlash": "슬래시 (/)",
-  "metadataSeparatorCustom": "사용자 지정 구분자",
-  "metadataSeparatorPreview": "미리보기",
   "metadataSeparatorInvalid": "줄바꿈이나 제어 문자 없이 1–16자를 사용하세요.",
   "settingDisabled": "비활성화됨",
   "@settingDisabled": {

@@ -194,13 +194,6 @@
   },
   "replayGainUnsupportedDecoder": "Some tracks could not be analyzed because their audio codec is not supported by the ReplayGain decoder. Their files were not changed.",
   "metadataSeparators": "タグの区切り文字",
-  "metadataSeparatorsDescription": "メタデータを編集してタグを保存するとき、カンマまたはセミコロンで区切られた値をどのように結合するかを選びます。カスタムのアーティスト区切り文字を使うと、結合された1つのタグとして書き込まれます。& や / を含む名前はそのまま保持されます。",
-  "metadataSeparatorSource": "元の書式を維持",
-  "metadataSeparatorComma": "カンマ (,)",
-  "metadataSeparatorSemicolon": "セミコロン (;)",
-  "metadataSeparatorSlash": "スラッシュ (/)",
-  "metadataSeparatorCustom": "カスタム区切り文字",
-  "metadataSeparatorPreview": "プレビュー",
   "metadataSeparatorInvalid": "改行や制御文字を含まない 1～16 文字を使用してください。",
   "settingDisabled": "無効",
   "@settingDisabled": {

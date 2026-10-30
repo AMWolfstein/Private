@@ -1,6 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:sistrum/core/models/automix_options.dart';
-import 'package:sistrum/core/models/metadata_separators.dart';
 import 'package:sistrum/core/models/tag_credit_settings.dart';
 
 part 'settings.g.dart';
@@ -29,7 +28,6 @@ double musicHapticsLevelFromJson(Object? value) =>
 
 @JsonSerializable(explicitToJson: true)
 class AppSettings {
-  final MetadataSeparators metadataSeparators;
   final TagCreditSettings tagCredits;
   // Optional pulses follow local playback.
   final bool musicHaptics;
@@ -123,7 +121,6 @@ class AppSettings {
   final bool playerShowTranslation;
 
   const AppSettings({
-    this.metadataSeparators = const MetadataSeparators(),
     this.tagCredits = const TagCreditSettings(),
     this.musicHaptics = false,
     this.musicHapticsSensitivity = 0.5,
@@ -171,7 +168,6 @@ class AppSettings {
   });
 
   AppSettings copyWith({
-    MetadataSeparators? metadataSeparators,
     TagCreditSettings? tagCredits,
     bool? musicHaptics,
     double? musicHapticsSensitivity,
@@ -218,7 +214,6 @@ class AppSettings {
     bool? playerShowTranslation,
   }) {
     return AppSettings(
-      metadataSeparators: metadataSeparators ?? this.metadataSeparators,
       tagCredits: tagCredits ?? this.tagCredits,
       musicHaptics: musicHaptics ?? this.musicHaptics,
       musicHapticsSensitivity:

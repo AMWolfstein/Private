@@ -194,13 +194,6 @@
   },
   "replayGainUnsupportedDecoder": "Beberapa lagu tidak dapat dianalisis karena decoder ReplayGain tidak mendukung codec audio-nya. File tidak diubah.",
   "metadataSeparators": "Pemisah tag",
-  "metadataSeparatorsDescription": "Pilih cara nilai yang dipisahkan koma atau titik koma digabungkan saat Anda menyimpan tag dengan Edit Metadata. Pemisah artis kustom menulis satu tag gabungan. Nama yang berisi & atau / tetap dipertahankan.",
-  "metadataSeparatorSource": "Pertahankan format asli",
-  "metadataSeparatorComma": "Koma (,)",
-  "metadataSeparatorSemicolon": "Titik koma (;)",
-  "metadataSeparatorSlash": "Garis miring (/)",
-  "metadataSeparatorCustom": "Pemisah kustom",
-  "metadataSeparatorPreview": "Pratinjau",
   "metadataSeparatorInvalid": "Gunakan 1–16 karakter tanpa baris baru atau karakter kontrol.",
   "settingDisabled": "Mati",
   "@settingDisabled": {

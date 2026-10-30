@@ -194,13 +194,6 @@
   },
   "replayGainUnsupportedDecoder": "Algunas pistas no se pudieron analizar porque el decodificador de ReplayGain no es compatible con su códec de audio. Los archivos no se modificaron.",
   "metadataSeparators": "Separadores de etiquetas",
-  "metadataSeparatorsDescription": "Elige cómo se unen los valores separados por comas o punto y coma al guardar etiquetas con Editar metadatos. Los separadores personalizados de artista escriben una sola etiqueta unida. Los nombres con & o / se conservan.",
-  "metadataSeparatorSource": "Mantener el formato original",
-  "metadataSeparatorComma": "Coma (,)",
-  "metadataSeparatorSemicolon": "Punto y coma (;)",
-  "metadataSeparatorSlash": "Barra (/)",
-  "metadataSeparatorCustom": "Separador personalizado",
-  "metadataSeparatorPreview": "Vista previa",
   "metadataSeparatorInvalid": "Usa de 1 a 16 caracteres sin saltos de línea ni caracteres de control.",
   "settingDisabled": "Desactivado",
   "@settingDisabled": {

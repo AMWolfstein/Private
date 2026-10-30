@@ -194,13 +194,6 @@
   },
   "replayGainUnsupportedDecoder": "Some tracks could not be analyzed because their audio codec is not supported by the ReplayGain decoder. Their files were not changed.",
   "metadataSeparators": "Separadores de tags",
-  "metadataSeparatorsDescription": "Escolha como valores separados por vírgula ou ponto e vírgula são unidos ao salvar tags com Editar metadados. Separadores personalizados de artista gravam uma única tag unida. Nomes que contêm & ou / são preservados.",
-  "metadataSeparatorSource": "Manter formatação original",
-  "metadataSeparatorComma": "Vírgula (,)",
-  "metadataSeparatorSemicolon": "Ponto e vírgula (;)",
-  "metadataSeparatorSlash": "Barra (/)",
-  "metadataSeparatorCustom": "Separador personalizado",
-  "metadataSeparatorPreview": "Pré-visualização",
   "metadataSeparatorInvalid": "Use de 1 a 16 caracteres, sem quebras de linha ou caracteres de controle.",
   "settingDisabled": "Desabilitado",
   "@settingDisabled": {

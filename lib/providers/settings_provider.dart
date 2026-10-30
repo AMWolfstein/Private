@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sistrum/core/models/app_glass.dart';
 import 'package:sistrum/core/models/settings.dart';
-import 'package:sistrum/core/models/metadata_separators.dart';
 import 'package:sistrum/core/models/tag_credit_settings.dart';
 import 'package:sistrum/core/models/automix_options.dart';
 import 'package:sistrum/utils/logging/logger.dart';
@@ -434,26 +433,6 @@ class SettingsNotifier extends Notifier<AppSettings> {
 
   void setLocalLibraryShowDuplicates(bool show) {
     state = state.copyWith(localLibraryShowDuplicates: show);
-    _saveSettings();
-  }
-
-  void setMetadataSeparator(String field, String separator) {
-    if (!MetadataSeparators.fields.contains(field) ||
-        MetadataSeparators.validSeparator(separator) != separator) {
-      return;
-    }
-    state = state.copyWith(
-      metadataSeparators: state.metadataSeparators.withField(field, separator),
-    );
-    _saveSettings();
-  }
-
-  /// Save-time separator shared by artist, album artist and composer.
-  void setMetadataNamesSeparator(String separator) {
-    if (MetadataSeparators.validSeparator(separator) != separator) return;
-    state = state.copyWith(
-      metadataSeparators: state.metadataSeparators.withNames(separator),
-    );
     _saveSettings();
   }
 

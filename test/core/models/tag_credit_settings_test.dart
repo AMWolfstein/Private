@@ -1,5 +1,4 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sistrum/core/models/metadata_separators.dart';
 import 'package:sistrum/core/models/settings.dart';
 import 'package:sistrum/core/models/tag_credit_settings.dart';
 
@@ -73,21 +72,5 @@ void main() {
     expect(TagCreditSettings.isValidDelimiter('FEAT.', offered), isFalse);
     expect(TagCreditSettings.isValidDelimiter('a' * 17, offered), isFalse);
     expect(TagCreditSettings.isValidDelimiter('a\nb', offered), isFalse);
-  });
-
-  test('names come from the first non-empty name field', () {
-    const legacy = MetadataSeparators(artist: '', albumArtist: ' / ');
-    expect(legacy.names, ' / ');
-    expect(const MetadataSeparators().names, '');
-  });
-
-  test('withNames writes the shared value and leaves genre alone', () {
-    const separators = MetadataSeparators(genre: ', ');
-    final shared = separators.withNames('; ');
-    expect(shared.artist, '; ');
-    expect(shared.albumArtist, '; ');
-    expect(shared.composer, '; ');
-    expect(shared.genre, ', ');
-    expect(separators.withNames('').names, '');
   });
 }

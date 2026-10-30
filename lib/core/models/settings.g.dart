@@ -7,11 +7,6 @@ part of 'settings.dart';
 // **************************************************************************
 
 AppSettings _$AppSettingsFromJson(Map<String, dynamic> json) => AppSettings(
-  metadataSeparators: json['metadataSeparators'] == null
-      ? const MetadataSeparators()
-      : MetadataSeparators.fromJson(
-          json['metadataSeparators'] as Map<String, dynamic>,
-        ),
   tagCredits: json['tagCredits'] == null
       ? const TagCreditSettings()
       : TagCreditSettings.fromJson(json['tagCredits'] as Map<String, dynamic>),
@@ -87,7 +82,6 @@ AppSettings _$AppSettingsFromJson(Map<String, dynamic> json) => AppSettings(
 
 Map<String, dynamic> _$AppSettingsToJson(AppSettings instance) =>
     <String, dynamic>{
-      'metadataSeparators': instance.metadataSeparators.toJson(),
       'tagCredits': instance.tagCredits.toJson(),
       'musicHaptics': instance.musicHaptics,
       'musicHapticsSensitivity': instance.musicHapticsSensitivity,

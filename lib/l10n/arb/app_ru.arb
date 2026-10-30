@@ -194,13 +194,6 @@
   },
   "replayGainUnsupportedDecoder": "Некоторые треки не могут быть проанализированы, так как их аудио кодек не поддерживается декодером ReplayGain, их файлы не были изменены.",
   "metadataSeparators": "Разделители тегов",
-  "metadataSeparatorsDescription": "Выберите, как объединяются значения, разделённые запятыми или точками с запятой, при сохранении тегов через «Редактировать метаданные». Свой разделитель исполнителей записывает один объединённый тег. Имена с & или / сохраняются.",
-  "metadataSeparatorSource": "Как в исходном файле",
-  "metadataSeparatorComma": "Запятая (,)",
-  "metadataSeparatorSemicolon": "Точка с запятой (;)",
-  "metadataSeparatorSlash": "Косая черта (/)",
-  "metadataSeparatorCustom": "Свой разделитель",
-  "metadataSeparatorPreview": "Предпросмотр",
   "metadataSeparatorInvalid": "Используйте от 1 до 16 символов без переводов строк и управляющих символов.",
   "settingDisabled": "Выключено",
   "@settingDisabled": {

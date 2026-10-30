@@ -3,8 +3,6 @@
 /// stay in their own list so a deselected custom chip is still offered.
 library;
 
-import 'package:sistrum/core/models/metadata_separators.dart';
-
 /// Chips offered in the Artists section, in display order.
 const kArtistDelimiterChoices = <String>[
   ';',
@@ -19,16 +17,9 @@ const kArtistDelimiterChoices = <String>[
   'with',
 ];
 
-/// Artist delimiters selected on a fresh install.
-const kArtistDelimiterDefaults = <String>[
-  ';',
-  ',',
-  '،',
-  'feat.',
-  'ft.',
-  'featuring',
-  '&',
-];
+/// Artist delimiters selected on a fresh install: every chip, so All is on.
+/// A name that one of them splits wrongly goes in Keep together.
+const kArtistDelimiterDefaults = kArtistDelimiterChoices;
 
 /// Chips offered in the Genre section, in display order.
 const kGenreDelimiterChoices = <String>[';', '،', ',', '/', '&'];
@@ -37,6 +28,12 @@ const kGenreDelimiterChoices = <String>[';', '،', ',', '/', '&'];
 const kGenreDelimiterDefaults = <String>[';', '،'];
 
 const _maxDelimiterLength = 16;
+
+/// Whether [token] fits a separator: at most 16 characters, with no line
+/// breaks or other control characters.
+bool isSeparatorToken(String token) =>
+    token.length <= _maxDelimiterLength &&
+    !token.contains(RegExp(r'[\x00-\x1f\x7f]'));
 const _maxKeepTogetherLength = 100;
 const _maxKeepTogetherCount = 200;
 const _maxCustomCount = 32;
@@ -123,7 +120,7 @@ class TagCreditSettings {
   static bool isValidDelimiter(String token, Iterable<String> existing) {
     final trimmed = token.trim();
     if (trimmed.isEmpty) return false;
-    if (MetadataSeparators.validSeparator(trimmed) != trimmed) return false;
+    if (!isSeparatorToken(trimmed)) return false;
     final key = trimmed.toLowerCase();
     return !existing.any((other) => other.toLowerCase() == key);
   }

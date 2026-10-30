@@ -194,13 +194,6 @@
   },
   "replayGainUnsupportedDecoder": "Деякі треки не вдалося проаналізувати, оскільки їхній аудіокодек не підтримується декодером ReplayGain. Їхні файли не були змінені.",
   "metadataSeparators": "Роздільники тегів",
-  "metadataSeparatorsDescription": "Оберіть, як з’єднувати значення, розділені комами або крапками з комою, під час збереження тегів у «Редагувати метадані». Власний роздільник виконавців записує один з’єднаний тег. Імена з & або / зберігаються.",
-  "metadataSeparatorSource": "Зберігати оригінальний формат",
-  "metadataSeparatorComma": "Кома (,)",
-  "metadataSeparatorSemicolon": "Крапка з комою (;)",
-  "metadataSeparatorSlash": "Скісна риска (/)",
-  "metadataSeparatorCustom": "Власний роздільник",
-  "metadataSeparatorPreview": "Попередній перегляд",
   "metadataSeparatorInvalid": "Використовуйте від 1 до 16 символів без переносів рядків і службових символів.",
   "settingDisabled": "Вимкнені",
   "@settingDisabled": {
