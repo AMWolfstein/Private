@@ -260,6 +260,17 @@ class LogBuffer extends ChangeNotifier {
       buffer.writeln(entry.toString());
     }
 
+    // Native and framework output the buffer never sees, such as the stack of
+    // a crash that happened before a Dart log call.
+    final logcat = await _nativeLogs.readAppLogcat();
+    if (logcat case NativeLogcatText(:final text) when text.trim().isNotEmpty) {
+      buffer.writeln();
+      buffer.writeln('=' * 60);
+      buffer.writeln('APP LOGCAT (this process)');
+      buffer.writeln('=' * 60);
+      buffer.write(text);
+    }
+
     return buffer.toString();
   }
 
@@ -394,7 +405,12 @@ class AppLogger {
 
   void e(String message, [Object? error, StackTrace? stackTrace]) {
     if (error != null) {
-      _addToBuffer('ERROR', message, error: error.toString());
+      // The buffer keeps the stack so an export shows where the error came from.
+      _addToBuffer(
+        'ERROR',
+        message,
+        error: stackTrace == null ? error.toString() : '$error\n$stackTrace',
+      );
       if (kDebugMode) {
         debugPrint(
           '[$_tag] ERROR: ${truncateLogText(redactSensitiveText(message))} | ${truncateLogText(redactSensitiveText(error.toString()))}',
