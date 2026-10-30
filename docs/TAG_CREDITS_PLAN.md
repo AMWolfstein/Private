@@ -183,7 +183,7 @@ Save path (Edit Metadata):
   `formatTagCreditsForSave(value, field, rules, separator)`: split with
   `splitTagCredits`, join with the Save with separator; an empty separator keeps
   the value unchanged.
-- `lib/widgets/library/track_metadata_persistence.dart` and
+- `lib/services/library/track_metadata_persistence.dart` and
   `lib/providers/metadata_editor_controller.dart`: format the four fields in Dart
   with the function above and stop adding `MetadataSeparators.writerFields` to the
   writer map, so the Rust writer stores the Dart result as is (otherwise it splits
