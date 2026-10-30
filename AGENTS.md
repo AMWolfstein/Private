@@ -88,11 +88,11 @@ menus, format/bitrate/quality sheets, encoding services or converted-file public
 Keep local tag/cover/lyrics editing, ReplayGain and CUE splitting as separate operations.
 Artwork probing and FFmpeg processing for those retained features remain supported.
 
-Tag separators live under Local Library settings in two sections: Artists (artist, album
-artist, composer) and Genre. Each section is a grid of separator chips (four per row) with
-defaults, All (selects every chip; when all are selected it resets to the defaults), and Add
-separator for a custom one; a section is never empty. Save with picks the separator that
-joins names when Edit Metadata saves tags. Keep together lists names that are never split.
+Tag separators live under Local Library settings as a list of two rows: Artists (artist,
+album artist, composer) and Genre. Each row opens a sheet with a grid of separator chips (four
+per row) with defaults, All (selects every chip; when all are selected it resets to the
+defaults), and an Add separator field that Save adds; a section is never empty. A Save with
+group (Artists, Genre) picks the separator that joins names when Edit Metadata saves tags. Keep together lists names that are never split.
 The library reads credits through a derived TEMP table `library_tag_credits` (item_id, field,
 name, name_key, position, built by `LibraryTagCreditsCache` from the visible view with the
 same rules), so artist and genre pages, search, and the discography shelves agree with the
