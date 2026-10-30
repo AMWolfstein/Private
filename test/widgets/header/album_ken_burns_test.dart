@@ -112,6 +112,32 @@ void main() {
     }
   });
 
+  testWidgets('stands still while inactive, such as lyrics on the player', (
+    tester,
+  ) async {
+    Widget host({required bool active}) => ProviderScope(
+      overrides: [
+        settingsProvider.overrideWith(() => _Settings(const AppSettings())),
+      ],
+      child: MaterialApp(
+        home: Scaffold(
+          body: AlbumKenBurns(
+            active: active,
+            child: const ColoredBox(color: Colors.red),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpWidget(host(active: false));
+    await tester.pump(const Duration(seconds: 3));
+    expect(_transform(tester), isNull);
+    expect(tester.hasRunningAnimations, isFalse);
+
+    await tester.pumpWidget(host(active: true));
+    await tester.pump(const Duration(seconds: 2));
+    expect(_transform(tester), isNotNull);
+  });
+
   testWidgets('stops once the page is scrolled past the cover', (tester) async {
     final controller = ScrollController();
     addTearDown(controller.dispose);

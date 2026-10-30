@@ -27,6 +27,7 @@ import 'package:sistrum/utils/logging/logger.dart';
 import 'package:sistrum/widgets/primitives/app_bottom_sheet.dart';
 import 'package:sistrum/widgets/status/audio_output_button.dart';
 import 'package:sistrum/widgets/lyrics/lyrics_screen_awake.dart';
+import 'package:sistrum/widgets/header/album_ken_burns.dart';
 import 'package:sistrum/widgets/player/artwork/player_artwork.dart';
 import 'package:sistrum/widgets/player/layout/player_track_swipe.dart';
 import 'package:sistrum/widgets/player/layout/player_gesture_regions.dart';
@@ -427,18 +428,21 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
                     fadeStart: immersive ? .72 : .58,
                     showArtwork: _currentPage == 0,
                     artwork: immersive
-                        ? PlayerArtworkDragRegion(
-                            child: PlayerTransitionArtwork(
-                              artworkKey: _immersiveArtworkKey,
-                              child: Hero(
-                                tag: kNowPlayingArtworkHeroTag,
-                                child: PlayerArtwork(
-                                  artUri: mediaItem.artUri?.toString(),
-                                  colorScheme: colorScheme,
-                                  cacheWidth:
-                                      PlayerArtwork.transitionCacheWidth(
-                                        context,
-                                      ),
+                        ? AlbumKenBurns(
+                            active: _currentPage == 0,
+                            child: PlayerArtworkDragRegion(
+                              child: PlayerTransitionArtwork(
+                                artworkKey: _immersiveArtworkKey,
+                                child: Hero(
+                                  tag: kNowPlayingArtworkHeroTag,
+                                  child: PlayerArtwork(
+                                    artUri: mediaItem.artUri?.toString(),
+                                    colorScheme: colorScheme,
+                                    cacheWidth:
+                                        PlayerArtwork.transitionCacheWidth(
+                                          context,
+                                        ),
+                                  ),
                                 ),
                               ),
                             ),

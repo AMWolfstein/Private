@@ -8,14 +8,17 @@ import 'package:sistrum/providers/settings_provider.dart';
 /// Seconds for one full drift; slow enough to read as ambient.
 const kAlbumKenBurnsPeriod = Duration(seconds: 28);
 
-/// A slow zoom and pan of an album header's cover. The cover stays on its own
-/// layer, so only a transform changes per frame. It stands still with the
-/// setting off, with reduced motion, without glass (off or low-end devices),
-/// while its route is covered, and once the page is scrolled past the cover.
+/// A slow zoom and pan of an album header's cover, and of the immersive
+/// player's artwork. The cover stays on its own layer, so only a transform
+/// changes per frame. It stands still with the setting off, with reduced
+/// motion, without glass (off or low-end devices), while [active] is false
+/// (for example, the player shows lyrics), while its route is covered, and
+/// once the page is scrolled past the cover.
 class AlbumKenBurns extends ConsumerStatefulWidget {
-  const AlbumKenBurns({super.key, required this.child});
+  const AlbumKenBurns({super.key, required this.child, this.active = true});
 
   final Widget child;
+  final bool active;
 
   @override
   ConsumerState<AlbumKenBurns> createState() => _AlbumKenBurnsState();
@@ -69,9 +72,12 @@ class _AlbumKenBurnsState extends ConsumerState<AlbumKenBurns>
     final enabled = ref.watch(
       settingsProvider.select((s) => s.animatedAlbumArtwork),
     );
-    final glass =
-        ref.watch(appGlassLevelProvider) != AppGlassLevel.flat;
-    _allowed = enabled && glass && !MediaQuery.disableAnimationsOf(context);
+    final glass = ref.watch(appGlassLevelProvider) != AppGlassLevel.flat;
+    _allowed =
+        enabled &&
+        glass &&
+        widget.active &&
+        !MediaQuery.disableAnimationsOf(context);
     return LayoutBuilder(
       builder: (context, constraints) {
         _height = constraints.maxHeight;
