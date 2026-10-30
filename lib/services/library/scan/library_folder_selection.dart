@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:file_picker/file_picker.dart';
 import 'package:sistrum/services/library/database/library_mutation_ports.dart';
 import 'package:sistrum/services/native/media_file_bridge.dart';
@@ -44,13 +45,13 @@ Future<bool> selectLibraryFolder(
       volumeId: result['volume_id'] as String?,
       isRemovable: result['is_removable'] == true,
     );
-    await library.startSourceScan(source.id);
+    unawaited(library.startSourceScan(source.id));
     return true;
   }
 
   final path = await FilePicker.getDirectoryPath();
   if (path == null) return false;
   final source = await library.addSource(path: path, displayName: path);
-  await library.startSourceScan(source.id);
+  unawaited(library.startSourceScan(source.id));
   return true;
 }
