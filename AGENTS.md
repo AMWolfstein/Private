@@ -25,7 +25,7 @@ Home has no Recent access-history section. Latest Releases uses valid release-da
 from local songs, normalized chronologically without scan/add-date fallback; keep Home's
 Recently Added shelf unchanged. Do not replace the feed with only access history.
 
-Detailed logging is the first option in Logs; there is no separate App settings page.
+Detailed logging is always on and has no toggle; Logs filters by level with a Full option that shows every entry. There is no separate App settings page.
 Lyrics settings do not contain Embed lyrics or its output-mode submenu/preferences.
 Local lyrics reading and per-file metadata/lyrics editing remain supported. Appearance has
 no decorative Library preview card. Settings and Library subpages reuse the album header's
@@ -104,7 +104,7 @@ library, with exact tag matching and no online catalog. Songs contains only trac
 playlist members), with no collection rows or individual playlists mixed into the list.
 
 Library pages have no search field (search lives in the bottom Search tab). Songs headers show Play/Shuffle, the
-player favorite is a heart, Listening statistics is the tab after Home, Edit Metadata has no cover resizer, and each
+player favorite is a heart, Insights (listening statistics) is the tab after Home and records listening always on, with no Record listening toggle, Edit Metadata has no cover resizer, and each
 lyric line takes its direction from its first strong letter.
 
 The updater is restored: `UpdateChecker` reads GitHub releases from `AppInfo.githubRepo`, Settings > Updates (above About) holds Check now and the
