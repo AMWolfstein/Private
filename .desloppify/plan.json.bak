@@ -1,14 +1,22 @@
 {
   "version": 8,
   "created": "2026-10-29T06:01:52+00:00",
-  "updated": "2026-10-30T11:47:53+00:00",
+  "updated": "2026-10-30T12:12:35+00:00",
   "queue_order": [
     "subjective::abstraction_fitness",
+    "subjective::ai_generated_debt",
+    "subjective::contract_coherence",
     "subjective::convention_outlier",
     "subjective::design_coherence",
+    "subjective::error_consistency",
+    "subjective::high_level_elegance",
     "subjective::logic_clarity",
+    "subjective::low_level_elegance",
+    "subjective::mid_level_elegance",
+    "subjective::naming_quality",
     "subjective::package_organization",
-    "review::.::holistic::type_safety::failed_replaygain_result_accepts_null"
+    "subjective::test_strategy",
+    "subjective::type_safety"
   ],
   "deferred": [],
   "skipped": {},
@@ -101,8 +109,8 @@
     "test_coverage::lib/screens/home/home_tab_feed.dart::untested_module": {
       "issue_id": "test_coverage::lib/screens/home/home_tab_feed.dart::untested_module",
       "created_at": "2026-10-29T06:01:52+00:00",
-      "cluster": "auto/test_coverage-untested_module",
-      "updated_at": "2026-10-29T18:55:17+00:00"
+      "cluster": null,
+      "updated_at": "2026-10-30T12:12:35+00:00"
     },
     "test_coverage::lib/l10n/app_localizations_ja.dart::untested_module": {
       "issue_id": "test_coverage::lib/l10n/app_localizations_ja.dart::untested_module",
@@ -155,8 +163,8 @@
     "test_coverage::lib/screens/home/home_tab_widgets.dart::untested_module": {
       "issue_id": "test_coverage::lib/screens/home/home_tab_widgets.dart::untested_module",
       "created_at": "2026-10-29T06:01:52+00:00",
-      "cluster": "auto/test_coverage-untested_module",
-      "updated_at": "2026-10-29T18:55:17+00:00"
+      "cluster": null,
+      "updated_at": "2026-10-30T12:12:35+00:00"
     },
     "test_coverage::lib/screens/library/queue_tab_filter_widgets.dart::untested_module": {
       "issue_id": "test_coverage::lib/screens/library/queue_tab_filter_widgets.dart::untested_module",
@@ -461,44 +469,44 @@
     "test_coverage::lib/screens/library/library_section_tab_selection.dart::untested_module": {
       "issue_id": "test_coverage::lib/screens/library/library_section_tab_selection.dart::untested_module",
       "created_at": "2026-10-29T18:55:17+00:00",
-      "cluster": "auto/test_coverage-untested_module",
-      "updated_at": "2026-10-29T18:55:17+00:00"
+      "cluster": null,
+      "updated_at": "2026-10-30T12:12:35+00:00"
     },
     "test_coverage::lib/screens/library/library_section_tab_filter_widgets.dart::untested_module": {
       "issue_id": "test_coverage::lib/screens/library/library_section_tab_filter_widgets.dart::untested_module",
       "created_at": "2026-10-29T18:55:17+00:00",
-      "cluster": "auto/test_coverage-untested_module",
-      "updated_at": "2026-10-29T18:55:17+00:00"
+      "cluster": null,
+      "updated_at": "2026-10-30T12:12:35+00:00"
     },
     "test_coverage::lib/screens/library/library_section_tab_collection_items.dart::untested_module": {
       "issue_id": "test_coverage::lib/screens/library/library_section_tab_collection_items.dart::untested_module",
       "created_at": "2026-10-29T18:55:17+00:00",
-      "cluster": "auto/test_coverage-untested_module",
-      "updated_at": "2026-10-29T18:55:17+00:00"
+      "cluster": null,
+      "updated_at": "2026-10-30T12:12:35+00:00"
     },
     "test_coverage::lib/screens/library/library_section_tab_navigation.dart::untested_module": {
       "issue_id": "test_coverage::lib/screens/library/library_section_tab_navigation.dart::untested_module",
       "created_at": "2026-10-29T18:55:17+00:00",
-      "cluster": "auto/test_coverage-untested_module",
-      "updated_at": "2026-10-29T18:55:17+00:00"
+      "cluster": null,
+      "updated_at": "2026-10-30T12:12:35+00:00"
     },
     "test_coverage::lib/screens/library/library_section_tab_item_widgets.dart::untested_module": {
       "issue_id": "test_coverage::lib/screens/library/library_section_tab_item_widgets.dart::untested_module",
       "created_at": "2026-10-29T18:55:17+00:00",
-      "cluster": "auto/test_coverage-untested_module",
-      "updated_at": "2026-10-29T18:55:17+00:00"
+      "cluster": null,
+      "updated_at": "2026-10-30T12:12:35+00:00"
     },
     "test_coverage::lib/screens/library/library_section_tab_batch_actions.dart::untested_module": {
       "issue_id": "test_coverage::lib/screens/library/library_section_tab_batch_actions.dart::untested_module",
       "created_at": "2026-10-29T18:55:17+00:00",
-      "cluster": "auto/test_coverage-untested_module",
-      "updated_at": "2026-10-29T18:55:17+00:00"
+      "cluster": null,
+      "updated_at": "2026-10-30T12:12:35+00:00"
     },
     "test_coverage::lib/screens/library/library_section_tab_helpers.dart::untested_module": {
       "issue_id": "test_coverage::lib/screens/library/library_section_tab_helpers.dart::untested_module",
       "created_at": "2026-10-29T18:55:17+00:00",
-      "cluster": "auto/test_coverage-untested_module",
-      "updated_at": "2026-10-29T18:55:17+00:00"
+      "cluster": null,
+      "updated_at": "2026-10-30T12:12:35+00:00"
     },
     "subjective::abstraction_fitness": {
       "issue_id": "subjective::abstraction_fitness",
@@ -631,23 +639,13 @@
     "auto/test_coverage-untested_module": {
       "name": "auto/test_coverage-untested_module",
       "description": "Fix 10 test coverage issues",
-      "issue_ids": [
-        "test_coverage::lib/screens/home/home_tab_feed.dart::untested_module",
-        "test_coverage::lib/screens/home/home_tab_widgets.dart::untested_module",
-        "test_coverage::lib/screens/library/library_section_tab_selection.dart::untested_module",
-        "test_coverage::lib/screens/library/library_section_tab_filter_widgets.dart::untested_module",
-        "test_coverage::lib/screens/library/library_section_tab_collection_items.dart::untested_module",
-        "test_coverage::lib/screens/library/library_section_tab_navigation.dart::untested_module",
-        "test_coverage::lib/screens/library/library_section_tab_item_widgets.dart::untested_module",
-        "test_coverage::lib/screens/library/library_section_tab_batch_actions.dart::untested_module",
-        "test_coverage::lib/screens/library/library_section_tab_helpers.dart::untested_module"
-      ],
+      "issue_ids": [],
       "created_at": "2026-10-29T06:01:52+00:00",
       "updated_at": "2026-10-29T18:55:17+00:00",
       "auto": true,
       "cluster_key": "detector::test_coverage::untested_module",
       "action": "review test coverage gaps",
-      "execution_status": "review",
+      "execution_status": "done",
       "user_modified": false,
       "action_type": "refactor",
       "execution_policy": "planned_only"
@@ -797,20 +795,14 @@
           "title": "Add behavioural parse-rule tests for audio_analysis_parsing.dart",
           "detail": "Test the parse rules directly; no stubs.",
           "effort": "medium",
-          "issue_refs": [
-            "test_coverage::lib/services/audio_analysis/audio_analysis_parsing.dart::transitive_only"
-          ],
+          "issue_refs": [],
           "done": true
         },
         {
           "title": "Add behavioural tests for listening_statistics_screen, local_guide_pages and duplicate_review_sheet",
           "detail": "Test visible statistics, guide-page and duplicate-review behaviour; no stubs. Track Test health strict score after the cluster.",
           "effort": "large",
-          "issue_refs": [
-            "test_coverage::lib/screens/listening_statistics_screen.dart::transitive_only",
-            "test_coverage::lib/screens/local_guide_pages.dart::transitive_only",
-            "test_coverage::lib/widgets/sheets/duplicate_review_sheet.dart::transitive_only"
-          ],
+          "issue_refs": [],
           "done": true
         }
       ]
@@ -1348,19 +1340,104 @@
       "superseded_at": "2026-10-30T11:44:20+00:00",
       "remapped_to": null,
       "candidates": []
+    },
+    "test_coverage::lib/screens/home/home_tab_feed.dart::untested_module": {
+      "original_id": "test_coverage::lib/screens/home/home_tab_feed.dart::untested_module",
+      "original_detector": "test_coverage",
+      "original_file": "lib/screens/home/home_tab_feed.dart",
+      "original_summary": "Untested module (423 LOC, 0 importers)",
+      "status": "superseded",
+      "superseded_at": "2026-10-30T12:12:35+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/screens/home/home_tab_widgets.dart::untested_module": {
+      "original_id": "test_coverage::lib/screens/home/home_tab_widgets.dart::untested_module",
+      "original_detector": "test_coverage",
+      "original_file": "lib/screens/home/home_tab_widgets.dart",
+      "original_summary": "Untested module (49 LOC, 0 importers)",
+      "status": "superseded",
+      "superseded_at": "2026-10-30T12:12:35+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/screens/library/library_section_tab_batch_actions.dart::untested_module": {
+      "original_id": "test_coverage::lib/screens/library/library_section_tab_batch_actions.dart::untested_module",
+      "original_detector": "test_coverage",
+      "original_file": "lib/screens/library/library_section_tab_batch_actions.dart",
+      "original_summary": "Untested module (37 LOC, 0 importers)",
+      "status": "superseded",
+      "superseded_at": "2026-10-30T12:12:35+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/screens/library/library_section_tab_collection_items.dart::untested_module": {
+      "original_id": "test_coverage::lib/screens/library/library_section_tab_collection_items.dart::untested_module",
+      "original_detector": "test_coverage",
+      "original_file": "lib/screens/library/library_section_tab_collection_items.dart",
+      "original_summary": "Untested module (94 LOC, 0 importers)",
+      "status": "superseded",
+      "superseded_at": "2026-10-30T12:12:35+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/screens/library/library_section_tab_filter_widgets.dart::untested_module": {
+      "original_id": "test_coverage::lib/screens/library/library_section_tab_filter_widgets.dart::untested_module",
+      "original_detector": "test_coverage",
+      "original_file": "lib/screens/library/library_section_tab_filter_widgets.dart",
+      "original_summary": "Untested module (393 LOC, 0 importers)",
+      "status": "superseded",
+      "superseded_at": "2026-10-30T12:12:35+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/screens/library/library_section_tab_helpers.dart::untested_module": {
+      "original_id": "test_coverage::lib/screens/library/library_section_tab_helpers.dart::untested_module",
+      "original_detector": "test_coverage",
+      "original_file": "lib/screens/library/library_section_tab_helpers.dart",
+      "original_summary": "Untested module (278 LOC, 0 importers)",
+      "status": "superseded",
+      "superseded_at": "2026-10-30T12:12:35+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/screens/library/library_section_tab_item_widgets.dart::untested_module": {
+      "original_id": "test_coverage::lib/screens/library/library_section_tab_item_widgets.dart::untested_module",
+      "original_detector": "test_coverage",
+      "original_file": "lib/screens/library/library_section_tab_item_widgets.dart",
+      "original_summary": "Untested module (135 LOC, 0 importers)",
+      "status": "superseded",
+      "superseded_at": "2026-10-30T12:12:35+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/screens/library/library_section_tab_navigation.dart::untested_module": {
+      "original_id": "test_coverage::lib/screens/library/library_section_tab_navigation.dart::untested_module",
+      "original_detector": "test_coverage",
+      "original_file": "lib/screens/library/library_section_tab_navigation.dart",
+      "original_summary": "Untested module (298 LOC, 0 importers)",
+      "status": "superseded",
+      "superseded_at": "2026-10-30T12:12:35+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/screens/library/library_section_tab_selection.dart::untested_module": {
+      "original_id": "test_coverage::lib/screens/library/library_section_tab_selection.dart::untested_module",
+      "original_detector": "test_coverage",
+      "original_file": "lib/screens/library/library_section_tab_selection.dart",
+      "original_summary": "Untested module (278 LOC, 0 importers)",
+      "status": "superseded",
+      "superseded_at": "2026-10-30T12:12:35+00:00",
+      "remapped_to": null,
+      "candidates": []
     }
   },
   "promoted_ids": [],
-  "plan_start_scores": {
-    "strict": 90.1,
-    "overall": 91.1,
-    "objective": 94.8,
-    "verified": 94.8
-  },
+  "plan_start_scores": {},
   "refresh_state": {
     "_subjective_migration_pruned": true,
     "lifecycle_phase": "plan",
-    "postflight_scan_completed_at_scan_count": 12,
+    "postflight_scan_completed_at_scan_count": 13,
     "subjective_review_completed_at_scan_count": 6
   },
   "execution_log": [
@@ -4907,6 +4984,86 @@
       "actor": "user",
       "note": "ReplayGainWriteResult.failed takes a non-null ReplayGainWriteFailure (commit f7632d3).",
       "detail": {}
+    },
+    {
+      "timestamp": "2026-10-30T11:47:53+00:00",
+      "action": "resolve",
+      "issue_ids": [
+        "review::.::holistic::type_safety::failed_replaygain_result_accepts_null"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "ReplayGainWriteResult.failed takes a non-null ReplayGainWriteFailure (commit f7632d3).",
+      "detail": {
+        "status": "fixed",
+        "attestation": "I have actually ReplayGainWriteResult.failed takes a non-null ReplayGainWriteFailure (commit f7632d3). and I am not gaming the score."
+      }
+    },
+    {
+      "timestamp": "2026-10-30T11:47:53+00:00",
+      "action": "sync_subjective",
+      "issue_ids": [],
+      "cluster_name": null,
+      "actor": "system",
+      "note": null,
+      "detail": {
+        "changes": true
+      }
+    },
+    {
+      "timestamp": "2026-10-30T12:12:35+00:00",
+      "action": "cluster_done",
+      "issue_ids": [],
+      "cluster_name": "auto/test_coverage-untested_module",
+      "actor": "system",
+      "note": null,
+      "detail": {
+        "reason": "cluster members no longer actionable in state"
+      }
+    },
+    {
+      "timestamp": "2026-10-30T12:12:35+00:00",
+      "action": "reconcile",
+      "issue_ids": [
+        "test_coverage::lib/screens/home/home_tab_feed.dart::untested_module",
+        "test_coverage::lib/screens/home/home_tab_widgets.dart::untested_module",
+        "test_coverage::lib/screens/library/library_section_tab_batch_actions.dart::untested_module",
+        "test_coverage::lib/screens/library/library_section_tab_collection_items.dart::untested_module",
+        "test_coverage::lib/screens/library/library_section_tab_filter_widgets.dart::untested_module",
+        "test_coverage::lib/screens/library/library_section_tab_helpers.dart::untested_module",
+        "test_coverage::lib/screens/library/library_section_tab_item_widgets.dart::untested_module",
+        "test_coverage::lib/screens/library/library_section_tab_navigation.dart::untested_module",
+        "test_coverage::lib/screens/library/library_section_tab_selection.dart::untested_module"
+      ],
+      "cluster_name": null,
+      "actor": "system",
+      "note": null,
+      "detail": {
+        "superseded_count": 9,
+        "pruned_count": 0,
+        "resurfaced_count": 0,
+        "clusters_completed_count": 1
+      }
+    },
+    {
+      "timestamp": "2026-10-30T12:12:35+00:00",
+      "action": "clear_start_scores",
+      "issue_ids": [],
+      "cluster_name": null,
+      "actor": "system",
+      "note": null,
+      "detail": {}
+    },
+    {
+      "timestamp": "2026-10-30T12:12:35+00:00",
+      "action": "complete_postflight_scan",
+      "issue_ids": [],
+      "cluster_name": null,
+      "actor": "system",
+      "note": null,
+      "detail": {
+        "scan_count": 13
+      }
     }
   ],
   "epic_triage_meta": {
@@ -5228,7 +5385,8 @@
     "review::.::holistic::mid_level_elegance::browse_track_mapper_drops_lyrics",
     "review::.::holistic::naming_quality::download_named_snapshot_fallback",
     "review::.::holistic::package_organization::persistence_services_placed_under_widgets",
-    "review::.::holistic::test_strategy::sql_fixtures_parse_source_format"
+    "review::.::holistic::test_strategy::sql_fixtures_parse_source_format",
+    "review::.::holistic::type_safety::failed_replaygain_result_accepts_null"
   ],
   "commit_tracking_branch": null,
   "scan_count_at_plan_start": 12,
