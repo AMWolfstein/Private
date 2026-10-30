@@ -10,10 +10,10 @@
   "stats": {
     "total": 706,
     "auto_resolved": 354,
-    "deferred": 0,
+    "deferred": 2,
     "false_positive": 9,
     "fixed": 98,
-    "open": 245,
+    "open": 243,
     "triaged_out": 0,
     "wontfix": 0,
     "by_tier": {
@@ -28,19 +28,19 @@
       },
       "2": {
         "auto_resolved": 19,
-        "deferred": 0,
+        "deferred": 1,
         "false_positive": 0,
         "fixed": 43,
-        "open": 1,
+        "open": 0,
         "triaged_out": 0,
         "wontfix": 0
       },
       "3": {
         "auto_resolved": 334,
-        "deferred": 0,
+        "deferred": 1,
         "false_positive": 9,
         "fixed": 9,
-        "open": 244,
+        "open": 243,
         "triaged_out": 0,
         "wontfix": 0
       },
@@ -18957,7 +18957,7 @@
       "suppression_pattern": null
     },
     "strategy::test-health-decline": {
-      "status": "open",
+      "status": "deferred",
       "detector": "strategy",
       "tier": 2,
       "priority": "high",
@@ -18979,17 +18979,23 @@
       "origin": "scan",
       "file": "",
       "confidence": "low",
-      "note": null,
+      "note": "",
       "first_seen": "2026-10-29T06:01:11+00:00",
       "last_seen": "2026-10-29T06:01:11+00:00",
-      "resolved_at": null,
+      "resolved_at": "2026-10-30T14:29:59+00:00",
       "reopen_count": 0,
       "suppressed": false,
       "suppressed_at": null,
-      "suppression_pattern": null
+      "suppression_pattern": null,
+      "resolution_attestation": {
+        "kind": "manual",
+        "text": null,
+        "attested_at": "2026-10-30T14:29:59+00:00",
+        "scan_verified": false
+      }
     },
     "strategy::file-health-and-code-quality-decline": {
-      "status": "open",
+      "status": "deferred",
       "detector": "strategy",
       "tier": 3,
       "priority": "medium",
@@ -19011,14 +19017,20 @@
       "origin": "scan",
       "file": "",
       "confidence": "low",
-      "note": null,
+      "note": "",
       "first_seen": "2026-10-29T06:01:11+00:00",
       "last_seen": "2026-10-29T06:01:11+00:00",
-      "resolved_at": null,
+      "resolved_at": "2026-10-30T14:29:59+00:00",
       "reopen_count": 0,
       "suppressed": false,
       "suppressed_at": null,
-      "suppression_pattern": null
+      "suppression_pattern": null,
+      "resolution_attestation": {
+        "kind": "manual",
+        "text": null,
+        "attested_at": "2026-10-30T14:29:59+00:00",
+        "scan_verified": false
+      }
     },
     "structural::lib/screens/equalizer_screen.dart": {
       "id": "structural::lib/screens/equalizer_screen.dart",
