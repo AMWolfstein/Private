@@ -151,23 +151,29 @@ class _SeparatorPickerState extends State<_SeparatorPicker> {
                   ),
               ],
             ),
+            // Same inset as the options group above, so every block lines up.
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  if (_selected == null)
+                  if (_selected == null) ...[
+                    const SizedBox(height: 12),
+                    // The selected row already names the field; a floating
+                    // label would repeat it and collide with the group.
                     TextField(
                       controller: _custom,
                       maxLength: 16,
+                      autofocus: _custom.text.isEmpty,
                       decoration: InputDecoration(
-                        labelText: context.l10n.metadataSeparatorCustom,
+                        hintText: ' | ',
                         errorText: valid || separator.isEmpty
                             ? null
                             : context.l10n.metadataSeparatorInvalid,
                       ),
                       onChanged: (_) => setState(() {}),
                     ),
+                  ],
                   const SizedBox(height: 16),
                   AppContentCard(
                     child: Padding(
