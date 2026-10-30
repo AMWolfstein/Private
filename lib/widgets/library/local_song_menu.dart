@@ -159,7 +159,6 @@ Future<bool> showLocalSongMenu(
           context,
           database: ref.read(libraryDatabaseProvider),
           artistNames: item.artistName,
-          tagSplit: ref.read(settingsProvider).tagSplit,
         );
       case 'album':
         await navigateToAlbum(

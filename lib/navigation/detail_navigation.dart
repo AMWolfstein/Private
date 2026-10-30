@@ -3,7 +3,6 @@ import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/models/local_library_item.dart';
 import 'package:sistrum/navigation/app_screens.dart';
 import 'package:sistrum/navigation/shell_navigation.dart';
-import 'package:sistrum/models/tag_split_settings.dart';
 import 'package:sistrum/services/library/library_database.dart';
 import 'package:sistrum/utils/detail_page_route.dart';
 import 'package:sistrum/utils/logger.dart';
@@ -12,15 +11,11 @@ Future<void> navigateToArtistCredits(
   BuildContext context, {
   required LibraryDatabase database,
   required String artistNames,
-  required TagSplitSettings tagSplit,
   String? artistIds,
 }) async {
   final raw = artistNames.trim();
   if (raw.isEmpty) return;
-  final names = splitArtistNames(
-    raw,
-    delimiters: tagSplit.activeArtistDelimiters,
-  );
+  final names = splitArtistNames(raw);
   if (names.isEmpty) return;
 
   var name = names.first;
@@ -188,15 +183,20 @@ class ClickableArtistName extends StatelessWidget {
   }
 }
 
-List<String> splitArtistNames(
-  String rawArtists, {
-  int? creditedArtistCount,
-  List<String> delimiters = kArtistDelimiters,
-}) {
+final RegExp _artistNameSplitPattern = RegExp(
+  r'\s*(?:,|;|&|\bx\b)\s*|\s+\b(?:feat(?:uring|ured|ure)?|ft|with)\.?(?=\s|$)\s*',
+  caseSensitive: false,
+);
+
+List<String> splitArtistNames(String rawArtists, {int? creditedArtistCount}) {
   final raw = rawArtists.trim();
   if (raw.isEmpty) return const [];
 
-  final names = splitTagNames(raw, delimiters);
+  final names = raw
+      .split(_artistNameSplitPattern)
+      .map((part) => part.trim())
+      .where((part) => part.isNotEmpty)
+      .toList(growable: false);
   // "and" can be part of a band's name. Only treat it as a separator when
   // the provider's separate artist IDs confirm that many credited artists.
   if (creditedArtistCount != null && creditedArtistCount > names.length) {

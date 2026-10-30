@@ -1,7 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:sistrum/models/automix_options.dart';
 import 'package:sistrum/models/metadata_separators.dart';
-import 'package:sistrum/models/tag_split_settings.dart';
 
 part 'settings.g.dart';
 
@@ -30,7 +29,6 @@ double musicHapticsLevelFromJson(Object? value) =>
 @JsonSerializable(explicitToJson: true)
 class AppSettings {
   final MetadataSeparators metadataSeparators;
-  final TagSplitSettings tagSplit;
   // Optional pulses follow local playback.
   final bool musicHaptics;
   @JsonKey(fromJson: musicHapticsLevelFromJson)
@@ -121,7 +119,6 @@ class AppSettings {
 
   const AppSettings({
     this.metadataSeparators = const MetadataSeparators(),
-    this.tagSplit = const TagSplitSettings(),
     this.musicHaptics = false,
     this.musicHapticsSensitivity = 0.5,
     this.musicHapticsStrength = 0.5,
@@ -168,7 +165,6 @@ class AppSettings {
 
   AppSettings copyWith({
     MetadataSeparators? metadataSeparators,
-    TagSplitSettings? tagSplit,
     bool? musicHaptics,
     double? musicHapticsSensitivity,
     double? musicHapticsStrength,
@@ -214,7 +210,6 @@ class AppSettings {
   }) {
     return AppSettings(
       metadataSeparators: metadataSeparators ?? this.metadataSeparators,
-      tagSplit: tagSplit ?? this.tagSplit,
       musicHaptics: musicHaptics ?? this.musicHaptics,
       musicHapticsSensitivity:
           musicHapticsSensitivity ?? this.musicHapticsSensitivity,

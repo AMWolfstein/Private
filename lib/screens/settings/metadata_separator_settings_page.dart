@@ -3,15 +3,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/models/metadata_separators.dart';
 import 'package:sistrum/providers/settings_provider.dart';
+import 'package:sistrum/utils/nav_bar_inset.dart';
 import 'package:sistrum/widgets/primitives/app_bottom_sheet.dart';
 import 'package:sistrum/widgets/primitives/app_content_card.dart';
+import 'package:sistrum/widgets/primitives/app_sliver_header.dart';
 import 'package:sistrum/widgets/settings/settings_group.dart';
 import 'package:sistrum/widgets/settings/settings_item_rows.dart';
 
 /// Per-field separators applied when local tags are saved from Edit Metadata.
-/// Shown inside the Tag separators page.
-class MetadataSeparatorRows extends ConsumerWidget {
-  const MetadataSeparatorRows({super.key});
+class MetadataSeparatorSettingsPage extends ConsumerWidget {
+  const MetadataSeparatorSettingsPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -24,39 +25,56 @@ class MetadataSeparatorRows extends ConsumerWidget {
       'composer': context.l10n.editMetadataFieldComposer,
       'genre': context.l10n.editMetadataFieldGenre,
     };
-    return SettingsGroup(
-      children: [
-        for (final field in MetadataSeparators.fields)
-          SettingsItem(
-            icon: field == 'genre'
-                ? Icons.category_outlined
-                : Icons.people_alt_outlined,
-            title: labels[field]!,
-            subtitle: separators.toJson()[field]!.isEmpty
-                ? context.l10n.metadataSeparatorSource
-                : formatMetadataTagValue(
-                    '${labels[field]} A, ${labels[field]} B',
-                    separators.toJson()[field]!,
-                  ),
-            showDivider: field != MetadataSeparators.fields.last,
-            onTap: () async {
-              final value = await showAppBottomSheet<String>(
-                context: context,
-                useRootNavigator: true,
-                title: labels[field]!,
-                builder: (_) => _SeparatorPicker(
-                  label: labels[field]!,
-                  current: separators.toJson()[field]!,
-                ),
-              );
-              if (value != null && context.mounted) {
-                ref
-                    .read(settingsProvider.notifier)
-                    .setMetadataSeparator(field, value);
-              }
-            },
+    return Scaffold(
+      body: CustomScrollView(
+        slivers: [
+          AppSliverHeader.page(title: context.l10n.metadataSeparators),
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(24, 12, 24, 20),
+              child: Text(context.l10n.metadataSeparatorsDescription),
+            ),
           ),
-      ],
+          SliverToBoxAdapter(
+            child: SettingsGroup(
+              children: [
+                for (final field in MetadataSeparators.fields)
+                  SettingsItem(
+                    icon: field == 'genre'
+                        ? Icons.category_outlined
+                        : Icons.people_alt_outlined,
+                    title: labels[field]!,
+                    subtitle: separators.toJson()[field]!.isEmpty
+                        ? context.l10n.metadataSeparatorSource
+                        : formatMetadataTagValue(
+                            '${labels[field]} A, ${labels[field]} B',
+                            separators.toJson()[field]!,
+                          ),
+                    showDivider: field != MetadataSeparators.fields.last,
+                    onTap: () async {
+                      final value = await showAppBottomSheet<String>(
+                        context: context,
+                        useRootNavigator: true,
+                        title: labels[field]!,
+                        builder: (_) => _SeparatorPicker(
+                          label: labels[field]!,
+                          current: separators.toJson()[field]!,
+                        ),
+                      );
+                      if (value != null && context.mounted) {
+                        ref
+                            .read(settingsProvider.notifier)
+                            .setMetadataSeparator(field, value);
+                      }
+                    },
+                  ),
+              ],
+            ),
+          ),
+          const SliverToBoxAdapter(child: SizedBox(height: 32)),
+          const NavBarSliverSpacer(),
+        ],
+      ),
     );
   }
 }

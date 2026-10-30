@@ -205,12 +205,6 @@ class SettingsSearchCatalog {
           keywords: const ['machine learning', 'recommendation', 'personal'],
         ),
         SettingsSearchEntry(
-          icon: Icons.insights_outlined,
-          title: l10n.listeningStats,
-          subtitle: l10n.listeningStatsDescription,
-          keywords: const ['wrapped', 'statistics', 'listening', 'stats'],
-        ),
-        SettingsSearchEntry(
           icon: Icons.equalizer,
           title: l10n.equalizerTitle,
           subtitle: l10n.equalizerDescription,

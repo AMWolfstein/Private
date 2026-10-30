@@ -6,12 +6,10 @@ import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/models/automix_options.dart';
 import 'package:sistrum/providers/settings_provider.dart';
 import 'package:sistrum/screens/equalizer_screen.dart';
-import 'package:sistrum/screens/listening_statistics_screen.dart';
 import 'package:sistrum/services/playback/music_playback_deck.dart';
 import 'package:sistrum/services/playback/music_player_service.dart'
     show resetAutoplayLearning;
 import 'package:sistrum/utils/nav_bar_inset.dart';
-import 'package:sistrum/widgets/animation_utils.dart';
 import 'package:sistrum/widgets/player/app_volume_control.dart';
 import 'package:sistrum/widgets/primitives/app_alert_dialog.dart';
 import 'package:sistrum/widgets/primitives/app_bottom_sheet.dart';
@@ -377,27 +375,6 @@ class _PlaybackSettingsPageState extends ConsumerState<PlaybackSettingsPage> {
                 ],
               ),
             ),
-          const SliverToBoxAdapter(child: SizedBox(height: 32)),
-          SliverToBoxAdapter(
-            child: SettingsSectionHeader(title: context.l10n.listeningStats),
-          ),
-          SliverToBoxAdapter(
-            child: SettingsGroup(
-              children: [
-                SettingsItem(
-                  icon: Icons.insights_outlined,
-                  title: context.l10n.listeningStats,
-                  subtitle: context.l10n.listeningStatsDescription,
-                  onTap: () => Navigator.of(context).push(
-                    slidePageRoute<void>(
-                      page: const ListeningStatisticsScreen(),
-                    ),
-                  ),
-                  showDivider: false,
-                ),
-              ],
-            ),
-          ),
           const SliverToBoxAdapter(child: SizedBox(height: 32)),
           const NavBarSliverSpacer(),
         ],

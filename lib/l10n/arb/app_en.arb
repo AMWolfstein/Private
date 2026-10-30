@@ -3494,23 +3494,5 @@
   "retry": "Retry",
   "@retry": {
     "description": "Snackbar action that repeats the failed operation"
-  },
-  "tagSplitDescription": "Names inside artist, composer and genre tags are split into separate names. Turn it off to keep each tag as one name.",
-  "tagSplitEnable": "Split names in tags",
-  "tagSplitEnableDescription": "Off keeps each tag as one name.",
-  "tagSplitArtists": "Artists and composers",
-  "tagSplitGenres": "Genres",
-  "tagSplitSaving": "Saving tags",
-  "tagSplitDelimiters": "Delimiters",
-  "tagSplitCustomHint": "Add a delimiter",
-  "tagSplitAdd": "Add",
-  "tagSplitPreview": "Preview",
-  "tagSplitPresetAll": "All",
-  "tagSplitPresetStandard": "Standard",
-  "tagSplitPresetMinimal": "Minimal",
-  "tagSplitPresetFeatured": "Featured",
-  "tagSplitPresetExtended": "Extended",
-  "tagSplitPresetCjk": "CJK",
-  "tagSplitPresetArabic": "Arabic",
-  "tagSplitPresetGenreDefault": "Default"
+  }
 }

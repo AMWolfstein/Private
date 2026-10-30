@@ -12,9 +12,6 @@ AppSettings _$AppSettingsFromJson(Map<String, dynamic> json) => AppSettings(
       : MetadataSeparators.fromJson(
           json['metadataSeparators'] as Map<String, dynamic>,
         ),
-  tagSplit: json['tagSplit'] == null
-      ? const TagSplitSettings()
-      : TagSplitSettings.fromJson(json['tagSplit'] as Map<String, dynamic>),
   musicHaptics: json['musicHaptics'] as bool? ?? false,
   musicHapticsSensitivity: json['musicHapticsSensitivity'] == null
       ? 0.5
@@ -87,7 +84,6 @@ AppSettings _$AppSettingsFromJson(Map<String, dynamic> json) => AppSettings(
 Map<String, dynamic> _$AppSettingsToJson(AppSettings instance) =>
     <String, dynamic>{
       'metadataSeparators': instance.metadataSeparators.toJson(),
-      'tagSplit': instance.tagSplit.toJson(),
       'musicHaptics': instance.musicHaptics,
       'musicHapticsSensitivity': instance.musicHapticsSensitivity,
       'musicHapticsStrength': instance.musicHapticsStrength,

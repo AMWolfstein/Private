@@ -442,25 +442,6 @@ class SettingsNotifier extends Notifier<AppSettings> {
     _saveSettings();
   }
 
-  void setTagSplitEnabled(bool enabled) {
-    state = state.copyWith(tagSplit: state.tagSplit.copyWith(enabled: enabled));
-    _saveSettings();
-  }
-
-  void setTagSplitArtistDelimiters(List<String> delimiters) {
-    state = state.copyWith(
-      tagSplit: state.tagSplit.copyWith(artistDelimiters: delimiters),
-    );
-    _saveSettings();
-  }
-
-  void setTagSplitGenreDelimiters(List<String> delimiters) {
-    state = state.copyWith(
-      tagSplit: state.tagSplit.copyWith(genreDelimiters: delimiters),
-    );
-    _saveSettings();
-  }
-
   void setLocalLibraryAutoScan(String mode) {
     state = state.copyWith(localLibraryAutoScan: mode);
     _saveSettings();

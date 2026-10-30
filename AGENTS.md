@@ -91,11 +91,8 @@ Artwork probing and FFmpeg processing for those retained features remain support
 
 Tag separators (artist, album artist, composer, genre) live under Local Library settings and
 apply only when local tags are saved via Edit Metadata; do not restore the download-era
-Metadata page or Artist Tag Mode for them. The same page also holds the read-side Tag
-separators switch and delimiter lists: artists and composers split on the artist list
-(default on, presets, custom delimiters, word delimiters like "feat." match on word
-boundaries, backslash escapes), genres split on the genre list (default ";" and the Arabic
-comma; newlines always separate) through `TagSplitSettings` (`lib/models/tag_split_settings.dart`).
+Metadata page or Artist Tag Mode for them. There is no read-side tag splitting: tags are
+shown as stored.
 Artist pictures use the artwork of the artist's most recently added song that has one.
 
 Appearance exposes Player view with Normal view (the default inset artwork) and Immersive
