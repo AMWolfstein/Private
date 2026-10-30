@@ -1,119 +1,141 @@
 {
   "command": "show",
-  "query": "orphaned",
+  "query": "structural",
   "status_filter": "open",
-  "total": 9,
+  "total": 10,
   "summary": {
     "by_tier": {
-      "T3": 9
+      "T3": 10
     },
     "by_detector": {
-      "orphaned": 9
+      "structural": 10
     },
-    "files": 9
+    "files": 10
   },
   "by_file": {
-    "lib/screens/library/library_section_tab_navigation.dart": [
+    "lib/l10n/app_localizations.dart": [
       {
-        "id": "orphaned::lib/screens/library/library_section_tab_navigation.dart",
+        "id": "structural::lib/l10n/app_localizations.dart",
         "tier": 3,
         "confidence": "medium",
-        "summary": "Orphaned file (245 LOC): zero importers, not an entry point",
+        "summary": "Large file: large (5916 LOC) / complexity score 542",
         "detail": {
-          "loc": 245
+          "loc": 5916,
+          "complexity_score": 542,
+          "complexity_signals": [
+            "21 imports",
+            "566 control flow"
+          ]
         }
       }
     ],
-    "lib/services/playback/music_player_events.dart": [
+    "lib/l10n/app_localizations_ar.dart": [
       {
-        "id": "orphaned::lib/services/playback/music_player_events.dart",
+        "id": "structural::lib/l10n/app_localizations_ar.dart",
         "tier": 3,
         "confidence": "medium",
-        "summary": "Orphaned file (214 LOC): zero importers, not an entry point",
+        "summary": "Large file: large (3545 LOC)",
         "detail": {
-          "loc": 214
+          "loc": 3545
         }
       }
     ],
-    "lib/services/playback/music_player_hooks.dart": [
+    "lib/l10n/app_localizations_de.dart": [
       {
-        "id": "orphaned::lib/services/playback/music_player_hooks.dart",
+        "id": "structural::lib/l10n/app_localizations_de.dart",
         "tier": 3,
         "confidence": "medium",
-        "summary": "Orphaned file (167 LOC): zero importers, not an entry point",
+        "summary": "Large file: large (3535 LOC)",
         "detail": {
-          "loc": 167
+          "loc": 3535
         }
       }
     ],
-    "lib/services/playback/music_player_lifecycle.dart": [
+    "lib/l10n/app_localizations_en.dart": [
       {
-        "id": "orphaned::lib/services/playback/music_player_lifecycle.dart",
+        "id": "structural::lib/l10n/app_localizations_en.dart",
         "tier": 3,
         "confidence": "medium",
-        "summary": "Orphaned file (137 LOC): zero importers, not an entry point",
+        "summary": "Large file: large (3509 LOC)",
         "detail": {
-          "loc": 137
+          "loc": 3509
         }
       }
     ],
-    "lib/services/playback/music_player_media.dart": [
+    "lib/l10n/app_localizations_es.dart": [
       {
-        "id": "orphaned::lib/services/playback/music_player_media.dart",
+        "id": "structural::lib/l10n/app_localizations_es.dart",
         "tier": 3,
         "confidence": "medium",
-        "summary": "Orphaned file (184 LOC): zero importers, not an entry point",
+        "summary": "Large file: large (6949 LOC)",
         "detail": {
-          "loc": 184
+          "loc": 6949
         }
       }
     ],
-    "lib/services/playback/music_player_playback.dart": [
+    "lib/l10n/app_localizations_fr.dart": [
       {
-        "id": "orphaned::lib/services/playback/music_player_playback.dart",
+        "id": "structural::lib/l10n/app_localizations_fr.dart",
         "tier": 3,
         "confidence": "medium",
-        "summary": "Orphaned file (333 LOC): zero importers, not an entry point",
+        "summary": "Large file: large (3563 LOC)",
         "detail": {
-          "loc": 333
+          "loc": 3563
         }
       }
     ],
-    "lib/services/playback/music_player_queue.dart": [
+    "lib/l10n/app_localizations_hi.dart": [
       {
-        "id": "orphaned::lib/services/playback/music_player_queue.dart",
+        "id": "structural::lib/l10n/app_localizations_hi.dart",
         "tier": 3,
         "confidence": "medium",
-        "summary": "Orphaned file (73 LOC): zero importers, not an entry point",
+        "summary": "Large file: large (3511 LOC)",
         "detail": {
-          "loc": 73
+          "loc": 3511
         }
       }
     ],
-    "lib/services/playback/music_player_session.dart": [
+    "lib/l10n/app_localizations_id.dart": [
       {
-        "id": "orphaned::lib/services/playback/music_player_session.dart",
+        "id": "structural::lib/l10n/app_localizations_id.dart",
         "tier": 3,
         "confidence": "medium",
-        "summary": "Orphaned file (54 LOC): zero importers, not an entry point",
+        "summary": "Large file: large (3494 LOC)",
         "detail": {
-          "loc": 54
+          "loc": 3494
         }
       }
     ],
-    "lib/services/playback/music_player_source.dart": [
+    "lib/l10n/app_localizations_it.dart": [
       {
-        "id": "orphaned::lib/services/playback/music_player_source.dart",
+        "id": "structural::lib/l10n/app_localizations_it.dart",
         "tier": 3,
         "confidence": "medium",
-        "summary": "Orphaned file (66 LOC): zero importers, not an entry point",
+        "summary": "Large file: large (3519 LOC)",
         "detail": {
-          "loc": 66
+          "loc": 3519
+        }
+      }
+    ],
+    "lib/l10n/app_localizations_ja.dart": [
+      {
+        "id": "structural::lib/l10n/app_localizations_ja.dart",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Large file: large (3469 LOC)",
+        "detail": {
+          "loc": 3469
         }
       }
     ]
   },
-  "total_matching": 9,
+  "total_matching": 69,
+  "hidden": {
+    "by_detector": {
+      "structural": 59
+    },
+    "total": 59
+  },
   "noise_budget": 10,
   "noise_global_budget": 0,
   "narrative": {
@@ -163,7 +185,7 @@
       "stagnant_dimensions": [
         {
           "name": "Code quality",
-          "strict": 96.5,
+          "strict": 97.9,
           "stuck_scans": 5
         },
         {
@@ -291,24 +313,13 @@
     "actions": [
       {
         "type": "reorganize",
-        "detector": "orphaned",
-        "count": 9,
-        "description": "9 orphaned issues \u2014 delete dead files or relocate with `desloppify move`",
-        "command": "desloppify show orphaned --status open",
-        "impact": 0.0,
-        "dimension": "Code quality",
-        "priority": 1,
-        "lane": "restructure"
-      },
-      {
-        "type": "reorganize",
         "detector": "flat_dirs",
         "count": 12,
         "description": "12 flat_dirs issues \u2014 create subdirectories and use `desloppify move`",
         "command": "desloppify show flat_dirs --status open",
         "impact": 0.0,
         "dimension": "Code quality",
-        "priority": 2,
+        "priority": 1,
         "lane": "restructure"
       },
       {
@@ -319,7 +330,7 @@
         "command": "desloppify show structural --status open",
         "impact": 0.0,
         "dimension": "File health",
-        "priority": 3,
+        "priority": 2,
         "lane": "refactor"
       },
       {
@@ -330,7 +341,7 @@
         "command": "desloppify show dupes --status open",
         "impact": 0.0,
         "dimension": "Duplication",
-        "priority": 4,
+        "priority": 3,
         "lane": "refactor"
       },
       {
@@ -341,7 +352,7 @@
         "command": "desloppify show signature --status open",
         "impact": 0.0,
         "dimension": "Unknown",
-        "priority": 5,
+        "priority": 4,
         "lane": "refactor"
       },
       {
@@ -352,14 +363,14 @@
         "command": "desloppify show boilerplate_duplication --status open",
         "impact": 0.0,
         "dimension": "Duplication",
-        "priority": 6,
+        "priority": 5,
         "lane": "refactor"
       }
     ],
     "strategy": {
       "fixer_leverage": {
         "auto_fixable_count": 0,
-        "total_count": 254,
+        "total_count": 245,
         "coverage": 0.0,
         "impact_ratio": 0.0,
         "recommendation": "none"
@@ -367,20 +378,19 @@
       "lanes": {
         "restructure": {
           "actions": [
-            1,
-            2
+            1
           ],
-          "file_count": 21,
+          "file_count": 12,
           "total_impact": 0.0,
           "automation": "manual",
           "run_first": false
         },
         "refactor": {
           "actions": [
+            2,
             3,
             4,
-            5,
-            6
+            5
           ],
           "file_count": 144,
           "total_impact": 0.0,
@@ -396,7 +406,7 @@
       "move": {
         "available": true,
         "relevant": true,
-        "reason": "9 orphaned files + 12 flat directories",
+        "reason": "12 flat directories",
         "usage": "desloppify move <source> <dest> [--dry-run]"
       },
       "plan": {
@@ -419,8 +429,8 @@
     },
     "milestone": "All T1 items cleared!",
     "primary_action": {
-      "command": "desloppify show orphaned --status open",
-      "description": "9 orphaned issues \u2014 delete dead files or relocate with `desloppify move`"
+      "command": "desloppify show flat_dirs --status open",
+      "description": "12 flat_dirs issues \u2014 create subdirectories and use `desloppify move`"
     },
     "why_now": "2 independent workstreams, safe to parallelize. Rescan after each phase to verify.",
     "verification_step": {
