@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/models/local_library_item.dart';
+import 'package:sistrum/services/library/library_tag_credits.dart';
 import 'package:sistrum/models/settings.dart';
 import 'package:sistrum/providers/settings_provider.dart';
 import 'package:sistrum/providers/local_library_provider.dart';
@@ -78,7 +79,10 @@ void main() {
       expect(find.byIcon(Icons.more_horiz), findsOneWidget);
       await tester.tap(find.text('Jazz song'));
       expect(player.ids, ['song']);
-      expect(requests, [(genre: null, offset: 0), (genre: 'jazz', offset: 0)]);
+      expect(requests, [
+        (field: TagCreditField.genre, genre: null, offset: 0),
+        (field: TagCreditField.genre, genre: 'jazz', offset: 0),
+      ]);
       expect(tester.takeException(), isNull);
     },
   );

@@ -18,14 +18,46 @@ Future<void> navigateToArtistCredits(
   required TagCreditRules rules,
 }) async {
   final names = splitTagCredits(artistNames, TagCreditField.artist, rules);
-  if (names.isEmpty || !context.mounted) return;
-  if (names.length == 1) {
-    await navigateToArtist(context, artistName: names.single);
-    return;
-  }
-  final name = await showAppBottomSheet<String>(
-    context: context,
+  final name = await _chooseCredit(
+    context,
+    names,
     title: context.l10n.appGoToArtist,
+  );
+  if (name == null || !context.mounted) return;
+  await navigateToArtist(context, artistName: name);
+}
+
+/// Opens the songs of the composer named by a credit, with the same picker
+/// as artists when several composers are credited.
+Future<void> navigateToComposerCredits(
+  BuildContext context, {
+  required String composerNames,
+  required TagCreditRules rules,
+}) async {
+  final names = splitTagCredits(composerNames, TagCreditField.composer, rules);
+  final name = await _chooseCredit(
+    context,
+    names,
+    title: context.l10n.actionGoToComposer,
+  );
+  if (name == null || !context.mounted) return;
+  pushViaPreferredNavigator(
+    context,
+    (_) => appScreensOf(context).composerSongs(composerName: name),
+  );
+}
+
+/// The name to open: the only credit, or the one picked from a sheet.
+Future<String?> _chooseCredit(
+  BuildContext context,
+  List<String> names, {
+  required String title,
+}) async {
+  if (names.isEmpty) return null;
+  if (names.length == 1) return names.single;
+  return showAppBottomSheet<String>(
+    context: context,
+    title: title,
     builder: (sheetContext) => Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -37,8 +69,6 @@ Future<void> navigateToArtistCredits(
       ],
     ),
   );
-  if (name == null || !context.mounted) return;
-  await navigateToArtist(context, artistName: name);
 }
 
 Future<void> navigateToArtist(

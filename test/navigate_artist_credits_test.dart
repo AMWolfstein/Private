@@ -14,6 +14,10 @@ class _Screens implements AppScreens {
       Scaffold(body: Text('Page $artistName'));
 
   @override
+  Widget composerSongs({required String composerName}) =>
+      Scaffold(body: Text('Songs $composerName'));
+
+  @override
   dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }
 
@@ -21,6 +25,7 @@ Future<void> _pumpOpener(
   WidgetTester tester, {
   required String artistNames,
   TagCreditRules rules = const TagCreditRules(),
+  bool composer = false,
 }) async {
   await tester.pumpWidget(
     ProviderScope(
@@ -33,11 +38,17 @@ Future<void> _pumpOpener(
           builder: (context) => Scaffold(
             body: Center(
               child: ElevatedButton(
-                onPressed: () => navigateToArtistCredits(
-                  context,
-                  artistNames: artistNames,
-                  rules: rules,
-                ),
+                onPressed: () => composer
+                    ? navigateToComposerCredits(
+                        context,
+                        composerNames: artistNames,
+                        rules: rules,
+                      )
+                    : navigateToArtistCredits(
+                        context,
+                        artistNames: artistNames,
+                        rules: rules,
+                      ),
                 child: const Text('open'),
               ),
             ),
@@ -78,5 +89,19 @@ void main() {
     );
     expect(find.text('Page A, B'), findsOneWidget);
     expect(find.widgetWithText(ListTile, 'A'), findsNothing);
+  });
+
+  testWidgets('a single composer opens its songs directly', (tester) async {
+    await _pumpOpener(tester, artistNames: 'Bach', composer: true);
+    expect(find.text('Songs Bach'), findsOneWidget);
+  });
+
+  testWidgets('several composers open a picker for the chosen one', (
+    tester,
+  ) async {
+    await _pumpOpener(tester, artistNames: 'Bach, Liszt', composer: true);
+    await tester.tap(find.widgetWithText(ListTile, 'Liszt'));
+    await tester.pumpAndSettle();
+    expect(find.text('Songs Liszt'), findsOneWidget);
   });
 }

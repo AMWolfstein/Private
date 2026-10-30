@@ -5,7 +5,9 @@ import 'package:sistrum/navigation/app_screens.dart';
 import 'package:sistrum/screens/library/library_collection_tracks_screen.dart';
 import 'package:sistrum/screens/library/local_album_screen.dart';
 import 'package:sistrum/screens/library/local_artist_screen.dart';
+import 'package:sistrum/screens/library/local_genres_screen.dart';
 import 'package:sistrum/screens/now_playing_screen.dart';
+import 'package:sistrum/services/library/library_tag_credits.dart';
 
 /// The app's full pages, installed as [appScreensProvider].
 class AppScreenBuilders implements AppScreens {
@@ -33,6 +35,13 @@ class AppScreenBuilders implements AppScreens {
     required LibraryCollectionMode mode,
     String? playlistId,
   }) => LibraryCollectionTracksScreen(mode: mode, playlistId: playlistId);
+
+  @override
+  Widget composerSongs({required String composerName}) => LocalGenresScreen(
+    field: TagCreditField.composer,
+    genre: composerName,
+    name: composerName,
+  );
 
   @override
   Widget nowPlaying() => const NowPlayingScreen();

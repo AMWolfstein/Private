@@ -4,9 +4,9 @@ import 'package:sistrum/services/library/library_schema.dart';
 import 'package:sistrum/services/library/library_tag_credits.dart';
 import 'package:sistrum/services/library/sqlite_helpers.dart' as sqlite;
 
-/// Genres from the shared credits table, so a genre splits exactly as the
-/// Tag separators settings say. The visible view respects disabled or
-/// disconnected library sources.
+/// Genre or composer credits from the shared credits table, so each splits
+/// exactly as the Tag separators settings say. The visible view respects
+/// disabled or disconnected library sources.
 class LibraryGenres {
   const LibraryGenres(
     this.db, {
@@ -19,6 +19,7 @@ class LibraryGenres {
   final TagCreditRules rules;
 
   Future<List<Map<String, dynamic>>> page({
+    TagCreditField field = TagCreditField.genre,
     String? genre,
     int offset = 0,
     int limit = 40,
@@ -32,21 +33,21 @@ class LibraryGenres {
         '''
         SELECT name_key AS genre_key, MIN(name) AS name,
           COUNT(DISTINCT item_id) AS track_count
-        FROM $table WHERE field = 'genre'
+        FROM $table WHERE field = ?
         GROUP BY name_key ORDER BY name_key LIMIT ? OFFSET ?
       ''',
-        [size, offset],
+        [field.dbName, size, offset],
       );
     }
     final rows = await db.rawQuery(
       '''
       SELECT l.* FROM ${LibrarySchema.visibleView} l
       WHERE l.id IN (
-        SELECT item_id FROM $table WHERE field = 'genre' AND name_key = ?
+        SELECT item_id FROM $table WHERE field = ? AND name_key = ?
       )
       ORDER BY l.track_name_norm, l.artist_name_norm, l.id LIMIT ? OFFSET ?
     ''',
-      [sqlite.normalizeSearchText(genre), size, offset],
+      [field.dbName, sqlite.normalizeSearchText(genre), size, offset],
     );
     return rows.map(LibraryRowMapper.decode).toList(growable: false);
   }

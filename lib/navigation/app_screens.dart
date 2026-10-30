@@ -21,6 +21,9 @@ abstract interface class AppScreens {
     String? playlistId,
   });
 
+  /// The songs credited to one composer.
+  Widget composerSongs({required String composerName});
+
   Widget nowPlaying();
 }
 

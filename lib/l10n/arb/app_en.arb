@@ -2660,6 +2660,10 @@
   "appContinuePlaying": "Continue Playing",
   "appFavorite": "Favorite",
   "appGoToArtist": "Go to Artist",
+  "actionGoToComposer": "Go to Composer",
+  "@actionGoToComposer": {
+    "description": "Song menu action that opens the songs of a composer"
+  },
   "@appFavorite": {
     "description": "Compact context menu action that adds a track to Loved"
   },

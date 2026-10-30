@@ -13,10 +13,12 @@ class _Genres {
   final LibraryGenres _store;
 
   Future<List<Map<String, dynamic>>> page({
+    TagCreditField field = TagCreditField.genre,
     String? genre,
     int offset = 0,
     int limit = 40,
   }) => _store.page(
+    field: field,
     genre: genre,
     offset: offset,
     limit: limit,
@@ -243,4 +245,23 @@ void main() {
       expect(split, isNot(contains('hip-hop/rap')));
     },
   );
+
+  test('composers split on the same delimiters and list their songs', () async {
+    await db.execute(
+      "UPDATE library_visible SET composer = 'Bach, Liszt' WHERE id = 'a'",
+    );
+    await db.execute(
+      "UPDATE library_visible SET composer = 'Liszt' WHERE id = 'c'",
+    );
+    final genres = _Genres(db);
+
+    final composers = await genres.page(field: TagCreditField.composer);
+    expect(composers.map((row) => row['genre_key']), ['bach', 'liszt']);
+
+    final lisztSongs = await genres.page(
+      field: TagCreditField.composer,
+      genre: 'Liszt',
+    );
+    expect(lisztSongs.map((row) => row['id']), ['a', 'c']);
+  });
 }

@@ -6,13 +6,14 @@ import 'package:sistrum/providers/local_library_provider.dart';
 import 'package:sistrum/providers/library_tag_credits_provider.dart';
 import 'package:sistrum/providers/playback_provider.dart';
 import 'package:sistrum/services/library/library_genres.dart';
+import 'package:sistrum/services/library/library_tag_credits.dart';
 import 'package:sistrum/widgets/primitives/app_sliver_header.dart';
 import 'package:sistrum/widgets/library/local_song_menu.dart';
 import 'package:sistrum/widgets/library/local_song_row.dart';
 import 'package:sistrum/utils/nav_bar_inset.dart';
 import 'package:sistrum/providers/library_database_provider.dart';
 
-typedef GenrePageRequest = ({String? genre, int offset});
+typedef GenrePageRequest = ({TagCreditField field, String? genre, int offset});
 final genrePageLoaderProvider =
     Provider<Future<List<Map<String, dynamic>>> Function(GenrePageRequest)>((
       ref,
@@ -28,6 +29,7 @@ final genrePageLoaderProvider =
             credits: credits,
             rules: rules,
           ).page(
+            field: request.field,
             genre: request.genre,
             offset: request.offset,
             libraryVersion: version,
@@ -41,9 +43,17 @@ final genrePageProvider = FutureProvider.autoDispose
       return ref.watch(genrePageLoaderProvider)(request);
     });
 
+/// Genres, or the songs of one genre or composer. [field] picks which tag the
+/// list and songs come from.
 class LocalGenresScreen extends ConsumerStatefulWidget {
-  const LocalGenresScreen({super.key, this.genre, this.name});
+  const LocalGenresScreen({
+    super.key,
+    this.genre,
+    this.name,
+    this.field = TagCreditField.genre,
+  });
   final String? genre, name;
+  final TagCreditField field;
   @override
   ConsumerState<LocalGenresScreen> createState() => _LocalGenresScreenState();
 }
@@ -82,7 +92,11 @@ class _LocalGenresScreenState extends ConsumerState<LocalGenresScreen> {
     AsyncValue<List<Map<String, dynamic>>>? last;
     for (var page = 0; page < _pages; page++) {
       final value = ref.watch(
-        genrePageProvider((genre: widget.genre, offset: page * 40)),
+        genrePageProvider((
+          field: widget.field,
+          genre: widget.genre,
+          offset: page * 40,
+        )),
       );
       last = value;
       entries.addAll(value.asData?.value ?? []);
@@ -117,6 +131,7 @@ class _LocalGenresScreenState extends ConsumerState<LocalGenresScreen> {
                   onTap: () => Navigator.of(context).push(
                     MaterialPageRoute<void>(
                       builder: (_) => LocalGenresScreen(
+                        field: widget.field,
                         genre: row['genre_key'] as String,
                         name: row['name'] as String,
                       ),
@@ -147,6 +162,7 @@ class _LocalGenresScreenState extends ConsumerState<LocalGenresScreen> {
               child: TextButton(
                 onPressed: () => ref.invalidate(
                   genrePageProvider((
+                    field: widget.field,
                     genre: widget.genre,
                     offset: (_pages - 1) * 40,
                   )),

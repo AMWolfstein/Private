@@ -119,6 +119,8 @@ Future<bool> showLocalSongMenu(
               option('album', Icons.album_outlined, l10n.homeGoToAlbum),
             if (item.artistName.trim().isNotEmpty)
               option('artist', Icons.person_outline, l10n.appGoToArtist),
+            if ((item.composer ?? '').trim().isNotEmpty)
+              option('composer', Icons.person_outline, l10n.actionGoToComposer),
           ],
           [
             if (!cue) ...[
@@ -159,6 +161,12 @@ Future<bool> showLocalSongMenu(
         await navigateToArtistCredits(
           context,
           artistNames: item.artistName,
+          rules: ref.read(tagCreditRulesProvider),
+        );
+      case 'composer':
+        await navigateToComposerCredits(
+          context,
+          composerNames: item.composer ?? '',
           rules: ref.read(tagCreditRulesProvider),
         );
       case 'album':
