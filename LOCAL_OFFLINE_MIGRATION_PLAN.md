@@ -22,6 +22,8 @@ popover placement so it follows the tapped ellipsis. Keep the metadata page remo
 
 ## Progress
 
+**Folder split (2026-10-30):** the last three `flat_dirs` findings are resolved. `test/` mirrors the `lib/` layout for tests whose source has the same name, and groups the rest by domain (library, ui, lyrics, playback, platform). `lib/widgets/player` is split into sheets, queue, lyrics, controls, layout and artwork; `lib/constants`, `lib/models`, `lib/navigation` and `lib/theme` move under `lib/core`. Imports rewritten; no behaviour change. Verification: `flutter analyze` clean; full `flutter test` 2,251 passed, exit 0. Code commit `8cc680e`; graph `6c875d6`.
+
 **Folder restructure (2026-10-30):** `desloppify` flagged ten directories as overloaded (`flat_dirs`). Files moved into feature subfolders with `git mv`: `lib/services/library` (collections, database, browse, scan, metadata, covers), `lib/services/playback` (music_player, automix, autoplay, session, notification, audio, stats, core), `lib/utils`, `lib/screens/library`, `lib/screens/settings`, `lib/widgets/glass`, `lib/widgets` and `integration_test`. Part files moved with their owners; imports, exports and parts rewritten, no behaviour change. Verification: `flutter analyze` clean; full `flutter test` 2,249 passed, exit 0. Code commit `9d2e7d0`; graph refreshed on the merged branch.
 
 **Code-health pass (2026-10-28):** a `desloppify` review queue drives structural fixes, one reviewed finding per change.
