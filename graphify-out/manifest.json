@@ -1746,9 +1746,9 @@
     "semantic_hash": "bfee1356e4c394e0644e2bbc91d17bec"
   },
   "LOCAL_OFFLINE_MIGRATION_PLAN.md": {
-    "mtime": 1793380846.1401615,
-    "seen": 1793382300.5945525,
-    "ast_hash": "f2f42bba2c636f6841ccfcec310a7c4f",
+    "mtime": 1793382308.202864,
+    "seen": 1793383150.952523,
+    "ast_hash": "e2f8ff46ed526aa3564674047d2c633e",
     "semantic_hash": ""
   },
   "third_party/audio_service/CHANGELOG.md": {
@@ -4254,9 +4254,9 @@
     "semantic_hash": ""
   },
   "lib/screens/lyrics_share_card.dart": {
-    "mtime": 1793373228.262632,
-    "seen": 1793373946.4648378,
-    "ast_hash": "94831d3bc6270650cdbf3153517be9b0",
+    "mtime": 1793383009.9722357,
+    "seen": 1793383150.8819158,
+    "ast_hash": "caf8ccbb7c5e435640488ff6c30679b3",
     "semantic_hash": ""
   },
   "lib/screens/lyrics_share_controls.dart": {
@@ -8046,9 +8046,9 @@
     "semantic_hash": ""
   },
   "lib/widgets/player/lyrics/player_lyrics.dart": {
-    "mtime": 1793373228.3550756,
-    "seen": 1793373946.4705577,
-    "ast_hash": "635a1039d45aea8aa1afb24f41cd57b5",
+    "mtime": 1793383003.9131508,
+    "seen": 1793383150.8949008,
+    "ast_hash": "0175b28b90fa5ff00e0adb354b419bcb",
     "semantic_hash": ""
   },
   "lib/widgets/player/lyrics/player_lyrics_controls.dart": {
@@ -8574,9 +8574,9 @@
     "semantic_hash": ""
   },
   "test/lyrics/lyric_text_direction_test.dart": {
-    "mtime": 1793373228.3697417,
-    "seen": 1793373946.4897544,
-    "ast_hash": "c46789a06c8387aec9d75ed74f8d6311",
+    "mtime": 1793383036.5956357,
+    "seen": 1793383150.9300966,
+    "ast_hash": "0af295d109f1c877abe8e7eaa1c313d9",
     "semantic_hash": ""
   },
   "test/lyrics/lyrics_appearance_test.dart": {
@@ -8964,9 +8964,9 @@
     "semantic_hash": ""
   },
   "test/screens/lyrics_share_screen_test.dart": {
-    "mtime": 1793373228.544699,
-    "seen": 1793373946.4898705,
-    "ast_hash": "4cd8e821cb113445e2ec573cff8ed343",
+    "mtime": 1793383069.7417629,
+    "seen": 1793383150.9331527,
+    "ast_hash": "91f375fa81b66c5f179ade4e7dd5caac",
     "semantic_hash": ""
   },
   "test/screens/main_shell_tabs_test.dart": {
@@ -10251,6 +10251,12 @@
     "mtime": 1793366198.1153946,
     "seen": 1793373946.4905257,
     "ast_hash": "c3c0cca810821db562c98f42eb34bcac",
+    "semantic_hash": ""
+  },
+  "lib/utils/lyrics/lyric_direction.dart": {
+    "mtime": 1793383003.9123406,
+    "seen": 1793383150.890056,
+    "ast_hash": "66053670aaa1c4c2c63165d3d8cb3278",
     "semantic_hash": ""
   }
 }
