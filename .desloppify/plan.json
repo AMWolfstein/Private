@@ -1,7 +1,7 @@
 {
   "version": 8,
   "created": "2026-10-29T06:01:52+00:00",
-  "updated": "2026-10-30T14:29:59+00:00",
+  "updated": "2026-10-30T14:31:04+00:00",
   "queue_order": [
     "subjective::abstraction_fitness",
     "subjective::ai_generated_debt",
@@ -322,7 +322,7 @@
     "test_coverage::lib/screens/local_guide_pages.dart::transitive_only": {
       "issue_id": "test_coverage::lib/screens/local_guide_pages.dart::transitive_only",
       "created_at": "2026-10-29T06:01:52+00:00",
-      "cluster": "transitive-behaviour-tests",
+      "cluster": null,
       "updated_at": "2026-10-30T14:24:34+00:00"
     },
     "test_coverage::lib/widgets/scroll_edge_fade.dart::transitive_only": {
@@ -364,7 +364,7 @@
     "test_coverage::lib/screens/listening_statistics_screen.dart::transitive_only": {
       "issue_id": "test_coverage::lib/screens/listening_statistics_screen.dart::transitive_only",
       "created_at": "2026-10-29T06:01:52+00:00",
-      "cluster": "transitive-behaviour-tests",
+      "cluster": null,
       "updated_at": "2026-10-30T14:24:34+00:00"
     },
     "test_coverage::lib/providers/playback_notification_provider.dart::transitive_only": {
@@ -538,7 +538,7 @@
     "test_coverage::lib/widgets/sheets/duplicate_review_sheet.dart::transitive_only": {
       "issue_id": "test_coverage::lib/widgets/sheets/duplicate_review_sheet.dart::transitive_only",
       "created_at": "2026-10-29T18:55:17+00:00",
-      "cluster": "transitive-behaviour-tests",
+      "cluster": null,
       "updated_at": "2026-10-30T14:24:34+00:00"
     },
     "test_coverage::lib/widgets/status/disc_separator_chip.dart::transitive_only": {
@@ -550,7 +550,7 @@
     "test_coverage::lib/services/audio_analysis/audio_analysis_parsing.dart::transitive_only": {
       "issue_id": "test_coverage::lib/services/audio_analysis/audio_analysis_parsing.dart::transitive_only",
       "created_at": "2026-10-29T18:55:17+00:00",
-      "cluster": "transitive-behaviour-tests",
+      "cluster": null,
       "updated_at": "2026-10-30T14:24:34+00:00"
     },
     "test_coverage::lib/screens/library/selection_mode_mixin.dart::transitive_only": {
@@ -2510,16 +2510,12 @@
     }
   },
   "promoted_ids": [],
-  "plan_start_scores": {
-    "strict": 90.1,
-    "overall": 91.8,
-    "objective": 97.7,
-    "verified": 97.7
-  },
+  "plan_start_scores": {},
   "refresh_state": {
     "_subjective_migration_pruned": true,
     "lifecycle_phase": "plan",
-    "subjective_review_completed_at_scan_count": 6
+    "subjective_review_completed_at_scan_count": 6,
+    "postflight_scan_completed_at_scan_count": 19
   },
   "execution_log": [
     {
@@ -6478,6 +6474,40 @@
       "detail": {
         "kind": "temporary",
         "reason": "Stale strategy note: test-health numbers do not match current scan; file-health findings are generated l10n files"
+      }
+    },
+    {
+      "timestamp": "2026-10-30T14:31:04+00:00",
+      "action": "reconcile",
+      "issue_ids": [],
+      "cluster_name": null,
+      "actor": "system",
+      "note": null,
+      "detail": {
+        "superseded_count": 0,
+        "pruned_count": 0,
+        "resurfaced_count": 0,
+        "clusters_completed_count": 0
+      }
+    },
+    {
+      "timestamp": "2026-10-30T14:31:04+00:00",
+      "action": "clear_start_scores",
+      "issue_ids": [],
+      "cluster_name": null,
+      "actor": "system",
+      "note": null,
+      "detail": {}
+    },
+    {
+      "timestamp": "2026-10-30T14:31:04+00:00",
+      "action": "complete_postflight_scan",
+      "issue_ids": [],
+      "cluster_name": null,
+      "actor": "system",
+      "note": null,
+      "detail": {
+        "scan_count": 19
       }
     }
   ],

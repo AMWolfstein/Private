@@ -1,7 +1,7 @@
 {
   "version": 8,
   "created": "2026-10-29T06:01:52+00:00",
-  "updated": "2026-10-30T14:26:42+00:00",
+  "updated": "2026-10-30T14:29:59+00:00",
   "queue_order": [
     "subjective::abstraction_fitness",
     "subjective::ai_generated_debt",
@@ -107,6 +107,26 @@
       "note": null,
       "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. These 9 files each start with part of and are included by a part directive in their owner library (music_player_service.dart or library_section_tab.dart); the orphan detector does not follow part directives. No code was changed.",
       "created_at": "2026-10-30T14:26:42+00:00",
+      "review_after": null,
+      "skipped_at_scan": 18
+    },
+    "strategy::test-health-decline": {
+      "issue_id": "strategy::test-health-decline",
+      "kind": "temporary",
+      "reason": "Stale strategy note: test-health numbers do not match current scan; file-health findings are generated l10n files",
+      "note": null,
+      "attestation": null,
+      "created_at": "2026-10-30T14:29:59+00:00",
+      "review_after": null,
+      "skipped_at_scan": 18
+    },
+    "strategy::file-health-and-code-quality-decline": {
+      "issue_id": "strategy::file-health-and-code-quality-decline",
+      "kind": "temporary",
+      "reason": "Stale strategy note: test-health numbers do not match current scan; file-health findings are generated l10n files",
+      "note": null,
+      "attestation": null,
+      "created_at": "2026-10-30T14:29:59+00:00",
       "review_after": null,
       "skipped_at_scan": 18
     }
@@ -6443,6 +6463,21 @@
       "detail": {
         "kind": "false_positive",
         "reason": "Dart part files included via part directive in owner library"
+      }
+    },
+    {
+      "timestamp": "2026-10-30T14:29:59+00:00",
+      "action": "skip",
+      "issue_ids": [
+        "strategy::test-health-decline",
+        "strategy::file-health-and-code-quality-decline"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": null,
+      "detail": {
+        "kind": "temporary",
+        "reason": "Stale strategy note: test-health numbers do not match current scan; file-health findings are generated l10n files"
       }
     }
   ],
