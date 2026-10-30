@@ -23,7 +23,8 @@ void main() {
 
     test('symbols that are not selected stay inside a name', () {
       expect(_artist('AC/DC'), ['AC/DC']);
-      expect(_artist('Simon & Garfunkel'), ['Simon & Garfunkel']);
+      // & is a default delimiter, so it splits a credit on a fresh install.
+      expect(_artist('Simon & Garfunkel'), ['Simon', 'Garfunkel']);
       expect(_artist('Malcolm X'), ['Malcolm X']);
     });
 
@@ -107,50 +108,6 @@ void main() {
         'Hip-Hop',
         'Rap',
       ]);
-    });
-  });
-
-  group('saving', () {
-    test('joins the names with the separator', () {
-      expect(
-        formatTagCreditsForSave(
-          ' A, B ; C ',
-          TagCreditField.artist,
-          _rules,
-          '; ',
-        ),
-        'A; B; C',
-      );
-    });
-
-    test('an empty or invalid separator keeps the value', () {
-      for (final separator in ['', '\n', 'abcdefghijklmnopq']) {
-        expect(
-          formatTagCreditsForSave(
-            'A, B',
-            TagCreditField.artist,
-            _rules,
-            separator,
-          ),
-          'A, B',
-        );
-      }
-    });
-
-    test('a value with no names is kept as it is', () {
-      expect(
-        formatTagCreditsForSave('  ', TagCreditField.artist, _rules, ' | '),
-        '  ',
-      );
-    });
-
-    test('band names survive a save with a separator', () {
-      for (final name in ['AC/DC', 'R&B', 'Florence and the Machine']) {
-        expect(
-          formatTagCreditsForSave(name, TagCreditField.artist, _rules, '; '),
-          name,
-        );
-      }
     });
   });
 

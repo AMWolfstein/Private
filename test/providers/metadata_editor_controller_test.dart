@@ -1,7 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/providers/metadata_editor_controller.dart';
-import 'package:sistrum/core/models/metadata_separators.dart';
-import 'package:sistrum/services/library/browse/library_tag_credits.dart';
 
 void main() {
   test('save snapshots preserve empty tags and explicit track/disc totals', () {
@@ -28,29 +26,15 @@ void main() {
     expect(tags.containsKey('total_discs'), isFalse);
   });
 
-  test('save joins name fields with the Save with separator, no keys', () {
+  test('save keeps name fields as typed, with no extra keys', () {
     final editor = MetadataEditorController({
       'artist': 'A, B',
       'genre': 'Rock; Pop',
     });
-    final tags = editor.buildMetadataTags(
-      separators: const MetadataSeparators(artist: ' / ', genre: '; '),
-    );
-    expect(tags['artist'], 'A / B');
+    final tags = editor.buildMetadataTags();
+    expect(tags['artist'], 'A, B');
     expect(tags['genre'], 'Rock; Pop');
     expect(tags.keys.where((key) => key.endsWith('_separator')), isEmpty);
-    editor.dispose();
-  });
-
-  test('a keep together name is not split when it is saved', () {
-    final editor = MetadataEditorController({
-      'artist': 'Tyler, The Creator, Kali Uchis',
-    });
-    final tags = editor.buildMetadataTags(
-      separators: const MetadataSeparators(artist: ' / '),
-      rules: const TagCreditRules(keepTogether: ['Tyler, The Creator']),
-    );
-    expect(tags['artist'], 'Tyler, The Creator / Kali Uchis');
     editor.dispose();
   });
 

@@ -1,3 +1,4 @@
+import 'package:sistrum/providers/library_tag_credits_provider.dart';
 import 'package:sistrum/screens/listening_rewind_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -23,7 +24,8 @@ final listeningSummaryProvider = FutureProvider.autoDispose
           ? DateTime(period.year)
           : DateTime(now.year, now.month, now.day - period.days + 1);
       final end = period.days == 0 ? DateTime(period.year + 1) : tomorrow;
-      return ListeningStatisticsStore.instance.load(start, end);
+      final rules = ref.watch(tagCreditRulesProvider);
+      return ListeningStatisticsStore.instance.load(start, end, rules: rules);
     });
 
 class ListeningStatisticsScreen extends ConsumerStatefulWidget {

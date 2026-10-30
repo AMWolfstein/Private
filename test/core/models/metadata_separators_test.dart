@@ -2,7 +2,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/core/models/metadata_separators.dart';
 import 'package:sistrum/core/models/settings.dart';
 import 'package:sistrum/services/ffmpeg/audio_metadata_mapper.dart';
-import 'package:sistrum/services/library/browse/library_tag_credits.dart';
 
 void main() {
   test(
@@ -27,50 +26,6 @@ void main() {
             .toJson(),
         separators.toJson(),
       );
-    },
-  );
-
-  test(
-    'formats names without splitting band names or changing other fields',
-    () {
-      const rules = TagCreditRules();
-      for (final name in [
-        'AC/DC',
-        'R&B',
-        'Florence and the Machine',
-        'Simon & Garfunkel',
-        'Malcolm X',
-      ]) {
-        expect(
-          formatTagCreditsForSave(name, TagCreditField.artist, rules, '; '),
-          name,
-        );
-      }
-      expect(
-        formatTagCreditsForSave(
-          ' A, B ; C ',
-          TagCreditField.artist,
-          rules,
-          '; ',
-        ),
-        'A; B; C',
-      );
-      expect(
-        formatTagCreditsForSave(' A, B ', TagCreditField.artist, rules, ''),
-        ' A, B ',
-      );
-      for (final invalid in ['\n', '\x00', 'abcdefghijklmnopq']) {
-        expect(MetadataSeparators.fromJson({'artist': invalid}).artist, '');
-        expect(
-          formatTagCreditsForSave(
-            'A, B',
-            TagCreditField.artist,
-            rules,
-            invalid,
-          ),
-          'A, B',
-        );
-      }
     },
   );
 

@@ -1,3 +1,4 @@
+import 'package:sistrum/services/library/browse/library_tag_credits.dart';
 import 'package:sistrum/services/playback/stats/listening_statistics.dart';
 import 'package:sistrum/utils/text/string_utils.dart';
 import 'package:sqflite/sqflite.dart';
@@ -376,8 +377,14 @@ Future<ListeningRewind> readListeningRewind(
   DatabaseExecutor db,
   ListeningRewindRange range, {
   bool yearly = false,
+  TagCreditRules rules = const TagCreditRules(),
 }) async {
-  final summary = await readListeningSummary(db, range.start, range.end);
+  final summary = await readListeningSummary(
+    db,
+    range.start,
+    range.end,
+    rules: rules,
+  );
   final start = listeningDay(range.start);
   final end = listeningDay(range.end);
   final previous = await db.rawQuery(

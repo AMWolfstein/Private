@@ -1,5 +1,4 @@
 import 'package:sqflite/sqflite.dart';
-import 'package:sistrum/core/models/metadata_separators.dart';
 import 'package:sistrum/core/models/tag_credit_settings.dart';
 import 'package:sistrum/services/library/database/library_schema.dart';
 import 'package:sistrum/services/library/database/sqlite_helpers.dart'
@@ -84,23 +83,6 @@ List<String> splitTagCredits(
     if (seen.add(sqlite.normalizeSearchText(name))) names.add(name);
   }
   return names;
-}
-
-/// Joins the names in [value] with [separator] for saving. An empty or invalid
-/// separator keeps the value as it is.
-String formatTagCreditsForSave(
-  String value,
-  TagCreditField field,
-  TagCreditRules rules,
-  String separator,
-) {
-  if (separator.isEmpty ||
-      MetadataSeparators.validSeparator(separator) != separator) {
-    return value;
-  }
-  final names = splitTagCredits(value, field, rules);
-  if (names.isEmpty) return value;
-  return names.join(separator);
 }
 
 String _escape(String value) => value.replaceAllMapped(

@@ -7,8 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:path/path.dart' as p;
 import 'package:sistrum/l10n/l10n.dart';
-import 'package:sistrum/core/models/metadata_separators.dart';
-import 'package:sistrum/services/library/browse/library_tag_credits.dart';
 import 'package:sistrum/providers/metadata_editor_controller.dart';
 import 'package:sistrum/services/library/metadata/metadata_cover_resources.dart';
 import 'package:sistrum/core/theme/app_icons.dart';
@@ -28,8 +26,6 @@ class EditMetadataSheet extends StatefulWidget {
   final String filePath;
 
   final int durationMs;
-  final MetadataSeparators metadataSeparators;
-  final TagCreditRules tagCreditRules;
 
   const EditMetadataSheet({
     super.key,
@@ -38,8 +34,6 @@ class EditMetadataSheet extends StatefulWidget {
     required this.filePath,
 
     required this.durationMs,
-    this.metadataSeparators = const MetadataSeparators(),
-    this.tagCreditRules = const TagCreditRules(),
   });
 
   @override
@@ -75,11 +69,7 @@ class _EditMetadataSheetState extends State<EditMetadataSheet>
       final result = await _persistence.save(
         MetadataSaveRequest(
           filePath: widget.filePath,
-          metadata: _form.buildMetadataTags(
-            separators: widget.metadataSeparators,
-            rules: widget.tagCreditRules,
-            onlyChanged: true,
-          ),
+          metadata: _form.buildMetadataTags(onlyChanged: true),
           selectedCoverPath: _selectedCoverPath,
           currentCoverPath: _currentCoverPath,
         ),

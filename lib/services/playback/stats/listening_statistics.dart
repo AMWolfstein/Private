@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:sistrum/services/library/browse/library_tag_credits.dart';
 import 'package:sistrum/services/library/database/sqlite_helpers.dart'
     as sqlite;
 import 'package:sistrum/utils/logging/logger.dart';
@@ -44,6 +45,7 @@ class ListeningSummary {
     this.tracks = const [],
     this.artists = const {},
     this.days = const {},
+    this.rules = const TagCreditRules(),
   });
 
   final int milliseconds;
@@ -52,19 +54,28 @@ class ListeningSummary {
   final Map<String, int> artists;
   final Map<String, int> days;
 
+  /// The separators that split each artist tag into names, so a track with
+  /// several artists counts for each of them.
+  final TagCreditRules rules;
+
   Map<String, String> get artistArtwork {
     final artwork = <String, String>{};
     final listeningTime = <String, int>{};
     for (final total in tracks) {
       final cover = normalizeCoverReference(total.track.artwork);
       if (cover == null) continue;
-      final artist = total.track.artist;
-      if (listeningTime.containsKey(artist) &&
-          total.milliseconds <= listeningTime[artist]!) {
-        continue;
+      for (final artist in splitTagCredits(
+        total.track.artist,
+        TagCreditField.artist,
+        rules,
+      )) {
+        if (listeningTime.containsKey(artist) &&
+            total.milliseconds <= listeningTime[artist]!) {
+          continue;
+        }
+        artwork[artist] = cover;
+        listeningTime[artist] = total.milliseconds;
       }
-      artwork[artist] = cover;
-      listeningTime[artist] = total.milliseconds;
     }
     return artwork;
   }
@@ -316,9 +327,13 @@ class ListeningStatisticsStore {
     });
   }
 
-  Future<ListeningSummary> load(DateTime start, DateTime end) async {
+  Future<ListeningSummary> load(
+    DateTime start,
+    DateTime end, {
+    TagCreditRules rules = const TagCreditRules(),
+  }) async {
     final db = await _open();
-    return readListeningSummary(db, start, end);
+    return readListeningSummary(db, start, end, rules: rules);
   }
 
   /// A bounded batch of local identities, aggregated across all listening days.
@@ -340,8 +355,9 @@ class ListeningStatisticsStore {
 Future<ListeningSummary> readListeningSummary(
   DatabaseExecutor db,
   DateTime start,
-  DateTime end,
-) async {
+  DateTime end, {
+  TagCreditRules rules = const TagCreditRules(),
+}) async {
   final arguments = [listeningDay(start), listeningDay(end)];
   final rows = await db.rawQuery('''
     SELECT totals.track_key, details.title, details.artist, details.album,
@@ -359,6 +375,18 @@ Future<ListeningSummary> readListeningSummary(
     SELECT artist, SUM(milliseconds) AS milliseconds
     FROM listening WHERE day >= ? AND day < ? GROUP BY artist
   ''', arguments);
+  // A track tagged with several artists adds its time to each of them.
+  final artists = <String, int>{};
+  for (final row in artistRows) {
+    final time = row['milliseconds'] as int;
+    for (final name in splitTagCredits(
+      row['artist'] as String,
+      TagCreditField.artist,
+      rules,
+    )) {
+      artists[name] = (artists[name] ?? 0) + time;
+    }
+  }
   final dayRows = await db.rawQuery('''
     SELECT day, SUM(milliseconds) AS milliseconds
     FROM listening WHERE day >= ? AND day < ? GROUP BY day ORDER BY day
@@ -381,14 +409,12 @@ Future<ListeningSummary> readListeningSummary(
     milliseconds: tracks.fold(0, (sum, track) => sum + track.milliseconds),
     plays: tracks.fold(0, (sum, track) => sum + track.plays),
     tracks: tracks,
-    artists: {
-      for (final row in artistRows)
-        row['artist'] as String: row['milliseconds'] as int,
-    },
+    artists: artists,
     days: {
       for (final row in dayRows)
         row['day'] as String: row['milliseconds'] as int,
     },
+    rules: rules,
   );
 }
 

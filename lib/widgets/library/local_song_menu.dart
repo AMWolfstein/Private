@@ -17,7 +17,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/core/models/track.dart';
 import 'package:sistrum/providers/local_library_provider.dart';
-import 'package:sistrum/providers/settings_provider.dart';
 import 'package:sistrum/providers/library_tag_credits_provider.dart';
 import 'package:sistrum/widgets/library/track_metadata_edit_sheet.dart';
 import 'package:sistrum/providers/library_database_provider.dart';
@@ -260,8 +259,6 @@ Future<bool> editLocalSongMetadata(
     return false;
   }
   final library = ref.read(localLibraryProvider.notifier);
-  final metadataSeparators = ref.read(settingsProvider).metadataSeparators;
-  final tagCreditRules = ref.read(tagCreditRulesProvider);
   Map<String, dynamic> tags = {};
   try {
     tags = await MediaFileBridge.readFileMetadata(item.filePath);
@@ -304,8 +301,6 @@ Future<bool> editLocalSongMetadata(
       initialValues: values,
       filePath: item.filePath,
       durationMs: (item.duration ?? 0) * 1000,
-      metadataSeparators: metadataSeparators,
-      tagCreditRules: tagCreditRules,
     ),
   );
   if (saved != true) return false;

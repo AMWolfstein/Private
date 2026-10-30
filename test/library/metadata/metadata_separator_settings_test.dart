@@ -70,7 +70,7 @@ void main() {
   setUp(() => SharedPreferences.setMockInitialValues({}));
 
   for (final size in [const Size(390, 844), const Size(844, 390)]) {
-    testWidgets('section sheets, Save with and Keep together ($size)', (
+    testWidgets('section sheets and Keep together ($size)', (
       tester,
     ) async {
       tester.view.physicalSize = size;
@@ -135,8 +135,7 @@ void main() {
       expect(credits().customArtistDelimiters, ['|']);
       expect(credits().artistDelimiters, contains('|'));
 
-      // The last selected genre delimiter cannot be turned off; Save with an
-      // empty field just closes the sheet.
+      // The last selected genre delimiter cannot be turned off.
       await _tap(tester, find.text('Genre'));
       await _tap(tester, inSheet(_chip('،')));
       expect(credits().genreDelimiters, [';']);
@@ -145,17 +144,6 @@ void main() {
       await _tap(tester, inSheet(find.text('Save')));
       expect(sheet, findsNothing);
       expect(credits().customGenreDelimiters, isEmpty);
-
-      // Save with on Artists writes one value to the three name fields.
-      await _showSection(tester, 'Save with');
-      await _tap(tester, find.text('Artists'), last: true);
-      await _tap(tester, find.text('Semicolon (;)'));
-      await _tap(tester, find.text('Save'), last: true);
-      final separators = container.read(settingsProvider).metadataSeparators;
-      expect(separators.artist, '; ');
-      expect(separators.albumArtist, '; ');
-      expect(separators.composer, '; ');
-      expect(separators.genre, '');
 
       // Keep together: a name is added, then removed.
       await _showSection(tester, 'Keep together');
@@ -172,36 +160,6 @@ void main() {
       expect(tester.takeException(), isNull);
     });
   }
-
-  testWidgets('dismissing the Save with sheet keeps the saved separator', (
-    tester,
-  ) async {
-    tester.view.physicalSize = const Size(390, 844);
-    tester.view.devicePixelRatio = 1;
-    addTearDown(tester.view.reset);
-    final container = ProviderContainer(
-      overrides: [settingsProvider.overrideWith(_Settings.new)],
-    );
-    addTearDown(container.dispose);
-    container.read(settingsProvider.notifier).setMetadataNamesSeparator(' | ');
-    await tester.pumpWidget(
-      UncontrolledProviderScope(
-        container: container,
-        child: MaterialApp(
-          theme: ThemeData(extensions: const [AppTheme()]),
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
-          supportedLocales: AppLocalizations.supportedLocales,
-          home: const MetadataSeparatorSettingsPage(),
-        ),
-      ),
-    );
-    await tester.pumpAndSettle();
-    await _tap(tester, find.text('Artists'), last: true);
-    await _tap(tester, find.text('Slash (/)'));
-    await tester.fling(find.byType(AppSheetHandle), const Offset(0, 600), 1200);
-    await tester.pumpAndSettle();
-    expect(container.read(settingsProvider).metadataSeparators.artist, ' | ');
-  });
 
   test('the Artists separator is shared across the name fields', () {
     const separators = MetadataSeparators(artist: '; ', genre: ', ');

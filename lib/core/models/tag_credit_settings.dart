@@ -27,6 +27,7 @@ const kArtistDelimiterDefaults = <String>[
   'feat.',
   'ft.',
   'featuring',
+  '&',
 ];
 
 /// Chips offered in the Genre section, in display order.

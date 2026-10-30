@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/core/models/metadata_separators.dart';
 import 'package:sistrum/core/models/tag_credit_settings.dart';
-import 'package:sistrum/services/library/browse/library_tag_credits.dart';
 import 'package:sistrum/providers/settings_provider.dart';
 import 'package:sistrum/utils/layout/nav_bar_inset.dart';
 import 'package:sistrum/widgets/primitives/app_alert_dialog.dart';
@@ -22,13 +21,8 @@ class MetadataSeparatorSettingsPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final separators = ref.watch(
-      settingsProvider.select((s) => s.metadataSeparators),
-    );
     final credits = ref.watch(settingsProvider.select((s) => s.tagCredits));
-    final notifier = ref.read(settingsProvider.notifier);
     final l10n = context.l10n;
-    final rules = TagCreditRules.fromSettings(credits);
     return Scaffold(
       body: CustomScrollView(
         slivers: [
@@ -63,44 +57,6 @@ class MetadataSeparatorSettingsPage extends ConsumerWidget {
               ],
             ),
           ),
-          SliverToBoxAdapter(
-            child: SettingsSectionHeader(title: l10n.tagSeparatorsSaveWith),
-          ),
-          SliverToBoxAdapter(
-            child: SettingsGroup(
-              children: [
-                _saveWithItem(
-                  context,
-                  title: l10n.tagSeparatorsArtists,
-                  label: l10n.editMetadataFieldArtist,
-                  field: TagCreditField.artist,
-                  rules: rules,
-                  value: separators.names,
-                  onSaved: notifier.setMetadataNamesSeparator,
-                ),
-                _saveWithItem(
-                  context,
-                  title: l10n.tagSeparatorsGenre,
-                  label: l10n.editMetadataFieldGenre,
-                  field: TagCreditField.genre,
-                  rules: rules,
-                  value: separators.genre,
-                  onSaved: (value) =>
-                      notifier.setMetadataSeparator('genre', value),
-                  last: true,
-                ),
-              ],
-            ),
-          ),
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(24, 8, 24, 0),
-              child: Text(
-                l10n.tagSeparatorsSaveWithDescription,
-                style: Theme.of(context).textTheme.bodySmall,
-              ),
-            ),
-          ),
           const SliverToBoxAdapter(child: SizedBox(height: 32)),
           const NavBarSliverSpacer(),
         ],
@@ -129,39 +85,6 @@ class MetadataSeparatorSettingsPage extends ConsumerWidget {
     );
   }
 
-  SettingsItem _saveWithItem(
-    BuildContext context, {
-    required String title,
-    required String label,
-    required TagCreditField field,
-    required TagCreditRules rules,
-    required String value,
-    required ValueChanged<String> onSaved,
-    bool last = false,
-  }) {
-    final l10n = context.l10n;
-    return SettingsItem(
-      title: title,
-      subtitle: value.isEmpty
-          ? l10n.metadataSeparatorSource
-          : formatTagCreditsForSave('$label A, $label B', field, rules, value),
-      showDivider: !last,
-      onTap: () async {
-        final picked = await showAppBottomSheet<String>(
-          context: context,
-          useRootNavigator: true,
-          title: l10n.tagSeparatorsSaveWith,
-          builder: (_) => _SeparatorPicker(
-            label: label,
-            current: value,
-            field: field,
-            rules: rules,
-          ),
-        );
-        if (picked != null && context.mounted) onSaved(picked);
-      },
-    );
-  }
 }
 
 /// One section's sheet: the chip grid, applied as it is tapped, and Add
@@ -464,145 +387,3 @@ class _KeepTogetherSheetState extends ConsumerState<_KeepTogetherSheet> {
 }
 
 /// Picks one save-time separator; the custom field takes any 1-16 characters.
-class _SeparatorPicker extends StatefulWidget {
-  const _SeparatorPicker({
-    required this.label,
-    required this.current,
-    required this.field,
-    required this.rules,
-  });
-  final String label;
-  final String current;
-  final TagCreditField field;
-  final TagCreditRules rules;
-
-  @override
-  State<_SeparatorPicker> createState() => _SeparatorPickerState();
-}
-
-class _SeparatorPickerState extends State<_SeparatorPicker> {
-  static const _presets = ['', ', ', '; ', ' / '];
-  late String? _selected = _presets.contains(widget.current)
-      ? widget.current
-      : null;
-  late final _custom = TextEditingController(
-    text: _selected == null ? widget.current : '',
-  );
-
-  @override
-  void dispose() {
-    _custom.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final labels = [
-      context.l10n.metadataSeparatorSource,
-      context.l10n.metadataSeparatorComma,
-      context.l10n.metadataSeparatorSemicolon,
-      context.l10n.metadataSeparatorSlash,
-      context.l10n.metadataSeparatorCustom,
-    ];
-    final separator = _selected ?? _custom.text;
-    final valid =
-        _selected != null ||
-        (separator.isNotEmpty &&
-            MetadataSeparators.validSeparator(separator) == separator);
-    final example = '${widget.label} A, ${widget.label} B';
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(0, 8, 0, 24),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            SettingsGroup(
-              children: [
-                for (var i = 0; i < labels.length; i++)
-                  Semantics(
-                    // One of a set: announce which separator is chosen.
-                    selected:
-                        _selected == (i < _presets.length ? _presets[i] : null),
-                    inMutuallyExclusiveGroup: true,
-                    child: SettingsItem(
-                      title: labels[i],
-                      trailing:
-                          _selected ==
-                              (i < _presets.length ? _presets[i] : null)
-                          ? Icon(
-                              Icons.check,
-                              color: Theme.of(context).colorScheme.primary,
-                            )
-                          : const SizedBox.shrink(),
-                      showDivider: i != labels.length - 1,
-                      onTap: () => setState(() {
-                        _selected = i < _presets.length ? _presets[i] : null;
-                      }),
-                    ),
-                  ),
-              ],
-            ),
-            // Same inset as the options group above, so every block lines up.
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  if (_selected == null) ...[
-                    const SizedBox(height: 12),
-                    // The selected row already names the field; a floating
-                    // label would repeat it and collide with the group.
-                    TextField(
-                      controller: _custom,
-                      maxLength: 16,
-                      autofocus: _custom.text.isEmpty,
-                      decoration: InputDecoration(
-                        hintText: ' | ',
-                        errorText: valid || separator.isEmpty
-                            ? null
-                            : context.l10n.metadataSeparatorInvalid,
-                      ),
-                      onChanged: (_) => setState(() {}),
-                    ),
-                  ],
-                  const SizedBox(height: 16),
-                  AppContentCard(
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            context.l10n.metadataSeparatorPreview,
-                            style: Theme.of(context).textTheme.labelLarge,
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            formatTagCreditsForSave(
-                              example,
-                              widget.field,
-                              widget.rules,
-                              valid ? separator : '',
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-                  FilledButton(
-                    onPressed: valid
-                        ? () => Navigator.of(context).pop(separator)
-                        : null,
-                    child: Text(context.l10n.dialogSave),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
