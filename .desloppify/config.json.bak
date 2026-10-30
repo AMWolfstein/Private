@@ -34,7 +34,8 @@
     "orphaned::lib/services/audio_analysis/audio_analysis_spectral_cutoff.dart",
     "orphaned::lib/services/library/library_database_queries.dart",
     "orphaned::lib/utils/lyrics_parser_ttml.dart",
-    "orphaned::lib/widgets/header/album_detail_header_parts.dart"
+    "orphaned::lib/widgets/header/album_detail_header_parts.dart",
+    "orphaned::lib/widgets/library/track_metadata_edit_cover.dart"
   ],
   "ignore_metadata": {
     "orphaned::lib/services/playback/music_player_automix.dart": {
@@ -231,6 +232,13 @@
       "added_at": "2026-10-29T22:07:31+00:00",
       "fingerprints": [
         "acec53d18e9cf1ac"
+      ]
+    },
+    "orphaned::lib/widgets/library/track_metadata_edit_cover.dart": {
+      "note": "Path-independent suppression fingerprints captured by suppress.",
+      "added_at": "2026-10-29T22:07:31+00:00",
+      "fingerprints": [
+        "a23748db765a409d"
       ]
     }
   },

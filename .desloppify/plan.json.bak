@@ -1,7 +1,7 @@
 {
   "version": 8,
   "created": "2026-10-29T06:01:52+00:00",
-  "updated": "2026-10-29T22:05:46+00:00",
+  "updated": "2026-10-30T06:55:02+00:00",
   "queue_order": [
     "workflow::create-plan",
     "triage::strategize",
@@ -28,14 +28,17 @@
     "subjective::package_organization",
     "subjective::test_strategy",
     "subjective::type_safety",
-    "strategy::test-health-decline",
-    "strategy::file-health-and-code-quality-decline",
-    "structural::lib/services/playback/music_player_service.dart",
-    "structural::lib/providers/library_collections_provider.dart",
-    "test_coverage::lib/services/audio_analysis/audio_analysis_parsing.dart::transitive_only",
-    "test_coverage::lib/screens/listening_statistics_screen.dart::transitive_only",
-    "test_coverage::lib/screens/local_guide_pages.dart::transitive_only",
-    "test_coverage::lib/widgets/sheets/duplicate_review_sheet.dart::transitive_only"
+    "review::.::holistic::ai_generated_debt::single_source_union_scaffolding",
+    "review::.::holistic::contract_coherence::backup_failure_reason_contract_not_preserved",
+    "review::.::holistic::error_consistency::saf_copy_discards_failure_cause",
+    "review::.::holistic::high_level_elegance::audio_analysis_backend_owned_by_widget_state",
+    "review::.::holistic::logic_clarity::browse_page_stored_twice",
+    "review::.::holistic::low_level_elegance::metadata_filter_chip_repetition",
+    "review::.::holistic::mid_level_elegance::browse_track_mapper_drops_lyrics",
+    "review::.::holistic::naming_quality::download_named_snapshot_fallback",
+    "review::.::holistic::package_organization::persistence_services_placed_under_widgets",
+    "review::.::holistic::test_strategy::sql_fixtures_parse_source_format",
+    "review::.::holistic::type_safety::failed_replaygain_result_accepts_null"
   ],
   "deferred": [],
   "skipped": {},
@@ -686,9 +689,7 @@
       "issue_ids": [
         "test_coverage::lib/utils/image_cache_utils.dart::transitive_only",
         "test_coverage::lib/utils/app_bar_layout.dart::transitive_only",
-        "test_coverage::lib/screens/local_guide_pages.dart::transitive_only",
         "test_coverage::lib/widgets/player/player_lyrics_controls.dart::transitive_only",
-        "test_coverage::lib/screens/listening_statistics_screen.dart::transitive_only",
         "test_coverage::lib/providers/playback_notification_provider.dart::transitive_only",
         "test_coverage::lib/utils/detail_page_route.dart::transitive_only",
         "test_coverage::lib/widgets/player/player_metadata_title.dart::transitive_only",
@@ -704,8 +705,6 @@
         "test_coverage::lib/services/native/cue_sheet_bridge.dart::transitive_only",
         "test_coverage::lib/services/library/library_scan_notifications.dart::transitive_only",
         "test_coverage::lib/widgets/lyrics/lyric_supplement_transition.dart::transitive_only",
-        "test_coverage::lib/widgets/sheets/duplicate_review_sheet.dart::transitive_only",
-        "test_coverage::lib/services/audio_analysis/audio_analysis_parsing.dart::transitive_only",
         "test_coverage::lib/screens/library/selection_mode_mixin.dart::transitive_only",
         "test_coverage::lib/widgets/status/beta_badge.dart::transitive_only",
         "test_coverage::lib/widgets/settings/custom_font_setting.dart::transitive_only",
@@ -4393,6 +4392,90 @@
       "detail": {
         "scan_count": 10
       }
+    },
+    {
+      "timestamp": "2026-10-30T06:55:02+00:00",
+      "action": "review_import_sync",
+      "issue_ids": [],
+      "cluster_name": null,
+      "actor": "system",
+      "note": null,
+      "detail": {
+        "trigger": "review_import",
+        "new_ids": [
+          "review::.::holistic::ai_generated_debt::single_source_union_scaffolding",
+          "review::.::holistic::contract_coherence::backup_failure_reason_contract_not_preserved",
+          "review::.::holistic::error_consistency::saf_copy_discards_failure_cause",
+          "review::.::holistic::high_level_elegance::audio_analysis_backend_owned_by_widget_state",
+          "review::.::holistic::logic_clarity::browse_page_stored_twice",
+          "review::.::holistic::low_level_elegance::metadata_filter_chip_repetition",
+          "review::.::holistic::mid_level_elegance::browse_track_mapper_drops_lyrics",
+          "review::.::holistic::naming_quality::download_named_snapshot_fallback",
+          "review::.::holistic::package_organization::persistence_services_placed_under_widgets",
+          "review::.::holistic::test_strategy::sql_fixtures_parse_source_format",
+          "review::.::holistic::type_safety::failed_replaygain_result_accepts_null"
+        ],
+        "added_to_queue": [
+          "review::.::holistic::ai_generated_debt::single_source_union_scaffolding",
+          "review::.::holistic::contract_coherence::backup_failure_reason_contract_not_preserved",
+          "review::.::holistic::error_consistency::saf_copy_discards_failure_cause",
+          "review::.::holistic::high_level_elegance::audio_analysis_backend_owned_by_widget_state",
+          "review::.::holistic::logic_clarity::browse_page_stored_twice",
+          "review::.::holistic::low_level_elegance::metadata_filter_chip_repetition",
+          "review::.::holistic::mid_level_elegance::browse_track_mapper_drops_lyrics",
+          "review::.::holistic::naming_quality::download_named_snapshot_fallback",
+          "review::.::holistic::package_organization::persistence_services_placed_under_widgets",
+          "review::.::holistic::test_strategy::sql_fixtures_parse_source_format",
+          "review::.::holistic::type_safety::failed_replaygain_result_accepts_null"
+        ],
+        "workflow_injected_ids": [],
+        "triage_injected": false,
+        "triage_injected_ids": [],
+        "triage_deferred": false,
+        "diff_new": 11,
+        "diff_reopened": 0,
+        "diff_auto_resolved": 20,
+        "stale_pruned_from_queue": [
+          "strategy::file-health-and-code-quality-decline",
+          "strategy::test-health-decline",
+          "structural::lib/providers/library_collections_provider.dart",
+          "structural::lib/services/playback/music_player_service.dart",
+          "test_coverage::lib/screens/listening_statistics_screen.dart::transitive_only",
+          "test_coverage::lib/screens/local_guide_pages.dart::transitive_only",
+          "test_coverage::lib/services/audio_analysis/audio_analysis_parsing.dart::transitive_only",
+          "test_coverage::lib/widgets/sheets/duplicate_review_sheet.dart::transitive_only"
+        ],
+        "covered_subjective_pruned_from_queue": [],
+        "covered_subjective": [
+          "subjective::abstraction_fitness",
+          "subjective::ai_generated_debt",
+          "subjective::api_surface_coherence",
+          "subjective::authorization_consistency",
+          "subjective::contract_coherence",
+          "subjective::convention_outlier",
+          "subjective::cross_module_architecture",
+          "subjective::dependency_health",
+          "subjective::design_coherence",
+          "subjective::error_consistency",
+          "subjective::high_level_elegance",
+          "subjective::incomplete_migration",
+          "subjective::initialization_coupling",
+          "subjective::logic_clarity",
+          "subjective::low_level_elegance",
+          "subjective::mid_level_elegance",
+          "subjective::naming_quality",
+          "subjective::package_organization",
+          "subjective::test_strategy",
+          "subjective::type_safety"
+        ],
+        "stale_sync_injected": [],
+        "stale_sync_pruned": [],
+        "auto_cluster_changes": 0,
+        "import_scores_injected": [],
+        "import_scores_pruned": [],
+        "sync_status": "synced",
+        "sync_message": null
+      }
     }
   ],
   "epic_triage_meta": {
@@ -4436,7 +4519,6 @@
         "confirmed_text": "I have actually read the reflect report's cluster blueprint and checked its file references and skip reasons against the repo; the blueprint names specific clusters, files and reasons, and I am not gaming the score by confirming without reading."
       }
     },
-    "active_triage_issue_ids": [],
     "strategist_briefing": {
       "computed_at": "2026-10-29T00:00:00Z",
       "lookback_scans": 8,
