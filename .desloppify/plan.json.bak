@@ -1,43 +1,13 @@
 {
   "version": 8,
   "created": "2026-10-29T06:01:52+00:00",
-  "updated": "2026-10-30T06:55:02+00:00",
+  "updated": "2026-10-30T11:47:53+00:00",
   "queue_order": [
-    "workflow::create-plan",
-    "triage::strategize",
-    "triage::organize",
-    "triage::enrich",
-    "triage::sense-check",
-    "triage::commit",
     "subjective::abstraction_fitness",
-    "subjective::ai_generated_debt",
-    "subjective::api_surface_coherence",
-    "subjective::contract_coherence",
     "subjective::convention_outlier",
-    "subjective::cross_module_architecture",
-    "subjective::dependency_health",
     "subjective::design_coherence",
-    "subjective::error_consistency",
-    "subjective::high_level_elegance",
-    "subjective::incomplete_migration",
-    "subjective::initialization_coupling",
     "subjective::logic_clarity",
-    "subjective::low_level_elegance",
-    "subjective::mid_level_elegance",
-    "subjective::naming_quality",
     "subjective::package_organization",
-    "subjective::test_strategy",
-    "subjective::type_safety",
-    "review::.::holistic::ai_generated_debt::single_source_union_scaffolding",
-    "review::.::holistic::contract_coherence::backup_failure_reason_contract_not_preserved",
-    "review::.::holistic::error_consistency::saf_copy_discards_failure_cause",
-    "review::.::holistic::high_level_elegance::audio_analysis_backend_owned_by_widget_state",
-    "review::.::holistic::logic_clarity::browse_page_stored_twice",
-    "review::.::holistic::low_level_elegance::metadata_filter_chip_repetition",
-    "review::.::holistic::mid_level_elegance::browse_track_mapper_drops_lyrics",
-    "review::.::holistic::naming_quality::download_named_snapshot_fallback",
-    "review::.::holistic::package_organization::persistence_services_placed_under_widgets",
-    "review::.::holistic::test_strategy::sql_fixtures_parse_source_format",
     "review::.::holistic::type_safety::failed_replaygain_result_accepts_null"
   ],
   "deferred": [],
@@ -179,8 +149,8 @@
     "test_coverage::lib/widgets/audio_analysis/audio_analysis_models.dart::untested_module": {
       "issue_id": "test_coverage::lib/widgets/audio_analysis/audio_analysis_models.dart::untested_module",
       "created_at": "2026-10-29T06:01:52+00:00",
-      "cluster": "auto/test_coverage-untested_module",
-      "updated_at": "2026-10-29T18:55:17+00:00"
+      "cluster": null,
+      "updated_at": "2026-10-30T11:44:20+00:00"
     },
     "test_coverage::lib/screens/home/home_tab_widgets.dart::untested_module": {
       "issue_id": "test_coverage::lib/screens/home/home_tab_widgets.dart::untested_module",
@@ -233,8 +203,8 @@
     "test_coverage::lib/screens/local_guide_pages.dart::transitive_only": {
       "issue_id": "test_coverage::lib/screens/local_guide_pages.dart::transitive_only",
       "created_at": "2026-10-29T06:01:52+00:00",
-      "cluster": "transitive-behaviour-tests",
-      "updated_at": "2026-10-29T20:35:50+00:00"
+      "cluster": null,
+      "updated_at": "2026-10-30T11:44:20+00:00"
     },
     "test_coverage::lib/widgets/scroll_edge_fade.dart::transitive_only": {
       "issue_id": "test_coverage::lib/widgets/scroll_edge_fade.dart::transitive_only",
@@ -275,8 +245,8 @@
     "test_coverage::lib/screens/listening_statistics_screen.dart::transitive_only": {
       "issue_id": "test_coverage::lib/screens/listening_statistics_screen.dart::transitive_only",
       "created_at": "2026-10-29T06:01:52+00:00",
-      "cluster": "transitive-behaviour-tests",
-      "updated_at": "2026-10-29T20:35:50+00:00"
+      "cluster": null,
+      "updated_at": "2026-10-30T11:44:20+00:00"
     },
     "test_coverage::lib/providers/playback_notification_provider.dart::transitive_only": {
       "issue_id": "test_coverage::lib/providers/playback_notification_provider.dart::transitive_only",
@@ -413,8 +383,8 @@
     "test_coverage::lib/utils/best_effort_delete.dart::transitive_only": {
       "issue_id": "test_coverage::lib/utils/best_effort_delete.dart::transitive_only",
       "created_at": "2026-10-29T18:55:17+00:00",
-      "cluster": "auto/test_coverage-transitive_only",
-      "updated_at": "2026-10-29T18:55:17+00:00"
+      "cluster": null,
+      "updated_at": "2026-10-30T11:44:20+00:00"
     },
     "test_coverage::lib/widgets/shell/scroll_edge_fade.dart::transitive_only": {
       "issue_id": "test_coverage::lib/widgets/shell/scroll_edge_fade.dart::transitive_only",
@@ -425,8 +395,8 @@
     "test_coverage::lib/services/library/library_scan_progress.dart::transitive_only": {
       "issue_id": "test_coverage::lib/services/library/library_scan_progress.dart::transitive_only",
       "created_at": "2026-10-29T18:55:17+00:00",
-      "cluster": "auto/test_coverage-transitive_only",
-      "updated_at": "2026-10-29T18:55:17+00:00"
+      "cluster": null,
+      "updated_at": "2026-10-30T11:44:20+00:00"
     },
     "test_coverage::lib/services/native/cue_sheet_bridge.dart::transitive_only": {
       "issue_id": "test_coverage::lib/services/native/cue_sheet_bridge.dart::transitive_only",
@@ -437,8 +407,8 @@
     "test_coverage::lib/services/library/library_scan_notifications.dart::transitive_only": {
       "issue_id": "test_coverage::lib/services/library/library_scan_notifications.dart::transitive_only",
       "created_at": "2026-10-29T18:55:17+00:00",
-      "cluster": "auto/test_coverage-transitive_only",
-      "updated_at": "2026-10-29T18:55:17+00:00"
+      "cluster": null,
+      "updated_at": "2026-10-30T11:44:20+00:00"
     },
     "test_coverage::lib/widgets/lyrics/lyric_supplement_transition.dart::transitive_only": {
       "issue_id": "test_coverage::lib/widgets/lyrics/lyric_supplement_transition.dart::transitive_only",
@@ -449,8 +419,8 @@
     "test_coverage::lib/widgets/sheets/duplicate_review_sheet.dart::transitive_only": {
       "issue_id": "test_coverage::lib/widgets/sheets/duplicate_review_sheet.dart::transitive_only",
       "created_at": "2026-10-29T18:55:17+00:00",
-      "cluster": "transitive-behaviour-tests",
-      "updated_at": "2026-10-29T20:35:50+00:00"
+      "cluster": null,
+      "updated_at": "2026-10-30T11:44:20+00:00"
     },
     "test_coverage::lib/widgets/status/disc_separator_chip.dart::transitive_only": {
       "issue_id": "test_coverage::lib/widgets/status/disc_separator_chip.dart::transitive_only",
@@ -461,8 +431,8 @@
     "test_coverage::lib/services/audio_analysis/audio_analysis_parsing.dart::transitive_only": {
       "issue_id": "test_coverage::lib/services/audio_analysis/audio_analysis_parsing.dart::transitive_only",
       "created_at": "2026-10-29T18:55:17+00:00",
-      "cluster": "transitive-behaviour-tests",
-      "updated_at": "2026-10-29T20:35:50+00:00"
+      "cluster": null,
+      "updated_at": "2026-10-30T11:44:20+00:00"
     },
     "test_coverage::lib/screens/library/selection_mode_mixin.dart::transitive_only": {
       "issue_id": "test_coverage::lib/screens/library/selection_mode_mixin.dart::transitive_only",
@@ -663,7 +633,6 @@
       "description": "Fix 10 test coverage issues",
       "issue_ids": [
         "test_coverage::lib/screens/home/home_tab_feed.dart::untested_module",
-        "test_coverage::lib/widgets/audio_analysis/audio_analysis_models.dart::untested_module",
         "test_coverage::lib/screens/home/home_tab_widgets.dart::untested_module",
         "test_coverage::lib/screens/library/library_section_tab_selection.dart::untested_module",
         "test_coverage::lib/screens/library/library_section_tab_filter_widgets.dart::untested_module",
@@ -699,11 +668,8 @@
         "test_coverage::lib/widgets/player/player_lyrics_section.dart::transitive_only",
         "test_coverage::lib/screens/library/collapsing_header_scroll_mixin.dart::transitive_only",
         "test_coverage::lib/widgets/settings/music_haptics_settings.dart::transitive_only",
-        "test_coverage::lib/utils/best_effort_delete.dart::transitive_only",
         "test_coverage::lib/widgets/shell/scroll_edge_fade.dart::transitive_only",
-        "test_coverage::lib/services/library/library_scan_progress.dart::transitive_only",
         "test_coverage::lib/services/native/cue_sheet_bridge.dart::transitive_only",
-        "test_coverage::lib/services/library/library_scan_notifications.dart::transitive_only",
         "test_coverage::lib/widgets/lyrics/lyric_supplement_transition.dart::transitive_only",
         "test_coverage::lib/screens/library/selection_mode_mixin.dart::transitive_only",
         "test_coverage::lib/widgets/status/beta_badge.dart::transitive_only",
@@ -776,7 +742,8 @@
           "effort": "large",
           "issue_refs": [
             "structural::lib/services/playback/music_player_service.dart"
-          ]
+          ],
+          "done": true
         }
       ]
     },
@@ -802,7 +769,8 @@
           "effort": "medium",
           "issue_refs": [
             "structural::lib/providers/library_collections_provider.dart"
-          ]
+          ],
+          "done": true
         }
       ]
     },
@@ -822,7 +790,7 @@
       "action": null,
       "action_type": "manual_fix",
       "execution_policy": "planned_only",
-      "execution_status": "active",
+      "execution_status": "done",
       "user_modified": true,
       "action_steps": [
         {
@@ -831,7 +799,8 @@
           "effort": "medium",
           "issue_refs": [
             "test_coverage::lib/services/audio_analysis/audio_analysis_parsing.dart::transitive_only"
-          ]
+          ],
+          "done": true
         },
         {
           "title": "Add behavioural tests for listening_statistics_screen, local_guide_pages and duplicate_review_sheet",
@@ -841,7 +810,8 @@
             "test_coverage::lib/screens/listening_statistics_screen.dart::transitive_only",
             "test_coverage::lib/screens/local_guide_pages.dart::transitive_only",
             "test_coverage::lib/widgets/sheets/duplicate_review_sheet.dart::transitive_only"
-          ]
+          ],
+          "done": true
         }
       ]
     }
@@ -1298,19 +1268,99 @@
       "superseded_at": "2026-10-29T20:31:23+00:00",
       "remapped_to": null,
       "candidates": []
+    },
+    "test_coverage::lib/screens/listening_statistics_screen.dart::transitive_only": {
+      "original_id": "test_coverage::lib/screens/listening_statistics_screen.dart::transitive_only",
+      "original_detector": "test_coverage",
+      "original_file": "lib/screens/listening_statistics_screen.dart",
+      "original_summary": "No direct tests (493 LOC, 2 importers) \u2014 covered only via imports from tested modules",
+      "status": "superseded",
+      "superseded_at": "2026-10-30T11:44:20+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/screens/local_guide_pages.dart::transitive_only": {
+      "original_id": "test_coverage::lib/screens/local_guide_pages.dart::transitive_only",
+      "original_detector": "test_coverage",
+      "original_file": "lib/screens/local_guide_pages.dart",
+      "original_summary": "No direct tests (424 LOC, 1 importers) \u2014 covered only via imports from tested modules",
+      "status": "superseded",
+      "superseded_at": "2026-10-30T11:44:20+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/services/audio_analysis/audio_analysis_parsing.dart::transitive_only": {
+      "original_id": "test_coverage::lib/services/audio_analysis/audio_analysis_parsing.dart::transitive_only",
+      "original_detector": "test_coverage",
+      "original_file": "lib/services/audio_analysis/audio_analysis_parsing.dart",
+      "original_summary": "No direct tests (106 LOC, 1 importers) \u2014 covered only via imports from tested modules",
+      "status": "superseded",
+      "superseded_at": "2026-10-30T11:44:20+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/services/library/library_scan_notifications.dart::transitive_only": {
+      "original_id": "test_coverage::lib/services/library/library_scan_notifications.dart::transitive_only",
+      "original_detector": "test_coverage",
+      "original_file": "lib/services/library/library_scan_notifications.dart",
+      "original_summary": "No direct tests (139 LOC, 1 importers) \u2014 covered only via imports from tested modules",
+      "status": "superseded",
+      "superseded_at": "2026-10-30T11:44:20+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/services/library/library_scan_progress.dart::transitive_only": {
+      "original_id": "test_coverage::lib/services/library/library_scan_progress.dart::transitive_only",
+      "original_detector": "test_coverage",
+      "original_file": "lib/services/library/library_scan_progress.dart",
+      "original_summary": "No direct tests (101 LOC, 1 importers) \u2014 covered only via imports from tested modules",
+      "status": "superseded",
+      "superseded_at": "2026-10-30T11:44:20+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/utils/best_effort_delete.dart::transitive_only": {
+      "original_id": "test_coverage::lib/utils/best_effort_delete.dart::transitive_only",
+      "original_detector": "test_coverage",
+      "original_file": "lib/utils/best_effort_delete.dart",
+      "original_summary": "No direct tests (12 LOC, 12 importers) \u2014 covered only via imports from tested modules",
+      "status": "superseded",
+      "superseded_at": "2026-10-30T11:44:20+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/widgets/audio_analysis/audio_analysis_models.dart::untested_module": {
+      "original_id": "test_coverage::lib/widgets/audio_analysis/audio_analysis_models.dart::untested_module",
+      "original_detector": "test_coverage",
+      "original_file": "lib/widgets/audio_analysis/audio_analysis_models.dart",
+      "original_summary": "Untested module (183 LOC, 0 importers)",
+      "status": "superseded",
+      "superseded_at": "2026-10-30T11:44:20+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/widgets/sheets/duplicate_review_sheet.dart::transitive_only": {
+      "original_id": "test_coverage::lib/widgets/sheets/duplicate_review_sheet.dart::transitive_only",
+      "original_detector": "test_coverage",
+      "original_file": "lib/widgets/sheets/duplicate_review_sheet.dart",
+      "original_summary": "No direct tests (368 LOC, 1 importers) \u2014 covered only via imports from tested modules",
+      "status": "superseded",
+      "superseded_at": "2026-10-30T11:44:20+00:00",
+      "remapped_to": null,
+      "candidates": []
     }
   },
   "promoted_ids": [],
   "plan_start_scores": {
-    "strict": 76.0,
-    "overall": 77.0,
-    "objective": 94.7,
-    "verified": 94.7
+    "strict": 90.1,
+    "overall": 91.1,
+    "objective": 94.8,
+    "verified": 94.8
   },
   "refresh_state": {
     "_subjective_migration_pruned": true,
     "lifecycle_phase": "plan",
-    "postflight_scan_completed_at_scan_count": 10,
+    "postflight_scan_completed_at_scan_count": 12,
     "subjective_review_completed_at_scan_count": 6
   },
   "execution_log": [
@@ -4476,6 +4526,387 @@
         "sync_status": "synced",
         "sync_message": null
       }
+    },
+    {
+      "timestamp": "2026-10-30T11:44:20+00:00",
+      "action": "cluster_done",
+      "issue_ids": [],
+      "cluster_name": "transitive-behaviour-tests",
+      "actor": "system",
+      "note": null,
+      "detail": {
+        "reason": "cluster members no longer actionable in state"
+      }
+    },
+    {
+      "timestamp": "2026-10-30T11:44:20+00:00",
+      "action": "reconcile",
+      "issue_ids": [
+        "test_coverage::lib/screens/listening_statistics_screen.dart::transitive_only",
+        "test_coverage::lib/screens/local_guide_pages.dart::transitive_only",
+        "test_coverage::lib/services/audio_analysis/audio_analysis_parsing.dart::transitive_only",
+        "test_coverage::lib/services/library/library_scan_notifications.dart::transitive_only",
+        "test_coverage::lib/services/library/library_scan_progress.dart::transitive_only",
+        "test_coverage::lib/utils/best_effort_delete.dart::transitive_only",
+        "test_coverage::lib/widgets/audio_analysis/audio_analysis_models.dart::untested_module",
+        "test_coverage::lib/widgets/sheets/duplicate_review_sheet.dart::transitive_only"
+      ],
+      "cluster_name": null,
+      "actor": "system",
+      "note": null,
+      "detail": {
+        "superseded_count": 8,
+        "pruned_count": 0,
+        "resurfaced_count": 0,
+        "clusters_completed_count": 1
+      }
+    },
+    {
+      "timestamp": "2026-10-30T11:44:20+00:00",
+      "action": "sync_subjective",
+      "issue_ids": [],
+      "cluster_name": null,
+      "actor": "system",
+      "note": null,
+      "detail": {
+        "changes": true
+      }
+    },
+    {
+      "timestamp": "2026-10-30T11:44:20+00:00",
+      "action": "seed_start_scores",
+      "issue_ids": [],
+      "cluster_name": null,
+      "actor": "system",
+      "note": null,
+      "detail": {}
+    },
+    {
+      "timestamp": "2026-10-30T11:44:20+00:00",
+      "action": "complete_postflight_scan",
+      "issue_ids": [],
+      "cluster_name": null,
+      "actor": "system",
+      "note": null,
+      "detail": {
+        "scan_count": 12
+      }
+    },
+    {
+      "timestamp": "2026-10-30T11:46:19+00:00",
+      "action": "done",
+      "issue_ids": [
+        "review::.::holistic::ai_generated_debt::single_source_union_scaffolding"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "Removed the one-element UNION ALL assembly: counts() and _getUnfilteredQueueCounts() each run a single aggregate query, and the track/album queue builders return the bounded SQL directly (commit f7632d3).",
+      "detail": {}
+    },
+    {
+      "timestamp": "2026-10-30T11:46:20+00:00",
+      "action": "resolve",
+      "issue_ids": [
+        "review::.::holistic::ai_generated_debt::single_source_union_scaffolding"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "Removed the one-element UNION ALL assembly: counts() and _getUnfilteredQueueCounts() each run a single aggregate query, and the track/album queue builders return the bounded SQL directly (commit f7632d3).",
+      "detail": {
+        "status": "fixed",
+        "attestation": "I have actually Removed the one-element UNION ALL assembly: counts() and _getUnfilteredQueueCounts() each run a single aggregate query, and the track/album queue builders return the bounded SQL directly (commit f7632d3). and I am not gaming the score."
+      }
+    },
+    {
+      "timestamp": "2026-10-30T11:46:29+00:00",
+      "action": "done",
+      "issue_ids": [
+        "review::.::holistic::contract_coherence::backup_failure_reason_contract_not_preserved"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "Native reader now returns {failure: code} (corrupt_archive / unsupported_version) as a success value; BackupService maps it to BackupParseFailure instead of unreadable (commit f7632d3).",
+      "detail": {}
+    },
+    {
+      "timestamp": "2026-10-30T11:46:29+00:00",
+      "action": "resolve",
+      "issue_ids": [
+        "review::.::holistic::contract_coherence::backup_failure_reason_contract_not_preserved"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "Native reader now returns {failure: code} (corrupt_archive / unsupported_version) as a success value; BackupService maps it to BackupParseFailure instead of unreadable (commit f7632d3).",
+      "detail": {
+        "status": "fixed",
+        "attestation": "I have actually Native reader now returns {failure: code} (corrupt_archive / unsupported_version) as a success value; BackupService maps it to BackupParseFailure instead of unreadable (commit f7632d3). and I am not gaming the score."
+      }
+    },
+    {
+      "timestamp": "2026-10-30T11:46:40+00:00",
+      "action": "done",
+      "issue_ids": [
+        "review::.::holistic::error_consistency::saf_copy_discards_failure_cause"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "safCopyToTemp returns saf_copy_failed / saf_permission_denied with the cause; copyContentUriToTempOrThrow surfaces it as PlatformException; ReplayGain and analysis keep the error (commit f7632d3).",
+      "detail": {}
+    },
+    {
+      "timestamp": "2026-10-30T11:46:40+00:00",
+      "action": "resolve",
+      "issue_ids": [
+        "review::.::holistic::error_consistency::saf_copy_discards_failure_cause"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "safCopyToTemp returns saf_copy_failed / saf_permission_denied with the cause; copyContentUriToTempOrThrow surfaces it as PlatformException; ReplayGain and analysis keep the error (commit f7632d3).",
+      "detail": {
+        "status": "fixed",
+        "attestation": "I have actually safCopyToTemp returns saf_copy_failed / saf_permission_denied with the cause; copyContentUriToTempOrThrow surfaces it as PlatformException; ReplayGain and analysis keep the error (commit f7632d3). and I am not gaming the score."
+      }
+    },
+    {
+      "timestamp": "2026-10-30T11:46:51+00:00",
+      "action": "done",
+      "issue_ids": [
+        "review::.::holistic::high_level_elegance::audio_analysis_backend_owned_by_widget_state"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "Analysis, spectrogram generation and cache read/write moved into services/audio_analysis/audio_analysis_runner.dart and audio_analysis_store.dart; the widget State only drives UI (commit f7632d3).",
+      "detail": {}
+    },
+    {
+      "timestamp": "2026-10-30T11:46:51+00:00",
+      "action": "resolve",
+      "issue_ids": [
+        "review::.::holistic::high_level_elegance::audio_analysis_backend_owned_by_widget_state"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "Analysis, spectrogram generation and cache read/write moved into services/audio_analysis/audio_analysis_runner.dart and audio_analysis_store.dart; the widget State only drives UI (commit f7632d3).",
+      "detail": {
+        "status": "fixed",
+        "attestation": "I have actually Analysis, spectrogram generation and cache read/write moved into services/audio_analysis/audio_analysis_runner.dart and audio_analysis_store.dart; the widget State only drives UI (commit f7632d3). and I am not gaming the score."
+      }
+    },
+    {
+      "timestamp": "2026-10-30T11:47:04+00:00",
+      "action": "done",
+      "issue_ids": [
+        "review::.::holistic::logic_clarity::browse_page_stored_twice"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "storePage is called once from the live asData value; the duplicate whenOrNull dispatch is removed (commit f7632d3)",
+      "detail": {}
+    },
+    {
+      "timestamp": "2026-10-30T11:47:04+00:00",
+      "action": "resolve",
+      "issue_ids": [
+        "review::.::holistic::logic_clarity::browse_page_stored_twice"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "storePage is called once from the live asData value; the duplicate whenOrNull dispatch is removed (commit f7632d3)",
+      "detail": {
+        "status": "fixed",
+        "attestation": "I have actually storePage is called once from the live asData value; the duplicate whenOrNull dispatch is removed (commit f7632d3) and I am not gaming the score."
+      }
+    },
+    {
+      "timestamp": "2026-10-30T11:47:06+00:00",
+      "action": "done",
+      "issue_ids": [
+        "review::.::holistic::mid_level_elegance::browse_track_mapper_drops_lyrics"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "Browse track select includes l.has_lyrics and rows map hasLyrics; test added (commit f7632d3)",
+      "detail": {}
+    },
+    {
+      "timestamp": "2026-10-30T11:47:07+00:00",
+      "action": "done",
+      "issue_ids": [
+        "review::.::holistic::naming_quality::download_named_snapshot_fallback"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "Parameters renamed to nonEmptyFallback / nonEmptyFallbackAvailable and tests describe snapshot retention (commit f7632d3)",
+      "detail": {}
+    },
+    {
+      "timestamp": "2026-10-30T11:47:08+00:00",
+      "action": "done",
+      "issue_ids": [
+        "review::.::holistic::package_organization::persistence_services_placed_under_widgets"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "track_metadata_persistence.dart moved to services/library and app_glass_auto_probe.dart to services/glass; imports updated (commit f7632d3)",
+      "detail": {}
+    },
+    {
+      "timestamp": "2026-10-30T11:47:09+00:00",
+      "action": "done",
+      "issue_ids": [
+        "review::.::holistic::test_strategy::sql_fixtures_parse_source_format"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "Fixtures now run LibrarySchema.create on SqliteProcessDatabase via test/support/library_table_definition.dart instead of parsing Dart source (commit f7632d3)",
+      "detail": {}
+    },
+    {
+      "timestamp": "2026-10-30T11:47:11+00:00",
+      "action": "done",
+      "issue_ids": [
+        "review::.::holistic::type_safety::failed_replaygain_result_accepts_null"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "ReplayGainWriteResult.failed takes a non-null ReplayGainWriteFailure (commit f7632d3)",
+      "detail": {}
+    },
+    {
+      "timestamp": "2026-10-30T11:47:17+00:00",
+      "action": "done",
+      "issue_ids": [
+        "review::.::holistic::low_level_elegance::metadata_filter_chip_repetition"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "Metadata filter sheet uses a local metadataChip(label, mode) helper, mirroring sortChip (commit f7632d3).",
+      "detail": {}
+    },
+    {
+      "timestamp": "2026-10-30T11:47:17+00:00",
+      "action": "resolve",
+      "issue_ids": [
+        "review::.::holistic::low_level_elegance::metadata_filter_chip_repetition"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "Metadata filter sheet uses a local metadataChip(label, mode) helper, mirroring sortChip (commit f7632d3).",
+      "detail": {
+        "status": "fixed",
+        "attestation": "I have actually Metadata filter sheet uses a local metadataChip(label, mode) helper, mirroring sortChip (commit f7632d3). and I am not gaming the score."
+      }
+    },
+    {
+      "timestamp": "2026-10-30T11:47:23+00:00",
+      "action": "done",
+      "issue_ids": [
+        "review::.::holistic::mid_level_elegance::browse_track_mapper_drops_lyrics"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "Browse track select includes l.has_lyrics and rows map hasLyrics; browse store test added (commit f7632d3).",
+      "detail": {}
+    },
+    {
+      "timestamp": "2026-10-30T11:47:23+00:00",
+      "action": "resolve",
+      "issue_ids": [
+        "review::.::holistic::mid_level_elegance::browse_track_mapper_drops_lyrics"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "Browse track select includes l.has_lyrics and rows map hasLyrics; browse store test added (commit f7632d3).",
+      "detail": {
+        "status": "fixed",
+        "attestation": "I have actually Browse track select includes l.has_lyrics and rows map hasLyrics; browse store test added (commit f7632d3). and I am not gaming the score."
+      }
+    },
+    {
+      "timestamp": "2026-10-30T11:47:30+00:00",
+      "action": "done",
+      "issue_ids": [
+        "review::.::holistic::naming_quality::download_named_snapshot_fallback"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "Parameters renamed to nonEmptyFallback / nonEmptyFallbackAvailable; test descriptions describe snapshot retention (commit f7632d3).",
+      "detail": {}
+    },
+    {
+      "timestamp": "2026-10-30T11:47:31+00:00",
+      "action": "resolve",
+      "issue_ids": [
+        "review::.::holistic::naming_quality::download_named_snapshot_fallback"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "Parameters renamed to nonEmptyFallback / nonEmptyFallbackAvailable; test descriptions describe snapshot retention (commit f7632d3).",
+      "detail": {
+        "status": "fixed",
+        "attestation": "I have actually Parameters renamed to nonEmptyFallback / nonEmptyFallbackAvailable; test descriptions describe snapshot retention (commit f7632d3). and I am not gaming the score."
+      }
+    },
+    {
+      "timestamp": "2026-10-30T11:47:38+00:00",
+      "action": "done",
+      "issue_ids": [
+        "review::.::holistic::package_organization::persistence_services_placed_under_widgets"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "track_metadata_persistence.dart moved to services/library and app_glass_auto_probe.dart to services/glass; imports updated (commit f7632d3).",
+      "detail": {}
+    },
+    {
+      "timestamp": "2026-10-30T11:47:38+00:00",
+      "action": "resolve",
+      "issue_ids": [
+        "review::.::holistic::package_organization::persistence_services_placed_under_widgets"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "track_metadata_persistence.dart moved to services/library and app_glass_auto_probe.dart to services/glass; imports updated (commit f7632d3).",
+      "detail": {
+        "status": "fixed",
+        "attestation": "I have actually track_metadata_persistence.dart moved to services/library and app_glass_auto_probe.dart to services/glass; imports updated (commit f7632d3). and I am not gaming the score."
+      }
+    },
+    {
+      "timestamp": "2026-10-30T11:47:47+00:00",
+      "action": "done",
+      "issue_ids": [
+        "review::.::holistic::test_strategy::sql_fixtures_parse_source_format"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "Fixtures run LibrarySchema.create on SqliteProcessDatabase via test/support/library_table_definition.dart instead of parsing Dart source (commit f7632d3).",
+      "detail": {}
+    },
+    {
+      "timestamp": "2026-10-30T11:47:47+00:00",
+      "action": "resolve",
+      "issue_ids": [
+        "review::.::holistic::test_strategy::sql_fixtures_parse_source_format"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "Fixtures run LibrarySchema.create on SqliteProcessDatabase via test/support/library_table_definition.dart instead of parsing Dart source (commit f7632d3).",
+      "detail": {
+        "status": "fixed",
+        "attestation": "I have actually Fixtures run LibrarySchema.create on SqliteProcessDatabase via test/support/library_table_definition.dart instead of parsing Dart source (commit f7632d3). and I am not gaming the score."
+      }
+    },
+    {
+      "timestamp": "2026-10-30T11:47:53+00:00",
+      "action": "done",
+      "issue_ids": [
+        "review::.::holistic::type_safety::failed_replaygain_result_accepts_null"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": "ReplayGainWriteResult.failed takes a non-null ReplayGainWriteFailure (commit f7632d3).",
+      "detail": {}
     }
   ],
   "epic_triage_meta": {
@@ -4693,7 +5124,21 @@
           ]
         }
       ]
-    }
+    },
+    "triaged_ids": [
+      "review::.::holistic::ai_generated_debt::single_source_union_scaffolding",
+      "review::.::holistic::contract_coherence::backup_failure_reason_contract_not_preserved",
+      "review::.::holistic::error_consistency::saf_copy_discards_failure_cause",
+      "review::.::holistic::high_level_elegance::audio_analysis_backend_owned_by_widget_state",
+      "review::.::holistic::logic_clarity::browse_page_stored_twice",
+      "review::.::holistic::low_level_elegance::metadata_filter_chip_repetition",
+      "review::.::holistic::mid_level_elegance::browse_track_mapper_drops_lyrics",
+      "review::.::holistic::naming_quality::download_named_snapshot_fallback",
+      "review::.::holistic::package_organization::persistence_services_placed_under_widgets",
+      "review::.::holistic::test_strategy::sql_fixtures_parse_source_format",
+      "review::.::holistic::type_safety::failed_replaygain_result_accepts_null"
+    ],
+    "issue_snapshot_hash": "023803ff22576374"
   },
   "commit_log": [
     {
@@ -4773,13 +5218,24 @@
       "cluster_name": null
     }
   ],
-  "uncommitted_issues": [],
+  "uncommitted_issues": [
+    "review::.::holistic::ai_generated_debt::single_source_union_scaffolding",
+    "review::.::holistic::contract_coherence::backup_failure_reason_contract_not_preserved",
+    "review::.::holistic::error_consistency::saf_copy_discards_failure_cause",
+    "review::.::holistic::high_level_elegance::audio_analysis_backend_owned_by_widget_state",
+    "review::.::holistic::logic_clarity::browse_page_stored_twice",
+    "review::.::holistic::low_level_elegance::metadata_filter_chip_repetition",
+    "review::.::holistic::mid_level_elegance::browse_track_mapper_drops_lyrics",
+    "review::.::holistic::naming_quality::download_named_snapshot_fallback",
+    "review::.::holistic::package_organization::persistence_services_placed_under_widgets",
+    "review::.::holistic::test_strategy::sql_fixtures_parse_source_format"
+  ],
   "commit_tracking_branch": null,
-  "scan_count_at_plan_start": 10,
+  "scan_count_at_plan_start": 12,
   "previous_plan_start_scores": {
-    "strict": 23.7,
-    "overall": 23.7,
-    "objective": 94.8,
-    "verified": 94.8
+    "strict": 76.0,
+    "overall": 77.0,
+    "objective": 94.7,
+    "verified": 94.7
   }
 }

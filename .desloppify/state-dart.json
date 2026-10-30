@@ -12,8 +12,8 @@
     "auto_resolved": 268,
     "deferred": 0,
     "false_positive": 0,
-    "fixed": 87,
-    "open": 349,
+    "fixed": 98,
+    "open": 338,
     "triaged_out": 0,
     "wontfix": 0,
     "by_tier": {
@@ -21,8 +21,8 @@
         "auto_resolved": 0,
         "deferred": 0,
         "false_positive": 0,
-        "fixed": 16,
-        "open": 10,
+        "fixed": 26,
+        "open": 0,
         "triaged_out": 0,
         "wontfix": 0
       },
@@ -30,8 +30,8 @@
         "auto_resolved": 17,
         "deferred": 0,
         "false_positive": 0,
-        "fixed": 42,
-        "open": 4,
+        "fixed": 43,
+        "open": 3,
         "triaged_out": 0,
         "wontfix": 0
       },
@@ -21302,11 +21302,11 @@
         "reasoning": "",
         "summary_hash": "e577b2d7"
       },
-      "status": "open",
-      "note": null,
+      "status": "fixed",
+      "note": "Analysis, spectrogram generation and cache read/write moved into services/audio_analysis/audio_analysis_runner.dart and audio_analysis_store.dart; the widget State only drives UI (commit f7632d3).",
       "first_seen": "2026-10-30T06:55:02+00:00",
       "last_seen": "2026-10-30T06:55:02+00:00",
-      "resolved_at": null,
+      "resolved_at": "2026-10-30T11:46:51+00:00",
       "reopen_count": 0,
       "work_item_kind": "review_defect",
       "issue_kind": "review_defect",
@@ -21314,7 +21314,13 @@
       "lang": "dart",
       "suppressed": false,
       "suppressed_at": null,
-      "suppression_pattern": null
+      "suppression_pattern": null,
+      "resolution_attestation": {
+        "kind": "manual",
+        "text": "I have actually Analysis, spectrogram generation and cache read/write moved into services/audio_analysis/audio_analysis_runner.dart and audio_analysis_store.dart; the widget State only drives UI (commit f7632d3). and I am not gaming the score.",
+        "attested_at": "2026-10-30T11:46:51+00:00",
+        "scan_verified": false
+      }
     },
     "review::.::holistic::package_organization::persistence_services_placed_under_widgets": {
       "id": "review::.::holistic::package_organization::persistence_services_placed_under_widgets",
@@ -21343,11 +21349,11 @@
         "reasoning": "",
         "summary_hash": "bc864c02"
       },
-      "status": "open",
-      "note": null,
+      "status": "fixed",
+      "note": "track_metadata_persistence.dart moved to services/library and app_glass_auto_probe.dart to services/glass; imports updated (commit f7632d3).",
       "first_seen": "2026-10-30T06:55:02+00:00",
       "last_seen": "2026-10-30T06:55:02+00:00",
-      "resolved_at": null,
+      "resolved_at": "2026-10-30T11:47:38+00:00",
       "reopen_count": 0,
       "work_item_kind": "review_defect",
       "issue_kind": "review_defect",
@@ -21355,7 +21361,13 @@
       "lang": "dart",
       "suppressed": false,
       "suppressed_at": null,
-      "suppression_pattern": null
+      "suppression_pattern": null,
+      "resolution_attestation": {
+        "kind": "manual",
+        "text": "I have actually track_metadata_persistence.dart moved to services/library and app_glass_auto_probe.dart to services/glass; imports updated (commit f7632d3). and I am not gaming the score.",
+        "attested_at": "2026-10-30T11:47:38+00:00",
+        "scan_verified": false
+      }
     },
     "review::.::holistic::error_consistency::saf_copy_discards_failure_cause": {
       "id": "review::.::holistic::error_consistency::saf_copy_discards_failure_cause",
@@ -21381,11 +21393,11 @@
         "reasoning": "",
         "summary_hash": "ade728e0"
       },
-      "status": "open",
-      "note": null,
+      "status": "fixed",
+      "note": "safCopyToTemp returns saf_copy_failed / saf_permission_denied with the cause; copyContentUriToTempOrThrow surfaces it as PlatformException; ReplayGain and analysis keep the error (commit f7632d3).",
       "first_seen": "2026-10-30T06:55:02+00:00",
       "last_seen": "2026-10-30T06:55:02+00:00",
-      "resolved_at": null,
+      "resolved_at": "2026-10-30T11:46:40+00:00",
       "reopen_count": 0,
       "work_item_kind": "review_defect",
       "issue_kind": "review_defect",
@@ -21393,7 +21405,13 @@
       "lang": "dart",
       "suppressed": false,
       "suppressed_at": null,
-      "suppression_pattern": null
+      "suppression_pattern": null,
+      "resolution_attestation": {
+        "kind": "manual",
+        "text": "I have actually safCopyToTemp returns saf_copy_failed / saf_permission_denied with the cause; copyContentUriToTempOrThrow surfaces it as PlatformException; ReplayGain and analysis keep the error (commit f7632d3). and I am not gaming the score.",
+        "attested_at": "2026-10-30T11:46:40+00:00",
+        "scan_verified": false
+      }
     },
     "review::.::holistic::contract_coherence::backup_failure_reason_contract_not_preserved": {
       "id": "review::.::holistic::contract_coherence::backup_failure_reason_contract_not_preserved",
@@ -21419,11 +21437,11 @@
         "reasoning": "",
         "summary_hash": "da5762cb"
       },
-      "status": "open",
-      "note": null,
+      "status": "fixed",
+      "note": "Native reader now returns {failure: code} (corrupt_archive / unsupported_version) as a success value; BackupService maps it to BackupParseFailure instead of unreadable (commit f7632d3).",
       "first_seen": "2026-10-30T06:55:02+00:00",
       "last_seen": "2026-10-30T06:55:02+00:00",
-      "resolved_at": null,
+      "resolved_at": "2026-10-30T11:46:29+00:00",
       "reopen_count": 0,
       "work_item_kind": "review_defect",
       "issue_kind": "review_defect",
@@ -21431,7 +21449,13 @@
       "lang": "dart",
       "suppressed": false,
       "suppressed_at": null,
-      "suppression_pattern": null
+      "suppression_pattern": null,
+      "resolution_attestation": {
+        "kind": "manual",
+        "text": "I have actually Native reader now returns {failure: code} (corrupt_archive / unsupported_version) as a success value; BackupService maps it to BackupParseFailure instead of unreadable (commit f7632d3). and I am not gaming the score.",
+        "attested_at": "2026-10-30T11:46:29+00:00",
+        "scan_verified": false
+      }
     },
     "review::.::holistic::type_safety::failed_replaygain_result_accepts_null": {
       "id": "review::.::holistic::type_safety::failed_replaygain_result_accepts_null",
@@ -21455,11 +21479,11 @@
         "reasoning": "",
         "summary_hash": "02900094"
       },
-      "status": "open",
-      "note": null,
+      "status": "fixed",
+      "note": "ReplayGainWriteResult.failed takes a non-null ReplayGainWriteFailure (commit f7632d3).",
       "first_seen": "2026-10-30T06:55:02+00:00",
       "last_seen": "2026-10-30T06:55:02+00:00",
-      "resolved_at": null,
+      "resolved_at": "2026-10-30T11:47:53+00:00",
       "reopen_count": 0,
       "work_item_kind": "review_defect",
       "issue_kind": "review_defect",
@@ -21467,7 +21491,13 @@
       "lang": "dart",
       "suppressed": false,
       "suppressed_at": null,
-      "suppression_pattern": null
+      "suppression_pattern": null,
+      "resolution_attestation": {
+        "kind": "manual",
+        "text": "I have actually ReplayGainWriteResult.failed takes a non-null ReplayGainWriteFailure (commit f7632d3). and I am not gaming the score.",
+        "attested_at": "2026-10-30T11:47:53+00:00",
+        "scan_verified": false
+      }
     },
     "review::.::holistic::logic_clarity::browse_page_stored_twice": {
       "id": "review::.::holistic::logic_clarity::browse_page_stored_twice",
@@ -21490,11 +21520,11 @@
         "reasoning": "",
         "summary_hash": "1af2fcb9"
       },
-      "status": "open",
-      "note": null,
+      "status": "fixed",
+      "note": "storePage is called once from the live asData value; the duplicate whenOrNull dispatch is removed (commit f7632d3)",
       "first_seen": "2026-10-30T06:55:02+00:00",
       "last_seen": "2026-10-30T06:55:02+00:00",
-      "resolved_at": null,
+      "resolved_at": "2026-10-30T11:47:04+00:00",
       "reopen_count": 0,
       "work_item_kind": "review_defect",
       "issue_kind": "review_defect",
@@ -21502,7 +21532,13 @@
       "lang": "dart",
       "suppressed": false,
       "suppressed_at": null,
-      "suppression_pattern": null
+      "suppression_pattern": null,
+      "resolution_attestation": {
+        "kind": "manual",
+        "text": "I have actually storePage is called once from the live asData value; the duplicate whenOrNull dispatch is removed (commit f7632d3) and I am not gaming the score.",
+        "attested_at": "2026-10-30T11:47:04+00:00",
+        "scan_verified": false
+      }
     },
     "review::.::holistic::mid_level_elegance::browse_track_mapper_drops_lyrics": {
       "id": "review::.::holistic::mid_level_elegance::browse_track_mapper_drops_lyrics",
@@ -21529,11 +21565,11 @@
         "reasoning": "",
         "summary_hash": "cf1816f5"
       },
-      "status": "open",
-      "note": null,
+      "status": "fixed",
+      "note": "Browse track select includes l.has_lyrics and rows map hasLyrics; browse store test added (commit f7632d3).",
       "first_seen": "2026-10-30T06:55:02+00:00",
       "last_seen": "2026-10-30T06:55:02+00:00",
-      "resolved_at": null,
+      "resolved_at": "2026-10-30T11:47:23+00:00",
       "reopen_count": 0,
       "work_item_kind": "review_defect",
       "issue_kind": "review_defect",
@@ -21541,7 +21577,13 @@
       "lang": "dart",
       "suppressed": false,
       "suppressed_at": null,
-      "suppression_pattern": null
+      "suppression_pattern": null,
+      "resolution_attestation": {
+        "kind": "manual",
+        "text": "I have actually Browse track select includes l.has_lyrics and rows map hasLyrics; browse store test added (commit f7632d3). and I am not gaming the score.",
+        "attested_at": "2026-10-30T11:47:23+00:00",
+        "scan_verified": false
+      }
     },
     "review::.::holistic::low_level_elegance::metadata_filter_chip_repetition": {
       "id": "review::.::holistic::low_level_elegance::metadata_filter_chip_repetition",
@@ -21564,11 +21606,11 @@
         "reasoning": "",
         "summary_hash": "dd3c9fe6"
       },
-      "status": "open",
-      "note": null,
+      "status": "fixed",
+      "note": "Metadata filter sheet uses a local metadataChip(label, mode) helper, mirroring sortChip (commit f7632d3).",
       "first_seen": "2026-10-30T06:55:02+00:00",
       "last_seen": "2026-10-30T06:55:02+00:00",
-      "resolved_at": null,
+      "resolved_at": "2026-10-30T11:47:17+00:00",
       "reopen_count": 0,
       "work_item_kind": "review_defect",
       "issue_kind": "review_defect",
@@ -21576,7 +21618,13 @@
       "lang": "dart",
       "suppressed": false,
       "suppressed_at": null,
-      "suppression_pattern": null
+      "suppression_pattern": null,
+      "resolution_attestation": {
+        "kind": "manual",
+        "text": "I have actually Metadata filter sheet uses a local metadataChip(label, mode) helper, mirroring sortChip (commit f7632d3). and I am not gaming the score.",
+        "attested_at": "2026-10-30T11:47:17+00:00",
+        "scan_verified": false
+      }
     },
     "review::.::holistic::naming_quality::download_named_snapshot_fallback": {
       "id": "review::.::holistic::naming_quality::download_named_snapshot_fallback",
@@ -21601,11 +21649,11 @@
         "reasoning": "",
         "summary_hash": "bcd4fed5"
       },
-      "status": "open",
-      "note": null,
+      "status": "fixed",
+      "note": "Parameters renamed to nonEmptyFallback / nonEmptyFallbackAvailable; test descriptions describe snapshot retention (commit f7632d3).",
       "first_seen": "2026-10-30T06:55:02+00:00",
       "last_seen": "2026-10-30T06:55:02+00:00",
-      "resolved_at": null,
+      "resolved_at": "2026-10-30T11:47:31+00:00",
       "reopen_count": 0,
       "work_item_kind": "review_defect",
       "issue_kind": "review_defect",
@@ -21613,7 +21661,13 @@
       "lang": "dart",
       "suppressed": false,
       "suppressed_at": null,
-      "suppression_pattern": null
+      "suppression_pattern": null,
+      "resolution_attestation": {
+        "kind": "manual",
+        "text": "I have actually Parameters renamed to nonEmptyFallback / nonEmptyFallbackAvailable; test descriptions describe snapshot retention (commit f7632d3). and I am not gaming the score.",
+        "attested_at": "2026-10-30T11:47:31+00:00",
+        "scan_verified": false
+      }
     },
     "review::.::holistic::ai_generated_debt::single_source_union_scaffolding": {
       "id": "review::.::holistic::ai_generated_debt::single_source_union_scaffolding",
@@ -21636,11 +21690,11 @@
         "reasoning": "",
         "summary_hash": "b70c05d6"
       },
-      "status": "open",
-      "note": null,
+      "status": "fixed",
+      "note": "Removed the one-element UNION ALL assembly: counts() and _getUnfilteredQueueCounts() each run a single aggregate query, and the track/album queue builders return the bounded SQL directly (commit f7632d3).",
       "first_seen": "2026-10-30T06:55:02+00:00",
       "last_seen": "2026-10-30T06:55:02+00:00",
-      "resolved_at": null,
+      "resolved_at": "2026-10-30T11:46:19+00:00",
       "reopen_count": 0,
       "work_item_kind": "review_defect",
       "issue_kind": "review_defect",
@@ -21648,7 +21702,13 @@
       "lang": "dart",
       "suppressed": false,
       "suppressed_at": null,
-      "suppression_pattern": null
+      "suppression_pattern": null,
+      "resolution_attestation": {
+        "kind": "manual",
+        "text": "I have actually Removed the one-element UNION ALL assembly: counts() and _getUnfilteredQueueCounts() each run a single aggregate query, and the track/album queue builders return the bounded SQL directly (commit f7632d3). and I am not gaming the score.",
+        "attested_at": "2026-10-30T11:46:19+00:00",
+        "scan_verified": false
+      }
     },
     "review::.::holistic::test_strategy::sql_fixtures_parse_source_format": {
       "id": "review::.::holistic::test_strategy::sql_fixtures_parse_source_format",
@@ -21673,11 +21733,11 @@
         "reasoning": "",
         "summary_hash": "8bd1108a"
       },
-      "status": "open",
-      "note": null,
+      "status": "fixed",
+      "note": "Fixtures run LibrarySchema.create on SqliteProcessDatabase via test/support/library_table_definition.dart instead of parsing Dart source (commit f7632d3).",
       "first_seen": "2026-10-30T06:55:02+00:00",
       "last_seen": "2026-10-30T06:55:02+00:00",
-      "resolved_at": null,
+      "resolved_at": "2026-10-30T11:47:47+00:00",
       "reopen_count": 0,
       "work_item_kind": "review_defect",
       "issue_kind": "review_defect",
@@ -21685,7 +21745,13 @@
       "lang": "dart",
       "suppressed": false,
       "suppressed_at": null,
-      "suppression_pattern": null
+      "suppression_pattern": null,
+      "resolution_attestation": {
+        "kind": "manual",
+        "text": "I have actually Fixtures run LibrarySchema.create on SqliteProcessDatabase via test/support/library_table_definition.dart instead of parsing Dart source (commit f7632d3). and I am not gaming the score.",
+        "attested_at": "2026-10-30T11:47:47+00:00",
+        "scan_verified": false
+      }
     },
     "structural::test/app_bottom_bar_test.dart": {
       "id": "structural::test/app_bottom_bar_test.dart",
@@ -23687,7 +23753,10 @@
       "source": "manual_override",
       "assessed_at": "2026-10-30T06:55:02+00:00",
       "provisional_override": true,
-      "provisional_until_scan": 12
+      "provisional_until_scan": 12,
+      "needs_review_refresh": true,
+      "refresh_reason": "review_issue_fixed",
+      "stale_since": "2026-10-30T11:46:19+00:00"
     },
     "api_surface_coherence": {
       "score": 96.0,
@@ -23708,7 +23777,10 @@
       "source": "manual_override",
       "assessed_at": "2026-10-30T06:55:02+00:00",
       "provisional_override": true,
-      "provisional_until_scan": 12
+      "provisional_until_scan": 12,
+      "needs_review_refresh": true,
+      "refresh_reason": "review_issue_fixed",
+      "stale_since": "2026-10-30T11:46:29+00:00"
     },
     "convention_outlier": {
       "score": 100,
@@ -23749,14 +23821,20 @@
       "source": "manual_override",
       "assessed_at": "2026-10-30T06:55:02+00:00",
       "provisional_override": true,
-      "provisional_until_scan": 12
+      "provisional_until_scan": 12,
+      "needs_review_refresh": true,
+      "refresh_reason": "review_issue_fixed",
+      "stale_since": "2026-10-30T11:46:40+00:00"
     },
     "high_level_elegance": {
       "score": 86.0,
       "source": "manual_override",
       "assessed_at": "2026-10-30T06:55:02+00:00",
       "provisional_override": true,
-      "provisional_until_scan": 12
+      "provisional_until_scan": 12,
+      "needs_review_refresh": true,
+      "refresh_reason": "review_issue_fixed",
+      "stale_since": "2026-10-30T11:46:51+00:00"
     },
     "incomplete_migration": {
       "score": 100,
@@ -23779,29 +23857,38 @@
       "provisional_override": true,
       "provisional_until_scan": 12,
       "needs_review_refresh": true,
-      "refresh_reason": "mechanical_issues_changed",
-      "stale_since": "2026-10-30T11:44:20+00:00"
+      "refresh_reason": "review_issue_fixed",
+      "stale_since": "2026-10-30T11:47:04+00:00"
     },
     "low_level_elegance": {
       "score": 89.0,
       "source": "manual_override",
       "assessed_at": "2026-10-30T06:55:02+00:00",
       "provisional_override": true,
-      "provisional_until_scan": 12
+      "provisional_until_scan": 12,
+      "needs_review_refresh": true,
+      "refresh_reason": "review_issue_fixed",
+      "stale_since": "2026-10-30T11:47:17+00:00"
     },
     "mid_level_elegance": {
       "score": 88.0,
       "source": "manual_override",
       "assessed_at": "2026-10-30T06:55:02+00:00",
       "provisional_override": true,
-      "provisional_until_scan": 12
+      "provisional_until_scan": 12,
+      "needs_review_refresh": true,
+      "refresh_reason": "review_issue_fixed",
+      "stale_since": "2026-10-30T11:47:23+00:00"
     },
     "naming_quality": {
       "score": 92.0,
       "source": "manual_override",
       "assessed_at": "2026-10-30T06:55:02+00:00",
       "provisional_override": true,
-      "provisional_until_scan": 12
+      "provisional_until_scan": 12,
+      "needs_review_refresh": true,
+      "refresh_reason": "review_issue_fixed",
+      "stale_since": "2026-10-30T11:47:31+00:00"
     },
     "package_organization": {
       "score": 87.0,
@@ -23810,22 +23897,28 @@
       "provisional_override": true,
       "provisional_until_scan": 12,
       "needs_review_refresh": true,
-      "refresh_reason": "mechanical_issues_changed",
-      "stale_since": "2026-10-30T11:44:20+00:00"
+      "refresh_reason": "review_issue_fixed",
+      "stale_since": "2026-10-30T11:47:38+00:00"
     },
     "test_strategy": {
       "score": 92.0,
       "source": "manual_override",
       "assessed_at": "2026-10-30T06:55:02+00:00",
       "provisional_override": true,
-      "provisional_until_scan": 12
+      "provisional_until_scan": 12,
+      "needs_review_refresh": true,
+      "refresh_reason": "review_issue_fixed",
+      "stale_since": "2026-10-30T11:47:47+00:00"
     },
     "type_safety": {
       "score": 94.0,
       "source": "manual_override",
       "assessed_at": "2026-10-30T06:55:02+00:00",
       "provisional_override": true,
-      "provisional_until_scan": 12
+      "provisional_until_scan": 12,
+      "needs_review_refresh": true,
+      "refresh_reason": "review_issue_fixed",
+      "stale_since": "2026-10-30T11:47:53+00:00"
     }
   },
   "scan_history": [
@@ -47612,13 +47705,13 @@
       "strict": 90.0,
       "verified_strict_score": 90.0,
       "checks": 10,
-      "failing": 1,
+      "failing": 0,
       "tier": 4,
       "detectors": {
         "subjective_assessment": {
           "potential": 10,
           "pass_rate": 0.9,
-          "failing": 1,
+          "failing": 0,
           "weighted_failures": 1.0,
           "assessment_score": 90.0,
           "placeholder": false,
@@ -47675,13 +47768,13 @@
       "strict": 91.0,
       "verified_strict_score": 91.0,
       "checks": 10,
-      "failing": 1,
+      "failing": 0,
       "tier": 4,
       "detectors": {
         "subjective_assessment": {
           "potential": 10,
           "pass_rate": 0.91,
-          "failing": 1,
+          "failing": 0,
           "weighted_failures": 0.9,
           "assessment_score": 91.0,
           "placeholder": false,
@@ -47780,13 +47873,13 @@
       "strict": 90.0,
       "verified_strict_score": 90.0,
       "checks": 10,
-      "failing": 1,
+      "failing": 0,
       "tier": 4,
       "detectors": {
         "subjective_assessment": {
           "potential": 10,
           "pass_rate": 0.9,
-          "failing": 1,
+          "failing": 0,
           "weighted_failures": 1.0,
           "assessment_score": 90.0,
           "placeholder": false,
@@ -47801,13 +47894,13 @@
       "strict": 86.0,
       "verified_strict_score": 86.0,
       "checks": 10,
-      "failing": 1,
+      "failing": 0,
       "tier": 4,
       "detectors": {
         "subjective_assessment": {
           "potential": 10,
           "pass_rate": 0.86,
-          "failing": 1,
+          "failing": 0,
           "weighted_failures": 1.4,
           "assessment_score": 86.0,
           "placeholder": false,
@@ -47864,13 +47957,13 @@
       "strict": 93.0,
       "verified_strict_score": 93.0,
       "checks": 10,
-      "failing": 1,
+      "failing": 0,
       "tier": 4,
       "detectors": {
         "subjective_assessment": {
           "potential": 10,
           "pass_rate": 0.93,
-          "failing": 1,
+          "failing": 0,
           "weighted_failures": 0.7,
           "assessment_score": 93.0,
           "placeholder": false,
@@ -47885,13 +47978,13 @@
       "strict": 89.0,
       "verified_strict_score": 89.0,
       "checks": 10,
-      "failing": 1,
+      "failing": 0,
       "tier": 4,
       "detectors": {
         "subjective_assessment": {
           "potential": 10,
           "pass_rate": 0.89,
-          "failing": 1,
+          "failing": 0,
           "weighted_failures": 1.1,
           "assessment_score": 89.0,
           "placeholder": false,
@@ -47906,13 +47999,13 @@
       "strict": 88.0,
       "verified_strict_score": 88.0,
       "checks": 10,
-      "failing": 1,
+      "failing": 0,
       "tier": 4,
       "detectors": {
         "subjective_assessment": {
           "potential": 10,
           "pass_rate": 0.88,
-          "failing": 1,
+          "failing": 0,
           "weighted_failures": 1.2,
           "assessment_score": 88.0,
           "placeholder": false,
@@ -47927,13 +48020,13 @@
       "strict": 92.0,
       "verified_strict_score": 92.0,
       "checks": 10,
-      "failing": 1,
+      "failing": 0,
       "tier": 4,
       "detectors": {
         "subjective_assessment": {
           "potential": 10,
           "pass_rate": 0.92,
-          "failing": 1,
+          "failing": 0,
           "weighted_failures": 0.8,
           "assessment_score": 92.0,
           "placeholder": false,
@@ -47948,13 +48041,13 @@
       "strict": 87.0,
       "verified_strict_score": 87.0,
       "checks": 10,
-      "failing": 1,
+      "failing": 0,
       "tier": 4,
       "detectors": {
         "subjective_assessment": {
           "potential": 10,
           "pass_rate": 0.87,
-          "failing": 1,
+          "failing": 0,
           "weighted_failures": 1.3,
           "assessment_score": 87.0,
           "placeholder": false,
@@ -47969,13 +48062,13 @@
       "strict": 92.0,
       "verified_strict_score": 92.0,
       "checks": 10,
-      "failing": 1,
+      "failing": 0,
       "tier": 4,
       "detectors": {
         "subjective_assessment": {
           "potential": 10,
           "pass_rate": 0.92,
-          "failing": 1,
+          "failing": 0,
           "weighted_failures": 0.8,
           "assessment_score": 92.0,
           "placeholder": false,
@@ -47990,13 +48083,13 @@
       "strict": 94.0,
       "verified_strict_score": 94.0,
       "checks": 10,
-      "failing": 1,
+      "failing": 0,
       "tier": 4,
       "detectors": {
         "subjective_assessment": {
           "potential": 10,
           "pass_rate": 0.94,
-          "failing": 1,
+          "failing": 0,
           "weighted_failures": 0.6,
           "assessment_score": 94.0,
           "placeholder": false,
