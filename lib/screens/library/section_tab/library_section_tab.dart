@@ -28,7 +28,6 @@ import 'package:sistrum/utils/layout/nav_bar_inset.dart';
 import 'package:sistrum/utils/files/file_access.dart';
 import 'package:sistrum/utils/scan/library_format_filters.dart';
 import 'package:sistrum/utils/playback/ordered_range_selection.dart';
-import 'package:sistrum/core/models/track.dart';
 import 'package:sistrum/core/models/unified_library_item.dart';
 import 'package:sistrum/providers/library_collections_provider.dart';
 import 'package:sistrum/providers/settings_provider.dart';
@@ -37,6 +36,7 @@ import 'package:sistrum/providers/playback_provider.dart';
 import 'package:sistrum/providers/music_player_provider.dart';
 import 'package:sistrum/services/playback/music_player/music_player_service.dart';
 import 'package:sistrum/services/library/database/library_database.dart';
+import 'package:sistrum/utils/logging/logger.dart';
 import 'package:sistrum/services/library/browse/album_completeness.dart';
 import 'package:sistrum/widgets/library/batch_track_actions.dart';
 import 'package:sistrum/widgets/library/local_song_row.dart';
@@ -62,6 +62,8 @@ part 'library_section_tab_album_grid.dart';
 part 'library_section_tab_empty_state.dart';
 part 'library_section_tab_batch_actions.dart';
 part 'library_section_tab_item_widgets.dart';
+
+final _librarySectionLog = AppLogger('LibrarySectionTab');
 
 class LibrarySectionTab extends ConsumerStatefulWidget {
   final String? librarySection;
@@ -144,7 +146,8 @@ class _LibrarySectionTabState extends ConsumerState<LibrarySectionTab> {
   /// Plays every song matching the current filters and sort, in order or
   /// shuffled, paging through the library with the cursor the list uses.
   Future<void> _playAllSongs({bool shuffle = false}) async {
-    final tracks = <Track>[];
+    final clock = Stopwatch()..start();
+    final items = <LocalLibraryItem>[];
     LibraryBrowseDbCursor? cursor;
     try {
       do {
@@ -164,14 +167,20 @@ class _LibrarySectionTabState extends ConsumerState<LibrarySectionTab> {
           if (row['source'] != 'local') continue;
           final item = LocalLibraryItem.fromEnvelope(row);
           if (isCueVirtualPath(item.filePath)) continue;
-          tracks.add(UnifiedLibraryItem.fromLocalLibrary(item).toTrack());
+          items.add(item);
         }
         cursor = page.nextCursor;
       } while (cursor != null);
-      if (tracks.isEmpty || !mounted) return;
-      if (shuffle) tracks.shuffle(Random());
+      _librarySectionLog.d(
+        'Read ${items.length} songs for play all in ${clock.elapsedMilliseconds} ms (shuffle: $shuffle)',
+      );
+      if (items.isEmpty || !mounted) return;
+      if (shuffle) items.shuffle(Random());
       await ref.read(musicPlayerControllerProvider).setShuffle(shuffle);
-      await ref.read(playbackProvider.notifier).playTrackList(tracks);
+      await ref.read(playbackProvider.notifier).playLocalItems(items);
+      _librarySectionLog.d(
+        'Play all started after ${clock.elapsedMilliseconds} ms (shuffle: $shuffle)',
+      );
     } catch (e) {
       if (mounted) showCannotOpenFileSnackBar(context, e);
     }

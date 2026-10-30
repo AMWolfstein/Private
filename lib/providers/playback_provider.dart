@@ -106,6 +106,26 @@ class PlaybackController extends Notifier<PlaybackState> {
     throw Exception('No local audio file is available to play.');
   }
 
+  /// Plays [items] in the order given, starting at the first. Callers that read
+  /// library rows directly use this; [playTrackList] first matches tracks back
+  /// to rows, which those callers already have.
+  Future<void> playLocalItems(List<LocalLibraryItem> items) async {
+    final clock = Stopwatch()..start();
+    final queue = [
+      for (final item in items)
+        if (!isCueVirtualPath(item.filePath)) playableFromLocal(item),
+    ];
+    if (queue.isEmpty) return;
+
+    await _ensureInternalPlayer();
+    final prepared = clock.elapsedMilliseconds;
+    await ref.read(musicPlayerControllerProvider).playAll(queue);
+    _log.d(
+      'Queued ${queue.length} tracks: prepare $prepared ms, '
+      'play ${clock.elapsedMilliseconds - prepared} ms',
+    );
+  }
+
   /// Resolves playlist tracks to the local-library rows they refer to, keeping
   /// the requested order. Missing and unreadable files stay null.
   Future<List<LocalLibraryItem?>> resolveLocalTracks(List<Track> tracks) =>
