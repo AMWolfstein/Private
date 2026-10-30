@@ -1,7 +1,7 @@
 {
   "version": 8,
   "created": "2026-10-29T06:01:52+00:00",
-  "updated": "2026-10-30T14:24:34+00:00",
+  "updated": "2026-10-30T14:26:42+00:00",
   "queue_order": [
     "subjective::abstraction_fitness",
     "subjective::ai_generated_debt",
@@ -19,7 +19,98 @@
     "subjective::type_safety"
   ],
   "deferred": [],
-  "skipped": {},
+  "skipped": {
+    "orphaned::lib/services/playback/music_player_playback.dart": {
+      "issue_id": "orphaned::lib/services/playback/music_player_playback.dart",
+      "kind": "false_positive",
+      "reason": "Dart part files included via part directive in owner library",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. These 9 files each start with part of and are included by a part directive in their owner library (music_player_service.dart or library_section_tab.dart); the orphan detector does not follow part directives. No code was changed.",
+      "created_at": "2026-10-30T14:26:42+00:00",
+      "review_after": null,
+      "skipped_at_scan": 18
+    },
+    "orphaned::lib/services/playback/music_player_events.dart": {
+      "issue_id": "orphaned::lib/services/playback/music_player_events.dart",
+      "kind": "false_positive",
+      "reason": "Dart part files included via part directive in owner library",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. These 9 files each start with part of and are included by a part directive in their owner library (music_player_service.dart or library_section_tab.dart); the orphan detector does not follow part directives. No code was changed.",
+      "created_at": "2026-10-30T14:26:42+00:00",
+      "review_after": null,
+      "skipped_at_scan": 18
+    },
+    "orphaned::lib/services/playback/music_player_media.dart": {
+      "issue_id": "orphaned::lib/services/playback/music_player_media.dart",
+      "kind": "false_positive",
+      "reason": "Dart part files included via part directive in owner library",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. These 9 files each start with part of and are included by a part directive in their owner library (music_player_service.dart or library_section_tab.dart); the orphan detector does not follow part directives. No code was changed.",
+      "created_at": "2026-10-30T14:26:42+00:00",
+      "review_after": null,
+      "skipped_at_scan": 18
+    },
+    "orphaned::lib/services/playback/music_player_hooks.dart": {
+      "issue_id": "orphaned::lib/services/playback/music_player_hooks.dart",
+      "kind": "false_positive",
+      "reason": "Dart part files included via part directive in owner library",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. These 9 files each start with part of and are included by a part directive in their owner library (music_player_service.dart or library_section_tab.dart); the orphan detector does not follow part directives. No code was changed.",
+      "created_at": "2026-10-30T14:26:42+00:00",
+      "review_after": null,
+      "skipped_at_scan": 18
+    },
+    "orphaned::lib/services/playback/music_player_lifecycle.dart": {
+      "issue_id": "orphaned::lib/services/playback/music_player_lifecycle.dart",
+      "kind": "false_positive",
+      "reason": "Dart part files included via part directive in owner library",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. These 9 files each start with part of and are included by a part directive in their owner library (music_player_service.dart or library_section_tab.dart); the orphan detector does not follow part directives. No code was changed.",
+      "created_at": "2026-10-30T14:26:42+00:00",
+      "review_after": null,
+      "skipped_at_scan": 18
+    },
+    "orphaned::lib/services/playback/music_player_queue.dart": {
+      "issue_id": "orphaned::lib/services/playback/music_player_queue.dart",
+      "kind": "false_positive",
+      "reason": "Dart part files included via part directive in owner library",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. These 9 files each start with part of and are included by a part directive in their owner library (music_player_service.dart or library_section_tab.dart); the orphan detector does not follow part directives. No code was changed.",
+      "created_at": "2026-10-30T14:26:42+00:00",
+      "review_after": null,
+      "skipped_at_scan": 18
+    },
+    "orphaned::lib/services/playback/music_player_source.dart": {
+      "issue_id": "orphaned::lib/services/playback/music_player_source.dart",
+      "kind": "false_positive",
+      "reason": "Dart part files included via part directive in owner library",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. These 9 files each start with part of and are included by a part directive in their owner library (music_player_service.dart or library_section_tab.dart); the orphan detector does not follow part directives. No code was changed.",
+      "created_at": "2026-10-30T14:26:42+00:00",
+      "review_after": null,
+      "skipped_at_scan": 18
+    },
+    "orphaned::lib/services/playback/music_player_session.dart": {
+      "issue_id": "orphaned::lib/services/playback/music_player_session.dart",
+      "kind": "false_positive",
+      "reason": "Dart part files included via part directive in owner library",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. These 9 files each start with part of and are included by a part directive in their owner library (music_player_service.dart or library_section_tab.dart); the orphan detector does not follow part directives. No code was changed.",
+      "created_at": "2026-10-30T14:26:42+00:00",
+      "review_after": null,
+      "skipped_at_scan": 18
+    },
+    "orphaned::lib/screens/library/library_section_tab_navigation.dart": {
+      "issue_id": "orphaned::lib/screens/library/library_section_tab_navigation.dart",
+      "kind": "false_positive",
+      "reason": "Dart part files included via part directive in owner library",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. These 9 files each start with part of and are included by a part directive in their owner library (music_player_service.dart or library_section_tab.dart); the orphan detector does not follow part directives. No code was changed.",
+      "created_at": "2026-10-30T14:26:42+00:00",
+      "review_after": null,
+      "skipped_at_scan": 18
+    }
+  },
   "active_cluster": null,
   "overrides": {
     "test_coverage::lib/l10n/app_localizations_en.dart::untested_module": {
@@ -2408,7 +2499,6 @@
   "refresh_state": {
     "_subjective_migration_pruned": true,
     "lifecycle_phase": "plan",
-    "postflight_scan_completed_at_scan_count": 18,
     "subjective_review_completed_at_scan_count": 6
   },
   "execution_log": [
@@ -6331,6 +6421,28 @@
       "note": null,
       "detail": {
         "scan_count": 18
+      }
+    },
+    {
+      "timestamp": "2026-10-30T14:26:42+00:00",
+      "action": "skip",
+      "issue_ids": [
+        "orphaned::lib/services/playback/music_player_playback.dart",
+        "orphaned::lib/services/playback/music_player_events.dart",
+        "orphaned::lib/services/playback/music_player_media.dart",
+        "orphaned::lib/services/playback/music_player_hooks.dart",
+        "orphaned::lib/services/playback/music_player_lifecycle.dart",
+        "orphaned::lib/services/playback/music_player_queue.dart",
+        "orphaned::lib/services/playback/music_player_source.dart",
+        "orphaned::lib/services/playback/music_player_session.dart",
+        "orphaned::lib/screens/library/library_section_tab_navigation.dart"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": null,
+      "detail": {
+        "kind": "false_positive",
+        "reason": "Dart part files included via part directive in owner library"
       }
     }
   ],

@@ -1,25 +1,121 @@
 {
-  "command": "next",
-  "items": [
-    {
-      "id": "orphaned::lib/screens/library/library_section_tab_navigation.dart",
-      "confidence": "medium",
-      "detector": "orphaned",
-      "file": "lib/screens/library/library_section_tab_navigation.dart",
-      "summary": "Orphaned file (245 LOC): zero importers, not an entry point",
-      "detail": {
-        "loc": 245
-      },
-      "status": "open",
-      "kind": "issue",
-      "primary_command": "desloppify plan resolve \"orphaned::lib/screens/library/library_section_tab_navigation.dart\" --note \"<what you did>\" --confirm",
-      "queue_position": 1
-    }
-  ],
-  "queue": {
-    "total": 1,
-    "mode": "execution"
+  "command": "show",
+  "query": "orphaned",
+  "status_filter": "open",
+  "total": 9,
+  "summary": {
+    "by_tier": {
+      "T3": 9
+    },
+    "by_detector": {
+      "orphaned": 9
+    },
+    "files": 9
   },
+  "by_file": {
+    "lib/screens/library/library_section_tab_navigation.dart": [
+      {
+        "id": "orphaned::lib/screens/library/library_section_tab_navigation.dart",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Orphaned file (245 LOC): zero importers, not an entry point",
+        "detail": {
+          "loc": 245
+        }
+      }
+    ],
+    "lib/services/playback/music_player_events.dart": [
+      {
+        "id": "orphaned::lib/services/playback/music_player_events.dart",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Orphaned file (214 LOC): zero importers, not an entry point",
+        "detail": {
+          "loc": 214
+        }
+      }
+    ],
+    "lib/services/playback/music_player_hooks.dart": [
+      {
+        "id": "orphaned::lib/services/playback/music_player_hooks.dart",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Orphaned file (167 LOC): zero importers, not an entry point",
+        "detail": {
+          "loc": 167
+        }
+      }
+    ],
+    "lib/services/playback/music_player_lifecycle.dart": [
+      {
+        "id": "orphaned::lib/services/playback/music_player_lifecycle.dart",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Orphaned file (137 LOC): zero importers, not an entry point",
+        "detail": {
+          "loc": 137
+        }
+      }
+    ],
+    "lib/services/playback/music_player_media.dart": [
+      {
+        "id": "orphaned::lib/services/playback/music_player_media.dart",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Orphaned file (184 LOC): zero importers, not an entry point",
+        "detail": {
+          "loc": 184
+        }
+      }
+    ],
+    "lib/services/playback/music_player_playback.dart": [
+      {
+        "id": "orphaned::lib/services/playback/music_player_playback.dart",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Orphaned file (333 LOC): zero importers, not an entry point",
+        "detail": {
+          "loc": 333
+        }
+      }
+    ],
+    "lib/services/playback/music_player_queue.dart": [
+      {
+        "id": "orphaned::lib/services/playback/music_player_queue.dart",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Orphaned file (73 LOC): zero importers, not an entry point",
+        "detail": {
+          "loc": 73
+        }
+      }
+    ],
+    "lib/services/playback/music_player_session.dart": [
+      {
+        "id": "orphaned::lib/services/playback/music_player_session.dart",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Orphaned file (54 LOC): zero importers, not an entry point",
+        "detail": {
+          "loc": 54
+        }
+      }
+    ],
+    "lib/services/playback/music_player_source.dart": [
+      {
+        "id": "orphaned::lib/services/playback/music_player_source.dart",
+        "tier": 3,
+        "confidence": "medium",
+        "summary": "Orphaned file (66 LOC): zero importers, not an entry point",
+        "detail": {
+          "loc": 66
+        }
+      }
+    ]
+  },
+  "total_matching": 9,
+  "noise_budget": 10,
+  "noise_global_budget": 0,
   "narrative": {
     "phase": "stagnation",
     "headline": "All T1 items cleared!",
@@ -356,491 +452,6 @@
       "review_not_run": 3
     }
   },
-  "agent_notes": [
-    "Do NOT use `desloppify plan skip` unless the user explicitly asks you to skip an item.",
-    "If you cannot fix an item, report it and move to the next one.",
-    "For cluster items: if the autofix_hint finds 0 results, drill into individual issues with the primary_command."
-  ],
-  "plan": {
-    "active": true,
-    "focus": null,
-    "clusters": [
-      {
-        "name": "auto/stale-review",
-        "description": "Re-review 14 stale subjective dimensions",
-        "item_count": 14
-      },
-      {
-        "name": "playback-service-split",
-        "description": "Split lib/services/playback/music_player_service.dart (2185 lines, complexity 235) into cohesive library modules that follow the existing music_player_runtime/autoplay/automix import pattern; behaviour unchanged",
-        "item_count": 1
-      },
-      {
-        "name": "collections-provider-bundle",
-        "description": "Bundle the structural refactor of lib/providers/library_collections_provider.dart (924 lines, complexity 82) into one change; persisted collection keys and backup format stay unchanged",
-        "item_count": 1
-      },
-      {
-        "name": "transitive-behaviour-tests",
-        "description": "Add behavioural tests for four transitive-only files with no pending quality item: audio_analysis_parsing, listening_statistics_screen, local_guide_pages and duplicate_review_sheet",
-        "item_count": 4
-      },
-      {
-        "name": "auto/strategy",
-        "description": "Fix 2 strategy issues",
-        "item_count": 2
-      }
-    ],
-    "total_ordered": 14,
-    "total_skipped": 0,
-    "plan_overrides_narrative": true
-  },
-  "overall_score": 91.8,
-  "objective_score": 97.7,
-  "strict_score": 90.1,
-  "scorecard_dimensions": [
-    {
-      "name": "File health",
-      "score": 95.1,
-      "strict": 88.0,
-      "checks": 396,
-      "failing": 28,
-      "tier": 3,
-      "subjective": false
-    },
-    {
-      "name": "AI generated debt",
-      "score": 90.0,
-      "strict": 90.0,
-      "checks": 10,
-      "failing": 0,
-      "tier": 4,
-      "subjective": true,
-      "placeholder": false,
-      "cli_keys": [
-        "ai_generated_debt"
-      ]
-    },
-    {
-      "name": "API coherence",
-      "score": 96.0,
-      "strict": 96.0,
-      "checks": 10,
-      "failing": 0,
-      "tier": 4,
-      "subjective": true,
-      "placeholder": false,
-      "cli_keys": [
-        "api_surface_coherence"
-      ]
-    },
-    {
-      "name": "Abstraction fit",
-      "score": 93.0,
-      "strict": 93.0,
-      "checks": 10,
-      "failing": 0,
-      "tier": 4,
-      "subjective": true,
-      "placeholder": false,
-      "cli_keys": [
-        "abstraction_fitness"
-      ]
-    },
-    {
-      "name": "Auth consistency",
-      "score": 100.0,
-      "strict": 100.0,
-      "checks": 10,
-      "failing": 0,
-      "tier": 4,
-      "subjective": true,
-      "placeholder": false,
-      "cli_keys": [
-        "authorization_consistency"
-      ]
-    },
-    {
-      "name": "Code quality",
-      "score": 96.6,
-      "strict": 96.5,
-      "checks": 437,
-      "failing": 21,
-      "tier": 3,
-      "subjective": false
-    },
-    {
-      "name": "Convention drift",
-      "score": 100.0,
-      "strict": 100.0,
-      "checks": 10,
-      "failing": 0,
-      "tier": 4,
-      "subjective": true,
-      "placeholder": false,
-      "cli_keys": [
-        "convention_outlier"
-      ]
-    },
-    {
-      "name": "Cross-module arch",
-      "score": 94.0,
-      "strict": 94.0,
-      "checks": 10,
-      "failing": 0,
-      "tier": 4,
-      "subjective": true,
-      "placeholder": false,
-      "cli_keys": [
-        "cross_module_architecture"
-      ]
-    },
-    {
-      "name": "Dep health",
-      "score": 100.0,
-      "strict": 100.0,
-      "checks": 10,
-      "failing": 0,
-      "tier": 4,
-      "subjective": true,
-      "placeholder": false,
-      "cli_keys": [
-        "dependency_health"
-      ]
-    },
-    {
-      "name": "Design coherence",
-      "score": 88.0,
-      "strict": 88.0,
-      "checks": 10,
-      "failing": 0,
-      "tier": 4,
-      "subjective": true,
-      "placeholder": false,
-      "cli_keys": [
-        "design_coherence"
-      ]
-    },
-    {
-      "name": "Duplication",
-      "score": 99.2,
-      "strict": 98.4,
-      "checks": 3231,
-      "failing": 59,
-      "tier": 3,
-      "subjective": false
-    },
-    {
-      "name": "Elegance",
-      "score": 87.7,
-      "strict": 87.7,
-      "checks": 30,
-      "failing": 0,
-      "tier": 4,
-      "subjective": true,
-      "placeholder": false,
-      "cli_keys": [
-        "high_level_elegance",
-        "low_level_elegance",
-        "mid_level_elegance"
-      ]
-    },
-    {
-      "name": "Error consistency",
-      "score": 90.0,
-      "strict": 90.0,
-      "checks": 10,
-      "failing": 0,
-      "tier": 4,
-      "subjective": true,
-      "placeholder": false,
-      "cli_keys": [
-        "error_consistency"
-      ]
-    },
-    {
-      "name": "Init coupling",
-      "score": 96.0,
-      "strict": 96.0,
-      "checks": 10,
-      "failing": 0,
-      "tier": 4,
-      "subjective": true,
-      "placeholder": false,
-      "cli_keys": [
-        "initialization_coupling"
-      ]
-    },
-    {
-      "name": "Naming quality",
-      "score": 92.0,
-      "strict": 92.0,
-      "checks": 10,
-      "failing": 0,
-      "tier": 4,
-      "subjective": true,
-      "placeholder": false,
-      "cli_keys": [
-        "naming_quality"
-      ]
-    },
-    {
-      "name": "Security",
-      "score": 100.0,
-      "strict": 99.7,
-      "checks": 792,
-      "failing": 0,
-      "tier": 4,
-      "subjective": false
-    },
-    {
-      "name": "Stale migration",
-      "score": 100.0,
-      "strict": 100.0,
-      "checks": 10,
-      "failing": 0,
-      "tier": 4,
-      "subjective": true,
-      "placeholder": false,
-      "cli_keys": [
-        "incomplete_migration"
-      ]
-    },
-    {
-      "name": "Structure nav",
-      "score": 87.0,
-      "strict": 87.0,
-      "checks": 10,
-      "failing": 0,
-      "tier": 4,
-      "subjective": true,
-      "placeholder": false,
-      "cli_keys": [
-        "package_organization"
-      ]
-    },
-    {
-      "name": "Test health",
-      "score": 100.0,
-      "strict": 73.2,
-      "checks": 5156,
-      "failing": 0,
-      "tier": 4,
-      "subjective": false
-    },
-    {
-      "name": "Test strategy",
-      "score": 92.0,
-      "strict": 92.0,
-      "checks": 10,
-      "failing": 0,
-      "tier": 4,
-      "subjective": true,
-      "placeholder": false,
-      "cli_keys": [
-        "test_strategy"
-      ]
-    }
-  ],
-  "subjective_measures": [
-    {
-      "name": "AI generated debt",
-      "score": 90.0,
-      "strict": 90.0,
-      "checks": 10,
-      "failing": 0,
-      "tier": 4,
-      "subjective": true,
-      "placeholder": false,
-      "cli_keys": [
-        "ai_generated_debt"
-      ]
-    },
-    {
-      "name": "API coherence",
-      "score": 96.0,
-      "strict": 96.0,
-      "checks": 10,
-      "failing": 0,
-      "tier": 4,
-      "subjective": true,
-      "placeholder": false,
-      "cli_keys": [
-        "api_surface_coherence"
-      ]
-    },
-    {
-      "name": "Abstraction fit",
-      "score": 93.0,
-      "strict": 93.0,
-      "checks": 10,
-      "failing": 0,
-      "tier": 4,
-      "subjective": true,
-      "placeholder": false,
-      "cli_keys": [
-        "abstraction_fitness"
-      ]
-    },
-    {
-      "name": "Auth consistency",
-      "score": 100.0,
-      "strict": 100.0,
-      "checks": 10,
-      "failing": 0,
-      "tier": 4,
-      "subjective": true,
-      "placeholder": false,
-      "cli_keys": [
-        "authorization_consistency"
-      ]
-    },
-    {
-      "name": "Convention drift",
-      "score": 100.0,
-      "strict": 100.0,
-      "checks": 10,
-      "failing": 0,
-      "tier": 4,
-      "subjective": true,
-      "placeholder": false,
-      "cli_keys": [
-        "convention_outlier"
-      ]
-    },
-    {
-      "name": "Cross-module arch",
-      "score": 94.0,
-      "strict": 94.0,
-      "checks": 10,
-      "failing": 0,
-      "tier": 4,
-      "subjective": true,
-      "placeholder": false,
-      "cli_keys": [
-        "cross_module_architecture"
-      ]
-    },
-    {
-      "name": "Dep health",
-      "score": 100.0,
-      "strict": 100.0,
-      "checks": 10,
-      "failing": 0,
-      "tier": 4,
-      "subjective": true,
-      "placeholder": false,
-      "cli_keys": [
-        "dependency_health"
-      ]
-    },
-    {
-      "name": "Design coherence",
-      "score": 88.0,
-      "strict": 88.0,
-      "checks": 10,
-      "failing": 0,
-      "tier": 4,
-      "subjective": true,
-      "placeholder": false,
-      "cli_keys": [
-        "design_coherence"
-      ]
-    },
-    {
-      "name": "Elegance",
-      "score": 87.7,
-      "strict": 87.7,
-      "checks": 30,
-      "failing": 0,
-      "tier": 4,
-      "subjective": true,
-      "placeholder": false,
-      "cli_keys": [
-        "high_level_elegance",
-        "low_level_elegance",
-        "mid_level_elegance"
-      ]
-    },
-    {
-      "name": "Error consistency",
-      "score": 90.0,
-      "strict": 90.0,
-      "checks": 10,
-      "failing": 0,
-      "tier": 4,
-      "subjective": true,
-      "placeholder": false,
-      "cli_keys": [
-        "error_consistency"
-      ]
-    },
-    {
-      "name": "Init coupling",
-      "score": 96.0,
-      "strict": 96.0,
-      "checks": 10,
-      "failing": 0,
-      "tier": 4,
-      "subjective": true,
-      "placeholder": false,
-      "cli_keys": [
-        "initialization_coupling"
-      ]
-    },
-    {
-      "name": "Naming quality",
-      "score": 92.0,
-      "strict": 92.0,
-      "checks": 10,
-      "failing": 0,
-      "tier": 4,
-      "subjective": true,
-      "placeholder": false,
-      "cli_keys": [
-        "naming_quality"
-      ]
-    },
-    {
-      "name": "Stale migration",
-      "score": 100.0,
-      "strict": 100.0,
-      "checks": 10,
-      "failing": 0,
-      "tier": 4,
-      "subjective": true,
-      "placeholder": false,
-      "cli_keys": [
-        "incomplete_migration"
-      ]
-    },
-    {
-      "name": "Structure nav",
-      "score": 87.0,
-      "strict": 87.0,
-      "checks": 10,
-      "failing": 0,
-      "tier": 4,
-      "subjective": true,
-      "placeholder": false,
-      "cli_keys": [
-        "package_organization"
-      ]
-    },
-    {
-      "name": "Test strategy",
-      "score": 92.0,
-      "strict": 92.0,
-      "checks": 10,
-      "failing": 0,
-      "tier": 4,
-      "subjective": true,
-      "placeholder": false,
-      "cli_keys": [
-        "test_strategy"
-      ]
-    }
-  ],
   "config": {
     "target_strict_score": 85,
     "review_max_age_days": 30,
