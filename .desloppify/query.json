@@ -2,399 +2,273 @@
   "command": "next",
   "items": [
     {
-      "id": "test_coverage::lib/screens/library/library_section_tab_empty_state.dart::untested_module",
-      "confidence": "high",
+      "id": "auto/test_coverage-transitive_only",
+      "action_type": "refactor",
+      "summary": "Fix 52 test coverage issues",
+      "member_count": 52,
+      "members": [
+        {
+          "id": "test_coverage::lib/providers/playback_notification_provider.dart::transitive_only",
+          "confidence": "medium",
+          "detector": "test_coverage",
+          "file": "lib/providers/playback_notification_provider.dart",
+          "summary": "No direct tests (57 LOC, 1 importers) \u2014 covered only via imports from tested modules",
+          "status": "open",
+          "kind": "issue",
+          "primary_command": "desloppify plan resolve \"test_coverage::lib/providers/playback_notification_provider.dart::transitive_only\" --note \"<what you did>\" --confirm"
+        },
+        {
+          "id": "test_coverage::lib/screens/library/artist_song_pages.dart::transitive_only",
+          "confidence": "medium",
+          "detector": "test_coverage",
+          "file": "lib/screens/library/artist_song_pages.dart",
+          "summary": "No direct tests (110 LOC, 1 importers) \u2014 covered only via imports from tested modules",
+          "status": "open",
+          "kind": "issue",
+          "primary_command": "desloppify plan resolve \"test_coverage::lib/screens/library/artist_song_pages.dart::transitive_only\" --note \"<what you did>\" --confirm"
+        },
+        {
+          "id": "test_coverage::lib/screens/library/collapsing_header_scroll_mixin.dart::transitive_only",
+          "confidence": "medium",
+          "detector": "test_coverage",
+          "file": "lib/screens/library/collapsing_header_scroll_mixin.dart",
+          "summary": "No direct tests (36 LOC, 2 importers) \u2014 covered only via imports from tested modules",
+          "status": "open",
+          "kind": "issue",
+          "primary_command": "desloppify plan resolve \"test_coverage::lib/screens/library/collapsing_header_scroll_mixin.dart::transitive_only\" --note \"<what you did>\" --confirm"
+        },
+        {
+          "id": "test_coverage::lib/screens/library/collection_empty_folder_state.dart::transitive_only",
+          "confidence": "medium",
+          "detector": "test_coverage",
+          "file": "lib/screens/library/collection_empty_folder_state.dart",
+          "summary": "No direct tests (46 LOC, 1 importers) \u2014 covered only via imports from tested modules",
+          "status": "open",
+          "kind": "issue",
+          "primary_command": "desloppify plan resolve \"test_coverage::lib/screens/library/collection_empty_folder_state.dart::transitive_only\" --note \"<what you did>\" --confirm"
+        },
+        {
+          "id": "test_coverage::lib/screens/library/collection_track_tile.dart::transitive_only",
+          "confidence": "medium",
+          "detector": "test_coverage",
+          "file": "lib/screens/library/collection_track_tile.dart",
+          "summary": "No direct tests (118 LOC, 1 importers) \u2014 covered only via imports from tested modules",
+          "status": "open",
+          "kind": "issue",
+          "primary_command": "desloppify plan resolve \"test_coverage::lib/screens/library/collection_track_tile.dart::transitive_only\" --note \"<what you did>\" --confirm"
+        },
+        {
+          "id": "test_coverage::lib/screens/library/library_browse_artwork.dart::transitive_only",
+          "confidence": "medium",
+          "detector": "test_coverage",
+          "file": "lib/screens/library/library_browse_artwork.dart",
+          "summary": "No direct tests (30 LOC, 1 importers) \u2014 covered only via imports from tested modules",
+          "status": "open",
+          "kind": "issue",
+          "primary_command": "desloppify plan resolve \"test_coverage::lib/screens/library/library_browse_artwork.dart::transitive_only\" --note \"<what you did>\" --confirm"
+        },
+        {
+          "id": "test_coverage::lib/screens/library/selection_mode_mixin.dart::transitive_only",
+          "confidence": "medium",
+          "detector": "test_coverage",
+          "file": "lib/screens/library/selection_mode_mixin.dart",
+          "summary": "No direct tests (60 LOC, 2 importers) \u2014 covered only via imports from tested modules",
+          "status": "open",
+          "kind": "issue",
+          "primary_command": "desloppify plan resolve \"test_coverage::lib/screens/library/selection_mode_mixin.dart::transitive_only\" --note \"<what you did>\" --confirm"
+        },
+        {
+          "id": "test_coverage::lib/screens/lyrics_share_controls.dart::transitive_only",
+          "confidence": "medium",
+          "detector": "test_coverage",
+          "file": "lib/screens/lyrics_share_controls.dart",
+          "summary": "No direct tests (266 LOC, 1 importers) \u2014 covered only via imports from tested modules",
+          "status": "open",
+          "kind": "issue",
+          "primary_command": "desloppify plan resolve \"test_coverage::lib/screens/lyrics_share_controls.dart::transitive_only\" --note \"<what you did>\" --confirm"
+        },
+        {
+          "id": "test_coverage::lib/screens/main_shell_tabs.dart::transitive_only",
+          "confidence": "medium",
+          "detector": "test_coverage",
+          "file": "lib/screens/main_shell_tabs.dart",
+          "summary": "No direct tests (60 LOC, 1 importers) \u2014 covered only via imports from tested modules",
+          "status": "open",
+          "kind": "issue",
+          "primary_command": "desloppify plan resolve \"test_coverage::lib/screens/main_shell_tabs.dart::transitive_only\" --note \"<what you did>\" --confirm"
+        },
+        {
+          "id": "test_coverage::lib/screens/settings/appearance_glass_clarity_slider.dart::transitive_only",
+          "confidence": "medium",
+          "detector": "test_coverage",
+          "file": "lib/screens/settings/appearance_glass_clarity_slider.dart",
+          "summary": "No direct tests (184 LOC, 1 importers) \u2014 covered only via imports from tested modules",
+          "status": "open",
+          "kind": "issue",
+          "primary_command": "desloppify plan resolve \"test_coverage::lib/screens/settings/appearance_glass_clarity_slider.dart::transitive_only\" --note \"<what you did>\" --confirm"
+        },
+        {
+          "id": "test_coverage::lib/screens/settings/appearance_settings_selectors.dart::transitive_only",
+          "confidence": "medium",
+          "detector": "test_coverage",
+          "file": "lib/screens/settings/appearance_settings_selectors.dart",
+          "summary": "No direct tests (285 LOC, 1 importers) \u2014 covered only via imports from tested modules",
+          "status": "open",
+          "kind": "issue",
+          "primary_command": "desloppify plan resolve \"test_coverage::lib/screens/settings/appearance_settings_selectors.dart::transitive_only\" --note \"<what you did>\" --confirm"
+        },
+        {
+          "id": "test_coverage::lib/screens/settings/cache_directory_tools.dart::transitive_only",
+          "confidence": "medium",
+          "detector": "test_coverage",
+          "file": "lib/screens/settings/cache_directory_tools.dart",
+          "summary": "No direct tests (56 LOC, 1 importers) \u2014 covered only via imports from tested modules",
+          "status": "open",
+          "kind": "issue",
+          "primary_command": "desloppify plan resolve \"test_coverage::lib/screens/settings/cache_directory_tools.dart::transitive_only\" --note \"<what you did>\" --confirm"
+        },
+        {
+          "id": "test_coverage::lib/screens/settings/cache_management_models.dart::transitive_only",
+          "confidence": "medium",
+          "detector": "test_coverage",
+          "file": "lib/screens/settings/cache_management_models.dart",
+          "summary": "No direct tests (34 LOC, 2 importers) \u2014 covered only via imports from tested modules",
+          "status": "open",
+          "kind": "issue",
+          "primary_command": "desloppify plan resolve \"test_coverage::lib/screens/settings/cache_management_models.dart::transitive_only\" --note \"<what you did>\" --confirm"
+        },
+        {
+          "id": "test_coverage::lib/screens/settings/library_settings_scan_widgets.dart::transitive_only",
+          "confidence": "medium",
+          "detector": "test_coverage",
+          "file": "lib/screens/settings/library_settings_scan_widgets.dart",
+          "summary": "No direct tests (414 LOC, 1 importers) \u2014 covered only via imports from tested modules",
+          "status": "open",
+          "kind": "issue",
+          "primary_command": "desloppify plan resolve \"test_coverage::lib/screens/settings/library_settings_scan_widgets.dart::transitive_only\" --note \"<what you did>\" --confirm"
+        },
+        {
+          "id": "test_coverage::lib/screens/settings/library_settings_source_item.dart::transitive_only",
+          "confidence": "medium",
+          "detector": "test_coverage",
+          "file": "lib/screens/settings/library_settings_source_item.dart",
+          "summary": "No direct tests (284 LOC, 1 importers) \u2014 covered only via imports from tested modules",
+          "status": "open",
+          "kind": "issue",
+          "primary_command": "desloppify plan resolve \"test_coverage::lib/screens/settings/library_settings_source_item.dart::transitive_only\" --note \"<what you did>\" --confirm"
+        },
+        {
+          "id": "test_coverage::lib/screens/settings/log_entry_tile.dart::transitive_only",
+          "confidence": "medium",
+          "detector": "test_coverage",
+          "file": "lib/screens/settings/log_entry_tile.dart",
+          "summary": "No direct tests (167 LOC, 1 importers) \u2014 covered only via imports from tested modules",
+          "status": "open",
+          "kind": "issue",
+          "primary_command": "desloppify plan resolve \"test_coverage::lib/screens/settings/log_entry_tile.dart::transitive_only\" --note \"<what you did>\" --confirm"
+        },
+        {
+          "id": "test_coverage::lib/screens/settings/lyrics_settings_page.dart::transitive_only",
+          "confidence": "medium",
+          "detector": "test_coverage",
+          "file": "lib/screens/settings/lyrics_settings_page.dart",
+          "summary": "No direct tests (57 LOC, 1 importers) \u2014 covered only via imports from tested modules",
+          "status": "open",
+          "kind": "issue",
+          "primary_command": "desloppify plan resolve \"test_coverage::lib/screens/settings/lyrics_settings_page.dart::transitive_only\" --note \"<what you did>\" --confirm"
+        },
+        {
+          "id": "test_coverage::lib/screens/settings/profile_settings_page.dart::transitive_only",
+          "confidence": "medium",
+          "detector": "test_coverage",
+          "file": "lib/screens/settings/profile_settings_page.dart",
+          "summary": "No direct tests (180 LOC, 1 importers) \u2014 covered only via imports from tested modules",
+          "status": "open",
+          "kind": "issue",
+          "primary_command": "desloppify plan resolve \"test_coverage::lib/screens/settings/profile_settings_page.dart::transitive_only\" --note \"<what you did>\" --confirm"
+        },
+        {
+          "id": "test_coverage::lib/screens/setup_step_layout.dart::transitive_only",
+          "confidence": "medium",
+          "detector": "test_coverage",
+          "file": "lib/screens/setup_step_layout.dart",
+          "summary": "No direct tests (135 LOC, 1 importers) \u2014 covered only via imports from tested modules",
+          "status": "open",
+          "kind": "issue",
+          "primary_command": "desloppify plan resolve \"test_coverage::lib/screens/setup_step_layout.dart::transitive_only\" --note \"<what you did>\" --confirm"
+        },
+        {
+          "id": "test_coverage::lib/services/audio_analysis/audio_analysis_log_parsing.dart::transitive_only",
+          "confidence": "medium",
+          "detector": "test_coverage",
+          "file": "lib/services/audio_analysis/audio_analysis_log_parsing.dart",
+          "summary": "No direct tests (190 LOC, 1 importers) \u2014 covered only via imports from tested modules",
+          "status": "open",
+          "kind": "issue",
+          "primary_command": "desloppify plan resolve \"test_coverage::lib/services/audio_analysis/audio_analysis_log_parsing.dart::transitive_only\" --note \"<what you did>\" --confirm"
+        },
+        {
+          "id": "test_coverage::lib/services/audio_analysis/audio_analysis_runner.dart::transitive_only",
+          "confidence": "medium",
+          "detector": "test_coverage",
+          "file": "lib/services/audio_analysis/audio_analysis_runner.dart",
+          "summary": "No direct tests (478 LOC, 1 importers) \u2014 covered only via imports from tested modules",
+          "status": "open",
+          "kind": "issue",
+          "primary_command": "desloppify plan resolve \"test_coverage::lib/services/audio_analysis/audio_analysis_runner.dart::transitive_only\" --note \"<what you did>\" --confirm"
+        },
+        {
+          "id": "test_coverage::lib/services/library/library_browse_rows.dart::transitive_only",
+          "confidence": "medium",
+          "detector": "test_coverage",
+          "file": "lib/services/library/library_browse_rows.dart",
+          "summary": "No direct tests (40 LOC, 1 importers) \u2014 covered only via imports from tested modules",
+          "status": "open",
+          "kind": "issue",
+          "primary_command": "desloppify plan resolve \"test_coverage::lib/services/library/library_browse_rows.dart::transitive_only\" --note \"<what you did>\" --confirm"
+        },
+        {
+          "id": "test_coverage::lib/services/library/library_collections_playlist_covers.dart::transitive_only",
+          "confidence": "medium",
+          "detector": "test_coverage",
+          "file": "lib/services/library/library_collections_playlist_covers.dart",
+          "summary": "No direct tests (114 LOC, 2 importers) \u2014 covered only via imports from tested modules",
+          "status": "open",
+          "kind": "issue",
+          "primary_command": "desloppify plan resolve \"test_coverage::lib/services/library/library_collections_playlist_covers.dart::transitive_only\" --note \"<what you did>\" --confirm"
+        },
+        {
+          "id": "test_coverage::lib/services/library/library_collections_read.dart::transitive_only",
+          "confidence": "medium",
+          "detector": "test_coverage",
+          "file": "lib/services/library/library_collections_read.dart",
+          "summary": "No direct tests (241 LOC, 1 importers) \u2014 covered only via imports from tested modules",
+          "status": "open",
+          "kind": "issue",
+          "primary_command": "desloppify plan resolve \"test_coverage::lib/services/library/library_collections_read.dart::transitive_only\" --note \"<what you did>\" --confirm"
+        },
+        {
+          "id": "test_coverage::lib/services/library/library_collections_restore.dart::transitive_only",
+          "confidence": "medium",
+          "detector": "test_coverage",
+          "file": "lib/services/library/library_collections_restore.dart",
+          "summary": "No direct tests (71 LOC, 1 importers) \u2014 covered only via imports from tested modules",
+          "status": "open",
+          "kind": "issue",
+          "primary_command": "desloppify plan resolve \"test_coverage::lib/services/library/library_collections_restore.dart::transitive_only\" --note \"<what you did>\" --confirm"
+        }
+      ],
+      "cluster_name": "auto/test_coverage-transitive_only",
+      "cluster_auto": true,
       "detector": "test_coverage",
-      "file": "lib/screens/library/library_section_tab_empty_state.dart",
-      "summary": "Untested module (56 LOC, 0 importers)",
-      "detail": {
-        "kind": "untested_module",
-        "loc": 56,
-        "importer_count": 0,
-        "loc_weight": 7.483314773547883
-      },
-      "status": "open",
-      "kind": "issue",
-      "primary_command": "desloppify plan resolve \"test_coverage::lib/screens/library/library_section_tab_empty_state.dart::untested_module\" --note \"<what you did>\" --confirm",
-      "queue_position": 1,
-      "plan_cluster": {
-        "name": "auto/test_coverage-untested_module",
-        "description": "Fix 17 test coverage issues",
-        "total_items": 17,
-        "action_steps": []
-      }
-    },
-    {
-      "id": "test_coverage::lib/screens/library/local_album_screen_header.dart::untested_module",
-      "confidence": "high",
-      "detector": "test_coverage",
-      "file": "lib/screens/library/local_album_screen_header.dart",
-      "summary": "Untested module (172 LOC, 0 importers)",
-      "detail": {
-        "kind": "untested_module",
-        "loc": 172,
-        "importer_count": 0,
-        "loc_weight": 13.114877048604
-      },
-      "status": "open",
-      "kind": "issue",
-      "primary_command": "desloppify plan resolve \"test_coverage::lib/screens/library/local_album_screen_header.dart::untested_module\" --note \"<what you did>\" --confirm",
-      "queue_position": 2,
-      "plan_cluster": {
-        "name": "auto/test_coverage-untested_module",
-        "description": "Fix 17 test coverage issues",
-        "total_items": 17,
-        "action_steps": []
-      }
-    },
-    {
-      "id": "test_coverage::lib/screens/library/local_album_screen_selection.dart::untested_module",
-      "confidence": "high",
-      "detector": "test_coverage",
-      "file": "lib/screens/library/local_album_screen_selection.dart",
-      "summary": "Untested module (98 LOC, 0 importers)",
-      "detail": {
-        "kind": "untested_module",
-        "loc": 98,
-        "importer_count": 0,
-        "loc_weight": 9.899494936611665
-      },
-      "status": "open",
-      "kind": "issue",
-      "primary_command": "desloppify plan resolve \"test_coverage::lib/screens/library/local_album_screen_selection.dart::untested_module\" --note \"<what you did>\" --confirm",
-      "queue_position": 3,
-      "plan_cluster": {
-        "name": "auto/test_coverage-untested_module",
-        "description": "Fix 17 test coverage issues",
-        "total_items": 17,
-        "action_steps": []
-      }
-    },
-    {
-      "id": "test_coverage::lib/screens/library/local_album_screen_track_list.dart::untested_module",
-      "confidence": "high",
-      "detector": "test_coverage",
-      "file": "lib/screens/library/local_album_screen_track_list.dart",
-      "summary": "Untested module (85 LOC, 0 importers)",
-      "detail": {
-        "kind": "untested_module",
-        "loc": 85,
-        "importer_count": 0,
-        "loc_weight": 9.219544457292887
-      },
-      "status": "open",
-      "kind": "issue",
-      "primary_command": "desloppify plan resolve \"test_coverage::lib/screens/library/local_album_screen_track_list.dart::untested_module\" --note \"<what you did>\" --confirm",
-      "queue_position": 4,
-      "plan_cluster": {
-        "name": "auto/test_coverage-untested_module",
-        "description": "Fix 17 test coverage issues",
-        "total_items": 17,
-        "action_steps": []
-      }
-    },
-    {
-      "id": "test_coverage::lib/services/audio_analysis/audio_analysis_ffmpeg_args.dart::untested_module",
-      "confidence": "high",
-      "detector": "test_coverage",
-      "file": "lib/services/audio_analysis/audio_analysis_ffmpeg_args.dart",
-      "summary": "Untested module (178 LOC, 0 importers)",
-      "detail": {
-        "kind": "untested_module",
-        "loc": 178,
-        "importer_count": 0,
-        "loc_weight": 13.341664064126334
-      },
-      "status": "open",
-      "kind": "issue",
-      "primary_command": "desloppify plan resolve \"test_coverage::lib/services/audio_analysis/audio_analysis_ffmpeg_args.dart::untested_module\" --note \"<what you did>\" --confirm",
-      "queue_position": 5,
-      "plan_cluster": {
-        "name": "auto/test_coverage-untested_module",
-        "description": "Fix 17 test coverage issues",
-        "total_items": 17,
-        "action_steps": []
-      }
-    },
-    {
-      "id": "test_coverage::lib/services/audio_analysis/audio_analysis_spectral_cutoff.dart::untested_module",
-      "confidence": "high",
-      "detector": "test_coverage",
-      "file": "lib/services/audio_analysis/audio_analysis_spectral_cutoff.dart",
-      "summary": "Untested module (270 LOC, 0 importers)",
-      "detail": {
-        "kind": "untested_module",
-        "loc": 270,
-        "importer_count": 0,
-        "loc_weight": 16.431676725154983
-      },
-      "status": "open",
-      "kind": "issue",
-      "primary_command": "desloppify plan resolve \"test_coverage::lib/services/audio_analysis/audio_analysis_spectral_cutoff.dart::untested_module\" --note \"<what you did>\" --confirm",
-      "queue_position": 6,
-      "plan_cluster": {
-        "name": "auto/test_coverage-untested_module",
-        "description": "Fix 17 test coverage issues",
-        "total_items": 17,
-        "action_steps": []
-      }
-    },
-    {
-      "id": "test_coverage::lib/services/library/library_database_queries.dart::untested_module",
-      "confidence": "high",
-      "detector": "test_coverage",
-      "file": "lib/services/library/library_database_queries.dart",
-      "summary": "Untested module (357 LOC, 0 importers)",
-      "detail": {
-        "kind": "untested_module",
-        "loc": 357,
-        "importer_count": 0,
-        "loc_weight": 18.894443627691185
-      },
-      "status": "open",
-      "kind": "issue",
-      "primary_command": "desloppify plan resolve \"test_coverage::lib/services/library/library_database_queries.dart::untested_module\" --note \"<what you did>\" --confirm",
-      "queue_position": 7,
-      "plan_cluster": {
-        "name": "auto/test_coverage-untested_module",
-        "description": "Fix 17 test coverage issues",
-        "total_items": 17,
-        "action_steps": []
-      }
-    },
-    {
-      "id": "test_coverage::lib/services/playback/music_player_events.dart::untested_module",
-      "confidence": "high",
-      "detector": "test_coverage",
-      "file": "lib/services/playback/music_player_events.dart",
-      "summary": "Untested module (214 LOC, 0 importers)",
-      "detail": {
-        "kind": "untested_module",
-        "loc": 214,
-        "importer_count": 0,
-        "loc_weight": 14.628738838327793
-      },
-      "status": "open",
-      "kind": "issue",
-      "primary_command": "desloppify plan resolve \"test_coverage::lib/services/playback/music_player_events.dart::untested_module\" --note \"<what you did>\" --confirm",
-      "queue_position": 8,
-      "plan_cluster": {
-        "name": "auto/test_coverage-untested_module",
-        "description": "Fix 17 test coverage issues",
-        "total_items": 17,
-        "action_steps": []
-      }
-    },
-    {
-      "id": "test_coverage::lib/services/playback/music_player_hooks.dart::untested_module",
-      "confidence": "high",
-      "detector": "test_coverage",
-      "file": "lib/services/playback/music_player_hooks.dart",
-      "summary": "Untested module (167 LOC, 0 importers)",
-      "detail": {
-        "kind": "untested_module",
-        "loc": 167,
-        "importer_count": 0,
-        "loc_weight": 12.922847983320086
-      },
-      "status": "open",
-      "kind": "issue",
-      "primary_command": "desloppify plan resolve \"test_coverage::lib/services/playback/music_player_hooks.dart::untested_module\" --note \"<what you did>\" --confirm",
-      "queue_position": 9,
-      "plan_cluster": {
-        "name": "auto/test_coverage-untested_module",
-        "description": "Fix 17 test coverage issues",
-        "total_items": 17,
-        "action_steps": []
-      }
-    },
-    {
-      "id": "test_coverage::lib/services/playback/music_player_lifecycle.dart::untested_module",
-      "confidence": "high",
-      "detector": "test_coverage",
-      "file": "lib/services/playback/music_player_lifecycle.dart",
-      "summary": "Untested module (137 LOC, 0 importers)",
-      "detail": {
-        "kind": "untested_module",
-        "loc": 137,
-        "importer_count": 0,
-        "loc_weight": 11.704699910719626
-      },
-      "status": "open",
-      "kind": "issue",
-      "primary_command": "desloppify plan resolve \"test_coverage::lib/services/playback/music_player_lifecycle.dart::untested_module\" --note \"<what you did>\" --confirm",
-      "queue_position": 10,
-      "plan_cluster": {
-        "name": "auto/test_coverage-untested_module",
-        "description": "Fix 17 test coverage issues",
-        "total_items": 17,
-        "action_steps": []
-      }
-    },
-    {
-      "id": "test_coverage::lib/services/playback/music_player_media.dart::untested_module",
-      "confidence": "high",
-      "detector": "test_coverage",
-      "file": "lib/services/playback/music_player_media.dart",
-      "summary": "Untested module (184 LOC, 0 importers)",
-      "detail": {
-        "kind": "untested_module",
-        "loc": 184,
-        "importer_count": 0,
-        "loc_weight": 13.564659966250536
-      },
-      "status": "open",
-      "kind": "issue",
-      "primary_command": "desloppify plan resolve \"test_coverage::lib/services/playback/music_player_media.dart::untested_module\" --note \"<what you did>\" --confirm",
-      "queue_position": 11,
-      "plan_cluster": {
-        "name": "auto/test_coverage-untested_module",
-        "description": "Fix 17 test coverage issues",
-        "total_items": 17,
-        "action_steps": []
-      }
-    },
-    {
-      "id": "test_coverage::lib/services/playback/music_player_queue.dart::untested_module",
-      "confidence": "high",
-      "detector": "test_coverage",
-      "file": "lib/services/playback/music_player_queue.dart",
-      "summary": "Untested module (73 LOC, 0 importers)",
-      "detail": {
-        "kind": "untested_module",
-        "loc": 73,
-        "importer_count": 0,
-        "loc_weight": 8.54400374531753
-      },
-      "status": "open",
-      "kind": "issue",
-      "primary_command": "desloppify plan resolve \"test_coverage::lib/services/playback/music_player_queue.dart::untested_module\" --note \"<what you did>\" --confirm",
-      "queue_position": 13,
-      "plan_cluster": {
-        "name": "auto/test_coverage-untested_module",
-        "description": "Fix 17 test coverage issues",
-        "total_items": 17,
-        "action_steps": []
-      }
-    },
-    {
-      "id": "test_coverage::lib/services/playback/music_player_session.dart::untested_module",
-      "confidence": "high",
-      "detector": "test_coverage",
-      "file": "lib/services/playback/music_player_session.dart",
-      "summary": "Untested module (54 LOC, 0 importers)",
-      "detail": {
-        "kind": "untested_module",
-        "loc": 54,
-        "importer_count": 0,
-        "loc_weight": 7.3484692283495345
-      },
-      "status": "open",
-      "kind": "issue",
-      "primary_command": "desloppify plan resolve \"test_coverage::lib/services/playback/music_player_session.dart::untested_module\" --note \"<what you did>\" --confirm",
-      "queue_position": 14,
-      "plan_cluster": {
-        "name": "auto/test_coverage-untested_module",
-        "description": "Fix 17 test coverage issues",
-        "total_items": 17,
-        "action_steps": []
-      }
-    },
-    {
-      "id": "test_coverage::lib/services/playback/music_player_source.dart::untested_module",
-      "confidence": "high",
-      "detector": "test_coverage",
-      "file": "lib/services/playback/music_player_source.dart",
-      "summary": "Untested module (66 LOC, 0 importers)",
-      "detail": {
-        "kind": "untested_module",
-        "loc": 66,
-        "importer_count": 0,
-        "loc_weight": 8.12403840463596
-      },
-      "status": "open",
-      "kind": "issue",
-      "primary_command": "desloppify plan resolve \"test_coverage::lib/services/playback/music_player_source.dart::untested_module\" --note \"<what you did>\" --confirm",
-      "queue_position": 15,
-      "plan_cluster": {
-        "name": "auto/test_coverage-untested_module",
-        "description": "Fix 17 test coverage issues",
-        "total_items": 17,
-        "action_steps": []
-      }
-    },
-    {
-      "id": "test_coverage::lib/utils/lyrics_parser_ttml.dart::untested_module",
-      "confidence": "high",
-      "detector": "test_coverage",
-      "file": "lib/utils/lyrics_parser_ttml.dart",
-      "summary": "Untested module (232 LOC, 0 importers)",
-      "detail": {
-        "kind": "untested_module",
-        "loc": 232,
-        "importer_count": 0,
-        "loc_weight": 15.231546211727817
-      },
-      "status": "open",
-      "kind": "issue",
-      "primary_command": "desloppify plan resolve \"test_coverage::lib/utils/lyrics_parser_ttml.dart::untested_module\" --note \"<what you did>\" --confirm",
-      "queue_position": 16,
-      "plan_cluster": {
-        "name": "auto/test_coverage-untested_module",
-        "description": "Fix 17 test coverage issues",
-        "total_items": 17,
-        "action_steps": []
-      }
-    },
-    {
-      "id": "test_coverage::lib/widgets/header/album_detail_header_parts.dart::untested_module",
-      "confidence": "high",
-      "detector": "test_coverage",
-      "file": "lib/widgets/header/album_detail_header_parts.dart",
-      "summary": "Untested module (126 LOC, 0 importers)",
-      "detail": {
-        "kind": "untested_module",
-        "loc": 126,
-        "importer_count": 0,
-        "loc_weight": 11.224972160321824
-      },
-      "status": "open",
-      "kind": "issue",
-      "primary_command": "desloppify plan resolve \"test_coverage::lib/widgets/header/album_detail_header_parts.dart::untested_module\" --note \"<what you did>\" --confirm",
-      "queue_position": 17,
-      "plan_cluster": {
-        "name": "auto/test_coverage-untested_module",
-        "description": "Fix 17 test coverage issues",
-        "total_items": 17,
-        "action_steps": []
-      }
-    },
-    {
-      "id": "test_coverage::lib/widgets/library/track_metadata_edit_cover.dart::untested_module",
-      "confidence": "high",
-      "detector": "test_coverage",
-      "file": "lib/widgets/library/track_metadata_edit_cover.dart",
-      "summary": "Untested module (427 LOC, 0 importers)",
-      "detail": {
-        "kind": "untested_module",
-        "loc": 427,
-        "importer_count": 0,
-        "loc_weight": 20.663978319771825
-      },
-      "status": "open",
-      "kind": "issue",
-      "primary_command": "desloppify plan resolve \"test_coverage::lib/widgets/library/track_metadata_edit_cover.dart::untested_module\" --note \"<what you did>\" --confirm",
-      "queue_position": 18,
-      "plan_cluster": {
-        "name": "auto/test_coverage-untested_module",
-        "description": "Fix 17 test coverage issues",
-        "total_items": 17,
-        "action_steps": []
-      }
+      "kind": "cluster",
+      "primary_command": "review test coverage gaps",
+      "members_truncated": true,
+      "members_sample_limit": 25
     }
   ],
   "queue": {
-    "total": 17,
+    "total": 1,
     "mode": "execution"
   },
   "narrative": {
@@ -405,7 +279,7 @@
         {
           "name": "Test health",
           "strict": 73.2,
-          "failing": 70,
+          "failing": 52,
           "impact": 0.0
         },
         {
@@ -428,9 +302,9 @@
       "biggest_gap_dimensions": [
         {
           "name": "Test health",
-          "lenient": 85.2,
+          "lenient": 89.7,
           "strict": 73.2,
-          "gap": 12.0,
+          "gap": 16.5,
           "wontfix_count": 0
         },
         {
@@ -443,6 +317,11 @@
       ],
       "stagnant_dimensions": [
         {
+          "name": "Code quality",
+          "strict": 96.5,
+          "stuck_scans": 5
+        },
+        {
           "name": "Security",
           "strict": 99.7,
           "stuck_scans": 5
@@ -450,6 +329,116 @@
         {
           "name": "File health",
           "strict": 88.0,
+          "stuck_scans": 5
+        },
+        {
+          "name": "Duplication",
+          "strict": 98.4,
+          "stuck_scans": 5
+        },
+        {
+          "name": "Test health",
+          "strict": 73.2,
+          "stuck_scans": 5
+        },
+        {
+          "name": "Abstraction fit",
+          "strict": 93.0,
+          "stuck_scans": 5
+        },
+        {
+          "name": "AI generated debt",
+          "strict": 90.0,
+          "stuck_scans": 5
+        },
+        {
+          "name": "API coherence",
+          "strict": 96.0,
+          "stuck_scans": 5
+        },
+        {
+          "name": "Auth consistency",
+          "strict": 100.0,
+          "stuck_scans": 5
+        },
+        {
+          "name": "Contracts",
+          "strict": 91.0,
+          "stuck_scans": 5
+        },
+        {
+          "name": "Convention drift",
+          "strict": 100.0,
+          "stuck_scans": 5
+        },
+        {
+          "name": "Cross-module arch",
+          "strict": 94.0,
+          "stuck_scans": 5
+        },
+        {
+          "name": "Dep health",
+          "strict": 100.0,
+          "stuck_scans": 5
+        },
+        {
+          "name": "Design coherence",
+          "strict": 88.0,
+          "stuck_scans": 5
+        },
+        {
+          "name": "Error consistency",
+          "strict": 90.0,
+          "stuck_scans": 5
+        },
+        {
+          "name": "High elegance",
+          "strict": 86.0,
+          "stuck_scans": 5
+        },
+        {
+          "name": "Stale migration",
+          "strict": 100.0,
+          "stuck_scans": 5
+        },
+        {
+          "name": "Init coupling",
+          "strict": 96.0,
+          "stuck_scans": 5
+        },
+        {
+          "name": "Logic clarity",
+          "strict": 93.0,
+          "stuck_scans": 5
+        },
+        {
+          "name": "Low elegance",
+          "strict": 89.0,
+          "stuck_scans": 5
+        },
+        {
+          "name": "Mid elegance",
+          "strict": 88.0,
+          "stuck_scans": 5
+        },
+        {
+          "name": "Naming quality",
+          "strict": 92.0,
+          "stuck_scans": 5
+        },
+        {
+          "name": "Structure nav",
+          "strict": 87.0,
+          "stuck_scans": 5
+        },
+        {
+          "name": "Test strategy",
+          "strict": 92.0,
+          "stuck_scans": 5
+        },
+        {
+          "name": "Type safety",
+          "strict": 94.0,
           "stuck_scans": 5
         }
       ]
@@ -502,17 +491,16 @@
       {
         "type": "refactor",
         "detector": "test_coverage",
-        "count": 70,
-        "description": "70 test_coverage issues in 2 cluster(s) \u2014 run `desloppify next`",
+        "count": 52,
+        "description": "52 test_coverage issues in 1 cluster(s) \u2014 run `desloppify next`",
         "command": "desloppify next",
         "impact": 0.0,
         "dimension": "Test health",
         "priority": 5,
         "clusters": [
-          "auto/test_coverage-untested_module",
           "auto/test_coverage-transitive_only"
         ],
-        "cluster_count": 2,
+        "cluster_count": 1,
         "lane": "test_coverage"
       },
       {
@@ -541,7 +529,7 @@
     "strategy": {
       "fixer_leverage": {
         "auto_fixable_count": 0,
-        "total_count": 326,
+        "total_count": 308,
         "coverage": 0.0,
         "impact_ratio": 0.0,
         "recommendation": "none"
@@ -573,7 +561,7 @@
           "actions": [
             5
           ],
-          "file_count": 70,
+          "file_count": 52,
           "total_impact": 0.0,
           "automation": "manual",
           "run_first": false
@@ -602,10 +590,10 @@
       }
     },
     "debt": {
-      "overall_gap": 0.8,
+      "overall_gap": 1.0,
       "wontfix_count": 0,
       "worst_dimension": "Test health",
-      "worst_gap": 12.0,
+      "worst_gap": 16.5,
       "trend": "stable"
     },
     "milestone": "All T1 items cleared!",
@@ -618,7 +606,13 @@
       "command": "desloppify scan",
       "reason": "revalidate after changes"
     },
-    "risk_flags": [],
+    "risk_flags": [
+      {
+        "type": "wontfix_gap",
+        "severity": "medium",
+        "message": "Strict/lenient gap is 1.0 pts with 0 wontfix issues"
+      }
+    ],
     "strict_target": {
       "target": 85.0,
       "current": 90.1,
@@ -629,7 +623,7 @@
     "reminders": [],
     "reminder_history": {
       "zone_classification": 3,
-      "report_scores": 12,
+      "report_scores": 14,
       "feedback_nudge": 3,
       "stagnant_nudge": 22,
       "wontfix_growing": 3,
@@ -646,11 +640,6 @@
     "active": true,
     "focus": null,
     "clusters": [
-      {
-        "name": "auto/test_coverage-untested_module",
-        "description": "Fix 17 test coverage issues",
-        "item_count": 17
-      },
       {
         "name": "auto/test_coverage-transitive_only",
         "description": "Fix 52 test coverage issues",
@@ -686,8 +675,8 @@
     "total_skipped": 0,
     "plan_overrides_narrative": true
   },
-  "overall_score": 91.2,
-  "objective_score": 95.2,
+  "overall_score": 91.4,
+  "objective_score": 95.9,
   "strict_score": 90.1,
   "scorecard_dimensions": [
     {
@@ -912,10 +901,10 @@
     },
     {
       "name": "Test health",
-      "score": 85.2,
+      "score": 89.7,
       "strict": 73.2,
       "checks": 5164,
-      "failing": 70,
+      "failing": 52,
       "tier": 4,
       "subjective": false
     },

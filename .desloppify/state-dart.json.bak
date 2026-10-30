@@ -1,19 +1,19 @@
 {
   "version": 3,
   "created": "2026-10-29T06:01:11+00:00",
-  "last_scan": "2026-10-30T12:16:39+00:00",
-  "scan_count": 14,
-  "overall_score": 91.2,
-  "objective_score": 95.2,
+  "last_scan": "2026-10-30T12:53:54+00:00",
+  "scan_count": 16,
+  "overall_score": 91.4,
+  "objective_score": 95.9,
   "strict_score": 90.1,
-  "verified_strict_score": 95.2,
+  "verified_strict_score": 95.9,
   "stats": {
     "total": 706,
-    "auto_resolved": 282,
+    "auto_resolved": 300,
     "deferred": 0,
     "false_positive": 0,
     "fixed": 98,
-    "open": 326,
+    "open": 308,
     "triaged_out": 0,
     "wontfix": 0,
     "by_tier": {
@@ -27,20 +27,20 @@
         "wontfix": 0
       },
       "2": {
-        "auto_resolved": 17,
+        "auto_resolved": 18,
         "deferred": 0,
         "false_positive": 0,
         "fixed": 43,
-        "open": 3,
+        "open": 2,
         "triaged_out": 0,
         "wontfix": 0
       },
       "3": {
-        "auto_resolved": 264,
+        "auto_resolved": 281,
         "deferred": 0,
         "false_positive": 0,
         "fixed": 9,
-        "open": 323,
+        "open": 306,
         "triaged_out": 0,
         "wontfix": 0
       },
@@ -69,7 +69,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:34+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -94,7 +94,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:34+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -119,7 +119,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:34+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -149,7 +149,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:34+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -180,7 +180,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:34+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -210,7 +210,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:34+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -235,7 +235,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:34+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -260,7 +260,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:34+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -285,7 +285,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:34+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -310,7 +310,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:34+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -335,7 +335,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:34+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -360,7 +360,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:34+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -385,7 +385,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:34+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -410,7 +410,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:34+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -435,7 +435,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:34+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -460,7 +460,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:34+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -485,7 +485,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:34+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -510,7 +510,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:34+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -535,7 +535,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:34+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -566,7 +566,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:34+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -595,7 +595,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:34+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -625,7 +625,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:34+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -655,7 +655,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:34+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -686,7 +686,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:34+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -716,7 +716,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:34+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -741,7 +741,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:34+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -766,7 +766,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:34+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -851,7 +851,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:34+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -909,7 +909,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:34+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -934,7 +934,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:34+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -964,7 +964,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:34+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -1079,7 +1079,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:34+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -1108,7 +1108,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:34+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -1216,7 +1216,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:34+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -1296,7 +1296,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:34+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -1425,7 +1425,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:34+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -1475,7 +1475,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:34+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -1529,7 +1529,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:34+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -1554,7 +1554,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:34+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -1644,7 +1644,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:34+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -1669,7 +1669,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:34+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -1694,7 +1694,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:34+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -1744,7 +1744,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:34+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -1844,7 +1844,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:34+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -1919,7 +1919,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:34+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -1969,7 +1969,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:34+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -2077,7 +2077,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:34+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -2160,7 +2160,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:34+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -2235,7 +2235,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:34+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -2253,11 +2253,11 @@
       "file": "test",
       "tier": 3,
       "confidence": "medium",
-      "summary": "Directory overload: 289 files, 1 child dirs (combined 292) \u2014 consider grouping by domain",
+      "summary": "Directory overload: 307 files, 1 child dirs (combined 310) \u2014 consider grouping by domain",
       "detail": {
-        "file_count": 289,
+        "file_count": 307,
         "child_dir_count": 1,
-        "combined_score": 292,
+        "combined_score": 310,
         "kind": "overload",
         "parent_sibling_count": 0,
         "wrapper_item_count": 0,
@@ -2268,7 +2268,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:34+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -2301,7 +2301,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:34+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -2334,7 +2334,7 @@
       "status": "open",
       "note": "Reopened (\u00d71) \u2014 reappeared in scan (was auto_resolved)",
       "first_seen": "2026-10-29T06:01:34+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 1,
       "work_item_kind": "mechanical_defect",
@@ -2367,7 +2367,7 @@
       "status": "open",
       "note": "Reopened (\u00d71) \u2014 reappeared in scan (was auto_resolved)",
       "first_seen": "2026-10-29T06:01:34+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 1,
       "work_item_kind": "mechanical_defect",
@@ -2400,7 +2400,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:34+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -2433,7 +2433,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:34+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -2466,7 +2466,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:34+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -2499,7 +2499,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:34+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -3060,7 +3060,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:34+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -3069,7 +3069,7 @@
       "lang": "dart",
       "zone": "production",
       "suppressed": true,
-      "suppressed_at": "2026-10-30T12:16:39+00:00",
+      "suppressed_at": "2026-10-30T12:53:54+00:00",
       "suppression_pattern": "orphaned::lib/widgets/audio_analysis/audio_analysis_spectrogram.dart"
     },
     "orphaned::lib/screens/home/home_tab_feed.dart": {
@@ -3085,7 +3085,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:34+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -3094,7 +3094,7 @@
       "lang": "dart",
       "zone": "production",
       "suppressed": true,
-      "suppressed_at": "2026-10-30T12:16:39+00:00",
+      "suppressed_at": "2026-10-30T12:53:54+00:00",
       "suppression_pattern": "orphaned::lib/screens/home/home_tab_feed.dart"
     },
     "orphaned::lib/services/playback/music_player_autoplay.dart": {
@@ -3135,7 +3135,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:34+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -3144,7 +3144,7 @@
       "lang": "dart",
       "zone": "production",
       "suppressed": true,
-      "suppressed_at": "2026-10-30T12:16:39+00:00",
+      "suppressed_at": "2026-10-30T12:53:54+00:00",
       "suppression_pattern": "orphaned::lib/widgets/audio_analysis/audio_analysis_info_card.dart"
     },
     "orphaned::lib/screens/library/queue_tab_navigation.dart": {
@@ -3310,7 +3310,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:34+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -3319,7 +3319,7 @@
       "lang": "dart",
       "zone": "production",
       "suppressed": true,
-      "suppressed_at": "2026-10-30T12:16:39+00:00",
+      "suppressed_at": "2026-10-30T12:53:54+00:00",
       "suppression_pattern": "orphaned::lib/screens/home/home_tab_widgets.dart"
     },
     "orphaned::lib/screens/library/queue_tab_batch_actions.dart": {
@@ -3353,12 +3353,12 @@
       "file": "test/adaptive_layout_test.dart",
       "tier": 3,
       "confidence": "medium",
-      "summary": "'test' has 67 different signatures across 180 files",
+      "summary": "'test' has 68 different signatures across 192 files",
       "detail": {},
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:38+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -3422,12 +3422,12 @@
       "file": "integration_test/library_collections_workers_test.dart",
       "tier": 3,
       "confidence": "medium",
-      "summary": "'expect' has 10 different signatures across 88 files",
+      "summary": "'expect' has 10 different signatures across 93 files",
       "detail": {},
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:38+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -3450,7 +3450,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:38+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -3468,12 +3468,12 @@
       "file": "lib/providers/equalizer_provider.dart",
       "tier": 3,
       "confidence": "medium",
-      "summary": "'update' has 11 different signatures across 14 files",
+      "summary": "'update' has 11 different signatures across 15 files",
       "detail": {},
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:38+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -3565,7 +3565,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:38+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -3657,7 +3657,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:38+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -3703,7 +3703,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:38+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -3749,7 +3749,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:38+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -3818,7 +3818,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:38+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -3864,7 +3864,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:38+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -3910,7 +3910,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:38+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -3928,12 +3928,12 @@
       "file": "lib/providers/music_player_provider.dart",
       "tier": 3,
       "confidence": "medium",
-      "summary": "'seek' has 4 different signatures across 6 files",
+      "summary": "'seek' has 4 different signatures across 7 files",
       "detail": {},
       "status": "open",
       "note": "Reopened (\u00d71) \u2014 reappeared in scan (was auto_resolved)",
       "first_seen": "2026-10-29T06:01:38+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 1,
       "work_item_kind": "mechanical_defect",
@@ -4002,7 +4002,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:38+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -4025,7 +4025,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:38+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -4094,7 +4094,7 @@
       "status": "open",
       "note": "Reopened (\u00d71) \u2014 reappeared in scan (was auto_resolved)",
       "first_seen": "2026-10-29T06:01:38+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 1,
       "work_item_kind": "mechanical_defect",
@@ -4117,7 +4117,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:38+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -4186,7 +4186,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:38+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -4209,7 +4209,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:38+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -4232,7 +4232,7 @@
       "status": "open",
       "note": "Reopened (\u00d71) \u2014 reappeared in scan (was auto_resolved)",
       "first_seen": "2026-10-29T06:01:38+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 1,
       "work_item_kind": "mechanical_defect",
@@ -4255,7 +4255,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:38+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -4278,7 +4278,7 @@
       "status": "open",
       "note": "Reopened (\u00d71) \u2014 reappeared in scan (was auto_resolved)",
       "first_seen": "2026-10-29T06:01:38+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 1,
       "work_item_kind": "mechanical_defect",
@@ -4370,7 +4370,7 @@
       "status": "open",
       "note": "Reopened (\u00d71) \u2014 reappeared in scan (was auto_resolved)",
       "first_seen": "2026-10-29T06:01:38+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 1,
       "work_item_kind": "mechanical_defect",
@@ -4393,7 +4393,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:38+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -4416,7 +4416,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:38+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -4462,7 +4462,7 @@
       "status": "open",
       "note": "Reopened (\u00d71) \u2014 reappeared in scan (was auto_resolved)",
       "first_seen": "2026-10-29T06:01:38+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 1,
       "work_item_kind": "mechanical_defect",
@@ -4485,7 +4485,7 @@
       "status": "open",
       "note": "Reopened (\u00d71) \u2014 reappeared in scan (was auto_resolved)",
       "first_seen": "2026-10-29T06:01:38+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 1,
       "work_item_kind": "mechanical_defect",
@@ -4508,7 +4508,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:38+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -4554,7 +4554,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:38+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -4623,7 +4623,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:38+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -4646,7 +4646,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:38+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -4738,7 +4738,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:38+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -4761,7 +4761,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:38+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -4779,12 +4779,12 @@
       "file": "lib/providers/music_player_provider.dart",
       "tier": 3,
       "confidence": "medium",
-      "summary": "'pause' has 2 different signatures across 6 files",
+      "summary": "'pause' has 2 different signatures across 7 files",
       "detail": {},
       "status": "open",
       "note": "Reopened (\u00d71) \u2014 reappeared in scan (was auto_resolved)",
       "first_seen": "2026-10-29T06:01:38+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 1,
       "work_item_kind": "mechanical_defect",
@@ -4830,7 +4830,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:38+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -4853,7 +4853,7 @@
       "status": "open",
       "note": "Reopened (\u00d71) \u2014 reappeared in scan (was auto_resolved)",
       "first_seen": "2026-10-29T06:01:38+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 1,
       "work_item_kind": "mechanical_defect",
@@ -4876,7 +4876,7 @@
       "status": "open",
       "note": "Reopened (\u00d71) \u2014 reappeared in scan (was auto_resolved)",
       "first_seen": "2026-10-29T06:01:38+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 1,
       "work_item_kind": "mechanical_defect",
@@ -4899,7 +4899,7 @@
       "status": "open",
       "note": "Reopened (\u00d71) \u2014 reappeared in scan (was auto_resolved)",
       "first_seen": "2026-10-29T06:01:38+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 1,
       "work_item_kind": "mechanical_defect",
@@ -4922,7 +4922,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:38+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -4945,7 +4945,7 @@
       "status": "open",
       "note": "Reopened (\u00d71) \u2014 reappeared in scan (was auto_resolved)",
       "first_seen": "2026-10-29T06:01:38+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 1,
       "work_item_kind": "mechanical_defect",
@@ -4968,7 +4968,7 @@
       "status": "open",
       "note": "Reopened (\u00d71) \u2014 reappeared in scan (was auto_resolved)",
       "first_seen": "2026-10-29T06:01:38+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 1,
       "work_item_kind": "mechanical_defect",
@@ -5037,7 +5037,7 @@
       "status": "open",
       "note": "Reopened (\u00d71) \u2014 reappeared in scan (was auto_resolved)",
       "first_seen": "2026-10-29T06:01:38+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 1,
       "work_item_kind": "mechanical_defect",
@@ -5060,7 +5060,7 @@
       "status": "open",
       "note": "Reopened (\u00d71) \u2014 reappeared in scan (was auto_resolved)",
       "first_seen": "2026-10-29T06:01:38+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 1,
       "work_item_kind": "mechanical_defect",
@@ -5129,7 +5129,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:38+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -5198,7 +5198,7 @@
       "status": "open",
       "note": "Reopened (\u00d71) \u2014 reappeared in scan (was auto_resolved)",
       "first_seen": "2026-10-29T06:01:38+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 1,
       "work_item_kind": "mechanical_defect",
@@ -5221,7 +5221,7 @@
       "status": "open",
       "note": "Reopened (\u00d71) \u2014 reappeared in scan (was auto_resolved)",
       "first_seen": "2026-10-29T06:01:38+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 1,
       "work_item_kind": "mechanical_defect",
@@ -5244,7 +5244,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:38+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -5267,7 +5267,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:38+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -5290,7 +5290,7 @@
       "status": "open",
       "note": "Reopened (\u00d71) \u2014 reappeared in scan (was auto_resolved)",
       "first_seen": "2026-10-29T06:01:38+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 1,
       "work_item_kind": "mechanical_defect",
@@ -5359,7 +5359,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:38+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -5382,7 +5382,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:38+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -5405,7 +5405,7 @@
       "status": "open",
       "note": "Reopened (\u00d71) \u2014 reappeared in scan (was auto_resolved)",
       "first_seen": "2026-10-29T06:01:38+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 1,
       "work_item_kind": "mechanical_defect",
@@ -5451,7 +5451,7 @@
       "status": "open",
       "note": "Reopened (\u00d71) \u2014 reappeared in scan (was auto_resolved)",
       "first_seen": "2026-10-29T06:01:38+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 1,
       "work_item_kind": "mechanical_defect",
@@ -5474,7 +5474,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:38+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -5497,7 +5497,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:38+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -5566,7 +5566,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:38+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -5678,7 +5678,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:48+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -5846,7 +5846,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:48+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -6154,7 +6154,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:48+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -6322,7 +6322,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:48+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -6546,7 +6546,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:48+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -6687,7 +6687,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:48+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -6771,7 +6771,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:48+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -6827,7 +6827,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:48+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -6883,7 +6883,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:48+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -6911,7 +6911,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:48+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -7261,7 +7261,7 @@
         "text": "Dimension assessment imported; coverage marker superseded",
         "attested_at": "2026-10-29T06:58:25+00:00",
         "scan_verified": true,
-        "scan_verified_at": "2026-10-30T12:16:39+00:00",
+        "scan_verified_at": "2026-10-30T12:53:54+00:00",
         "scan_verification_text": "Absent from detector output in latest scan"
       }
     },
@@ -7295,7 +7295,7 @@
         "text": "Dimension assessment imported; coverage marker superseded",
         "attested_at": "2026-10-29T06:58:25+00:00",
         "scan_verified": true,
-        "scan_verified_at": "2026-10-30T12:16:39+00:00",
+        "scan_verified_at": "2026-10-30T12:53:54+00:00",
         "scan_verification_text": "Absent from detector output in latest scan"
       }
     },
@@ -7329,7 +7329,7 @@
         "text": "Dimension assessment imported; coverage marker superseded",
         "attested_at": "2026-10-29T06:58:25+00:00",
         "scan_verified": true,
-        "scan_verified_at": "2026-10-30T12:16:39+00:00",
+        "scan_verified_at": "2026-10-30T12:53:54+00:00",
         "scan_verification_text": "Absent from detector output in latest scan"
       }
     },
@@ -7363,7 +7363,7 @@
         "text": "Dimension assessment imported; coverage marker superseded",
         "attested_at": "2026-10-29T06:58:25+00:00",
         "scan_verified": true,
-        "scan_verified_at": "2026-10-30T12:16:39+00:00",
+        "scan_verified_at": "2026-10-30T12:53:54+00:00",
         "scan_verification_text": "Absent from detector output in latest scan"
       }
     },
@@ -7397,7 +7397,7 @@
         "text": "Dimension assessment imported; coverage marker superseded",
         "attested_at": "2026-10-29T06:58:25+00:00",
         "scan_verified": true,
-        "scan_verified_at": "2026-10-30T12:16:39+00:00",
+        "scan_verified_at": "2026-10-30T12:53:54+00:00",
         "scan_verification_text": "Absent from detector output in latest scan"
       }
     },
@@ -7431,7 +7431,7 @@
         "text": "Dimension assessment imported; coverage marker superseded",
         "attested_at": "2026-10-29T06:58:25+00:00",
         "scan_verified": true,
-        "scan_verified_at": "2026-10-30T12:16:39+00:00",
+        "scan_verified_at": "2026-10-30T12:53:54+00:00",
         "scan_verification_text": "Absent from detector output in latest scan"
       }
     },
@@ -7465,7 +7465,7 @@
         "text": "Dimension assessment imported; coverage marker superseded",
         "attested_at": "2026-10-29T06:58:25+00:00",
         "scan_verified": true,
-        "scan_verified_at": "2026-10-30T12:16:39+00:00",
+        "scan_verified_at": "2026-10-30T12:53:54+00:00",
         "scan_verification_text": "Absent from detector output in latest scan"
       }
     },
@@ -7499,7 +7499,7 @@
         "text": "Dimension assessment imported; coverage marker superseded",
         "attested_at": "2026-10-29T06:58:25+00:00",
         "scan_verified": true,
-        "scan_verified_at": "2026-10-30T12:16:39+00:00",
+        "scan_verified_at": "2026-10-30T12:53:54+00:00",
         "scan_verification_text": "Absent from detector output in latest scan"
       }
     },
@@ -7533,7 +7533,7 @@
         "text": "Dimension assessment imported; coverage marker superseded",
         "attested_at": "2026-10-29T06:58:25+00:00",
         "scan_verified": true,
-        "scan_verified_at": "2026-10-30T12:16:39+00:00",
+        "scan_verified_at": "2026-10-30T12:53:54+00:00",
         "scan_verification_text": "Absent from detector output in latest scan"
       }
     },
@@ -7567,7 +7567,7 @@
         "text": "Dimension assessment imported; coverage marker superseded",
         "attested_at": "2026-10-29T06:58:25+00:00",
         "scan_verified": true,
-        "scan_verified_at": "2026-10-30T12:16:39+00:00",
+        "scan_verified_at": "2026-10-30T12:53:54+00:00",
         "scan_verification_text": "Absent from detector output in latest scan"
       }
     },
@@ -7601,7 +7601,7 @@
         "text": "Dimension assessment imported; coverage marker superseded",
         "attested_at": "2026-10-29T06:58:25+00:00",
         "scan_verified": true,
-        "scan_verified_at": "2026-10-30T12:16:39+00:00",
+        "scan_verified_at": "2026-10-30T12:53:54+00:00",
         "scan_verification_text": "Absent from detector output in latest scan"
       }
     },
@@ -7635,7 +7635,7 @@
         "text": "Dimension assessment imported; coverage marker superseded",
         "attested_at": "2026-10-29T06:58:25+00:00",
         "scan_verified": true,
-        "scan_verified_at": "2026-10-30T12:16:39+00:00",
+        "scan_verified_at": "2026-10-30T12:53:54+00:00",
         "scan_verification_text": "Absent from detector output in latest scan"
       }
     },
@@ -7669,7 +7669,7 @@
         "text": "Dimension assessment imported; coverage marker superseded",
         "attested_at": "2026-10-29T06:58:25+00:00",
         "scan_verified": true,
-        "scan_verified_at": "2026-10-30T12:16:39+00:00",
+        "scan_verified_at": "2026-10-30T12:53:54+00:00",
         "scan_verification_text": "Absent from detector output in latest scan"
       }
     },
@@ -7703,7 +7703,7 @@
         "text": "Dimension assessment imported; coverage marker superseded",
         "attested_at": "2026-10-29T06:58:25+00:00",
         "scan_verified": true,
-        "scan_verified_at": "2026-10-30T12:16:39+00:00",
+        "scan_verified_at": "2026-10-30T12:53:54+00:00",
         "scan_verification_text": "Absent from detector output in latest scan"
       }
     },
@@ -7737,7 +7737,7 @@
         "text": "Dimension assessment imported; coverage marker superseded",
         "attested_at": "2026-10-29T06:58:25+00:00",
         "scan_verified": true,
-        "scan_verified_at": "2026-10-30T12:16:39+00:00",
+        "scan_verified_at": "2026-10-30T12:53:54+00:00",
         "scan_verification_text": "Absent from detector output in latest scan"
       }
     },
@@ -7771,7 +7771,7 @@
         "text": "Dimension assessment imported; coverage marker superseded",
         "attested_at": "2026-10-29T06:58:25+00:00",
         "scan_verified": true,
-        "scan_verified_at": "2026-10-30T12:16:39+00:00",
+        "scan_verified_at": "2026-10-30T12:53:54+00:00",
         "scan_verification_text": "Absent from detector output in latest scan"
       }
     },
@@ -7805,7 +7805,7 @@
         "text": "Dimension assessment imported; coverage marker superseded",
         "attested_at": "2026-10-29T06:58:25+00:00",
         "scan_verified": true,
-        "scan_verified_at": "2026-10-30T12:16:39+00:00",
+        "scan_verified_at": "2026-10-30T12:53:54+00:00",
         "scan_verification_text": "Absent from detector output in latest scan"
       }
     },
@@ -7839,7 +7839,7 @@
         "text": "Dimension assessment imported; coverage marker superseded",
         "attested_at": "2026-10-29T06:58:25+00:00",
         "scan_verified": true,
-        "scan_verified_at": "2026-10-30T12:16:39+00:00",
+        "scan_verified_at": "2026-10-30T12:53:54+00:00",
         "scan_verification_text": "Absent from detector output in latest scan"
       }
     },
@@ -7873,7 +7873,7 @@
         "text": "Dimension assessment imported; coverage marker superseded",
         "attested_at": "2026-10-29T06:58:25+00:00",
         "scan_verified": true,
-        "scan_verified_at": "2026-10-30T12:16:39+00:00",
+        "scan_verified_at": "2026-10-30T12:53:54+00:00",
         "scan_verification_text": "Absent from detector output in latest scan"
       }
     },
@@ -7907,7 +7907,7 @@
         "text": "Dimension assessment imported; coverage marker superseded",
         "attested_at": "2026-10-29T06:58:25+00:00",
         "scan_verified": true,
-        "scan_verified_at": "2026-10-30T12:16:39+00:00",
+        "scan_verified_at": "2026-10-30T12:53:54+00:00",
         "scan_verification_text": "Absent from detector output in latest scan"
       }
     },
@@ -7945,7 +7945,7 @@
       "status": "open",
       "note": "Reopened (\u00d71) \u2014 reappeared in scan (was auto_resolved)",
       "first_seen": "2026-10-29T06:01:49+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 1,
       "work_item_kind": "mechanical_defect",
@@ -8113,7 +8113,7 @@
       "status": "open",
       "note": "Reopened (\u00d71) \u2014 reappeared in scan (was auto_resolved)",
       "first_seen": "2026-10-29T06:01:49+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 1,
       "work_item_kind": "mechanical_defect",
@@ -8197,7 +8197,7 @@
       "status": "open",
       "note": "Reopened (\u00d71) \u2014 reappeared in scan (was auto_resolved)",
       "first_seen": "2026-10-29T06:01:49+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 1,
       "work_item_kind": "mechanical_defect",
@@ -8239,7 +8239,7 @@
       "status": "open",
       "note": "Reopened (\u00d71) \u2014 reappeared in scan (was auto_resolved)",
       "first_seen": "2026-10-29T06:01:49+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 1,
       "work_item_kind": "mechanical_defect",
@@ -8365,7 +8365,7 @@
       "status": "open",
       "note": "Reopened (\u00d71) \u2014 reappeared in scan (was auto_resolved)",
       "first_seen": "2026-10-29T06:01:49+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 1,
       "work_item_kind": "mechanical_defect",
@@ -8533,7 +8533,7 @@
       "status": "open",
       "note": "Reopened (\u00d71) \u2014 reappeared in scan (was auto_resolved)",
       "first_seen": "2026-10-29T06:01:49+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 1,
       "work_item_kind": "mechanical_defect",
@@ -8575,7 +8575,7 @@
       "status": "open",
       "note": "Reopened (\u00d71) \u2014 reappeared in scan (was auto_resolved)",
       "first_seen": "2026-10-29T06:01:49+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 1,
       "work_item_kind": "mechanical_defect",
@@ -8785,7 +8785,7 @@
       "status": "open",
       "note": "Reopened (\u00d71) \u2014 reappeared in scan (was auto_resolved)",
       "first_seen": "2026-10-29T06:01:49+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 1,
       "work_item_kind": "mechanical_defect",
@@ -8827,7 +8827,7 @@
       "status": "open",
       "note": "Reopened (\u00d71) \u2014 reappeared in scan (was auto_resolved)",
       "first_seen": "2026-10-29T06:01:49+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 1,
       "work_item_kind": "mechanical_defect",
@@ -9956,7 +9956,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:52+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -10068,7 +10068,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:52+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -10121,7 +10121,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:52+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -10292,7 +10292,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:52+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -10351,7 +10351,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:52+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -10404,7 +10404,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:52+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -10616,7 +10616,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:52+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -10669,7 +10669,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:52+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -10781,7 +10781,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:52+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -10834,7 +10834,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:52+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -10899,7 +10899,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:52+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -11005,7 +11005,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:52+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -11176,7 +11176,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:52+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -11241,7 +11241,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:52+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -11294,7 +11294,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:52+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -11347,7 +11347,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:52+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -11400,7 +11400,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:52+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -11453,7 +11453,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:52+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -11506,7 +11506,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:52+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -11612,7 +11612,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:52+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -11665,7 +11665,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:52+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -11718,7 +11718,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:52+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -11771,7 +11771,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:52+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -11983,7 +11983,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:52+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -12036,7 +12036,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T06:01:52+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -15078,7 +15078,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T15:53:35+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -15107,7 +15107,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T15:53:35+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -15137,7 +15137,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T15:53:35+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -15217,7 +15217,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T15:53:35+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -15242,7 +15242,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T15:53:35+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -15325,7 +15325,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T15:53:35+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -15519,7 +15519,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T15:53:35+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -16175,7 +16175,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T15:53:35+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -16184,7 +16184,7 @@
       "lang": "dart",
       "zone": "production",
       "suppressed": true,
-      "suppressed_at": "2026-10-30T12:16:39+00:00",
+      "suppressed_at": "2026-10-30T12:53:54+00:00",
       "suppression_pattern": "orphaned::lib/screens/library/library_section_tab_filter_widgets.dart"
     },
     "orphaned::lib/screens/library/library_section_tab_navigation.dart": {
@@ -16200,7 +16200,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T15:53:35+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -16225,7 +16225,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T15:53:35+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -16234,7 +16234,7 @@
       "lang": "dart",
       "zone": "production",
       "suppressed": true,
-      "suppressed_at": "2026-10-30T12:16:39+00:00",
+      "suppressed_at": "2026-10-30T12:53:54+00:00",
       "suppression_pattern": "orphaned::lib/screens/library/library_section_tab_helpers.dart"
     },
     "orphaned::lib/screens/library/library_section_tab_helpers.dart": {
@@ -16250,7 +16250,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T15:53:35+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -16259,7 +16259,7 @@
       "lang": "dart",
       "zone": "production",
       "suppressed": true,
-      "suppressed_at": "2026-10-30T12:16:39+00:00",
+      "suppressed_at": "2026-10-30T12:53:54+00:00",
       "suppression_pattern": "orphaned::lib/screens/library/library_section_tab_helpers.dart"
     },
     "orphaned::lib/screens/library/library_section_tab_item_widgets.dart": {
@@ -16275,7 +16275,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T15:53:35+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -16284,7 +16284,7 @@
       "lang": "dart",
       "zone": "production",
       "suppressed": true,
-      "suppressed_at": "2026-10-30T12:16:39+00:00",
+      "suppressed_at": "2026-10-30T12:53:54+00:00",
       "suppression_pattern": "orphaned::lib/screens/library/queue_tab_item_widgets.dart"
     },
     "orphaned::lib/screens/library/library_section_tab_collection_items.dart": {
@@ -16300,7 +16300,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T15:53:35+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -16309,7 +16309,7 @@
       "lang": "dart",
       "zone": "production",
       "suppressed": true,
-      "suppressed_at": "2026-10-30T12:16:39+00:00",
+      "suppressed_at": "2026-10-30T12:53:54+00:00",
       "suppression_pattern": "orphaned::lib/screens/library/queue_tab_collection_items.dart"
     },
     "orphaned::lib/screens/library/library_section_tab_batch_actions.dart": {
@@ -16325,7 +16325,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T15:53:35+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -16334,7 +16334,7 @@
       "lang": "dart",
       "zone": "production",
       "suppressed": true,
-      "suppressed_at": "2026-10-30T12:16:39+00:00",
+      "suppressed_at": "2026-10-30T12:53:54+00:00",
       "suppression_pattern": "orphaned::lib/screens/library/library_section_tab_batch_actions.dart"
     },
     "signature::lib/screens/library/library_section_tab.dart::signature_variance::AnimatedBuilder": {
@@ -16348,7 +16348,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T15:53:38+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -16463,7 +16463,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T15:53:38+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -16486,7 +16486,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T15:53:38+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -16509,7 +16509,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T15:53:38+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -16532,7 +16532,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T15:53:38+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -16578,7 +16578,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T15:53:38+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -16601,7 +16601,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T15:53:38+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -16624,7 +16624,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T15:53:38+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -16670,7 +16670,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T15:53:38+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -16693,7 +16693,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T15:53:38+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -16762,7 +16762,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T15:53:38+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -16808,7 +16808,7 @@
       "status": "open",
       "note": "Reopened (\u00d71) \u2014 reappeared in scan (was auto_resolved)",
       "first_seen": "2026-10-29T15:53:38+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 1,
       "work_item_kind": "mechanical_defect",
@@ -16854,7 +16854,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T15:53:38+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -16877,7 +16877,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T15:53:38+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -16900,7 +16900,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T15:53:38+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -16923,7 +16923,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T15:53:38+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -17002,7 +17002,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T15:53:54+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -17087,7 +17087,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T15:53:54+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -17143,7 +17143,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T15:53:54+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -17227,7 +17227,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T15:53:54+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -17283,7 +17283,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T15:53:54+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -17479,7 +17479,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T15:53:54+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -17535,7 +17535,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T15:53:54+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -17563,7 +17563,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T15:53:54+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -17697,7 +17697,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T15:54:00+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -17750,7 +17750,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T15:54:00+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -17803,7 +17803,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T15:54:00+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -17909,7 +17909,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T15:54:00+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -18068,7 +18068,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T15:54:00+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -18121,7 +18121,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T15:54:00+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -18413,7 +18413,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T18:55:00+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -18438,7 +18438,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T18:55:00+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -18463,7 +18463,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T18:55:00+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -18564,7 +18564,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T18:55:02+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -18661,7 +18661,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T18:55:14+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -18720,7 +18720,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T18:55:17+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -18773,7 +18773,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T18:55:17+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -18832,7 +18832,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T18:55:17+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -18885,7 +18885,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T18:55:17+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -18938,7 +18938,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T18:55:17+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -19056,7 +19056,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T20:31:08+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -19081,7 +19081,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T20:31:08+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -19111,7 +19111,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T20:31:08+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -19144,7 +19144,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T20:31:08+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -19195,7 +19195,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T20:31:08+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -19204,7 +19204,7 @@
       "lang": "dart",
       "zone": "production",
       "suppressed": true,
-      "suppressed_at": "2026-10-30T12:16:39+00:00",
+      "suppressed_at": "2026-10-30T12:53:54+00:00",
       "suppression_pattern": "orphaned::lib/screens/library/library_section_tab_album_grid.dart"
     },
     "orphaned::lib/screens/library/library_section_tab_empty_state.dart": {
@@ -19220,7 +19220,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T20:31:08+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -19229,7 +19229,7 @@
       "lang": "dart",
       "zone": "production",
       "suppressed": true,
-      "suppressed_at": "2026-10-30T12:16:39+00:00",
+      "suppressed_at": "2026-10-30T12:53:54+00:00",
       "suppression_pattern": "orphaned::lib/screens/library/library_section_tab_empty_state.dart"
     },
     "signature::lib/screens/equalizer_screen.dart::signature_variance::paint": {
@@ -19312,7 +19312,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T20:31:10+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -19340,7 +19340,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T20:31:20+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -19396,7 +19396,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T20:31:20+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -19424,7 +19424,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T20:31:20+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -19449,11 +19449,11 @@
         "importer_count": 0,
         "loc_weight": 7.483314773547883
       },
-      "status": "open",
-      "note": null,
+      "status": "auto_resolved",
+      "note": "Auto-resolved: absent from latest detector output",
       "first_seen": "2026-10-29T20:31:20+00:00",
       "last_seen": "2026-10-30T12:16:39+00:00",
-      "resolved_at": null,
+      "resolved_at": "2026-10-30T12:43:17+00:00",
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
       "issue_kind": "mechanical_defect",
@@ -19480,7 +19480,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T20:31:20+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -19533,7 +19533,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T20:31:22+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -19566,7 +19566,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T22:05:30+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -19599,7 +19599,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T22:05:30+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -19624,7 +19624,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T22:05:30+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -19633,7 +19633,7 @@
       "lang": "dart",
       "zone": "production",
       "suppressed": true,
-      "suppressed_at": "2026-10-30T12:16:39+00:00",
+      "suppressed_at": "2026-10-30T12:53:54+00:00",
       "suppression_pattern": "orphaned::lib/widgets/library/track_metadata_edit_cover.dart"
     },
     "orphaned::lib/services/library/library_database_queries.dart": {
@@ -19649,7 +19649,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T22:05:30+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -19658,7 +19658,7 @@
       "lang": "dart",
       "zone": "production",
       "suppressed": true,
-      "suppressed_at": "2026-10-30T12:16:39+00:00",
+      "suppressed_at": "2026-10-30T12:53:54+00:00",
       "suppression_pattern": "orphaned::lib/services/library/library_database_queries.dart"
     },
     "orphaned::lib/services/audio_analysis/audio_analysis_spectral_cutoff.dart": {
@@ -19671,11 +19671,11 @@
       "detail": {
         "loc": 270
       },
-      "status": "open",
-      "note": null,
+      "status": "auto_resolved",
+      "note": "Auto-resolved: absent from latest detector output",
       "first_seen": "2026-10-29T22:05:30+00:00",
       "last_seen": "2026-10-30T12:16:39+00:00",
-      "resolved_at": null,
+      "resolved_at": "2026-10-30T12:43:17+00:00",
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
       "issue_kind": "mechanical_defect",
@@ -19699,7 +19699,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T22:05:30+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -19708,7 +19708,7 @@
       "lang": "dart",
       "zone": "production",
       "suppressed": true,
-      "suppressed_at": "2026-10-30T12:16:39+00:00",
+      "suppressed_at": "2026-10-30T12:53:54+00:00",
       "suppression_pattern": "orphaned::lib/utils/lyrics_parser_ttml.dart"
     },
     "orphaned::lib/services/audio_analysis/audio_analysis_log_parsing.dart": {
@@ -19746,11 +19746,11 @@
       "detail": {
         "loc": 178
       },
-      "status": "open",
-      "note": null,
+      "status": "auto_resolved",
+      "note": "Auto-resolved: absent from latest detector output",
       "first_seen": "2026-10-29T22:05:30+00:00",
       "last_seen": "2026-10-30T12:16:39+00:00",
-      "resolved_at": null,
+      "resolved_at": "2026-10-30T12:43:17+00:00",
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
       "issue_kind": "mechanical_defect",
@@ -19774,7 +19774,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T22:05:30+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -19783,7 +19783,7 @@
       "lang": "dart",
       "zone": "production",
       "suppressed": true,
-      "suppressed_at": "2026-10-30T12:16:39+00:00",
+      "suppressed_at": "2026-10-30T12:53:54+00:00",
       "suppression_pattern": "orphaned::lib/screens/library/local_album_screen_header.dart"
     },
     "orphaned::lib/widgets/header/album_detail_header_parts.dart": {
@@ -19799,7 +19799,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T22:05:30+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -19808,7 +19808,7 @@
       "lang": "dart",
       "zone": "production",
       "suppressed": true,
-      "suppressed_at": "2026-10-30T12:16:39+00:00",
+      "suppressed_at": "2026-10-30T12:53:54+00:00",
       "suppression_pattern": "orphaned::lib/widgets/header/album_detail_header_parts.dart"
     },
     "orphaned::lib/screens/library/local_album_screen_selection.dart": {
@@ -19824,7 +19824,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T22:05:30+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -19833,7 +19833,7 @@
       "lang": "dart",
       "zone": "production",
       "suppressed": true,
-      "suppressed_at": "2026-10-30T12:16:39+00:00",
+      "suppressed_at": "2026-10-30T12:53:54+00:00",
       "suppression_pattern": "orphaned::lib/screens/library/local_album_screen_selection.dart"
     },
     "orphaned::lib/screens/library/local_album_screen_track_list.dart": {
@@ -19849,7 +19849,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T22:05:30+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -19858,7 +19858,7 @@
       "lang": "dart",
       "zone": "production",
       "suppressed": true,
-      "suppressed_at": "2026-10-30T12:16:39+00:00",
+      "suppressed_at": "2026-10-30T12:53:54+00:00",
       "suppression_pattern": "orphaned::lib/screens/library/local_album_screen_track_list.dart"
     },
     "signature::lib/services/library/library_collections_rows.dart::signature_variance::add": {
@@ -19895,7 +19895,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T22:05:32+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -19918,7 +19918,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T22:05:32+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -19964,7 +19964,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T22:05:32+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -19987,7 +19987,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T22:05:32+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -20010,7 +20010,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T22:05:32+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -20038,7 +20038,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T22:05:43+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -20066,7 +20066,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T22:05:43+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -20094,7 +20094,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T22:05:43+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -20122,7 +20122,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T22:05:43+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -20150,7 +20150,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T22:05:43+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -20175,11 +20175,11 @@
         "importer_count": 0,
         "loc_weight": 9.899494936611665
       },
-      "status": "open",
-      "note": null,
+      "status": "auto_resolved",
+      "note": "Auto-resolved: absent from latest detector output",
       "first_seen": "2026-10-29T22:05:43+00:00",
       "last_seen": "2026-10-30T12:16:39+00:00",
-      "resolved_at": null,
+      "resolved_at": "2026-10-30T12:43:17+00:00",
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
       "issue_kind": "mechanical_defect",
@@ -20206,7 +20206,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T22:05:43+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -20231,11 +20231,11 @@
         "importer_count": 0,
         "loc_weight": 13.341664064126334
       },
-      "status": "open",
-      "note": null,
+      "status": "auto_resolved",
+      "note": "Auto-resolved: absent from latest detector output",
       "first_seen": "2026-10-29T22:05:43+00:00",
       "last_seen": "2026-10-30T12:16:39+00:00",
-      "resolved_at": null,
+      "resolved_at": "2026-10-30T12:43:17+00:00",
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
       "issue_kind": "mechanical_defect",
@@ -20262,7 +20262,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T22:05:43+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -20290,7 +20290,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T22:05:43+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -20315,11 +20315,11 @@
         "importer_count": 0,
         "loc_weight": 13.114877048604
       },
-      "status": "open",
-      "note": null,
+      "status": "auto_resolved",
+      "note": "Auto-resolved: absent from latest detector output",
       "first_seen": "2026-10-29T22:05:43+00:00",
       "last_seen": "2026-10-30T12:16:39+00:00",
-      "resolved_at": null,
+      "resolved_at": "2026-10-30T12:43:17+00:00",
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
       "issue_kind": "mechanical_defect",
@@ -20346,7 +20346,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T22:05:43+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -20402,7 +20402,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T22:05:43+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -20458,7 +20458,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T22:05:43+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -20486,7 +20486,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T22:05:43+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -20511,11 +20511,11 @@
         "importer_count": 0,
         "loc_weight": 20.663978319771825
       },
-      "status": "open",
-      "note": null,
+      "status": "auto_resolved",
+      "note": "Auto-resolved: absent from latest detector output",
       "first_seen": "2026-10-29T22:05:43+00:00",
       "last_seen": "2026-10-30T12:16:39+00:00",
-      "resolved_at": null,
+      "resolved_at": "2026-10-30T12:43:17+00:00",
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
       "issue_kind": "mechanical_defect",
@@ -20542,7 +20542,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T22:05:43+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -20567,11 +20567,11 @@
         "importer_count": 0,
         "loc_weight": 15.231546211727817
       },
-      "status": "open",
-      "note": null,
+      "status": "auto_resolved",
+      "note": "Auto-resolved: absent from latest detector output",
       "first_seen": "2026-10-29T22:05:43+00:00",
       "last_seen": "2026-10-30T12:16:39+00:00",
-      "resolved_at": null,
+      "resolved_at": "2026-10-30T12:43:17+00:00",
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
       "issue_kind": "mechanical_defect",
@@ -20598,7 +20598,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T22:05:43+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -20654,7 +20654,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T22:05:43+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -20679,11 +20679,11 @@
         "importer_count": 0,
         "loc_weight": 9.219544457292887
       },
-      "status": "open",
-      "note": null,
+      "status": "auto_resolved",
+      "note": "Auto-resolved: absent from latest detector output",
       "first_seen": "2026-10-29T22:05:43+00:00",
       "last_seen": "2026-10-30T12:16:39+00:00",
-      "resolved_at": null,
+      "resolved_at": "2026-10-30T12:43:17+00:00",
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
       "issue_kind": "mechanical_defect",
@@ -20707,11 +20707,11 @@
         "importer_count": 0,
         "loc_weight": 11.224972160321824
       },
-      "status": "open",
-      "note": null,
+      "status": "auto_resolved",
+      "note": "Auto-resolved: absent from latest detector output",
       "first_seen": "2026-10-29T22:05:43+00:00",
       "last_seen": "2026-10-30T12:16:39+00:00",
-      "resolved_at": null,
+      "resolved_at": "2026-10-30T12:43:17+00:00",
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
       "issue_kind": "mechanical_defect",
@@ -20738,7 +20738,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T22:05:43+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -20766,7 +20766,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T22:05:43+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -20794,7 +20794,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T22:05:43+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -20819,11 +20819,11 @@
         "importer_count": 0,
         "loc_weight": 18.894443627691185
       },
-      "status": "open",
-      "note": null,
+      "status": "auto_resolved",
+      "note": "Auto-resolved: absent from latest detector output",
       "first_seen": "2026-10-29T22:05:43+00:00",
       "last_seen": "2026-10-30T12:16:39+00:00",
-      "resolved_at": null,
+      "resolved_at": "2026-10-30T12:43:17+00:00",
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
       "issue_kind": "mechanical_defect",
@@ -20850,7 +20850,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T22:05:43+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -20878,7 +20878,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T22:05:43+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -20906,7 +20906,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T22:05:43+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -20935,7 +20935,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T22:05:43+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -20991,7 +20991,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T22:05:43+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -21016,11 +21016,11 @@
         "importer_count": 0,
         "loc_weight": 16.431676725154983
       },
-      "status": "open",
-      "note": null,
+      "status": "auto_resolved",
+      "note": "Auto-resolved: absent from latest detector output",
       "first_seen": "2026-10-29T22:05:43+00:00",
       "last_seen": "2026-10-30T12:16:39+00:00",
-      "resolved_at": null,
+      "resolved_at": "2026-10-30T12:43:17+00:00",
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
       "issue_kind": "mechanical_defect",
@@ -21047,7 +21047,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T22:05:43+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -21106,7 +21106,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T22:05:45+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -21159,7 +21159,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T22:05:45+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -21212,7 +21212,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T22:05:45+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -21265,7 +21265,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-29T22:05:45+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -21771,7 +21771,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-30T11:43:55+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -21796,7 +21796,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-30T11:43:55+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -21821,7 +21821,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-30T11:43:55+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -21846,7 +21846,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-30T11:43:55+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -21871,7 +21871,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-30T11:43:55+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -21896,7 +21896,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-30T11:43:55+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -21921,7 +21921,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-30T11:43:55+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -21946,7 +21946,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-30T11:43:55+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -21971,7 +21971,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-30T11:43:56+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -21996,7 +21996,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-30T11:43:56+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -22021,7 +22021,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-30T11:43:56+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -22046,7 +22046,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-30T11:43:56+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -22071,7 +22071,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-30T11:43:56+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -22096,7 +22096,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-30T11:43:56+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -22121,7 +22121,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-30T11:43:56+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -22146,7 +22146,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-30T11:43:56+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -22164,12 +22164,12 @@
       "file": "integration_test/app_artwork_performance_test.dart",
       "tier": 3,
       "confidence": "medium",
-      "summary": "'testWidgets' has 36 different signatures across 146 files",
+      "summary": "'testWidgets' has 37 different signatures across 151 files",
       "detail": {},
       "status": "open",
       "note": null,
       "first_seen": "2026-10-30T11:44:02+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -22187,12 +22187,12 @@
       "file": "test/app_bottom_bar_test.dart",
       "tier": 3,
       "confidence": "medium",
-      "summary": "'ProviderScope' has 12 different signatures across 24 files",
+      "summary": "'ProviderScope' has 12 different signatures across 25 files",
       "detail": {},
       "status": "open",
       "note": null,
       "first_seen": "2026-10-30T11:44:02+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -22215,7 +22215,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-30T11:44:02+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -22238,7 +22238,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-30T11:44:02+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -22261,7 +22261,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-30T11:44:02+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -22284,7 +22284,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-30T11:44:02+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -22307,7 +22307,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-30T11:44:02+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -22330,7 +22330,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-30T11:44:02+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -22353,7 +22353,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-30T11:44:02+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -22376,7 +22376,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-30T11:44:02+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -22399,7 +22399,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-30T11:44:02+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -22422,7 +22422,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-30T11:44:02+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -22445,7 +22445,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-30T11:44:02+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -22463,12 +22463,12 @@
       "file": "integration_test/app_lyrics_performance_test.dart",
       "tier": 3,
       "confidence": "medium",
-      "summary": "'stop' has 3 different signatures across 10 files",
+      "summary": "'stop' has 3 different signatures across 11 files",
       "detail": {},
       "status": "open",
       "note": null,
       "first_seen": "2026-10-30T11:44:02+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -22491,7 +22491,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-30T11:44:02+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -22514,7 +22514,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-30T11:44:02+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -22537,7 +22537,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-30T11:44:02+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -22560,7 +22560,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-30T11:44:02+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -22583,7 +22583,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-30T11:44:02+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -22606,7 +22606,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-30T11:44:02+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -22629,7 +22629,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-30T11:44:02+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -22652,7 +22652,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-30T11:44:02+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -22675,7 +22675,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-30T11:44:02+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -22698,7 +22698,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-30T11:44:02+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -22721,7 +22721,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-30T11:44:02+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -22746,11 +22746,11 @@
         "importer_count": 0,
         "loc_weight": 12.922847983320086
       },
-      "status": "open",
-      "note": null,
+      "status": "auto_resolved",
+      "note": "Auto-resolved: absent from latest detector output",
       "first_seen": "2026-10-30T11:44:17+00:00",
       "last_seen": "2026-10-30T12:16:39+00:00",
-      "resolved_at": null,
+      "resolved_at": "2026-10-30T12:43:17+00:00",
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
       "issue_kind": "mechanical_defect",
@@ -22777,7 +22777,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-30T11:44:17+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -22802,11 +22802,11 @@
         "importer_count": 0,
         "loc_weight": 14.628738838327793
       },
-      "status": "open",
-      "note": null,
+      "status": "auto_resolved",
+      "note": "Auto-resolved: absent from latest detector output",
       "first_seen": "2026-10-30T11:44:17+00:00",
       "last_seen": "2026-10-30T12:16:39+00:00",
-      "resolved_at": null,
+      "resolved_at": "2026-10-30T12:43:17+00:00",
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
       "issue_kind": "mechanical_defect",
@@ -22830,11 +22830,11 @@
         "importer_count": 0,
         "loc_weight": 7.3484692283495345
       },
-      "status": "open",
-      "note": null,
+      "status": "auto_resolved",
+      "note": "Auto-resolved: absent from latest detector output",
       "first_seen": "2026-10-30T11:44:17+00:00",
       "last_seen": "2026-10-30T12:16:39+00:00",
-      "resolved_at": null,
+      "resolved_at": "2026-10-30T12:43:17+00:00",
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
       "issue_kind": "mechanical_defect",
@@ -22858,11 +22858,11 @@
         "importer_count": 0,
         "loc_weight": 8.12403840463596
       },
-      "status": "open",
-      "note": null,
+      "status": "auto_resolved",
+      "note": "Auto-resolved: absent from latest detector output",
       "first_seen": "2026-10-30T11:44:17+00:00",
       "last_seen": "2026-10-30T12:16:39+00:00",
-      "resolved_at": null,
+      "resolved_at": "2026-10-30T12:43:17+00:00",
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
       "issue_kind": "mechanical_defect",
@@ -22886,11 +22886,11 @@
         "importer_count": 0,
         "loc_weight": 13.564659966250536
       },
-      "status": "open",
-      "note": null,
+      "status": "auto_resolved",
+      "note": "Auto-resolved: absent from latest detector output",
       "first_seen": "2026-10-30T11:44:17+00:00",
       "last_seen": "2026-10-30T12:16:39+00:00",
-      "resolved_at": null,
+      "resolved_at": "2026-10-30T12:43:17+00:00",
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
       "issue_kind": "mechanical_defect",
@@ -22915,11 +22915,11 @@
         "loc_weight": 18.24828759089466,
         "complexity_score": 27
       },
-      "status": "open",
-      "note": null,
+      "status": "auto_resolved",
+      "note": "Auto-resolved: absent from latest detector output",
       "first_seen": "2026-10-30T11:44:17+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
-      "resolved_at": null,
+      "last_seen": "2026-10-30T12:43:17+00:00",
+      "resolved_at": "2026-10-30T12:53:54+00:00",
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
       "issue_kind": "mechanical_defect",
@@ -22943,11 +22943,11 @@
         "importer_count": 0,
         "loc_weight": 11.704699910719626
       },
-      "status": "open",
-      "note": null,
+      "status": "auto_resolved",
+      "note": "Auto-resolved: absent from latest detector output",
       "first_seen": "2026-10-30T11:44:17+00:00",
       "last_seen": "2026-10-30T12:16:39+00:00",
-      "resolved_at": null,
+      "resolved_at": "2026-10-30T12:43:17+00:00",
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
       "issue_kind": "mechanical_defect",
@@ -22974,7 +22974,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-30T11:44:17+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -22999,11 +22999,11 @@
         "importer_count": 0,
         "loc_weight": 8.54400374531753
       },
-      "status": "open",
-      "note": null,
+      "status": "auto_resolved",
+      "note": "Auto-resolved: absent from latest detector output",
       "first_seen": "2026-10-30T11:44:17+00:00",
       "last_seen": "2026-10-30T12:16:39+00:00",
-      "resolved_at": null,
+      "resolved_at": "2026-10-30T12:43:17+00:00",
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
       "issue_kind": "mechanical_defect",
@@ -23030,7 +23030,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-30T11:44:17+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -23058,7 +23058,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-30T11:44:17+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -23184,7 +23184,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-30T11:44:18+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -23268,7 +23268,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-30T11:44:18+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -23310,7 +23310,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-30T11:44:18+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -23394,7 +23394,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-30T11:44:18+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -23436,7 +23436,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-30T11:44:18+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -23478,7 +23478,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-30T11:44:18+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -23520,7 +23520,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-30T11:44:18+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -23562,7 +23562,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-30T11:44:18+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -23604,7 +23604,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-30T11:44:18+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -23646,7 +23646,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-30T11:44:18+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -23688,7 +23688,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-30T11:44:18+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -23716,7 +23716,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-10-30T12:12:32+00:00",
-      "last_seen": "2026-10-30T12:16:39+00:00",
+      "last_seen": "2026-10-30T12:53:54+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "work_item_kind": "mechanical_defect",
@@ -23746,7 +23746,7 @@
         }
       },
       "warnings": [],
-      "updated_at": "2026-10-30T12:16:39+00:00"
+      "updated_at": "2026-10-30T12:53:54+00:00"
     }
   },
   "score_confidence": {
@@ -25755,13 +25755,271 @@
           "strict": 94.0
         }
       }
+    },
+    {
+      "timestamp": "2026-10-30T12:43:17+00:00",
+      "lang": "dart",
+      "strict_score": 90.1,
+      "verified_strict_score": 95.9,
+      "objective_score": 95.9,
+      "overall_score": 91.4,
+      "open": 309,
+      "diff_new": 0,
+      "diff_resolved": 39,
+      "ignored": 19,
+      "raw_issues": 327,
+      "suppressed_pct": 5.8,
+      "ignore_patterns": 29,
+      "subjective_integrity": {
+        "status": "disabled",
+        "matched_count": 0,
+        "reset_count": 0,
+        "target_score": 85.0
+      },
+      "score_confidence": {
+        "status": "full",
+        "confidence": 1.0,
+        "detector_count": 0,
+        "dimension_count": 0
+      },
+      "dimension_scores": {
+        "Code quality": {
+          "score": 96.6,
+          "strict": 96.5
+        },
+        "Security": {
+          "score": 100.0,
+          "strict": 99.7
+        },
+        "File health": {
+          "score": 95.1,
+          "strict": 88.0
+        },
+        "Duplication": {
+          "score": 99.2,
+          "strict": 98.4
+        },
+        "Test health": {
+          "score": 89.3,
+          "strict": 73.2
+        },
+        "Abstraction fit": {
+          "score": 93.0,
+          "strict": 93.0
+        },
+        "AI generated debt": {
+          "score": 90.0,
+          "strict": 90.0
+        },
+        "API coherence": {
+          "score": 96.0,
+          "strict": 96.0
+        },
+        "Auth consistency": {
+          "score": 100.0,
+          "strict": 100.0
+        },
+        "Contracts": {
+          "score": 91.0,
+          "strict": 91.0
+        },
+        "Convention drift": {
+          "score": 100.0,
+          "strict": 100.0
+        },
+        "Cross-module arch": {
+          "score": 94.0,
+          "strict": 94.0
+        },
+        "Dep health": {
+          "score": 100.0,
+          "strict": 100.0
+        },
+        "Design coherence": {
+          "score": 88.0,
+          "strict": 88.0
+        },
+        "Error consistency": {
+          "score": 90.0,
+          "strict": 90.0
+        },
+        "High elegance": {
+          "score": 86.0,
+          "strict": 86.0
+        },
+        "Stale migration": {
+          "score": 100.0,
+          "strict": 100.0
+        },
+        "Init coupling": {
+          "score": 96.0,
+          "strict": 96.0
+        },
+        "Logic clarity": {
+          "score": 93.0,
+          "strict": 93.0
+        },
+        "Low elegance": {
+          "score": 89.0,
+          "strict": 89.0
+        },
+        "Mid elegance": {
+          "score": 88.0,
+          "strict": 88.0
+        },
+        "Naming quality": {
+          "score": 92.0,
+          "strict": 92.0
+        },
+        "Structure nav": {
+          "score": 87.0,
+          "strict": 87.0
+        },
+        "Test strategy": {
+          "score": 92.0,
+          "strict": 92.0
+        },
+        "Type safety": {
+          "score": 94.0,
+          "strict": 94.0
+        }
+      }
+    },
+    {
+      "timestamp": "2026-10-30T12:53:54+00:00",
+      "lang": "dart",
+      "strict_score": 90.1,
+      "verified_strict_score": 95.9,
+      "objective_score": 95.9,
+      "overall_score": 91.4,
+      "open": 308,
+      "diff_new": 0,
+      "diff_resolved": 21,
+      "ignored": 19,
+      "raw_issues": 326,
+      "suppressed_pct": 5.8,
+      "ignore_patterns": 29,
+      "subjective_integrity": {
+        "status": "disabled",
+        "matched_count": 0,
+        "reset_count": 0,
+        "target_score": 85.0
+      },
+      "score_confidence": {
+        "status": "full",
+        "confidence": 1.0,
+        "detector_count": 0,
+        "dimension_count": 0
+      },
+      "dimension_scores": {
+        "Code quality": {
+          "score": 96.6,
+          "strict": 96.5
+        },
+        "Security": {
+          "score": 100.0,
+          "strict": 99.7
+        },
+        "File health": {
+          "score": 95.1,
+          "strict": 88.0
+        },
+        "Duplication": {
+          "score": 99.2,
+          "strict": 98.4
+        },
+        "Test health": {
+          "score": 89.7,
+          "strict": 73.2
+        },
+        "Abstraction fit": {
+          "score": 93.0,
+          "strict": 93.0
+        },
+        "AI generated debt": {
+          "score": 90.0,
+          "strict": 90.0
+        },
+        "API coherence": {
+          "score": 96.0,
+          "strict": 96.0
+        },
+        "Auth consistency": {
+          "score": 100.0,
+          "strict": 100.0
+        },
+        "Contracts": {
+          "score": 91.0,
+          "strict": 91.0
+        },
+        "Convention drift": {
+          "score": 100.0,
+          "strict": 100.0
+        },
+        "Cross-module arch": {
+          "score": 94.0,
+          "strict": 94.0
+        },
+        "Dep health": {
+          "score": 100.0,
+          "strict": 100.0
+        },
+        "Design coherence": {
+          "score": 88.0,
+          "strict": 88.0
+        },
+        "Error consistency": {
+          "score": 90.0,
+          "strict": 90.0
+        },
+        "High elegance": {
+          "score": 86.0,
+          "strict": 86.0
+        },
+        "Stale migration": {
+          "score": 100.0,
+          "strict": 100.0
+        },
+        "Init coupling": {
+          "score": 96.0,
+          "strict": 96.0
+        },
+        "Logic clarity": {
+          "score": 93.0,
+          "strict": 93.0
+        },
+        "Low elegance": {
+          "score": 89.0,
+          "strict": 89.0
+        },
+        "Mid elegance": {
+          "score": 88.0,
+          "strict": 88.0
+        },
+        "Naming quality": {
+          "score": 92.0,
+          "strict": 92.0
+        },
+        "Structure nav": {
+          "score": 87.0,
+          "strict": 87.0
+        },
+        "Test strategy": {
+          "score": 92.0,
+          "strict": 92.0
+        },
+        "Type safety": {
+          "score": 94.0,
+          "strict": 94.0
+        }
+      }
     }
   ],
   "review_cache": {
     "detectors": {
       "boilerplate": {
         "version": 1,
-        "fingerprint": "7531d99146b4aed46bb6ed26d391b424ccf953ae",
+        "fingerprint": "7ca35753bcfe683b33c77e1516f7b6a79113d652",
         "entries": [
           {
             "id": "34fbdc494033e729",
@@ -26214,6 +26472,43 @@
               "        options(nostack, noreturn)",
               "    )",
               "}"
+            ]
+          },
+          {
+            "id": "1ae5d00b8ffa7018",
+            "distinct_files": 6,
+            "window_size": 17,
+            "locations": [
+              {
+                "file": "test/music_player_events_test.dart",
+                "line": 1
+              },
+              {
+                "file": "test/music_player_hooks_test.dart",
+                "line": 1
+              },
+              {
+                "file": "test/music_player_lifecycle_test.dart",
+                "line": 1
+              },
+              {
+                "file": "test/music_player_playback_test.dart",
+                "line": 2
+              },
+              {
+                "file": "test/music_player_queue_test.dart",
+                "line": 2
+              },
+              {
+                "file": "test/music_player_session_test.dart",
+                "line": 1
+              }
+            ],
+            "sample": [
+              "import 'package:flutter_test/flutter_test.dart';",
+              "import 'package:sistrum/services/playback/music_player_service.dart';",
+              "",
+              "import 'support/music_player_harness.dart';"
             ]
           },
           {
@@ -27264,6 +27559,27 @@
             ]
           },
           {
+            "id": "08667911899bce4c",
+            "distinct_files": 2,
+            "window_size": 17,
+            "locations": [
+              {
+                "file": "test/local_album_metadata_navigation_test.dart",
+                "line": 33
+              },
+              {
+                "file": "test/local_album_screen_header_test.dart",
+                "line": 31
+              }
+            ],
+            "sample": [
+              "      final navigator = GlobalKey<NavigatorState>();",
+              "      final tracks = [",
+              "        for (final number in [2, 1])",
+              "          LocalLibraryItem("
+            ]
+          },
+          {
             "id": "08e92eb87d3f1307",
             "distinct_files": 2,
             "window_size": 16,
@@ -27894,6 +28210,27 @@
             ]
           },
           {
+            "id": "1be0d4b242bf1a89",
+            "distinct_files": 2,
+            "window_size": 8,
+            "locations": [
+              {
+                "file": "test/album_detail_header_parts_test.dart",
+                "line": 16
+              },
+              {
+                "file": "test/app_detail_headers_test.dart",
+                "line": 117
+              }
+            ],
+            "sample": [
+              "        '(reduced motion: $reduceMotion)', (tester) async {",
+              "      tester.view.physicalSize = const Size(390, 844);",
+              "      tester.view.devicePixelRatio = 1;",
+              "      tester.view.padding = FakeViewPadding(top: 59, bottom: 34);"
+            ]
+          },
+          {
             "id": "1bed714e0a50eed6",
             "distinct_files": 2,
             "window_size": 13,
@@ -27933,6 +28270,27 @@
               "{",
               "\tstruct handle_priv *hpriv = usbi_get_device_handle_priv(handle);",
               "\tint i;"
+            ]
+          },
+          {
+            "id": "1dd4a35a64ae3f69",
+            "distinct_files": 2,
+            "window_size": 9,
+            "locations": [
+              {
+                "file": "test/local_album_screen_selection_test.dart",
+                "line": 11
+              },
+              {
+                "file": "test/local_album_screen_track_list_test.dart",
+                "line": 12
+              }
+            ],
+            "sample": [
+              "  testWidgets('long press selects album tracks and the bar counts them', (",
+              "    tester,",
+              "  ) async {",
+              "    SharedPreferences.setMockInitialValues({});"
             ]
           },
           {
@@ -28080,6 +28438,48 @@
               "        options(nostack, preserves_flags)",
               "    );",
               "    FromAsm::from_asm(r0)"
+            ]
+          },
+          {
+            "id": "22ae6951d90c9184",
+            "distinct_files": 2,
+            "window_size": 39,
+            "locations": [
+              {
+                "file": "test/music_player_runtime_test.dart",
+                "line": 140
+              },
+              {
+                "file": "test/support/music_player_harness.dart",
+                "line": 138
+              }
+            ],
+            "sample": [
+              "class _Session implements AudioSession {",
+              "  int configurations = 0;",
+              "  final activations = <bool>[];",
+              "  Completer<void>? configureBarrier;"
+            ]
+          },
+          {
+            "id": "240af8bd4e5c36ba",
+            "distinct_files": 2,
+            "window_size": 16,
+            "locations": [
+              {
+                "file": "test/music_player_runtime_test.dart",
+                "line": 112
+              },
+              {
+                "file": "test/support/music_player_harness.dart",
+                "line": 110
+              }
+            ],
+            "sample": [
+              "    if (!sourceStarted.isCompleted) sourceStarted.complete();",
+              "    await sourceBarrier?.future;",
+              "    outputOptions = {",
+              "      'bitPerfect': preferBitPerfect,"
             ]
           },
           {
@@ -28248,6 +28648,27 @@
               "};",
               "",
               "struct handle_priv {"
+            ]
+          },
+          {
+            "id": "2e5d980f409bb12a",
+            "distinct_files": 2,
+            "window_size": 27,
+            "locations": [
+              {
+                "file": "test/local_album_screen_selection_test.dart",
+                "line": 19
+              },
+              {
+                "file": "test/local_album_screen_track_list_test.dart",
+                "line": 20
+              }
+            ],
+            "sample": [
+              "      for (final number in [1, 2])",
+              "        LocalLibraryItem(",
+              "          id: '$number',",
+              "          trackName: 'Song $number',"
             ]
           },
           {
@@ -28479,6 +28900,27 @@
               "}",
               "",
               "int"
+            ]
+          },
+          {
+            "id": "35ca3a3e741bb45d",
+            "distinct_files": 2,
+            "window_size": 73,
+            "locations": [
+              {
+                "file": "test/music_player_runtime_test.dart",
+                "line": 39
+              },
+              {
+                "file": "test/support/music_player_harness.dart",
+                "line": 36
+              }
+            ],
+            "sample": [
+              "  final seeks = <Duration>[];",
+              "  final sourceStarted = Completer<void>();",
+              "  Completer<void> resumeStarted = Completer<void>();",
+              ""
             ]
           },
           {
@@ -29007,6 +29449,27 @@
             ]
           },
           {
+            "id": "4afc2d8ceb957462",
+            "distinct_files": 2,
+            "window_size": 24,
+            "locations": [
+              {
+                "file": "test/album_detail_header_parts_test.dart",
+                "line": 23
+              },
+              {
+                "file": "test/app_detail_headers_test.dart",
+                "line": 262
+              }
+            ],
+            "sample": [
+              "      const artworkKey = ValueKey('album-part-artwork');",
+              "      var plays = 0;",
+              "      await tester.pumpWidget(",
+              "        ProviderScope("
+            ]
+          },
+          {
             "id": "4b245be6729d3fa2",
             "distinct_files": 2,
             "window_size": 5,
@@ -29427,6 +29890,27 @@
             ]
           },
           {
+            "id": "55a7e4168f7c57dd",
+            "distinct_files": 2,
+            "window_size": 14,
+            "locations": [
+              {
+                "file": "test/music_player_runtime_test.dart",
+                "line": 127
+              },
+              {
+                "file": "test/support/music_player_harness.dart",
+                "line": 125
+              }
+            ],
+            "sample": [
+              "class _CompletionDeck extends _Deck {",
+              "  final completions = StreamController<void>.broadcast();",
+              "",
+              "  @override"
+            ]
+          },
+          {
             "id": "55d42b8d9430f097",
             "distinct_files": 2,
             "window_size": 11,
@@ -29634,6 +30118,27 @@
               " *",
               " * Since version 1.0.21, \\ref LIBUSB_API_VERSION >= 0x01000105",
               " *"
+            ]
+          },
+          {
+            "id": "590ee6b09ae2594f",
+            "distinct_files": 2,
+            "window_size": 10,
+            "locations": [
+              {
+                "file": "test/music_player_runtime_test.dart",
+                "line": 248
+              },
+              {
+                "file": "test/support/music_player_harness.dart",
+                "line": 257
+              }
+            ],
+            "sample": [
+              "            final deck = _Deck();",
+              "            decks?.add(deck);",
+              "            return deck;",
+              "          },"
             ]
           },
           {
@@ -30351,6 +30856,27 @@
             ]
           },
           {
+            "id": "6ec499c1f354fab0",
+            "distinct_files": 2,
+            "window_size": 27,
+            "locations": [
+              {
+                "file": "test/album_detail_header_parts_test.dart",
+                "line": 46
+              },
+              {
+                "file": "test/app_detail_headers_test.dart",
+                "line": 287
+              }
+            ],
+            "sample": [
+              "                immersive: true,",
+              "                title: 'Album',",
+              "                expandedHeight: 400,",
+              "                showTitleInAppBar: false,"
+            ]
+          },
+          {
             "id": "6f2a9591a580be47",
             "distinct_files": 2,
             "window_size": 7,
@@ -30435,6 +30961,27 @@
             ]
           },
           {
+            "id": "70e1718502a11076",
+            "distinct_files": 2,
+            "window_size": 15,
+            "locations": [
+              {
+                "file": "test/local_album_metadata_navigation_test.dart",
+                "line": 11
+              },
+              {
+                "file": "test/local_album_screen_header_test.dart",
+                "line": 9
+              }
+            ],
+            "sample": [
+              "import 'package:sistrum/widgets/library/album_track_tile.dart';",
+              "",
+              "class _Playback extends PlaybackController {",
+              "  final played = <String>[];"
+            ]
+          },
+          {
             "id": "70e43206e829cb8e",
             "distinct_files": 2,
             "window_size": 11,
@@ -30453,6 +31000,27 @@
               "        <exclude domain=\"root\" path=\".\" />",
               "        <exclude domain=\"file\" path=\".\" />",
               "        <exclude domain=\"database\" path=\".\" />"
+            ]
+          },
+          {
+            "id": "711be492c01f48ac",
+            "distinct_files": 2,
+            "window_size": 14,
+            "locations": [
+              {
+                "file": "test/music_player_runtime_test.dart",
+                "line": 235
+              },
+              {
+                "file": "test/support/music_player_harness.dart",
+                "line": 244
+              }
+            ],
+            "sample": [
+              "  final audioSession = session ?? _Session();",
+              "  addTearDown(audioSession.dispose);",
+              "  final runtime = MusicPlayerRuntime(",
+              "    settings: settings,"
             ]
           },
           {
@@ -30897,6 +31465,27 @@
             ]
           },
           {
+            "id": "856aa03e51955a01",
+            "distinct_files": 2,
+            "window_size": 15,
+            "locations": [
+              {
+                "file": "test/music_player_runtime_test.dart",
+                "line": 26
+              },
+              {
+                "file": "test/support/music_player_harness.dart",
+                "line": 22
+              }
+            ],
+            "sample": [
+              "class _Deck implements MusicPlaybackDeck {",
+              "  @override",
+              "  PlayerState state = PlayerState.stopped;",
+              "  final volumes = <double>[];"
+            ]
+          },
+          {
             "id": "85b64938837295e3",
             "distinct_files": 2,
             "window_size": 17,
@@ -31149,6 +31738,27 @@
             ]
           },
           {
+            "id": "8dc5d3b06e956d3f",
+            "distinct_files": 2,
+            "window_size": 13,
+            "locations": [
+              {
+                "file": "test/local_album_screen_header_test.dart",
+                "line": 47
+              },
+              {
+                "file": "test/local_album_screen_selection_test.dart",
+                "line": 32
+              }
+            ],
+            "sample": [
+              "        child: MaterialApp(",
+              "          theme: AppTheme.build(Brightness.light),",
+              "          localizationsDelegates: AppLocalizations.localizationsDelegates,",
+              "          supportedLocales: AppLocalizations.supportedLocales,"
+            ]
+          },
+          {
             "id": "8e926665404e5311",
             "distinct_files": 2,
             "window_size": 7,
@@ -31335,6 +31945,27 @@
               "            let ptr = vdso.sym(cstr!(\"LINUX_2.6.15\"), cstr!(\"__kernel_getcpu\"));",
               "            #[cfg(target_arch = \"s390x\")]",
               "            let ptr = vdso.sym(cstr!(\"LINUX_2.6.29\"), cstr!(\"__kernel_getcpu\"));"
+            ]
+          },
+          {
+            "id": "9346ba25efb97689",
+            "distinct_files": 2,
+            "window_size": 14,
+            "locations": [
+              {
+                "file": "test/music_player_runtime_test.dart",
+                "line": 183
+              },
+              {
+                "file": "test/support/music_player_harness.dart",
+                "line": 186
+              }
+            ],
+            "sample": [
+              "  Future<void> savePlaybackSession(Map<String, dynamic> session) async {}",
+              "  @override",
+              "  Future<bool> updatePlaybackSessionState({",
+              "    required int index,"
             ]
           },
           {
@@ -31713,6 +32344,27 @@
               "            if let Ok(s) = core::str::from_utf8(name) {",
               "                return s.fmt(f);",
               "            }"
+            ]
+          },
+          {
+            "id": "9faaa64560a12e90",
+            "distinct_files": 2,
+            "window_size": 18,
+            "locations": [
+              {
+                "file": "test/music_player_runtime_test.dart",
+                "line": 207
+              },
+              {
+                "file": "test/support/music_player_harness.dart",
+                "line": 215
+              }
+            ],
+            "sample": [
+              "  _Recorder({required super.write, required super.elapsed, required super.now});",
+              "",
+              "  int updates = 0;",
+              "  ListeningTrack? latestTrack;"
             ]
           },
           {
@@ -32448,6 +33100,27 @@
               "pub(crate) fn set_ip_add_source_membership(",
               "    fd: BorrowedFd<'_>,",
               "    multiaddr: &Ipv4Addr,"
+            ]
+          },
+          {
+            "id": "b42be1f9f12d6865",
+            "distinct_files": 2,
+            "window_size": 18,
+            "locations": [
+              {
+                "file": "test/music_player_runtime_test.dart",
+                "line": 257
+              },
+              {
+                "file": "test/support/music_player_harness.dart",
+                "line": 266
+              }
+            ],
+            "sample": [
+              "      sessionDatabase: _SessionStore(),",
+              "      recorder:",
+              "          recorder ??",
+              "          ListeningRecorder("
             ]
           },
           {
@@ -33396,6 +34069,27 @@
             ]
           },
           {
+            "id": "d877c01a5410d6ec",
+            "distinct_files": 2,
+            "window_size": 7,
+            "locations": [
+              {
+                "file": "test/local_album_metadata_navigation_test.dart",
+                "line": 27
+              },
+              {
+                "file": "test/local_album_screen_header_test.dart",
+                "line": 26
+              }
+            ],
+            "sample": [
+              "    testWidgets('album row and Play both play ($sistrum)', (tester) async {",
+              "      SharedPreferences.setMockInitialValues({});",
+              "      tester.view.physicalSize = const Size(430, 1200);",
+              "      tester.view.devicePixelRatio = 1;"
+            ]
+          },
+          {
             "id": "d8fe4f252d173d0d",
             "distinct_files": 2,
             "window_size": 428,
@@ -34257,6 +34951,27 @@
             ]
           },
           {
+            "id": "f0c0f2ec38d3dfb8",
+            "distinct_files": 2,
+            "window_size": 6,
+            "locations": [
+              {
+                "file": "test/music_player_events_test.dart",
+                "line": 17
+              },
+              {
+                "file": "test/music_player_hooks_test.dart",
+                "line": 17
+              }
+            ],
+            "sample": [
+              "  test('a finished track advances to the next one in the queue', () async {",
+              "    final deck = FakeCompletionDeck();",
+              "    final handler =",
+              "        await musicPlayerRuntimeFor(createDeck: (_) => deck).initialize()"
+            ]
+          },
+          {
             "id": "f136795ec1a656cc",
             "distinct_files": 2,
             "window_size": 9,
@@ -34659,7 +35374,7 @@
       },
       "security": {
         "version": 1,
-        "fingerprint": "5384485e4ced21f8a96f35c39749abb6ab126ff2",
+        "fingerprint": "3bde13a75d4e509a869637e78ce72deb7652a363",
         "entries": [],
         "files_scanned": 0,
         "coverage": null
@@ -47810,7 +48525,7 @@
     }
   },
   "zone_distribution": {
-    "test": 327,
+    "test": 346,
     "production": 395,
     "generated": 19,
     "script": 1,
@@ -47839,8 +48554,8 @@
   },
   "codebase_metrics": {
     "dart": {
-      "total_files": 743,
-      "total_loc": 236468,
+      "total_files": 762,
+      "total_loc": 237880,
       "total_directories": 39
     }
   },
@@ -47928,18 +48643,18 @@
       }
     },
     "Test health": {
-      "score": 85.2,
+      "score": 89.7,
       "strict": 73.2,
-      "verified_strict_score": 85.2,
+      "verified_strict_score": 89.7,
       "checks": 5164,
-      "failing": 70,
+      "failing": 52,
       "tier": 4,
       "detectors": {
         "test_coverage": {
           "potential": 5164,
-          "pass_rate": 0.8522985797370103,
-          "failing": 70,
-          "weighted_failures": 762.7301342380789
+          "pass_rate": 0.8969521928262175,
+          "failing": 52,
+          "weighted_failures": 532.1388762454128
         }
       }
     },
@@ -48366,12 +49081,12 @@
   },
   "reminder_history": {
     "zone_classification": 3,
-    "report_scores": 11,
+    "report_scores": 13,
     "feedback_nudge": 3,
     "stagnant_nudge": 22,
     "wontfix_growing": 3,
     "review_issues_pending": 1,
-    "review_not_run": 2
+    "review_not_run": 3
   },
   "attestation_log": [
     {

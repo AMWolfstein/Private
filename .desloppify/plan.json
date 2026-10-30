@@ -1,7 +1,7 @@
 {
   "version": 8,
   "created": "2026-10-29T06:01:52+00:00",
-  "updated": "2026-10-30T12:16:39+00:00",
+  "updated": "2026-10-30T12:53:54+00:00",
   "queue_order": [
     "subjective::abstraction_fitness",
     "subjective::ai_generated_debt",
@@ -194,13 +194,13 @@
       "issue_id": "test_coverage::lib/utils/image_cache_utils.dart::transitive_only",
       "created_at": "2026-10-29T06:01:52+00:00",
       "cluster": "auto/test_coverage-transitive_only",
-      "updated_at": "2026-10-30T12:16:39+00:00"
+      "updated_at": "2026-10-30T12:53:54+00:00"
     },
     "test_coverage::lib/utils/app_bar_layout.dart::transitive_only": {
       "issue_id": "test_coverage::lib/utils/app_bar_layout.dart::transitive_only",
       "created_at": "2026-10-29T06:01:52+00:00",
       "cluster": "auto/test_coverage-transitive_only",
-      "updated_at": "2026-10-30T12:16:39+00:00"
+      "updated_at": "2026-10-30T12:53:54+00:00"
     },
     "test_coverage::lib/services/sistrum_glass_warmup.dart::transitive_only": {
       "issue_id": "test_coverage::lib/services/sistrum_glass_warmup.dart::transitive_only",
@@ -212,7 +212,7 @@
       "issue_id": "test_coverage::lib/screens/local_guide_pages.dart::transitive_only",
       "created_at": "2026-10-29T06:01:52+00:00",
       "cluster": "transitive-behaviour-tests",
-      "updated_at": "2026-10-30T12:16:39+00:00"
+      "updated_at": "2026-10-30T12:53:54+00:00"
     },
     "test_coverage::lib/widgets/scroll_edge_fade.dart::transitive_only": {
       "issue_id": "test_coverage::lib/widgets/scroll_edge_fade.dart::transitive_only",
@@ -236,7 +236,7 @@
       "issue_id": "test_coverage::lib/widgets/player/player_lyrics_controls.dart::transitive_only",
       "created_at": "2026-10-29T06:01:52+00:00",
       "cluster": "auto/test_coverage-transitive_only",
-      "updated_at": "2026-10-30T12:16:39+00:00"
+      "updated_at": "2026-10-30T12:53:54+00:00"
     },
     "test_coverage::lib/screens/selection_mode_mixin.dart::transitive_only": {
       "issue_id": "test_coverage::lib/screens/selection_mode_mixin.dart::transitive_only",
@@ -254,13 +254,13 @@
       "issue_id": "test_coverage::lib/screens/listening_statistics_screen.dart::transitive_only",
       "created_at": "2026-10-29T06:01:52+00:00",
       "cluster": "transitive-behaviour-tests",
-      "updated_at": "2026-10-30T12:16:39+00:00"
+      "updated_at": "2026-10-30T12:53:54+00:00"
     },
     "test_coverage::lib/providers/playback_notification_provider.dart::transitive_only": {
       "issue_id": "test_coverage::lib/providers/playback_notification_provider.dart::transitive_only",
       "created_at": "2026-10-29T06:01:52+00:00",
       "cluster": "auto/test_coverage-transitive_only",
-      "updated_at": "2026-10-30T12:16:39+00:00"
+      "updated_at": "2026-10-30T12:53:54+00:00"
     },
     "test_coverage::lib/utils/int_utils.dart::transitive_only": {
       "issue_id": "test_coverage::lib/utils/int_utils.dart::transitive_only",
@@ -284,7 +284,7 @@
       "issue_id": "test_coverage::lib/utils/detail_page_route.dart::transitive_only",
       "created_at": "2026-10-29T06:01:52+00:00",
       "cluster": "auto/test_coverage-transitive_only",
-      "updated_at": "2026-10-30T12:16:39+00:00"
+      "updated_at": "2026-10-30T12:53:54+00:00"
     },
     "test_coverage::lib/utils/progress_stream_poller.dart::transitive_only": {
       "issue_id": "test_coverage::lib/utils/progress_stream_poller.dart::transitive_only",
@@ -308,7 +308,7 @@
       "issue_id": "test_coverage::lib/widgets/player/player_metadata_title.dart::transitive_only",
       "created_at": "2026-10-29T06:01:52+00:00",
       "cluster": "auto/test_coverage-transitive_only",
-      "updated_at": "2026-10-30T12:16:39+00:00"
+      "updated_at": "2026-10-30T12:53:54+00:00"
     },
     "test_coverage::lib/widgets/music_haptics_settings.dart::transitive_only": {
       "issue_id": "test_coverage::lib/widgets/music_haptics_settings.dart::transitive_only",
@@ -320,7 +320,7 @@
       "issue_id": "test_coverage::lib/screens/settings/profile_settings_page.dart::transitive_only",
       "created_at": "2026-10-29T06:01:52+00:00",
       "cluster": "auto/test_coverage-transitive_only",
-      "updated_at": "2026-10-30T12:16:39+00:00"
+      "updated_at": "2026-10-30T12:53:54+00:00"
     },
     "test_coverage::lib/screens/collapsing_header_scroll_mixin.dart::transitive_only": {
       "issue_id": "test_coverage::lib/screens/collapsing_header_scroll_mixin.dart::transitive_only",
@@ -332,7 +332,7 @@
       "issue_id": "test_coverage::lib/screens/settings/lyrics_settings_page.dart::transitive_only",
       "created_at": "2026-10-29T06:01:52+00:00",
       "cluster": "auto/test_coverage-transitive_only",
-      "updated_at": "2026-10-30T12:16:39+00:00"
+      "updated_at": "2026-10-30T12:53:54+00:00"
     },
     "test_coverage::lib/widgets/app_content_card.dart::transitive_only": {
       "issue_id": "test_coverage::lib/widgets/app_content_card.dart::transitive_only",
@@ -344,13 +344,13 @@
       "issue_id": "test_coverage::lib/widgets/player/player_playback_controls.dart::transitive_only",
       "created_at": "2026-10-29T06:01:52+00:00",
       "cluster": "auto/test_coverage-transitive_only",
-      "updated_at": "2026-10-30T12:16:39+00:00"
+      "updated_at": "2026-10-30T12:53:54+00:00"
     },
     "test_coverage::lib/widgets/player/player_lyrics_section.dart::transitive_only": {
       "issue_id": "test_coverage::lib/widgets/player/player_lyrics_section.dart::transitive_only",
       "created_at": "2026-10-29T06:01:52+00:00",
       "cluster": "auto/test_coverage-transitive_only",
-      "updated_at": "2026-10-30T12:16:39+00:00"
+      "updated_at": "2026-10-30T12:53:54+00:00"
     },
     "test_coverage::lib/services/playback/playback_metadata.dart::transitive_only": {
       "issue_id": "test_coverage::lib/services/playback/playback_metadata.dart::transitive_only",
@@ -380,13 +380,13 @@
       "issue_id": "test_coverage::lib/screens/library/collapsing_header_scroll_mixin.dart::transitive_only",
       "created_at": "2026-10-29T18:55:17+00:00",
       "cluster": "auto/test_coverage-transitive_only",
-      "updated_at": "2026-10-30T12:16:39+00:00"
+      "updated_at": "2026-10-30T12:53:54+00:00"
     },
     "test_coverage::lib/widgets/settings/music_haptics_settings.dart::transitive_only": {
       "issue_id": "test_coverage::lib/widgets/settings/music_haptics_settings.dart::transitive_only",
       "created_at": "2026-10-29T18:55:17+00:00",
       "cluster": "auto/test_coverage-transitive_only",
-      "updated_at": "2026-10-30T12:16:39+00:00"
+      "updated_at": "2026-10-30T12:53:54+00:00"
     },
     "test_coverage::lib/utils/best_effort_delete.dart::transitive_only": {
       "issue_id": "test_coverage::lib/utils/best_effort_delete.dart::transitive_only",
@@ -398,7 +398,7 @@
       "issue_id": "test_coverage::lib/widgets/shell/scroll_edge_fade.dart::transitive_only",
       "created_at": "2026-10-29T18:55:17+00:00",
       "cluster": "auto/test_coverage-transitive_only",
-      "updated_at": "2026-10-30T12:16:39+00:00"
+      "updated_at": "2026-10-30T12:53:54+00:00"
     },
     "test_coverage::lib/services/library/library_scan_progress.dart::transitive_only": {
       "issue_id": "test_coverage::lib/services/library/library_scan_progress.dart::transitive_only",
@@ -410,7 +410,7 @@
       "issue_id": "test_coverage::lib/services/native/cue_sheet_bridge.dart::transitive_only",
       "created_at": "2026-10-29T18:55:17+00:00",
       "cluster": "auto/test_coverage-transitive_only",
-      "updated_at": "2026-10-30T12:16:39+00:00"
+      "updated_at": "2026-10-30T12:53:54+00:00"
     },
     "test_coverage::lib/services/library/library_scan_notifications.dart::transitive_only": {
       "issue_id": "test_coverage::lib/services/library/library_scan_notifications.dart::transitive_only",
@@ -422,13 +422,13 @@
       "issue_id": "test_coverage::lib/widgets/lyrics/lyric_supplement_transition.dart::transitive_only",
       "created_at": "2026-10-29T18:55:17+00:00",
       "cluster": "auto/test_coverage-transitive_only",
-      "updated_at": "2026-10-30T12:16:39+00:00"
+      "updated_at": "2026-10-30T12:53:54+00:00"
     },
     "test_coverage::lib/widgets/sheets/duplicate_review_sheet.dart::transitive_only": {
       "issue_id": "test_coverage::lib/widgets/sheets/duplicate_review_sheet.dart::transitive_only",
       "created_at": "2026-10-29T18:55:17+00:00",
       "cluster": "transitive-behaviour-tests",
-      "updated_at": "2026-10-30T12:16:39+00:00"
+      "updated_at": "2026-10-30T12:53:54+00:00"
     },
     "test_coverage::lib/widgets/status/disc_separator_chip.dart::transitive_only": {
       "issue_id": "test_coverage::lib/widgets/status/disc_separator_chip.dart::transitive_only",
@@ -440,31 +440,31 @@
       "issue_id": "test_coverage::lib/services/audio_analysis/audio_analysis_parsing.dart::transitive_only",
       "created_at": "2026-10-29T18:55:17+00:00",
       "cluster": "transitive-behaviour-tests",
-      "updated_at": "2026-10-30T12:16:39+00:00"
+      "updated_at": "2026-10-30T12:53:54+00:00"
     },
     "test_coverage::lib/screens/library/selection_mode_mixin.dart::transitive_only": {
       "issue_id": "test_coverage::lib/screens/library/selection_mode_mixin.dart::transitive_only",
       "created_at": "2026-10-29T18:55:17+00:00",
       "cluster": "auto/test_coverage-transitive_only",
-      "updated_at": "2026-10-30T12:16:39+00:00"
+      "updated_at": "2026-10-30T12:53:54+00:00"
     },
     "test_coverage::lib/widgets/status/beta_badge.dart::transitive_only": {
       "issue_id": "test_coverage::lib/widgets/status/beta_badge.dart::transitive_only",
       "created_at": "2026-10-29T18:55:17+00:00",
       "cluster": "auto/test_coverage-transitive_only",
-      "updated_at": "2026-10-30T12:16:39+00:00"
+      "updated_at": "2026-10-30T12:53:54+00:00"
     },
     "test_coverage::lib/widgets/settings/custom_font_setting.dart::transitive_only": {
       "issue_id": "test_coverage::lib/widgets/settings/custom_font_setting.dart::transitive_only",
       "created_at": "2026-10-29T18:55:17+00:00",
       "cluster": "auto/test_coverage-transitive_only",
-      "updated_at": "2026-10-30T12:16:39+00:00"
+      "updated_at": "2026-10-30T12:53:54+00:00"
     },
     "test_coverage::lib/widgets/glass/app_glass_warmup.dart::transitive_only": {
       "issue_id": "test_coverage::lib/widgets/glass/app_glass_warmup.dart::transitive_only",
       "created_at": "2026-10-29T18:55:17+00:00",
       "cluster": "auto/test_coverage-transitive_only",
-      "updated_at": "2026-10-30T12:16:39+00:00"
+      "updated_at": "2026-10-30T12:53:54+00:00"
     },
     "test_coverage::lib/screens/library/library_section_tab_selection.dart::untested_module": {
       "issue_id": "test_coverage::lib/screens/library/library_section_tab_selection.dart::untested_module",
@@ -512,13 +512,13 @@
       "issue_id": "subjective::abstraction_fitness",
       "created_at": "2026-10-29T18:55:17+00:00",
       "cluster": "auto/stale-review",
-      "updated_at": "2026-10-30T12:16:39+00:00"
+      "updated_at": "2026-10-30T12:53:54+00:00"
     },
     "subjective::ai_generated_debt": {
       "issue_id": "subjective::ai_generated_debt",
       "created_at": "2026-10-29T18:55:17+00:00",
       "cluster": "auto/stale-review",
-      "updated_at": "2026-10-30T12:16:39+00:00"
+      "updated_at": "2026-10-30T12:53:54+00:00"
     },
     "subjective::api_surface_coherence": {
       "issue_id": "subjective::api_surface_coherence",
@@ -530,13 +530,13 @@
       "issue_id": "subjective::contract_coherence",
       "created_at": "2026-10-29T18:55:17+00:00",
       "cluster": "auto/stale-review",
-      "updated_at": "2026-10-30T12:16:39+00:00"
+      "updated_at": "2026-10-30T12:53:54+00:00"
     },
     "subjective::convention_outlier": {
       "issue_id": "subjective::convention_outlier",
       "created_at": "2026-10-29T18:55:17+00:00",
       "cluster": "auto/stale-review",
-      "updated_at": "2026-10-30T12:16:39+00:00"
+      "updated_at": "2026-10-30T12:53:54+00:00"
     },
     "subjective::cross_module_architecture": {
       "issue_id": "subjective::cross_module_architecture",
@@ -554,19 +554,19 @@
       "issue_id": "subjective::design_coherence",
       "created_at": "2026-10-29T18:55:17+00:00",
       "cluster": "auto/stale-review",
-      "updated_at": "2026-10-30T12:16:39+00:00"
+      "updated_at": "2026-10-30T12:53:54+00:00"
     },
     "subjective::error_consistency": {
       "issue_id": "subjective::error_consistency",
       "created_at": "2026-10-29T18:55:17+00:00",
       "cluster": "auto/stale-review",
-      "updated_at": "2026-10-30T12:16:39+00:00"
+      "updated_at": "2026-10-30T12:53:54+00:00"
     },
     "subjective::high_level_elegance": {
       "issue_id": "subjective::high_level_elegance",
       "created_at": "2026-10-29T18:55:17+00:00",
       "cluster": "auto/stale-review",
-      "updated_at": "2026-10-30T12:16:39+00:00"
+      "updated_at": "2026-10-30T12:53:54+00:00"
     },
     "subjective::incomplete_migration": {
       "issue_id": "subjective::incomplete_migration",
@@ -584,43 +584,43 @@
       "issue_id": "subjective::logic_clarity",
       "created_at": "2026-10-29T18:55:17+00:00",
       "cluster": "auto/stale-review",
-      "updated_at": "2026-10-30T12:16:39+00:00"
+      "updated_at": "2026-10-30T12:53:54+00:00"
     },
     "subjective::low_level_elegance": {
       "issue_id": "subjective::low_level_elegance",
       "created_at": "2026-10-29T18:55:17+00:00",
       "cluster": "auto/stale-review",
-      "updated_at": "2026-10-30T12:16:39+00:00"
+      "updated_at": "2026-10-30T12:53:54+00:00"
     },
     "subjective::mid_level_elegance": {
       "issue_id": "subjective::mid_level_elegance",
       "created_at": "2026-10-29T18:55:17+00:00",
       "cluster": "auto/stale-review",
-      "updated_at": "2026-10-30T12:16:39+00:00"
+      "updated_at": "2026-10-30T12:53:54+00:00"
     },
     "subjective::naming_quality": {
       "issue_id": "subjective::naming_quality",
       "created_at": "2026-10-29T18:55:17+00:00",
       "cluster": "auto/stale-review",
-      "updated_at": "2026-10-30T12:16:39+00:00"
+      "updated_at": "2026-10-30T12:53:54+00:00"
     },
     "subjective::package_organization": {
       "issue_id": "subjective::package_organization",
       "created_at": "2026-10-29T18:55:17+00:00",
       "cluster": "auto/stale-review",
-      "updated_at": "2026-10-30T12:16:39+00:00"
+      "updated_at": "2026-10-30T12:53:54+00:00"
     },
     "subjective::test_strategy": {
       "issue_id": "subjective::test_strategy",
       "created_at": "2026-10-29T18:55:17+00:00",
       "cluster": "auto/stale-review",
-      "updated_at": "2026-10-30T12:16:39+00:00"
+      "updated_at": "2026-10-30T12:53:54+00:00"
     },
     "subjective::type_safety": {
       "issue_id": "subjective::type_safety",
       "created_at": "2026-10-29T18:55:17+00:00",
       "cluster": "auto/stale-review",
-      "updated_at": "2026-10-30T12:16:39+00:00"
+      "updated_at": "2026-10-30T12:53:54+00:00"
     },
     "structural::lib/services/playback/music_player_service.dart": {
       "issue_id": "structural::lib/services/playback/music_player_service.dart",
@@ -638,348 +638,316 @@
       "issue_id": "test_coverage::lib/screens/library/library_browse_artwork.dart::transitive_only",
       "created_at": "2026-10-30T12:16:39+00:00",
       "cluster": "auto/test_coverage-transitive_only",
-      "updated_at": "2026-10-30T12:16:39+00:00"
+      "updated_at": "2026-10-30T12:53:54+00:00"
     },
     "test_coverage::lib/screens/library/collection_track_tile.dart::transitive_only": {
       "issue_id": "test_coverage::lib/screens/library/collection_track_tile.dart::transitive_only",
       "created_at": "2026-10-30T12:16:39+00:00",
       "cluster": "auto/test_coverage-transitive_only",
-      "updated_at": "2026-10-30T12:16:39+00:00"
+      "updated_at": "2026-10-30T12:53:54+00:00"
     },
     "test_coverage::lib/screens/library/artist_song_pages.dart::transitive_only": {
       "issue_id": "test_coverage::lib/screens/library/artist_song_pages.dart::transitive_only",
       "created_at": "2026-10-30T12:16:39+00:00",
       "cluster": "auto/test_coverage-transitive_only",
-      "updated_at": "2026-10-30T12:16:39+00:00"
+      "updated_at": "2026-10-30T12:53:54+00:00"
     },
     "test_coverage::lib/screens/library/collection_empty_folder_state.dart::transitive_only": {
       "issue_id": "test_coverage::lib/screens/library/collection_empty_folder_state.dart::transitive_only",
       "created_at": "2026-10-30T12:16:39+00:00",
       "cluster": "auto/test_coverage-transitive_only",
-      "updated_at": "2026-10-30T12:16:39+00:00"
+      "updated_at": "2026-10-30T12:53:54+00:00"
     },
     "test_coverage::lib/services/library/library_browse_rows.dart::transitive_only": {
       "issue_id": "test_coverage::lib/services/library/library_browse_rows.dart::transitive_only",
       "created_at": "2026-10-30T12:16:39+00:00",
       "cluster": "auto/test_coverage-transitive_only",
-      "updated_at": "2026-10-30T12:16:39+00:00"
+      "updated_at": "2026-10-30T12:53:54+00:00"
     },
     "test_coverage::lib/screens/settings/library_settings_source_item.dart::transitive_only": {
       "issue_id": "test_coverage::lib/screens/settings/library_settings_source_item.dart::transitive_only",
       "created_at": "2026-10-30T12:16:39+00:00",
       "cluster": "auto/test_coverage-transitive_only",
-      "updated_at": "2026-10-30T12:16:39+00:00"
+      "updated_at": "2026-10-30T12:53:54+00:00"
     },
     "test_coverage::lib/widgets/glass/app_selection_shared.dart::transitive_only": {
       "issue_id": "test_coverage::lib/widgets/glass/app_selection_shared.dart::transitive_only",
       "created_at": "2026-10-30T12:16:39+00:00",
       "cluster": "auto/test_coverage-transitive_only",
-      "updated_at": "2026-10-30T12:16:39+00:00"
+      "updated_at": "2026-10-30T12:53:54+00:00"
     },
     "test_coverage::lib/screens/settings/cache_directory_tools.dart::transitive_only": {
       "issue_id": "test_coverage::lib/screens/settings/cache_directory_tools.dart::transitive_only",
       "created_at": "2026-10-30T12:16:39+00:00",
       "cluster": "auto/test_coverage-transitive_only",
-      "updated_at": "2026-10-30T12:16:39+00:00"
+      "updated_at": "2026-10-30T12:53:54+00:00"
     },
     "test_coverage::lib/widgets/selection/app_animated_selection_bar.dart::transitive_only": {
       "issue_id": "test_coverage::lib/widgets/selection/app_animated_selection_bar.dart::transitive_only",
       "created_at": "2026-10-30T12:16:39+00:00",
       "cluster": "auto/test_coverage-transitive_only",
-      "updated_at": "2026-10-30T12:16:39+00:00"
+      "updated_at": "2026-10-30T12:53:54+00:00"
     },
     "test_coverage::lib/screens/settings/library_settings_scan_widgets.dart::transitive_only": {
       "issue_id": "test_coverage::lib/screens/settings/library_settings_scan_widgets.dart::transitive_only",
       "created_at": "2026-10-30T12:16:39+00:00",
       "cluster": "auto/test_coverage-transitive_only",
-      "updated_at": "2026-10-30T12:16:39+00:00"
+      "updated_at": "2026-10-30T12:53:54+00:00"
     },
     "test_coverage::lib/screens/settings/appearance_glass_clarity_slider.dart::transitive_only": {
       "issue_id": "test_coverage::lib/screens/settings/appearance_glass_clarity_slider.dart::transitive_only",
       "created_at": "2026-10-30T12:16:39+00:00",
       "cluster": "auto/test_coverage-transitive_only",
-      "updated_at": "2026-10-30T12:16:39+00:00"
+      "updated_at": "2026-10-30T12:53:54+00:00"
     },
     "test_coverage::lib/services/library/library_collections_read.dart::transitive_only": {
       "issue_id": "test_coverage::lib/services/library/library_collections_read.dart::transitive_only",
       "created_at": "2026-10-30T12:16:39+00:00",
       "cluster": "auto/test_coverage-transitive_only",
-      "updated_at": "2026-10-30T12:16:39+00:00"
+      "updated_at": "2026-10-30T12:53:54+00:00"
     },
     "test_coverage::lib/widgets/sheets/playlist_picker_rows.dart::transitive_only": {
       "issue_id": "test_coverage::lib/widgets/sheets/playlist_picker_rows.dart::transitive_only",
       "created_at": "2026-10-30T12:16:39+00:00",
       "cluster": "auto/test_coverage-transitive_only",
-      "updated_at": "2026-10-30T12:16:39+00:00"
+      "updated_at": "2026-10-30T12:53:54+00:00"
     },
     "test_coverage::lib/widgets/sheets/playlist_picker_name_prompt.dart::transitive_only": {
       "issue_id": "test_coverage::lib/widgets/sheets/playlist_picker_name_prompt.dart::transitive_only",
       "created_at": "2026-10-30T12:16:39+00:00",
       "cluster": "auto/test_coverage-transitive_only",
-      "updated_at": "2026-10-30T12:16:39+00:00"
+      "updated_at": "2026-10-30T12:53:54+00:00"
     },
     "test_coverage::lib/screens/setup_step_layout.dart::transitive_only": {
       "issue_id": "test_coverage::lib/screens/setup_step_layout.dart::transitive_only",
       "created_at": "2026-10-30T12:16:39+00:00",
       "cluster": "auto/test_coverage-transitive_only",
-      "updated_at": "2026-10-30T12:16:39+00:00"
+      "updated_at": "2026-10-30T12:53:54+00:00"
     },
     "test_coverage::lib/screens/settings/cache_management_models.dart::transitive_only": {
       "issue_id": "test_coverage::lib/screens/settings/cache_management_models.dart::transitive_only",
       "created_at": "2026-10-30T12:16:39+00:00",
       "cluster": "auto/test_coverage-transitive_only",
-      "updated_at": "2026-10-30T12:16:39+00:00"
+      "updated_at": "2026-10-30T12:53:54+00:00"
     },
     "test_coverage::lib/widgets/selection/app_selection_panel_drag.dart::transitive_only": {
       "issue_id": "test_coverage::lib/widgets/selection/app_selection_panel_drag.dart::transitive_only",
       "created_at": "2026-10-30T12:16:39+00:00",
       "cluster": "auto/test_coverage-transitive_only",
-      "updated_at": "2026-10-30T12:16:39+00:00"
+      "updated_at": "2026-10-30T12:53:54+00:00"
     },
     "test_coverage::lib/services/library/library_collections_schema.dart::transitive_only": {
       "issue_id": "test_coverage::lib/services/library/library_collections_schema.dart::transitive_only",
       "created_at": "2026-10-30T12:16:39+00:00",
       "cluster": "auto/test_coverage-transitive_only",
-      "updated_at": "2026-10-30T12:16:39+00:00"
+      "updated_at": "2026-10-30T12:53:54+00:00"
     },
     "test_coverage::lib/widgets/sheets/app_audio_info_fact_rows.dart::transitive_only": {
       "issue_id": "test_coverage::lib/widgets/sheets/app_audio_info_fact_rows.dart::transitive_only",
       "created_at": "2026-10-30T12:16:39+00:00",
       "cluster": "auto/test_coverage-transitive_only",
-      "updated_at": "2026-10-30T12:16:39+00:00"
+      "updated_at": "2026-10-30T12:53:54+00:00"
     },
     "test_coverage::lib/screens/settings/appearance_settings_selectors.dart::transitive_only": {
       "issue_id": "test_coverage::lib/screens/settings/appearance_settings_selectors.dart::transitive_only",
       "created_at": "2026-10-30T12:16:39+00:00",
       "cluster": "auto/test_coverage-transitive_only",
-      "updated_at": "2026-10-30T12:16:39+00:00"
+      "updated_at": "2026-10-30T12:53:54+00:00"
     },
     "test_coverage::lib/widgets/player/app_player_header_layout.dart::transitive_only": {
       "issue_id": "test_coverage::lib/widgets/player/app_player_header_layout.dart::transitive_only",
       "created_at": "2026-10-30T12:16:39+00:00",
       "cluster": "auto/test_coverage-transitive_only",
-      "updated_at": "2026-10-30T12:16:39+00:00"
+      "updated_at": "2026-10-30T12:53:54+00:00"
     },
     "test_coverage::lib/widgets/animation_indicators.dart::transitive_only": {
       "issue_id": "test_coverage::lib/widgets/animation_indicators.dart::transitive_only",
       "created_at": "2026-10-30T12:16:39+00:00",
       "cluster": "auto/test_coverage-transitive_only",
-      "updated_at": "2026-10-30T12:16:39+00:00"
+      "updated_at": "2026-10-30T12:53:54+00:00"
     },
     "test_coverage::lib/screens/lyrics_share_controls.dart::transitive_only": {
       "issue_id": "test_coverage::lib/screens/lyrics_share_controls.dart::transitive_only",
       "created_at": "2026-10-30T12:16:39+00:00",
       "cluster": "auto/test_coverage-transitive_only",
-      "updated_at": "2026-10-30T12:16:39+00:00"
+      "updated_at": "2026-10-30T12:53:54+00:00"
     },
     "test_coverage::lib/widgets/player/app_player_lyrics_viewport.dart::transitive_only": {
       "issue_id": "test_coverage::lib/widgets/player/app_player_lyrics_viewport.dart::transitive_only",
       "created_at": "2026-10-30T12:16:39+00:00",
       "cluster": "auto/test_coverage-transitive_only",
-      "updated_at": "2026-10-30T12:16:39+00:00"
+      "updated_at": "2026-10-30T12:53:54+00:00"
     },
     "test_coverage::lib/services/library/library_collections_worker.dart::transitive_only": {
       "issue_id": "test_coverage::lib/services/library/library_collections_worker.dart::transitive_only",
       "created_at": "2026-10-30T12:16:39+00:00",
       "cluster": "auto/test_coverage-transitive_only",
-      "updated_at": "2026-10-30T12:16:39+00:00"
+      "updated_at": "2026-10-30T12:53:54+00:00"
     },
     "test_coverage::lib/widgets/sheets/audio_info_facts.dart::transitive_only": {
       "issue_id": "test_coverage::lib/widgets/sheets/audio_info_facts.dart::transitive_only",
       "created_at": "2026-10-30T12:16:39+00:00",
       "cluster": "auto/test_coverage-transitive_only",
-      "updated_at": "2026-10-30T12:16:39+00:00"
+      "updated_at": "2026-10-30T12:53:54+00:00"
     },
     "test_coverage::lib/screens/main_shell_tabs.dart::transitive_only": {
       "issue_id": "test_coverage::lib/screens/main_shell_tabs.dart::transitive_only",
       "created_at": "2026-10-30T12:16:39+00:00",
       "cluster": "auto/test_coverage-transitive_only",
-      "updated_at": "2026-10-30T12:16:39+00:00"
+      "updated_at": "2026-10-30T12:53:54+00:00"
     },
     "test_coverage::lib/screens/settings/log_entry_tile.dart::transitive_only": {
       "issue_id": "test_coverage::lib/screens/settings/log_entry_tile.dart::transitive_only",
       "created_at": "2026-10-30T12:16:39+00:00",
       "cluster": "auto/test_coverage-transitive_only",
-      "updated_at": "2026-10-30T12:16:39+00:00"
+      "updated_at": "2026-10-30T12:53:54+00:00"
     },
     "test_coverage::lib/services/library/library_collections_restore.dart::transitive_only": {
       "issue_id": "test_coverage::lib/services/library/library_collections_restore.dart::transitive_only",
       "created_at": "2026-10-30T12:16:39+00:00",
       "cluster": "auto/test_coverage-transitive_only",
-      "updated_at": "2026-10-30T12:16:39+00:00"
+      "updated_at": "2026-10-30T12:53:54+00:00"
     },
     "test_coverage::lib/services/library/library_collections_playlist_covers.dart::transitive_only": {
       "issue_id": "test_coverage::lib/services/library/library_collections_playlist_covers.dart::transitive_only",
       "created_at": "2026-10-30T12:16:39+00:00",
       "cluster": "auto/test_coverage-transitive_only",
-      "updated_at": "2026-10-30T12:16:39+00:00"
+      "updated_at": "2026-10-30T12:53:54+00:00"
     },
     "test_coverage::lib/services/audio_analysis/audio_analysis_log_parsing.dart::transitive_only": {
       "issue_id": "test_coverage::lib/services/audio_analysis/audio_analysis_log_parsing.dart::transitive_only",
       "created_at": "2026-10-30T12:16:39+00:00",
       "cluster": "auto/test_coverage-transitive_only",
-      "updated_at": "2026-10-30T12:16:39+00:00"
+      "updated_at": "2026-10-30T12:53:54+00:00"
     },
     "test_coverage::lib/services/audio_analysis/audio_analysis_runner.dart::transitive_only": {
       "issue_id": "test_coverage::lib/services/audio_analysis/audio_analysis_runner.dart::transitive_only",
       "created_at": "2026-10-30T12:16:39+00:00",
       "cluster": "auto/test_coverage-transitive_only",
-      "updated_at": "2026-10-30T12:16:39+00:00"
+      "updated_at": "2026-10-30T12:53:54+00:00"
     },
     "test_coverage::lib/widgets/library/playlist_name_dialog.dart::transitive_only": {
       "issue_id": "test_coverage::lib/widgets/library/playlist_name_dialog.dart::transitive_only",
       "created_at": "2026-10-30T12:16:39+00:00",
       "cluster": "auto/test_coverage-transitive_only",
-      "updated_at": "2026-10-30T12:16:39+00:00"
+      "updated_at": "2026-10-30T12:53:54+00:00"
     },
     "strategy::test-health-decline": {
       "issue_id": "strategy::test-health-decline",
       "created_at": "2026-10-30T12:16:39+00:00",
       "cluster": "auto/strategy",
-      "updated_at": "2026-10-30T12:16:39+00:00"
+      "updated_at": "2026-10-30T12:53:54+00:00"
     },
     "strategy::file-health-and-code-quality-decline": {
       "issue_id": "strategy::file-health-and-code-quality-decline",
       "created_at": "2026-10-30T12:16:39+00:00",
       "cluster": "auto/strategy",
-      "updated_at": "2026-10-30T12:16:39+00:00"
+      "updated_at": "2026-10-30T12:53:54+00:00"
     },
     "test_coverage::lib/screens/library/library_section_tab_empty_state.dart::untested_module": {
       "issue_id": "test_coverage::lib/screens/library/library_section_tab_empty_state.dart::untested_module",
       "created_at": "2026-10-30T12:16:39+00:00",
-      "cluster": "auto/test_coverage-untested_module",
-      "updated_at": "2026-10-30T12:16:39+00:00"
+      "cluster": null,
+      "updated_at": "2026-10-30T12:43:17+00:00"
     },
     "test_coverage::lib/screens/library/local_album_screen_selection.dart::untested_module": {
       "issue_id": "test_coverage::lib/screens/library/local_album_screen_selection.dart::untested_module",
       "created_at": "2026-10-30T12:16:39+00:00",
-      "cluster": "auto/test_coverage-untested_module",
-      "updated_at": "2026-10-30T12:16:39+00:00"
+      "cluster": null,
+      "updated_at": "2026-10-30T12:43:17+00:00"
     },
     "test_coverage::lib/services/audio_analysis/audio_analysis_ffmpeg_args.dart::untested_module": {
       "issue_id": "test_coverage::lib/services/audio_analysis/audio_analysis_ffmpeg_args.dart::untested_module",
       "created_at": "2026-10-30T12:16:39+00:00",
-      "cluster": "auto/test_coverage-untested_module",
-      "updated_at": "2026-10-30T12:16:39+00:00"
+      "cluster": null,
+      "updated_at": "2026-10-30T12:43:17+00:00"
     },
     "test_coverage::lib/screens/library/local_album_screen_header.dart::untested_module": {
       "issue_id": "test_coverage::lib/screens/library/local_album_screen_header.dart::untested_module",
       "created_at": "2026-10-30T12:16:39+00:00",
-      "cluster": "auto/test_coverage-untested_module",
-      "updated_at": "2026-10-30T12:16:39+00:00"
+      "cluster": null,
+      "updated_at": "2026-10-30T12:43:17+00:00"
     },
     "test_coverage::lib/widgets/library/track_metadata_edit_cover.dart::untested_module": {
       "issue_id": "test_coverage::lib/widgets/library/track_metadata_edit_cover.dart::untested_module",
       "created_at": "2026-10-30T12:16:39+00:00",
-      "cluster": "auto/test_coverage-untested_module",
-      "updated_at": "2026-10-30T12:16:39+00:00"
+      "cluster": null,
+      "updated_at": "2026-10-30T12:43:17+00:00"
     },
     "test_coverage::lib/utils/lyrics_parser_ttml.dart::untested_module": {
       "issue_id": "test_coverage::lib/utils/lyrics_parser_ttml.dart::untested_module",
       "created_at": "2026-10-30T12:16:39+00:00",
-      "cluster": "auto/test_coverage-untested_module",
-      "updated_at": "2026-10-30T12:16:39+00:00"
+      "cluster": null,
+      "updated_at": "2026-10-30T12:43:17+00:00"
     },
     "test_coverage::lib/screens/library/local_album_screen_track_list.dart::untested_module": {
       "issue_id": "test_coverage::lib/screens/library/local_album_screen_track_list.dart::untested_module",
       "created_at": "2026-10-30T12:16:39+00:00",
-      "cluster": "auto/test_coverage-untested_module",
-      "updated_at": "2026-10-30T12:16:39+00:00"
+      "cluster": null,
+      "updated_at": "2026-10-30T12:43:17+00:00"
     },
     "test_coverage::lib/widgets/header/album_detail_header_parts.dart::untested_module": {
       "issue_id": "test_coverage::lib/widgets/header/album_detail_header_parts.dart::untested_module",
       "created_at": "2026-10-30T12:16:39+00:00",
-      "cluster": "auto/test_coverage-untested_module",
-      "updated_at": "2026-10-30T12:16:39+00:00"
+      "cluster": null,
+      "updated_at": "2026-10-30T12:43:17+00:00"
     },
     "test_coverage::lib/services/library/library_database_queries.dart::untested_module": {
       "issue_id": "test_coverage::lib/services/library/library_database_queries.dart::untested_module",
       "created_at": "2026-10-30T12:16:39+00:00",
-      "cluster": "auto/test_coverage-untested_module",
-      "updated_at": "2026-10-30T12:16:39+00:00"
+      "cluster": null,
+      "updated_at": "2026-10-30T12:43:17+00:00"
     },
     "test_coverage::lib/services/audio_analysis/audio_analysis_spectral_cutoff.dart::untested_module": {
       "issue_id": "test_coverage::lib/services/audio_analysis/audio_analysis_spectral_cutoff.dart::untested_module",
       "created_at": "2026-10-30T12:16:39+00:00",
-      "cluster": "auto/test_coverage-untested_module",
-      "updated_at": "2026-10-30T12:16:39+00:00"
+      "cluster": null,
+      "updated_at": "2026-10-30T12:43:17+00:00"
     },
     "test_coverage::lib/services/playback/music_player_hooks.dart::untested_module": {
       "issue_id": "test_coverage::lib/services/playback/music_player_hooks.dart::untested_module",
       "created_at": "2026-10-30T12:16:39+00:00",
-      "cluster": "auto/test_coverage-untested_module",
-      "updated_at": "2026-10-30T12:16:39+00:00"
+      "cluster": null,
+      "updated_at": "2026-10-30T12:43:17+00:00"
     },
     "test_coverage::lib/services/playback/music_player_events.dart::untested_module": {
       "issue_id": "test_coverage::lib/services/playback/music_player_events.dart::untested_module",
       "created_at": "2026-10-30T12:16:39+00:00",
-      "cluster": "auto/test_coverage-untested_module",
-      "updated_at": "2026-10-30T12:16:39+00:00"
+      "cluster": null,
+      "updated_at": "2026-10-30T12:43:17+00:00"
     },
     "test_coverage::lib/services/playback/music_player_session.dart::untested_module": {
       "issue_id": "test_coverage::lib/services/playback/music_player_session.dart::untested_module",
       "created_at": "2026-10-30T12:16:39+00:00",
-      "cluster": "auto/test_coverage-untested_module",
-      "updated_at": "2026-10-30T12:16:39+00:00"
+      "cluster": null,
+      "updated_at": "2026-10-30T12:43:17+00:00"
     },
     "test_coverage::lib/services/playback/music_player_source.dart::untested_module": {
       "issue_id": "test_coverage::lib/services/playback/music_player_source.dart::untested_module",
       "created_at": "2026-10-30T12:16:39+00:00",
-      "cluster": "auto/test_coverage-untested_module",
-      "updated_at": "2026-10-30T12:16:39+00:00"
+      "cluster": null,
+      "updated_at": "2026-10-30T12:43:17+00:00"
     },
     "test_coverage::lib/services/playback/music_player_media.dart::untested_module": {
       "issue_id": "test_coverage::lib/services/playback/music_player_media.dart::untested_module",
       "created_at": "2026-10-30T12:16:39+00:00",
-      "cluster": "auto/test_coverage-untested_module",
-      "updated_at": "2026-10-30T12:16:39+00:00"
+      "cluster": null,
+      "updated_at": "2026-10-30T12:43:17+00:00"
     },
     "test_coverage::lib/services/playback/music_player_lifecycle.dart::untested_module": {
       "issue_id": "test_coverage::lib/services/playback/music_player_lifecycle.dart::untested_module",
       "created_at": "2026-10-30T12:16:39+00:00",
-      "cluster": "auto/test_coverage-untested_module",
-      "updated_at": "2026-10-30T12:16:39+00:00"
+      "cluster": null,
+      "updated_at": "2026-10-30T12:43:17+00:00"
     },
     "test_coverage::lib/services/playback/music_player_queue.dart::untested_module": {
       "issue_id": "test_coverage::lib/services/playback/music_player_queue.dart::untested_module",
       "created_at": "2026-10-30T12:16:39+00:00",
-      "cluster": "auto/test_coverage-untested_module",
-      "updated_at": "2026-10-30T12:16:39+00:00"
+      "cluster": null,
+      "updated_at": "2026-10-30T12:43:17+00:00"
     }
   },
   "clusters": {
-    "auto/test_coverage-untested_module": {
-      "name": "auto/test_coverage-untested_module",
-      "description": "Fix 17 test coverage issues",
-      "issue_ids": [
-        "test_coverage::lib/screens/library/library_section_tab_empty_state.dart::untested_module",
-        "test_coverage::lib/screens/library/local_album_screen_selection.dart::untested_module",
-        "test_coverage::lib/services/audio_analysis/audio_analysis_ffmpeg_args.dart::untested_module",
-        "test_coverage::lib/screens/library/local_album_screen_header.dart::untested_module",
-        "test_coverage::lib/widgets/library/track_metadata_edit_cover.dart::untested_module",
-        "test_coverage::lib/utils/lyrics_parser_ttml.dart::untested_module",
-        "test_coverage::lib/screens/library/local_album_screen_track_list.dart::untested_module",
-        "test_coverage::lib/widgets/header/album_detail_header_parts.dart::untested_module",
-        "test_coverage::lib/services/library/library_database_queries.dart::untested_module",
-        "test_coverage::lib/services/audio_analysis/audio_analysis_spectral_cutoff.dart::untested_module",
-        "test_coverage::lib/services/playback/music_player_hooks.dart::untested_module",
-        "test_coverage::lib/services/playback/music_player_events.dart::untested_module",
-        "test_coverage::lib/services/playback/music_player_session.dart::untested_module",
-        "test_coverage::lib/services/playback/music_player_source.dart::untested_module",
-        "test_coverage::lib/services/playback/music_player_media.dart::untested_module",
-        "test_coverage::lib/services/playback/music_player_lifecycle.dart::untested_module",
-        "test_coverage::lib/services/playback/music_player_queue.dart::untested_module"
-      ],
-      "created_at": "2026-10-29T06:01:52+00:00",
-      "updated_at": "2026-10-30T12:16:39+00:00",
-      "auto": true,
-      "cluster_key": "detector::test_coverage::untested_module",
-      "action": "review test coverage gaps",
-      "execution_status": "review",
-      "user_modified": false,
-      "action_type": "refactor",
-      "execution_policy": "planned_only"
-    },
     "auto/test_coverage-transitive_only": {
       "name": "auto/test_coverage-transitive_only",
       "description": "Fix 52 test coverage issues",
@@ -1805,19 +1773,189 @@
       "superseded_at": "2026-10-30T12:12:35+00:00",
       "remapped_to": null,
       "candidates": []
+    },
+    "test_coverage::lib/screens/library/library_section_tab_empty_state.dart::untested_module": {
+      "original_id": "test_coverage::lib/screens/library/library_section_tab_empty_state.dart::untested_module",
+      "original_detector": "test_coverage",
+      "original_file": "lib/screens/library/library_section_tab_empty_state.dart",
+      "original_summary": "Untested module (56 LOC, 0 importers)",
+      "status": "superseded",
+      "superseded_at": "2026-10-30T12:43:17+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/screens/library/local_album_screen_header.dart::untested_module": {
+      "original_id": "test_coverage::lib/screens/library/local_album_screen_header.dart::untested_module",
+      "original_detector": "test_coverage",
+      "original_file": "lib/screens/library/local_album_screen_header.dart",
+      "original_summary": "Untested module (172 LOC, 0 importers)",
+      "status": "superseded",
+      "superseded_at": "2026-10-30T12:43:17+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/screens/library/local_album_screen_selection.dart::untested_module": {
+      "original_id": "test_coverage::lib/screens/library/local_album_screen_selection.dart::untested_module",
+      "original_detector": "test_coverage",
+      "original_file": "lib/screens/library/local_album_screen_selection.dart",
+      "original_summary": "Untested module (98 LOC, 0 importers)",
+      "status": "superseded",
+      "superseded_at": "2026-10-30T12:43:17+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/screens/library/local_album_screen_track_list.dart::untested_module": {
+      "original_id": "test_coverage::lib/screens/library/local_album_screen_track_list.dart::untested_module",
+      "original_detector": "test_coverage",
+      "original_file": "lib/screens/library/local_album_screen_track_list.dart",
+      "original_summary": "Untested module (85 LOC, 0 importers)",
+      "status": "superseded",
+      "superseded_at": "2026-10-30T12:43:17+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/services/audio_analysis/audio_analysis_ffmpeg_args.dart::untested_module": {
+      "original_id": "test_coverage::lib/services/audio_analysis/audio_analysis_ffmpeg_args.dart::untested_module",
+      "original_detector": "test_coverage",
+      "original_file": "lib/services/audio_analysis/audio_analysis_ffmpeg_args.dart",
+      "original_summary": "Untested module (178 LOC, 0 importers)",
+      "status": "superseded",
+      "superseded_at": "2026-10-30T12:43:17+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/services/audio_analysis/audio_analysis_spectral_cutoff.dart::untested_module": {
+      "original_id": "test_coverage::lib/services/audio_analysis/audio_analysis_spectral_cutoff.dart::untested_module",
+      "original_detector": "test_coverage",
+      "original_file": "lib/services/audio_analysis/audio_analysis_spectral_cutoff.dart",
+      "original_summary": "Untested module (270 LOC, 0 importers)",
+      "status": "superseded",
+      "superseded_at": "2026-10-30T12:43:17+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/services/library/library_database_queries.dart::untested_module": {
+      "original_id": "test_coverage::lib/services/library/library_database_queries.dart::untested_module",
+      "original_detector": "test_coverage",
+      "original_file": "lib/services/library/library_database_queries.dart",
+      "original_summary": "Untested module (357 LOC, 0 importers)",
+      "status": "superseded",
+      "superseded_at": "2026-10-30T12:43:17+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/services/playback/music_player_events.dart::untested_module": {
+      "original_id": "test_coverage::lib/services/playback/music_player_events.dart::untested_module",
+      "original_detector": "test_coverage",
+      "original_file": "lib/services/playback/music_player_events.dart",
+      "original_summary": "Untested module (214 LOC, 0 importers)",
+      "status": "superseded",
+      "superseded_at": "2026-10-30T12:43:17+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/services/playback/music_player_hooks.dart::untested_module": {
+      "original_id": "test_coverage::lib/services/playback/music_player_hooks.dart::untested_module",
+      "original_detector": "test_coverage",
+      "original_file": "lib/services/playback/music_player_hooks.dart",
+      "original_summary": "Untested module (167 LOC, 0 importers)",
+      "status": "superseded",
+      "superseded_at": "2026-10-30T12:43:17+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/services/playback/music_player_lifecycle.dart::untested_module": {
+      "original_id": "test_coverage::lib/services/playback/music_player_lifecycle.dart::untested_module",
+      "original_detector": "test_coverage",
+      "original_file": "lib/services/playback/music_player_lifecycle.dart",
+      "original_summary": "Untested module (137 LOC, 0 importers)",
+      "status": "superseded",
+      "superseded_at": "2026-10-30T12:43:17+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/services/playback/music_player_media.dart::untested_module": {
+      "original_id": "test_coverage::lib/services/playback/music_player_media.dart::untested_module",
+      "original_detector": "test_coverage",
+      "original_file": "lib/services/playback/music_player_media.dart",
+      "original_summary": "Untested module (184 LOC, 0 importers)",
+      "status": "superseded",
+      "superseded_at": "2026-10-30T12:43:17+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/services/playback/music_player_queue.dart::untested_module": {
+      "original_id": "test_coverage::lib/services/playback/music_player_queue.dart::untested_module",
+      "original_detector": "test_coverage",
+      "original_file": "lib/services/playback/music_player_queue.dart",
+      "original_summary": "Untested module (73 LOC, 0 importers)",
+      "status": "superseded",
+      "superseded_at": "2026-10-30T12:43:17+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/services/playback/music_player_session.dart::untested_module": {
+      "original_id": "test_coverage::lib/services/playback/music_player_session.dart::untested_module",
+      "original_detector": "test_coverage",
+      "original_file": "lib/services/playback/music_player_session.dart",
+      "original_summary": "Untested module (54 LOC, 0 importers)",
+      "status": "superseded",
+      "superseded_at": "2026-10-30T12:43:17+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/services/playback/music_player_source.dart::untested_module": {
+      "original_id": "test_coverage::lib/services/playback/music_player_source.dart::untested_module",
+      "original_detector": "test_coverage",
+      "original_file": "lib/services/playback/music_player_source.dart",
+      "original_summary": "Untested module (66 LOC, 0 importers)",
+      "status": "superseded",
+      "superseded_at": "2026-10-30T12:43:17+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/utils/lyrics_parser_ttml.dart::untested_module": {
+      "original_id": "test_coverage::lib/utils/lyrics_parser_ttml.dart::untested_module",
+      "original_detector": "test_coverage",
+      "original_file": "lib/utils/lyrics_parser_ttml.dart",
+      "original_summary": "Untested module (232 LOC, 0 importers)",
+      "status": "superseded",
+      "superseded_at": "2026-10-30T12:43:17+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/widgets/header/album_detail_header_parts.dart::untested_module": {
+      "original_id": "test_coverage::lib/widgets/header/album_detail_header_parts.dart::untested_module",
+      "original_detector": "test_coverage",
+      "original_file": "lib/widgets/header/album_detail_header_parts.dart",
+      "original_summary": "Untested module (126 LOC, 0 importers)",
+      "status": "superseded",
+      "superseded_at": "2026-10-30T12:43:17+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/widgets/library/track_metadata_edit_cover.dart::untested_module": {
+      "original_id": "test_coverage::lib/widgets/library/track_metadata_edit_cover.dart::untested_module",
+      "original_detector": "test_coverage",
+      "original_file": "lib/widgets/library/track_metadata_edit_cover.dart",
+      "original_summary": "Untested module (427 LOC, 0 importers)",
+      "status": "superseded",
+      "superseded_at": "2026-10-30T12:43:17+00:00",
+      "remapped_to": null,
+      "candidates": []
     }
   },
   "promoted_ids": [],
   "plan_start_scores": {
     "strict": 90.1,
-    "overall": 91.2,
-    "objective": 95.2,
-    "verified": 95.2
+    "overall": 91.4,
+    "objective": 95.9,
+    "verified": 95.9
   },
   "refresh_state": {
     "_subjective_migration_pruned": true,
     "lifecycle_phase": "plan",
-    "postflight_scan_completed_at_scan_count": 14,
+    "postflight_scan_completed_at_scan_count": 16,
     "subjective_review_completed_at_scan_count": 6
   },
   "execution_log": [
@@ -5489,6 +5627,114 @@
       "detail": {
         "scan_count": 14
       }
+    },
+    {
+      "timestamp": "2026-10-30T12:43:17+00:00",
+      "action": "cluster_done",
+      "issue_ids": [],
+      "cluster_name": "auto/test_coverage-untested_module",
+      "actor": "system",
+      "note": null,
+      "detail": {
+        "reason": "cluster members no longer actionable in state"
+      }
+    },
+    {
+      "timestamp": "2026-10-30T12:43:17+00:00",
+      "action": "reconcile",
+      "issue_ids": [
+        "test_coverage::lib/screens/library/library_section_tab_empty_state.dart::untested_module",
+        "test_coverage::lib/screens/library/local_album_screen_header.dart::untested_module",
+        "test_coverage::lib/screens/library/local_album_screen_selection.dart::untested_module",
+        "test_coverage::lib/screens/library/local_album_screen_track_list.dart::untested_module",
+        "test_coverage::lib/services/audio_analysis/audio_analysis_ffmpeg_args.dart::untested_module",
+        "test_coverage::lib/services/audio_analysis/audio_analysis_spectral_cutoff.dart::untested_module",
+        "test_coverage::lib/services/library/library_database_queries.dart::untested_module",
+        "test_coverage::lib/services/playback/music_player_events.dart::untested_module",
+        "test_coverage::lib/services/playback/music_player_hooks.dart::untested_module",
+        "test_coverage::lib/services/playback/music_player_lifecycle.dart::untested_module",
+        "test_coverage::lib/services/playback/music_player_media.dart::untested_module",
+        "test_coverage::lib/services/playback/music_player_queue.dart::untested_module",
+        "test_coverage::lib/services/playback/music_player_session.dart::untested_module",
+        "test_coverage::lib/services/playback/music_player_source.dart::untested_module",
+        "test_coverage::lib/utils/lyrics_parser_ttml.dart::untested_module",
+        "test_coverage::lib/widgets/header/album_detail_header_parts.dart::untested_module",
+        "test_coverage::lib/widgets/library/track_metadata_edit_cover.dart::untested_module"
+      ],
+      "cluster_name": null,
+      "actor": "system",
+      "note": null,
+      "detail": {
+        "superseded_count": 17,
+        "pruned_count": 0,
+        "resurfaced_count": 0,
+        "clusters_completed_count": 1
+      }
+    },
+    {
+      "timestamp": "2026-10-30T12:43:17+00:00",
+      "action": "clear_start_scores",
+      "issue_ids": [],
+      "cluster_name": null,
+      "actor": "system",
+      "note": null,
+      "detail": {}
+    },
+    {
+      "timestamp": "2026-10-30T12:43:17+00:00",
+      "action": "complete_postflight_scan",
+      "issue_ids": [],
+      "cluster_name": null,
+      "actor": "system",
+      "note": null,
+      "detail": {
+        "scan_count": 15
+      }
+    },
+    {
+      "timestamp": "2026-10-30T12:53:54+00:00",
+      "action": "reconcile",
+      "issue_ids": [],
+      "cluster_name": null,
+      "actor": "system",
+      "note": null,
+      "detail": {
+        "superseded_count": 0,
+        "pruned_count": 0,
+        "resurfaced_count": 0,
+        "clusters_completed_count": 0
+      }
+    },
+    {
+      "timestamp": "2026-10-30T12:53:54+00:00",
+      "action": "auto_cluster",
+      "issue_ids": [],
+      "cluster_name": null,
+      "actor": "system",
+      "note": null,
+      "detail": {
+        "changes": true
+      }
+    },
+    {
+      "timestamp": "2026-10-30T12:53:54+00:00",
+      "action": "seed_start_scores",
+      "issue_ids": [],
+      "cluster_name": null,
+      "actor": "system",
+      "note": null,
+      "detail": {}
+    },
+    {
+      "timestamp": "2026-10-30T12:53:54+00:00",
+      "action": "complete_postflight_scan",
+      "issue_ids": [],
+      "cluster_name": null,
+      "actor": "system",
+      "note": null,
+      "detail": {
+        "scan_count": 16
+      }
     }
   ],
   "epic_triage_meta": {
@@ -5814,7 +6060,7 @@
     "review::.::holistic::type_safety::failed_replaygain_result_accepts_null"
   ],
   "commit_tracking_branch": null,
-  "scan_count_at_plan_start": 14,
+  "scan_count_at_plan_start": 16,
   "previous_plan_start_scores": {
     "strict": 76.0,
     "overall": 77.0,
