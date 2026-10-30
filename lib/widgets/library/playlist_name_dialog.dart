@@ -3,25 +3,29 @@ import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/widgets/primitives/app_alert_dialog.dart';
 
 /// Asks for the name of a new playlist. Returns the trimmed name, or null when
-/// the dialog is cancelled.
-Future<String?> showPlaylistNameDialog(BuildContext context) =>
-    showAppDialog<String>(
-      context: context,
-      builder: (_) => const _PlaylistNameDialog(),
-    );
+/// the dialog is cancelled. [prefill] starts the field with a suggested name.
+Future<String?> showPlaylistNameDialog(
+  BuildContext context, {
+  String? prefill,
+}) => showAppDialog<String>(
+  context: context,
+  builder: (_) => _PlaylistNameDialog(prefill: prefill),
+);
 
 /// The field's controller belongs to this State, so it is disposed only after
 /// the dialog has left the tree. The dialog's exit animation still builds the
 /// field, so disposing the controller when the dialog future completes fails.
 class _PlaylistNameDialog extends StatefulWidget {
-  const _PlaylistNameDialog();
+  const _PlaylistNameDialog({this.prefill});
+
+  final String? prefill;
 
   @override
   State<_PlaylistNameDialog> createState() => _PlaylistNameDialogState();
 }
 
 class _PlaylistNameDialogState extends State<_PlaylistNameDialog> {
-  final _controller = TextEditingController();
+  late final _controller = TextEditingController(text: widget.prefill);
   final _formKey = GlobalKey<FormState>();
 
   @override
