@@ -824,7 +824,7 @@ def status(root: Path, brief: bool) -> str:
     if changed:
         lines.append(f'Uncommitted code paths: {len(changed)}')
     if not brief:
-        lines.append('Workflow: .claude/skills/work/SKILL.md. Constitution: work/constitution.md.')
+        lines.append('Workflow: .agents/skills/work/SKILL.md. Constitution: work/constitution.md.')
     return '\n'.join(lines)
 
 
