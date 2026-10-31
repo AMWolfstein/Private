@@ -27,8 +27,8 @@ CLOSED = {'fixed', 'contested', 'escalated', 'declined', 'false_positive', 'wont
 STATUSES = CLOSED | {'open'}
 SEVERITIES = {'blocker', 'major', 'nit'}
 REVIEW_ROUND_CAP = 4
-# Process records are not code: editing them must not make code evidence stale.
-RECORD_DIRS = ('work', '.work')
+# Only progress/evidence records are excluded. Checks and policy affect evidence.
+RECORD_DIRS = ('work/changes', '.work')
 RECORD_PREFIXES = tuple(d + '/' for d in RECORD_DIRS)
 TEST_DIRS = {'test', 'tests', 'integration_test', 'androidTest'}
 TEST_SUFFIXES = ('_test.dart', 'Test.kt', 'Tests.kt', '_test.py', '_test.rs')
@@ -36,6 +36,10 @@ TEST_SUFFIXES = ('_test.dart', 'Test.kt', 'Tests.kt', '_test.py', '_test.rs')
 
 class Blocked(Exception):
     """A gate, guard or configuration problem the caller must resolve."""
+
+
+class NoChecksSelected(Blocked):
+    """Valid configuration, but no changed domain requests a check."""
 
 
 # ---------------------------------------------------------------- utilities
@@ -92,7 +96,7 @@ def docs_fingerprint(folder: Path) -> str:
 
 def changed_paths(root: Path, base: str = 'HEAD') -> list[str]:
     """Paths that differ from base, plus untracked files, excluding records."""
-    tracked = git(root, 'diff', '--name-only', '-z', base, check=False).split('\0')
+    tracked = git(root, 'diff', '--name-only', '-z', base).split('\0')
     untracked = git(root, 'ls-files', '-z', '--others', '--exclude-standard').split('\0')
     return sorted({p for p in tracked + untracked if p and not is_record(p)})
 
@@ -334,7 +338,7 @@ def missing_evidence(root: Path, base: str) -> list[str]:
     try:
         config = load_config(root)
         required = select_checks(root, config, ['auto'], base)
-    except Blocked:
+    except NoChecksSelected:
         return []  # nothing in a checked domain changed
     evidence, current = check_evidence(root), fingerprint(root)
     problems = []
@@ -459,7 +463,7 @@ def select_checks(root: Path, config: dict, names: list[str], base: str) -> list
             raise Blocked(f'unknown check "{name}"; known: {", ".join(config["checks"])}, auto')
     ordered = [k for k in config['checks'] if k in keys]  # config order keeps Flutter and Gradle serial
     if not ordered:
-        raise Blocked('no check selected: nothing changed in a configured domain')
+        raise NoChecksSelected('no check selected: nothing changed in a configured domain')
     return ordered
 
 
@@ -482,29 +486,60 @@ def worktree_changes(root: Path) -> list[tuple[str, str]]:
     return items
 
 
-def prove(root: Path, command: list[str], timeout: int) -> dict:
-    """Run command with every non-test code change reverted to HEAD; it must fail.
+def prove(root: Path, command: list[str], timeout: int,
+          expected_failure: str | None = None) -> dict:
+    """Green/red/green command evidence with an explicit regression signature.
 
-    Restores the working tree afterwards, including on errors and Ctrl-C.
+    Changes are restored even on errors/Ctrl-C. The signature is a literal assertion
+    diagnostic selected by the caller, not automatic proof of semantic causality.
     """
     if not command:
-        raise Blocked('usage: prove -- <test command>')
-    try:
-        domains = {d: pats for d, pats in load_config(root)['domains'].items() if d != 'workflow'}
-    except (Blocked, OSError, KeyError, ValueError):
-        domains = None
+        raise Blocked('usage: prove --expect-failure <assertion text> -- <test command>')
+    domains = {d: pats for d, pats in load_config(root)['domains'].items() if d != 'workflow'}
+
     def is_code(path: str) -> bool:
         if path.startswith('scripts/work/'):
-            return False  # never revert the tool that is running
-        if domains is None:
-            return True
+            return False
         return any(fnmatch.fnmatchcase(path, pat) for pats in domains.values() for pat in pats)
+
     targets = sorted({p for _, p in worktree_changes(root)
                       if not is_test(p) and not is_record(p) and is_code(p)})
     if not targets:
         raise Blocked('no non-test code change to revert; prove needs a fix in the working tree')
+    directory = root / '.work/proofs' / datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%S%fZ')
+    directory.mkdir(parents=True)
+    before = fingerprint(root)
+    phases = {}
+
+    def execute(phase):
+        log = directory / (phase + '.log')
+        result = run_one(command, root, log, timeout, None)
+        result['log'] = log.relative_to(root).as_posix()
+        phases[phase] = result
+        return result, log.read_text(errors='replace')
+
+    def report(status, meaning, reverted, output=''):
+        result = {'status': status, 'meaning': meaning, 'reverted': reverted,
+                  'command': command, 'expected_failure': expected_failure,
+                  'fingerprint': before, 'phases': phases,
+                  'output_tail': output[-4000:],
+                  'scope': 'Command transitions and literal diagnostic only; inspect failure cause.'}
+        (directory / 'report.json').write_text(json.dumps(result, indent=2) + '\n')
+        return result
+
+    baseline, output = execute('with_fix')
+    if baseline['status'] != 'PASS':
+        return report('INCONCLUSIVE', 'the command must pass with the fix before testing the old code', [], output)
+    if fingerprint(root) != before:
+        return report('INCONCLUSIVE', 'the baseline command changed tracked or untracked inputs', [], output)
+    if not expected_failure or not expected_failure.strip():
+        return report('INCONCLUSIVE', 'provide --expect-failure with the specific regression assertion diagnostic', [])
+    if expected_failure in output:
+        return report('INCONCLUSIVE', 'failure diagnostic also appears in the passing run; choose a specific assertion', [], output)
+
     backup = Path(tempfile.mkdtemp(prefix='work-prove-'))
     saved: list[tuple[str, bool]] = []
+
     def interrupted(*_):
         raise KeyboardInterrupt
 
@@ -519,16 +554,19 @@ def prove(root: Path, command: list[str], timeout: int) -> dict:
             saved.append((path, exists))
             head = subprocess.run(['git', 'show', f'HEAD:{path}'], cwd=root, capture_output=True)
             if head.returncode == 0:
+                # Never follow a changed symlink while writing the temporary old file.
+                if full.is_symlink():
+                    full.unlink()
                 full.parent.mkdir(parents=True, exist_ok=True)
                 full.write_bytes(head.stdout)
             elif exists:
                 full.unlink()
-        log = Path(backup) / 'prove.log'
-        result = run_one(command, root, log, timeout, None)
-        output = log.read_text(errors='replace')[-4000:]
+        negative, output = execute('without_fix')
     finally:
         for path, existed in saved:
             full = root / path
+            if full.is_symlink():
+                full.unlink()
             if existed:
                 full.parent.mkdir(parents=True, exist_ok=True)
                 shutil.copy2(backup / path, full, follow_symlinks=False)
@@ -536,11 +574,20 @@ def prove(root: Path, command: list[str], timeout: int) -> dict:
                 full.unlink()
         signal.signal(signal.SIGTERM, previous)
         shutil.rmtree(backup, ignore_errors=True)
-    outcome = {'FAIL': ('PASS', 'the test fails without the fix, so it detects the bug'),
-               'PASS': ('FAIL', 'the test passes without the fix: it does not prove the fix')}.get(
-        result['status'], ('INCONCLUSIVE', f'the command ended {result["status"]}; nothing was proved'))
-    return {'status': outcome[0], 'meaning': outcome[1], 'reverted': targets,
-            'command_result': result['status'], 'seconds': result.get('seconds'), 'output_tail': output}
+
+    if fingerprint(root) != before:
+        return report('INCONCLUSIVE', 'inputs changed during the negative run; inspect the tree', targets, output)
+    restored, restored_output = execute('restored_fix')
+    if restored['status'] != 'PASS' or fingerprint(root) != before:
+        return report('INCONCLUSIVE', 'the restored fix did not pass unchanged', targets, restored_output)
+    if expected_failure in restored_output:
+        return report('INCONCLUSIVE', 'failure diagnostic appears in the restored passing run', targets, restored_output)
+    if negative['status'] == 'PASS':
+        return report('FAIL', 'the same command also passes without the fix', targets, output)
+    if (negative['status'] != 'FAIL' or (negative.get('exit_code') or 0) <= 0
+            or expected_failure not in output):
+        return report('INCONCLUSIVE', 'old-code failure was not the expected regression assertion', targets, output)
+    return report('PASS', 'the same command passed with/restored fix and failed without it with the expected diagnostic; review the logs to confirm the cause', targets, output)
 
 
 # ------------------------------------------------------------------- packet
@@ -647,6 +694,7 @@ def main(argv: list[str] | None = None) -> int:
     s = sub.add_parser('check'); s.add_argument('names', nargs='+'); s.add_argument('--base', default='HEAD')
     sub.add_parser('fresh')
     s = sub.add_parser('prove'); s.add_argument('--timeout', type=int, default=900)
+    s.add_argument('--expect-failure', help='literal regression assertion diagnostic, not a test name or compiler error')
     s.add_argument('cmd', nargs=argparse.REMAINDER)
     s = sub.add_parser('packet'); s.add_argument('--base', default='HEAD'); s.add_argument('--goal')
     s.add_argument('--change'); s.add_argument('--out', default='.work/review/packet.md')
@@ -700,7 +748,7 @@ def main(argv: list[str] | None = None) -> int:
             result = {'status': 'PASS' if ok else 'STALE_OR_INCOMPLETE'}
         elif args.action == 'prove':
             command = args.cmd[1:] if args.cmd[:1] == ['--'] else args.cmd
-            result = prove(root, command, args.timeout)
+            result = prove(root, command, args.timeout, expected_failure=args.expect_failure)
         else:
             result = packet(root, args.base, args.goal, args.change, args.out)
     except (Blocked, OSError, KeyError, ValueError) as error:

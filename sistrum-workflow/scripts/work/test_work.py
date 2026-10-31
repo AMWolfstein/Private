@@ -74,6 +74,18 @@ class FingerprintTests(Repo):
         self.write('work/changes/001-x/log.md', 'entry')
         self.assertEqual(before, work.fingerprint(self.root))
 
+    def test_check_configuration_changes_invalidate_fingerprint(self):
+        before = work.fingerprint(self.root)
+        config = json.loads((self.root / 'work/checks.json').read_text())
+        config['checks']['analyze']['run'] = [PY, '-c', 'pass']
+        self.write('work/checks.json', json.dumps(config))
+        self.assertNotEqual(before, work.fingerprint(self.root))
+
+    def test_check_configuration_deletion_invalidates_fingerprint(self):
+        before = work.fingerprint(self.root)
+        (self.root / 'work/checks.json').unlink()
+        self.assertNotEqual(before, work.fingerprint(self.root))
+
     def test_committing_keeps_the_same_fingerprint(self):
         self.write('lib/app.dart', 'changed\n')
         before = work.fingerprint(self.root)
@@ -111,6 +123,15 @@ class ScopeTests(Repo):
         self.write('work/changes/001-x/spec.md', 'x')
         with self.assertRaises(work.Blocked):
             work.select_checks(self.root, config, ['auto'], 'HEAD')
+
+    def test_check_config_change_selects_workflow_checks(self):
+        config = work.load_config(self.root)
+        self.write('work/checks.json', json.dumps(config, indent=4))
+        self.assertEqual(work.select_checks(self.root, config, ['auto'], 'HEAD'), ['workflow'])
+
+    def test_invalid_base_cannot_hide_changed_paths(self):
+        with self.assertRaises(work.Blocked):
+            work.changed_paths(self.root, 'not-a-real-revision')
 
     def test_tests_are_recognised(self):
         for path in ('test/a_test.dart', 'android/app/src/test/kotlin/A.kt',
@@ -185,13 +206,15 @@ class ProveTests(Repo):
     def setUp(self):
         super().setUp()
         # The "test" fails unless lib/app.dart contains "fixed".
-        self.write('test/app_test.py', 'import sys\nsys.exit(0 if "fixed" in open("lib/app.dart").read() else 1)\n')
+        self.failure = 'REGRESSION: expected fixed playback'
+        self.write('test/app_test.py',
+                   'assert "fixed" in open("lib/app.dart").read(), ' + repr(self.failure) + '\n')
         self.command = [PY, 'test/app_test.py']
 
     def test_prove_passes_when_test_fails_without_fix(self):
         self.write('lib/app.dart', 'fixed\n')
         self.write('lib/helper.dart', 'new file\n')
-        result = work.prove(self.root, self.command, 30)
+        result = work.prove(self.root, self.command, 30, expected_failure=self.failure)
         self.assertEqual(result['status'], 'PASS')
         self.assertEqual(result['reverted'], ['lib/app.dart', 'lib/helper.dart'])
         self.assertEqual((self.root / 'lib/app.dart').read_text(), 'fixed\n')
@@ -199,7 +222,7 @@ class ProveTests(Repo):
 
     def test_prove_fails_when_test_does_not_detect_bug(self):
         self.write('lib/app.dart', 'fixed\n')
-        result = work.prove(self.root, [PY, '-c', 'pass'], 30)
+        result = work.prove(self.root, [PY, '-c', 'pass'], 30, expected_failure=self.failure)
         self.assertEqual(result['status'], 'FAIL')
         self.assertEqual((self.root / 'lib/app.dart').read_text(), 'fixed\n')
 
@@ -208,7 +231,7 @@ class ProveTests(Repo):
         self.commit('add old')
         (self.root / 'lib/old.dart').unlink()
         self.write('lib/app.dart', 'fixed\n')
-        work.prove(self.root, self.command, 30)
+        work.prove(self.root, self.command, 30, expected_failure=self.failure)
         self.assertFalse((self.root / 'lib/old.dart').exists())
 
     def test_prove_leaves_tool_and_non_code_files_alone(self):
@@ -216,7 +239,8 @@ class ProveTests(Repo):
         self.write('scripts/work/work.py', 'the running tool\n')
         self.write('notes.txt', 'owner notes\n')
         seen = 'import os; print(os.path.exists("scripts/work/work.py"), os.path.exists("notes.txt"))'
-        result = work.prove(self.root, [PY, '-c', seen + '; raise SystemExit(1)'], 30)
+        result = work.prove(self.root, [PY, '-c', seen + '; exec(open("test/app_test.py").read())'], 30,
+                            expected_failure=self.failure)
         self.assertEqual(result['reverted'], ['lib/app.dart'])
         self.assertIn('True True', result['output_tail'])
 
@@ -229,6 +253,49 @@ class ProveTests(Repo):
     def test_prove_needs_a_non_test_change(self):
         with self.assertRaises(work.Blocked):
             work.prove(self.root, self.command, 30)
+
+    def test_always_failing_command_cannot_prove_a_fix(self):
+        self.write('lib/app.dart', 'fixed\n')
+        result = work.prove(self.root, [PY, '-c', 'raise SystemExit(7)'], 30)
+        self.assertNotEqual(result['status'], 'PASS')
+        self.assertEqual((self.root / 'lib/app.dart').read_text(), 'fixed\n')
+
+    def test_prove_requires_recognized_regression_failure(self):
+        self.write('lib/app.dart', 'fixed\n')
+        result = work.prove(self.root, self.command, 30, expected_failure='EXPECTED ASSERTION')
+        self.assertEqual(result['status'], 'INCONCLUSIVE')
+        self.assertEqual((self.root / 'lib/app.dart').read_text(), 'fixed\n')
+
+    def test_prove_without_failure_signature_is_inconclusive(self):
+        self.write('lib/app.dart', 'fixed\n')
+        result = work.prove(self.root, self.command, 30)
+        self.assertEqual(result['status'], 'INCONCLUSIVE')
+
+    def test_prove_requires_restored_run_to_pass(self):
+        self.write('lib/app.dart', 'fixed\n')
+        self.write('test/app_test.py',
+                   'from pathlib import Path\n'
+                   'counter = Path(".work/run-count")\n'
+                   'n = int(counter.read_text()) + 1 if counter.exists() else 1\n'
+                   'counter.write_text(str(n))\n'
+                   'assert n != 3, "restored run failed"\n'
+                   'assert "fixed" in Path("lib/app.dart").read_text(), ' + repr(self.failure) + '\n')
+        result = work.prove(self.root, self.command, 30, expected_failure=self.failure)
+        self.assertEqual(result['status'], 'INCONCLUSIVE')
+        self.assertEqual(result['phases']['restored_fix']['status'], 'FAIL')
+        self.assertEqual((self.root / 'lib/app.dart').read_text(), 'fixed\n')
+
+    def test_prove_cli_and_persistent_phase_logs(self):
+        self.write('lib/app.dart', 'fixed\n')
+        self.assertEqual(work.main(['--root', str(self.root), 'prove',
+                                   '--expect-failure', self.failure, '--', *self.command]), 0)
+        reports = list((self.root / '.work/proofs').glob('*/report.json'))
+        self.assertEqual(len(reports), 1)
+        report = json.loads(reports[0].read_text())
+        self.assertEqual(report['status'], 'PASS')
+        self.assertEqual(list(report['phases']), ['with_fix', 'without_fix', 'restored_fix'])
+        for phase in report['phases'].values():
+            self.assertTrue((self.root / phase['log']).is_file())
 
 
 class GateTests(Repo):
@@ -320,6 +387,35 @@ class GateTests(Repo):
         self.commit('feature')
         with self.assertRaisesRegex(work.Blocked, 'no passing "analyze"'):
             work.advance(self.root, self.id, 'review')
+
+    def test_missing_config_blocks_review_gate(self):
+        self.walk_to_build()
+        self.good_tasks(done=True)
+        self.write('lib/app.dart', 'feature code\n')
+        (self.root / 'work/checks.json').unlink()
+        with self.assertRaisesRegex(work.Blocked, 'checks.json'):
+            work.advance(self.root, self.id, 'review')
+
+    def test_invalid_config_blocks_review_gate(self):
+        self.walk_to_build()
+        self.good_tasks(done=True)
+        self.write('lib/app.dart', 'feature code\n')
+        config = work.load_config(self.root)
+        config['checks']['analyze']['requires'] = 'not-a-list'
+        self.write('work/checks.json', json.dumps(config))
+        with self.assertRaises(work.Blocked):
+            work.advance(self.root, self.id, 'review')
+
+    def test_record_only_change_does_not_require_code_evidence(self):
+        self.assertEqual(work.missing_evidence(self.root, 'HEAD'), [])
+
+    def test_changed_check_command_makes_evidence_stale(self):
+        self.write('lib/app.dart', 'feature code\n')
+        self.pass_checks('analyze', 'dart-tests')
+        config = work.load_config(self.root)
+        config['checks']['analyze']['run'] = [PY, '-c', 'pass']
+        self.write('work/checks.json', json.dumps(config))
+        self.assertTrue(any('stale' in p for p in work.missing_evidence(self.root, 'HEAD')))
 
     def test_ship_needs_clean_round_on_final_code(self):
         self.walk_to_build()
