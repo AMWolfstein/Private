@@ -38,7 +38,7 @@ python3 scripts/work/work.py status            # active changes, freshness of th
 python3 scripts/work/work.py scope             # domains, high-risk paths and checks for the current diff
 python3 scripts/work/work.py check auto        # run the checks for the changed paths, store evidence
 python3 scripts/work/work.py fresh             # does the last passing evidence match the tree?
-python3 scripts/work/work.py prove -- <cmd>    # the test must fail with every non-test change reverted
+python3 scripts/work/work.py prove --expect-failure "<assertion diagnostic>" -- <cmd>
 python3 scripts/work/work.py new "<title>" --size feature|architecture
 python3 scripts/work/work.py lint [NNN]        # spec/plan/tasks/findings consistency
 python3 scripts/work/work.py packet --change NNN --out .work/review/NNN-code-r1.md
@@ -46,9 +46,22 @@ python3 scripts/work/work.py round NNN design|code clean|dirty --reviewer NAME
 python3 scripts/work/work.py advance NNN <phase>
 ```
 
-Evidence is identified by git's tree id of all non-ignored files except `work/` and `.work/`, so generated output
-never makes it stale and committing does not either. `check` runs the configured commands one at a time, splits
+Evidence is identified by git's tree id of all non-ignored files except `work/changes/` and `.work/`.
+Check configuration, constitution, templates and lessons are included: changing them invalidates previous
+evidence. Progress records and ignored generated output do not invalidate it; committing does not either.
+Missing or invalid check configuration blocks review gates. `check` runs the configured commands one at a time, splits
 `flutter test` by top-level test folder, and reports a chunk that stops printing as STALLED after one retry.
+
+`prove` requires the same command to pass with the fix, fail with the configured non-test code changes
+reverted to HEAD, and pass again after restoring the fix. The failing run must contain the literal
+`--expect-failure` assertion diagnostic, absent from both passing runs. Missing diagnostics, timeouts or a
+failing baseline/restored run are INCONCLUSIVE. A test that passes without the fix is FAIL. Phase logs and
+`report.json` remain under `.work/proofs/`. Inspect the failure cause: matching text alone cannot prove
+semantic correctness. Use a specific assertion message, not a test name or compiler error.
+
+The command temporarily changes the active working tree; do not run it alongside edits or other builds.
+Normal errors and interrupts restore the selected files, but forced process termination cannot guarantee
+restoration. The command must leave non-ignored inputs unchanged.
 
 ## Install in a repository
 

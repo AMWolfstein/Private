@@ -35,11 +35,16 @@ protection, accessibility and hardware calibration.
 ## 4. Prove the test
 
 ```sh
-python3 scripts/work/work.py prove -- flutter test test/path/to_test.dart --plain-name "test name"
+python3 scripts/work/work.py prove --expect-failure "<specific assertion diagnostic>" -- flutter test test/path/to_test.dart --plain-name "test name"
 ```
 
-`prove` puts every non-test change back to HEAD, runs the command, requires it to fail, and restores your
-changes. `PASS` means the test detects the bug. `FAIL` means it does not: fix the test, not the result.
+`prove` runs the same command with the fix, with configured non-test code changes reverted to HEAD, and
+again after restoring the fix. It requires pass/fail/pass and the literal assertion diagnostic only in the
+failing run. `FAIL` means the test also passes without the fix. Missing diagnostics, timeouts or a failing
+baseline/restored run are `INCONCLUSIVE`, never success. Inspect `.work/proofs/` logs to confirm the failure
+is the regression, not a compiler or environment error; a text match alone cannot establish causality.
+Run without concurrent edits or builds; this command temporarily changes the working tree. Forced
+termination can prevent restoration. Checks must leave non-ignored inputs unchanged.
 
 ## 5. Verify
 
