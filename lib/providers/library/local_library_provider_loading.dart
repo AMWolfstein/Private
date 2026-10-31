@@ -244,7 +244,11 @@ extension _LocalLibraryLoading on LocalLibraryNotifier {
         return await _availabilityProbe(path);
       }
       if (Platform.isAndroid && path.startsWith('content://')) {
-        return await MediaFileBridge.probeSafTreeReadAccess(path);
+        return switch (await MediaFileBridge.probeSafTreeReadAccess(path)) {
+          SafTreeReadAccess.readable => true,
+          SafTreeReadAccess.unreadable => false,
+          SafTreeReadAccess.unknown => null,
+        };
       }
 
       return await Directory(path).exists();

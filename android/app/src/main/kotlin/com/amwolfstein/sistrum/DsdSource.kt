@@ -40,7 +40,7 @@ internal class WavPackDsdSource private constructor(private var handle: Long) : 
 
     companion object {
         fun open(path: String): WavPackDsdSource? {
-            val handle = NativeAudio.openWavPack(path)
+            val handle = NativeAudio.openWavPack(path.toByteArray(Charsets.UTF_8))
             if (handle == 0L) return null
             try { return nativePlaybackCall { WavPackDsdSource(handle) } }
             catch (error: Exception) {

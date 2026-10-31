@@ -180,18 +180,40 @@ List<int> _ints(Object? value) => value is List
 
 const _channel = MethodChannel('com.amwolfstein.sistrum/audio_route');
 
+/// Outcome of reading the audio route. Null is not used for either missing
+/// support or a failed call, so the two stay distinguishable.
+sealed class AudioRouteRead {
+  const AudioRouteRead();
+}
+
+final class AudioRouteFound extends AudioRouteRead {
+  const AudioRouteFound(this.info);
+  final AudioRouteInfo info;
+}
+
+/// The platform has no route to report (no implementation, or it returned none).
+final class AudioRouteNotAvailable extends AudioRouteRead {
+  const AudioRouteNotAvailable();
+}
+
+final class AudioRouteReadFailed extends AudioRouteRead {
+  const AudioRouteReadFailed(this.error);
+  final Object error;
+}
+
 /// Reads the current route; [path] adds what the platform decoder sees for a
-/// local file. Returns null where the platform has no implementation.
-Future<AudioRouteInfo?> readAudioRouteInfo({String? path}) async {
+/// local file.
+Future<AudioRouteRead> readAudioRouteInfo({String? path}) async {
   try {
     final map = await _channel.invokeMapMethod<String, dynamic>('read', {
       'path': ?path,
     });
-    return map == null ? null : AudioRouteInfo.fromMap(map);
+    if (map == null) return const AudioRouteNotAvailable();
+    return AudioRouteFound(AudioRouteInfo.fromMap(map));
   } on MissingPluginException {
-    return null;
+    return const AudioRouteNotAvailable();
   } catch (error) {
     _log.w('Failed to read audio route: $error');
-    return null;
+    return AudioRouteReadFailed(error);
   }
 }

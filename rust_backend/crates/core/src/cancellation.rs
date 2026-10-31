@@ -1,14 +1,14 @@
 //! Request cancellation with Go-compatible sentinels and reference counting.
 //!
-//! Leases release their reference on drop; an
-//! explicit release also wakes a pending wait. Shutdown closes the instance and
-//! wakes all leases, including untracked requests with an empty ID.
+//! Work polls `check_active` at its checkpoints; cancellation is never pushed.
+//! Leases release their reference on drop. Shutdown closes the instance, so
+//! every later check fails, including for untracked requests with an empty ID.
 
 use std::collections::BTreeMap;
+use std::collections::VecDeque;
 use std::fmt;
 use std::sync::atomic::{AtomicBool, Ordering};
-use std::sync::{Arc, Condvar, Mutex, Weak};
-use std::thread::Thread;
+use std::sync::{Arc, Mutex};
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum CancellationError {
@@ -35,10 +35,35 @@ struct Entry {
     references: usize,
 }
 
+/// Cancelled ids that no lease holds yet. A pre-cancel is kept so a later
+/// acquire of the same id starts cancelled; only the newest are kept, so a
+/// stream of cancels for ids that never run cannot grow the registry.
+const MAX_TOMBSTONES: usize = 256;
+
 #[derive(Default)]
 struct State {
     closed: bool,
     entries: BTreeMap<String, Entry>,
+    tombstones: VecDeque<String>,
+}
+
+impl State {
+    fn remember_tombstone(&mut self, id: &str) {
+        self.tombstones.push_back(id.to_owned());
+        while self.tombstones.len() > MAX_TOMBSTONES {
+            let Some(oldest) = self.tombstones.pop_front() else {
+                break;
+            };
+            // Only drop it while no lease holds it; a live lease owns its entry.
+            if self
+                .entries
+                .get(&oldest)
+                .is_some_and(|entry| entry.references == 0)
+            {
+                self.entries.remove(&oldest);
+            }
+        }
+    }
 }
 
 impl State {
@@ -51,28 +76,11 @@ impl State {
     }
 }
 
+/// Cancellation is cooperative: work observes it through `check_active` and
+/// `is_cancelled` at its checkpoints, so there is no wake-up to deliver.
 #[derive(Default)]
 struct Shared {
     state: Mutex<State>,
-    changed: Condvar,
-    threads: Mutex<Vec<Weak<Thread>>>,
-}
-
-impl Shared {
-    fn notify(&self) {
-        self.changed.notify_all();
-        self.threads
-            .lock()
-            .expect("cancellation thread lock")
-            .retain(|thread| {
-                if let Some(thread) = thread.upgrade() {
-                    thread.unpark();
-                    true
-                } else {
-                    false
-                }
-            });
-    }
 }
 
 pub struct CancellationRegistry {
@@ -114,19 +122,16 @@ impl CancellationRegistry {
     ) -> Result<(), CancellationError> {
         let mut state = self.shared.state.lock().expect("cancellation state lock");
         state.check_open()?;
-        let mut changed = false;
         for id in ids.into_iter().filter(|id| !id.is_empty()) {
+            if !state.entries.contains_key(id) {
+                state.remember_tombstone(id);
+            }
             state
                 .entries
                 .entry(id.to_owned())
                 .or_default()
                 .cancelled
                 .store(true, Ordering::Release);
-            changed = true;
-        }
-        drop(state);
-        if changed {
-            self.shared.notify();
         }
         Ok(())
     }
@@ -146,7 +151,6 @@ impl CancellationRegistry {
         state.closed = true;
         state.entries.clear();
         drop(state);
-        self.shared.notify();
     }
 }
 
@@ -205,7 +209,6 @@ impl RequestLease {
             }
         }
         drop(state);
-        self.shared.notify();
     }
 }
 
@@ -231,6 +234,22 @@ mod tests {
         assert!(!second.is_cancelled().unwrap());
         assert!(registry.acquire("idle").unwrap().is_cancelled().unwrap());
         assert!(registry.is_cancelled("音楽").unwrap());
+    }
+
+    #[test]
+    fn pre_cancels_for_ids_that_never_run_are_bounded() {
+        let registry = CancellationRegistry::new();
+        let ids: Vec<String> = (0..MAX_TOMBSTONES * 3)
+            .map(|i| format!("never-{i}"))
+            .collect();
+        registry
+            .cancel_many(ids.iter().map(String::as_str))
+            .unwrap();
+        let entries = registry.shared.state.lock().unwrap().entries.len();
+        assert!(entries <= MAX_TOMBSTONES, "kept {entries} pre-cancels");
+        // The newest pre-cancel still applies to a later acquire.
+        let newest = ids.last().unwrap();
+        assert!(registry.acquire(newest).unwrap().is_cancelled().unwrap());
     }
 
     #[test]

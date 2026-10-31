@@ -10,6 +10,7 @@ import org.json.JSONObject
 // while app initialization is still running. Acquire before queuing on IO, so
 // a following channel cancellation also reaches work that has not started.
 internal object NativeDataJobs {
+    private const val SAF_TIMESTAMP_CHUNK = 50
     private val registry = CancellationRegistry()
     private val active = mutableMapOf<String, MutableList<RequestLease>>()
 
@@ -63,13 +64,17 @@ internal fun MainActivity.runNativeDataJobPlatform(arguments: Any?, lease: Reque
                         .put("cursor", cursor).put("limit", 500)
                     val page = JSONObject(RustCoreBackend.runDataJob(pageRequest, byteArrayOf(), lease))
                     val paths = page.getJSONArray("paths")
-                    val uris = JSONArray()
-                    for (index in 0 until paths.length()) uris.put(paths.getJSONObject(index).getString("file_path"))
-                    val times = JSONObject(getSafFileModTimes(uris.toString()))
-                    val keys = times.keys()
-                    while (keys.hasNext()) {
-                        val path = keys.next()
-                        backfilled.put(path, times.getLong(path))
+                    val uris = List(paths.length()) { index -> paths.getJSONObject(index).getString("file_path") }
+                    // Each provider query can be slow; check between small chunks so a
+                    // cancel does not wait for a whole page of 500 lookups.
+                    for (chunk in uris.chunked(SAF_TIMESTAMP_CHUNK)) {
+                        checkActive()
+                        val times = JSONObject(getSafFileModTimes(JSONArray(chunk).toString()))
+                        val keys = times.keys()
+                        while (keys.hasNext()) {
+                            val path = keys.next()
+                            backfilled.put(path, times.getLong(path))
+                        }
                     }
                     cursor = page.getString("cursor")
                 } while (page.getBoolean("has_more"))

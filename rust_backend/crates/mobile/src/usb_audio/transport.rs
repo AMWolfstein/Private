@@ -82,9 +82,19 @@ impl Output {
                             .map(Volume::snapshot)
                             .unwrap_or_default();
                         let _ = tx.send(Ok(session.format.clone()));
-                        if let Err(error) = session.run(&state) {
-                            let mut s = state.0.lock().unwrap();
-                            s.error = Some(error);
+                        // A panic in the transfer loop must reach the caller as an
+                        // error; otherwise the feeder waits on a queue that never drains.
+                        let run = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+                            session.run(&state)
+                        }));
+                        let failure = match run {
+                            Ok(Ok(())) => None,
+                            Ok(Err(error)) => Some(error),
+                            Err(_) => Some("USB audio worker stopped unexpectedly".to_string()),
+                        };
+                        if let Some(error) = failure {
+                            let mut s = state.0.lock().unwrap_or_else(|p| p.into_inner());
+                            s.error.get_or_insert(error);
                             s.playing = false;
                         }
                     }

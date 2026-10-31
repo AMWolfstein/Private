@@ -37,6 +37,9 @@ class ContentUriPlaybackLease {
 
 /// Storage Access Framework trees, content URIs, and file metadata reached
 /// through the native backend.
+/// Result of a SAF tree read probe. Only [unreadable] may hide a source.
+enum SafTreeReadAccess { readable, unreadable, unknown }
+
 class MediaFileBridge {
   /// Holds local backend access until the media operation finishes.
   static Future<String> acquireMediaDirectory(String path) async {
@@ -104,22 +107,28 @@ class MediaFileBridge {
   }
 
   /// Read access for a Library source, independent of download write access.
-  /// Null means the provider could not confirm access (loading/query failure).
-  static Future<bool?> probeSafTreeReadAccess(String treeUri) async {
+  /// [SafTreeReadAccess.unknown] means the provider could not answer; that is
+  /// not evidence that the source is gone.
+  static Future<SafTreeReadAccess> probeSafTreeReadAccess(String treeUri) async {
+    SafTreeReadAccess toAccess(bool? readable) => switch (readable) {
+      true => SafTreeReadAccess.readable,
+      false => SafTreeReadAccess.unreadable,
+      null => SafTreeReadAccess.unknown,
+    };
     try {
       Future<bool?> probe() => nativeBackendChannel.invokeMethod<bool>(
         'probeSafTreeReadAccess',
         {'tree_uri': treeUri},
       );
       final readable = await probe();
-      if (readable != false) return readable;
+      if (readable != false) return toAccess(readable);
       // A busy provider can briefly return an empty root after a write.
       // Confirm a negative before hiding all tracks from this source.
       await Future<void>.delayed(const Duration(milliseconds: 200));
-      return await probe();
+      return toAccess(await probe());
     } catch (e) {
       _log.w('Failed to probe SAF library read access: $e');
-      return null;
+      return SafTreeReadAccess.unknown;
     }
   }
 

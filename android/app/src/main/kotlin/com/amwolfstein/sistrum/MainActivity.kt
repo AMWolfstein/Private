@@ -119,7 +119,23 @@ class MainActivity: FlutterFragmentActivity() {
             val process = ProcessBuilder("logcat", "-d", "-v", "threadtime", "--pid=$pid")
                 .redirectErrorStream(true)
                 .start()
-            val output = process.inputStream.bufferedReader().use { it.readText() }
+            // Drain stdout on its own thread so the deadline bounds the read itself:
+            // a logcat that keeps the pipe open must not block this caller.
+            val collected = java.util.concurrent.atomic.AtomicReference("")
+            val reader = Thread {
+                try {
+                    collected.set(process.inputStream.bufferedReader().use { it.readText() })
+                } catch (_: java.io.IOException) {
+                    // The pipe closes when the process is destroyed; the timeout path reports it.
+                }
+            }.apply { isDaemon = true; start() }
+            reader.join(APP_LOGCAT_TIMEOUT_SECONDS * 1000)
+            if (reader.isAlive) {
+                process.destroyForcibly()
+                android.util.Log.w("Sistrum", "App logcat read timed out")
+                return ""
+            }
+            val output = collected.get()
             if (!process.waitFor(APP_LOGCAT_TIMEOUT_SECONDS, TimeUnit.SECONDS)) {
                 process.destroyForcibly()
                 android.util.Log.w("Sistrum", "App logcat read timed out")
@@ -144,6 +160,7 @@ class MainActivity: FlutterFragmentActivity() {
     private var flutterBackCallback: OnBackPressedCallback? = null
     private val playbackLeaseLock = Any()
     private val playbackLeases = LinkedHashMap<String, ParcelFileDescriptor>()
+    private val MAX_PLAYBACK_LEASES = 8
     private val safTreeLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { activityResult ->
@@ -536,15 +553,22 @@ class MainActivity: FlutterFragmentActivity() {
             return null
         }
         val token = UUID.randomUUID().toString()
-        synchronized(playbackLeaseLock) {
-            while (playbackLeases.size >= 4) {
-                val oldest = playbackLeases.entries.firstOrNull() ?: break
-                playbackLeases.remove(oldest.key)
-                try {
-                    oldest.value.close()
-                } catch (_: Exception) {}
+        // Never evict a lease: Dart may still be opening the /proc/self/fd path it
+        // names. A full table means no lease, and Dart uses its copy fallback.
+        val accepted = synchronized(playbackLeaseLock) {
+            if (playbackLeases.size >= MAX_PLAYBACK_LEASES) {
+                false
+            } else {
+                playbackLeases[token] = descriptor
+                true
             }
-            playbackLeases[token] = descriptor
+        }
+        if (!accepted) {
+            android.util.Log.w("Sistrum", "Playback lease table full; using fallback")
+            try {
+                descriptor.close()
+            } catch (_: Exception) {}
+            return null
         }
         return mapOf(
             "token" to token,
@@ -602,8 +626,9 @@ class MainActivity: FlutterFragmentActivity() {
         if (isFinishing) {
             stopLibraryScanProgressStream()
             scope.cancel()
+            // Recreation keeps the engine and Dart's leases; only a real exit releases them.
+            closeAllSafPlaybackLeases()
         }
-        closeAllSafPlaybackLeases()
         super.onDestroy()
     }
 
@@ -917,7 +942,8 @@ class MainActivity: FlutterFragmentActivity() {
                             val title = call.argument<String>("title") ?: ""
                             try {
                                 val uri = Uri.parse(uriStr)
-                                val type = contentResolver.getType(uri) ?: "audio/*"
+                                // Provider IPC: keep it off the main thread.
+                                val type = withContext(Dispatchers.IO) { contentResolver.getType(uri) } ?: "audio/*"
                                 val shareIntent = Intent(Intent.ACTION_SEND).apply {
                                     putExtra(Intent.EXTRA_STREAM, uri)
                                     setType(type)

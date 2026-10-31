@@ -1,3 +1,4 @@
+#include <string>
 #include <jni.h>
 #include <oboe/Oboe.h>
 #include <wavpack.h>
@@ -243,13 +244,22 @@ JNIEXPORT jlong JNICALL JNI_AUDIO(framesOboe)(JNIEnv *env, jobject, jlong handle
     try { return outputs.get(handle)->frames(); } catch (const std::exception &e) { report(env, e); return 0; }
 }
 JNIEXPORT void JNICALL JNI_AUDIO(closeOboe)(JNIEnv *, jobject, jlong handle) { outputs.remove(handle); }
-JNIEXPORT jlong JNICALL JNI_AUDIO(openWavPack)(JNIEnv *env, jobject, jstring path) {
-    const char *text = env->GetStringUTFChars(path, nullptr);
-    if (!text) return 0;
+// Paths arrive as UTF-8 bytes. JNI strings are modified UTF-8, which encodes
+// non-BMP characters as surrogate pairs and so is not a valid filesystem path.
+static std::string utf8Path(JNIEnv *env, jbyteArray bytes) {
+    require(bytes != nullptr, "Missing audio path");
+    const jsize size = env->GetArrayLength(bytes);
+    require(size > 0 && size <= 4096, "Invalid audio path length");
+    std::string path(static_cast<size_t>(size), '\0');
+    env->GetByteArrayRegion(bytes, 0, size, reinterpret_cast<jbyte *>(&path[0]));
+    require(path.find('\0') == std::string::npos, "Invalid audio path");
+    return path;
+}
+
+JNIEXPORT jlong JNICALL JNI_AUDIO(openWavPack)(JNIEnv *env, jobject, jbyteArray path) {
     try {
-        auto decoder = std::make_shared<DsdDecoder>(text);
-        env->ReleaseStringUTFChars(path, text);
-        text = nullptr;
+        const std::string text = utf8Path(env, path);
+        auto decoder = std::make_shared<DsdDecoder>(text.c_str());
         if (!decoder->isDsd()) return 0; // PCM WavPack uses ordinary playback.
         require(decoder->channels >= 1 && decoder->channels <= 2 && decoder->samples > 0 &&
                 decoder->samples <= std::numeric_limits<int64_t>::max() / 8000000 &&
@@ -257,7 +267,6 @@ JNIEXPORT jlong JNICALL JNI_AUDIO(openWavPack)(JNIEnv *env, jobject, jstring pat
                 "Unsupported WavPack DSD format");
         return decoders.add(std::move(decoder));
     } catch (const std::exception &e) {
-        if (text) env->ReleaseStringUTFChars(path, text);
         report(env, e); return 0;
     }
 }
@@ -294,16 +303,12 @@ JNIEXPORT void JNICALL JNI_AUDIO(seekWavPack)(JNIEnv *env, jobject, jlong handle
     } catch (const std::exception &e) { report(env, e); }
 }
 JNIEXPORT void JNICALL JNI_AUDIO(closeWavPack)(JNIEnv *, jobject, jlong handle) { decoders.remove(handle); }
-JNIEXPORT jlong JNICALL JNI_AUDIO(openFlac)(JNIEnv *env, jobject, jstring path) {
-    const char *text = env->GetStringUTFChars(path, nullptr);
-    if (!text) return 0;
+JNIEXPORT jlong JNICALL JNI_AUDIO(openFlac)(JNIEnv *env, jobject, jbyteArray path) {
     try {
-        auto source = std::make_shared<FlacPcmSource>(text);
-        env->ReleaseStringUTFChars(path, text);
-        text = nullptr;
+        const std::string text = utf8Path(env, path);
+        auto source = std::make_shared<FlacPcmSource>(text.c_str());
         return flacSources.add(std::move(source));
     } catch (const std::exception &e) {
-        if (text) env->ReleaseStringUTFChars(path, text);
         report(env, e); return 0;
     }
 }

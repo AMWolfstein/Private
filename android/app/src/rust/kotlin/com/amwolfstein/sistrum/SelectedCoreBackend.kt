@@ -338,17 +338,17 @@ internal object RustCoreBackend : CoreBackend {
         val args = arguments as? Map<*, *> ?: emptyMap<Any, Any>()
         fun string(key: String, default: String = "") = args[key] as? String ?: default
         return when (method) {
-            "acquireMediaDirectory" -> synchronized(this) {
+            "acquireMediaDirectory" -> {
+                // Opening a grant can be slow; only the map insert needs the lock.
                 val scope = openMediaDirectory(string("path"))
                 val token = UUID.randomUUID().toString()
-                directoryScopes[token] = scope
+                synchronized(this) { directoryScopes[token] = scope }
                 token
             }
             "releaseMediaDirectory" -> synchronized(this) {
                 directoryScopes.remove(string("token"))?.close()
                 null
             }
-            "cancelNativeDataJob" -> { NativeDataJobs.cancel(string("request_id")); null }
             "getLogsSince" -> logs.since((args["index"] as? Number)?.toLong() ?: 0L)
             "clearLogs" -> { logs.clear(); null }
             "setLoggingEnabled" -> { logs.setEnabled(args["enabled"] as? Boolean ?: false); null }

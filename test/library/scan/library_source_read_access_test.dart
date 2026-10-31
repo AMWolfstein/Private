@@ -16,7 +16,7 @@ void main() {
       expect(call.arguments, {'tree_uri': tree});
       return true;
     });
-    expect(await MediaFileBridge.probeSafTreeReadAccess(tree), isTrue);
+    expect(await MediaFileBridge.probeSafTreeReadAccess(tree), equals(SafTreeReadAccess.readable));
   });
 
   test('a transient empty root recovers before being marked offline', () async {
@@ -25,7 +25,7 @@ void main() {
       expect(call.method, 'probeSafTreeReadAccess');
       return ++calls > 1;
     });
-    expect(await MediaFileBridge.probeSafTreeReadAccess(tree), isTrue);
+    expect(await MediaFileBridge.probeSafTreeReadAccess(tree), equals(SafTreeReadAccess.readable));
     expect(calls, 2);
   });
 
@@ -35,7 +35,7 @@ void main() {
       calls++;
       return false;
     });
-    expect(await MediaFileBridge.probeSafTreeReadAccess(tree), isFalse);
+    expect(await MediaFileBridge.probeSafTreeReadAccess(tree), equals(SafTreeReadAccess.unreadable));
     expect(calls, 2);
   });
 
@@ -45,15 +45,15 @@ void main() {
       if (++calls == 1) return null;
       return true;
     });
-    expect(await MediaFileBridge.probeSafTreeReadAccess(tree), isNull);
-    expect(await MediaFileBridge.probeSafTreeReadAccess(tree), isTrue);
+    expect(await MediaFileBridge.probeSafTreeReadAccess(tree), equals(SafTreeReadAccess.unknown));
+    expect(await MediaFileBridge.probeSafTreeReadAccess(tree), equals(SafTreeReadAccess.readable));
   });
 
   test('channel failure cannot confirm that a Library is offline', () async {
     messenger.setMockMethodCallHandler(channel, (call) async {
       throw PlatformException(code: 'provider_busy');
     });
-    expect(await MediaFileBridge.probeSafTreeReadAccess(tree), isNull);
+    expect(await MediaFileBridge.probeSafTreeReadAccess(tree), equals(SafTreeReadAccess.unknown));
   });
 
   test('failed confirmation is inconclusive, not a lost grant', () async {
@@ -62,6 +62,6 @@ void main() {
       if (++calls == 1) return false;
       throw PlatformException(code: 'provider_busy');
     });
-    expect(await MediaFileBridge.probeSafTreeReadAccess(tree), isNull);
+    expect(await MediaFileBridge.probeSafTreeReadAccess(tree), equals(SafTreeReadAccess.unknown));
   });
 }

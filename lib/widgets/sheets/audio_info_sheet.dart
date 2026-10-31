@@ -77,7 +77,8 @@ class _AudioInfoSheetState extends State<_AudioInfoSheet> {
     if (!mounted || generation != _loadGeneration) return;
     setState(() {
       _loading = false;
-      _route = results[0] as AudioRouteInfo?;
+      final route = results[0] as AudioRouteRead;
+      _route = route is AudioRouteFound ? route.info : null;
       _fileSize = results[1] as int?;
     });
   }

@@ -13,12 +13,12 @@ internal object NativeAudio {
     external fun flushOboe(handle: Long)
     external fun framesOboe(handle: Long): Long
     external fun closeOboe(handle: Long)
-    external fun openWavPack(path: String): Long
+    external fun openWavPack(path: ByteArray): Long
     external fun infoWavPack(handle: Long): LongArray
     external fun readWavPack(handle: Long, frames: Int): ByteArray
     external fun seekWavPack(handle: Long, sample: Long)
     external fun closeWavPack(handle: Long)
-    external fun openFlac(path: String): Long
+    external fun openFlac(path: ByteArray): Long
     external fun infoFlac(handle: Long): LongArray
     external fun readFlac(handle: Long, data: ByteBuffer, bits: Int): Int
     external fun seekFlac(handle: Long, sample: Long)

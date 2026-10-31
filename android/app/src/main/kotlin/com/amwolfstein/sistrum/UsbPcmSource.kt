@@ -39,7 +39,7 @@ internal class UsbPcmSource(path: String) : Closeable {
             if (BitPerfectPcm.flacFormat(header) != null) {
                 // Some vendor extractors report FLAC as audio/raw and silently
                 // truncate it to 16-bit. Open the original file with libFLAC.
-                flac = NativeAudio.openFlac(path)
+                flac = NativeAudio.openFlac(path.toByteArray(Charsets.UTF_8))
                 val format = NativeAudio.infoFlac(flac)
                 rate = format[0].toInt()
                 channels = format[1].toInt()

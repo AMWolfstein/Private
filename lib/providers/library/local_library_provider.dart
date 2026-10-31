@@ -362,7 +362,7 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState>
               return await MediaFileBridge.probeSafTreeReadAccess(
                     source.path,
                   ) ==
-                  true;
+                  SafTreeReadAccess.readable;
             }
             // Recheck access after the file probes, before deleting a page.
             // An empty but readable source is valid; an offline one throws.

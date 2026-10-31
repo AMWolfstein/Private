@@ -112,7 +112,7 @@ pub(super) fn write(request: &Value, check: Check<'_>) -> Result<Value, String> 
             .and_then(|_| writer.get_ref().sync_all())
             .map_err(|e| err("publish backup archive", e))?;
         check()?;
-        Ok(json!({"published": true, "count": files.len(), "path": output}))
+        Ok(json!({"published": true, "committed": true, "count": files.len(), "path": output}))
     })();
     if result.is_err() {
         let _ = std::fs::remove_file(output);
