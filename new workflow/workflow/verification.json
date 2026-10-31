@@ -1,0 +1,161 @@
+{
+  "version": 1,
+  "notes": [
+    "Commands are argv arrays, never shell strings.",
+    "Android defaults assume an app module; bootstrap must verify layout and add tests for every affected JVM module.",
+    "Empty contract/parity/module commands intentionally BLOCK until actual suites exist.",
+    "Device gates and independent review are not supplied by these host profiles."
+  ],
+  "checks": {
+    "workflow-tests": {
+      "command": [
+        "{python}",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "scripts/tests",
+        "-v"
+      ],
+      "cwd": ".",
+      "requires": [
+        "scripts/tests"
+      ],
+      "timeout_seconds": 60
+    },
+    "workflow-structure": {
+      "command": [
+        "{python}",
+        "scripts/workflow.py",
+        "validate"
+      ],
+      "cwd": ".",
+      "requires": [
+        "scripts/workflow.py"
+      ],
+      "timeout_seconds": 30
+    },
+    "dart-analyze": {
+      "command": [
+        "flutter",
+        "analyze",
+        "--no-pub"
+      ],
+      "cwd": ".",
+      "requires": [
+        "pubspec.yaml"
+      ],
+      "timeout_seconds": 600
+    },
+    "dart-tests": {
+      "command": [
+        "flutter",
+        "test",
+        "--no-pub"
+      ],
+      "cwd": ".",
+      "requires": [
+        "pubspec.yaml",
+        "test"
+      ],
+      "timeout_seconds": 1200
+    },
+    "android-lint": {
+      "command": [
+        "bash",
+        "gradlew",
+        ":app:lintDebug"
+      ],
+      "cwd": "android",
+      "requires": [
+        "android/gradlew",
+        "android/app"
+      ],
+      "timeout_seconds": 1200
+    },
+    "android-tests": {
+      "command": [
+        "bash",
+        "gradlew",
+        ":app:testDebugUnitTest"
+      ],
+      "cwd": "android",
+      "requires": [
+        "android/gradlew",
+        "android/app"
+      ],
+      "timeout_seconds": 1200
+    },
+    "android-compile": {
+      "command": [
+        "bash",
+        "gradlew",
+        ":app:compileDebugKotlin"
+      ],
+      "cwd": "android",
+      "requires": [
+        "android/gradlew",
+        "android/app"
+      ],
+      "timeout_seconds": 1200
+    },
+    "bridge-contracts": {
+      "command": [],
+      "cwd": ".",
+      "requires": [],
+      "timeout_seconds": 600
+    },
+    "data-parity": {
+      "command": [],
+      "cwd": ".",
+      "requires": [],
+      "timeout_seconds": 600
+    },
+    "pure-kotlin-modules": {
+      "command": [],
+      "cwd": ".",
+      "requires": [],
+      "timeout_seconds": 1200
+    }
+  },
+  "profiles": {
+    "workflow": [
+      "workflow-structure",
+      "workflow-tests"
+    ],
+    "flutter": [
+      "dart-analyze",
+      "dart-tests"
+    ],
+    "android": [
+      "android-lint",
+      "android-tests",
+      "android-compile"
+    ],
+    "bridge": [
+      "dart-analyze",
+      "dart-tests",
+      "android-lint",
+      "android-tests",
+      "android-compile",
+      "bridge-contracts"
+    ],
+    "data": [
+      "android-tests",
+      "data-parity"
+    ],
+    "kotlin-modules": [
+      "pure-kotlin-modules"
+    ],
+    "migration": [
+      "dart-analyze",
+      "dart-tests",
+      "android-lint",
+      "android-tests",
+      "android-compile",
+      "bridge-contracts",
+      "data-parity",
+      "pure-kotlin-modules"
+    ]
+  }
+}

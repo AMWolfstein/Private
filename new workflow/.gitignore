@@ -1,0 +1,4 @@
+# Local workflow evidence and Python cache
+.workflow-runs/
+__pycache__/
+*.pyc
