@@ -22,6 +22,8 @@ popover placement so it follows the tapped ellipsis. Keep the metadata page remo
 
 ## Progress
 
+**Architecture review fixes (2026-10-31):** the five findings in `reviews/ARCHITECTURE_API_INITIALIZATION_REVIEW.md` are addressed. Native progress payloads must be JSON objects (malformed payloads throw instead of reading as empty progress). Playback restore returns a typed outcome and retries after a failure. Player widget binding and AutoMix status are injected per runtime, so scoped runtimes no longer change the process widget or badge. Audio analysis state moved into `AudioAnalysisController`, with cache and worker seams that the new tests use. The full `flutter test` run passes (2,273) and `flutter analyze lib test integration_test` is clean.
+
 **Part file names (2026-10-31):** the numbered part files from the file-health splits now have descriptive names, for example `setup_screen_flow.dart` and `library_collections_database_statics.dart`, and split test registration functions are renamed to match. The Full `flutter test` run passes (2,253), and `flutter analyze` is clean.
 
 **Code health cleanup (2026-10-31):** Desloppify Code quality, Duplication, Test health and File health have no open items. `lib/providers` and `lib/screens` are grouped into domain folders, and package imports and path references are updated. The remaining scanner findings are false positives skipped with a reason: part files verified against their owner's `part` directive, declarative widget lists and builder shapes, same-named Flutter members, and intentional single-consumer modules. Full `flutter test` 2,253 passed, exit 0; `flutter analyze` clean.
