@@ -9,7 +9,9 @@ import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/core/models/settings.dart';
+import 'package:sistrum/providers/library/local_library_provider.dart';
 import 'package:sistrum/providers/settings/settings_provider.dart';
+import 'package:sistrum/services/library/database/library_database_models.dart';
 import 'package:sistrum/screens/setup/setup_screen.dart';
 
 class _Settings extends SettingsNotifier {
@@ -18,6 +20,30 @@ class _Settings extends SettingsNotifier {
 
   @override
   Future<void> ensureLoaded() async {}
+}
+
+class _Local extends LocalLibraryNotifier {
+  final added = <String>[];
+
+  @override
+  LocalLibraryState build() => LocalLibraryState();
+
+  @override
+  Future<LocalLibrarySource> addSource({
+    required String path,
+    required String displayName,
+    String? volumeId,
+    bool isRemovable = false,
+  }) async {
+    added.add(path);
+    return LocalLibrarySource(id: 's1', path: path, displayName: displayName);
+  }
+
+  @override
+  Future<void> startSourceScan(
+    String sourceId, {
+    bool forceFullScan = false,
+  }) async {}
 }
 
 const _backend = MethodChannel('com.amwolfstein.sistrum/backend');
@@ -36,7 +62,10 @@ Widget _setup() {
   );
   addTearDown(router.dispose);
   return ProviderScope(
-    overrides: [settingsProvider.overrideWith(_Settings.new)],
+    overrides: [
+      settingsProvider.overrideWith(_Settings.new),
+      localLibraryProvider.overrideWith(_Local.new),
+    ],
     child: MaterialApp.router(
       routerConfig: router,
       locale: const Locale('en'),
@@ -159,6 +188,46 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
+  testWidgets(
+    'choosing a folder opens the next page and survives the picker resume',
+    (tester) async {
+      await prefs.setString('setup_progress_v1', '{"version":4,"step":3}');
+      notificationsGranted = false;
+      messenger.setMockMethodCallHandler(_backend, (call) async {
+        if (call.method != 'pickSafTree') {
+          throw StateError('Unexpected backend call: ${call.method}');
+        }
+        pickerCalls++;
+        return {
+          'tree_uri': 'content://tree/primary%3AMusic',
+          'display_name': 'Music',
+        };
+      });
+      await tester.pumpWidget(_setup());
+      await tester.pumpAndSettle();
+      expect(find.text('4/5'), findsOneWidget);
+      await tester.tap(find.text('Choose Music Folder'));
+      await tester.pumpAndSettle();
+      expect(pickerCalls, 1);
+      expect(find.text('5/5'), findsOneWidget);
+      expect(find.text('Enable Notifications'), findsWidgets);
+      // Returning from the system picker resumes the app, and that recheck
+      // finishes after the picked folder arrives; it must not forget it.
+      binding.handleAppLifecycleStateChanged(AppLifecycleState.paused);
+      binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
+      await tester.pumpAndSettle();
+      await tester.tap(find.byTooltip('Back'));
+      await tester.pumpAndSettle();
+      expect(find.text('4/5'), findsOneWidget);
+      expect(find.text('Storage Permission Granted!'), findsOneWidget);
+      final nextButton = tester.widget<FloatingActionButton>(
+        find.byType(FloatingActionButton),
+      );
+      expect(nextButton.onPressed, isNotNull);
+      expect(tester.takeException(), isNull);
+    },
+  );
+
   for (final sdk in [32, 33]) {
     testWidgets(
       'one guide finishes on permissions without choosing an output folder (SDK $sdk)',
@@ -200,7 +269,7 @@ void main() {
         await tester.tap(find.text('Skip for now'));
         await tester.pumpAndSettle();
         if (sdk >= 33) {
-          await next(tester);
+          // Skipping opens the next page directly; no Next tap is needed.
           expect(find.text('Notification Permission Granted!'), findsOneWidget);
         }
         expect(find.text('Get Started'), findsOneWidget);
@@ -303,7 +372,6 @@ void main() {
       expect(find.text('4/5'), findsOneWidget);
       await tester.tap(find.text('Skip for now'));
       await tester.pumpAndSettle();
-      await next(tester);
       expect(find.text('Enable Notifications'), findsWidgets);
       expect(find.text('5/5'), findsOneWidget);
       binding.handleAppLifecycleStateChanged(AppLifecycleState.paused);

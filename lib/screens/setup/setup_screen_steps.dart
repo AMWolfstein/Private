@@ -182,10 +182,7 @@ extension _SetupScreenStatePart2 on _SetupScreenState {
                 ),
                 if (scopedFolder)
                   TextButton(
-                    onPressed: () async {
-                      _rebuild(() => _storageSkipped = true);
-                      await _saveProgress();
-                    },
+                    onPressed: _skipStorage,
                     child: Text(context.l10n.setupSkipForNow),
                   ),
               ],

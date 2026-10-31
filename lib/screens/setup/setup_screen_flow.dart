@@ -19,9 +19,9 @@ extension _SetupScreenStatePart1 on _SetupScreenState {
           final draft = jsonDecode(saved) as Map<String, dynamic>;
           var savedStep = (draft['step'] as int?) ?? 0;
           final version = draft['version'];
-          // Version 1 drafts used 2/3 for permissions and ended in a
-          // download-folder step.
-          if (version != 2 && version != 3 && savedStep >= 2) {
+          // Version 1 drafts (saved without a version) used 2/3 for
+          // permissions and ended in a download-folder step.
+          if (version == null && savedStep >= 2) {
             savedStep += _SetupScreenState._fivePageGuideCount;
           }
           // Version 3 drafts (English-only build) had no language step at 1.
@@ -82,7 +82,10 @@ extension _SetupScreenStatePart1 on _SetupScreenState {
 
   Future<void> _checkInitialPermissions() async {
     if (_platform == TargetPlatform.android) {
-      bool storageGranted = false;
+      // Android 10+ storage is the scoped folder chosen on the storage step;
+      // no permission reflects it, so a resume (including the return from
+      // the folder picker) keeps what that step recorded.
+      var storageGranted = _storagePermissionGranted;
 
       if (_androidSdkVersion < 29) {
         // Android 10 and later read music through a scoped SAF folder, which
@@ -113,6 +116,7 @@ extension _SetupScreenStatePart1 on _SetupScreenState {
   Future<void> _requestStoragePermission() async {
     if (_isLoading) return;
     _rebuild(() => _isLoading = true);
+    var granted = false;
     try {
       await _saveProgress();
       if (!mounted) return;
@@ -132,6 +136,7 @@ extension _SetupScreenStatePart1 on _SetupScreenState {
         );
         if (!mounted) return;
         _rebuild(() => _storagePermissionGranted = added);
+        granted = added;
         return;
       }
 
@@ -140,6 +145,7 @@ extension _SetupScreenStatePart1 on _SetupScreenState {
         final status = await Permission.storage.request();
         if (!mounted) return;
         _rebuild(() => _storagePermissionGranted = status.isGranted);
+        granted = status.isGranted;
         if (status.isPermanentlyDenied) {
           await _showPermissionDeniedDialog(permissionStorage);
           return;
@@ -151,12 +157,35 @@ extension _SetupScreenStatePart1 on _SetupScreenState {
         }
       } else {
         _rebuild(() => _storagePermissionGranted = true);
+        granted = true;
       }
     } catch (e, stack) {
       _log.e('Storage access request failed', e, stack);
     } finally {
       if (mounted) _rebuild(() => _isLoading = false);
+      // In finally: the folder branch returns early from the try.
+      if (granted && mounted) unawaited(_continueFrom(_storageStep));
     }
+  }
+
+  /// Skips the storage step without a folder and moves on.
+  Future<void> _skipStorage() async {
+    if (_isLoading) return;
+    _rebuild(() => _storageSkipped = true);
+    try {
+      await _saveProgress();
+    } catch (e, stack) {
+      _log.e('Failed to save setup step', e, stack);
+    }
+    if (mounted) await _continueFrom(_storageStep);
+  }
+
+  /// Opens the page after [step] once it is done, so choosing a folder or
+  /// skipping needs no extra Next tap. The final page keeps Get Started.
+  Future<void> _continueFrom(int step) async {
+    if (_currentStep != step || step >= _totalSteps - 1) return;
+    if (!_isStepCompleted(step)) return;
+    await _goToStep(step + 1);
   }
 
   Future<void> _requestNotificationPermission() async {
