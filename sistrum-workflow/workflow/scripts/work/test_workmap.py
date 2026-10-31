@@ -579,7 +579,6 @@ class MockedAdapterContextTests(Repo):
             self.write(f'lib/player/user_{index}.dart', "import 'queue.dart';\nvoid use() {}\n")
         result = workmap.context(self.root, '', files=['lib/player/queue.dart'], budget=300)
         self.assertTrue(result['data']['truncated'])
-        self.assertIn('more not shown', result['text'])
         self.assertIn('--expand file:lib/player/queue.dart', result['text'])
         expanded = workmap.context(self.root, '', expand='file:lib/player/queue.dart', budget=6000)
         self.assertGreater(expanded['text'].count('imported by'), result['text'].count('imported by'))
@@ -642,6 +641,44 @@ class MockedAdapterContextTests(Repo):
         done = subprocess.run([sys.executable, str(script), 'context', '--json', '--symbol', 'Queue'], cwd=self.root,
                               capture_output=True, text=True)
         self.assertEqual(json.loads(done.stdout)['entries'][0]['file'], 'lib/player/queue.dart')
+
+
+class MockedAdapterGapTests(Repo):
+    """Behaviour added to close the known gaps: synonyms, critical tests and users, Dart name calls."""
+
+    def test_synonyms_and_inflections_match_the_same_family(self):
+        self.assertEqual(workmap.words('playbackFailure'), ['playback', 'error'])
+        self.assertEqual(workmap.words('songs'), ['song'])
+        self.assertIn('error', workmap.words('onErrorRetry'))
+
+    def test_tests_of_entry_files_survive_a_tiny_budget(self):
+        self.write('lib/player/extra_test_target.dart', 'class ExtraTarget {}\n')
+        for index in range(4):
+            self.write(f'test/player/extra_{index}_test.dart',
+                       "import '../../lib/player/extra_test_target.dart';\nvoid main() {}\n")
+        self.update()
+        text = workmap.context(self.root, '', files=['lib/player/extra_test_target.dart'], budget=40)['text']
+        self.assertIn('## Tests and checks (linked; first three per file, never cut)', text)
+        self.assertEqual(text.count('- lib/player/extra_test_target.dart: test/player/extra_'), 3)
+
+    def test_direct_users_of_an_entry_file_are_always_listed(self):
+        text = workmap.context(self.root, '', files=['lib/player/queue.dart'], budget=40)['text']
+        self.assertIn('lib/player/queue.dart is used by', text)
+        self.assertIn('lib/player/player_bridge.dart:2 imports lib/player/queue.dart', text)
+
+    def test_dart_calls_are_inferred_for_unqualified_calls_only(self):
+        self.write('lib/player/caller.dart', "class Caller {\n  void drive() {\n    scheduleTrack();\n"
+                   "    Other.scheduleTrack();\n  }\n  void scheduleTrack() {}\n}\n")
+        self.update()
+        calls = [e for e in self.data()['edges'] if e['via'] == 'adapter:dart-name-call'
+                 and e['file'] == 'lib/player/caller.dart']
+        self.assertEqual(len(calls), 1, calls)
+        self.assertEqual(calls[0]['line'], 3)
+        self.assertEqual(calls[0]['fact'], 'inferred')
+        symbols = {s['id']: s for s in self.data()['symbols']}
+        self.assertEqual(symbols[calls[0]['source']]['name'], 'drive')
+        self.assertEqual(symbols[calls[0]['source']]['lang'], 'dart')
+        self.assertEqual(symbols[calls[0]['target']]['name'], 'scheduleTrack')
 
 
 class MockedAdapterGateTests(Repo):
@@ -786,8 +823,9 @@ class RealGraphifySmokeTests(Repo):
         by_id = {s['id']: s for s in data['symbols']}
         self.assertIn(('start', 'prepare'), {(by_id[e['source']]['name'], by_id[e['target']]['name'])
                                              for e in calls if e['source'] in by_id and e.get('target') in by_id})
-        self.assertFalse(any(e['relation'] == 'calls' and e['file'].endswith('.dart') for e in data['edges']),
-                         'Graphify 0.9.97 emits no Dart call edges; update the docs if this changes')
+        graphify_dart_calls = [e for e in data['edges'] if e['relation'] == 'calls' and e['file'].endswith('.dart')
+                               and e['via'] == 'graphify:dart-regex']
+        self.assertEqual(graphify_dart_calls, [], 'Graphify 0.9.97 emits no Dart call edges; update the docs if this changes')
         self.assertTrue((self.root / '.work/map/graphify/cache').is_dir())
         ignored = sh(self.root, 'git', 'status', '--porcelain', '--ignored')
         self.assertEqual(ignored.strip(), '!! .work/', 'Graphify must write only under .work/map/graphify')

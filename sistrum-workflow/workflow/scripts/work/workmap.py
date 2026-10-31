@@ -19,6 +19,7 @@ from __future__ import annotations
 import bisect
 import fnmatch
 import hashlib
+import math
 import importlib.util
 import json
 import os
@@ -150,7 +151,7 @@ DEFAULT_CONFIG = {
                 'dart_invoke_methods': ['invokeMethod', 'invokeMapMethod', 'invokeListMethod'],
                 'dart_wrappers': [],
                 'kotlin_channel_types': ['MethodChannel', 'EventChannel', 'BasicMessageChannel']},
-    'context': {'budget_tokens': 2500, 'entry_files': 5, 'per_section': 12, 'excerpt_lines': 10,
+    'context': {'budget_tokens': 2500, 'entry_files': 8, 'per_section': 12, 'excerpt_lines': 10,
                 'max_excerpts': 3, 'fallback_hits': 20},
 }
 
@@ -388,26 +389,37 @@ def map_status(root: Path, config: dict | None = None, tool: dict | None = None)
 
 @contextmanager
 def map_lock(root: Path, timeout: float):
-    try:
-        import fcntl
-    except ImportError as error:  # shortcut: POSIX only, add msvcrt locking if Windows is needed
-        raise Blocked('map updates need POSIX file locking (fcntl)') from error
+    """Exclusive, non-blocking lock with a deadline: fcntl on POSIX, msvcrt on Windows (not tested here)."""
     path = map_dir(root) / 'update.lock'
     path.parent.mkdir(parents=True, exist_ok=True)
+    try:
+        import fcntl
+        windows = None
+    except ImportError:
+        import msvcrt  # Windows: locks the first byte of the file
+        fcntl, windows = None, msvcrt
     with open(path, 'a+') as handle:
         deadline = time.monotonic() + timeout
         while True:
             try:
-                fcntl.flock(handle, fcntl.LOCK_EX | fcntl.LOCK_NB)
+                if fcntl:
+                    fcntl.flock(handle, fcntl.LOCK_EX | fcntl.LOCK_NB)
+                else:
+                    handle.seek(0)
+                    windows.locking(handle.fileno(), windows.LK_NBLCK, 1)
                 break
-            except BlockingIOError:
+            except OSError:
                 if time.monotonic() >= deadline:
                     raise Blocked('another map update holds .work/map/update.lock; retry when it finishes')
                 time.sleep(0.1)
         try:
             yield
         finally:
-            fcntl.flock(handle, fcntl.LOCK_UN)
+            if fcntl:
+                fcntl.flock(handle, fcntl.LOCK_UN)
+            else:
+                handle.seek(0)
+                windows.locking(handle.fileno(), windows.LK_UNLCK, 1)
 
 
 def lock_timeout() -> float:
@@ -532,7 +544,7 @@ def build(root: Path, config: dict, tool: dict, current: dict) -> dict:
         if stats.get('failed_sources'):
             problems.append(f'graphify failed on {stats["failed_sources"]} file(s); see .work/map/logs/')
         meta_structure = {'status': 'graphify', 'note': 'symbols, calls and references from Graphify; Dart '
-                          'declarations are regex-based and have no call edges; Dart and Kotlin imports and channels '
+                          'declarations are regex-based, Dart calls are inferred by name; Dart and Kotlin imports and channels '
                           'come from pattern scans'}
     elif files:
         meta_structure = {'status': tool['status'], 'note': tool.get('reason', '')}
@@ -542,6 +554,9 @@ def build(root: Path, config: dict, tool: dict, current: dict) -> dict:
     problems += dep_problems
     bridges = scan_bridges(texts, file_info, config)
     attach_bridge_tests(root, bridges, current['aux'], file_info, texts)
+    name_edges, name_notes = dart_name_calls(texts, symbols, file_info)
+    edges += name_edges
+    problems += name_notes
     tests = link_tests(file_info, deps, symbols, edges)
     declarations = load_declarations(root, file_info, deps, bridges, problems)
     tool_public = {k: v for k, v in tool.items() if k not in ('argv',)}
@@ -557,6 +572,67 @@ def build(root: Path, config: dict, tool: dict, current: dict) -> dict:
 LANGUAGE_BY_SUFFIX = {'.dart': 'dart', '.kt': 'kotlin', '.kts': 'kotlin', '.rs': 'rust', '.c': 'c', '.h': 'c',
                       '.cpp': 'cpp', '.cc': 'cpp', '.cxx': 'cpp', '.hpp': 'cpp', '.java': 'java', '.py': 'python',
                       '.swift': 'swift', '.sh': 'shell', '.bash': 'shell', '.gradle': 'gradle'}
+
+
+# Calls that name too little to point at one declaration.
+CALL_STOP = {'build', 'toString', 'setState', 'dispose', 'initState', 'then', 'of', 'call', 'get', 'set', 'add',
+             'remove', 'length', 'map', 'where', 'first', 'last', 'isEmpty', 'isNotEmpty', 'print', 'main', 'super',
+             'this', 'new', 'if', 'for', 'while', 'switch', 'catch', 'return', 'await', 'async', 'watch', 'read',
+             'listen', 'emit', 'value', 'name', 'id', 'copyWith', 'fromJson', 'toJson', 'equals', 'hashCode',
+             'close', 'start', 'stop', 'run', 'update', 'load', 'open', 'create', 'init', 'reset', 'clear', 'send'}
+CALL_TOKEN = re.compile(r'\b([A-Za-z_]\w*)\s*\(')
+
+
+def dart_name_calls(texts: dict, symbols: list, file_info: dict) -> tuple[list[dict], list[str]]:
+    """Dart call edges inferred by name. Graphify emits none for Dart, so a call `f(` counts as a call to
+    the declaration(s) named `f` in the corpus when the name is distinctive. Always labelled inferred; the
+    caller is the nearest declaration above the call in the same file."""
+    by_name: dict[str, list[dict]] = {}
+    for symbol in symbols:
+        if symbol['lang'] == 'dart' and symbol['name'] not in CALL_STOP and len(symbol['name']) > 2:
+            by_name.setdefault(symbol['name'], []).append(symbol)
+    per_file: dict[str, list[dict]] = {}
+    for symbol in symbols:
+        if symbol['lang'] == 'dart':
+            per_file.setdefault(symbol['file'], []).append(symbol)
+    edges, skipped = [], 0
+    for path in sorted(per_file):
+        if path not in texts or file_info.get(path, {}).get('lang') != 'dart':
+            continue
+        clean = strip_comments(texts[path])
+        declared = sorted(per_file[path], key=lambda s: s['line'] or 0)
+        line_of_call = Lines(clean)
+        seen = set()
+        for found in CALL_TOKEN.finditer(clean):
+            name = found.group(1)
+            targets = by_name.get(name)
+            if not targets:
+                continue
+            # Only unqualified calls and this.x() are attributed: `Other.f(` or `value.f(` usually name a
+            # member of a type the map does not know, and matching them by name produced false edges.
+            before = clean[max(0, found.start() - 5):found.start()]
+            if before.endswith('.') and not before.endswith('this.'):
+                continue
+            if len(targets) > 3:
+                skipped += 1
+                continue
+            line = line_of_call(found.start())
+            callers = [d for d in declared if d['line'] and d['line'] <= line and d['name'] != name]
+            if not callers:
+                continue
+            caller = callers[-1]
+            for target in targets:
+                if target['file'] == path and target['line'] == line:
+                    continue
+                key = (caller['id'], target['id'], line)
+                if key in seen:
+                    continue
+                seen.add(key)
+                edges.append({'source': caller['id'], 'target': target['id'], 'relation': 'calls', 'file': path,
+                              'line': line, 'context': 'name', 'fact': 'inferred', 'via': 'adapter:dart-name-call',
+                              'confidence': 'medium' if len(targets) == 1 else 'low', 'target_file': target['file']})
+    notes = [f'{skipped} Dart call site(s) named a symbol declared in more than three files: no call edge inferred']
+    return edges, notes if skipped else []
 
 
 def language(path: str) -> str:
@@ -1252,9 +1328,28 @@ def validate_architecture(data) -> None:
 
 # ---------------------------------------------------------------- context
 
+# Domain synonyms and inflections for lexical matching. Each family maps to one stem.
+SYNONYMS = {'failure': 'error', 'failures': 'error', 'failed': 'error', 'fail': 'error', 'fails': 'error',
+            'failing': 'error', 'errors': 'error', 'crash': 'error', 'crashed': 'error', 'exception': 'error',
+            'exceptions': 'error', 'retries': 'retry', 'retrying': 'retry', 'songs': 'song', 'tracks': 'track',
+            'lyrics': 'lyric', 'channels': 'channel', 'commands': 'command', 'handlers': 'handler',
+            'tests': 'test', 'buttons': 'button', 'screens': 'screen', 'pages': 'page', 'files': 'file'}
+
+
+def stem(word: str) -> str:
+    word = word.lower()
+    if word in SYNONYMS:
+        return SYNONYMS[word]
+    if len(word) > 4 and word.endswith('ing'):
+        return word[:-3]
+    if len(word) > 3 and word.endswith('s') and not word.endswith('ss'):
+        return word[:-1]
+    return word
+
+
 def words(text: str) -> list[str]:
     parts = re.sub(r'([a-z0-9])([A-Z])', r'\1 \2', text)
-    return [w.lower() for w in re.findall(r'[A-Za-z][A-Za-z0-9]*', parts.replace('_', ' '))]
+    return [stem(w) for w in re.findall(r'[A-Za-z][A-Za-z0-9]*', parts.replace('_', ' '))]
 
 
 class Context:
@@ -1311,10 +1406,12 @@ class Context:
         scores: dict[str, dict] = {}
         frequency = self.word_frequency()
 
+        files_total = max(1, len(corpus))
+
         def weight(hit: set[str]) -> float:
-            # Words found in many files say little about which file the task means.
-            return sum(1.0 if frequency.get(w, 0) <= 3 else 0.6 if frequency.get(w, 0) <= 20
-                       else 0.3 if frequency.get(w, 0) <= 100 else 0.1 for w in hit)
+            # Inverse document frequency: a word found in many files says little about which file the
+            # task means; a word found in few says a lot. Each file's words add up.
+            return sum(math.log(1 + files_total / max(1, frequency.get(w, 1))) for w in hit) / 4
 
         def bump(path: str, points: float, reason: str, symbol: dict | None = None):
             entry = scores.setdefault(path, {'file': path, 'score': 0.0, 'reasons': [], 'symbols': []})
@@ -1546,6 +1643,18 @@ def context(root: Path, task: str = '', files: list[str] = (), symbols: list[str
         critical.append('## Bridge endpoints not resolved (dynamic or ambiguous)\n\n' + '\n'.join(
             f'- {where(u)} ({u["side"]}): {u["detail"]}' for u in unresolved))
     critical += render_declarations(root, data, paths, {item['name'] for item, _ in bridges})
+    users = []
+    for path in sorted(paths):  # direct users of each entry file: short and always shown
+        incoming = view.importers.get(path, [])
+        if incoming:
+            shown = [f'- {d["from"]}:{d["line"]} imports {path}' + (' (test)' if data['files'].get(d['from'], {}).get('test') else '')
+                     for d in incoming[:8]]
+            users.append(f'- {path} is used by {len(incoming)} file(s):')
+            users += ['  ' + line for line in shown]
+            if len(incoming) > 8:
+                users.append(f'  ... {len(incoming) - 8} more: --expand file:{path}')
+    if users:
+        critical.append('## Direct users of entry files (never cut to eight per file)\n\n' + '\n'.join(users))
     lines, more = [], 0
     for entry in entries:
         own = view.symbols_by_file.get(entry['file'], [])
@@ -1582,17 +1691,21 @@ def context(root: Path, task: str = '', files: list[str] = (), symbols: list[str
             listed = lines[:per_section]
             optional.append((f'## Dependencies of {path} (extracted imports; Kotlin calls/references from Graphify)',
                              listed, len(lines) - len(listed)))
-    lines = []
+    critical_lines, extra_lines = [], []
     for path in sorted(paths):
         tests = data['tests'].get(path, [])
-        lines += [f'- {path}: {t["test"]} {label(t)}' for t in tests]
+        critical_lines += [f'- {path}: {t["test"]} {label(t)}' for t in tests[:3]]
+        extra_lines += [f'- {path}: {t["test"]} {label(t)}' for t in tests[3:]]
         checks_now = view.checks_for(path)
         if checks_now:
-            lines.append(f'- {path}: checks {", ".join(checks_now)} (from {CHECKS})')
+            critical_lines.append(f'- {path}: checks {", ".join(checks_now)} (from {CHECKS})')
         if not tests and not data['files'][path]['test']:
             notes.append(f'{path}: no linked test found (imports, Kotlin references and names searched)')
-    if lines:
-        optional.append(('## Tests and checks', lines[:per_section * 2], max(0, len(lines) - per_section * 2)))
+    # The strongest three tests per entry file and its checks are never cut; the rest are optional.
+    if critical_lines:
+        critical.append('## Tests and checks (linked; first three per file, never cut)\n\n' + '\n'.join(critical_lines))
+    if extra_lines:
+        optional.append(('## More linked tests', extra_lines[:per_section], max(0, len(extra_lines) - per_section)))
     excerpts, shown = [], 0
     for entry in entries:
         for symbol in [s for s in entry['symbols'] if s.get('line')][:1]:
@@ -1608,7 +1721,8 @@ def context(root: Path, task: str = '', files: list[str] = (), symbols: list[str
     if guidance:
         optional.append(('## Guidance to read for this task', [f'- {g}' for g in guidance], 0))
     if structure.get('status') == 'graphify' and any(p.endswith('.dart') for p in paths):
-        notes.append('Dart: Graphify extracts declarations only (no call edges); callers are approximated by importers')
+        notes.append('Dart calls are inferred by name from unqualified call sites (low and medium confidence); '
+                     'qualified calls such as Type.f() are not attributed')
     if structure.get('status') != 'graphify':
         notes.append(f'code structure unavailable ({structure.get("status")}: {structure.get("note", "")}); '
                      'symbols and calls are missing, imports and bridges come from pattern scans')

@@ -100,7 +100,7 @@
   },
   "context": {
     "budget_tokens": 2500,
-    "entry_files": 5,
+    "entry_files": 8,
     "per_section": 12,
     "excerpt_lines": 10,
     "max_excerpts": 3,
