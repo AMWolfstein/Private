@@ -75,7 +75,7 @@ class AlbumDetailHeader extends StatelessWidget {
   /// "•"-joined meta row under the subtitle.
   final Widget? meta;
 
-  /// Action row (play/shuffle, download-all, ...) under the meta row.
+  /// Action row (play/shuffle, ...) under the meta row.
   final Widget? actions;
 
   /// Extra toolbar actions (top-right).
@@ -114,5 +114,5 @@ class AlbumDetailHeader extends StatelessWidget {
   }
 }
 
-/// Primary action pill in a detail header (download all, play all). Reads its
+/// Primary action pill in a detail header (play all). Reads its
 /// colours from [HeaderPalette] so it works on light and dark headers alike.

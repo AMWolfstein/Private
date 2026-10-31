@@ -153,7 +153,7 @@ List<String> buildAudioMetricsArguments({
   required String metadataPath,
   required double durationSeconds,
 }) {
-  // FFmpegKit's log level is process-global. A native download finalizer can
+  // FFmpegKit's log level is process-global. Another native FFmpeg job can
   // run `-v error` concurrently, so analyzer results must come from this
   // session's metadata file rather than info-level log callbacks.
   return [

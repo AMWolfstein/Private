@@ -47,7 +47,7 @@ String? buildLibraryAudioQualityLabel({
   if (isLossyAudioFormat(effectiveFormat)) {
     // Older rows may know the codec before their bitrate has been backfilled.
     // Keep a useful badge without showing stale lossless specs or inventing a
-    // bitrate from the user's current download/conversion setting.
+    // bitrate from the user's current quality setting.
     return bitrateLabel ?? _libraryFileFormatLabel(effectiveFormat);
   }
 

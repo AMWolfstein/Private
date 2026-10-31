@@ -11,7 +11,7 @@ internal class NativeMediaWorkspace(privateDirectory: File) {
 
     init {
         // These app-owned scratch files cannot resume after process death.
-        // Reclaim them once at startup, before any download or scan can begin.
+        // Reclaim them once at startup, before any scan can begin.
         ensureDirectory().listFiles()?.forEach { it.delete() }
     }
 

@@ -17,7 +17,7 @@ import 'package:sistrum/widgets/settings/settings_group.dart';
 import 'package:sistrum/providers/library/library_database_provider.dart';
 
 /// Bottom sheet listing tracks that exist more than once (same ISRC) across
-/// download history and the local library, with keep-best and per-copy
+/// the local library, with keep-best and per-copy
 /// delete actions.
 class DuplicateReviewSheet extends ConsumerStatefulWidget {
   const DuplicateReviewSheet({super.key});

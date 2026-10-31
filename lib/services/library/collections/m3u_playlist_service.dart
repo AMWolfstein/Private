@@ -53,7 +53,7 @@ class M3uPlaylistService {
 
   /// Converts a resolved library file path into an M3U entry path. Plain
   /// paths pass through unchanged; SAF document URIs become paths relative
-  /// to their tree root (so the .m3u8 resolves when placed in the download
+  /// to their tree root (so the .m3u8 resolves when placed in the music
   /// folder). Returns null when a content URI carries no usable path.
   static String? exportPathFor(String rawPath) {
     final trimmed = rawPath.trim();

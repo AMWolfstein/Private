@@ -9,7 +9,7 @@ import 'package:sistrum/l10n/l10n.dart';
 
 /// Hosts selection bars above the shell navigation while keeping modal routes
 /// above the bar. A raw entry in the root [Overlay] stays above routes pushed
-/// later, which made download pickers appear behind the selection toolbar.
+/// later, which made pickers appear behind the selection toolbar.
 class SelectionOverlayHost extends StatefulWidget {
   const SelectionOverlayHost({super.key, required this.child});
 

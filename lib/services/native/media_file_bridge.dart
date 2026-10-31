@@ -106,7 +106,7 @@ class MediaFileBridge {
     };
   }
 
-  /// Read access for a Library source, independent of download write access.
+  /// Read access for a Library source, independent of write access.
   /// [SafTreeReadAccess.unknown] means the provider could not answer; that is
   /// not evidence that the source is gone.
   static Future<SafTreeReadAccess> probeSafTreeReadAccess(

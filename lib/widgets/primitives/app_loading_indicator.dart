@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// Indeterminate loading only. Downloads/analysis keep their real progress.
+/// Indeterminate loading only. Analysis keeps its real progress.
 class AppLoadingIndicator extends StatelessWidget {
   const AppLoadingIndicator({
     super.key,

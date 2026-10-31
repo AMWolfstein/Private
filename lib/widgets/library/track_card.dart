@@ -18,7 +18,7 @@ enum TrackCardStyle {
 /// The one track row in the app.
 ///
 /// Screens provide [leading], [subtitle], [trailing], and an optional
-/// [background] layer for download progress.
+/// [background] layer for progress.
 class TrackCard extends StatelessWidget {
   const TrackCard({
     super.key,

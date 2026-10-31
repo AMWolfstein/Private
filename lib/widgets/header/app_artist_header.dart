@@ -129,7 +129,7 @@ class _AppArtistSurfaceState extends State<AppArtistSurface> {
 }
 
 /// Portrait and centered identity from Sistrum's MobileArtistView. Actions stay
-/// supplied by the screen so remote artists retain download/favorite behavior.
+/// supplied by the screen so remote artists retain their favorite behavior.
 class AppArtistHeader extends StatelessWidget {
   const AppArtistHeader({
     super.key,

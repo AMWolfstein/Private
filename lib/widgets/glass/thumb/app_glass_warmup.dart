@@ -97,7 +97,7 @@ Future<void> _rasterize(ui.FlutterView view) async {
                   Padding(
                     padding: EdgeInsets.all(12),
                     child: AppGlassPanel.overlay(
-                      child: Center(child: Text('Download')),
+                      child: Center(child: Text('Sistrum')),
                     ),
                   ),
                 ],

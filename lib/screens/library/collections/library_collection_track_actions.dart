@@ -4,7 +4,7 @@ extension _LibraryCollectionTracksScreenStatePart1
     on _LibraryCollectionTracksScreenState {
   /// Exports the collection as an .m3u8 shared via the system sheet. Tracks
   /// without a resolvable local file are skipped; SAF entries are written
-  /// relative to the download tree root.
+  /// relative to the music tree root.
   Future<void> _exportAsM3u8(
     BuildContext context,
     String title,
