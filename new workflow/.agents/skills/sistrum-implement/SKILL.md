@@ -5,6 +5,8 @@ description: "Use automatically for approved features, bug fixes and bounded ref
 
 # Implement
 
+For spec-driven work, first read the linked spec/design and requirement-to-task map. Pick the next task whose prerequisites are satisfied; do not implement from a vague checkbox alone. Update implementation and verification status separately. A missing requirement becomes a linked task, not an unrecorded expansion of scope. Clear bug fixes can use the existing task acceptance statement without a full spec.
+
 1. Read the code and consumers; identify the root cause or intended behavior before editing. Reuse the repository's healthy implementation rather than add a second mechanism.
 2. Select the smallest complete change. Include callers, fixtures, configuration and error handling affected by it. Preserve validation, data-loss protection, accessibility and hardware calibration. Avoid speculative flexibility and forwarding-only layers.
 3. For risky behavior, write a meaningful failing regression/characterization test first when feasible. Do not write tests for a trivial reversible prose/style edit. Document when reproduction needs a device.

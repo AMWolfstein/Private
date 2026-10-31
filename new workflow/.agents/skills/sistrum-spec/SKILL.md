@@ -1,0 +1,18 @@
+---
+name: sistrum-spec
+description: "Use automatically before nontrivial Sistrum features, architecture changes and ports to define behavior, clarify material unknowns, map requirements to tasks, and check delivery against the spec."
+---
+
+# Specify, connect and converge
+
+Read `workflow/spec-driven.md`. This is a project-specific adaptation of GitHub Spec Kit's method, not the Specify CLI or an installed upstream plugin. No slash command is required.
+
+1. **Specify the outcome.** Read the request, accepted decisions, contracts and actual source. For a substantial feature/port create `workflow/specs/<id>.md` from `workflow/templates/spec.md`; for a bounded change keep a short acceptance statement in the existing task. Describe what must happen and why, with observable success/failure scenarios. Reference existing architectural constraints rather than duplicating them or inventing implementation details in the behavior spec.
+2. **Clarify selectively.** Record known facts, assumptions and unknowns separately. Resolve questions from the repository/reference first. Ask only for material unanswered choices about behavior, compatibility, data loss, lifecycle or product scope; do not make the user approve each section. Do not reopen accepted Media3 decisions. Dependent work waits for unresolved blocking choices; independent discovery can continue.
+3. **Check the requirements.** Are outcomes unambiguous, independently verifiable and complete for the relevant failure cases? Is "fast" backed by a defined measurement if performance matters? Is unsupported behavior distinguishable from failure? This is a check of the spec's quality, not evidence that the code works.
+4. **Plan through the existing design skill.** Link a design only if architectural reasoning is needed. Existing project rules serve the constitution role. Check compatibility with them before and after design. Do not create a second constitution, plan, task list or automatic branch. Reuse the accepted migration batch as the starting plan.
+5. **Make traceable tasks.** In `workflow/tasks/<id>.md`, map each in-scope requirement/acceptance case to stable task IDs, actual/proposed paths, dependencies and a meaningful check. Mark proposed files explicitly. Preserve identifiers across fixes. A task without a requirement must identify its necessary enabling purpose. Parallel eligibility requires independent resources and dependencies; it is not permission to launch agents.
+6. **Analyze before execution.** Use the review skill for an independent read-only consistency pass on substantial work: spec versus design versus task list versus project rules. Look for missing coverage, contradictions, duplicated work, undefined contracts and impossible ordering. The orchestrator resolves confirmed findings without the reviewer editing code. Block only dependent work for material gaps; do not turn wording preferences into blockers.
+7. **Converge after execution.** With review/verify, compare current behavior and evidence to every in-scope requirement, even tasks marked done. Missing work becomes a new ID in the same task record, linked to its requirement/finding. Do not rewrite requirements to match accidental implementation, silently drop acceptance cases, or add speculative features. If requirements genuinely change, record the owner decision and recheck affected tasks/evidence. No missing work means no extra tasks.
+
+Reuse the existing four-round review/fix bound; do not add a second unbounded convergence loop. Missing device evidence is IMPLEMENTED_PENDING_VERIFICATION, not a new implementation task by default. A completed spec, requirement checklist or task checkbox never substitutes for code review and executed checks.

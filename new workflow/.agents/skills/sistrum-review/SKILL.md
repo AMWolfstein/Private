@@ -9,6 +9,8 @@ Read `workflow/quality.md`. The orchestrator supplies goal, non-goals, accepted 
 
 Reviewer permissions: read-only, no edits/commits/pushes, no further subagents. Read beyond the diff into direct consumers and guards. Expand scope only when evidence requires it. A design review checks responsibilities, contracts, failure handling and feasibility; a code review checks implementation and regressions.
 
+For spec-driven work, also check consistency between requirements, the design, task dependencies and project rules. Identify unmapped requirements, tasks without a requirement/enabling purpose, contradictory contracts and missing acceptance checks. At final review, compare actual behavior/evidence to every in-scope requirement regardless of checkbox state. Requirements-quality review is distinct from implementation verification. Send missing work to the orchestrator; do not edit the spec to excuse a defect or append duplicate findings each round.
+
 Use every relevant quality lens: cohesion, API consistency, dependency direction, initialization, data integrity, concurrency/lifecycle, error propagation, tests, measured performance and simplicity. Do not demand identical patterns for unrelated domains. No style-only findings, line quotas or cosmetic splits.
 
 For each finding return: ID, priority, confidence, file:line, trigger, inspected guards/callers, consequence, fix and verification. Use `workflow/templates/finding.md` for persisted findings. Label unverified risk; zero findings is legitimate.

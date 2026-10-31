@@ -4,6 +4,7 @@ import argparse
 import hashlib
 import json
 import os
+import re
 from pathlib import Path
 import signal
 import subprocess
@@ -15,7 +16,7 @@ from datetime import datetime, timezone
 # as text; external targets are not read and need separate provenance.
 EXCLUDED = {'.git', '.workflow-runs', '__pycache__', '.dart_tool', '.gradle',
             'build', '.kotlin', '.venv', 'node_modules'}
-SKILLS = ('workflow', 'design', 'implement', 'port', 'review', 'verify')
+SKILLS = ('workflow', 'spec', 'design', 'implement', 'port', 'review', 'verify')
 
 
 def fingerprint(root):
@@ -62,6 +63,7 @@ def load_config(root):
 
 def route(intent, paths):
     text = (intent + ' ' + ' '.join(paths)).lower()
+    action = intent.strip().lower()
     domains = set()
     if any(p.endswith('.dart') for p in paths): domains.add('flutter')
     if any(p.endswith(('.kt', '.kts')) or p.startswith('android/') for p in paths):
@@ -73,11 +75,28 @@ def route(intent, paths):
     if any(w in text for w in ('playback', 'audio', 'media3', 'exoplayer', 'تشغيل', 'صوت')):
         domains.add('playback')
     mode = 'feature'
-    if any(w in text for w in ('port', 'migrat', 'بورت', 'انقل', 'نقل')): mode = 'migration'
-    elif any(w in text for w in ('architect', 'تصميم', 'معمار')): mode = 'architecture'
-    elif any(w in text for w in ('audit', 'review', 'راجع', 'مراجعة')): mode = 'audit'
+    # An explicit review request stays read-only even when its subject is a port.
+    # File names inform domains, not permission to change the requested action.
+    if re.match(r'(?:please\s+)?(?:review|audit)\b', action) or action.startswith(('راجع', 'مراجعة', 'افحص')):
+        mode = 'audit'
+    elif re.search(r'\b(?:port|porting|migrat\w*)\b', action) or any(w in action for w in ('بورت', 'انقل', 'نقل')):
+        mode = 'migration'
+    elif any(w in action for w in ('architect', 'تصميم', 'معمار')):
+        mode = 'architecture'
+    elif re.search(r'\b(?:fix|debug|repair)\b', action) or any(w in action for w in ('صلح', 'إصلاح', 'اصلح')):
+        mode = 'fix'
+    elif re.search(r'\b(?:review|audit)\b', action) or any(w in action for w in ('راجع', 'مراجعة')):
+        mode = 'audit'
+    skills = {
+        'feature': ['spec', 'implement', 'review', 'verify'],
+        'architecture': ['spec', 'design', 'implement', 'review', 'verify'],
+        'migration': ['spec', 'design', 'port', 'review', 'verify'],
+        'fix': ['implement', 'review', 'verify'],
+        'audit': ['review'],
+    }
     return {'mode': mode, 'domains': sorted(domains), 'advisory_only': True,
-            'note': 'Trace callers and select explicit profiles. Routing never proves scope or executes commands.'}
+            'suggested_skills': ['sistrum-' + name for name in skills[mode]],
+            'note': 'Trace callers and select explicit profiles. Skills are suggestions, not an execution order; simplify trivial work. Routing never proves scope or executes commands.'}
 
 
 def validate(root):
@@ -89,6 +108,8 @@ def validate(root):
             raise ValueError(f'Invalid skill header: {path}')
     for name in ('AGENTS.md', 'workflow/STATE.md', 'workflow/architecture.md',
                  'workflow/quality.md', 'workflow/migration.md',
+                 'workflow/spec-driven.md', 'workflow/templates/spec.md',
+                 'workflow/templates/task.md', 'workflow/templates/design.md',
                  'workflow/contracts/playback-bridge.md',
                  'workflow/contracts/data-compatibility.md'):
         if not (root / name).is_file(): raise ValueError(f'Missing {name}')

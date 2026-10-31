@@ -5,6 +5,8 @@ description: "Use automatically before claiming completion; execute appropriate 
 
 # Verify and retain lessons
 
+For spec-driven work, report evidence by requirement ID in the task's delivery matrix. A planned test is not an executed check, and an executed command alone is not proof it covers a requirement. Use `sistrum-spec`'s convergence check with the reviewer before closing the feature; unresolved required evidence keeps it pending. Recognize owner-reported source validation as such without presenting it as a new run on the destination.
+
 1. Choose profiles using actual risk and consumers, not extensions alone. Read `workflow/verification.json`; confirm each command's real scope. Run `plan` first on a newly configured repository. Missing tools/tasks or empty commands are blockers, not skips.
 2. Run covering unit/contract/lifecycle tests, relevant static analysis and batch-level suites. Flutter checks run serially with Android build operations. No APK packaging is implicit. `run` logs exits and fingerprints, but does not know whether a test suite exercises the claimed behavior.
 3. Review failures and check counts. A zero-test suite cannot establish behavior. Device compilation is not device execution; a mocked channel is not a Kotlin/JNI test. Do not substitute the workflow's own unit tests for app tests.

@@ -2,6 +2,8 @@
 
 Before implementation, trace entry points, data flow, consumers and guards. During implementation, make coherent changes and verify their effects. After implementation, review the surrounding system as well as the diff. Whole-subsystem audits are explicit or justified by evidence; never scan everything for a label change.
 
+For spec-driven work, apply `workflow/spec-driven.md`: check requirements/design/tasks for contradictions and missing coverage before execution, then compare delivered behavior and evidence against intent. Requirements-quality approval is not code verification. Stable requirement IDs support traceability, not scores.
+
 ## Review lenses
 
 1. Responsibility/cohesion: does one unit have unrelated reasons to change? Would extraction improve ownership rather than only file length?

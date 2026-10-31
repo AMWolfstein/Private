@@ -1,6 +1,6 @@
 # Sistrum workflow
 
-A portable, project-specific engineering workflow for Flutter/Dart, Kotlin and their Android bridge. No Desloppify installation, score, runtime service or third-party agent plugin is required. Skills guide reasoning; ordinary analyzers, tests and independent reviews supply evidence. This is a workflow starter, not an implemented player or a promise to find every bug.
+A portable, project-specific engineering workflow for Flutter/Dart, Kotlin and their Android bridge. No Desloppify installation, score, Spec Kit CLI, runtime service or third-party agent plugin is required. Skills guide reasoning; ordinary analyzers, tests and independent reviews supply evidence. This is a workflow starter, not an implemented player or a promise to find every bug.
 
 ## Use in a new repository
 
@@ -14,18 +14,21 @@ On a host that does not read `AGENTS.md`, explicitly configure its project-instr
 
 ## What happens per task
 
-Read state/contracts → discover affected callers and risk → design only when needed → implement one coherent change → verify → review independently where required → fix confirmed findings → checkpoint evidence and state.
+Read state/contracts → discover affected callers and risk → specify substantial work and clarify material unknowns → design only when needed → map requirements to tasks/checks → consistency review → implement → verify/review → compare delivery to requirements → checkpoint evidence and state.
 
 Small changes stay small. Architecture and migration work get a design and isolated review. No file-size quota, forced wrapper count, automatic split, score or mandatory swarm. `part of` files are one Dart library. Review responsibilities and dependency direction.
+
+Spec Kit's method is integrated into the same automatic entry: say “Add a sleep timer” or “Port codecs” and the agent loads `sistrum-spec` when warranted. It defines observable acceptance cases, links them to tasks and checks, catches contradictions before implementation, then checks for missing work afterward. A clear bug fix uses its existing acceptance statement; a read-only review does not create a feature or start a port. Existing policies provide the constitution role. No upstream commands, hooks, branch creation or second task database are installed. See `workflow/spec-driven.md` for the precise mapping and limits.
 
 ## Contents
 
 - `AGENTS.md`: automatic entry and persistent authority rules.
-- `.agents/skills/`: six focused skills loaded on demand.
+- `.agents/skills/`: seven focused skills loaded on demand, including `sistrum-spec`.
 - `workflow/architecture.md`, `quality.md`, `contracts/`: target architecture, review lenses and behavioral contracts.
 - `workflow/migration.md`: normalized Media3/backend sequence, owner decisions and unresolved choices.
+- `workflow/spec-driven.md`: Spec Kit adaptation, artifact sizing, traceability and convergence rules.
 - `workflow/STATE.md`: current readiness, not historical success copied from another repository.
-- `workflow/templates/`: task, finding and design records. Copy only when needed.
+- `workflow/templates/`: spec, task, finding and design records. Copy only when needed; keep one task list per feature/batch.
 - `scripts/workflow.py`: advisory routing, explicit check execution, evidence freshness and package validation. Python standard library only.
 - `workflow/verification.json`: commands and prerequisites. Android module/task names must be checked during bootstrap.
 

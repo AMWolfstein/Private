@@ -5,6 +5,8 @@ description: "Use automatically when importing reference implementation or movin
 
 # Port behavior and proven fixes
 
+Use `sistrum-spec` to record preserved behavior, approved differences and an evidence-backed disposition per component: reuse, adapt, restructure or exclude. A well-tested module can be reused without splitting. Keep owner-reported source device validation distinct from checks performed on the new integration; neither dismiss the former nor invent the latter. Link parity requirements to the tasks and checks that establish them.
+
 1. Read `workflow/migration.md` and check phase prerequisites. Select an explicit batch, reference revision, destination and accepted mode. Record unavailable reference sources as blocked; never fabricate equivalence.
 2. Inventory the old behavior, its consumers, regression tests, known defects and licence/attribution. Do not import Compose UI, unrelated network behavior or obsolete engine selection.
 3. Define parity using `workflow/contracts/data-compatibility.md` and playback contracts. Port meaningful tests/fixtures before risky implementation. Run old/new against common input where possible. Record intentional differences instead of making buggy output the oracle.

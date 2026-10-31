@@ -98,6 +98,46 @@ class EvidenceTests(unittest.TestCase):
         self.assertIn('flutter', result['domains'])
         self.assertTrue(result['advisory_only'])
 
+    def test_feature_routes_through_spec_without_installing_tools(self):
+        result = workflow.route('Add a sleep timer', ['lib/player.dart'])
+        self.assertEqual(result['mode'], 'feature')
+        self.assertIn('sistrum-spec', result['suggested_skills'])
+        self.assertIn('sistrum-verify', result['suggested_skills'])
+
+    def test_migration_requires_spec_and_port(self):
+        result = workflow.route('Port codecs to Kotlin', ['android/codecs/build.gradle.kts'])
+        self.assertEqual(result['mode'], 'migration')
+        self.assertIn('sistrum-spec', result['suggested_skills'])
+        self.assertIn('sistrum-port', result['suggested_skills'])
+
+    def test_read_only_review_of_port_does_not_route_to_implementation(self):
+        for intent in ('Review the proposed port to Kotlin', 'راجع خطة نقل codecs'):
+            with self.subTest(intent=intent):
+                result = workflow.route(intent, ['android/codecs/build.gradle.kts'])
+                self.assertEqual(result['mode'], 'audit')
+                self.assertEqual(result['suggested_skills'], ['sistrum-review'])
+
+    def test_clear_bug_fix_does_not_require_feature_spec(self):
+        result = workflow.route('Fix cancellation race', ['lib/player.dart'])
+        self.assertEqual(result['mode'], 'fix')
+        self.assertNotIn('sistrum-spec', result['suggested_skills'])
+        self.assertIn('sistrum-verify', result['suggested_skills'])
+
+    def test_missing_spec_skill_is_not_a_valid_package(self):
+        target = self.root / 'destination'
+        shutil.copytree(MODULE.parents[1], target, ignore=shutil.ignore_patterns('.workflow-runs', '__pycache__'))
+        path = target / '.agents/skills/sistrum-spec/SKILL.md'
+        path.unlink()
+        with self.assertRaises((OSError, ValueError)):
+            workflow.validate(target)
+
+    def test_missing_spec_template_is_not_a_valid_package(self):
+        target = self.root / 'destination'
+        shutil.copytree(MODULE.parents[1], target, ignore=shutil.ignore_patterns('.workflow-runs', '__pycache__'))
+        (target / 'workflow/templates/spec.md').unlink()
+        with self.assertRaises((OSError, ValueError)):
+            workflow.validate(target)
+
     def test_fresh_cli_rejects_later_edit(self):
         workflow.run_checks(self.root, self.config(), 'test')
         command = [sys.executable, str(MODULE), '--root', str(self.root),
