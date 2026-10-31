@@ -79,12 +79,22 @@ updates never invalidate check evidence or review rounds, and real source or con
 
 ## Corpus
 
-`workflow/work/map.json` → `corpus`: `include` globs (default `*.dart`, `*.kt`), `exclude` globs, `exceptions`
-(re-include an excluded path). Globs use fnmatch, `*` crosses `/`. Files ignored by git are never read.
-Default exclusions: the workflow itself, `.work/`, an old `graphify-out/`, build output, `.dart_tool`,
-generated Dart (`*.g.dart`, `*.freezed.dart`, `*.gr.dart`, `*.mocks.dart`, protobuf, `app_localizations*`),
-`*/generated/*`, and vendored or reference code (`third_party/`, `vendor/`, `reference/`). Rust, C++, Java and
-Gradle scripts are not indexed: add an include pattern if reference code must be mapped during a port.
+`workflow/work/map.json` → `corpus`: `include` globs, `exclude` globs, `exceptions` (re-include an excluded path).
+Globs use fnmatch, `*` crosses `/`. Files ignored by git are never read.
+
+The default `include` covers the source code of every language Graphify extracts in this repository: Dart,
+Kotlin, Rust, C/C++, Java, Python, Swift, shell, Gradle, and a few more. Configuration and data formats (JSON,
+YAML, XML, project and lock files, Markdown, images) are not code and are not indexed.
+
+Default exclusions: the workflow itself, hidden top-level and hidden folders (`.*`), `.work/`, an old
+`graphify-out/`, build output, `.dart_tool`, `.gradle`, `node_modules`, generated code (`*.g.dart`,
+`*.freezed.dart`, `*.gr.dart`, `*.mocks.dart`, protobuf, `app_localizations*`, `*/generated/*`, `*/bindings/*`),
+vendored and reference code (`third_party/`, `*/vendor/*`, `reference/`), review reports (`reviews/`), the
+`new workflow/` folder and `docs/`. Adjust these in `map.json` when the repository layout changes.
+
+What is measured for a language decides what the packet can say: Dart and Kotlin get imports, channels and
+handlers; the other languages get Graphify's symbols, calls and references, but not import resolution or channel
+scans.
 
 ## Facts and provenance
 
@@ -182,5 +192,7 @@ extraction logs), `context/` (last packet). Delete the directory at any time; `m
   attribute a command in a file with several channels; such cases appear as unresolved or low confidence.
 - A Dart `package:` import of a package outside the repository is external; a `pubspec.yaml` inside the
   repository maps `package:<name>/` to its `lib/`.
+- Outside Dart and Kotlin, Graphify's symbols, calls and references are shown with their own provenance
+  (`graphify:<language>-ast`). Imports and channels are not resolved for them.
 - Locking needs POSIX `fcntl`; on Windows `map update` is blocked with that reason.
 - Map facts are a starting point for reading code, not evidence for a review finding or a completion claim.

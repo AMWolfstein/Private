@@ -27,6 +27,13 @@ Tokens are estimates (characters / 4). Baseline = whole-word search for the task
 Map full update on the snapshot: about 5 s cold. Context query: about 0.2 s. Expected lists were written by hand
 before running; they are small (2–3 items) and are not a statistically meaningful sample.
 
+## Scope update (full repository)
+- Corpus widened from Dart/Kotlin to every language Graphify extracts (1125 files on the snapshot: Dart 943,
+  Kotlin 71, Rust 80, Python 18, C++/C/Java/shell and others). Config, data, vendored, generated, review and
+  hidden folders stay excluded. Map build: about 9 s cold on the snapshot.
+- Non-Dart/Kotlin languages: symbols, calls and references only; no import resolution, no channel scan.
+- Bench on the full map: packets 2.4–2.8k estimated tokens, unchanged coverage results.
+
 ## Known gaps (open)
 - Playback-bug case: the lexical match did not reach `music_player_events.dart` (part file, function
   `_reportPlaybackError`). Plain-word tasks rely on rare words; no fix yet. Use `--file` or `--symbol` as the
