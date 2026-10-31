@@ -54,3 +54,7 @@ so any edit after a clean round needs one more round.
 ## Review coverage
 
 Use `work/guides/quality.md` for cohesion, cross-module dependencies, API coherence and initialization, as well as safety and correctness. For bridge/data changes use `work/guides/contracts/`; inspect actual callers and guards. No cosmetic file splitting or line quotas.
+
+## Executable assurance
+
+The packet includes `assurance.json`. Verify applicability, source provenance, inventory completeness and that check IDs test the actual contracts on both sides. Structural validation cannot establish semantic parity.

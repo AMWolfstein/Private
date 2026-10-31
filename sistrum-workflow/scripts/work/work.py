@@ -88,7 +88,7 @@ def fingerprint(root: Path) -> str:
 
 def docs_fingerprint(folder: Path) -> str:
     digest = hashlib.sha256()
-    for name in ('spec.md', 'plan.md'):
+    for name in ('spec.md', 'plan.md', 'assurance.json'):
         path = folder / name
         digest.update(name.encode() + (path.read_bytes() if path.is_file() else b'<missing>'))
     return digest.hexdigest()
@@ -174,6 +174,7 @@ def new_change(root: Path, title: str, size: str) -> Path:
         text = (templates / name).read_text().replace('{{TITLE}}', title).replace(
             '{{ID}}', folder.name).replace('{{DATE}}', now()[:10])
         (folder / name).write_text(text)
+    shutil.copy2(templates / 'assurance.json', folder / 'assurance.json')
     base = git(root, 'rev-parse', 'HEAD', check=False).strip() or None
     write_state(folder, {'id': folder.name, 'title': title, 'size': size, 'phase': 'spec', 'base': base,
                          'created': now(), 'rounds': [], 'history': [{'phase': 'spec', 'at': now()}]})
@@ -211,6 +212,110 @@ def requirement_ids(text: str) -> set[str]:
 
 # ------------------------------------------------------------------- checks
 
+def assurance_problems(root: Path, folder: Path, target: str) -> list[str]:
+    """Validate declared scope and demand real runner evidence, not prose PASS."""
+    problems = []
+    path = folder / 'assurance.json'
+    def require(condition, message):
+        if not condition:
+            problems.append('assurance.json: ' + message)
+    def text(value):
+        return isinstance(value, str) and bool(value.strip()) and not placeholders(value)
+    def strings(value):
+        return isinstance(value, list) and bool(value) and all(text(v) for v in value)
+    try:
+        data = json.loads(path.read_text())
+        require(isinstance(data, dict) and data.get('version') == 1, 'version must be 1')
+        if problems:
+            return problems
+        checks = set()
+        for section in ('port', 'bridge'):
+            item = data.get(section)
+            if not isinstance(item, dict):
+                require(False, section + ' declaration is required')
+                continue
+            require(type(item.get('applies')) is bool, section + '.applies must be explicitly true or false')
+            require(text(item.get('reason')), section + '.reason must explain the classification')
+            if item.get('applies') is not True:
+                continue
+            require(read_state(folder).get('size') == 'architecture',
+                    section + ' changes require architecture size')
+            if section == 'port':
+                require(text(item.get('source')), 'port.source must identify the reference repository')
+                require(bool(re.fullmatch(r'[0-9a-fA-F]{40}', str(item.get('revision', '')))),
+                        'port.revision must pin a full source commit')
+                rows = item.get('components')
+                require(isinstance(rows, list) and bool(rows), 'port.components must inventory the batch')
+                for row in rows if isinstance(rows, list) else []:
+                    if not isinstance(row, dict):
+                        require(False, 'port component must be an object')
+                        continue
+                    require(all(text(row.get(k)) for k in ('name', 'destination', 'rationale', 'provenance')),
+                            'port component needs name, destination, rationale and provenance')
+                    require(row.get('disposition') in ('reuse', 'adapt', 'restructure', 'exclude'),
+                            'port component disposition is invalid')
+                    require(strings(row.get('checks')), 'port component needs characterization/parity check IDs')
+                    if strings(row.get('checks')):
+                        checks.update(row['checks'])
+            else:
+                rows = item.get('contracts')
+                require(isinstance(rows, list) and bool(rows), 'bridge.contracts must inventory changed boundaries')
+                for row in rows if isinstance(rows, list) else []:
+                    if not isinstance(row, dict):
+                        require(False, 'bridge contract must be an object')
+                        continue
+                    require(all(text(row.get(k)) for k in ('name', 'caller', 'implementation', 'payload',
+                            'ordering', 'ownership', 'cancellation', 'reconnect', 'errors')),
+                            'bridge contract needs endpoints, payload, ordering, ownership, cancellation, reconnect and errors')
+                    for side in ('caller_checks', 'native_checks'):
+                        require(strings(row.get(side)), 'bridge contract needs ' + side)
+                        if strings(row.get(side)):
+                            checks.update(row[side])
+        dependencies = data.get('prerequisites')
+        require(isinstance(dependencies, list), 'prerequisites must be a list of change IDs')
+        def walk(ident, seen):
+            dependency = find_change(root, ident)
+            require(dependency.name not in seen, 'cyclic prerequisite: ' + dependency.name)
+            if dependency.name in seen:
+                return
+            require(read_state(dependency).get('phase') == 'done', 'prerequisite is not done: ' + dependency.name)
+            other = json.loads((dependency / 'assurance.json').read_text())
+            children = other.get('prerequisites') if isinstance(other, dict) else None
+            require(isinstance(children, list), 'malformed prerequisites in ' + dependency.name)
+            for child in children if isinstance(children, list) else []:
+                require(text(child), 'invalid prerequisite ID in ' + dependency.name)
+                if text(child):
+                    walk(child, seen | {dependency.name})
+        for ident in dependencies if isinstance(dependencies, list) else []:
+            require(text(ident), 'prerequisite must be a change ID')
+            if text(ident):
+                walk(ident, {folder.name})
+        config = load_config(root)
+        evidence = check_evidence(root)
+        current = fingerprint(root) if PHASES.index(target) >= PHASES.index('review') else None
+        for key in checks:
+            require(key in config['checks'], 'unknown check ID: ' + key)
+            if current is not None:
+                entry = evidence.get(key, {})
+                require(entry.get('status') == 'PASS' and entry.get('fingerprint') == current,
+                        'missing or stale passing evidence for ' + key)
+        devices = data.get('device_checks')
+        require(isinstance(devices, list), 'device_checks must be a list (empty if none apply)')
+        for device in devices if isinstance(devices, list) else []:
+            if not isinstance(device, dict):
+                require(False, 'device check must be an object')
+                continue
+            require(text(device.get('case')) and device.get('status') in ('pending', 'passed'),
+                    'device check needs case and pending/passed status')
+            if device.get('status') == 'passed':
+                require(text(device.get('evidence')), 'passed device check needs owner/device evidence')
+            if PHASES.index(target) >= PHASES.index('ship'):
+                require(device.get('status') == 'passed', 'device check is pending: ' + str(device.get('case')))
+    except (OSError, ValueError, TypeError, KeyError, Blocked) as error:
+        problems.append('assurance.json: invalid or unavailable declaration: ' + str(error))
+    return problems
+
+
 def lint_change(root: Path, folder: Path, target: str | None = None) -> list[str]:
     """Cross-artifact problems; with target, only those that gate that phase."""
     state = read_state(folder)
@@ -240,6 +345,7 @@ def lint_change(root: Path, folder: Path, target: str | None = None) -> list[str
             elif design[-1]['fingerprint'] != current:
                 problems.append('spec/plan changed after the last design review round')
     if order >= PHASES.index('build'):
+        problems += assurance_problems(root, folder, target or 'done')
         lines = task_lines(tasks)
         if not lines:
             problems.append('tasks.md has no T### tasks')
@@ -260,7 +366,8 @@ def lint_change(root: Path, folder: Path, target: str | None = None) -> list[str
         code = [r for r in state['rounds'] if r['stage'] == 'code']
         if not code or code[-1]['result'] != 'clean':
             problems.append('the last code-review round is missing or not clean')
-        elif code[-1]['fingerprint'] != fingerprint(root):
+        elif (code[-1]['fingerprint'] != fingerprint(root)
+              or code[-1].get('assurance') != docs_fingerprint(folder)):
             problems.append('code changed after the last clean review round; review the final code')
     for item in parse_findings(findings_text):
         status, severity = item.get('status', '').lower(), item.get('severity', '').lower()
@@ -312,7 +419,7 @@ def record_round(root: Path, ident: str, stage: str, result: str, reviewer: str)
         note = ''
     fp = docs_fingerprint(folder) if stage == 'design' else fingerprint(root)
     state['rounds'].append({'stage': stage, 'round': len(rounds) + 1, 'result': result,
-                            'reviewer': reviewer, 'fingerprint': fp, 'at': now()})
+                            'reviewer': reviewer, 'fingerprint': fp, 'assurance': docs_fingerprint(folder), 'at': now()})
     write_state(folder, state)
     return {'status': 'PASS', 'round': len(rounds) + 1, 'note': note}
 
@@ -642,7 +749,7 @@ def packet(root: Path, base: str, goal_file: str | None, ident: str | None, out:
              'do not assume anything the packet or the code does not show.', '']
     if ident:
         folder = find_change(root, ident)
-        for name in ('spec.md', 'plan.md'):
+        for name in ('spec.md', 'plan.md', 'assurance.json'):
             if (folder / name).is_file():
                 parts += [f'## {name} ({folder.name})', '', (folder / name).read_text(), '']
     if goal_file:

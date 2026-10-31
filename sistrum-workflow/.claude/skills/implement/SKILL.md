@@ -42,3 +42,7 @@ requires every task done and passing evidence that matches the current tree.
 ## Ports
 
 Follow `work/guides/port.md`. Record a disposition per component: reuse, adapt, restructure or exclude, with evidence. Reorganize only for responsibility and dependency boundaries; a tested module may remain intact. Preserve source device-test evidence separately from new integration validation.
+
+## Executable assurance
+
+Run all check IDs named in `assurance.json` via `work.py check <IDs>`. Build validates declarations; review requires fresh runner evidence, including checks outside automatic path selection.

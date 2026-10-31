@@ -63,3 +63,7 @@ items, and, for architecture, a plan changed after its last clean review round.
 ## Project guidance
 
 Read `work/guides/architecture.md` and the relevant contract in `work/guides/contracts/`. For ports, also read `work/guides/port.md` and `work/guides/migration.md`. The migration guide carries historical references: verify the actual reference revision and accepted decisions before importing. In a new repository preserve these guides; do not rely on an absent external plan. Later explicit owner decisions and the current accepted migration plan supersede historical summaries. Record conflicts rather than silently choosing.
+
+## Executable assurance
+
+Fill `assurance.json` before design review: source revision, component dispositions, bridge contracts, check IDs, prerequisite change IDs and device cases. Follow `work/guides/assurance.md`; no duplicate evidence database.

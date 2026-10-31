@@ -42,3 +42,7 @@ say exactly which commit it came from and that it has not been tested on a devic
 ## 6. Report
 
 Use the report format in the `work` skill, in the owner's language.
+
+## Executable assurance
+
+Run `work.py lint <NNN>` before completion. Assurance device cases must have real passed evidence before ship; pending cases are a verification gap. Manifest edits invalidate review rounds.

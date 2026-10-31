@@ -348,6 +348,10 @@ class GateTests(Repo):
         self.fill('plan.md', '# Plan\n\n## Constitution check\n\n- [x] I. ok\n\n## Next\n')
 
     def good_tasks(self, done=False):
+        self.fill('assurance.json', json.dumps({'version': 1,
+            'port': {'applies': False, 'reason': 'UI-only test fixture'},
+            'bridge': {'applies': False, 'reason': 'No boundary change'},
+            'prerequisites': [], 'device_checks': []}))
         mark = 'x' if done else ' '
         self.fill('tasks.md', f'- [{mark}] T001 Play clips (FR-001) — check: flutter test test/cue_test.dart\n')
 
@@ -491,6 +495,128 @@ class GateTests(Repo):
     def test_done_needs_close_lines(self):
         problems = work.lint_change(self.root, self.folder, 'done')
         self.assertTrue(any('Drift' in p for p in problems))
+
+
+class AssuranceTests(Repo):
+    def setUp(self):
+        super().setUp()
+        self.folder = work.new_change(self.root, 'Boundary migration', 'architecture')
+        self.data = {'version': 1, 'port': {'applies': False, 'reason': 'Not a port'},
+                     'bridge': {'applies': False, 'reason': 'No boundary changes'},
+                     'prerequisites': [], 'device_checks': []}
+
+    def problems(self, phase='build'):
+        (self.folder / 'assurance.json').write_text(json.dumps(self.data))
+        return work.assurance_problems(self.root, self.folder, phase)
+
+    def port(self):
+        self.data['port'] = {'applies': True, 'reason': 'Kotlin port', 'source': 'reference repo',
+            'revision': 'a' * 40, 'components': [{'name': 'DSP', 'destination': 'kotlin/dsp',
+            'disposition': 'adapt', 'rationale': 'Android adapter', 'provenance': 'source licence',
+            'checks': ['workflow']}]}
+
+    def test_unclassified_new_change_blocks_build(self):
+        data = json.loads((self.folder / 'assurance.json').read_text())
+        self.data = data
+        self.assertTrue(any('explicitly' in p for p in self.problems()))
+        with self.assertRaises(work.Blocked):
+            work.advance(self.root, self.folder.name, 'plan')
+
+    def test_advance_build_enforces_manifest_not_just_standalone_validator(self):
+        state = work.read_state(self.folder)
+        state.update(size='feature', phase='tasks')
+        work.write_state(self.folder, state)
+        (self.folder / 'spec.md').write_text('- FR-001: MUST work. Given a, When b, Then c.\n')
+        (self.folder / 'plan.md').write_text('## Constitution check\n- [x] checked\n')
+        (self.folder / 'tasks.md').write_text('- [ ] T001 Implement (FR-001) — check: unit test\n')
+        with self.assertRaisesRegex(work.Blocked, 'assurance.json'):
+            work.advance(self.root, self.folder.name, 'build')
+        self.problems()
+        self.assertEqual(work.advance(self.root, self.folder.name, 'build')['phase'], 'build')
+
+    def test_explicit_non_applicability_passes(self):
+        self.assertEqual(self.problems(), [])
+
+    def test_missing_and_malformed_manifest_block(self):
+        path = self.folder / 'assurance.json'
+        for content in ('{broken', '[]'):
+            path.write_text(content)
+            self.assertTrue(work.assurance_problems(self.root, self.folder, 'build'))
+        path.unlink()
+        self.assertTrue(work.assurance_problems(self.root, self.folder, 'build'))
+
+    def test_port_requires_pinned_source_and_component_disposition(self):
+        self.port()
+        self.assertEqual(self.problems(), [])
+        self.data['port']['revision'] = 'main'
+        self.data['port']['components'][0]['disposition'] = 'copy blindly'
+        result = self.problems()
+        self.assertTrue(any('commit' in p for p in result))
+        self.assertTrue(any('disposition' in p for p in result))
+
+    def test_declared_checks_require_actual_fresh_runner_evidence(self):
+        self.port()
+        self.assertTrue(any('workflow' in p for p in self.problems('review')))
+        config = self.config({'workflow': {'run': [PY, '-c', 'pass']}})
+        work.run_checks(self.root, config, ['workflow'])
+        self.assertEqual(self.problems('review'), [])
+        self.write('lib/app.dart', 'edited')
+        self.assertTrue(any('stale' in p for p in self.problems('review')))
+
+    def test_unknown_checks_cannot_count_as_evidence(self):
+        self.port()
+        self.data['port']['components'][0]['checks'] = ['imaginary']
+        self.assertTrue(any('unknown check' in p for p in self.problems()))
+
+    def test_bridge_requires_both_sides_and_lifecycle_contract(self):
+        contract = {k: 'documented contract' for k in ('name', 'caller', 'implementation',
+            'payload', 'ordering', 'ownership', 'cancellation', 'reconnect', 'errors')}
+        contract.update(caller_checks=['workflow'], native_checks=['android-unit'])
+        self.data['bridge'] = {'applies': True, 'reason': 'Playback API', 'contracts': [contract]}
+        self.assertEqual(self.problems(), [])
+        del contract['reconnect']
+        contract['native_checks'] = []
+        result = self.problems()
+        self.assertTrue(any('reconnect' in p for p in result))
+        self.assertTrue(any('native_checks' in p for p in result))
+
+    def test_prerequisites_must_exist_be_done_and_acyclic(self):
+        self.data['prerequisites'] = ['999']
+        self.assertTrue(self.problems())
+        self.data['prerequisites'] = [self.folder.name]
+        self.assertTrue(any('cyclic' in p for p in self.problems()))
+        other = work.new_change(self.root, 'Previous batch', 'architecture')
+        self.data['prerequisites'] = [other.name]
+        self.assertTrue(any('not done' in p for p in self.problems()))
+        state = work.read_state(other); state['phase'] = 'done'; work.write_state(other, state)
+        (other / 'assurance.json').write_text(json.dumps({'prerequisites': []}))
+        self.assertEqual(self.problems(), [])
+
+    def test_malformed_nested_prerequisites_block_instead_of_crashing(self):
+        other = work.new_change(self.root, 'Dependency', 'architecture')
+        state = work.read_state(other); state['phase'] = 'done'; work.write_state(other, state)
+        self.data['prerequisites'] = [other.name]
+        for malformed in ([], {'prerequisites': [7]}, {'prerequisites': '001'}):
+            (other / 'assurance.json').write_text(json.dumps(malformed))
+            self.assertTrue(self.problems())
+
+    def test_pending_device_check_allows_review_but_blocks_ship(self):
+        self.data['device_checks'] = [{'case': 'screen-off playback', 'status': 'pending'}]
+        self.assertEqual(self.problems('review'), [])
+        self.assertTrue(any('pending' in p for p in self.problems('ship')))
+        self.data['device_checks'][0]['status'] = 'passed'
+        self.assertTrue(any('evidence' in p for p in self.problems('ship')))
+        self.data['device_checks'][0]['evidence'] = 'Owner report, device/API, revision, log'
+        self.assertEqual(self.problems('ship'), [])
+
+    def test_manifest_edit_invalidates_review_fingerprint_and_packet_includes_it(self):
+        self.problems()
+        before = work.docs_fingerprint(self.folder)
+        self.data['port']['reason'] = 'Changed scope'
+        self.problems()
+        self.assertNotEqual(before, work.docs_fingerprint(self.folder))
+        work.packet(self.root, 'HEAD', None, self.folder.name, '.work/packet.md')
+        self.assertIn('Changed scope', (self.root / '.work/packet.md').read_text())
 
 
 class GuardTests(unittest.TestCase):

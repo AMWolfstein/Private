@@ -50,3 +50,7 @@ Fix what fails. Then show the owner a short summary in their language and the op
 
 `python3 scripts/work/work.py advance <NNN> plan` refuses while markers remain or there is no FR or acceptance
 scenario. When the owner is only discussing, stop here and keep refining the spec with them.
+
+## Executable assurance
+
+Classify port/bridge applicability in `assurance.json` with reasons; use `work/guides/assurance.md`. Do not guess non-applicability to bypass a gate.
