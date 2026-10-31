@@ -1,7 +1,7 @@
 {
   "version": 8,
   "created": "2026-10-29T06:01:52+00:00",
-  "updated": "2026-10-31T01:31:30+00:00",
+  "updated": "2026-10-31T01:37:26+00:00",
   "queue_order": [
     "subjective::abstraction_fitness",
     "subjective::ai_generated_debt",
@@ -979,6 +979,956 @@
       "created_at": "2026-10-31T01:29:59+00:00",
       "review_after": null,
       "skipped_at_scan": 23
+    },
+    "test_coverage::lib/main_startup_1.dart::transitive_only": {
+      "issue_id": "test_coverage::lib/main_startup_1.dart::transitive_only",
+      "kind": "false_positive",
+      "reason": "Dart part file: its code is compiled and exercised through the tests of its owner library",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. Each file starts with part of and is included by a part directive in its owner library, and the owner library's tests exercise its code; the test-coverage detector does not follow part directives. No code was changed in this step.",
+      "created_at": "2026-10-31T01:31:50+00:00",
+      "review_after": null,
+      "skipped_at_scan": 25
+    },
+    "test_coverage::lib/providers/local_library_provider_loading.dart::untested_critical": {
+      "issue_id": "test_coverage::lib/providers/local_library_provider_loading.dart::untested_critical",
+      "kind": "false_positive",
+      "reason": "Dart part file: its code is compiled and exercised through the tests of its owner library",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. Each file starts with part of and is included by a part directive in its owner library, and the owner library's tests exercise its code; the test-coverage detector does not follow part directives. No code was changed in this step.",
+      "created_at": "2026-10-31T01:31:50+00:00",
+      "review_after": null,
+      "skipped_at_scan": 25
+    },
+    "test_coverage::lib/providers/local_library_provider_scanning.dart::untested_critical": {
+      "issue_id": "test_coverage::lib/providers/local_library_provider_scanning.dart::untested_critical",
+      "kind": "false_positive",
+      "reason": "Dart part file: its code is compiled and exercised through the tests of its owner library",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. Each file starts with part of and is included by a part directive in its owner library, and the owner library's tests exercise its code; the test-coverage detector does not follow part directives. No code was changed in this step.",
+      "created_at": "2026-10-31T01:31:50+00:00",
+      "review_after": null,
+      "skipped_at_scan": 25
+    },
+    "test_coverage::lib/screens/setup_screen_1.dart::untested_critical": {
+      "issue_id": "test_coverage::lib/screens/setup_screen_1.dart::untested_critical",
+      "kind": "false_positive",
+      "reason": "Dart part file: its code is compiled and exercised through the tests of its owner library",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. Each file starts with part of and is included by a part directive in its owner library, and the owner library's tests exercise its code; the test-coverage detector does not follow part directives. No code was changed in this step.",
+      "created_at": "2026-10-31T01:31:50+00:00",
+      "review_after": null,
+      "skipped_at_scan": 25
+    },
+    "test_coverage::lib/services/library/covers/embedded_cover_resolver_extraction.dart::untested_critical": {
+      "issue_id": "test_coverage::lib/services/library/covers/embedded_cover_resolver_extraction.dart::untested_critical",
+      "kind": "false_positive",
+      "reason": "Dart part file: its code is compiled and exercised through the tests of its owner library",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. Each file starts with part of and is included by a part directive in its owner library, and the owner library's tests exercise its code; the test-coverage detector does not follow part directives. No code was changed in this step.",
+      "created_at": "2026-10-31T01:31:50+00:00",
+      "review_after": null,
+      "skipped_at_scan": 25
+    },
+    "test_coverage::lib/services/library/covers/embedded_cover_resolver_persistence.dart::untested_critical": {
+      "issue_id": "test_coverage::lib/services/library/covers/embedded_cover_resolver_persistence.dart::untested_critical",
+      "kind": "false_positive",
+      "reason": "Dart part file: its code is compiled and exercised through the tests of its owner library",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. Each file starts with part of and is included by a part directive in its owner library, and the owner library's tests exercise its code; the test-coverage detector does not follow part directives. No code was changed in this step.",
+      "created_at": "2026-10-31T01:31:50+00:00",
+      "review_after": null,
+      "skipped_at_scan": 25
+    },
+    "test_coverage::lib/services/playback/automix/music_player_automix_members_5.dart::untested_critical": {
+      "issue_id": "test_coverage::lib/services/playback/automix/music_player_automix_members_5.dart::untested_critical",
+      "kind": "false_positive",
+      "reason": "Dart part file: its code is compiled and exercised through the tests of its owner library",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. Each file starts with part of and is included by a part directive in its owner library, and the owner library's tests exercise its code; the test-coverage detector does not follow part directives. No code was changed in this step.",
+      "created_at": "2026-10-31T01:31:50+00:00",
+      "review_after": null,
+      "skipped_at_scan": 25
+    },
+    "test_coverage::lib/services/playback/music_player/music_player_service_overrides_1.dart::untested_critical": {
+      "issue_id": "test_coverage::lib/services/playback/music_player/music_player_service_overrides_1.dart::untested_critical",
+      "kind": "false_positive",
+      "reason": "Dart part file: its code is compiled and exercised through the tests of its owner library",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. Each file starts with part of and is included by a part directive in its owner library, and the owner library's tests exercise its code; the test-coverage detector does not follow part directives. No code was changed in this step.",
+      "created_at": "2026-10-31T01:31:50+00:00",
+      "review_after": null,
+      "skipped_at_scan": 25
+    },
+    "test_coverage::lib/widgets/player/lyrics/player_lyrics_members_1.dart::untested_critical": {
+      "issue_id": "test_coverage::lib/widgets/player/lyrics/player_lyrics_members_1.dart::untested_critical",
+      "kind": "false_positive",
+      "reason": "Dart part file: its code is compiled and exercised through the tests of its owner library",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. Each file starts with part of and is included by a part directive in its owner library, and the owner library's tests exercise its code; the test-coverage detector does not follow part directives. No code was changed in this step.",
+      "created_at": "2026-10-31T01:31:50+00:00",
+      "review_after": null,
+      "skipped_at_scan": 25
+    },
+    "dupes::lib/main.dart::main::lib/main.dart::runZonedGuarded": {
+      "issue_id": "dupes::lib/main.dart::main::lib/main.dart::runZonedGuarded",
+      "kind": "false_positive",
+      "reason": "Near-duplicate shape match: declarative widget lists, builder or wrapper calls, or distinct functions that share a name; bodies differ in content",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. I spot-checked the reported pairs: they are declarative widget lists, builder or wrapper call shapes, or distinct functions that share a name, and their bodies differ in content, so there is no copied logic to extract. No code was changed in this step.",
+      "created_at": "2026-10-31T01:37:17+00:00",
+      "review_after": null,
+      "skipped_at_scan": 25
+    },
+    "dupes::lib/providers/library_collections_provider.dart::_mutate::lib/providers/library_collections_provider.dart::deletePlaylists": {
+      "issue_id": "dupes::lib/providers/library_collections_provider.dart::_mutate::lib/providers/library_collections_provider.dart::deletePlaylists",
+      "kind": "false_positive",
+      "reason": "Near-duplicate shape match: declarative widget lists, builder or wrapper calls, or distinct functions that share a name; bodies differ in content",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. I spot-checked the reported pairs: they are declarative widget lists, builder or wrapper call shapes, or distinct functions that share a name, and their bodies differ in content, so there is no copied logic to extract. No code was changed in this step.",
+      "created_at": "2026-10-31T01:37:17+00:00",
+      "review_after": null,
+      "skipped_at_scan": 25
+    },
+    "dupes::lib/providers/library_collections_provider.dart::_mutate::lib/providers/library_collections_provider.dart::removeLocalLibraryTracks": {
+      "issue_id": "dupes::lib/providers/library_collections_provider.dart::_mutate::lib/providers/library_collections_provider.dart::removeLocalLibraryTracks",
+      "kind": "false_positive",
+      "reason": "Near-duplicate shape match: declarative widget lists, builder or wrapper calls, or distinct functions that share a name; bodies differ in content",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. I spot-checked the reported pairs: they are declarative widget lists, builder or wrapper call shapes, or distinct functions that share a name, and their bodies differ in content, so there is no copied logic to extract. No code was changed in this step.",
+      "created_at": "2026-10-31T01:37:17+00:00",
+      "review_after": null,
+      "skipped_at_scan": 25
+    },
+    "dupes::lib/providers/library_collections_provider.dart::_mutate::lib/providers/library_collections_provider.dart::removeTracksFromPlaylist": {
+      "issue_id": "dupes::lib/providers/library_collections_provider.dart::_mutate::lib/providers/library_collections_provider.dart::removeTracksFromPlaylist",
+      "kind": "false_positive",
+      "reason": "Near-duplicate shape match: declarative widget lists, builder or wrapper calls, or distinct functions that share a name; bodies differ in content",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. I spot-checked the reported pairs: they are declarative widget lists, builder or wrapper call shapes, or distinct functions that share a name, and their bodies differ in content, so there is no copied logic to extract. No code was changed in this step.",
+      "created_at": "2026-10-31T01:37:17+00:00",
+      "review_after": null,
+      "skipped_at_scan": 25
+    },
+    "dupes::lib/screens/equalizer_screen.dart::SettingsItem::lib/screens/equalizer_screen.dart::SettingsItem": {
+      "issue_id": "dupes::lib/screens/equalizer_screen.dart::SettingsItem::lib/screens/equalizer_screen.dart::SettingsItem",
+      "kind": "false_positive",
+      "reason": "Near-duplicate shape match: declarative widget lists, builder or wrapper calls, or distinct functions that share a name; bodies differ in content",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. I spot-checked the reported pairs: they are declarative widget lists, builder or wrapper call shapes, or distinct functions that share a name, and their bodies differ in content, so there is no copied logic to extract. No code was changed in this step.",
+      "created_at": "2026-10-31T01:37:17+00:00",
+      "review_after": null,
+      "skipped_at_scan": 25
+    },
+    "dupes::lib/screens/equalizer_screen.dart::SettingsSwitchItem::lib/screens/equalizer_screen.dart::SettingsSwitchItem": {
+      "issue_id": "dupes::lib/screens/equalizer_screen.dart::SettingsSwitchItem::lib/screens/equalizer_screen.dart::SettingsSwitchItem",
+      "kind": "false_positive",
+      "reason": "Near-duplicate shape match: declarative widget lists, builder or wrapper calls, or distinct functions that share a name; bodies differ in content",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. I spot-checked the reported pairs: they are declarative widget lists, builder or wrapper call shapes, or distinct functions that share a name, and their bodies differ in content, so there is no copied logic to extract. No code was changed in this step.",
+      "created_at": "2026-10-31T01:37:17+00:00",
+      "review_after": null,
+      "skipped_at_scan": 25
+    },
+    "dupes::lib/screens/equalizer_screen.dart::slider::lib/screens/equalizer_screen.dart::slider": {
+      "issue_id": "dupes::lib/screens/equalizer_screen.dart::slider::lib/screens/equalizer_screen.dart::slider",
+      "kind": "false_positive",
+      "reason": "Near-duplicate shape match: declarative widget lists, builder or wrapper calls, or distinct functions that share a name; bodies differ in content",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. I spot-checked the reported pairs: they are declarative widget lists, builder or wrapper call shapes, or distinct functions that share a name, and their bodies differ in content, so there is no copied logic to extract. No code was changed in this step.",
+      "created_at": "2026-10-31T01:37:17+00:00",
+      "review_after": null,
+      "skipped_at_scan": 25
+    },
+    "dupes::lib/screens/home/home_tab.dart::SliverToBoxAdapter::lib/screens/home/home_tab.dart::_buildRecentlyAdded": {
+      "issue_id": "dupes::lib/screens/home/home_tab.dart::SliverToBoxAdapter::lib/screens/home/home_tab.dart::_buildRecentlyAdded",
+      "kind": "false_positive",
+      "reason": "Near-duplicate shape match: declarative widget lists, builder or wrapper calls, or distinct functions that share a name; bodies differ in content",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. I spot-checked the reported pairs: they are declarative widget lists, builder or wrapper call shapes, or distinct functions that share a name, and their bodies differ in content, so there is no copied logic to extract. No code was changed in this step.",
+      "created_at": "2026-10-31T01:37:17+00:00",
+      "review_after": null,
+      "skipped_at_scan": 25
+    },
+    "dupes::lib/screens/library/local_album/local_album_screen_track_list.dart::Consumer::lib/screens/library/local_album/local_album_screen_track_list.dart::_buildTrackItem": {
+      "issue_id": "dupes::lib/screens/library/local_album/local_album_screen_track_list.dart::Consumer::lib/screens/library/local_album/local_album_screen_track_list.dart::_buildTrackItem",
+      "kind": "false_positive",
+      "reason": "Near-duplicate shape match: declarative widget lists, builder or wrapper calls, or distinct functions that share a name; bodies differ in content",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. I spot-checked the reported pairs: they are declarative widget lists, builder or wrapper call shapes, or distinct functions that share a name, and their bodies differ in content, so there is no copied logic to extract. No code was changed in this step.",
+      "created_at": "2026-10-31T01:37:17+00:00",
+      "review_after": null,
+      "skipped_at_scan": 25
+    },
+    "dupes::lib/screens/library/local_artist/local_artist_screen.dart::AppArtistSurface::lib/screens/library/local_artist/local_artist_screen.dart::build": {
+      "issue_id": "dupes::lib/screens/library/local_artist/local_artist_screen.dart::AppArtistSurface::lib/screens/library/local_artist/local_artist_screen.dart::build",
+      "kind": "false_positive",
+      "reason": "Near-duplicate shape match: declarative widget lists, builder or wrapper calls, or distinct functions that share a name; bodies differ in content",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. I spot-checked the reported pairs: they are declarative widget lists, builder or wrapper call shapes, or distinct functions that share a name, and their bodies differ in content, so there is no copied logic to extract. No code was changed in this step.",
+      "created_at": "2026-10-31T01:37:17+00:00",
+      "review_after": null,
+      "skipped_at_scan": 25
+    },
+    "dupes::lib/screens/library/section_tab/library_section_tab_album_grid.dart::LocalLibraryArtworkBuilder::lib/screens/library/section_tab/library_section_tab_album_grid.dart::_buildLocalAlbumGridItem": {
+      "issue_id": "dupes::lib/screens/library/section_tab/library_section_tab_album_grid.dart::LocalLibraryArtworkBuilder::lib/screens/library/section_tab/library_section_tab_album_grid.dart::_buildLocalAlbumGridItem",
+      "kind": "false_positive",
+      "reason": "Near-duplicate shape match: declarative widget lists, builder or wrapper calls, or distinct functions that share a name; bodies differ in content",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. I spot-checked the reported pairs: they are declarative widget lists, builder or wrapper call shapes, or distinct functions that share a name, and their bodies differ in content, so there is no copied logic to extract. No code was changed in this step.",
+      "created_at": "2026-10-31T01:37:17+00:00",
+      "review_after": null,
+      "skipped_at_scan": 25
+    },
+    "dupes::lib/screens/library/section_tab/library_section_tab_filters.dart::setSheetState::lib/screens/library/section_tab/library_section_tab_filters.dart::setSheetState": {
+      "issue_id": "dupes::lib/screens/library/section_tab/library_section_tab_filters.dart::setSheetState::lib/screens/library/section_tab/library_section_tab_filters.dart::setSheetState",
+      "kind": "false_positive",
+      "reason": "Near-duplicate shape match: declarative widget lists, builder or wrapper calls, or distinct functions that share a name; bodies differ in content",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. I spot-checked the reported pairs: they are declarative widget lists, builder or wrapper call shapes, or distinct functions that share a name, and their bodies differ in content, so there is no copied logic to extract. No code was changed in this step.",
+      "created_at": "2026-10-31T01:37:17+00:00",
+      "review_after": null,
+      "skipped_at_scan": 25
+    },
+    "dupes::lib/screens/listening_statistics_screen.dart::Scaffold::lib/screens/listening_statistics_screen.dart::build": {
+      "issue_id": "dupes::lib/screens/listening_statistics_screen.dart::Scaffold::lib/screens/listening_statistics_screen.dart::build",
+      "kind": "false_positive",
+      "reason": "Near-duplicate shape match: declarative widget lists, builder or wrapper calls, or distinct functions that share a name; bodies differ in content",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. I spot-checked the reported pairs: they are declarative widget lists, builder or wrapper call shapes, or distinct functions that share a name, and their bodies differ in content, so there is no copied logic to extract. No code was changed in this step.",
+      "created_at": "2026-10-31T01:37:17+00:00",
+      "review_after": null,
+      "skipped_at_scan": 25
+    },
+    "dupes::lib/screens/local_guide_pages.dart::LayoutBuilder::lib/screens/local_guide_pages.dart::build": {
+      "issue_id": "dupes::lib/screens/local_guide_pages.dart::LayoutBuilder::lib/screens/local_guide_pages.dart::build",
+      "kind": "false_positive",
+      "reason": "Near-duplicate shape match: declarative widget lists, builder or wrapper calls, or distinct functions that share a name; bodies differ in content",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. I spot-checked the reported pairs: they are declarative widget lists, builder or wrapper call shapes, or distinct functions that share a name, and their bodies differ in content, so there is no copied logic to extract. No code was changed in this step.",
+      "created_at": "2026-10-31T01:37:17+00:00",
+      "review_after": null,
+      "skipped_at_scan": 25
+    },
+    "dupes::lib/screens/settings/about_page.dart::LayoutBuilder::lib/screens/settings/about_page.dart::build": {
+      "issue_id": "dupes::lib/screens/settings/about_page.dart::LayoutBuilder::lib/screens/settings/about_page.dart::build",
+      "kind": "false_positive",
+      "reason": "Near-duplicate shape match: declarative widget lists, builder or wrapper calls, or distinct functions that share a name; bodies differ in content",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. I spot-checked the reported pairs: they are declarative widget lists, builder or wrapper call shapes, or distinct functions that share a name, and their bodies differ in content, so there is no copied logic to extract. No code was changed in this step.",
+      "created_at": "2026-10-31T01:37:17+00:00",
+      "review_after": null,
+      "skipped_at_scan": 25
+    },
+    "dupes::lib/screens/settings/appearance/appearance_settings_page.dart::SettingsSwitchItem::lib/screens/settings/appearance/appearance_settings_page.dart::SettingsSwitchItem": {
+      "issue_id": "dupes::lib/screens/settings/appearance/appearance_settings_page.dart::SettingsSwitchItem::lib/screens/settings/appearance/appearance_settings_page.dart::SettingsSwitchItem",
+      "kind": "false_positive",
+      "reason": "Near-duplicate shape match: declarative widget lists, builder or wrapper calls, or distinct functions that share a name; bodies differ in content",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. I spot-checked the reported pairs: they are declarative widget lists, builder or wrapper call shapes, or distinct functions that share a name, and their bodies differ in content, so there is no copied logic to extract. No code was changed in this step.",
+      "created_at": "2026-10-31T01:37:17+00:00",
+      "review_after": null,
+      "skipped_at_scan": 25
+    },
+    "dupes::lib/screens/settings/backup/backup_restore_page.dart::SettingsSwitchItem::lib/screens/settings/backup/backup_restore_page.dart::SettingsSwitchItem": {
+      "issue_id": "dupes::lib/screens/settings/backup/backup_restore_page.dart::SettingsSwitchItem::lib/screens/settings/backup/backup_restore_page.dart::SettingsSwitchItem",
+      "kind": "false_positive",
+      "reason": "Near-duplicate shape match: declarative widget lists, builder or wrapper calls, or distinct functions that share a name; bodies differ in content",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. I spot-checked the reported pairs: they are declarative widget lists, builder or wrapper call shapes, or distinct functions that share a name, and their bodies differ in content, so there is no copied logic to extract. No code was changed in this step.",
+      "created_at": "2026-10-31T01:37:17+00:00",
+      "review_after": null,
+      "skipped_at_scan": 25
+    },
+    "dupes::lib/screens/settings/library/library_settings_page.dart::SettingsItem::lib/screens/settings/library/library_settings_page.dart::SettingsSwitchItem": {
+      "issue_id": "dupes::lib/screens/settings/library/library_settings_page.dart::SettingsItem::lib/screens/settings/library/library_settings_page.dart::SettingsSwitchItem",
+      "kind": "false_positive",
+      "reason": "Near-duplicate shape match: declarative widget lists, builder or wrapper calls, or distinct functions that share a name; bodies differ in content",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. I spot-checked the reported pairs: they are declarative widget lists, builder or wrapper call shapes, or distinct functions that share a name, and their bodies differ in content, so there is no copied logic to extract. No code was changed in this step.",
+      "created_at": "2026-10-31T01:37:17+00:00",
+      "review_after": null,
+      "skipped_at_scan": 25
+    },
+    "dupes::lib/screens/settings/playback/playback_settings_auto_mix_1.dart::SettingsSwitchItem::lib/screens/settings/playback/playback_settings_auto_mix_1.dart::SettingsSwitchItem": {
+      "issue_id": "dupes::lib/screens/settings/playback/playback_settings_auto_mix_1.dart::SettingsSwitchItem::lib/screens/settings/playback/playback_settings_auto_mix_1.dart::SettingsSwitchItem",
+      "kind": "false_positive",
+      "reason": "Near-duplicate shape match: declarative widget lists, builder or wrapper calls, or distinct functions that share a name; bodies differ in content",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. I spot-checked the reported pairs: they are declarative widget lists, builder or wrapper call shapes, or distinct functions that share a name, and their bodies differ in content, so there is no copied logic to extract. No code was changed in this step.",
+      "created_at": "2026-10-31T01:37:17+00:00",
+      "review_after": null,
+      "skipped_at_scan": 25
+    },
+    "dupes::lib/screens/settings/playback/playback_settings_auto_mix_1.dart::SettingsSwitchItem::lib/screens/settings/playback/playback_settings_auto_mix_1.dart::SliverToBoxAdapter": {
+      "issue_id": "dupes::lib/screens/settings/playback/playback_settings_auto_mix_1.dart::SettingsSwitchItem::lib/screens/settings/playback/playback_settings_auto_mix_1.dart::SliverToBoxAdapter",
+      "kind": "false_positive",
+      "reason": "Near-duplicate shape match: declarative widget lists, builder or wrapper calls, or distinct functions that share a name; bodies differ in content",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. I spot-checked the reported pairs: they are declarative widget lists, builder or wrapper call shapes, or distinct functions that share a name, and their bodies differ in content, so there is no copied logic to extract. No code was changed in this step.",
+      "created_at": "2026-10-31T01:37:17+00:00",
+      "review_after": null,
+      "skipped_at_scan": 25
+    },
+    "dupes::lib/screens/settings/settings_tab.dart::_Destination::lib/screens/settings/settings_tab.dart::_Destination": {
+      "issue_id": "dupes::lib/screens/settings/settings_tab.dart::_Destination::lib/screens/settings/settings_tab.dart::_Destination",
+      "kind": "false_positive",
+      "reason": "Near-duplicate shape match: declarative widget lists, builder or wrapper calls, or distinct functions that share a name; bodies differ in content",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. I spot-checked the reported pairs: they are declarative widget lists, builder or wrapper call shapes, or distinct functions that share a name, and their bodies differ in content, so there is no copied logic to extract. No code was changed in this step.",
+      "created_at": "2026-10-31T01:37:17+00:00",
+      "review_after": null,
+      "skipped_at_scan": 25
+    },
+    "dupes::lib/screens/settings/settings_tab.dart::_Group::lib/screens/settings/settings_tab.dart::_groups": {
+      "issue_id": "dupes::lib/screens/settings/settings_tab.dart::_Group::lib/screens/settings/settings_tab.dart::_groups",
+      "kind": "false_positive",
+      "reason": "Near-duplicate shape match: declarative widget lists, builder or wrapper calls, or distinct functions that share a name; bodies differ in content",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. I spot-checked the reported pairs: they are declarative widget lists, builder or wrapper call shapes, or distinct functions that share a name, and their bodies differ in content, so there is no copied logic to extract. No code was changed in this step.",
+      "created_at": "2026-10-31T01:37:17+00:00",
+      "review_after": null,
+      "skipped_at_scan": 25
+    },
+    "dupes::lib/screens/setup_screen_1.dart::LayoutBuilder::lib/screens/setup_screen_1.dart::_buildWelcomeStep": {
+      "issue_id": "dupes::lib/screens/setup_screen_1.dart::LayoutBuilder::lib/screens/setup_screen_1.dart::_buildWelcomeStep",
+      "kind": "false_positive",
+      "reason": "Near-duplicate shape match: declarative widget lists, builder or wrapper calls, or distinct functions that share a name; bodies differ in content",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. I spot-checked the reported pairs: they are declarative widget lists, builder or wrapper call shapes, or distinct functions that share a name, and their bodies differ in content, so there is no copied logic to extract. No code was changed in this step.",
+      "created_at": "2026-10-31T01:37:17+00:00",
+      "review_after": null,
+      "skipped_at_scan": 25
+    },
+    "dupes::lib/screens/setup_screen_2.dart::LayoutBuilder::lib/screens/setup_screen_2.dart::_buildLanguageStep": {
+      "issue_id": "dupes::lib/screens/setup_screen_2.dart::LayoutBuilder::lib/screens/setup_screen_2.dart::_buildLanguageStep",
+      "kind": "false_positive",
+      "reason": "Near-duplicate shape match: declarative widget lists, builder or wrapper calls, or distinct functions that share a name; bodies differ in content",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. I spot-checked the reported pairs: they are declarative widget lists, builder or wrapper call shapes, or distinct functions that share a name, and their bodies differ in content, so there is no copied logic to extract. No code was changed in this step.",
+      "created_at": "2026-10-31T01:37:17+00:00",
+      "review_after": null,
+      "skipped_at_scan": 25
+    },
+    "dupes::lib/screens/setup_step_layout.dart::LayoutBuilder::lib/screens/setup_step_layout.dart::build": {
+      "issue_id": "dupes::lib/screens/setup_step_layout.dart::LayoutBuilder::lib/screens/setup_step_layout.dart::build",
+      "kind": "false_positive",
+      "reason": "Near-duplicate shape match: declarative widget lists, builder or wrapper calls, or distinct functions that share a name; bodies differ in content",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. I spot-checked the reported pairs: they are declarative widget lists, builder or wrapper call shapes, or distinct functions that share a name, and their bodies differ in content, so there is no copied logic to extract. No code was changed in this step.",
+      "created_at": "2026-10-31T01:37:17+00:00",
+      "review_after": null,
+      "skipped_at_scan": 25
+    },
+    "dupes::lib/services/playback/music_player/music_player_service_members_2.dart::reapplyNormalization::lib/services/playback/music_player/music_player_service_members_2.dart::unawaited": {
+      "issue_id": "dupes::lib/services/playback/music_player/music_player_service_members_2.dart::reapplyNormalization::lib/services/playback/music_player/music_player_service_members_2.dart::unawaited",
+      "kind": "false_positive",
+      "reason": "Near-duplicate shape match: declarative widget lists, builder or wrapper calls, or distinct functions that share a name; bodies differ in content",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. I spot-checked the reported pairs: they are declarative widget lists, builder or wrapper call shapes, or distinct functions that share a name, and their bodies differ in content, so there is no copied logic to extract. No code was changed in this step.",
+      "created_at": "2026-10-31T01:37:17+00:00",
+      "review_after": null,
+      "skipped_at_scan": 25
+    },
+    "dupes::lib/utils/files/path_match_keys.dart::_computePathMatchKeys::lib/utils/files/path_match_keys.dart::addNormalized": {
+      "issue_id": "dupes::lib/utils/files/path_match_keys.dart::_computePathMatchKeys::lib/utils/files/path_match_keys.dart::addNormalized",
+      "kind": "false_positive",
+      "reason": "Near-duplicate shape match: declarative widget lists, builder or wrapper calls, or distinct functions that share a name; bodies differ in content",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. I spot-checked the reported pairs: they are declarative widget lists, builder or wrapper call shapes, or distinct functions that share a name, and their bodies differ in content, so there is no copied logic to extract. No code was changed in this step.",
+      "created_at": "2026-10-31T01:37:17+00:00",
+      "review_after": null,
+      "skipped_at_scan": 25
+    },
+    "dupes::lib/widgets/animation/animation_skeletons.dart::LayoutBuilder::lib/widgets/animation/animation_skeletons.dart::Stack": {
+      "issue_id": "dupes::lib/widgets/animation/animation_skeletons.dart::LayoutBuilder::lib/widgets/animation/animation_skeletons.dart::Stack",
+      "kind": "false_positive",
+      "reason": "Near-duplicate shape match: declarative widget lists, builder or wrapper calls, or distinct functions that share a name; bodies differ in content",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. I spot-checked the reported pairs: they are declarative widget lists, builder or wrapper call shapes, or distinct functions that share a name, and their bodies differ in content, so there is no copied logic to extract. No code was changed in this step.",
+      "created_at": "2026-10-31T01:37:17+00:00",
+      "review_after": null,
+      "skipped_at_scan": 25
+    },
+    "dupes::lib/widgets/cover/cached_cover_image.dart::decode::lib/widgets/cover/cached_cover_image.dart::loadImage": {
+      "issue_id": "dupes::lib/widgets/cover/cached_cover_image.dart::decode::lib/widgets/cover/cached_cover_image.dart::loadImage",
+      "kind": "false_positive",
+      "reason": "Near-duplicate shape match: declarative widget lists, builder or wrapper calls, or distinct functions that share a name; bodies differ in content",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. I spot-checked the reported pairs: they are declarative widget lists, builder or wrapper call shapes, or distinct functions that share a name, and their bodies differ in content, so there is no copied logic to extract. No code was changed in this step.",
+      "created_at": "2026-10-31T01:37:17+00:00",
+      "review_after": null,
+      "skipped_at_scan": 25
+    },
+    "dupes::lib/widgets/header/app_artist_header.dart::SliverLayoutBuilder::lib/widgets/header/app_artist_header.dart::buildSlivers": {
+      "issue_id": "dupes::lib/widgets/header/app_artist_header.dart::SliverLayoutBuilder::lib/widgets/header/app_artist_header.dart::buildSlivers",
+      "kind": "false_positive",
+      "reason": "Near-duplicate shape match: declarative widget lists, builder or wrapper calls, or distinct functions that share a name; bodies differ in content",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. I spot-checked the reported pairs: they are declarative widget lists, builder or wrapper call shapes, or distinct functions that share a name, and their bodies differ in content, so there is no copied logic to extract. No code was changed in this step.",
+      "created_at": "2026-10-31T01:37:17+00:00",
+      "review_after": null,
+      "skipped_at_scan": 25
+    },
+    "dupes::lib/widgets/library/library_fast_scroller.dart::PositionedDirectional::lib/widgets/library/library_fast_scroller.dart::Stack": {
+      "issue_id": "dupes::lib/widgets/library/library_fast_scroller.dart::PositionedDirectional::lib/widgets/library/library_fast_scroller.dart::Stack",
+      "kind": "false_positive",
+      "reason": "Near-duplicate shape match: declarative widget lists, builder or wrapper calls, or distinct functions that share a name; bodies differ in content",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. I spot-checked the reported pairs: they are declarative widget lists, builder or wrapper call shapes, or distinct functions that share a name, and their bodies differ in content, so there is no copied logic to extract. No code was changed in this step.",
+      "created_at": "2026-10-31T01:37:17+00:00",
+      "review_after": null,
+      "skipped_at_scan": 25
+    },
+    "dupes::lib/widgets/library/track_metadata_edit_sheet.dart::_sectionCard::lib/widgets/library/track_metadata_edit_sheet.dart::setState": {
+      "issue_id": "dupes::lib/widgets/library/track_metadata_edit_sheet.dart::_sectionCard::lib/widgets/library/track_metadata_edit_sheet.dart::setState",
+      "kind": "false_positive",
+      "reason": "Near-duplicate shape match: declarative widget lists, builder or wrapper calls, or distinct functions that share a name; bodies differ in content",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. I spot-checked the reported pairs: they are declarative widget lists, builder or wrapper call shapes, or distinct functions that share a name, and their bodies differ in content, so there is no copied logic to extract. No code was changed in this step.",
+      "created_at": "2026-10-31T01:37:17+00:00",
+      "review_after": null,
+      "skipped_at_scan": 25
+    },
+    "dupes::lib/widgets/library/track_metadata_edit_sheet.dart::_switchField::lib/widgets/library/track_metadata_edit_sheet.dart::setState": {
+      "issue_id": "dupes::lib/widgets/library/track_metadata_edit_sheet.dart::_switchField::lib/widgets/library/track_metadata_edit_sheet.dart::setState",
+      "kind": "false_positive",
+      "reason": "Near-duplicate shape match: declarative widget lists, builder or wrapper calls, or distinct functions that share a name; bodies differ in content",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. I spot-checked the reported pairs: they are declarative widget lists, builder or wrapper call shapes, or distinct functions that share a name, and their bodies differ in content, so there is no copied logic to extract. No code was changed in this step.",
+      "created_at": "2026-10-31T01:37:17+00:00",
+      "review_after": null,
+      "skipped_at_scan": 25
+    },
+    "dupes::lib/widgets/lyrics/aligned_lyric_pronunciation.dart::SizedBox::lib/widgets/lyrics/aligned_lyric_pronunciation.dart::_buildGroup": {
+      "issue_id": "dupes::lib/widgets/lyrics/aligned_lyric_pronunciation.dart::SizedBox::lib/widgets/lyrics/aligned_lyric_pronunciation.dart::_buildGroup",
+      "kind": "false_positive",
+      "reason": "Near-duplicate shape match: declarative widget lists, builder or wrapper calls, or distinct functions that share a name; bodies differ in content",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. I spot-checked the reported pairs: they are declarative widget lists, builder or wrapper call shapes, or distinct functions that share a name, and their bodies differ in content, so there is no copied logic to extract. No code was changed in this step.",
+      "created_at": "2026-10-31T01:37:17+00:00",
+      "review_after": null,
+      "skipped_at_scan": 25
+    },
+    "dupes::lib/widgets/player/layout/app_player_layout_members_1.dart::Builder::lib/widgets/player/layout/app_player_layout_members_1.dart::Expanded": {
+      "issue_id": "dupes::lib/widgets/player/layout/app_player_layout_members_1.dart::Builder::lib/widgets/player/layout/app_player_layout_members_1.dart::Expanded",
+      "kind": "false_positive",
+      "reason": "Near-duplicate shape match: declarative widget lists, builder or wrapper calls, or distinct functions that share a name; bodies differ in content",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. I spot-checked the reported pairs: they are declarative widget lists, builder or wrapper call shapes, or distinct functions that share a name, and their bodies differ in content, so there is no copied logic to extract. No code was changed in this step.",
+      "created_at": "2026-10-31T01:37:17+00:00",
+      "review_after": null,
+      "skipped_at_scan": 25
+    },
+    "dupes::lib/widgets/player/layout/player_track_swipe.dart::PlayerTrackSwipeRegion::lib/widgets/player/layout/player_track_swipe.dart::build": {
+      "issue_id": "dupes::lib/widgets/player/layout/player_track_swipe.dart::PlayerTrackSwipeRegion::lib/widgets/player/layout/player_track_swipe.dart::build",
+      "kind": "false_positive",
+      "reason": "Near-duplicate shape match: declarative widget lists, builder or wrapper calls, or distinct functions that share a name; bodies differ in content",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. I spot-checked the reported pairs: they are declarative widget lists, builder or wrapper call shapes, or distinct functions that share a name, and their bodies differ in content, so there is no copied logic to extract. No code was changed in this step.",
+      "created_at": "2026-10-31T01:37:17+00:00",
+      "review_after": null,
+      "skipped_at_scan": 25
+    },
+    "dupes::lib/widgets/player/lyrics/player_lyrics_painting_2.dart::LayoutBuilder::lib/widgets/player/lyrics/player_lyrics_painting_2.dart::build": {
+      "issue_id": "dupes::lib/widgets/player/lyrics/player_lyrics_painting_2.dart::LayoutBuilder::lib/widgets/player/lyrics/player_lyrics_painting_2.dart::build",
+      "kind": "false_positive",
+      "reason": "Near-duplicate shape match: declarative widget lists, builder or wrapper calls, or distinct functions that share a name; bodies differ in content",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. I spot-checked the reported pairs: they are declarative widget lists, builder or wrapper call shapes, or distinct functions that share a name, and their bodies differ in content, so there is no copied logic to extract. No code was changed in this step.",
+      "created_at": "2026-10-31T01:37:17+00:00",
+      "review_after": null,
+      "skipped_at_scan": 25
+    },
+    "dupes::lib/widgets/player/queue/app_player_queue.dart::modeButton::lib/widgets/player/queue/app_player_queue.dart::modeButton": {
+      "issue_id": "dupes::lib/widgets/player/queue/app_player_queue.dart::modeButton::lib/widgets/player/queue/app_player_queue.dart::modeButton",
+      "kind": "false_positive",
+      "reason": "Near-duplicate shape match: declarative widget lists, builder or wrapper calls, or distinct functions that share a name; bodies differ in content",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. I spot-checked the reported pairs: they are declarative widget lists, builder or wrapper call shapes, or distinct functions that share a name, and their bodies differ in content, so there is no copied logic to extract. No code was changed in this step.",
+      "created_at": "2026-10-31T01:37:17+00:00",
+      "review_after": null,
+      "skipped_at_scan": 25
+    },
+    "dupes::lib/widgets/settings/settings_item_rows.dart::Opacity::lib/widgets/settings/settings_item_rows.dart::build": {
+      "issue_id": "dupes::lib/widgets/settings/settings_item_rows.dart::Opacity::lib/widgets/settings/settings_item_rows.dart::build",
+      "kind": "false_positive",
+      "reason": "Near-duplicate shape match: declarative widget lists, builder or wrapper calls, or distinct functions that share a name; bodies differ in content",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. I spot-checked the reported pairs: they are declarative widget lists, builder or wrapper call shapes, or distinct functions that share a name, and their bodies differ in content, so there is no copied logic to extract. No code was changed in this step.",
+      "created_at": "2026-10-31T01:37:17+00:00",
+      "review_after": null,
+      "skipped_at_scan": 25
+    },
+    "dupes::lib/widgets/shell/app_bottom_bar.dart::AnimatedBuilder::lib/widgets/shell/app_bottom_bar.dart::LayoutBuilder": {
+      "issue_id": "dupes::lib/widgets/shell/app_bottom_bar.dart::AnimatedBuilder::lib/widgets/shell/app_bottom_bar.dart::LayoutBuilder",
+      "kind": "false_positive",
+      "reason": "Near-duplicate shape match: declarative widget lists, builder or wrapper calls, or distinct functions that share a name; bodies differ in content",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. I spot-checked the reported pairs: they are declarative widget lists, builder or wrapper call shapes, or distinct functions that share a name, and their bodies differ in content, so there is no copied logic to extract. No code was changed in this step.",
+      "created_at": "2026-10-31T01:37:17+00:00",
+      "review_after": null,
+      "skipped_at_scan": 25
+    },
+    "dupes::lib/widgets/shell/scroll_edge_fade.dart::Stack::lib/widgets/shell/scroll_edge_fade.dart::build": {
+      "issue_id": "dupes::lib/widgets/shell/scroll_edge_fade.dart::Stack::lib/widgets/shell/scroll_edge_fade.dart::build",
+      "kind": "false_positive",
+      "reason": "Near-duplicate shape match: declarative widget lists, builder or wrapper calls, or distinct functions that share a name; bodies differ in content",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. I spot-checked the reported pairs: they are declarative widget lists, builder or wrapper call shapes, or distinct functions that share a name, and their bodies differ in content, so there is no copied logic to extract. No code was changed in this step.",
+      "created_at": "2026-10-31T01:37:17+00:00",
+      "review_after": null,
+      "skipped_at_scan": 25
+    },
+    "signature::lib/app.dart::signature_variance::build": {
+      "issue_id": "signature::lib/app.dart::signature_variance::build",
+      "kind": "false_positive",
+      "reason": "Same-named members or helpers across files with different signatures; this is the usual shape of Flutter builders, overrides and helpers, not a duplicated API",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. The flagged names (for example build, update, Expanded, SizedBox) are Flutter builders, overrides or per-file helpers whose signatures are set by their context; they are not a shared API that should have one signature. No code was changed in this step.",
+      "created_at": "2026-10-31T01:37:26+00:00",
+      "review_after": null,
+      "skipped_at_scan": 25
+    },
+    "signature::lib/core/models/equalizer_settings.dart::signature_variance::copyWith": {
+      "issue_id": "signature::lib/core/models/equalizer_settings.dart::signature_variance::copyWith",
+      "kind": "false_positive",
+      "reason": "Same-named members or helpers across files with different signatures; this is the usual shape of Flutter builders, overrides and helpers, not a duplicated API",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. The flagged names (for example build, update, Expanded, SizedBox) are Flutter builders, overrides or per-file helpers whose signatures are set by their context; they are not a shared API that should have one signature. No code was changed in this step.",
+      "created_at": "2026-10-31T01:37:26+00:00",
+      "review_after": null,
+      "skipped_at_scan": 25
+    },
+    "signature::lib/core/navigation/detail_navigation.dart::signature_variance::GestureDetector": {
+      "issue_id": "signature::lib/core/navigation/detail_navigation.dart::signature_variance::GestureDetector",
+      "kind": "false_positive",
+      "reason": "Same-named members or helpers across files with different signatures; this is the usual shape of Flutter builders, overrides and helpers, not a duplicated API",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. The flagged names (for example build, update, Expanded, SizedBox) are Flutter builders, overrides or per-file helpers whose signatures are set by their context; they are not a shared API that should have one signature. No code was changed in this step.",
+      "created_at": "2026-10-31T01:37:26+00:00",
+      "review_after": null,
+      "skipped_at_scan": 25
+    },
+    "signature::lib/core/navigation/now_playing_route.dart::signature_variance::didPop": {
+      "issue_id": "signature::lib/core/navigation/now_playing_route.dart::signature_variance::didPop",
+      "kind": "false_positive",
+      "reason": "Same-named members or helpers across files with different signatures; this is the usual shape of Flutter builders, overrides and helpers, not a duplicated API",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. The flagged names (for example build, update, Expanded, SizedBox) are Flutter builders, overrides or per-file helpers whose signatures are set by their context; they are not a shared API that should have one signature. No code was changed in this step.",
+      "created_at": "2026-10-31T01:37:26+00:00",
+      "review_after": null,
+      "skipped_at_scan": 25
+    },
+    "signature::lib/core/navigation/shell_navigation.dart::signature_variance::detach": {
+      "issue_id": "signature::lib/core/navigation/shell_navigation.dart::signature_variance::detach",
+      "kind": "false_positive",
+      "reason": "Same-named members or helpers across files with different signatures; this is the usual shape of Flutter builders, overrides and helpers, not a duplicated API",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. The flagged names (for example build, update, Expanded, SizedBox) are Flutter builders, overrides or per-file helpers whose signatures are set by their context; they are not a shared API that should have one signature. No code was changed in this step.",
+      "created_at": "2026-10-31T01:37:26+00:00",
+      "review_after": null,
+      "skipped_at_scan": 25
+    },
+    "signature::lib/l10n/app_localizations.dart::signature_variance::load": {
+      "issue_id": "signature::lib/l10n/app_localizations.dart::signature_variance::load",
+      "kind": "false_positive",
+      "reason": "Same-named members or helpers across files with different signatures; this is the usual shape of Flutter builders, overrides and helpers, not a duplicated API",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. The flagged names (for example build, update, Expanded, SizedBox) are Flutter builders, overrides or per-file helpers whose signatures are set by their context; they are not a shared API that should have one signature. No code was changed in this step.",
+      "created_at": "2026-10-31T01:37:26+00:00",
+      "review_after": null,
+      "skipped_at_scan": 25
+    },
+    "signature::lib/main.dart::signature_variance::unawaited": {
+      "issue_id": "signature::lib/main.dart::signature_variance::unawaited",
+      "kind": "false_positive",
+      "reason": "Same-named members or helpers across files with different signatures; this is the usual shape of Flutter builders, overrides and helpers, not a duplicated API",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. The flagged names (for example build, update, Expanded, SizedBox) are Flutter builders, overrides or per-file helpers whose signatures are set by their context; they are not a shared API that should have one signature. No code was changed in this step.",
+      "created_at": "2026-10-31T01:37:26+00:00",
+      "review_after": null,
+      "skipped_at_scan": 25
+    },
+    "signature::lib/providers/equalizer_provider.dart::signature_variance::update": {
+      "issue_id": "signature::lib/providers/equalizer_provider.dart::signature_variance::update",
+      "kind": "false_positive",
+      "reason": "Same-named members or helpers across files with different signatures; this is the usual shape of Flutter builders, overrides and helpers, not a duplicated API",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. The flagged names (for example build, update, Expanded, SizedBox) are Flutter builders, overrides or per-file helpers whose signatures are set by their context; they are not a shared API that should have one signature. No code was changed in this step.",
+      "created_at": "2026-10-31T01:37:26+00:00",
+      "review_after": null,
+      "skipped_at_scan": 25
+    },
+    "signature::lib/providers/library_collections_provider.dart::signature_variance::matches": {
+      "issue_id": "signature::lib/providers/library_collections_provider.dart::signature_variance::matches",
+      "kind": "false_positive",
+      "reason": "Same-named members or helpers across files with different signatures; this is the usual shape of Flutter builders, overrides and helpers, not a duplicated API",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. The flagged names (for example build, update, Expanded, SizedBox) are Flutter builders, overrides or per-file helpers whose signatures are set by their context; they are not a shared API that should have one signature. No code was changed in this step.",
+      "created_at": "2026-10-31T01:37:26+00:00",
+      "review_after": null,
+      "skipped_at_scan": 25
+    },
+    "signature::lib/providers/library_collections_provider_mutations.dart::signature_variance::restoreFromBackup": {
+      "issue_id": "signature::lib/providers/library_collections_provider_mutations.dart::signature_variance::restoreFromBackup",
+      "kind": "false_positive",
+      "reason": "Same-named members or helpers across files with different signatures; this is the usual shape of Flutter builders, overrides and helpers, not a duplicated API",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. The flagged names (for example build, update, Expanded, SizedBox) are Flutter builders, overrides or per-file helpers whose signatures are set by their context; they are not a shared API that should have one signature. No code was changed in this step.",
+      "created_at": "2026-10-31T01:37:26+00:00",
+      "review_after": null,
+      "skipped_at_scan": 25
+    },
+    "signature::lib/providers/metadata_editor_controller.dart::signature_variance::isCurrent": {
+      "issue_id": "signature::lib/providers/metadata_editor_controller.dart::signature_variance::isCurrent",
+      "kind": "false_positive",
+      "reason": "Same-named members or helpers across files with different signatures; this is the usual shape of Flutter builders, overrides and helpers, not a duplicated API",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. The flagged names (for example build, update, Expanded, SizedBox) are Flutter builders, overrides or per-file helpers whose signatures are set by their context; they are not a shared API that should have one signature. No code was changed in this step.",
+      "created_at": "2026-10-31T01:37:26+00:00",
+      "review_after": null,
+      "skipped_at_scan": 25
+    },
+    "signature::lib/providers/music_player_provider.dart::signature_variance::stop": {
+      "issue_id": "signature::lib/providers/music_player_provider.dart::signature_variance::stop",
+      "kind": "false_positive",
+      "reason": "Same-named members or helpers across files with different signatures; this is the usual shape of Flutter builders, overrides and helpers, not a duplicated API",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. The flagged names (for example build, update, Expanded, SizedBox) are Flutter builders, overrides or per-file helpers whose signatures are set by their context; they are not a shared API that should have one signature. No code was changed in this step.",
+      "created_at": "2026-10-31T01:37:26+00:00",
+      "review_after": null,
+      "skipped_at_scan": 25
+    },
+    "signature::lib/providers/music_player_provider.dart::signature_variance::updateShouldNotify": {
+      "issue_id": "signature::lib/providers/music_player_provider.dart::signature_variance::updateShouldNotify",
+      "kind": "false_positive",
+      "reason": "Same-named members or helpers across files with different signatures; this is the usual shape of Flutter builders, overrides and helpers, not a duplicated API",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. The flagged names (for example build, update, Expanded, SizedBox) are Flutter builders, overrides or per-file helpers whose signatures are set by their context; they are not a shared API that should have one signature. No code was changed in this step.",
+      "created_at": "2026-10-31T01:37:26+00:00",
+      "review_after": null,
+      "skipped_at_scan": 25
+    },
+    "signature::lib/providers/user_profile_provider.dart::signature_variance::save": {
+      "issue_id": "signature::lib/providers/user_profile_provider.dart::signature_variance::save",
+      "kind": "false_positive",
+      "reason": "Same-named members or helpers across files with different signatures; this is the usual shape of Flutter builders, overrides and helpers, not a duplicated API",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. The flagged names (for example build, update, Expanded, SizedBox) are Flutter builders, overrides or per-file helpers whose signatures are set by their context; they are not a shared API that should have one signature. No code was changed in this step.",
+      "created_at": "2026-10-31T01:37:26+00:00",
+      "review_after": null,
+      "skipped_at_scan": 25
+    },
+    "signature::lib/screens/equalizer_screen.dart::signature_variance::AppDialogAction": {
+      "issue_id": "signature::lib/screens/equalizer_screen.dart::signature_variance::AppDialogAction",
+      "kind": "false_positive",
+      "reason": "Same-named members or helpers across files with different signatures; this is the usual shape of Flutter builders, overrides and helpers, not a duplicated API",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. The flagged names (for example build, update, Expanded, SizedBox) are Flutter builders, overrides or per-file helpers whose signatures are set by their context; they are not a shared API that should have one signature. No code was changed in this step.",
+      "created_at": "2026-10-31T01:37:26+00:00",
+      "review_after": null,
+      "skipped_at_scan": 25
+    },
+    "signature::lib/screens/equalizer_screen.dart::signature_variance::Expanded": {
+      "issue_id": "signature::lib/screens/equalizer_screen.dart::signature_variance::Expanded",
+      "kind": "false_positive",
+      "reason": "Same-named members or helpers across files with different signatures; this is the usual shape of Flutter builders, overrides and helpers, not a duplicated API",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. The flagged names (for example build, update, Expanded, SizedBox) are Flutter builders, overrides or per-file helpers whose signatures are set by their context; they are not a shared API that should have one signature. No code was changed in this step.",
+      "created_at": "2026-10-31T01:37:26+00:00",
+      "review_after": null,
+      "skipped_at_scan": 25
+    },
+    "signature::lib/screens/equalizer_screen.dart::signature_variance::SettingsItem": {
+      "issue_id": "signature::lib/screens/equalizer_screen.dart::signature_variance::SettingsItem",
+      "kind": "false_positive",
+      "reason": "Same-named members or helpers across files with different signatures; this is the usual shape of Flutter builders, overrides and helpers, not a duplicated API",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. The flagged names (for example build, update, Expanded, SizedBox) are Flutter builders, overrides or per-file helpers whose signatures are set by their context; they are not a shared API that should have one signature. No code was changed in this step.",
+      "created_at": "2026-10-31T01:37:26+00:00",
+      "review_after": null,
+      "skipped_at_scan": 25
+    },
+    "signature::lib/screens/equalizer_screen.dart::signature_variance::SettingsSwitchItem": {
+      "issue_id": "signature::lib/screens/equalizer_screen.dart::signature_variance::SettingsSwitchItem",
+      "kind": "false_positive",
+      "reason": "Same-named members or helpers across files with different signatures; this is the usual shape of Flutter builders, overrides and helpers, not a duplicated API",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. The flagged names (for example build, update, Expanded, SizedBox) are Flutter builders, overrides or per-file helpers whose signatures are set by their context; they are not a shared API that should have one signature. No code was changed in this step.",
+      "created_at": "2026-10-31T01:37:26+00:00",
+      "review_after": null,
+      "skipped_at_scan": 25
+    },
+    "signature::lib/screens/equalizer_screen.dart::signature_variance::SizedBox": {
+      "issue_id": "signature::lib/screens/equalizer_screen.dart::signature_variance::SizedBox",
+      "kind": "false_positive",
+      "reason": "Same-named members or helpers across files with different signatures; this is the usual shape of Flutter builders, overrides and helpers, not a duplicated API",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. The flagged names (for example build, update, Expanded, SizedBox) are Flutter builders, overrides or per-file helpers whose signatures are set by their context; they are not a shared API that should have one signature. No code was changed in this step.",
+      "created_at": "2026-10-31T01:37:26+00:00",
+      "review_after": null,
+      "skipped_at_scan": 25
+    },
+    "signature::lib/screens/home/home_tab.dart::signature_variance::SliverToBoxAdapter": {
+      "issue_id": "signature::lib/screens/home/home_tab.dart::signature_variance::SliverToBoxAdapter",
+      "kind": "false_positive",
+      "reason": "Same-named members or helpers across files with different signatures; this is the usual shape of Flutter builders, overrides and helpers, not a duplicated API",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. The flagged names (for example build, update, Expanded, SizedBox) are Flutter builders, overrides or per-file helpers whose signatures are set by their context; they are not a shared API that should have one signature. No code was changed in this step.",
+      "created_at": "2026-10-31T01:37:26+00:00",
+      "review_after": null,
+      "skipped_at_scan": 25
+    },
+    "signature::lib/screens/library/app_library_screen.dart::signature_variance::Semantics": {
+      "issue_id": "signature::lib/screens/library/app_library_screen.dart::signature_variance::Semantics",
+      "kind": "false_positive",
+      "reason": "Same-named members or helpers across files with different signatures; this is the usual shape of Flutter builders, overrides and helpers, not a duplicated API",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. The flagged names (for example build, update, Expanded, SizedBox) are Flutter builders, overrides or per-file helpers whose signatures are set by their context; they are not a shared API that should have one signature. No code was changed in this step.",
+      "created_at": "2026-10-31T01:37:26+00:00",
+      "review_after": null,
+      "skipped_at_scan": 25
+    },
+    "signature::lib/screens/library/collections/library_collection_tracks_screen_1.dart::signature_variance::SelectionBottomBar": {
+      "issue_id": "signature::lib/screens/library/collections/library_collection_tracks_screen_1.dart::signature_variance::SelectionBottomBar",
+      "kind": "false_positive",
+      "reason": "Same-named members or helpers across files with different signatures; this is the usual shape of Flutter builders, overrides and helpers, not a duplicated API",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. The flagged names (for example build, update, Expanded, SizedBox) are Flutter builders, overrides or per-file helpers whose signatures are set by their context; they are not a shared API that should have one signature. No code was changed in this step.",
+      "created_at": "2026-10-31T01:37:26+00:00",
+      "review_after": null,
+      "skipped_at_scan": 25
+    },
+    "signature::lib/screens/library/collections/library_collection_tracks_screen_1.dart::signature_variance::selectAll": {
+      "issue_id": "signature::lib/screens/library/collections/library_collection_tracks_screen_1.dart::signature_variance::selectAll",
+      "kind": "false_positive",
+      "reason": "Same-named members or helpers across files with different signatures; this is the usual shape of Flutter builders, overrides and helpers, not a duplicated API",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. The flagged names (for example build, update, Expanded, SizedBox) are Flutter builders, overrides or per-file helpers whose signatures are set by their context; they are not a shared API that should have one signature. No code was changed in this step.",
+      "created_at": "2026-10-31T01:37:26+00:00",
+      "review_after": null,
+      "skipped_at_scan": 25
+    },
+    "signature::lib/screens/library/collections/library_collection_tracks_screen_2.dart::signature_variance::LocalCoverImage": {
+      "issue_id": "signature::lib/screens/library/collections/library_collection_tracks_screen_2.dart::signature_variance::LocalCoverImage",
+      "kind": "false_positive",
+      "reason": "Same-named members or helpers across files with different signatures; this is the usual shape of Flutter builders, overrides and helpers, not a duplicated API",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. The flagged names (for example build, update, Expanded, SizedBox) are Flutter builders, overrides or per-file helpers whose signatures are set by their context; they are not a shared API that should have one signature. No code was changed in this step.",
+      "created_at": "2026-10-31T01:37:26+00:00",
+      "review_after": null,
+      "skipped_at_scan": 25
+    },
+    "signature::lib/screens/library/local_album/local_album_screen.dart::signature_variance::LocalLibraryArtworkBuilder": {
+      "issue_id": "signature::lib/screens/library/local_album/local_album_screen.dart::signature_variance::LocalLibraryArtworkBuilder",
+      "kind": "false_positive",
+      "reason": "Same-named members or helpers across files with different signatures; this is the usual shape of Flutter builders, overrides and helpers, not a duplicated API",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. The flagged names (for example build, update, Expanded, SizedBox) are Flutter builders, overrides or per-file helpers whose signatures are set by their context; they are not a shared API that should have one signature. No code was changed in this step.",
+      "created_at": "2026-10-31T01:37:26+00:00",
+      "review_after": null,
+      "skipped_at_scan": 25
+    },
+    "signature::lib/screens/library/local_album/local_album_screen_track_list.dart::signature_variance::Consumer": {
+      "issue_id": "signature::lib/screens/library/local_album/local_album_screen_track_list.dart::signature_variance::Consumer",
+      "kind": "false_positive",
+      "reason": "Same-named members or helpers across files with different signatures; this is the usual shape of Flutter builders, overrides and helpers, not a duplicated API",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. The flagged names (for example build, update, Expanded, SizedBox) are Flutter builders, overrides or per-file helpers whose signatures are set by their context; they are not a shared API that should have one signature. No code was changed in this step.",
+      "created_at": "2026-10-31T01:37:26+00:00",
+      "review_after": null,
+      "skipped_at_scan": 25
+    },
+    "signature::lib/screens/library/section_tab/library_section_tab.dart::signature_variance::AnimatedBuilder": {
+      "issue_id": "signature::lib/screens/library/section_tab/library_section_tab.dart::signature_variance::AnimatedBuilder",
+      "kind": "false_positive",
+      "reason": "Same-named members or helpers across files with different signatures; this is the usual shape of Flutter builders, overrides and helpers, not a duplicated API",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. The flagged names (for example build, update, Expanded, SizedBox) are Flutter builders, overrides or per-file helpers whose signatures are set by their context; they are not a shared API that should have one signature. No code was changed in this step.",
+      "created_at": "2026-10-31T01:37:26+00:00",
+      "review_after": null,
+      "skipped_at_scan": 25
+    },
+    "signature::lib/screens/library/section_tab/library_section_tab.dart::signature_variance::PopScope": {
+      "issue_id": "signature::lib/screens/library/section_tab/library_section_tab.dart::signature_variance::PopScope",
+      "kind": "false_positive",
+      "reason": "Same-named members or helpers across files with different signatures; this is the usual shape of Flutter builders, overrides and helpers, not a duplicated API",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. The flagged names (for example build, update, Expanded, SizedBox) are Flutter builders, overrides or per-file helpers whose signatures are set by their context; they are not a shared API that should have one signature. No code was changed in this step.",
+      "created_at": "2026-10-31T01:37:26+00:00",
+      "review_after": null,
+      "skipped_at_scan": 25
+    },
+    "signature::lib/screens/listening_statistics_screen.dart::signature_variance::IconButton": {
+      "issue_id": "signature::lib/screens/listening_statistics_screen.dart::signature_variance::IconButton",
+      "kind": "false_positive",
+      "reason": "Same-named members or helpers across files with different signatures; this is the usual shape of Flutter builders, overrides and helpers, not a duplicated API",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. The flagged names (for example build, update, Expanded, SizedBox) are Flutter builders, overrides or per-file helpers whose signatures are set by their context; they are not a shared API that should have one signature. No code was changed in this step.",
+      "created_at": "2026-10-31T01:37:26+00:00",
+      "review_after": null,
+      "skipped_at_scan": 25
+    },
+    "signature::lib/services/audio_analysis/audio_analysis_jobs.dart::signature_variance::invalidate": {
+      "issue_id": "signature::lib/services/audio_analysis/audio_analysis_jobs.dart::signature_variance::invalidate",
+      "kind": "false_positive",
+      "reason": "Same-named members or helpers across files with different signatures; this is the usual shape of Flutter builders, overrides and helpers, not a duplicated API",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. The flagged names (for example build, update, Expanded, SizedBox) are Flutter builders, overrides or per-file helpers whose signatures are set by their context; they are not a shared API that should have one signature. No code was changed in this step.",
+      "created_at": "2026-10-31T01:37:26+00:00",
+      "review_after": null,
+      "skipped_at_scan": 25
+    },
+    "signature::lib/services/backup/backup_service.dart::signature_variance::encode": {
+      "issue_id": "signature::lib/services/backup/backup_service.dart::signature_variance::encode",
+      "kind": "false_positive",
+      "reason": "Same-named members or helpers across files with different signatures; this is the usual shape of Flutter builders, overrides and helpers, not a duplicated API",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. The flagged names (for example build, update, Expanded, SizedBox) are Flutter builders, overrides or per-file helpers whose signatures are set by their context; they are not a shared API that should have one signature. No code was changed in this step.",
+      "created_at": "2026-10-31T01:37:26+00:00",
+      "review_after": null,
+      "skipped_at_scan": 25
+    },
+    "signature::lib/services/glass/app_glass_auto_probe.dart::signature_variance::add": {
+      "issue_id": "signature::lib/services/glass/app_glass_auto_probe.dart::signature_variance::add",
+      "kind": "false_positive",
+      "reason": "Same-named members or helpers across files with different signatures; this is the usual shape of Flutter builders, overrides and helpers, not a duplicated API",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. The flagged names (for example build, update, Expanded, SizedBox) are Flutter builders, overrides or per-file helpers whose signatures are set by their context; they are not a shared API that should have one signature. No code was changed in this step.",
+      "created_at": "2026-10-31T01:37:26+00:00",
+      "review_after": null,
+      "skipped_at_scan": 25
+    },
+    "signature::lib/services/library/collections/library_collections_rows.dart::signature_variance::finish": {
+      "issue_id": "signature::lib/services/library/collections/library_collections_rows.dart::signature_variance::finish",
+      "kind": "false_positive",
+      "reason": "Same-named members or helpers across files with different signatures; this is the usual shape of Flutter builders, overrides and helpers, not a duplicated API",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. The flagged names (for example build, update, Expanded, SizedBox) are Flutter builders, overrides or per-file helpers whose signatures are set by their context; they are not a shared API that should have one signature. No code was changed in this step.",
+      "created_at": "2026-10-31T01:37:26+00:00",
+      "review_after": null,
+      "skipped_at_scan": 25
+    },
+    "signature::lib/services/library/covers/cover_palette.dart::signature_variance::resolve": {
+      "issue_id": "signature::lib/services/library/covers/cover_palette.dart::signature_variance::resolve",
+      "kind": "false_positive",
+      "reason": "Same-named members or helpers across files with different signatures; this is the usual shape of Flutter builders, overrides and helpers, not a duplicated API",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. The flagged names (for example build, update, Expanded, SizedBox) are Flutter builders, overrides or per-file helpers whose signatures are set by their context; they are not a shared API that should have one signature. No code was changed in this step.",
+      "created_at": "2026-10-31T01:37:26+00:00",
+      "review_after": null,
+      "skipped_at_scan": 25
+    },
+    "signature::lib/services/library/database/library_row_mapper.dart::signature_variance::decode": {
+      "issue_id": "signature::lib/services/library/database/library_row_mapper.dart::signature_variance::decode",
+      "kind": "false_positive",
+      "reason": "Same-named members or helpers across files with different signatures; this is the usual shape of Flutter builders, overrides and helpers, not a duplicated API",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. The flagged names (for example build, update, Expanded, SizedBox) are Flutter builders, overrides or per-file helpers whose signatures are set by their context; they are not a shared API that should have one signature. No code was changed in this step.",
+      "created_at": "2026-10-31T01:37:26+00:00",
+      "review_after": null,
+      "skipped_at_scan": 25
+    },
+    "signature::lib/services/library/metadata/metadata_cover_resources.dart::signature_variance::release": {
+      "issue_id": "signature::lib/services/library/metadata/metadata_cover_resources.dart::signature_variance::release",
+      "kind": "false_positive",
+      "reason": "Same-named members or helpers across files with different signatures; this is the usual shape of Flutter builders, overrides and helpers, not a duplicated API",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. The flagged names (for example build, update, Expanded, SizedBox) are Flutter builders, overrides or per-file helpers whose signatures are set by their context; they are not a shared API that should have one signature. No code was changed in this step.",
+      "created_at": "2026-10-31T01:37:26+00:00",
+      "review_after": null,
+      "skipped_at_scan": 25
+    },
+    "signature::lib/services/library/scan/library_scan_progress.dart::signature_variance::start": {
+      "issue_id": "signature::lib/services/library/scan/library_scan_progress.dart::signature_variance::start",
+      "kind": "false_positive",
+      "reason": "Same-named members or helpers across files with different signatures; this is the usual shape of Flutter builders, overrides and helpers, not a duplicated API",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. The flagged names (for example build, update, Expanded, SizedBox) are Flutter builders, overrides or per-file helpers whose signatures are set by their context; they are not a shared API that should have one signature. No code was changed in this step.",
+      "created_at": "2026-10-31T01:37:26+00:00",
+      "review_after": null,
+      "skipped_at_scan": 25
+    },
+    "signature::lib/services/native/native_data_jobs.dart::signature_variance::cancel": {
+      "issue_id": "signature::lib/services/native/native_data_jobs.dart::signature_variance::cancel",
+      "kind": "false_positive",
+      "reason": "Same-named members or helpers across files with different signatures; this is the usual shape of Flutter builders, overrides and helpers, not a duplicated API",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. The flagged names (for example build, update, Expanded, SizedBox) are Flutter builders, overrides or per-file helpers whose signatures are set by their context; they are not a shared API that should have one signature. No code was changed in this step.",
+      "created_at": "2026-10-31T01:37:26+00:00",
+      "review_after": null,
+      "skipped_at_scan": 25
+    },
+    "signature::lib/services/playback/autoplay/autoplay_personalization.dart::signature_variance::begin": {
+      "issue_id": "signature::lib/services/playback/autoplay/autoplay_personalization.dart::signature_variance::begin",
+      "kind": "false_positive",
+      "reason": "Same-named members or helpers across files with different signatures; this is the usual shape of Flutter builders, overrides and helpers, not a duplicated API",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. The flagged names (for example build, update, Expanded, SizedBox) are Flutter builders, overrides or per-file helpers whose signatures are set by their context; they are not a shared API that should have one signature. No code was changed in this step.",
+      "created_at": "2026-10-31T01:37:26+00:00",
+      "review_after": null,
+      "skipped_at_scan": 25
+    },
+    "signature::lib/services/playback/music_player/music_player_runtime.dart::signature_variance::attach": {
+      "issue_id": "signature::lib/services/playback/music_player/music_player_runtime.dart::signature_variance::attach",
+      "kind": "false_positive",
+      "reason": "Same-named members or helpers across files with different signatures; this is the usual shape of Flutter builders, overrides and helpers, not a duplicated API",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. The flagged names (for example build, update, Expanded, SizedBox) are Flutter builders, overrides or per-file helpers whose signatures are set by their context; they are not a shared API that should have one signature. No code was changed in this step.",
+      "created_at": "2026-10-31T01:37:26+00:00",
+      "review_after": null,
+      "skipped_at_scan": 25
+    },
+    "signature::lib/widgets/animation/animation_skeletons.dart::signature_variance::Stack": {
+      "issue_id": "signature::lib/widgets/animation/animation_skeletons.dart::signature_variance::Stack",
+      "kind": "false_positive",
+      "reason": "Same-named members or helpers across files with different signatures; this is the usual shape of Flutter builders, overrides and helpers, not a duplicated API",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. The flagged names (for example build, update, Expanded, SizedBox) are Flutter builders, overrides or per-file helpers whose signatures are set by their context; they are not a shared API that should have one signature. No code was changed in this step.",
+      "created_at": "2026-10-31T01:37:26+00:00",
+      "review_after": null,
+      "skipped_at_scan": 25
+    },
+    "signature::lib/widgets/audio_analysis/audio_analysis_spectrogram.dart::signature_variance::paint": {
+      "issue_id": "signature::lib/widgets/audio_analysis/audio_analysis_spectrogram.dart::signature_variance::paint",
+      "kind": "false_positive",
+      "reason": "Same-named members or helpers across files with different signatures; this is the usual shape of Flutter builders, overrides and helpers, not a duplicated API",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. The flagged names (for example build, update, Expanded, SizedBox) are Flutter builders, overrides or per-file helpers whose signatures are set by their context; they are not a shared API that should have one signature. No code was changed in this step.",
+      "created_at": "2026-10-31T01:37:26+00:00",
+      "review_after": null,
+      "skipped_at_scan": 25
+    },
+    "signature::lib/widgets/audio_analysis/audio_analysis_spectrogram.dart::signature_variance::shouldRepaint": {
+      "issue_id": "signature::lib/widgets/audio_analysis/audio_analysis_spectrogram.dart::signature_variance::shouldRepaint",
+      "kind": "false_positive",
+      "reason": "Same-named members or helpers across files with different signatures; this is the usual shape of Flutter builders, overrides and helpers, not a duplicated API",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. The flagged names (for example build, update, Expanded, SizedBox) are Flutter builders, overrides or per-file helpers whose signatures are set by their context; they are not a shared API that should have one signature. No code was changed in this step.",
+      "created_at": "2026-10-31T01:37:26+00:00",
+      "review_after": null,
+      "skipped_at_scan": 25
+    },
+    "signature::lib/widgets/collection/pinned_section_sliver_list.dart::signature_variance::performLayout": {
+      "issue_id": "signature::lib/widgets/collection/pinned_section_sliver_list.dart::signature_variance::performLayout",
+      "kind": "false_positive",
+      "reason": "Same-named members or helpers across files with different signatures; this is the usual shape of Flutter builders, overrides and helpers, not a duplicated API",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. The flagged names (for example build, update, Expanded, SizedBox) are Flutter builders, overrides or per-file helpers whose signatures are set by their context; they are not a shared API that should have one signature. No code was changed in this step.",
+      "created_at": "2026-10-31T01:37:26+00:00",
+      "review_after": null,
+      "skipped_at_scan": 25
+    },
+    "signature::lib/widgets/glass/artwork/app_artwork_ground.dart::signature_variance::show": {
+      "issue_id": "signature::lib/widgets/glass/artwork/app_artwork_ground.dart::signature_variance::show",
+      "kind": "false_positive",
+      "reason": "Same-named members or helpers across files with different signatures; this is the usual shape of Flutter builders, overrides and helpers, not a duplicated API",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. The flagged names (for example build, update, Expanded, SizedBox) are Flutter builders, overrides or per-file helpers whose signatures are set by their context; they are not a shared API that should have one signature. No code was changed in this step.",
+      "created_at": "2026-10-31T01:37:26+00:00",
+      "review_after": null,
+      "skipped_at_scan": 25
     }
   },
   "active_cluster": null,
@@ -1172,8 +2122,8 @@
     "test_coverage::lib/screens/local_guide_pages.dart::transitive_only": {
       "issue_id": "test_coverage::lib/screens/local_guide_pages.dart::transitive_only",
       "created_at": "2026-10-29T06:01:52+00:00",
-      "cluster": null,
-      "updated_at": "2026-10-31T01:30:30+00:00"
+      "cluster": "transitive-behaviour-tests",
+      "updated_at": "2026-10-31T01:31:50+00:00"
     },
     "test_coverage::lib/widgets/scroll_edge_fade.dart::transitive_only": {
       "issue_id": "test_coverage::lib/widgets/scroll_edge_fade.dart::transitive_only",
@@ -1214,8 +2164,8 @@
     "test_coverage::lib/screens/listening_statistics_screen.dart::transitive_only": {
       "issue_id": "test_coverage::lib/screens/listening_statistics_screen.dart::transitive_only",
       "created_at": "2026-10-29T06:01:52+00:00",
-      "cluster": null,
-      "updated_at": "2026-10-31T01:30:30+00:00"
+      "cluster": "transitive-behaviour-tests",
+      "updated_at": "2026-10-31T01:31:50+00:00"
     },
     "test_coverage::lib/providers/playback_notification_provider.dart::transitive_only": {
       "issue_id": "test_coverage::lib/providers/playback_notification_provider.dart::transitive_only",
@@ -1388,8 +2338,8 @@
     "test_coverage::lib/widgets/sheets/duplicate_review_sheet.dart::transitive_only": {
       "issue_id": "test_coverage::lib/widgets/sheets/duplicate_review_sheet.dart::transitive_only",
       "created_at": "2026-10-29T18:55:17+00:00",
-      "cluster": null,
-      "updated_at": "2026-10-31T01:30:30+00:00"
+      "cluster": "transitive-behaviour-tests",
+      "updated_at": "2026-10-31T01:31:50+00:00"
     },
     "test_coverage::lib/widgets/status/disc_separator_chip.dart::transitive_only": {
       "issue_id": "test_coverage::lib/widgets/status/disc_separator_chip.dart::transitive_only",
@@ -1400,8 +2350,8 @@
     "test_coverage::lib/services/audio_analysis/audio_analysis_parsing.dart::transitive_only": {
       "issue_id": "test_coverage::lib/services/audio_analysis/audio_analysis_parsing.dart::transitive_only",
       "created_at": "2026-10-29T18:55:17+00:00",
-      "cluster": null,
-      "updated_at": "2026-10-31T01:30:30+00:00"
+      "cluster": "transitive-behaviour-tests",
+      "updated_at": "2026-10-31T01:31:50+00:00"
     },
     "test_coverage::lib/screens/library/selection_mode_mixin.dart::transitive_only": {
       "issue_id": "test_coverage::lib/screens/library/selection_mode_mixin.dart::transitive_only",
@@ -1473,13 +2423,13 @@
       "issue_id": "subjective::abstraction_fitness",
       "created_at": "2026-10-29T18:55:17+00:00",
       "cluster": "auto/stale-review",
-      "updated_at": "2026-10-31T01:30:30+00:00"
+      "updated_at": "2026-10-31T01:31:50+00:00"
     },
     "subjective::ai_generated_debt": {
       "issue_id": "subjective::ai_generated_debt",
       "created_at": "2026-10-29T18:55:17+00:00",
       "cluster": "auto/stale-review",
-      "updated_at": "2026-10-31T01:30:30+00:00"
+      "updated_at": "2026-10-31T01:31:50+00:00"
     },
     "subjective::api_surface_coherence": {
       "issue_id": "subjective::api_surface_coherence",
@@ -1491,13 +2441,13 @@
       "issue_id": "subjective::contract_coherence",
       "created_at": "2026-10-29T18:55:17+00:00",
       "cluster": "auto/stale-review",
-      "updated_at": "2026-10-31T01:30:30+00:00"
+      "updated_at": "2026-10-31T01:31:50+00:00"
     },
     "subjective::convention_outlier": {
       "issue_id": "subjective::convention_outlier",
       "created_at": "2026-10-29T18:55:17+00:00",
       "cluster": "auto/stale-review",
-      "updated_at": "2026-10-31T01:30:30+00:00"
+      "updated_at": "2026-10-31T01:31:50+00:00"
     },
     "subjective::cross_module_architecture": {
       "issue_id": "subjective::cross_module_architecture",
@@ -1515,19 +2465,19 @@
       "issue_id": "subjective::design_coherence",
       "created_at": "2026-10-29T18:55:17+00:00",
       "cluster": "auto/stale-review",
-      "updated_at": "2026-10-31T01:30:30+00:00"
+      "updated_at": "2026-10-31T01:31:50+00:00"
     },
     "subjective::error_consistency": {
       "issue_id": "subjective::error_consistency",
       "created_at": "2026-10-29T18:55:17+00:00",
       "cluster": "auto/stale-review",
-      "updated_at": "2026-10-31T01:30:30+00:00"
+      "updated_at": "2026-10-31T01:31:50+00:00"
     },
     "subjective::high_level_elegance": {
       "issue_id": "subjective::high_level_elegance",
       "created_at": "2026-10-29T18:55:17+00:00",
       "cluster": "auto/stale-review",
-      "updated_at": "2026-10-31T01:30:30+00:00"
+      "updated_at": "2026-10-31T01:31:50+00:00"
     },
     "subjective::incomplete_migration": {
       "issue_id": "subjective::incomplete_migration",
@@ -1545,55 +2495,55 @@
       "issue_id": "subjective::logic_clarity",
       "created_at": "2026-10-29T18:55:17+00:00",
       "cluster": "auto/stale-review",
-      "updated_at": "2026-10-31T01:30:30+00:00"
+      "updated_at": "2026-10-31T01:31:50+00:00"
     },
     "subjective::low_level_elegance": {
       "issue_id": "subjective::low_level_elegance",
       "created_at": "2026-10-29T18:55:17+00:00",
       "cluster": "auto/stale-review",
-      "updated_at": "2026-10-31T01:30:30+00:00"
+      "updated_at": "2026-10-31T01:31:50+00:00"
     },
     "subjective::mid_level_elegance": {
       "issue_id": "subjective::mid_level_elegance",
       "created_at": "2026-10-29T18:55:17+00:00",
       "cluster": "auto/stale-review",
-      "updated_at": "2026-10-31T01:30:30+00:00"
+      "updated_at": "2026-10-31T01:31:50+00:00"
     },
     "subjective::naming_quality": {
       "issue_id": "subjective::naming_quality",
       "created_at": "2026-10-29T18:55:17+00:00",
       "cluster": "auto/stale-review",
-      "updated_at": "2026-10-31T01:30:30+00:00"
+      "updated_at": "2026-10-31T01:31:50+00:00"
     },
     "subjective::package_organization": {
       "issue_id": "subjective::package_organization",
       "created_at": "2026-10-29T18:55:17+00:00",
       "cluster": "auto/stale-review",
-      "updated_at": "2026-10-31T01:30:30+00:00"
+      "updated_at": "2026-10-31T01:31:50+00:00"
     },
     "subjective::test_strategy": {
       "issue_id": "subjective::test_strategy",
       "created_at": "2026-10-29T18:55:17+00:00",
       "cluster": "auto/stale-review",
-      "updated_at": "2026-10-31T01:30:30+00:00"
+      "updated_at": "2026-10-31T01:31:50+00:00"
     },
     "subjective::type_safety": {
       "issue_id": "subjective::type_safety",
       "created_at": "2026-10-29T18:55:17+00:00",
       "cluster": "auto/stale-review",
-      "updated_at": "2026-10-31T01:30:30+00:00"
+      "updated_at": "2026-10-31T01:31:50+00:00"
     },
     "structural::lib/services/playback/music_player_service.dart": {
       "issue_id": "structural::lib/services/playback/music_player_service.dart",
       "created_at": "2026-10-29T20:35:47+00:00",
-      "cluster": null,
-      "updated_at": "2026-10-31T01:30:30+00:00"
+      "cluster": "playback-service-split",
+      "updated_at": "2026-10-31T01:31:50+00:00"
     },
     "structural::lib/providers/library_collections_provider.dart": {
       "issue_id": "structural::lib/providers/library_collections_provider.dart",
       "created_at": "2026-10-29T20:35:48+00:00",
-      "cluster": null,
-      "updated_at": "2026-10-31T01:30:30+00:00"
+      "cluster": "collections-provider-bundle",
+      "updated_at": "2026-10-31T01:31:50+00:00"
     },
     "test_coverage::lib/screens/library/library_browse_artwork.dart::transitive_only": {
       "issue_id": "test_coverage::lib/screens/library/library_browse_artwork.dart::transitive_only",
@@ -2264,50 +3214,50 @@
     "test_coverage::lib/services/playback/automix/music_player_automix_members_5.dart::untested_critical": {
       "issue_id": "test_coverage::lib/services/playback/automix/music_player_automix_members_5.dart::untested_critical",
       "created_at": "2026-10-31T01:29:59+00:00",
-      "cluster": "auto/test_coverage-untested_critical",
-      "updated_at": "2026-10-31T01:30:30+00:00"
+      "cluster": null,
+      "updated_at": "2026-10-31T01:31:50+00:00"
     },
     "test_coverage::lib/providers/local_library_provider_scanning.dart::untested_critical": {
       "issue_id": "test_coverage::lib/providers/local_library_provider_scanning.dart::untested_critical",
       "created_at": "2026-10-31T01:29:59+00:00",
-      "cluster": "auto/test_coverage-untested_critical",
-      "updated_at": "2026-10-31T01:30:30+00:00"
+      "cluster": null,
+      "updated_at": "2026-10-31T01:31:50+00:00"
     },
     "test_coverage::lib/services/library/covers/embedded_cover_resolver_extraction.dart::untested_critical": {
       "issue_id": "test_coverage::lib/services/library/covers/embedded_cover_resolver_extraction.dart::untested_critical",
       "created_at": "2026-10-31T01:29:59+00:00",
-      "cluster": "auto/test_coverage-untested_critical",
-      "updated_at": "2026-10-31T01:30:30+00:00"
+      "cluster": null,
+      "updated_at": "2026-10-31T01:31:50+00:00"
     },
     "test_coverage::lib/services/playback/music_player/music_player_service_overrides_1.dart::untested_critical": {
       "issue_id": "test_coverage::lib/services/playback/music_player/music_player_service_overrides_1.dart::untested_critical",
       "created_at": "2026-10-31T01:29:59+00:00",
-      "cluster": "auto/test_coverage-untested_critical",
-      "updated_at": "2026-10-31T01:30:30+00:00"
+      "cluster": null,
+      "updated_at": "2026-10-31T01:31:50+00:00"
     },
     "test_coverage::lib/widgets/player/lyrics/player_lyrics_members_1.dart::untested_critical": {
       "issue_id": "test_coverage::lib/widgets/player/lyrics/player_lyrics_members_1.dart::untested_critical",
       "created_at": "2026-10-31T01:29:59+00:00",
-      "cluster": "auto/test_coverage-untested_critical",
-      "updated_at": "2026-10-31T01:30:30+00:00"
+      "cluster": null,
+      "updated_at": "2026-10-31T01:31:50+00:00"
     },
     "test_coverage::lib/providers/local_library_provider_loading.dart::untested_critical": {
       "issue_id": "test_coverage::lib/providers/local_library_provider_loading.dart::untested_critical",
       "created_at": "2026-10-31T01:29:59+00:00",
-      "cluster": "auto/test_coverage-untested_critical",
-      "updated_at": "2026-10-31T01:30:30+00:00"
+      "cluster": null,
+      "updated_at": "2026-10-31T01:31:50+00:00"
     },
     "test_coverage::lib/services/library/covers/embedded_cover_resolver_persistence.dart::untested_critical": {
       "issue_id": "test_coverage::lib/services/library/covers/embedded_cover_resolver_persistence.dart::untested_critical",
       "created_at": "2026-10-31T01:29:59+00:00",
-      "cluster": "auto/test_coverage-untested_critical",
-      "updated_at": "2026-10-31T01:30:30+00:00"
+      "cluster": null,
+      "updated_at": "2026-10-31T01:31:50+00:00"
     },
     "test_coverage::lib/screens/setup_screen_1.dart::untested_critical": {
       "issue_id": "test_coverage::lib/screens/setup_screen_1.dart::untested_critical",
       "created_at": "2026-10-31T01:29:59+00:00",
-      "cluster": "auto/test_coverage-untested_critical",
-      "updated_at": "2026-10-31T01:30:30+00:00"
+      "cluster": null,
+      "updated_at": "2026-10-31T01:31:50+00:00"
     }
   },
   "clusters": {
@@ -2424,43 +3374,6 @@
           "done": true
         }
       ]
-    },
-    "auto/test_coverage-untested_module": {
-      "name": "auto/test_coverage-untested_module",
-      "description": "Fix 59 test coverage issues",
-      "issue_ids": [],
-      "created_at": "2026-10-31T01:29:59+00:00",
-      "updated_at": "2026-10-31T01:29:59+00:00",
-      "auto": true,
-      "cluster_key": "detector::test_coverage::untested_module",
-      "action": "review test coverage gaps",
-      "execution_status": "done",
-      "user_modified": false,
-      "action_type": "refactor",
-      "execution_policy": "planned_only"
-    },
-    "auto/test_coverage-untested_critical": {
-      "name": "auto/test_coverage-untested_critical",
-      "description": "Fix 8 test coverage issues",
-      "issue_ids": [
-        "test_coverage::lib/services/playback/automix/music_player_automix_members_5.dart::untested_critical",
-        "test_coverage::lib/providers/local_library_provider_scanning.dart::untested_critical",
-        "test_coverage::lib/services/library/covers/embedded_cover_resolver_extraction.dart::untested_critical",
-        "test_coverage::lib/services/playback/music_player/music_player_service_overrides_1.dart::untested_critical",
-        "test_coverage::lib/widgets/player/lyrics/player_lyrics_members_1.dart::untested_critical",
-        "test_coverage::lib/providers/local_library_provider_loading.dart::untested_critical",
-        "test_coverage::lib/services/library/covers/embedded_cover_resolver_persistence.dart::untested_critical",
-        "test_coverage::lib/screens/setup_screen_1.dart::untested_critical"
-      ],
-      "created_at": "2026-10-31T01:29:59+00:00",
-      "updated_at": "2026-10-31T01:29:59+00:00",
-      "auto": true,
-      "cluster_key": "detector::test_coverage::untested_critical",
-      "action": "review test coverage gaps",
-      "execution_status": "review",
-      "user_modified": false,
-      "action_type": "refactor",
-      "execution_policy": "planned_only"
     }
   },
   "superseded": {
@@ -4392,8 +5305,7 @@
   "refresh_state": {
     "_subjective_migration_pruned": true,
     "lifecycle_phase": "plan",
-    "subjective_review_completed_at_scan_count": 6,
-    "postflight_scan_completed_at_scan_count": 25
+    "subjective_review_completed_at_scan_count": 6
   },
   "execution_log": [
     {
@@ -8938,6 +9850,151 @@
       "note": null,
       "detail": {
         "scan_count": 25
+      }
+    },
+    {
+      "timestamp": "2026-10-31T01:31:50+00:00",
+      "action": "skip",
+      "issue_ids": [
+        "test_coverage::lib/main_startup_1.dart::transitive_only",
+        "test_coverage::lib/providers/local_library_provider_loading.dart::untested_critical",
+        "test_coverage::lib/providers/local_library_provider_scanning.dart::untested_critical",
+        "test_coverage::lib/screens/setup_screen_1.dart::untested_critical",
+        "test_coverage::lib/services/library/covers/embedded_cover_resolver_extraction.dart::untested_critical",
+        "test_coverage::lib/services/library/covers/embedded_cover_resolver_persistence.dart::untested_critical",
+        "test_coverage::lib/services/playback/automix/music_player_automix_members_5.dart::untested_critical",
+        "test_coverage::lib/services/playback/music_player/music_player_service_overrides_1.dart::untested_critical",
+        "test_coverage::lib/widgets/player/lyrics/player_lyrics_members_1.dart::untested_critical"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": null,
+      "detail": {
+        "kind": "false_positive",
+        "reason": "Dart part file: its code is compiled and exercised through the tests of its owner library"
+      }
+    },
+    {
+      "timestamp": "2026-10-31T01:31:50+00:00",
+      "action": "auto_cluster",
+      "issue_ids": [],
+      "cluster_name": null,
+      "actor": "system",
+      "note": null,
+      "detail": {
+        "changes": true
+      }
+    },
+    {
+      "timestamp": "2026-10-31T01:37:17+00:00",
+      "action": "skip",
+      "issue_ids": [
+        "dupes::lib/main.dart::main::lib/main.dart::runZonedGuarded",
+        "dupes::lib/providers/library_collections_provider.dart::_mutate::lib/providers/library_collections_provider.dart::deletePlaylists",
+        "dupes::lib/providers/library_collections_provider.dart::_mutate::lib/providers/library_collections_provider.dart::removeLocalLibraryTracks",
+        "dupes::lib/providers/library_collections_provider.dart::_mutate::lib/providers/library_collections_provider.dart::removeTracksFromPlaylist",
+        "dupes::lib/screens/equalizer_screen.dart::SettingsItem::lib/screens/equalizer_screen.dart::SettingsItem",
+        "dupes::lib/screens/equalizer_screen.dart::SettingsSwitchItem::lib/screens/equalizer_screen.dart::SettingsSwitchItem",
+        "dupes::lib/screens/equalizer_screen.dart::slider::lib/screens/equalizer_screen.dart::slider",
+        "dupes::lib/screens/home/home_tab.dart::SliverToBoxAdapter::lib/screens/home/home_tab.dart::_buildRecentlyAdded",
+        "dupes::lib/screens/library/local_album/local_album_screen_track_list.dart::Consumer::lib/screens/library/local_album/local_album_screen_track_list.dart::_buildTrackItem",
+        "dupes::lib/screens/library/local_artist/local_artist_screen.dart::AppArtistSurface::lib/screens/library/local_artist/local_artist_screen.dart::build",
+        "dupes::lib/screens/library/section_tab/library_section_tab_album_grid.dart::LocalLibraryArtworkBuilder::lib/screens/library/section_tab/library_section_tab_album_grid.dart::_buildLocalAlbumGridItem",
+        "dupes::lib/screens/library/section_tab/library_section_tab_filters.dart::setSheetState::lib/screens/library/section_tab/library_section_tab_filters.dart::setSheetState",
+        "dupes::lib/screens/listening_statistics_screen.dart::Scaffold::lib/screens/listening_statistics_screen.dart::build",
+        "dupes::lib/screens/local_guide_pages.dart::LayoutBuilder::lib/screens/local_guide_pages.dart::build",
+        "dupes::lib/screens/settings/about_page.dart::LayoutBuilder::lib/screens/settings/about_page.dart::build",
+        "dupes::lib/screens/settings/appearance/appearance_settings_page.dart::SettingsSwitchItem::lib/screens/settings/appearance/appearance_settings_page.dart::SettingsSwitchItem",
+        "dupes::lib/screens/settings/backup/backup_restore_page.dart::SettingsSwitchItem::lib/screens/settings/backup/backup_restore_page.dart::SettingsSwitchItem",
+        "dupes::lib/screens/settings/library/library_settings_page.dart::SettingsItem::lib/screens/settings/library/library_settings_page.dart::SettingsSwitchItem",
+        "dupes::lib/screens/settings/playback/playback_settings_auto_mix_1.dart::SettingsSwitchItem::lib/screens/settings/playback/playback_settings_auto_mix_1.dart::SettingsSwitchItem",
+        "dupes::lib/screens/settings/playback/playback_settings_auto_mix_1.dart::SettingsSwitchItem::lib/screens/settings/playback/playback_settings_auto_mix_1.dart::SliverToBoxAdapter",
+        "dupes::lib/screens/settings/settings_tab.dart::_Destination::lib/screens/settings/settings_tab.dart::_Destination",
+        "dupes::lib/screens/settings/settings_tab.dart::_Group::lib/screens/settings/settings_tab.dart::_groups",
+        "dupes::lib/screens/setup_screen_1.dart::LayoutBuilder::lib/screens/setup_screen_1.dart::_buildWelcomeStep",
+        "dupes::lib/screens/setup_screen_2.dart::LayoutBuilder::lib/screens/setup_screen_2.dart::_buildLanguageStep",
+        "dupes::lib/screens/setup_step_layout.dart::LayoutBuilder::lib/screens/setup_step_layout.dart::build",
+        "dupes::lib/services/playback/music_player/music_player_service_members_2.dart::reapplyNormalization::lib/services/playback/music_player/music_player_service_members_2.dart::unawaited",
+        "dupes::lib/utils/files/path_match_keys.dart::_computePathMatchKeys::lib/utils/files/path_match_keys.dart::addNormalized",
+        "dupes::lib/widgets/animation/animation_skeletons.dart::LayoutBuilder::lib/widgets/animation/animation_skeletons.dart::Stack",
+        "dupes::lib/widgets/cover/cached_cover_image.dart::decode::lib/widgets/cover/cached_cover_image.dart::loadImage",
+        "dupes::lib/widgets/header/app_artist_header.dart::SliverLayoutBuilder::lib/widgets/header/app_artist_header.dart::buildSlivers",
+        "dupes::lib/widgets/library/library_fast_scroller.dart::PositionedDirectional::lib/widgets/library/library_fast_scroller.dart::Stack",
+        "dupes::lib/widgets/library/track_metadata_edit_sheet.dart::_sectionCard::lib/widgets/library/track_metadata_edit_sheet.dart::setState",
+        "dupes::lib/widgets/library/track_metadata_edit_sheet.dart::_switchField::lib/widgets/library/track_metadata_edit_sheet.dart::setState",
+        "dupes::lib/widgets/lyrics/aligned_lyric_pronunciation.dart::SizedBox::lib/widgets/lyrics/aligned_lyric_pronunciation.dart::_buildGroup",
+        "dupes::lib/widgets/player/layout/app_player_layout_members_1.dart::Builder::lib/widgets/player/layout/app_player_layout_members_1.dart::Expanded",
+        "dupes::lib/widgets/player/layout/player_track_swipe.dart::PlayerTrackSwipeRegion::lib/widgets/player/layout/player_track_swipe.dart::build",
+        "dupes::lib/widgets/player/lyrics/player_lyrics_painting_2.dart::LayoutBuilder::lib/widgets/player/lyrics/player_lyrics_painting_2.dart::build",
+        "dupes::lib/widgets/player/queue/app_player_queue.dart::modeButton::lib/widgets/player/queue/app_player_queue.dart::modeButton",
+        "dupes::lib/widgets/settings/settings_item_rows.dart::Opacity::lib/widgets/settings/settings_item_rows.dart::build",
+        "dupes::lib/widgets/shell/app_bottom_bar.dart::AnimatedBuilder::lib/widgets/shell/app_bottom_bar.dart::LayoutBuilder",
+        "dupes::lib/widgets/shell/scroll_edge_fade.dart::Stack::lib/widgets/shell/scroll_edge_fade.dart::build"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": null,
+      "detail": {
+        "kind": "false_positive",
+        "reason": "Near-duplicate shape match: declarative widget lists, builder or wrapper calls, or distinct functions that share a name; bodies differ in content"
+      }
+    },
+    {
+      "timestamp": "2026-10-31T01:37:26+00:00",
+      "action": "skip",
+      "issue_ids": [
+        "signature::lib/app.dart::signature_variance::build",
+        "signature::lib/core/models/equalizer_settings.dart::signature_variance::copyWith",
+        "signature::lib/core/navigation/detail_navigation.dart::signature_variance::GestureDetector",
+        "signature::lib/core/navigation/now_playing_route.dart::signature_variance::didPop",
+        "signature::lib/core/navigation/shell_navigation.dart::signature_variance::detach",
+        "signature::lib/l10n/app_localizations.dart::signature_variance::load",
+        "signature::lib/main.dart::signature_variance::unawaited",
+        "signature::lib/providers/equalizer_provider.dart::signature_variance::update",
+        "signature::lib/providers/library_collections_provider.dart::signature_variance::matches",
+        "signature::lib/providers/library_collections_provider_mutations.dart::signature_variance::restoreFromBackup",
+        "signature::lib/providers/metadata_editor_controller.dart::signature_variance::isCurrent",
+        "signature::lib/providers/music_player_provider.dart::signature_variance::stop",
+        "signature::lib/providers/music_player_provider.dart::signature_variance::updateShouldNotify",
+        "signature::lib/providers/user_profile_provider.dart::signature_variance::save",
+        "signature::lib/screens/equalizer_screen.dart::signature_variance::AppDialogAction",
+        "signature::lib/screens/equalizer_screen.dart::signature_variance::Expanded",
+        "signature::lib/screens/equalizer_screen.dart::signature_variance::SettingsItem",
+        "signature::lib/screens/equalizer_screen.dart::signature_variance::SettingsSwitchItem",
+        "signature::lib/screens/equalizer_screen.dart::signature_variance::SizedBox",
+        "signature::lib/screens/home/home_tab.dart::signature_variance::SliverToBoxAdapter",
+        "signature::lib/screens/library/app_library_screen.dart::signature_variance::Semantics",
+        "signature::lib/screens/library/collections/library_collection_tracks_screen_1.dart::signature_variance::SelectionBottomBar",
+        "signature::lib/screens/library/collections/library_collection_tracks_screen_1.dart::signature_variance::selectAll",
+        "signature::lib/screens/library/collections/library_collection_tracks_screen_2.dart::signature_variance::LocalCoverImage",
+        "signature::lib/screens/library/local_album/local_album_screen.dart::signature_variance::LocalLibraryArtworkBuilder",
+        "signature::lib/screens/library/local_album/local_album_screen_track_list.dart::signature_variance::Consumer",
+        "signature::lib/screens/library/section_tab/library_section_tab.dart::signature_variance::AnimatedBuilder",
+        "signature::lib/screens/library/section_tab/library_section_tab.dart::signature_variance::PopScope",
+        "signature::lib/screens/listening_statistics_screen.dart::signature_variance::IconButton",
+        "signature::lib/services/audio_analysis/audio_analysis_jobs.dart::signature_variance::invalidate",
+        "signature::lib/services/backup/backup_service.dart::signature_variance::encode",
+        "signature::lib/services/glass/app_glass_auto_probe.dart::signature_variance::add",
+        "signature::lib/services/library/collections/library_collections_rows.dart::signature_variance::finish",
+        "signature::lib/services/library/covers/cover_palette.dart::signature_variance::resolve",
+        "signature::lib/services/library/database/library_row_mapper.dart::signature_variance::decode",
+        "signature::lib/services/library/metadata/metadata_cover_resources.dart::signature_variance::release",
+        "signature::lib/services/library/scan/library_scan_progress.dart::signature_variance::start",
+        "signature::lib/services/native/native_data_jobs.dart::signature_variance::cancel",
+        "signature::lib/services/playback/autoplay/autoplay_personalization.dart::signature_variance::begin",
+        "signature::lib/services/playback/music_player/music_player_runtime.dart::signature_variance::attach",
+        "signature::lib/widgets/animation/animation_skeletons.dart::signature_variance::Stack",
+        "signature::lib/widgets/audio_analysis/audio_analysis_spectrogram.dart::signature_variance::paint",
+        "signature::lib/widgets/audio_analysis/audio_analysis_spectrogram.dart::signature_variance::shouldRepaint",
+        "signature::lib/widgets/collection/pinned_section_sliver_list.dart::signature_variance::performLayout",
+        "signature::lib/widgets/glass/artwork/app_artwork_ground.dart::signature_variance::show"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": null,
+      "detail": {
+        "kind": "false_positive",
+        "reason": "Same-named members or helpers across files with different signatures; this is the usual shape of Flutter builders, overrides and helpers, not a duplicated API"
       }
     }
   ],
