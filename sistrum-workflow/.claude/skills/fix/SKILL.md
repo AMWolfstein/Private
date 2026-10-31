@@ -43,8 +43,9 @@ again after restoring the fix. It requires pass/fail/pass and the literal assert
 failing run. `FAIL` means the test also passes without the fix. Missing diagnostics, timeouts or a failing
 baseline/restored run are `INCONCLUSIVE`, never success. Inspect `.work/proofs/` logs to confirm the failure
 is the regression, not a compiler or environment error; a text match alone cannot establish causality.
-Run without concurrent edits or builds; this command temporarily changes the working tree. Forced
-termination can prevent restoration. Checks must leave non-ignored inputs unchanged.
+Proof runs in a disposable Git worktree. Ignored dependencies are not copied; provision them there if required.
+Use repository-relative command paths. Checks must leave non-ignored inputs unchanged. Source edits during
+the run invalidate the result.
 
 ## 5. Verify
 

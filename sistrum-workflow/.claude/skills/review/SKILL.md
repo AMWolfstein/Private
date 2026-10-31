@@ -50,3 +50,7 @@ For an audit the owner asked for, stop here and present the findings by severity
 covers the changed code and the open findings, not the whole project again. At most 4 rounds; then list what is
 open and ask the owner. `work.py advance <NNN> ship` requires the last round to be clean on the current tree,
 so any edit after a clean round needs one more round.
+
+## Review coverage
+
+Use `work/guides/quality.md` for cohesion, cross-module dependencies, API coherence and initialization, as well as safety and correctness. For bridge/data changes use `work/guides/contracts/`; inspect actual callers and guards. No cosmetic file splitting or line quotas.

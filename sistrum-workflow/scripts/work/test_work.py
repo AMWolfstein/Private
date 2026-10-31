@@ -297,6 +297,40 @@ class ProveTests(Repo):
         for phase in report['phases'].values():
             self.assertTrue((self.root / phase['log']).is_file())
 
+    def test_prove_never_reverts_original_worktree(self):
+        self.write('lib/app.dart', 'fixed\n')
+        original = str(self.root / 'lib/app.dart')
+        self.write('test/app_test.py',
+                   'from pathlib import Path\n'
+                   'assert Path(' + repr(original) + ').read_text() == "fixed\\n", "owner file changed"\n'
+                   'assert "fixed" in Path("lib/app.dart").read_text(), ' + repr(self.failure) + '\n')
+        result = work.prove(self.root, self.command, 30, expected_failure=self.failure)
+        self.assertEqual(result['status'], 'PASS')
+        self.assertIn('disposable', result['isolation'])
+        self.assertEqual((self.root / 'lib/app.dart').read_text(), 'fixed\n')
+
+
+class PythonCountTests(Repo):
+    def test_unittest_success_and_skip_counts(self):
+        script = ('import unittest\n'
+                  'class Example(unittest.TestCase):\n'
+                  ' def test_ok(self): pass\n'
+                  ' @unittest.skip("device")\n'
+                  ' def test_skip(self): pass\n'
+                  'unittest.main()\n')
+        self.write('runner.py', script)
+        result = work.run_one([PY, 'runner.py'], self.root, self.root / 'out.log', 30, None)
+        self.assertEqual(result['tests'], {'passed': 1, 'skipped': 1, 'failed': 0})
+
+    def test_unittest_failure_and_error_counts(self):
+        self.write('runner.py', 'import unittest\nclass Example(unittest.TestCase):\n'
+                   ' def test_fail(self): self.fail("regression")\n'
+                   ' def test_error(self): raise RuntimeError("broken")\n'
+                   'unittest.main()\n')
+        result = work.run_one([PY, 'runner.py'], self.root, self.root / 'out.log', 30, None)
+        self.assertEqual(result['status'], 'FAIL')
+        self.assertEqual(result['tests'], {'passed': 0, 'skipped': 0, 'failed': 2})
+
 
 class GateTests(Repo):
     def setUp(self):

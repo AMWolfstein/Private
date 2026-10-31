@@ -11,6 +11,8 @@ repository for callers, guards and tests.
 Read `work/constitution.md`, then the packet whose path you were given. If the prompt names a focus, cover it
 first, then the rest.
 
+Also read `work/guides/quality.md` and the applicable bridge/data contract. Explicitly check responsibility cohesion, dependency direction, public API coherence and duplicated or hidden initialization.
+
 Sweep in this order:
 1. Bugs: wrong results, a fix in one caller while the shared code stays broken, early returns that skip work,
    off-by-one, null handling, a test that passes without the fix.

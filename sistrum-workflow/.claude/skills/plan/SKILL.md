@@ -59,3 +59,7 @@ A feature-size plan can be short: "unchanged" and "none" are fine answers.
 Show the owner the plan summary and open choices. When the owner accepts, record it in `log.md` and run
 `python3 scripts/work/work.py advance <NNN> tasks`. The gate refuses unfilled sections, unticked constitution
 items, and, for architecture, a plan changed after its last clean review round.
+
+## Project guidance
+
+Read `work/guides/architecture.md` and the relevant contract in `work/guides/contracts/`. For ports, also read `work/guides/port.md` and `work/guides/migration.md`. The migration guide carries historical references: verify the actual reference revision and accepted decisions before importing. In a new repository preserve these guides; do not rely on an absent external plan. Later explicit owner decisions and the current accepted migration plan supersede historical summaries. Record conflicts rather than silently choosing.

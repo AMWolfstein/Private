@@ -395,10 +395,22 @@ def run_one(argv: list[str], cwd: Path, log: Path, timeout: int, stall: int | No
     item = {'status': status or ('PASS' if process.returncode == 0 else 'FAIL'),
             'exit_code': None if status else process.returncode,
             'seconds': round(time.monotonic() - started, 1)}
-    counts = COUNT.findall(log.read_bytes())
+    data = log.read_bytes()
+    counts = COUNT.findall(data)
     if counts:
         passed, skipped, failed = counts[-1]
         item['tests'] = {'passed': int(passed), 'skipped': int(skipped or 0), 'failed': int(failed or 0)}
+    else:
+        summaries = re.findall(rb'^Ran (\d+) tests? in [^\n]+\n\s*\n(OK(?: \([^\n]*\))?|FAILED \([^\n]*\))', data, re.M)
+        if summaries:
+            total, outcome = summaries[-1]
+            def count(name):
+                found = re.search(name + rb'=(\d+)', outcome)
+                return int(found.group(1)) if found else 0
+            skipped = count(b'skipped')
+            failed = count(b'failures') + count(b'errors') + count(b'unexpected successes')
+            item['tests'] = {'passed': max(0, int(total) - skipped - failed),
+                             'skipped': skipped, 'failed': failed}
     return item
 
 
@@ -487,6 +499,38 @@ def worktree_changes(root: Path) -> list[tuple[str, str]]:
 
 
 def prove(root: Path, command: list[str], timeout: int,
+          expected_failure: str | None = None) -> dict:
+    """Run proof in a disposable worktree; never revert the owner's files."""
+    before = fingerprint(root)
+    with tempfile.TemporaryDirectory(prefix='work-proof-') as temporary:
+        isolated = Path(temporary) / 'tree'
+        git(root, 'worktree', 'add', '--detach', str(isolated), 'HEAD')
+        try:
+            paths = git(root, 'ls-files', '-z', '--cached', '--others', '--exclude-standard').split('\0')
+            for path in filter(None, paths):
+                if is_record(path):
+                    continue
+                source, target = root / path, isolated / path
+                if target.is_symlink() or target.is_file():
+                    target.unlink()
+                if source.is_symlink() or source.is_file():
+                    target.parent.mkdir(parents=True, exist_ok=True)
+                    shutil.copy2(source, target, follow_symlinks=False)
+            # Ignored dependencies/build caches are deliberately not copied.
+            result = _prove_in_worktree(isolated, command, timeout, expected_failure)
+            proofs = isolated / '.work/proofs'
+            if proofs.exists():
+                shutil.copytree(proofs, root / '.work/proofs', dirs_exist_ok=True)
+            if fingerprint(root) != before:
+                result['status'] = 'INCONCLUSIVE'
+                result['meaning'] = 'source tree changed while proof was running; rerun on stable inputs'
+            result['isolation'] = 'disposable Git worktree; ignored dependencies are not copied'
+            return result
+        finally:
+            git(root, 'worktree', 'remove', '--force', str(isolated))
+
+
+def _prove_in_worktree(root: Path, command: list[str], timeout: int,
           expected_failure: str | None = None) -> dict:
     """Green/red/green command evidence with an explicit regression signature.
 
