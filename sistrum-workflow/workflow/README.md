@@ -179,5 +179,5 @@ in a fresh context. If those capabilities are unavailable, report self-review; d
 - Host checks never prove device behaviour. Device checks stay pending until the owner runs them.
 - Discovery, hooks and read-only reviewer isolation depend on the host agent. Instructions alone do not
   guarantee enforcement; missing independent-review capability must be reported.
-- The code map's entry points are lexical, Dart has no call edges in Graphify 0.9.97, and channel scans are
+- The code map's entry points are lexical, Graphify 0.9.97 emits no Dart call edges (the map infers unqualified ones by name), and channel scans are
   patterns. A current map says the facts match the tree, not that they are complete; see the map guide.

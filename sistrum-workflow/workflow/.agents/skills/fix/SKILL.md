@@ -12,7 +12,7 @@ No change folder. The record is the regression test, the commit and the report.
 - Start from what the owner sees. Text on a screenshot leads to an `lib/l10n/arb/app_en.arb` key, the key to the
   widget, the widget to its handler and state.
 - Once you have a starting file, `python3 workflow/scripts/work/work.py context "<symptom words>" --file <path>`
-  lists its importers (Dart callers are approximated by importers), Kotlin callers and callees, both sides of
+  lists its importers (Dart call edges are inferred by name, unqualified calls only), Kotlin callers and callees, both sides of
   any channel it touches, and its linked tests. Use it instead of reading neighbouring files whole.
 - Follow the flow to the state that is wrong, and read who else writes it. Lifecycle callbacks (resume, dispose,
   route changes), async gaps and early `return`s inside `try` are common culprits.

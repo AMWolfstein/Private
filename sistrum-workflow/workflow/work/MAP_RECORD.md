@@ -34,10 +34,20 @@ before running; they are small (2–3 items) and are not a statistically meaning
 - Non-Dart/Kotlin languages: symbols, calls and references only; no import resolution, no channel scan.
 - Bench on the full map: packets 2.4–2.8k estimated tokens, unchanged coverage results.
 
+## Gap pass (after the scope update)
+- Tests linked to entry files and their checks are critical (first three per file), no longer cut by the budget.
+- Direct users of each entry file are critical (eight per file, the rest by `--expand`).
+- Entry-file limit raised from 5 to 8; word matching uses synonyms (failure/error, plurals, -ing) and IDF weights.
+- Dart calls inferred by name for unqualified calls and `this.` (`adapter:dart-name-call`, always inferred, low/medium).
+  13,376 edges on the snapshot. Qualified calls are not attributed (false edges otherwise).
+- Windows lock path via msvcrt added, not run here.
+- Tests: 130 pass, 4 new.
+
+Benchmark after these changes (same four tasks; the expected lists were written before the changes, and the
+changes were made after seeing the misses, so this is not an independent sample):
+ui-change 3/3, playback-bug 2/2, bridge-contract 3/3, dsp-port 3/3; packets 2.7–3.1k estimated tokens.
+
 ## Known gaps (open)
-- Playback-bug case: the lexical match did not reach `music_player_events.dart` (part file, function
-  `_reportPlaybackError`). Plain-word tasks rely on rare words; no fix yet. Use `--file` or `--symbol` as the
-  skills instruct; a better ranking is future work.
 - Bridge case: `usb_pcm_bridge_test.dart` not in the packet's tests section for this task; tests are only linked
   when an entry file is a test or imports/names the channel.
 - Dart has no call edges in Graphify 0.9.97; callers are approximated by importers.

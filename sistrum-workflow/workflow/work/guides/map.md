@@ -113,8 +113,15 @@ Every relationship carries `fact` (extracted, declared or inferred), `via` (who 
 
 Graphify 0.9.97 facts verified on the Sistrum code base: Dart gets declarations only, with no call edges, and
 its import edges are left unresolved (the adapter resolves them); Kotlin calls inside lambdas and across files
-are partly missing (for example `engine.start()` inside a `setMethodCallHandler` lambda). Callers of Dart code
-are approximated by importers; packets say so.
+are partly missing (for example `engine.start()` inside a `setMethodCallHandler` lambda).
+
+To fill the Dart call gap the map infers calls by name (`adapter:dart-name-call`, always `inferred`): an
+unqualified call `f(` or `this.f(` in a Dart file is attributed to the declaration(s) named `f` in the corpus,
+only when at most three files declare that name, with `medium` confidence for one declaration and `low` for
+several. The caller is the nearest declaration above the call. Qualified calls such as `Type.f(` or `value.f(`
+are not attributed, because matching them by name produced false edges (for example framework methods that
+share a name with repository code). Common names (`build`, `dispose`, `add`, ...) are never attributed. Expect
+missed calls through qualified receivers, tear-offs and dynamic dispatch.
 
 ### Channel conventions recognised
 
@@ -194,5 +201,6 @@ extraction logs), `context/` (last packet). Delete the directory at any time; `m
   repository maps `package:<name>/` to its `lib/`.
 - Outside Dart and Kotlin, Graphify's symbols, calls and references are shown with their own provenance
   (`graphify:<language>-ast`). Imports and channels are not resolved for them.
-- Locking needs POSIX `fcntl`; on Windows `map update` is blocked with that reason.
+- Locking uses `fcntl` on POSIX and `msvcrt` on Windows. The Windows path is written but not run in this
+  environment; verify it on Windows before relying on it.
 - Map facts are a starting point for reading code, not evidence for a review finding or a completion claim.
