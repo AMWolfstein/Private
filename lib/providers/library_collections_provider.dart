@@ -18,6 +18,9 @@ export 'package:sistrum/core/models/library_collections.dart';
 export 'package:sistrum/services/library/collections/library_collections_playlist_covers.dart'
     show PlaylistCoverProbe, PlaylistCoverResize;
 
+part 'library_collections_provider_helpers.dart';
+part 'library_collections_provider_mutations.dart';
+
 final _log = AppLogger('LibraryCollections');
 
 class LibraryCollectionsNotifier extends Notifier<LibraryCollectionsState> {
@@ -42,60 +45,16 @@ class LibraryCollectionsNotifier extends Notifier<LibraryCollectionsState> {
   final Map<String, Future<void>> _playlistLoadFutures = {};
   Future<void> _mutationTail = Future<void>.value();
 
-  /// Evaluate membership against the preceding completed write, then publish
-  /// only after persistence succeeds. A failed write does not block the next.
-  Future<T> _mutate<T>(Future<T> Function() mutation) {
-    final operation = _mutationTail.then((_) async {
-      await _ensureLoaded();
-      if (!ref.mounted) {
-        throw StateError('Library collections provider was disposed');
-      }
-      return mutation();
-    });
-    _mutationTail = operation.then<void>(
-      (_) {},
-      onError: (Object error, StackTrace stack) {},
-    );
-    return operation;
-  }
+  LibraryCollectionsState get _current => state;
 
-  void _invalidatePlaylistPickerSummaries() {
-    if (!ref.mounted) return;
-    ref.invalidate(libraryPlaylistPickerSummariesProvider);
-  }
+  set _current(LibraryCollectionsState value) => state = value;
+
+  Ref get _ref => ref;
 
   @override
   LibraryCollectionsState build() {
     _loadFuture = _load();
     return LibraryCollectionsState();
-  }
-
-  Future<void> _load() async {
-    _loadFailure = null;
-    try {
-      if (!ref.mounted) return;
-      final snapshot = await _db.loadSnapshot();
-      try {
-        if (!ref.mounted) return;
-        final loaded = await hydrateLibraryCollectionsSnapshot(snapshot);
-        if (ref.mounted) state = loaded;
-      } finally {
-        await cleanupCollectionRows(
-          nativeRowsPath: snapshot.nativeRowsPath,
-          nativeRowsDirectory: snapshot.nativeRowsDirectory,
-        );
-      }
-    } catch (error, stack) {
-      _loadFailure = error;
-      _log.e('Failed to load library collections', error, stack);
-      if (ref.mounted) state = state.copyWith(isLoaded: true);
-    }
-  }
-
-  Future<void> _ensureLoaded() async {
-    if (!ref.mounted) return;
-    if (state.isLoaded) return;
-    await (_loadFuture ?? _load());
   }
 
   Future<void> ensurePlaylistLoaded(String playlistId) async {
@@ -149,26 +108,6 @@ class LibraryCollectionsNotifier extends Notifier<LibraryCollectionsState> {
         _playlistLoadFutures.remove(playlistId);
       }
     }
-  }
-
-  bool _replacePlaylistById(
-    String playlistId,
-    UserPlaylistCollection Function(UserPlaylistCollection playlist) update,
-  ) {
-    if (!ref.mounted) return false;
-    final playlist = state.playlistById(playlistId);
-    if (playlist == null) return false;
-
-    final playlistIndex = state.playlists.indexWhere((p) => p.id == playlistId);
-    if (playlistIndex < 0) return false;
-
-    final nextPlaylist = update(playlist);
-    if (identical(nextPlaylist, playlist)) return false;
-
-    final updatedPlaylists = [...state.playlists];
-    updatedPlaylists[playlistIndex] = nextPlaylist;
-    state = state.copyWith(playlists: updatedPlaylists);
-    return true;
   }
 
   Future<bool> toggleLoved(Track track) => _mutate(() async {
@@ -252,104 +191,6 @@ class LibraryCollectionsNotifier extends Notifier<LibraryCollectionsState> {
       await prepared.dispose();
     }
   });
-
-  Future<bool> toggleFavoriteArtist({
-    required String artistId,
-    required String? providerId,
-    required String name,
-    String? imageUrl,
-  }) => _mutate(() async {
-    final key = artistCollectionKey(artistId: artistId, providerId: providerId);
-    final sourceSeparator = key.indexOf(':');
-    final source = sourceSeparator > 0 ? key.substring(0, sourceSeparator) : '';
-    final trimmedProviderId = providerId?.trim();
-    final effectiveProviderId =
-        trimmedProviderId != null && trimmedProviderId.isNotEmpty
-        ? trimmedProviderId
-        : (source.isNotEmpty && source != 'builtin' ? source : null);
-    if (state.containsFavoriteArtistKey(key)) {
-      await _db.deleteFavoriteArtistEntry(key);
-      if (!ref.mounted) return false;
-      state = state.copyWith(
-        favoriteArtists: state.favoriteArtists
-            .where((entry) => entry.key != key)
-            .toList(growable: false),
-      );
-      return false;
-    }
-
-    final entry = CollectionArtistEntry(
-      key: key,
-      artistId: collectionArtistId(artistId),
-      providerId: effectiveProviderId,
-      name: name,
-      imageUrl: imageUrl,
-      addedAt: DateTime.now(),
-    );
-    await _db.upsertFavoriteArtistEntry(
-      artistKey: key,
-      artistJson: jsonEncode(entry.toJson()),
-      addedAt: entry.addedAt.toIso8601String(),
-    );
-    if (ref.mounted) {
-      state = state.copyWith(
-        favoriteArtists: [entry, ...state.favoriteArtists],
-      );
-    }
-    return true;
-  });
-
-  Future<void> _removeEntry<T>(
-    String key, {
-    required bool Function(String key) contains,
-    required List<T> Function(LibraryCollectionsState state) select,
-    required String Function(T entry) keyOf,
-    required LibraryCollectionsState Function(List<T> list) withList,
-    required Future<void> Function(String key) dbDelete,
-  }) => _mutate(() async {
-    if (!contains(key)) return;
-
-    await dbDelete(key);
-    if (!ref.mounted) return;
-    state = withList(
-      select(
-        state,
-      ).where((entry) => keyOf(entry) != key).toList(growable: false),
-    );
-  });
-
-  Future<void> removeFavoriteArtist(String artistKey) => _removeEntry(
-    artistKey,
-    contains: (key) => state.containsFavoriteArtistKey(key),
-    select: (state) => state.favoriteArtists,
-    keyOf: (entry) => entry.key,
-    withList: (list) => state.copyWith(favoriteArtists: list),
-    dbDelete: _db.deleteFavoriteArtistEntry,
-  );
-
-  Future<int> _removeTrackEntries(
-    Iterable<String> trackKeys, {
-    required bool Function(String key) contains,
-    required List<CollectionTrackEntry> Function() select,
-    required LibraryCollectionsState Function(List<CollectionTrackEntry>)
-    withList,
-    required Future<void> Function(List<String>) dbDelete,
-  }) {
-    final selected = trackKeys.toSet();
-    return _mutate(() async {
-      final keys = selected.where(contains).toSet();
-      if (keys.isEmpty) return 0;
-      await dbDelete(keys.toList(growable: false));
-      if (ref.mounted) {
-        state = withList(
-          select()
-              .where((entry) => !keys.contains(entry.key))
-              .toList(growable: false),
-        );
-      }
-      return keys.length;
-    });
-  }
 
   Future<int> removeLovedTracks(Iterable<String> trackKeys) =>
       _removeTrackEntries(
@@ -467,25 +308,6 @@ class LibraryCollectionsNotifier extends Notifier<LibraryCollectionsState> {
     return id;
   });
 
-  Future<void> renamePlaylist(String playlistId, String newName) =>
-      _mutate(() async {
-        final trimmed = newName.trim();
-        if (trimmed.isEmpty) return;
-        final playlist = state.playlistById(playlistId);
-        if (playlist == null || playlist.name == trimmed) return;
-
-        final now = DateTime.now();
-        await _db.renamePlaylist(
-          playlistId: playlistId,
-          name: trimmed,
-          updatedAt: now.toIso8601String(),
-        );
-        _replacePlaylistById(playlistId, (playlist) {
-          return playlist.copyWith(name: trimmed, updatedAt: now);
-        });
-        _invalidatePlaylistPickerSummaries();
-      });
-
   Future<int> deletePlaylists(Iterable<String> playlistIds) {
     final selected = playlistIds.toSet();
     return _mutate(() async {
@@ -505,40 +327,6 @@ class LibraryCollectionsNotifier extends Notifier<LibraryCollectionsState> {
       return ids.length;
     });
   }
-
-  Future<bool> addTrackToPlaylist(String playlistId, Track track) => _mutate(
-    () async {
-      var playlist = state.playlistById(playlistId);
-      if (playlist == null) return false;
-
-      final key = trackCollectionKey(track);
-      if (playlist.containsTrackKey(key)) return false;
-      await ensurePlaylistLoaded(playlistId);
-      if (!ref.mounted) return false;
-      playlist = state.playlistById(playlistId);
-      if (playlist == null) return false;
-
-      final now = DateTime.now();
-      final entry = CollectionTrackEntry(key: key, track: track, addedAt: now);
-      await _db.upsertPlaylistTrack(
-        playlistId: playlistId,
-        trackKey: key,
-        trackJson: jsonEncode(track.toJson()),
-        addedAt: entry.addedAt.toIso8601String(),
-        playlistUpdatedAt: now.toIso8601String(),
-      );
-      final changed = _replacePlaylistById(playlistId, (playlist) {
-        if (playlist.containsTrackKey(key)) return playlist;
-        return playlist.copyWith(
-          tracks: [...playlist.tracks, entry],
-          updatedAt: now,
-        );
-      });
-      if (!changed) return false;
-      _invalidatePlaylistPickerSummaries();
-      return true;
-    },
-  );
 
   Future<PlaylistAddBatchResult> addTracksToPlaylist(
     String playlistId,
@@ -642,139 +430,6 @@ class LibraryCollectionsNotifier extends Notifier<LibraryCollectionsState> {
       return keys.length;
     });
   }
-
-  Future<void> setPlaylistCover(
-    String playlistId,
-    String sourceFilePath,
-  ) => _mutate(() async {
-    final playlist = state.playlistById(playlistId);
-    if (playlist == null) return;
-
-    final previousCoverPath = playlist.coverImagePath;
-    final destPath = await _covers.normalizePlaylistCoverFile(sourceFilePath);
-
-    final now = DateTime.now();
-    try {
-      await _db.updatePlaylistCover(
-        playlistId: playlistId,
-        coverImagePath: destPath,
-        updatedAt: now.toIso8601String(),
-      );
-    } catch (_) {
-      await _covers.deletePrivatePlaylistCover(destPath);
-      rethrow;
-    }
-    _replacePlaylistById(playlistId, (playlist) {
-      if (playlist.coverImagePath == destPath) return playlist;
-      return playlist.copyWith(coverImagePath: () => destPath, updatedAt: now);
-    });
-    _invalidatePlaylistPickerSummaries();
-    if (previousCoverPath != null && previousCoverPath != destPath) {
-      if (!state.playlists.any((p) => p.coverImagePath == previousCoverPath)) {
-        await _covers.deletePrivatePlaylistCover(previousCoverPath);
-      }
-    }
-  });
-
-  Future<void> removePlaylistCover(String playlistId) => _mutate(() async {
-    final playlist = state.playlistById(playlistId);
-    if (playlist == null || playlist.coverImagePath == null) return;
-
-    final path = playlist.coverImagePath;
-    if (path != null) {
-      final file = File(path);
-      if (await file.exists()) {
-        await file.delete();
-      }
-    }
-
-    final now = DateTime.now();
-    await _db.updatePlaylistCover(
-      playlistId: playlistId,
-      coverImagePath: null,
-      updatedAt: now.toIso8601String(),
-    );
-    _replacePlaylistById(playlistId, (playlist) {
-      if (playlist.coverImagePath == null) return playlist;
-      return playlist.copyWith(coverImagePath: () => null, updatedAt: now);
-    });
-    _invalidatePlaylistPickerSummaries();
-  });
-
-  Future<String> exportCollectionsJson() => _mutate(() async {
-    final snapshot = await _db.exportBackupSnapshot();
-    return exportCollectionsBackupSnapshot(snapshot);
-  });
-
-  /// Returns cover file references for the streaming ZIP backup format. The
-  /// backup writer reads each file directly instead of materializing every
-  /// image as base64 in memory.
-  Future<Map<String, Map<String, String>>> exportPlaylistCoverFiles() async {
-    await _ensureLoaded();
-    final covers = <String, Map<String, String>>{};
-    final playlists = List<UserPlaylistCollection>.of(state.playlists);
-    for (final playlist in playlists) {
-      var path = playlist.coverImagePath;
-      if (path == null || path.isEmpty) continue;
-      try {
-        if (await _covers.playlistCoverNeedsNormalization(path)) {
-          await setPlaylistCover(playlist.id, path);
-          path = state.playlistById(playlist.id)?.coverImagePath ?? path;
-        }
-        final file = File(path);
-        if (!await file.exists() || await file.length() == 0) continue;
-        covers[playlist.id] = {
-          'ext': p.extension(path).toLowerCase(),
-          'path': path,
-        };
-      } catch (_) {
-        // Skip unreadable cover; the rest of the backup still succeeds.
-      }
-    }
-    return covers;
-  }
-
-  /// Replaces all collections (loved, playlists, favorite artists)
-  /// with the contents of a backup. [collectionsJson] uses the
-  /// [LibraryCollectionsState.toJson] shape; [coverImages] is the map produced
-  /// from a backup. Cover images are rewritten into this device's
-  /// covers directory and their paths fixed up before persisting.
-  Future<void> restoreFromBackup(
-    Map<String, dynamic> collectionsJson, {
-    Map<String, dynamic>? coverImages,
-  }) => _mutate(() async {
-    final normalized = Map<String, dynamic>.from(collectionsJson);
-    final coversDir = await _covers.playlistCoversDir();
-    final prepared = <String>[];
-    final previous = state.playlists
-        .map((p) => p.coverImagePath)
-        .whereType<String>()
-        .toSet();
-    var committed = false;
-    try {
-      await rewriteBackupPlaylistCovers(
-        normalized: normalized,
-        coverImages: coverImages,
-        coversDir: coversDir,
-        covers: _covers,
-        prepared: prepared,
-      );
-
-      await _db.replaceAllFromBackup(normalized);
-      committed = true;
-      for (final path in previous.difference(prepared.toSet())) {
-        await _covers.deletePrivatePlaylistCover(path);
-      }
-      await _load();
-      _invalidatePlaylistPickerSummaries();
-    } finally {
-      if (!committed) {
-        for (final path in prepared) {
-          await _covers.deletePrivatePlaylistCover(path);
-        }
-      }
-    }
-  });
 }
 
 final libraryCollectionsProvider =

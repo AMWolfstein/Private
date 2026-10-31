@@ -145,8 +145,8 @@ ParsedLyrics? _parseTtml(String text) {
       );
     }
 
-    LyricsParser._sortLines(lines);
-    final synced = LyricsParser._hasUsableTiming(lines);
+    _LyricsParserSupport._sortLines(lines);
+    final synced = _LyricsParserSupport._hasUsableTiming(lines);
     return ParsedLyrics(
       synced: synced,
       wordSynced: synced && sawWords,

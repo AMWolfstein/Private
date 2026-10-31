@@ -18,6 +18,10 @@ import 'package:sistrum/utils/logging/logger.dart';
 
 export 'library_collections_models.dart';
 
+part 'library_collections_database_1.dart';
+part 'library_collections_database_2.dart';
+part 'library_collections_database_3.dart';
+
 final _log = AppLogger('LibraryCollectionsDb');
 
 class LibraryCollectionsDatabase {
@@ -52,10 +56,6 @@ class LibraryCollectionsDatabase {
       'Collections database v$oldVersion needs no upgrade to v$newVersion',
     );
   }
-
-  /// A stable paged row file for backup; it never loads playlist UI models.
-  Future<LibraryCollectionsSnapshot> exportBackupSnapshot() async =>
-      writeDatabaseBackupSnapshot(await database);
 
   static Future<LibraryCollectionsSnapshot> writeDatabaseBackupSnapshot(
     Database db, {
@@ -185,30 +185,6 @@ class LibraryCollectionsDatabase {
     Database db,
     String playlistId,
   ) => readDartPlaylistTracks(db, playlistId);
-
-  Future<List<PlaylistPickerSummary>> loadPlaylistPickerSummaries(
-    List<String> requestedTrackKeys,
-  ) async => readPlaylistPickerSummaries(await database, requestedTrackKeys);
-
-  Future<void> _upsertEntry(
-    String table,
-    String prefix, {
-    required String key,
-    required String json,
-    required String addedAt,
-  }) async {
-    final db = await database;
-    await db.insert(table, {
-      '${prefix}_key': key,
-      '${prefix}_json': json,
-      'added_at': addedAt,
-    }, conflictAlgorithm: ConflictAlgorithm.replace);
-  }
-
-  Future<void> _deleteEntry(String table, String prefix, String key) async {
-    final db = await database;
-    await db.delete(table, where: '${prefix}_key = ?', whereArgs: [key]);
-  }
 
   Future<void> upsertLovedEntry({
     required String trackKey,
@@ -341,20 +317,6 @@ class LibraryCollectionsDatabase {
     );
   }
 
-  Future<void> updatePlaylistCover({
-    required String playlistId,
-    required String updatedAt,
-    String? coverImagePath,
-  }) async {
-    final db = await database;
-    await db.update(
-      tablePlaylists,
-      {'cover_image_path': coverImagePath, 'updated_at': updatedAt},
-      where: 'id = ?',
-      whereArgs: [playlistId],
-    );
-  }
-
   Future<void> deletePlaylists(List<String> playlistIds) async {
     if (playlistIds.isEmpty) return;
     await deleteDatabasePlaylists(await database, playlistIds);
@@ -379,30 +341,6 @@ class LibraryCollectionsDatabase {
           whereArgs: ids,
         );
       }
-    });
-  }
-
-  Future<void> upsertPlaylistTrack({
-    required String playlistId,
-    required String trackKey,
-    required String trackJson,
-    required String addedAt,
-    required String playlistUpdatedAt,
-  }) async {
-    final db = await database;
-    await db.transaction((txn) async {
-      await txn.insert(tablePlaylistTracks, {
-        'playlist_id': playlistId,
-        'track_key': trackKey,
-        'track_json': trackJson,
-        'added_at': addedAt,
-      }, conflictAlgorithm: ConflictAlgorithm.replace);
-      await txn.update(
-        tablePlaylists,
-        {'updated_at': playlistUpdatedAt},
-        where: 'id = ?',
-        whereArgs: [playlistId],
-      );
     });
   }
 
@@ -452,19 +390,6 @@ class LibraryCollectionsDatabase {
       await batch.commit(noResult: true);
     });
   }
-
-  Future<void> upsertPlaylistTracksFile({
-    required String playlistId,
-    required String playlistUpdatedAt,
-    required String rowsPath,
-    required int expectedCount,
-  }) async => publishPlaylistBatch(
-    database: await database,
-    playlistId: playlistId,
-    updatedAt: playlistUpdatedAt,
-    rowsPath: rowsPath,
-    expectedCount: expectedCount,
-  );
 
   Future<void> deletePlaylistTracks({
     required String playlistId,

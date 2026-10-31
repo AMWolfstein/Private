@@ -83,7 +83,6 @@ class MetadataSeparatorSettingsPage extends ConsumerWidget {
       builder: (_) => _DelimiterSheet(artists: artists),
     );
   }
-
 }
 
 /// One section's sheet: the chip grid, applied as it is tapped, and Add
@@ -123,10 +122,7 @@ class _DelimiterSheetState extends ConsumerState<_DelimiterSheet> {
     final offered = [...choices, ...custom];
     final token = _field.text.trim();
     final valid = TagCreditSettings.isValidDelimiter(token, offered);
-    final duplicate =
-        token.isNotEmpty &&
-        !valid &&
-        isSeparatorToken(token);
+    final duplicate = token.isNotEmpty && !valid && isSeparatorToken(token);
     final error = token.isEmpty || valid
         ? null
         : duplicate
