@@ -6,11 +6,13 @@ import java.io.File
 import org.json.JSONArray
 import org.json.JSONObject
 
+// Paths per SAF timestamp lookup; cancellation is checked between chunks.
+private const val SAF_TIMESTAMP_CHUNK = 50
+
 // Independent of Library initialization: palette/metadata jobs can start
 // while app initialization is still running. Acquire before queuing on IO, so
 // a following channel cancellation also reaches work that has not started.
 internal object NativeDataJobs {
-    private const val SAF_TIMESTAMP_CHUNK = 50
     private val registry = CancellationRegistry()
     private val active = mutableMapOf<String, MutableList<RequestLease>>()
 
