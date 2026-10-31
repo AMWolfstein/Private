@@ -24,7 +24,7 @@ report with evidence. Reply in the owner's language; code, records and commit me
 | Question, explanation, "what do you think" about code | Answer from the code with `file:line`. No edits. | none |
 | Discussion or planning ("let's plan", "عاوز نعمل خطة", a design question) | `spec` skill, then `plan`. Documents only; no code until the owner says to build. | change folder |
 | Bug or small change: one behaviour, a few files, no contract, schema or format change | `fix` skill | none: test + commit + report |
-| Feature: new behaviour or several files | `work.py new "<title>" --size feature`, then spec → plan → tasks → build → review → ship | change folder |
+| Feature: new behaviour or several files | `work.py new "<title>" --size feature`, then the skills `spec` → `plan` → `implement` (tasks and code; the record's phases are tasks and build) → `review` → `ship` | change folder |
 | Architecture: a migration batch, a Dart ↔ Kotlin ↔ Rust contract, playback engine, database, backup or file format | `work.py new "<title>" --size architecture`: as feature, plus fresh-context design review | change folder |
 | Review or audit ("راجع", "افحص") | `review` skill, read-only. Findings only unless the owner asks for fixes. | findings |
 | Commit, push, APK, release | `ship` skill. Push and APK only when asked now. | none |

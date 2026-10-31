@@ -13,8 +13,8 @@ feature, an architecture change, a review or a release, and follows the matching
 |---|---|---|
 | Constitution checked by every plan; spec (what and why) before plan (how) before tasks; at most 3 clarification markers; one question at a time; requirement-quality check; cross-artifact consistency; "a ticked task is not evidence" | github/spec-kit | `work/constitution.md`, `work/templates/`, `spec`, `plan`, `review` skills, `work.py lint` and `advance` |
 | The author holds context and writes a self-contained document; fresh reviewers with no history paraphrase it first; findings are fixed, contested with checkable evidence, escalated or declined; two consecutive clean rounds; drift between design and code | google/elephant-goldfish-model | `plan` and `review` skills, `goldfish-reader`, `design-critic`, `code-reviewer`, `work.py packet` and `round`, the Close section |
-| Plans with a check per step, bounded attempts, "same failure twice: question the assumption", evidence in the same message as the claim, append-only log, repeated mistakes become enforced checks | aicodeking/deepseek-stack | `build`, `fix` and `ship` skills, `log.md`, `work/LESSONS.md` |
-| Read callers before editing; the reuse ladder; economical solution, complete change; the never-cut list; `shortcut:` comments; review sweep order with a concrete case per finding | DietrichGebert/ponytail | `fix` and `build` skills, constitution article III, `code-reviewer` |
+| Plans with a check per step, bounded attempts, "same failure twice: question the assumption", evidence in the same message as the claim, append-only log, repeated mistakes become enforced checks | aicodeking/deepseek-stack | `implement`, `fix` and `ship` skills, `log.md`, `work/LESSONS.md` |
+| Read callers before editing; the reuse ladder; economical solution, complete change; the never-cut list; `shortcut:` comments; review sweep order with a concrete case per finding | DietrichGebert/ponytail | `fix` and `implement` skills, constitution article III, `code-reviewer` |
 | Mechanical evidence kept apart from judgment review; blind review packets without targets; finding statuses with evidence; a finding that disappears is not fixed | peteromallet/desloppify | `work.py check` and `packet`, `findings.md` statuses, `work.py lint` |
 
 Left out on purpose: scores (they can be gamed and do not measure correctness), installed CLIs, swarms of
@@ -27,7 +27,7 @@ reviewers, and records for small fixes.
 | Question | Answer from the code with file:line |
 | Discussion or plan | `work.py new`, spec with the owner, then plan; no code until the owner says build |
 | Small fix | Cause → regression test → change → `work.py prove` → `work.py check auto` → commit → report |
-| Feature | spec → plan → tasks → build → one fresh code review → ship |
+| Feature | spec → plan → tasks → implement → one fresh code review → ship |
 | Architecture, migration batch, contracts, data formats | as feature, plus fresh design review until two consecutive clean rounds |
 | Review or audit | read-only findings |
 
