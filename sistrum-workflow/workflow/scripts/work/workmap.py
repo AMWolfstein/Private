@@ -531,8 +531,9 @@ def build(root: Path, config: dict, tool: dict, current: dict) -> dict:
         stats = raw.get('stats', {})
         if stats.get('failed_sources'):
             problems.append(f'graphify failed on {stats["failed_sources"]} file(s); see .work/map/logs/')
-        meta_structure = {'status': 'graphify', 'note': 'Kotlin: tree-sitter AST with calls and references; '
-                          'Dart: Graphify regex extractor (declarations, no call edges)'}
+        meta_structure = {'status': 'graphify', 'note': 'symbols, calls and references from Graphify; Dart '
+                          'declarations are regex-based and have no call edges; Dart and Kotlin imports and channels '
+                          'come from pattern scans'}
     elif files:
         meta_structure = {'status': tool['status'], 'note': tool.get('reason', '')}
     file_info = {path: {'lang': language(path), 'test': is_test(path), 'blob': current['files'][path]}
@@ -553,8 +554,16 @@ def build(root: Path, config: dict, tool: dict, current: dict) -> dict:
             'declarations': declarations, 'problems': problems}
 
 
+LANGUAGE_BY_SUFFIX = {'.dart': 'dart', '.kt': 'kotlin', '.kts': 'kotlin', '.rs': 'rust', '.c': 'c', '.h': 'c',
+                      '.cpp': 'cpp', '.cc': 'cpp', '.cxx': 'cpp', '.hpp': 'cpp', '.java': 'java', '.py': 'python',
+                      '.swift': 'swift', '.sh': 'shell', '.bash': 'shell', '.gradle': 'gradle'}
+
+
 def language(path: str) -> str:
-    return {'.dart': 'dart', '.kt': 'kotlin', '.kts': 'kotlin'}.get(posixpath.splitext(path)[1], 'other')
+    """Language of a corpus file: Dart and Kotlin get bridge and import handling; the rest get
+    Graphify's AST symbols and calls only."""
+    suffix = posixpath.splitext(path)[1]
+    return LANGUAGE_BY_SUFFIX.get(suffix, 'other')
 
 
 def run_adapter(root: Path, files: list[str], config: dict, tool: dict) -> dict:
@@ -642,9 +651,10 @@ def normalize(raw: dict, corpus: set[str]) -> tuple[list[dict], list[dict], list
         if relation == 'method' and source in kept and target in kept:
             owners[target] = kept[source]['name']
         confidence = str(edge.get('confidence', 'EXTRACTED')).upper()
-        via = 'graphify:kotlin-ast' if lang == 'kotlin' else 'graphify:dart-regex'
+        # Dart is extracted by Graphify's regex extractor (no call edges); other languages by tree-sitter.
+        via = 'graphify:dart-regex' if lang == 'dart' else f'graphify:{lang}-ast'
         if confidence == 'EXTRACTED':
-            label = fact('extracted', via, 'high' if lang == 'kotlin' else 'medium')
+            label = fact('extracted', via, 'medium' if lang == 'dart' else 'high')
         else:
             label = fact('inferred', via + ':resolver', 'low' if confidence == 'AMBIGUOUS' else 'medium')
         item = {'source': kept[source]['id'] if source in kept else 'file:' + file_ids[source],

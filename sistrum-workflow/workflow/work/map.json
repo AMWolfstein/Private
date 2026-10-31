@@ -2,7 +2,7 @@
   "version": 1,
   "notes": [
     "Configuration of the code map (work.py map / context). Schema and rules: workflow/work/guides/map.md.",
-    "Globs use fnmatch: '*' crosses '/'. A path is in the corpus when it matches include, is not ignored by git, and matches no exclude unless it also matches an exception.",
+    "Globs use fnmatch: '*' crosses '/'. A path is in the corpus when it matches include, is not ignored by git, and matches no exclude unless it also matches an exception. Default include: source code of the languages Graphify extracts. JSON, YAML, XML, project and lock files are configuration or data, not code, and are not indexed.",
     "extractor.version pins Graphify (PyPI package graphifyy). Another installed version is reported as unverified and not used unless allow_unverified is true."
   ],
   "extractor": {
@@ -14,19 +14,89 @@
     "timeout": 900
   },
   "corpus": {
-    "include": ["*.dart", "*.kt"],
+    "include": [
+      "*.dart",
+      "*.kt",
+      "*.kts",
+      "*.rs",
+      "*.c",
+      "*.h",
+      "*.cpp",
+      "*.cc",
+      "*.cxx",
+      "*.hpp",
+      "*.java",
+      "*.py",
+      "*.swift",
+      "*.sh",
+      "*.bash",
+      "*.gradle",
+      "*.cs",
+      "*.go",
+      "*.js",
+      "*.jsx",
+      "*.ts",
+      "*.tsx",
+      "*.m",
+      "*.mm",
+      "*.rb",
+      "*.php",
+      "*.scala",
+      "*.lua",
+      "*.zig",
+      "*.ps1"
+    ],
     "exclude": [
-      "workflow/*", ".work/*", "graphify-out/*", "build/*", "*/build/*", ".dart_tool/*", "*/.dart_tool/*",
-      "*.g.dart", "*.freezed.dart", "*.gr.dart", "*.mocks.dart", "*.pb.dart", "*.pbenum.dart", "*.pbjson.dart",
-      "lib/l10n/app_localizations*.dart", "*/generated/*", "third_party/*", "vendor/*", "reference/*"
+      ".*/*",
+      ".*",
+      "workflow/*",
+      ".work/*",
+      "graphify-out/*",
+      "build/*",
+      "*/build/*",
+      ".dart_tool/*",
+      "*/.dart_tool/*",
+      "*/.gradle/*",
+      ".git/*",
+      "*/node_modules/*",
+      "*.g.dart",
+      "*.freezed.dart",
+      "*.gr.dart",
+      "*.mocks.dart",
+      "*.pb.dart",
+      "*.pbenum.dart",
+      "*.pbjson.dart",
+      "lib/l10n/app_localizations*.dart",
+      "*/generated/*",
+      "*/bindings/*",
+      "third_party/*",
+      "*/vendor/*",
+      "vendor/*",
+      "reference/*",
+      "reviews/*",
+      "new workflow/*",
+      "docs/*"
     ],
     "exceptions": []
   },
   "bridges": {
-    "dart_channel_types": ["MethodChannel", "OptionalMethodChannel", "EventChannel", "BasicMessageChannel"],
-    "dart_invoke_methods": ["invokeMethod", "invokeMapMethod", "invokeListMethod"],
+    "dart_channel_types": [
+      "MethodChannel",
+      "OptionalMethodChannel",
+      "EventChannel",
+      "BasicMessageChannel"
+    ],
+    "dart_invoke_methods": [
+      "invokeMethod",
+      "invokeMapMethod",
+      "invokeListMethod"
+    ],
     "dart_wrappers": [],
-    "kotlin_channel_types": ["MethodChannel", "EventChannel", "BasicMessageChannel"]
+    "kotlin_channel_types": [
+      "MethodChannel",
+      "EventChannel",
+      "BasicMessageChannel"
+    ]
   },
   "context": {
     "budget_tokens": 2500,
