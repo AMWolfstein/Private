@@ -1844,7 +1844,7 @@
   "@homeSearchHintDefault": {
     "description": "Default placeholder for the main search field on Home"
   },
-  "tutorialSearchHint": "Вставити або шукати...",
+  "tutorialSearchHint": "Пошук у вашій медіатеці...",
   "@tutorialSearchHint": {
     "description": "Placeholder shown in the tutorial search demo"
   },

@@ -1497,7 +1497,7 @@
   "notifLibraryScanPaused": "Análise da biblioteca pausada",
   "notifLibraryScanPausedBody": "{count} ficheiros analisados. Retome nas definições da Biblioteca Local para continuar a partir daqui.",
   "homeSearchHintDefault": "Pesquise na sua biblioteca...",
-  "tutorialSearchHint": "Cole ou pesquise...",
+  "tutorialSearchHint": "Pesquise na sua biblioteca...",
   "trackCoverNoEmbeddedArt": "Nenhuma capa incorporada encontrada",
   "trackCoverReplace": "Substituir capa",
   "trackCoverPick": "Escolher capa",

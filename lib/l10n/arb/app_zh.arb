@@ -1788,7 +1788,7 @@
   "@homeSearchHintDefault": {
     "description": "Default placeholder for the main search field on Home"
   },
-  "tutorialSearchHint": "Paste or search...",
+  "tutorialSearchHint": "搜索你的音乐库...",
   "@tutorialSearchHint": {
     "description": "Placeholder shown in the tutorial search demo"
   },

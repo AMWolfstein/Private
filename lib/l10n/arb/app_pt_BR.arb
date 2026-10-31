@@ -1844,7 +1844,7 @@
   "@homeSearchHintDefault": {
     "description": "Default placeholder for the main search field on Home"
   },
-  "tutorialSearchHint": "Paste or search...",
+  "tutorialSearchHint": "Pesquise na sua biblioteca...",
   "@tutorialSearchHint": {
     "description": "Placeholder shown in the tutorial search demo"
   },

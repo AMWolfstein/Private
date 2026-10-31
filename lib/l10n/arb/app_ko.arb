@@ -1844,7 +1844,7 @@
   "@homeSearchHintDefault": {
     "description": "Default placeholder for the main search field on Home"
   },
-  "tutorialSearchHint": "붙여넣기 또는 검색하기...",
+  "tutorialSearchHint": "내 라이브러리에서 검색...",
   "@tutorialSearchHint": {
     "description": "Placeholder shown in the tutorial search demo"
   },

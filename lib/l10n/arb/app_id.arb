@@ -1854,7 +1854,7 @@
   "@homeSearchHintDefault": {
     "description": "Default placeholder for the main search field on Home"
   },
-  "tutorialSearchHint": "Tempel atau telusuri...",
+  "tutorialSearchHint": "Telusuri pustaka Anda...",
   "@tutorialSearchHint": {
     "description": "Placeholder shown in the tutorial search demo"
   },

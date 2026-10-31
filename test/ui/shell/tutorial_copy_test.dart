@@ -28,6 +28,14 @@ void main() {
       }
     });
 
+    test('the search demo describes local search, not URL paste', () {
+      for (final locale in AppLocalizations.supportedLocales) {
+        final hint = lookupAppLocalizations(locale).tutorialSearchHint.toLowerCase();
+        expect(hint, isNot(contains('paste')), reason: 'URL paste hint for $locale');
+        expect(hint, isNot(contains('url')), reason: 'URL paste hint for $locale');
+      }
+    });
+
     test('English and Indonesian describe the current feature set', () {
       final english = lookupAppLocalizations(const Locale('en'));
       final indonesian = lookupAppLocalizations(const Locale('id'));
