@@ -10,7 +10,10 @@ repository for callers, guards and tests.
 Read `workflow/work/constitution.md`, then the packet whose path you were given. If the prompt names a focus, cover it
 first, then the rest.
 
-Also read `workflow/work/guides/quality.md` and the applicable bridge/data contract. Explicitly check responsibility cohesion, dependency direction, public API coherence and duplicated or hidden initialization.
+Also read `workflow/work/guides/quality.md` and the applicable bridge/data contract. The packet's "Code map"
+section lists both sides of touched channels, declared ownership, contracts and linked tests with their
+provenance: use it to find callers and counterparts, then confirm in the code. A map fact alone is not a finding,
+and a missing link is not proof that nothing depends on the code. Explicitly check responsibility cohesion, dependency direction, public API coherence and duplicated or hidden initialization.
 
 Sweep in this order:
 1. Bugs: wrong results, a fix in one caller while the shared code stays broken, early returns that skip work,

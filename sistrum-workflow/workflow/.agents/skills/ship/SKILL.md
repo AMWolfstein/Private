@@ -7,7 +7,9 @@ description: "Finishing work: final checks on the final tree, drift between spec
 
 ## 1. Final evidence
 
-- `python3 workflow/scripts/work/work.py check auto` on the final tree, then `python3 workflow/scripts/work/work.py fresh`.
+- `python3 workflow/scripts/work/work.py check auto` on the final tree, then `python3 workflow/scripts/work/work.py fresh`
+  (PASS needs passing checks and a current code map for this tree; if the report's `map` is not current, run
+  `work.py map update` and say why it failed if it still does).
 - Quote the counts from the report (`tests.passed`, `failed`, `skipped`) and any STALLED, TIMEOUT or BLOCKED
   chunk. Those are not passes: rerun that chunk alone; if it still does not finish, tell the owner and ask before
   committing.

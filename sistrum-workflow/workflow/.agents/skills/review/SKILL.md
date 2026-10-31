@@ -14,7 +14,9 @@ description: "Independent code review in a fresh, read-only context, and owner-r
 ## 1. Mechanical first
 
 `python3 workflow/scripts/work/work.py check auto` and `python3 workflow/scripts/work/work.py lint <NNN>`. Tool output is
-evidence, kept separate from the reviewers' judgment. Fix mechanical failures before asking a reviewer.
+evidence, kept separate from the reviewers' judgment. Fix mechanical failures before asking a reviewer. The
+check run refreshes the code map; the packet then carries map facts for the changed files (both channel sides,
+declared ownership, contracts, linked tests) as leads for the reviewer, not as findings or proof.
 
 ## 2. Convergence
 
@@ -46,7 +48,8 @@ For an audit the owner asked for, stop here and present the findings by severity
 
 ## 5. Rounds
 
-`python3 workflow/scripts/work/work.py round <NNN> code clean|dirty --reviewer code-reviewer`. After fixes, the next packet
+`python3 workflow/scripts/work/work.py round <NNN> code clean|dirty --reviewer code-reviewer` (a clean round needs a current
+code map and records it). After fixes, the next packet
 covers the changed code and the open findings, not the whole project again. At most 4 rounds; then list what is
 open and ask the owner. `work.py advance <NNN> ship` requires the last round to be clean on the current tree,
 so any edit after a clean round needs one more round.

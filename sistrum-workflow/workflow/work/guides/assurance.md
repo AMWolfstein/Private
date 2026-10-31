@@ -63,6 +63,10 @@ scope acceptance. Non-applicable sections use `{"applies": false, "reason": "spe
 Prerequisites are existing change IDs whose phase is done; missing, unfinished or cyclic dependencies block.
 For a passed device case add `evidence` identifying the actual report, device/API and source revision.
 
+The code map reads these declarations (never writes them): bridge contracts are attached to the channels they
+name and to the files they cite, port components to the files under their destination, and `work.py context`
+shows them, with the change's current phase, whenever a packet touches those files or channels.
+
 The manifest appears in review packets and fingerprints. Editing it invalidates design and code reviews;
 complete or update its evidence before recording clean rounds. Re-review changes rather than reusing old approval.
 

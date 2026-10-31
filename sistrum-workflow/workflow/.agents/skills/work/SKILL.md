@@ -14,8 +14,14 @@ report with evidence. Reply in the owner's language; code, records and commit me
    paths. If a change is active and the request belongs to it, continue it from its records.
 2. Know the rules: `workflow/work/constitution.md` (always), accepted specs in `workflow/work/changes/` (product decisions), and for engine work
    `docs/AUDIO_ENGINE_MIGRATION.md`.
-3. Restate the goal in one line to yourself. Find the code before deciding the size: use `graphify query` if a
-   fresh `graphify-out/` exists, otherwise targeted `rg` on strings, symbols and imports.
+3. Restate the goal in one line to yourself. Find the code before deciding the size, without reading whole
+   files or reports first: `python3 workflow/scripts/work/work.py context "<identifiers or English words>"`
+   (add `--file`/`--symbol` once you know a starting point; screenshot text → `rg` the arb key first, then
+   `--file` the widget). It refreshes a stale map and returns entry points, both sides of affected channels,
+   declared ownership and contracts, linked tests and checks, and what is uncertain. Open only the files it
+   points to. A FALLBACK section is text search, not graph evidence; confirm with `rg` and by reading code.
+4. Read only the guidance the packet lists under "Guidance to read" plus the skill for the chosen path. The
+   packet's facts are leads with provenance; a claim about the code still needs the code itself.
 
 ## Choose the path
 
@@ -44,6 +50,9 @@ Size by consequence, not by effort. After the first edits run `python3 workflow/
   as a suggestion instead.
 - After compaction or in a new session: `work.py status`, the change's `log.md` and `git log -5` tell you where
   you are. Re-run the last recorded check before trusting it.
+- After each completed batch of edits, before the next graph-dependent step: `work.py map update` (or a
+  `work.py check` run, which refreshes it). Renames, deletions and channel or contract changes count. Edits made
+  outside the workflow are detected at the next workflow command, not when they happen.
 
 ## Report format
 

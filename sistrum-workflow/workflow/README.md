@@ -1,8 +1,9 @@
 # Sistrum workflow
 
-A repo-local engineering workflow for coding agents. Nothing to install: the
-skills and reviewer agents are Markdown, the tool is one Python 3.10+ standard-library script, and the checks are
-the repository's own commands.
+A repo-local engineering workflow for coding agents. The skills and reviewer agents are Markdown, the tool is
+standard-library Python 3.10+, and the checks are the repository's own commands. The code map can use the pinned
+Graphify (optional, `pip install graphifyy==0.9.97`); without it the map keeps imports, channels, tests and
+declarations and says that structure is unavailable.
 
 The owner talks normally. The `work` skill decides whether a request is a question, a discussion, a small fix, a
 feature, an architecture change, a review or a release, and follows the matching path.
@@ -16,6 +17,7 @@ feature, an architecture change, a review or a release, and follows the matching
 | Plans with a check per step, bounded attempts, "same failure twice: question the assumption", evidence in the same message as the claim, append-only log, repeated mistakes become enforced checks | aicodeking/deepseek-stack | `implement`, `fix` and `ship` skills, `log.md`, `workflow/work/LESSONS.md` |
 | Read callers before editing; the reuse ladder; economical solution, complete change; the never-cut list; `shortcut:` comments; review sweep order with a concrete case per finding | DietrichGebert/ponytail | `fix` and `implement` skills, constitution article III, `code-reviewer` |
 | Mechanical evidence kept apart from judgment review; blind review packets without targets; finding statuses with evidence; a finding that disappears is not fixed | peteromallet/desloppify | `work.py check` and `packet`, `findings.md` statuses, `work.py lint` |
+| Small, current, scoped context from a code graph instead of whole files or reports | Graphify-Labs/graphify (AST extraction only) | `work.py map` and `context`, `workflow/work/map.json`, `workflow/work/architecture.json`, [map guide](work/guides/map.md) |
 
 Left out on purpose: scores (they can be gamed and do not measure correctness), installed CLIs, swarms of
 reviewers, and records for small fixes.
@@ -34,10 +36,12 @@ reviewers, and records for small fixes.
 ## Tool
 
 ```sh
-python3 workflow/scripts/work/work.py status            # active changes, freshness of the last checks
+python3 workflow/scripts/work/work.py status            # active changes, freshness of the last checks and of the map
+python3 workflow/scripts/work/work.py context "<task>" [--file P] [--symbol S] [--budget N] [--expand HANDLE]
+python3 workflow/scripts/work/work.py map status|update|build   # code map freshness, incremental update, full rebuild
 python3 workflow/scripts/work/work.py scope             # domains, high-risk paths and checks for the current diff
 python3 workflow/scripts/work/work.py check auto        # run the checks for the changed paths, store evidence
-python3 workflow/scripts/work/work.py fresh             # does the last passing evidence match the tree?
+python3 workflow/scripts/work/work.py fresh             # do the last passing checks and the code map match the tree?
 python3 workflow/scripts/work/work.py prove --expect-failure "<assertion diagnostic>" -- <cmd>
 python3 workflow/scripts/work/work.py new "<title>" --size feature|architecture
 python3 workflow/scripts/work/work.py lint [NNN]        # spec/plan/tasks/findings consistency
@@ -64,6 +68,16 @@ are never reverted. Logs are copied to the original `.work/proofs/`; source edit
 result. Ignored dependencies and caches are not copied: provision dependencies in the isolated checkout through
 the test command if needed. Missing dependencies are INCONCLUSIVE, never proof. Use repository-relative test
 paths; absolute paths may escape isolation. Forced termination may leave a worktree for manual cleanup.
+
+## Code map and context
+
+`work.py context` answers "what do I need to read for this task?" with a bounded packet: entry points, both sides
+of affected Dart ↔ Kotlin channels, declared ownership, contracts and port records, linked tests and checks,
+short excerpts, truncation and expansion commands, and what is uncertain. Every fact is labelled extracted,
+declared or inferred. The map refreshes itself before `context` and `packet`, after `check`, and before review,
+ship and done gates; a clean code round records the map it was reviewed against. Edits made outside the workflow
+are detected at the next workflow command. Details, schemas, freshness rules and limits:
+[map guide](work/guides/map.md).
 
 Project-specific guidance lives in `workflow/work/guides/`: architecture, review lenses, port dispositions, migration
 batches and playback/data contracts. Keep it when installing in a new repository. Historical reference revisions
@@ -93,25 +107,44 @@ new-repository/
     │   ├── skills/
     │   └── reviewers/
     ├── scripts/work/
-    │   ├── work.py
-    │   └── test_work.py
+    │   ├── work.py              # CLI, gates, evidence
+    │   ├── workmap.py           # code map and context
+    │   ├── worklib.py           # shared helpers
+    │   ├── graphify_adapter.py  # process boundary to Graphify
+    │   ├── test_work.py
+    │   ├── test_workmap.py
+    │   └── fixtures/            # mock extractor for tests
     └── work/
         ├── checks.json
+        ├── map.json             # map configuration
+        ├── architecture.json    # reviewed module and constraint declarations (starts empty)
         ├── constitution.md
         ├── LESSONS.md
-        ├── guides/
+        ├── guides/              # includes map.md
         └── templates/
 ```
 
 Keep AGENTS.md at the root: it directs the agent into workflow/. Merge existing AGENTS.md and .gitignore
 rather than overwriting project content. Copy hidden directories too. No dependency on the old repository remains.
 
-Requirements: Git and Python 3.10+, an initialized checkout with at least one commit. From the repository root:
+Requirements: Git and Python 3.10+, an initialized checkout with at least one commit, and POSIX file locking
+(Linux or macOS) for map updates. Optional: Graphify for code structure:
 
 ```sh
-python3 -m unittest discover -s workflow/scripts/work -p 'test_*.py'
-python3 workflow/scripts/work/work.py status
+python3 -m pip install graphifyy==0.9.97          # or set WORK_GRAPHIFY_PYTHON to a Python that has it
 ```
+
+From the repository root:
+
+```sh
+python3 -m unittest discover -s workflow/scripts/work -p 'test_*.py'   # RealGraphify tests skip without Graphify
+python3 workflow/scripts/work/work.py status
+python3 workflow/scripts/work/work.py map update
+```
+
+An empty repository is a valid start: the map is built with zero files and fills in as code arrives. Map
+declarations start empty (`architecture.json`); add modules only for paths that exist and decisions that were
+made. Do not copy an old repository's `graphify-out/` or `.work/`.
 
 Make the agent read root AGENTS.md if it does not discover it automatically. All commands run from the repository
 root, not inside workflow/. Runtime logs remain in root `.work/`, ignored by the supplied .gitignore.
@@ -129,6 +162,8 @@ uses another entry convention. Do not duplicate the skills into provider-specifi
 
 If your agent supports hooks, wire session start to `python3 workflow/scripts/work/work.py status --brief`, new requests
 to `python3 workflow/scripts/work/work.py remind`, and shell preflight to `python3 workflow/scripts/work/work.py hook-bash`.
+A post-edit hook may run `python3 workflow/scripts/work/work.py map update`; it only saves the refresh that the next
+`context`, `check`, `round` or gate would otherwise do.
 The shell guard accepts JSON on stdin: `{"tool_input": {"command": "git status"}}`; exit 2 blocks, exit 0 allows.
 Adapt your agent's event payload and working directory to this interface. Hook names, installation and blocking
 behavior depend on the host agent. Without integration these are explicit commands and instructions, not
@@ -144,3 +179,5 @@ in a fresh context. If those capabilities are unavailable, report self-review; d
 - Host checks never prove device behaviour. Device checks stay pending until the owner runs them.
 - Discovery, hooks and read-only reviewer isolation depend on the host agent. Instructions alone do not
   guarantee enforcement; missing independent-review capability must be reported.
+- The code map's entry points are lexical, Dart has no call edges in Graphify 0.9.97, and channel scans are
+  patterns. A current map says the facts match the tree, not that they are complete; see the map guide.

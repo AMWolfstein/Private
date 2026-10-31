@@ -17,7 +17,9 @@ description: "Turns an accepted plan into tasks.md and implements it one verifie
 
 ## Each task
 
-1. Run the task's check before editing, to see the starting state.
+1. Run the task's check before editing, to see the starting state. Get the task's context with
+   `python3 workflow/scripts/work/work.py context "<task>" --file <files the task names>`: callers, both channel
+   sides, declared ownership and contracts, linked tests. Read those files, not the whole area.
 2. Choose the change: not needed; already in the codebase; Flutter, Android or Media3 provides it; an installed
    dependency; the least new code. Complete it: callers, tests, fixtures, all arb files, settings, backup keys.
 3. Rerun the exact check and read the whole output. Root cause in one sentence for every failure.
@@ -25,11 +27,14 @@ description: "Turns an accepted plan into tasks.md and implements it one verifie
    shared, test it, and change approach. Still stuck: stop and tell the owner what you tried and what you need.
 5. Never weaken, skip or delete a test, assertion or lint to pass. Never mock away the thing under test.
 6. Mark `[x]` only after the check passed, and append one line to `log.md`: date, task, command, result.
+7. After the task's edits (including renames, deletions and bridge/contract changes) run
+   `python3 workflow/scripts/work/work.py map update` before the next task asks for context.
 
 ## Boundaries
 
 - A Dart ↔ Kotlin channel change is tested on both sides with the same cases; a mocked channel test does not
-  prove the Kotlin side.
+  prove the Kotlin side. `work.py context --expand bridge:<channel>` lists every command with both endpoints;
+  commands reported as unresolved or "no handler found" need reading, not trust.
 - Kotlin, C++ or Rust changes run their checks (`work.py check auto` selects them by path).
 - Behaviour that must survive the app closing is tested on the Android side, and listed for device checks.
 - Shortcuts carry `shortcut: <limit>, <when to upgrade>` and are listed in the report.

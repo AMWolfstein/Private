@@ -1,6 +1,6 @@
 # Architecture contract
 
-Status: target responsibilities, not a claim about current files. Map these roles onto actual paths during bootstrap. Keep names and folders minimal; add modules only for real ownership boundaries.
+Status: target responsibilities, not a claim about current files. Map these roles onto actual paths in `workflow/work/architecture.json` once the paths exist (modules with responsibility, owned state, allowed dependencies; constraints with forbidden imports; each `reviewed` or `proposed` with its source). Keep names and folders minimal; add modules only for real ownership boundaries.
 
 ## Direction and ownership
 
@@ -23,7 +23,7 @@ Background native jobs and playback need explicit cancellation/commit semantics.
 
 | Rule | Evidence required | Current automation |
 |---|---|---|
-| Layer direction and single state owner | Imports, direct callers, architecture review | Analyzer alone is insufficient; add focused rule only after paths exist |
+| Layer direction and single state owner | Imports, direct callers, architecture review | `work.py context` reports possible import-level violations of `architecture.json` `may_depend_on`/`forbid_imports`; ownership itself is review judgment |
 | Channel compatibility | Dart and Kotlin contract tests with shared cases | Must be implemented in app; starter provides contract checklist |
 | Publication and cancellation | Failure-injection and lifecycle tests | Must be implemented per operation |
 | Background operation without Dart | Android service/device tests | Device gate, never a host-mock pass |

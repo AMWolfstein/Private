@@ -11,6 +11,9 @@ No change folder. The record is the regression test, the commit and the report.
 
 - Start from what the owner sees. Text on a screenshot leads to an `lib/l10n/arb/app_en.arb` key, the key to the
   widget, the widget to its handler and state.
+- Once you have a starting file, `python3 workflow/scripts/work/work.py context "<symptom words>" --file <path>`
+  lists its importers (Dart callers are approximated by importers), Kotlin callers and callees, both sides of
+  any channel it touches, and its linked tests. Use it instead of reading neighbouring files whole.
 - Follow the flow to the state that is wrong, and read who else writes it. Lifecycle callbacks (resume, dispose,
   route changes), async gaps and early `return`s inside `try` are common culprits.
 - Write the root cause in one sentence before editing. If you cannot, observe: add a test or a log line that
@@ -53,7 +56,7 @@ the run invalidate the result.
    different fixes, write down the assumption both shared, test that assumption, and change approach.
 2. `python3 workflow/scripts/work/work.py check auto` for the full checks of every touched area (Dart analyze and the
    whole suite by folder; Android and Rust checks when those paths changed). Run it in the background and keep
-   the owner informed.
+   the owner informed. It also refreshes the code map; `work.py fresh` needs both to match the final tree.
 3. STALLED, TIMEOUT or BLOCKED is not a pass. Re-run the affected chunk alone; if it still does not finish, tell
    the owner which chunk, what passed, and ask before committing.
 

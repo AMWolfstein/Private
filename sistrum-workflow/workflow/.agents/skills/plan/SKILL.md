@@ -11,7 +11,9 @@ understand and check it.
 ## Write plan.md
 
 1. Facts first: how the current system works, with `file:line`, who calls the code you will change, and what
-   tests cover it today. Read the code; do not describe it from memory or from the reference app.
+   tests cover it today. Start from `python3 workflow/scripts/work/work.py context "<change>" --file <path>`
+   (`--depth 2` adds the channels of import neighbours), then read the code it points to; do not describe the
+   system from memory, from the reference app or from the packet alone.
 2. Design, in the template's rows: ownership and dependency direction, contracts across Dart, Kotlin and Rust,
    threads and lifecycle, failure and publication, data compatibility, and what gets removed with proof.
 3. Decisions as `PD-n` with rationale and the alternatives considered. Prefer existing code, then Flutter,
@@ -30,8 +32,9 @@ A feature-size plan can be short: "unchanged" and "none" are fine answers.
 - Pin today's behaviour first: port the existing Dart tests as the specification before the Kotlin code
   (section 6.1), and run old and new on the same inputs where both exist (section 10.4: song IDs, schemas,
   backups, cover keys, tag output, CUE results must stay byte-compatible).
-- Remove old code only after the replacement's acceptance passes, with a reference inventory (graphify or `rg`)
-  proving nothing still uses it. Record the source commit of anything ported, and keep licence headers.
+- Remove old code only after the replacement's acceptance passes, with a reference inventory (`work.py context
+  --expand file:<path>` for importers, callers and channels, plus `rg` for strings and dynamic uses the map
+  cannot see) proving nothing still uses it. Record the source commit of anything ported, and keep licence headers.
 
 ## Design review (required for architecture, optional for feature)
 
@@ -62,7 +65,10 @@ items, and, for architecture, a plan changed after its last clean review round.
 
 ## Project guidance
 
-Read `workflow/work/guides/architecture.md` and the relevant contract in `workflow/work/guides/contracts/`. For ports, also read `workflow/work/guides/port.md` and `workflow/work/guides/migration.md`. The migration guide carries historical references: verify the actual reference revision and accepted decisions before importing. In a new repository preserve these guides; do not rely on an absent external plan. Later explicit owner decisions and the current accepted migration plan supersede historical summaries. Record conflicts rather than silently choosing.
+Read `workflow/work/guides/architecture.md` and the relevant contract in `workflow/work/guides/contracts/`.
+When a design creates or moves an ownership boundary, propose its `workflow/work/architecture.json` module
+(paths, responsibility, owns, may_depend_on) in plan.md; record it with `status: reviewed` only after the design
+review and the owner's acceptance (schema: `workflow/work/guides/map.md`). For ports, also read `workflow/work/guides/port.md` and `workflow/work/guides/migration.md`. The migration guide carries historical references: verify the actual reference revision and accepted decisions before importing. In a new repository preserve these guides; do not rely on an absent external plan. Later explicit owner decisions and the current accepted migration plan supersede historical summaries. Record conflicts rather than silently choosing.
 
 ## Executable assurance
 
