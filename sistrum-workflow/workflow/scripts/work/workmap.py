@@ -143,7 +143,7 @@ def depth_at(text: str) -> list[int]:
 
 DEFAULT_CONFIG = {
     'version': 1,
-    'extractor': {'name': 'graphify', 'package': 'graphifyy', 'version': '0.9.97', 'enabled': True,
+    'extractor': {'name': 'graphify', 'package': 'graphifyy', 'version': '0.9.97', 'enabled': False,
                   'allow_unverified': False, 'timeout': 900},
     'corpus': {'include': ['*.dart', '*.kt'], 'exclude': [], 'exceptions': []},
     'bridges': {'dart_channel_types': ['MethodChannel', 'OptionalMethodChannel', 'EventChannel',

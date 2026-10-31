@@ -9,7 +9,7 @@
     "name": "graphify",
     "package": "graphifyy",
     "version": "0.9.97",
-    "enabled": true,
+    "enabled": false,
     "allow_unverified": false,
     "timeout": 900
   },

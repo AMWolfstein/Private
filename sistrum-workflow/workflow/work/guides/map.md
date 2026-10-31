@@ -7,11 +7,15 @@ The map never proves that tests pass, that the architecture is right or that a r
 
 ## Install
 
-Graphify is optional and pinned. Without it the map still holds imports, channels, tests and declarations
-(structure `unavailable`), and every packet says so.
+Graphify is off by default (`extractor.enabled: false` in `workflow/work/map.json`, status `disabled`). Nothing
+needs installing: without it the map still holds imports, channels, tests and declarations, and every packet says
+structure is disabled. Dart and Kotlin are covered by pattern scans either way.
+
+To add symbols, calls and references for the other languages, install the pinned version and enable it:
 
 ```sh
 python3 -m pip install graphifyy==0.9.97   # PyPI name has two y's; the module is `graphify`
+# then set "enabled": true under "extractor" in workflow/work/map.json
 python3 workflow/scripts/work/work.py map update
 ```
 
@@ -27,7 +31,7 @@ python3 workflow/scripts/work/work.py map update
 - Another installed version is reported `unverified` and not used. To move the pin: install the new version,
   run `python3 -m unittest workflow.scripts.work.test_workmap` (the `RealGraphify` smoke tests must run, not
   skip), check the Dart/Kotlin notes below, then change `extractor.version` in `workflow/work/map.json`.
-- `WORK_MAP_STRUCTURE=off` or `extractor.enabled: false` turns extraction off explicitly (status `disabled`).
+- `extractor.enabled` defaults to `false`. `WORK_MAP_STRUCTURE=off` also forces it off for one run (status `disabled`).
 
 ## Commands
 

@@ -185,6 +185,7 @@ def install(target: Path):
 
 class Repo(unittest.TestCase):
     files = FIXTURE
+    structure_on = True  # Graphify is off by default; the adapter tests switch it on in their repo
 
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory(prefix='map test ')
@@ -194,6 +195,11 @@ class Repo(unittest.TestCase):
         sh(self.root, 'git', 'config', 'user.email', 't@example.com')
         sh(self.root, 'git', 'config', 'user.name', 't')
         install(self.root)
+        if self.structure_on:
+            config_path = self.root / 'workflow/work/map.json'
+            data = json.loads(config_path.read_text())
+            data['extractor']['enabled'] = True
+            config_path.write_text(json.dumps(data, indent=2))
         for path, text in self.files.items():
             self.write(path, text)
         self.commit('base')
@@ -226,6 +232,21 @@ class Repo(unittest.TestCase):
         data = json.loads(path.read_text())
         change(data)
         path.write_text(json.dumps(data, indent=2))
+
+
+class DefaultOffTests(Repo):
+    """The shipped configuration: no Graphify, no adapter, the map still builds and says so."""
+    structure_on = False
+
+    def test_default_config_disables_graphify_and_builds_without_it(self):
+        self.assertFalse(json.loads((self.root / 'workflow/work/map.json').read_text())['extractor']['enabled'])
+        result = self.update()
+        self.assertEqual(result['structure']['status'], 'disabled')
+        self.assertEqual(self.state(), 'current')
+        data = self.data()
+        self.assertEqual(data['symbols'], [])
+        self.assertTrue(data['deps'], 'Dart and Kotlin imports still come from the pattern scans')
+        self.assertFalse((self.root / '.work/map/graphify').exists())
 
 
 class MockedAdapterFreshnessTests(Repo):
