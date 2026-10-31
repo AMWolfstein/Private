@@ -1,17 +1,13 @@
-# Sistrum: complete record of changes
+# Sistrum: complete record of changes, decisions and working rules
 
-This file brings together, in one place, everything changed in this repository on top of the original project at
-version 5.1.1. It is a summary. The detailed evidence for each entry stays in the files listed at the end.
+This file is the single record of what was done to this project, from the original 5.1.1 release to today
+(2026-10-31). It covers three things: what changed, the decisions behind it, and the rules the work follows.
 
-- Starting point: the original project 5.1.1 (upstream `5a895265`), an online, extension-driven music downloader
-  for Android and iOS.
-- End point: branch `desloppify/code-health`, commit `7cacbc4` (2026-10-31). The app is Sistrum, a local, offline,
-  Android-only music player, version 1.0.0+1.
+- Starting point: the original project 5.1.1, an online, extension-driven music downloader for Android and iOS.
+- Today: **Sistrum 1.0.0**, a local, offline, Android-only music player.
 - Period: 2026-10-16 to 2026-10-31.
-- The clone is shallow: git history here starts on 2026-10-29. Earlier commit IDs come from
-  `LOCAL_OFFLINE_MIGRATION_PLAN.md` and cannot be checked in this clone.
-- Test counts are the results recorded at each step. Nothing listed here was tested on an Android device unless it
-  says so.
+- Unless a section says otherwise, nothing here was tested on an Android device; host checks never count as
+  device checks.
 
 ## 1. Summary
 
@@ -20,205 +16,343 @@ version 5.1.1. It is a summary. The detailed evidence for each entry stays in th
 | Purpose | Download music from online providers through extensions | Play the music files already on the device |
 | Platforms | Android and iOS | Android only |
 | Network use | Providers, extensions, SMB/WebDAV, Discord, updater, remote config | Only the GitHub release updater |
-| Rust workspace | `core`, `network`, `providers`, `extensions`, `mobile`, `bindgen` | `core`, `local`, `mobile`, `bindgen` |
+| Native backend | Rust with online crates (network, providers, extensions) | Rust with local crates only (core, local, mobile, bindgen) |
 | Look | Several themes and a theme picker | Sistrum theme only, light and dark, liquid glass |
-| Name and ID | Original name and package | Sistrum, `com.amwolfstein.sistrum` (side-by-side build: Sistrum Local, `.local`) |
-| Flutter tests | not recorded here | 2,281 passed (2026-10-31), `flutter analyze` clean |
-| Rust tests | not recorded here | core 7 and mobile 91 passing; clippy clean with `-D warnings` |
+| Name | The original name and package | Sistrum, `com.amwolfstein.sistrum` (side-by-side build: Sistrum Local) |
+| Tests | — | 2,281 Flutter tests pass, analyzer clean; Rust core and mobile tests pass, clippy clean |
 
-## 2. Owner decisions that shaped the work
+## 2. Decisions
 
-- **D1:** the player reads the local library database. Download history is deleted.
-- **D2:** Home stays, rebuilt from local data.
-- **V1:** Sistrum is the only theme. Light and dark modes, accents, glass and fonts stay.
-- **V2:** the Home feed keeps its editorial card and shelf layout, filled from local data.
-- **V3:** the original artist, album and playlist designs are restored over local data. Artist links open
-  `local_artist_screen.dart`.
-- **V4:** every online setting is removed.
-- **PD1 to PD7** (`PHASE6_DECISIONS.md`): choices made during the download-engine removal, with their later
-  corrections.
-- **Engine plan** (`docs/AUDIO_ENGINE_MIGRATION.md`): D1–D6 decided (GPL-3.0, minSdk 31, drop Direct USB, drop
-  AAudio, CUE plays through Media3, playback moves to Kotlin). D7 (formats with no decoder) is a recommendation, not
-  decided. **None of this plan is implemented yet.**
+### Direction
+- The app becomes a local, offline, Android-only music player.
+- The player and queue read the local library database. Download history is deleted.
+- Home stays, rebuilt from local data.
+- Sistrum is the only theme. Light and dark modes, accents, glass and font controls stay.
+- The original artist, album and playlist designs are restored over local data.
+- Every online setting is removed: extensions, providers, downloads, network storage, Discord, remote config,
+  profile, donations.
+- Kept: local storage, playback, lyrics, metadata editing, backup and restore, USB and output-device controls,
+  DSP, AutoMix, ReplayGain, CUE, statistics, widgets.
 
-## 3. Online features removed (phases 1–8)
+### Things that must not come back
+Providers, downloads, extension credentials, remote artwork loading, iOS code, format conversion, Wishlist, the
+separate track details page, player-mode choices and external players, Artist Tag Mode, Embed lyrics, the
+output-folder and download-era Metadata pages, App settings page, Default view and Audio quality label options,
+History View, "Always use blur effects", the Library preview card, search fields inside Library pages, the Home
+Recent access section, and the old download/output-folder setup step.
 
-| Phase | Commit | Removed |
-|---|---|---|
-| 1 | `159a9c2` | `ios/`, `third_party/discord/`, online release tooling, docs and scripts |
-| 2 | `91240e2` | Discord rich presence (Dart, settings, translations, Gradle, manifest, scripts) |
-| 3 | `757ebcc` | Updater, remote config, announcements, donations (the updater came back later, see section 5) |
-| 4 | Phase 4 commit | Network storage: SMB, WebDAV and NAS, the `network://` scheme, `dart_smb2` |
-| 5 | `05bf2fe`, `0567a80`, `83a02c4` | Extension store, repository tab, provider priorities, online metadata autofill and re-enrich, re-download, cross-extension share, hi-res check, previews, Explore feed, weekly releases, artist concerts, motion artwork |
-| 6 | `f3ab83e`, `dfd7f43` | The download engine, the extension registry and track provider. Player and queue re-pointed to the local library |
-| 7 | `a9f63b9`, `fa2afff` | Rust crates `providers`, `network` and `extensions` (126 lockfile packages). New `sistrum-local` crate for scans, CUE, tags, artwork and lyrics. `ExtensionManager` replaced by `LocalBackend`. iOS and Swift build wiring removed |
-| 8 | `8609ad06` | Online Dart dependencies (`http`, `connectivity_plus`, `cached_network_image`, `flutter_cache_manager`, `flutter_secure_storage`, `receive_sharing_intent`, `video_player`, `dynamic_color` and others), online translations, release Internet permission |
+### Product rules (from AGENTS.md)
 
-Phase 7 validation: 1,645 Flutter tests passed with 3 skipped, Rust 215 passed, Kotlin unit tests 63 passed, and
-Android ARM64 and ARMv7 Rust builds passed.
+**Home**
+- Apple Music style editorial cards and shelves over local data, with bounded queries and local artwork.
+- Latest Releases uses valid release-date tags only, in chronological order, with no scan-date fallback.
+- Recently Added stays. There is no Recent access section, and the feed is never replaced by history.
 
-## 4. Features removed later
+**Library**
+- The overview order is Songs, Genres, Loved Songs, Favorite Artists, then Playlists in its own category.
+- Artists and Album Artists are separate lists, with Album Artists directly under Artists.
+- Songs holds only tracks. Genres use exact tag matching against the visible library.
+- Badges use the measured or stored bitrate, with a codec fallback for old lossy files.
+- Library pages have no search field; search lives in the bottom Search tab.
 
-- **Format conversion** (`19a28b3`): single and batch Convert, quality sheets, encoders, converted-file publishing.
-- **Wishlist** (`d44a273`): Library, menus, models, backups. Collections schema v3 drops its table.
-- **Separate track details page** (`26f8e71`): song taps play; its actions moved to the song menu.
-- **Settings pages:** Files & Folders output folder, download-era Metadata, App settings, Embed lyrics, Default
-  view, Audio quality label, History View, Artist Tag Mode, the "Always use blur effects" switch, the local-library
-  on/off switch.
-- **Home Recent access section**, and search inside Library pages (search lives in the bottom tab).
-- **Legacy code** (2026-10-28): download-history database and model, history and extension payloads in backups
-  (backups are now `.sbk`, format v3 only), old-install preference migrations, the library v20 and collections v4
-  schema upgraders, single-folder library settings, iOS code paths, and two dead-code passes over Dart, Kotlin and
-  Rust.
+**Artist page**
+- Opens `local_artist_screen.dart`, with Play centered.
+- Releases are featured by their release-date tags.
+- Singles come only from an explicit total-track tag of 1. EPs stay under Albums.
+- Popular shows at most 20 songs ranked by all-time play counts, with a random but stable order for unplayed
+  songs. It shows five per page with at most four dots.
+- There are no Show-more buttons; discography shelves load more when swiped near their end.
+- Playing the whole artist is not limited by the Popular cap.
+- Appears On sits under Singles.
 
-## 5. Features added or changed
+**Album, playlist and Loved**
+- One centered row: Loved, Play/Pause, Shuffle, Add to playlist. It keeps its order in RTL, and Shuffle never
+  moves to the toolbar.
+- Albums show track numbers. Songs, playlists and Loved show artwork, title with an explicit E, artist, Play and a
+  menu.
+- "Loved Songs" is a display rename only: stored keys and backups keep the old names.
 
-**Identity and builds**
-- Renamed to Sistrum, `com.amwolfstein.sistrum`, across Android source sets, JNI, channels, manifests and copy
-  (T15). Persisted keys and backups keep working through encoded legacy identifiers (T16).
-- Version reset to 1.0.0+1.
-- `SISTRUM_SIDE_BY_SIDE=true` builds Sistrum Local, which installs next to the main app.
-- New launcher icon on a cream background.
+**Song menu**
+- Tapping a song plays it.
+- The menu has Play or Share, Play next, Add to queue, Go to album or artist, Copy file path, Edit Metadata,
+  ReplayGain apply or remove, Audio Quality Analysis and confirmed deletion.
+- CUE rows also have Split into Tracks. Deleting a CUE row keeps the backing audio.
+- The menu is positioned from the tapped button and scrolls when it is long.
 
-**Home and Library**
-- Local Home feed: editorial cards for the latest releases by release-date tag, Recently Added, Albums, Playlists,
-  Artists. Bounded queries, local artwork.
-- Library overview rows: Songs, Genres, Loved Songs, Favorite Artists, Playlists, Artists and a new Album Artists
-  list.
-- Genres from local tags with exact matching.
-- Tag separators (Artists, Genre, Keep together) under Local Library settings. A derived
-  `library_tag_credits` table keeps artist and genre pages, search and shelves consistent.
-- Appears On section on artist pages. Go to Artist and Go to Composer with a picker for split credits.
-- Sorting by file size.
-
-**Detail pages**
-- Artist page: portrait header, centered Play, featured release, Popular (20 songs ranked by play count, 5 per page,
-  at most 4 dots), discography shelves that page automatically, Singles only from an explicit total-track count of 1.
-- Album, playlist and Loved headers: one centered row of Loved, Play, Shuffle and Add to playlist.
-- Song menus: Play or Share, Play next, Add to queue, Go to album or artist, Copy file path, Edit Metadata,
-  ReplayGain, Audio Quality Analysis, confirmed delete. CUE rows also have Split into Tracks.
+**Tag separators**
+- Under Local Library: Artists, Genre and Keep together. Each opens a sheet of chips with defaults, an All option
+  and an Add field.
+- Edit Metadata saves names exactly as typed. Keep together protects names like AC/DC.
+- A derived credits table keeps artist and genre pages, search and shelves consistent with these settings.
 
 **Player**
-- Normal and Immersive player views, saved across restarts.
-- Ken Burns drift on album headers and the player cover, with an Appearance switch and automatic pauses.
-- Optional lyric line above the seek bar. Lyrics follow the direction of each line.
-- Heart for favorites, a quality badge, normalization pre-amp and track/album gain.
-- An optional equalizer: 5, 10, 15 or 31 bands, preamp, balance, limiter and compressor, presets, JSON import and
-  share.
-- AutoMix: lands on the beat and falls back to a plain crossfade.
-- Playback errors keep the song selected so it can be retried.
+- Normal or Immersive view, saved across restarts. Lyrics, queue, track changes and mini-player dismissal work in
+  both, and landscape keeps two columns.
+- Ken Burns drift on album headers and on the player cover, switched off from Appearance. It also pauses for
+  lyrics, reduced motion, glass off, low-end devices, covered routes and a scrolled-away cover.
+- A playback error keeps the song selected for retry. Duration and artwork updates reach open players.
+- Each lyric line takes its direction from its first strong letter.
 
-**Look and feel**
-- Liquid glass: quality setting (auto, lite, full, off) and clarity levels 1–5, glass thumbs only while touched,
-  floating headers, one shared backdrop read for persistent chrome, a pre-blurred ground image over artwork, and a
-  hidden performance HUD.
+**Audio**
+- Only the built-in player, even when importing old settings.
+- Exact PCM output decodes FLAC through the integer native source.
+
+**Glass**
+- Quality setting: auto, lite, full or off. Clarity levels 1–5, all values in one table.
+- Blur never goes below sigma 6.
+- Auto measures frame time and steps down; explicit qualities are never measured.
+- Switch and slider thumbs turn to glass only while touched.
+- Headers float with a glass back circle and one capsule for actions. Controls are 48dp; the profile photo ends
+  every header except Settings.
+- One shared backdrop read for persistent chrome. Glass over artwork draws a pre-blurred ground image instead of
+  sampling.
 - Cover colours come from one analysis per cover, stored in the library database.
-- Accessibility: 48dp touch targets, labels, named sliders, live selection counts, large text.
 
 **Other**
-- First-run setup and the local guide form one flow, with permission checks and no output-folder step.
-- Insights (listening statistics) tab, always recording, with Rewind highlights.
-- Languages: English only on 2026-10-23, then the 19 translations restored on 2026-10-27.
-- Updater restored on 2026-10-28: Settings > Updates, GitHub releases, resumable HTTPS download with a SHA-256
-  check, install through the system installer.
+- Setup and the local guide are one flow that ends in Home from the final permission page.
+- Insights (listening statistics) is the tab after Home and always records.
+- Logging is always detailed; Logs filters by level.
+- Every language with a translation file is supported, falling back to English, and the language picker is in
+  setup and Appearance.
+- The updater reads GitHub releases. Its HTTPS download is resumable and checked with SHA-256, and it is the only
+  feature allowed to use the network.
 
-## 6. Upstream ports
+### Audio engine plan (decided, not started)
+The next project replaces the engine with Media3/ExoPlayer:
+- **Licence:** the licence becomes GPL-3.0, keeping the MIT notice for the original code.
+- **minSdk:** raised to 31.
+- **USB and output:**
+  - Direct USB (libusb) is dropped.
+  - The AAudio/Oboe exact-rate output is dropped.
+  - Android 14+ bit-perfect output and DoP stay.
+- **CUE:** tracks play directly, and Split into Tracks goes in the same step.
+- **Playback ownership:** playback, queue, notification, Android Auto and the widget move to a Kotlin service, and
+  Flutter becomes the interface.
+- **Still open:** formats with no decoder after FFmpeg is removed have a recommendation but no decision yet.
 
-- Upstream 5.1.1 to 5.2.6 (`5a895265..c90ec647`): all 533 commits checked one by one in
-  `reviews/upstream-v5.1.1-v5.2.6-ledger.md`. Verdicts: 12 ported in the final pass, 144 handled earlier (ported,
-  already present, or declined with a reason, as recorded in `reviews/UPSTREAM.md`), 339 not applicable, 38
-  translations.
-- Port batches 1–17C (2026-10-20 to 2026-10-27) and the 5.2.5 ports (U-401..U-412). Highlights: exact FLAC
-  output with libFLAC 1.5.0, tag separators, lyric spring scrolling, Rewind, equalizer, media controls that follow
-  late metadata, AutoMix beat landing, scans that index untagged MP3/MP4, raw AAC and ID3-prefixed FLAC.
+## 3. Changes
 
-## 7. Audits and safety fixes (T1–T14)
+### Online features removed (eight phases)
+1. iOS, Discord sources, and online release tooling and scripts.
+2. Discord rich presence.
+3. Updater, remote config, announcements and donations. The updater came back later.
+4. Network storage: SMB, WebDAV and NAS.
+5. Extension store, provider priorities, online metadata autofill and re-enrichment, re-download, sharing between
+   extensions, hi-res check, previews, Explore feed, weekly releases, artist concerts and motion artwork.
+6. The download engine and extension registry. Player and queue now read the local library.
+7. The Rust online crates (network, providers, extensions). A new local crate handles scans, CUE, tags, artwork and
+   lyrics, and iOS build wiring was removed.
+8. Online Dart dependencies, online translations and the release Internet permission. The permission came back
+   with the updater.
 
-| Audit | Main fixes |
+### Features removed later
+- Format conversion: single and batch, quality sheets and encoders.
+- Wishlist: from the Library, menus, models and backups.
+- The separate track details page. Its actions moved to the song menu.
+- Obsolete settings pages and options (see "Things that must not come back").
+- Legacy code:
+  - download history;
+  - old backup formats (backups are now `.sbk` version 3 only);
+  - old-install migrations and old database upgraders;
+  - single-folder library settings;
+  - iOS paths;
+  - two dead-code passes over Dart, Kotlin and Rust.
+
+### Features added or changed
+- **Identity:**
+  - renamed to Sistrum, with old stored keys still readable;
+  - version reset to 1.0.0;
+  - a side-by-side build option;
+  - a new launcher icon.
+- **Home:** local editorial feed with cached shelves, pull to refresh and loading states.
+- **Library:**
+  - Album Artists list and Genres;
+  - tag separators with Keep together;
+  - Appears On;
+  - Go to Artist or Composer with a picker;
+  - sorting by file size;
+  - section headers and fast scrolling.
+- **Detail pages:** restored artist page with Popular; centered collection actions; song menus with all local
+  actions.
+- **Player:**
+  - Normal and Immersive views;
+  - Ken Burns drift;
+  - optional lyric line above the seek bar;
+  - heart favorite and quality badge;
+  - normalization pre-amp and track or album gain;
+  - optional equalizer (5 to 31 bands, preamp, balance, limiter, compressor, presets, import and share);
+  - AutoMix that lands on the beat;
+  - retry after errors.
+- **Lyrics:**
+  - spring scrolling, with work paused when hidden;
+  - lyric quote cards;
+  - untimed TTML shown as plain text;
+  - right-to-left word sweep for Arabic.
+- **Glass:** quality and clarity settings, touch-only glass thumbs, floating headers, shared backdrop reads, artwork
+  ground images, and a hidden performance overlay.
+- **Accessibility:** 48dp targets, labels, named sliders, live selection counts and large text.
+- **Setup:** one flow with the local guide and permission checks.
+- **Insights:** a tab with Rewind highlights.
+- **Languages:** reduced to English, then all 19 translations restored on the owner's request.
+- **Updater:** restored with in-app download and install.
+
+### Upstream updates
+- All 533 upstream changes between 5.1.1 and 5.2.6 were checked one by one:
+  - 12 ported in the final pass;
+  - 144 handled earlier (ported, already present, or declined with a reason);
+  - 339 not applicable to an offline app;
+  - 38 translation updates.
+- Notable ports:
+  - exact FLAC output;
+  - tag separators;
+  - lyric spring scrolling;
+  - Rewind;
+  - the equalizer;
+  - media controls that follow late metadata;
+  - AutoMix beat landing;
+  - scans that index untagged MP3/MP4, raw AAC and ID3-prefixed FLAC.
+
+### Safety and correctness audits
+
+| Area | Main fixes |
 |---|---|
-| T1 SAF scanning | A provider error is no longer read as an empty folder; an empty listing cannot wipe indexed rows |
-| T2 CUE delete and split | Deleting a CUE row removes only the database row, never the backing audio |
-| T3 Tag writing | Only edited fields are written; failed writes keep the original; SAF replacement verifies backup and rollback |
-| T4 CUE and library identity | Stricter CUE parsing; incremental scans re-read backing metadata; cover cache safety |
-| T5 Backup and startup | Crafted backups cannot write outside the private cover folder; covers commit with their rows |
-| T6 Lyrics parsing | Untimed TTML shows plain lyrics instead of raw XML |
-| T7 Playback | Seeks after a restored session and previous-track restarts are no longer lost |
-| T8 Library correctness | Keyed album queries, Singles from explicit totals, NFC search schema 18, safer deletion |
-| T9 Query cost | Schema 19 index for album artists, per-connection genre cache |
-| T10 Scan and cover cost | Shared thumbnail names, cache expiry, fewer whole-file copies |
-| T11 Visible UI defects | Partial album deletes, safe metadata saves, stale debounces, damaged spectrograms |
-| T12 Accessibility | 48dp targets, semantics, named sliders, large text |
-| T13 Build and dependencies | Release signing fallback warns; unused dependencies removed |
-| T14 Dead code | Unused SAF writer, wrappers and policy code removed |
+| Folder scanning | A provider error is no longer read as an empty folder; an empty listing cannot wipe indexed songs |
+| CUE delete and split | Deleting a CUE row removes only the row, never the audio file |
+| Tag writing | Only edited fields are written; a failed write keeps the original file |
+| CUE and library identity | Stricter CUE parsing; rescans re-read metadata; safer cover cache |
+| Backup and startup | A crafted backup cannot write outside the private folder; covers restore with their rows |
+| Lyrics | Untimed TTML shows plain text instead of raw XML |
+| Playback | Seeks after restoring a session and previous-track restarts are no longer lost |
+| Library correctness | Correct album grouping, Singles from explicit totals, safer search and deletion |
+| Speed | Indexes for artist pages, a genre cache, cheaper scans and cover cache |
+| Visible bugs | Partial album deletes, safe metadata saves, stale searches, damaged spectrograms |
+| Accessibility | Touch targets, labels, large text |
+| Build | The release signing fallback warns; unused dependencies removed |
+| Dead code | Unused writers, wrappers and policies removed |
 
-Also: two Opus scan fixes for real device libraries (`6500a82`, `34133cc`).
+Two Opus scanning bugs found on a real device library were also fixed.
 
-## 8. Code health and structure (2026-10-28 to 2026-10-31)
+### Code health
+- Every code-quality, duplication, test-health and file-health issue the scanner reported was fixed or skipped with
+  a written reason.
+- Folders were grouped by feature, and `test/` mirrors `lib/`.
+- Large files were split under about 500 lines, then given descriptive names.
+- A smaller FFmpeg package was tried, then reverted.
 
-- `desloppify` queue worked through: no open items in code quality, duplication, test health and file health.
-  Strict score 87.4; the remaining findings are skipped with a reason.
-- Folders regrouped by feature (`lib/services/library/*`, `lib/services/playback/*`, `lib/widgets/player/*`,
-  domain folders for providers and screens, `test/` mirrors `lib/`).
-- Large files split under about 500 lines with `part` files, then renamed to descriptive names.
-- FFmpeg moved to the minimal package, then reverted to `ffmpeg_kit_flutter_new_audio` 2.5.7 (`95778bf`).
+### Review fixes (2026-10-31)
 
-## 9. Review fixes (2026-10-31)
+**Architecture review (five findings)**
+- Malformed native payloads now fail instead of reading as empty.
+- Restoring playback returns a clear result and retries after a failure.
+- The widget binding and AutoMix status belong to each player runtime.
+- Audio analysis logic moved out of the widget and gained tests.
+- Folder access checks and audio route reads return clear results.
 
-**Architecture review** (`reviews/ARCHITECTURE_API_INITIALIZATION_REVIEW.md`, five findings, all fixed)
-- Native progress payloads must be JSON objects; malformed ones throw instead of reading as empty.
-- Playback restore returns a typed outcome (`restored`, `nothingSaved`, `failed`) and retries after a failure.
-- The player widget binding and AutoMix status are injected per runtime.
-- Audio analysis state moved into `AudioAnalysisController`, with tests.
-- SAF read probes and audio route reads return typed results.
+**Native bridge review**
+- A crash in the USB worker becomes a playback error.
+- Non-English file paths reach native code correctly.
+- Playback file handles are no longer taken away mid-song.
+- Log reads have a time limit, and a file-type lookup left the main thread.
+- Cancellation is simpler and bounded.
+- Folder timestamp lookups run in cancellable chunks.
+- Small data jobs skip a background isolate (measured on a computer only).
+- Still open: a watchdog for a stuck USB stream, and measurements on a device.
 
-**Bridge deep review** (`reviews/BRIDGE_DEEP_REVIEW.md`, F1–F13)
-- A panic in the USB worker becomes a playback error instead of crashing.
-- Non-ASCII audio paths reach native code as UTF-8 bytes.
-- Playback leases are no longer evicted (at most 8; when full, playback falls back).
-- Logcat reads have a deadline; a MIME lookup moved off the main thread.
-- Cancellation lost its unused wake-up path; pre-cancels are bounded (256).
-- SAF timestamp lookups run in chunks of 50 and can be cancelled.
-- Small data jobs and lyrics (under 64 KiB) encode on the calling isolate. Measured on the host only.
-- Open: a Kotlin watchdog for a stuck USB pump (F1), and device measurements.
+### Last changes of the period
+- **Setup folder step:**
+  - choosing a music folder or tapping Skip for now goes straight to the next page;
+  - reopening setup no longer jumps past the folder page;
+  - a new test proves the fix.
+- **New workflow:** a self-contained workflow package for the next repository (section 5).
+- **Builds:** two release APKs for arm64, not tested on a device.
 
-## 10. This session's last changes (2026-10-31)
+## 4. How the work is done (from AGENTS.md)
 
-- **Setup folder step** (`8464cef`): choosing a music folder or tapping Skip for now goes straight to the next
-  page. Cause: the resume check after the folder picker reset the step to "not granted", so Next stayed disabled.
-  Also fixed: reopening setup jumped past the folder page because current drafts were shifted as old ones. A new
-  test fails without the fix (shown with `work.py prove`). The full `flutter test` run did not finish in the cloud
-  container (the runner stalled between files); every folder passed when run on its own.
-- **New workflow** (`95d2d94`, `7cacbc4`): `sistrum-workflow/`, a repo-local workflow for the next repository.
-  See section 12.
-- **Release APKs:** arm64 from `fd4b5dd` and from `a007921`. Neither was tested on a device.
+### Order of work
+1. Read the progress record and recent history before continuing.
+2. For codebase questions, query the code graph first, then targeted searches.
+3. Make the change, then verify it.
+4. Commit in three separate commits, in this order:
+   - code (source, tests, configuration);
+   - the code-graph refresh;
+   - documentation and the progress record.
+5. Stage files by name. Never stage everything at once, because generated files are untracked on purpose.
 
-## 11. Not verified
+### Verification
+- `flutter analyze` must be clean, and the full `flutter test` must pass before committing.
+- Rust changes run the Rust check script (format, clippy, tests).
+- Android native changes run the Android unit-test script.
+- Flutter tests and APK builds never run at the same time.
+- Compiling device tests is not running them on a device, and is never reported as a device pass.
 
-- No change in this file was tested on an Android device by the agent. Playback, scanning, SAF and USB, widgets,
-  background behaviour and statx compatibility need device checks.
-- Kotlin unit and instrumentation tests were not run for the 2026-10-31 native changes.
-- The full `flutter test` run after the setup fix did not complete in the cloud container.
-- In `scripts/`, `test_find_dead_code` needs `tree-sitter` installed, and `test_generate_sistrum_branding` fails
-  (`'16%' != '0%'`).
-- Release builds use a development key; a production key is needed before official distribution.
+### Removing a feature
+1. Plan from the code graph: every file and link the feature touches.
+2. Remove it, cross-checking with searches.
+3. Prove it is gone: analyzer clean, full tests pass, and no references remain.
+4. Commit in the three-commit order.
 
-## 12. Workflow and tooling history
+### Code rules
+- **Failure signalling:**
+  - A lookup that may find nothing returns a nullable value, and null means only "not found".
+  - An operation the user can see fail returns a typed result or throws a typed exception, never a bare boolean or
+    a map with an error key.
+  - Best-effort cleanup says so in its name or comment.
+  - A wrapper that only forwards a result's success flag is removed.
+- **Part files** only split one library's private implementation and add no imports. Everything else is a normal
+  module.
+- **Naming:** every shared UI file uses the `app_` prefix and every class the `App` prefix. The app name, package
+  name and stored or external identifiers keep their original values.
 
-- **2026-10-19:** review agents, `reviews/PROTOCOL.md`, `/review` and `/audit` skills.
-- **2026-10-28 onward:** `desloppify` and `graphify` drove the code-health work.
-- **2026-10-31:** `new workflow/` (owner commit `3c780a6`), followed by `sistrum-workflow/`. The second one is a
-  self-contained package for the next repository: 7 skills, 3 read-only reviewer agents, a constitution,
-  change-record templates, and `scripts/work/work.py` (evidence, gates, `prove`, a Bash guard). Nothing needs
-  installing, and it has 45 tests. It was built from spec-kit, elephant-goldfish-model, deepseek-stack, ponytail and
-  desloppify.
+### Reviews and upstream
+- Reviews follow one protocol, with specialised read-only reviewers and incremental reviews by commit range.
+- Reviewers never edit code. Fixes come in separate batches of one to three findings.
+- Upstream ports follow a port plan and record every upstream change. They never bring back upstream branding;
+  the original authors keep their copyright credit.
 
-## 13. Where the details are
+## 5. New workflow for the next repository
+
+The next repository starts from the original 5.1.1 release, then adds this project's code without agent files,
+then installs a new workflow and begins the Media3 plan. The workflow package (`sistrum-workflow/`) is ready.
+
+- **Use:** the owner talks normally. The workflow decides whether a request is a question, a plan, a small fix, a
+  feature, an architecture change, a review or a release.
+- **Fix:**
+  1. Find the cause.
+  2. Write a test that fails without the fix, and prove it fails.
+  3. Make the smallest complete change.
+  4. Run the checks, commit, and report.
+- **Features and architecture:** spec, then plan, then tasks, then implementation, then an independent review in a
+  fresh context, then ship. Architecture changes also get a design review until two rounds in a row are clean.
+- **Pieces:**
+  - a constitution;
+  - seven skills and three read-only reviewers;
+  - templates;
+  - one Python tool for checks, evidence, gates, proof of tests and a guard against dangerous git and shell
+    commands.
+- **Requirements:** nothing to install. The tool has 45 tests.
+- **Sources of the ideas:** spec-kit, the elephant-goldfish model, deepseek-stack, ponytail and desloppify. Scores
+  and installed tools were left out on purpose.
+
+## 6. Not verified yet
+
+- **On a device:**
+  - playback, background behaviour and controls;
+  - scanning, metadata and lyrics saving, backups;
+  - folder access, USB output and widgets;
+  - older Android versions.
+- **Recent native changes:** Kotlin tests were not run.
+- **Full test suite after the setup fix:** it did not finish in the cloud environment, though every test folder
+  passed on its own.
+- **Two helper-script tests:** one needs a parser library installed, and one fails an assertion.
+- **Release signing:** builds use a development key; official distribution needs a production key.
+
+## 7. Where the details are
 
 | File | Content |
 |---|---|
-| `LOCAL_OFFLINE_MIGRATION_PLAN.md` | Every step with commits and test results (the main source of this file) |
-| `PHASE6_DECISIONS.md` | Decisions made during the download-engine removal |
-| `AGENTS.md` | Current product rules |
-| `docs/AUDIO_ENGINE_MIGRATION.md` | The Media3 plan and decisions D1–D7 |
-| `reviews/` | Audits, findings, upstream ledgers, review reports |
+| `LOCAL_OFFLINE_MIGRATION_PLAN.md` | Every step with its checks and results |
+| `PHASE6_DECISIONS.md` | Decisions made while removing the download engine |
+| `AGENTS.md` | The current product and working rules |
+| `docs/AUDIO_ENGINE_MIGRATION.md` | The Media3 plan and its decisions |
+| `reviews/` | Audits, findings, upstream records, review reports |
 | `sistrum-workflow/README.md` | The new workflow |
