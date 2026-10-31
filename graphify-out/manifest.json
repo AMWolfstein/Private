@@ -9528,9 +9528,9 @@
     "semantic_hash": ""
   },
   "test/ui/shell/setup_screen_recovery_test.dart": {
-    "mtime": 1793410743.8359675,
-    "seen": 1793411239.6641572,
-    "ast_hash": "609e2ebb4ac1138803328091bd2677e2",
+    "mtime": 1793458963.8828301,
+    "seen": 1793459029.6208289,
+    "ast_hash": "4a6906b07eb6b97007ecdd2da1fba266",
     "semantic_hash": ""
   },
   "test/ui/shell/shell_navigation_service_test.dart": {
@@ -10482,15 +10482,15 @@
     "semantic_hash": ""
   },
   "lib/screens/setup/setup_screen_flow.dart": {
-    "mtime": 1793406364.1008348,
-    "seen": 1793414207.9444811,
-    "ast_hash": "8f7d63901972d5a989a52f60b1bc4986",
+    "mtime": 1793458963.8828301,
+    "seen": 1793459029.583356,
+    "ast_hash": "05ae00e9e99fbe22f50153c2084d3c98",
     "semantic_hash": ""
   },
   "lib/screens/setup/setup_screen_steps.dart": {
-    "mtime": 1793406342.2168336,
-    "seen": 1793414207.944484,
-    "ast_hash": "7374c99981389fee6ddd7bed1b0f9135",
+    "mtime": 1793458963.8828301,
+    "seen": 1793459029.5833614,
+    "ast_hash": "61bf22c2ac57553431412c270ae593d8",
     "semantic_hash": ""
   },
   "lib/services/library/collections/library_collections_database_playlists.dart": {
@@ -11145,6 +11145,138 @@
     "mtime": 1793444134.300239,
     "seen": 1793445196.2412338,
     "ast_hash": "3217afe84771c9941482f8ee28caa64d",
+    "semantic_hash": ""
+  },
+  "new workflow/scripts/tests/test_workflow.py": {
+    "mtime": 1793458963.8631365,
+    "seen": 1793459029.5949216,
+    "ast_hash": "92dd83ef745125b7da29a3bdb15d8f97",
+    "semantic_hash": ""
+  },
+  "new workflow/scripts/workflow.py": {
+    "mtime": 1793458963.8632576,
+    "seen": 1793459029.5949247,
+    "ast_hash": "efc3f3439eb70af21fb76f63756a5813",
+    "semantic_hash": ""
+  },
+  "new workflow/workflow/verification.json": {
+    "mtime": 1793458963.8643484,
+    "seen": 1793459029.594927,
+    "ast_hash": "712722d722edc70e56f363b46efb4c7e",
+    "semantic_hash": ""
+  },
+  "new workflow/.agents/skills/sistrum-design/SKILL.md": {
+    "mtime": 1793458963.86212,
+    "seen": 1793459029.628314,
+    "ast_hash": "e850337d95fb1b61fdf37bb86f99ab79",
+    "semantic_hash": ""
+  },
+  "new workflow/.agents/skills/sistrum-implement/SKILL.md": {
+    "mtime": 1793458963.86212,
+    "seen": 1793459029.6283166,
+    "ast_hash": "2cd56bb2718f64a28429d4e98fcd6a28",
+    "semantic_hash": ""
+  },
+  "new workflow/.agents/skills/sistrum-port/SKILL.md": {
+    "mtime": 1793458963.86212,
+    "seen": 1793459029.6283185,
+    "ast_hash": "04014cdf87ca1809262897cecb858452",
+    "semantic_hash": ""
+  },
+  "new workflow/.agents/skills/sistrum-review/SKILL.md": {
+    "mtime": 1793458963.86212,
+    "seen": 1793459029.6283202,
+    "ast_hash": "957635fa9887b28e93950f2dea50f6e1",
+    "semantic_hash": ""
+  },
+  "new workflow/.agents/skills/sistrum-verify/SKILL.md": {
+    "mtime": 1793458963.86212,
+    "seen": 1793459029.6283221,
+    "ast_hash": "dcf1383c0118590f2f2d9bb3196304d6",
+    "semantic_hash": ""
+  },
+  "new workflow/.agents/skills/sistrum-workflow/SKILL.md": {
+    "mtime": 1793458963.86212,
+    "seen": 1793459029.628324,
+    "ast_hash": "183fe69ea811f19e972060c8357f085f",
+    "semantic_hash": ""
+  },
+  "new workflow/AGENTS.md": {
+    "mtime": 1793458963.86212,
+    "seen": 1793459029.6283257,
+    "ast_hash": "6604d567db34c351f5c24e3367a15f02",
+    "semantic_hash": ""
+  },
+  "new workflow/README.md": {
+    "mtime": 1793458963.86212,
+    "seen": 1793459029.6283274,
+    "ast_hash": "8e12355a198d91bd6cd25eae0d5a8bd2",
+    "semantic_hash": ""
+  },
+  "new workflow/workflow/SOURCES.md": {
+    "mtime": 1793458963.8632576,
+    "seen": 1793459029.628329,
+    "ast_hash": "146ddda4486922015816e297d2eab0a5",
+    "semantic_hash": ""
+  },
+  "new workflow/workflow/STATE.md": {
+    "mtime": 1793458963.863515,
+    "seen": 1793459029.6283305,
+    "ast_hash": "b57043ca320f36656d9d08131cff8e87",
+    "semantic_hash": ""
+  },
+  "new workflow/workflow/VALIDATION.md": {
+    "mtime": 1793458963.863515,
+    "seen": 1793459029.6283324,
+    "ast_hash": "f4dd859759abcbee9975dbf799891c72",
+    "semantic_hash": ""
+  },
+  "new workflow/workflow/architecture.md": {
+    "mtime": 1793458963.863515,
+    "seen": 1793459029.628334,
+    "ast_hash": "ee535473152a820cb8b99849665de099",
+    "semantic_hash": ""
+  },
+  "new workflow/workflow/contracts/data-compatibility.md": {
+    "mtime": 1793458963.8637726,
+    "seen": 1793459029.6283357,
+    "ast_hash": "cc6e80b6f3579b65a097b46905971f93",
+    "semantic_hash": ""
+  },
+  "new workflow/workflow/contracts/playback-bridge.md": {
+    "mtime": 1793458963.863857,
+    "seen": 1793459029.6283374,
+    "ast_hash": "8e54e3b1f18d755b137da8c4f666ae28",
+    "semantic_hash": ""
+  },
+  "new workflow/workflow/migration.md": {
+    "mtime": 1793458963.8640366,
+    "seen": 1793459029.628339,
+    "ast_hash": "f384a03cb41c20d349cbfe7926e5fd5f",
+    "semantic_hash": ""
+  },
+  "new workflow/workflow/quality.md": {
+    "mtime": 1793458963.8640366,
+    "seen": 1793459029.6283402,
+    "ast_hash": "39187acb5c9fbd69a868bc8c96fcf7ad",
+    "semantic_hash": ""
+  },
+  "new workflow/workflow/templates/design.md": {
+    "mtime": 1793458963.8640366,
+    "seen": 1793459029.6283414,
+    "ast_hash": "8eec39ef00622361e83d1056ee86225c",
+    "semantic_hash": ""
+  },
+  "new workflow/workflow/templates/finding.md": {
+    "mtime": 1793458963.8642702,
+    "seen": 1793459029.6283436,
+    "ast_hash": "a2d9cd8367ef794f1f442f536452c775",
+    "semantic_hash": ""
+  },
+  "new workflow/workflow/templates/task.md": {
+    "mtime": 1793458963.8643484,
+    "seen": 1793459029.6283453,
+    "ast_hash": "491968351806d7f0d27fd88d471015aa",
     "semantic_hash": ""
   }
 }
