@@ -1,103 +1,18 @@
 {
   "command": "show",
-  "query": "single_use",
+  "query": "structural",
   "status_filter": "open",
-  "total": 6,
-  "summary": {
-    "by_tier": {
-      "T3": 6
-    },
-    "by_detector": {
-      "single_use": 6
-    },
-    "files": 6
-  },
-  "by_file": {
-    "lib/screens/app_screens.dart": [
-      {
-        "id": "single_use::lib/screens/app_screens.dart",
-        "tier": 3,
-        "confidence": "medium",
-        "summary": "Single-use (48 LOC): only imported by lib/main.dart",
-        "detail": {
-          "loc": 48,
-          "sole_importer": "lib/main.dart"
-        }
-      }
-    ],
-    "lib/widgets/primitives/app_level_slider.dart": [
-      {
-        "id": "single_use::lib/widgets/primitives/app_level_slider.dart",
-        "tier": 3,
-        "confidence": "medium",
-        "summary": "Single-use (252 LOC): only imported by lib/screens/equalizer_screen.dart",
-        "detail": {
-          "loc": 252,
-          "sole_importer": "lib/screens/equalizer_screen.dart"
-        }
-      }
-    ],
-    "lib/services/library/metadata/track_metadata_persistence.dart": [
-      {
-        "id": "single_use::lib/services/library/metadata/track_metadata_persistence.dart",
-        "tier": 3,
-        "confidence": "medium",
-        "summary": "Single-use (216 LOC): only imported by lib/widgets/library/track_metadata_edit_sheet.dart",
-        "detail": {
-          "loc": 216,
-          "sole_importer": "lib/widgets/library/track_metadata_edit_sheet.dart"
-        }
-      }
-    ],
-    "lib/services/playback/audio/replaygain_write_result.dart": [
-      {
-        "id": "single_use::lib/services/playback/audio/replaygain_write_result.dart",
-        "tier": 3,
-        "confidence": "medium",
-        "summary": "Single-use (32 LOC): only imported by lib/widgets/library/batch_track_actions.dart",
-        "detail": {
-          "loc": 32,
-          "sole_importer": "lib/widgets/library/batch_track_actions.dart"
-        }
-      }
-    ],
-    "lib/services/playback/notification/activity_attachment.dart": [
-      {
-        "id": "single_use::lib/services/playback/notification/activity_attachment.dart",
-        "tier": 3,
-        "confidence": "medium",
-        "summary": "Single-use (32 LOC): only imported by lib/main.dart",
-        "detail": {
-          "loc": 32,
-          "sole_importer": "lib/main.dart"
-        }
-      }
-    ],
-    "lib/screens/setup_screen.dart": [
-      {
-        "id": "single_use::lib/screens/setup_screen.dart",
-        "tier": 3,
-        "confidence": "medium",
-        "summary": "Single-use (208 LOC): only imported by lib/app.dart",
-        "detail": {
-          "loc": 208,
-          "sole_importer": "lib/app.dart"
-        }
-      }
-    ]
-  },
-  "total_matching": 6,
-  "noise_budget": 0,
-  "noise_global_budget": 0,
+  "total": 0,
+  "issues": [],
   "narrative": {
     "phase": "stagnation",
-    "headline": "Crossed 90% strict!",
+    "headline": "All T1 items cleared!",
     "dimensions": {
       "lowest_dimensions": [
         {
           "name": "Test health",
-          "strict": 76.1,
-          "failing": 0,
+          "strict": 61.6,
+          "failing": 62,
           "impact": 0.0
         },
         {
@@ -120,9 +35,9 @@
       "biggest_gap_dimensions": [
         {
           "name": "Test health",
-          "lenient": 100.0,
-          "strict": 76.1,
-          "gap": 23.9,
+          "lenient": 85.4,
+          "strict": 61.6,
+          "gap": 23.8,
           "wontfix_count": 0
         },
         {
@@ -134,8 +49,8 @@
         },
         {
           "name": "Code quality",
-          "lenient": 99.2,
-          "strict": 95.3,
+          "lenient": 97.7,
+          "strict": 93.8,
           "gap": 3.9,
           "wontfix_count": 0
         }
@@ -148,7 +63,7 @@
         },
         {
           "name": "Duplication",
-          "strict": 99.4,
+          "strict": 99.3,
           "stuck_scans": 5
         },
         {
@@ -256,10 +171,10 @@
     "actions": [
       {
         "type": "reorganize",
-        "detector": "flat_dirs",
-        "count": 2,
-        "description": "2 flat_dirs issues \u2014 create subdirectories and use `desloppify move`",
-        "command": "desloppify show flat_dirs --status open",
+        "detector": "orphaned",
+        "count": 20,
+        "description": "20 orphaned issues \u2014 delete dead files or relocate with `desloppify move`",
+        "command": "desloppify show orphaned --status open",
         "impact": 0.0,
         "dimension": "Code quality",
         "priority": 1,
@@ -268,19 +183,52 @@
       {
         "type": "reorganize",
         "detector": "single_use",
-        "count": 6,
-        "description": "6 single_use issues \u2014 inline or relocate with `desloppify move`",
+        "count": 2,
+        "description": "2 single_use issues \u2014 inline or relocate with `desloppify move`",
         "command": "desloppify show single_use --status open",
         "impact": 0.0,
         "dimension": "Code quality",
         "priority": 2,
         "lane": "restructure"
+      },
+      {
+        "type": "refactor",
+        "detector": "dupes",
+        "count": 11,
+        "description": "11 dupes work items \u2014 extract shared utility or consolidate duplicates",
+        "command": "desloppify show dupes --status open",
+        "impact": 0.0,
+        "dimension": "Duplication",
+        "priority": 3,
+        "lane": "refactor"
+      },
+      {
+        "type": "refactor",
+        "detector": "test_coverage",
+        "count": 62,
+        "description": "62 test_coverage work items \u2014 review test coverage gaps \u2014 focus on critical modules with many importers first; defer test writing until code quality issues are resolved",
+        "command": "desloppify show test_coverage --status open",
+        "impact": 0.0,
+        "dimension": "Test health",
+        "priority": 4,
+        "lane": "test_coverage"
+      },
+      {
+        "type": "refactor",
+        "detector": "signature",
+        "count": 13,
+        "description": "13 signature work items \u2014 consolidate inconsistent function signatures",
+        "command": "desloppify show signature --status open",
+        "impact": 0.0,
+        "dimension": "Unknown",
+        "priority": 5,
+        "lane": "refactor"
       }
     ],
     "strategy": {
       "fixer_leverage": {
         "auto_fixable_count": 0,
-        "total_count": 8,
+        "total_count": 108,
         "coverage": 0.0,
         "impact_ratio": 0.0,
         "recommendation": "none"
@@ -291,21 +239,40 @@
             1,
             2
           ],
-          "file_count": 8,
+          "file_count": 22,
+          "total_impact": 0.0,
+          "automation": "manual",
+          "run_first": false
+        },
+        "refactor": {
+          "actions": [
+            3,
+            5
+          ],
+          "file_count": 15,
+          "total_impact": 0.0,
+          "automation": "manual",
+          "run_first": false
+        },
+        "test_coverage": {
+          "actions": [
+            4
+          ],
+          "file_count": 62,
           "total_impact": 0.0,
           "automation": "manual",
           "run_first": false
         }
       },
-      "can_parallelize": false,
-      "hint": "Try a different dimension to break the plateau."
+      "can_parallelize": true,
+      "hint": "3 independent workstreams, safe to parallelize. Rescan after each phase to verify."
     },
     "tools": {
       "fixers": [],
       "move": {
         "available": true,
         "relevant": true,
-        "reason": "6 single-use files + 2 flat directories",
+        "reason": "20 orphaned files + 2 single-use files",
         "usage": "desloppify move <source> <dest> [--dry-run]"
       },
       "plan": {
@@ -320,18 +287,18 @@
       }
     },
     "debt": {
-      "overall_gap": 1.6,
+      "overall_gap": 1.5,
       "wontfix_count": 0,
       "worst_dimension": "Test health",
-      "worst_gap": 23.9,
+      "worst_gap": 23.8,
       "trend": "stable"
     },
-    "milestone": "Crossed 90% strict!",
+    "milestone": "All T1 items cleared!",
     "primary_action": {
-      "command": "desloppify show flat_dirs --status open",
-      "description": "2 flat_dirs issues \u2014 create subdirectories and use `desloppify move`"
+      "command": "desloppify show orphaned --status open",
+      "description": "20 orphaned issues \u2014 delete dead files or relocate with `desloppify move`"
     },
-    "why_now": "Try a different dimension to break the plateau.",
+    "why_now": "3 independent workstreams, safe to parallelize. Rescan after each phase to verify.",
     "verification_step": {
       "command": "desloppify scan",
       "reason": "revalidate after changes"
@@ -340,34 +307,20 @@
       {
         "type": "wontfix_gap",
         "severity": "medium",
-        "message": "Strict/lenient gap is 1.6 pts with 0 wontfix issues"
+        "message": "Strict/lenient gap is 1.5 pts with 0 wontfix issues"
       }
     ],
     "strict_target": {
       "target": 85.0,
-      "current": 90.1,
-      "gap": -5.1,
+      "current": 89.5,
+      "gap": -4.5,
       "state": "above",
       "warning": null
     },
     "reminders": [
       {
         "type": "fp_calibration_dupes_production",
-        "message": "43% of dupes issues in production zone are false positives. Consider reviewing detection rules for production files.",
-        "command": null,
-        "priority": 2,
-        "severity": "medium"
-      },
-      {
-        "type": "fp_calibration_signature_production",
-        "message": "31% of signature issues in production zone are false positives. Consider reviewing detection rules for production files.",
-        "command": null,
-        "priority": 2,
-        "severity": "medium"
-      },
-      {
-        "type": "fp_calibration_test_coverage_production",
-        "message": "36% of test_coverage issues in production zone are false positives. Consider reviewing detection rules for production files.",
+        "message": "39% of dupes issues in production zone are false positives. Consider reviewing detection rules for production files.",
         "command": null,
         "priority": 2,
         "severity": "medium"
@@ -375,7 +328,7 @@
     ],
     "reminder_history": {
       "zone_classification": 3,
-      "report_scores": 23,
+      "report_scores": 24,
       "feedback_nudge": 3,
       "stagnant_nudge": 22,
       "wontfix_growing": 3,
@@ -383,9 +336,8 @@
       "review_not_run": 3,
       "fp_calibration_orphaned_production": 3,
       "fp_calibration_structural_generated": 3,
-      "fp_calibration_test_coverage_production": 2,
-      "fp_calibration_dupes_production": 1,
-      "fp_calibration_signature_production": 1
+      "fp_calibration_test_coverage_production": 1,
+      "fp_calibration_dupes_production": 2
     }
   },
   "config": {
