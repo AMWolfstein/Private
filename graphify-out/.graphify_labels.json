@@ -1,9 +1,7 @@
 {
   "16": "_",
   "23": "usbi_get_device_priv",
-  "43": "settings_provider.dart",
   "56": "FocusManager",
-  "60": "local_library_provider.dart",
   "87": "library_browse_provider.dart",
   "88": "darwin_usb.c",
   "100": "AudioService",
