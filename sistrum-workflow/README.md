@@ -69,6 +69,16 @@ Project-specific guidance lives in `work/guides/`: architecture, review lenses, 
 batches and playback/data contracts. Keep it when installing in a new repository. Historical reference revisions
 must be verified at import time; accepted owner changes supersede the historical summary.
 
+## Executable port and bridge gates
+
+`new` also creates `assurance.json`. Explicit applicability, pinned reference revisions, per-component
+reuse/adapt/restructure/exclude decisions, both bridge endpoints and contract fields, check IDs and completed
+prerequisites are required before build. Review requires fresh passing runner evidence for the named checks;
+ship blocks pending device cases. See [assurance declaration](work/guides/assurance.md) for the schema and example.
+Existing active changes must add this declaration. Review packets and review fingerprints include it.
+Skills remain responsible for analysis, sensible tests and semantic review; Python enforces declarations and
+evidence, not the truth of arbitrary prose. No redundant parallel skill system is introduced.
+
 ## Install in a repository
 
 1. Copy the contents of this folder to the repository root: `AGENTS.md`, `CLAUDE.md`, `.claude/skills/`,
