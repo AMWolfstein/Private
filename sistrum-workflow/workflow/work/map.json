@@ -1,0 +1,39 @@
+{
+  "version": 1,
+  "notes": [
+    "Configuration of the code map (work.py map / context). Schema and rules: workflow/work/guides/map.md.",
+    "Globs use fnmatch: '*' crosses '/'. A path is in the corpus when it matches include, is not ignored by git, and matches no exclude unless it also matches an exception.",
+    "extractor.version pins Graphify (PyPI package graphifyy). Another installed version is reported as unverified and not used unless allow_unverified is true."
+  ],
+  "extractor": {
+    "name": "graphify",
+    "package": "graphifyy",
+    "version": "0.9.97",
+    "enabled": true,
+    "allow_unverified": false,
+    "timeout": 900
+  },
+  "corpus": {
+    "include": ["*.dart", "*.kt"],
+    "exclude": [
+      "workflow/*", ".work/*", "graphify-out/*", "build/*", "*/build/*", ".dart_tool/*", "*/.dart_tool/*",
+      "*.g.dart", "*.freezed.dart", "*.gr.dart", "*.mocks.dart", "*.pb.dart", "*.pbenum.dart", "*.pbjson.dart",
+      "lib/l10n/app_localizations*.dart", "*/generated/*", "third_party/*", "vendor/*", "reference/*"
+    ],
+    "exceptions": []
+  },
+  "bridges": {
+    "dart_channel_types": ["MethodChannel", "OptionalMethodChannel", "EventChannel", "BasicMessageChannel"],
+    "dart_invoke_methods": ["invokeMethod", "invokeMapMethod", "invokeListMethod"],
+    "dart_wrappers": [],
+    "kotlin_channel_types": ["MethodChannel", "EventChannel", "BasicMessageChannel"]
+  },
+  "context": {
+    "budget_tokens": 2500,
+    "entry_files": 5,
+    "per_section": 12,
+    "excerpt_lines": 10,
+    "max_excerpts": 3,
+    "fallback_hits": 20
+  }
+}

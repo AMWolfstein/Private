@@ -21,6 +21,10 @@ import time
 from datetime import datetime, timezone
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import workmap  # noqa: E402  (map and context retrieval)
+from worklib import Blocked, atomic_write, domains_for, git, is_test, now, snapshot  # noqa: E402,F401
+
 PHASES = ('spec', 'plan', 'tasks', 'build', 'review', 'ship', 'done')
 SIZES = ('feature', 'architecture')
 CLOSED = {'fixed', 'contested', 'escalated', 'declined', 'false_positive', 'wontfix'}
@@ -30,12 +34,6 @@ REVIEW_ROUND_CAP = 4
 # Only progress/evidence records are excluded. Checks and policy affect evidence.
 RECORD_DIRS = ('workflow/work/changes', '.work')
 RECORD_PREFIXES = tuple(d + '/' for d in RECORD_DIRS)
-TEST_DIRS = {'test', 'tests', 'integration_test', 'androidTest'}
-TEST_SUFFIXES = ('_test.dart', 'Test.kt', 'Tests.kt', '_test.py', '_test.rs')
-
-
-class Blocked(Exception):
-    """A gate, guard or configuration problem the caller must resolve."""
 
 
 class NoChecksSelected(Blocked):
@@ -44,25 +42,8 @@ class NoChecksSelected(Blocked):
 
 # ---------------------------------------------------------------- utilities
 
-def now() -> str:
-    return datetime.now(timezone.utc).isoformat(timespec='seconds')
-
-
-def git(root: Path, *args: str, check: bool = True) -> str:
-    result = subprocess.run(['git', *args], cwd=root, capture_output=True)
-    if check and result.returncode != 0:
-        raise Blocked(f'git {" ".join(args)} failed: {result.stderr.decode(errors="replace").strip()}')
-    return result.stdout.decode('utf-8', errors='surrogateescape')
-
-
 def is_record(path: str) -> bool:
     return path.startswith(RECORD_PREFIXES)
-
-
-def is_test(path: str) -> bool:
-    parts = path.split('/')
-    return (any(part in TEST_DIRS for part in parts[:-1])
-            or parts[-1].endswith(TEST_SUFFIXES) or parts[-1].startswith('test_'))
 
 
 def fingerprint(root: Path) -> str:
@@ -70,20 +51,7 @@ def fingerprint(root: Path) -> str:
     temporary index. Same content gives the same id before and after a commit; files
     ignored by .gitignore (generated output) and process records do not count.
     """
-    index = Path(git(root, 'rev-parse', '--git-path', 'index').strip())
-    index = index if index.is_absolute() else root / index
-    with tempfile.TemporaryDirectory(prefix='work-fp-') as temp:
-        temp_index = Path(temp) / 'index'
-        if index.is_file():
-            shutil.copy2(index, temp_index)  # reuse git's cached file hashes
-        env = {**os.environ, 'GIT_INDEX_FILE': str(temp_index)}
-        for argv in (['git', 'add', '--all', '--', '.'],
-                     ['git', 'rm', '-r', '--cached', '-q', '--ignore-unmatch', '--', *RECORD_DIRS]):
-            done = subprocess.run(argv, cwd=root, env=env, capture_output=True)
-            if done.returncode != 0:
-                raise Blocked(f'fingerprint failed: {done.stderr.decode(errors="replace").strip()}')
-        return subprocess.run(['git', 'write-tree'], cwd=root, env=env, capture_output=True,
-                              check=True).stdout.decode().strip()
+    return snapshot(root, drop=RECORD_DIRS)[0]
 
 
 def docs_fingerprint(folder: Path) -> str:
@@ -119,15 +87,6 @@ def load_config(root: Path) -> dict:
             if key not in config['checks']:
                 raise Blocked(f'domain {domain} names unknown check {key}')
     return config
-
-
-def domains_for(config: dict, paths: list[str]) -> dict[str, list[str]]:
-    found: dict[str, list[str]] = {}
-    for path in paths:
-        for domain, patterns in config['domains'].items():
-            if any(fnmatch.fnmatchcase(path, pattern) for pattern in patterns):
-                found.setdefault(domain, []).append(path)
-    return found
 
 
 def high_risk(config: dict, paths: list[str]) -> list[str]:
@@ -362,6 +321,8 @@ def lint_change(root: Path, folder: Path, target: str | None = None) -> list[str
             if not done:
                 problems.append(f'unfinished task: {rest[:60]}')
         problems += missing_evidence(root, state.get('base') or 'HEAD')
+        map_problems = workmap.gate_problems(root)
+        problems += map_problems
     if order >= PHASES.index('ship'):
         code = [r for r in state['rounds'] if r['stage'] == 'code']
         if not code or code[-1]['result'] != 'clean':
@@ -369,6 +330,9 @@ def lint_change(root: Path, folder: Path, target: str | None = None) -> list[str
         elif (code[-1]['fingerprint'] != fingerprint(root)
               or code[-1].get('assurance') != docs_fingerprint(folder)):
             problems.append('code changed after the last clean review round; review the final code')
+        elif not map_problems and (code[-1].get('map') or {}).get('corpus') != current_map_corpus(root):
+            problems.append('the last clean review round was not recorded against the current code map; '
+                            'record a new round')
     for item in parse_findings(findings_text):
         status, severity = item.get('status', '').lower(), item.get('severity', '').lower()
         if status not in STATUSES or severity not in SEVERITIES:
@@ -389,6 +353,13 @@ def lint_change(root: Path, folder: Path, target: str | None = None) -> list[str
     return problems
 
 
+def current_map_corpus(root: Path) -> str | None:
+    try:
+        return workmap.map_status(root)['components']['corpus']
+    except Blocked:
+        return None
+
+
 def advance(root: Path, ident: str, target: str) -> dict:
     folder = find_change(root, ident)
     state = read_state(folder)
@@ -398,7 +369,13 @@ def advance(root: Path, ident: str, target: str) -> dict:
     if wanted > current + 1:
         raise Blocked(f'{state["phase"]} → {target} skips a phase; advance one phase at a time')
     if wanted > current:
-        problems = lint_change(root, folder, target)
+        refresh = []
+        if wanted >= PHASES.index('review'):
+            try:  # the gate needs a map of the final code; refresh it rather than fail on staleness
+                workmap.ensure_current(root)
+            except Blocked as error:
+                refresh = [f'code map could not be refreshed: {error}']
+        problems = refresh + lint_change(root, folder, target)
         if problems:
             raise Blocked('gate failed:\n  - ' + '\n  - '.join(problems))
     state['phase'] = target
@@ -418,8 +395,13 @@ def record_round(root: Path, ident: str, stage: str, result: str, reviewer: str)
     else:
         note = ''
     fp = docs_fingerprint(folder) if stage == 'design' else fingerprint(root)
-    state['rounds'].append({'stage': stage, 'round': len(rounds) + 1, 'result': result,
-                            'reviewer': reviewer, 'fingerprint': fp, 'assurance': docs_fingerprint(folder), 'at': now()})
+    entry = {'stage': stage, 'round': len(rounds) + 1, 'result': result,
+             'reviewer': reviewer, 'fingerprint': fp, 'assurance': docs_fingerprint(folder), 'at': now()}
+    if stage == 'code' and result == 'clean':
+        entry['map'] = workmap.round_record(root)  # Blocked when the map cannot match this code
+        if fingerprint(root) != fp:
+            raise Blocked('the tree changed while the round was being recorded; review the final code')
+    state['rounds'].append(entry)
     write_state(folder, state)
     return {'status': 'PASS', 'round': len(rounds) + 1, 'note': note}
 
@@ -555,6 +537,12 @@ def run_checks(root: Path, config: dict, keys: list[str]) -> dict:
     report = {'schema': 1, 'checks': results, 'tests': totals, 'fingerprint': after,
               'source_changed_during_run': before != after, 'status': status, 'at': now(),
               'scope': 'Command exits only. Not review, not device verification.'}
+    try:  # a finished check run ends an edit batch: bring the code map up to date as well
+        refreshed = workmap.update(root)
+        report['map'] = {'state': 'current', 'rebuilt': refreshed['rebuilt'],
+                         'structure': (refreshed.get('structure') or {}).get('status')}
+    except Blocked as error:
+        report['map'] = {'state': 'not current', 'error': str(error)[:500]}
     encoded = json.dumps(report, indent=2) + '\n'
     (directory / 'report.json').write_text(encoded)
     (runs_dir(root) / 'latest.json').write_text(encoded)
@@ -766,6 +754,7 @@ def packet(root: Path, base: str, goal_file: str | None, ident: str | None, out:
         fresh = report['fingerprint'] == fingerprint(root)
         parts += ['## Latest checks', '',
                   f'Status {report["status"]}, {"fresh" if fresh else "STALE"}, tests {report["tests"]}', '']
+    parts += [workmap.packet_section(root, paths)]
     target = root / out
     target.parent.mkdir(parents=True, exist_ok=True)
     target.write_text('\n'.join(parts))
@@ -823,6 +812,7 @@ def status(root: Path, brief: bool) -> str:
     changed = changed_paths(root)
     if changed:
         lines.append(f'Uncommitted code paths: {len(changed)}')
+    lines.append(workmap.status_line(root))
     if not brief:
         lines.append('Workflow: workflow/.agents/skills/work/SKILL.md. Constitution: workflow/work/constitution.md.')
     return '\n'.join(lines)
@@ -850,6 +840,17 @@ def main(argv: list[str] | None = None) -> int:
     s = sub.add_parser('packet'); s.add_argument('--base', default='HEAD'); s.add_argument('--goal')
     s.add_argument('--change'); s.add_argument('--out', default='.work/review/packet.md')
     sub.add_parser('hook-bash')
+    s = sub.add_parser('map', help='code map: build (full), update (incremental), status')
+    s.add_argument('op', choices=('build', 'update', 'status'))
+    s = sub.add_parser('context', help='bounded context packet for a task from the code map')
+    s.add_argument('task', nargs='?', default='')
+    s.add_argument('--file', action='append', default=[], help='entry file (repeatable)')
+    s.add_argument('--symbol', action='append', default=[], help='entry symbol name (repeatable)')
+    s.add_argument('--budget', type=int, help='approximate token budget (characters / 4)')
+    s.add_argument('--depth', type=int, choices=(1, 2), default=1, help='2 adds bridges of import neighbours')
+    s.add_argument('--expand', help='file:<path>, symbol:<name>, bridge:<channel> or module:<id>')
+    s.add_argument('--no-refresh', action='store_true', help='use the published map even when it is stale')
+    s.add_argument('--json', action='store_true', help='print the structured data instead of the packet')
     args = parser.parse_args(argv)
     if args.action == 'hook-bash':
         code, message = hook_bash(sys.stdin.read())
@@ -896,7 +897,26 @@ def main(argv: list[str] | None = None) -> int:
         elif args.action == 'fresh':
             report = latest_report(root)
             ok = bool(report) and report['status'] == 'PASS' and report['fingerprint'] == fingerprint(root)
-            result = {'status': 'PASS' if ok else 'STALE_OR_INCOMPLETE'}
+            map_state = workmap.map_status(root)['state']
+            result = {'status': 'PASS' if ok and map_state == 'current' else 'STALE_OR_INCOMPLETE',
+                      'checks': 'fresh' if ok else 'stale or incomplete', 'map': map_state}
+        elif args.action == 'map':
+            if args.op == 'status':
+                status_now = workmap.map_status(root)
+                result = {'status': 'PASS' if status_now['state'] == 'current' else status_now['state'].upper(),
+                          **status_now}
+            else:
+                result = workmap.update(root, force=args.op == 'build')
+        elif args.action == 'context':
+            if not (args.task or args.file or args.symbol or args.expand):
+                raise Blocked('usage: context "<task>" [--file PATH] [--symbol NAME] [--expand HANDLE]')
+            packet_now = workmap.context(root, args.task, args.file, args.symbol, args.budget, args.depth,
+                                         args.expand, refresh=not args.no_refresh)
+            if args.json:
+                print(json.dumps(packet_now['data'], indent=2, ensure_ascii=False))
+            else:
+                print(packet_now['text'], end='')
+            return 0
         elif args.action == 'prove':
             command = args.cmd[1:] if args.cmd[:1] == ['--'] else args.cmd
             result = prove(root, command, args.timeout, expected_failure=args.expect_failure)

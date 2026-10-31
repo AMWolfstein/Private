@@ -39,7 +39,7 @@
     "dart": ["lib/*", "test/*", "integration_test/*", "pubspec.yaml", "pubspec.lock", "analysis_options.yaml", "l10n.yaml", "assets/*", "third_party/*"],
     "android": ["android/*"],
     "rust": ["rust_backend/*"],
-    "workflow": ["workflow/scripts/work/*", "workflow/.agents/*", "AGENTS.md", "workflow/work/checks.json", "workflow/work/constitution.md", "workflow/work/templates/*", "workflow/work/LESSONS.md", "workflow/work/guides/*"]
+    "workflow": ["workflow/scripts/work/*", "workflow/.agents/*", "AGENTS.md", "workflow/work/checks.json", "workflow/work/constitution.md", "workflow/work/templates/*", "workflow/work/LESSONS.md", "workflow/work/guides/*", "workflow/work/map.json", "workflow/work/architecture.json"]
   },
   "domain_checks": {
     "dart": ["analyze", "dart-tests"],
