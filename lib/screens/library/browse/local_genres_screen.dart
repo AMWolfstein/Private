@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/core/models/local_library_item.dart';
-import 'package:sistrum/providers/local_library_provider.dart';
-import 'package:sistrum/providers/library_tag_credits_provider.dart';
-import 'package:sistrum/providers/playback_provider.dart';
+import 'package:sistrum/providers/library/local_library_provider.dart';
+import 'package:sistrum/providers/library/library_tag_credits_provider.dart';
+import 'package:sistrum/providers/playback/playback_provider.dart';
 import 'package:sistrum/services/library/browse/library_genres.dart';
 import 'package:sistrum/services/library/browse/library_tag_credits.dart';
 import 'package:sistrum/widgets/primitives/app_sliver_header.dart';
 import 'package:sistrum/widgets/library/local_song_menu.dart';
 import 'package:sistrum/widgets/library/local_song_row.dart';
 import 'package:sistrum/utils/layout/nav_bar_inset.dart';
-import 'package:sistrum/providers/library_database_provider.dart';
+import 'package:sistrum/providers/library/library_database_provider.dart';
 
 typedef GenrePageRequest = ({TagCreditField field, String? genre, int offset});
 final genrePageLoaderProvider =

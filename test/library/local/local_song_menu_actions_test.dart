@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:sistrum/core/models/local_library_item.dart';
 import 'package:sistrum/core/navigation/app_screens.dart';
-import 'package:sistrum/screens/app_screens.dart';
+import 'package:sistrum/screens/shell/app_screens.dart';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -11,9 +11,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/core/models/settings.dart';
-import 'package:sistrum/providers/settings_provider.dart';
-import 'package:sistrum/providers/local_library_provider.dart';
-import 'package:sistrum/providers/music_player_provider.dart';
+import 'package:sistrum/providers/settings/settings_provider.dart';
+import 'package:sistrum/providers/library/local_library_provider.dart';
+import 'package:sistrum/providers/playback/music_player_provider.dart';
 import 'package:sistrum/screens/library/local_artist/local_artist_screen.dart';
 import 'package:sistrum/widgets/library/track_metadata_edit_sheet.dart';
 import 'package:sistrum/core/theme/app_theme.dart';

@@ -1,5 +1,5 @@
 import 'package:sqflite/sqflite.dart';
-import 'package:sistrum/providers/library_browse_provider.dart';
+import 'package:sistrum/providers/library/library_browse_provider.dart';
 import 'package:sistrum/services/library/browse/library_browse_store.dart';
 import 'package:sistrum/services/library/database/library_schema.dart';
 

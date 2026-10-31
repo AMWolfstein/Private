@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/core/constants/app_info.dart';
 import 'package:sistrum/l10n/l10n.dart';
-import 'package:sistrum/providers/user_profile_provider.dart';
+import 'package:sistrum/providers/settings/user_profile_provider.dart';
 import 'package:sistrum/screens/settings/profile_settings_page.dart';
 import 'package:sistrum/screens/settings/about_page.dart';
 import 'package:sistrum/screens/settings/updates_page.dart';

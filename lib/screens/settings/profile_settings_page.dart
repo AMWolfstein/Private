@@ -4,7 +4,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/l10n/l10n.dart';
-import 'package:sistrum/providers/user_profile_provider.dart';
+import 'package:sistrum/providers/settings/user_profile_provider.dart';
 import 'package:sistrum/services/platform/user_profile_store.dart';
 import 'package:sistrum/utils/layout/adaptive_layout.dart';
 import 'package:sistrum/widgets/primitives/app_action_button.dart';

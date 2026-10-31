@@ -1,7 +1,7 @@
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sistrum/providers/player_metadata_controller.dart';
+import 'package:sistrum/providers/playback/player_metadata_controller.dart';
 import 'package:sistrum/widgets/player/layout/player_metadata_title.dart';
 
 void main() {

@@ -5,7 +5,7 @@ import 'dart:io';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/core/models/track.dart';
-import 'package:sistrum/providers/library_collections_provider.dart';
+import 'package:sistrum/providers/library/library_collections_provider.dart';
 import 'package:sistrum/services/library/collections/library_collections_database.dart';
 
 part 'library_collections_mutation_1.dart';

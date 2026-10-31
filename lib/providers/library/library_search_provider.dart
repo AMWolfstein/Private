@@ -1,10 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/core/models/local_library_item.dart';
 import 'package:sistrum/core/models/unified_library_item.dart';
-import 'package:sistrum/providers/library_collections_provider.dart';
-import 'package:sistrum/providers/library_database_provider.dart';
-import 'package:sistrum/providers/library_tag_credits_provider.dart';
-import 'package:sistrum/providers/local_library_provider.dart';
+import 'package:sistrum/providers/library/library_collections_provider.dart';
+import 'package:sistrum/providers/library/library_database_provider.dart';
+import 'package:sistrum/providers/library/library_tag_credits_provider.dart';
+import 'package:sistrum/providers/library/local_library_provider.dart';
 import 'package:sistrum/services/library/database/library_database.dart';
 import 'package:sistrum/services/library/collections/library_playlist_search.dart';
 import 'package:sistrum/services/library/browse/library_search.dart';

@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:sistrum/providers/theme_provider.dart';
+import 'package:sistrum/providers/settings/theme_provider.dart';
 import 'package:sistrum/services/platform/custom_font_service.dart';
 
 final customFontFamilyProvider = FutureProvider<String?>((ref) {

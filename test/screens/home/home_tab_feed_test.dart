@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/l10n/app_localizations.dart';
-import 'package:sistrum/providers/library_browse_provider.dart';
+import 'package:sistrum/providers/library/library_browse_provider.dart';
 import 'package:sistrum/screens/home/home_tab.dart';
 import 'package:sistrum/widgets/status/error_card.dart';
 

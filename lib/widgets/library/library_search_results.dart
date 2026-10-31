@@ -5,9 +5,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/core/models/local_library_item.dart';
 import 'package:sistrum/core/models/unified_library_item.dart';
-import 'package:sistrum/providers/library_search_provider.dart';
-import 'package:sistrum/providers/music_player_provider.dart';
-import 'package:sistrum/providers/playback_provider.dart';
+import 'package:sistrum/providers/library/library_search_provider.dart';
+import 'package:sistrum/providers/playback/music_player_provider.dart';
+import 'package:sistrum/providers/playback/playback_provider.dart';
 import 'package:sistrum/core/navigation/app_screens.dart';
 import 'package:sistrum/services/library/database/library_database.dart';
 import 'package:sistrum/widgets/library/batch_track_actions.dart';
@@ -19,7 +19,7 @@ import 'package:sistrum/widgets/library/library_track_selection_bar.dart';
 import 'package:sistrum/widgets/library/library_selection_playback_actions.dart';
 import 'package:sistrum/widgets/selection/selection_bottom_bar.dart';
 import 'package:sistrum/widgets/library/track_card.dart';
-import 'package:sistrum/providers/library_database_provider.dart';
+import 'package:sistrum/providers/library/library_database_provider.dart';
 
 /// Slivers shared by Material's Library and Sistrum's Library/Songs screens.
 /// Only the current query's provider families are watched; late results from

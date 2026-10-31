@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sistrum/screens/now_playing_screen.dart';
+import 'package:sistrum/screens/player/now_playing_screen.dart';
 import 'package:sistrum/services/platform/app_orientation.dart';
 
 class _PlayerRoute extends NowPlayingRoute {

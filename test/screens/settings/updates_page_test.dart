@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sistrum/l10n/app_localizations.dart';
-import 'package:sistrum/providers/settings_provider.dart';
+import 'package:sistrum/providers/settings/settings_provider.dart';
 import 'package:sistrum/screens/settings/updates_page.dart';
 import 'package:sistrum/services/platform/update_checker.dart';
 import 'package:sistrum/core/theme/app_theme.dart';

@@ -1,5 +1,5 @@
-import 'package:sistrum/providers/library_tag_credits_provider.dart';
-import 'package:sistrum/screens/listening_rewind_screen.dart';
+import 'package:sistrum/providers/library/library_tag_credits_provider.dart';
+import 'package:sistrum/screens/stats/listening_rewind_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';

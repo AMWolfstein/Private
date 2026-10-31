@@ -6,7 +6,7 @@ import 'package:sistrum/widgets/primitives/app_bottom_sheet.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path/path.dart' as p;
 import 'package:sistrum/l10n/l10n.dart';
-import 'package:sistrum/providers/local_library_provider.dart';
+import 'package:sistrum/providers/library/local_library_provider.dart';
 import 'package:sistrum/services/library/covers/embedded_cover_resolver.dart';
 import 'package:sistrum/services/library/database/library_database.dart';
 import 'package:sistrum/utils/scan/duplicate_cleanup_policy.dart';
@@ -14,7 +14,7 @@ import 'package:sistrum/utils/files/file_access.dart';
 import 'package:sistrum/widgets/status/audio_quality_badges.dart';
 import 'package:sistrum/widgets/status/error_card.dart';
 import 'package:sistrum/widgets/settings/settings_group.dart';
-import 'package:sistrum/providers/library_database_provider.dart';
+import 'package:sistrum/providers/library/library_database_provider.dart';
 
 /// Bottom sheet listing tracks that exist more than once (same ISRC) across
 /// download history and the local library, with keep-best and per-copy

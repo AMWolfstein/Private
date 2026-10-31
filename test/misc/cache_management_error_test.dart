@@ -9,7 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/core/models/settings.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
-import 'package:sistrum/providers/settings_provider.dart';
+import 'package:sistrum/providers/settings/settings_provider.dart';
 import 'package:sistrum/screens/settings/cache/cache_management_page.dart';
 import 'package:sistrum/core/theme/app_theme.dart';
 import 'package:sistrum/utils/text/string_utils.dart';

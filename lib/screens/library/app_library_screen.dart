@@ -3,14 +3,14 @@ import 'package:sistrum/core/models/local_library_item.dart';
 import 'package:sistrum/services/library/database/library_database.dart';
 import 'package:sistrum/widgets/library/library_fast_scroller.dart';
 import 'package:sistrum/widgets/library/library_section_list.dart';
-import 'package:sistrum/screens/listening_rewind_screen.dart';
+import 'package:sistrum/screens/stats/listening_rewind_screen.dart';
 import 'dart:async';
 import 'package:sistrum/screens/library/browse/local_genres_screen.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/l10n/l10n.dart';
-import 'package:sistrum/providers/library_browse_provider.dart';
+import 'package:sistrum/providers/library/library_browse_provider.dart';
 import 'package:sistrum/screens/library/local_album/local_album_screen.dart';
 import 'package:sistrum/screens/library/collections/library_collection_tracks_screen.dart';
 import 'package:sistrum/screens/library/collections/favorite_artists_screen.dart';
@@ -20,7 +20,7 @@ import 'package:sistrum/utils/layout/adaptive_layout.dart';
 import 'package:sistrum/utils/layout/nav_bar_inset.dart';
 import 'package:sistrum/widgets/primitives/app_bottom_sheet.dart';
 import 'package:sistrum/widgets/primitives/app_sliver_header.dart';
-import 'package:sistrum/providers/library_database_provider.dart';
+import 'package:sistrum/providers/library/library_database_provider.dart';
 import 'package:sistrum/screens/library/shared/library_browse_artwork.dart';
 
 part 'app_library_screen_1.dart';

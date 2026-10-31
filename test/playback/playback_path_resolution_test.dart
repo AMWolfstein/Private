@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/core/models/track.dart';
-import 'package:sistrum/providers/playback_provider.dart';
+import 'package:sistrum/providers/playback/playback_provider.dart';
 import 'package:sistrum/services/library/database/library_database.dart';
 
 class _Library extends Fake implements LibraryDatabase {

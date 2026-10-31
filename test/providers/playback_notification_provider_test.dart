@@ -2,9 +2,9 @@ import 'package:audio_service/audio_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/core/models/track.dart';
-import 'package:sistrum/providers/library_collections_provider.dart';
-import 'package:sistrum/providers/music_player_provider.dart';
-import 'package:sistrum/providers/playback_notification_provider.dart';
+import 'package:sistrum/providers/library/library_collections_provider.dart';
+import 'package:sistrum/providers/playback/music_player_provider.dart';
+import 'package:sistrum/providers/playback/playback_notification_provider.dart';
 import 'package:sistrum/services/playback/music_player/music_player_runtime.dart';
 import 'package:sistrum/services/playback/notification/playback_notification.dart';
 

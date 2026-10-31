@@ -1,6 +1,6 @@
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter/material.dart';
-import 'package:sistrum/providers/player_metadata_controller.dart';
+import 'package:sistrum/providers/playback/player_metadata_controller.dart';
 import 'package:sistrum/utils/text/string_utils.dart';
 import 'package:sistrum/widgets/status/audio_quality_badges.dart';
 

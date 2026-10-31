@@ -10,7 +10,7 @@ import 'package:flutter/rendering.dart'
 import 'package:flutter/services.dart' show HapticFeedback;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/l10n/l10n.dart';
-import 'package:sistrum/providers/music_player_provider.dart';
+import 'package:sistrum/providers/playback/music_player_provider.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/core/theme/app_theme.dart';
 import 'package:sistrum/core/theme/app_tokens.dart';

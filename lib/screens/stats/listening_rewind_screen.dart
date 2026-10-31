@@ -12,7 +12,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart' show ShareParams, SharePlus, XFile;
-import 'package:sistrum/providers/library_tag_credits_provider.dart';
+import 'package:sistrum/providers/library/library_tag_credits_provider.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/services/playback/stats/listening_rewind.dart';
 import 'package:sistrum/services/playback/stats/listening_statistics.dart';

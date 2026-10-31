@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sistrum/screens/setup_step_layout.dart';
+import 'package:sistrum/screens/setup/setup_step_layout.dart';
 
 void main() {
   testWidgets('a setup step shows its icon, title, description and action', (

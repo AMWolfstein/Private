@@ -3,12 +3,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/l10n/l10n.dart';
-import 'package:sistrum/providers/library_collections_provider.dart';
-import 'package:sistrum/providers/music_player_provider.dart';
+import 'package:sistrum/providers/library/library_collections_provider.dart';
+import 'package:sistrum/providers/playback/music_player_provider.dart';
 import 'package:sistrum/services/library/covers/cover_palette.dart';
 import 'package:sistrum/core/theme/app_theme.dart';
 import 'package:sistrum/widgets/primitives/app_context_menu.dart';
-import 'package:sistrum/providers/cover_palette_provider.dart';
+import 'package:sistrum/providers/library/cover_palette_provider.dart';
 
 /// Navigation for the title/artist, separate from playback and file actions.
 class AppPlayerNavigationMenu extends StatelessWidget {

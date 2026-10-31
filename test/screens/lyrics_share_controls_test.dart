@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/l10n/app_localizations.dart';
-import 'package:sistrum/screens/lyrics_share_card.dart';
-import 'package:sistrum/screens/lyrics_share_controls.dart';
+import 'package:sistrum/screens/lyrics/lyrics_share_card.dart';
+import 'package:sistrum/screens/lyrics/lyrics_share_controls.dart';
 
 Future<void> _pump(WidgetTester tester, Widget child) async {
   tester.view.physicalSize = const Size(390, 844);

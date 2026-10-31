@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sistrum/widgets/header/album_ken_burns.dart';
 import 'package:sistrum/services/library/covers/cover_palette.dart';
-import 'package:sistrum/providers/cover_palette_provider.dart';
+import 'package:sistrum/providers/library/cover_palette_provider.dart';
 
 /// Height of the player's full-bleed artwork on a [screen]: [aspectRatio]
 /// (immersive) up to 0.75 of the height, else square or 0.66 of the height.

@@ -4,9 +4,9 @@ library;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/core/models/settings.dart';
-import 'package:sistrum/providers/library_browse_provider.dart';
-import 'package:sistrum/providers/local_library_provider.dart';
-import 'package:sistrum/providers/settings_provider.dart';
+import 'package:sistrum/providers/library/library_browse_provider.dart';
+import 'package:sistrum/providers/library/local_library_provider.dart';
+import 'package:sistrum/providers/settings/settings_provider.dart';
 import 'package:sistrum/services/library/browse/album_completeness.dart';
 import 'package:sistrum/services/library/browse/library_browse_store.dart';
 

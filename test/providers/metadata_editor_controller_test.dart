@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sistrum/providers/metadata_editor_controller.dart';
+import 'package:sistrum/providers/library/metadata_editor_controller.dart';
 
 void main() {
   test('save snapshots preserve empty tags and explicit track/disc totals', () {

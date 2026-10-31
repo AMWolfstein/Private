@@ -9,7 +9,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:path/path.dart' as p;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sistrum/l10n/l10n.dart';
-import 'package:sistrum/providers/user_profile_provider.dart';
+import 'package:sistrum/providers/settings/user_profile_provider.dart';
 import 'package:sistrum/screens/settings/settings_tab.dart';
 import 'package:sistrum/services/backup/backup_service.dart';
 import 'package:sistrum/core/navigation/shell_navigation.dart';

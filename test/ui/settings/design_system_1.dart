@@ -313,10 +313,10 @@ void _registerDesignSystem1() {
   group('Now Playing actions', () {
     test('uses the app bottom sheet instead of a platform popup menu', () {
       final source = [
-        'lib/screens/now_playing_screen.dart',
-        'lib/screens/now_playing_screen_player.dart',
-        'lib/screens/now_playing_screen_lyrics.dart',
-        'lib/screens/now_playing_screen_menus.dart',
+        'lib/screens/player/now_playing_screen.dart',
+        'lib/screens/player/now_playing_screen_player.dart',
+        'lib/screens/player/now_playing_screen_lyrics.dart',
+        'lib/screens/player/now_playing_screen_menus.dart',
       ].map((path) => File(path).readAsStringSync()).join('\n');
 
       expect(source, contains('showAppBottomSheet<String>'));

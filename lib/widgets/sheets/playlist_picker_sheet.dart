@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/core/models/track.dart';
-import 'package:sistrum/providers/library_collections_provider.dart';
+import 'package:sistrum/providers/library/library_collections_provider.dart';
 import 'package:sistrum/core/theme/app_theme.dart';
 import 'package:sistrum/utils/logging/logger.dart';
 import 'package:sistrum/widgets/primitives/app_action_button.dart';

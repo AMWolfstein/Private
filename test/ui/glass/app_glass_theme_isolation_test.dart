@@ -6,8 +6,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sistrum/core/models/theme_settings.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
-import 'package:sistrum/providers/settings_provider.dart';
-import 'package:sistrum/providers/theme_provider.dart';
+import 'package:sistrum/providers/settings/settings_provider.dart';
+import 'package:sistrum/providers/settings/theme_provider.dart';
 import 'package:sistrum/app.dart';
 
 int _themeBuilds = 0;

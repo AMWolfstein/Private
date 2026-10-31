@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:sistrum/providers/cover_palette_provider.dart';
+import 'package:sistrum/providers/library/cover_palette_provider.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/core/theme/app_glass_levels.dart';
 import 'package:sistrum/utils/cover/cover_file_image.dart';

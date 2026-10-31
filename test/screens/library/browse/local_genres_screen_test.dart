@@ -5,9 +5,9 @@ import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/core/models/local_library_item.dart';
 import 'package:sistrum/services/library/browse/library_tag_credits.dart';
 import 'package:sistrum/core/models/settings.dart';
-import 'package:sistrum/providers/settings_provider.dart';
-import 'package:sistrum/providers/local_library_provider.dart';
-import 'package:sistrum/providers/playback_provider.dart';
+import 'package:sistrum/providers/settings/settings_provider.dart';
+import 'package:sistrum/providers/library/local_library_provider.dart';
+import 'package:sistrum/providers/playback/playback_provider.dart';
 import 'package:sistrum/screens/library/browse/local_genres_screen.dart';
 import 'package:sistrum/core/theme/app_theme.dart';
 

@@ -6,7 +6,7 @@ import 'package:sistrum/screens/library/collections/library_collection_tracks_sc
 import 'package:sistrum/screens/library/local_album/local_album_screen.dart';
 import 'package:sistrum/screens/library/local_artist/local_artist_screen.dart';
 import 'package:sistrum/screens/library/browse/local_genres_screen.dart';
-import 'package:sistrum/screens/now_playing_screen.dart';
+import 'package:sistrum/screens/player/now_playing_screen.dart';
 import 'package:sistrum/services/library/browse/library_tag_credits.dart';
 
 /// The app's full pages, installed as [appScreensProvider].

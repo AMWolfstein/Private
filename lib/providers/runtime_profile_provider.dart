@@ -3,8 +3,8 @@ import 'dart:ui' as ui;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/core/models/app_glass.dart';
 import 'package:sistrum/services/glass/app_glass_auto_probe.dart';
-import 'package:sistrum/providers/settings_provider.dart';
-import 'package:sistrum/providers/theme_provider.dart';
+import 'package:sistrum/providers/settings/settings_provider.dart';
+import 'package:sistrum/providers/settings/theme_provider.dart';
 
 /// True on low-end hardware (arm32-only or low-RAM, resolved at startup in
 /// main.dart via a ProviderScope override). UI uses it to skip expensive

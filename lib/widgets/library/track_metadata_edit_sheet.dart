@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:path/path.dart' as p;
 import 'package:sistrum/l10n/l10n.dart';
-import 'package:sistrum/providers/metadata_editor_controller.dart';
+import 'package:sistrum/providers/library/metadata_editor_controller.dart';
 import 'package:sistrum/services/library/metadata/metadata_cover_resources.dart';
 import 'package:sistrum/core/theme/app_icons.dart';
 import 'package:sistrum/core/theme/app_theme.dart';

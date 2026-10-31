@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sistrum/screens/main_shell_tabs.dart';
+import 'package:sistrum/screens/shell/main_shell_tabs.dart';
 
 void main() {
   testWidgets('a tab navigator shows its first page', (tester) async {

@@ -6,7 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/l10n/app_localizations.dart';
 import 'package:sistrum/core/models/local_library_item.dart';
 import 'package:sistrum/core/models/unified_library_item.dart';
-import 'package:sistrum/providers/local_library_provider.dart';
+import 'package:sistrum/providers/library/local_library_provider.dart';
 import 'package:sistrum/widgets/library/local_track_batch_actions.dart';
 import 'package:sistrum/widgets/primitives/app_alert_dialog.dart';
 import '../../support/pump_until.dart';

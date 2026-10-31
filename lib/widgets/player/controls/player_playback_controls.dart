@@ -1,12 +1,12 @@
-import 'package:sistrum/providers/settings_provider.dart';
+import 'package:sistrum/providers/settings/settings_provider.dart';
 import 'package:sistrum/widgets/player/lyrics/player_lyric_strip.dart';
 import 'package:sistrum/widgets/sheets/audio_info_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:sistrum/providers/player_metadata_controller.dart';
+import 'package:sistrum/providers/playback/player_metadata_controller.dart';
 import 'package:sistrum/l10n/l10n.dart';
-import 'package:sistrum/providers/music_player_provider.dart';
+import 'package:sistrum/providers/playback/music_player_provider.dart';
 import 'package:sistrum/core/theme/app_theme.dart';
 import 'package:sistrum/utils/playback/playback_seek_preview.dart';
 import 'package:sistrum/utils/text/string_utils.dart';

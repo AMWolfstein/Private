@@ -5,8 +5,8 @@ import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sistrum/l10n/app_localizations.dart';
 import 'package:sistrum/core/models/settings.dart';
-import 'package:sistrum/providers/settings_provider.dart';
-import 'package:sistrum/screens/main_shell.dart';
+import 'package:sistrum/providers/settings/settings_provider.dart';
+import 'package:sistrum/screens/shell/main_shell.dart';
 
 class _Settings extends SettingsNotifier {
   @override

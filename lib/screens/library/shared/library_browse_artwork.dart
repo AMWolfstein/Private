@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sistrum/providers/library_browse_provider.dart';
+import 'package:sistrum/providers/library/library_browse_provider.dart';
 import 'package:sistrum/widgets/cover/cached_cover_image.dart';
 import 'package:sistrum/widgets/library/local_library_artwork_builder.dart';
 

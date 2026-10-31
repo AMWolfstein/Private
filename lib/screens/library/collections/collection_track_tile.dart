@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:sistrum/widgets/primitives/app_snack_bar.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/core/models/track.dart';
-import 'package:sistrum/providers/library_collections_provider.dart';
-import 'package:sistrum/providers/music_player_provider.dart';
-import 'package:sistrum/providers/playback_provider.dart';
-import 'package:sistrum/providers/local_library_cover_providers.dart';
+import 'package:sistrum/providers/library/library_collections_provider.dart';
+import 'package:sistrum/providers/playback/music_player_provider.dart';
+import 'package:sistrum/providers/playback/playback_provider.dart';
+import 'package:sistrum/providers/library/local_library_cover_providers.dart';
 import 'package:sistrum/widgets/library/local_song_row.dart';
 import 'package:sistrum/widgets/library/local_song_menu.dart';
 

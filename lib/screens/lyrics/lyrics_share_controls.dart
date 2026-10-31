@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sistrum/l10n/l10n.dart';
-import 'package:sistrum/screens/lyrics_share_card.dart';
+import 'package:sistrum/screens/lyrics/lyrics_share_card.dart';
 import 'package:sistrum/core/theme/app_theme.dart';
 
 class BackgroundPicker extends StatelessWidget {

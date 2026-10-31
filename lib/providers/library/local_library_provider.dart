@@ -5,9 +5,9 @@ import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sistrum/core/models/library_scan_failure.dart';
 import 'package:sistrum/core/models/local_library_item.dart';
-import 'package:sistrum/providers/settings_provider.dart';
-import 'package:sistrum/providers/library_collections_provider.dart';
-import 'package:sistrum/providers/library_database_provider.dart';
+import 'package:sistrum/providers/settings/settings_provider.dart';
+import 'package:sistrum/providers/library/library_collections_provider.dart';
+import 'package:sistrum/providers/library/library_database_provider.dart';
 import 'package:sistrum/services/library/scan/library_cleanup.dart';
 import 'package:sistrum/services/library/database/library_database.dart';
 import 'package:sistrum/services/library/database/library_mutation_ports.dart';
@@ -27,7 +27,7 @@ part 'local_library_provider_sources.dart';
 part 'local_library_provider_loading.dart';
 part 'local_library_provider_scanning.dart';
 part 'local_library_provider_scan_results.dart';
-part 'local_library_state_1.dart';
+part 'local_library_state.dart';
 
 final _log = AppLogger('LocalLibrary');
 

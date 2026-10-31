@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/core/models/automix_options.dart';
-import 'package:sistrum/providers/settings_provider.dart';
-import 'package:sistrum/screens/equalizer_screen.dart';
+import 'package:sistrum/providers/settings/settings_provider.dart';
+import 'package:sistrum/screens/player/equalizer_screen.dart';
 import 'package:sistrum/services/playback/core/music_playback_deck.dart';
 import 'package:sistrum/services/playback/music_player/music_player_service.dart'
     show resetAutoplayLearning;

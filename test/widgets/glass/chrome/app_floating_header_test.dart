@@ -17,7 +17,7 @@ import 'package:sistrum/widgets/collection/collection_scaffold.dart';
 import 'package:sistrum/widgets/glass/chrome/app_backdrop_groups.dart';
 import 'package:sistrum/widgets/glass/chrome/app_chrome.dart';
 import 'package:sistrum/widgets/glass/chrome/app_floating_header.dart';
-import 'package:sistrum/providers/cover_palette_provider.dart';
+import 'package:sistrum/providers/library/cover_palette_provider.dart';
 
 Widget maybeGroups(bool groups, Widget child) =>
     groups ? AppChromeBatch(child: child) : child;

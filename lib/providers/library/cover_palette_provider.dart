@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/services/library/covers/cover_palette.dart';
-import 'package:sistrum/providers/library_database_provider.dart';
+import 'package:sistrum/providers/library/library_database_provider.dart';
 import 'package:sistrum/services/library/covers/cover_analysis_store.dart';
 
 /// The app's cover palette cache: one analysis per cover version, shared by

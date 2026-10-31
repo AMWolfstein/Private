@@ -5,7 +5,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/core/models/local_library_item.dart';
-import 'package:sistrum/providers/music_player_provider.dart';
+import 'package:sistrum/providers/playback/music_player_provider.dart';
 import 'package:sistrum/widgets/player/artwork/player_artwork.dart';
 
 void main() {

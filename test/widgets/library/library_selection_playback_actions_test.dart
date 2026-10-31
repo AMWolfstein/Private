@@ -4,7 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/core/models/local_library_item.dart';
 import 'package:sistrum/core/models/unified_library_item.dart';
-import 'package:sistrum/providers/music_player_provider.dart';
+import 'package:sistrum/providers/playback/music_player_provider.dart';
 import 'package:sistrum/core/theme/app_theme.dart';
 import 'package:sistrum/widgets/library/library_selection_playback_actions.dart';
 import 'package:sistrum/widgets/library/library_track_selection_bar.dart';

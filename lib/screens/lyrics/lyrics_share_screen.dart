@@ -12,9 +12,9 @@ import 'package:sistrum/core/theme/app_tokens.dart';
 import 'package:sistrum/services/library/covers/cover_palette.dart';
 import 'package:sistrum/utils/lyrics/lyric_models.dart';
 import 'package:sistrum/widgets/header/header_controls.dart';
-import 'package:sistrum/providers/cover_palette_provider.dart';
-import 'package:sistrum/screens/lyrics_share_card.dart';
-import 'package:sistrum/screens/lyrics_share_controls.dart';
+import 'package:sistrum/providers/library/cover_palette_provider.dart';
+import 'package:sistrum/screens/lyrics/lyrics_share_card.dart';
+import 'package:sistrum/screens/lyrics/lyrics_share_controls.dart';
 
 /// Lines a card can quote: timed lines in order, or the plain text's lines.
 List<LyricsShareLine> lyricsShareLines(ParsedLyrics lyrics) {

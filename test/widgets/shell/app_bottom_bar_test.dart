@@ -9,7 +9,7 @@ import 'package:liquid_glass_easy/liquid_glass_easy.dart';
 import 'package:sistrum/core/models/app_glass.dart';
 import 'package:sistrum/widgets/glass/selection/app_selection_pill.dart';
 import 'package:sistrum/l10n/l10n.dart';
-import 'package:sistrum/providers/music_player_provider.dart';
+import 'package:sistrum/providers/playback/music_player_provider.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/screens/settings/settings_tab.dart';
 import 'package:sistrum/core/theme/app_theme.dart';

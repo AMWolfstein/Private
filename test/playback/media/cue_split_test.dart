@@ -4,7 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/l10n/app_localizations.dart';
-import 'package:sistrum/providers/local_library_provider.dart';
+import 'package:sistrum/providers/library/local_library_provider.dart';
 import 'package:sistrum/services/ffmpeg/ffmpeg_cue.dart';
 import 'package:sistrum/services/ffmpeg/ffmpeg_models.dart';
 import 'package:sistrum/services/library/database/library_database_models.dart';

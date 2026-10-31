@@ -1,12 +1,12 @@
-import 'package:sistrum/providers/equalizer_provider.dart';
+import 'package:sistrum/providers/settings/equalizer_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sistrum/core/constants/app_info.dart';
-import 'package:sistrum/screens/main_shell.dart';
-import 'package:sistrum/screens/setup_screen.dart';
-import 'package:sistrum/providers/settings_provider.dart';
+import 'package:sistrum/screens/shell/main_shell.dart';
+import 'package:sistrum/screens/setup/setup_screen.dart';
+import 'package:sistrum/providers/settings/settings_provider.dart';
 import 'package:sistrum/core/navigation/app_navigation.dart';
 import 'package:sistrum/services/platform/app_orientation.dart';
 import 'package:sistrum/l10n/app_localizations.dart';
@@ -22,8 +22,8 @@ import 'package:sistrum/core/theme/app_glass_levels.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/widgets/glass/thumb/app_glass_warmup.dart';
 import 'package:sistrum/widgets/glass/artwork/app_artwork_glass.dart';
-import 'package:sistrum/providers/theme_provider.dart';
-import 'package:sistrum/providers/custom_font_provider.dart';
+import 'package:sistrum/providers/settings/theme_provider.dart';
+import 'package:sistrum/providers/settings/custom_font_provider.dart';
 import 'package:sistrum/core/theme/app_theme.dart';
 
 String initialLocationForAppState({

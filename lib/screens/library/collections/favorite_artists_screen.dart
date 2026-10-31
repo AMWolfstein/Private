@@ -2,7 +2,7 @@ import 'package:sistrum/widgets/cover/cached_cover_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/l10n/l10n.dart';
-import 'package:sistrum/providers/library_collections_provider.dart';
+import 'package:sistrum/providers/library/library_collections_provider.dart';
 import 'package:sistrum/screens/library/local_artist/local_artist_screen.dart';
 import 'package:sistrum/utils/layout/adaptive_layout.dart';
 import 'package:sistrum/utils/layout/nav_bar_inset.dart';

@@ -9,7 +9,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/core/models/equalizer_settings.dart';
-import 'package:sistrum/providers/equalizer_provider.dart';
+import 'package:sistrum/providers/settings/equalizer_provider.dart';
 import 'package:sistrum/services/playback/audio/playback_equalizer.dart';
 import 'package:sistrum/core/theme/app_theme.dart';
 import 'package:sistrum/widgets/primitives/app_alert_dialog.dart';

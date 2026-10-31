@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:sistrum/providers/library_collections_provider.dart';
+import 'package:sistrum/providers/library/library_collections_provider.dart';
 import 'package:sistrum/services/library/collections/library_collections_database.dart';
 import 'package:sistrum/services/library/collections/collection_track_batch.dart';
 import 'package:sistrum/services/native/library_scan_bridge.dart';

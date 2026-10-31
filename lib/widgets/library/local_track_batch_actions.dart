@@ -5,7 +5,7 @@ import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/core/models/unified_library_item.dart';
 import 'package:sistrum/services/library/scan/deleted_library_files.dart';
 import 'package:sistrum/widgets/selection/confirm_and_delete_tracks.dart';
-import 'package:sistrum/providers/local_library_provider.dart';
+import 'package:sistrum/providers/library/local_library_provider.dart';
 
 /// Confirms, then deletes the files behind [selected] and removes their
 /// local-index rows. Files that cannot be deleted keep their rows.

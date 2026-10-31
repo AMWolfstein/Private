@@ -4,7 +4,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/l10n/l10n.dart';
-import 'package:sistrum/providers/user_profile_provider.dart';
+import 'package:sistrum/providers/settings/user_profile_provider.dart';
 import 'package:sistrum/core/navigation/shell_navigation.dart';
 
 class ProfileAvatar extends StatelessWidget {
