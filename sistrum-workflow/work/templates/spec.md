@@ -3,7 +3,7 @@
 Status: Draft | Clarified | Accepted
 Created: {{DATE}}
 Input: [FILL: the owner's request in their own words]
-Binding decisions: [FILL: sections of docs/PRODUCT_DECISIONS.md, engine decisions Dn, earlier changes; or "none"]
+Binding decisions: [FILL: earlier accepted changes in work/changes/, engine decisions Dn; or "none"]
 
 <!-- What and why only. No classes, files or APIs here: those belong in plan.md.
      At most 3 NEEDS CLARIFICATION markers (written in square brackets with the question), for choices that change scope, data safety or

@@ -56,7 +56,7 @@ never makes it stale and committing does not either. `check` runs the configured
    `.claude/agents/`, `work/`, `scripts/work/`. Merge with existing files of the same name instead of overwriting
    them.
 2. Add `.work/` to `.gitignore`.
-3. Create `docs/PRODUCT_DECISIONS.md` with the product rules (the product sections of the old `AGENTS.md`).
+3. Product decisions start empty: each accepted spec in `work/changes/` records the decisions it makes.
 4. Check `work/checks.json` against the repository's commands.
 5. Run `python3 -m unittest discover -s scripts/work -p 'test_*.py'` and `python3 scripts/work/work.py status`.
 6. Optional, recommended: the Claude Code hooks below.

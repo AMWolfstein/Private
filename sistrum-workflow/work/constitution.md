@@ -4,8 +4,9 @@ Version 1.0.0 (draft until the owner ratifies it). Every change, plan and review
 articles. A plan that cannot meet one records the deviation in its Complexity tracking table with the reason and
 the simpler option it rejected; it never weakens the article.
 
-Product decisions are not repeated here. They live in `docs/PRODUCT_DECISIONS.md` (product rules) and
-`docs/AUDIO_ENGINE_MIGRATION.md` (engine decisions D1–D7, batch order). Both bind every change.
+Product decisions are not repeated here. They live in the accepted specs under `work/changes/` and, for engine
+work, in `docs/AUDIO_ENGINE_MIGRATION.md` (decisions D1–D7, batch order) when that file is present. Both bind
+every change.
 
 ## I. The owner decides (NON-NEGOTIABLE)
 

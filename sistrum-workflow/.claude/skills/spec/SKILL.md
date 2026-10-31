@@ -14,7 +14,7 @@ The spec is the shared document for a discussion. It says what the owner wants a
 
 ## Write spec.md
 
-1. Read the binding decisions first: `docs/PRODUCT_DECISIONS.md`, and for engine work
+1. Read the binding decisions first: accepted specs in `work/changes/` that touch the same area, and for engine work
    `docs/AUDIO_ENGINE_MIGRATION.md` (decisions D1–D7 and the batch order). Cite the ones that apply under
    "Binding decisions". If the request conflicts with one, stop and ask the owner which wins.
 2. Read the current behaviour in the code so the scenarios describe the real starting point.

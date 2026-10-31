@@ -12,7 +12,7 @@ report with evidence. Reply in the owner's language; code, records and commit me
 
 1. Read the hook output (`work.py status`): active change records, freshness of the last checks, uncommitted
    paths. If a change is active and the request belongs to it, continue it from its records.
-2. Know the rules: `work/constitution.md` (always), `docs/PRODUCT_DECISIONS.md` (product), and for engine work
+2. Know the rules: `work/constitution.md` (always), accepted specs in `work/changes/` (product decisions), and for engine work
    `docs/AUDIO_ENGINE_MIGRATION.md`.
 3. Restate the goal in one line to yourself. Find the code before deciding the size: use `graphify query` if a
    fresh `graphify-out/` exists, otherwise targeted `rg` on strings, symbols and imports.

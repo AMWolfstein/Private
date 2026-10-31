@@ -6,8 +6,8 @@ For every request about this repository (a bug report or screenshot, a feature, 
 a question about the code, a commit, push or build), read `.claude/skills/work/SKILL.md` and follow it. It
 chooses the path; the owner never needs to name a skill or a command.
 
-Authority, highest first: the owner's current instructions; `work/constitution.md`; `docs/PRODUCT_DECISIONS.md`
-and `docs/AUDIO_ENGINE_MIGRATION.md`; accepted change records in `work/changes/`; the existing code.
+Authority, highest first: the owner's current instructions; `work/constitution.md`; accepted change records in
+`work/changes/`; `docs/AUDIO_ENGINE_MIGRATION.md` when present; the existing code.
 
 The tool is `python3 scripts/work/work.py` (status, scope, check, prove, packet, round, lint, new, advance).
 When the Claude Code hooks are installed (see README), it runs on session start, on each message and before
