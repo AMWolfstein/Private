@@ -10,7 +10,7 @@ part 'lyrics_parser_support.dart';
 part 'lyrics_parser_words.dart';
 
 part 'lyrics_parser_ttml.dart';
-part 'lyrics_parser_background_1.dart';
+part 'lyrics_parser_isolate.dart';
 
 class LyricsParser {
   LyricsParser._();

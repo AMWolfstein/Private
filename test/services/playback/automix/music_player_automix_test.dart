@@ -20,13 +20,13 @@ import 'package:sistrum/services/playback/automix/automix_status.dart';
 import 'package:sistrum/services/playback/audio/system_volume_service.dart';
 import 'package:sistrum/services/playback/autoplay/music_player_autoplay.dart';
 
-part 'music_player_automix_1.dart';
-part 'music_player_automix_2.dart';
-part 'music_player_automix_3.dart';
-part 'music_player_automix_4.dart';
-part 'music_player_automix_5.dart';
-part 'music_player_automix_6.dart';
-part 'music_player_automix_7.dart';
+part 'music_player_automix_transport.dart';
+part 'music_player_automix_system_volume.dart';
+part 'music_player_automix_usb.dart';
+part 'music_player_automix_refill.dart';
+part 'music_player_automix_notifications.dart';
+part 'music_player_automix_crossfade.dart';
+part 'music_player_automix_repeat.dart';
 
 class _EffectRenderer extends AutoMixEffectRenderer {
   final tails = <RenderedMixTail>[];
@@ -258,13 +258,13 @@ Future<void> _until(bool Function() ready) async {
 }
 
 void main() {
-  _registerMusicPlayerAutomix1();
-  _registerMusicPlayerAutomix2();
-  _registerMusicPlayerAutomix3();
-  _registerMusicPlayerAutomix4();
-  _registerMusicPlayerAutomix5();
-  _registerMusicPlayerAutomix6();
-  _registerMusicPlayerAutomix7();
+  _registerMusicPlayerAutomixTransport();
+  _registerMusicPlayerAutomixSystemVolume();
+  _registerMusicPlayerAutomixUsb();
+  _registerMusicPlayerAutomixRefill();
+  _registerMusicPlayerAutomixNotifications();
+  _registerMusicPlayerAutomixCrossfade();
+  _registerMusicPlayerAutomixRepeat();
 }
 
 void configurePlaybackNotification({

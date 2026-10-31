@@ -16,8 +16,8 @@ import 'package:sistrum/widgets/glass/thumb/app_glass_surface.dart';
 import 'package:sistrum/widgets/glass/chrome/app_chrome_controls.dart';
 import 'package:sistrum/widgets/glass/selection/app_selection_pill.dart';
 
-part 'app_glass_level_1.dart';
-part 'app_glass_level_2.dart';
+part 'app_glass_level_quality.dart';
+part 'app_glass_level_material.dart';
 
 class _Settings extends SettingsNotifier {
   @override
@@ -46,6 +46,6 @@ AppGlassLevel _levelFor({
 }
 
 void main() {
-  _registerAppGlassLevel1();
-  _registerAppGlassLevel2();
+  _registerAppGlassLevelQuality();
+  _registerAppGlassLevelMaterial();
 }

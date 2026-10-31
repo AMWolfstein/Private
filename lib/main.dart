@@ -32,7 +32,7 @@ import 'package:sistrum/utils/scan/local_library_scan_prefs.dart';
 import 'package:sistrum/utils/logging/logger.dart';
 import 'package:sistrum/services/native/native_channel.dart';
 
-part 'main_startup_1.dart';
+part 'main_startup_benchmark.dart';
 
 final _log = AppLogger('Main');
 _StartupBenchmark? _startupBenchmark;

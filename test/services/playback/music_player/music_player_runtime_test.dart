@@ -23,10 +23,10 @@ import 'package:sistrum/utils/logging/logger.dart';
 import 'package:sistrum/services/playback/music_player/music_player_runtime.dart';
 import 'package:sistrum/services/library/database/library_database.dart';
 
-part 'music_player_runtime_1.dart';
-part 'music_player_runtime_2.dart';
-part 'music_player_runtime_3.dart';
-part 'music_player_runtime_4.dart';
+part 'music_player_runtime_restore.dart';
+part 'music_player_runtime_learning.dart';
+part 'music_player_runtime_failures.dart';
+part 'music_player_runtime_providers.dart';
 
 class _Deck implements MusicPlaybackDeck {
   @override
@@ -288,10 +288,10 @@ const _track = PlayableMedia(
 );
 
 void main() {
-  _registerMusicPlayerRuntime1();
-  _registerMusicPlayerRuntime2();
-  _registerMusicPlayerRuntime3();
-  _registerMusicPlayerRuntime4();
+  _registerMusicPlayerRuntimeRestore();
+  _registerMusicPlayerRuntimeLearning();
+  _registerMusicPlayerRuntimeFailures();
+  _registerMusicPlayerRuntimeProviders();
 }
 
 double _adjustment(

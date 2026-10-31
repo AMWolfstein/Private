@@ -38,8 +38,8 @@ import 'package:sistrum/widgets/header/header_controls.dart';
 import 'package:sistrum/screens/library/collections/collection_track_tile.dart';
 import 'package:sistrum/screens/library/collections/collection_empty_folder_state.dart';
 
-part 'library_collection_tracks_screen_1.dart';
-part 'library_collection_tracks_screen_2.dart';
+part 'library_collection_track_actions.dart';
+part 'library_collection_track_chrome.dart';
 
 class LibraryCollectionTracksScreen extends ConsumerStatefulWidget {
   final LibraryCollectionMode mode;

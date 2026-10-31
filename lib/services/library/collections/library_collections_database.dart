@@ -18,10 +18,10 @@ import 'package:sistrum/utils/logging/logger.dart';
 
 export 'library_collections_models.dart';
 
-part 'library_collections_database_1.dart';
-part 'library_collections_database_2.dart';
-part 'library_collections_database_3.dart';
-part 'library_collections_database_statics_1.dart';
+part 'library_collections_database_snapshots.dart';
+part 'library_collections_database_rows.dart';
+part 'library_collections_database_playlists.dart';
+part 'library_collections_database_statics.dart';
 
 final _log = AppLogger('LibraryCollectionsDb');
 

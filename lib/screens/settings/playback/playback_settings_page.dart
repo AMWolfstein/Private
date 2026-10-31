@@ -21,8 +21,8 @@ import 'package:sistrum/widgets/settings/settings_group.dart';
 import 'package:sistrum/widgets/settings/settings_item_rows.dart';
 import 'package:sistrum/widgets/status/beta_badge.dart';
 
-part 'playback_settings_auto_mix_1.dart';
-part 'playback_settings_auto_mix_2.dart';
+part 'playback_settings_auto_mix_confirm.dart';
+part 'playback_settings_auto_mix_effects.dart';
 
 class PlaybackSettingsPage extends ConsumerStatefulWidget {
   const PlaybackSettingsPage({super.key});

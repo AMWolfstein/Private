@@ -21,8 +21,8 @@ import 'package:sistrum/core/theme/app_theme.dart';
 import 'package:sistrum/widgets/library/track_card.dart';
 import 'package:sistrum/widgets/header/album_play_actions.dart';
 
-part 'playlist_playback_1.dart';
-part 'playlist_playback_2.dart';
+part 'playlist_playback_rows.dart';
+part 'playlist_playback_empty.dart';
 
 final _tracks = [
   for (final name in ['First', 'Unavailable', 'Selected', 'Last'])
@@ -203,6 +203,6 @@ class _PlaylistLibrary extends LocalLibraryNotifier {
 }
 
 void main() {
-  _registerPlaylistPlayback1();
-  _registerPlaylistPlayback2();
+  _registerPlaylistPlaybackRows();
+  _registerPlaylistPlaybackEmpty();
 }

@@ -13,9 +13,9 @@ import 'package:sistrum/widgets/glass/artwork/app_artwork_page_ground.dart';
 import 'package:sistrum/widgets/glass/chrome/app_floating_header.dart';
 import 'package:sistrum/widgets/header/header_controls.dart';
 
-part 'album_detail_header_members_1.dart';
-part 'album_detail_header_members_2.dart';
-part 'album_detail_header_members_3.dart';
+part 'album_detail_header_title.dart';
+part 'album_detail_header_slivers.dart';
+part 'album_detail_header_app_bars.dart';
 
 part 'album_detail_header_parts.dart';
 

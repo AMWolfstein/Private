@@ -24,7 +24,7 @@ import 'package:sistrum/utils/text/string_utils.dart';
 
 export 'package:sistrum/services/audio_analysis/audio_analysis_parsing.dart';
 
-part 'audio_analysis_card_1.dart';
+part 'audio_analysis_card_pipeline.dart';
 
 part 'audio_analysis_info_card.dart';
 part 'audio_analysis_spectrogram.dart';

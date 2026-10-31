@@ -175,9 +175,7 @@ class LibraryBrowseStore {
     await _ensureCredits(request, always: true);
     final search = sqlite.normalizeSearchText(request.searchQuery);
     const table = LibraryTagCreditsCache.tempTable;
-    final fields = request.albumArtistsOnly
-        ? "'album_artist'"
-        : "'artist'";
+    final fields = request.albumArtistsOnly ? "'album_artist'" : "'artist'";
     final args = <Object?>[
       if (search.isNotEmpty) '%${escapeLikePattern(search)}%',
       request.limit,

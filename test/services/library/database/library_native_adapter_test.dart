@@ -11,8 +11,8 @@ import 'package:sistrum/services/library/database/sqlite_native_snapshot.dart';
 import '../../../support/library_native_fixture.dart';
 import '../../../support/sqlite_process_database.dart';
 
-part 'library_native_adapter_1.dart';
-part 'library_native_adapter_2.dart';
+part 'library_native_adapter_staging.dart';
+part 'library_native_adapter_timestamps.dart';
 
 class _NativeHarness {
   _NativeHarness(this.live);
@@ -179,6 +179,6 @@ class _SqlProbe implements Database, Transaction {
 }
 
 void main() {
-  _registerLibraryNativeAdapter1();
-  _registerLibraryNativeAdapter2();
+  _registerLibraryNativeAdapterStaging();
+  _registerLibraryNativeAdapterTimestamps();
 }

@@ -8,9 +8,9 @@ import 'package:sistrum/core/models/track.dart';
 import 'package:sistrum/providers/library/library_collections_provider.dart';
 import 'package:sistrum/services/library/collections/library_collections_database.dart';
 
-part 'library_collections_mutation_1.dart';
-part 'library_collections_mutation_2.dart';
-part 'library_collections_mutation_3.dart';
+part 'library_collections_mutation_hydration.dart';
+part 'library_collections_mutation_disposal.dart';
+part 'library_collections_mutation_toggles.dart';
 
 class _CollectionsDatabase implements LibraryCollectionsDatabase {
   final loved = <String, Map<String, dynamic>>{};
@@ -224,7 +224,7 @@ ProviderContainer _container(_CollectionsDatabase db) {
 }
 
 void main() {
-  _registerLibraryCollectionsMutation1();
-  _registerLibraryCollectionsMutation2();
-  _registerLibraryCollectionsMutation3();
+  _registerLibraryCollectionsMutationHydration();
+  _registerLibraryCollectionsMutationDisposal();
+  _registerLibraryCollectionsMutationToggles();
 }

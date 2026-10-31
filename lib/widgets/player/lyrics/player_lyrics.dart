@@ -25,17 +25,17 @@ import 'package:sistrum/widgets/lyrics/lyric_supplement_transition.dart';
 import 'package:sistrum/widgets/lyrics/lyrics_text_scale.dart';
 import 'package:sistrum/widgets/player/controls/app_player_slider.dart';
 
-part 'player_lyrics_members_1.dart';
-part 'player_lyrics_members_2.dart';
-part 'player_lyrics_members_3.dart';
-part 'player_lyrics_members_4.dart';
+part 'player_lyrics_scroll.dart';
+part 'player_lyrics_measurement.dart';
+part 'player_lyrics_build.dart';
+part 'player_lyrics_reveal.dart';
 
-part 'player_lyrics_support_1.dart';
-part 'player_lyrics_overrides_1.dart';
-part 'player_lyrics_painting_1.dart';
-part 'player_lyrics_painting_2.dart';
-part 'player_lyrics_painting_3.dart';
-part 'player_lyrics_layout_1.dart';
+part 'player_lyrics_extent_geometry.dart';
+part 'player_lyrics_lifecycle.dart';
+part 'player_lyrics_word_timing.dart';
+part 'player_lyrics_sweep_painting.dart';
+part 'player_lyrics_word_boundaries.dart';
+part 'player_lyric_layout_models.dart';
 
 const _appLyricFontSize = 34.0;
 const appLyricsContentInset = 28.0 + AppPlayerSlider.horizontalInset;

@@ -36,8 +36,8 @@ import 'package:sistrum/utils/logging/logger.dart';
 export 'package:sistrum/core/models/playable_media.dart';
 export '../core/playback_metadata.dart';
 
-part 'music_player_service_members_1.dart';
-part 'music_player_service_members_2.dart';
+part 'music_player_service_dependencies.dart';
+part 'music_player_service_normalization.dart';
 
 part 'music_player_events.dart';
 part 'music_player_hooks.dart';
@@ -47,8 +47,8 @@ part 'music_player_playback.dart';
 part 'music_player_queue.dart';
 part 'music_player_session.dart';
 part 'music_player_source.dart';
-part 'music_player_service_overrides_1.dart';
-part 'music_player_service_overrides_2.dart';
+part 'music_player_service_session_handlers.dart';
+part 'music_player_service_media_handlers.dart';
 
 final _log = AppLogger('MusicPlayer');
 

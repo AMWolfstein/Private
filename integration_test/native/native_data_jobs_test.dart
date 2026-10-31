@@ -18,7 +18,7 @@ import 'package:sistrum/utils/lyrics/lyrics_parser.dart';
 import 'package:sistrum/utils/lyrics/lyric_models.dart';
 import 'package:sistrum/widgets/audio_analysis/audio_analysis_widget.dart';
 
-part 'native_data_jobs_1.dart';
+part 'native_data_jobs_lyrics.dart';
 
 // Run on a real Android/iOS host. These tests intentionally use the actual
 // channel and native workers; missing bindings must fail, never use a fallback.
@@ -120,7 +120,7 @@ Uint8List _flac({String title = 'Native song', Uint8List? picture}) {
 }
 
 void main() {
-  _registerNativeDataJobs1();
+  _registerNativeDataJobsLyrics();
 }
 
 // Embedded from test/fixtures/native_lyrics_parsers.json so device tests do not

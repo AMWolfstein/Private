@@ -22,7 +22,7 @@ import 'package:sistrum/widgets/animation/animation_utils.dart';
 import 'package:sistrum/screens/settings/library/library_settings_scan_widgets.dart';
 import 'package:sistrum/screens/settings/library/library_settings_source_item.dart';
 
-part 'library_settings_page_1.dart';
+part 'library_settings_actions.dart';
 
 class LibrarySettingsPage extends ConsumerStatefulWidget {
   const LibrarySettingsPage({super.key});

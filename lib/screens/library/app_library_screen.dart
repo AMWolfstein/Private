@@ -23,7 +23,7 @@ import 'package:sistrum/widgets/primitives/app_sliver_header.dart';
 import 'package:sistrum/providers/library/library_database_provider.dart';
 import 'package:sistrum/screens/library/shared/library_browse_artwork.dart';
 
-part 'app_library_screen_1.dart';
+part 'app_library_actions.dart';
 
 enum AppLibraryPage { overview, albums, artists, albumArtists }
 

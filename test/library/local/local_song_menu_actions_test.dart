@@ -22,8 +22,8 @@ import 'package:sistrum/widgets/library/local_song_row.dart';
 import 'package:sistrum/widgets/primitives/app_context_menu.dart';
 import '../../support/pump_until.dart';
 
-part 'local_song_menu_actions_1.dart';
-part 'local_song_menu_actions_2.dart';
+part 'local_song_menu_popover.dart';
+part 'local_song_menu_navigation.dart';
 
 class _Settings extends SettingsNotifier {
   @override
@@ -54,6 +54,6 @@ class _Player extends MusicPlayerController {
 }
 
 void main() {
-  _registerLocalSongMenuActions1();
-  _registerLocalSongMenuActions2();
+  _registerLocalSongMenuPopover();
+  _registerLocalSongMenuNavigation();
 }

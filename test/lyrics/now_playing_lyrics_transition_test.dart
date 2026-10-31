@@ -44,38 +44,38 @@ import 'package:sistrum/widgets/player/artwork/app_player_background.dart';
 import 'package:sistrum/widgets/player/mini_player.dart';
 import 'package:sistrum/widgets/player/controls/playback_seek_slider.dart';
 
-part 'now_playing_lyrics_transition_1.dart';
-part 'now_playing_lyrics_transition_2.dart';
-part 'now_playing_lyrics_transition_3.dart';
-part 'now_playing_lyrics_transition_4.dart';
-part 'now_playing_lyrics_transition_5.dart';
-part 'now_playing_lyrics_transition_6.dart';
-part 'now_playing_lyrics_transition_7.dart';
-part 'now_playing_lyrics_transition_8.dart';
-part 'now_playing_lyrics_transition_9.dart';
-part 'now_playing_lyrics_transition_10.dart';
-part 'now_playing_lyrics_transition_11.dart';
-part 'now_playing_lyrics_transition_12.dart';
-part 'now_playing_lyrics_transition_13.dart';
-part 'now_playing_lyrics_transition_14.dart';
-part 'now_playing_lyrics_transition_15.dart';
+part 'now_playing_lyrics_navigation.dart';
+part 'now_playing_lyrics_glass.dart';
+part 'now_playing_lyrics_scrubbing.dart';
+part 'now_playing_lyrics_scrolling.dart';
+part 'now_playing_lyrics_background.dart';
+part 'now_playing_lyrics_instrumental.dart';
+part 'now_playing_lyrics_transport.dart';
+part 'now_playing_lyrics_times.dart';
+part 'now_playing_lyrics_immersive.dart';
+part 'now_playing_lyrics_header.dart';
+part 'now_playing_lyrics_language_menu.dart';
+part 'now_playing_lyrics_ttml_voices.dart';
+part 'now_playing_lyrics_romanization.dart';
+part 'now_playing_lyrics_hold.dart';
+part 'now_playing_lyrics_alignment.dart';
 
 void main() {
-  _registerNowPlayingLyricsTransition1();
-  _registerNowPlayingLyricsTransition2();
-  _registerNowPlayingLyricsTransition3();
-  _registerNowPlayingLyricsTransition4();
-  _registerNowPlayingLyricsTransition5();
-  _registerNowPlayingLyricsTransition6();
-  _registerNowPlayingLyricsTransition7();
-  _registerNowPlayingLyricsTransition8();
-  _registerNowPlayingLyricsTransition9();
-  _registerNowPlayingLyricsTransition10();
-  _registerNowPlayingLyricsTransition11();
-  _registerNowPlayingLyricsTransition12();
-  _registerNowPlayingLyricsTransition13();
-  _registerNowPlayingLyricsTransition14();
-  _registerNowPlayingLyricsTransition15();
+  _registerNowPlayingLyricsNavigation();
+  _registerNowPlayingLyricsGlass();
+  _registerNowPlayingLyricsScrubbing();
+  _registerNowPlayingLyricsScrolling();
+  _registerNowPlayingLyricsBackground();
+  _registerNowPlayingLyricsInstrumental();
+  _registerNowPlayingLyricsTransport();
+  _registerNowPlayingLyricsTimes();
+  _registerNowPlayingLyricsImmersive();
+  _registerNowPlayingLyricsHeader();
+  _registerNowPlayingLyricsLanguageMenu();
+  _registerNowPlayingLyricsTtmlVoices();
+  _registerNowPlayingLyricsRomanization();
+  _registerNowPlayingLyricsHold();
+  _registerNowPlayingLyricsAlignment();
 }
 
 Map<String, dynamic> _lyricsDto(ParsedLyrics value) => {

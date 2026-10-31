@@ -11,8 +11,8 @@ import 'package:sistrum/providers/library/library_collections_provider.dart';
 import 'package:sistrum/providers/settings/settings_provider.dart';
 import 'package:sistrum/services/library/database/library_database.dart';
 
-part 'library_loading_1.dart';
-part 'library_loading_2.dart';
+part 'library_loading_grants.dart';
+part 'library_loading_cleanup.dart';
 
 class _Settings extends SettingsNotifier {
   @override
@@ -120,6 +120,6 @@ Future<void> _waitFor(bool Function() condition) async {
 }
 
 void main() {
-  _registerLibraryLoading1();
-  _registerLibraryLoading2();
+  _registerLibraryLoadingGrants();
+  _registerLibraryLoadingCleanup();
 }

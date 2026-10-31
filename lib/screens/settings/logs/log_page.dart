@@ -17,7 +17,7 @@ import 'package:sistrum/utils/layout/adaptive_layout.dart';
 import 'package:sistrum/screens/settings/logs/log_entry_tile.dart';
 import 'package:sistrum/services/platform/native_log_source.dart';
 
-part 'log_page_1.dart';
+part 'log_page_controls.dart';
 
 class LogPage extends ConsumerStatefulWidget {
   const LogPage({super.key});

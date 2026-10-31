@@ -10,8 +10,8 @@ import 'package:sistrum/core/theme/app_theme.dart';
 import 'package:sistrum/utils/lyrics/lyric_models.dart';
 import 'package:sistrum/widgets/player/lyrics/player_lyrics.dart';
 
-part 'player_lyrics_repaint_1.dart';
-part 'player_lyrics_repaint_2.dart';
+part 'player_lyrics_repaint_crossfades.dart';
+part 'player_lyrics_repaint_painters.dart';
 
 const _text = 'AAAA BBBB';
 const _lyrics = ParsedLyrics(
@@ -70,6 +70,6 @@ Future<List<int>> _pixels(WidgetTester tester) async {
 }
 
 void main() {
-  _registerPlayerLyricsRepaint1();
-  _registerPlayerLyricsRepaint2();
+  _registerPlayerLyricsRepaintCrossfades();
+  _registerPlayerLyricsRepaintPainters();
 }

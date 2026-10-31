@@ -11,7 +11,7 @@ import 'package:sistrum/widgets/glass/thumb/app_liquid_backdrop.dart';
 import 'package:sistrum/widgets/glass/selection/app_selection_foreground.dart';
 import 'package:sistrum/widgets/glass/selection/app_selection_shared.dart';
 
-part 'app_selection_pill_1.dart';
+part 'app_selection_pill_motion.dart';
 
 Future<ui.FragmentProgram>? _selectionMaskProgram;
 ui.FragmentProgram? _loadedSelectionMaskProgram;

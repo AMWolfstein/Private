@@ -23,14 +23,14 @@ import 'package:sistrum/widgets/header/app_artist_header.dart';
 import 'package:sistrum/widgets/shell/app_bottom_bar.dart';
 import 'package:sistrum/widgets/glass/chrome/app_chrome_controls.dart';
 
-part 'app_bottom_bar_1.dart';
-part 'app_bottom_bar_2.dart';
-part 'app_bottom_bar_3.dart';
+part 'app_bottom_bar_shared_read.dart';
+part 'app_bottom_bar_transitions.dart';
+part 'app_bottom_bar_folding.dart';
 
 void main() {
-  _registerAppBottomBar1();
-  _registerAppBottomBar2();
-  _registerAppBottomBar3();
+  _registerAppBottomBarSharedRead();
+  _registerAppBottomBarTransitions();
+  _registerAppBottomBarFolding();
 }
 
 class _StripedBackdrop extends CustomPainter {

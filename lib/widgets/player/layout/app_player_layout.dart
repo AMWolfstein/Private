@@ -23,7 +23,7 @@ import 'package:sistrum/widgets/player/layout/player_metadata_title.dart';
 import 'package:sistrum/widgets/player/controls/player_playback_controls.dart';
 import 'package:sistrum/widgets/player/layout/player_track_swipe.dart';
 
-part 'app_player_layout_members_1.dart';
+part 'app_player_layout_track_header.dart';
 
 /// Keys stay owned by the surface that measures contrast and route dismissal.
 typedef AppPlayerArtworkKeys = ({

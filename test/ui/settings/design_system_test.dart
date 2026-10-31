@@ -24,9 +24,9 @@ import 'package:sistrum/widgets/selection/selection_bottom_bar.dart';
 import 'package:sistrum/widgets/settings/settings_chips_and_cards.dart';
 import 'package:sistrum/widgets/library/track_card.dart';
 
-part 'design_system_1.dart';
-part 'design_system_2.dart';
-part 'design_system_3.dart';
+part 'design_system_tokens.dart';
+part 'design_system_headers.dart';
+part 'design_system_selection.dart';
 
 /// Every Dart source file under `lib/`, used by the source-level contracts
 /// below. Those contracts exist because the duplication they guard against was
@@ -78,7 +78,7 @@ Widget _hostSliver(Widget sliver) {
 }
 
 void main() {
-  _registerDesignSystem1();
-  _registerDesignSystem2();
-  _registerDesignSystem3();
+  _registerDesignSystemTokens();
+  _registerDesignSystemHeaders();
+  _registerDesignSystemSelection();
 }

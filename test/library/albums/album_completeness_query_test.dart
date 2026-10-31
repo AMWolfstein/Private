@@ -21,8 +21,8 @@ import 'package:sistrum/services/library/database/library_database.dart';
 import '../../support/library_table_definition.dart';
 import '../../support/material_test_theme.dart';
 
-part 'album_completeness_query_1.dart';
-part 'album_completeness_query_2.dart';
+part 'album_completeness_query_filters.dart';
+part 'album_completeness_query_rescan.dart';
 
 // Execute the actual page/count queries with their bound parameters in SQLite.
 // Schema/bootstrap calls are isolated from this fixed inventory fixture.
@@ -134,6 +134,6 @@ Future<void> _waitFor(WidgetTester tester, Finder finder) async {
 }
 
 void main() {
-  _registerAlbumCompletenessQuery1();
-  _registerAlbumCompletenessQuery2();
+  _registerAlbumCompletenessQueryFilters();
+  _registerAlbumCompletenessQueryRescan();
 }

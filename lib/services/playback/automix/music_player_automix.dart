@@ -12,13 +12,13 @@ import 'package:sistrum/services/playback/automix/automix_status.dart';
 import 'package:sistrum/services/playback/core/music_playback_deck.dart';
 import 'package:sistrum/utils/logging/logger.dart';
 
-part 'music_player_automix_members_1.dart';
-part 'music_player_automix_members_2.dart';
-part 'music_player_automix_members_3.dart';
-part 'music_player_automix_members_4.dart';
-part 'music_player_automix_members_5.dart';
-part 'music_player_automix_members_6.dart';
-part 'music_player_automix_members_7.dart';
+part 'music_player_automix_status.dart';
+part 'music_player_automix_pins.dart';
+part 'music_player_automix_generation.dart';
+part 'music_player_automix_position.dart';
+part 'music_player_automix_start.dart';
+part 'music_player_automix_alignment.dart';
+part 'music_player_automix_lifecycle.dart';
 
 final _log = AppLogger('MusicPlayer');
 

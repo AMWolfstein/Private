@@ -8,8 +8,8 @@ import 'package:sistrum/services/library/database/library_schema.dart';
 
 import '../../../support/sqlite_process_database.dart';
 
-part 'library_browse_store_1.dart';
-part 'library_browse_store_2.dart';
+part 'library_browse_store_releases.dart';
+part 'library_browse_store_counts.dart';
 
 List<String> _tracks(LibraryBrowseDbPage page) => [
   for (final row in page.rows) '${row['source']}:${(row['item'] as Map)['id']}',
@@ -37,6 +37,6 @@ class _AlbumQueryDatabase implements Database {
 }
 
 void main() {
-  _registerLibraryBrowseStore1();
-  _registerLibraryBrowseStore2();
+  _registerLibraryBrowseStoreReleases();
+  _registerLibraryBrowseStoreCounts();
 }

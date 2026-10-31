@@ -17,8 +17,8 @@ import 'package:sistrum/services/native/library_scan_bridge.dart';
 import 'package:sistrum/services/platform/notification_service.dart';
 import 'package:sistrum/utils/scan/local_library_scan_prefs.dart';
 
-part 'library_scan_scheduling_1.dart';
-part 'library_scan_scheduling_2.dart';
+part 'library_scan_scheduling_starts.dart';
+part 'library_scan_scheduling_reconnect.dart';
 
 /// Scan jobs reach the backend as `runNativeDataJob` requests; these tests
 /// hold them open through their own channel handler.
@@ -145,6 +145,6 @@ Future<void> _waitFor(bool Function() condition) async {
 }
 
 void main() {
-  _registerLibraryScanScheduling1();
-  _registerLibraryScanScheduling2();
+  _registerLibraryScanSchedulingStarts();
+  _registerLibraryScanSchedulingReconnect();
 }

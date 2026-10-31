@@ -16,8 +16,8 @@ import 'package:sistrum/utils/text/string_utils.dart';
 import 'package:sistrum/widgets/primitives/app_alert_dialog.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-part 'update_dialog_support_1.dart';
-part 'update_dialog_support_2.dart';
+part 'update_dialog_download.dart';
+part 'update_dialog_install.dart';
 
 class UpdateDialog extends StatefulWidget {
   final UpdateInfo updateInfo;

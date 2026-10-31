@@ -27,7 +27,7 @@ import 'package:sistrum/widgets/primitives/app_snack_bar.dart';
 import 'package:sistrum/widgets/status/audio_quality_badges.dart';
 import 'package:sistrum/widgets/status/error_card.dart';
 
-part 'local_artist_screen_1.dart';
+part 'local_artist_sections.dart';
 
 /// Sistrum's former artist detail composition, backed entirely by local music.
 class LocalArtistScreen extends ConsumerStatefulWidget {

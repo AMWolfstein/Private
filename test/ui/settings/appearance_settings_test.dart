@@ -15,12 +15,12 @@ import 'package:sistrum/screens/settings/appearance/appearance_settings_page.dar
 import 'package:sistrum/app.dart';
 import 'package:sistrum/core/theme/app_theme.dart';
 
-part 'appearance_settings_1.dart';
-part 'appearance_settings_2.dart';
-part 'appearance_settings_3.dart';
+part 'appearance_settings_defaults.dart';
+part 'appearance_settings_persistence.dart';
+part 'appearance_settings_font.dart';
 
 void main() {
-  _registerAppearanceSettings1();
-  _registerAppearanceSettings2();
-  _registerAppearanceSettings3();
+  _registerAppearanceSettingsDefaults();
+  _registerAppearanceSettingsPersistence();
+  _registerAppearanceSettingsFont();
 }

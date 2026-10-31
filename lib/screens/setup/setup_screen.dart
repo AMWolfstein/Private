@@ -19,8 +19,8 @@ import 'package:sistrum/utils/logging/logger.dart';
 import 'package:sistrum/providers/library/local_library_provider.dart';
 import 'package:sistrum/screens/setup/setup_step_layout.dart';
 
-part 'setup_screen_1.dart';
-part 'setup_screen_2.dart';
+part 'setup_screen_flow.dart';
+part 'setup_screen_steps.dart';
 
 final _log = AppLogger('SetupScreen');
 

@@ -12,7 +12,7 @@ import 'package:sistrum/widgets/glass/chrome/app_chrome_controls.dart';
 import 'package:sistrum/widgets/glass/selection/app_selection_pill.dart';
 import 'package:sistrum/widgets/glass/selection/app_selection_foreground.dart';
 
-part 'app_glass_interaction_1.dart';
+part 'app_glass_interaction_gestures.dart';
 
 void _maskCullingTests() {
   for (final direction in TextDirection.values) {
@@ -149,7 +149,7 @@ void _maskCullingTests() {
 }
 
 void main() {
-  _registerAppGlassInteraction1();
+  _registerAppGlassInteractionGestures();
 }
 
 class _OverflowForeground extends LeafRenderObjectWidget {

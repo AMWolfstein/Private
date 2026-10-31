@@ -9,8 +9,8 @@ import 'package:sistrum/core/theme/app_theme.dart';
 
 import '../../../support/sqlite_process_database.dart';
 
-part 'listening_rewind_1.dart';
-part 'listening_rewind_2.dart';
+part 'listening_rewind_aggregates.dart';
+part 'listening_rewind_slides.dart';
 
 Map<String, Object?> _row(
   String day,
@@ -81,6 +81,6 @@ ListeningRewind _yearSample() => ListeningRewind.compute(
 );
 
 void main() {
-  _registerListeningRewind1();
-  _registerListeningRewind2();
+  _registerListeningRewindAggregates();
+  _registerListeningRewindSlides();
 }

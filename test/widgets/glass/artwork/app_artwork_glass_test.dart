@@ -18,8 +18,8 @@ import 'package:sistrum/widgets/glass/chrome/app_floating_header.dart';
 import 'package:sistrum/widgets/player/artwork/app_player_ground.dart';
 import 'package:sistrum/widgets/primitives/app_context_menu.dart';
 
-part 'app_artwork_glass_1.dart';
-part 'app_artwork_glass_2.dart';
+part 'app_artwork_glass_shaders.dart';
+part 'app_artwork_glass_grounds.dart';
 
 final _cover = File('test/fixtures/covers/qamar.png').absolute.path;
 final _otherCover = File('test/fixtures/covers/saturated.png').absolute.path;
@@ -122,6 +122,6 @@ extension<T> on T {
 }
 
 void main() {
-  _registerAppArtworkGlass1();
-  _registerAppArtworkGlass2();
+  _registerAppArtworkGlassShaders();
+  _registerAppArtworkGlassGrounds();
 }

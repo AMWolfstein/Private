@@ -15,10 +15,10 @@ import 'package:sistrum/widgets/header/album_play_actions.dart';
 import 'package:sistrum/widgets/header/app_artist_header.dart';
 import 'package:sistrum/widgets/header/header_controls.dart';
 
-part 'app_detail_headers_1.dart';
-part 'app_detail_headers_2.dart';
+part 'app_detail_headers_artist.dart';
+part 'app_detail_headers_album.dart';
 
 void main() {
-  _registerAppDetailHeaders1();
-  _registerAppDetailHeaders2();
+  _registerAppDetailHeadersArtist();
+  _registerAppDetailHeadersAlbum();
 }

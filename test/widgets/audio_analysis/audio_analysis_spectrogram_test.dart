@@ -5,12 +5,12 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/services/audio_analysis/audio_analysis_store.dart';
 import 'package:sistrum/widgets/audio_analysis/audio_analysis_widget.dart';
 
-part 'audio_analysis_spectrogram_1.dart';
-part 'audio_analysis_spectrogram_2.dart';
+part 'audio_analysis_codecs.dart';
+part 'audio_analysis_cutoffs.dart';
 
 void main() {
-  _registerAudioAnalysisSpectrogram1();
-  _registerAudioAnalysisSpectrogram2();
+  _registerAudioAnalysisCodecs();
+  _registerAudioAnalysisCutoffs();
 }
 
 ({Uint8List intensity, int width, int height, double maxFrequencyHz})
