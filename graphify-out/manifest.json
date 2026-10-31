@@ -1656,9 +1656,9 @@
     "semantic_hash": "bfee1356e4c394e0644e2bbc91d17bec"
   },
   "LOCAL_OFFLINE_MIGRATION_PLAN.md": {
-    "mtime": 1793438322.1316044,
-    "seen": 1793443279.492362,
-    "ast_hash": "f32f5ea1f8b63d032e88b97dadcf0110",
+    "mtime": 1793443286.1891413,
+    "seen": 1793445196.2520201,
+    "ast_hash": "fe5b5070ec83db9120787af20744ceaa",
     "semantic_hash": ""
   },
   "third_party/audio_service/CHANGELOG.md": {
@@ -3906,9 +3906,9 @@
     "semantic_hash": ""
   },
   "lib/services/native/media_file_bridge.dart": {
-    "mtime": 1793440266.4551284,
-    "seen": 1793443279.4336534,
-    "ast_hash": "073018de206075361bb9cae5b7010a69",
+    "mtime": 1793444134.2562392,
+    "seen": 1793445196.210942,
+    "ast_hash": "f96f7d6d7de801769800b80f655ff13e",
     "semantic_hash": ""
   },
   "lib/services/native/native_channel.dart": {
@@ -4050,9 +4050,9 @@
     "semantic_hash": ""
   },
   "lib/services/native/native_data_jobs.dart": {
-    "mtime": 1793284540.154643,
-    "seen": 1793372074.3903475,
-    "ast_hash": "1032f1b8060d1dbda589a62b3bb89c7a",
+    "mtime": 1793444125.878827,
+    "seen": 1793445196.2110338,
+    "ast_hash": "d3e91718a446aaa7a7b621b7ba620e8d",
     "semantic_hash": ""
   },
   "lib/services/native/native_device.dart": {
@@ -7302,9 +7302,9 @@
     "semantic_hash": ""
   },
   "lib/utils/lyrics/lyrics_parser.dart": {
-    "mtime": 1793413572.375737,
-    "seen": 1793414207.950373,
-    "ast_hash": "bc20453254abf86f083d9e1900ad9329",
+    "mtime": 1793444131.1433065,
+    "seen": 1793445196.2132764,
+    "ast_hash": "7cf71ef440543e0da68e6a26b7695b18",
     "semantic_hash": ""
   },
   "lib/utils/lyrics/lyrics_parser_ttml.dart": {
@@ -8442,9 +8442,9 @@
     "semantic_hash": ""
   },
   "test/platform/native_data_job_bridge_test.dart": {
-    "mtime": 1793373264.744335,
-    "seen": 1793373946.4897895,
-    "ast_hash": "c80a018cff4c2b8006b80dc913dcb8ba",
+    "mtime": 1793444689.7699516,
+    "seen": 1793445196.2381268,
+    "ast_hash": "0f09e4c1c6c10e7d518be248c3c73bf7",
     "semantic_hash": ""
   },
   "test/platform/native_library_contract_test.dart": {
@@ -11139,6 +11139,12 @@
     "mtime": 1793440306.0881827,
     "seen": 1793443279.4780924,
     "ast_hash": "309208280e2892f20a1b26f8b914ea1e",
+    "semantic_hash": ""
+  },
+  "test/services/native/native_data_job_inline_encoding_test.dart": {
+    "mtime": 1793444134.300239,
+    "seen": 1793445196.2412338,
+    "ast_hash": "3217afe84771c9941482f8ee28caa64d",
     "semantic_hash": ""
   }
 }
