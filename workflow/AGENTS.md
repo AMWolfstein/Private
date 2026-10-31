@@ -1,6 +1,7 @@
 # Sistrum engineering workflow
 
-This repository carries its own workflow; nothing needs installing.
+This repository carries its own workflow; nothing needs installing beyond Git and Python 3.10+.
+The package contents belong at the repository root. All paths below are relative to that root.
 
 For every request about this repository (a bug report or screenshot, a feature, a plan or discussion, a review,
 a question about the code, a commit, push or build), read `.agents/skills/work/SKILL.md` and follow it. It

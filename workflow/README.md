@@ -79,17 +79,51 @@ Existing active changes must add this declaration. Review packets and review fin
 Skills remain responsible for analysis, sensible tests and semantic review; Python enforces declarations and
 evidence, not the truth of arbitrary prose. No redundant parallel skill system is introduced.
 
-## Install in a repository
+## Copy into a new repository
 
-1. Copy the contents of this folder to the repository root: `AGENTS.md`, `.agents/skills/`,
-   `.agents/reviewers/`, `work/`, `scripts/work/`. Merge with existing files of the same name instead of overwriting
-   them.
-2. Add `.work/` to `.gitignore`.
-3. Product decisions start empty: each accepted spec in `work/changes/` records the decisions it makes.
-4. Check `work/checks.json` against the repository's commands.
-5. Run `python3 -m unittest discover -s scripts/work -p 'test_*.py'` and `python3 scripts/work/work.py status`.
-6. Make your agent read root `AGENTS.md`. It routes requests to `.agents/skills/work/SKILL.md`.
-   Automatic AGENTS.md and skill discovery depend on the agent; explicit file reads work without a plugin.
+Copy **the contents** of this `workflow/` folder into the new repository root, including hidden files and
+folders. Do not copy the outer `workflow/` folder itself. The resulting layout is:
+
+```text
+new-repository/
+├── AGENTS.md
+├── README.md
+├── .gitignore
+├── .agents/
+│   ├── skills/
+│   └── reviewers/
+├── scripts/work/
+│   ├── work.py
+│   └── test_work.py
+└── work/
+    ├── checks.json
+    ├── constitution.md
+    ├── LESSONS.md
+    ├── guides/
+    └── templates/
+```
+
+Merge existing AGENTS.md, README.md and .gitignore instead of overwriting project content. Include the two
+ignore rules supplied here (`.work/` and `__pycache__/`). No dependency on this source repository remains.
+`AGENTS.md` is required: it is the agent entry point, alongside the three directories and README.
+
+Requirements: Git and Python 3.10+. Use an initialized Git checkout with at least one commit. If the new repo
+is empty, initialize it and make the initial commit before running workflow commands. From its root run:
+
+```sh
+python3 -m unittest discover -s scripts/work -p 'test_*.py'
+python3 scripts/work/work.py status
+```
+
+Make your agent read root `AGENTS.md`; it routes requests to `.agents/skills/work/SKILL.md`. Automatic
+AGENTS.md and skill discovery depend on the agent; explicit file reads need no plugin. Product decisions are
+recorded under `work/changes/`; historical migration guidance must be reconciled with accepted current scope.
+
+The workflow itself needs no Python packages or installed workflow CLI. Product checks need the actual
+Flutter/Android/Rust toolchains when those domains change. Android uses the new project's Gradle wrapper
+and `testDebugUnitTest`; Rust uses Cargo directly, without helper scripts from the old repository. No Rust
+installation is needed for Flutter/Kotlin-only changes. Adjust check commands for actual flavors/modules when
+created. Missing project files or tools block the relevant check; they never count as passing validation.
 
 ### Optional agent integrations
 
