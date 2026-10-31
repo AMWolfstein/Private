@@ -1,7 +1,7 @@
 {
   "version": 8,
   "created": "2026-10-29T06:01:52+00:00",
-  "updated": "2026-10-30T23:32:50+00:00",
+  "updated": "2026-10-31T01:31:50+00:00",
   "queue_order": [
     "subjective::abstraction_fitness",
     "subjective::ai_generated_debt",
@@ -319,6 +319,756 @@
       "created_at": "2026-10-30T23:32:50+00:00",
       "review_after": null,
       "skipped_at_scan": 22
+    },
+    "orphaned::lib/services/library/covers/embedded_cover_resolver_extraction.dart": {
+      "issue_id": "orphaned::lib/services/library/covers/embedded_cover_resolver_extraction.dart",
+      "kind": "false_positive",
+      "reason": "Dart part file included by a part directive in its owner library",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. Each file starts with part of and is included by a part directive in its owner library (checked for every skipped file); the orphan detector does not follow part directives. No code was changed in this step.",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "review_after": null,
+      "skipped_at_scan": 23
+    },
+    "orphaned::lib/screens/listening_rewind_screen_slide.dart": {
+      "issue_id": "orphaned::lib/screens/listening_rewind_screen_slide.dart",
+      "kind": "false_positive",
+      "reason": "Dart part file included by a part directive in its owner library",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. Each file starts with part of and is included by a part directive in its owner library (checked for every skipped file); the orphan detector does not follow part directives. No code was changed in this step.",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "review_after": null,
+      "skipped_at_scan": 23
+    },
+    "orphaned::lib/utils/lyrics/lyrics_parser_support.dart": {
+      "issue_id": "orphaned::lib/utils/lyrics/lyrics_parser_support.dart",
+      "kind": "false_positive",
+      "reason": "Dart part file included by a part directive in its owner library",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. Each file starts with part of and is included by a part directive in its owner library (checked for every skipped file); the orphan detector does not follow part directives. No code was changed in this step.",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "review_after": null,
+      "skipped_at_scan": 23
+    },
+    "orphaned::lib/screens/listening_rewind_screen_story.dart": {
+      "issue_id": "orphaned::lib/screens/listening_rewind_screen_story.dart",
+      "kind": "false_positive",
+      "reason": "Dart part file included by a part directive in its owner library",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. Each file starts with part of and is included by a part directive in its owner library (checked for every skipped file); the orphan detector does not follow part directives. No code was changed in this step.",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "review_after": null,
+      "skipped_at_scan": 23
+    },
+    "orphaned::lib/providers/local_library_provider_scanning.dart": {
+      "issue_id": "orphaned::lib/providers/local_library_provider_scanning.dart",
+      "kind": "false_positive",
+      "reason": "Dart part file included by a part directive in its owner library",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. Each file starts with part of and is included by a part directive in its owner library (checked for every skipped file); the orphan detector does not follow part directives. No code was changed in this step.",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "review_after": null,
+      "skipped_at_scan": 23
+    },
+    "orphaned::lib/widgets/player/lyrics/player_lyrics_members_3.dart": {
+      "issue_id": "orphaned::lib/widgets/player/lyrics/player_lyrics_members_3.dart",
+      "kind": "false_positive",
+      "reason": "Dart part file included by a part directive in its owner library",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. Each file starts with part of and is included by a part directive in its owner library (checked for every skipped file); the orphan detector does not follow part directives. No code was changed in this step.",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "review_after": null,
+      "skipped_at_scan": 23
+    },
+    "orphaned::lib/screens/library/collections/library_collection_tracks_screen_1.dart": {
+      "issue_id": "orphaned::lib/screens/library/collections/library_collection_tracks_screen_1.dart",
+      "kind": "false_positive",
+      "reason": "Dart part file included by a part directive in its owner library",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. Each file starts with part of and is included by a part directive in its owner library (checked for every skipped file); the orphan detector does not follow part directives. No code was changed in this step.",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "review_after": null,
+      "skipped_at_scan": 23
+    },
+    "orphaned::lib/widgets/player/lyrics/player_lyrics_members_1.dart": {
+      "issue_id": "orphaned::lib/widgets/player/lyrics/player_lyrics_members_1.dart",
+      "kind": "false_positive",
+      "reason": "Dart part file included by a part directive in its owner library",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. Each file starts with part of and is included by a part directive in its owner library (checked for every skipped file); the orphan detector does not follow part directives. No code was changed in this step.",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "review_after": null,
+      "skipped_at_scan": 23
+    },
+    "orphaned::lib/services/playback/automix/music_player_automix_members_5.dart": {
+      "issue_id": "orphaned::lib/services/playback/automix/music_player_automix_members_5.dart",
+      "kind": "false_positive",
+      "reason": "Dart part file included by a part directive in its owner library",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. Each file starts with part of and is included by a part directive in its owner library (checked for every skipped file); the orphan detector does not follow part directives. No code was changed in this step.",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "review_after": null,
+      "skipped_at_scan": 23
+    },
+    "orphaned::lib/services/playback/music_player/music_player_service_overrides_1.dart": {
+      "issue_id": "orphaned::lib/services/playback/music_player/music_player_service_overrides_1.dart",
+      "kind": "false_positive",
+      "reason": "Dart part file included by a part directive in its owner library",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. Each file starts with part of and is included by a part directive in its owner library (checked for every skipped file); the orphan detector does not follow part directives. No code was changed in this step.",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "review_after": null,
+      "skipped_at_scan": 23
+    },
+    "orphaned::lib/widgets/player/lyrics/player_lyrics_painting_2.dart": {
+      "issue_id": "orphaned::lib/widgets/player/lyrics/player_lyrics_painting_2.dart",
+      "kind": "false_positive",
+      "reason": "Dart part file included by a part directive in its owner library",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. Each file starts with part of and is included by a part directive in its owner library (checked for every skipped file); the orphan detector does not follow part directives. No code was changed in this step.",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "review_after": null,
+      "skipped_at_scan": 23
+    },
+    "orphaned::lib/providers/settings_provider_actions.dart": {
+      "issue_id": "orphaned::lib/providers/settings_provider_actions.dart",
+      "kind": "false_positive",
+      "reason": "Dart part file included by a part directive in its owner library",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. Each file starts with part of and is included by a part directive in its owner library (checked for every skipped file); the orphan detector does not follow part directives. No code was changed in this step.",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "review_after": null,
+      "skipped_at_scan": 23
+    },
+    "orphaned::lib/widgets/sheets/update_dialog_support_1.dart": {
+      "issue_id": "orphaned::lib/widgets/sheets/update_dialog_support_1.dart",
+      "kind": "false_positive",
+      "reason": "Dart part file included by a part directive in its owner library",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. Each file starts with part of and is included by a part directive in its owner library (checked for every skipped file); the orphan detector does not follow part directives. No code was changed in this step.",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "review_after": null,
+      "skipped_at_scan": 23
+    },
+    "orphaned::lib/screens/setup_screen_1.dart": {
+      "issue_id": "orphaned::lib/screens/setup_screen_1.dart",
+      "kind": "false_positive",
+      "reason": "Dart part file included by a part directive in its owner library",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. Each file starts with part of and is included by a part directive in its owner library (checked for every skipped file); the orphan detector does not follow part directives. No code was changed in this step.",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "review_after": null,
+      "skipped_at_scan": 23
+    },
+    "orphaned::lib/screens/settings/playback/playback_settings_auto_mix_1.dart": {
+      "issue_id": "orphaned::lib/screens/settings/playback/playback_settings_auto_mix_1.dart",
+      "kind": "false_positive",
+      "reason": "Dart part file included by a part directive in its owner library",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. Each file starts with part of and is included by a part directive in its owner library (checked for every skipped file); the orphan detector does not follow part directives. No code was changed in this step.",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "review_after": null,
+      "skipped_at_scan": 23
+    },
+    "orphaned::lib/screens/listening_rewind_screen_stats.dart": {
+      "issue_id": "orphaned::lib/screens/listening_rewind_screen_stats.dart",
+      "kind": "false_positive",
+      "reason": "Dart part file included by a part directive in its owner library",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. Each file starts with part of and is included by a part directive in its owner library (checked for every skipped file); the orphan detector does not follow part directives. No code was changed in this step.",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "review_after": null,
+      "skipped_at_scan": 23
+    },
+    "orphaned::lib/services/library/collections/library_collections_database_statics_1.dart": {
+      "issue_id": "orphaned::lib/services/library/collections/library_collections_database_statics_1.dart",
+      "kind": "false_positive",
+      "reason": "Dart part file included by a part directive in its owner library",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. Each file starts with part of and is included by a part directive in its owner library (checked for every skipped file); the orphan detector does not follow part directives. No code was changed in this step.",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "review_after": null,
+      "skipped_at_scan": 23
+    },
+    "orphaned::lib/services/library/covers/embedded_cover_resolver_persistence.dart": {
+      "issue_id": "orphaned::lib/services/library/covers/embedded_cover_resolver_persistence.dart",
+      "kind": "false_positive",
+      "reason": "Dart part file included by a part directive in its owner library",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. Each file starts with part of and is included by a part directive in its owner library (checked for every skipped file); the orphan detector does not follow part directives. No code was changed in this step.",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "review_after": null,
+      "skipped_at_scan": 23
+    },
+    "orphaned::lib/screens/now_playing_screen_player.dart": {
+      "issue_id": "orphaned::lib/screens/now_playing_screen_player.dart",
+      "kind": "false_positive",
+      "reason": "Dart part file included by a part directive in its owner library",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. Each file starts with part of and is included by a part directive in its owner library (checked for every skipped file); the orphan detector does not follow part directives. No code was changed in this step.",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "review_after": null,
+      "skipped_at_scan": 23
+    },
+    "orphaned::lib/widgets/player/lyrics/player_lyrics_support_1.dart": {
+      "issue_id": "orphaned::lib/widgets/player/lyrics/player_lyrics_support_1.dart",
+      "kind": "false_positive",
+      "reason": "Dart part file included by a part directive in its owner library",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. Each file starts with part of and is included by a part directive in its owner library (checked for every skipped file); the orphan detector does not follow part directives. No code was changed in this step.",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "review_after": null,
+      "skipped_at_scan": 23
+    },
+    "orphaned::lib/providers/local_library_provider_loading.dart": {
+      "issue_id": "orphaned::lib/providers/local_library_provider_loading.dart",
+      "kind": "false_positive",
+      "reason": "Dart part file included by a part directive in its owner library",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. Each file starts with part of and is included by a part directive in its owner library (checked for every skipped file); the orphan detector does not follow part directives. No code was changed in this step.",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "review_after": null,
+      "skipped_at_scan": 23
+    },
+    "orphaned::lib/widgets/audio_analysis/audio_analysis_card_1.dart": {
+      "issue_id": "orphaned::lib/widgets/audio_analysis/audio_analysis_card_1.dart",
+      "kind": "false_positive",
+      "reason": "Dart part file included by a part directive in its owner library",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. Each file starts with part of and is included by a part directive in its owner library (checked for every skipped file); the orphan detector does not follow part directives. No code was changed in this step.",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "review_after": null,
+      "skipped_at_scan": 23
+    },
+    "orphaned::lib/screens/library/collections/library_collection_tracks_screen_2.dart": {
+      "issue_id": "orphaned::lib/screens/library/collections/library_collection_tracks_screen_2.dart",
+      "kind": "false_positive",
+      "reason": "Dart part file included by a part directive in its owner library",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. Each file starts with part of and is included by a part directive in its owner library (checked for every skipped file); the orphan detector does not follow part directives. No code was changed in this step.",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "review_after": null,
+      "skipped_at_scan": 23
+    },
+    "orphaned::lib/widgets/player/lyrics/player_lyrics_painting_1.dart": {
+      "issue_id": "orphaned::lib/widgets/player/lyrics/player_lyrics_painting_1.dart",
+      "kind": "false_positive",
+      "reason": "Dart part file included by a part directive in its owner library",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. Each file starts with part of and is included by a part directive in its owner library (checked for every skipped file); the orphan detector does not follow part directives. No code was changed in this step.",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "review_after": null,
+      "skipped_at_scan": 23
+    },
+    "orphaned::lib/screens/now_playing_screen_menus.dart": {
+      "issue_id": "orphaned::lib/screens/now_playing_screen_menus.dart",
+      "kind": "false_positive",
+      "reason": "Dart part file included by a part directive in its owner library",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. Each file starts with part of and is included by a part directive in its owner library (checked for every skipped file); the orphan detector does not follow part directives. No code was changed in this step.",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "review_after": null,
+      "skipped_at_scan": 23
+    },
+    "orphaned::lib/screens/settings/logs/log_page_1.dart": {
+      "issue_id": "orphaned::lib/screens/settings/logs/log_page_1.dart",
+      "kind": "false_positive",
+      "reason": "Dart part file included by a part directive in its owner library",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. Each file starts with part of and is included by a part directive in its owner library (checked for every skipped file); the orphan detector does not follow part directives. No code was changed in this step.",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "review_after": null,
+      "skipped_at_scan": 23
+    },
+    "orphaned::lib/screens/library/section_tab/library_section_tab_filters.dart": {
+      "issue_id": "orphaned::lib/screens/library/section_tab/library_section_tab_filters.dart",
+      "kind": "false_positive",
+      "reason": "Dart part file included by a part directive in its owner library",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. Each file starts with part of and is included by a part directive in its owner library (checked for every skipped file); the orphan detector does not follow part directives. No code was changed in this step.",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "review_after": null,
+      "skipped_at_scan": 23
+    },
+    "orphaned::lib/screens/listening_rewind_screen_backdrop.dart": {
+      "issue_id": "orphaned::lib/screens/listening_rewind_screen_backdrop.dart",
+      "kind": "false_positive",
+      "reason": "Dart part file included by a part directive in its owner library",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. Each file starts with part of and is included by a part directive in its owner library (checked for every skipped file); the orphan detector does not follow part directives. No code was changed in this step.",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "review_after": null,
+      "skipped_at_scan": 23
+    },
+    "orphaned::lib/screens/settings/library/library_settings_page_1.dart": {
+      "issue_id": "orphaned::lib/screens/settings/library/library_settings_page_1.dart",
+      "kind": "false_positive",
+      "reason": "Dart part file included by a part directive in its owner library",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. Each file starts with part of and is included by a part directive in its owner library (checked for every skipped file); the orphan detector does not follow part directives. No code was changed in this step.",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "review_after": null,
+      "skipped_at_scan": 23
+    },
+    "orphaned::lib/screens/library/local_artist/local_artist_screen_1.dart": {
+      "issue_id": "orphaned::lib/screens/library/local_artist/local_artist_screen_1.dart",
+      "kind": "false_positive",
+      "reason": "Dart part file included by a part directive in its owner library",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. Each file starts with part of and is included by a part directive in its owner library (checked for every skipped file); the orphan detector does not follow part directives. No code was changed in this step.",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "review_after": null,
+      "skipped_at_scan": 23
+    },
+    "orphaned::lib/screens/library/section_tab/library_section_tab_paging.dart": {
+      "issue_id": "orphaned::lib/screens/library/section_tab/library_section_tab_paging.dart",
+      "kind": "false_positive",
+      "reason": "Dart part file included by a part directive in its owner library",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. Each file starts with part of and is included by a part directive in its owner library (checked for every skipped file); the orphan detector does not follow part directives. No code was changed in this step.",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "review_after": null,
+      "skipped_at_scan": 23
+    },
+    "orphaned::lib/screens/settings/cache/cache_management_page_1.dart": {
+      "issue_id": "orphaned::lib/screens/settings/cache/cache_management_page_1.dart",
+      "kind": "false_positive",
+      "reason": "Dart part file included by a part directive in its owner library",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. Each file starts with part of and is included by a part directive in its owner library (checked for every skipped file); the orphan detector does not follow part directives. No code was changed in this step.",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "review_after": null,
+      "skipped_at_scan": 23
+    },
+    "orphaned::lib/widgets/header/album_detail_header_members_3.dart": {
+      "issue_id": "orphaned::lib/widgets/header/album_detail_header_members_3.dart",
+      "kind": "false_positive",
+      "reason": "Dart part file included by a part directive in its owner library",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. Each file starts with part of and is included by a part directive in its owner library (checked for every skipped file); the orphan detector does not follow part directives. No code was changed in this step.",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "review_after": null,
+      "skipped_at_scan": 23
+    },
+    "orphaned::lib/screens/listening_rewind_screen_banners.dart": {
+      "issue_id": "orphaned::lib/screens/listening_rewind_screen_banners.dart",
+      "kind": "false_positive",
+      "reason": "Dart part file included by a part directive in its owner library",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. Each file starts with part of and is included by a part directive in its owner library (checked for every skipped file); the orphan detector does not follow part directives. No code was changed in this step.",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "review_after": null,
+      "skipped_at_scan": 23
+    },
+    "orphaned::lib/providers/library_collections_provider_mutations.dart": {
+      "issue_id": "orphaned::lib/providers/library_collections_provider_mutations.dart",
+      "kind": "false_positive",
+      "reason": "Dart part file included by a part directive in its owner library",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. Each file starts with part of and is included by a part directive in its owner library (checked for every skipped file); the orphan detector does not follow part directives. No code was changed in this step.",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "review_after": null,
+      "skipped_at_scan": 23
+    },
+    "orphaned::lib/widgets/glass/selection/app_selection_pill_1.dart": {
+      "issue_id": "orphaned::lib/widgets/glass/selection/app_selection_pill_1.dart",
+      "kind": "false_positive",
+      "reason": "Dart part file included by a part directive in its owner library",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. Each file starts with part of and is included by a part directive in its owner library (checked for every skipped file); the orphan detector does not follow part directives. No code was changed in this step.",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "review_after": null,
+      "skipped_at_scan": 23
+    },
+    "orphaned::lib/screens/setup_screen_2.dart": {
+      "issue_id": "orphaned::lib/screens/setup_screen_2.dart",
+      "kind": "false_positive",
+      "reason": "Dart part file included by a part directive in its owner library",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. Each file starts with part of and is included by a part directive in its owner library (checked for every skipped file); the orphan detector does not follow part directives. No code was changed in this step.",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "review_after": null,
+      "skipped_at_scan": 23
+    },
+    "orphaned::lib/providers/local_library_provider_scan_results.dart": {
+      "issue_id": "orphaned::lib/providers/local_library_provider_scan_results.dart",
+      "kind": "false_positive",
+      "reason": "Dart part file included by a part directive in its owner library",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. Each file starts with part of and is included by a part directive in its owner library (checked for every skipped file); the orphan detector does not follow part directives. No code was changed in this step.",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "review_after": null,
+      "skipped_at_scan": 23
+    },
+    "orphaned::lib/screens/main_shell_navigation.dart": {
+      "issue_id": "orphaned::lib/screens/main_shell_navigation.dart",
+      "kind": "false_positive",
+      "reason": "Dart part file included by a part directive in its owner library",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. Each file starts with part of and is included by a part directive in its owner library (checked for every skipped file); the orphan detector does not follow part directives. No code was changed in this step.",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "review_after": null,
+      "skipped_at_scan": 23
+    },
+    "orphaned::lib/screens/settings/playback/playback_settings_auto_mix_2.dart": {
+      "issue_id": "orphaned::lib/screens/settings/playback/playback_settings_auto_mix_2.dart",
+      "kind": "false_positive",
+      "reason": "Dart part file included by a part directive in its owner library",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. Each file starts with part of and is included by a part directive in its owner library (checked for every skipped file); the orphan detector does not follow part directives. No code was changed in this step.",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "review_after": null,
+      "skipped_at_scan": 23
+    },
+    "orphaned::lib/widgets/player/lyrics/player_lyrics_members_2.dart": {
+      "issue_id": "orphaned::lib/widgets/player/lyrics/player_lyrics_members_2.dart",
+      "kind": "false_positive",
+      "reason": "Dart part file included by a part directive in its owner library",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. Each file starts with part of and is included by a part directive in its owner library (checked for every skipped file); the orphan detector does not follow part directives. No code was changed in this step.",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "review_after": null,
+      "skipped_at_scan": 23
+    },
+    "orphaned::lib/screens/now_playing_screen_lyrics.dart": {
+      "issue_id": "orphaned::lib/screens/now_playing_screen_lyrics.dart",
+      "kind": "false_positive",
+      "reason": "Dart part file included by a part directive in its owner library",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. Each file starts with part of and is included by a part directive in its owner library (checked for every skipped file); the orphan detector does not follow part directives. No code was changed in this step.",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "review_after": null,
+      "skipped_at_scan": 23
+    },
+    "orphaned::lib/screens/library/app_library_screen_1.dart": {
+      "issue_id": "orphaned::lib/screens/library/app_library_screen_1.dart",
+      "kind": "false_positive",
+      "reason": "Dart part file included by a part directive in its owner library",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. Each file starts with part of and is included by a part directive in its owner library (checked for every skipped file); the orphan detector does not follow part directives. No code was changed in this step.",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "review_after": null,
+      "skipped_at_scan": 23
+    },
+    "orphaned::lib/widgets/header/album_detail_header_members_2.dart": {
+      "issue_id": "orphaned::lib/widgets/header/album_detail_header_members_2.dart",
+      "kind": "false_positive",
+      "reason": "Dart part file included by a part directive in its owner library",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. Each file starts with part of and is included by a part directive in its owner library (checked for every skipped file); the orphan detector does not follow part directives. No code was changed in this step.",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "review_after": null,
+      "skipped_at_scan": 23
+    },
+    "orphaned::lib/widgets/player/lyrics/player_lyrics_layout_1.dart": {
+      "issue_id": "orphaned::lib/widgets/player/lyrics/player_lyrics_layout_1.dart",
+      "kind": "false_positive",
+      "reason": "Dart part file included by a part directive in its owner library",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. Each file starts with part of and is included by a part directive in its owner library (checked for every skipped file); the orphan detector does not follow part directives. No code was changed in this step.",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "review_after": null,
+      "skipped_at_scan": 23
+    },
+    "orphaned::lib/utils/lyrics/lyrics_parser_words.dart": {
+      "issue_id": "orphaned::lib/utils/lyrics/lyrics_parser_words.dart",
+      "kind": "false_positive",
+      "reason": "Dart part file included by a part directive in its owner library",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. Each file starts with part of and is included by a part directive in its owner library (checked for every skipped file); the orphan detector does not follow part directives. No code was changed in this step.",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "review_after": null,
+      "skipped_at_scan": 23
+    },
+    "orphaned::lib/services/playback/automix/music_player_automix_members_6.dart": {
+      "issue_id": "orphaned::lib/services/playback/automix/music_player_automix_members_6.dart",
+      "kind": "false_positive",
+      "reason": "Dart part file included by a part directive in its owner library",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. Each file starts with part of and is included by a part directive in its owner library (checked for every skipped file); the orphan detector does not follow part directives. No code was changed in this step.",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "review_after": null,
+      "skipped_at_scan": 23
+    },
+    "orphaned::lib/providers/library_collections_provider_helpers.dart": {
+      "issue_id": "orphaned::lib/providers/library_collections_provider_helpers.dart",
+      "kind": "false_positive",
+      "reason": "Dart part file included by a part directive in its owner library",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. Each file starts with part of and is included by a part directive in its owner library (checked for every skipped file); the orphan detector does not follow part directives. No code was changed in this step.",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "review_after": null,
+      "skipped_at_scan": 23
+    },
+    "orphaned::lib/services/playback/music_player/music_player_service_overrides_2.dart": {
+      "issue_id": "orphaned::lib/services/playback/music_player/music_player_service_overrides_2.dart",
+      "kind": "false_positive",
+      "reason": "Dart part file included by a part directive in its owner library",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. Each file starts with part of and is included by a part directive in its owner library (checked for every skipped file); the orphan detector does not follow part directives. No code was changed in this step.",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "review_after": null,
+      "skipped_at_scan": 23
+    },
+    "orphaned::lib/providers/local_library_state_1.dart": {
+      "issue_id": "orphaned::lib/providers/local_library_state_1.dart",
+      "kind": "false_positive",
+      "reason": "Dart part file included by a part directive in its owner library",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. Each file starts with part of and is included by a part directive in its owner library (checked for every skipped file); the orphan detector does not follow part directives. No code was changed in this step.",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "review_after": null,
+      "skipped_at_scan": 23
+    },
+    "orphaned::lib/providers/local_library_provider_sources.dart": {
+      "issue_id": "orphaned::lib/providers/local_library_provider_sources.dart",
+      "kind": "false_positive",
+      "reason": "Dart part file included by a part directive in its owner library",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. Each file starts with part of and is included by a part directive in its owner library (checked for every skipped file); the orphan detector does not follow part directives. No code was changed in this step.",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "review_after": null,
+      "skipped_at_scan": 23
+    },
+    "orphaned::lib/providers/settings_provider_helpers.dart": {
+      "issue_id": "orphaned::lib/providers/settings_provider_helpers.dart",
+      "kind": "false_positive",
+      "reason": "Dart part file included by a part directive in its owner library",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. Each file starts with part of and is included by a part directive in its owner library (checked for every skipped file); the orphan detector does not follow part directives. No code was changed in this step.",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "review_after": null,
+      "skipped_at_scan": 23
+    },
+    "orphaned::lib/services/playback/automix/music_player_automix_members_7.dart": {
+      "issue_id": "orphaned::lib/services/playback/automix/music_player_automix_members_7.dart",
+      "kind": "false_positive",
+      "reason": "Dart part file included by a part directive in its owner library",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. Each file starts with part of and is included by a part directive in its owner library (checked for every skipped file); the orphan detector does not follow part directives. No code was changed in this step.",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "review_after": null,
+      "skipped_at_scan": 23
+    },
+    "orphaned::lib/widgets/player/lyrics/player_lyrics_members_4.dart": {
+      "issue_id": "orphaned::lib/widgets/player/lyrics/player_lyrics_members_4.dart",
+      "kind": "false_positive",
+      "reason": "Dart part file included by a part directive in its owner library",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. Each file starts with part of and is included by a part directive in its owner library (checked for every skipped file); the orphan detector does not follow part directives. No code was changed in this step.",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "review_after": null,
+      "skipped_at_scan": 23
+    },
+    "orphaned::lib/services/library/collections/library_collections_database_3.dart": {
+      "issue_id": "orphaned::lib/services/library/collections/library_collections_database_3.dart",
+      "kind": "false_positive",
+      "reason": "Dart part file included by a part directive in its owner library",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. Each file starts with part of and is included by a part directive in its owner library (checked for every skipped file); the orphan detector does not follow part directives. No code was changed in this step.",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "review_after": null,
+      "skipped_at_scan": 23
+    },
+    "orphaned::lib/services/playback/music_player/music_player_service_members_2.dart": {
+      "issue_id": "orphaned::lib/services/playback/music_player/music_player_service_members_2.dart",
+      "kind": "false_positive",
+      "reason": "Dart part file included by a part directive in its owner library",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. Each file starts with part of and is included by a part directive in its owner library (checked for every skipped file); the orphan detector does not follow part directives. No code was changed in this step.",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "review_after": null,
+      "skipped_at_scan": 23
+    },
+    "orphaned::lib/utils/lyrics/lyrics_parser_background_1.dart": {
+      "issue_id": "orphaned::lib/utils/lyrics/lyrics_parser_background_1.dart",
+      "kind": "false_positive",
+      "reason": "Dart part file included by a part directive in its owner library",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. Each file starts with part of and is included by a part directive in its owner library (checked for every skipped file); the orphan detector does not follow part directives. No code was changed in this step.",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "review_after": null,
+      "skipped_at_scan": 23
+    },
+    "orphaned::lib/widgets/sheets/update_dialog_support_2.dart": {
+      "issue_id": "orphaned::lib/widgets/sheets/update_dialog_support_2.dart",
+      "kind": "false_positive",
+      "reason": "Dart part file included by a part directive in its owner library",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. Each file starts with part of and is included by a part directive in its owner library (checked for every skipped file); the orphan detector does not follow part directives. No code was changed in this step.",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "review_after": null,
+      "skipped_at_scan": 23
+    },
+    "orphaned::lib/widgets/player/lyrics/player_lyrics_painting_3.dart": {
+      "issue_id": "orphaned::lib/widgets/player/lyrics/player_lyrics_painting_3.dart",
+      "kind": "false_positive",
+      "reason": "Dart part file included by a part directive in its owner library",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. Each file starts with part of and is included by a part directive in its owner library (checked for every skipped file); the orphan detector does not follow part directives. No code was changed in this step.",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "review_after": null,
+      "skipped_at_scan": 23
+    },
+    "orphaned::lib/services/playback/automix/music_player_automix_members_4.dart": {
+      "issue_id": "orphaned::lib/services/playback/automix/music_player_automix_members_4.dart",
+      "kind": "false_positive",
+      "reason": "Dart part file included by a part directive in its owner library",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. Each file starts with part of and is included by a part directive in its owner library (checked for every skipped file); the orphan detector does not follow part directives. No code was changed in this step.",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "review_after": null,
+      "skipped_at_scan": 23
+    },
+    "orphaned::lib/widgets/player/lyrics/player_lyrics_overrides_1.dart": {
+      "issue_id": "orphaned::lib/widgets/player/lyrics/player_lyrics_overrides_1.dart",
+      "kind": "false_positive",
+      "reason": "Dart part file included by a part directive in its owner library",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. Each file starts with part of and is included by a part directive in its owner library (checked for every skipped file); the orphan detector does not follow part directives. No code was changed in this step.",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "review_after": null,
+      "skipped_at_scan": 23
+    },
+    "orphaned::lib/services/library/collections/library_collections_database_2.dart": {
+      "issue_id": "orphaned::lib/services/library/collections/library_collections_database_2.dart",
+      "kind": "false_positive",
+      "reason": "Dart part file included by a part directive in its owner library",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. Each file starts with part of and is included by a part directive in its owner library (checked for every skipped file); the orphan detector does not follow part directives. No code was changed in this step.",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "review_after": null,
+      "skipped_at_scan": 23
+    },
+    "orphaned::lib/services/playback/automix/music_player_automix_members_3.dart": {
+      "issue_id": "orphaned::lib/services/playback/automix/music_player_automix_members_3.dart",
+      "kind": "false_positive",
+      "reason": "Dart part file included by a part directive in its owner library",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. Each file starts with part of and is included by a part directive in its owner library (checked for every skipped file); the orphan detector does not follow part directives. No code was changed in this step.",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "review_after": null,
+      "skipped_at_scan": 23
+    },
+    "orphaned::lib/services/playback/automix/music_player_automix_members_1.dart": {
+      "issue_id": "orphaned::lib/services/playback/automix/music_player_automix_members_1.dart",
+      "kind": "false_positive",
+      "reason": "Dart part file included by a part directive in its owner library",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. Each file starts with part of and is included by a part directive in its owner library (checked for every skipped file); the orphan detector does not follow part directives. No code was changed in this step.",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "review_after": null,
+      "skipped_at_scan": 23
+    },
+    "orphaned::lib/widgets/header/album_detail_header_members_1.dart": {
+      "issue_id": "orphaned::lib/widgets/header/album_detail_header_members_1.dart",
+      "kind": "false_positive",
+      "reason": "Dart part file included by a part directive in its owner library",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. Each file starts with part of and is included by a part directive in its owner library (checked for every skipped file); the orphan detector does not follow part directives. No code was changed in this step.",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "review_after": null,
+      "skipped_at_scan": 23
+    },
+    "orphaned::lib/services/library/collections/library_collections_database_1.dart": {
+      "issue_id": "orphaned::lib/services/library/collections/library_collections_database_1.dart",
+      "kind": "false_positive",
+      "reason": "Dart part file included by a part directive in its owner library",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. Each file starts with part of and is included by a part directive in its owner library (checked for every skipped file); the orphan detector does not follow part directives. No code was changed in this step.",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "review_after": null,
+      "skipped_at_scan": 23
+    },
+    "test_coverage::lib/main_startup_1.dart::transitive_only": {
+      "issue_id": "test_coverage::lib/main_startup_1.dart::transitive_only",
+      "kind": "false_positive",
+      "reason": "Dart part file: its code is compiled and exercised through the tests of its owner library",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. Each file starts with part of and is included by a part directive in its owner library, and the owner library's tests exercise its code; the test-coverage detector does not follow part directives. No code was changed in this step.",
+      "created_at": "2026-10-31T01:31:50+00:00",
+      "review_after": null,
+      "skipped_at_scan": 25
+    },
+    "test_coverage::lib/providers/local_library_provider_loading.dart::untested_critical": {
+      "issue_id": "test_coverage::lib/providers/local_library_provider_loading.dart::untested_critical",
+      "kind": "false_positive",
+      "reason": "Dart part file: its code is compiled and exercised through the tests of its owner library",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. Each file starts with part of and is included by a part directive in its owner library, and the owner library's tests exercise its code; the test-coverage detector does not follow part directives. No code was changed in this step.",
+      "created_at": "2026-10-31T01:31:50+00:00",
+      "review_after": null,
+      "skipped_at_scan": 25
+    },
+    "test_coverage::lib/providers/local_library_provider_scanning.dart::untested_critical": {
+      "issue_id": "test_coverage::lib/providers/local_library_provider_scanning.dart::untested_critical",
+      "kind": "false_positive",
+      "reason": "Dart part file: its code is compiled and exercised through the tests of its owner library",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. Each file starts with part of and is included by a part directive in its owner library, and the owner library's tests exercise its code; the test-coverage detector does not follow part directives. No code was changed in this step.",
+      "created_at": "2026-10-31T01:31:50+00:00",
+      "review_after": null,
+      "skipped_at_scan": 25
+    },
+    "test_coverage::lib/screens/setup_screen_1.dart::untested_critical": {
+      "issue_id": "test_coverage::lib/screens/setup_screen_1.dart::untested_critical",
+      "kind": "false_positive",
+      "reason": "Dart part file: its code is compiled and exercised through the tests of its owner library",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. Each file starts with part of and is included by a part directive in its owner library, and the owner library's tests exercise its code; the test-coverage detector does not follow part directives. No code was changed in this step.",
+      "created_at": "2026-10-31T01:31:50+00:00",
+      "review_after": null,
+      "skipped_at_scan": 25
+    },
+    "test_coverage::lib/services/library/covers/embedded_cover_resolver_extraction.dart::untested_critical": {
+      "issue_id": "test_coverage::lib/services/library/covers/embedded_cover_resolver_extraction.dart::untested_critical",
+      "kind": "false_positive",
+      "reason": "Dart part file: its code is compiled and exercised through the tests of its owner library",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. Each file starts with part of and is included by a part directive in its owner library, and the owner library's tests exercise its code; the test-coverage detector does not follow part directives. No code was changed in this step.",
+      "created_at": "2026-10-31T01:31:50+00:00",
+      "review_after": null,
+      "skipped_at_scan": 25
+    },
+    "test_coverage::lib/services/library/covers/embedded_cover_resolver_persistence.dart::untested_critical": {
+      "issue_id": "test_coverage::lib/services/library/covers/embedded_cover_resolver_persistence.dart::untested_critical",
+      "kind": "false_positive",
+      "reason": "Dart part file: its code is compiled and exercised through the tests of its owner library",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. Each file starts with part of and is included by a part directive in its owner library, and the owner library's tests exercise its code; the test-coverage detector does not follow part directives. No code was changed in this step.",
+      "created_at": "2026-10-31T01:31:50+00:00",
+      "review_after": null,
+      "skipped_at_scan": 25
+    },
+    "test_coverage::lib/services/playback/automix/music_player_automix_members_5.dart::untested_critical": {
+      "issue_id": "test_coverage::lib/services/playback/automix/music_player_automix_members_5.dart::untested_critical",
+      "kind": "false_positive",
+      "reason": "Dart part file: its code is compiled and exercised through the tests of its owner library",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. Each file starts with part of and is included by a part directive in its owner library, and the owner library's tests exercise its code; the test-coverage detector does not follow part directives. No code was changed in this step.",
+      "created_at": "2026-10-31T01:31:50+00:00",
+      "review_after": null,
+      "skipped_at_scan": 25
+    },
+    "test_coverage::lib/services/playback/music_player/music_player_service_overrides_1.dart::untested_critical": {
+      "issue_id": "test_coverage::lib/services/playback/music_player/music_player_service_overrides_1.dart::untested_critical",
+      "kind": "false_positive",
+      "reason": "Dart part file: its code is compiled and exercised through the tests of its owner library",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. Each file starts with part of and is included by a part directive in its owner library, and the owner library's tests exercise its code; the test-coverage detector does not follow part directives. No code was changed in this step.",
+      "created_at": "2026-10-31T01:31:50+00:00",
+      "review_after": null,
+      "skipped_at_scan": 25
+    },
+    "test_coverage::lib/widgets/player/lyrics/player_lyrics_members_1.dart::untested_critical": {
+      "issue_id": "test_coverage::lib/widgets/player/lyrics/player_lyrics_members_1.dart::untested_critical",
+      "kind": "false_positive",
+      "reason": "Dart part file: its code is compiled and exercised through the tests of its owner library",
+      "note": null,
+      "attestation": "I have reviewed this triage skip against the code and I am not gaming the score by suppressing a real defect. Each file starts with part of and is included by a part directive in its owner library, and the owner library's tests exercise its code; the test-coverage detector does not follow part directives. No code was changed in this step.",
+      "created_at": "2026-10-31T01:31:50+00:00",
+      "review_after": null,
+      "skipped_at_scan": 25
     }
   },
   "active_cluster": null,
@@ -513,7 +1263,7 @@
       "issue_id": "test_coverage::lib/screens/local_guide_pages.dart::transitive_only",
       "created_at": "2026-10-29T06:01:52+00:00",
       "cluster": "transitive-behaviour-tests",
-      "updated_at": "2026-10-30T23:31:15+00:00"
+      "updated_at": "2026-10-31T01:31:50+00:00"
     },
     "test_coverage::lib/widgets/scroll_edge_fade.dart::transitive_only": {
       "issue_id": "test_coverage::lib/widgets/scroll_edge_fade.dart::transitive_only",
@@ -555,7 +1305,7 @@
       "issue_id": "test_coverage::lib/screens/listening_statistics_screen.dart::transitive_only",
       "created_at": "2026-10-29T06:01:52+00:00",
       "cluster": "transitive-behaviour-tests",
-      "updated_at": "2026-10-30T23:31:15+00:00"
+      "updated_at": "2026-10-31T01:31:50+00:00"
     },
     "test_coverage::lib/providers/playback_notification_provider.dart::transitive_only": {
       "issue_id": "test_coverage::lib/providers/playback_notification_provider.dart::transitive_only",
@@ -729,7 +1479,7 @@
       "issue_id": "test_coverage::lib/widgets/sheets/duplicate_review_sheet.dart::transitive_only",
       "created_at": "2026-10-29T18:55:17+00:00",
       "cluster": "transitive-behaviour-tests",
-      "updated_at": "2026-10-30T23:31:15+00:00"
+      "updated_at": "2026-10-31T01:31:50+00:00"
     },
     "test_coverage::lib/widgets/status/disc_separator_chip.dart::transitive_only": {
       "issue_id": "test_coverage::lib/widgets/status/disc_separator_chip.dart::transitive_only",
@@ -741,7 +1491,7 @@
       "issue_id": "test_coverage::lib/services/audio_analysis/audio_analysis_parsing.dart::transitive_only",
       "created_at": "2026-10-29T18:55:17+00:00",
       "cluster": "transitive-behaviour-tests",
-      "updated_at": "2026-10-30T23:31:15+00:00"
+      "updated_at": "2026-10-31T01:31:50+00:00"
     },
     "test_coverage::lib/screens/library/selection_mode_mixin.dart::transitive_only": {
       "issue_id": "test_coverage::lib/screens/library/selection_mode_mixin.dart::transitive_only",
@@ -813,13 +1563,13 @@
       "issue_id": "subjective::abstraction_fitness",
       "created_at": "2026-10-29T18:55:17+00:00",
       "cluster": "auto/stale-review",
-      "updated_at": "2026-10-30T23:31:15+00:00"
+      "updated_at": "2026-10-31T01:31:50+00:00"
     },
     "subjective::ai_generated_debt": {
       "issue_id": "subjective::ai_generated_debt",
       "created_at": "2026-10-29T18:55:17+00:00",
       "cluster": "auto/stale-review",
-      "updated_at": "2026-10-30T23:31:15+00:00"
+      "updated_at": "2026-10-31T01:31:50+00:00"
     },
     "subjective::api_surface_coherence": {
       "issue_id": "subjective::api_surface_coherence",
@@ -831,13 +1581,13 @@
       "issue_id": "subjective::contract_coherence",
       "created_at": "2026-10-29T18:55:17+00:00",
       "cluster": "auto/stale-review",
-      "updated_at": "2026-10-30T23:31:15+00:00"
+      "updated_at": "2026-10-31T01:31:50+00:00"
     },
     "subjective::convention_outlier": {
       "issue_id": "subjective::convention_outlier",
       "created_at": "2026-10-29T18:55:17+00:00",
       "cluster": "auto/stale-review",
-      "updated_at": "2026-10-30T23:31:15+00:00"
+      "updated_at": "2026-10-31T01:31:50+00:00"
     },
     "subjective::cross_module_architecture": {
       "issue_id": "subjective::cross_module_architecture",
@@ -855,19 +1605,19 @@
       "issue_id": "subjective::design_coherence",
       "created_at": "2026-10-29T18:55:17+00:00",
       "cluster": "auto/stale-review",
-      "updated_at": "2026-10-30T23:31:15+00:00"
+      "updated_at": "2026-10-31T01:31:50+00:00"
     },
     "subjective::error_consistency": {
       "issue_id": "subjective::error_consistency",
       "created_at": "2026-10-29T18:55:17+00:00",
       "cluster": "auto/stale-review",
-      "updated_at": "2026-10-30T23:31:15+00:00"
+      "updated_at": "2026-10-31T01:31:50+00:00"
     },
     "subjective::high_level_elegance": {
       "issue_id": "subjective::high_level_elegance",
       "created_at": "2026-10-29T18:55:17+00:00",
       "cluster": "auto/stale-review",
-      "updated_at": "2026-10-30T23:31:15+00:00"
+      "updated_at": "2026-10-31T01:31:50+00:00"
     },
     "subjective::incomplete_migration": {
       "issue_id": "subjective::incomplete_migration",
@@ -885,55 +1635,55 @@
       "issue_id": "subjective::logic_clarity",
       "created_at": "2026-10-29T18:55:17+00:00",
       "cluster": "auto/stale-review",
-      "updated_at": "2026-10-30T23:31:15+00:00"
+      "updated_at": "2026-10-31T01:31:50+00:00"
     },
     "subjective::low_level_elegance": {
       "issue_id": "subjective::low_level_elegance",
       "created_at": "2026-10-29T18:55:17+00:00",
       "cluster": "auto/stale-review",
-      "updated_at": "2026-10-30T23:31:15+00:00"
+      "updated_at": "2026-10-31T01:31:50+00:00"
     },
     "subjective::mid_level_elegance": {
       "issue_id": "subjective::mid_level_elegance",
       "created_at": "2026-10-29T18:55:17+00:00",
       "cluster": "auto/stale-review",
-      "updated_at": "2026-10-30T23:31:15+00:00"
+      "updated_at": "2026-10-31T01:31:50+00:00"
     },
     "subjective::naming_quality": {
       "issue_id": "subjective::naming_quality",
       "created_at": "2026-10-29T18:55:17+00:00",
       "cluster": "auto/stale-review",
-      "updated_at": "2026-10-30T23:31:15+00:00"
+      "updated_at": "2026-10-31T01:31:50+00:00"
     },
     "subjective::package_organization": {
       "issue_id": "subjective::package_organization",
       "created_at": "2026-10-29T18:55:17+00:00",
       "cluster": "auto/stale-review",
-      "updated_at": "2026-10-30T23:31:15+00:00"
+      "updated_at": "2026-10-31T01:31:50+00:00"
     },
     "subjective::test_strategy": {
       "issue_id": "subjective::test_strategy",
       "created_at": "2026-10-29T18:55:17+00:00",
       "cluster": "auto/stale-review",
-      "updated_at": "2026-10-30T23:31:15+00:00"
+      "updated_at": "2026-10-31T01:31:50+00:00"
     },
     "subjective::type_safety": {
       "issue_id": "subjective::type_safety",
       "created_at": "2026-10-29T18:55:17+00:00",
       "cluster": "auto/stale-review",
-      "updated_at": "2026-10-30T23:31:15+00:00"
+      "updated_at": "2026-10-31T01:31:50+00:00"
     },
     "structural::lib/services/playback/music_player_service.dart": {
       "issue_id": "structural::lib/services/playback/music_player_service.dart",
       "created_at": "2026-10-29T20:35:47+00:00",
       "cluster": "playback-service-split",
-      "updated_at": "2026-10-30T23:31:15+00:00"
+      "updated_at": "2026-10-31T01:31:50+00:00"
     },
     "structural::lib/providers/library_collections_provider.dart": {
       "issue_id": "structural::lib/providers/library_collections_provider.dart",
       "created_at": "2026-10-29T20:35:48+00:00",
       "cluster": "collections-provider-bundle",
-      "updated_at": "2026-10-29T20:35:48+00:00"
+      "updated_at": "2026-10-31T01:31:50+00:00"
     },
     "test_coverage::lib/screens/library/library_browse_artwork.dart::transitive_only": {
       "issue_id": "test_coverage::lib/screens/library/library_browse_artwork.dart::transitive_only",
@@ -1246,6 +1996,408 @@
       "created_at": "2026-10-30T12:16:39+00:00",
       "cluster": null,
       "updated_at": "2026-10-30T12:43:17+00:00"
+    },
+    "test_coverage::lib/screens/setup_screen_2.dart::untested_module": {
+      "issue_id": "test_coverage::lib/screens/setup_screen_2.dart::untested_module",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "cluster": null,
+      "updated_at": "2026-10-31T01:31:30+00:00"
+    },
+    "test_coverage::lib/screens/listening_rewind_screen_story.dart::untested_module": {
+      "issue_id": "test_coverage::lib/screens/listening_rewind_screen_story.dart::untested_module",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "cluster": null,
+      "updated_at": "2026-10-31T01:31:30+00:00"
+    },
+    "test_coverage::lib/providers/settings_provider_helpers.dart::untested_module": {
+      "issue_id": "test_coverage::lib/providers/settings_provider_helpers.dart::untested_module",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "cluster": null,
+      "updated_at": "2026-10-31T01:31:30+00:00"
+    },
+    "test_coverage::lib/services/playback/automix/music_player_automix_members_4.dart::untested_module": {
+      "issue_id": "test_coverage::lib/services/playback/automix/music_player_automix_members_4.dart::untested_module",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "cluster": null,
+      "updated_at": "2026-10-31T01:31:30+00:00"
+    },
+    "test_coverage::lib/screens/settings/playback/playback_settings_auto_mix_2.dart::untested_module": {
+      "issue_id": "test_coverage::lib/screens/settings/playback/playback_settings_auto_mix_2.dart::untested_module",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "cluster": null,
+      "updated_at": "2026-10-31T01:31:30+00:00"
+    },
+    "test_coverage::lib/screens/settings/playback/playback_settings_auto_mix_1.dart::untested_module": {
+      "issue_id": "test_coverage::lib/screens/settings/playback/playback_settings_auto_mix_1.dart::untested_module",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "cluster": null,
+      "updated_at": "2026-10-31T01:31:30+00:00"
+    },
+    "test_coverage::lib/screens/library/app_library_screen_1.dart::untested_module": {
+      "issue_id": "test_coverage::lib/screens/library/app_library_screen_1.dart::untested_module",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "cluster": null,
+      "updated_at": "2026-10-31T01:31:30+00:00"
+    },
+    "test_coverage::lib/screens/main_shell_navigation.dart::untested_module": {
+      "issue_id": "test_coverage::lib/screens/main_shell_navigation.dart::untested_module",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "cluster": null,
+      "updated_at": "2026-10-31T01:31:30+00:00"
+    },
+    "test_coverage::lib/screens/library/section_tab/library_section_tab_paging.dart::untested_module": {
+      "issue_id": "test_coverage::lib/screens/library/section_tab/library_section_tab_paging.dart::untested_module",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "cluster": null,
+      "updated_at": "2026-10-31T01:31:30+00:00"
+    },
+    "test_coverage::lib/screens/library/collections/library_collection_tracks_screen_1.dart::untested_module": {
+      "issue_id": "test_coverage::lib/screens/library/collections/library_collection_tracks_screen_1.dart::untested_module",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "cluster": null,
+      "updated_at": "2026-10-31T01:31:30+00:00"
+    },
+    "test_coverage::lib/services/library/collections/library_collections_database_2.dart::untested_module": {
+      "issue_id": "test_coverage::lib/services/library/collections/library_collections_database_2.dart::untested_module",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "cluster": null,
+      "updated_at": "2026-10-31T01:31:30+00:00"
+    },
+    "test_coverage::lib/services/library/collections/library_collections_database_1.dart::untested_module": {
+      "issue_id": "test_coverage::lib/services/library/collections/library_collections_database_1.dart::untested_module",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "cluster": null,
+      "updated_at": "2026-10-31T01:31:30+00:00"
+    },
+    "test_coverage::lib/utils/lyrics/lyrics_parser_words.dart::untested_module": {
+      "issue_id": "test_coverage::lib/utils/lyrics/lyrics_parser_words.dart::untested_module",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "cluster": null,
+      "updated_at": "2026-10-31T01:31:30+00:00"
+    },
+    "test_coverage::lib/screens/library/section_tab/library_section_tab_filters.dart::untested_module": {
+      "issue_id": "test_coverage::lib/screens/library/section_tab/library_section_tab_filters.dart::untested_module",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "cluster": null,
+      "updated_at": "2026-10-31T01:31:30+00:00"
+    },
+    "test_coverage::lib/screens/now_playing_screen_player.dart::untested_module": {
+      "issue_id": "test_coverage::lib/screens/now_playing_screen_player.dart::untested_module",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "cluster": null,
+      "updated_at": "2026-10-31T01:31:30+00:00"
+    },
+    "test_coverage::lib/widgets/header/album_detail_header_members_3.dart::untested_module": {
+      "issue_id": "test_coverage::lib/widgets/header/album_detail_header_members_3.dart::untested_module",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "cluster": null,
+      "updated_at": "2026-10-31T01:31:30+00:00"
+    },
+    "test_coverage::lib/screens/settings/library/library_settings_page_1.dart::untested_module": {
+      "issue_id": "test_coverage::lib/screens/settings/library/library_settings_page_1.dart::untested_module",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "cluster": null,
+      "updated_at": "2026-10-31T01:31:30+00:00"
+    },
+    "test_coverage::lib/widgets/player/lyrics/player_lyrics_painting_3.dart::untested_module": {
+      "issue_id": "test_coverage::lib/widgets/player/lyrics/player_lyrics_painting_3.dart::untested_module",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "cluster": null,
+      "updated_at": "2026-10-31T01:31:30+00:00"
+    },
+    "test_coverage::lib/providers/library_collections_provider_mutations.dart::untested_module": {
+      "issue_id": "test_coverage::lib/providers/library_collections_provider_mutations.dart::untested_module",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "cluster": null,
+      "updated_at": "2026-10-31T01:31:30+00:00"
+    },
+    "test_coverage::lib/widgets/player/lyrics/player_lyrics_overrides_1.dart::untested_module": {
+      "issue_id": "test_coverage::lib/widgets/player/lyrics/player_lyrics_overrides_1.dart::untested_module",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "cluster": null,
+      "updated_at": "2026-10-31T01:31:30+00:00"
+    },
+    "test_coverage::lib/services/library/collections/library_collections_database_statics_1.dart::untested_module": {
+      "issue_id": "test_coverage::lib/services/library/collections/library_collections_database_statics_1.dart::untested_module",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "cluster": null,
+      "updated_at": "2026-10-31T01:31:30+00:00"
+    },
+    "test_coverage::lib/services/library/collections/library_collections_database_3.dart::untested_module": {
+      "issue_id": "test_coverage::lib/services/library/collections/library_collections_database_3.dart::untested_module",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "cluster": null,
+      "updated_at": "2026-10-31T01:31:30+00:00"
+    },
+    "test_coverage::lib/utils/lyrics/lyrics_parser_background_1.dart::untested_module": {
+      "issue_id": "test_coverage::lib/utils/lyrics/lyrics_parser_background_1.dart::untested_module",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "cluster": null,
+      "updated_at": "2026-10-31T01:31:30+00:00"
+    },
+    "test_coverage::lib/screens/listening_rewind_screen_banners.dart::untested_module": {
+      "issue_id": "test_coverage::lib/screens/listening_rewind_screen_banners.dart::untested_module",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "cluster": null,
+      "updated_at": "2026-10-31T01:31:30+00:00"
+    },
+    "test_coverage::lib/screens/settings/cache/cache_management_page_1.dart::untested_module": {
+      "issue_id": "test_coverage::lib/screens/settings/cache/cache_management_page_1.dart::untested_module",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "cluster": null,
+      "updated_at": "2026-10-31T01:31:30+00:00"
+    },
+    "test_coverage::lib/services/playback/music_player/music_player_service_members_2.dart::untested_module": {
+      "issue_id": "test_coverage::lib/services/playback/music_player/music_player_service_members_2.dart::untested_module",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "cluster": null,
+      "updated_at": "2026-10-31T01:31:30+00:00"
+    },
+    "test_coverage::lib/widgets/sheets/update_dialog_support_2.dart::untested_module": {
+      "issue_id": "test_coverage::lib/widgets/sheets/update_dialog_support_2.dart::untested_module",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "cluster": null,
+      "updated_at": "2026-10-31T01:31:30+00:00"
+    },
+    "test_coverage::lib/widgets/player/lyrics/player_lyrics_members_2.dart::untested_module": {
+      "issue_id": "test_coverage::lib/widgets/player/lyrics/player_lyrics_members_2.dart::untested_module",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "cluster": null,
+      "updated_at": "2026-10-31T01:31:30+00:00"
+    },
+    "test_coverage::lib/widgets/sheets/update_dialog_support_1.dart::untested_module": {
+      "issue_id": "test_coverage::lib/widgets/sheets/update_dialog_support_1.dart::untested_module",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "cluster": null,
+      "updated_at": "2026-10-31T01:31:30+00:00"
+    },
+    "test_coverage::lib/widgets/player/layout/app_player_layout_members_1.dart::untested_module": {
+      "issue_id": "test_coverage::lib/widgets/player/layout/app_player_layout_members_1.dart::untested_module",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "cluster": null,
+      "updated_at": "2026-10-31T01:31:30+00:00"
+    },
+    "test_coverage::lib/services/playback/music_player/music_player_service_overrides_2.dart::untested_module": {
+      "issue_id": "test_coverage::lib/services/playback/music_player/music_player_service_overrides_2.dart::untested_module",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "cluster": null,
+      "updated_at": "2026-10-31T01:31:30+00:00"
+    },
+    "test_coverage::lib/screens/listening_rewind_screen_slide.dart::untested_module": {
+      "issue_id": "test_coverage::lib/screens/listening_rewind_screen_slide.dart::untested_module",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "cluster": null,
+      "updated_at": "2026-10-31T01:31:30+00:00"
+    },
+    "test_coverage::lib/providers/settings_provider_actions.dart::untested_module": {
+      "issue_id": "test_coverage::lib/providers/settings_provider_actions.dart::untested_module",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "cluster": null,
+      "updated_at": "2026-10-31T01:31:30+00:00"
+    },
+    "test_coverage::lib/widgets/player/lyrics/player_lyrics_members_4.dart::untested_module": {
+      "issue_id": "test_coverage::lib/widgets/player/lyrics/player_lyrics_members_4.dart::untested_module",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "cluster": null,
+      "updated_at": "2026-10-31T01:31:30+00:00"
+    },
+    "test_coverage::lib/providers/local_library_provider_scan_results.dart::untested_module": {
+      "issue_id": "test_coverage::lib/providers/local_library_provider_scan_results.dart::untested_module",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "cluster": null,
+      "updated_at": "2026-10-31T01:31:30+00:00"
+    },
+    "test_coverage::lib/screens/library/collections/library_collection_tracks_screen_2.dart::untested_module": {
+      "issue_id": "test_coverage::lib/screens/library/collections/library_collection_tracks_screen_2.dart::untested_module",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "cluster": null,
+      "updated_at": "2026-10-31T01:31:30+00:00"
+    },
+    "test_coverage::lib/screens/now_playing_screen_menus.dart::untested_module": {
+      "issue_id": "test_coverage::lib/screens/now_playing_screen_menus.dart::untested_module",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "cluster": null,
+      "updated_at": "2026-10-31T01:31:30+00:00"
+    },
+    "test_coverage::lib/utils/lyrics/lyrics_parser_support.dart::untested_module": {
+      "issue_id": "test_coverage::lib/utils/lyrics/lyrics_parser_support.dart::untested_module",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "cluster": null,
+      "updated_at": "2026-10-31T01:31:30+00:00"
+    },
+    "test_coverage::lib/providers/local_library_provider_sources.dart::untested_module": {
+      "issue_id": "test_coverage::lib/providers/local_library_provider_sources.dart::untested_module",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "cluster": null,
+      "updated_at": "2026-10-31T01:31:30+00:00"
+    },
+    "test_coverage::lib/services/playback/automix/music_player_automix_members_7.dart::untested_module": {
+      "issue_id": "test_coverage::lib/services/playback/automix/music_player_automix_members_7.dart::untested_module",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "cluster": null,
+      "updated_at": "2026-10-31T01:31:30+00:00"
+    },
+    "test_coverage::lib/widgets/audio_analysis/audio_analysis_card_1.dart::untested_module": {
+      "issue_id": "test_coverage::lib/widgets/audio_analysis/audio_analysis_card_1.dart::untested_module",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "cluster": null,
+      "updated_at": "2026-10-31T01:31:30+00:00"
+    },
+    "test_coverage::lib/widgets/glass/selection/app_selection_pill_1.dart::untested_module": {
+      "issue_id": "test_coverage::lib/widgets/glass/selection/app_selection_pill_1.dart::untested_module",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "cluster": null,
+      "updated_at": "2026-10-31T01:31:30+00:00"
+    },
+    "test_coverage::lib/services/playback/automix/music_player_automix_members_3.dart::untested_module": {
+      "issue_id": "test_coverage::lib/services/playback/automix/music_player_automix_members_3.dart::untested_module",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "cluster": null,
+      "updated_at": "2026-10-31T01:31:30+00:00"
+    },
+    "test_coverage::lib/widgets/player/lyrics/player_lyrics_painting_1.dart::untested_module": {
+      "issue_id": "test_coverage::lib/widgets/player/lyrics/player_lyrics_painting_1.dart::untested_module",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "cluster": null,
+      "updated_at": "2026-10-31T01:31:30+00:00"
+    },
+    "test_coverage::lib/providers/library_collections_provider_helpers.dart::untested_module": {
+      "issue_id": "test_coverage::lib/providers/library_collections_provider_helpers.dart::untested_module",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "cluster": null,
+      "updated_at": "2026-10-31T01:31:30+00:00"
+    },
+    "test_coverage::lib/widgets/header/album_detail_header_members_1.dart::untested_module": {
+      "issue_id": "test_coverage::lib/widgets/header/album_detail_header_members_1.dart::untested_module",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "cluster": null,
+      "updated_at": "2026-10-31T01:31:30+00:00"
+    },
+    "test_coverage::lib/services/playback/automix/music_player_automix_members_1.dart::untested_module": {
+      "issue_id": "test_coverage::lib/services/playback/automix/music_player_automix_members_1.dart::untested_module",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "cluster": null,
+      "updated_at": "2026-10-31T01:31:30+00:00"
+    },
+    "test_coverage::lib/screens/listening_rewind_screen_backdrop.dart::untested_module": {
+      "issue_id": "test_coverage::lib/screens/listening_rewind_screen_backdrop.dart::untested_module",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "cluster": null,
+      "updated_at": "2026-10-31T01:31:30+00:00"
+    },
+    "test_coverage::lib/providers/local_library_state_1.dart::untested_module": {
+      "issue_id": "test_coverage::lib/providers/local_library_state_1.dart::untested_module",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "cluster": null,
+      "updated_at": "2026-10-31T01:31:30+00:00"
+    },
+    "test_coverage::lib/widgets/header/album_detail_header_members_2.dart::untested_module": {
+      "issue_id": "test_coverage::lib/widgets/header/album_detail_header_members_2.dart::untested_module",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "cluster": null,
+      "updated_at": "2026-10-31T01:31:30+00:00"
+    },
+    "test_coverage::lib/widgets/player/lyrics/player_lyrics_members_3.dart::untested_module": {
+      "issue_id": "test_coverage::lib/widgets/player/lyrics/player_lyrics_members_3.dart::untested_module",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "cluster": null,
+      "updated_at": "2026-10-31T01:31:30+00:00"
+    },
+    "test_coverage::lib/screens/settings/logs/log_page_1.dart::untested_module": {
+      "issue_id": "test_coverage::lib/screens/settings/logs/log_page_1.dart::untested_module",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "cluster": null,
+      "updated_at": "2026-10-31T01:31:30+00:00"
+    },
+    "test_coverage::lib/screens/listening_rewind_screen_stats.dart::untested_module": {
+      "issue_id": "test_coverage::lib/screens/listening_rewind_screen_stats.dart::untested_module",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "cluster": null,
+      "updated_at": "2026-10-31T01:31:30+00:00"
+    },
+    "test_coverage::lib/screens/now_playing_screen_lyrics.dart::untested_module": {
+      "issue_id": "test_coverage::lib/screens/now_playing_screen_lyrics.dart::untested_module",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "cluster": null,
+      "updated_at": "2026-10-31T01:31:30+00:00"
+    },
+    "test_coverage::lib/widgets/player/lyrics/player_lyrics_layout_1.dart::untested_module": {
+      "issue_id": "test_coverage::lib/widgets/player/lyrics/player_lyrics_layout_1.dart::untested_module",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "cluster": null,
+      "updated_at": "2026-10-31T01:31:30+00:00"
+    },
+    "test_coverage::lib/screens/library/local_artist/local_artist_screen_1.dart::untested_module": {
+      "issue_id": "test_coverage::lib/screens/library/local_artist/local_artist_screen_1.dart::untested_module",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "cluster": null,
+      "updated_at": "2026-10-31T01:31:30+00:00"
+    },
+    "test_coverage::lib/widgets/player/lyrics/player_lyrics_painting_2.dart::untested_module": {
+      "issue_id": "test_coverage::lib/widgets/player/lyrics/player_lyrics_painting_2.dart::untested_module",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "cluster": null,
+      "updated_at": "2026-10-31T01:31:30+00:00"
+    },
+    "test_coverage::lib/widgets/player/lyrics/player_lyrics_support_1.dart::untested_module": {
+      "issue_id": "test_coverage::lib/widgets/player/lyrics/player_lyrics_support_1.dart::untested_module",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "cluster": null,
+      "updated_at": "2026-10-31T01:31:30+00:00"
+    },
+    "test_coverage::lib/services/playback/automix/music_player_automix_members_6.dart::untested_module": {
+      "issue_id": "test_coverage::lib/services/playback/automix/music_player_automix_members_6.dart::untested_module",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "cluster": null,
+      "updated_at": "2026-10-31T01:31:30+00:00"
+    },
+    "test_coverage::lib/services/playback/automix/music_player_automix_members_5.dart::untested_critical": {
+      "issue_id": "test_coverage::lib/services/playback/automix/music_player_automix_members_5.dart::untested_critical",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "cluster": null,
+      "updated_at": "2026-10-31T01:31:50+00:00"
+    },
+    "test_coverage::lib/providers/local_library_provider_scanning.dart::untested_critical": {
+      "issue_id": "test_coverage::lib/providers/local_library_provider_scanning.dart::untested_critical",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "cluster": null,
+      "updated_at": "2026-10-31T01:31:50+00:00"
+    },
+    "test_coverage::lib/services/library/covers/embedded_cover_resolver_extraction.dart::untested_critical": {
+      "issue_id": "test_coverage::lib/services/library/covers/embedded_cover_resolver_extraction.dart::untested_critical",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "cluster": null,
+      "updated_at": "2026-10-31T01:31:50+00:00"
+    },
+    "test_coverage::lib/services/playback/music_player/music_player_service_overrides_1.dart::untested_critical": {
+      "issue_id": "test_coverage::lib/services/playback/music_player/music_player_service_overrides_1.dart::untested_critical",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "cluster": null,
+      "updated_at": "2026-10-31T01:31:50+00:00"
+    },
+    "test_coverage::lib/widgets/player/lyrics/player_lyrics_members_1.dart::untested_critical": {
+      "issue_id": "test_coverage::lib/widgets/player/lyrics/player_lyrics_members_1.dart::untested_critical",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "cluster": null,
+      "updated_at": "2026-10-31T01:31:50+00:00"
+    },
+    "test_coverage::lib/providers/local_library_provider_loading.dart::untested_critical": {
+      "issue_id": "test_coverage::lib/providers/local_library_provider_loading.dart::untested_critical",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "cluster": null,
+      "updated_at": "2026-10-31T01:31:50+00:00"
+    },
+    "test_coverage::lib/services/library/covers/embedded_cover_resolver_persistence.dart::untested_critical": {
+      "issue_id": "test_coverage::lib/services/library/covers/embedded_cover_resolver_persistence.dart::untested_critical",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "cluster": null,
+      "updated_at": "2026-10-31T01:31:50+00:00"
+    },
+    "test_coverage::lib/screens/setup_screen_1.dart::untested_critical": {
+      "issue_id": "test_coverage::lib/screens/setup_screen_1.dart::untested_critical",
+      "created_at": "2026-10-31T01:29:59+00:00",
+      "cluster": null,
+      "updated_at": "2026-10-31T01:31:50+00:00"
     }
   },
   "clusters": {
@@ -1316,16 +2468,14 @@
       "action": null,
       "action_type": "manual_fix",
       "execution_policy": "planned_only",
-      "execution_status": "active",
+      "execution_status": "done",
       "user_modified": true,
       "action_steps": [
         {
           "title": "Apply the single bundled file-size reduction to library_collections_provider.dart",
           "detail": "Do not touch the five false-positive items (three _mutate dupes, matches and restoreFromBackup signatures). Keep Loved UI-only rename, Wishlist removal and schema v3 behaviour.",
           "effort": "medium",
-          "issue_refs": [
-            "structural::lib/providers/library_collections_provider.dart"
-          ],
+          "issue_refs": [],
           "done": true
         }
       ]
@@ -2688,15 +3838,610 @@
       "superseded_at": "2026-10-30T15:09:18+00:00",
       "remapped_to": null,
       "candidates": []
+    },
+    "structural::lib/providers/library_collections_provider.dart": {
+      "original_id": "structural::lib/providers/library_collections_provider.dart",
+      "original_detector": "structural",
+      "original_file": "lib/providers/library_collections_provider.dart",
+      "original_summary": "Large file: large (792 LOC) / complexity score 65",
+      "status": "superseded",
+      "superseded_at": "2026-10-31T01:29:41+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/providers/library_collections_provider_helpers.dart::untested_module": {
+      "original_id": "test_coverage::lib/providers/library_collections_provider_helpers.dart::untested_module",
+      "original_detector": "test_coverage",
+      "original_file": "lib/providers/library_collections_provider_helpers.dart",
+      "original_summary": "Untested module (117 LOC, 0 importers)",
+      "status": "superseded",
+      "superseded_at": "2026-10-31T01:31:30+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/providers/library_collections_provider_mutations.dart::untested_module": {
+      "original_id": "test_coverage::lib/providers/library_collections_provider_mutations.dart::untested_module",
+      "original_detector": "test_coverage",
+      "original_file": "lib/providers/library_collections_provider_mutations.dart",
+      "original_summary": "Untested module (240 LOC, 0 importers)",
+      "status": "superseded",
+      "superseded_at": "2026-10-31T01:31:30+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/providers/local_library_provider_scan_results.dart::untested_module": {
+      "original_id": "test_coverage::lib/providers/local_library_provider_scan_results.dart::untested_module",
+      "original_detector": "test_coverage",
+      "original_file": "lib/providers/local_library_provider_scan_results.dart",
+      "original_summary": "Untested module (225 LOC, 0 importers)",
+      "status": "superseded",
+      "superseded_at": "2026-10-31T01:31:30+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/providers/local_library_provider_sources.dart::untested_module": {
+      "original_id": "test_coverage::lib/providers/local_library_provider_sources.dart::untested_module",
+      "original_detector": "test_coverage",
+      "original_file": "lib/providers/local_library_provider_sources.dart",
+      "original_summary": "Untested module (83 LOC, 0 importers)",
+      "status": "superseded",
+      "superseded_at": "2026-10-31T01:31:30+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/providers/local_library_state_1.dart::untested_module": {
+      "original_id": "test_coverage::lib/providers/local_library_state_1.dart::untested_module",
+      "original_detector": "test_coverage",
+      "original_file": "lib/providers/local_library_state_1.dart",
+      "original_summary": "Untested module (88 LOC, 0 importers)",
+      "status": "superseded",
+      "superseded_at": "2026-10-31T01:31:30+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/providers/settings_provider_actions.dart::untested_module": {
+      "original_id": "test_coverage::lib/providers/settings_provider_actions.dart::untested_module",
+      "original_detector": "test_coverage",
+      "original_file": "lib/providers/settings_provider_actions.dart",
+      "original_summary": "Untested module (370 LOC, 0 importers)",
+      "status": "superseded",
+      "superseded_at": "2026-10-31T01:31:30+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/providers/settings_provider_helpers.dart::untested_module": {
+      "original_id": "test_coverage::lib/providers/settings_provider_helpers.dart::untested_module",
+      "original_detector": "test_coverage",
+      "original_file": "lib/providers/settings_provider_helpers.dart",
+      "original_summary": "Untested module (76 LOC, 0 importers)",
+      "status": "superseded",
+      "superseded_at": "2026-10-31T01:31:30+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/screens/library/app_library_screen_1.dart::untested_module": {
+      "original_id": "test_coverage::lib/screens/library/app_library_screen_1.dart::untested_module",
+      "original_detector": "test_coverage",
+      "original_file": "lib/screens/library/app_library_screen_1.dart",
+      "original_summary": "Untested module (173 LOC, 0 importers)",
+      "status": "superseded",
+      "superseded_at": "2026-10-31T01:31:30+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/screens/library/collections/library_collection_tracks_screen_1.dart::untested_module": {
+      "original_id": "test_coverage::lib/screens/library/collections/library_collection_tracks_screen_1.dart::untested_module",
+      "original_detector": "test_coverage",
+      "original_file": "lib/screens/library/collections/library_collection_tracks_screen_1.dart",
+      "original_summary": "Untested module (388 LOC, 0 importers)",
+      "status": "superseded",
+      "superseded_at": "2026-10-31T01:31:30+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/screens/library/collections/library_collection_tracks_screen_2.dart::untested_module": {
+      "original_id": "test_coverage::lib/screens/library/collections/library_collection_tracks_screen_2.dart::untested_module",
+      "original_detector": "test_coverage",
+      "original_file": "lib/screens/library/collections/library_collection_tracks_screen_2.dart",
+      "original_summary": "Untested module (319 LOC, 0 importers)",
+      "status": "superseded",
+      "superseded_at": "2026-10-31T01:31:30+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/screens/library/local_artist/local_artist_screen_1.dart::untested_module": {
+      "original_id": "test_coverage::lib/screens/library/local_artist/local_artist_screen_1.dart::untested_module",
+      "original_detector": "test_coverage",
+      "original_file": "lib/screens/library/local_artist/local_artist_screen_1.dart",
+      "original_summary": "Untested module (292 LOC, 0 importers)",
+      "status": "superseded",
+      "superseded_at": "2026-10-31T01:31:30+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/screens/library/section_tab/library_section_tab_filters.dart::untested_module": {
+      "original_id": "test_coverage::lib/screens/library/section_tab/library_section_tab_filters.dart::untested_module",
+      "original_detector": "test_coverage",
+      "original_file": "lib/screens/library/section_tab/library_section_tab_filters.dart",
+      "original_summary": "Untested module (310 LOC, 0 importers)",
+      "status": "superseded",
+      "superseded_at": "2026-10-31T01:31:30+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/screens/library/section_tab/library_section_tab_paging.dart::untested_module": {
+      "original_id": "test_coverage::lib/screens/library/section_tab/library_section_tab_paging.dart::untested_module",
+      "original_detector": "test_coverage",
+      "original_file": "lib/screens/library/section_tab/library_section_tab_paging.dart",
+      "original_summary": "Untested module (265 LOC, 0 importers)",
+      "status": "superseded",
+      "superseded_at": "2026-10-31T01:31:30+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/screens/listening_rewind_screen_backdrop.dart::untested_module": {
+      "original_id": "test_coverage::lib/screens/listening_rewind_screen_backdrop.dart::untested_module",
+      "original_detector": "test_coverage",
+      "original_file": "lib/screens/listening_rewind_screen_backdrop.dart",
+      "original_summary": "Untested module (296 LOC, 0 importers)",
+      "status": "superseded",
+      "superseded_at": "2026-10-31T01:31:30+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/screens/listening_rewind_screen_banners.dart::untested_module": {
+      "original_id": "test_coverage::lib/screens/listening_rewind_screen_banners.dart::untested_module",
+      "original_detector": "test_coverage",
+      "original_file": "lib/screens/listening_rewind_screen_banners.dart",
+      "original_summary": "Untested module (247 LOC, 0 importers)",
+      "status": "superseded",
+      "superseded_at": "2026-10-31T01:31:30+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/screens/listening_rewind_screen_slide.dart::untested_module": {
+      "original_id": "test_coverage::lib/screens/listening_rewind_screen_slide.dart::untested_module",
+      "original_detector": "test_coverage",
+      "original_file": "lib/screens/listening_rewind_screen_slide.dart",
+      "original_summary": "Untested module (418 LOC, 0 importers)",
+      "status": "superseded",
+      "superseded_at": "2026-10-31T01:31:30+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/screens/listening_rewind_screen_stats.dart::untested_module": {
+      "original_id": "test_coverage::lib/screens/listening_rewind_screen_stats.dart::untested_module",
+      "original_detector": "test_coverage",
+      "original_file": "lib/screens/listening_rewind_screen_stats.dart",
+      "original_summary": "Untested module (349 LOC, 0 importers)",
+      "status": "superseded",
+      "superseded_at": "2026-10-31T01:31:30+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/screens/listening_rewind_screen_story.dart::untested_module": {
+      "original_id": "test_coverage::lib/screens/listening_rewind_screen_story.dart::untested_module",
+      "original_detector": "test_coverage",
+      "original_file": "lib/screens/listening_rewind_screen_story.dart",
+      "original_summary": "Untested module (394 LOC, 0 importers)",
+      "status": "superseded",
+      "superseded_at": "2026-10-31T01:31:30+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/screens/main_shell_navigation.dart::untested_module": {
+      "original_id": "test_coverage::lib/screens/main_shell_navigation.dart::untested_module",
+      "original_detector": "test_coverage",
+      "original_file": "lib/screens/main_shell_navigation.dart",
+      "original_summary": "Untested module (201 LOC, 0 importers)",
+      "status": "superseded",
+      "superseded_at": "2026-10-31T01:31:30+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/screens/now_playing_screen_lyrics.dart::untested_module": {
+      "original_id": "test_coverage::lib/screens/now_playing_screen_lyrics.dart::untested_module",
+      "original_detector": "test_coverage",
+      "original_file": "lib/screens/now_playing_screen_lyrics.dart",
+      "original_summary": "Untested module (185 LOC, 0 importers)",
+      "status": "superseded",
+      "superseded_at": "2026-10-31T01:31:30+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/screens/now_playing_screen_menus.dart::untested_module": {
+      "original_id": "test_coverage::lib/screens/now_playing_screen_menus.dart::untested_module",
+      "original_detector": "test_coverage",
+      "original_file": "lib/screens/now_playing_screen_menus.dart",
+      "original_summary": "Untested module (315 LOC, 0 importers)",
+      "status": "superseded",
+      "superseded_at": "2026-10-31T01:31:30+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/screens/now_playing_screen_player.dart::untested_module": {
+      "original_id": "test_coverage::lib/screens/now_playing_screen_player.dart::untested_module",
+      "original_detector": "test_coverage",
+      "original_file": "lib/screens/now_playing_screen_player.dart",
+      "original_summary": "Untested module (341 LOC, 0 importers)",
+      "status": "superseded",
+      "superseded_at": "2026-10-31T01:31:30+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/screens/settings/cache/cache_management_page_1.dart::untested_module": {
+      "original_id": "test_coverage::lib/screens/settings/cache/cache_management_page_1.dart::untested_module",
+      "original_detector": "test_coverage",
+      "original_file": "lib/screens/settings/cache/cache_management_page_1.dart",
+      "original_summary": "Untested module (260 LOC, 0 importers)",
+      "status": "superseded",
+      "superseded_at": "2026-10-31T01:31:30+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/screens/settings/library/library_settings_page_1.dart::untested_module": {
+      "original_id": "test_coverage::lib/screens/settings/library/library_settings_page_1.dart::untested_module",
+      "original_detector": "test_coverage",
+      "original_file": "lib/screens/settings/library/library_settings_page_1.dart",
+      "original_summary": "Untested module (294 LOC, 0 importers)",
+      "status": "superseded",
+      "superseded_at": "2026-10-31T01:31:30+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/screens/settings/logs/log_page_1.dart::untested_module": {
+      "original_id": "test_coverage::lib/screens/settings/logs/log_page_1.dart::untested_module",
+      "original_detector": "test_coverage",
+      "original_file": "lib/screens/settings/logs/log_page_1.dart",
+      "original_summary": "Untested module (313 LOC, 0 importers)",
+      "status": "superseded",
+      "superseded_at": "2026-10-31T01:31:30+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/screens/settings/playback/playback_settings_auto_mix_1.dart::untested_module": {
+      "original_id": "test_coverage::lib/screens/settings/playback/playback_settings_auto_mix_1.dart::untested_module",
+      "original_detector": "test_coverage",
+      "original_file": "lib/screens/settings/playback/playback_settings_auto_mix_1.dart",
+      "original_summary": "Untested module (355 LOC, 0 importers)",
+      "status": "superseded",
+      "superseded_at": "2026-10-31T01:31:30+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/screens/settings/playback/playback_settings_auto_mix_2.dart::untested_module": {
+      "original_id": "test_coverage::lib/screens/settings/playback/playback_settings_auto_mix_2.dart::untested_module",
+      "original_detector": "test_coverage",
+      "original_file": "lib/screens/settings/playback/playback_settings_auto_mix_2.dart",
+      "original_summary": "Untested module (193 LOC, 0 importers)",
+      "status": "superseded",
+      "superseded_at": "2026-10-31T01:31:30+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/screens/setup_screen_2.dart::untested_module": {
+      "original_id": "test_coverage::lib/screens/setup_screen_2.dart::untested_module",
+      "original_detector": "test_coverage",
+      "original_file": "lib/screens/setup_screen_2.dart",
+      "original_summary": "Untested module (230 LOC, 0 importers)",
+      "status": "superseded",
+      "superseded_at": "2026-10-31T01:31:30+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/services/library/collections/library_collections_database_1.dart::untested_module": {
+      "original_id": "test_coverage::lib/services/library/collections/library_collections_database_1.dart::untested_module",
+      "original_detector": "test_coverage",
+      "original_file": "lib/services/library/collections/library_collections_database_1.dart",
+      "original_summary": "Untested module (10 LOC, 0 importers)",
+      "status": "superseded",
+      "superseded_at": "2026-10-31T01:31:30+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/services/library/collections/library_collections_database_2.dart::untested_module": {
+      "original_id": "test_coverage::lib/services/library/collections/library_collections_database_2.dart::untested_module",
+      "original_detector": "test_coverage",
+      "original_file": "lib/services/library/collections/library_collections_database_2.dart",
+      "original_summary": "Untested module (23 LOC, 0 importers)",
+      "status": "superseded",
+      "superseded_at": "2026-10-31T01:31:30+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/services/library/collections/library_collections_database_3.dart::untested_module": {
+      "original_id": "test_coverage::lib/services/library/collections/library_collections_database_3.dart::untested_module",
+      "original_detector": "test_coverage",
+      "original_file": "lib/services/library/collections/library_collections_database_3.dart",
+      "original_summary": "Untested module (54 LOC, 0 importers)",
+      "status": "superseded",
+      "superseded_at": "2026-10-31T01:31:30+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/services/library/collections/library_collections_database_statics_1.dart::untested_module": {
+      "original_id": "test_coverage::lib/services/library/collections/library_collections_database_statics_1.dart::untested_module",
+      "original_detector": "test_coverage",
+      "original_file": "lib/services/library/collections/library_collections_database_statics_1.dart",
+      "original_summary": "Untested module (349 LOC, 0 importers)",
+      "status": "superseded",
+      "superseded_at": "2026-10-31T01:31:30+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/services/playback/automix/music_player_automix_members_1.dart::untested_module": {
+      "original_id": "test_coverage::lib/services/playback/automix/music_player_automix_members_1.dart::untested_module",
+      "original_detector": "test_coverage",
+      "original_file": "lib/services/playback/automix/music_player_automix_members_1.dart",
+      "original_summary": "Untested module (13 LOC, 0 importers)",
+      "status": "superseded",
+      "superseded_at": "2026-10-31T01:31:30+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/services/playback/automix/music_player_automix_members_3.dart::untested_module": {
+      "original_id": "test_coverage::lib/services/playback/automix/music_player_automix_members_3.dart::untested_module",
+      "original_detector": "test_coverage",
+      "original_file": "lib/services/playback/automix/music_player_automix_members_3.dart",
+      "original_summary": "Untested module (20 LOC, 0 importers)",
+      "status": "superseded",
+      "superseded_at": "2026-10-31T01:31:30+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/services/playback/automix/music_player_automix_members_4.dart::untested_module": {
+      "original_id": "test_coverage::lib/services/playback/automix/music_player_automix_members_4.dart::untested_module",
+      "original_detector": "test_coverage",
+      "original_file": "lib/services/playback/automix/music_player_automix_members_4.dart",
+      "original_summary": "Untested module (28 LOC, 0 importers)",
+      "status": "superseded",
+      "superseded_at": "2026-10-31T01:31:30+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/services/playback/automix/music_player_automix_members_6.dart::untested_module": {
+      "original_id": "test_coverage::lib/services/playback/automix/music_player_automix_members_6.dart::untested_module",
+      "original_detector": "test_coverage",
+      "original_file": "lib/services/playback/automix/music_player_automix_members_6.dart",
+      "original_summary": "Untested module (131 LOC, 0 importers)",
+      "status": "superseded",
+      "superseded_at": "2026-10-31T01:31:30+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/services/playback/automix/music_player_automix_members_7.dart::untested_module": {
+      "original_id": "test_coverage::lib/services/playback/automix/music_player_automix_members_7.dart::untested_module",
+      "original_detector": "test_coverage",
+      "original_file": "lib/services/playback/automix/music_player_automix_members_7.dart",
+      "original_summary": "Untested module (58 LOC, 0 importers)",
+      "status": "superseded",
+      "superseded_at": "2026-10-31T01:31:30+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/services/playback/music_player/music_player_service_members_2.dart::untested_module": {
+      "original_id": "test_coverage::lib/services/playback/music_player/music_player_service_members_2.dart::untested_module",
+      "original_detector": "test_coverage",
+      "original_file": "lib/services/playback/music_player/music_player_service_members_2.dart",
+      "original_summary": "Untested module (54 LOC, 0 importers)",
+      "status": "superseded",
+      "superseded_at": "2026-10-31T01:31:30+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/services/playback/music_player/music_player_service_overrides_2.dart::untested_module": {
+      "original_id": "test_coverage::lib/services/playback/music_player/music_player_service_overrides_2.dart::untested_module",
+      "original_detector": "test_coverage",
+      "original_file": "lib/services/playback/music_player/music_player_service_overrides_2.dart",
+      "original_summary": "Untested module (115 LOC, 0 importers)",
+      "status": "superseded",
+      "superseded_at": "2026-10-31T01:31:30+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/utils/lyrics/lyrics_parser_background_1.dart::untested_module": {
+      "original_id": "test_coverage::lib/utils/lyrics/lyrics_parser_background_1.dart::untested_module",
+      "original_detector": "test_coverage",
+      "original_file": "lib/utils/lyrics/lyrics_parser_background_1.dart",
+      "original_summary": "Untested module (52 LOC, 0 importers)",
+      "status": "superseded",
+      "superseded_at": "2026-10-31T01:31:30+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/utils/lyrics/lyrics_parser_support.dart::untested_module": {
+      "original_id": "test_coverage::lib/utils/lyrics/lyrics_parser_support.dart::untested_module",
+      "original_detector": "test_coverage",
+      "original_file": "lib/utils/lyrics/lyrics_parser_support.dart",
+      "original_summary": "Untested module (403 LOC, 0 importers)",
+      "status": "superseded",
+      "superseded_at": "2026-10-31T01:31:30+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/utils/lyrics/lyrics_parser_words.dart::untested_module": {
+      "original_id": "test_coverage::lib/utils/lyrics/lyrics_parser_words.dart::untested_module",
+      "original_detector": "test_coverage",
+      "original_file": "lib/utils/lyrics/lyrics_parser_words.dart",
+      "original_summary": "Untested module (136 LOC, 0 importers)",
+      "status": "superseded",
+      "superseded_at": "2026-10-31T01:31:30+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/widgets/audio_analysis/audio_analysis_card_1.dart::untested_module": {
+      "original_id": "test_coverage::lib/widgets/audio_analysis/audio_analysis_card_1.dart::untested_module",
+      "original_detector": "test_coverage",
+      "original_file": "lib/widgets/audio_analysis/audio_analysis_card_1.dart",
+      "original_summary": "Untested module (327 LOC, 0 importers)",
+      "status": "superseded",
+      "superseded_at": "2026-10-31T01:31:30+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/widgets/glass/selection/app_selection_pill_1.dart::untested_module": {
+      "original_id": "test_coverage::lib/widgets/glass/selection/app_selection_pill_1.dart::untested_module",
+      "original_detector": "test_coverage",
+      "original_file": "lib/widgets/glass/selection/app_selection_pill_1.dart",
+      "original_summary": "Untested module (236 LOC, 0 importers)",
+      "status": "superseded",
+      "superseded_at": "2026-10-31T01:31:30+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/widgets/header/album_detail_header_members_1.dart::untested_module": {
+      "original_id": "test_coverage::lib/widgets/header/album_detail_header_members_1.dart::untested_module",
+      "original_detector": "test_coverage",
+      "original_file": "lib/widgets/header/album_detail_header_members_1.dart",
+      "original_summary": "Untested module (11 LOC, 0 importers)",
+      "status": "superseded",
+      "superseded_at": "2026-10-31T01:31:30+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/widgets/header/album_detail_header_members_2.dart::untested_module": {
+      "original_id": "test_coverage::lib/widgets/header/album_detail_header_members_2.dart::untested_module",
+      "original_detector": "test_coverage",
+      "original_file": "lib/widgets/header/album_detail_header_members_2.dart",
+      "original_summary": "Untested module (159 LOC, 0 importers)",
+      "status": "superseded",
+      "superseded_at": "2026-10-31T01:31:30+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/widgets/header/album_detail_header_members_3.dart::untested_module": {
+      "original_id": "test_coverage::lib/widgets/header/album_detail_header_members_3.dart::untested_module",
+      "original_detector": "test_coverage",
+      "original_file": "lib/widgets/header/album_detail_header_members_3.dart",
+      "original_summary": "Untested module (248 LOC, 0 importers)",
+      "status": "superseded",
+      "superseded_at": "2026-10-31T01:31:30+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/widgets/player/layout/app_player_layout_members_1.dart::untested_module": {
+      "original_id": "test_coverage::lib/widgets/player/layout/app_player_layout_members_1.dart::untested_module",
+      "original_detector": "test_coverage",
+      "original_file": "lib/widgets/player/layout/app_player_layout_members_1.dart",
+      "original_summary": "Untested module (94 LOC, 0 importers)",
+      "status": "superseded",
+      "superseded_at": "2026-10-31T01:31:30+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/widgets/player/lyrics/player_lyrics_layout_1.dart::untested_module": {
+      "original_id": "test_coverage::lib/widgets/player/lyrics/player_lyrics_layout_1.dart::untested_module",
+      "original_detector": "test_coverage",
+      "original_file": "lib/widgets/player/lyrics/player_lyrics_layout_1.dart",
+      "original_summary": "Untested module (138 LOC, 0 importers)",
+      "status": "superseded",
+      "superseded_at": "2026-10-31T01:31:30+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/widgets/player/lyrics/player_lyrics_members_2.dart::untested_module": {
+      "original_id": "test_coverage::lib/widgets/player/lyrics/player_lyrics_members_2.dart::untested_module",
+      "original_detector": "test_coverage",
+      "original_file": "lib/widgets/player/lyrics/player_lyrics_members_2.dart",
+      "original_summary": "Untested module (188 LOC, 0 importers)",
+      "status": "superseded",
+      "superseded_at": "2026-10-31T01:31:30+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/widgets/player/lyrics/player_lyrics_members_3.dart::untested_module": {
+      "original_id": "test_coverage::lib/widgets/player/lyrics/player_lyrics_members_3.dart::untested_module",
+      "original_detector": "test_coverage",
+      "original_file": "lib/widgets/player/lyrics/player_lyrics_members_3.dart",
+      "original_summary": "Untested module (391 LOC, 0 importers)",
+      "status": "superseded",
+      "superseded_at": "2026-10-31T01:31:30+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/widgets/player/lyrics/player_lyrics_members_4.dart::untested_module": {
+      "original_id": "test_coverage::lib/widgets/player/lyrics/player_lyrics_members_4.dart::untested_module",
+      "original_detector": "test_coverage",
+      "original_file": "lib/widgets/player/lyrics/player_lyrics_members_4.dart",
+      "original_summary": "Untested module (58 LOC, 0 importers)",
+      "status": "superseded",
+      "superseded_at": "2026-10-31T01:31:30+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/widgets/player/lyrics/player_lyrics_overrides_1.dart::untested_module": {
+      "original_id": "test_coverage::lib/widgets/player/lyrics/player_lyrics_overrides_1.dart::untested_module",
+      "original_detector": "test_coverage",
+      "original_file": "lib/widgets/player/lyrics/player_lyrics_overrides_1.dart",
+      "original_summary": "Untested module (27 LOC, 0 importers)",
+      "status": "superseded",
+      "superseded_at": "2026-10-31T01:31:30+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/widgets/player/lyrics/player_lyrics_painting_1.dart::untested_module": {
+      "original_id": "test_coverage::lib/widgets/player/lyrics/player_lyrics_painting_1.dart::untested_module",
+      "original_detector": "test_coverage",
+      "original_file": "lib/widgets/player/lyrics/player_lyrics_painting_1.dart",
+      "original_summary": "Untested module (318 LOC, 0 importers)",
+      "status": "superseded",
+      "superseded_at": "2026-10-31T01:31:30+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/widgets/player/lyrics/player_lyrics_painting_2.dart::untested_module": {
+      "original_id": "test_coverage::lib/widgets/player/lyrics/player_lyrics_painting_2.dart::untested_module",
+      "original_detector": "test_coverage",
+      "original_file": "lib/widgets/player/lyrics/player_lyrics_painting_2.dart",
+      "original_summary": "Untested module (383 LOC, 0 importers)",
+      "status": "superseded",
+      "superseded_at": "2026-10-31T01:31:30+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/widgets/player/lyrics/player_lyrics_painting_3.dart::untested_module": {
+      "original_id": "test_coverage::lib/widgets/player/lyrics/player_lyrics_painting_3.dart::untested_module",
+      "original_detector": "test_coverage",
+      "original_file": "lib/widgets/player/lyrics/player_lyrics_painting_3.dart",
+      "original_summary": "Untested module (34 LOC, 0 importers)",
+      "status": "superseded",
+      "superseded_at": "2026-10-31T01:31:30+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/widgets/player/lyrics/player_lyrics_support_1.dart::untested_module": {
+      "original_id": "test_coverage::lib/widgets/player/lyrics/player_lyrics_support_1.dart::untested_module",
+      "original_detector": "test_coverage",
+      "original_file": "lib/widgets/player/lyrics/player_lyrics_support_1.dart",
+      "original_summary": "Untested module (331 LOC, 0 importers)",
+      "status": "superseded",
+      "superseded_at": "2026-10-31T01:31:30+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/widgets/sheets/update_dialog_support_1.dart::untested_module": {
+      "original_id": "test_coverage::lib/widgets/sheets/update_dialog_support_1.dart::untested_module",
+      "original_detector": "test_coverage",
+      "original_file": "lib/widgets/sheets/update_dialog_support_1.dart",
+      "original_summary": "Untested module (370 LOC, 0 importers)",
+      "status": "superseded",
+      "superseded_at": "2026-10-31T01:31:30+00:00",
+      "remapped_to": null,
+      "candidates": []
+    },
+    "test_coverage::lib/widgets/sheets/update_dialog_support_2.dart::untested_module": {
+      "original_id": "test_coverage::lib/widgets/sheets/update_dialog_support_2.dart::untested_module",
+      "original_detector": "test_coverage",
+      "original_file": "lib/widgets/sheets/update_dialog_support_2.dart",
+      "original_summary": "Untested module (41 LOC, 0 importers)",
+      "status": "superseded",
+      "superseded_at": "2026-10-31T01:31:30+00:00",
+      "remapped_to": null,
+      "candidates": []
     }
   },
   "promoted_ids": [],
-  "plan_start_scores": {
-    "strict": 89.8,
-    "overall": 91.9,
-    "objective": 98.1,
-    "verified": 97.9
-  },
+  "plan_start_scores": {},
   "refresh_state": {
     "_subjective_migration_pruned": true,
     "lifecycle_phase": "plan",
@@ -6887,6 +8632,398 @@
         "kind": "false_positive",
         "reason": "Generated (gen-l10n) or vendored third-party code, not hand-written source"
       }
+    },
+    {
+      "timestamp": "2026-10-31T01:29:41+00:00",
+      "action": "cluster_done",
+      "issue_ids": [],
+      "cluster_name": "collections-provider-bundle",
+      "actor": "system",
+      "note": null,
+      "detail": {
+        "reason": "cluster members no longer actionable in state"
+      }
+    },
+    {
+      "timestamp": "2026-10-31T01:29:41+00:00",
+      "action": "reconcile",
+      "issue_ids": [
+        "structural::lib/providers/library_collections_provider.dart"
+      ],
+      "cluster_name": null,
+      "actor": "system",
+      "note": null,
+      "detail": {
+        "superseded_count": 1,
+        "pruned_count": 0,
+        "resurfaced_count": 0,
+        "clusters_completed_count": 1
+      }
+    },
+    {
+      "timestamp": "2026-10-31T01:29:41+00:00",
+      "action": "clear_start_scores",
+      "issue_ids": [],
+      "cluster_name": null,
+      "actor": "system",
+      "note": null,
+      "detail": {}
+    },
+    {
+      "timestamp": "2026-10-31T01:29:41+00:00",
+      "action": "complete_postflight_scan",
+      "issue_ids": [],
+      "cluster_name": null,
+      "actor": "system",
+      "note": null,
+      "detail": {
+        "scan_count": 23
+      }
+    },
+    {
+      "timestamp": "2026-10-31T01:29:59+00:00",
+      "action": "skip",
+      "issue_ids": [
+        "orphaned::lib/services/library/covers/embedded_cover_resolver_extraction.dart",
+        "orphaned::lib/screens/listening_rewind_screen_slide.dart",
+        "orphaned::lib/utils/lyrics/lyrics_parser_support.dart",
+        "orphaned::lib/screens/listening_rewind_screen_story.dart",
+        "orphaned::lib/providers/local_library_provider_scanning.dart",
+        "orphaned::lib/widgets/player/lyrics/player_lyrics_members_3.dart",
+        "orphaned::lib/screens/library/collections/library_collection_tracks_screen_1.dart",
+        "orphaned::lib/widgets/player/lyrics/player_lyrics_members_1.dart",
+        "orphaned::lib/services/playback/automix/music_player_automix_members_5.dart",
+        "orphaned::lib/services/playback/music_player/music_player_service_overrides_1.dart",
+        "orphaned::lib/widgets/player/lyrics/player_lyrics_painting_2.dart",
+        "orphaned::lib/providers/settings_provider_actions.dart",
+        "orphaned::lib/widgets/sheets/update_dialog_support_1.dart",
+        "orphaned::lib/screens/setup_screen_1.dart",
+        "orphaned::lib/screens/settings/playback/playback_settings_auto_mix_1.dart",
+        "orphaned::lib/screens/listening_rewind_screen_stats.dart",
+        "orphaned::lib/services/library/collections/library_collections_database_statics_1.dart",
+        "orphaned::lib/services/library/covers/embedded_cover_resolver_persistence.dart",
+        "orphaned::lib/screens/now_playing_screen_player.dart",
+        "orphaned::lib/widgets/player/lyrics/player_lyrics_support_1.dart",
+        "orphaned::lib/providers/local_library_provider_loading.dart",
+        "orphaned::lib/widgets/audio_analysis/audio_analysis_card_1.dart",
+        "orphaned::lib/screens/library/collections/library_collection_tracks_screen_2.dart",
+        "orphaned::lib/widgets/player/lyrics/player_lyrics_painting_1.dart",
+        "orphaned::lib/screens/now_playing_screen_menus.dart",
+        "orphaned::lib/screens/settings/logs/log_page_1.dart",
+        "orphaned::lib/screens/library/section_tab/library_section_tab_filters.dart",
+        "orphaned::lib/screens/listening_rewind_screen_backdrop.dart",
+        "orphaned::lib/screens/settings/library/library_settings_page_1.dart",
+        "orphaned::lib/screens/library/local_artist/local_artist_screen_1.dart",
+        "orphaned::lib/screens/library/section_tab/library_section_tab_paging.dart",
+        "orphaned::lib/screens/settings/cache/cache_management_page_1.dart",
+        "orphaned::lib/widgets/header/album_detail_header_members_3.dart",
+        "orphaned::lib/screens/listening_rewind_screen_banners.dart",
+        "orphaned::lib/providers/library_collections_provider_mutations.dart",
+        "orphaned::lib/widgets/glass/selection/app_selection_pill_1.dart",
+        "orphaned::lib/screens/setup_screen_2.dart",
+        "orphaned::lib/providers/local_library_provider_scan_results.dart",
+        "orphaned::lib/screens/main_shell_navigation.dart",
+        "orphaned::lib/screens/settings/playback/playback_settings_auto_mix_2.dart",
+        "orphaned::lib/widgets/player/lyrics/player_lyrics_members_2.dart",
+        "orphaned::lib/screens/now_playing_screen_lyrics.dart",
+        "orphaned::lib/screens/library/app_library_screen_1.dart",
+        "orphaned::lib/widgets/header/album_detail_header_members_2.dart",
+        "orphaned::lib/widgets/player/lyrics/player_lyrics_layout_1.dart",
+        "orphaned::lib/utils/lyrics/lyrics_parser_words.dart",
+        "orphaned::lib/services/playback/automix/music_player_automix_members_6.dart",
+        "orphaned::lib/providers/library_collections_provider_helpers.dart",
+        "orphaned::lib/services/playback/music_player/music_player_service_overrides_2.dart",
+        "orphaned::lib/providers/local_library_state_1.dart",
+        "orphaned::lib/providers/local_library_provider_sources.dart",
+        "orphaned::lib/providers/settings_provider_helpers.dart",
+        "orphaned::lib/services/playback/automix/music_player_automix_members_7.dart",
+        "orphaned::lib/widgets/player/lyrics/player_lyrics_members_4.dart",
+        "orphaned::lib/services/library/collections/library_collections_database_3.dart",
+        "orphaned::lib/services/playback/music_player/music_player_service_members_2.dart",
+        "orphaned::lib/utils/lyrics/lyrics_parser_background_1.dart",
+        "orphaned::lib/widgets/sheets/update_dialog_support_2.dart",
+        "orphaned::lib/widgets/player/lyrics/player_lyrics_painting_3.dart",
+        "orphaned::lib/services/playback/automix/music_player_automix_members_4.dart",
+        "orphaned::lib/widgets/player/lyrics/player_lyrics_overrides_1.dart",
+        "orphaned::lib/services/library/collections/library_collections_database_2.dart",
+        "orphaned::lib/services/playback/automix/music_player_automix_members_3.dart",
+        "orphaned::lib/services/playback/automix/music_player_automix_members_1.dart",
+        "orphaned::lib/widgets/header/album_detail_header_members_1.dart",
+        "orphaned::lib/services/library/collections/library_collections_database_1.dart"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": null,
+      "detail": {
+        "kind": "false_positive",
+        "reason": "Dart part file included by a part directive in its owner library"
+      }
+    },
+    {
+      "timestamp": "2026-10-31T01:29:59+00:00",
+      "action": "auto_cluster",
+      "issue_ids": [],
+      "cluster_name": null,
+      "actor": "system",
+      "note": null,
+      "detail": {
+        "changes": true
+      }
+    },
+    {
+      "timestamp": "2026-10-31T01:30:30+00:00",
+      "action": "reconcile",
+      "issue_ids": [],
+      "cluster_name": null,
+      "actor": "system",
+      "note": null,
+      "detail": {
+        "superseded_count": 0,
+        "pruned_count": 0,
+        "resurfaced_count": 0,
+        "clusters_completed_count": 0
+      }
+    },
+    {
+      "timestamp": "2026-10-31T01:30:30+00:00",
+      "action": "auto_cluster",
+      "issue_ids": [],
+      "cluster_name": null,
+      "actor": "system",
+      "note": null,
+      "detail": {
+        "changes": true
+      }
+    },
+    {
+      "timestamp": "2026-10-31T01:30:30+00:00",
+      "action": "seed_start_scores",
+      "issue_ids": [],
+      "cluster_name": null,
+      "actor": "system",
+      "note": null,
+      "detail": {}
+    },
+    {
+      "timestamp": "2026-10-31T01:30:30+00:00",
+      "action": "complete_postflight_scan",
+      "issue_ids": [],
+      "cluster_name": null,
+      "actor": "system",
+      "note": null,
+      "detail": {
+        "scan_count": 24
+      }
+    },
+    {
+      "timestamp": "2026-10-31T01:30:58+00:00",
+      "action": "skip",
+      "issue_ids": [
+        "test_coverage::lib/screens/setup_screen_2.dart::untested_module",
+        "test_coverage::lib/screens/listening_rewind_screen_story.dart::untested_module",
+        "test_coverage::lib/providers/settings_provider_helpers.dart::untested_module",
+        "test_coverage::lib/services/playback/automix/music_player_automix_members_4.dart::untested_module",
+        "test_coverage::lib/screens/settings/playback/playback_settings_auto_mix_2.dart::untested_module",
+        "test_coverage::lib/screens/settings/playback/playback_settings_auto_mix_1.dart::untested_module",
+        "test_coverage::lib/screens/library/app_library_screen_1.dart::untested_module",
+        "test_coverage::lib/screens/main_shell_navigation.dart::untested_module",
+        "test_coverage::lib/screens/library/section_tab/library_section_tab_paging.dart::untested_module",
+        "test_coverage::lib/screens/library/collections/library_collection_tracks_screen_1.dart::untested_module",
+        "test_coverage::lib/services/library/collections/library_collections_database_2.dart::untested_module",
+        "test_coverage::lib/services/library/collections/library_collections_database_1.dart::untested_module",
+        "test_coverage::lib/utils/lyrics/lyrics_parser_words.dart::untested_module",
+        "test_coverage::lib/screens/library/section_tab/library_section_tab_filters.dart::untested_module",
+        "test_coverage::lib/screens/now_playing_screen_player.dart::untested_module",
+        "test_coverage::lib/widgets/header/album_detail_header_members_3.dart::untested_module",
+        "test_coverage::lib/screens/settings/library/library_settings_page_1.dart::untested_module",
+        "test_coverage::lib/widgets/player/lyrics/player_lyrics_painting_3.dart::untested_module",
+        "test_coverage::lib/providers/library_collections_provider_mutations.dart::untested_module",
+        "test_coverage::lib/widgets/player/lyrics/player_lyrics_overrides_1.dart::untested_module",
+        "test_coverage::lib/services/library/collections/library_collections_database_statics_1.dart::untested_module",
+        "test_coverage::lib/services/library/collections/library_collections_database_3.dart::untested_module",
+        "test_coverage::lib/utils/lyrics/lyrics_parser_background_1.dart::untested_module",
+        "test_coverage::lib/screens/listening_rewind_screen_banners.dart::untested_module",
+        "test_coverage::lib/screens/settings/cache/cache_management_page_1.dart::untested_module",
+        "test_coverage::lib/services/playback/music_player/music_player_service_members_2.dart::untested_module",
+        "test_coverage::lib/widgets/sheets/update_dialog_support_2.dart::untested_module",
+        "test_coverage::lib/widgets/player/lyrics/player_lyrics_members_2.dart::untested_module",
+        "test_coverage::lib/widgets/sheets/update_dialog_support_1.dart::untested_module",
+        "test_coverage::lib/widgets/player/layout/app_player_layout_members_1.dart::untested_module",
+        "test_coverage::lib/services/playback/music_player/music_player_service_overrides_2.dart::untested_module",
+        "test_coverage::lib/screens/listening_rewind_screen_slide.dart::untested_module",
+        "test_coverage::lib/providers/settings_provider_actions.dart::untested_module",
+        "test_coverage::lib/widgets/player/lyrics/player_lyrics_members_4.dart::untested_module",
+        "test_coverage::lib/providers/local_library_provider_scan_results.dart::untested_module",
+        "test_coverage::lib/screens/library/collections/library_collection_tracks_screen_2.dart::untested_module",
+        "test_coverage::lib/screens/now_playing_screen_menus.dart::untested_module",
+        "test_coverage::lib/utils/lyrics/lyrics_parser_support.dart::untested_module",
+        "test_coverage::lib/providers/local_library_provider_sources.dart::untested_module",
+        "test_coverage::lib/services/playback/automix/music_player_automix_members_7.dart::untested_module",
+        "test_coverage::lib/widgets/audio_analysis/audio_analysis_card_1.dart::untested_module",
+        "test_coverage::lib/widgets/glass/selection/app_selection_pill_1.dart::untested_module",
+        "test_coverage::lib/services/playback/automix/music_player_automix_members_3.dart::untested_module",
+        "test_coverage::lib/widgets/player/lyrics/player_lyrics_painting_1.dart::untested_module",
+        "test_coverage::lib/providers/library_collections_provider_helpers.dart::untested_module",
+        "test_coverage::lib/widgets/header/album_detail_header_members_1.dart::untested_module",
+        "test_coverage::lib/services/playback/automix/music_player_automix_members_1.dart::untested_module",
+        "test_coverage::lib/screens/listening_rewind_screen_backdrop.dart::untested_module",
+        "test_coverage::lib/providers/local_library_state_1.dart::untested_module",
+        "test_coverage::lib/widgets/header/album_detail_header_members_2.dart::untested_module",
+        "test_coverage::lib/widgets/player/lyrics/player_lyrics_members_3.dart::untested_module",
+        "test_coverage::lib/screens/settings/logs/log_page_1.dart::untested_module",
+        "test_coverage::lib/screens/listening_rewind_screen_stats.dart::untested_module",
+        "test_coverage::lib/screens/now_playing_screen_lyrics.dart::untested_module",
+        "test_coverage::lib/widgets/player/lyrics/player_lyrics_layout_1.dart::untested_module",
+        "test_coverage::lib/screens/library/local_artist/local_artist_screen_1.dart::untested_module",
+        "test_coverage::lib/widgets/player/lyrics/player_lyrics_painting_2.dart::untested_module",
+        "test_coverage::lib/widgets/player/lyrics/player_lyrics_support_1.dart::untested_module",
+        "test_coverage::lib/services/playback/automix/music_player_automix_members_6.dart::untested_module"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": null,
+      "detail": {
+        "kind": "false_positive",
+        "reason": "Dart part file: its code is compiled and exercised through the tests of its owner library"
+      }
+    },
+    {
+      "timestamp": "2026-10-31T01:31:30+00:00",
+      "action": "cluster_done",
+      "issue_ids": [],
+      "cluster_name": "auto/test_coverage-untested_module",
+      "actor": "system",
+      "note": null,
+      "detail": {
+        "reason": "cluster members no longer actionable in state"
+      }
+    },
+    {
+      "timestamp": "2026-10-31T01:31:30+00:00",
+      "action": "reconcile",
+      "issue_ids": [
+        "test_coverage::lib/providers/library_collections_provider_helpers.dart::untested_module",
+        "test_coverage::lib/providers/library_collections_provider_mutations.dart::untested_module",
+        "test_coverage::lib/providers/local_library_provider_scan_results.dart::untested_module",
+        "test_coverage::lib/providers/local_library_provider_sources.dart::untested_module",
+        "test_coverage::lib/providers/local_library_state_1.dart::untested_module",
+        "test_coverage::lib/providers/settings_provider_actions.dart::untested_module",
+        "test_coverage::lib/providers/settings_provider_helpers.dart::untested_module",
+        "test_coverage::lib/screens/library/app_library_screen_1.dart::untested_module",
+        "test_coverage::lib/screens/library/collections/library_collection_tracks_screen_1.dart::untested_module",
+        "test_coverage::lib/screens/library/collections/library_collection_tracks_screen_2.dart::untested_module",
+        "test_coverage::lib/screens/library/local_artist/local_artist_screen_1.dart::untested_module",
+        "test_coverage::lib/screens/library/section_tab/library_section_tab_filters.dart::untested_module",
+        "test_coverage::lib/screens/library/section_tab/library_section_tab_paging.dart::untested_module",
+        "test_coverage::lib/screens/listening_rewind_screen_backdrop.dart::untested_module",
+        "test_coverage::lib/screens/listening_rewind_screen_banners.dart::untested_module",
+        "test_coverage::lib/screens/listening_rewind_screen_slide.dart::untested_module",
+        "test_coverage::lib/screens/listening_rewind_screen_stats.dart::untested_module",
+        "test_coverage::lib/screens/listening_rewind_screen_story.dart::untested_module",
+        "test_coverage::lib/screens/main_shell_navigation.dart::untested_module",
+        "test_coverage::lib/screens/now_playing_screen_lyrics.dart::untested_module",
+        "test_coverage::lib/screens/now_playing_screen_menus.dart::untested_module",
+        "test_coverage::lib/screens/now_playing_screen_player.dart::untested_module",
+        "test_coverage::lib/screens/settings/cache/cache_management_page_1.dart::untested_module",
+        "test_coverage::lib/screens/settings/library/library_settings_page_1.dart::untested_module",
+        "test_coverage::lib/screens/settings/logs/log_page_1.dart::untested_module",
+        "test_coverage::lib/screens/settings/playback/playback_settings_auto_mix_1.dart::untested_module",
+        "test_coverage::lib/screens/settings/playback/playback_settings_auto_mix_2.dart::untested_module",
+        "test_coverage::lib/screens/setup_screen_2.dart::untested_module",
+        "test_coverage::lib/services/library/collections/library_collections_database_1.dart::untested_module",
+        "test_coverage::lib/services/library/collections/library_collections_database_2.dart::untested_module",
+        "test_coverage::lib/services/library/collections/library_collections_database_3.dart::untested_module",
+        "test_coverage::lib/services/library/collections/library_collections_database_statics_1.dart::untested_module",
+        "test_coverage::lib/services/playback/automix/music_player_automix_members_1.dart::untested_module",
+        "test_coverage::lib/services/playback/automix/music_player_automix_members_3.dart::untested_module",
+        "test_coverage::lib/services/playback/automix/music_player_automix_members_4.dart::untested_module",
+        "test_coverage::lib/services/playback/automix/music_player_automix_members_6.dart::untested_module",
+        "test_coverage::lib/services/playback/automix/music_player_automix_members_7.dart::untested_module",
+        "test_coverage::lib/services/playback/music_player/music_player_service_members_2.dart::untested_module",
+        "test_coverage::lib/services/playback/music_player/music_player_service_overrides_2.dart::untested_module",
+        "test_coverage::lib/utils/lyrics/lyrics_parser_background_1.dart::untested_module",
+        "test_coverage::lib/utils/lyrics/lyrics_parser_support.dart::untested_module",
+        "test_coverage::lib/utils/lyrics/lyrics_parser_words.dart::untested_module",
+        "test_coverage::lib/widgets/audio_analysis/audio_analysis_card_1.dart::untested_module",
+        "test_coverage::lib/widgets/glass/selection/app_selection_pill_1.dart::untested_module",
+        "test_coverage::lib/widgets/header/album_detail_header_members_1.dart::untested_module",
+        "test_coverage::lib/widgets/header/album_detail_header_members_2.dart::untested_module",
+        "test_coverage::lib/widgets/header/album_detail_header_members_3.dart::untested_module",
+        "test_coverage::lib/widgets/player/layout/app_player_layout_members_1.dart::untested_module",
+        "test_coverage::lib/widgets/player/lyrics/player_lyrics_layout_1.dart::untested_module",
+        "test_coverage::lib/widgets/player/lyrics/player_lyrics_members_2.dart::untested_module",
+        "test_coverage::lib/widgets/player/lyrics/player_lyrics_members_3.dart::untested_module",
+        "test_coverage::lib/widgets/player/lyrics/player_lyrics_members_4.dart::untested_module",
+        "test_coverage::lib/widgets/player/lyrics/player_lyrics_overrides_1.dart::untested_module",
+        "test_coverage::lib/widgets/player/lyrics/player_lyrics_painting_1.dart::untested_module",
+        "test_coverage::lib/widgets/player/lyrics/player_lyrics_painting_2.dart::untested_module",
+        "test_coverage::lib/widgets/player/lyrics/player_lyrics_painting_3.dart::untested_module",
+        "test_coverage::lib/widgets/player/lyrics/player_lyrics_support_1.dart::untested_module",
+        "test_coverage::lib/widgets/sheets/update_dialog_support_1.dart::untested_module",
+        "test_coverage::lib/widgets/sheets/update_dialog_support_2.dart::untested_module"
+      ],
+      "cluster_name": null,
+      "actor": "system",
+      "note": null,
+      "detail": {
+        "superseded_count": 59,
+        "pruned_count": 0,
+        "resurfaced_count": 0,
+        "clusters_completed_count": 1
+      }
+    },
+    {
+      "timestamp": "2026-10-31T01:31:30+00:00",
+      "action": "clear_start_scores",
+      "issue_ids": [],
+      "cluster_name": null,
+      "actor": "system",
+      "note": null,
+      "detail": {}
+    },
+    {
+      "timestamp": "2026-10-31T01:31:30+00:00",
+      "action": "complete_postflight_scan",
+      "issue_ids": [],
+      "cluster_name": null,
+      "actor": "system",
+      "note": null,
+      "detail": {
+        "scan_count": 25
+      }
+    },
+    {
+      "timestamp": "2026-10-31T01:31:50+00:00",
+      "action": "skip",
+      "issue_ids": [
+        "test_coverage::lib/main_startup_1.dart::transitive_only",
+        "test_coverage::lib/providers/local_library_provider_loading.dart::untested_critical",
+        "test_coverage::lib/providers/local_library_provider_scanning.dart::untested_critical",
+        "test_coverage::lib/screens/setup_screen_1.dart::untested_critical",
+        "test_coverage::lib/services/library/covers/embedded_cover_resolver_extraction.dart::untested_critical",
+        "test_coverage::lib/services/library/covers/embedded_cover_resolver_persistence.dart::untested_critical",
+        "test_coverage::lib/services/playback/automix/music_player_automix_members_5.dart::untested_critical",
+        "test_coverage::lib/services/playback/music_player/music_player_service_overrides_1.dart::untested_critical",
+        "test_coverage::lib/widgets/player/lyrics/player_lyrics_members_1.dart::untested_critical"
+      ],
+      "cluster_name": null,
+      "actor": "user",
+      "note": null,
+      "detail": {
+        "kind": "false_positive",
+        "reason": "Dart part file: its code is compiled and exercised through the tests of its owner library"
+      }
+    },
+    {
+      "timestamp": "2026-10-31T01:31:50+00:00",
+      "action": "auto_cluster",
+      "issue_ids": [],
+      "cluster_name": null,
+      "actor": "system",
+      "note": null,
+      "detail": {
+        "changes": true
+      }
     }
   ],
   "epic_triage_meta": {
@@ -7212,7 +9349,7 @@
     "review::.::holistic::type_safety::failed_replaygain_result_accepts_null"
   ],
   "commit_tracking_branch": null,
-  "scan_count_at_plan_start": 22,
+  "scan_count_at_plan_start": 24,
   "previous_plan_start_scores": {
     "strict": 76.0,
     "overall": 77.0,
