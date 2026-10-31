@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/l10n/app_localizations.dart';
 import 'package:sistrum/providers/library/library_browse_provider.dart';
 import 'package:sistrum/screens/home/home_tab.dart';
+import 'package:sistrum/widgets/primitives/app_search_field.dart';
 import 'package:sistrum/widgets/status/error_card.dart';
 
 import '../../support/home_tab_harness.dart';
@@ -18,6 +19,21 @@ void main() {
     expect(find.text(l10n.homeChooseLibraryFolder), findsOneWidget);
     expect(find.text(l10n.settingsLocalLibrary), findsOneWidget);
     expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('the Home search field only describes local library search', (
+    tester,
+  ) async {
+    await pumpHome(
+      tester,
+      mode: HomeTabMode.search,
+      loader: (request) async => const LibraryBrowsePage([]),
+    );
+    final hint = tester.widget<AppSearchField>(find.byType(AppSearchField)).hintText;
+    // URL paste was removed with downloads: the placeholder must not invite it.
+    expect(hint.toLowerCase(), isNot(contains('url')));
+    expect(hint.toLowerCase(), isNot(contains('paste')));
+    expect(hint, AppLocalizations.of(tester.element(find.byType(HomeTab))).homeSearchHintDefault);
   });
 
   testWidgets('a failed shelf shows a retry card that reloads it', (

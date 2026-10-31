@@ -42,6 +42,7 @@ LibraryBrowseEntry bareRelease(String name) => LibraryBrowseEntry(
 Future<void> pumpHome(
   WidgetTester tester, {
   required Future<LibraryBrowsePage> Function(LibraryBrowsePageRequest) loader,
+  HomeTabMode mode = HomeTabMode.browse,
 }) async {
   SharedPreferences.setMockInitialValues({});
   tester.view.physicalSize = const Size(360, 900);
@@ -60,7 +61,7 @@ Future<void> pumpHome(
         theme: AppTheme.build(Brightness.dark),
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
-        home: const HomeTab(mode: HomeTabMode.browse),
+        home: HomeTab(mode: mode),
       ),
     ),
   );

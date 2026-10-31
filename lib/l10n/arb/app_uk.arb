@@ -1840,7 +1840,7 @@
       }
     }
   },
-  "homeSearchHintDefault": "Вставте підтримувану URL-адресу або виконайте пошук...",
+  "homeSearchHintDefault": "Пошук у вашій медіатеці...",
   "@homeSearchHintDefault": {
     "description": "Default placeholder for the main search field on Home"
   },

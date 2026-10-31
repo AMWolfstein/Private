@@ -1840,7 +1840,7 @@
       }
     }
   },
-  "homeSearchHintDefault": "Вставьте URL или найдите...",
+  "homeSearchHintDefault": "Поиск в медиатеке...",
   "@homeSearchHintDefault": {
     "description": "Default placeholder for the main search field on Home"
   },

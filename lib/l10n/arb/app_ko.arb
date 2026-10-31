@@ -1840,7 +1840,7 @@
       }
     }
   },
-  "homeSearchHintDefault": "지원되는 URL을 붙여넣거나 검색...",
+  "homeSearchHintDefault": "내 라이브러리에서 검색...",
   "@homeSearchHintDefault": {
     "description": "Default placeholder for the main search field on Home"
   },

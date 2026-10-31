@@ -1496,7 +1496,7 @@
   },
   "notifLibraryScanPaused": "Análisis de biblioteca en pausa",
   "notifLibraryScanPausedBody": "{count} archivos analizados. Reanuda en los ajustes de Biblioteca local para continuar desde aquí.",
-  "homeSearchHintDefault": "Pega una URL compatible o busca...",
+  "homeSearchHintDefault": "Busca en tu biblioteca...",
   "tutorialSearchHint": "Pega o busca...",
   "trackCoverNoEmbeddedArt": "No se encontró ninguna portada incrustada",
   "trackCoverReplace": "Reemplazar portada",

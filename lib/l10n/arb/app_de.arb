@@ -1840,7 +1840,7 @@
       }
     }
   },
-  "homeSearchHintDefault": "Unterstützte URL einfügen oder suchen...",
+  "homeSearchHintDefault": "In deiner Bibliothek suchen...",
   "@homeSearchHintDefault": {
     "description": "Default placeholder for the main search field on Home"
   },

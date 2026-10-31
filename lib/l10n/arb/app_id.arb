@@ -1850,7 +1850,7 @@
       }
     }
   },
-  "homeSearchHintDefault": "Tempel URL yang didukung atau telusuri...",
+  "homeSearchHintDefault": "Telusuri pustaka Anda...",
   "@homeSearchHintDefault": {
     "description": "Default placeholder for the main search field on Home"
   },

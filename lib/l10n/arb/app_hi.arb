@@ -1840,7 +1840,7 @@
       }
     }
   },
-  "homeSearchHintDefault": "Paste supported URL or search...",
+  "homeSearchHintDefault": "अपनी लाइब्रेरी में खोजें...",
   "@homeSearchHintDefault": {
     "description": "Default placeholder for the main search field on Home"
   },

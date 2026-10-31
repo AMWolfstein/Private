@@ -1840,7 +1840,7 @@
       }
     }
   },
-  "homeSearchHintDefault": "Pega una URL válida o realiza una búsqueda...",
+  "homeSearchHintDefault": "Busca en tu biblioteca...",
   "@homeSearchHintDefault": {
     "description": "Default placeholder for the main search field on Home"
   },

@@ -1784,7 +1784,7 @@
   },
   "notifLibraryScanPaused": "资料库扫描已暂停",
   "notifLibraryScanPausedBody": "已扫描 {count} 个文件。在本地资料库设置中继续，即可从此处恢复扫描。",
-  "homeSearchHintDefault": "Paste supported URL or search...",
+  "homeSearchHintDefault": "搜索你的音乐库...",
   "@homeSearchHintDefault": {
     "description": "Default placeholder for the main search field on Home"
   },

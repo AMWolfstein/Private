@@ -1840,7 +1840,7 @@
       }
     }
   },
-  "homeSearchHintDefault": "Paste supported URL or search...",
+  "homeSearchHintDefault": "ابحث في مكتبتك...",
   "@homeSearchHintDefault": {
     "description": "Default placeholder for the main search field on Home"
   },

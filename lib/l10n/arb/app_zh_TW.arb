@@ -1840,7 +1840,7 @@
       }
     }
   },
-  "homeSearchHintDefault": "Paste supported URL or search...",
+  "homeSearchHintDefault": "搜尋你的音樂庫...",
   "@homeSearchHintDefault": {
     "description": "Default placeholder for the main search field on Home"
   },

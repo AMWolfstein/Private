@@ -2113,7 +2113,7 @@
       }
     }
   },
-  "homeSearchHintDefault": "Paste supported URL or search...",
+  "homeSearchHintDefault": "Search your library...",
   "@homeSearchHintDefault": {
     "description": "Default placeholder for the main search field on Home"
   },

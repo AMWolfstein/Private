@@ -1840,7 +1840,7 @@
       }
     }
   },
-  "homeSearchHintDefault": "Paste supported URL or search...",
+  "homeSearchHintDefault": "Zoek in je bibliotheek...",
   "@homeSearchHintDefault": {
     "description": "Default placeholder for the main search field on Home"
   },
