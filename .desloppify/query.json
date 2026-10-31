@@ -1,9 +1,333 @@
 {
   "command": "show",
-  "query": "structural",
+  "query": "test_coverage",
   "status_filter": "open",
-  "total": 0,
-  "issues": [],
+  "total": 22,
+  "summary": {
+    "by_tier": {
+      "T2": 2,
+      "T3": 20
+    },
+    "by_detector": {
+      "test_coverage": 22
+    },
+    "files": 22
+  },
+  "by_file": {
+    "lib/screens/library/section_tab/library_section_tab_paging.dart": [
+      {
+        "id": "test_coverage::lib/screens/library/section_tab/library_section_tab_paging.dart::untested_module",
+        "tier": 3,
+        "confidence": "high",
+        "summary": "Untested module (265 LOC, 0 importers)",
+        "detail": {
+          "kind": "untested_module",
+          "loc": 265,
+          "importer_count": 0,
+          "loc_weight": 16.278820596099706
+        }
+      }
+    ],
+    "lib/utils/lyrics/lyrics_parser_words.dart": [
+      {
+        "id": "test_coverage::lib/utils/lyrics/lyrics_parser_words.dart::untested_module",
+        "tier": 3,
+        "confidence": "high",
+        "summary": "Untested module (136 LOC, 0 importers)",
+        "detail": {
+          "kind": "untested_module",
+          "loc": 136,
+          "importer_count": 0,
+          "loc_weight": 11.661903789690601
+        }
+      }
+    ],
+    "lib/screens/library/section_tab/library_section_tab_filters.dart": [
+      {
+        "id": "test_coverage::lib/screens/library/section_tab/library_section_tab_filters.dart::untested_module",
+        "tier": 3,
+        "confidence": "high",
+        "summary": "Untested module (310 LOC, 0 importers)",
+        "detail": {
+          "kind": "untested_module",
+          "loc": 310,
+          "importer_count": 0,
+          "loc_weight": 17.60681686165901
+        }
+      }
+    ],
+    "lib/utils/lyrics/lyrics_parser_support.dart": [
+      {
+        "id": "test_coverage::lib/utils/lyrics/lyrics_parser_support.dart::untested_module",
+        "tier": 3,
+        "confidence": "high",
+        "summary": "Untested module (403 LOC, 0 importers)",
+        "detail": {
+          "kind": "untested_module",
+          "loc": 403,
+          "importer_count": 0,
+          "loc_weight": 20.074859899884732
+        }
+      }
+    ],
+    "lib/providers/settings/settings_provider_helpers.dart": [
+      {
+        "id": "test_coverage::lib/providers/settings/settings_provider_helpers.dart::untested_module",
+        "tier": 3,
+        "confidence": "high",
+        "summary": "Untested module (76 LOC, 0 importers)",
+        "detail": {
+          "kind": "untested_module",
+          "loc": 76,
+          "importer_count": 0,
+          "loc_weight": 8.717797887081348
+        }
+      }
+    ],
+    "lib/screens/shell/main_shell_navigation.dart": [
+      {
+        "id": "test_coverage::lib/screens/shell/main_shell_navigation.dart::untested_module",
+        "tier": 3,
+        "confidence": "high",
+        "summary": "Untested module (201 LOC, 0 importers)",
+        "detail": {
+          "kind": "untested_module",
+          "loc": 201,
+          "importer_count": 0,
+          "loc_weight": 14.177446878757825
+        }
+      }
+    ],
+    "lib/providers/library/local_library_provider_scan_results.dart": [
+      {
+        "id": "test_coverage::lib/providers/library/local_library_provider_scan_results.dart::untested_module",
+        "tier": 3,
+        "confidence": "high",
+        "summary": "Untested module (225 LOC, 0 importers)",
+        "detail": {
+          "kind": "untested_module",
+          "loc": 225,
+          "importer_count": 0,
+          "loc_weight": 15.0
+        }
+      }
+    ],
+    "lib/providers/settings/settings_provider_actions.dart": [
+      {
+        "id": "test_coverage::lib/providers/settings/settings_provider_actions.dart::untested_module",
+        "tier": 3,
+        "confidence": "high",
+        "summary": "Untested module (370 LOC, 0 importers)",
+        "detail": {
+          "kind": "untested_module",
+          "loc": 370,
+          "importer_count": 0,
+          "loc_weight": 19.235384061671343
+        }
+      }
+    ],
+    "lib/screens/stats/listening_rewind_screen_slide.dart": [
+      {
+        "id": "test_coverage::lib/screens/stats/listening_rewind_screen_slide.dart::untested_module",
+        "tier": 3,
+        "confidence": "high",
+        "summary": "Untested module (418 LOC, 0 importers)",
+        "detail": {
+          "kind": "untested_module",
+          "loc": 418,
+          "importer_count": 0,
+          "loc_weight": 20.445048300260872
+        }
+      }
+    ],
+    "lib/screens/stats/listening_rewind_screen_story.dart": [
+      {
+        "id": "test_coverage::lib/screens/stats/listening_rewind_screen_story.dart::untested_module",
+        "tier": 3,
+        "confidence": "high",
+        "summary": "Untested module (394 LOC, 0 importers)",
+        "detail": {
+          "kind": "untested_module",
+          "loc": 394,
+          "importer_count": 0,
+          "loc_weight": 19.849433241279208
+        }
+      }
+    ],
+    "lib/screens/player/now_playing_screen_menus.dart": [
+      {
+        "id": "test_coverage::lib/screens/player/now_playing_screen_menus.dart::untested_module",
+        "tier": 3,
+        "confidence": "high",
+        "summary": "Untested module (315 LOC, 0 importers)",
+        "detail": {
+          "kind": "untested_module",
+          "loc": 315,
+          "importer_count": 0,
+          "loc_weight": 17.74823934929885
+        }
+      }
+    ],
+    "lib/providers/library/library_collections_provider_mutations.dart": [
+      {
+        "id": "test_coverage::lib/providers/library/library_collections_provider_mutations.dart::untested_module",
+        "tier": 3,
+        "confidence": "high",
+        "summary": "Untested module (240 LOC, 0 importers)",
+        "detail": {
+          "kind": "untested_module",
+          "loc": 240,
+          "importer_count": 0,
+          "loc_weight": 15.491933384829668
+        }
+      }
+    ],
+    "lib/providers/library/library_collections_provider_helpers.dart": [
+      {
+        "id": "test_coverage::lib/providers/library/library_collections_provider_helpers.dart::untested_module",
+        "tier": 3,
+        "confidence": "high",
+        "summary": "Untested module (117 LOC, 0 importers)",
+        "detail": {
+          "kind": "untested_module",
+          "loc": 117,
+          "importer_count": 0,
+          "loc_weight": 10.816653826391969
+        }
+      }
+    ],
+    "lib/screens/stats/listening_rewind_screen_banners.dart": [
+      {
+        "id": "test_coverage::lib/screens/stats/listening_rewind_screen_banners.dart::untested_module",
+        "tier": 3,
+        "confidence": "high",
+        "summary": "Untested module (247 LOC, 0 importers)",
+        "detail": {
+          "kind": "untested_module",
+          "loc": 247,
+          "importer_count": 0,
+          "loc_weight": 15.716233645501712
+        }
+      }
+    ],
+    "lib/screens/stats/listening_rewind_screen_backdrop.dart": [
+      {
+        "id": "test_coverage::lib/screens/stats/listening_rewind_screen_backdrop.dart::untested_module",
+        "tier": 3,
+        "confidence": "high",
+        "summary": "Untested module (296 LOC, 0 importers)",
+        "detail": {
+          "kind": "untested_module",
+          "loc": 296,
+          "importer_count": 0,
+          "loc_weight": 17.204650534085253
+        }
+      }
+    ],
+    "lib/providers/library/local_library_provider_scanning.dart": [
+      {
+        "id": "test_coverage::lib/providers/library/local_library_provider_scanning.dart::untested_critical",
+        "tier": 2,
+        "confidence": "high",
+        "summary": "Untested critical module (392 LOC, 0 importers) \u2014 high blast radius",
+        "detail": {
+          "kind": "untested_critical",
+          "loc": 392,
+          "importer_count": 0,
+          "loc_weight": 19.79898987322333,
+          "complexity_score": 23
+        }
+      }
+    ],
+    "lib/providers/library/local_library_provider_loading.dart": [
+      {
+        "id": "test_coverage::lib/providers/library/local_library_provider_loading.dart::untested_critical",
+        "tier": 2,
+        "confidence": "high",
+        "summary": "Untested critical module (329 LOC, 0 importers) \u2014 high blast radius",
+        "detail": {
+          "kind": "untested_critical",
+          "loc": 329,
+          "importer_count": 0,
+          "loc_weight": 18.138357147217054,
+          "complexity_score": 32
+        }
+      }
+    ],
+    "lib/screens/player/now_playing_screen_lyrics.dart": [
+      {
+        "id": "test_coverage::lib/screens/player/now_playing_screen_lyrics.dart::untested_module",
+        "tier": 3,
+        "confidence": "high",
+        "summary": "Untested module (185 LOC, 0 importers)",
+        "detail": {
+          "kind": "untested_module",
+          "loc": 185,
+          "importer_count": 0,
+          "loc_weight": 13.601470508735444
+        }
+      }
+    ],
+    "lib/screens/player/now_playing_screen_player.dart": [
+      {
+        "id": "test_coverage::lib/screens/player/now_playing_screen_player.dart::untested_module",
+        "tier": 3,
+        "confidence": "high",
+        "summary": "Untested module (341 LOC, 0 importers)",
+        "detail": {
+          "kind": "untested_module",
+          "loc": 341,
+          "importer_count": 0,
+          "loc_weight": 18.466185312619388
+        }
+      }
+    ],
+    "lib/providers/library/local_library_state.dart": [
+      {
+        "id": "test_coverage::lib/providers/library/local_library_state.dart::untested_module",
+        "tier": 3,
+        "confidence": "high",
+        "summary": "Untested module (88 LOC, 0 importers)",
+        "detail": {
+          "kind": "untested_module",
+          "loc": 88,
+          "importer_count": 0,
+          "loc_weight": 9.38083151964686
+        }
+      }
+    ],
+    "lib/providers/library/local_library_provider_sources.dart": [
+      {
+        "id": "test_coverage::lib/providers/library/local_library_provider_sources.dart::untested_module",
+        "tier": 3,
+        "confidence": "high",
+        "summary": "Untested module (83 LOC, 0 importers)",
+        "detail": {
+          "kind": "untested_module",
+          "loc": 83,
+          "importer_count": 0,
+          "loc_weight": 9.1104335791443
+        }
+      }
+    ],
+    "lib/screens/stats/listening_rewind_screen_stats.dart": [
+      {
+        "id": "test_coverage::lib/screens/stats/listening_rewind_screen_stats.dart::untested_module",
+        "tier": 3,
+        "confidence": "high",
+        "summary": "Untested module (349 LOC, 0 importers)",
+        "detail": {
+          "kind": "untested_module",
+          "loc": 349,
+          "importer_count": 0,
+          "loc_weight": 18.681541692269406
+        }
+      }
+    ]
+  },
+  "total_matching": 22,
+  "noise_budget": 0,
+  "noise_global_budget": 0,
   "narrative": {
     "phase": "stagnation",
     "headline": "All T1 items cleared!",
@@ -11,8 +335,8 @@
       "lowest_dimensions": [
         {
           "name": "Test health",
-          "strict": 65.3,
-          "failing": 47,
+          "strict": 70.2,
+          "failing": 22,
           "impact": 0.0
         },
         {
@@ -35,9 +359,9 @@
       "biggest_gap_dimensions": [
         {
           "name": "Test health",
-          "lenient": 89.2,
-          "strict": 65.3,
-          "gap": 23.9,
+          "lenient": 94.0,
+          "strict": 70.2,
+          "gap": 23.8,
           "wontfix_count": 0
         },
         {
@@ -49,8 +373,8 @@
         },
         {
           "name": "Code quality",
-          "lenient": 95.7,
-          "strict": 91.7,
+          "lenient": 100.0,
+          "strict": 96.0,
           "gap": 4.0,
           "wontfix_count": 0
         }
@@ -58,7 +382,7 @@
       "stagnant_dimensions": [
         {
           "name": "Code quality",
-          "strict": 91.7,
+          "strict": 96.0,
           "stuck_scans": 5
         },
         {
@@ -78,7 +402,7 @@
         },
         {
           "name": "Test health",
-          "strict": 65.3,
+          "strict": 70.2,
           "stuck_scans": 5
         },
         {
@@ -185,105 +509,45 @@
     },
     "actions": [
       {
-        "type": "reorganize",
-        "detector": "orphaned",
-        "count": 42,
-        "description": "42 orphaned issues \u2014 delete dead files or relocate with `desloppify move`",
-        "command": "desloppify show orphaned --status open",
-        "impact": 0.0,
-        "dimension": "Code quality",
-        "priority": 1,
-        "lane": "restructure"
-      },
-      {
-        "type": "refactor",
-        "detector": "dupes",
-        "count": 7,
-        "description": "7 dupes work items \u2014 extract shared utility or consolidate duplicates",
-        "command": "desloppify show dupes --status open",
-        "impact": 0.0,
-        "dimension": "Duplication",
-        "priority": 2,
-        "lane": "refactor_0"
-      },
-      {
         "type": "refactor",
         "detector": "test_coverage",
-        "count": 47,
-        "description": "47 test_coverage work items \u2014 review test coverage gaps \u2014 focus on critical modules with many importers first; defer test writing until code quality issues are resolved",
+        "count": 22,
+        "description": "22 test_coverage work items \u2014 review test coverage gaps \u2014 focus on critical modules with many importers first; defer test writing until code quality issues are resolved",
         "command": "desloppify show test_coverage --status open",
         "impact": 0.0,
         "dimension": "Test health",
-        "priority": 3,
+        "priority": 1,
         "lane": "test_coverage"
-      },
-      {
-        "type": "refactor",
-        "detector": "signature",
-        "count": 5,
-        "description": "5 signature work items \u2014 consolidate inconsistent function signatures",
-        "command": "desloppify show signature --status open",
-        "impact": 0.0,
-        "dimension": "Unknown",
-        "priority": 4,
-        "lane": "refactor_1"
       }
     ],
     "strategy": {
       "fixer_leverage": {
         "auto_fixable_count": 0,
-        "total_count": 101,
+        "total_count": 22,
         "coverage": 0.0,
         "impact_ratio": 0.0,
         "recommendation": "none"
       },
       "lanes": {
-        "restructure": {
+        "test_coverage": {
           "actions": [
             1
           ],
-          "file_count": 42,
-          "total_impact": 0.0,
-          "automation": "manual",
-          "run_first": false
-        },
-        "refactor_0": {
-          "actions": [
-            2
-          ],
-          "file_count": 6,
-          "total_impact": 0.0,
-          "automation": "manual",
-          "run_first": false
-        },
-        "refactor_1": {
-          "actions": [
-            4
-          ],
-          "file_count": 2,
-          "total_impact": 0.0,
-          "automation": "manual",
-          "run_first": false
-        },
-        "test_coverage": {
-          "actions": [
-            3
-          ],
-          "file_count": 47,
+          "file_count": 22,
           "total_impact": 0.0,
           "automation": "manual",
           "run_first": false
         }
       },
-      "can_parallelize": true,
-      "hint": "4 independent workstreams, safe to parallelize. Rescan after each phase to verify."
+      "can_parallelize": false,
+      "hint": "Try a different dimension to break the plateau."
     },
     "tools": {
       "fixers": [],
       "move": {
         "available": true,
-        "relevant": true,
-        "reason": "42 orphaned files",
+        "relevant": false,
+        "reason": null,
         "usage": "desloppify move <source> <dest> [--dry-run]"
       },
       "plan": {
@@ -301,15 +565,15 @@
       "overall_gap": 1.5,
       "wontfix_count": 0,
       "worst_dimension": "Test health",
-      "worst_gap": 23.9,
+      "worst_gap": 23.8,
       "trend": "stable"
     },
     "milestone": "All T1 items cleared!",
     "primary_action": {
-      "command": "desloppify show orphaned --status open",
-      "description": "42 orphaned issues \u2014 delete dead files or relocate with `desloppify move`"
+      "command": "desloppify show test_coverage --status open",
+      "description": "22 test_coverage work items \u2014 review test coverage gaps \u2014 focus on critical modules with many importers first; defer test writing until code quality issues are resolved"
     },
-    "why_now": "4 independent workstreams, safe to parallelize. Rescan after each phase to verify.",
+    "why_now": "Try a different dimension to break the plateau.",
     "verification_step": {
       "command": "desloppify scan",
       "reason": "revalidate after changes"
@@ -323,29 +587,15 @@
     ],
     "strict_target": {
       "target": 85.0,
-      "current": 89.5,
-      "gap": -4.5,
+      "current": 89.9,
+      "gap": -4.9,
       "state": "above",
       "warning": null
     },
     "reminders": [
       {
-        "type": "fp_calibration_dupes_production",
-        "message": "46% of dupes issues in production zone are false positives. Consider reviewing detection rules for production files.",
-        "command": null,
-        "priority": 2,
-        "severity": "medium"
-      },
-      {
         "type": "fp_calibration_signature_production",
-        "message": "36% of signature issues in production zone are false positives. Consider reviewing detection rules for production files.",
-        "command": null,
-        "priority": 2,
-        "severity": "medium"
-      },
-      {
-        "type": "fp_calibration_test_coverage_production",
-        "message": "33% of test_coverage issues in production zone are false positives. Consider reviewing detection rules for production files.",
+        "message": "39% of signature issues in production zone are false positives. Consider reviewing detection rules for production files.",
         "command": null,
         "priority": 2,
         "severity": "medium"
@@ -353,7 +603,7 @@
     ],
     "reminder_history": {
       "zone_classification": 3,
-      "report_scores": 25,
+      "report_scores": 26,
       "feedback_nudge": 3,
       "stagnant_nudge": 22,
       "wontfix_growing": 3,
@@ -363,7 +613,7 @@
       "fp_calibration_structural_generated": 3,
       "fp_calibration_test_coverage_production": 3,
       "fp_calibration_dupes_production": 3,
-      "fp_calibration_signature_production": 2
+      "fp_calibration_signature_production": 3
     }
   },
   "config": {
