@@ -109,7 +109,9 @@ class MediaFileBridge {
   /// Read access for a Library source, independent of download write access.
   /// [SafTreeReadAccess.unknown] means the provider could not answer; that is
   /// not evidence that the source is gone.
-  static Future<SafTreeReadAccess> probeSafTreeReadAccess(String treeUri) async {
+  static Future<SafTreeReadAccess> probeSafTreeReadAccess(
+    String treeUri,
+  ) async {
     SafTreeReadAccess toAccess(bool? readable) => switch (readable) {
       true => SafTreeReadAccess.readable,
       false => SafTreeReadAccess.unreadable,
