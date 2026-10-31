@@ -59,9 +59,15 @@ failing baseline/restored run are INCONCLUSIVE. A test that passes without the f
 `report.json` remain under `.work/proofs/`. Inspect the failure cause: matching text alone cannot prove
 semantic correctness. Use a specific assertion message, not a test name or compiler error.
 
-The command temporarily changes the active working tree; do not run it alongside edits or other builds.
-Normal errors and interrupts restore the selected files, but forced process termination cannot guarantee
-restoration. The command must leave non-ignored inputs unchanged.
+`prove` snapshots non-ignored inputs into a disposable detached Git worktree. The owner's files and index
+are never reverted. Logs are copied to the original `.work/proofs/`; source edits during proof invalidate the
+result. Ignored dependencies and caches are not copied: provision dependencies in the isolated checkout through
+the test command if needed. Missing dependencies are INCONCLUSIVE, never proof. Use repository-relative test
+paths; absolute paths may escape isolation. Forced termination may leave a worktree for manual cleanup.
+
+Project-specific guidance lives in `work/guides/`: architecture, review lenses, port dispositions, migration
+batches and playback/data contracts. Keep it when installing in a new repository. Historical reference revisions
+must be verified at import time; accepted owner changes supersede the historical summary.
 
 ## Install in a repository
 
