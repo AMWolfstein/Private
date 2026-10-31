@@ -91,7 +91,7 @@ external player or download lookups). Upstream-latest items are in `UPSTREAM.md`
 
 ### UX-232 [P3] [confidence: medium] [VALIDATED]
 - T12 disposition: Owner-deferred T12: English-only product; agreed RTL/translation exclusions remain open, not claimed fixed.
-- Location: `lib/screens/listening_rewind_screen.dart` (left-third tap = previous, `EdgeInsets.fromLTRB(16, 8, 4, 0)`), `lib/screens/listening_statistics_screen.dart` (`chevron_left`/`chevron_right`)
+- Location: `lib/screens/stats/listening_rewind_screen.dart` (left-third tap = previous, `EdgeInsets.fromLTRB(16, 8, 4, 0)`), `lib/screens/stats/listening_statistics_screen.dart` (`chevron_left`/`chevron_right`)
 - Scenario: RTL → reversed story tap zones, asymmetric Close/progress insets, year arrows pointing the wrong way.
 - Fix: directional insets, flip the zone test, direction-aware chevrons; ~8 lines.
 
@@ -122,7 +122,7 @@ external player or download lookups). Upstream-latest items are in `UPSTREAM.md`
 ### DATA-002 [P2] [confidence: medium] [RESOLVED]
 - Resolution: `506b892` (T14). The last whole-library `getAll()` caller, the unused `MusicPlayerController.shuffleLibrary` (DC-DEAD-008), was deleted; the recent-album read was already keyed in T8. `rg "\.getAll\(\)" lib` finds no remaining caller of the library `getAll()`; its definition is untouched.
 - T8 disposition: recent-album whole-library reads are already gone; localAlbumFor is keyed. The only remaining getAll() caller is unused shuffleLibrary, explicitly assigned to T14 with DC-DEAD-008. This item remains open for that deletion; no unmeasured shuffle optimization is claimed.
-- Location: `lib/screens/home_tab_recent.dart:210`, `lib/providers/music_player_provider.dart:162` (`shuffleLibrary`), lib/services/library_database.dart:583 (`getAll`)
+- Location: `lib/screens/home_tab_recent.dart:210`, `lib/providers/playback/music_player_provider.dart:162` (`shuffleLibrary`), lib/services/library_database.dart:583 (`getAll`)
 - Scenario: tapping a recent album calls unbounded `getAll()`, decodes every library row, then filters by album in Dart; shuffle does the same for all rows.
 - Root cause: `getAll()` has no bound and its ORDER BY matches no index (temp B-tree sort of the whole view).
 - Impact: jank and memory spikes on large libraries for a single album tap.
@@ -173,13 +173,13 @@ external player or download lookups). Upstream-latest items are in `UPSTREAM.md`
 
 ### UX-107 [P3] [confidence: high] [RESOLVED]
 - Resolution: `601fa81` (T12). Statistics Retry has a tooltip; daily rows expose one date/minutes semantic label and the date column can grow instead of wrapping at a fixed 68dp.
-- Location: `lib/screens/listening_statistics_screen.dart:150-154,237-263`
+- Location: `lib/screens/stats/listening_statistics_screen.dart:150-154,237-263`
 - Scenario: error refresh `IconButton` has no tooltip; activity rows are announced as fragments; fixed 68px date column wraps at large scale.
 - Fix: tooltip, `Semantics(label:, excludeSemantics: true)` per row, min-width instead of fixed width; ~8 lines.
 
 ### UI-420 [P3] [confidence: low] [RESOLVED]
 - Resolution: `601fa81` (T12). Lyrics sharing uses a side-by-side preview/line list only in sufficiently wide short windows; the toolbar always has the full width, wraps, and keeps four 48dp swatch targets (lyrics_share_screen_test.dart).
-- Location: `lib/screens/lyrics_share_screen.dart` (6:4 `Expanded` split)
+- Location: `lib/screens/lyrics/lyrics_share_screen.dart` (6:4 `Expanded` split)
 - Scenario: landscape phone or large text → the line list shows about one row.
 - Fix: side-by-side layout below a height threshold; ~15 lines.
 
@@ -245,13 +245,13 @@ external player or download lookups). Upstream-latest items are in `UPSTREAM.md`
 
 ### UX-225 [P3] [confidence: high] [RESOLVED]
 - Resolution: `601fa81` (T12). Setup jumps pages, guide animations use zero duration, and settings-search reveal scrolls immediately under reduced motion; Codex FA-UX-009 is the same finding.
-- Location: `lib/screens/setup_screen.dart` (`animateToPage`), `lib/screens/local_guide_pages.dart` (staggered/implicit animations), `lib/widgets/settings_group.dart` (`SettingsSearchTarget._reveal` `ensureVisible`)
+- Location: `lib/screens/setup/setup_screen.dart` (`animateToPage`), `lib/screens/setup/local_guide_pages.dart` (staggered/implicit animations), `lib/widgets/settings_group.dart` (`SettingsSearchTarget._reveal` `ensureVisible`)
 - Scenario: reduced motion on → setup slides/bounces and the settings search scroll still animate.
 - Fix: `Duration.zero`/`jumpToPage` when `disableAnimationsOf`; ~10 lines.
 
 ### UX-229 [P2] [confidence: medium] [RESOLVED]
 - Resolution: `601fa81` (T12). Rewind does not auto-advance when accessibleNavigation is enabled (listening_rewind_test.dart covers enabled/disabled behavior); also closes FA-UX-007.
-- Location: `lib/screens/listening_rewind_screen.dart` (`_RewindStoryState` auto-advance)
+- Location: `lib/screens/stats/listening_rewind_screen.dart` (`_RewindStoryState` auto-advance)
 - Scenario: TalkBack on → slides auto-advance every 6 s while the reader is still speaking (only `disableAnimationsOf` is checked).
 - Fix: `_autoAdvance = !disableAnimations && !MediaQuery.accessibleNavigationOf(context)`; ~2 lines.
 
@@ -305,7 +305,7 @@ external player or download lookups). Upstream-latest items are in `UPSTREAM.md`
 
 ### UX-242 [P3] [confidence: medium] [RESOLVED]
 - Resolution: `601fa81` (T12). Both player minimize toolbars are 48dp tall rather than constraining the icon button to 36dp.
-- Location: `lib/screens/now_playing_screen.dart` (minimize `IconButton` as the title of a 36dp toolbar)
+- Location: `lib/screens/player/now_playing_screen.dart` (minimize `IconButton` as the title of a 36dp toolbar)
 - Scenario: the minimize control is about 36dp tall. Swipe-down and Back still dismiss.
 - Fix: a 48dp toolbar or taller hit area; 1-3 lines.
 
@@ -317,7 +317,7 @@ external player or download lookups). Upstream-latest items are in `UPSTREAM.md`
 
 ### UX-244 [P3] [confidence: medium] [RESOLVED]
 - Resolution: `601fa81` (T12). The selected lyric-line count is a live-region container (lyrics_share_screen_test.dart).
-- Location: `lib/screens/lyrics_share_screen.dart` (`_SelectionCount`)
+- Location: `lib/screens/lyrics/lyrics_share_screen.dart` (`_SelectionCount`)
 - Scenario: the "n/N" selected-lines count changes silently for TalkBack.
 - Fix: `Semantics(liveRegion: true, container: true)`; 2 lines.
 
@@ -365,7 +365,7 @@ external player or download lookups). Upstream-latest items are in `UPSTREAM.md`
 
 ### UX-218 [P2] [confidence: medium] [RESOLVED]
 - Resolution: `f0d2318` (T11). `local_guide_pages.dart` reserves 104 dp (24 dp plus the 80 dp setup header) under the tips, so the Next button never covers them.
-- Location: `lib/screens/local_guide_pages.dart` (`_TutorialPage` bottom gap) vs `lib/screens/setup_screen.dart` (`floatingActionButton`)
+- Location: `lib/screens/setup/local_guide_pages.dart` (`_TutorialPage` bottom gap) vs `lib/screens/setup/setup_screen.dart` (`floatingActionButton`)
 - Scenario: setup tip pages (especially the last with the Ready card) at a small viewport or large text → content ends 12-32dp above the bottom, so the Next button permanently covers it.
 - Fix: the same `24 + _headerHeight`-style bottom padding the other steps use; ~3 lines.
 
@@ -407,7 +407,7 @@ external player or download lookups). Upstream-latest items are in `UPSTREAM.md`
 
 ### UI-410 [P3] [confidence: medium] [RESOLVED]
 - Resolution: `f0d2318` (T11). Failed pages wait for Retry: the screen skips auto-load while `loadMoreError` is set, refresh no longer rethrows, and `library_browse_provider.dart` retains the loaded rows with the error (`sistrum_library_browse_test.dart`).
-- Location: `lib/screens/sistrum_library_screen.dart` (scroll listener, Retry, `onRefresh`), `lib/providers/library_browse_provider.dart` (`loadMore`)
+- Location: `lib/screens/sistrum_library_screen.dart` (scroll listener, Retry, `onRefresh`), `lib/providers/library/library_browse_provider.dart` (`loadMore`)
 - Scenario: `loadMore()` fails on Albums/Artists → every scroll tick near the end retries it; Retry invalidates the provider and drops every loaded page; pull-to-refresh rethrows from `onRefresh`.
 - Fix: skip auto load-more while `loadMoreError` is set, make Retry call `loadMore()`, catch in `onRefresh`; ~8 lines. Needs a forced failure to confirm.
 
@@ -443,7 +443,7 @@ external player or download lookups). Upstream-latest items are in `UPSTREAM.md`
 
 ### UI-417 [P3] [confidence: high] [RESOLVED]
 - Resolution: `f0d2318` (T11). `main_shell.dart` builds tab pages through `LazyTabView`; the eager `_KeepAliveTabPage` wrapper is gone.
-- Location: `lib/screens/main_shell.dart` (`_KeepAliveTabPage`)
+- Location: `lib/screens/shell/main_shell.dart` (`_KeepAliveTabPage`)
 - Scenario: unused leftover from the previous tab host (`LazyTabView` replaced it).
 - Fix: delete it; ~20 lines.
 
@@ -473,7 +473,7 @@ external player or download lookups). Upstream-latest items are in `UPSTREAM.md`
 
 ### UX-219 [P3] [confidence: high] [RESOLVED]
 - Resolution: `f0d2318` (T11). `setup_screen.dart` uses `PopScope(canPop: _currentStep == 0)` and routes system Back through `_prevPage` (`setup_screen_recovery_test.dart`).
-- Location: `lib/screens/setup_screen.dart` (no `PopScope`)
+- Location: `lib/screens/setup/setup_screen.dart` (no `PopScope`)
 - Scenario: press system Back on setup step 4 → the app exits instead of going to step 3.
 - Fix: `PopScope(canPop: _currentStep == 0, onPopInvokedWithResult: → _prevPage)`; ~8 lines.
 
@@ -560,7 +560,7 @@ external player or download lookups). Upstream-latest items are in `UPSTREAM.md`
 
 ### PERF-404 [P2] [confidence: medium] [RESOLVED]
 - Resolution: `fcacc49` (T9). `getLookupIndex`, `LocalLibraryLookupIndex` and the `LocalLibraryState` lookup sets are removed with their last reader. The now write-only `library_lookup_summary` triggers are measured scan-path work deferred to T10 and a dead-table removal candidate for T14; no production reader remains.
-- Location: `lib/services/library_database.dart:793-815` (`getLookupIndex`), `lib/providers/local_library_provider.dart:65-76,266-300,538-562`
+- Location: `lib/services/library_database.dart:793-815` (`getLookupIndex`), `lib/providers/library/local_library_provider.dart:65-76,266-300,538-562`
 - Scenario: about 15 refresh paths (after a scan, edit, delete, clear or source change) load up to 2×N `match_key`/`isrc` strings into two Dart `Set`s.
   - The only consumer, `existsInLibrary`, is called only from `track_list_tile.dart:52`.
   - `TrackListTile` is dead code (UX-104).
@@ -676,21 +676,21 @@ external player or download lookups). Upstream-latest items are in `UPSTREAM.md`
 
 ### BUG-203 [P2] [confidence: medium] [RESOLVED]
 - Resolution: `3602d2c` (T8). Confirmed local-row removal first serializes Loved/playlist cleanup by actual local IDs, including lazy playlists and imported occurrences. Distinct copies sharing ISRC remain. Read/write/disposal failures abort index removal so identity is available for retry.
-- Location: `lib/providers/local_library_provider.dart:1666-1678` (`removePhysicalFiles`/`removeItems`), `lib/services/deleted_library_files.dart:7-16`, `lib/providers/library_collections_provider.dart`
+- Location: `lib/providers/library/local_library_provider.dart:1666-1678` (`removePhysicalFiles`/`removeItems`), `lib/services/deleted_library_files.dart:7-16`, `lib/providers/library/library_collections_provider.dart`
 - Scenario: deleting a song (menu, album, duplicates, batch) clears only the library index; Loved/playlist entries keyed `local:<id>`/`isrc:` remain and render verbatim (`library_tracks_folder_screen.dart:236-259`).
 - Impact: ghost rows in Loved/playlists that fail on play; inflated counts.
 - Fix: remove matching collection keys on delete, or hide missing local entries at render; ~25 lines. Unverified: exact play failure symptom.
 
 ### BUG-204 [P2] [confidence: medium] [RESOLVED]
 - Resolution: `3602d2c` (T8). Reload invalidates the active snapshot before joining its owner. The loader rereads after invalidation, and concurrent retries after a failed load remain single-flight.
-- Location: `lib/providers/local_library_provider.dart:324-335` (`reloadFromStorage`)
+- Location: `lib/providers/library/local_library_provider.dart:324-335` (`reloadFromStorage`)
 - Scenario: a DB write (tag edit, duplicates, batch edit) followed by `reloadFromStorage()` while a load is in flight → awaits the stale load and returns; `loadedIndexVersion` not bumped.
 - Impact: UI shows pre-edit tags/artwork until the next reload; dependent providers stay stale.
 - Fix: `_reloadRequested` flag → extra pass after the in-flight load; ~8 lines.
 
 ### BUG-205 [P3] [confidence: low] [RESOLVED]
 - Resolution: `3602d2c` (T8). Clear closes scan admission synchronously, advances the scan epoch, discards pending reconnects, cancels and joins the native scan owner before clearing persisted rows, and guards state publication after disposal. This also resolves FA-DATA-008.
-- Location: `lib/providers/local_library_provider.dart:1616-1631` (`clearLibrary`)
+- Location: `lib/providers/library/local_library_provider.dart:1616-1631` (`clearLibrary`)
 - Scenario: provider disposed during the awaited refresh → `state =` without `ref.mounted` → StateError; no guard against a running scan.
 - Fix: `if (!ref.mounted) return;`; optionally refuse during `_scanInProgress`.
 
@@ -781,7 +781,7 @@ external player or download lookups). Upstream-latest items are in `UPSTREAM.md`
 - Resolution: T7. Per-ID random priorities are kept in an autoDispose family cache that lives as long as the Popular page listens, so an index refresh reuses the original draws, deleted rows drop out and a newly indexed ID draws once. Ranking (play counts first, 20 cap), paging and the full-artist queue are unchanged; reopening the page draws afresh. Regression: `local_artist_popular_test.dart` (draw-counting refresh, delete, promote and dispose cases).
 
 ### BUG-202 [P2] [confidence: high] [RESOLVED]
-- Location: `lib/providers/library_search_provider.dart`
+- Location: `lib/providers/library/library_search_provider.dart`
 - Scenario: Local Library disabled → search still returns local songs/albums/artists (`includeLocal: true` hard-coded; watched setting discarded).
 - Resolution: T7. The watched setting is forwarded to `includeLocal`, and a disabled library returns no local hits without touching the index or database; user playlists remain searchable. Regression: `library_search_provider_test.dart` (songs/albums/artists empty with an index that throws on access, playlists still searched).
 
@@ -791,7 +791,7 @@ external player or download lookups). Upstream-latest items are in `UPSTREAM.md`
 - Resolution: T7. Verified by trace. CUE virtual rows are filtered out before the confirmation totals and the loop (a CUE-only selection returns early with no dialog), and failures now log: a false write warns with the path, an exception logs with its stack. Regressions: `batch_track_actions_test.dart` (CUE-only, mixed local/SAF filtering, false-write logging, Back during a pending write).
 
 ### DEAD-604 [P3] [confidence: medium] [RESOLVED]
-- Location: `lib/widgets/player_artwork.dart` (`http` branch), `lib/providers/music_player_provider.dart` (`playableFromLocal`)
+- Location: `lib/widgets/player_artwork.dart` (`http` branch), `lib/providers/playback/music_player_provider.dart` (`playableFromLocal`)
 - Scenario: `http*` covers still render via `CachedCoverImage`, and `playableFromLocal` passes them through → legacy rows could fetch remote artwork (contradicts "no remote artwork loading").
 - Resolution: T7. `CachedCoverImage` already rejected every non-file scheme, so no fetch was possible; the dead network branch is gone and a legacy `http` cover now renders the placeholder and is not published into playback state. Regression: `player_artwork_test.dart` (remote URL placeholder, `playableFromLocal` drops `http` and keeps a local path).
 
@@ -1079,7 +1079,7 @@ external player or download lookups). Upstream-latest items are in `UPSTREAM.md`
 - Resolution: REMOVED with the Appearance Language option (owner: English only, 2026-10-23).
 
 ### UX-204 [P3] [confidence: medium] [RESOLVED]
-- Location: `lib/screens/setup_screen.dart:657-709` (`_buildLanguageList`)
+- Location: `lib/screens/setup/setup_screen.dart:657-709` (`_buildLanguageList`)
 - Scenario: language rows expose selection only by a check icon; no `Semantics(selected:)` → TalkBack does not announce the active language.
 - Fix: `Semantics(selected: isSelected, button: true)`; ~3 lines.
 
@@ -1172,7 +1172,7 @@ external player or download lookups). Upstream-latest items are in `UPSTREAM.md`
 - Resolution: `ef8ba64d`; verified in PORT_PLAN batch 16. Physical-device checks remain NOT RUN where applicable.
 
 ### DEAD-207 [P3] [confidence: high] [RESOLVED]
-- Location: `lib/services/platform_bridge.dart:1167-1230` (iOS bookmark/directory methods), `lib/widgets/ios_library_folder_sheet.dart`, `lib/providers/local_library_provider.dart:636-644, 917, 1586-1608`, `lib/screens/settings/library_settings_page.dart:150`
+- Location: `lib/services/platform_bridge.dart:1167-1230` (iOS bookmark/directory methods), `lib/widgets/ios_library_folder_sheet.dart`, `lib/providers/library/local_library_provider.dart:636-644, 917, 1586-1608`, `lib/screens/settings/library_settings_page.dart:150`
 - Scenario: Android-only project (no `ios/`); methods have no handler.
 - Fix: remove iOS methods, sheet and branches (~150 lines); include `migrateIosContainerPaths`, `lib/utils/ios_container_paths.dart` in the dead-code sweep.
 - Resolution: `ef8ba64d`; verified in PORT_PLAN batch 16. Physical-device checks remain NOT RUN where applicable.
@@ -1208,7 +1208,7 @@ external player or download lookups). Upstream-latest items are in `UPSTREAM.md`
 - Resolution: `ef8ba64d`; verified in PORT_PLAN batch 16. Physical-device checks remain NOT RUN where applicable.
 
 ### DEAD-401 [P3] [confidence: high] [RESOLVED]
-- Location: `lib/models/settings.dart` (`albumFolderStructure`, `hasSearchedBefore`, `embeddedCoverMaxDimension`), `lib/providers/settings_provider.dart:89-95, 241-243, 275-277, 317-322, 459-464, 477-480`
+- Location: `lib/models/settings.dart` (`albumFolderStructure`, `hasSearchedBefore`, `embeddedCoverMaxDimension`), `lib/providers/settings/settings_provider.dart:89-95, 241-243, 275-277, 317-322, 459-464, 477-480`
 - Scenario: download-era settings with no readers outside settings files; `artistTagMode` has no setter.
 - Fix: delete (~40 lines); old JSON still loads.
 - Resolution: `ef8ba64d`; verified in PORT_PLAN batch 16. Physical-device checks remain NOT RUN where applicable.
@@ -1304,7 +1304,7 @@ external player or download lookups). Upstream-latest items are in `UPSTREAM.md`
 - Resolution: `ef8ba64d`; verified in PORT_PLAN batch 16. Physical-device checks remain NOT RUN where applicable.
 
 ### DEAD-622 [P3] [confidence: medium] [RESOLVED]
-- Location: `lib/screens/main_shell.dart` (`SlidingIcon` :931 unused; `BouncingIcon` :892 and `SpinIcon` :978 only in non-Sistrum destinations; non-Sistrum `PageView` path with `_tabJumpOpacity/_tabJumpScale` :57-64,:639-660; `if (!context.isSistrum) const SettingsTab()` :542)
+- Location: `lib/screens/shell/main_shell.dart` (`SlidingIcon` :931 unused; `BouncingIcon` :892 and `SpinIcon` :978 only in non-Sistrum destinations; non-Sistrum `PageView` path with `_tabJumpOpacity/_tabJumpScale` :57-64,:639-660; `if (!context.isSistrum) const SettingsTab()` :542)
 - Scenario: `isSistrum` is always true in production → these branches never run.
 - Fix: collapse the shell to the Sistrum path (~150 lines); do together with DEAD-633 (`ExpressiveNavigationBar`) and DEAD-601.
 - Resolution: `ef8ba64d`; verified in PORT_PLAN batch 16. Physical-device checks remain NOT RUN where applicable.
@@ -1387,7 +1387,7 @@ external player or download lookups). Upstream-latest items are in `UPSTREAM.md`
 - Resolution: `ef8ba64d`; verified in PORT_PLAN batch 16. Physical-device checks remain NOT RUN where applicable.
 
 ### DEAD-803 [P3] [confidence: high] [RESOLVED]
-- Location: `lib/providers/theme_provider.dart:14-17,81-84,113-131` (`setStyle`, `setUseDynamicColor`, `setSeedColor`, `setUseAmoled`), `lib/models/theme_settings.dart` (`useDynamicColor`, `seedColorValue`, `useAmoled`, `AppThemeStyle`), `lib/providers/playback_notification_provider.dart:22-24`
+- Location: `lib/providers/settings/theme_provider.dart:14-17,81-84,113-131` (`setStyle`, `setUseDynamicColor`, `setSeedColor`, `setUseAmoled`), `lib/models/theme_settings.dart` (`useDynamicColor`, `seedColorValue`, `useAmoled`, `AppThemeStyle`), `lib/providers/playback/playback_notification_provider.dart:22-24`
 - Scenario: these are multi-theme leftovers. The setters are never called (`setUseAmoled` only in a test), the fields are never read, and `AppThemeStyle` has the single value `sistrum`, so the check is always true.
 - Fix: remove them (~80 lines) but keep parsing the old keys for imports. Update `models_and_utils_test.dart:649-679` and `appearance_settings_test.dart:412`.
 - Resolution: `ef8ba64d`; verified in PORT_PLAN batch 16. Physical-device checks remain NOT RUN where applicable. Old JSON/preference keys are accepted and ignored; retained theme/player/font fields round-trip. No persisted schema migration.
@@ -1531,13 +1531,13 @@ external player or download lookups). Upstream-latest items are in `UPSTREAM.md`
 - Resolution: `ef8ba64d`; verified in PORT_PLAN batch 16. Physical-device checks remain NOT RUN where applicable. The finding belonged to the unreachable Hi-Res module removed with DEAD-902; active native_audio_analysis remains.
 
 ### PLAY-001 [P2] [confidence: medium-high] [RESOLVED]
-- Location: `lib/screens/now_playing_screen.dart:474-495` (Immersive artwork inside `SistrumPlayerBackground`), `lib/widgets/sistrum_player_layout.dart:466-475` (`PlayerTrackSwipe`), :271 (expanded layer skipped when `fullBleed`), `lib/widgets/player_track_swipe.dart:133-136`
+- Location: `lib/screens/player/now_playing_screen.dart:474-495` (Immersive artwork inside `SistrumPlayerBackground`), `lib/widgets/sistrum_player_layout.dart:466-475` (`PlayerTrackSwipe`), :271 (expanded layer skipped when `fullBleed`), `lib/widgets/player_track_swipe.dart:133-136`
 - Scenario: Player view = Immersive, swipe left/right on the cover → nothing happens. The background is a sibling of the layout in the `Stack`, so `PlayerTrackSwipeRegion` finds no `_SwipeScope` and returns its child unwrapped; Normal view works. AGENTS.md requires track changes in both views. Upstream has the same structure but only hits it with motion artwork.
 - Fix: lift `PlayerTrackSwipe` above the `Stack`, or give the background artwork its own scope; ~20 lines plus a widget test for Immersive swipe.
 - Resolution: `3dfa8b73`; verified in PORT_PLAN batch 14. Physical-device checks remain NOT RUN where applicable.
 
 ### PLAY-002 [P3] [confidence: medium] [RESOLVED]
-- Location: `lib/screens/now_playing_screen.dart:475` (`key: ValueKey(immersive)`)
+- Location: `lib/screens/player/now_playing_screen.dart:475` (`key: ValueKey(immersive)`)
 - Scenario: `immersive` includes `!_landscape`, so rotating in Immersive recreates the background: `CoverPaletteBuilder` and the 380 ms gradient restart (visible pop), and `_expandedArtworkKey` moves between parents in one frame.
 - Fix: drop the key or key on `squareArtwork` only; test the Hero/GlobalKey move on rotation.
 - Resolution: `822a4656`; verified in PORT_PLAN batch 14. Physical-device checks remain NOT RUN where applicable.
@@ -1597,7 +1597,7 @@ external player or download lookups). Upstream-latest items are in `UPSTREAM.md`
 - Resolution: `0d9dbf9c`; verified in PORT_PLAN batch 13. Physical-device checks remain NOT RUN where applicable.
 
 ### HOME-008 [P3] [confidence: medium] [RESOLVED]
-- Location: `lib/screens/main_shell.dart:353-357` (`_resetHomeToMain`), `lib/screens/home_tab_feed.dart:185-191`, :97, :244
+- Location: `lib/screens/shell/main_shell.dart:353-357` (`_resetHomeToMain`), `lib/screens/home_tab_feed.dart:185-191`, :97, :244
 - Scenario: re-tapping Home while scrolled down does nothing (pops only); release/track/playlist cards have no keys, so cover state is reused by index when a shelf reorders; no long-press menu on Home cards (upstream Sistrum context menu). Upstream also lacks tab-reselect scroll.
 - Fix: scroll to top on reselect; `ValueKey` per card; optional long-press with the local song/album menu.
 - Resolution: `0d9dbf9c`; verified in PORT_PLAN batch 13. Physical-device checks remain NOT RUN where applicable.
@@ -1798,7 +1798,7 @@ external player or download lookups). Upstream-latest items are in `UPSTREAM.md`
 - Impact: display-only.
 - Fix: return the segment directly; 1 line.
 - Evidence: contradicts `resolveSafDocumentLocation` doc comment.
-- Resolution: `46c4ea6a`. The cited `lib/utils/saf_display_path.dart` no longer exists; the live double decodes were `_displayNameForPath` and `_looksLikeRemovablePath` in `lib/providers/local_library_provider.dart` and `_getDisplayPath` in `lib/screens/settings/library_settings_page.dart`. All now use the already-decoded `pathSegments`, and no `Uri.decodeComponent` call remains under `lib/`.
+- Resolution: `46c4ea6a`. The cited `lib/utils/saf_display_path.dart` no longer exists; the live double decodes were `_displayNameForPath` and `_looksLikeRemovablePath` in `lib/providers/library/local_library_provider.dart` and `_getDisplayPath` in `lib/screens/settings/library_settings_page.dart`. All now use the already-decoded `pathSegments`, and no `Uri.decodeComponent` call remains under `lib/`.
 
 ### BUG-001 [P2] [confidence: high] [RESOLVED]
 - Location: lib/widgets/local_song_file_actions.dart:191 (`splitLocalCue`)
@@ -1940,7 +1940,7 @@ external player or download lookups). Upstream-latest items are in `UPSTREAM.md`
 
 ### PERF-405 [P3] [confidence: low] [REJECTED]
 - Rejection (T9): Measured on the 20k-row host fixture: the Home shelf queries cost ~30 ms per `loadedIndexVersion` bump. Rejected as not worth a shelf cache or summary table.
-- Location: `lib/screens/home_tab_feed.dart:7-12`, `lib/services/library_queue_store.dart:430-470` (`_queueAlbumUnionSql`), `lib/providers/library_browse_provider.dart:150-170`
+- Location: `lib/screens/home_tab_feed.dart:7-12`, `lib/services/library_queue_store.dart:430-470` (`_queueAlbumUnionSql`), `lib/providers/library/library_browse_provider.dart:150-170`
 - Scenario: every `loadedIndexVersion` bump re-runs about four full-library aggregates for the Home shelves. The browse notifier also re-reads every loaded page.
 - Fix: only if the measurement is bad, cache shelf results per version or use an album summary table.
 - Measure: a Stopwatch around the shelf queries at Home mount, at 20k and 50k tracks.

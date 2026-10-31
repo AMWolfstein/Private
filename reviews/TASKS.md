@@ -183,9 +183,9 @@ or exported components.
 
 - [x] **T5: Fix backup restore, settings restore and startup**
   - Findings: API-001, API-002, API-201, API-202, API-203, UX-003.
-  - Files: `lib/services/backup_service.dart`, `lib/providers/settings_provider.dart`
+  - Files: `lib/services/backup_service.dart`, `lib/providers/settings/settings_provider.dart`
     (`restoreFromBackup`), `lib/main.dart` (`_prepareAndroidInstallationState`),
-    `lib/screens/main_shell.dart` (`_repairSafAccessIfNeeded`), `lib/models/settings.dart`.
+    `lib/screens/shell/main_shell.dart` (`_repairSafAccessIfNeeded`), `lib/models/settings.dart`.
   - Goal: history restore and the backup archive stay consistent. An old backup no longer
     sends the user back to setup or imports another device's folder path. The
     download-era settings, the SAF repair dialog and the migration prompt are removed or
@@ -232,7 +232,7 @@ or exported components.
     `lib/widgets/batch_progress_dialog.dart` (`dismiss`),
     `lib/screens/settings/cache_management_page.dart`,
     `lib/providers/local_artist_provider.dart` (`localArtistPopularProvider`),
-    `lib/providers/library_search_provider.dart`.
+    `lib/providers/library/library_search_provider.dart`.
   - Goal:
     - No seek or restart race, and deleting the playing file is handled.
     - The mini player no longer hides on pause after one swipe-dismiss.
@@ -259,7 +259,7 @@ or exported components.
     `library_queue_store.dart`, `library_search.dart`, `library_duplicates.dart`,
     `lib/utils/duplicate_cleanup_policy.dart`, `lib/utils/file_access.dart`
     (`deleteFile`), `lib/utils/local_library_scan_prefs.dart`,
-    `lib/providers/local_library_provider.dart`, `lib/screens/queue_tab*.dart`,
+    `lib/providers/library/local_library_provider.dart`, `lib/screens/queue_tab*.dart`,
     `lib/screens/settings/log_screen.dart`.
   - Goal:
     - Shuffle no longer loads the whole library (DATA-002; only `shuffleLibrary` is
@@ -291,7 +291,7 @@ or exported components.
     PERF-405, PERF-601, PERF-602, PERF-603, PERF-604.
   - Files: `lib/services/library_schema.dart` (`_createNormalizedIndexes`),
     `library_queue_store.dart`, `library_genres.dart`, `library_database.dart`
-    (`getLookupIndex`), `lib/providers/local_library_provider.dart`,
+    (`getLookupIndex`), `lib/providers/library/local_library_provider.dart`,
     `local_artist_provider.dart`, `lib/screens/queue_tab.dart`,
     `queue_tab_filter_widgets.dart`, `library_tracks_folder_screen.dart`,
     `home_tab_feed.dart`, `lib/theme/cover_palette.dart`, `lib/main.dart`.

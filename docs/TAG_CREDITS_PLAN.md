@@ -97,7 +97,7 @@ Save separator, `lib/models/metadata_separators.dart`:
 - `fromJson`: when the three name fields differ (settings saved before this
   change), use the first non-empty of artist, album artist, composer for all three.
 
-Provider, `lib/providers/settings_provider.dart`:
+Provider, `lib/providers/settings/settings_provider.dart`:
 - `toggleArtistDelimiter(String)`, `toggleGenreDelimiter(String)`,
   `selectAllArtistDelimiters()`, `selectAllGenreDelimiters()` (when everything is
   already selected, reset that section to its defaults),
@@ -184,7 +184,7 @@ Save path (Edit Metadata):
   `splitTagCredits`, join with the Save with separator; an empty separator keeps
   the value unchanged.
 - `lib/services/library/track_metadata_persistence.dart` and
-  `lib/providers/metadata_editor_controller.dart`: format the four fields in Dart
+  `lib/providers/library/metadata_editor_controller.dart`: format the four fields in Dart
   with the function above and stop adding `MetadataSeparators.writerFields` to the
   writer map, so the Rust writer stores the Dart result as is (otherwise it splits
   again on `,`/`;` and breaks Keep-together names). Leave the Rust code unchanged.

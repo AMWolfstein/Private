@@ -499,7 +499,7 @@ passed (exit 0).
   function, `readLibraryScanProgress`, and the stream-then-poll timing lives in
   `LibraryScanProgressPolling`. Both are in `lib/services/library/library_scan_progress.dart`. The
   notifier applies the sample and posts the notice. Cover request keys and batched first-cover
-  lookups live in `lib/providers/local_library_cover_providers.dart`.
+  lookups live in `lib/providers/library/local_library_cover_providers.dart`.
 - mid_level_elegance::two_db_access_paths: database access goes through `libraryDatabaseProvider`.
   Widgets and notifiers read it through `ref`. Helpers without a `ref` take the database as a
   parameter: `runBatchReplayGain`, `navigateToAlbum`, `navigateToArtistCredits`,
