@@ -1,6 +1,6 @@
 # Sistrum workflow
 
-A repo-local engineering workflow for Claude Code (and, with less enforcement, OpenCode). Nothing to install: the
+A repo-local engineering workflow for coding agents. Nothing to install: the
 skills and reviewer agents are Markdown, the tool is one Python 3.10+ standard-library script, and the checks are
 the repository's own commands.
 
@@ -81,39 +81,36 @@ evidence, not the truth of arbitrary prose. No redundant parallel skill system i
 
 ## Install in a repository
 
-1. Copy the contents of this folder to the repository root: `AGENTS.md`, `CLAUDE.md`, `.claude/skills/`,
-   `.claude/agents/`, `work/`, `scripts/work/`. Merge with existing files of the same name instead of overwriting
+1. Copy the contents of this folder to the repository root: `AGENTS.md`, `.agents/skills/`,
+   `.agents/reviewers/`, `work/`, `scripts/work/`. Merge with existing files of the same name instead of overwriting
    them.
 2. Add `.work/` to `.gitignore`.
 3. Product decisions start empty: each accepted spec in `work/changes/` records the decisions it makes.
 4. Check `work/checks.json` against the repository's commands.
 5. Run `python3 -m unittest discover -s scripts/work -p 'test_*.py'` and `python3 scripts/work/work.py status`.
-6. Optional, recommended: the Claude Code hooks below.
+6. Make your agent read root `AGENTS.md`. It routes requests to `.agents/skills/work/SKILL.md`.
+   Automatic AGENTS.md and skill discovery depend on the agent; explicit file reads work without a plugin.
 
-### Claude Code hooks (add yourself)
+### Optional agent integrations
 
-Create `.claude/settings.json` (or merge into it) so the tool runs automatically: the session starts with the
-status, each message carries a one-line reminder, and shell commands pass the guard (no `git add -A`, force push,
-`--no-verify`, `reset --hard`, `clean -f`, `pkill -f`). Without it, the skills still work, but nothing enforces
-the guard and the status is not shown automatically.
+The shared source is `AGENTS.md`, `.agents/skills/` and `.agents/reviewers/`. There is no required
+provider-specific directory, import syntax or tool allowlist. Configure your agent to read AGENTS.md if it
+uses another entry convention. Do not duplicate the skills into provider-specific copies.
 
-```json
-{
-  "hooks": {
-    "SessionStart": [{"hooks": [{"type": "command",
-      "command": "python3 \"$CLAUDE_PROJECT_DIR/scripts/work/work.py\" status --brief"}]}],
-    "UserPromptSubmit": [{"hooks": [{"type": "command",
-      "command": "python3 \"$CLAUDE_PROJECT_DIR/scripts/work/work.py\" remind"}]}],
-    "PreToolUse": [{"matcher": "Bash", "hooks": [{"type": "command",
-      "command": "python3 \"$CLAUDE_PROJECT_DIR/scripts/work/work.py\" hook-bash"}]}]
-  }
-}
-```
+If your agent supports hooks, wire session start to `python3 scripts/work/work.py status --brief`, new requests
+to `python3 scripts/work/work.py remind`, and shell preflight to `python3 scripts/work/work.py hook-bash`.
+The shell guard accepts JSON on stdin: `{"tool_input": {"command": "git status"}}`; exit 2 blocks, exit 0 allows.
+Adapt your agent's event payload and working directory to this interface. Hook names, installation and blocking
+behavior depend on the host agent. Without integration these are explicit commands and instructions, not
+automatic enforcement of every shell invocation.
+
+Reviewer prompts are ordinary Markdown. Configure read-only tools in the host agent and provide the packet
+in a fresh context. If those capabilities are unavailable, report self-review; do not count it as independent.
 
 ## Limits
 
 - The tool checks structure and evidence; it cannot tell whether a review was honest or a test is meaningful.
   The fresh-context reviewers and the owner do that.
 - Host checks never prove device behaviour. Device checks stay pending until the owner runs them.
-- OpenCode has no hooks here and its reviewers are not restricted by these agent files; label its reviews as
-  self-review unless it runs a fresh read-only reviewer.
+- Discovery, hooks and read-only reviewer isolation depend on the host agent. Instructions alone do not
+  guarantee enforcement; missing independent-review capability must be reported.
