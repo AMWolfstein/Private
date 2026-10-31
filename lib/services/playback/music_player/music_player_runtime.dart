@@ -3,16 +3,17 @@ import 'dart:io';
 
 import 'package:audio_service/audio_service.dart';
 import 'package:audio_session/audio_session.dart';
+import 'package:flutter/foundation.dart';
 import 'package:sistrum/core/models/settings.dart';
 import 'package:sistrum/services/native/media_file_bridge.dart';
 import 'package:sistrum/services/storage/app_state_database.dart';
 import 'package:sistrum/services/playback/autoplay/autoplay_personalization.dart';
+import 'package:sistrum/services/playback/automix/automix_status.dart';
 import 'package:sistrum/services/library/database/library_database.dart';
 import 'package:sistrum/services/playback/stats/listening_statistics.dart';
 import 'package:sistrum/services/playback/core/music_playback_deck.dart';
 import 'package:sistrum/services/playback/core/playback_handler.dart';
 import 'package:sistrum/services/playback/notification/playback_notification.dart';
-import 'package:sistrum/services/playback/notification/player_widget_service.dart';
 import 'package:sistrum/services/library/scan/source_deletion_events.dart';
 import 'package:sistrum/services/playback/audio/system_volume_service.dart';
 import 'package:sistrum/utils/logging/logger.dart';
@@ -24,8 +25,13 @@ final _log = AppLogger('MusicPlayerRuntime');
 typedef PlaybackHandlerFactory =
     PlaybackHandler Function(MusicPlayerRuntime runtime);
 
+/// How a restore attempt ended. [failed] is retryable: the runtime forgets it
+/// so the next [MusicPlayerRuntime.restoreSession] call runs again.
+enum PlaybackRestoreOutcome { restored, nothingSaved, failed }
+
 /// Restores the persisted session into a runtime. The service library supplies it.
-typedef PlaybackRestore = Future<void> Function(MusicPlayerRuntime runtime);
+typedef PlaybackRestore =
+    Future<PlaybackRestoreOutcome> Function(MusicPlayerRuntime runtime);
 
 /// The process services used by a player. Tests can replace effects without
 /// changing the queue, transport, interruption or automation algorithms.
@@ -37,6 +43,8 @@ class PlaybackDependencies {
     this.audioSession = _getAudioSession,
     this.readMetadata = MediaFileBridge.readFileMetadata,
     this.initializeHandler = _initializeAudioHandler,
+    this.bindPlayerWidget,
+    this.autoMixStatus,
     this.createPersonalization = AutoplayPersonalization.new,
     AppStateDatabase? sessionDatabase,
     required LibraryDatabase libraryDatabase,
@@ -66,6 +74,15 @@ class PlaybackDependencies {
   final SourceDeletionEvents? _sourceDeletionEvents;
   final Stream<double>? _volumeChanges;
   final bool? _isAndroid;
+
+  /// Connects a new Android handler to the process player widget. Only the
+  /// process runtime supplies it; a scoped runtime leaves the widget alone.
+  final void Function(PlaybackHandler handler)? bindPlayerWidget;
+
+  /// Where a runtime's AutoMix status is published. Only the process runtime
+  /// supplies the global notifier the badge reads; a scoped runtime with no sink
+  /// publishes nothing, so it cannot change the process badge.
+  final ValueNotifier<AutoMixStatus>? autoMixStatus;
 
   AppStateDatabase get sessionDatabase =>
       _sessionDatabase ?? AppStateDatabase.instance;
@@ -109,7 +126,7 @@ class MusicPlayerRuntime {
   PlaybackHandler? _handler;
   void Function()? _unsubscribeSourceDeletion;
   Future<PlaybackHandler>? _initFuture;
-  Future<void>? _restoreFuture;
+  Future<PlaybackRestoreOutcome>? _restoreFuture;
   final _handlers = StreamController<PlaybackHandler?>.broadcast(sync: true);
   final _mutedPlaybackEvents = StreamController<void>.broadcast();
   bool _initializing = false;
@@ -217,7 +234,7 @@ class MusicPlayerRuntime {
       _initializing = false;
       _handlers.add(handler);
       if (dependencies.isAndroid) {
-        PlayerWidgetService.instance.bind(handler);
+        dependencies.bindPlayerWidget?.call(handler);
       }
       return handler;
     } catch (error, stack) {
@@ -230,8 +247,24 @@ class MusicPlayerRuntime {
     }
   }
 
-  Future<void> restoreSession() =>
-      _restoreFuture ??= dependencies.restoreSession(this);
+  /// Single-flight while an attempt runs. A finished restore or an empty one is
+  /// kept; a failed one is cleared so the next call retries it.
+  Future<PlaybackRestoreOutcome> restoreSession() {
+    final pending = _restoreFuture;
+    if (pending != null) return pending;
+    late final Future<PlaybackRestoreOutcome> attempt;
+    attempt = Future.sync(() => dependencies.restoreSession(this)).then((
+      outcome,
+    ) {
+      if (outcome == PlaybackRestoreOutcome.failed &&
+          identical(_restoreFuture, attempt)) {
+        _restoreFuture = null;
+      }
+      return outcome;
+    });
+    _restoreFuture = attempt;
+    return attempt;
+  }
 
   /// The default runtime lives for the app lifetime. Scoped runtimes close
   /// subscriptions and reject new initialization when their owner disposes.

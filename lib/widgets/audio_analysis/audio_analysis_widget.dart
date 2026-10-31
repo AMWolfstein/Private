@@ -1,30 +1,25 @@
 import 'dart:async';
 import 'dart:math' as math;
 import 'dart:ui' as ui;
-import 'package:ffmpeg_kit_flutter_new_audio/ffmpeg_kit.dart';
-import 'package:ffmpeg_kit_flutter_new_audio/ffmpeg_session.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sistrum/core/theme/app_theme.dart';
-import 'package:sistrum/services/audio_analysis/audio_analysis_jobs.dart';
+import 'package:sistrum/services/audio_analysis/audio_analysis_controller.dart';
 import 'package:sistrum/services/audio_analysis/audio_analysis_parsing.dart';
-import 'package:sistrum/services/audio_analysis/audio_analysis_runner.dart';
+import 'package:sistrum/services/audio_analysis/audio_analysis_worker.dart';
 import 'package:sistrum/services/audio_analysis/audio_analysis_store.dart';
 import 'package:sistrum/widgets/settings/settings_group.dart';
 import 'package:sistrum/widgets/primitives/app_content_card.dart';
 import 'package:sistrum/widgets/primitives/app_choice_chip.dart';
 import 'package:path/path.dart' as p;
 import 'package:sistrum/l10n/l10n.dart';
-import 'package:sistrum/services/native/native_data_jobs.dart';
 import 'package:sistrum/utils/logging/logger.dart';
 import 'package:sistrum/utils/text/string_utils.dart';
 
 export 'package:sistrum/services/audio_analysis/audio_analysis_parsing.dart';
-
-part 'audio_analysis_card_pipeline.dart';
 
 part 'audio_analysis_info_card.dart';
 part 'audio_analysis_spectrogram.dart';
@@ -51,73 +46,31 @@ class AudioAnalysisCard extends StatefulWidget {
 }
 
 class _AudioAnalysisCardState extends State<AudioAnalysisCard> {
-  AudioAnalysisData? _data;
-  bool _analyzing = false;
-  bool _checkingCache = true;
-  String? _error;
-  ui.Image? _spectrogramImage;
-  int _spectrogramChannel = -1;
-  bool _spectrogramChannelLoading = false;
-  int _spectrogramRequestId = 0;
+  late final AudioAnalysisController _controller = AudioAnalysisController(
+    filePath: widget.filePath,
+    codecHint: widget.codecHint,
+    artifacts: const ProcessAudioAnalysisArtifacts(),
+    createWorker: (checkRequest) =>
+        FfmpegAudioAnalysisWorker(checkRequest: checkRequest),
+  );
   bool _savingSpectrogram = false;
-  String? _unsupportedCodec;
-  final _analysisJobs = AudioAnalysisJobs<FFmpegSession>(
-    start: (arguments) async {
-      final completed = Completer<FFmpegSession>();
-      final session = await FFmpegKit.executeWithArgumentsAsync(
-        arguments,
-        completed.complete,
-      );
-      final id = session.getSessionId();
-      if (id == null) {
-        // Never pass null to cancel: FFmpegKit interprets it as cancel-all.
-        await completed.future;
-        throw StateError('Analysis session has no ID');
-      }
-      return (id: id, completed: completed.future);
-    },
-    cancel: (id) => FFmpegKit.cancel(id),
-  );
 
-  final _nativeAnalysisRequests = <String>{};
+  AudioAnalysisData? get _data => _controller.data;
+  bool get _analyzing => _controller.analyzing;
+  bool get _checkingCache => _controller.checkingCache;
+  Object? get _error => _controller.error;
+  ui.Image? get _spectrogramImage => _controller.spectrogramImage;
+  int get _spectrogramChannel => _controller.spectrogramChannel;
+  bool get _spectrogramChannelLoading => _controller.spectrogramChannelLoading;
+  String? get _unsupportedCodec => _controller.unsupportedCodec;
 
-  late final _runner = AudioAnalysisRunner(
-    jobs: _analysisJobs,
-    nativeRequests: _nativeAnalysisRequests,
-    checkRequest: _checkAnalysisRequest,
-  );
-
-  static const _supportedExtensions = {
-    '.flac',
-    '.mp3',
-    '.m4a',
-    '.mp4',
-    '.aac',
-    '.ac3',
-    '.eac3',
-    '.opus',
-    '.ogg',
-    '.wav',
-    '.wma',
-    '.mka',
-    '.wv',
-    '.ape',
-    '.tta',
-    '.aif',
-    '.aiff',
-  };
+  bool get _isSupported => AudioAnalysisController.supports(widget.filePath);
 
   @override
   void initState() {
     super.initState();
-    _unsupportedCodec = unsupportedAudioAnalysisCodecLabel(widget.codecHint);
-    if (_isSupported) {
-      if (_unsupportedCodec == null) {
-        _tryLoadFromCache();
-      } else {
-        _checkingCache = false;
-      }
-    }
+    _controller.addListener(_onControllerChanged);
+    _controller.start();
   }
 
   @override
@@ -127,35 +80,89 @@ class _AudioAnalysisCardState extends State<AudioAnalysisCard> {
         oldWidget.codecHint == widget.codecHint) {
       return;
     }
-
-    _spectrogramRequestId++;
-    _analysisJobs.invalidate();
-    _cancelNativeAnalysis();
-    _spectrogramImage?.dispose();
-    _spectrogramImage = null;
-    _spectrogramChannel = -1;
-    _spectrogramChannelLoading = false;
-    _data = null;
-    _error = null;
-    _analyzing = false;
-    _unsupportedCodec = unsupportedAudioAnalysisCodecLabel(widget.codecHint);
-    _checkingCache = _isSupported && _unsupportedCodec == null;
-
-    if (_checkingCache) {
-      unawaited(_tryLoadFromCache());
-    }
+    _controller.changeFile(widget.filePath, codecHint: widget.codecHint);
   }
 
   @override
   void dispose() {
-    _spectrogramRequestId++;
-    _analysisJobs.dispose();
-    _cancelNativeAnalysis();
-    _spectrogramImage?.dispose();
+    _controller.removeListener(_onControllerChanged);
+    _controller.dispose();
     super.dispose();
   }
 
+  void _onControllerChanged() {
+    if (mounted) setState(() {});
+  }
+
   void _rebuild(VoidCallback fn) => setState(fn);
+
+  Future<void> _analyze({bool forceRefresh = false}) =>
+      _controller.analyze(forceRefresh: forceRefresh);
+
+  Future<void> _changeSpectrogramChannel(int channel) =>
+      _controller.changeChannel(channel);
+
+  /// Renders the spectrogram with its axes and legend, then asks where to
+  /// save it through the system file picker.
+  Future<void> _saveSpectrogram() async {
+    final data = _data;
+    final shown = _spectrogramImage;
+    if (data == null || shown == null || _savingSpectrogram) return;
+    final l10n = context.l10n;
+    final channel = _spectrogramChannel;
+    final baseName = audioSpectrogramExportBaseName(
+      widget.filePath,
+      exportName: widget.exportName,
+    );
+    final fileName = channel < 0
+        ? '${baseName}_spectrogram.png'
+        : '${baseName}_spectrogram_ch${channel + 1}.png';
+    // A channel switch disposes the shown image while this still renders.
+    final image = shown.clone();
+    _rebuild(() => _savingSpectrogram = true);
+    try {
+      final bytes = await renderAudioSpectrogramPng(
+        image: image,
+        title: baseName,
+        sampleRate: data.sampleRate,
+        duration: data.duration,
+        details: [
+          '${l10n.audioAnalysisSampleRate}: ${data.sampleRate} Hz',
+          '${l10n.audioAnalysisNyquist}: '
+              '${(data.sampleRate / 2000).toStringAsFixed(1)} kHz',
+          if (channel >= 0) 'Ch ${channel + 1}',
+        ],
+      );
+      final saved = await FilePicker.saveFile(
+        fileName: fileName,
+        bytes: bytes,
+        mimeType: 'image/png',
+        dialogTitle: l10n.audioAnalysisSaveSpectrogram,
+      );
+      if (saved == null || !mounted) return;
+      final savedName = saved.scheme == 'file'
+          ? p.basename(saved.toFilePath())
+          : fileName;
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(
+          SnackBar(
+            content: Text(l10n.audioAnalysisSpectrogramSaved(savedName)),
+          ),
+        );
+    } catch (e) {
+      _log.e('Could not save the spectrogram: $e');
+      if (!mounted) return;
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(
+          SnackBar(content: Text(l10n.audioAnalysisSpectrogramSaveFailed)),
+        );
+    } finally {
+      image.dispose();
+      if (mounted) _rebuild(() => _savingSpectrogram = false);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -255,7 +262,7 @@ class _AudioAnalysisCardState extends State<AudioAnalysisCard> {
               const SizedBox(width: 12),
               Expanded(
                 child: Text(
-                  _error!,
+                  context.friendlyError(_error),
                   style: TextStyle(color: cs.onErrorContainer, fontSize: 13),
                 ),
               ),

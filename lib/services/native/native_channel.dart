@@ -88,18 +88,18 @@ Future<Map<String, dynamic>> nativeDecodeRequiredMapResultAsync(
   );
 }
 
-Map<String, dynamic> nativeDecodeMapResult(dynamic result) {
-  if (result is Map) {
-    return result.cast<String, dynamic>();
+/// Decodes a payload that the native side always sends as a JSON object. Null,
+/// an empty string or any other shape is a contract violation and throws, so a
+/// broken native response reaches the caller's error handling instead of
+/// looking like an empty snapshot.
+Map<String, dynamic> nativeDecodeMapResult(dynamic result, String method) {
+  final decoded = nativeDecodeJsonResult(result);
+  if (decoded is Map) {
+    return decoded.cast<String, dynamic>();
   }
-  if (result is String) {
-    if (result.isEmpty) return const <String, dynamic>{};
-    final decoded = jsonDecode(result);
-    if (decoded is Map) {
-      return decoded.cast<String, dynamic>();
-    }
-  }
-  return const <String, dynamic>{};
+  throw FormatException(
+    'Expected map result from $method, got ${decoded.runtimeType}',
+  );
 }
 
 /// Native notifications on the backend channel. The channel holds a single

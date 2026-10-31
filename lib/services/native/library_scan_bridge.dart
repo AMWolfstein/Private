@@ -174,7 +174,7 @@ class LibraryScanBridge {
     final result = await nativeBackendChannel.invokeMethod(
       'getLibraryScanProgress',
     );
-    return nativeDecodeMapResult(result);
+    return nativeDecodeMapResult(result, 'getLibraryScanProgress');
   }
 
   static Future<Map<String, dynamic>?> getLibraryScanExitInfo({
@@ -190,7 +190,7 @@ class LibraryScanBridge {
 
   static Stream<Map<String, dynamic>> libraryScanProgressStream() {
     return _libraryScanProgressEvents.receiveBroadcastStream().map(
-      nativeDecodeMapResult,
+      (event) => nativeDecodeMapResult(event, 'libraryScanProgressStream'),
     );
   }
 

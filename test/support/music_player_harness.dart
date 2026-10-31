@@ -1,11 +1,13 @@
 import 'dart:async';
 
 import 'package:audio_session/audio_session.dart';
+import 'package:flutter/foundation.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/core/models/settings.dart';
 import 'package:sistrum/services/storage/app_state_database.dart';
 import 'package:sistrum/services/playback/autoplay/autoplay_personalization.dart';
+import 'package:sistrum/services/playback/automix/automix_status.dart';
 import 'package:sistrum/services/playback/stats/listening_statistics.dart';
 import 'package:sistrum/services/playback/core/music_playback_deck.dart';
 import 'package:sistrum/services/playback/core/playback_handler.dart';
@@ -240,6 +242,10 @@ MusicPlayerRuntime musicPlayerRuntimeFor({
   AutoplayPersonalization Function()? createPersonalization,
   FakeAudioSession? session,
   FakeSessionStore? sessionStore,
+  PlaybackRestore? restoreSession,
+  bool isAndroid = false,
+  void Function(PlaybackHandler handler)? bindPlayerWidget,
+  ValueNotifier<AutoMixStatus>? autoMixStatus,
 }) {
   final audioSession = session ?? FakeAudioSession();
   addTearDown(audioSession.dispose);
@@ -247,8 +253,10 @@ MusicPlayerRuntime musicPlayerRuntimeFor({
     settings: settings,
     dependencies: PlaybackDependencies(
       createHandler: createMusicPlayerHandler,
-      restoreSession: restorePlaybackSession,
+      restoreSession: restoreSession ?? restorePlaybackSession,
       libraryDatabase: LibraryDatabase.instance,
+      bindPlayerWidget: bindPlayerWidget,
+      autoMixStatus: autoMixStatus,
       createPersonalization:
           createPersonalization ?? AutoplayPersonalization.new,
       createDeck:
@@ -273,7 +281,7 @@ MusicPlayerRuntime musicPlayerRuntimeFor({
           ),
       volumeChanges: volumeChanges,
       sourceDeletionEvents: sourceDeletionEvents ?? SourceDeletionEvents(),
-      isAndroid: false,
+      isAndroid: isAndroid,
     ),
   );
   addTearDown(runtime.dispose);

@@ -6,16 +6,18 @@ import 'package:sistrum/utils/logging/logger.dart';
 
 final _log = AppLogger('MusicPlayer');
 
-Future<void> restorePlaybackSession(MusicPlayerRuntime runtime) async {
+Future<PlaybackRestoreOutcome> restorePlaybackSession(
+  MusicPlayerRuntime runtime,
+) async {
   try {
     final database = runtime.dependencies.sessionDatabase;
     final session = await database.getPlaybackSession();
-    if (session == null) return;
+    if (session == null) return PlaybackRestoreOutcome.nothingSaved;
 
     final rawMedia = session['media'];
     if (rawMedia is! List) {
       await database.clearPlaybackSession();
-      return;
+      return PlaybackRestoreOutcome.nothingSaved;
     }
 
     final prepared = await prepareRestoredPlaybackMedia(
@@ -39,7 +41,7 @@ Future<void> restorePlaybackSession(MusicPlayerRuntime runtime) async {
     final (:items, :keptOriginalIndices, :artworkRelocated) = prepared;
     if (items.isEmpty) {
       await database.clearPlaybackSession();
-      return;
+      return PlaybackRestoreOutcome.nothingSaved;
     }
 
     // Remap the saved index onto the surviving list; if the current track
@@ -76,7 +78,9 @@ Future<void> restorePlaybackSession(MusicPlayerRuntime runtime) async {
       'Restored playback session: ${items.length} track(s), paused at '
       '${position.inSeconds}s',
     );
+    return PlaybackRestoreOutcome.restored;
   } catch (e) {
     _log.w('Failed to restore playback session: $e');
+    return PlaybackRestoreOutcome.failed;
   }
 }

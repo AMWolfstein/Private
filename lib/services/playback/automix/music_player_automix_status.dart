@@ -1,11 +1,7 @@
 part of 'music_player_automix.dart';
 
 extension _MusicAutoMixPart1 on MusicAutoMix {
-  void _setStatus(AutoMixStatus status) {
-    if (host.isLiveHandler) {
-      autoMixStatus.value = status;
-    }
-  }
+  void _setStatus(AutoMixStatus status) => host.publishStatus(status);
 
   String _beatSummary(AutoMixBeatGrid? grid) => grid == null
       ? 'unavailable'

@@ -31,7 +31,9 @@ abstract interface class AutoMixHost {
   bool get sourceReady;
   bool get userPaused;
   bool get interruptionActive;
-  bool get isLiveHandler;
+
+  /// Publishes AutoMix status for this handler's runtime, if it has a sink.
+  void publishStatus(AutoMixStatus status);
   AudioServiceRepeatMode get repeatMode;
   int get mediaCount;
   PlayableMedia mediaAt(int index);

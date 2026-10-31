@@ -62,7 +62,12 @@ class _HandlerAutoMixHost implements AutoMixHost {
   @override
   bool get interruptionActive => _handler._focus.active;
   @override
-  bool get isLiveHandler => identical(musicPlayerRuntime.handler, _handler);
+  void publishStatus(AutoMixStatus status) {
+    // Only the runtime's live handler publishes; a replaced handler is silent.
+    if (!identical(_handler._runtime.handler, _handler)) return;
+    _handler._runtime.dependencies.autoMixStatus?.value = status;
+  }
+
   @override
   AudioServiceRepeatMode get repeatMode => _handler._repeatMode;
   @override

@@ -20,6 +20,7 @@ import 'package:sistrum/services/playback/music_player/music_player_runtime.dart
 import 'package:sistrum/services/playback/autoplay/music_player_autoplay.dart';
 import 'package:sistrum/services/playback/automix/music_player_automix.dart';
 import 'package:sistrum/services/playback/core/playback_handler.dart';
+import 'package:sistrum/services/playback/notification/player_widget_service.dart';
 import 'package:sistrum/services/playback/core/playback_policies.dart';
 import 'package:sistrum/services/playback/core/music_playback_deck.dart';
 import 'package:sistrum/services/playback/autoplay/autoplay_personalization.dart';
@@ -419,6 +420,8 @@ final defaultPlaybackDependencies = PlaybackDependencies(
   createHandler: createMusicPlayerHandler,
   restoreSession: restorePlaybackSession,
   libraryDatabase: LibraryDatabase.instance,
+  autoMixStatus: autoMixStatus,
+  bindPlayerWidget: (handler) => PlayerWidgetService.instance.bind(handler),
 );
 
 final musicPlayerRuntime = MusicPlayerRuntime(
