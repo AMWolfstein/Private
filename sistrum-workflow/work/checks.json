@@ -1,0 +1,64 @@
+{
+  "version": 1,
+  "notes": [
+    "Commands are argv lists, run from the repository root, one at a time in the order listed (Flutter and Gradle never overlap).",
+    "dart-tests runs each top-level test folder separately: a whole-suite run can stall between files. A chunk with no output for 'stall' seconds is killed and retried once, then reported STALLED, never PASS.",
+    "Change paths (fnmatch, '*' crosses '/') decide which checks 'work.py check auto' runs. 'high_risk' paths make a change at least feature size with independent review.",
+    "Edit this file when the repository's commands change; a missing 'requires' path makes the check BLOCKED, not skipped."
+  ],
+  "checks": {
+    "analyze": {
+      "run": ["flutter", "analyze"],
+      "requires": ["pubspec.yaml"],
+      "timeout": 900
+    },
+    "dart-tests": {
+      "run": ["flutter", "test", "-r", "expanded", "--timeout", "120s"],
+      "split": "test",
+      "requires": ["pubspec.yaml", "test"],
+      "timeout": 2400,
+      "stall": 600
+    },
+    "android-unit": {
+      "run": ["bash", "scripts/check_android.sh"],
+      "requires": ["scripts/check_android.sh", "android/gradlew"],
+      "timeout": 2400
+    },
+    "rust": {
+      "run": ["bash", "scripts/check_rust_backend.sh"],
+      "requires": ["scripts/check_rust_backend.sh", "rust_backend"],
+      "timeout": 2400
+    },
+    "workflow": {
+      "run": ["{python}", "-m", "unittest", "discover", "-s", "scripts/work", "-p", "test_*.py"],
+      "requires": ["scripts/work/test_work.py"],
+      "timeout": 300
+    }
+  },
+  "domains": {
+    "dart": ["lib/*", "test/*", "integration_test/*", "pubspec.yaml", "pubspec.lock", "analysis_options.yaml", "l10n.yaml", "assets/*", "third_party/*"],
+    "android": ["android/*"],
+    "rust": ["rust_backend/*"],
+    "workflow": ["scripts/work/*", ".claude/*", "AGENTS.md", "CLAUDE.md"]
+  },
+  "domain_checks": {
+    "dart": ["analyze", "dart-tests"],
+    "android": ["android-unit"],
+    "rust": ["rust", "android-unit"],
+    "workflow": ["workflow"]
+  },
+  "high_risk": [
+    "lib/services/native/*",
+    "lib/services/playback/*",
+    "android/app/src/main/kotlin/*",
+    "android/app/src/rust/*",
+    "android/app/src/main/cpp/*",
+    "rust_backend/*",
+    "*database*",
+    "*backup*",
+    "*migration*",
+    "pubspec.yaml",
+    "android/*.gradle.kts",
+    "android/app/src/main/AndroidManifest.xml"
+  ]
+}
