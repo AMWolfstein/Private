@@ -24,11 +24,15 @@ void main() {
   test(
     'cancel before encoding completes never dispatches an idle job',
     () async {
+      // Over the inline budget, so encoding runs on an isolate and the
+      // cancel below really arrives before encoding completes.
+      final oversized = {
+        'operation': 'hash_file',
+        'path': '/unused',
+        'padding': 'x' * (64 * 1024 + 1),
+      };
       final expectation = expectLater(
-        NativeDataJobs.run({
-          'operation': 'hash_file',
-          'path': '/unused',
-        }, requestId: 'encoding'),
+        NativeDataJobs.run(oversized, requestId: 'encoding'),
         throwsA(
           isA<PlatformException>().having((e) => e.code, 'code', 'CANCELLED'),
         ),

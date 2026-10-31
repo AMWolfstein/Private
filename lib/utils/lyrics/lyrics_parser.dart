@@ -12,6 +12,9 @@ part 'lyrics_parser_words.dart';
 part 'lyrics_parser_ttml.dart';
 part 'lyrics_parser_isolate.dart';
 
+/// Lyrics up to this many characters are UTF-8 encoded on the calling isolate.
+const _inlineEncodeChars = 64 * 1024;
+
 class LyricsParser {
   LyricsParser._();
 
@@ -86,7 +89,10 @@ class LyricsParser {
     if (raw == null || raw.isEmpty) return ParsedLyrics.empty;
     Map<String, dynamic> result;
     try {
-      final bytes = await compute(_encodeLyricsInBackground, raw);
+      // Small lyrics encode inline: the isolate spawn costs more than the work.
+      final bytes = raw.length <= _inlineEncodeChars
+          ? Uint8List.fromList(utf8.encode(raw))
+          : await compute(_encodeLyricsInBackground, raw);
       result = await NativeDataJobs.run({
         'operation': 'parse_lyrics',
       }, bytes: bytes);
