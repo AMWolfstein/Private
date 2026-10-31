@@ -1,6 +1,77 @@
 part of 'now_playing_lyrics_transition_test.dart';
 
 void _registerNowPlayingLyricsTransition2() {
+  testWidgets('custom glass keeps live lyrics under the finger on reversal', (
+    tester,
+  ) async {
+    metadataOverrides['lyrics'] = List.generate(
+      20,
+      (index) =>
+          '[00:${(index * 3).toString().padLeft(2, '0')}.00]Live lyric $index with several words on this line',
+    ).join('\n');
+    final playback = StreamController<PlaybackState>.broadcast();
+    addTearDown(playback.close);
+    await _pumpNowPlaying(
+      tester,
+      theme: AppTheme.build(Brightness.dark),
+      glassLevel: 2,
+      size: const Size(393, 852),
+      playbackEvents: playback.stream,
+    );
+    mediaItems.add(_item('many'));
+    playback.add(
+      PlaybackState(
+        playing: true,
+        processingState: AudioProcessingState.ready,
+        updatePosition: const Duration(seconds: 30),
+      ),
+    );
+    await _settlePlayer(tester);
+    await tester.tap(find.byIcon(CupertinoIcons.quote_bubble));
+    await _settlePlayer(tester);
+    final list = find.byType(ListView);
+    final bounds = tester.getRect(list);
+    final scroll = tester.widget<ListView>(list).controller!;
+    final initial = scroll.offset;
+    final pause = find.widgetWithIcon(
+      AppPlaybackButton,
+      CupertinoIcons.pause_fill,
+    );
+    final touch = await tester.startGesture(
+      Offset(bounds.center.dx, bounds.top + 180),
+    );
+    await touch.moveBy(const Offset(0, -20));
+    await tester.pump();
+    await touch.moveBy(const Offset(0, -100));
+    await tester.pump();
+    final hidden = scroll.offset;
+    expect(hidden, greaterThan(initial));
+    expect(pause.hitTestable(), findsNothing);
+
+    playback.add(
+      PlaybackState(
+        playing: true,
+        processingState: AudioProcessingState.ready,
+        updatePosition: const Duration(seconds: 33),
+      ),
+    );
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 250));
+    expect(scroll.offset, closeTo(hidden, 0.01));
+    await touch.moveBy(const Offset(0, 24));
+    await tester.pump();
+    expect(scroll.offset, closeTo(hidden - 24, 0.01));
+    expect(pause.hitTestable(), findsOneWidget);
+    for (var frame = 0; frame < 15; frame++) {
+      await tester.pump(const Duration(milliseconds: 16));
+      expect(scroll.offset, closeTo(hidden - 24, 0.01));
+      expect(tester.getRect(list), bounds);
+    }
+    await touch.up();
+    await tester.pumpWidget(const SizedBox());
+    expect(tester.takeException(), isNull);
+  });
+
   for (final reducedMotion in [false, true]) {
     testWidgets(
       'static cover shrinks on pause without moving controls (reduced motion: $reducedMotion)',
@@ -190,123 +261,5 @@ void _registerNowPlayingLyricsTransition2() {
       }
       expect(tester.takeException(), isNull);
     });
-  }
-
-  for (final size in [const Size(393, 852), const Size(768, 1024)]) {
-    for (final reducedMotion in [false, true]) {
-      testWidgets(
-        'slider scrubs lyrics both ways before seeking (size: $size, reduced motion: $reducedMotion)',
-        (tester) async {
-          metadataOverrides['lyrics'] = List.generate(
-            18,
-            (index) =>
-                '[${(index ~/ 6).toString().padLeft(2, '0')}:'
-                '${(index % 6 * 10).toString().padLeft(2, '0')}.00]'
-                'Line $index with enough words to wrap across several rows',
-          ).join('\n');
-          final playback = StreamController<PlaybackState>.broadcast();
-          addTearDown(playback.close);
-          final controller = _SeekController();
-          await _pumpNowPlaying(
-            tester,
-            theme: AppTheme.build(Brightness.dark),
-            size: size,
-            playbackEvents: playback.stream,
-            controller: controller,
-            wrapPlayer: (player) => Builder(
-              builder: (context) => MediaQuery(
-                data: MediaQuery.of(
-                  context,
-                ).copyWith(disableAnimations: reducedMotion),
-                child: player,
-              ),
-            ),
-          );
-          mediaItems.add(_item('first'));
-          playback.add(
-            PlaybackState(updatePosition: const Duration(seconds: 1)),
-          );
-          await _settlePlayer(tester);
-          await tester.tap(find.byIcon(CupertinoIcons.quote_bubble));
-          await _settlePlayer(tester);
-          final slider = find.descendant(
-            of: find.byType(PlaybackSeekSlider),
-            matching: find.byType(Slider),
-          );
-          final bounds = tester.getRect(slider);
-          Offset point(double fraction) => Offset(
-            bounds.left + 8 + (bounds.width - 16) * fraction,
-            bounds.center.dy,
-          );
-          final list = find.byType(ListView);
-          double offset() => tester.widget<ListView>(list).controller!.offset;
-          void expectFocus() {
-            final seconds = tester.widget<Slider>(slider).value / 1000;
-            final index = seconds ~/ 10;
-            final line = find.text(
-              'Line $index with enough words to wrap across several rows',
-            );
-            final focus = (size.height * 0.06).clamp(16, 48);
-            expect(
-              tester.getTopLeft(line).dy,
-              closeTo(tester.getTopLeft(list).dy + focus + 16, 2),
-            );
-            final label = tester.widget<AppPlaybackTime>(
-              find.byKey(const ValueKey('elapsed:first')),
-            );
-            expect(label.seconds, seconds.floor());
-          }
-
-          final gesture = await tester.startGesture(point(0.02));
-          await _settlePlayer(tester);
-          final initial = offset();
-          await gesture.moveTo(point(0.82));
-          await tester.pump();
-          await tester.pump();
-          await tester.pump(const Duration(milliseconds: 70));
-          final intermediate = offset();
-          expect(intermediate, greaterThan(initial));
-          await _settlePlayer(tester);
-          if (!reducedMotion) expect(offset(), greaterThan(intermediate));
-          expectFocus();
-          expect(controller.seeks, isEmpty);
-
-          final forward = offset();
-          await gesture.moveTo(point(0.19));
-          await tester.pump();
-          await tester.pump();
-          await tester.pump(const Duration(milliseconds: 70));
-          expect(offset(), lessThan(forward));
-          await _settlePlayer(tester);
-          expectFocus();
-          final held = offset();
-          // Neither playback ticks nor the automatic next-line timer may
-          // move the user's preview while the finger is still down.
-          playback.add(
-            PlaybackState(
-              processingState: AudioProcessingState.ready,
-              playing: true,
-              updatePosition: const Duration(seconds: 151),
-            ),
-          );
-          await tester.pump();
-          await tester.pump(const Duration(seconds: 10));
-          expect(offset(), closeTo(held, 0.01));
-          expectFocus();
-          expect(controller.seeks, isEmpty);
-
-          await gesture.up();
-          await tester.pump();
-          expect(controller.seeks, hasLength(1));
-          playback.add(PlaybackState(updatePosition: controller.seeks.single));
-          await tester.pump();
-          controller.completions.single.complete();
-          await _settlePlayer(tester);
-          expect(offset(), closeTo(held, 0.01));
-          expectFocus();
-          expect(tester.takeException(), isNull);
-        },
-      );
-    }
   }
 }

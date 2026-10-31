@@ -58,6 +58,7 @@ part 'now_playing_lyrics_transition_11.dart';
 part 'now_playing_lyrics_transition_12.dart';
 part 'now_playing_lyrics_transition_13.dart';
 part 'now_playing_lyrics_transition_14.dart';
+part 'now_playing_lyrics_transition_15.dart';
 
 void main() {
   _registerNowPlayingLyricsTransition1();
@@ -74,6 +75,7 @@ void main() {
   _registerNowPlayingLyricsTransition12();
   _registerNowPlayingLyricsTransition13();
   _registerNowPlayingLyricsTransition14();
+  _registerNowPlayingLyricsTransition15();
 }
 
 Map<String, dynamic> _lyricsDto(ParsedLyrics value) => {

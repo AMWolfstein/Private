@@ -1,6 +1,170 @@
 part of 'now_playing_lyrics_transition_test.dart';
 
 void _registerNowPlayingLyricsTransition5() {
+  testWidgets(
+    'accessible navigation keeps lyric controls available while idle',
+    (tester) async {
+      await _pumpNowPlaying(
+        tester,
+        theme: AppTheme.build(Brightness.dark),
+        size: const Size(393, 852),
+        playback: PlaybackState(playing: true),
+        wrapPlayer: (player) => Builder(
+          builder: (context) => MediaQuery(
+            data: MediaQuery.of(context).copyWith(accessibleNavigation: true),
+            child: player,
+          ),
+        ),
+      );
+      mediaItems.add(_item('many'));
+      await _settlePlayer(tester);
+      await tester.tap(find.byIcon(CupertinoIcons.quote_bubble));
+      await _settlePlayer(tester);
+      await tester.pump(const Duration(seconds: 6));
+      expect(find.byType(AppVolumeControl).hitTestable(), findsOneWidget);
+      expect(
+        find.byIcon(CupertinoIcons.quote_bubble).hitTestable(),
+        findsOneWidget,
+      );
+      expect(tester.takeException(), isNull);
+    },
+  );
+
+  testWidgets('Sistrum player background does not reveal the page below', (
+    tester,
+  ) async {
+    final background = ValueNotifier<Color>(Colors.white);
+    addTearDown(background.dispose);
+    final capture = GlobalKey();
+    await _pumpNowPlaying(
+      tester,
+      theme: AppTheme.build(Brightness.light),
+      size: const Size(393, 780),
+      wrapPlayer: (player) => RepaintBoundary(
+        key: capture,
+        child: ValueListenableBuilder<Color>(
+          valueListenable: background,
+          child: player,
+          builder: (context, color, child) => Stack(
+            fit: StackFit.expand,
+            children: [
+              ColoredBox(color: color),
+              child!,
+            ],
+          ),
+        ),
+      ),
+    );
+    mediaItems.add(_item('first'));
+    await _settlePlayer(tester);
+
+    Future<List<int>?> edgePixel() => tester.runAsync(() async {
+      final boundary = tester.renderObject<RenderRepaintBoundary>(
+        find.byKey(capture),
+      );
+      final image = await boundary.toImage();
+      final bytes = (await image.toByteData(
+        format: ui.ImageByteFormat.rawRgba,
+      ))!;
+      final offset = (image.width + 1) * 4;
+      final pixel = List<int>.generate(4, (i) => bytes.getUint8(offset + i));
+      image.dispose();
+      return pixel;
+    });
+
+    final onWhite = await edgePixel();
+    background.value = Colors.red;
+    await _settlePlayer(tester);
+    expect(await edgePixel(), onWhite);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets(
+    'Sistrum player menu floats above its button and retains dark colors',
+    (tester) async {
+      await _pumpNowPlaying(
+        tester,
+        theme: AppTheme.build(Brightness.light),
+        size: const Size(393, 780),
+      );
+      mediaItems.add(_item('first'));
+      await _settlePlayer(tester);
+      final moreButton = find.byIcon(CupertinoIcons.ellipsis).hitTestable();
+      final anchor = tester.getRect(moreButton);
+      await tester.tap(moreButton);
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 40));
+      final panel = find.byType(AppPlayerActionsSheet);
+      final enteringWidth = tester.getSize(panel).width;
+      await _settlePlayer(tester);
+      expect(tester.getSize(panel).width, enteringWidth);
+      expect(tester.getRect(panel).bottom, lessThan(anchor.top));
+      expect(tester.getRect(panel).width, 280);
+      expect(find.byType(BottomSheet), findsNothing);
+      expect(Theme.of(tester.element(panel)).brightness, Brightness.dark);
+      expect(
+        tester.widget<Text>(find.text('Go to Album')).style?.color,
+        Colors.white,
+      );
+      expect(find.byIcon(CupertinoIcons.square_stack), findsOneWidget);
+      expect(find.byIcon(CupertinoIcons.moon_zzz), findsOneWidget);
+      expect(find.byIcon(CupertinoIcons.gear_alt), findsNothing);
+      expect(
+        find.text(
+          AppLocalizations.of(tester.element(panel)).collectionAddToPlaylist,
+        ),
+        findsOneWidget,
+      );
+      expect(find.text('Go to Artist'), findsOneWidget);
+      expect(find.text('Favorite'), findsOneWidget);
+      expect(find.text('Share'), findsOneWidget);
+      expect(tester.widget<Text>(find.text('Go to Album')).style?.fontSize, 16);
+      await tester.ensureVisible(find.text('Sleep timer'));
+      await tester.tap(find.text('Sleep timer'));
+      await _settlePlayer(tester);
+      expect(
+        Theme.of(tester.element(find.text('15 minutes'))).brightness,
+        Brightness.dark,
+      );
+      expect(tester.takeException(), isNull);
+    },
+  );
+
+  testWidgets(
+    'Sistrum title opens artist and album destinations with subtitles',
+    (tester) async {
+      await _pumpNowPlaying(
+        tester,
+        theme: AppTheme.build(Brightness.dark),
+        size: const Size(393, 780),
+      );
+      mediaItems.add(_item('first'));
+      await _settlePlayer(tester);
+      await tester.tap(find.text('First').hitTestable());
+      await _settlePlayer(tester);
+      expect(find.text('Go to Artist'), findsOneWidget);
+      expect(find.text('Go to Album'), findsOneWidget);
+      expect(
+        find.descendant(
+          of: find.byType(AppPlayerNavigationMenu),
+          matching: find.text('Artist'),
+        ),
+        findsOneWidget,
+      );
+      expect(
+        find.descendant(
+          of: find.byType(AppPlayerNavigationMenu),
+          matching: find.text('Album'),
+        ),
+        findsOneWidget,
+      );
+      await tester.tapAt(const Offset(5, 770));
+      await _settlePlayer(tester);
+      expect(find.byType(AppPlayerNavigationMenu), findsNothing);
+      expect(tester.takeException(), isNull);
+    },
+  );
+
   testWidgets('Go to Artist offers each artist of a split credit', (
     tester,
   ) async {
@@ -128,80 +292,6 @@ void _registerNowPlayingLyricsTransition5() {
       await tester.tap(find.text('Done'));
       await _settlePlayer(tester);
       expect(sheet, findsNothing);
-      expect(tester.takeException(), isNull);
-    },
-  );
-
-  testWidgets(
-    'Sistrum heart shares Library favorites across tracks and compact headers',
-    (tester) async {
-      await _pumpNowPlaying(
-        tester,
-        theme: AppTheme.build(Brightness.light),
-        size: const Size(393, 780),
-      );
-      mediaItems.add(_item('first'));
-      await _settlePlayer(tester);
-      final container = ProviderScope.containerOf(
-        tester.element(find.byType(NowPlayingScreen)),
-      );
-      final heart = find.byIcon(CupertinoIcons.heart).hitTestable();
-      expect(heart, findsOneWidget);
-      await tester.tap(heart);
-      await _settlePlayer(tester);
-      expect(
-        find.byIcon(CupertinoIcons.heart_fill).hitTestable(),
-        findsOneWidget,
-      );
-      expect(
-        container.read(libraryCollectionsProvider).loved.single.track.id,
-        'first',
-      );
-      await tester.tap(find.byIcon(CupertinoIcons.ellipsis).hitTestable());
-      await _settlePlayer(tester);
-      await tester.tap(find.text('Favorited'));
-      await _settlePlayer(tester);
-      expect(container.read(libraryCollectionsProvider).loved, isEmpty);
-      expect(heart, findsOneWidget);
-      await tester.tap(find.byIcon(CupertinoIcons.ellipsis).hitTestable());
-      await _settlePlayer(tester);
-      await tester.tap(find.text('Favorite'));
-      await _settlePlayer(tester);
-      expect(
-        container.read(libraryCollectionsProvider).loved.single.track.id,
-        'first',
-      );
-      await tester.tap(find.byIcon(CupertinoIcons.list_bullet));
-      await _settlePlayer(tester);
-      expect(
-        find.byIcon(CupertinoIcons.heart_fill).hitTestable(),
-        findsOneWidget,
-      );
-      mediaItems.add(_item('second'));
-      await _settlePlayer(tester);
-      expect(find.byIcon(CupertinoIcons.heart).hitTestable(), findsOneWidget);
-      mediaItems.add(_item('first'));
-      await _settlePlayer(tester);
-      expect(
-        find.byIcon(CupertinoIcons.heart_fill).hitTestable(),
-        findsOneWidget,
-      );
-
-      // A change from Library must also update the player, without reopening it.
-      final track = container
-          .read(libraryCollectionsProvider)
-          .loved
-          .single
-          .track;
-      await container
-          .read(libraryCollectionsProvider.notifier)
-          .toggleLoved(track);
-      await _settlePlayer(tester);
-      expect(find.byIcon(CupertinoIcons.heart).hitTestable(), findsOneWidget);
-      expect(
-        find.byType(AppPlayerFavoriteButton).hitTestable(),
-        findsOneWidget,
-      );
       expect(tester.takeException(), isNull);
     },
   );
