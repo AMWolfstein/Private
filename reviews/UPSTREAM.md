@@ -39,6 +39,26 @@ task has no test sources). The new Android handoff integration test and acoustic
 continuity/device-cost measurements are **NOT RUN**. No APK and no push.
 Details: `docs/LOCAL_PLAYBACK_FEATURES.md`.
 
+## Android Auto adaptation from v5.3.0 (2026-11-01)
+
+Owner requested this on the existing engine. Source commit **`1b694df8`**;
+reference tag `afee4332a257f1b6aeb288229eddf04ac0777b3c`.
+
+| ID | Upstream reference | Decision and current implementation |
+|---|---|---|
+| U-606 | `4682990e` | ADAPT: four local browse roots, bounded database pages, full-context playback, structured voice search/resume, app-context headless bootstrap and background Loved controls. Shared phone resolver/collection identity, saved EQ and session restore retained. No downloaded catalog, scanner or second engine. |
+| U-607 | `8b36e856`, `7d5bbd30`, `e913f09d`, `40e55df0`, `9019e853` | ADAPT: local-only cover content URIs, cached successful/coalesced provider discovery with retry on failure, folder-specific filenames and validation of the opened read-only image descriptor. No network cover store or arbitrary-file endpoint. |
+| U-608 | `a7f84b6d`, `22e3536d`, `f2cf97a3` | ADAPT: queue/recent artwork transport, independent bounded bitmap ownership and a three-entry recent decoded-art cache. Original phone metadata URI and existing audio_service engine retained. |
+| U-609 | `e954e847`, `27d2be16` | NOT TRANSPLANTED: the 512 KB preference-session limit does not exist in this target's SQLite media JSON persistence; remote cover-store implementation conflicts with local-only policy. Applicable local art recovery already exists and is used by the browser. |
+
+Tests: full Flutter **2,349 passed / 3 skipped / zero failures** (5m25s),
+analysis **No issues found**; Android app JVM **93 passed / 1 skipped**,
+audio_service JVM **11 passed**. Instrumentation Kotlin/Java compilation
+succeeded; instrumentation execution, Android Auto DHU/physical car, real SAF
+providers and device memory/battery measurements are **NOT RUN**. No APK build.
+LGPL provenance/terms are registered through `assets/licenses/android_auto.txt`;
+no new package dependency or Rust/C++ source change. See `docs/ANDROID_AUTO.md`.
+
 ## Port order (batches; test once per batch)
 
 Done: batch 1 (U-001, U-101, U-102, U-103; pushed `3f8bbe7`) and batch 1b:

@@ -37,3 +37,31 @@ UI. We preserve real play/pause/previous/next semantics for headsets, lock scree
 and Android Auto instead of disguising them as unrelated custom actions.
 
 When upgrading, compare these changes against the matching upstream files.
+
+
+## Local Android Auto extension (2026-11-01)
+
+Source checkpoint: `1b694df8`; upstream reference Mornye v5.3.0
+`afee4332a257f1b6aeb288229eddf04ac0777b3c`.
+
+- `AudioServicePlugin` offers a pre-Dart shared-engine configurator. The app
+  registers playback/SAF/cover channels with application context, so a car can
+  initialize the existing player without an Activity. Renderer argument policy
+  and trusted-browser policy remain intact.
+- Queue descriptions map allowlisted app-owned artwork to read-only content
+  URIs through the app-supplied `QueueArtResolver`. Main metadata retains its
+  original URI. Missing/recycled queue bitmaps cannot invalidate the queue.
+- `MediaArtwork` bounds decoded session art to 512px and creates independent
+  bitmap copies for metadata keys, queue descriptions and notifications. Text
+  metadata remains available if an image is recycled or rejected.
+- `RecentArtCache` holds at most three bounded decoded covers and preserves only
+  the current entry on memory trim. Consumers do not recycle borrowed bitmaps.
+- Adapted upstream helpers retain their LGPL notices; complete terms and
+  attribution are registered by the application in
+  `assets/licenses/android_auto.txt`. Existing vendored license remains intact.
+
+Verification: vendored JVM tests **11 passed**; app JVM tests **93 passed,
+1 skipped**. Full Flutter suite **2,349 passed, 3 skipped, 0 failures** and
+analysis clean. Instrumentation sources compile, but bitmap IPC behavior,
+headless playback and car/OEM lifecycle behavior were **not tested on a device**.
+No APK was built. See `docs/ANDROID_AUTO.md` for architecture and limitations.
