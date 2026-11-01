@@ -59,6 +59,35 @@ providers and device memory/battery measurements are **NOT RUN**. No APK build.
 LGPL provenance/terms are registered through `assets/licenses/android_auto.txt`;
 no new package dependency or Rust/C++ source change. See `docs/ANDROID_AUTO.md`.
 
+## Advanced acoustic and local performance follow-up (2026-11-01)
+
+Reference tag: `afee4332a257f1b6aeb288229eddf04ac0777b3c`. This is a selective
+comparison of the requested local Android feature/performance areas, not an
+individual audit of all commits after the older v5.2.6 checkpoint.
+Source checkpoint: `bad86c09`.
+
+| ID | Upstream reference | Decision / implementation |
+|---|---|---|
+| U-610 | `native_audio_features.rs`, `song_features.dart`, `autoplay_sound_signal.dart` at v5.3.0 | ADAPT: 42-value MFCC/tempo/key/energy extraction via existing cancellable native jobs, bounded FFmpeg windows, v2 invalidating local cache, session similarity and per-pick transition scoring. No full-library sweep/charging-policy UI, decoder or engine replacement. |
+| U-611 | `b12f0399` | ADAPT: in-place drag ordering for local Loved/Playlists, stable occurrence identity, validated transactional timestamp updates in 128-row batches and existing ASC/DESC backup/browser order. No Wishlist or Link. |
+| U-612 | `4823a141`, `4eaa5eff`, `3e2f5d66`, `929c8886` | ADAPT: Android OS position extrapolation filter, newest pending queue only, idle-aware listening flush timer including outstanding writes/failure retries. Flutter UI keeps every playback state. |
+| U-613 | `fde03233`, `71c7de52` | ADAPT: same locked FFmpegKit 2.5.7/audio AAR, vendored Android lazy executor loading and synchronized callback registration. Native download finalizer is inapplicable. Three host JVM startup/direct-caller/failure tests retained. |
+| U-614 | `4de2cff4`, `08c4f6d7`, `e954e847` | Existing queue-revision/scalar-write policy retained; large snapshot JSON encoding and saved JSON parsing moved to workers. No preference chunk format or 512 KB cap exists in target SQLite persistence. |
+| U-615 | `668a850b`, `65a50d87`, `9b4fdabc` | ADAPT off-isolate font validation/hash/read and immediate logged initial-orientation failure handling; existing orientation/init overlap retained. |
+| U-616 | `ad2820cc` | ADAPT truthful Bluetooth/LE/hearing-aid codec reporting, separately labeled Android default PCM properties and route refresh on resume. USB direct facts keep precedence. |
+| U-617 | `22a2abac` | ADAPT Android direct-build GIT_COMMIT forwarding with explicit-define/source-archive preservation. Six shell-helper Python tests; no iOS or release workflow transplant. |
+| U-618 | `afee4332`, `d6daf454` | ADAPT native Android SDK probe with device_info fallback. REJECT broad-files permission shortcut/LAN Nearby flow: target intentionally asks for scoped music folder access from Android 10 and does not implement Link/LAN. |
+
+Verification: full Flutter **2,377 passed / 3 skipped / zero failures** (5m47s),
+analysis **No issues found**; Rust fmt/Clippy clean, **207 passed / 1 ignored**;
+Android JVM **107 passed / 1 skipped** across app, audio_service and FFmpegKit;
+build-revision helper **6 Python tests passed**. No APK packaging or device tests.
+
+Other compared cache/history/platform changes and reasons for retaining this
+fork's implementations are listed in `docs/UPSTREAM_530_FOLLOWUP.md`.
+Adapted LGPL code/tests retain attribution and complete in-app terms. Existing
+Rust/C++/FFmpeg/player implementations and package versions remain.
+
 ## Port order (batches; test once per batch)
 
 Done: batch 1 (U-001, U-101, U-102, U-103; pushed `3f8bbe7`) and batch 1b:

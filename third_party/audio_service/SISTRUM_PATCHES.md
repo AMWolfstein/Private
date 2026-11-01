@@ -65,3 +65,16 @@ Verification: vendored JVM tests **11 passed**; app JVM tests **93 passed,
 analysis clean. Instrumentation sources compile, but bitmap IPC behavior,
 headless playback and car/OEM lifecycle behavior were **not tested on a device**.
 No APK was built. See `docs/ANDROID_AUTO.md` for architecture and limitations.
+
+
+## Queue publication coalescing (2026-11-01)
+
+Adapted upstream `4eaa5eff` in source `bad86c09`: only Android receives the full
+session queue. An idle change publishes immediately; while a native setQueue
+request is pending, intermediate queues are replaced with the newest snapshot.
+The latest pending queue publishes after completion or failure, retaining its
+ordering relative to item/state calls. App-side queue streams are unchanged.
+Adapted platform tests cover complete queues, platform exclusion, burst
+coalescing, failure recovery and item/state ordering. App runtime additionally
+installs an Android-only media-state extrapolation filter; vendor playback
+state APIs are unchanged. Full Flutter **2,377 passed / 3 skipped**, analysis clean.

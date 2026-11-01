@@ -44,28 +44,12 @@ modules; no whole upstream player or networking subsystem is transplanted.
 
 ## Acoustic Autoplay matching
 
-**Playback > Match the sound** is optional and off by default. With Autoplay
-enabled it ranks using cached acoustic summaries of the current song and up to
-11 recent songs. Missing/invalid summaries contribute no score. Acoustic scores
-are bounded so they cannot override duplicate exclusion or recent-play penalties.
-
-After publishing a refill, one cancellable background job analyzes the seed,
-up to four suggestions and four sampled candidates, sequentially. It reuses the
-existing FFmpeg job owner/decoder conventions: one mono 11,025 Hz window, up to
-24 seconds, one decoder thread, a 20-second cancellation deadline, temporary PCM
-deleted in `finally`, and numeric extraction in an isolate. SAF input uses an
-owned read lease, always closed in `finally`. Queue reset, opt-out and player
-disposal cancel outstanding decoding; generation checks protect the live queue
-and file-identity checks reject summaries of edited audio.
-
-Six normalized measurements describe bass/mid/treble energy, RMS loudness,
-zero-crossing texture and envelope movement. This is a lightweight adaptation,
-not upstream's MFCC/tempo/key model or a claim of semantic genre recognition.
-Similarity improves as more local summaries become available; the full library
-is not decoded eagerly. At most 512 small summaries are stored in
-`autoplay_sound_v1`. Size/modification stamps invalidate edited files. SAF
-providers without a reliable size/modification identity are skipped safely.
-No audio or analysis leaves the device.
+The initial six-measurement adaptation is superseded by native MFCC, tempo,
+key and energy descriptors with confidence-aware transition matching. The
+existing optional **Playback > Match the sound** preference, bounded scheduling,
+SAF ownership and cancellation remain. The version-2 cache rejects obsolete
+summaries and audio edits. See `docs/UPSTREAM_530_FOLLOWUP.md` for current window
+selection, cache/ranking limits, upstream comparisons and verification.
 
 ## Lyrics timing
 
