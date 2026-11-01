@@ -56,6 +56,7 @@ class _MiniPlayerState extends ConsumerState<MiniPlayer> {
     Navigator.of(context, rootNavigator: true).push(
       NowPlayingRoute(
         child: appScreensOf(context).nowPlaying(),
+        openOrigin: heroAnimations ? _bounds(_surfaceKey) : null,
         miniPlayerGeometry: !heroAnimations
             ? null
             : () {
