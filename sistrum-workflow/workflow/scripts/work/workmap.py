@@ -597,7 +597,7 @@ def dart_name_calls(texts: dict, symbols: list, file_info: dict, deps: list) -> 
             imported.setdefault(dep['from'].split(' ')[0], set()).add(dep['to'])
     by_name: dict[str, list[dict]] = {}
     for symbol in symbols:
-        if symbol['lang'] == 'dart' and symbol['name'] not in CALL_STOP and len(symbol['name']) > 2:
+        if symbol['lang'] == 'dart' and len(symbol['name']) > 2:
             by_name.setdefault(symbol['name'], []).append(symbol)
     per_file: dict[str, list[dict]] = {}
     for symbol in symbols:
@@ -619,11 +619,22 @@ def dart_name_calls(texts: dict, symbols: list, file_info: dict, deps: list) -> 
             # Only unqualified calls and this.x() are attributed: `Other.f(` or `value.f(` usually name a
             # member of a type the map does not know, and matching them by name produced false edges.
             before = clean[max(0, found.start() - 5):found.start()]
-            if before.endswith('.') and not before.endswith('this.'):
-                continue
-            local = [t for t in targets if t['file'] == path]
+            qualified = before.endswith('.') and not before.endswith('this.')
+            if name in CALL_STOP and not qualified:
+                continue  # common names are attributed only through a declared owner, never by name alone
+            if qualified:
+                # `Type.f(` is attributed only when Type declares a member named f; a receiver variable
+                # (`value.f(`) is never guessed.
+                receiver = re.search(r'([A-Za-z_]\w*)\.$', clean[:found.start()])
+                owned = [t for t in targets if receiver and t.get('owner') == receiver.group(1)]
+                if not owned:
+                    continue
+                targets, scope = owned, 'qualified'
             near = [t for t in targets if t['file'] in imported.get(path, set())]
-            if local:
+            local = [t for t in targets if t['file'] == path]
+            if qualified:
+                pass
+            elif local:
                 targets, scope = local, 'same file'
             elif near:
                 targets, scope = near, 'imported file'
@@ -647,7 +658,7 @@ def dart_name_calls(texts: dict, symbols: list, file_info: dict, deps: list) -> 
                 edges.append({'source': caller['id'], 'target': target['id'], 'relation': 'calls', 'file': path,
                               'line': line, 'context': 'name', 'fact': 'inferred',
                               'via': f'adapter:dart-name-call ({scope})',
-                              'confidence': 'medium' if scope != 'corpus' or len(targets) == 1 else 'low',
+                              'confidence': 'low' if scope == 'corpus' and len(targets) > 1 else 'medium',
                               'target_file': target['file']})
     notes = [f'{skipped} Dart call site(s) named a symbol declared in more than three files: no call edge inferred']
     return edges, notes if skipped else []

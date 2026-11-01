@@ -249,6 +249,21 @@ class DefaultOffTests(Repo):
         self.assertTrue(data['deps'], 'Dart and Kotlin imports still come from the pattern scans')
         self.assertFalse((self.root / '.work/map/graphify').exists())
 
+    def test_type_qualified_calls_attribute_only_to_the_declared_owner(self):
+        self.write('lib/b/store.dart', "class Store {\n  static Store open() {\n    return Store();\n  }\n"
+                   "  void save() {}\n}\nclass Other {\n  void save() {}\n}\n")
+        self.write('lib/b/use.dart', "import 'store.dart';\n\nvoid run(Store value) {\n  Store.open();\n"
+                   "  value.save();\n}\n")
+        self.update()
+        edges = [e for e in self.data()['edges'] if e['file'] == 'lib/b/use.dart'
+                 and e['via'] == 'adapter:dart-name-call (qualified)']
+        by_id = {s['id']: s for s in self.data()['symbols']}
+        self.assertEqual([(by_id[e['source']]['name'], by_id[e['target']]['name'], by_id[e['target']]['owner'])
+                          for e in edges], [('run', 'open', 'Store')])
+        self.assertEqual(edges[0]['line'], 4)
+        self.assertFalse([e for e in self.data()['edges'] if e['file'] == 'lib/b/use.dart'
+                          and e['line'] == 5 and e['via'].startswith('adapter:dart-name-call')])
+
     def test_blast_radius_ranks_callers_and_reaches_tests(self):
         self.write('lib/a/core.dart', "class Core {\n  void work() {}\n}\n")
         self.write('lib/a/caller.dart', "import 'core.dart';\n\nvoid go1() {\n  work();\n  work();\n}\n")

@@ -130,8 +130,9 @@ unqualified call `f(` or `this.f(` in a Dart file is attributed to a declaration
 the same file (`via` says `(same file)`), then a file it imports (`(imported file)`), then anywhere in the corpus
 only when at most three files declare that name (`(corpus)`, `low` for several). Same-file and imported matches
 are `medium`. The caller is the nearest declaration above the call. Qualified calls such as `Type.f(` or `value.f(`
-are not attributed, because matching them by name produced false edges (for example framework methods that
-share a name with repository code). Common names (`build`, `dispose`, `add`, ...) are never attributed. Expect
+are attributed only when `Type` is a declared name that owns a member `f` (`via` says `(qualified)`), so
+framework methods that share a name with repository code do not match. Calls on receiver variables (`value.f(`)
+are never guessed. Common names (`build`, `dispose`, `add`, ...) are attributed only through a declared owner. Expect
 missed calls through qualified receivers, tear-offs and dynamic dispatch.
 
 ### Channel conventions recognised
