@@ -4,48 +4,48 @@
   "appearancePlayerView": "عرض المشغّل",
   "appearancePlayerViewNormal": "العرض العادي",
   "appearancePlayerViewImmersive": "العرض الغامر",
-  "settingsPlaybackSubtitle": "Player, volume, AutoMix, and audio output",
-  "sectionVolumeAndTransitions": "Volume and transitions",
-  "sectionAudioOutput": "Audio output",
-  "usbBitPerfect": "Hi-res and bit-perfect audio",
-  "usbBitPerfectDescription": "Preserve source precision on compatible outputs. Choose direct USB or AAudio exclusive below; otherwise Android USB output requires Android 14 or later. Applies from the next track, without AutoMix or normalization. System volume may not control direct USB.",
-  "usbHardwareVolume": "DAC hardware volume",
-  "usbVolumeWarningTitle": "Check your listening volume",
-  "usbVolumeWarning": "Direct USB audio can be much louder than normal playback, and phone volume buttons may not control it. Lower your DAC or amplifier volume before starting. When supported, Sistrum sets the DAC to at most −40 dB on connection; this does not guarantee a safe listening level on every amplifier or headphone.",
-  "usbVolumeAccept": "I understand",
-  "usbVolumeUnavailable": "Playback is paused because this DAC has no verified hardware volume control. Lower the DAC or amplifier volume, then enable fixed-volume output if needed and select the track again.",
-  "usbFixedVolume": "Allow fixed-volume USB output",
-  "usbFixedVolumeDescription": "For DACs without a volume control accessible to the app. Keep off for USB headsets without their own volume control. Applies from the next track.",
-  "usbFixedVolumeWarning": "The app cannot lower the volume on this output. Audio may start at full level, and the phone volume slider will not help. Only continue after lowering the volume on your DAC or external amplifier. Do not enable this for a headset without its own volume control.",
-  "dapExclusive": "DAP hi-res (AAudio exclusive)",
-  "dapExclusiveDescription": "Use Oboe/AAudio at the track's original rate and precision for FLAC/WAV PCM. Requires Android 8.1 or later and compatible hardware. Exclusive access is checked; unavailable formats use normal playback. DSD requires the direct USB driver. Applies from the next track.",
-  "dapExclusiveUnavailable": "AAudio exclusive access is unavailable for this track and current output. Using normal playback. For a USB DAC, try the direct USB driver.",
-  "usbDirect": "Direct USB driver",
-  "usbDirectDescription": "Use exclusive USB audio for FLAC/WAV, DSF/DFF and WavPack DSD, with Android USB permission. Native DSD requires a recognized compatible DAC. Other PCM formats use normal playback. Applies from the next track.",
-  "usbDsdOverPcm": "DSD over PCM (DoP)",
-  "usbDsdOverPcmDescription": "Enable only if your DAC explicitly supports DoP. Sends DSF/DFF and WavPack DSD inside a PCM carrier when native DSD is unavailable. An incompatible device may play noise; leave off for ordinary USB headsets.",
-  "usbDsdUnsupported": "This DSD format or connected DAC is not supported. Playback stopped.",
-  "usbPermissionDenied": "USB permission was not granted. Using normal playback.",
-  "usbBitPerfectPending": "Waiting for the next track and a compatible USB output.",
-  "usbBitPerfectNoDevice": "No USB DAC connected. Using normal audio output.",
-  "usbBitPerfectFallback": "This device or audio format does not support bit-perfect output. Using normal playback.",
-  "usbBitPerfectRouteChanged": "The USB audio route changed. Playback paused; select a track to reconnect.",
-  "nowPlayingVolume": "Volume",
+  "settingsPlaybackSubtitle": "المشغّل والصوت وAutoMix والمخرج الصوتي",
+  "sectionVolumeAndTransitions": "الصوت والانتقالات",
+  "sectionAudioOutput": "المخرج الصوتي",
+  "usbBitPerfect": "صوت Hi-res وbit-perfect",
+  "usbBitPerfectDescription": "يحافظ على دقة المصدر في المخرجات المتوافقة. اختر USB المباشر أو AAudio الحصري أدناه؛ وإلا يتطلب إخراج USB في Android الإصدار 14 أو أحدث.",
+  "usbHardwareVolume": "مستوى صوت الأجهزة في DAC",
+  "usbVolumeWarningTitle": "تحقق من مستوى الاستماع",
+  "usbVolumeWarning": "قد يكون الصوت المباشر عبر USB أعلى بكثير من التشغيل العادي، وقد لا تتحكم فيه أزرار صوت الهاتف. خفّض صوت DAC أو المضخم قبل البدء. عند الدعم، يضبط Sistrum الـ DAC عند الاتصال على −40 dB كحد أقصى؛ لكن هذا لا يضمن مستوى استماع آمنًا على كل مضخم أو سماعة.",
+  "usbVolumeAccept": "أفهم",
+  "usbVolumeUnavailable": "أُوقف التشغيل لأن هذا الـ DAC لا يملك تحكمًا موثّقًا في مستوى صوت الأجهزة. خفّض صوت الـ DAC أو المضخم، ثم فعّل إخراج الصوت الثابت إذا لزم الأمر.",
+  "usbFixedVolume": "السماح بإخراج USB بصوت ثابت",
+  "usbFixedVolumeDescription": "لأجهزة DAC التي لا يصل إليها التطبيق عبر تحكم بالصوت. اتركه معطّلًا لسماعات USB التي لها تحكم صوت خاص بها. يُطبَّق من المقطع التالي.",
+  "usbFixedVolumeWarning": "لا يستطيع التطبيق خفض الصوت في هذا المخرج. قد يبدأ الصوت بأقصى مستوى، ولن يفيد منزلق صوت الهاتف. تابع فقط بعد خفض الصوت.",
+  "dapExclusive": "Hi-res لمشغّل DAP (AAudio حصري)",
+  "dapExclusiveDescription": "يستخدم Oboe/AAudio بالمعدل والدقة الأصليين للمقطع لملفات FLAC/WAV PCM. يتطلب Android 8.1 أو أحدث وعتادًا متوافقًا. يُتحقَّق من الوصول الحصري؛ والصيغ غير المتاحة تُشغَّل بالتشغيل العادي. يتطلب DSD تعريف USB المباشر. يُطبَّق من المقطع التالي.",
+  "dapExclusiveUnavailable": "الوصول الحصري لـ AAudio غير متاح لهذا المقطع والمخرج الحالي. يُستخدم التشغيل العادي. مع DAC عبر USB، جرّب تعريف USB المباشر.",
+  "usbDirect": "تعريف USB المباشر",
+  "usbDirectDescription": "يستخدم صوت USB الحصري لملفات FLAC/WAV وDSF/DFF وWavPack DSD، بإذن USB من Android. يتطلب DSD الأصلي DAC متوافقًا معروفًا. تُشغَّل صيغ PCM الأخرى بالتشغيل العادي. يُطبَّق من المقطع التالي.",
+  "usbDsdOverPcm": "DSD عبر PCM (DoP)",
+  "usbDsdOverPcmDescription": "فعّله فقط إذا كان الـ DAC يدعم DoP صراحةً. يرسل DSF/DFF وWavPack DSD داخل حامل PCM عند عدم توفر DSD الأصلي. قد يشغّل جهاز غير متوافق ضوضاء؛ اتركه معطّلًا لسماعات USB العادية.",
+  "usbDsdUnsupported": "صيغة DSD هذه أو الـ DAC المتصل غير مدعومة. أُوقف التشغيل.",
+  "usbPermissionDenied": "لم يُمنح إذن USB. يُستخدم التشغيل العادي.",
+  "usbBitPerfectPending": "في انتظار المقطع التالي ومخرج USB متوافق.",
+  "usbBitPerfectNoDevice": "لا يوجد DAC عبر USB متصل. يُستخدم مخرج الصوت العادي.",
+  "usbBitPerfectFallback": "هذا الجهاز أو تنسيق الصوت لا يدعم الإخراج bit-perfect. يُستخدم التشغيل العادي.",
+  "usbBitPerfectRouteChanged": "تغيّر مسار صوت USB. أُوقف التشغيل؛ اختر مقطعًا لإعادة الاتصال.",
+  "nowPlayingVolume": "الصوت",
   "@nowPlayingVolume": {
     "description": "System volume control label in the Sistrum player"
   },
-  "appearanceAccentRed": "Red (default)",
-  "appearanceAccentOrange": "Orange",
-  "appearanceAccentGreen": "Green",
-  "appearanceAccentTeal": "Teal",
-  "appearanceAccentBlue": "Blue",
-  "appearanceAccentPurple": "Purple",
-  "appearanceAccentPink": "Pink",
-  "appearanceGlassClarity": "Glass clarity",
+  "appearanceAccentRed": "أحمر (افتراضي)",
+  "appearanceAccentOrange": "برتقالي",
+  "appearanceAccentGreen": "أخضر",
+  "appearanceAccentTeal": "أزرق مخضر",
+  "appearanceAccentBlue": "أزرق",
+  "appearanceAccentPurple": "بنفسجي",
+  "appearanceAccentPink": "وردي",
+  "appearanceGlassClarity": "وضوح الزجاج",
   "appearanceGlassOutlines": "حدود الزجاج",
   "appearanceGlassOutlinesSubtitle": "إظهار حافة مضيئة حول زجاج Sistrum. إيقافها لا يغيّر الزجاج نفسه.",
-  "appearanceGlassClaritySubtitle": "Adjust transparency in Sistrum menus and navigation. Text contrast is preserved.",
-  "appearanceGlassTinted": "Tinted",
+  "appearanceGlassClaritySubtitle": "اضبط الشفافية في قوائم Sistrum والتنقل. يُحفظ تباين النص.",
+  "appearanceGlassTinted": "ملوّن",
   "appearanceGlassClear": "محو",
   "appearanceGlassClearPerformance": "قد يستهلك الزجاج الشفاف جدًا طاقة أكبر ويبدو أقل سلاسة على الأجهزة القديمة. خفّض الوضوح إذا لزم الأمر.",
   "appearanceGlassQuality": "جودة الزجاج",
@@ -64,8 +64,8 @@
   "appearanceGlassClarityContrast": "يطلب نظامك تباينًا أعلى، لذا يبقى الزجاج معتمًا. اختر خفيف أو كامل لاستخدام الزجاج على أي حال؛ يبقى تباين النص محفوظًا.",
   "appearanceGlassAutoMeasured": "بعد القياس على هذا الجهاز، يستخدم الوضع التلقائي {quality}.",
   "appearanceGlassClarityAutoFrosted": "قاس الوضع التلقائي هذا الجهاز ويستخدم مُثلَّج. اختر خفيف أو كامل لضبط الصفاء.",
-  "appearanceUseSystemFont": "Use system font",
-  "appearanceUseSystemFontSubtitle": "Use your device’s default typeface for app text.",
+  "appearanceUseSystemFont": "استخدام خط النظام",
+  "appearanceUseSystemFontSubtitle": "استخدم الخط الافتراضي لجهازك لنصوص التطبيق.",
   "appName": "Sistrum",
   "@appName": {
     "description": "App name - DO NOT TRANSLATE"
@@ -92,10 +92,10 @@
   },
   "homeLatestReleases": "أحدث الإصدارات في مكتبتك",
   "artistPopular": "الأكثر شيوعًا",
-  "libraryRecentlyAdded": "Recently Added",
+  "libraryRecentlyAdded": "أُضيف مؤخرًا",
   "homeChooseLibraryFolder": "اختر مجلد موسيقى في إعدادات المكتبة المحلية.",
   "homeLibraryEmpty": "أضف موسيقى إلى مجلدات مكتبتك، ثم افحص مكتبتك.",
-  "libraryEmptyCollection": "Your music will appear here",
+  "libraryEmptyCollection": "ستظهر موسيقاك هنا",
   "settingsTitle": "الإعدادات",
   "@settingsTitle": {
     "description": "Settings screen title"
@@ -124,9 +124,9 @@
   "@appearanceThemeDark": {
     "description": "Dark theme"
   },
-  "trackRemoveReplayGain": "Remove ReplayGain",
-  "replayGainRemoving": "Removing ReplayGain...",
-  "replayGainRemoveConfirmMessage": "Remove track and album ReplayGain tags from {count} track(s)? Audio, artwork, and other metadata will be preserved.",
+  "trackRemoveReplayGain": "إزالة ReplayGain",
+  "replayGainRemoving": "جارٍ إزالة ReplayGain...",
+  "replayGainRemoveConfirmMessage": "إزالة وسوم ReplayGain للمقطع والألبوم من {count} مقطع؟ سيُحفظ الصوت والأغلفة والبيانات الوصفية الأخرى.",
   "@replayGainRemoveConfirmMessage": {
     "placeholders": {
       "count": {
@@ -134,7 +134,7 @@
       }
     }
   },
-  "selectionRemoveReplayGainCount": "Remove RG ({count})",
+  "selectionRemoveReplayGainCount": "إزالة RG ({count})",
   "@selectionRemoveReplayGainCount": {
     "description": "Compact selection action label. RG abbreviates ReplayGain; keep this short for a two-column toolbar.",
     "placeholders": {
@@ -143,7 +143,7 @@
       }
     }
   },
-  "replayGainRemoveBatchSuccess": "ReplayGain removed from {success} of {total} tracks",
+  "replayGainRemoveBatchSuccess": "أُزيل ReplayGain من {success} من أصل {total} مقطع",
   "@replayGainRemoveBatchSuccess": {
     "placeholders": {
       "success": {
@@ -192,7 +192,7 @@
       }
     }
   },
-  "replayGainUnsupportedDecoder": "Some tracks could not be analyzed because their audio codec is not supported by the ReplayGain decoder. Their files were not changed.",
+  "replayGainUnsupportedDecoder": "تعذّر تحليل بعض المقاطع لأن ترميز الصوت فيها غير مدعوم من مفكك ReplayGain. لم تتغيّر ملفاتها.",
   "metadataSeparators": "فواصل الوسوم",
   "metadataSeparatorInvalid": "استخدم من 1 إلى 16 حرفًا بدون فواصل أسطر أو محارف تحكم.",
   "settingDisabled": "معطَّل",
@@ -386,11 +386,11 @@
   "@duplicatesKeepBest": {
     "description": "Button that deletes all but the highest-quality copy in a duplicate group"
   },
-  "duplicatesKeepBestAll": "Keep best for all",
+  "duplicatesKeepBestAll": "الاحتفاظ بالأفضل للكل",
   "@duplicatesKeepBestAll": {
     "description": "Button that keeps the highest-quality copy in every duplicate group and deletes the rest"
   },
-  "duplicatesKeepBestAllMessage": "Keep the best copy of {groupCount} {groupCount, plural, =1{track} other{tracks}} and delete {count} lower-quality {count, plural, =1{copy} other{copies}}?\n\nThe deleted files will be removed from storage.",
+  "duplicatesKeepBestAllMessage": "الاحتفاظ بأفضل نسخة من {groupCount} {groupCount, plural, =1{مقطع} other{مقطع}} وحذف {count} نسخة أقل جودة؟",
   "@duplicatesKeepBestAllMessage": {
     "description": "Confirmation message for keeping the best copy across every duplicate group",
     "placeholders": {
@@ -612,8 +612,8 @@
   "@sectionLyrics": {
     "description": "Settings section header"
   },
-  "lyricsKeepScreenOn": "Keep screen on while viewing lyrics",
-  "lyricsKeepScreenOnSubtitle": "Prevent screen timeout while lyrics are open, including when playback is paused.",
+  "lyricsKeepScreenOn": "إبقاء الشاشة مفعّلة أثناء عرض الكلمات",
+  "lyricsKeepScreenOnSubtitle": "يمنع إطفاء الشاشة أثناء فتح الكلمات، حتى عند إيقاف التشغيل مؤقتًا.",
   "sectionColor": "اللون",
   "@sectionColor": {
     "description": "Settings section header"
@@ -725,43 +725,43 @@
       }
     }
   },
-  "settingsLocalLibrary": "Local Library",
+  "settingsLocalLibrary": "المكتبة المحلية",
   "@settingsLocalLibrary": {
     "description": "Settings menu item - local library"
   },
-  "settingsLocalLibrarySubtitle": "Scan music & detect duplicates",
+  "settingsLocalLibrarySubtitle": "فحص الموسيقى واكتشاف التكرارات",
   "@settingsLocalLibrarySubtitle": {
     "description": "Subtitle for local library settings"
   },
-  "settingsCache": "Storage & Cache",
+  "settingsCache": "التخزين والذاكرة المؤقتة",
   "@settingsCache": {
     "description": "Settings menu item - cache management"
   },
-  "settingsCacheSubtitle": "View size and clear cached data",
+  "settingsCacheSubtitle": "عرض الحجم ومسح البيانات المخزنة مؤقتًا",
   "@settingsCacheSubtitle": {
     "description": "Subtitle for cache management menu"
   },
-  "libraryTitle": "Local Library",
+  "libraryTitle": "المكتبة المحلية",
   "@libraryTitle": {
     "description": "Library settings page title"
   },
-  "libraryScanSettings": "Scan Settings",
+  "libraryScanSettings": "إعدادات الفحص",
   "@libraryScanSettings": {
     "description": "Section header for scan settings"
   },
-  "libraryFolderHint": "Tap to select folder",
+  "libraryFolderHint": "اضغط لاختيار المجلد",
   "@libraryFolderHint": {
     "description": "Placeholder when no folder selected"
   },
-  "libraryAddFolder": "Add library folder",
+  "libraryAddFolder": "إضافة مجلد إلى المكتبة",
   "@libraryAddFolder": {
     "description": "Action to add another local library source"
   },
-  "libraryAddFolderSubtitle": "Internal storage, SD card, SSD, or another external drive",
+  "libraryAddFolderSubtitle": "التخزين الداخلي أو بطاقة SD أو SSD أو قرص خارجي آخر",
   "@libraryAddFolderSubtitle": {
     "description": "Supported storage locations for local library sources"
   },
-  "librarySourceOffline": "Offline. Reconnect the storage to restore these tracks",
+  "librarySourceOffline": "غير متصل. أعد توصيل التخزين لاستعادة هذه المقاطع",
   "@librarySourceOffline": {
     "description": "Library source is temporarily disconnected"
   },
@@ -769,7 +769,7 @@
   "@librarySourceDisabled": {
     "description": "Library source has been disabled by the user"
   },
-  "librarySourceScanCount": "{scanned} of {total} files scanned ({progress}%)",
+  "librarySourceScanCount": "تم فحص {scanned} من {total} ملفًا ({progress}%)",
   "@librarySourceScanCount": {
     "description": "Live progress for one library folder scan",
     "placeholders": {
@@ -784,15 +784,15 @@
       }
     }
   },
-  "libraryExternalStorage": "External storage",
+  "libraryExternalStorage": "تخزين خارجي",
   "@libraryExternalStorage": {
     "description": "Label for a removable or external library source"
   },
-  "libraryRemoveFolder": "Remove library folder",
+  "libraryRemoveFolder": "إزالة مجلد المكتبة",
   "@libraryRemoveFolder": {
     "description": "Action to remove one indexed library source"
   },
-  "libraryRemoveFolderMessage": "Remove this folder and its indexed tracks from Sistrum? Audio files on the storage will not be deleted.",
+  "libraryRemoveFolderMessage": "إزالة هذا المجلد ومقاطعه المفهرسة من Sistrum؟ لن تُحذف ملفات الصوت من التخزين.",
   "@libraryRemoveFolderMessage": {
     "description": "Confirmation shown before removing a library source"
   },
@@ -834,7 +834,7 @@
       }
     }
   },
-  "libraryShowDuplicateIndicator": "Show Duplicate Indicator",
+  "libraryShowDuplicateIndicator": "إظهار مؤشر التكرار",
   "@libraryShowDuplicateIndicator": {
     "description": "Toggle for duplicate indicator in search"
   },
@@ -950,7 +950,7 @@
   "@libraryScanFinalizing": {
     "description": "Status shown after file scanning finishes but library persistence is still running"
   },
-  "libraryScanPaused": "Scan paused",
+  "libraryScanPaused": "الفحص متوقف مؤقتًا",
   "@libraryScanPaused": {
     "description": "Status shown while a library scan is paused by the user"
   },
@@ -1007,7 +1007,7 @@
   "@libraryFilterQuality": {
     "description": "Filter section - audio quality"
   },
-  "libraryFilterQualityHiRes": "Hi-Res (24bit)",
+  "libraryFilterQualityHiRes": "Hi-Res (24 بت)",
   "@libraryFilterQualityHiRes": {
     "description": "Filter option - high resolution audio"
   },
@@ -1043,43 +1043,43 @@
   "@libraryFilterMetadataMissingGenre": {
     "description": "Filter option - items missing genre"
   },
-  "libraryFilterMetadataMissingAlbumArtist": "Missing album artist",
+  "libraryFilterMetadataMissingAlbumArtist": "فنان الألبوم مفقود",
   "@libraryFilterMetadataMissingAlbumArtist": {
     "description": "Filter option - items missing album artist"
   },
-  "libraryFilterSort": "Sort",
+  "libraryFilterSort": "ترتيب",
   "@libraryFilterSort": {
     "description": "Filter section - sort order"
   },
-  "libraryFilterSortLatest": "Latest",
+  "libraryFilterSortLatest": "الأحدث",
   "@libraryFilterSortLatest": {
     "description": "Sort option - newest first"
   },
-  "libraryFilterSortOldest": "Oldest",
+  "libraryFilterSortOldest": "الأقدم",
   "@libraryFilterSortOldest": {
     "description": "Sort option - oldest first"
   },
-  "libraryFilterSortAlbumAsc": "Album (A-Z)",
+  "libraryFilterSortAlbumAsc": "الألبوم (A-Z)",
   "@libraryFilterSortAlbumAsc": {
     "description": "Sort option - album ascending"
   },
-  "libraryFilterSortAlbumDesc": "Album (Z-A)",
+  "libraryFilterSortAlbumDesc": "الألبوم (Z-A)",
   "@libraryFilterSortAlbumDesc": {
     "description": "Sort option - album descending"
   },
-  "libraryFilterSortGenreAsc": "Genre (A-Z)",
+  "libraryFilterSortGenreAsc": "النوع (A-Z)",
   "@libraryFilterSortGenreAsc": {
     "description": "Sort option - genre ascending"
   },
-  "libraryFilterSortGenreDesc": "Genre (Z-A)",
+  "libraryFilterSortGenreDesc": "النوع (Z-A)",
   "@libraryFilterSortGenreDesc": {
     "description": "Sort option - genre descending"
   },
-  "timeJustNow": "Just now",
+  "timeJustNow": "الآن",
   "@timeJustNow": {
     "description": "Relative time - less than a minute ago"
   },
-  "timeMinutesAgo": "{count, plural, =1{1 minute ago} other{{count} minutes ago}}",
+  "timeMinutesAgo": "{count, plural, =1{منذ دقيقة} other{منذ {count} دقيقة}}",
   "@timeMinutesAgo": {
     "description": "Relative time - minutes ago",
     "placeholders": {
@@ -1088,7 +1088,7 @@
       }
     }
   },
-  "timeHoursAgo": "{count, plural, =1{1 hour ago} other{{count} hours ago}}",
+  "timeHoursAgo": "{count, plural, =1{منذ ساعة} other{منذ {count} ساعات}}",
   "@timeHoursAgo": {
     "description": "Relative time - hours ago",
     "placeholders": {
@@ -1097,58 +1097,58 @@
       }
     }
   },
-  "tutorialSearchTitle": "Finding Music",
+  "tutorialSearchTitle": "البحث عن الموسيقى",
   "@tutorialSearchTitle": {
     "description": "Tutorial search page title"
   },
   "tutorialSearchDesc": "ابحث في الأغاني والفنانين والألبومات المحلية بعد فحص مكتبتك.",
-  "tutorialLibraryTitle": "Your Library",
+  "tutorialLibraryTitle": "مكتبتك",
   "@tutorialLibraryTitle": {
     "description": "Tutorial library page title"
   },
   "tutorialLibraryDesc": "تُنظَّم موسيقاك المفحوصة في أغانٍ وفنانين وألبومات وقوائم تشغيل.",
   "tutorialLibraryTip1": "تصفّح المقاطع الموجودة على جهازك وابحث فيها",
-  "tutorialLibraryTip2": "Tap a track to play it with the built-in player",
+  "tutorialLibraryTip2": "اضغط على مقطع لتشغيله بالمشغّل المدمج",
   "@tutorialLibraryTip2": {
     "description": "Tutorial library tip 2"
   },
-  "tutorialLibraryTip3": "Browse tracks, albums, and playlists in list or grid views",
+  "tutorialLibraryTip3": "تصفّح المقاطع والألبومات وقوائم التشغيل في العرض القائمة أو الشبكة",
   "@tutorialLibraryTip3": {
     "description": "Tutorial library tip 3"
   },
-  "tutorialSettingsTitle": "Customize Your Experience",
+  "tutorialSettingsTitle": "خصّص تجربتك",
   "@tutorialSettingsTitle": {
     "description": "Tutorial settings page title"
   },
   "tutorialSettingsDesc": "اضبط التشغيل وفحص المكتبة والكلمات ومظهر Sistrum والتخزين المحلي.",
   "tutorialSettingsTip1": "أدر مجلدات الموسيقى والوصول إلى الملفات المحلية",
-  "tutorialSettingsTip2": "Adjust your local library, playback, and appearance preferences.",
+  "tutorialSettingsTip2": "اضبط تفضيلات المكتبة المحلية والتشغيل والمظهر.",
   "@tutorialSettingsTip2": {
     "description": "Tutorial settings tip 2"
   },
-  "tutorialSettingsTip3": "Customize app theme and appearance",
+  "tutorialSettingsTip3": "خصّص سمة التطبيق ومظهره",
   "@tutorialSettingsTip3": {
     "description": "Tutorial settings tip 3"
   },
   "tutorialReadyMessage": "اختر مجلد موسيقى، وافحص مكتبتك، وابدأ الاستماع.",
-  "libraryForceFullScan": "Force Full Scan",
+  "libraryForceFullScan": "فرض فحص كامل",
   "@libraryForceFullScan": {
     "description": "Button to force a complete rescan of library"
   },
-  "libraryForceFullScanSubtitle": "Rescan all files, ignoring cache",
+  "libraryForceFullScanSubtitle": "إعادة فحص كل الملفات متجاهلًا الذاكرة المؤقتة",
   "@libraryForceFullScanSubtitle": {
     "description": "Subtitle for force full scan button"
   },
-  "cacheTitle": "Storage & Cache",
+  "cacheTitle": "التخزين والذاكرة المؤقتة",
   "@cacheTitle": {
     "description": "Cache management page title"
   },
-  "cacheSummaryTitle": "Cache overview",
+  "cacheSummaryTitle": "نظرة عامة على الذاكرة المؤقتة",
   "@cacheSummaryTitle": {
     "description": "Heading for cache summary card"
   },
   "cacheSummarySubtitle": "مسح الذاكرة المؤقتة يُبقي ملفات موسيقاك الأصلية.",
-  "cacheEstimatedTotal": "Estimated cache usage: {size}",
+  "cacheEstimatedTotal": "الاستخدام التقديري للذاكرة المؤقتة: {size}",
   "@cacheEstimatedTotal": {
     "description": "Total cache size shown in summary",
     "placeholders": {
@@ -1157,19 +1157,19 @@
       }
     }
   },
-  "cacheSectionStorage": "Cached Data",
+  "cacheSectionStorage": "البيانات المخزنة مؤقتًا",
   "@cacheSectionStorage": {
     "description": "Section header for cache entries"
   },
-  "cacheSectionMaintenance": "Maintenance",
+  "cacheSectionMaintenance": "الصيانة",
   "@cacheSectionMaintenance": {
     "description": "Section header for cleanup actions"
   },
-  "cacheAppDirectory": "App cache directory",
+  "cacheAppDirectory": "مجلد الذاكرة المؤقتة للتطبيق",
   "@cacheAppDirectory": {
     "description": "Cache item title for app cache directory"
   },
-  "cacheAppDirectoryDesc": "HTTP responses, WebView data, and other temporary app data.",
+  "cacheAppDirectoryDesc": "استجابات HTTP وبيانات WebView وبيانات مؤقتة أخرى للتطبيق.",
   "@cacheAppDirectoryDesc": {
     "description": "Description of what app cache directory contains"
   },
@@ -1178,36 +1178,36 @@
     "description": "Cache item title for temporary files directory"
   },
   "cacheTempDirectoryDesc": "ملفات مؤقتة للصور المصغرة المحلية ومعالجة الصوت.",
-  "cacheLibraryCover": "Library cover cache",
+  "cacheLibraryCover": "ذاكرة أغلفة المكتبة",
   "@cacheLibraryCover": {
     "description": "Cache item title for local library cover art images"
   },
-  "cacheLibraryCoverDesc": "Cover art extracted from local music files. Will re-extract on next scan.",
+  "cacheLibraryCoverDesc": "أغلفة مستخرجة من ملفات الموسيقى المحلية. ستُستخرج مجددًا عند الفحص التالي.",
   "@cacheLibraryCoverDesc": {
     "description": "Description of what library cover cache contains"
   },
-  "libraryPlaybackNormalization": "Volume normalization",
+  "libraryPlaybackNormalization": "تسوية مستوى الصوت",
   "@libraryPlaybackNormalization": {
     "description": "Toggle title for ReplayGain playback normalization in the built-in player"
   },
-  "libraryPlaybackNormalizationSubtitle": "Even out loudness between tracks using their ReplayGain or R128 tags, when present",
+  "libraryPlaybackNormalizationSubtitle": "يوازن مستوى الصوت بين المقاطع باستخدام وسوم ReplayGain أو R128 عند وجودها",
   "@libraryPlaybackNormalizationSubtitle": {
     "description": "Subtitle explaining playback volume normalization"
   },
-  "cacheAudioAnalysis": "Audio analysis cache",
+  "cacheAudioAnalysis": "ذاكرة تحليل الصوت",
   "@cacheAudioAnalysis": {
     "description": "Cache item title for saved audio analysis results"
   },
-  "cacheAudioAnalysisDesc": "Saved spectrograms and analysis results. Will re-analyze on next open.",
+  "cacheAudioAnalysisDesc": "المخططات الطيفية ونتائج التحليل المحفوظة. ستُعاد عند الفتح التالي.",
   "@cacheAudioAnalysisDesc": {
     "description": "Description of what audio analysis cache contains"
   },
   "cacheCleanupUnusedDesc": "أزل إدخالات المكتبة التي لم تعد ملفاتها المحلية موجودة.",
-  "cacheNoData": "No cached data",
+  "cacheNoData": "لا توجد بيانات مخزنة مؤقتًا",
   "@cacheNoData": {
     "description": "Label when cache category has no data"
   },
-  "cacheSizeWithFiles": "{size} in {count} files",
+  "cacheSizeWithFiles": "{size} في {count} ملفًا",
   "@cacheSizeWithFiles": {
     "description": "Cache size and file count",
     "placeholders": {
@@ -1219,7 +1219,7 @@
       }
     }
   },
-  "cacheClearSuccess": "Cleared: {target}",
+  "cacheClearSuccess": "تم المسح: {target}",
   "@cacheClearSuccess": {
     "description": "Snackbar after clearing selected cache",
     "placeholders": {
@@ -1228,38 +1228,38 @@
       }
     }
   },
-  "cacheClearConfirmTitle": "Clear cache?",
+  "cacheClearConfirmTitle": "مسح الذاكرة المؤقتة؟",
   "@cacheClearConfirmTitle": {
     "description": "Dialog title before clearing one cache category"
   },
   "cacheClearConfirmMessage": "هل تريد مسح البيانات المخزنة مؤقتًا لـ {target}؟ ستبقى ملفات الموسيقى الأصلية.",
-  "cacheClearAllConfirmTitle": "Clear all cache?",
+  "cacheClearAllConfirmTitle": "مسح كل الذاكرة المؤقتة؟",
   "@cacheClearAllConfirmTitle": {
     "description": "Dialog title before clearing all caches"
   },
   "cacheClearAllConfirmMessage": "هل تريد مسح جميع فئات الذاكرة المؤقتة في هذه الصفحة؟ ستبقى ملفات الموسيقى الأصلية.",
-  "cacheClearAll": "Clear all cache",
+  "cacheClearAll": "مسح كل الذاكرة المؤقتة",
   "@cacheClearAll": {
     "description": "Button label to clear all caches"
   },
-  "cacheCleanupUnused": "Cleanup unused data",
+  "cacheCleanupUnused": "تنظيف البيانات غير المستخدمة",
   "@cacheCleanupUnused": {
     "description": "Action title for cleaning unused entries"
   },
   "cacheCleanupUnusedSubtitle": "أزل الملفات المحلية المفقودة من فهرس المكتبة",
-  "cacheRefreshStats": "Refresh stats",
+  "cacheRefreshStats": "تحديث الإحصاءات",
   "@cacheRefreshStats": {
     "description": "Button label to refresh cache statistics"
   },
-  "trackEditMetadata": "Edit Metadata",
+  "trackEditMetadata": "تعديل البيانات الوصفية",
   "@trackEditMetadata": {
     "description": "Menu action - edit embedded metadata"
   },
-  "audioBitrate": "Bitrate",
+  "audioBitrate": "معدل البت",
   "@audioBitrate": {
     "description": "Label for bitrate selection"
   },
-  "actionCreate": "Create",
+  "actionCreate": "إنشاء",
   "@actionCreate": {
     "description": "Generic action button - create"
   },
@@ -1267,23 +1267,23 @@
   "@collectionLoved": {
     "description": "Custom folder for favorite tracks"
   },
-  "collectionFavoriteArtists": "Favorite Artists",
+  "collectionFavoriteArtists": "الفنانون المفضّلون",
   "@collectionFavoriteArtists": {
     "description": "Custom folder for favorite artists"
   },
-  "collectionPlaylist": "Playlist",
+  "collectionPlaylist": "قائمة تشغيل",
   "@collectionPlaylist": {
     "description": "Single playlist label"
   },
-  "collectionAddToPlaylist": "Add to playlist",
+  "collectionAddToPlaylist": "إضافة إلى قائمة التشغيل",
   "@collectionAddToPlaylist": {
     "description": "Action to add a track to user playlist"
   },
-  "collectionCreatePlaylist": "Create playlist",
+  "collectionCreatePlaylist": "إنشاء قائمة تشغيل",
   "@collectionCreatePlaylist": {
     "description": "Action to create a new playlist"
   },
-  "collectionNoPlaylistsYet": "No playlists yet",
+  "collectionNoPlaylistsYet": "لا توجد قوائم تشغيل بعد",
   "@collectionNoPlaylistsYet": {
     "description": "Empty state title when user has no playlists"
   },
@@ -1296,7 +1296,7 @@
       }
     }
   },
-  "collectionAddedToPlaylist": "Added to \"{playlistName}\"",
+  "collectionAddedToPlaylist": "أُضيف إلى «{playlistName}»",
   "@collectionAddedToPlaylist": {
     "description": "Snackbar after adding track to playlist",
     "placeholders": {
@@ -1305,7 +1305,7 @@
       }
     }
   },
-  "collectionAlreadyInPlaylist": "Already in \"{playlistName}\"",
+  "collectionAlreadyInPlaylist": "موجود بالفعل في «{playlistName}»",
   "@collectionAlreadyInPlaylist": {
     "description": "Snackbar when track already exists in playlist",
     "placeholders": {
@@ -1314,60 +1314,60 @@
       }
     }
   },
-  "collectionPlaylistNameHint": "Playlist name",
+  "collectionPlaylistNameHint": "اسم قائمة التشغيل",
   "@collectionPlaylistNameHint": {
     "description": "Hint text for playlist name input"
   },
-  "collectionPlaylistNameRequired": "Playlist name is required",
+  "collectionPlaylistNameRequired": "اسم قائمة التشغيل مطلوب",
   "@collectionPlaylistNameRequired": {
     "description": "Validation error for empty playlist name"
   },
-  "collectionRenamePlaylist": "Rename playlist",
+  "collectionRenamePlaylist": "إعادة تسمية قائمة التشغيل",
   "@collectionRenamePlaylist": {
     "description": "Action to rename playlist"
   },
-  "collectionDeletePlaylist": "Delete playlist",
+  "collectionDeletePlaylist": "حذف قائمة التشغيل",
   "@collectionDeletePlaylist": {
     "description": "Action to delete playlist"
   },
-  "collectionPlaylistRenamed": "Playlist renamed",
+  "collectionPlaylistRenamed": "أُعيدت تسمية قائمة التشغيل",
   "@collectionPlaylistRenamed": {
     "description": "Snackbar after renaming playlist"
   },
   "collectionRemovedTracks": "{count, plural, =1{تمت إزالة مقطع واحد} other{تمت إزالة {count} مقاطع}}",
-  "collectionLovedEmptyTitle": "No loved songs yet",
+  "collectionLovedEmptyTitle": "لا توجد أغانٍ مفضلة بعد",
   "@collectionLovedEmptyTitle": {
     "description": "Loved empty state title"
   },
-  "collectionLovedEmptySubtitle": "Tap love on tracks to keep your favorites",
+  "collectionLovedEmptySubtitle": "اضغط على القلب في المقاطع لحفظ مفضلاتك",
   "@collectionLovedEmptySubtitle": {
     "description": "Loved empty state subtitle"
   },
-  "collectionFavoriteArtistsEmptyTitle": "No favorite artists yet",
+  "collectionFavoriteArtistsEmptyTitle": "لا يوجد فنانون مفضلون بعد",
   "@collectionFavoriteArtistsEmptyTitle": {
     "description": "Favorite artists empty state title"
   },
-  "collectionFavoriteArtistsEmptySubtitle": "Tap the heart on an artist page to keep them here",
+  "collectionFavoriteArtistsEmptySubtitle": "اضغط على القلب في صفحة الفنان لتظهر هنا",
   "@collectionFavoriteArtistsEmptySubtitle": {
     "description": "Favorite artists empty state subtitle"
   },
-  "collectionPlaylistEmptyTitle": "Playlist is empty",
+  "collectionPlaylistEmptyTitle": "قائمة التشغيل فارغة",
   "@collectionPlaylistEmptyTitle": {
     "description": "Playlist empty state title"
   },
-  "collectionPlaylistEmptySubtitle": "Long-press + on any track to add it here",
+  "collectionPlaylistEmptySubtitle": "اضغط مطولًا على + في أي مقطع لإضافته هنا",
   "@collectionPlaylistEmptySubtitle": {
     "description": "Playlist empty state subtitle"
   },
-  "collectionRemoveFromPlaylist": "Remove from playlist",
+  "collectionRemoveFromPlaylist": "إزالة من قائمة التشغيل",
   "@collectionRemoveFromPlaylist": {
     "description": "Tooltip for removing track from playlist"
   },
-  "collectionRemoveFromFolder": "Remove from folder",
+  "collectionRemoveFromFolder": "إزالة من المجلد",
   "@collectionRemoveFromFolder": {
     "description": "Tooltip for removing track from Loved folder"
   },
-  "collectionRemovedFromFavoriteArtists": "\"{artistName}\" removed from Favorite Artists",
+  "collectionRemovedFromFavoriteArtists": "أُزيل «{artistName}» من الفنانين المفضلين",
   "@collectionRemovedFromFavoriteArtists": {
     "description": "Snackbar after removing artist from favorite artists",
     "placeholders": {
@@ -1376,109 +1376,109 @@
       }
     }
   },
-  "trackOptionAddToLoved": "Add to Loved",
+  "trackOptionAddToLoved": "إضافة إلى المفضلة",
   "@trackOptionAddToLoved": {
     "description": "Bottom sheet action label - add track to loved folder"
   },
-  "trackOptionRemoveFromLoved": "Remove from Loved",
+  "trackOptionRemoveFromLoved": "إزالة من المفضلة",
   "@trackOptionRemoveFromLoved": {
     "description": "Bottom sheet action label - remove track from loved folder"
   },
-  "artistOptionRemoveFromFavorites": "Remove from Favorite Artists",
+  "artistOptionRemoveFromFavorites": "إزالة من الفنانين المفضلين",
   "@artistOptionRemoveFromFavorites": {
     "description": "Action label - remove artist from favorite artists"
   },
-  "collectionPlaylistChangeCover": "Change cover image",
+  "collectionPlaylistChangeCover": "تغيير صورة الغلاف",
   "@collectionPlaylistChangeCover": {
     "description": "Bottom sheet action to pick a custom cover image for a playlist"
   },
-  "collectionPlaylistRemoveCover": "Remove cover image",
+  "collectionPlaylistRemoveCover": "إزالة صورة الغلاف",
   "@collectionPlaylistRemoveCover": {
     "description": "Bottom sheet action to remove custom cover image from a playlist"
   },
-  "settingsBackup": "Backup & Restore",
+  "settingsBackup": "النسخ الاحتياطي والاستعادة",
   "@settingsBackup": {
     "description": "Settings menu item - backup and restore page"
   },
-  "settingsBackupSubtitle": "Move your library, history and settings to a new device",
+  "settingsBackupSubtitle": "انقل مكتبتك وسجلك وإعداداتك إلى جهاز جديد",
   "@settingsBackupSubtitle": {
     "description": "Subtitle for backup and restore settings item"
   },
-  "backupTitle": "Backup & Restore",
+  "backupTitle": "النسخ الاحتياطي والاستعادة",
   "@backupTitle": {
     "description": "App bar title for the backup and restore page"
   },
-  "backupExportSectionTitle": "Create backup",
+  "backupExportSectionTitle": "إنشاء نسخة احتياطية",
   "@backupExportSectionTitle": {
     "description": "Section title for the export/backup card"
   },
   "backupExportSectionDescription": "احفظ الإعدادات والملفات الشخصية المحلية والمجموعات وسجلات المكتبة القديمة الاختيارية في ملف نسخ احتياطي.",
-  "backupExportButton": "Create backup file",
+  "backupExportButton": "إنشاء ملف نسخة احتياطية",
   "@backupExportButton": {
     "description": "Button to create and share a backup file"
   },
-  "backupImportSectionTitle": "Restore backup",
+  "backupImportSectionTitle": "استعادة نسخة احتياطية",
   "@backupImportSectionTitle": {
     "description": "Section title for the import/restore card"
   },
-  "backupImportSectionDescription": "Pick a backup file to restore your data. This replaces the current settings, history and library on this device.",
+  "backupImportSectionDescription": "اختر ملف نسخة احتياطية لاستعادة بياناتك. سيستبدل هذا الإعدادات والسجل والمكتبة الحالية على هذا الجهاز.",
   "@backupImportSectionDescription": {
     "description": "Description for the restore action"
   },
-  "backupImportButton": "Choose backup file",
+  "backupImportButton": "اختيار ملف النسخة الاحتياطية",
   "@backupImportButton": {
     "description": "Button to pick a backup file to restore"
   },
-  "backupCreated": "Backup created",
+  "backupCreated": "تم إنشاء النسخة الاحتياطية",
   "@backupCreated": {
     "description": "Snackbar after a backup file is created"
   },
-  "backupCreateFailed": "Failed to create backup",
+  "backupCreateFailed": "تعذّر إنشاء النسخة الاحتياطية",
   "@backupCreateFailed": {
     "description": "Snackbar when backup creation fails"
   },
   "backupTooLarge": "هذه النسخة الاحتياطية كبيرة جدًا للاستعادة. ضمّن فئات أقل وحاول مرة أخرى.",
   "backupRestorePartiallyFailed": "فشلت استعادة النسخة الاحتياطية. تمت استعادة: {categories}",
   "backupListeningStatisticsExcluded": "لا تتضمن إحصاءات الاستماع وعدد مرات التشغيل.",
-  "backupRestoreConfirmTitle": "Restore this backup?",
+  "backupRestoreConfirmTitle": "استعادة هذه النسخة الاحتياطية؟",
   "@backupRestoreConfirmTitle": {
     "description": "Confirmation dialog title before restoring a backup"
   },
-  "backupRestoreConfirmButton": "Restore",
+  "backupRestoreConfirmButton": "استعادة",
   "@backupRestoreConfirmButton": {
     "description": "Confirm button to proceed with restore"
   },
-  "backupRestored": "Backup restored successfully",
+  "backupRestored": "تمت استعادة النسخة الاحتياطية بنجاح",
   "@backupRestored": {
     "description": "Snackbar after a successful restore"
   },
-  "backupRestoreFailed": "Failed to restore backup",
+  "backupRestoreFailed": "تعذّرت استعادة النسخة الاحتياطية",
   "@backupRestoreFailed": {
     "description": "Snackbar when restore fails"
   },
-  "backupInvalidFile": "This file is not a valid Sistrum backup",
+  "backupInvalidFile": "هذا الملف ليس نسخة احتياطية صالحة من Sistrum",
   "@backupInvalidFile": {
     "description": "Snackbar when the chosen file is not a valid backup"
   },
-  "backupRestoreRestartHint": "Restart the app to make sure every change is applied.",
+  "backupRestoreRestartHint": "أعد تشغيل التطبيق للتأكد من تطبيق كل التغييرات.",
   "@backupRestoreRestartHint": {
     "description": "Hint shown after restoring that an app restart is recommended"
   },
-  "backupContentsTitle": "Backup contents",
+  "backupContentsTitle": "محتويات النسخة الاحتياطية",
   "@backupContentsTitle": {
     "description": "Header above the list summarizing what the backup contains"
   },
-  "backupSettingsOnly": "Settings only",
-  "backupSelectCollections": "Library collections",
-  "backupSelectCollectionsDescription": "Liked tracks, favorite artists, playlists and playlist covers.",
-  "backupSelectedExportDescription": "Save the selected categories to a backup file. Audio files are not included.",
-  "backupSelectAtLeastOne": "Select at least one category to create a backup.",
-  "backupSelectedRestoreMessage": "Only the categories listed below will be restored. Categories not included in this backup will stay unchanged. Restoring can replace existing data and cannot be undone.",
-  "backupContentsSettings": "App settings",
+  "backupSettingsOnly": "الإعدادات فقط",
+  "backupSelectCollections": "مجموعات المكتبة",
+  "backupSelectCollectionsDescription": "المقاطع المفضلة والفنانون المفضلون وقوائم التشغيل وأغلفتها.",
+  "backupSelectedExportDescription": "احفظ الفئات المحددة في ملف نسخة احتياطية. لا تتضمن ملفات الصوت.",
+  "backupSelectAtLeastOne": "حدّد فئة واحدة على الأقل لإنشاء نسخة احتياطية.",
+  "backupSelectedRestoreMessage": "ستُستعاد الفئات المدرجة أدناه فقط. ستبقى الفئات غير المتضمنة في هذه النسخة دون تغيير.",
+  "backupContentsSettings": "إعدادات التطبيق",
   "@backupContentsSettings": {
     "description": "Backup contents row label for settings"
   },
-  "backupContentsLiked": "{count} liked {count, plural, =1{track} other{tracks}}",
+  "backupContentsLiked": "{count} {count, plural, =1{مقطع مفضّل} other{مقطعًا مفضّلًا}}",
   "@backupContentsLiked": {
     "description": "Backup contents row for liked tracks count",
     "placeholders": {
@@ -1487,7 +1487,7 @@
       }
     }
   },
-  "backupContentsPlaylists": "{count, plural, =1{1 playlist} other{{count} playlists}}",
+  "backupContentsPlaylists": "{count, plural, =1{قائمة تشغيل واحدة} other{{count} قوائم تشغيل}}",
   "@backupContentsPlaylists": {
     "description": "Backup contents row for playlist count",
     "placeholders": {
@@ -1496,7 +1496,7 @@
       }
     }
   },
-  "backupContentsArtists": "{count, plural, =1{1 favorite artist} other{{count} favorite artists}}",
+  "backupContentsArtists": "{count, plural, =1{فنان مفضّل واحد} other{{count} فنانين مفضلين}}",
   "@backupContentsArtists": {
     "description": "Backup contents row for favorite artists count",
     "placeholders": {
@@ -1505,7 +1505,7 @@
       }
     }
   },
-  "snackbarRemovedTracksFromLoved": "Removed {count} tracks from Loved",
+  "snackbarRemovedTracksFromLoved": "أُزيلت {count} مقاطع من المفضلة",
   "@snackbarRemovedTracksFromLoved": {
     "description": "Snackbar after removing multiple tracks from Loved folder",
     "placeholders": {
@@ -1514,7 +1514,7 @@
       }
     }
   },
-  "snackbarAddedTracksToLoved": "Added {count} tracks to Loved",
+  "snackbarAddedTracksToLoved": "أُضيفت {count} مقاطع إلى المفضلة",
   "@snackbarAddedTracksToLoved": {
     "description": "Snackbar after adding multiple tracks to Loved folder",
     "placeholders": {
@@ -1523,15 +1523,15 @@
       }
     }
   },
-  "homeGoToAlbum": "Go to Album",
+  "homeGoToAlbum": "الانتقال إلى الألبوم",
   "@homeGoToAlbum": {
     "description": "Context menu item to navigate to the album page"
   },
-  "snackbarMetadataSaved": "Metadata saved successfully",
+  "snackbarMetadataSaved": "تم حفظ البيانات الوصفية بنجاح",
   "@snackbarMetadataSaved": {
     "description": "Snackbar after successfully saving track metadata"
   },
-  "snackbarError": "Error: {error}",
+  "snackbarError": "خطأ: {error}",
   "@snackbarError": {
     "description": "Generic error snackbar with error detail",
     "placeholders": {
@@ -1540,19 +1540,19 @@
       }
     }
   },
-  "noTracksFoundForAlbum": "No tracks found for this album",
+  "noTracksFoundForAlbum": "لم يُعثر على مقاطع لهذا الألبوم",
   "@noTracksFoundForAlbum": {
     "description": "Empty state message when an album has no tracks"
   },
-  "snackbarUnsupportedAudioFormat": "Unsupported audio format",
+  "snackbarUnsupportedAudioFormat": "تنسيق صوت غير مدعوم",
   "@snackbarUnsupportedAudioFormat": {
     "description": "Snackbar when the audio format is not supported for the requested operation"
   },
-  "cacheRefresh": "Refresh",
+  "cacheRefresh": "تحديث",
   "@cacheRefresh": {
     "description": "Tooltip for refresh button on cache management page"
   },
-  "editMetadataFieldTitle": "Title",
+  "editMetadataFieldTitle": "العنوان",
   "@editMetadataFieldTitle": {
     "description": "Chip label for title field in auto-fill selector"
   },
@@ -1564,19 +1564,19 @@
   "@editMetadataFieldAlbum": {
     "description": "Chip label for album field in auto-fill selector"
   },
-  "editMetadataFieldAlbumArtist": "Album Artist",
+  "editMetadataFieldAlbumArtist": "فنان الألبوم",
   "@editMetadataFieldAlbumArtist": {
     "description": "Chip label for album artist field in auto-fill selector"
   },
-  "editMetadataFieldDate": "Date",
+  "editMetadataFieldDate": "التاريخ",
   "@editMetadataFieldDate": {
     "description": "Chip label for date field in auto-fill selector"
   },
-  "editMetadataFieldTrackNum": "Track #",
+  "editMetadataFieldTrackNum": "رقم المقطع",
   "@editMetadataFieldTrackNum": {
     "description": "Chip label for track number field in auto-fill selector"
   },
-  "editMetadataFieldDiscNum": "Disc #",
+  "editMetadataFieldDiscNum": "رقم القرص",
   "@editMetadataFieldDiscNum": {
     "description": "Chip label for disc number field in auto-fill selector"
   },
@@ -1596,11 +1596,11 @@
   "@editMetadataFieldCopyright": {
     "description": "Chip label for copyright field in auto-fill selector"
   },
-  "editMetadataFieldCover": "Cover Art",
+  "editMetadataFieldCover": "غلاف الألبوم",
   "@editMetadataFieldCover": {
     "description": "Chip label for cover art field in auto-fill selector"
   },
-  "queueFilteringIndicator": "Filtering...",
+  "queueFilteringIndicator": "جارٍ التصفية...",
   "@queueFilteringIndicator": {
     "description": "Shown while filter results are being computed"
   },
@@ -1613,7 +1613,7 @@
       }
     }
   },
-  "queueAlbumCount": "{count, plural, =1{1 album} other{{count} albums}}",
+  "queueAlbumCount": "{count, plural, =1{ألبوم واحد} other{{count} ألبومات}}",
   "@queueAlbumCount": {
     "description": "Album count label with plural support",
     "placeholders": {
@@ -1626,7 +1626,7 @@
   "queueEmptyAlbumsSubtitle": "افحص مجلد موسيقى لإضافة ألبومات",
   "queueEmptySingles": "لا توجد أغانٍ منفردة محلية",
   "queueEmptySinglesSubtitle": "تظهر هنا المقاطع المنفردة المفحوصة",
-  "queuePlaylistCount": "{count, plural, =1{1 playlist} other{{count} playlists}}",
+  "queuePlaylistCount": "{count, plural, =1{قائمة تشغيل واحدة} other{{count} قوائم تشغيل}}",
   "@queuePlaylistCount": {
     "description": "Playlist count label with plural support",
     "placeholders": {
@@ -1635,57 +1635,57 @@
       }
     }
   },
-  "queueEmptyPlaylistsSubtitle": "Create a playlist to organize your tracks",
+  "queueEmptyPlaylistsSubtitle": "أنشئ قائمة تشغيل لتنظيم مقاطعك",
   "@queueEmptyPlaylistsSubtitle": {
     "description": "Empty state subtitle for the playlists library view"
   },
   "libraryEmpty": "لا توجد مقاطع محلية",
   "libraryEmptySubtitle": "افحص مجلد موسيقى لملء مكتبتك",
-  "selectionAllPlaylistsSelected": "All playlists selected",
+  "selectionAllPlaylistsSelected": "تم تحديد كل قوائم التشغيل",
   "@selectionAllPlaylistsSelected": {
     "description": "Shown when all playlists are selected in selection mode"
   },
-  "selectionTapPlaylistsToSelect": "Tap playlists to select",
+  "selectionTapPlaylistsToSelect": "اضغط على قوائم التشغيل لتحديدها",
   "@selectionTapPlaylistsToSelect": {
     "description": "Hint shown in playlist selection mode"
   },
-  "selectionSelectPlaylistsToDelete": "Select playlists to delete",
+  "selectionSelectPlaylistsToDelete": "حدّد قوائم التشغيل لحذفها",
   "@selectionSelectPlaylistsToDelete": {
     "description": "Hint shown when no playlists are selected for deletion"
   },
-  "audioAnalysisTitle": "Audio Quality Analysis",
+  "audioAnalysisTitle": "تحليل جودة الصوت",
   "@audioAnalysisTitle": {
     "description": "Title for audio analysis section"
   },
-  "audioAnalysisDescription": "Verify lossless quality with spectrum analysis",
+  "audioAnalysisDescription": "تحقّق من الجودة بلا فقد عبر تحليل الطيف",
   "@audioAnalysisDescription": {
     "description": "Description for audio analysis tap-to-analyze prompt"
   },
-  "audioAnalysisAnalyzing": "Analyzing audio...",
+  "audioAnalysisAnalyzing": "جارٍ تحليل الصوت...",
   "@audioAnalysisAnalyzing": {
     "description": "Loading text while analyzing audio"
   },
-  "audioAnalysisSampleRate": "Sample Rate",
+  "audioAnalysisSampleRate": "معدل العينة",
   "@audioAnalysisSampleRate": {
     "description": "Sample rate metric label"
   },
-  "audioAnalysisCodec": "Codec",
+  "audioAnalysisCodec": "الترميز",
   "@audioAnalysisCodec": {
     "description": "Audio codec metric label"
   },
-  "audioAnalysisContainer": "Container",
+  "audioAnalysisContainer": "الحاوية",
   "@audioAnalysisContainer": {
     "description": "Audio container metric label"
   },
-  "audioAnalysisDecodedFormat": "Decoded Format",
+  "audioAnalysisDecodedFormat": "التنسيق بعد فك الترميز",
   "@audioAnalysisDecodedFormat": {
     "description": "Decoded sample format metric label"
   },
-  "audioAnalysisBitDepth": "Bit Depth",
+  "audioAnalysisBitDepth": "عمق البت",
   "@audioAnalysisBitDepth": {
     "description": "Bit depth metric label"
   },
-  "audioAnalysisChannels": "Channels",
+  "audioAnalysisChannels": "القنوات",
   "@audioAnalysisChannels": {
     "description": "Channels metric label"
   },
@@ -1697,15 +1697,15 @@
   "@audioAnalysisNyquist": {
     "description": "Nyquist frequency metric label"
   },
-  "audioAnalysisFileSize": "Size",
+  "audioAnalysisFileSize": "الحجم",
   "@audioAnalysisFileSize": {
     "description": "File size metric label"
   },
-  "audioAnalysisDynamicRange": "Dynamic Range",
+  "audioAnalysisDynamicRange": "المدى الديناميكي",
   "@audioAnalysisDynamicRange": {
     "description": "Dynamic range metric label"
   },
-  "audioAnalysisPeak": "Peak",
+  "audioAnalysisPeak": "الذروة",
   "@audioAnalysisPeak": {
     "description": "Peak amplitude metric label"
   },
@@ -1717,58 +1717,58 @@
   "@audioAnalysisLufs": {
     "description": "Integrated loudness metric label"
   },
-  "audioAnalysisTruePeak": "True Peak",
+  "audioAnalysisTruePeak": "الذروة الحقيقية",
   "@audioAnalysisTruePeak": {
     "description": "True peak metric label"
   },
-  "audioAnalysisClipping": "Clipping",
+  "audioAnalysisClipping": "القص",
   "@audioAnalysisClipping": {
     "description": "Clipping metric label"
   },
-  "audioAnalysisNoClipping": "No clipping",
+  "audioAnalysisNoClipping": "لا يوجد قص",
   "@audioAnalysisNoClipping": {
     "description": "Displayed when no clipped samples were detected"
   },
-  "audioAnalysisSpectralCutoff": "Spectral Cutoff",
+  "audioAnalysisSpectralCutoff": "قطع الطيف",
   "@audioAnalysisSpectralCutoff": {
     "description": "Estimated spectral cutoff metric label"
   },
-  "audioAnalysisCutoffNotDetected": "Not detected",
+  "audioAnalysisCutoffNotDetected": "غير مكتشف",
   "@audioAnalysisCutoffNotDetected": {
     "description": "Displayed when no reliable broadband spectral cutoff can be detected"
   },
-  "audioAnalysisChannelStats": "Per-channel Stats",
+  "audioAnalysisChannelStats": "إحصاءات لكل قناة",
   "@audioAnalysisChannelStats": {
     "description": "Per-channel audio analysis section label"
   },
-  "audioAnalysisSamples": "Samples",
+  "audioAnalysisSamples": "العينات",
   "@audioAnalysisSamples": {
     "description": "Total samples metric label"
   },
-  "audioAnalysisRescan": "Re-analyze",
+  "audioAnalysisRescan": "إعادة التحليل",
   "@audioAnalysisRescan": {
     "description": "Tooltip/label for the button that re-runs the audio analysis, discarding cached results"
   },
   "audioAnalysisSaveSpectrogram": "حفظ مخطط الطيف",
   "audioAnalysisSpectrogramSaved": "تم حفظ مخطط الطيف في {fileName}",
   "audioAnalysisSpectrogramSaveFailed": "تعذّر حفظ مخطط الطيف",
-  "audioAnalysisRescanning": "Re-analyzing audio...",
+  "audioAnalysisRescanning": "جارٍ إعادة تحليل الصوت...",
   "@audioAnalysisRescanning": {
     "description": "Loading text while audio is being re-analyzed after an explicit refresh"
   },
-  "metadataSaveFailedFfmpeg": "Failed to save metadata via FFmpeg",
+  "metadataSaveFailedFfmpeg": "تعذّر حفظ البيانات الوصفية عبر FFmpeg",
   "@metadataSaveFailedFfmpeg": {
     "description": "Snackbar error when FFmpeg fails to write metadata"
   },
-  "metadataSaveFailedStorage": "Failed to write metadata back to storage",
+  "metadataSaveFailedStorage": "تعذّرت كتابة البيانات الوصفية إلى التخزين",
   "@metadataSaveFailedStorage": {
     "description": "Snackbar error when writing metadata file back to storage fails"
   },
-  "notifScanningLibrary": "Scanning local library",
+  "notifScanningLibrary": "جارٍ فحص المكتبة المحلية",
   "@notifScanningLibrary": {
     "description": "Notification title while scanning local library"
   },
-  "notifLibraryScanProgressWithTotal": "{scanned}/{total} files • {percentage}%",
+  "notifLibraryScanProgressWithTotal": "{scanned}/{total} ملفًا • {percentage}%",
   "@notifLibraryScanProgressWithTotal": {
     "description": "Notification body for library scan progress when total is known",
     "placeholders": {
@@ -1783,7 +1783,7 @@
       }
     }
   },
-  "notifLibraryScanProgressNoTotal": "{scanned} files scanned",
+  "notifLibraryScanProgressNoTotal": "تم فحص {scanned} ملفًا",
   "@notifLibraryScanProgressNoTotal": {
     "description": "Notification body for library scan progress when total is unknown",
     "placeholders": {
@@ -1792,11 +1792,11 @@
       }
     }
   },
-  "notifLibraryScanComplete": "Library scan complete",
+  "notifLibraryScanComplete": "اكتمل فحص المكتبة",
   "@notifLibraryScanComplete": {
     "description": "Notification title when library scan finishes"
   },
-  "notifLibraryScanCompleteBody": "{count} tracks indexed",
+  "notifLibraryScanCompleteBody": "تمت فهرسة {count} مقاطع",
   "@notifLibraryScanCompleteBody": {
     "description": "Notification body for library scan complete - number of indexed tracks",
     "placeholders": {
@@ -1805,7 +1805,7 @@
       }
     }
   },
-  "notifLibraryScanErrors": "{count} errors",
+  "notifLibraryScanErrors": "{count} أخطاء",
   "@notifLibraryScanErrors": {
     "description": "Library scan complete suffix - error count",
     "placeholders": {
@@ -1814,24 +1814,24 @@
       }
     }
   },
-  "notifLibraryScanFailed": "Library scan failed",
+  "notifLibraryScanFailed": "فشل فحص المكتبة",
   "@notifLibraryScanFailed": {
     "description": "Notification title when library scan fails"
   },
   "notifLibraryScanInterruptedBody": "توقف فحص المكتبة السابق. افحص المجلد مرة أخرى للمتابعة. المقاطع المفهرسة ما تزال متاحة.",
-  "notifLibraryScanCancelled": "Library scan cancelled",
+  "notifLibraryScanCancelled": "أُلغي فحص المكتبة",
   "@notifLibraryScanCancelled": {
     "description": "Notification title when library scan is cancelled by the user"
   },
-  "notifLibraryScanStopped": "Scan stopped before completion.",
+  "notifLibraryScanStopped": "توقّف الفحص قبل الاكتمال.",
   "@notifLibraryScanStopped": {
     "description": "Notification body when library scan is cancelled"
   },
-  "notifLibraryScanPaused": "Library scan paused",
+  "notifLibraryScanPaused": "الفحص متوقف مؤقتًا",
   "@notifLibraryScanPaused": {
     "description": "Notification title when the user pauses a library scan"
   },
-  "notifLibraryScanPausedBody": "{count} files scanned. Resume in Local Library settings to continue from here.",
+  "notifLibraryScanPausedBody": "تم فحص {count} ملفًا. استأنف من إعدادات المكتبة المحلية للمتابعة من هنا.",
   "@notifLibraryScanPausedBody": {
     "description": "Notification body for a paused library scan - files scanned so far",
     "placeholders": {
@@ -1848,63 +1848,63 @@
   "@tutorialSearchHint": {
     "description": "Placeholder shown in the tutorial search demo"
   },
-  "trackCoverNoEmbeddedArt": "No embedded album art found",
+  "trackCoverNoEmbeddedArt": "لم يُعثر على غلاف ألبوم مضمّن",
   "@trackCoverNoEmbeddedArt": {
     "description": "Message shown when a track file has no embedded cover art"
   },
-  "trackCoverReplace": "Replace Cover",
+  "trackCoverReplace": "استبدال الغلاف",
   "@trackCoverReplace": {
     "description": "Button label for replacing selected cover art"
   },
-  "trackCoverPick": "Pick Cover",
+  "trackCoverPick": "اختيار غلاف",
   "@trackCoverPick": {
     "description": "Button label for selecting cover art"
   },
-  "trackCoverClearSelected": "Clear selected cover",
+  "trackCoverClearSelected": "مسح الغلاف المحدد",
   "@trackCoverClearSelected": {
     "description": "Tooltip for clearing the newly selected cover art"
   },
-  "trackCoverCurrent": "Current cover",
+  "trackCoverCurrent": "الغلاف الحالي",
   "@trackCoverCurrent": {
     "description": "Label for the currently embedded cover preview"
   },
-  "trackCoverSelected": "Selected cover",
+  "trackCoverSelected": "الغلاف المحدد",
   "@trackCoverSelected": {
     "description": "Label for the newly selected cover preview"
   },
-  "trackCoverReplaceNotice": "The selected cover will replace the current embedded cover when you tap Save.",
+  "trackCoverReplaceNotice": "سيحل الغلاف المحدد محل الغلاف الحالي عند النقر على حفظ.",
   "@trackCoverReplaceNotice": {
     "description": "Notice shown when a new cover has been selected but not saved yet"
   },
-  "nowPlayingRepeatOff": "Repeat off",
+  "nowPlayingRepeatOff": "التكرار متوقف",
   "@nowPlayingRepeatOff": {
     "description": "Repeat toggle tooltip when repeat is disabled"
   },
-  "nowPlayingRepeatAll": "Repeat all",
+  "nowPlayingRepeatAll": "تكرار الكل",
   "@nowPlayingRepeatAll": {
     "description": "Repeat toggle tooltip when the whole queue repeats"
   },
-  "nowPlayingRepeatOne": "Repeat one",
+  "nowPlayingRepeatOne": "تكرار مقطع واحد",
   "@nowPlayingRepeatOne": {
     "description": "Repeat toggle tooltip when the current track repeats"
   },
-  "logAutoScrollOn": "Auto-scroll ON",
+  "logAutoScrollOn": "التمرير التلقائي مفعّل",
   "@logAutoScrollOn": {
     "description": "Tooltip when auto-scroll is enabled on the log screen"
   },
-  "logAutoScrollOff": "Auto-scroll OFF",
+  "logAutoScrollOff": "التمرير التلقائي متوقف",
   "@logAutoScrollOff": {
     "description": "Tooltip when auto-scroll is disabled on the log screen"
   },
-  "logCopyLogs": "Copy logs",
+  "logCopyLogs": "نسخ السجلات",
   "@logCopyLogs": {
     "description": "Tooltip for copying logs"
   },
-  "logClearSearch": "Clear search",
+  "logClearSearch": "مسح البحث",
   "@logClearSearch": {
     "description": "Tooltip for clearing the log search field"
   },
-  "clickableInformationUnavailable": "{type} information not available",
+  "clickableInformationUnavailable": "معلومات {type} غير متاحة",
   "@clickableInformationUnavailable": {
     "description": "Snackbar shown when clickable metadata cannot open a destination",
     "placeholders": {
@@ -1913,7 +1913,7 @@
       }
     }
   },
-  "a11yOpenAlbumByArtistTrackCount": "Open album {albumName} by {artistName}, {trackCount} tracks",
+  "a11yOpenAlbumByArtistTrackCount": "فتح الألبوم {albumName} للفنان {artistName}، {trackCount} مقاطع",
   "@a11yOpenAlbumByArtistTrackCount": {
     "description": "Accessibility label for opening an album item with track count",
     "placeholders": {
@@ -1933,83 +1933,83 @@
     "description": "Settings menu item - lyrics settings"
   },
   "settingsLyricsSubtitle": "الكلمات المحلية ووضع الحفظ وحجم النص",
-  "editMetadataFieldDateHint": "YYYY-MM-DD or YYYY",
+  "editMetadataFieldDateHint": "YYYY-MM-DD أو YYYY",
   "@editMetadataFieldDateHint": {
     "description": "Hint text for the edit metadata date field"
   },
-  "editMetadataFieldTrackTotal": "Track Total",
+  "editMetadataFieldTrackTotal": "إجمالي المقاطع",
   "@editMetadataFieldTrackTotal": {
     "description": "Label for total tracks field in the edit metadata sheet"
   },
-  "editMetadataFieldDiscTotal": "Disc Total",
+  "editMetadataFieldDiscTotal": "إجمالي الأقراص",
   "@editMetadataFieldDiscTotal": {
     "description": "Label for total discs field in the edit metadata sheet"
   },
-  "editMetadataFieldComposer": "Composer",
+  "editMetadataFieldComposer": "الملحن",
   "@editMetadataFieldComposer": {
     "description": "Label for composer field in the edit metadata sheet"
   },
-  "editMetadataFieldComment": "Comment",
+  "editMetadataFieldComment": "تعليق",
   "@editMetadataFieldComment": {
     "description": "Label for comment field in the edit metadata sheet"
   },
-  "trackAlbumType": "Release Type",
+  "trackAlbumType": "نوع الإصدار",
   "@trackAlbumType": {
     "description": "Label for an album or release type metadata value"
   },
-  "editMetadataFieldAlbumTypeHint": "Album, single, EP, compilation...",
+  "editMetadataFieldAlbumTypeHint": "ألبوم، سингل، EP، مجموعة...",
   "@editMetadataFieldAlbumTypeHint": {
     "description": "Hint for the release type metadata field"
   },
-  "editMetadataFieldExplicit": "Explicit",
+  "editMetadataFieldExplicit": "صريح",
   "@editMetadataFieldExplicit": {
     "description": "Label for the explicit content metadata field"
   },
-  "editMetadataFieldExplicitHint": "Mark this track as containing explicit content",
+  "editMetadataFieldExplicitHint": "حدّد أن هذا المقطع يحتوي على محتوى صريح",
   "@editMetadataFieldExplicitHint": {
     "description": "Description for the explicit content metadata switch"
   },
-  "metadataExplicitValue": "Explicit",
+  "metadataExplicitValue": "صريح",
   "@metadataExplicitValue": {
     "description": "Displayed value when a track is marked explicit"
   },
-  "editMetadataFieldUpc": "UPC / Barcode",
+  "editMetadataFieldUpc": "UPC / الباركود",
   "@editMetadataFieldUpc": {
     "description": "Label for the release barcode metadata field"
   },
-  "editMetadataFieldUpcHint": "Numeric UPC, EAN, or GTIN",
+  "editMetadataFieldUpcHint": "UPC أو EAN أو GTIN رقمي",
   "@editMetadataFieldUpcHint": {
     "description": "Hint for the release barcode metadata field"
   },
-  "editMetadataAdvanced": "Advanced",
+  "editMetadataAdvanced": "متقدم",
   "@editMetadataAdvanced": {
     "description": "Expandable section label for advanced metadata fields"
   },
-  "libraryFilterMetadataMissingTrackNumber": "Missing track number",
+  "libraryFilterMetadataMissingTrackNumber": "رقم المقطع مفقود",
   "@libraryFilterMetadataMissingTrackNumber": {
     "description": "Filter option - items missing track number"
   },
-  "libraryFilterMetadataMissingDiscNumber": "Missing disc number",
+  "libraryFilterMetadataMissingDiscNumber": "رقم القرص مفقود",
   "@libraryFilterMetadataMissingDiscNumber": {
     "description": "Filter option - items missing disc number"
   },
-  "libraryFilterMetadataMissingArtist": "Missing artist",
+  "libraryFilterMetadataMissingArtist": "الفنان مفقود",
   "@libraryFilterMetadataMissingArtist": {
     "description": "Filter option - items missing artist"
   },
-  "libraryFilterMetadataIncorrectIsrcFormat": "Incorrect ISRC format",
+  "libraryFilterMetadataIncorrectIsrcFormat": "تنسيق ISRC غير صحيح",
   "@libraryFilterMetadataIncorrectIsrcFormat": {
     "description": "Filter option - items with an invalid ISRC format"
   },
-  "libraryFilterMetadataMissingIsrc": "Missing ISRC",
+  "libraryFilterMetadataMissingIsrc": "ISRC مفقود",
   "@libraryFilterMetadataMissingIsrc": {
     "description": "Filter option - items without any ISRC tag"
   },
-  "libraryFilterMetadataMissingLabel": "Missing label",
+  "libraryFilterMetadataMissingLabel": "الناشر مفقود",
   "@libraryFilterMetadataMissingLabel": {
     "description": "Filter option - items missing record label"
   },
-  "collectionDeletePlaylistsMessage": "Delete {count} {count, plural, =1{playlist} other{playlists}}?",
+  "collectionDeletePlaylistsMessage": "حذف {count} {count, plural, =1{قائمة تشغيل} other{قوائم تشغيل}}؟",
   "@collectionDeletePlaylistsMessage": {
     "description": "Confirmation message for deleting selected playlists",
     "placeholders": {
@@ -2018,7 +2018,7 @@
       }
     }
   },
-  "collectionPlaylistsDeleted": "{count} {count, plural, =1{playlist} other{playlists}} deleted",
+  "collectionPlaylistsDeleted": "تم حذف {count} {count, plural, =1{قائمة تشغيل} other{قوائم تشغيل}}",
   "@collectionPlaylistsDeleted": {
     "description": "Snackbar after deleting selected playlists",
     "placeholders": {
@@ -2027,7 +2027,7 @@
       }
     }
   },
-  "collectionAddedTracksToPlaylist": "Added {count} {count, plural, =1{track} other{tracks}} to {playlistName}",
+  "collectionAddedTracksToPlaylist": "أُضيف {count} {count, plural, =1{مقطع} other{مقطعًا}} إلى {playlistName}",
   "@collectionAddedTracksToPlaylist": {
     "description": "Snackbar after adding multiple tracks to a playlist",
     "placeholders": {
@@ -2039,7 +2039,7 @@
       }
     }
   },
-  "collectionAddedTracksToPlaylistWithExisting": "Added {count} {count, plural, =1{track} other{tracks}} to {playlistName} ({alreadyCount} already in playlist)",
+  "collectionAddedTracksToPlaylistWithExisting": "أُضيف {count} {count, plural, =1{مقطع} other{مقطعًا}} إلى {playlistName} ({alreadyCount} موجود بالفعل في قائمة التشغيل)",
   "@collectionAddedTracksToPlaylistWithExisting": {
     "description": "Snackbar after adding multiple tracks to a playlist when some were already present",
     "placeholders": {
@@ -2054,7 +2054,7 @@
       }
     }
   },
-  "itemCount": "{count} {count, plural, =1{item} other{items}}",
+  "itemCount": "{count} {count, plural, =1{عنصر} other{عناصر}}",
   "@itemCount": {
     "description": "Generic item count label",
     "placeholders": {
@@ -2072,15 +2072,15 @@
       }
     }
   },
-  "a11ySelectTrack": "Select track",
+  "a11ySelectTrack": "تحديد المقطع",
   "@a11ySelectTrack": {
     "description": "Accessibility label for selecting a track"
   },
-  "a11yDeselectTrack": "Deselect track",
+  "a11yDeselectTrack": "إلغاء تحديد المقطع",
   "@a11yDeselectTrack": {
     "description": "Accessibility label for deselecting a track"
   },
-  "a11yPlayTrackByArtist": "Play {trackName} by {artistName}",
+  "a11yPlayTrackByArtist": "تشغيل {trackName} للفنان {artistName}",
   "@a11yPlayTrackByArtist": {
     "description": "Accessibility label for playing a local library track",
     "placeholders": {
@@ -2102,11 +2102,11 @@
   "a11yPlaybackPosition": "موضع التشغيل",
   "a11ySavingTrackDetails": "جارٍ حفظ تفاصيل المقطع",
   "cacheClearFor": "مسح {target}",
-  "logIssueSummary": "Issue Summary",
+  "logIssueSummary": "ملخص المشكلات",
   "@logIssueSummary": {
     "description": "Header for log issue analysis summary"
   },
-  "logTotalErrors": "Total errors: {count}",
+  "logTotalErrors": "إجمالي الأخطاء: {count}",
   "@logTotalErrors": {
     "description": "Total error count in log issue analysis",
     "placeholders": {
@@ -2115,52 +2115,52 @@
       }
     }
   },
-  "libraryScanCancelled": "Scan cancelled",
+  "libraryScanCancelled": "أُلغي الفحص",
   "@libraryScanCancelled": {
     "description": "Library scan status when a scan was cancelled"
   },
-  "libraryScanCancelledSubtitle": "You can retry the scan when ready.",
+  "libraryScanCancelledSubtitle": "يمكنك إعادة الفحص عندما تكون جاهزًا.",
   "@libraryScanCancelledSubtitle": {
     "description": "Library scan status subtitle after cancellation"
   },
-  "audioAnalysisStereo": "Stereo",
+  "audioAnalysisStereo": "ستيريو",
   "@audioAnalysisStereo": {
     "description": "Audio channel layout label - stereo"
   },
-  "audioAnalysisMono": "Mono",
+  "audioAnalysisMono": "أحادي",
   "@audioAnalysisMono": {
     "description": "Audio channel layout label - mono"
   },
-  "unknownArtist": "Unknown Artist",
+  "unknownArtist": "فنان غير معروف",
   "@unknownArtist": {
     "description": "Fallback artist name when metadata is missing"
   },
-  "permissionStorage": "Storage",
+  "permissionStorage": "التخزين",
   "@permissionStorage": {
     "description": "Storage permission type label"
   },
-  "permissionNotification": "Notification",
+  "permissionNotification": "الإشعارات",
   "@permissionNotification": {
     "description": "Notification permission type label"
   },
-  "libraryPlayback": "Playback",
+  "libraryPlayback": "التشغيل",
   "@libraryPlayback": {
     "description": "Section header for playback settings in library settings"
   },
-  "nowPlayingNothingPlaying": "Nothing is playing",
+  "nowPlayingNothingPlaying": "لا يوجد تشغيل",
   "@nowPlayingNothingPlaying": {
     "description": "Empty state when no track is currently playing"
   },
-  "nowPlayingMinimize": "Minimize",
+  "nowPlayingMinimize": "تصغير",
   "@nowPlayingMinimize": {
     "description": "Tooltip for minimizing the now playing screen"
   },
-  "nowPlayingUpNext": "Up next",
+  "nowPlayingUpNext": "التالي",
   "@nowPlayingUpNext": {
     "description": "Title for the playback queue sheet"
   },
-  "nowPlayingAudioOutput": "Audio Output",
-  "nowPlayingWrittenBy": "Written by: {writers}",
+  "nowPlayingAudioOutput": "المخرج الصوتي",
+  "nowPlayingWrittenBy": "كتبه: {writers}",
   "@nowPlayingWrittenBy": {
     "placeholders": {
       "writers": {
@@ -2168,7 +2168,7 @@
       }
     }
   },
-  "nowPlayingLyricsSource": "Lyrics: {provider}",
+  "nowPlayingLyricsSource": "الكلمات: {provider}",
   "@nowPlayingLyricsSource": {
     "placeholders": {
       "provider": {
@@ -2176,24 +2176,24 @@
       }
     }
   },
-  "nowPlayingAudioOutputUnavailable": "Unable to open audio output settings.",
-  "nowPlayingPreviousTrack": "Previous track",
+  "nowPlayingAudioOutputUnavailable": "تعذّر فتح إعدادات المخرج الصوتي.",
+  "nowPlayingPreviousTrack": "المقطع السابق",
   "@nowPlayingPreviousTrack": {
     "description": "Tooltip for the previous-track playback control"
   },
-  "nowPlayingNextTrack": "Next track",
+  "nowPlayingNextTrack": "المقطع التالي",
   "@nowPlayingNextTrack": {
     "description": "Tooltip for the next-track playback control"
   },
-  "nowPlayingDetails": "Details",
+  "nowPlayingDetails": "التفاصيل",
   "@nowPlayingDetails": {
     "description": "Menu item and section title for track metadata details"
   },
-  "nowPlayingSleepTimer": "Sleep timer",
+  "nowPlayingSleepTimer": "مؤقت النوم",
   "@nowPlayingSleepTimer": {
     "description": "Menu item and sheet title for the playback sleep timer"
   },
-  "nowPlayingSleepTimerActive": "Ends at {time}",
+  "nowPlayingSleepTimerActive": "ينتهي عند {time}",
   "@nowPlayingSleepTimerActive": {
     "description": "Active sleep timer deadline shown in the player menu",
     "placeholders": {
@@ -2202,7 +2202,7 @@
       }
     }
   },
-  "nowPlayingSleepTimerMinutes": "{minutes, plural, =1{1 minute} other{{minutes} minutes}}",
+  "nowPlayingSleepTimerMinutes": "{minutes, plural, =1{دقيقة واحدة} other{{minutes} دقيقة}}",
   "@nowPlayingSleepTimerMinutes": {
     "description": "Duration choice for the playback sleep timer",
     "placeholders": {
@@ -2211,11 +2211,11 @@
       }
     }
   },
-  "nowPlayingSleepTimerOff": "Turn off sleep timer",
+  "nowPlayingSleepTimerOff": "إيقاف مؤقت النوم",
   "@nowPlayingSleepTimerOff": {
     "description": "Action to cancel the active playback sleep timer"
   },
-  "nowPlayingSleepTimerSet": "Sleep timer set for {duration}",
+  "nowPlayingSleepTimerSet": "تم ضبط مؤقت النوم على {duration}",
   "@nowPlayingSleepTimerSet": {
     "description": "Confirmation after setting the playback sleep timer",
     "placeholders": {
@@ -2224,11 +2224,11 @@
       }
     }
   },
-  "nowPlayingSleepTimerCancelled": "Sleep timer turned off",
+  "nowPlayingSleepTimerCancelled": "تم إيقاف مؤقت النوم",
   "@nowPlayingSleepTimerCancelled": {
     "description": "Confirmation after cancelling the playback sleep timer"
   },
-  "nowPlayingTabPlayer": "Player",
+  "nowPlayingTabPlayer": "المشغّل",
   "@nowPlayingTabPlayer": {
     "description": "Tab label for the player view"
   },
@@ -2236,39 +2236,39 @@
   "@nowPlayingTabLyrics": {
     "description": "Tab label for the lyrics view"
   },
-  "nowPlayingNoLyrics": "No lyrics in this file",
+  "nowPlayingNoLyrics": "لا توجد كلمات في هذا الملف",
   "@nowPlayingNoLyrics": {
     "description": "Empty state when the playing file has no embedded lyrics"
   },
-  "nowPlayingInstrumental": "Instrumental",
+  "nowPlayingInstrumental": "موسيقى بدون كلمات",
   "@nowPlayingInstrumental": {
     "description": "Accessibility label for the three-dot countdown during an instrumental break before lyrics resume"
   },
-  "nowPlayingLyricsLanguageOptions": "Lyrics language options",
+  "nowPlayingLyricsLanguageOptions": "خيارات لغة الكلمات",
   "@nowPlayingLyricsLanguageOptions": {
     "description": "Tooltip for the player menu that shows or hides existing lyric pronunciation and translation"
   },
-  "nowPlayingHidePronunciation": "Hide Pronunciation",
-  "nowPlayingShowPronunciation": "Show Pronunciation",
-  "nowPlayingHideTranslation": "Hide Translation",
-  "nowPlayingShowTranslation": "Show Translation",
-  "nowPlayingShuffleOn": "Shuffle on",
+  "nowPlayingHidePronunciation": "إخفاء النطق",
+  "nowPlayingShowPronunciation": "إظهار النطق",
+  "nowPlayingHideTranslation": "إخفاء الترجمة",
+  "nowPlayingShowTranslation": "إظهار الترجمة",
+  "nowPlayingShuffleOn": "التشغيل العشوائي مفعّل",
   "@nowPlayingShuffleOn": {
     "description": "Tooltip when shuffle mode is enabled"
   },
-  "nowPlayingPlayInOrder": "Play in order",
+  "nowPlayingPlayInOrder": "التشغيل بالترتيب",
   "@nowPlayingPlayInOrder": {
     "description": "Tooltip when shuffle mode is disabled"
   },
-  "nowPlayingQueueEmpty": "Queue is empty",
+  "nowPlayingQueueEmpty": "قائمة الانتظار فارغة",
   "@nowPlayingQueueEmpty": {
     "description": "Empty state when the playback queue has no items"
   },
-  "nowPlayingNoMetadata": "No metadata available",
+  "nowPlayingNoMetadata": "لا توجد بيانات وصفية متاحة",
   "@nowPlayingNoMetadata": {
     "description": "Empty state when track metadata cannot be loaded"
   },
-  "selectionDeletePlaylistsCount": "Delete {count} {count, plural, =1{playlist} other{playlists}}",
+  "selectionDeletePlaylistsCount": "حذف {count} {count, plural, =1{قائمة تشغيل} other{قوائم تشغيل}}",
   "@selectionDeletePlaylistsCount": {
     "description": "Button label for deleting multiple selected playlists",
     "placeholders": {
@@ -2277,27 +2277,27 @@
       }
     }
   },
-  "actionShuffle": "Shuffle",
+  "actionShuffle": "تشغيل عشوائي",
   "@actionShuffle": {
     "description": "Tooltip for shuffle playback action"
   },
-  "unknownTitle": "Unknown title",
+  "unknownTitle": "عنوان غير معروف",
   "@unknownTitle": {
     "description": "Fallback track title when metadata is missing"
   },
-  "trackPlayNext": "Play next",
+  "trackPlayNext": "تشغيل التالي",
   "@trackPlayNext": {
     "description": "Menu action to play a track as the next queue item"
   },
-  "trackAddToQueue": "Add to queue",
+  "trackAddToQueue": "إضافة إلى قائمة الانتظار",
   "@trackAddToQueue": {
     "description": "Menu action to add a track to the playback queue"
   },
-  "settingsSearchHint": "Search settings",
+  "settingsSearchHint": "بحث في الإعدادات",
   "@settingsSearchHint": {
     "description": "Placeholder of the search field on the Settings tab"
   },
-  "settingsSearchNoResults": "No settings match \"{query}\"",
+  "settingsSearchNoResults": "لا توجد إعدادات تطابق «{query}»",
   "@settingsSearchNoResults": {
     "description": "Shown when a Settings search returns nothing",
     "placeholders": {
@@ -2306,11 +2306,11 @@
       }
     }
   },
-  "libraryFilterMetadataMissingLyrics": "Missing lyrics",
+  "libraryFilterMetadataMissingLyrics": "الكلمات مفقودة",
   "@libraryFilterMetadataMissingLyrics": {
     "description": "Filter option for tracks without embedded or sidecar lyrics"
   },
-  "libraryFilterMetadataMissingReplayGain": "Missing ReplayGain",
+  "libraryFilterMetadataMissingReplayGain": "ReplayGain مفقود",
   "@libraryFilterMetadataMissingReplayGain": {
     "description": "Filter option for scanned tracks without ReplayGain gain tags"
   },
@@ -2318,38 +2318,38 @@
   "libraryFilterIncompleteAlbums": "ألبومات غير مكتملة",
   "libraryAlbumCompletenessUnknown": "اكتمال الألبوم غير معروف",
   "libraryAlbumMissingTracks": "{present}/{expected} مقطعًا · {missing} مفقود",
-  "appSearch": "Search",
-  "appContinuePlaying": "Continue Playing",
-  "appFavorite": "Favorite",
+  "appSearch": "بحث",
+  "appContinuePlaying": "متابعة التشغيل",
+  "appFavorite": "مفضّل",
   "@appFavorite": {
     "description": "Compact context menu action that adds a track to Loved"
   },
-  "appGoToArtist": "Go to Artist",
-  "appFavorited": "Favorited",
+  "appGoToArtist": "الانتقال إلى الفنان",
+  "appFavorited": "أُضيف إلى المفضلة",
   "@appFavorited": {
     "description": "Selected state of the compact favorite action"
   },
-  "autoMixDescription": "Blend songs with beat matching and pitch-preserving tempo adjustment. Uses crossfade when beats cannot be matched.",
-  "autoMixOn": "AutoMix on",
-  "autoMixOff": "AutoMix off",
-  "autoplayOn": "Autoplay on",
-  "autoplayOff": "Autoplay off",
-  "autoplayFromLibrary": "Autoplay from your Library",
+  "autoMixDescription": "يمزج الأغاني بمطابقة الإيقاع وضبط السرعة مع الحفاظ على درجة الصوت. يستخدم Crossfade عندما تتعذر مطابقة الإيقاعات.",
+  "autoMixOn": "AutoMix مفعّل",
+  "autoMixOff": "AutoMix متوقف",
+  "autoplayOn": "التشغيل التلقائي مفعّل",
+  "autoplayOff": "التشغيل التلقائي متوقف",
+  "autoplayFromLibrary": "التشغيل التلقائي من مكتبتك",
   "autoplayDescription": "تابع بأغانٍ ذات صلة من مكتبتك عند انتهاء قائمة الانتظار.",
   "autoplayPersonalization": "التشغيل التلقائي المخصص",
   "autoplayPersonalizationDescription": "تعلّم من الأغاني التي تستمع إليها وتتخطاها، بخصوصية على هذا الجهاز. إيقاف هذا الخيار يوقف التعلم ويعيد التشغيل التلقائي العادي.",
   "autoplayResetLearning": "إعادة ضبط تعلّم التوصيات",
   "autoplayResetLearningConfirm": "إعادة الضبط",
-  "profileTitle": "Profile",
-  "profileSetUp": "Set up your profile",
-  "profileEdit": "Edit name and photo",
-  "backupIncludesProfile": "Includes your profile name and photo",
-  "profileName": "Name",
-  "profileNameHint": "Your name",
-  "profileChangePhoto": "Choose photo",
-  "profileRemovePhoto": "Remove photo",
-  "profilePhotoError": "Choose a valid image smaller than 20 MB.",
-  "profileSaveError": "Could not save your profile. Please try again.",
+  "profileTitle": "الملف الشخصي",
+  "profileSetUp": "إعداد ملفك الشخصي",
+  "profileEdit": "تعديل الاسم والصورة",
+  "backupIncludesProfile": "يتضمن اسم ملفك الشخصي وصورته",
+  "profileName": "الاسم",
+  "profileNameHint": "اسمك",
+  "profileChangePhoto": "اختيار صورة",
+  "profileRemovePhoto": "إزالة الصورة",
+  "profilePhotoError": "اختر صورة صالحة أصغر من 20 ميغابايت.",
+  "profileSaveError": "تعذّر حفظ ملفك الشخصي. حاول مرة أخرى.",
   "motionArtwork": "الصور المتحركة",
   "listeningStats": "الإحصاءات",
   "listeningStatsDescription": "تُخزَّن على هذا الجهاز فقط، ابتداءً من الآن. تُسجَّل بيانات المشغّل المدمج فقط؛ الإيقاف المؤقت والتخزين المؤقت والتقديم لا تضيف وقت استماع. تُحتسب مرة التشغيل بعد 30 ثانية.",
@@ -2409,7 +2409,7 @@
   "tutorialPlaybackTip1": "شغّل الموسيقى أو أوقفها مؤقتًا بالمشغّل المدمج",
   "tutorialPlaybackTip2": "أضف المقاطع المحلية إلى قائمة الانتظار وقوائم التشغيل",
   "tutorialPlaybackTip3": "اقرأ الكلمات المضمنة أو المرافقة أثناء الاستماع",
-  "cueSplitButton": "Split into Tracks",
+  "cueSplitButton": "تقسيم إلى مقاطع",
   "@cueSplitButton": {
     "description": "Button text to start CUE splitting"
   },
@@ -2425,15 +2425,15 @@
       }
     }
   },
-  "cueSplitConfirmTitle": "Split CUE Album",
+  "cueSplitConfirmTitle": "تقسيم ألبوم CUE",
   "@cueSplitConfirmTitle": {
     "description": "CUE split confirmation dialog title"
   },
-  "cueSplitFailed": "CUE split failed",
+  "cueSplitFailed": "فشل تقسيم CUE",
   "@cueSplitFailed": {
     "description": "Snackbar when CUE split fails"
   },
-  "cueSplitSplitting": "Splitting CUE sheet... ({current}/{total})",
+  "cueSplitSplitting": "جارٍ تقسيم ملف CUE... ({current}/{total})",
   "@cueSplitSplitting": {
     "description": "Snackbar while splitting CUE",
     "placeholders": {
@@ -2445,7 +2445,7 @@
       }
     }
   },
-  "cueSplitSuccess": "Split into {count} tracks successfully",
+  "cueSplitSuccess": "تم التقسيم إلى {count} مقاطع بنجاح",
   "@cueSplitSuccess": {
     "description": "Snackbar after successful CUE split",
     "placeholders": {
@@ -2456,15 +2456,15 @@
   },
   "cueSplitPartialSuccess": "تم التقسيم إلى {count} من المقاطع؛ تعذّر إنشاء {failed}",
   "cueSplitSavedOutsideLibrary": "حُفظت المقاطع خارج مكتبة موسيقاك. أضف ذلك المجلد ضمن المكتبة المحلية لرؤيتها.",
-  "cueSplitTitle": "Split CUE Sheet",
+  "cueSplitTitle": "تقسيم ملف CUE",
   "@cueSplitTitle": {
     "description": "Title for CUE split bottom sheet"
   },
-  "snackbarAddedToQueueGeneric": "Added to queue",
+  "snackbarAddedToQueueGeneric": "أُضيف إلى قائمة الانتظار",
   "@snackbarAddedToQueueGeneric": {
     "description": "Snackbar when a track is added to the playback queue without naming it"
   },
-  "snackbarPlayingNext": "Playing next",
+  "snackbarPlayingNext": "سيُشغَّل التالي",
   "@snackbarPlayingNext": {
     "description": "Snackbar when a track is inserted as the next queue item"
   },
@@ -2472,7 +2472,7 @@
   "@trackCopyFilePath": {
     "description": "Action - copy file path"
   },
-  "trackDeleteConfirmMessage": "This permanently deletes the local audio file and removes it from your library.",
+  "trackDeleteConfirmMessage": "يحذف هذا نهائيًا ملف الصوت المحلي ويزيله من مكتبتك.",
   "trackDeleteConfirmTitle": "حذف من الجهاز؟",
   "@trackDeleteConfirmTitle": {
     "description": "Delete confirmation title"
@@ -2499,7 +2499,7 @@
   "audioInfoOutput": "المخرج",
   "audioInfoAnalysis": "تحليل الطيف والمستوى",
   "audioInfoQuality": "الجودة",
-  "audioInfoHiResLossless": "Hi-Res Lossless",
+  "audioInfoHiResLossless": "Hi-Res بلا فقد",
   "audioInfoLossless": "بدون فقد",
   "audioInfoLossy": "مع فقد",
   "audioInfoFormat": "التنسيق",
@@ -2691,14 +2691,14 @@
   "updateWhatsNew": "ما الجديد",
   "updateDownloadInstall": "تحميل وتثبيت",
   "updateDontRemind": "لا تذكّرني",
-  "updateViewRelease": "View Release",
-  "updateSeeReleaseNotes": "See release notes for details.",
-  "notifDownloadingUpdate": "Downloading Sistrum v{version}",
-  "notifUpdateProgress": "{received} / {total} MB • {percentage}%",
-  "notifUpdateReady": "Update Ready",
-  "notifUpdateReadyBody": "Sistrum v{version} downloaded. Tap to install.",
-  "notifUpdateFailed": "Update Failed",
-  "notifUpdateFailedBody": "Could not download update. Try again later.",
+  "updateViewRelease": "عرض الإصدار",
+  "updateSeeReleaseNotes": "راجع ملاحظات الإصدار للتفاصيل.",
+  "notifDownloadingUpdate": "جارٍ تنزيل Sistrum v{version}",
+  "notifUpdateProgress": "{received} / {total} ميغابايت • {percentage}%",
+  "notifUpdateReady": "التحديث جاهز",
+  "notifUpdateReadyBody": "تم تنزيل Sistrum v{version}. اضغط للتثبيت.",
+  "notifUpdateFailed": "فشل التحديث",
+  "notifUpdateFailedBody": "تعذّر تنزيل التحديث. حاول لاحقًا.",
   "settingsUpdates": "التحديثات",
   "settingsUpdatesSubtitle": "ابحث عن إصدارات جديدة",
   "updateCheckNow": "تحقق الآن",
