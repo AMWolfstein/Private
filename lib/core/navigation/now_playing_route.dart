@@ -10,13 +10,21 @@ const kNowPlayingArtworkHeroTag = 'now-playing-artwork';
 /// page follows the finger (via [startDrag]/[updateDrag]/[endDrag]) and
 /// settles open or pops based on release position and velocity.
 class NowPlayingRoute extends PageRoute<void> {
-  NowPlayingRoute({required this.child, this.miniPlayerGeometry})
-    : super(
-        fullscreenDialog: true,
-        settings: const RouteSettings(name: fullPlayerRouteName),
-      );
+  NowPlayingRoute({
+    required this.child,
+    this.miniPlayerGeometry,
+    this.openOrigin,
+  }) : super(
+         fullscreenDialog: true,
+         settings: const RouteSettings(name: fullPlayerRouteName),
+       );
 
   final Widget child;
+
+  /// Mini player surface in overlay coordinates when the player was opened.
+  /// The route grows from this rect to the full screen, and shrinks back to
+  /// it while dismissing, so opening and closing mirror each other.
+  final Rect? openOrigin;
 
   /// Read at dismissal so rotation and collapsing navigation cannot leave a
   /// stale destination from when the player was opened.
@@ -225,6 +233,55 @@ class NowPlayingRoute extends PageRoute<void> {
                     : cover.child,
               ),
             ),
+        ],
+      );
+    }
+    final origin = openOrigin;
+    if (origin != null && !MediaQuery.disableAnimationsOf(context)) {
+      // Same tree shape as the dismissal above, so the page is not remounted
+      // when the open animation ends or a drag or dismissal takes over.
+      final size = MediaQuery.sizeOf(context);
+      // A drag keeps the page sliding under the finger; only the programmatic
+      // open grows out of the mini player.
+      final dragging = _interactiveTransition;
+      final grow = Easing.emphasizedDecelerate.transform(animation.value);
+      final bounds = dragging
+          ? Rect.fromLTWH(
+              0,
+              size.height * (1 - animation.value.clamp(0.0, 1.0)),
+              size.width,
+              size.height,
+            )
+          : Rect.lerp(origin, Offset.zero & size, grow)!;
+      return Stack(
+        fit: StackFit.expand,
+        children: [
+          Positioned.fromRect(
+            rect: bounds,
+            child: ClipRRect(
+              key: const ValueKey('player-minimize-surface'),
+              borderRadius: BorderRadius.circular(
+                dragging ? 0 : 28 * (1 - grow),
+              ),
+              child: OverflowBox(
+                alignment: Alignment.topLeft,
+                minWidth: size.width,
+                maxWidth: size.width,
+                minHeight: size.height,
+                maxHeight: size.height,
+                child: Transform.scale(
+                  scale: bounds.width / size.width,
+                  alignment: Alignment.topLeft,
+                  child: Opacity(
+                    opacity: dragging
+                        ? 1
+                        : const Interval(0, 0.6).transform(grow),
+                    child: child,
+                  ),
+                ),
+              ),
+            ),
+          ),
         ],
       );
     }
