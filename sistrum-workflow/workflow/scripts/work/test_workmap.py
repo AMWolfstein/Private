@@ -249,6 +249,19 @@ class DefaultOffTests(Repo):
         self.assertTrue(data['deps'], 'Dart and Kotlin imports still come from the pattern scans')
         self.assertFalse((self.root / '.work/map/graphify').exists())
 
+    def test_blast_radius_ranks_callers_and_reaches_tests(self):
+        self.write('lib/a/core.dart', "class Core {\n  void work() {}\n}\n")
+        self.write('lib/a/caller.dart', "import 'core.dart';\n\nvoid go1() {\n  work();\n  work();\n}\n")
+        self.write('test/a/caller_test.dart', "import '../../lib/a/caller.dart';\n\nvoid main() {\n  go1();\n}\n")
+        self.update()
+        data = self.data()
+        context = workmap.Context(self.root, data, workmap.load_config(self.root), workmap.map_status(self.root), None)
+        symbol = next(s for s in data['symbols'] if s['name'] == 'work')
+        text = '\n'.join(context.blast_radius(symbol))
+        self.assertIn('2 call site(s) from 1 file(s)', text)
+        self.assertIn('called by go1 at lib/a/caller.dart:4 (2 call site(s))', text)
+        self.assertIn('test/a/caller_test.dart', text)
+
     def test_pattern_declarations_include_multi_line_signatures(self):
         self.write('lib/a/wide.dart', "class Wide {\n  void report(\n    Object error,\n    int code,\n  ) {\n"
                    "    print(error);\n  }\n  void call(Object x) => report(x, 1);\n}\n")

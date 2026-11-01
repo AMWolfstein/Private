@@ -1462,6 +1462,50 @@ class Context:
             if dep['to']:
                 self.importers.setdefault(dep['to'], []).append(dep)
 
+    def blast_radius(self, symbol: dict, depth: int = 3, shown: int = 5) -> list[str]:
+        """Who calls the symbol, what it calls, and the tests that reach its callers within `depth` import hops.
+        Callers are ranked by call sites; the call edges carry their own provenance."""
+        callers: dict[tuple[str, str], dict] = {}
+        callees: dict[str, int] = {}
+        for edge in self.data['edges']:
+            if edge['relation'] != 'calls':
+                continue
+            if edge.get('target') == symbol['id']:
+                source = self.symbol_by_id.get(edge['source'])
+                key = (edge['file'], source['name'] if source else edge['source'])
+                item = callers.setdefault(key, {'count': 0, 'line': edge['line']})
+                item['count'] += 1
+            elif edge['source'] == symbol['id'] and edge.get('target') in self.symbol_by_id:
+                name = self.symbol_by_id[edge['target']]['name']
+                callees[name] = callees.get(name, 0) + 1
+        ranked = sorted(callers.items(), key=lambda kv: (-kv[1]['count'], kv[0]))
+        caller_files = {file for (file, _), _ in ranked}
+        reached, frontier = set(caller_files), set(caller_files)
+        for _ in range(depth):
+            following = set()
+            for path in frontier:
+                for dep in self.importers.get(path, []):
+                    source = dep['from'].split(' ')[0]
+                    if source not in reached:
+                        reached.add(source)
+                        following.add(source)
+            frontier = following
+        tests = sorted(p for p in reached if self.data['files'].get(p, {}).get('test'))
+        head = f'**{symbol["name"]}** at {symbol["file"]}:{symbol["line"]}: {sum(v["count"] for v in callers.values())} ' \
+               f'call site(s) from {len(caller_files)} file(s)'
+        lines = [head]
+        if callees:
+            top = sorted(callees.items(), key=lambda kv: (-kv[1], kv[0]))[:shown]
+            lines.append('- calls: ' + ', '.join(f'{name} ({n})' for name, n in top))
+        for (file, name), item in ranked[:shown]:
+            lines.append(f'- called by {name} at {file}:{item["line"]} ({item["count"]} call site(s))')
+        if len(ranked) > shown:
+            lines.append(f'- ... {len(ranked) - shown} more caller(s)')
+        lines.append('- tests within ' + str(depth) + ' import hops of the callers: '
+                     + (', '.join(tests[:shown]) + (f' (+{len(tests) - shown} more)' if len(tests) > shown else '')
+                        if tests else 'none found'))
+        return lines
+
     # -- entry points
     def entries(self, task: str, files: list[str], symbols: list[str]) -> tuple[list[dict], list[str]]:
         notes, chosen = [], {}
@@ -1760,7 +1804,7 @@ def context(root: Path, task: str = '', files: list[str] = (), symbols: list[str
     if lines:
         optional.append(('## Symbols in entry files' + ('' if structure.get('declarations') != 'none' else ' (none: '
                          'structure unavailable)'), lines, more))
-    excerpts, shown = [], 0
+    excerpts, shown, focus = [], 0, []
     named = set(symbols)
     for entry in entries:
         # the symbol the task names first, then functions before the types that contain them
@@ -1772,9 +1816,14 @@ def context(root: Path, task: str = '', files: list[str] = (), symbols: list[str
             text = excerpt(root, symbol['file'], symbol['line'], config['context']['excerpt_lines'])
             if text:
                 excerpts.append(f'{where(symbol)} ({symbol["name"]}):\n```\n{text}\n```')
+                focus.append(symbol)
                 shown += 1
     if excerpts:
         optional.append(('## Excerpts (current files)', excerpts, 0))
+    if focus and structure.get('declarations') != 'none':
+        blocks = ['\n'.join(view.blast_radius(symbol)) for symbol in focus]
+        optional.append(('## Blast radius of the focus symbols (callers by use; tests within 3 import hops)',
+                         blocks, 0))
     for path in sorted(paths):
         out = [d for d in view.imports.get(path, []) if d['to']]
         incoming = list(view.importers.get(path, []))

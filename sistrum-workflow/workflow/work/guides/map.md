@@ -33,6 +33,11 @@ python3 workflow/scripts/work/work.py map update
   skip), check the Dart/Kotlin notes below, then change `extractor.version` in `workflow/work/map.json`.
 - `extractor.enabled` defaults to `false`. `WORK_MAP_STRUCTURE=off` also forces it off for one run (status `disabled`).
 
+Blast radius: for up to three focus symbols (the excerpted ones), the packet lists the calls into them ranked by
+call sites, the calls they make, and the tests reachable from the callers within three import hops. Each call
+edge carries its own `fact` and `confidence`, so inferred Dart calls stay labelled. Not implemented: callers of
+qualified calls, and call paths longer than one edge.
+
 ## Commands
 
 ```sh
