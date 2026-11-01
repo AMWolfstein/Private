@@ -17,3 +17,15 @@ an error as completion. Dart forwards the output error, retains the selected son
 supports Play retry; failed output must not automatically advance the queue.
 No equalizer code/dependencies were imported from upstream. The existing descriptor lease
 patch above is retained. Device MediaPlayer behavior still needs physical-device testing.
+
+## Native gapless handoff (2026-11-01)
+
+`setNextPlayer` links two prepared ordinary MediaPlayer wrappers through
+`setNextMediaPlayer`. The wrapper marks the already-started incoming player as
+playing on outgoing completion and avoids stop/seek/focus release during that
+handoff. Dart owns generation validation, unlinking on cancellation and deck
+disposal; USB/direct and exclusive paths do not use this link. The API is
+available since Android API 16 and introduces no native ABI dependency. The Android
+Kotlin library compiles, host orchestration/cancellation tests cover the Dart
+owner, and a separate Android integration test is supplied. Acoustic continuity
+and OEM behavior remain unverified on a physical device.

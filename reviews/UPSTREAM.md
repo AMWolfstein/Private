@@ -19,6 +19,26 @@ batch.
 - Do the ports before any module/folder reorganisation; moved files make every patch fail.
 - Before a `FIX_PLAN.md` batch, check this list for an upstream commit that fixes the same code.
 
+## Local features adapted from v5.3.0 (2026-11-01)
+
+Owner requested these on the current Android engine, independently of the future
+Kotlin/Media3 plan. Reference tag: `afee4332a257f1b6aeb288229eddf04ac0777b3c`.
+All five adaptations are in source commit `a5f262ac`.
+
+| ID | Upstream reference | Current-engine adaptation |
+|---|---|---|
+| U-601 | `b2c500c4`, `4a2848f3` | Home local-library mixes; bounded 1,500-row sample, deterministic daily selection, artist balancing, favorites/genre/artist/decade/fresh variants, existing local queue controller. No download/provider code. |
+| U-602 | `c4b98bba`, `5bc71671` | AdaGrad plus bounded Thompson arms, version-1 migration, local audible feedback, replay and committed love/playlist events. Adapted upstream model/tests retain LGPL-3.0-only notices and complete in-app terms. |
+| U-603 | `lib/services/autoplay_sound_signal.dart` | Lightweight adaptation: optional acoustic Autoplay using six decoded energy/texture/envelope measurements, cancellable short-window FFmpeg jobs and bounded invalidating local cache. Upstream MFCC/tempo/key extraction and full-library scheduling are not transplanted. |
+| U-604 | `152bb36d2e679c64ceec2f9930ee7cdd81009736` | Global -2..+2 second lyric timing, saved on release; lead/backing/word/romanization/countdown/strip timing stays coherent, seek/share timestamps stay original. Existing theme persistence and widgets retained. |
+| U-605 | `lib/services/music_player_gapless.dart` | Native `MediaPlayer.setNextMediaPlayer` on the current vendored audioplayers bridge, sharing AutoMix ownership/generation/cache/normalization. Cancellation and ordinary completion fallback retained; direct USB/exclusive/DSD/repeat-one excluded. |
+
+Verification: full Flutter suite **2,321 passed, 0 failed, 3 skipped**; Flutter
+analysis clean; Android plugin Kotlin compilation succeeds (library unit-test
+task has no test sources). The new Android handoff integration test and acoustic
+continuity/device-cost measurements are **NOT RUN**. No APK and no push.
+Details: `docs/LOCAL_PLAYBACK_FEATURES.md`.
+
 ## Port order (batches; test once per batch)
 
 Done: batch 1 (U-001, U-101, U-102, U-103; pushed `3f8bbe7`) and batch 1b:

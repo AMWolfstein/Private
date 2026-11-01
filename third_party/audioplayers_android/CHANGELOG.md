@@ -1,3 +1,10 @@
+## Sistrum local patch (2026-11-01)
+
+- Add an ordinary MediaPlayer next-player link for native gapless handoff.
+- Adopt the linked player's running state on completion without stopping the
+  outgoing focus owner before the next source starts.
+- Source preparation, cancellation and deck disposal remain owned by Sistrum.
+
 ## 5.3.0
 
  - **FEAT**(android): Compatibility with Built-In Kotlin ([#1991](https://github.com/bluefireteam/audioplayers/issues/1991)). ([687218b9](https://github.com/bluefireteam/audioplayers/commit/687218b96682a7bcadd9490572db692dbc9a2f07))
