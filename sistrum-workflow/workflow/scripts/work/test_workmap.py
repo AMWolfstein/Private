@@ -277,6 +277,20 @@ class DefaultOffTests(Repo):
         self.assertIn('called by go1 at lib/a/caller.dart:4 (2 call site(s))', text)
         self.assertIn('test/a/caller_test.dart', text)
 
+    def test_rust_python_and_swift_declarations_come_from_the_pattern_scan(self):
+        self.write('rust/src/engine.rs', "pub struct Engine {\n    x: u8,\n}\nimpl Engine {\n    pub fn start(&self) -> u8 {\n"
+                   "        1\n    }\n}\npub fn free() {}\n")
+        self.write('py/player.py', "class Player:\n    def play(self, track):\n        pass\n\ndef helper():\n    return 1\n")
+        self.write('ios/Store.swift', "public final class Store {\n    func save() {}\n}\nfunc top() {}\n")
+        self.update()
+        symbols = {(s['file'], s['name']): s for s in self.data()['symbols']}
+        self.assertEqual(symbols[('rust/src/engine.rs', 'start')]['owner'], 'Engine')
+        self.assertEqual(symbols[('py/player.py', 'play')]['owner'], 'Player')
+        self.assertEqual(symbols[('ios/Store.swift', 'save')]['owner'], 'Store')
+        self.assertIsNone(symbols[('py/player.py', 'helper')].get('owner'))
+        self.assertTrue(all(s['via'].endswith('-declaration') for s in symbols.values()
+                            if s['file'].split('.')[-1] in ('rs', 'py', 'swift')))
+
     def test_pattern_declarations_include_multi_line_signatures(self):
         self.write('lib/a/wide.dart', "class Wide {\n  void report(\n    Object error,\n    int code,\n  ) {\n"
                    "    print(error);\n  }\n  void call(Object x) => report(x, 1);\n}\n")

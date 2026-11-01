@@ -10,7 +10,9 @@ The map never proves that tests pass, that the architecture is right or that a r
 The map runs on its built-in pattern scan and needs nothing installed. Graphify is not used by this workflow:
 `extractor.enabled` is `false` in `workflow/work/map.json` (status `disabled`), and the adapter stays in place only
 so that a later decision can turn it on. Dart and Kotlin declarations, imports, channels and tests come from the
-pattern scan. Other languages get no symbols or calls until one of them is added to the scan.
+pattern scan. Rust, Python and Swift declarations come from the same kind of scan (`workflow:<lang>-declaration`,
+declared, medium), with owners for methods in an `impl`, class or type; they have no call attribution yet. Other
+languages (C, C++, Java, Go, shell, ...) get no symbols or calls.
 
 - Verified version: graphifyy 0.9.97 (Apache-2.0, `graphifyy-0.9.97.dist-info/licenses/`). It pulls in
   networkx, numpy, rapidfuzz, pyyaml, tree-sitter 0.25 and about 25 tree-sitter grammar packages; it is not

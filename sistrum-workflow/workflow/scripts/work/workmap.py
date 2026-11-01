@@ -813,16 +813,43 @@ KT_DECL = re.compile(r'^(\s*)(?:(?:public|private|internal|protected|override|su
                      r'(?:[\w.]+\.)?([A-Za-z_]\w*)')
 
 
+# Rust, Python and Swift declarations, by line pattern (stdlib only, no parser). Same contract as the Dart and
+# Kotlin scan: `declared` facts, multi-line signatures are read for a body, a member's owner is the last top-level
+# type above it. Calls in these languages are not attributed yet.
+RUST_DECL = re.compile(r'^(\s*)(?:pub(?:\([^)]*\))?\s+)?(?:async\s+|const\s+|unsafe\s+|extern\s+"[^"]*"\s+)*'
+                       r'(fn|struct|enum|trait|mod|type)\s+([A-Za-z_]\w*)')
+RUST_IMPL = re.compile(r'^impl(?:<[^>]*>)?\s+(?:[\w:<>, ]+?\s+for\s+)?([A-Za-z_]\w*)')
+PY_DECL = re.compile(r'^(\s*)(?:async\s+)?(def|class)\s+([A-Za-z_]\w*)')
+SWIFT_DECL = re.compile(r'^(\s*)(?:(?:public|private|internal|fileprivate|open|final|static|override|mutating|'
+                        r'required|convenience|nonmutating|@\w+)\s+)*(func|class|struct|enum|protocol|extension)'
+                        r'\s+([A-Za-z_]\w*)')
+PATTERN_LANGUAGES = ('dart', 'kotlin', 'rust', 'python', 'swift')
+
+
 def scan_declarations(texts: dict, file_info: dict) -> list[dict]:
     symbols = []
     for path, text in texts.items():
         lang = file_info.get(path, {}).get('lang')
-        if lang not in ('dart', 'kotlin'):
+        if lang not in PATTERN_LANGUAGES:
             continue
         owner = None
         lines = text.split('\n')
         for number, line in enumerate(lines, 1):
-            if lang == 'dart':
+            if lang in ('rust', 'python', 'swift'):
+                kind = name = None
+                found = {'rust': RUST_DECL, 'python': PY_DECL, 'swift': SWIFT_DECL}[lang].match(line)
+                if not found and lang == 'rust':
+                    impl = RUST_IMPL.match(line)
+                    if impl:
+                        owner = impl.group(1)  # methods below an `impl` block belong to it
+                    continue
+                if not found:
+                    continue
+                indent, raw_kind, name = found.group(1), found.group(2), found.group(3)
+                kind = 'function' if raw_kind in ('fn', 'def', 'func') else raw_kind
+                if indent == '':
+                    owner = None if kind == 'function' else name
+            elif lang == 'dart':
                 kind = name = None
                 top = DART_TYPE_DECL.match(line)
                 if top:
