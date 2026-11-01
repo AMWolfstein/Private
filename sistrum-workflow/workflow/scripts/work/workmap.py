@@ -557,7 +557,7 @@ def build(root: Path, config: dict, tool: dict, current: dict) -> dict:
     problems += dep_problems
     bridges = scan_bridges(texts, file_info, config)
     attach_bridge_tests(root, bridges, current['aux'], file_info, texts)
-    name_edges, name_notes = dart_name_calls(texts, symbols, file_info, deps)
+    name_edges, name_notes = name_calls(texts, symbols, file_info, deps)
     edges += name_edges
     problems += name_notes
     tests = link_tests(file_info, deps, symbols, edges)
@@ -574,7 +574,7 @@ def build(root: Path, config: dict, tool: dict, current: dict) -> dict:
 
 LANGUAGE_BY_SUFFIX = {'.dart': 'dart', '.kt': 'kotlin', '.kts': 'kotlin', '.rs': 'rust', '.c': 'c', '.h': 'c',
                       '.cpp': 'cpp', '.cc': 'cpp', '.cxx': 'cpp', '.hpp': 'cpp', '.java': 'java', '.py': 'python',
-                      '.swift': 'swift', '.sh': 'shell', '.bash': 'shell', '.gradle': 'gradle'}
+                      '.swift': 'swift', '.sh': 'shell', '.bash': 'shell', '.gradle': 'gradle', '.go': 'go'}
 
 
 # Calls that name too little to point at one declaration.
@@ -586,28 +586,32 @@ CALL_STOP = {'build', 'toString', 'setState', 'dispose', 'initState', 'then', 'o
 CALL_TOKEN = re.compile(r'\b([A-Za-z_]\w*)\s*\(')
 
 
-def dart_name_calls(texts: dict, symbols: list, file_info: dict, deps: list) -> tuple[list[dict], list[str]]:
-    """Dart call edges inferred by name. Graphify emits none for Dart, so a call `f(` counts as a call to
-    a declaration named `f` chosen in scope: first in the same file, then in files the caller imports, and
-    only then anywhere in the corpus when the name is distinctive (up to three files). Always labelled
-    inferred; the caller is the nearest declaration above the call in the same file."""
+def name_calls(texts: dict, symbols: list, file_info: dict, deps: list) -> tuple[list[dict], list[str]]:
+    """Call edges inferred by name, for the languages in CALL_LANGUAGES. A call `f(` is a call to a declaration
+    named `f`, chosen in scope: first in the same file, then in files the caller imports, and only then anywhere
+    in the corpus when the name is distinctive (up to three files). `Type.f(` and `Type::f(` go to the member
+    the declared owner `Type` has; receivers that are not declared names (`value.f(`) are never guessed. Always
+    labelled inferred; the caller is the nearest declaration above the call in the same file."""
     imported: dict[str, set[str]] = {}
     for dep in deps:
         if dep.get('to') and dep.get('kind') in ('import', 'export', 'part', 'part-of'):
             imported.setdefault(dep['from'].split(' ')[0], set()).add(dep['to'])
     by_name: dict[str, list[dict]] = {}
-    for symbol in symbols:
-        if symbol['lang'] == 'dart' and len(symbol['name']) > 2:
-            by_name.setdefault(symbol['name'], []).append(symbol)
     per_file: dict[str, list[dict]] = {}
     for symbol in symbols:
-        if symbol['lang'] == 'dart':
-            per_file.setdefault(symbol['file'], []).append(symbol)
+        if symbol['lang'] not in CALL_LANGUAGES:
+            continue
+        per_file.setdefault(symbol['file'], []).append(symbol)
+        if len(symbol['name']) > 2:
+            by_name.setdefault(symbol['name'], []).append(symbol)
     edges, skipped = [], 0
     for path in sorted(per_file):
-        if path not in texts or file_info.get(path, {}).get('lang') != 'dart':
+        lang = file_info.get(path, {}).get('lang')
+        if path not in texts or lang not in CALL_LANGUAGES:
             continue
         clean = strip_comments(texts[path])
+        if lang == 'python':
+            clean = re.sub(r'#[^\n]*', '', clean)
         declared = sorted(per_file[path], key=lambda s: s['line'] or 0)
         line_of_call = Lines(clean)
         seen = set()
@@ -616,33 +620,28 @@ def dart_name_calls(texts: dict, symbols: list, file_info: dict, deps: list) -> 
             targets = by_name.get(name)
             if not targets:
                 continue
-            # Only unqualified calls and this.x() are attributed: `Other.f(` or `value.f(` usually name a
-            # member of a type the map does not know, and matching them by name produced false edges.
-            before = clean[max(0, found.start() - 5):found.start()]
-            qualified = before.endswith('.') and not before.endswith('this.')
-            if name in CALL_STOP and not qualified:
+            qualifier = QUALIFIER.search(clean[max(0, found.start() - 80):found.start()])
+            receiver = qualifier.group(1) if qualifier else None
+            qualified = receiver is not None and receiver not in SELF_RECEIVERS
+            if (name in CALL_KEYWORDS or name in CALL_STOP) and not qualified:
                 continue  # common names are attributed only through a declared owner, never by name alone
             if qualified:
-                # `Type.f(` is attributed only when Type declares a member named f; a receiver variable
-                # (`value.f(`) is never guessed.
-                receiver = re.search(r'([A-Za-z_]\w*)\.$', clean[:found.start()])
-                owned = [t for t in targets if receiver and t.get('owner') == receiver.group(1)]
+                owned = [t for t in targets if t.get('owner') == receiver]
                 if not owned:
                     continue
                 targets, scope = owned, 'qualified'
-            near = [t for t in targets if t['file'] in imported.get(path, set())]
-            local = [t for t in targets if t['file'] == path]
-            if qualified:
-                pass
-            elif local:
-                targets, scope = local, 'same file'
-            elif near:
-                targets, scope = near, 'imported file'
-            elif len(targets) > 3:
-                skipped += 1
-                continue
             else:
-                scope = 'corpus'
+                near = [t for t in targets if t['file'] in imported.get(path, set())]
+                local = [t for t in targets if t['file'] == path]
+                if local:
+                    targets, scope = local, 'same file'
+                elif near:
+                    targets, scope = near, 'imported file'
+                elif len(targets) > 3:
+                    skipped += 1
+                    continue
+                else:
+                    scope = 'corpus'
             line = line_of_call(found.start())
             callers = [d for d in declared if d['line'] and d['line'] <= line and d['name'] != name]
             if not callers:
@@ -657,10 +656,10 @@ def dart_name_calls(texts: dict, symbols: list, file_info: dict, deps: list) -> 
                 seen.add(key)
                 edges.append({'source': caller['id'], 'target': target['id'], 'relation': 'calls', 'file': path,
                               'line': line, 'context': 'name', 'fact': 'inferred',
-                              'via': f'adapter:dart-name-call ({scope})',
+                              'via': f'adapter:{lang}-name-call ({scope})',
                               'confidence': 'low' if scope == 'corpus' and len(targets) > 1 else 'medium',
                               'target_file': target['file']})
-    notes = [f'{skipped} Dart call site(s) named a symbol declared in more than three files: no call edge inferred']
+    notes = [f'{skipped} call site(s) named a symbol declared in more than three files: no call edge inferred']
     return edges, notes if skipped else []
 
 
@@ -804,7 +803,8 @@ def dart_body_follows(lines: list[str], index: int, paren: int) -> bool:
             if depth == 0:
                 return DART_BODY_START.match(text, position + 1) is not None
     return False
-TYPE_KINDS = {'class', 'mixin', 'enum', 'extension', 'typedef', 'interface', 'object'}
+TYPE_KINDS = {'class', 'mixin', 'enum', 'extension', 'typedef', 'interface', 'object', 'struct', 'record',
+              'namespace', 'union', 'protocol', 'trait', 'mod'}
 DART_NOT_DECLARED = {'if', 'for', 'while', 'switch', 'catch', 'return', 'new', 'else', 'await', 'assert', 'super',
                      'this', 'throw', 'yield', 'do', 'const', 'final', 'var'}
 KT_DECL = re.compile(r'^(\s*)(?:(?:public|private|internal|protected|override|suspend|inline|open|abstract|final|'
@@ -823,7 +823,44 @@ PY_DECL = re.compile(r'^(\s*)(?:async\s+)?(def|class)\s+([A-Za-z_]\w*)')
 SWIFT_DECL = re.compile(r'^(\s*)(?:(?:public|private|internal|fileprivate|open|final|static|override|mutating|'
                         r'required|convenience|nonmutating|@\w+)\s+)*(func|class|struct|enum|protocol|extension)'
                         r'\s+([A-Za-z_]\w*)')
-PATTERN_LANGUAGES = ('dart', 'kotlin', 'rust', 'python', 'swift')
+PATTERN_LANGUAGES = ('dart', 'kotlin', 'rust', 'python', 'swift', 'java', 'c', 'cpp', 'go', 'shell')
+CALL_LANGUAGES = ('dart', 'kotlin', 'swift', 'python', 'rust', 'java', 'go', 'cpp', 'c')
+SELF_RECEIVERS = {'this', 'self', 'Self'}
+CALL_KEYWORDS = {'if', 'for', 'while', 'switch', 'catch', 'return', 'sizeof', 'elif', 'with', 'assert', 'yield',
+                 'not', 'and', 'or', 'else', 'do', 'case', 'new', 'delete', 'throw', 'match', 'lambda', 'def', 'fn',
+                 'func', 'function', 'typeof', 'await', 'super', 'print', 'when', 'synchronized'}
+QUALIFIER = re.compile(r'([A-Za-z_]\w*)\s*(?:\.|::|->)\s*$')
+
+
+JAVA_TYPE = re.compile(r'^(\s*)(?:(?:public|private|protected|static|final|abstract|sealed|strictfp)\s+)*'
+                       r'(class|interface|enum|record)\s+([A-Za-z_]\w*)')
+JAVA_METHOD = re.compile(r'^(\s+)(?:(?:public|private|protected|static|final|abstract|synchronized|native|default)\s+)*'
+                         r'(?:<[^>]*>\s+)?([A-Za-z_][\w.<>\[\],?]*)\s+([A-Za-z_]\w*)\s*\(')
+CPP_TYPE = re.compile(r'^(\s*)(?:template\s*<[^>]*>\s*)?(?:enum\s+)?(class|struct|namespace|union)\s+([A-Za-z_]\w*)')
+C_FUNC = re.compile(r'^([ \t]*)(?:(?:static|inline|virtual|explicit|extern|const|constexpr|unsigned|signed|volatile)\s+)*'
+                    r'([A-Za-z_][\w:<>,*&\s]*?)[\s*&]+(~?[A-Za-z_]\w*(?:::~?[A-Za-z_]\w*)?)\s*\(')
+GO_TYPE = re.compile(r'^type\s+([A-Za-z_]\w*)\s+(struct|interface)\b')
+GO_FUNC = re.compile(r'^func\s+(?:\(\s*\w*\s*\*?\s*([A-Za-z_]\w*)[^)]*\)\s*)?([A-Za-z_]\w*)\s*\(')
+SHELL_FUNC = re.compile(r'^(\s*)(?:function\s+)?([A-Za-z_][\w.-]*)\s*\(\)\s*\{?')
+BRACE_TAIL = re.compile(r'[^;{}()]*\{')
+
+
+def paren_block_follows(lines: list[str], index: int, paren: int) -> bool:
+    """True when the parameter list opened at lines[index][paren] closes, possibly on a later line, and a
+    block `{` follows it (with `throws`, `const` and similar words in between)."""
+    text = '\n'.join([lines[index][paren:]] + lines[index + 1:index + 25])
+    depth = 0
+    for position, char in enumerate(text):
+        if char == '(':
+            depth += 1
+        elif char == ')':
+            depth -= 1
+            if depth == 0:
+                return BRACE_TAIL.match(text, position + 1) is not None
+    return False
+
+
+C_KEYWORD_RETURNS = {'return', 'else', 'case', 'new', 'delete', 'throw', 'sizeof', 'goto', 'do', 'typedef'}
 
 
 def scan_declarations(texts: dict, file_info: dict) -> list[dict]:
@@ -835,6 +872,66 @@ def scan_declarations(texts: dict, file_info: dict) -> list[dict]:
         owner = None
         lines = text.split('\n')
         for number, line in enumerate(lines, 1):
+            explicit = None
+            if lang in ('java', 'c', 'cpp', 'go', 'shell'):
+                kind = name = None
+                if lang == 'go':
+                    declared_type = GO_TYPE.match(line)
+                    if declared_type:
+                        kind, name = declared_type.group(2), declared_type.group(1)
+                        owner = name
+                    else:
+                        func = GO_FUNC.match(line)
+                        if func:
+                            kind, name = 'function', func.group(2)
+                            explicit = func.group(1)  # receiver type, or None for a plain function
+                            if not explicit:
+                                owner = None
+                elif lang == 'shell':
+                    func = SHELL_FUNC.match(line)
+                    if func:
+                        kind, name = 'function', func.group(2)
+                elif lang == 'java':
+                    declared_type = JAVA_TYPE.match(line)
+                    if declared_type:
+                        kind, name = declared_type.group(2), declared_type.group(3)
+                        if declared_type.group(1) == '':
+                            owner = name
+                    else:
+                        method = JAVA_METHOD.match(line)
+                        if method and method.group(2) not in C_KEYWORD_RETURNS and method.group(3) not in CALL_KEYWORDS \
+                                and paren_block_follows(lines, number - 1, method.end() - 1):
+                            kind, name = 'function', method.group(3)
+                else:  # c and cpp
+                    declared_type = CPP_TYPE.match(line)
+                    if declared_type:
+                        kind, name = declared_type.group(2), declared_type.group(3)
+                        if declared_type.group(1) == '':
+                            owner = name
+                    else:
+                        func = C_FUNC.match(line)
+                        if func and func.group(2).split()[-1] not in C_KEYWORD_RETURNS \
+                                and func.group(3).split('::')[-1] not in CALL_KEYWORDS \
+                                and paren_block_follows(lines, number - 1, func.end() - 1):
+                            kind = 'function'
+                            qualified_name = func.group(3)
+                            if '::' in qualified_name:
+                                explicit, name = qualified_name.rsplit('::', 1)
+                                explicit = explicit.split('::')[-1]
+                            else:
+                                name = qualified_name
+                                if func.group(1) == '':
+                                    owner = None
+                if not name:
+                    continue
+                item = {'id': f'{path}#{number}', 'name': name, 'label': name, 'file': path, 'line': number,
+                        'lang': lang, 'kind': kind, 'via': f'workflow:{lang}-declaration',
+                        'fact': 'declared', 'confidence': 'medium'}
+                member_of = explicit or (owner if kind == 'function' else None)
+                if member_of and member_of != name:
+                    item['owner'] = member_of
+                symbols.append(item)
+                continue
             if lang in ('rust', 'python', 'swift'):
                 kind = name = None
                 found = {'rust': RUST_DECL, 'python': PY_DECL, 'swift': SWIFT_DECL}[lang].match(line)

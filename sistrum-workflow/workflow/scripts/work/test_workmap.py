@@ -291,6 +291,31 @@ class DefaultOffTests(Repo):
         self.assertTrue(all(s['via'].endswith('-declaration') for s in symbols.values()
                             if s['file'].split('.')[-1] in ('rs', 'py', 'swift')))
 
+    def test_name_calls_for_each_language_with_its_receiver_rules(self):
+        self.write('py/worker.py', "class Worker:\n    def run(self):\n        self.step()\n\n"
+                   "    def step(self):\n        pass\n")
+        self.write('rust/src/main.rs', "struct Engine;\nimpl Engine {\n    fn new() -> Engine { Engine }\n}\n"
+                   "fn boot() -> Engine {\n    Engine::new()\n}\n")
+        self.write('java/app/Shop.java', "class Shop {\n    void buy() {\n        total();\n    }\n"
+                   "    int total() {\n        return 1;\n    }\n}\n")
+        self.write('go/shop.go', "package shop\n\nfunc Buy() {\n\tTotal()\n}\n\nfunc Total() int {\n\treturn 1\n}\n")
+        self.write('cpp/engine.cpp', "class Engine {\npublic:\n    void spin();\n};\n"
+                   "void Engine::spin() {\n    halt();\n}\nvoid halt() {}\n")
+        self.write('scripts/run.sh', "build() {\n  echo hi\n}\n")
+        self.update()
+        data = self.data()
+        by_id = {s['id']: s for s in data['symbols']}
+        edges = {(by_id[e['source']]['name'], by_id[e['target']]['name'], e['via'])
+                 for e in data['edges'] if e['relation'] == 'calls' and e.get('target') in by_id}
+        self.assertIn(('run', 'step', 'adapter:python-name-call (same file)'), edges)
+        self.assertIn(('boot', 'new', 'adapter:rust-name-call (qualified)'), edges)
+        self.assertIn(('buy', 'total', 'adapter:java-name-call (same file)'), edges)
+        self.assertIn(('Buy', 'Total', 'adapter:go-name-call (same file)'), edges)
+        self.assertIn(('spin', 'halt', 'adapter:cpp-name-call (same file)'), edges)
+        shell = [s for s in data['symbols'] if s['file'] == 'scripts/run.sh']
+        self.assertEqual([(s['name'], s['kind']) for s in shell], [('build', 'function')])
+        self.assertFalse([e for e in data['edges'] if e['file'] == 'scripts/run.sh'])
+
     def test_pattern_declarations_include_multi_line_signatures(self):
         self.write('lib/a/wide.dart', "class Wide {\n  void report(\n    Object error,\n    int code,\n  ) {\n"
                    "    print(error);\n  }\n  void call(Object x) => report(x, 1);\n}\n")

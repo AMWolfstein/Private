@@ -10,9 +10,11 @@ The map never proves that tests pass, that the architecture is right or that a r
 The map runs on its built-in pattern scan and needs nothing installed. Graphify is not used by this workflow:
 `extractor.enabled` is `false` in `workflow/work/map.json` (status `disabled`), and the adapter stays in place only
 so that a later decision can turn it on. Dart and Kotlin declarations, imports, channels and tests come from the
-pattern scan. Rust, Python and Swift declarations come from the same kind of scan (`workflow:<lang>-declaration`,
-declared, medium), with owners for methods in an `impl`, class or type; they have no call attribution yet. Other
-languages (C, C++, Java, Go, shell, ...) get no symbols or calls.
+pattern scan. Rust, Python, Swift, Java, C, C++, Go and shell declarations come from the same kind of scan
+(`workflow:<lang>-declaration`, declared, medium), with owners for methods in an `impl`, class, type, receiver or
+`Class::method` definition. Shell functions are declarations only. Calls are attributed by name for Dart, Kotlin,
+Rust, Python, Java, C, C++ and Go (`adapter:<lang>-name-call`), with the same scope rules as Dart; `self.`, `this.`,
+`Self::` and `this->` count as unqualified.
 
 - Verified version: graphifyy 0.9.97 (Apache-2.0, `graphifyy-0.9.97.dist-info/licenses/`). It pulls in
   networkx, numpy, rapidfuzz, pyyaml, tree-sitter 0.25 and about 25 tree-sitter grammar packages; it is not
@@ -121,7 +123,7 @@ its import edges are left unresolved (the adapter resolves them); Kotlin calls i
 are partly missing (for example `engine.start()` inside a `setMethodCallHandler` lambda).
 
 To fill the Dart call gap the map infers calls by name (`adapter:dart-name-call`, always `inferred`): an
-unqualified call `f(` or `this.f(` in a Dart file is attributed to a declaration named `f` in this scope order:
+unqualified call `f(` or `this.f(` in a Dart file (and the other call languages) is attributed to a declaration named `f` in this scope order:
 the same file (`via` says `(same file)`), then a file it imports (`(imported file)`), then anywhere in the corpus
 only when at most three files declare that name (`(corpus)`, `low` for several). Same-file and imported matches
 are `medium`. The caller is the nearest declaration above the call. Qualified calls such as `Type.f(` or `value.f(`
