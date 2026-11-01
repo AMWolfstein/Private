@@ -13,8 +13,14 @@ chooses the path; the owner never needs to name a skill or a command.
 Authority, highest first: the owner's current instructions; `workflow/work/constitution.md`; accepted change records in
 `workflow/work/changes/`; `docs/AUDIO_ENGINE_MIGRATION.md` when present; the existing code.
 
-The tool is `python3 workflow/scripts/work/work.py` (status, context, map, scope, check, prove, packet, round, lint,
+The tool is `python3 workflow/scripts/work/work.py` (setup, doctor, status, context, map, scope, check, prove, packet, round, lint,
 new, advance). Run `work.py status` when you start and `work.py check auto` before claiming completion.
+
+On first use in a Linux cloud/Fedora checkout, run `python3 workflow/scripts/work/work.py doctor`. If tools are
+missing, run `python3 workflow/scripts/work/work.py setup`; project-local dependency provisioning is part of the
+workflow. No sudo/system-package changes or provider configuration edits. Node/npm must already be available
+for initial CodeGraph provisioning. Setup writes only ignored `.work/`, and ordinary CLI commands then discover
+the managed environment automatically. Do not claim setup success when doctor is BLOCKED.
 
 Before reading code broadly, run `work.py context "<task>"` (with `--file`/`--symbol` once known) and open only the
 files and guides the packet names. It refreshes the code map when stale and labels every fact as extracted,

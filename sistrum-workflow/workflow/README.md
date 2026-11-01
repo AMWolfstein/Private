@@ -101,6 +101,7 @@ Copy the contents of the outer `sistrum-workflow/` package into the new reposito
 new-repository/
 ├── AGENTS.md
 ├── .gitignore
+├── .github/workflows/workflow-linux.yml
 └── workflow/
     ├── README.md
     ├── .agents/
@@ -127,27 +128,34 @@ new-repository/
 Keep AGENTS.md at the root: it directs the agent into workflow/. Merge existing AGENTS.md and .gitignore
 rather than overwriting project content. Copy hidden directories too. No dependency on the old repository remains.
 
-Requirements: Git and Python 3.10+, an initialized checkout with at least one commit. Install CodeGraph
-1.6.2 for AST/resolver analysis (see [map guide](work/guides/map.md)); Graphify is not required. For a project-local
-npm install, use `npm install --prefix .work/tools @colbymchenry/codegraph@1.6.2` and configure
-`extractor.command` for that executable or put it on PATH. No automatic downloads or agent configuration edits.
-
-From the repository root:
+Requirements: Linux x86_64/aarch64 (cloud or Fedora), Git with an initial commit, Python 3.10+ with venv/pip,
+and Node.js/npm for first-time dependency provisioning. From the copied repository root:
 
 ```sh
-python3 -m unittest discover -s workflow/scripts/work -p 'test_*.py'
-python3 workflow/scripts/work/work.py map update
-python3 workflow/scripts/work/work.py map coverage
-python3 workflow/scripts/work/work.py status
+python3 workflow/scripts/work/work.py setup
+python3 workflow/scripts/work/work.py doctor
+python3 workflow/scripts/work/work.py context "your task"
 ```
 
-Make the agent read root AGENTS.md if it does not discover it automatically. All commands run from the repository
-root, not inside workflow/. Logs, graph and private engine mirror remain in ignored root `.work/`.
-Missing CodeGraph permits explicitly limited fallback navigation, with no guessed call graph. Parser failures,
-unsupported inputs and unresolved references are visible in coverage. Structured-resource parsers and the pinned Tree-sitter Bash supplement cover JSON/ARB, XML, TOML and shell.
-Install `workflow/scripts/work/requirements.txt` in the workflow Python environment (no Graphify). Bash analysis
-is parse-only and reports dynamic/unresolved commands; it does not execute scripts or prove runtime effects. Product checks still require the actual Flutter/Android/Rust toolchains when
-those domains change. No old graphify-out/ directory or machine-specific paths should be copied.
+`setup` provisions pinned Bash/TOML packages under `.work/python/` and CodeGraph under `.work/tools/`.
+It uses no sudo/global install, does not edit map.json or provider settings, and reuses a healthy environment.
+`doctor` only diagnoses versions, real parser readiness, Git/root/ignore rules and environment specification.
+`setup --offline` reuses/validates an already prepared environment without downloading anything; missing tools
+remain BLOCKED. Changes to requirements or the engine pin demand a fresh setup.
+
+Ordinary `work.py` CLI commands automatically use the managed Python, and default CodeGraph discovery prefers
+the managed executable. No shell activation or PATH edit is required. Explicit custom extractor commands are
+preserved and must be valid. Direct Python library use does not re-execute your process; use the prepared Python
+for those APIs. Logs/caches remain under `.work/`, which must be ignored before setup.
+
+Copy hidden `.github/` alongside AGENTS.md too. It contains the portable Linux CI workflow; GitHub only discovers
+Actions at repository-root `.github/workflows/`. This repository mirrors that same file at its own root because
+the distribution currently lives in sistrum-workflow/. CI runs a fresh copied installation, setup/doctor/offline
+reuse, strict real-engine/parser tests and freshness. Jobs cover Python 3.10/3.12/3.14 and Fedora 44. Only the
+optional namespace-isolation test may skip; missing CodeGraph/Bash integrations cannot count as green.
+
+Manual alternative installation and coverage details: [map guide](work/guides/map.md). Product checks still
+require their actual Flutter/Android/Rust toolchains; setup here installs workflow tools only.
 
 ### Optional agent integrations
 

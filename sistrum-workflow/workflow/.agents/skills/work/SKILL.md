@@ -10,6 +10,12 @@ report with evidence. Reply in the owner's language; code, records and commit me
 
 ## Start of every request
 
+On first use of a Linux checkout, run `work.py doctor`. For missing workflow dependencies run `work.py setup`
+(project-local installation is authorized by this workflow); rerun doctor after configuration/tool changes.
+Do not install OS packages with sudo or modify agent-provider configuration. If Git/Python/Node/npm
+prerequisites are missing, report the prerequisite instead of calling fallback analysis complete. Setup is
+reusable/offline after initial provisioning, and normal CLI commands discover its Python/CodeGraph automatically.
+
 1. Read the hook output (`work.py status`): active change records, freshness of the last checks, uncommitted
    paths. If a change is active and the request belongs to it, continue it from its records.
 2. Know the rules: `workflow/work/constitution.md` (always), accepted specs in `workflow/work/changes/` (product decisions), and for engine work

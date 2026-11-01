@@ -7,6 +7,25 @@ No `explore` response is injected wholesale into agent context.
 
 ## Install once per environment
 
+Supported setup target: Linux cloud/Fedora, x86_64/aarch64. Recommended:
+
+```sh
+python3 workflow/scripts/work/work.py setup
+python3 workflow/scripts/work/work.py doctor
+```
+
+This prepares `.work/python` and `.work/tools`, detects architecture, pins dependencies, tests actual Bash/TOML
+parsing and CodeGraph version, and records the dependency specification. Normal work.py CLI commands then
+switch to the managed Python and discover local CodeGraph without activation or editing configuration.
+No sudo/system-package or agent-provider changes are made. Git HEAD and ignored `.work/` are prerequisites.
+Initial provisioning needs Python venv/pip and Node/npm. `doctor` is read-only; `setup --offline` never downloads.
+A missing/broken environment is BLOCKED. A healthy environment is reused without package-manager commands.
+Pip config files and destination-changing environment options are ignored during provisioning; network/index/
+certificate environment variables remain available. Use environment variables for private indexes. Wheels are
+required, so setup does not add system compilers. Installation failures do not publish a ready marker. See `.work/setup.log` for a failed install.
+
+The manual alternative below remains available for custom environments:
+
 Python 3.10+ and Git run the workflow. Install the parse-only resource/shell requirements in that Python environment:
 
 ```sh
@@ -31,7 +50,8 @@ Set `extractor.command` in `workflow/work/map.json` to the argv for your platfor
 `[".work/tools/node_modules/.bin/codegraph"]` on Linux/macOS, or put the CLI on PATH and retain `["codegraph"]`.
 A command containing a relative path resolves from the repository root, including version probing. Arguments
 are an argv list, never shell code. Use the appropriate executable on Windows; this platform has not been tested.
-The workflow never runs an agent installer, adds MCP settings or downloads tools automatically.
+The analysis adapter never downloads tools or runs an agent installer; only the explicit setup command
+provisions the pinned project-local dependencies. It never adds MCP/provider settings.
 CodeGraph telemetry is disabled in the adapter environment.
 
 `extractor.enabled` is true by default. Missing tools, disabled extraction and unverified versions produce a
