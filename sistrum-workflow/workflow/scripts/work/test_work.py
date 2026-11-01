@@ -12,8 +12,8 @@ from pathlib import Path
 MODULE = Path(__file__).resolve().parent / 'work.py'
 PACKAGE = MODULE.parents[2]
 # Map refreshes inside these tests use the mock extractor (test_workmap.py covers the real one).
-os.environ.update({'WORK_MAP_ADAPTER': str(MODULE.parent / 'fixtures/fake_graphify_adapter.py'),
-                   'WORK_GRAPHIFY_PYTHON': sys.executable, 'WORK_MAP_LOCK_TIMEOUT': '5'})
+os.environ.update({'WORK_MAP_ADAPTER': str(MODULE.parent / 'fixtures/fake_codegraph_adapter.py'),
+                   'WORK_MAP_PYTHON': sys.executable, 'WORK_MAP_LOCK_TIMEOUT': '5'})
 spec = importlib.util.spec_from_file_location('work', MODULE)
 work = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(work)

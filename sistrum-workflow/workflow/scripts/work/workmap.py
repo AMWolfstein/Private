@@ -2,7 +2,7 @@
 
 The map joins three kinds of facts, each labelled with provenance and confidence:
 
-* extracted: Graphify's local AST extraction (symbols, Kotlin calls and references) and
+* extracted: CodeGraph's local AST extraction (symbols, Kotlin calls and references) and
   this module's own pattern scans (Dart/Kotlin imports, platform-channel endpoints);
 * declared: human-maintained declarations (workflow/work/architecture.json, the
   assurance.json of change records, the wrappers listed in workflow/work/map.json);
@@ -12,7 +12,7 @@ The map joins three kinds of facts, each labelled with provenance and confidence
 Generated data lives in .work/map/ and is rebuilt as one complete snapshot, published
 atomically under a lock. Declarations are only read, never written. Freshness is a digest
 of the selected sources, the configuration, the declarations and the extractor version.
-Standard library only; Graphify runs in its own process through graphify_adapter.py.
+Standard library only; CodeGraph runs in its own process through codegraph_adapter.py.
 """
 from __future__ import annotations
 
@@ -20,7 +20,6 @@ import bisect
 import fnmatch
 import hashlib
 import math
-import importlib.util
 import json
 import os
 import posixpath
@@ -35,6 +34,8 @@ from contextlib import contextmanager
 from datetime import datetime, timezone
 from pathlib import Path
 
+import native_bindings
+
 from worklib import Blocked, atomic_write, domains_for, is_test, now, snapshot
 
 SCHEMA = 1
@@ -43,7 +44,7 @@ ARCHITECTURE = 'workflow/work/architecture.json'
 CHECKS = 'workflow/work/checks.json'
 CHANGES = 'workflow/work/changes'
 HERE = Path(__file__).resolve().parent
-ADAPTER = HERE / 'graphify_adapter.py'
+ADAPTER = HERE / 'codegraph_adapter.py'
 TEXT_LIMIT = 1_000_000  # bytes; larger files are not pattern-scanned (reported)
 FACTS = ('extracted', 'declared', 'inferred')
 STOPWORDS = set('''a an and are as at be but by can do does for from has have how in into is it its
@@ -143,8 +144,8 @@ def depth_at(text: str) -> list[int]:
 
 DEFAULT_CONFIG = {
     'version': 1,
-    'extractor': {'name': 'graphify', 'package': 'graphifyy', 'version': '0.9.97', 'enabled': False,
-                  'allow_unverified': False, 'timeout': 900},
+    'extractor': {'name': 'codegraph', 'package': '@colbymchenry/codegraph', 'version': '1.6.2', 'enabled': True,
+                  'allow_unverified': False, 'timeout': 900, 'command': ['codegraph']},
     'corpus': {'include': ['*.dart', '*.kt'], 'exclude': [], 'exceptions': []},
     'bridges': {'dart_channel_types': ['MethodChannel', 'OptionalMethodChannel', 'EventChannel',
                                        'BasicMessageChannel'],
@@ -180,6 +181,14 @@ def load_config(root: Path) -> dict:
     for key in ('include', 'exclude', 'exceptions'):
         if not isinstance(config['corpus'][key], list) or not all(isinstance(v, str) for v in config['corpus'][key]):
             raise Blocked(f'{CONFIG}: corpus.{key} must be a list of glob strings')
+    extractor = config['extractor']
+    if extractor['name'] != 'codegraph':
+        raise Blocked('Unsupported extractor: migrate map.json to codegraph')
+    if not isinstance(extractor['enabled'], bool) or not isinstance(extractor['command'], list) or not extractor['command'] or not all(isinstance(v, str) and v for v in extractor['command']):
+        raise Blocked('extractor.enabled must be boolean and command must be a nonempty argv list')
+    command = extractor['command']
+    if ('/' in command[0] or '\\' in command[0]) and not Path(command[0]).is_absolute():
+        extractor['command'] = [str((root / command[0]).resolve()), *command[1:]]
     for wrapper in config['bridges']['dart_wrappers']:
         if not (isinstance(wrapper, dict) and isinstance(wrapper.get('function'), str)
                 and isinstance(wrapper.get('channel'), str)):
@@ -195,24 +204,10 @@ def adapter_path() -> Path:
     return Path(override).resolve() if override else ADAPTER
 
 
-def interpreter() -> tuple[list[str] | None, str]:
-    """The Python that has Graphify, and how it was found. Never a stored machine path."""
-    override = os.environ.get('WORK_GRAPHIFY_PYTHON')
-    if override:
-        return shlex.split(override), 'WORK_GRAPHIFY_PYTHON'
-    if importlib.util.find_spec('graphify') is not None:
-        return [sys.executable], 'current interpreter'
-    executable = shutil.which('graphify')
-    if executable:
-        try:
-            first = Path(executable).read_text(errors='replace').split('\n', 1)[0]
-        except OSError:
-            first = ''
-        if first.startswith('#!'):
-            argv = shlex.split(first[2:].strip())
-            if argv and Path(argv[0]).is_file():
-                return argv, f'shebang of {executable}'
-    return None, 'no interpreter with graphify found'
+def interpreter() -> tuple[list[str], str]:
+    # The adapter is standard-library Python. CodeGraph supplies its own runtime.
+    override = os.environ.get('WORK_MAP_PYTHON')
+    return (shlex.split(override), 'WORK_MAP_PYTHON') if override else ([sys.executable], 'current interpreter')
 
 
 _TOOL_CACHE: dict[str, dict] = {}
@@ -229,17 +224,18 @@ def tool_info(config: dict) -> dict:
 def probe_tool(config: dict) -> dict:
     """`status` is ready, unavailable, unverified or disabled."""
     pinned = config['extractor']
-    base = {'name': 'graphify', 'package': pinned['package'], 'pinned': pinned['version']}
+    base = {'name': 'codegraph', 'package': pinned['package'], 'pinned': pinned['version']}
     if not pinned['enabled'] or os.environ.get('WORK_MAP_STRUCTURE') == 'off':
         where = 'WORK_MAP_STRUCTURE=off' if os.environ.get('WORK_MAP_STRUCTURE') == 'off' else CONFIG
         return {**base, 'status': 'disabled', 'reason': f'structure extraction disabled by {where}'}
     argv, found = interpreter()
-    install = f'pip install {pinned["package"]}=={pinned["version"]}'
+    install = f'npm install --prefix .work/tools {pinned["package"]}@{pinned["version"]}'
     if argv is None:
-        return {**base, 'status': 'unavailable', 'reason': f'{found}; {install} or set WORK_GRAPHIFY_PYTHON'}
+        return {**base, 'status': 'unavailable', 'reason': f'{found}; {install} or set WORK_MAP_PYTHON'}
     try:
         done = subprocess.run([*argv, str(adapter_path()), 'version'], capture_output=True, timeout=120,
-                              env={**os.environ, 'PYTHONHASHSEED': '0'})
+                              env={**os.environ, 'PYTHONHASHSEED': '0',
+                                   'WORK_CODEGRAPH_COMMAND': json.dumps(pinned['command'])})
         info = json.loads(done.stdout.decode() or 'null')
     except (OSError, ValueError, subprocess.TimeoutExpired) as error:
         return {**base, 'status': 'unavailable', 'reason': f'adapter version check failed: {error}'}
@@ -272,13 +268,13 @@ def corpus_of(listing: dict, config: dict) -> tuple[list[str], dict]:
 
 def aux_inputs(listing: dict, selected: set[str]) -> list[str]:
     """Inputs read besides the corpus: package manifests (Dart import resolution), the
-    Graphify project rc file, and non-code test fixtures (bridge test candidates)."""
+    CodeGraph project rc file, and non-code test fixtures (bridge test candidates)."""
     aux = []
     for path in sorted(listing):
         if path in selected or listing[path][0] == '120000':
             continue
         name = path.rsplit('/', 1)[-1]
-        if name in ('pubspec.yaml', '.graphifyrc') or (is_test(path) and not path.startswith(('workflow/', '.work/'))):
+        if name in ('pubspec.yaml', 'Cargo.toml', 'Cargo.lock', 'codegraph.json') or (is_test(path) and not path.startswith(('workflow/', '.work/'))):
             aux.append(path)
     return aux
 
@@ -317,7 +313,8 @@ def inputs(root: Path, config: dict, tool: dict) -> dict:
     files = {path: listing[path][1] for path in corpus}
     corpus_digest = sha(json.dumps([[p, listing[p][1]] for p in corpus + aux]))
     config_digest = sha(b''.join(read_bytes(root / p) for p in (CONFIG, CHECKS))
-                        + read_bytes(Path(__file__)) + read_bytes(adapter_path()))
+                        + read_bytes(Path(__file__)) + read_bytes(adapter_path())
+                        + read_bytes(HERE / 'native_bindings.py'))
     declarations = sha(b''.join(name.encode() + b'\0' + data for name, data in declaration_inputs(root)))
     tool_key = {k: tool.get(k) for k in ('status', 'package', 'pinned', 'version', 'python', 'grammars')}
     components = {'corpus': corpus_digest, 'config': config_digest, 'declarations': declarations,
@@ -366,7 +363,7 @@ def map_status(root: Path, config: dict | None = None, tool: dict | None = None)
     if not path.is_file() or sha(path.read_bytes()) != state['map_sha256']:
         return {**result, 'state': 'invalid', 'reasons': ['map.json does not match state.json; run work.py map update']}
     result.update({'built_at': state.get('built_at'), 'structure': state.get('structure'),
-                   'map_digest': state.get('digest')})
+                   'map_digest': state.get('digest'), 'coverage': state.get('coverage', {})})
     if state.get('digest') == now_inputs['digest']:
         return {**result, 'state': 'current', 'reasons': []}
     reasons, old = [], state.get('files', {})
@@ -385,6 +382,25 @@ def map_status(root: Path, config: dict | None = None, tool: dict | None = None)
                                 'declarations': f'{ARCHITECTURE} or a change record assurance/phase changed',
                                 'tool': 'extractor availability or version changed'}[name])
     return {**result, 'state': 'stale', 'reasons': reasons}
+
+
+def coverage_report(root: Path) -> dict:
+    ensure_current(root)
+    data = load_map(root)
+    languages = {}
+    for path, info in data['files'].items():
+        counts = languages.setdefault(info['lang'], {})
+        status = info.get('analysis', {}).get('status', 'unavailable')
+        counts[status] = counts.get(status, 0) + 1
+    config = load_config(root)
+    current = inputs(root, config, tool_info(config))
+    selected = set(data['files'])
+    excluded = [p for p in sorted(current['listing']) if matches(p, config['corpus']['include'])
+                and p not in selected]
+    return {'status': 'PASS', 'meaning': 'Coverage inventory, not semantic correctness or device validation',
+            'summary': data['meta']['coverage'], 'languages': languages,
+            'files': data['coverage'], 'native_bindings': data.get('native_bindings', []),
+            'excluded': len(excluded), 'excluded_files': excluded}
 
 
 @contextmanager
@@ -441,7 +457,7 @@ def update(root: Path, force: bool = False, timeout: float | None = None) -> dic
         started = time.monotonic()
         try:
             if force:
-                shutil.rmtree(map_dir(root) / 'graphify', ignore_errors=True)
+                shutil.rmtree(map_dir(root) / 'codegraph', ignore_errors=True)
             data = build(root, config, tool, before)
             after = inputs(root, config, tool)
             if after['digest'] != before['digest']:
@@ -458,11 +474,12 @@ def update(root: Path, force: bool = False, timeout: float | None = None) -> dic
         new_state = {'schema': SCHEMA, 'digest': before['digest'], 'components': before['components'],
                      'files': before['files'], 'structure': data['meta']['structure'],
                      'tool': data['meta']['tool'], 'built_at': data['meta']['built_at'],
-                     'map_sha256': sha(encoded), 'counts': data['meta']['counts'], 'last_failure': None}
+                     'map_sha256': sha(encoded), 'counts': data['meta']['counts'],
+                     'coverage': data['meta']['coverage'], 'last_failure': None}
         atomic_write(map_dir(root) / 'state.json', json.dumps(new_state, indent=1) + '\n')
         return {'status': 'PASS', 'map': 'current', 'rebuilt': True, 'structure': data['meta']['structure'],
                 'counts': data['meta']['counts'], 'seconds': data['meta']['seconds'],
-                'problems': data['problems'][:20]}
+                'coverage': data['meta']['coverage'], 'problems': data['problems'][:20]}
 
 
 def record_failure(root: Path, state: dict | None, reason: str, digest: str) -> None:
@@ -509,7 +526,7 @@ def status_line(root: Path) -> str:
         return f'Code map: unavailable ({error})'
     structure = status.get('structure') or {}
     tool = status['tool']
-    label = (f'graphify {tool.get("version")}' if structure.get('status') == 'graphify'
+    label = (f'codegraph {tool.get("version")}' if structure.get('status') == 'codegraph'
              else f'structure {structure.get("status", "?")}')
     text = f'Code map: {status["state"]}'
     if status['state'] != 'missing':
@@ -535,7 +552,7 @@ def build(root: Path, config: dict, tool: dict, current: dict) -> dict:
             continue
         texts[path] = raw.decode('utf-8', errors='replace')
     meta_structure = {'status': 'empty', 'note': 'no source file matches the corpus patterns'}
-    symbols, edges, stats = [], [], {}
+    symbols, edges, stats, coverage, raw = [], [], {}, [], {}
     file_info = {path: {'lang': language(path), 'test': is_test(path), 'blob': current['files'][path]}
                  for path in files}
     if files and tool['status'] == 'ready':
@@ -543,129 +560,61 @@ def build(root: Path, config: dict, tool: dict, current: dict) -> dict:
         symbols, edges, extra = normalize(raw, set(files))
         problems += extra
         stats = raw.get('stats', {})
+        coverage = raw.get('coverage', [])
         if stats.get('failed_sources'):
-            problems.append(f'graphify failed on {stats["failed_sources"]} file(s); see .work/map/logs/')
-        meta_structure = {'status': 'graphify', 'declarations': 'graphify', 'note': 'symbols, calls and references from Graphify; Dart '
-                          'declarations are regex-based, Dart calls are inferred by name; Dart and Kotlin imports and channels '
-                          'come from pattern scans'}
+            problems.append(f'codegraph failed on {stats["failed_sources"]} file(s); see .work/map/logs/')
+        meta_structure = {'status': 'codegraph', 'declarations': 'codegraph',
+                          'note': 'AST symbols and resolver relationships from CodeGraph; calls remain inferred. '
+                                  'Coverage reports partial and unindexed inputs; no name-only calls are added.'}
     elif files:
-        meta_structure = {'status': tool['status'], 'note': tool.get('reason', '')}
-    if files and not symbols:
+        meta_structure = {'status': tool['status'], 'declarations': 'none', 'note': tool.get('reason', '')}
+    if files and not coverage:
+        coverage = [{'file': path, 'status': 'unavailable', 'errors': [], 'symbols': 0} for path in files]
+    # Fallback declarations are navigation candidates only, never a source of call edges.
+    if files and not symbols and tool['status'] != 'ready':
         symbols = scan_declarations({p: t for p, t in texts.items() if p in file_info}, file_info)
+        for symbol in symbols:
+            symbol.update(fact='inferred', confidence='low')
     meta_structure['declarations'] = meta_structure.get('declarations') or ('patterns' if symbols else 'none')
+    if symbols and tool['status'] != 'ready':
+        meta_structure['declarations'] = 'patterns'
+    for entry in coverage:
+        if entry['file'] in file_info:
+            file_info[entry['file']]['analysis'] = entry
+            if entry.get('language'):
+                file_info[entry['file']]['lang'] = entry['language']
+        if entry['status'] != 'indexed':
+            problems.append(f"{entry['file']}: {entry['status']} ({len(entry.get('errors', []))} diagnostics); not complete analysis")
     deps, kotlin_index, dep_problems = dependencies(root, texts, file_info, current['listing'], config)
     problems += dep_problems
+    existing = {(d['from'], d.get('to')) for d in deps}
+    deps += [d for d in engine_dependencies(raw, set(files)) if (d['from'], d['to']) not in existing]
     bridges = scan_bridges(texts, file_info, config)
     attach_bridge_tests(root, bridges, current['aux'], file_info, texts)
-    name_edges, name_notes = name_calls(texts, symbols, file_info, deps)
-    edges += name_edges
-    problems += name_notes
     tests = link_tests(file_info, deps, symbols, edges)
     declarations = load_declarations(root, file_info, deps, bridges, problems)
     tool_public = {k: v for k, v in tool.items() if k not in ('argv',)}
     meta = {'schema': SCHEMA, 'digest': current['digest'], 'components': current['components'],
             'built_at': now(), 'tool': tool_public, 'structure': meta_structure, 'stats': stats,
+            'coverage': {status: sum(c['status'] == status for c in coverage)
+                         for status in sorted({c['status'] for c in coverage})},
             'counts': {'files': len(files), 'symbols': len(symbols), 'edges': len(edges), 'deps': len(deps),
                        'channels': len(bridges['channels']), **current['counts']}}
     return {'meta': meta, 'files': file_info, 'symbols': symbols, 'edges': edges, 'deps': deps,
             'kotlin_index': kotlin_index, 'bridges': bridges, 'tests': tests,
-            'declarations': declarations, 'problems': problems}
+            'declarations': declarations, 'coverage': coverage,
+            'native_bindings': native_bindings.inventory(texts, symbols), 'problems': problems}
 
 
 LANGUAGE_BY_SUFFIX = {'.dart': 'dart', '.kt': 'kotlin', '.kts': 'kotlin', '.rs': 'rust', '.c': 'c', '.h': 'c',
                       '.cpp': 'cpp', '.cc': 'cpp', '.cxx': 'cpp', '.hpp': 'cpp', '.java': 'java', '.py': 'python',
-                      '.sh': 'shell', '.bash': 'shell', '.gradle': 'gradle'}
-
-
-# Calls that name too little to point at one declaration.
-CALL_STOP = {'build', 'toString', 'setState', 'dispose', 'initState', 'then', 'of', 'call', 'get', 'set', 'add',
-             'remove', 'length', 'map', 'where', 'first', 'last', 'isEmpty', 'isNotEmpty', 'print', 'main', 'super',
-             'this', 'new', 'if', 'for', 'while', 'switch', 'catch', 'return', 'await', 'async', 'watch', 'read',
-             'listen', 'emit', 'value', 'name', 'id', 'copyWith', 'fromJson', 'toJson', 'equals', 'hashCode',
-             'close', 'start', 'stop', 'run', 'update', 'load', 'open', 'create', 'init', 'reset', 'clear', 'send'}
-CALL_TOKEN = re.compile(r'\b([A-Za-z_]\w*)\s*\(')
-
-
-def name_calls(texts: dict, symbols: list, file_info: dict, deps: list) -> tuple[list[dict], list[str]]:
-    """Call edges inferred by name, for the languages in CALL_LANGUAGES. A call `f(` is a call to a declaration
-    named `f`, chosen in scope: first in the same file, then in files the caller imports, and only then anywhere
-    in the corpus when the name is distinctive (up to three files). `Type.f(` and `Type::f(` go to the member
-    the declared owner `Type` has; receivers that are not declared names (`value.f(`) are never guessed. Always
-    labelled inferred; the caller is the nearest declaration above the call in the same file."""
-    imported: dict[str, set[str]] = {}
-    for dep in deps:
-        if dep.get('to') and dep.get('kind') in ('import', 'export', 'part', 'part-of'):
-            imported.setdefault(dep['from'].split(' ')[0], set()).add(dep['to'])
-    by_name: dict[str, list[dict]] = {}
-    per_file: dict[str, list[dict]] = {}
-    for symbol in symbols:
-        if symbol['lang'] not in CALL_LANGUAGES:
-            continue
-        per_file.setdefault(symbol['file'], []).append(symbol)
-        if len(symbol['name']) > 2:
-            by_name.setdefault(symbol['name'], []).append(symbol)
-    edges, skipped = [], 0
-    for path in sorted(per_file):
-        lang = file_info.get(path, {}).get('lang')
-        if path not in texts or lang not in CALL_LANGUAGES:
-            continue
-        clean = strip_comments(texts[path])
-        if lang == 'python':
-            clean = re.sub(r'#[^\n]*', '', clean)
-        declared = sorted(per_file[path], key=lambda s: s['line'] or 0)
-        line_of_call = Lines(clean)
-        seen = set()
-        for found in CALL_TOKEN.finditer(clean):
-            name = found.group(1)
-            targets = by_name.get(name)
-            if not targets:
-                continue
-            qualifier = QUALIFIER.search(clean[max(0, found.start() - 80):found.start()])
-            receiver = qualifier.group(1) if qualifier else None
-            qualified = receiver is not None and receiver not in SELF_RECEIVERS
-            if (name in CALL_KEYWORDS or name in CALL_STOP) and not qualified:
-                continue  # common names are attributed only through a declared owner, never by name alone
-            if qualified:
-                owned = [t for t in targets if t.get('owner') == receiver]
-                if not owned:
-                    continue
-                targets, scope = owned, 'qualified'
-            else:
-                near = [t for t in targets if t['file'] in imported.get(path, set())]
-                local = [t for t in targets if t['file'] == path]
-                if local:
-                    targets, scope = local, 'same file'
-                elif near:
-                    targets, scope = near, 'imported file'
-                elif len(targets) > 3:
-                    skipped += 1
-                    continue
-                else:
-                    scope = 'corpus'
-            line = line_of_call(found.start())
-            callers = [d for d in declared if d['line'] and d['line'] <= line and d['name'] != name]
-            if not callers:
-                continue
-            caller = callers[-1]
-            for target in targets:
-                if target['file'] == path and target['line'] == line:
-                    continue
-                key = (caller['id'], target['id'], line)
-                if key in seen:
-                    continue
-                seen.add(key)
-                edges.append({'source': caller['id'], 'target': target['id'], 'relation': 'calls', 'file': path,
-                              'line': line, 'context': 'name', 'fact': 'inferred',
-                              'via': f'adapter:{lang}-name-call ({scope})',
-                              'confidence': 'low' if scope == 'corpus' and len(targets) > 1 else 'medium',
-                              'target_file': target['file']})
-    notes = [f'{skipped} call site(s) named a symbol declared in more than three files: no call edge inferred']
-    return edges, notes if skipped else []
+                      '.sh': 'shell', '.bash': 'shell', '.gradle': 'gradle', '.js': 'javascript', '.mjs': 'javascript',
+                      '.cjs': 'javascript', '.ts': 'typescript', '.tsx': 'tsx', '.jsx': 'jsx',
+                      '.xml': 'xml', '.yaml': 'yaml', '.yml': 'yaml', '.json': 'json', '.toml': 'toml', '.arb': 'json'}
 
 
 def language(path: str) -> str:
-    """Language of a corpus file: Dart and Kotlin get bridge and import handling; the rest get
-    Graphify's AST symbols and calls only."""
+    """Extension fallback; engine-detected languages replace this in coverage when available."""
     suffix = posixpath.splitext(path)[1]
     return LANGUAGE_BY_SUFFIX.get(suffix, 'other')
 
@@ -676,10 +625,13 @@ def run_adapter(root: Path, files: list[str], config: dict, tool: dict) -> dict:
     (work / 'logs').mkdir(parents=True, exist_ok=True)
     request, out = work / 'tmp/request.json', work / 'tmp/structure.json'
     out.unlink(missing_ok=True)
-    atomic_write(request, json.dumps({'root': str(root), 'files': files}))
+    atomic_write(request, json.dumps({'root': str(root), 'files': files,
+                                      'auxiliary': [p for p in inputs(root, config, tool)['aux']
+                                                    if p.endswith(('pubspec.yaml', 'Cargo.toml', 'Cargo.lock'))]}))
     stamp = datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%S%fZ')
     log = work / f'logs/extract-{stamp}.log'
-    env = {**os.environ, 'PYTHONHASHSEED': '0', 'GRAPHIFY_OUT': str((work / 'graphify').resolve())}
+    env = {**os.environ, 'PYTHONHASHSEED': '0', 'WORK_MAP_CACHE': str((work / 'codegraph').resolve()),
+           'WORK_CODEGRAPH_COMMAND': json.dumps(config['extractor']['command'])}
     timeout = config['extractor']['timeout']
     with log.open('wb') as output:
         process = subprocess.Popen([*tool['argv'], str(adapter_path()), 'extract', '--request', str(request),
@@ -690,24 +642,24 @@ def run_adapter(root: Path, files: list[str], config: dict, tool: dict) -> dict:
         except subprocess.TimeoutExpired:
             os.killpg(process.pid, signal.SIGKILL)
             process.wait()
-            raise Blocked(f'graphify extraction timed out after {timeout}s; see {log.relative_to(root)}')
+            raise Blocked(f'codegraph extraction timed out after {timeout}s; see {log.relative_to(root)}')
     for old in sorted((work / 'logs').glob('extract-*.log'))[:-5]:
         old.unlink(missing_ok=True)  # best-effort log rotation
     if code != 0:
         tail = log.read_text(errors='replace')[-600:]
-        raise Blocked(f'graphify extraction failed (exit {code}); {log.relative_to(root)}: {tail}')
+        raise Blocked(f'codegraph extraction failed (exit {code}); {log.relative_to(root)}: {tail}')
     try:
         data = json.loads(out.read_text())
     except (OSError, ValueError) as error:
-        raise Blocked(f'graphify adapter wrote no valid output: {error}') from error
+        raise Blocked(f'codegraph adapter wrote no valid output: {error}') from error
     if not (isinstance(data, dict) and data.get('schema') == 1 and isinstance(data.get('nodes'), list)
             and isinstance(data.get('edges'), list)
             and all(isinstance(n, dict) and isinstance(n.get('id'), str) for n in data['nodes'])
             and all(isinstance(e, dict) and all(isinstance(e.get(k), str) for k in ('source', 'target', 'relation'))
                     for e in data['edges'])):
-        raise Blocked('graphify adapter output does not match the expected schema')
+        raise Blocked('codegraph adapter output does not match the expected schema')
     if (data.get('tool') or {}).get('version') != tool.get('version'):
-        raise Blocked('graphify version changed between the version check and extraction')
+        raise Blocked('codegraph version changed between the version check and extraction')
     return data
 
 
@@ -717,72 +669,70 @@ def line_of(location) -> int | None:
 
 
 def normalize(raw: dict, corpus: set[str]) -> tuple[list[dict], list[dict], list[str]]:
-    """Graphify nodes/edges as repository-relative facts. Redundant file->symbol edges and
-    Dart import edges (resolved here instead) are dropped; nothing else is filtered."""
-    by_id = {n['id']: n for n in raw['nodes']}
-    problems, symbols, kept, file_ids = [], [], {}, {}
-    outside = 0
+    """Keep AST symbol facts separate from resolver candidates and explicit bridge metadata."""
+    symbols, kept, file_ids, problems = [], {}, {}, []
     for node in raw['nodes']:
         source = node.get('source_file')
-        if not source:
-            continue
         if source not in corpus:
-            outside += 1
             continue
-        label = str(node.get('label', ''))
-        if label == source.rsplit('/', 1)[-1]:
+        name = str(node.get('label', '')).strip('.').removesuffix('()')
+        if node.get('kind') == 'file' or name == source.rsplit('/', 1)[-1]:
             file_ids[node['id']] = source
             continue
-        name = label.strip('.').removesuffix('()') or label
-        item = {'id': node['id'], 'name': name, 'label': label, 'file': source,
-                'line': line_of(node.get('source_location')), 'lang': language(source)}
-        kept[node['id']] = item
+        item = {'id': node['id'], 'name': name, 'label': name, 'file': source,
+                'line': line_of(node.get('source_location')), 'end_line': node.get('end_line'),
+                'lang': node.get('language') or language(source), 'kind': node.get('kind'),
+                **fact('extracted', 'codegraph:ast', 'high')}
+        kept[item['id']] = item
         symbols.append(item)
-    if outside:
-        problems.append(f'graphify returned {outside} node(s) outside the corpus; ignored')
-    owners = {}
     edges = []
     for edge in raw['edges']:
-        relation, source, target = edge['relation'], edge['source'], edge['target']
-        source_file = edge.get('source_file') or ''
-        lang = language(source_file)
-        if source in file_ids and relation in ('defines', 'contains'):
+        source, target, relation = edge['source'], edge['target'], edge['relation']
+        if source not in kept or target not in kept:
             continue
-        if lang == 'dart' and relation in ('imports', 'exports', 'includes'):
-            continue  # resolved to files by dependencies()
-        if source not in kept and source not in file_ids:
+        if relation in ('contains', 'method') and kept[source].get('kind') in ('class', 'struct', 'interface', None):
+            kept[target]['owner'] = kept[source]['name']
+        if relation == 'calls' and kept[source]['lang'] != kept[target]['lang'] and not (
+                {kept[source]['lang'], kept[target]['lang']} <= {'c', 'cpp'}):
+            problems.append('Rejected name/resolver call across language boundary: ' + source + ' -> ' + target)
             continue
-        if relation == 'method' and source in kept and target in kept:
-            owners[target] = kept[source]['name']
-        confidence = str(edge.get('confidence', 'EXTRACTED')).upper()
-        # Dart is extracted by Graphify's regex extractor (no call edges); other languages by tree-sitter.
-        via = 'graphify:dart-regex' if lang == 'dart' else f'graphify:{lang}-ast'
-        if confidence == 'EXTRACTED':
-            label = fact('extracted', via, 'medium' if lang == 'dart' else 'high')
-        else:
-            label = fact('inferred', via + ':resolver', 'low' if confidence == 'AMBIGUOUS' else 'medium')
-        item = {'source': kept[source]['id'] if source in kept else 'file:' + file_ids[source],
-                'relation': relation, 'file': source_file, 'line': line_of(edge.get('source_location')),
-                'context': edge.get('context'), **label}
-        if target in kept:
-            item['target'] = target
-        elif target in file_ids:
-            item['target'] = 'file:' + file_ids[target]
-        else:
-            item['target'] = None
-            item['target_label'] = str(by_id.get(target, {}).get('label', target))
-        edges.append(item)
-    for item in symbols:
-        if item['id'] in owners:
-            item['owner'] = owners[item['id']]
+        if relation in ('contains', 'defines', 'method'):
+            continue
+        inferred = relation not in ('contains', 'defines')
+        score = (edge.get('evidence') or {}).get('confidence')
+        confidence = 'low' if isinstance(score, (int, float)) and score <= 0.5 else 'medium'
+        edges.append({'source': source, 'target': target, 'relation': relation,
+                      'file': edge.get('source_file') or kept[source]['file'],
+                      'target_file': kept[target]['file'], 'line': line_of(edge.get('source_location')),
+                      'context': edge.get('context'), 'evidence': edge.get('evidence', {}),
+                      **fact('inferred' if inferred else 'extracted', 'codegraph:resolver', confidence if inferred else 'high')})
     return symbols, edges, problems
+
+
+def engine_dependencies(raw: dict, corpus: set[str]) -> list[dict]:
+    """Preserve resolver imports for every language, not only the channel languages."""
+    nodes = {n['id']: n for n in raw.get('nodes', [])}
+    result, seen = [], set()
+    for edge in raw.get('edges', []):
+        if edge['relation'] not in ('imports', 'includes', 'exports'):
+            continue
+        source, target = nodes.get(edge['source'], {}), nodes.get(edge['target'], {})
+        start, end = source.get('source_file'), target.get('source_file')
+        if start not in corpus or end not in corpus or start == end or (start, end) in seen:
+            continue
+        seen.add((start, end))
+        score = (edge.get('evidence') or {}).get('confidence')
+        result.append({'from': start, 'to': end, 'kind': 'import',
+                       'line': line_of(edge.get('source_location')), 'uri': target.get('label', end), 'target': 'resolver candidate',
+                       **fact('inferred', 'codegraph:resolver-import',
+                              'low' if isinstance(score, (int, float)) and score <= 0.5 else 'medium')})
+    return result
 
 
 # ------------------------------------------------------ pattern declarations
 
-# Used when Graphify is off or unavailable: Dart and Kotlin declarations by line pattern. Declarations are
-# `declared` facts (what the file says), not parsed trees: a multi-line signature is skipped, and a
-# member's owner is the last top-level type above it. Calls to them are inferred by name, as with Graphify.
+# Navigation-only fallback when CodeGraph is unavailable. These are inferred, low-confidence
+# candidates, never call-graph evidence; brace ownership is deliberately not trusted for resolution.
 DART_TYPE_DECL = re.compile(r'^(?:(?:abstract|base|sealed|final|interface|mixin|augment)\s+)*'
                             r'(class|mixin|enum|extension|typedef)\s+([A-Za-z_]\w*)')
 DART_MEMBER = re.compile(r'^(\s*)(?:(?:static|final|const|late|external|override|factory)\s+)*'
@@ -821,12 +771,9 @@ RUST_DECL = re.compile(r'^(\s*)(?:pub(?:\([^)]*\))?\s+)?(?:async\s+|const\s+|uns
 RUST_IMPL = re.compile(r'^impl(?:<[^>]*>)?\s+(?:[\w:<>, ]+?\s+for\s+)?([A-Za-z_]\w*)')
 PY_DECL = re.compile(r'^(\s*)(?:async\s+)?(def|class)\s+([A-Za-z_]\w*)')
 PATTERN_LANGUAGES = ('dart', 'kotlin', 'rust', 'python', 'java', 'c', 'cpp', 'shell')
-CALL_LANGUAGES = ('dart', 'kotlin', 'python', 'rust', 'java', 'cpp', 'c')
-SELF_RECEIVERS = {'this', 'self', 'Self'}
 CALL_KEYWORDS = {'if', 'for', 'while', 'switch', 'catch', 'return', 'sizeof', 'elif', 'with', 'assert', 'yield',
                  'not', 'and', 'or', 'else', 'do', 'case', 'new', 'delete', 'throw', 'match', 'lambda', 'def', 'fn',
                  'func', 'function', 'typeof', 'await', 'super', 'print', 'when', 'synchronized'}
-QUALIFIER = re.compile(r'([A-Za-z_]\w*)\s*(?:\.|::|->)\s*$')
 
 
 JAVA_TYPE = re.compile(r'^(\s*)(?:(?:public|private|protected|static|final|abstract|sealed|strictfp)\s+)*'
@@ -1591,7 +1538,8 @@ class Context:
             if edge.get('target') == symbol['id']:
                 source = self.symbol_by_id.get(edge['source'])
                 key = (edge['file'], source['name'] if source else edge['source'])
-                item = callers.setdefault(key, {'count': 0, 'line': edge['line']})
+                item = callers.setdefault(key, {'count': 0, 'line': edge['line'], 'labels': set()})
+                item['labels'].add(label(edge))
                 item['count'] += 1
             elif edge['source'] == symbol['id'] and edge.get('target') in self.symbol_by_id:
                 name = self.symbol_by_id[edge['target']]['name']
@@ -1609,14 +1557,14 @@ class Context:
                         following.add(source)
             frontier = following
         tests = sorted(p for p in reached if self.data['files'].get(p, {}).get('test'))
-        head = f'**{symbol["name"]}** at {symbol["file"]}:{symbol["line"]}: {sum(v["count"] for v in callers.values())} ' \
+        head = f'**{symbol["name"]}** at {symbol["file"]}:{symbol["line"]} (resolver candidates, not confirmed runtime reachability): {sum(v["count"] for v in callers.values())} ' \
                f'call site(s) from {len(caller_files)} file(s)'
         lines = [head]
         if callees:
             top = sorted(callees.items(), key=lambda kv: (-kv[1], kv[0]))[:shown]
-            lines.append('- calls: ' + ', '.join(f'{name} ({n})' for name, n in top))
+            lines.append('- calls (resolver candidates; inferred): ' + ', '.join(f'{name} ({n})' for name, n in top))
         for (file, name), item in ranked[:shown]:
-            lines.append(f'- called by {name} at {file}:{item["line"]} ({item["count"]} call site(s))')
+            lines.append(f'- called by {name} at {file}:{item["line"]} ({item["count"]} call site(s)) ' + '; '.join(sorted(item['labels'])))
         if len(ranked) > shown:
             lines.append(f'- ... {len(ranked) - shown} more caller(s)')
         lines.append('- tests within ' + str(depth) + ' import hops of the callers: '
@@ -1836,7 +1784,7 @@ def context(root: Path, task: str = '', files: list[str] = (), symbols: list[str
     structure = (status.get('structure') or {})
     if data:
         header.append(f'Structure: {structure.get("status")}'
-                      + (f' {status["tool"].get("version")}' if structure.get('status') == 'graphify' else '')
+                      + (f' {status["tool"].get("version")}' if structure.get('status') == 'codegraph' else '')
                       + f'. {structure.get("note", "")}')
     if failure:
         header.append(f'Map update FAILED: {failure[:400]}')
@@ -1872,6 +1820,12 @@ def context(root: Path, task: str = '', files: list[str] = (), symbols: list[str
         entries += [{'file': f, 'score': 0, 'reasons': [f'member of module {ident}'], 'symbols': []}
                     for f in sorted(members)[:per_section]]
     paths = {e['file'] for e in entries}
+    related_native = [n for n in data.get('native_bindings', []) if n['file'] in paths
+                      or any(c['file'] in paths for c in n.get('candidates', []))]
+    if related_native:
+        critical.append('## Native binding evidence (candidates, not runtime proof)\n\n' + '\n'.join(
+            f"- {n['kind']} {n.get('name', '')} at {n['file']}:{n['line']}: {n['status']} "
+            + json.dumps(n.get('candidates', [])) for n in related_native))
     result_data['entries'] = [{k: v for k, v in e.items() if k != 'symbols'} for e in entries]
     if entries:
         lines = ['## Entry points', '']
@@ -1902,7 +1856,7 @@ def context(root: Path, task: str = '', files: list[str] = (), symbols: list[str
     for path in sorted(paths):  # direct users of each entry file: short and always shown
         incoming = view.importers.get(path, [])
         if incoming:
-            shown = [f'- {d["from"]}:{d["line"]} imports {path}' + (' (test)' if data['files'].get(d['from'], {}).get('test') else '')
+            shown = [f'- {d["from"]}:{d["line"]} imports {path} {label(d)}' + (' (test)' if data['files'].get(d['from'], {}).get('test') else '')
                      for d in incoming[:8]]
             users.append(f'- {path} is used by {len(incoming)} file(s):')
             users += ['  ' + line for line in shown]
@@ -1948,8 +1902,8 @@ def context(root: Path, task: str = '', files: list[str] = (), symbols: list[str
         for library in [d['to'] for d in out if d['kind'] == 'part-of']:  # parts are imported via their library
             incoming += [{**d, 'from': f'{d["from"]} (via library {library})'} for d in view.importers.get(library, [])
                          if d['kind'] != 'part']
-        lines = [f'- imports {d["to"]} ({d["target"]}) at line {d["line"]}' for d in out]
-        lines += [f'- imported by {d["from"]}:{d["line"]}' + (' (test)' if data['files'].get(d['from'].split(' ')[0], {})
+        lines = [f'- imports {d["to"]} ({d["target"]}) at line {d["line"]} {label(d)}' for d in out]
+        lines += [f'- imported by {d["from"]}:{d["line"]} {label(d)}' + (' (test)' if data['files'].get(d['from'].split(' ')[0], {})
                                                               .get('test') else '') for d in incoming]
         graph = [e for e in data['edges'] if e['file'] == path and e.get('target') and e['relation'] in
                  ('calls', 'references', 'inherits', 'implements', 'extends', 'mixes_in')]
@@ -1964,8 +1918,8 @@ def context(root: Path, task: str = '', files: list[str] = (), symbols: list[str
                 lines.append(f'- {edge["file"]}:{edge["line"]} {edge["relation"]} {target["name"]} {label(edge)}')
         if lines:
             listed = lines[:per_section]
-            source = 'Kotlin calls/references from Graphify' if structure.get('status') == 'graphify' else 'no call edges'
-            optional.append((f'## Dependencies of {path} (extracted imports; {source})',
+            source = 'calls/references from CodeGraph' if structure.get('status') == 'codegraph' else 'no call edges'
+            optional.append((f'## Dependencies of {path} (import evidence and resolver candidates; {source})',
                              listed, len(lines) - len(listed)))
     critical_lines, extra_lines = [], []
     for path in sorted(paths):
@@ -1985,14 +1939,13 @@ def context(root: Path, task: str = '', files: list[str] = (), symbols: list[str
     guidance = guidance_for(data, paths, bridges)
     if guidance:
         optional.append(('## Guidance to read for this task', [f'- {g}' for g in guidance], 0))
-    if any(p.endswith('.dart') for p in paths) and structure.get('declarations') != 'none':
-        notes.append('Dart calls are inferred by name from unqualified call sites (low and medium confidence); '
-                     'qualified calls such as Type.f() are not attributed')
-    if structure.get('status') != 'graphify':
-        notes.append(f'Graphify not used ({structure.get("status")}: {structure.get("note", "")}); '
-                     + ('Dart and Kotlin declarations come from pattern scans; ' if structure.get('declarations') == 'patterns'
-                        else 'no declarations; ')
-                     + 'calls to other languages are missing, imports and bridges come from pattern scans')
+    if structure.get('status') != 'codegraph':
+        notes.append(f"CodeGraph not used ({structure.get('status')}: {structure.get('note', '')}); "
+                     'fallback declarations are candidates only; no call edges are fabricated.')
+    if data.get('meta', {}).get('coverage'):
+        critical.append('## Analysis coverage\n\n' + json.dumps(data['meta']['coverage'])
+                        + '\nUnindexed/partial files are not complete analysis. Inspect map status and per-file diagnostics.')
+    notes.append('Call relationships are resolver candidates, not compiler proofs. Cross-language calls require explicit bindings. Unknown receivers remain unresolved.')
     if not entries:
         hits = fallback_search(root, task, files, config)
         critical.append(render_fallback(hits, 'no entry point matched in the map'))

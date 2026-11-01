@@ -841,7 +841,7 @@ def main(argv: list[str] | None = None) -> int:
     s.add_argument('--change'); s.add_argument('--out', default='.work/review/packet.md')
     sub.add_parser('hook-bash')
     s = sub.add_parser('map', help='code map: build (full), update (incremental), status')
-    s.add_argument('op', choices=('build', 'update', 'status'))
+    s.add_argument('op', choices=('build', 'update', 'status', 'coverage'))
     s = sub.add_parser('context', help='bounded context packet for a task from the code map')
     s.add_argument('task', nargs='?', default='')
     s.add_argument('--file', action='append', default=[], help='entry file (repeatable)')
@@ -901,7 +901,9 @@ def main(argv: list[str] | None = None) -> int:
             result = {'status': 'PASS' if ok and map_state == 'current' else 'STALE_OR_INCOMPLETE',
                       'checks': 'fresh' if ok else 'stale or incomplete', 'map': map_state}
         elif args.action == 'map':
-            if args.op == 'status':
+            if args.op == 'coverage':
+                result = workmap.coverage_report(root)
+            elif args.op == 'status':
                 status_now = workmap.map_status(root)
                 result = {'status': 'PASS' if status_now['state'] == 'current' else status_now['state'].upper(),
                           **status_now}

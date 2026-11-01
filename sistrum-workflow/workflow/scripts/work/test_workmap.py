@@ -1,7 +1,7 @@
 """Tests for the code map and task context (workmap.py) on throwaway git repositories.
 
-MockedAdapter* classes use fixtures/fake_graphify_adapter.py (no Graphify needed).
-RealGraphify* classes run the pinned Graphify and are skipped when it is not installed.
+MockedAdapter* classes use fixtures/fake_codegraph_adapter.py (no CodeGraph needed).
+RealCodeGraph* classes run the pinned CodeGraph and are skipped when it is not installed.
 """
 import importlib.util
 import json
@@ -16,10 +16,10 @@ from unittest import mock
 
 HERE = Path(__file__).resolve().parent
 PACKAGE = HERE.parents[2]
-FAKE = HERE / 'fixtures/fake_graphify_adapter.py'
-MOCK_ENV = {'WORK_MAP_ADAPTER': str(FAKE), 'WORK_GRAPHIFY_PYTHON': sys.executable, 'WORK_MAP_LOCK_TIMEOUT': '5'}
+FAKE = HERE / 'fixtures/fake_codegraph_adapter.py'
+MOCK_ENV = {'WORK_MAP_ADAPTER': str(FAKE), 'WORK_MAP_PYTHON': sys.executable, 'WORK_MAP_LOCK_TIMEOUT': '5'}
 os.environ.update(MOCK_ENV)  # every test in this process uses the mock unless it says otherwise
-for name in ('FAKE_GRAPHIFY', 'FAKE_GRAPHIFY_VERSION', 'WORK_MAP_STRUCTURE'):
+for name in ('FAKE_CODEGRAPH', 'FAKE_CODEGRAPH_VERSION', 'WORK_MAP_STRUCTURE'):
     os.environ.pop(name, None)
 
 spec = importlib.util.spec_from_file_location('work', HERE / 'work.py')
@@ -185,7 +185,7 @@ def install(target: Path):
 
 class Repo(unittest.TestCase):
     files = FIXTURE
-    structure_on = True  # Graphify is off by default; the adapter tests switch it on in their repo
+    structure_on = True  # the disabled fallback fixture explicitly opts out
 
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory(prefix='map test ')
@@ -195,10 +195,10 @@ class Repo(unittest.TestCase):
         sh(self.root, 'git', 'config', 'user.email', 't@example.com')
         sh(self.root, 'git', 'config', 'user.name', 't')
         install(self.root)
-        if self.structure_on:
+        if True:  # explicitly exercise enabled and disabled configurations
             config_path = self.root / 'workflow/work/map.json'
             data = json.loads(config_path.read_text())
-            data['extractor']['enabled'] = True
+            data['extractor']['enabled'] = self.structure_on
             config_path.write_text(json.dumps(data, indent=2))
         for path, text in self.files.items():
             self.write(path, text)
@@ -206,7 +206,7 @@ class Repo(unittest.TestCase):
         patcher = mock.patch.dict(os.environ, MOCK_ENV)
         patcher.start()
         self.addCleanup(patcher.stop)
-        for name in ('FAKE_GRAPHIFY', 'FAKE_GRAPHIFY_VERSION', 'WORK_MAP_STRUCTURE'):
+        for name in ('FAKE_CODEGRAPH', 'FAKE_CODEGRAPH_VERSION', 'WORK_MAP_STRUCTURE'):
             os.environ.pop(name, None)
 
     def write(self, path, text):
@@ -234,106 +234,20 @@ class Repo(unittest.TestCase):
         path.write_text(json.dumps(data, indent=2))
 
 
-class DefaultOffTests(Repo):
-    """The shipped configuration: no Graphify, no adapter, the map still builds and says so."""
+class DisabledFallbackTests(Repo):
     structure_on = False
 
-    def test_default_config_disables_graphify_and_builds_without_it(self):
-        self.assertFalse(json.loads((self.root / 'workflow/work/map.json').read_text())['extractor']['enabled'])
+    def test_disabled_engine_keeps_bridges_but_never_fabricates_call_edges(self):
+        self.write('lib/false.dart', "void processItem() {}\nvoid runJob() {\n  final label = 'processItem()';\n}\n")
+        self.write('native/false.rs', 'pub fn processItem() {}\n')
         result = self.update()
         self.assertEqual(result['structure']['status'], 'disabled')
         self.assertEqual(self.state(), 'current')
-        data = self.data()
-        self.assertTrue(data['symbols'], 'Dart and Kotlin declarations come from the pattern scan')
-        self.assertTrue(all(s['via'].endswith('-declaration') for s in data['symbols']))
-        self.assertTrue(data['deps'], 'Dart and Kotlin imports still come from the pattern scans')
-        self.assertFalse((self.root / '.work/map/graphify').exists())
-
-    def test_type_qualified_calls_attribute_only_to_the_declared_owner(self):
-        self.write('lib/b/store.dart', "class Store {\n  static Store open() {\n    return Store();\n  }\n"
-                   "  void save() {}\n}\nclass Other {\n  void save() {}\n}\n")
-        self.write('lib/b/use.dart', "import 'store.dart';\n\nvoid run(Store value) {\n  Store.open();\n"
-                   "  value.save();\n}\n")
-        self.update()
-        edges = [e for e in self.data()['edges'] if e['file'] == 'lib/b/use.dart'
-                 and e['via'] == 'adapter:dart-name-call (qualified)']
-        by_id = {s['id']: s for s in self.data()['symbols']}
-        self.assertEqual([(by_id[e['source']]['name'], by_id[e['target']]['name'], by_id[e['target']]['owner'])
-                          for e in edges], [('run', 'open', 'Store')])
-        self.assertEqual(edges[0]['line'], 4)
-        self.assertFalse([e for e in self.data()['edges'] if e['file'] == 'lib/b/use.dart'
-                          and e['line'] == 5 and e['via'].startswith('adapter:dart-name-call')])
-
-    def test_blast_radius_ranks_callers_and_reaches_tests(self):
-        self.write('lib/a/core.dart', "class Core {\n  void work() {}\n}\n")
-        self.write('lib/a/caller.dart', "import 'core.dart';\n\nvoid go1() {\n  work();\n  work();\n}\n")
-        self.write('test/a/caller_test.dart', "import '../../lib/a/caller.dart';\n\nvoid main() {\n  go1();\n}\n")
-        self.update()
-        data = self.data()
-        context = workmap.Context(self.root, data, workmap.load_config(self.root), workmap.map_status(self.root), None)
-        symbol = next(s for s in data['symbols'] if s['name'] == 'work')
-        text = '\n'.join(context.blast_radius(symbol))
-        self.assertIn('2 call site(s) from 1 file(s)', text)
-        self.assertIn('called by go1 at lib/a/caller.dart:4 (2 call site(s))', text)
-        self.assertIn('test/a/caller_test.dart', text)
-
-    def test_rust_and_python_declarations_come_from_the_pattern_scan(self):
-        self.write('rust/src/engine.rs', "pub struct Engine {\n    x: u8,\n}\nimpl Engine {\n    pub fn start(&self) -> u8 {\n"
-                   "        1\n    }\n}\npub fn free() {}\n")
-        self.write('py/player.py', "class Player:\n    def play(self, track):\n        pass\n\ndef helper():\n    return 1\n")
-        self.update()
-        symbols = {(s['file'], s['name']): s for s in self.data()['symbols']}
-        self.assertEqual(symbols[('rust/src/engine.rs', 'start')]['owner'], 'Engine')
-        self.assertEqual(symbols[('py/player.py', 'play')]['owner'], 'Player')
-        self.assertIsNone(symbols[('py/player.py', 'helper')].get('owner'))
-        self.assertTrue(all(s['via'].endswith('-declaration') for s in symbols.values()
-                            if s['file'].split('.')[-1] in ('rs', 'py')))
-
-    def test_name_calls_for_each_language_with_its_receiver_rules(self):
-        self.write('py/worker.py', "class Worker:\n    def run(self):\n        self.step()\n\n"
-                   "    def step(self):\n        pass\n")
-        self.write('rust/src/main.rs', "struct Engine;\nimpl Engine {\n    fn new() -> Engine { Engine }\n}\n"
-                   "fn boot() -> Engine {\n    Engine::new()\n}\n")
-        self.write('java/app/Shop.java', "class Shop {\n    void buy() {\n        total();\n    }\n"
-                   "    int total() {\n        return 1;\n    }\n}\n")
-        self.write('cpp/engine.cpp', "class Engine {\npublic:\n    void spin();\n};\n"
-                   "void Engine::spin() {\n    halt();\n}\nvoid halt() {}\n")
-        self.write('scripts/run.sh', "build() {\n  echo hi\n}\n")
-        self.update()
-        data = self.data()
-        by_id = {s['id']: s for s in data['symbols']}
-        edges = {(by_id[e['source']]['name'], by_id[e['target']]['name'], e['via'])
-                 for e in data['edges'] if e['relation'] == 'calls' and e.get('target') in by_id}
-        self.assertIn(('run', 'step', 'adapter:python-name-call (same file)'), edges)
-        self.assertIn(('boot', 'new', 'adapter:rust-name-call (qualified)'), edges)
-        self.assertIn(('buy', 'total', 'adapter:java-name-call (same file)'), edges)
-        self.assertIn(('spin', 'halt', 'adapter:cpp-name-call (same file)'), edges)
-        shell = [s for s in data['symbols'] if s['file'] == 'scripts/run.sh']
-        self.assertEqual([(s['name'], s['kind']) for s in shell], [('build', 'function')])
-        self.assertFalse([e for e in data['edges'] if e['file'] == 'scripts/run.sh'])
-
-    def test_pattern_declarations_include_multi_line_signatures(self):
-        self.write('lib/a/wide.dart', "class Wide {\n  void report(\n    Object error,\n    int code,\n  ) {\n"
-                   "    print(error);\n  }\n  void call(Object x) => report(x, 1);\n}\n")
-        self.write('lib/a/wide_call.dart', "void drive() {\n  when(() {\n    x();\n  });\n}\n")
-        self.update()
-        names = {(s['file'], s['name']) for s in self.data()['symbols']}
-        self.assertIn(('lib/a/wide.dart', 'report'), names)
-        self.assertIn(('lib/a/wide.dart', 'call'), names)
-        self.assertIn(('lib/a/wide.dart', 'Wide'), names)
-        self.assertNotIn(('lib/a/wide_call.dart', 'when'), names)
-
-    def test_name_calls_resolve_in_scope_before_the_corpus(self):
-        self.write('lib/a/one.dart', "class One {\n  void run() {\n    helper();\n  }\n  void helper() {}\n}\n")
-        self.write('lib/b/two.dart', "class Two {\n  void helper() {}\n}\n")
-        self.update()
-        calls = [e for e in self.data()['edges'] if e['via'] == 'adapter:dart-name-call (same file)'
-                 and e['file'] == 'lib/a/one.dart']
-        by_id = {s['id']: s for s in self.data()['symbols']}
-        self.assertTrue(calls)
-        self.assertEqual({by_id[e['target']]['file'] for e in calls}, {'lib/a/one.dart'})
-        self.assertFalse([e for e in self.data()['edges'] if e['via'].startswith('adapter:dart-name-call')
-                          and e['file'] == 'lib/a/one.dart' and e['target_file'] == 'lib/b/two.dart'])
+        self.assertTrue(self.data()['bridges']['channels'])
+        self.assertFalse(self.data()['edges'])
+        self.assertTrue(all(s['fact'] == 'inferred' for s in self.data()['symbols']))
+        self.assertTrue(all(c['status'] == 'unavailable' for c in self.data()['coverage']))
+        self.assertIn('no call edges are fabricated', workmap.context(self.root, 'processItem')['text'])
 
 
 class MockedAdapterFreshnessTests(Repo):
@@ -342,12 +256,12 @@ class MockedAdapterFreshnessTests(Repo):
         result = self.update()
         self.assertTrue(result['rebuilt'])
         self.assertEqual(self.state(), 'current')
-        self.assertEqual(self.data()['meta']['structure']['status'], 'graphify')
+        self.assertEqual(self.data()['meta']['structure']['status'], 'codegraph')
 
     def test_current_map_is_not_rebuilt(self):
         log = self.root.parent / f'{self.root.name}.log'
-        os.environ['FAKE_GRAPHIFY_LOG'] = str(log)
-        self.addCleanup(os.environ.pop, 'FAKE_GRAPHIFY_LOG', None)
+        os.environ['FAKE_CODEGRAPH_LOG'] = str(log)
+        self.addCleanup(os.environ.pop, 'FAKE_CODEGRAPH_LOG', None)
         self.update()
         self.assertFalse(self.update()['rebuilt'])
         self.assertEqual(log.read_text().count('extract'), 1)
@@ -406,28 +320,28 @@ class MockedAdapterFreshnessTests(Repo):
 
     def test_extractor_version_change_makes_the_map_stale_and_unverified_versions_are_not_used(self):
         self.update()
-        os.environ['FAKE_GRAPHIFY_VERSION'] = '0.9.99'
+        os.environ['FAKE_CODEGRAPH_VERSION'] = '1.6.99'
         status = workmap.map_status(self.root)
         self.assertEqual(status['state'], 'stale')
         self.assertIn('extractor availability or version changed', status['reasons'])
         self.update()
         data = self.data()
         self.assertEqual(data['meta']['structure']['status'], 'unverified')
-        self.assertEqual([s for s in data['symbols'] if s['via'].startswith('graphify')], [])
+        self.assertEqual([s for s in data['symbols'] if s['via'].startswith('codegraph')], [])
         self.config(lambda c: c['extractor'].update(allow_unverified=True))
         self.update()
         self.assertTrue(self.data()['symbols'])
 
     def test_missing_extractor_still_builds_a_labelled_companion_map(self):
-        os.environ['FAKE_GRAPHIFY'] = 'missing'
+        os.environ['FAKE_CODEGRAPH'] = 'missing'
         self.update()
         data = self.data()
         self.assertEqual(data['meta']['structure']['status'], 'unavailable')
-        self.assertEqual([s for s in data['symbols'] if s['via'].startswith('graphify')], [])
+        self.assertEqual([s for s in data['symbols'] if s['via'].startswith('codegraph')], [])
         self.assertIn('com.example/player', data['bridges']['channels'])
         self.assertTrue(data['deps'])
         text = workmap.context(self.root, 'player bridge play')['text']
-        self.assertIn('Graphify not used', text)
+        self.assertIn('CodeGraph not used', text)
 
     def test_disabled_structure_is_explicit(self):
         os.environ['WORK_MAP_STRUCTURE'] = 'off'
@@ -450,8 +364,8 @@ class MockedAdapterPublicationTests(Repo):
         self.update()
         published = (self.root / '.work/map/map.json').read_bytes()
         self.write('lib/player/queue.dart', QUEUE_DART + '// edit\n')
-        os.environ['FAKE_GRAPHIFY'] = 'fail'
-        with self.assertRaisesRegex(Blocked, 'graphify extraction failed'):
+        os.environ['FAKE_CODEGRAPH'] = 'fail'
+        with self.assertRaisesRegex(Blocked, 'codegraph extraction failed'):
             self.update()
         self.assertEqual(published, (self.root / '.work/map/map.json').read_bytes())
         status = workmap.map_status(self.root)
@@ -462,27 +376,27 @@ class MockedAdapterPublicationTests(Repo):
         self.assertIn('STALE', text)
         self.assertIn('Map update FAILED', text)
         self.assertIn('lib/player/queue.dart', text)
-        os.environ.pop('FAKE_GRAPHIFY')
+        os.environ.pop('FAKE_CODEGRAPH')
         self.update()
         self.assertIsNone(workmap.map_status(self.root).get('last_failure'))
 
     def test_malformed_extractor_output_is_rejected(self):
-        os.environ['FAKE_GRAPHIFY'] = 'garbage'
+        os.environ['FAKE_CODEGRAPH'] = 'garbage'
         with self.assertRaisesRegex(Blocked, 'schema'):
             self.update()
         self.assertEqual(self.state(), 'missing')
 
     def test_timeout_is_a_failure(self):
-        os.environ['FAKE_GRAPHIFY'] = 'hang'
+        os.environ['FAKE_CODEGRAPH'] = 'hang'
         self.config(lambda c: c['extractor'].update(timeout=1))
         with self.assertRaisesRegex(Blocked, 'timed out'):
             self.update()
         self.assertEqual(self.state(), 'missing')
 
     def test_sources_changed_during_update_are_not_published(self):
-        os.environ['FAKE_GRAPHIFY'] = 'touch'
-        os.environ['FAKE_GRAPHIFY_TOUCH'] = 'lib/player/queue.dart'
-        self.addCleanup(os.environ.pop, 'FAKE_GRAPHIFY_TOUCH', None)
+        os.environ['FAKE_CODEGRAPH'] = 'touch'
+        os.environ['FAKE_CODEGRAPH_TOUCH'] = 'lib/player/queue.dart'
+        self.addCleanup(os.environ.pop, 'FAKE_CODEGRAPH_TOUCH', None)
         with self.assertRaisesRegex(Blocked, 'changed while the map was being built'):
             self.update()
         self.assertEqual(self.state(), 'missing')
@@ -774,20 +688,10 @@ class MockedAdapterGapTests(Repo):
         self.assertIn('lib/player/queue.dart is used by', text)
         self.assertIn('lib/player/player_bridge.dart:2 imports lib/player/queue.dart', text)
 
-    def test_dart_calls_are_inferred_for_unqualified_calls_only(self):
-        self.write('lib/player/caller.dart', "class Caller {\n  void drive() {\n    scheduleTrack();\n"
-                   "    Other.scheduleTrack();\n  }\n  void scheduleTrack() {}\n}\n")
+    def test_no_name_only_dart_calls_are_added_to_engine_output(self):
+        self.write('lib/caller.dart', "void uniqueTarget() {}\nvoid caller() {\n uniqueTarget();\n}\n")
         self.update()
-        calls = [e for e in self.data()['edges'] if e['via'].startswith('adapter:dart-name-call')
-                 and e['file'] == 'lib/player/caller.dart']
-        self.assertEqual(len(calls), 1, calls)
-        self.assertEqual(calls[0]['line'], 3)
-        self.assertEqual(calls[0]['fact'], 'inferred')
-        self.assertEqual(calls[0]['via'], 'adapter:dart-name-call (same file)')
-        symbols = {s['id']: s for s in self.data()['symbols']}
-        self.assertEqual(symbols[calls[0]['source']]['name'], 'drive')
-        self.assertEqual(symbols[calls[0]['source']]['lang'], 'dart')
-        self.assertEqual(symbols[calls[0]['target']]['name'], 'scheduleTrack')
+        self.assertFalse([e for e in self.data()['edges'] if e['via'].startswith('adapter:dart-name-call')])
 
 
 class MockedAdapterGateTests(Repo):
@@ -805,10 +709,10 @@ class MockedAdapterGateTests(Repo):
         self.assertTrue(any('code map is stale' in p for p in problems), problems)
 
     def test_advance_refreshes_the_map_and_fails_when_it_cannot(self):
-        os.environ['FAKE_GRAPHIFY'] = 'fail'
+        os.environ['FAKE_CODEGRAPH'] = 'fail'
         with self.assertRaisesRegex(Blocked, 'code map could not be refreshed'):
             work.advance(self.root, self.folder.name, 'review')
-        os.environ.pop('FAKE_GRAPHIFY')
+        os.environ.pop('FAKE_CODEGRAPH')
         with self.assertRaises(Blocked) as caught:  # other gate problems remain, the map one is gone
             work.advance(self.root, self.folder.name, 'review')
         self.assertNotIn('code map', str(caught.exception))
@@ -825,7 +729,7 @@ class MockedAdapterGateTests(Repo):
         self.assertTrue(any('not recorded against the current code map' in p for p in problems), problems)
 
     def test_clean_round_cannot_be_recorded_without_a_current_map(self):
-        os.environ['FAKE_GRAPHIFY'] = 'fail'
+        os.environ['FAKE_CODEGRAPH'] = 'fail'
         with self.assertRaises(Blocked):
             work.record_round(self.root, self.folder.name, 'code', 'clean', 'code-reviewer')
         self.assertEqual(work.read_state(self.folder)['rounds'], [])
@@ -837,7 +741,7 @@ class MockedAdapterGateTests(Repo):
         report = work.run_checks(self.root, config, ['ok'])
         self.assertEqual(report['status'], 'PASS')
         self.assertEqual(report['map']['state'], 'current')
-        os.environ['FAKE_GRAPHIFY'] = 'fail'
+        os.environ['FAKE_CODEGRAPH'] = 'fail'
         self.write('lib/player/queue.dart', QUEUE_DART + '// edit\n')
         report = work.run_checks(self.root, config, ['ok'])
         self.assertEqual(report['status'], 'PASS')
@@ -888,56 +792,53 @@ class MockedAdapterInstallTests(unittest.TestCase):
             self.assertEqual(leftovers, '', 'map commands must only write ignored .work/ files')
 
 
-def real_graphify() -> str | None:
-    """Reason to skip, or None when the pinned Graphify can run here."""
+def real_codegraph() -> str | None:
+    """Reason to skip, or None when the pinned CodeGraph can run here."""
     pinned = json.loads((PACKAGE / 'workflow/work/map.json').read_text())['extractor']['version']
     with mock.patch.dict(os.environ, {}, clear=False):
         for name in MOCK_ENV:
             os.environ.pop(name, None)
         argv, _how = workmap.interpreter()
         if argv is None:
-            return 'graphify is not installed'
+            return 'codegraph is not installed'
         done = subprocess.run([*argv, str(workmap.ADAPTER), 'version'], capture_output=True, text=True)
     try:
         info = json.loads(done.stdout)
     except ValueError:
-        return 'graphify adapter version check failed'
+        return 'codegraph adapter version check failed'
     if not info.get('available') or info.get('version') != pinned:
-        return f'pinned graphifyy {pinned} not available ({info.get("version") or info.get("reason")})'
+        return f'pinned @colbymchenry/codegraph {pinned} not available ({info.get("version") or info.get("reason")})'
     return None
 
 
-SKIP_REAL = real_graphify()
+SKIP_REAL = real_codegraph()
 
 
 @unittest.skipIf(SKIP_REAL, SKIP_REAL or '')
-class RealGraphifySmokeTests(Repo):
-    """Runs the pinned Graphify through the real adapter: integration, not a mock."""
+class RealCodeGraphSmokeTests(Repo):
+    """Runs the pinned CodeGraph through the real adapter: integration, not a mock."""
 
     def setUp(self):
         super().setUp()
-        for name in ('WORK_MAP_ADAPTER', 'WORK_GRAPHIFY_PYTHON'):
+        for name in ('WORK_MAP_ADAPTER', 'WORK_MAP_PYTHON'):
             os.environ.pop(name, None)
 
     def test_real_extraction_of_dart_and_kotlin(self):
         result = self.update()
-        self.assertEqual(result['structure']['status'], 'graphify')
+        self.assertEqual(result['structure']['status'], 'codegraph')
         data = self.data()
         self.assertEqual(data['meta']['tool']['version'], json.loads(
             (self.root / 'workflow/work/map.json').read_text())['extractor']['version'])
         names = {(s['file'], s['name']) for s in data['symbols']}
         self.assertIn(('lib/player/player_bridge.dart', 'PlayerBridge'), names)
         self.assertIn((ENGINE, 'prepare'), names)
-        calls = [e for e in data['edges'] if e['relation'] == 'calls' and e['via'] == 'graphify:kotlin-ast']
+        calls = [e for e in data['edges'] if e['relation'] == 'calls' and e['via'] == 'codegraph:resolver']
         by_id = {s['id']: s for s in data['symbols']}
         self.assertIn(('start', 'prepare'), {(by_id[e['source']]['name'], by_id[e['target']]['name'])
                                              for e in calls if e['source'] in by_id and e.get('target') in by_id})
-        graphify_dart_calls = [e for e in data['edges'] if e['relation'] == 'calls' and e['file'].endswith('.dart')
-                               and e['via'] == 'graphify:dart-regex']
-        self.assertEqual(graphify_dart_calls, [], 'Graphify 0.9.97 emits no Dart call edges; update the docs if this changes')
-        self.assertTrue((self.root / '.work/map/graphify/cache').is_dir())
+        self.assertTrue((self.root / '.work/map/codegraph/source/.codegraph/codegraph.db').is_file())
         ignored = sh(self.root, 'git', 'status', '--porcelain', '--ignored')
-        self.assertEqual(ignored.strip(), '!! .work/', 'Graphify must write only under .work/map/graphify')
+        self.assertEqual(ignored.strip(), '!! .work/', 'CodeGraph must write only under .work/map/codegraph')
 
     def test_real_update_removes_deleted_symbols(self):
         self.update()
@@ -951,8 +852,8 @@ class RealGraphifySmokeTests(Repo):
         if not shutil.which('unshare') or subprocess.run(['unshare', '-n', 'true'], capture_output=True).returncode:
             self.skipTest('cannot create a network namespace here')
         argv, _how = workmap.interpreter()
-        os.environ['WORK_GRAPHIFY_PYTHON'] = ' '.join(['unshare', '-n', *argv])
-        self.assertEqual(self.update()['structure']['status'], 'graphify')
+        os.environ['WORK_MAP_PYTHON'] = ' '.join(['unshare', '-n', *argv])
+        self.assertEqual(self.update()['structure']['status'], 'codegraph')
 
 
 if __name__ == '__main__':

@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""MOCK of graphify_adapter.py for the mocked tests: same protocol, no Graphify.
+"""MOCK of codegraph_adapter.py for the mocked tests: same protocol, no CodeGraph.
 
-Behaviour is chosen with FAKE_GRAPHIFY: unset (normal), missing, fail, garbage, hang,
-touch (edits FAKE_GRAPHIFY_TOUCH during extraction). FAKE_GRAPHIFY_VERSION sets the
-reported version; FAKE_GRAPHIFY_LOG appends one line per extraction.
+Behaviour is chosen with FAKE_CODEGRAPH: unset (normal), missing, fail, garbage, hang,
+touch (edits FAKE_CODEGRAPH_TOUCH during extraction). FAKE_CODEGRAPH_VERSION sets the
+reported version; FAKE_CODEGRAPH_LOG appends one line per extraction.
 """
 import json
 import os
@@ -14,10 +14,10 @@ from pathlib import Path
 
 
 def info():
-    if os.environ.get('FAKE_GRAPHIFY') == 'missing':
-        return {'schema': 1, 'available': False, 'package': 'graphifyy', 'reason': 'fake: graphifyy is not installed'}
-    return {'schema': 1, 'available': True, 'package': 'graphifyy', 'python': 'fake',
-            'version': os.environ.get('FAKE_GRAPHIFY_VERSION', '0.9.97'), 'grammars': {'tree-sitter': 'fake'}}
+    if os.environ.get('FAKE_CODEGRAPH') == 'missing':
+        return {'schema': 1, 'available': False, 'package': '@colbymchenry/codegraph', 'reason': 'fake: @colbymchenry/codegraph is not installed'}
+    return {'schema': 1, 'available': True, 'package': '@colbymchenry/codegraph', 'python': 'fake',
+            'version': os.environ.get('FAKE_CODEGRAPH_VERSION', '1.6.2'), 'grammars': {'tree-sitter': 'fake'}}
 
 
 def ident(path, *names):
@@ -25,11 +25,11 @@ def ident(path, *names):
 
 
 def extract(request, out):
-    mode = os.environ.get('FAKE_GRAPHIFY', '')
+    mode = os.environ.get('FAKE_CODEGRAPH', '')
     data = json.loads(Path(request).read_text())
     root, files = Path(data['root']), data['files']
-    if os.environ.get('FAKE_GRAPHIFY_LOG'):
-        with open(os.environ['FAKE_GRAPHIFY_LOG'], 'a') as log:
+    if os.environ.get('FAKE_CODEGRAPH_LOG'):
+        with open(os.environ['FAKE_CODEGRAPH_LOG'], 'a') as log:
             log.write(f'extract {len(files)}\n')
     if mode == 'fail':
         print('fake extractor crashed', file=sys.stderr)
@@ -40,7 +40,7 @@ def extract(request, out):
     if mode == 'hang':
         time.sleep(60)
     if mode == 'touch':
-        target = root / os.environ['FAKE_GRAPHIFY_TOUCH']
+        target = root / os.environ['FAKE_CODEGRAPH_TOUCH']
         target.write_text(target.read_text() + '\n// edited during extraction\n')
     nodes, edges, functions = [], [], {}
     for rel in files:
@@ -81,6 +81,7 @@ def extract(request, out):
                                       'confidence': 'EXTRACTED' if file == rel else 'INFERRED',
                                       'source_file': rel, 'source_location': f'L{number}'})
     Path(out).write_text(json.dumps({'schema': 1, 'tool': info(), 'nodes': nodes, 'edges': edges,
+                                     'coverage': [{'file': f, 'status': 'indexed', 'errors': [], 'symbols': 0} for f in files],
                                      'stats': {'extracted_sources': len(files)}}))
     return 0
 
