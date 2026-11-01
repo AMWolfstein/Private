@@ -67,7 +67,36 @@ Host tests cover browser roots, pagination beyond 500 rows, complete context que
 
 Native JVM tests cover cover directory rules, traversal, links, signatures and recent-art cache behavior. Instrumentation sources cover provider read/write restrictions, per-engine descriptor ownership and bitmap ownership. Compiling instrumentation is not device execution.
 
+After preserving remote player-animation updates through `6d635e09` in merge `94a2b974`, analysis and the complete Flutter suite were run again: **2,349 passed, 3 skipped, 0 failures** (5m28s). Refreshed graph `aee55d59` validates 27,705 unique nodes and 53,103 links with no dangling endpoints.
+
 Android Auto Desktop Head Unit, physical cars/phones, OEM lifecycle/background restrictions, audible playback transitions, SAF provider behavior on devices and measured device memory/battery performance remain **unverified**. No APK was built or installed for this work.
+
+## Device acceptance checklist (pending)
+
+Use an equivalent installed build and a seeded offline library; this work does
+not package that build. Record device/Android version, Android Auto version,
+output route and whether the Activity was alive for each case.
+
+1. With the phone app closed, connect DHU/car, open all four roots, and start a
+   song. Confirm saved session/EQ and original file permissions are honored.
+2. Browse a library/playlist larger than 500 songs. Select near a page boundary,
+   then Next/Previous across it; verify the full context and duplicate playlist
+   occurrences. Compare album order with the phone.
+3. Search by title/artist and issue focused album/artist/playlist voice requests.
+   Issue an unnamed music request with and without a restored queue.
+4. Verify local covers in browse, queue and recent items, then remove a cached
+   cover and retry. Confirm a missing/recycled cover preserves text and controls.
+5. Love/unlove while headless; open the phone during the operation and verify
+   both views agree. Repeat after changing tracks rapidly.
+6. During a slow browse/play request, replace the queue on the phone, pause,
+   seek and stop. Confirm delayed work never starts an obsolete selection.
+7. Detach/recreate the Activity while playing a SAF file, disconnect/reconnect
+   the car, and exercise service/engine teardown. Verify no stale callbacks,
+   lost active descriptors or steadily growing descriptor/bitmap counts.
+8. Exercise low-memory trim, revoked folder access and unavailable SAF documents.
+   Confirm readable errors/fallbacks and retry without a crash or network access.
+
+These checks are a release gate for device claims, not completed host results.
 
 ## Upstream provenance
 
