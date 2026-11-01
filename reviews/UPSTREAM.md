@@ -88,6 +88,23 @@ fork's implementations are listed in `docs/UPSTREAM_530_FOLLOWUP.md`.
 Adapted LGPL code/tests retain attribution and complete in-app terms. Existing
 Rust/C++/FFmpeg/player implementations and package versions remain.
 
+## Mornye player preferences and EQ presentation (2026-11-01)
+
+Reference tag `afee4332a257f1b6aeb288229eddf04ac0777b3c`.
+Source checkpoint: `e555a7f8`.
+
+| ID | Upstream reference | Adaptation |
+|---|---|---|
+| U-619 | `457d074b` | Lyrics blur Off–150%, default 100%, live preview/release persistence/reset, settings search and existing contrast/performance gates. Active lines remain sharp. |
+| U-620 | `c489960b` | Persistent Now Playing menu volume visibility on current Normal/Immersive portrait/landscape layouts, with no system volume writes. |
+| U-621 | v5.3.0 `equalizer_screen.dart`, `equalizer_widgets.dart`, `equalizer_curve.dart` | Mornye-only response overview/chart, responsive faders and individual resets, selected presets and grouped tone/dynamics/reset UI. Existing model, DSP, preset storage, streaming import cap and output bypass retained; upstream preset formats accepted. No Material/Expressive or desktop renderer imported. |
+
+Verification: full Flutter **2,386 passed / 3 skipped / zero failures** (5m41s);
+analysis **No issues found**. Focused EQ/preview tests and light/dark host renders
+checked; no native production source changed. Details, comparison, attribution
+and verification limits: `docs/PLAYER_CONTROLS_AND_EQUALIZER.md`.
+No APK or device audio measurement.
+
 ## Port order (batches; test once per batch)
 
 Done: batch 1 (U-001, U-101, U-102, U-103; pushed `3f8bbe7`) and batch 1b:
