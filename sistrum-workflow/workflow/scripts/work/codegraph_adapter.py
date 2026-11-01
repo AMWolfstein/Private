@@ -26,7 +26,7 @@ def command():
 
 def run(args, cwd=None):
     done = subprocess.run([*command(), *args], cwd=cwd, capture_output=True, text=True,
-                          env={**os.environ, 'CODEGRAPH_TELEMETRY': '0', 'DO_NOT_TRACK': '1'}, timeout=840)
+                          env={**os.environ, 'CODEGRAPH_TELEMETRY': '0', 'DO_NOT_TRACK': '1', 'CODEGRAPH_NO_DOWNLOAD': '1'}, timeout=840)
     if done.returncode:
         raise RuntimeError(f'CodeGraph exit {done.returncode}: {(done.stderr + done.stdout)[-1500:]}')
     return done.stdout

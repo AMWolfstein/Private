@@ -35,6 +35,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 import native_bindings
+import resource_index
 
 from worklib import Blocked, atomic_write, domains_for, is_test, now, snapshot
 
@@ -314,7 +315,9 @@ def inputs(root: Path, config: dict, tool: dict) -> dict:
     corpus_digest = sha(json.dumps([[p, listing[p][1]] for p in corpus + aux]))
     config_digest = sha(b''.join(read_bytes(root / p) for p in (CONFIG, CHECKS))
                         + read_bytes(Path(__file__)) + read_bytes(adapter_path())
-                        + read_bytes(HERE / 'native_bindings.py'))
+                        + read_bytes(HERE / 'native_bindings.py') + read_bytes(HERE / 'resource_index.py')
+                        + read_bytes(HERE / 'shell_adapter.py') + read_bytes(HERE / 'requirements.txt')
+                        + json.dumps(resource_index.capabilities(config['extractor']['command']), sort_keys=True).encode())
     declarations = sha(b''.join(name.encode() + b'\0' + data for name, data in declaration_inputs(root)))
     tool_key = {k: tool.get(k) for k in ('status', 'package', 'pinned', 'version', 'python', 'grammars')}
     components = {'corpus': corpus_digest, 'config': config_digest, 'declarations': declarations,
@@ -400,6 +403,8 @@ def coverage_report(root: Path) -> dict:
     return {'status': 'PASS', 'meaning': 'Coverage inventory, not semantic correctness or device validation',
             'summary': data['meta']['coverage'], 'languages': languages,
             'files': data['coverage'], 'native_bindings': data.get('native_bindings', []),
+            'shell': data.get('resources', {}).get('shell', []),
+            'resource_unresolved': data.get('resources', {}).get('unresolved', []),
             'excluded': len(excluded), 'excluded_files': excluded}
 
 
@@ -578,17 +583,27 @@ def build(root: Path, config: dict, tool: dict, current: dict) -> dict:
     meta_structure['declarations'] = meta_structure.get('declarations') or ('patterns' if symbols else 'none')
     if symbols and tool['status'] != 'ready':
         meta_structure['declarations'] = 'patterns'
+    supplementary = resource_index.index(texts, config['extractor']['command'])
+    symbols += supplementary['symbols']
+    coverage = [{**entry, 'engine_status': entry['status'], **supplementary['coverage'].get(entry['file'], {})}
+                for entry in coverage]
     for entry in coverage:
         if entry['file'] in file_info:
             file_info[entry['file']]['analysis'] = entry
             if entry.get('language'):
                 file_info[entry['file']]['lang'] = entry['language']
-        if entry['status'] != 'indexed':
+        if entry['status'] not in ('indexed', 'resource-indexed', 'shell-indexed'):
             problems.append(f"{entry['file']}: {entry['status']} ({len(entry.get('errors', []))} diagnostics); not complete analysis")
     deps, kotlin_index, dep_problems = dependencies(root, texts, file_info, current['listing'], config)
     problems += dep_problems
     existing = {(d['from'], d.get('to')) for d in deps}
     deps += [d for d in engine_dependencies(raw, set(files)) if (d['from'], d['to']) not in existing]
+    seen_dependencies = {(d['from'], d.get('to')) for d in deps}
+    for link in supplementary['links']:
+        key = (link['from'], link['to'])
+        if key not in seen_dependencies:
+            deps.append({**link, 'line': 1, 'target': 'supplementary evidence'})
+            seen_dependencies.add(key)
     bridges = scan_bridges(texts, file_info, config)
     attach_bridge_tests(root, bridges, current['aux'], file_info, texts)
     tests = link_tests(file_info, deps, symbols, edges)
@@ -603,7 +618,8 @@ def build(root: Path, config: dict, tool: dict, current: dict) -> dict:
     return {'meta': meta, 'files': file_info, 'symbols': symbols, 'edges': edges, 'deps': deps,
             'kotlin_index': kotlin_index, 'bridges': bridges, 'tests': tests,
             'declarations': declarations, 'coverage': coverage,
-            'native_bindings': native_bindings.inventory(texts, symbols), 'problems': problems}
+            'native_bindings': native_bindings.inventory(texts, symbols),
+            'resources': supplementary, 'problems': problems}
 
 
 LANGUAGE_BY_SUFFIX = {'.dart': 'dart', '.kt': 'kotlin', '.kts': 'kotlin', '.rs': 'rust', '.c': 'c', '.h': 'c',
@@ -1826,6 +1842,19 @@ def context(root: Path, task: str = '', files: list[str] = (), symbols: list[str
         critical.append('## Native binding evidence (candidates, not runtime proof)\n\n' + '\n'.join(
             f"- {n['kind']} {n.get('name', '')} at {n['file']}:{n['line']}: {n['status']} "
             + json.dumps(n.get('candidates', [])) for n in related_native))
+    resource_links = [d for d in data.get('resources', {}).get('links', []) if d['from'] in paths or d['to'] in paths]
+    if resource_links:
+        optional.append(('## Resource and script relationships (not code calls)',
+                         [f"- {d['from']} -> {d['to']} ({d['kind']}: {d['detail']}) {label(d)}" for d in resource_links[:per_section]],
+                         max(0, len(resource_links) - per_section)))
+    resource_unknown = [d for d in data.get('resources', {}).get('unresolved', []) if d['file'] in paths]
+    if resource_unknown:
+        critical.append('## Unresolved resource references\n\n' + '\n'.join(json.dumps(d) for d in resource_unknown))
+    shell = [item for item in data.get('resources', {}).get('shell', []) if item['file'] in paths]
+    if shell:
+        optional.append(('## Shell AST command inventory (never executed; dynamic commands unresolved)',
+                         [f"{item['file']}:{c['line']} {json.dumps(c)}" for item in shell for c in item['commands']][:per_section],
+                         max(0, sum(len(item['commands']) for item in shell) - per_section)))
     result_data['entries'] = [{k: v for k, v in e.items() if k != 'symbols'} for e in entries]
     if entries:
         lines = ['## Entry points', '']
@@ -1944,7 +1973,7 @@ def context(root: Path, task: str = '', files: list[str] = (), symbols: list[str
                      'fallback declarations are candidates only; no call edges are fabricated.')
     if data.get('meta', {}).get('coverage'):
         critical.append('## Analysis coverage\n\n' + json.dumps(data['meta']['coverage'])
-                        + '\nUnindexed/partial files are not complete analysis. Inspect map status and per-file diagnostics.')
+                        + '\nResource/shell indexing is supplementary analysis, not complete runtime resolution. Unindexed/partial files are not complete analysis. Inspect map status and per-file diagnostics.')
     notes.append('Call relationships are resolver candidates, not compiler proofs. Cross-language calls require explicit bindings. Unknown receivers remain unresolved.')
     if not entries:
         hits = fallback_search(root, task, files, config)

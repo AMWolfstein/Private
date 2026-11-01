@@ -245,8 +245,8 @@ class DisabledFallbackTests(Repo):
         self.assertEqual(self.state(), 'current')
         self.assertTrue(self.data()['bridges']['channels'])
         self.assertFalse(self.data()['edges'])
-        self.assertTrue(all(s['fact'] == 'inferred' for s in self.data()['symbols']))
-        self.assertTrue(all(c['status'] == 'unavailable' for c in self.data()['coverage']))
+        self.assertTrue(all(s['fact'] == 'inferred' for s in self.data()['symbols'] if s['via'].startswith('workflow:')))
+        self.assertTrue(all(c['status'] == 'unavailable' for c in self.data()['coverage'] if c['file'].endswith(('.dart', '.kt', '.rs'))))
         self.assertIn('no call edges are fabricated', workmap.context(self.root, 'processItem')['text'])
 
 
@@ -435,6 +435,31 @@ class MockedAdapterGraphTests(Repo):
         (self.root / renamed).unlink()
         self.update()
         self.assertFalse(any(s['file'] == renamed for s in self.data()['symbols']))
+
+    def test_multiple_resource_uses_do_not_inflate_file_dependency_counts(self):
+        self.write('lib/app_en.arb', '{"first":"First","second":"Second"}')
+        self.write('lib/view.dart', 'void render() { context.l10n.first; context.l10n.second; }')
+        self.update()
+        deps = [d for d in self.data()['deps'] if d['from'] == 'lib/view.dart' and d['to'] == 'lib/app_en.arb']
+        self.assertEqual(len(deps), 1)
+        text = workmap.context(self.root, '', files=['lib/app_en.arb'])['text']
+        self.assertIn('lib/app_en.arb is used by 1 file(s)', text)
+
+    def test_resource_edits_renames_and_deletions_remove_obsolete_keys_and_links(self):
+        self.write('lib/app_en.arb', '{"first":"First"}')
+        self.write('lib/view.dart', 'void render() { context.l10n.first; context.l10n.second; }')
+        self.update()
+        self.assertTrue(any(d['detail'] == 'first' for d in self.data()['resources']['links']))
+        self.write('lib/app_en.arb', '{"second":"Second"}')
+        self.update()
+        self.assertFalse(any(d['detail'] == 'first' for d in self.data()['resources']['links']))
+        (self.root / 'lib/app_en.arb').rename(self.root / 'lib/app_ar.arb')
+        self.update()
+        self.assertFalse(any(s['file'] == 'lib/app_en.arb' for s in self.data()['symbols']))
+        self.assertTrue(any(d['to'] == 'lib/app_ar.arb' for d in self.data()['resources']['links']))
+        (self.root / 'lib/app_ar.arb').unlink()
+        self.update()
+        self.assertFalse(any(d['kind'] == 'localization' for d in self.data()['resources']['links']))
 
     def test_dart_imports_are_resolved_to_files(self):
         self.update()
