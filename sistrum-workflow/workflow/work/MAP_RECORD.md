@@ -1,5 +1,7 @@
 # Code-map migration record
 
+Current resource/Bash extension and validation: `RESOURCE_INDEX_RECORD.md`.
+
 Current engine: CodeGraph 1.6.2. See `guides/map.md` for the active installation, schemas and limitations.
 Graphify and regex call inference were retired; historical measurements below do not describe the current engine.
 Current validation and review results are recorded in `CODEGRAPH_MIGRATION.md`.

@@ -1,5 +1,8 @@
 # CodeGraph engine migration
 
+Follow-up: `RESOURCE_INDEX_RECORD.md` records the resource/Bash supplement that addresses the 68 gaps
+measured below. Counts below are historical measurements of the initial engine migration.
+
 Base revision: `434dd03d`, fetched and applied before implementation. Only the workflow distribution changes.
 The owner authorized replacement of the extraction engine; no push or APK build is included.
 

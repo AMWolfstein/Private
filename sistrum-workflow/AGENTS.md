@@ -2,7 +2,8 @@
 
 This repository carries its own workflow. It needs Git and Python 3.10+; the code map uses pinned
 CodeGraph 1.6.2 (see workflow/work/guides/map.md for project-local installation). Without it, structural coverage
-is explicitly unavailable; fallback navigation never fabricates call relationships.
+is explicitly unavailable; fallback navigation never fabricates call relationships. Structured resources and
+parse-only Bash use workflow/scripts/work/requirements.txt; missing parsers remain explicit coverage gaps.
 Keep this AGENTS.md at the repository root and the workflow/ directory beside it. All paths below are relative to the repository root.
 
 For every request about this repository (a bug report or screenshot, a feature, a plan or discussion, a review,

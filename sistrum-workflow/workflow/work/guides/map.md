@@ -7,7 +7,17 @@ No `explore` response is injected wholesale into agent context.
 
 ## Install once per environment
 
-Python 3.10+ and Git run the workflow. For real structural analysis install the pinned CodeGraph CLI. A
+Python 3.10+ and Git run the workflow. Install the parse-only resource/shell requirements in that Python environment:
+
+```sh
+python3 -m pip install -r workflow/scripts/work/requirements.txt
+```
+
+The pins are tree-sitter 0.25.2 and tree-sitter-bash 0.25.1. Python 3.10 additionally uses tomli; 3.11+ uses stdlib tomllib.
+No Graphify is required. An isolated interpreter can be selected with `WORK_SHELL_PYTHON` for the Bash worker;
+TOML parsing runs in the workflow Python. Missing parsers produce explicit unavailable statuses.
+
+ For real structural analysis install the pinned CodeGraph CLI. A
 standalone distribution bundles its runtime; the npm distribution also ships a platform bundle. Follow the
 upstream platform requirements. There is no requirement to build Rust or install Graphify for this integration.
 
@@ -66,12 +76,30 @@ Each requested file has one status:
 - `partial`: parser diagnostics exist; some extracted symbols may remain useful.
 - `not-indexed`: the configured file was not recorded by the engine (unsupported/filtered inputs included).
 - `unavailable`: structural extraction was not run.
+- `resource-indexed`: JSON/ARB, XML or TOML parsed by the supplementary data parser, not CodeGraph AST.
+- `resource-error` / `resource-unavailable`: malformed/unsupported data or absent parser; never passing coverage.
+- `shell-indexed`: Bash AST syntax/functions/commands parsed without executing the script.
+- `shell-partial` / `shell-unavailable`: syntax errors or unavailable pinned parser; not complete shell analysis.
 
-CodeGraph 1.6.2 does not index shell in our real fixture. Shell files remain discoverable by text search with
-an explicit gap rather than an invented shell call graph. Unsupported formats such as a particular TOML/ARB
-input may likewise be unindexed. JSON/YAML/XML are resources/configuration, not ordinary call graphs. Gradle
-DSL, macros, dynamic calls and generated code have language-specific limits. `indexed` never means compiler
-or runtime completeness. Review parse diagnostics and unresolved references before removal or impact decisions.
+CodeGraph does not index shell directly. The supplementary pinned Tree-sitter Bash worker supplies a syntax
+and command inventory without executing scripts. Literal script invocation/source paths are low-confidence
+repository-root candidates because cwd, aliases, eval, variables and generated commands affect runtime behavior.
+Dynamic command receivers remain explicitly dynamic; the workflow does not invent a shell runtime call graph.
+The Bash grammar shipped inside CodeGraph was tried but fails on real expansions in this version, so no
+unsupported runtime patch or private WASM compatibility assumption is used.
+
+Structured-resource indexing adds top-level JSON/ARB keys and TOML tables, Android XML resources and ids,
+Dart `l10n.key` references to locale files, direct `R.type.name` references and local XML `@type/name` references.
+Qualified external Android namespaces are not treated as local resources. Literal Rust include_str!/include_bytes!
+and conventional file/asset reads can link fixtures; string examples and comments are excluded. Cargo path
+and workspace-member/inherited path declarations link manifests. Generic package-manager dependencies with
+no local path are not fabricated as project edges. Resource and script links are separate from code calls,
+labelled with provenance/confidence, and participate in dependency/test navigation. Failed parsing cannot
+produce a valid-resource claim. XML DTD/entities are rejected. Resource parsing does not prove all usage sites,
+resource overlays, ICU messages or platform behavior correct.
+
+Indexed status never means compiler/runtime completeness; read diagnostics and unresolved references before
+removal/impact decisions. Existing engine status is retained alongside the supplementary coverage status.
 
 ## Relationship provenance
 
@@ -106,8 +134,8 @@ an unrelated root `codegraph.json` cannot silently replace the workflow's corpus
 
 Updates hold the existing map lock and publish matching graph/state hashes atomically. Failed extraction
 keeps the last published map marked stale. A forcibly interrupted process may leave a cache requiring rebuild.
-The digest includes source hashes, auxiliary manifests, map/check configuration, adapter/normalizer/native
-inventory code, reviewed declarations and engine availability/version. Configuration changes invalidate evidence.
+The digest includes source hashes, auxiliary manifests, map/check configuration, adapter/normalizer/native/resource/shell
+inventory code and parser capabilities, reviewed declarations and engine availability/version. Configuration changes invalidate evidence.
 The source tree is checked again after extraction before publication.
 
 After every completed edit batch, run `map update` before using more graph context. Checks, packets and clean
@@ -124,5 +152,7 @@ python3 -m unittest discover -s workflow/scripts/work -p 'test_*.py'
 Most lifecycle/publication/gate tests use the explicitly mocked adapter; they do not establish parsing quality.
 `RealCodeGraphSmokeTests` and `RealCodeGraphRegressions` exercise the pinned installed CLI, including Dart,
 Kotlin, Rust, C, C++, Java, Python and JavaScript, and negative string/cross-language/wrong-class cases.
-Real tests skip if the engine is unavailable; report those skips as unverified. The optional no-network
+Real Bash tests also parse heredocs, variable commands and malformed syntax, and prove a sentinel script is not executed.
+Resource tests cover malformed/duplicate JSON, ARB, XML entities, namespace separation and Cargo workspace links.
+Real tests skip if the engine or required parser is unavailable; report those skips as unverified. The optional no-network
 namespace test also skips when the host cannot create namespaces. No device behavior is verified by map tests.

@@ -1,7 +1,7 @@
 # Sistrum workflow
 
 A repo-local engineering workflow for coding agents. The skills and reviewer agents are Markdown, the tool is
-standard-library Python 3.10+, and the checks are the repository's own commands. The code map can use the pinned
+a standard-library Python 3.10+ core plus pinned parse-only Bash dependencies, and the checks are the repository's own commands. The code map can use the pinned
 CodeGraph 1.6.2 (local CLI); without it the map keeps imports, channels, tests and
 declarations and says that structure is unavailable.
 
@@ -144,8 +144,9 @@ python3 workflow/scripts/work/work.py status
 Make the agent read root AGENTS.md if it does not discover it automatically. All commands run from the repository
 root, not inside workflow/. Logs, graph and private engine mirror remain in ignored root `.work/`.
 Missing CodeGraph permits explicitly limited fallback navigation, with no guessed call graph. Parser failures,
-unsupported inputs and unresolved references are visible in coverage. Shell is not structurally indexed by the
-pinned engine in our fixture. Product checks still require the actual Flutter/Android/Rust toolchains when
+unsupported inputs and unresolved references are visible in coverage. Structured-resource parsers and the pinned Tree-sitter Bash supplement cover JSON/ARB, XML, TOML and shell.
+Install `workflow/scripts/work/requirements.txt` in the workflow Python environment (no Graphify). Bash analysis
+is parse-only and reports dynamic/unresolved commands; it does not execute scripts or prove runtime effects. Product checks still require the actual Flutter/Android/Rust toolchains when
 those domains change. No old graphify-out/ directory or machine-specific paths should be copied.
 
 ### Optional agent integrations
