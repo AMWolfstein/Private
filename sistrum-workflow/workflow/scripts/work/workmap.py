@@ -574,7 +574,7 @@ def build(root: Path, config: dict, tool: dict, current: dict) -> dict:
 
 LANGUAGE_BY_SUFFIX = {'.dart': 'dart', '.kt': 'kotlin', '.kts': 'kotlin', '.rs': 'rust', '.c': 'c', '.h': 'c',
                       '.cpp': 'cpp', '.cc': 'cpp', '.cxx': 'cpp', '.hpp': 'cpp', '.java': 'java', '.py': 'python',
-                      '.swift': 'swift', '.sh': 'shell', '.bash': 'shell', '.gradle': 'gradle', '.go': 'go'}
+                      '.sh': 'shell', '.bash': 'shell', '.gradle': 'gradle'}
 
 
 # Calls that name too little to point at one declaration.
@@ -813,18 +813,15 @@ KT_DECL = re.compile(r'^(\s*)(?:(?:public|private|internal|protected|override|su
                      r'(?:[\w.]+\.)?([A-Za-z_]\w*)')
 
 
-# Rust, Python and Swift declarations, by line pattern (stdlib only, no parser). Same contract as the Dart and
+# Rust and Python declarations, by line pattern (stdlib only, no parser). Same contract as the Dart and
 # Kotlin scan: `declared` facts, multi-line signatures are read for a body, a member's owner is the last top-level
 # type above it. Calls in these languages are not attributed yet.
 RUST_DECL = re.compile(r'^(\s*)(?:pub(?:\([^)]*\))?\s+)?(?:async\s+|const\s+|unsafe\s+|extern\s+"[^"]*"\s+)*'
                        r'(fn|struct|enum|trait|mod|type)\s+([A-Za-z_]\w*)')
 RUST_IMPL = re.compile(r'^impl(?:<[^>]*>)?\s+(?:[\w:<>, ]+?\s+for\s+)?([A-Za-z_]\w*)')
 PY_DECL = re.compile(r'^(\s*)(?:async\s+)?(def|class)\s+([A-Za-z_]\w*)')
-SWIFT_DECL = re.compile(r'^(\s*)(?:(?:public|private|internal|fileprivate|open|final|static|override|mutating|'
-                        r'required|convenience|nonmutating|@\w+)\s+)*(func|class|struct|enum|protocol|extension)'
-                        r'\s+([A-Za-z_]\w*)')
-PATTERN_LANGUAGES = ('dart', 'kotlin', 'rust', 'python', 'swift', 'java', 'c', 'cpp', 'go', 'shell')
-CALL_LANGUAGES = ('dart', 'kotlin', 'swift', 'python', 'rust', 'java', 'go', 'cpp', 'c')
+PATTERN_LANGUAGES = ('dart', 'kotlin', 'rust', 'python', 'java', 'c', 'cpp', 'shell')
+CALL_LANGUAGES = ('dart', 'kotlin', 'python', 'rust', 'java', 'cpp', 'c')
 SELF_RECEIVERS = {'this', 'self', 'Self'}
 CALL_KEYWORDS = {'if', 'for', 'while', 'switch', 'catch', 'return', 'sizeof', 'elif', 'with', 'assert', 'yield',
                  'not', 'and', 'or', 'else', 'do', 'case', 'new', 'delete', 'throw', 'match', 'lambda', 'def', 'fn',
@@ -839,8 +836,6 @@ JAVA_METHOD = re.compile(r'^(\s+)(?:(?:public|private|protected|static|final|abs
 CPP_TYPE = re.compile(r'^(\s*)(?:template\s*<[^>]*>\s*)?(?:enum\s+)?(class|struct|namespace|union)\s+([A-Za-z_]\w*)')
 C_FUNC = re.compile(r'^([ \t]*)(?:(?:static|inline|virtual|explicit|extern|const|constexpr|unsigned|signed|volatile)\s+)*'
                     r'([A-Za-z_][\w:<>,*&\s]*?)[\s*&]+(~?[A-Za-z_]\w*(?:::~?[A-Za-z_]\w*)?)\s*\(')
-GO_TYPE = re.compile(r'^type\s+([A-Za-z_]\w*)\s+(struct|interface)\b')
-GO_FUNC = re.compile(r'^func\s+(?:\(\s*\w*\s*\*?\s*([A-Za-z_]\w*)[^)]*\)\s*)?([A-Za-z_]\w*)\s*\(')
 SHELL_FUNC = re.compile(r'^(\s*)(?:function\s+)?([A-Za-z_][\w.-]*)\s*\(\)\s*\{?')
 BRACE_TAIL = re.compile(r'[^;{}()]*\{')
 
@@ -873,21 +868,9 @@ def scan_declarations(texts: dict, file_info: dict) -> list[dict]:
         lines = text.split('\n')
         for number, line in enumerate(lines, 1):
             explicit = None
-            if lang in ('java', 'c', 'cpp', 'go', 'shell'):
+            if lang in ('java', 'c', 'cpp', 'shell'):
                 kind = name = None
-                if lang == 'go':
-                    declared_type = GO_TYPE.match(line)
-                    if declared_type:
-                        kind, name = declared_type.group(2), declared_type.group(1)
-                        owner = name
-                    else:
-                        func = GO_FUNC.match(line)
-                        if func:
-                            kind, name = 'function', func.group(2)
-                            explicit = func.group(1)  # receiver type, or None for a plain function
-                            if not explicit:
-                                owner = None
-                elif lang == 'shell':
+                if lang == 'shell':
                     func = SHELL_FUNC.match(line)
                     if func:
                         kind, name = 'function', func.group(2)
@@ -932,9 +915,9 @@ def scan_declarations(texts: dict, file_info: dict) -> list[dict]:
                     item['owner'] = member_of
                 symbols.append(item)
                 continue
-            if lang in ('rust', 'python', 'swift'):
+            if lang in ('rust', 'python'):
                 kind = name = None
-                found = {'rust': RUST_DECL, 'python': PY_DECL, 'swift': SWIFT_DECL}[lang].match(line)
+                found = {'rust': RUST_DECL, 'python': PY_DECL}[lang].match(line)
                 if not found and lang == 'rust':
                     impl = RUST_IMPL.match(line)
                     if impl:

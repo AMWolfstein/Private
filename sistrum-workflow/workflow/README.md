@@ -129,7 +129,7 @@ rather than overwriting project content. Copy hidden directories too. No depende
 
 Requirements: Git and Python 3.10+, an initialized checkout with at least one commit, and POSIX file locking
 (Linux or macOS) for map updates. Nothing else is installed: the map runs on its built-in pattern scan
-(declarations for Dart, Kotlin, Rust, Python, Swift, Java, C, C++, Go and shell; imports, channels, tests). Graphify is not used by this workflow; its adapter
+(declarations for Dart, Kotlin, Rust, Python, Java, C, C++ and shell; imports, channels, tests). Graphify is not used by this workflow; its adapter
 stays in place, disabled, for a future decision.
 
 From the repository root:

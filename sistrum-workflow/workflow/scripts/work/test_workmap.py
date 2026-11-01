@@ -277,19 +277,17 @@ class DefaultOffTests(Repo):
         self.assertIn('called by go1 at lib/a/caller.dart:4 (2 call site(s))', text)
         self.assertIn('test/a/caller_test.dart', text)
 
-    def test_rust_python_and_swift_declarations_come_from_the_pattern_scan(self):
+    def test_rust_and_python_declarations_come_from_the_pattern_scan(self):
         self.write('rust/src/engine.rs', "pub struct Engine {\n    x: u8,\n}\nimpl Engine {\n    pub fn start(&self) -> u8 {\n"
                    "        1\n    }\n}\npub fn free() {}\n")
         self.write('py/player.py', "class Player:\n    def play(self, track):\n        pass\n\ndef helper():\n    return 1\n")
-        self.write('ios/Store.swift', "public final class Store {\n    func save() {}\n}\nfunc top() {}\n")
         self.update()
         symbols = {(s['file'], s['name']): s for s in self.data()['symbols']}
         self.assertEqual(symbols[('rust/src/engine.rs', 'start')]['owner'], 'Engine')
         self.assertEqual(symbols[('py/player.py', 'play')]['owner'], 'Player')
-        self.assertEqual(symbols[('ios/Store.swift', 'save')]['owner'], 'Store')
         self.assertIsNone(symbols[('py/player.py', 'helper')].get('owner'))
         self.assertTrue(all(s['via'].endswith('-declaration') for s in symbols.values()
-                            if s['file'].split('.')[-1] in ('rs', 'py', 'swift')))
+                            if s['file'].split('.')[-1] in ('rs', 'py')))
 
     def test_name_calls_for_each_language_with_its_receiver_rules(self):
         self.write('py/worker.py', "class Worker:\n    def run(self):\n        self.step()\n\n"
@@ -298,7 +296,6 @@ class DefaultOffTests(Repo):
                    "fn boot() -> Engine {\n    Engine::new()\n}\n")
         self.write('java/app/Shop.java', "class Shop {\n    void buy() {\n        total();\n    }\n"
                    "    int total() {\n        return 1;\n    }\n}\n")
-        self.write('go/shop.go', "package shop\n\nfunc Buy() {\n\tTotal()\n}\n\nfunc Total() int {\n\treturn 1\n}\n")
         self.write('cpp/engine.cpp', "class Engine {\npublic:\n    void spin();\n};\n"
                    "void Engine::spin() {\n    halt();\n}\nvoid halt() {}\n")
         self.write('scripts/run.sh', "build() {\n  echo hi\n}\n")
@@ -310,7 +307,6 @@ class DefaultOffTests(Repo):
         self.assertIn(('run', 'step', 'adapter:python-name-call (same file)'), edges)
         self.assertIn(('boot', 'new', 'adapter:rust-name-call (qualified)'), edges)
         self.assertIn(('buy', 'total', 'adapter:java-name-call (same file)'), edges)
-        self.assertIn(('Buy', 'Total', 'adapter:go-name-call (same file)'), edges)
         self.assertIn(('spin', 'halt', 'adapter:cpp-name-call (same file)'), edges)
         shell = [s for s in data['symbols'] if s['file'] == 'scripts/run.sh']
         self.assertEqual([(s['name'], s['kind']) for s in shell], [('build', 'function')])
