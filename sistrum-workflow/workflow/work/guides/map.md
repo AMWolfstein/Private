@@ -107,7 +107,8 @@ Every relationship carries `fact` (extracted, declared or inferred), `via` (who 
 | Layer | Produced by | Fact, confidence |
 |---|---|---|
 | Kotlin symbols, members, calls, type references | Graphify tree-sitter (`graphify:kotlin-ast`) | extracted, high; Graphify INFERRED cross-file calls: inferred, medium |
-| Dart classes, functions, fields, inheritance, Riverpod/Bloc lookups | Graphify regex extractor (`graphify:dart-regex`) | extracted, medium |
+| Dart classes, functions, fields, inheritance, Riverpod/Bloc lookups | Graphify regex extractor (`graphify:dart-regex`); without Graphify, the pattern scan (`workflow:dart-declaration`) | extracted, medium; pattern scan `declared`, medium |
+| Kotlin classes and functions without Graphify | pattern scan (`workflow:kotlin-declaration`) | declared, medium |
 | Dart import/export/part and Kotlin imports, resolved to files | this adapter (`adapter:dart-directive`, `adapter:kotlin-import`) | extracted; ambiguous Kotlin targets inferred, low |
 | Channel declarations, commands, listeners, stream handlers | this adapter's pattern scan | literal names extracted, high; command attribution medium; single-channel guess inferred, low |
 | Tests per source file | imports from tests, Graphify edges from tests, Dart part→library | extracted or as the edge; name convention inferred, low |
@@ -120,9 +121,10 @@ its import edges are left unresolved (the adapter resolves them); Kotlin calls i
 are partly missing (for example `engine.start()` inside a `setMethodCallHandler` lambda).
 
 To fill the Dart call gap the map infers calls by name (`adapter:dart-name-call`, always `inferred`): an
-unqualified call `f(` or `this.f(` in a Dart file is attributed to the declaration(s) named `f` in the corpus,
-only when at most three files declare that name, with `medium` confidence for one declaration and `low` for
-several. The caller is the nearest declaration above the call. Qualified calls such as `Type.f(` or `value.f(`
+unqualified call `f(` or `this.f(` in a Dart file is attributed to a declaration named `f` in this scope order:
+the same file (`via` says `(same file)`), then a file it imports (`(imported file)`), then anywhere in the corpus
+only when at most three files declare that name (`(corpus)`, `low` for several). Same-file and imported matches
+are `medium`. The caller is the nearest declaration above the call. Qualified calls such as `Type.f(` or `value.f(`
 are not attributed, because matching them by name produced false edges (for example framework methods that
 share a name with repository code). Common names (`build`, `dispose`, `add`, ...) are never attributed. Expect
 missed calls through qualified receivers, tear-offs and dynamic dispatch.

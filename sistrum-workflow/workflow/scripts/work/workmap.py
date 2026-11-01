@@ -536,6 +536,8 @@ def build(root: Path, config: dict, tool: dict, current: dict) -> dict:
         texts[path] = raw.decode('utf-8', errors='replace')
     meta_structure = {'status': 'empty', 'note': 'no source file matches the corpus patterns'}
     symbols, edges, stats = [], [], {}
+    file_info = {path: {'lang': language(path), 'test': is_test(path), 'blob': current['files'][path]}
+                 for path in files}
     if files and tool['status'] == 'ready':
         raw = run_adapter(root, files, config, tool)
         symbols, edges, extra = normalize(raw, set(files))
@@ -543,18 +545,19 @@ def build(root: Path, config: dict, tool: dict, current: dict) -> dict:
         stats = raw.get('stats', {})
         if stats.get('failed_sources'):
             problems.append(f'graphify failed on {stats["failed_sources"]} file(s); see .work/map/logs/')
-        meta_structure = {'status': 'graphify', 'note': 'symbols, calls and references from Graphify; Dart '
+        meta_structure = {'status': 'graphify', 'declarations': 'graphify', 'note': 'symbols, calls and references from Graphify; Dart '
                           'declarations are regex-based, Dart calls are inferred by name; Dart and Kotlin imports and channels '
                           'come from pattern scans'}
     elif files:
         meta_structure = {'status': tool['status'], 'note': tool.get('reason', '')}
-    file_info = {path: {'lang': language(path), 'test': is_test(path), 'blob': current['files'][path]}
-                 for path in files}
+    if files and not symbols:
+        symbols = scan_declarations({p: t for p, t in texts.items() if p in file_info}, file_info)
+    meta_structure['declarations'] = meta_structure.get('declarations') or ('patterns' if symbols else 'none')
     deps, kotlin_index, dep_problems = dependencies(root, texts, file_info, current['listing'], config)
     problems += dep_problems
     bridges = scan_bridges(texts, file_info, config)
     attach_bridge_tests(root, bridges, current['aux'], file_info, texts)
-    name_edges, name_notes = dart_name_calls(texts, symbols, file_info)
+    name_edges, name_notes = dart_name_calls(texts, symbols, file_info, deps)
     edges += name_edges
     problems += name_notes
     tests = link_tests(file_info, deps, symbols, edges)
@@ -583,10 +586,15 @@ CALL_STOP = {'build', 'toString', 'setState', 'dispose', 'initState', 'then', 'o
 CALL_TOKEN = re.compile(r'\b([A-Za-z_]\w*)\s*\(')
 
 
-def dart_name_calls(texts: dict, symbols: list, file_info: dict) -> tuple[list[dict], list[str]]:
+def dart_name_calls(texts: dict, symbols: list, file_info: dict, deps: list) -> tuple[list[dict], list[str]]:
     """Dart call edges inferred by name. Graphify emits none for Dart, so a call `f(` counts as a call to
-    the declaration(s) named `f` in the corpus when the name is distinctive. Always labelled inferred; the
-    caller is the nearest declaration above the call in the same file."""
+    a declaration named `f` chosen in scope: first in the same file, then in files the caller imports, and
+    only then anywhere in the corpus when the name is distinctive (up to three files). Always labelled
+    inferred; the caller is the nearest declaration above the call in the same file."""
+    imported: dict[str, set[str]] = {}
+    for dep in deps:
+        if dep.get('to') and dep.get('kind') in ('import', 'export', 'part', 'part-of'):
+            imported.setdefault(dep['from'].split(' ')[0], set()).add(dep['to'])
     by_name: dict[str, list[dict]] = {}
     for symbol in symbols:
         if symbol['lang'] == 'dart' and symbol['name'] not in CALL_STOP and len(symbol['name']) > 2:
@@ -613,9 +621,17 @@ def dart_name_calls(texts: dict, symbols: list, file_info: dict) -> tuple[list[d
             before = clean[max(0, found.start() - 5):found.start()]
             if before.endswith('.') and not before.endswith('this.'):
                 continue
-            if len(targets) > 3:
+            local = [t for t in targets if t['file'] == path]
+            near = [t for t in targets if t['file'] in imported.get(path, set())]
+            if local:
+                targets, scope = local, 'same file'
+            elif near:
+                targets, scope = near, 'imported file'
+            elif len(targets) > 3:
                 skipped += 1
                 continue
+            else:
+                scope = 'corpus'
             line = line_of_call(found.start())
             callers = [d for d in declared if d['line'] and d['line'] <= line and d['name'] != name]
             if not callers:
@@ -629,8 +645,10 @@ def dart_name_calls(texts: dict, symbols: list, file_info: dict) -> tuple[list[d
                     continue
                 seen.add(key)
                 edges.append({'source': caller['id'], 'target': target['id'], 'relation': 'calls', 'file': path,
-                              'line': line, 'context': 'name', 'fact': 'inferred', 'via': 'adapter:dart-name-call',
-                              'confidence': 'medium' if len(targets) == 1 else 'low', 'target_file': target['file']})
+                              'line': line, 'context': 'name', 'fact': 'inferred',
+                              'via': f'adapter:dart-name-call ({scope})',
+                              'confidence': 'medium' if scope != 'corpus' or len(targets) == 1 else 'low',
+                              'target_file': target['file']})
     notes = [f'{skipped} Dart call site(s) named a symbol declared in more than three files: no call edge inferred']
     return edges, notes if skipped else []
 
@@ -748,6 +766,81 @@ def normalize(raw: dict, corpus: set[str]) -> tuple[list[dict], list[dict], list
         if item['id'] in owners:
             item['owner'] = owners[item['id']]
     return symbols, edges, problems
+
+
+# ------------------------------------------------------ pattern declarations
+
+# Used when Graphify is off or unavailable: Dart and Kotlin declarations by line pattern. Declarations are
+# `declared` facts (what the file says), not parsed trees: a multi-line signature is skipped, and a
+# member's owner is the last top-level type above it. Calls to them are inferred by name, as with Graphify.
+DART_TYPE_DECL = re.compile(r'^(?:(?:abstract|base|sealed|final|interface|mixin|augment)\s+)*'
+                            r'(class|mixin|enum|extension|typedef)\s+([A-Za-z_]\w*)')
+DART_MEMBER = re.compile(r'^(\s*)(?:(?:static|final|const|late|external|override|factory)\s+)*'
+                         r'(?:[A-Za-z_][\w<>?,\[\]]*(?:\s*<[^()]*>)?\??\s+)?([A-Za-z_]\w*)\s*\(')
+DART_BODY_START = re.compile(r'\s*(?:async\*?\s*)?(?:\{|=>)')
+
+
+def dart_body_follows(lines: list[str], index: int, paren: int) -> bool:
+    """True when the parameter list opened at lines[index][paren] closes (possibly on a later line, as
+    formatted multi-line signatures do) and a function body `{` or `=>` follows it."""
+    text = '\n'.join([lines[index][paren:]] + lines[index + 1:index + 25])
+    depth = 0
+    for position, char in enumerate(text):
+        if char == '(':
+            depth += 1
+        elif char == ')':
+            depth -= 1
+            if depth == 0:
+                return DART_BODY_START.match(text, position + 1) is not None
+    return False
+TYPE_KINDS = {'class', 'mixin', 'enum', 'extension', 'typedef', 'interface', 'object'}
+DART_NOT_DECLARED = {'if', 'for', 'while', 'switch', 'catch', 'return', 'new', 'else', 'await', 'assert', 'super',
+                     'this', 'throw', 'yield', 'do', 'const', 'final', 'var'}
+KT_DECL = re.compile(r'^(\s*)(?:(?:public|private|internal|protected|override|suspend|inline|open|abstract|final|'
+                     r'operator|infix|tailrec|const|data|sealed|enum|annotation|inner|companion|lateinit|external|'
+                     r'actual|expect|value)\s+)*(class|interface|object|fun)\s+(?:<[^>]*>\s*)?'
+                     r'(?:[\w.]+\.)?([A-Za-z_]\w*)')
+
+
+def scan_declarations(texts: dict, file_info: dict) -> list[dict]:
+    symbols = []
+    for path, text in texts.items():
+        lang = file_info.get(path, {}).get('lang')
+        if lang not in ('dart', 'kotlin'):
+            continue
+        owner = None
+        lines = text.split('\n')
+        for number, line in enumerate(lines, 1):
+            if lang == 'dart':
+                kind = name = None
+                top = DART_TYPE_DECL.match(line)
+                if top:
+                    kind, name = top.group(1), top.group(2)
+                    owner = name
+                else:
+                    member = DART_MEMBER.match(line)
+                    if member and member.group(2) not in DART_NOT_DECLARED and \
+                            dart_body_follows(lines, number - 1, member.end() - 1):
+                        kind, name = 'function', member.group(2)
+                        if member.group(1) == '':
+                            owner = None
+            else:
+                match = KT_DECL.match(line)
+                if not match:
+                    continue
+                kind, name = match.group(2), match.group(3)
+                if match.group(1) == '' and kind in ('class', 'interface', 'object'):
+                    owner = name
+                elif match.group(1) == '':
+                    owner = None
+            if name:
+                item = {'id': f'{path}#{number}', 'name': name, 'label': name, 'file': path, 'line': number,
+                        'lang': lang, 'kind': kind, 'via': f'workflow:{lang}-declaration',
+                        'fact': 'declared', 'confidence': 'medium'}
+                if owner and owner != name and kind == 'function':
+                    item['owner'] = owner
+                symbols.append(item)
+    return symbols
 
 
 # ----------------------------------------------------------- dependencies
@@ -1665,8 +1758,23 @@ def context(root: Path, task: str = '', files: list[str] = (), symbols: list[str
             owner = f'{symbol["owner"]}.' if symbol.get('owner') else ''
             lines.append(f'- {owner}{symbol["name"]} at {where(symbol)}')
     if lines:
-        optional.append(('## Symbols in entry files' + ('' if structure.get('status') == 'graphify' else ' (none: '
+        optional.append(('## Symbols in entry files' + ('' if structure.get('declarations') != 'none' else ' (none: '
                          'structure unavailable)'), lines, more))
+    excerpts, shown = [], 0
+    named = set(symbols)
+    for entry in entries:
+        # the symbol the task names first, then functions before the types that contain them
+        ranked = sorted([s for s in entry['symbols'] if s.get('line')],
+                        key=lambda s: (s['name'] not in named, s.get('kind') in TYPE_KINDS))
+        for symbol in ranked[:1]:
+            if shown >= config['context']['max_excerpts']:
+                break
+            text = excerpt(root, symbol['file'], symbol['line'], config['context']['excerpt_lines'])
+            if text:
+                excerpts.append(f'{where(symbol)} ({symbol["name"]}):\n```\n{text}\n```')
+                shown += 1
+    if excerpts:
+        optional.append(('## Excerpts (current files)', excerpts, 0))
     for path in sorted(paths):
         out = [d for d in view.imports.get(path, []) if d['to']]
         incoming = list(view.importers.get(path, []))
@@ -1689,7 +1797,8 @@ def context(root: Path, task: str = '', files: list[str] = (), symbols: list[str
                 lines.append(f'- {edge["file"]}:{edge["line"]} {edge["relation"]} {target["name"]} {label(edge)}')
         if lines:
             listed = lines[:per_section]
-            optional.append((f'## Dependencies of {path} (extracted imports; Kotlin calls/references from Graphify)',
+            source = 'Kotlin calls/references from Graphify' if structure.get('status') == 'graphify' else 'no call edges'
+            optional.append((f'## Dependencies of {path} (extracted imports; {source})',
                              listed, len(lines) - len(listed)))
     critical_lines, extra_lines = [], []
     for path in sorted(paths):
@@ -1706,26 +1815,17 @@ def context(root: Path, task: str = '', files: list[str] = (), symbols: list[str
         critical.append('## Tests and checks (linked; first three per file, never cut)\n\n' + '\n'.join(critical_lines))
     if extra_lines:
         optional.append(('## More linked tests', extra_lines[:per_section], max(0, len(extra_lines) - per_section)))
-    excerpts, shown = [], 0
-    for entry in entries:
-        for symbol in [s for s in entry['symbols'] if s.get('line')][:1]:
-            if shown >= config['context']['max_excerpts']:
-                break
-            text = excerpt(root, symbol['file'], symbol['line'], config['context']['excerpt_lines'])
-            if text:
-                excerpts.append(f'{where(symbol)} ({symbol["name"]}):\n```\n{text}\n```')
-                shown += 1
-    if excerpts:
-        optional.append(('## Excerpts (current files)', excerpts, 0))
     guidance = guidance_for(data, paths, bridges)
     if guidance:
         optional.append(('## Guidance to read for this task', [f'- {g}' for g in guidance], 0))
-    if structure.get('status') == 'graphify' and any(p.endswith('.dart') for p in paths):
+    if any(p.endswith('.dart') for p in paths) and structure.get('declarations') != 'none':
         notes.append('Dart calls are inferred by name from unqualified call sites (low and medium confidence); '
                      'qualified calls such as Type.f() are not attributed')
     if structure.get('status') != 'graphify':
-        notes.append(f'code structure unavailable ({structure.get("status")}: {structure.get("note", "")}); '
-                     'symbols and calls are missing, imports and bridges come from pattern scans')
+        notes.append(f'Graphify not used ({structure.get("status")}: {structure.get("note", "")}); '
+                     + ('Dart and Kotlin declarations come from pattern scans; ' if structure.get('declarations') == 'patterns'
+                        else 'no declarations; ')
+                     + 'calls to other languages are missing, imports and bridges come from pattern scans')
     if not entries:
         hits = fallback_search(root, task, files, config)
         critical.append(render_fallback(hits, 'no entry point matched in the map'))

@@ -128,7 +128,7 @@ Keep AGENTS.md at the root: it directs the agent into workflow/. Merge existing 
 rather than overwriting project content. Copy hidden directories too. No dependency on the old repository remains.
 
 Requirements: Git and Python 3.10+, an initialized checkout with at least one commit, and POSIX file locking
-(Linux or macOS) for map updates. Optional, off by default: Graphify for code structure in other languages:
+(Linux or macOS) for map updates. Optional, off by default: Graphify for symbols and calls in other languages (Dart and Kotlin declarations come from the built-in pattern scan either way):
 
 ```sh
 python3 -m pip install graphifyy==0.9.97          # or set WORK_GRAPHIFY_PYTHON to a Python that has it

@@ -244,9 +244,33 @@ class DefaultOffTests(Repo):
         self.assertEqual(result['structure']['status'], 'disabled')
         self.assertEqual(self.state(), 'current')
         data = self.data()
-        self.assertEqual(data['symbols'], [])
+        self.assertTrue(data['symbols'], 'Dart and Kotlin declarations come from the pattern scan')
+        self.assertTrue(all(s['via'].endswith('-declaration') for s in data['symbols']))
         self.assertTrue(data['deps'], 'Dart and Kotlin imports still come from the pattern scans')
         self.assertFalse((self.root / '.work/map/graphify').exists())
+
+    def test_pattern_declarations_include_multi_line_signatures(self):
+        self.write('lib/a/wide.dart', "class Wide {\n  void report(\n    Object error,\n    int code,\n  ) {\n"
+                   "    print(error);\n  }\n  void call(Object x) => report(x, 1);\n}\n")
+        self.write('lib/a/wide_call.dart', "void drive() {\n  when(() {\n    x();\n  });\n}\n")
+        self.update()
+        names = {(s['file'], s['name']) for s in self.data()['symbols']}
+        self.assertIn(('lib/a/wide.dart', 'report'), names)
+        self.assertIn(('lib/a/wide.dart', 'call'), names)
+        self.assertIn(('lib/a/wide.dart', 'Wide'), names)
+        self.assertNotIn(('lib/a/wide_call.dart', 'when'), names)
+
+    def test_name_calls_resolve_in_scope_before_the_corpus(self):
+        self.write('lib/a/one.dart', "class One {\n  void run() {\n    helper();\n  }\n  void helper() {}\n}\n")
+        self.write('lib/b/two.dart', "class Two {\n  void helper() {}\n}\n")
+        self.update()
+        calls = [e for e in self.data()['edges'] if e['via'] == 'adapter:dart-name-call (same file)'
+                 and e['file'] == 'lib/a/one.dart']
+        by_id = {s['id']: s for s in self.data()['symbols']}
+        self.assertTrue(calls)
+        self.assertEqual({by_id[e['target']]['file'] for e in calls}, {'lib/a/one.dart'})
+        self.assertFalse([e for e in self.data()['edges'] if e['via'].startswith('adapter:dart-name-call')
+                          and e['file'] == 'lib/a/one.dart' and e['target_file'] == 'lib/b/two.dart'])
 
 
 class MockedAdapterFreshnessTests(Repo):
@@ -326,7 +350,7 @@ class MockedAdapterFreshnessTests(Repo):
         self.update()
         data = self.data()
         self.assertEqual(data['meta']['structure']['status'], 'unverified')
-        self.assertEqual(data['symbols'], [])
+        self.assertEqual([s for s in data['symbols'] if s['via'].startswith('graphify')], [])
         self.config(lambda c: c['extractor'].update(allow_unverified=True))
         self.update()
         self.assertTrue(self.data()['symbols'])
@@ -336,11 +360,11 @@ class MockedAdapterFreshnessTests(Repo):
         self.update()
         data = self.data()
         self.assertEqual(data['meta']['structure']['status'], 'unavailable')
-        self.assertEqual(data['symbols'], [])
+        self.assertEqual([s for s in data['symbols'] if s['via'].startswith('graphify')], [])
         self.assertIn('com.example/player', data['bridges']['channels'])
         self.assertTrue(data['deps'])
         text = workmap.context(self.root, 'player bridge play')['text']
-        self.assertIn('code structure unavailable', text)
+        self.assertIn('Graphify not used', text)
 
     def test_disabled_structure_is_explicit(self):
         os.environ['WORK_MAP_STRUCTURE'] = 'off'
@@ -691,11 +715,12 @@ class MockedAdapterGapTests(Repo):
         self.write('lib/player/caller.dart', "class Caller {\n  void drive() {\n    scheduleTrack();\n"
                    "    Other.scheduleTrack();\n  }\n  void scheduleTrack() {}\n}\n")
         self.update()
-        calls = [e for e in self.data()['edges'] if e['via'] == 'adapter:dart-name-call'
+        calls = [e for e in self.data()['edges'] if e['via'].startswith('adapter:dart-name-call')
                  and e['file'] == 'lib/player/caller.dart']
         self.assertEqual(len(calls), 1, calls)
         self.assertEqual(calls[0]['line'], 3)
         self.assertEqual(calls[0]['fact'], 'inferred')
+        self.assertEqual(calls[0]['via'], 'adapter:dart-name-call (same file)')
         symbols = {s['id']: s for s in self.data()['symbols']}
         self.assertEqual(symbols[calls[0]['source']]['name'], 'drive')
         self.assertEqual(symbols[calls[0]['source']]['lang'], 'dart')
