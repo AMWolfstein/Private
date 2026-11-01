@@ -49,7 +49,7 @@
   "appearanceGlassClear": "Effacer",
   "appearanceGlassClearPerformance": "Un verre très transparent peut consommer davantage et être moins fluide sur les anciens appareils. Réduisez la clarté si nécessaire.",
   "appearanceGlassQuality": "Qualité du verre",
-  "appearanceGlassQualityAuto": "Auto",
+  "appearanceGlassQualityAuto": "Automatique",
   "appearanceGlassQualityLite": "Léger",
   "appearanceGlassQualityFull": "Complet",
   "appearanceGlassQualityOff": "Désactivé",
@@ -506,7 +506,7 @@
   "@searchAlbums": {
     "description": "Search result category - albums"
   },
-  "searchPlaylists": "Playlists",
+  "searchPlaylists": "Listes de lecture",
   "@searchPlaylists": {
     "description": "Search result category - playlists"
   },
@@ -1271,7 +1271,7 @@
   "@collectionFavoriteArtists": {
     "description": "Custom folder for favorite artists"
   },
-  "collectionPlaylist": "Playlist",
+  "collectionPlaylist": "Liste de lecture",
   "@collectionPlaylist": {
     "description": "Single playlist label"
   },
@@ -1487,7 +1487,7 @@
       }
     }
   },
-  "backupContentsPlaylists": "{count, plural, =1{1 playlist} other{{count} playlists}}",
+  "backupContentsPlaylists": "{count, plural, =1{1 liste de lecture} other{{count} listes de lecture}}",
   "@backupContentsPlaylists": {
     "description": "Backup contents row for playlist count",
     "placeholders": {
@@ -1626,7 +1626,7 @@
   "queueEmptyAlbumsSubtitle": "Analysez un dossier musical pour ajouter des albums",
   "queueEmptySingles": "Aucun single local",
   "queueEmptySinglesSubtitle": "Les titres uniques analysés apparaissent ici",
-  "queuePlaylistCount": "{count, plural, =1{1 playlist} other{{count} playlists}}",
+  "queuePlaylistCount": "{count, plural, =1{1 liste de lecture} other{{count} listes de lecture}}",
   "@queuePlaylistCount": {
     "description": "Playlist count label with plural support",
     "placeholders": {
@@ -1717,7 +1717,7 @@
   "@audioAnalysisLufs": {
     "description": "Integrated loudness metric label"
   },
-  "audioAnalysisTruePeak": "True Peak",
+  "audioAnalysisTruePeak": "Crête réelle",
   "@audioAnalysisTruePeak": {
     "description": "True peak metric label"
   },
@@ -1957,7 +1957,7 @@
   "@trackAlbumType": {
     "description": "Label for an album or release type metadata value"
   },
-  "editMetadataFieldAlbumTypeHint": "Album, single, EP, compilation...",
+  "editMetadataFieldAlbumTypeHint": "Album, single, EP, compilation…",
   "@editMetadataFieldAlbumTypeHint": {
     "description": "Hint for the release type metadata field"
   },
@@ -2139,7 +2139,7 @@
   "@permissionStorage": {
     "description": "Storage permission type label"
   },
-  "permissionNotification": "Notification",
+  "permissionNotification": "Notifications",
   "@permissionNotification": {
     "description": "Notification permission type label"
   },
@@ -2372,7 +2372,7 @@
   "autoMixAutomaticDuration": "Durée automatique",
   "autoMixDuration": "Durée du mix",
   "autoMixEffect": "Effet de transition",
-  "autoMixEffectAuto": "Auto",
+  "autoMixEffectAuto": "Automatique",
   "autoMixEffectCrossfade": "Fondu enchaîné",
   "autoMixEffectMuffled": "Étouffé",
   "autoMixEffectEcho": "Écho",
@@ -2472,7 +2472,7 @@
   "@trackCopyFilePath": {
     "description": "Action - copy file path"
   },
-  "trackDeleteConfirmMessage": "This permanently deletes the local audio file and removes it from your library.",
+  "trackDeleteConfirmMessage": "Cela supprime définitivement le fichier audio local et le retire de votre bibliothèque.",
   "trackDeleteConfirmTitle": "Supprimer de l'appareil ?",
   "@trackDeleteConfirmTitle": {
     "description": "Delete confirmation title"
@@ -2577,7 +2577,7 @@
   "musicHapticsDescription": "Vibre au rythme des titres téléchargés et locaux",
   "musicHapticsSensitivity": "Sensibilité",
   "musicHapticsStrength": "Intensité",
-  "listeningRewind": "Rewind",
+  "listeningRewind": "Retour en arrière",
   "listeningRewindDescription": "Revivez les moments forts de vos dernières semaines et de vos derniers mois",
   "listeningRewindChoosePeriod": "Choisissez une période",
   "listeningRewindLastWeeks": "{weeks} dernières semaines",
@@ -2691,7 +2691,7 @@
   "updateWhatsNew": "Quoi de neuf ?",
   "updateDownloadInstall": "Télécharger & Installer",
   "updateDontRemind": "Ne plus me le rappeler",
-  "updateViewRelease": "View Release",
+  "updateViewRelease": "Voir la version",
   "updateSeeReleaseNotes": "Pour plus de détails, consultez les notes de mise à jour.",
   "notifDownloadingUpdate": "Télécharger Sistrum v{version}",
   "notifUpdateProgress": "{received} / {total} Mo • {percentage}%",

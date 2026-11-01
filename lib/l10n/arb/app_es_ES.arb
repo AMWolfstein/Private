@@ -49,7 +49,7 @@
   "appearanceGlassClear": "Borrar",
   "appearanceGlassClearPerformance": "El cristal muy transparente puede consumir más batería y ir menos fluido en dispositivos antiguos. Reduce la claridad si hace falta.",
   "appearanceGlassQuality": "Calidad del cristal",
-  "appearanceGlassQualityAuto": "Auto",
+  "appearanceGlassQualityAuto": "Automático",
   "appearanceGlassQualityLite": "Lite",
   "appearanceGlassQualityFull": "Completa",
   "appearanceGlassQualityOff": "Desactivado",
@@ -950,7 +950,7 @@
   "@libraryScanFinalizing": {
     "description": "Status shown after file scanning finishes but library persistence is still running"
   },
-  "libraryScanPaused": "Scan paused",
+  "libraryScanPaused": "Análisis en pausa",
   "@libraryScanPaused": {
     "description": "Status shown while a library scan is paused by the user"
   },
@@ -2373,7 +2373,7 @@
   "autoMixAutomaticDuration": "Duración automática",
   "autoMixDuration": "Duración de la mezcla",
   "autoMixEffect": "Efecto de transición",
-  "autoMixEffectAuto": "Auto",
+  "autoMixEffectAuto": "Automático",
   "autoMixEffectCrossfade": "Fundido cruzado",
   "autoMixEffectMuffled": "Apagado",
   "autoMixEffectEcho": "Eco",
@@ -2473,7 +2473,7 @@
   "@trackCopyFilePath": {
     "description": "Action - copy file path"
   },
-  "trackDeleteConfirmMessage": "This permanently deletes the local audio file and removes it from your library.",
+  "trackDeleteConfirmMessage": "Esto elimina de forma permanente el archivo de audio local y lo quita de tu biblioteca.",
   "trackDeleteConfirmTitle": "¿Eliminar del dispositivo?",
   "@trackDeleteConfirmTitle": {
     "description": "Delete confirmation title"
@@ -2692,7 +2692,7 @@
   "updateWhatsNew": "Novedades",
   "updateDownloadInstall": "Descargar & Instalar",
   "updateDontRemind": "No recordar",
-  "updateViewRelease": "View Release",
+  "updateViewRelease": "Ver versión",
   "updateSeeReleaseNotes": "Consulte las notas de la versión para obtener más detalles.",
   "notifDownloadingUpdate": "Descargar Sistrum v{version}",
   "notifUpdateProgress": "{received} / {total} MB • {percentage} %",

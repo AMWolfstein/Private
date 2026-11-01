@@ -51,7 +51,7 @@
   "appearanceGlassQuality": "Kualitas kaca",
   "appearanceGlassQualityAuto": "Otomatis",
   "appearanceGlassQualityLite": "Lite",
-  "appearanceGlassQualityFull": "Full",
+  "appearanceGlassQualityFull": "Penuh",
   "appearanceGlassQualityOff": "Mati",
   "appearanceGlassQualitySubtitle": "Otomatis memilih Full, Lite, atau Mati untuk perangkat ini. Lite melewatkan refraksi untuk menghemat daya.",
   "appearanceGlassLevelFrosted": "Buram",
@@ -1002,7 +1002,7 @@
   "@libraryFilterTitle": {
     "description": "Filter bottom sheet title"
   },
-  "libraryFilterReset": "Reset",
+  "libraryFilterReset": "Atur ulang",
   "@libraryFilterReset": {
     "description": "Reset all filters button"
   },
@@ -1278,7 +1278,7 @@
   "@collectionFavoriteArtists": {
     "description": "Custom folder for favorite artists"
   },
-  "collectionPlaylist": "Playlist",
+  "collectionPlaylist": "Daftar putar",
   "@collectionPlaylist": {
     "description": "Single playlist label"
   },
@@ -1672,7 +1672,7 @@
   "@audioAnalysisAnalyzing": {
     "description": "Loading text while analyzing audio"
   },
-  "audioAnalysisSampleRate": "Sample Rate",
+  "audioAnalysisSampleRate": "Sample rate",
   "@audioAnalysisSampleRate": {
     "description": "Sample rate metric label"
   },
@@ -1680,7 +1680,7 @@
   "@audioAnalysisCodec": {
     "description": "Audio codec metric label"
   },
-  "audioAnalysisContainer": "Container",
+  "audioAnalysisContainer": "Kontainer",
   "@audioAnalysisContainer": {
     "description": "Audio container metric label"
   },
@@ -1688,7 +1688,7 @@
   "@audioAnalysisDecodedFormat": {
     "description": "Decoded sample format metric label"
   },
-  "audioAnalysisBitDepth": "Bit Depth",
+  "audioAnalysisBitDepth": "Kedalaman bit",
   "@audioAnalysisBitDepth": {
     "description": "Bit depth metric label"
   },
@@ -1712,7 +1712,7 @@
   "@audioAnalysisDynamicRange": {
     "description": "Dynamic range metric label"
   },
-  "audioAnalysisPeak": "Peak",
+  "audioAnalysisPeak": "Puncak",
   "@audioAnalysisPeak": {
     "description": "Peak amplitude metric label"
   },
@@ -2506,7 +2506,7 @@
   "@trackCopyFilePath": {
     "description": "Action - copy file path"
   },
-  "trackDeleteConfirmMessage": "This permanently deletes the local audio file and removes it from your library.",
+  "trackDeleteConfirmMessage": "Ini menghapus file audio lokal secara permanen dan menghapusnya dari pustaka Anda.",
   "trackDeleteConfirmTitle": "Hapus dari perangkat?",
   "@trackDeleteConfirmTitle": {
     "description": "Delete confirmation title"
@@ -2611,7 +2611,7 @@
   "musicHapticsDescription": "Bergetar mengikuti ketukan lagu unduhan dan lokal",
   "musicHapticsSensitivity": "Sensitivitas",
   "musicHapticsStrength": "Kekuatan",
-  "listeningRewind": "Rewind",
+  "listeningRewind": "Mundur",
   "listeningRewindDescription": "Nikmati kembali sorotan beberapa minggu dan bulan terakhir Anda",
   "listeningRewindChoosePeriod": "Pilih periode",
   "listeningRewindLastWeeks": "{weeks} minggu terakhir",
@@ -2696,7 +2696,7 @@
   "equalizerPresetName": "Nama preset",
   "equalizerImport": "Impor preset",
   "equalizerExport": "Bagikan preset",
-  "equalizerResetTitle": "Reset equalizer?",
+  "equalizerResetTitle": "Atur ulang equalizer?",
   "equalizerResetDescription": "Kembalikan kurva datar dan pengaturan nada serta dinamika default. Preset yang disimpan tetap dipertahankan.",
   "equalizerBypass": "Bit-perfect, USB langsung, dan output Hi-Res eksklusif melewati EQ. Nonaktifkan output bit-perfect untuk memakai EQ.",
   "equalizerEffectivePreamp": "Gain input setelah headroom",

@@ -4,32 +4,32 @@
   "appearancePlayerView": "Player-Ansicht",
   "appearancePlayerViewNormal": "Normale Ansicht",
   "appearancePlayerViewImmersive": "Immersive Ansicht",
-  "settingsPlaybackSubtitle": "Player, volume, AutoMix, and audio output",
-  "sectionVolumeAndTransitions": "Volume and transitions",
+  "settingsPlaybackSubtitle": "Player, Lautstärke, AutoMix und Audioausgabe",
+  "sectionVolumeAndTransitions": "Lautstärke und Übergänge",
   "sectionAudioOutput": "Audio-Output",
-  "usbBitPerfect": "Hi-res and bit-perfect audio",
-  "usbBitPerfectDescription": "Preserve source precision on compatible outputs. Choose direct USB or AAudio exclusive below; otherwise Android USB output requires Android 14 or later. Applies from the next track, without AutoMix or normalization. System volume may not control direct USB.",
-  "usbHardwareVolume": "DAC hardware volume",
-  "usbVolumeWarningTitle": "Check your listening volume",
-  "usbVolumeWarning": "Direct USB audio can be much louder than normal playback, and phone volume buttons may not control it. Lower your DAC or amplifier volume before starting. When supported, Sistrum sets the DAC to at most −40 dB on connection; this does not guarantee a safe listening level on every amplifier or headphone.",
+  "usbBitPerfect": "Hi-Res- und Bit-perfect-Audio",
+  "usbBitPerfectDescription": "Bewahrt die Genauigkeit der Quelle bei kompatiblen Ausgaben. Wähle unten direktes USB oder AAudio exklusiv; andernfalls benötigt die USB-Ausgabe unter Android Android 14 oder neuer.",
+  "usbHardwareVolume": "Hardware-Lautstärke des DAC",
+  "usbVolumeWarningTitle": "Prüfe deine Hörlautstärke",
+  "usbVolumeWarning": "Direktes USB-Audio kann deutlich lauter sein als normale Wiedergabe, und die Lautstärketasten des Telefons funktionieren eventuell nicht. Senke vor dem Start die Lautstärke deines DAC oder Verstärkers. Wenn unterstützt, setzt Sistrum den DAC beim Verbinden auf höchstens −40 dB; das garantiert aber nicht bei jedem Verstärker oder Kopfhörer einen sicheren Pegel.",
   "usbVolumeAccept": "Verstanden",
-  "usbVolumeUnavailable": "Playback is paused because this DAC has no verified hardware volume control. Lower the DAC or amplifier volume, then enable fixed-volume output if needed and select the track again.",
-  "usbFixedVolume": "Allow fixed-volume USB output",
-  "usbFixedVolumeDescription": "For DACs without a volume control accessible to the app. Keep off for USB headsets without their own volume control. Applies from the next track.",
-  "usbFixedVolumeWarning": "The app cannot lower the volume on this output. Audio may start at full level, and the phone volume slider will not help. Only continue after lowering the volume on your DAC or external amplifier. Do not enable this for a headset without its own volume control.",
-  "dapExclusive": "DAP hi-res (AAudio exclusive)",
-  "dapExclusiveDescription": "Use Oboe/AAudio at the track's original rate and precision for FLAC/WAV PCM. Requires Android 8.1 or later and compatible hardware. Exclusive access is checked; unavailable formats use normal playback. DSD requires the direct USB driver. Applies from the next track.",
-  "dapExclusiveUnavailable": "AAudio exclusive access is unavailable for this track and current output. Using normal playback. For a USB DAC, try the direct USB driver.",
-  "usbDirect": "Direct USB driver",
-  "usbDirectDescription": "Use exclusive USB audio for FLAC/WAV, DSF/DFF and WavPack DSD, with Android USB permission. Native DSD requires a recognized compatible DAC. Other PCM formats use normal playback. Applies from the next track.",
-  "usbDsdOverPcm": "DSD over PCM (DoP)",
-  "usbDsdOverPcmDescription": "Enable only if your DAC explicitly supports DoP. Sends DSF/DFF and WavPack DSD inside a PCM carrier when native DSD is unavailable. An incompatible device may play noise; leave off for ordinary USB headsets.",
-  "usbDsdUnsupported": "This DSD format or connected DAC is not supported. Playback stopped.",
-  "usbPermissionDenied": "USB permission was not granted. Using normal playback.",
-  "usbBitPerfectPending": "Waiting for the next track and a compatible USB output.",
-  "usbBitPerfectNoDevice": "No USB DAC connected. Using normal audio output.",
-  "usbBitPerfectFallback": "This device or audio format does not support bit-perfect output. Using normal playback.",
-  "usbBitPerfectRouteChanged": "The USB audio route changed. Playback paused; select a track to reconnect.",
+  "usbVolumeUnavailable": "Die Wiedergabe ist pausiert, weil dieser DAC keine verifizierte Hardware-Lautstärkeregelung hat. Senke die Lautstärke des DAC oder Verstärkers und aktiviere dann bei Bedarf die Ausgabe mit fester Lautstärke.",
+  "usbFixedVolume": "Ausgabe per USB mit fester Lautstärke erlauben",
+  "usbFixedVolumeDescription": "Für DACs ohne eine von der App erreichbare Lautstärkeregelung. Für USB-Headsets ohne eigene Lautstärkeregelung deaktiviert lassen. Gilt ab dem nächsten Titel.",
+  "usbFixedVolumeWarning": "Die App kann die Lautstärke dieser Ausgabe nicht senken. Das Audio kann mit voller Lautstärke starten, und der Lautstärkeregler des Telefons hilft nicht. Fahre nur fort, nachdem du die Lautstärke gesenkt hast.",
+  "dapExclusive": "DAP Hi-Res (AAudio exklusiv)",
+  "dapExclusiveDescription": "Verwendet Oboe/AAudio mit der ursprünglichen Abtastrate und Genauigkeit des Titels für FLAC/WAV-PCM. Erfordert Android 8.1 oder neuer und kompatible Hardware. Der exklusive Zugriff wird geprüft; nicht unterstützte Formate werden normal wiedergegeben. DSD erfordert den direkten USB-Treiber. Gilt ab dem nächsten Titel.",
+  "dapExclusiveUnavailable": "Der exklusive AAudio-Zugriff ist für diesen Titel und die aktuelle Ausgabe nicht verfügbar. Es wird normal wiedergegeben. Bei einem USB-DAC versuche den direkten USB-Treiber.",
+  "usbDirect": "Direkter USB-Treiber",
+  "usbDirectDescription": "Verwendet exklusives USB-Audio für FLAC/WAV, DSF/DFF und WavPack-DSD, mit Android-USB-Berechtigung. Natives DSD erfordert einen erkannten kompatiblen DAC. Andere PCM-Formate werden normal wiedergegeben. Gilt ab dem nächsten Titel.",
+  "usbDsdOverPcm": "DSD über PCM (DoP)",
+  "usbDsdOverPcmDescription": "Nur aktivieren, wenn dein DAC DoP ausdrücklich unterstützt. Sendet DSF/DFF und WavPack-DSD in einem PCM-Träger, wenn natives DSD nicht verfügbar ist. Ein inkompatibles Gerät kann Rauschen abspielen; für gewöhnliche USB-Headsets deaktiviert lassen.",
+  "usbDsdUnsupported": "Dieses DSD-Format oder der angeschlossene DAC wird nicht unterstützt. Die Wiedergabe wurde beendet.",
+  "usbPermissionDenied": "Die USB-Berechtigung wurde nicht erteilt. Es wird normal wiedergegeben.",
+  "usbBitPerfectPending": "Warten auf den nächsten Titel und eine kompatible USB-Ausgabe.",
+  "usbBitPerfectNoDevice": "Kein USB-DAC verbunden. Es wird die normale Audioausgabe verwendet.",
+  "usbBitPerfectFallback": "Dieses Gerät oder Audioformat unterstützt keine Bit-perfect-Ausgabe. Es wird normal wiedergegeben.",
+  "usbBitPerfectRouteChanged": "Die USB-Audioroute hat sich geändert. Die Wiedergabe ist pausiert; wähle einen Titel, um die Verbindung wiederherzustellen.",
   "nowPlayingVolume": "Lautstärke",
   "@nowPlayingVolume": {
     "description": "System volume control label in the Sistrum player"
@@ -44,12 +44,12 @@
   "appearanceGlassClarity": "Glastransparenz",
   "appearanceGlassOutlines": "Glas-Konturen",
   "appearanceGlassOutlinesSubtitle": "Zeigt einen hellen Rand um das Sistrum-Glas. Ausschalten lässt das Glas selbst unverändert.",
-  "appearanceGlassClaritySubtitle": "Adjust transparency in Sistrum menus and navigation. Text contrast is preserved.",
+  "appearanceGlassClaritySubtitle": "Transparenz in Sistrum-Menüs und der Navigation anpassen. Der Textkontrast bleibt erhalten.",
   "appearanceGlassTinted": "Eingefärbt",
   "appearanceGlassClear": "klar",
   "appearanceGlassClearPerformance": "Sehr klares Glas kann mehr Energie verbrauchen und auf älteren Geräten weniger flüssig wirken. Verringere bei Bedarf die Klarheit.",
   "appearanceGlassQuality": "Glasqualität",
-  "appearanceGlassQualityAuto": "Auto",
+  "appearanceGlassQualityAuto": "Automatisch",
   "appearanceGlassQualityLite": "Lite",
   "appearanceGlassQualityFull": "Voll",
   "appearanceGlassQualityOff": "Aus",
@@ -64,8 +64,8 @@
   "appearanceGlassClarityContrast": "Dein System fordert erhöhten Kontrast an, daher bleibt das Glas undurchsichtig. Wähle Lite oder Voll, um Glas trotzdem zu verwenden; der Textkontrast bleibt erhalten.",
   "appearanceGlassAutoMeasured": "Auf diesem Gerät gemessen: Auto verwendet {quality}.",
   "appearanceGlassClarityAutoFrosted": "Auto hat dieses Gerät gemessen und verwendet Matt. Wähle Lite oder Voll, um die Klarheit festzulegen.",
-  "appearanceUseSystemFont": "Use system font",
-  "appearanceUseSystemFontSubtitle": "Use your device’s default typeface for app text.",
+  "appearanceUseSystemFont": "Systemschrift verwenden",
+  "appearanceUseSystemFontSubtitle": "Die Standardschrift deines Geräts für App-Texte verwenden.",
   "appName": "Sistrum",
   "@appName": {
     "description": "App name - DO NOT TRANSLATE"
@@ -95,7 +95,7 @@
   "libraryRecentlyAdded": "Zuletzt hinzugefügt",
   "homeChooseLibraryFolder": "Wähle einen Musikordner in den Einstellungen der lokalen Bibliothek.",
   "homeLibraryEmpty": "Füge Musik zu deinen Bibliotheksordnern hinzu und scanne dann deine Bibliothek.",
-  "libraryEmptyCollection": "Your music will appear here",
+  "libraryEmptyCollection": "Deine Musik wird hier angezeigt",
   "settingsTitle": "Einstellungen",
   "@settingsTitle": {
     "description": "Settings screen title"
@@ -125,8 +125,8 @@
     "description": "Dark theme"
   },
   "trackRemoveReplayGain": "ReplayGain entfernen",
-  "replayGainRemoving": "Removing ReplayGain...",
-  "replayGainRemoveConfirmMessage": "Remove track and album ReplayGain tags from {count} track(s)? Audio, artwork, and other metadata will be preserved.",
+  "replayGainRemoving": "ReplayGain wird entfernt …",
+  "replayGainRemoveConfirmMessage": "ReplayGain-Tags von Titel und Album aus {count} Titel(n) entfernen? Audio, Cover und andere Metadaten bleiben erhalten.",
   "@replayGainRemoveConfirmMessage": {
     "placeholders": {
       "count": {
@@ -134,7 +134,7 @@
       }
     }
   },
-  "selectionRemoveReplayGainCount": "Remove RG ({count})",
+  "selectionRemoveReplayGainCount": "RG entfernen ({count})",
   "@selectionRemoveReplayGainCount": {
     "description": "Compact selection action label. RG abbreviates ReplayGain; keep this short for a two-column toolbar.",
     "placeholders": {
@@ -143,7 +143,7 @@
       }
     }
   },
-  "replayGainRemoveBatchSuccess": "ReplayGain removed from {success} of {total} tracks",
+  "replayGainRemoveBatchSuccess": "ReplayGain bei {success} von {total} Titeln entfernt",
   "@replayGainRemoveBatchSuccess": {
     "placeholders": {
       "success": {
@@ -167,7 +167,7 @@
   "@replayGainBatchConfirmTitle": {
     "description": "Title of the batch ReplayGain confirmation dialog"
   },
-  "replayGainBatchConfirmMessage": "Analyze loudness and write ReplayGain tags to {count} track(s)?",
+  "replayGainBatchConfirmMessage": "Lautheit analysieren und ReplayGain-Tags für {count} Titel schreiben?",
   "@replayGainBatchConfirmMessage": {
     "description": "Message of the batch ReplayGain confirmation dialog",
     "placeholders": {
@@ -176,11 +176,11 @@
       }
     }
   },
-  "replayGainBatchAnalyzing": "Analyzing ReplayGain...",
+  "replayGainBatchAnalyzing": "ReplayGain wird analysiert …",
   "@replayGainBatchAnalyzing": {
     "description": "Progress dialog title while batch scanning ReplayGain"
   },
-  "replayGainBatchSuccess": "ReplayGain added to {success} of {total} tracks",
+  "replayGainBatchSuccess": "ReplayGain bei {success} von {total} Titeln hinzugefügt",
   "@replayGainBatchSuccess": {
     "description": "Snackbar after batch ReplayGain completes",
     "placeholders": {
@@ -192,7 +192,7 @@
       }
     }
   },
-  "replayGainUnsupportedDecoder": "Some tracks could not be analyzed because their audio codec is not supported by the ReplayGain decoder. Their files were not changed.",
+  "replayGainUnsupportedDecoder": "Einige Titel konnten nicht analysiert werden, weil ihr Audiocodec vom ReplayGain-Decoder nicht unterstützt wird. Ihre Dateien wurden nicht verändert.",
   "metadataSeparators": "Tag-Trennzeichen",
   "metadataSeparatorInvalid": "Verwende 1–16 Zeichen ohne Zeilenumbrüche oder Steuerzeichen.",
   "settingDisabled": "Deaktiviert",
@@ -349,7 +349,7 @@
   "@collectionExportM3u": {
     "description": "Tooltip on the collection screen action that exports the track list as an M3U8 playlist file"
   },
-  "collectionExportM3uDone": "Exported {exported} of {total} tracks",
+  "collectionExportM3uDone": "{exported} von {total} Titeln exportiert",
   "@collectionExportM3uDone": {
     "description": "Snackbar after M3U8 export; tracks without a local file are not exported",
     "placeholders": {
@@ -366,11 +366,11 @@
   "@collectionExportM3uFailed": {
     "description": "Snackbar when writing or sharing the M3U8 export fails"
   },
-  "libraryReviewDuplicates": "Review duplicates",
+  "libraryReviewDuplicates": "Duplikate prüfen",
   "@libraryReviewDuplicates": {
     "description": "Library settings row opening the duplicate review sheet"
   },
-  "libraryReviewDuplicatesSubtitle": "Find tracks stored more than once",
+  "libraryReviewDuplicatesSubtitle": "Titel finden, die mehrfach gespeichert sind",
   "@libraryReviewDuplicatesSubtitle": {
     "description": "Subtitle for the duplicate review settings row"
   },
@@ -378,7 +378,7 @@
   "@duplicatesTitle": {
     "description": "Title of the duplicate review sheet"
   },
-  "duplicatesEmpty": "No duplicate tracks found.",
+  "duplicatesEmpty": "Keine doppelten Titel gefunden.",
   "@duplicatesEmpty": {
     "description": "Shown when the duplicate review sheet finds nothing"
   },
@@ -386,11 +386,11 @@
   "@duplicatesKeepBest": {
     "description": "Button that deletes all but the highest-quality copy in a duplicate group"
   },
-  "duplicatesKeepBestAll": "Keep best for all",
+  "duplicatesKeepBestAll": "Für alle die beste behalten",
   "@duplicatesKeepBestAll": {
     "description": "Button that keeps the highest-quality copy in every duplicate group and deletes the rest"
   },
-  "duplicatesKeepBestAllMessage": "Keep the best copy of {groupCount} {groupCount, plural, =1{track} other{tracks}} and delete {count} lower-quality {count, plural, =1{copy} other{copies}}?\n\nThe deleted files will be removed from storage.",
+  "duplicatesKeepBestAllMessage": "Die beste Kopie von {groupCount} {groupCount, plural, =1{Titel} other{Titeln}} behalten und {count} Kopien geringerer Qualität löschen?",
   "@duplicatesKeepBestAllMessage": {
     "description": "Confirmation message for keeping the best copy across every duplicate group",
     "placeholders": {
@@ -402,7 +402,7 @@
       }
     }
   },
-  "duplicatesKeepBestMessage": "Delete {count} lower-quality copies of \"{trackName}\"?",
+  "duplicatesKeepBestMessage": "{count} Kopien geringerer Qualität von „{trackName}“ löschen?",
   "@duplicatesKeepBestMessage": {
     "description": "Confirmation message for the keep-best action",
     "placeholders": {
@@ -414,7 +414,7 @@
       }
     }
   },
-  "duplicatesDeleteCopyMessage": "Delete this copy of \"{trackName}\"?",
+  "duplicatesDeleteCopyMessage": "Diese Kopie von „{trackName}“ löschen?",
   "@duplicatesDeleteCopyMessage": {
     "description": "Confirmation message for deleting one duplicate copy",
     "placeholders": {
@@ -453,7 +453,7 @@
   "@errorRateLimitedMessage": {
     "description": "Error message - rate limit explanation"
   },
-  "searchEmptyResultSubtitle": "Try another keyword",
+  "searchEmptyResultSubtitle": "Versuche ein anderes Stichwort",
   "@searchEmptyResultSubtitle": {
     "description": "Subtitle shown under the empty search result state on the home screen"
   },
@@ -608,12 +608,12 @@
       }
     }
   },
-  "sectionLyrics": "Lyrics",
+  "sectionLyrics": "Liedtexte",
   "@sectionLyrics": {
     "description": "Settings section header"
   },
-  "lyricsKeepScreenOn": "Keep screen on while viewing lyrics",
-  "lyricsKeepScreenOnSubtitle": "Prevent screen timeout while lyrics are open, including when playback is paused.",
+  "lyricsKeepScreenOn": "Bildschirm während der Liedtexte anlassen",
+  "lyricsKeepScreenOnSubtitle": "Verhindert, dass der Bildschirm sich abschaltet, solange Liedtexte geöffnet sind, auch wenn die Wiedergabe pausiert ist.",
   "sectionColor": "Farbe",
   "@sectionColor": {
     "description": "Settings section header"
@@ -655,7 +655,7 @@
   "@trackMetadata": {
     "description": "Tab title - track metadata"
   },
-  "trackLyrics": "Lyrics",
+  "trackLyrics": "Liedtexte",
   "@trackLyrics": {
     "description": "Tab title - lyrics"
   },
@@ -677,11 +677,11 @@
       }
     }
   },
-  "appearanceHeroAnimations": "Hero animations",
+  "appearanceHeroAnimations": "Heldenanimationen",
   "@appearanceHeroAnimations": {
     "description": "Toggle for shared-element (Hero) transitions"
   },
-  "appearanceHeroAnimationsSubtitle": "Fly covers between screens, e.g. when opening the player",
+  "appearanceHeroAnimationsSubtitle": "Cover zwischen Bildschirmen übergleiten lassen, z. B. beim Öffnen des Players",
   "@appearanceHeroAnimationsSubtitle": {
     "description": "Subtitle for the Hero animations toggle"
   },
@@ -715,7 +715,7 @@
   "@collectionSelectToDelete": {
     "description": "Placeholder when nothing selected"
   },
-  "collectionDiscHeader": "Disc {discNumber}",
+  "collectionDiscHeader": "CD {discNumber}",
   "@collectionDiscHeader": {
     "description": "Header for disc separator in multi-disc albums",
     "placeholders": {
@@ -753,15 +753,15 @@
   "@libraryFolderHint": {
     "description": "Placeholder when no folder selected"
   },
-  "libraryAddFolder": "Add library folder",
+  "libraryAddFolder": "Musikordner hinzufügen",
   "@libraryAddFolder": {
     "description": "Action to add another local library source"
   },
-  "libraryAddFolderSubtitle": "Internal storage, SD card, SSD, or another external drive",
+  "libraryAddFolderSubtitle": "Interner Speicher, SD-Karte, SSD oder ein anderes externes Laufwerk",
   "@libraryAddFolderSubtitle": {
     "description": "Supported storage locations for local library sources"
   },
-  "librarySourceOffline": "Offline. Reconnect the storage to restore these tracks",
+  "librarySourceOffline": "Offline. Verbinde den Speicher erneut, um diese Titel wiederherzustellen",
   "@librarySourceOffline": {
     "description": "Library source is temporarily disconnected"
   },
@@ -769,7 +769,7 @@
   "@librarySourceDisabled": {
     "description": "Library source has been disabled by the user"
   },
-  "librarySourceScanCount": "{scanned} of {total} files scanned ({progress}%)",
+  "librarySourceScanCount": "{scanned} von {total} Dateien gescannt ({progress} %)",
   "@librarySourceScanCount": {
     "description": "Live progress for one library folder scan",
     "placeholders": {
@@ -784,15 +784,15 @@
       }
     }
   },
-  "libraryExternalStorage": "External storage",
+  "libraryExternalStorage": "Externer Speicher",
   "@libraryExternalStorage": {
     "description": "Label for a removable or external library source"
   },
-  "libraryRemoveFolder": "Remove library folder",
+  "libraryRemoveFolder": "Musikordner entfernen",
   "@libraryRemoveFolder": {
     "description": "Action to remove one indexed library source"
   },
-  "libraryRemoveFolderMessage": "Remove this folder and its indexed tracks from Sistrum? Audio files on the storage will not be deleted.",
+  "libraryRemoveFolderMessage": "Diesen Ordner und seine indizierten Titel aus Sistrum entfernen? Audiodateien auf dem Speicher werden nicht gelöscht.",
   "@libraryRemoveFolderMessage": {
     "description": "Confirmation shown before removing a library source"
   },
@@ -1007,11 +1007,11 @@
   "@libraryFilterQuality": {
     "description": "Filter section - audio quality"
   },
-  "libraryFilterQualityHiRes": "Hi-Res (24bit)",
+  "libraryFilterQualityHiRes": "Hi-Res (24 Bit)",
   "@libraryFilterQualityHiRes": {
     "description": "Filter option - high resolution audio"
   },
-  "libraryFilterQualityCD": "CD (16bit)",
+  "libraryFilterQualityCD": "CD (16 Bit)",
   "@libraryFilterQualityCD": {
     "description": "Filter option - CD quality audio"
   },
@@ -1059,19 +1059,19 @@
   "@libraryFilterSortOldest": {
     "description": "Sort option - oldest first"
   },
-  "libraryFilterSortAlbumAsc": "Album (A-Z)",
+  "libraryFilterSortAlbumAsc": "Album (A–Z)",
   "@libraryFilterSortAlbumAsc": {
     "description": "Sort option - album ascending"
   },
-  "libraryFilterSortAlbumDesc": "Album (Z-A)",
+  "libraryFilterSortAlbumDesc": "Album (Z–A)",
   "@libraryFilterSortAlbumDesc": {
     "description": "Sort option - album descending"
   },
-  "libraryFilterSortGenreAsc": "Genre (A-Z)",
+  "libraryFilterSortGenreAsc": "Genre (A–Z)",
   "@libraryFilterSortGenreAsc": {
     "description": "Sort option - genre ascending"
   },
-  "libraryFilterSortGenreDesc": "Genre (Z-A)",
+  "libraryFilterSortGenreDesc": "Genre (Z–A)",
   "@libraryFilterSortGenreDesc": {
     "description": "Sort option - genre descending"
   },
@@ -1108,11 +1108,11 @@
   },
   "tutorialLibraryDesc": "Deine gescannte Musik ist in Songs, Künstler, Alben und Playlists gegliedert.",
   "tutorialLibraryTip1": "Durchsuche und finde Titel, die bereits auf deinem Gerät sind",
-  "tutorialLibraryTip2": "Tap a track to play it with the built-in player",
+  "tutorialLibraryTip2": "Tippe auf einen Titel, um ihn mit dem integrierten Player abzuspielen",
   "@tutorialLibraryTip2": {
     "description": "Tutorial library tip 2"
   },
-  "tutorialLibraryTip3": "Browse tracks, albums, and playlists in list or grid views",
+  "tutorialLibraryTip3": "Durchsuche Titel, Alben und Playlists in Listen- oder Rasteransicht",
   "@tutorialLibraryTip3": {
     "description": "Tutorial library tip 3"
   },
@@ -1122,7 +1122,7 @@
   },
   "tutorialSettingsDesc": "Passe Wiedergabe, Bibliotheks-Scan, Liedtexte, das Sistrum-Erscheinungsbild und lokalen Speicher an.",
   "tutorialSettingsTip1": "Verwalte Musikordner und lokalen Dateizugriff",
-  "tutorialSettingsTip2": "Adjust your local library, playback, and appearance preferences.",
+  "tutorialSettingsTip2": "Passe deine Einstellungen für lokale Bibliothek, Wiedergabe und Darstellung an.",
   "@tutorialSettingsTip2": {
     "description": "Tutorial settings tip 2"
   },
@@ -1186,19 +1186,19 @@
   "@cacheLibraryCoverDesc": {
     "description": "Description of what library cover cache contains"
   },
-  "libraryPlaybackNormalization": "Volume normalization",
+  "libraryPlaybackNormalization": "Lautstärkeangleichung",
   "@libraryPlaybackNormalization": {
     "description": "Toggle title for ReplayGain playback normalization in the built-in player"
   },
-  "libraryPlaybackNormalizationSubtitle": "Even out loudness between tracks using their ReplayGain or R128 tags, when present",
+  "libraryPlaybackNormalizationSubtitle": "Gleicht die Lautheit zwischen Titeln über ihre ReplayGain- oder R128-Tags aus, sofern vorhanden",
   "@libraryPlaybackNormalizationSubtitle": {
     "description": "Subtitle explaining playback volume normalization"
   },
-  "cacheAudioAnalysis": "Audio analysis cache",
+  "cacheAudioAnalysis": "Cache der Audioanalyse",
   "@cacheAudioAnalysis": {
     "description": "Cache item title for saved audio analysis results"
   },
-  "cacheAudioAnalysisDesc": "Saved spectrograms and analysis results. Will re-analyze on next open.",
+  "cacheAudioAnalysisDesc": "Gespeicherte Spektrogramme und Analyseergebnisse. Wird beim nächsten Öffnen neu analysiert.",
   "@cacheAudioAnalysisDesc": {
     "description": "Description of what audio analysis cache contains"
   },
@@ -1396,15 +1396,15 @@
   "@collectionPlaylistRemoveCover": {
     "description": "Bottom sheet action to remove custom cover image from a playlist"
   },
-  "settingsBackup": "Backup & Restore",
+  "settingsBackup": "Sicherung und Wiederherstellung",
   "@settingsBackup": {
     "description": "Settings menu item - backup and restore page"
   },
-  "settingsBackupSubtitle": "Move your library, history and settings to a new device",
+  "settingsBackupSubtitle": "Bibliothek, Verlauf und Einstellungen auf ein neues Gerät übertragen",
   "@settingsBackupSubtitle": {
     "description": "Subtitle for backup and restore settings item"
   },
-  "backupTitle": "Backup & Restore",
+  "backupTitle": "Sicherung und Wiederherstellung",
   "@backupTitle": {
     "description": "App bar title for the backup and restore page"
   },
@@ -1413,34 +1413,34 @@
     "description": "Section title for the export/backup card"
   },
   "backupExportSectionDescription": "Speichere Einstellungen, lokale Profile, Sammlungen und optionale Altbibliotheksdaten in einer Sicherungsdatei.",
-  "backupExportButton": "Create backup file",
+  "backupExportButton": "Sicherungsdatei erstellen",
   "@backupExportButton": {
     "description": "Button to create and share a backup file"
   },
-  "backupImportSectionTitle": "Restore backup",
+  "backupImportSectionTitle": "Sicherung wiederherstellen",
   "@backupImportSectionTitle": {
     "description": "Section title for the import/restore card"
   },
-  "backupImportSectionDescription": "Pick a backup file to restore your data. This replaces the current settings, history and library on this device.",
+  "backupImportSectionDescription": "Wähle eine Sicherungsdatei, um deine Daten wiederherzustellen. Dies ersetzt die aktuellen Einstellungen, den Verlauf und die Bibliothek auf diesem Gerät.",
   "@backupImportSectionDescription": {
     "description": "Description for the restore action"
   },
-  "backupImportButton": "Choose backup file",
+  "backupImportButton": "Sicherungsdatei auswählen",
   "@backupImportButton": {
     "description": "Button to pick a backup file to restore"
   },
-  "backupCreated": "Backup created",
+  "backupCreated": "Sicherung erstellt",
   "@backupCreated": {
     "description": "Snackbar after a backup file is created"
   },
-  "backupCreateFailed": "Failed to create backup",
+  "backupCreateFailed": "Sicherung konnte nicht erstellt werden",
   "@backupCreateFailed": {
     "description": "Snackbar when backup creation fails"
   },
   "backupTooLarge": "Diese Sicherung wäre zu groß zum Wiederherstellen. Nimm weniger Kategorien auf und versuche es erneut.",
   "backupRestorePartiallyFailed": "Wiederherstellen der Sicherung fehlgeschlagen. Bereits wiederhergestellt: {categories}",
   "backupListeningStatisticsExcluded": "Hörstatistiken und Wiedergabezahlen sind nicht enthalten.",
-  "backupRestoreConfirmTitle": "Restore this backup?",
+  "backupRestoreConfirmTitle": "Diese Sicherung wiederherstellen?",
   "@backupRestoreConfirmTitle": {
     "description": "Confirmation dialog title before restoring a backup"
   },
@@ -1448,37 +1448,37 @@
   "@backupRestoreConfirmButton": {
     "description": "Confirm button to proceed with restore"
   },
-  "backupRestored": "Backup restored successfully",
+  "backupRestored": "Sicherung erfolgreich wiederhergestellt",
   "@backupRestored": {
     "description": "Snackbar after a successful restore"
   },
-  "backupRestoreFailed": "Failed to restore backup",
+  "backupRestoreFailed": "Sicherung konnte nicht wiederhergestellt werden",
   "@backupRestoreFailed": {
     "description": "Snackbar when restore fails"
   },
-  "backupInvalidFile": "This file is not a valid Sistrum backup",
+  "backupInvalidFile": "Diese Datei ist keine gültige Sistrum-Sicherung",
   "@backupInvalidFile": {
     "description": "Snackbar when the chosen file is not a valid backup"
   },
-  "backupRestoreRestartHint": "Restart the app to make sure every change is applied.",
+  "backupRestoreRestartHint": "Starte die App neu, damit alle Änderungen übernommen werden.",
   "@backupRestoreRestartHint": {
     "description": "Hint shown after restoring that an app restart is recommended"
   },
-  "backupContentsTitle": "Backup contents",
+  "backupContentsTitle": "Inhalt der Sicherung",
   "@backupContentsTitle": {
     "description": "Header above the list summarizing what the backup contains"
   },
   "backupSettingsOnly": "Nur Einstellungen",
-  "backupSelectCollections": "Library collections",
-  "backupSelectCollectionsDescription": "Liked tracks, favorite artists, playlists and playlist covers.",
-  "backupSelectedExportDescription": "Save the selected categories to a backup file. Audio files are not included.",
-  "backupSelectAtLeastOne": "Select at least one category to create a backup.",
-  "backupSelectedRestoreMessage": "Only the categories listed below will be restored. Categories not included in this backup will stay unchanged. Restoring can replace existing data and cannot be undone.",
+  "backupSelectCollections": "Bibliothekssammlungen",
+  "backupSelectCollectionsDescription": "Gemochte Titel, Lieblingskünstler, Playlists und Playlist-Cover.",
+  "backupSelectedExportDescription": "Speichert die ausgewählten Kategorien in einer Sicherungsdatei. Audiodateien sind nicht enthalten.",
+  "backupSelectAtLeastOne": "Wähle mindestens eine Kategorie aus, um eine Sicherung zu erstellen.",
+  "backupSelectedRestoreMessage": "Nur die unten aufgeführten Kategorien werden wiederhergestellt. Kategorien, die nicht in dieser Sicherung enthalten sind, bleiben unverändert. Das Wiederherstellen kann vorhandene Daten ersetzen und kann nicht rückgängig gemacht werden.",
   "backupContentsSettings": "Appeinstellungen",
   "@backupContentsSettings": {
     "description": "Backup contents row label for settings"
   },
-  "backupContentsLiked": "{count} liked {count, plural, =1{track} other{tracks}}",
+  "backupContentsLiked": "{count} gemochte {count, plural, =1{Titel} other{Titel}}",
   "@backupContentsLiked": {
     "description": "Backup contents row for liked tracks count",
     "placeholders": {
@@ -1496,7 +1496,7 @@
       }
     }
   },
-  "backupContentsArtists": "{count, plural, =1{1 favorite artist} other{{count} favorite artists}}",
+  "backupContentsArtists": "{count, plural, =1{1 Lieblingskünstler} other{{count} Lieblingskünstler}}",
   "@backupContentsArtists": {
     "description": "Backup contents row for favorite artists count",
     "placeholders": {
@@ -1635,7 +1635,7 @@
       }
     }
   },
-  "queueEmptyPlaylistsSubtitle": "Create a playlist to organize your tracks",
+  "queueEmptyPlaylistsSubtitle": "Erstelle eine Playlist, um deine Titel zu ordnen",
   "@queueEmptyPlaylistsSubtitle": {
     "description": "Empty state subtitle for the playlists library view"
   },
@@ -1827,11 +1827,11 @@
   "@notifLibraryScanStopped": {
     "description": "Notification body when library scan is cancelled"
   },
-  "notifLibraryScanPaused": "Library scan paused",
+  "notifLibraryScanPaused": "Bibliotheksscan pausiert",
   "@notifLibraryScanPaused": {
     "description": "Notification title when the user pauses a library scan"
   },
-  "notifLibraryScanPausedBody": "{count} files scanned. Resume in Local Library settings to continue from here.",
+  "notifLibraryScanPausedBody": "{count} Dateien gescannt. Setze den Scan in den Einstellungen der lokalen Bibliothek fort, um von hier aus weiterzumachen.",
   "@notifLibraryScanPausedBody": {
     "description": "Notification body for a paused library scan - files scanned so far",
     "placeholders": {
@@ -1928,7 +1928,7 @@
       }
     }
   },
-  "settingsLyrics": "Lyrics",
+  "settingsLyrics": "Liedtexte",
   "@settingsLyrics": {
     "description": "Settings menu item - lyrics settings"
   },
@@ -1957,7 +1957,7 @@
   "@trackAlbumType": {
     "description": "Label for an album or release type metadata value"
   },
-  "editMetadataFieldAlbumTypeHint": "Album, single, EP, compilation...",
+  "editMetadataFieldAlbumTypeHint": "Album, Single, EP, Sampler …",
   "@editMetadataFieldAlbumTypeHint": {
     "description": "Hint for the release type metadata field"
   },
@@ -1965,7 +1965,7 @@
   "@editMetadataFieldExplicit": {
     "description": "Label for the explicit content metadata field"
   },
-  "editMetadataFieldExplicitHint": "Mark this track as containing explicit content",
+  "editMetadataFieldExplicitHint": "Diesen Titel als explizit kennzeichnen",
   "@editMetadataFieldExplicitHint": {
     "description": "Description for the explicit content metadata switch"
   },
@@ -1977,7 +1977,7 @@
   "@editMetadataFieldUpc": {
     "description": "Label for the release barcode metadata field"
   },
-  "editMetadataFieldUpcHint": "Numeric UPC, EAN, or GTIN",
+  "editMetadataFieldUpcHint": "Numerische UPC, EAN oder GTIN",
   "@editMetadataFieldUpcHint": {
     "description": "Hint for the release barcode metadata field"
   },
@@ -2147,7 +2147,7 @@
   "@libraryPlayback": {
     "description": "Section header for playback settings in library settings"
   },
-  "nowPlayingNothingPlaying": "Nothing is playing",
+  "nowPlayingNothingPlaying": "Es wird nichts abgespielt",
   "@nowPlayingNothingPlaying": {
     "description": "Empty state when no track is currently playing"
   },
@@ -2160,7 +2160,7 @@
     "description": "Title for the playback queue sheet"
   },
   "nowPlayingAudioOutput": "Audio-Output",
-  "nowPlayingWrittenBy": "Written by: {writers}",
+  "nowPlayingWrittenBy": "Geschrieben von: {writers}",
   "@nowPlayingWrittenBy": {
     "placeholders": {
       "writers": {
@@ -2168,7 +2168,7 @@
       }
     }
   },
-  "nowPlayingLyricsSource": "Lyrics: {provider}",
+  "nowPlayingLyricsSource": "Liedtexte: {provider}",
   "@nowPlayingLyricsSource": {
     "placeholders": {
       "provider": {
@@ -2176,8 +2176,8 @@
       }
     }
   },
-  "nowPlayingAudioOutputUnavailable": "Unable to open audio output settings.",
-  "nowPlayingPreviousTrack": "Previous track",
+  "nowPlayingAudioOutputUnavailable": "Die Audioausgabe-Einstellungen können nicht geöffnet werden.",
+  "nowPlayingPreviousTrack": "Vorheriger Titel",
   "@nowPlayingPreviousTrack": {
     "description": "Tooltip for the previous-track playback control"
   },
@@ -2193,7 +2193,7 @@
   "@nowPlayingSleepTimer": {
     "description": "Menu item and sheet title for the playback sleep timer"
   },
-  "nowPlayingSleepTimerActive": "Ends at {time}",
+  "nowPlayingSleepTimerActive": "Endet um {time}",
   "@nowPlayingSleepTimerActive": {
     "description": "Active sleep timer deadline shown in the player menu",
     "placeholders": {
@@ -2202,7 +2202,7 @@
       }
     }
   },
-  "nowPlayingSleepTimerMinutes": "{minutes, plural, =1{1 minute} other{{minutes} minutes}}",
+  "nowPlayingSleepTimerMinutes": "{minutes, plural, =1{1 Minute} other{{minutes} Minuten}}",
   "@nowPlayingSleepTimerMinutes": {
     "description": "Duration choice for the playback sleep timer",
     "placeholders": {
@@ -2211,11 +2211,11 @@
       }
     }
   },
-  "nowPlayingSleepTimerOff": "Turn off sleep timer",
+  "nowPlayingSleepTimerOff": "Schlaftimer ausschalten",
   "@nowPlayingSleepTimerOff": {
     "description": "Action to cancel the active playback sleep timer"
   },
-  "nowPlayingSleepTimerSet": "Sleep timer set for {duration}",
+  "nowPlayingSleepTimerSet": "Schlaftimer auf {duration} eingestellt",
   "@nowPlayingSleepTimerSet": {
     "description": "Confirmation after setting the playback sleep timer",
     "placeholders": {
@@ -2224,7 +2224,7 @@
       }
     }
   },
-  "nowPlayingSleepTimerCancelled": "Sleep timer turned off",
+  "nowPlayingSleepTimerCancelled": "Schlaftimer ausgeschaltet",
   "@nowPlayingSleepTimerCancelled": {
     "description": "Confirmation after cancelling the playback sleep timer"
   },
@@ -2232,11 +2232,11 @@
   "@nowPlayingTabPlayer": {
     "description": "Tab label for the player view"
   },
-  "nowPlayingTabLyrics": "Lyrics",
+  "nowPlayingTabLyrics": "Liedtexte",
   "@nowPlayingTabLyrics": {
     "description": "Tab label for the lyrics view"
   },
-  "nowPlayingNoLyrics": "No lyrics in this file",
+  "nowPlayingNoLyrics": "Keine Liedtexte in dieser Datei",
   "@nowPlayingNoLyrics": {
     "description": "Empty state when the playing file has no embedded lyrics"
   },
@@ -2244,14 +2244,14 @@
   "@nowPlayingInstrumental": {
     "description": "Accessibility label for the three-dot countdown during an instrumental break before lyrics resume"
   },
-  "nowPlayingLyricsLanguageOptions": "Lyrics language options",
+  "nowPlayingLyricsLanguageOptions": "Optionen für die Liedtextsprache",
   "@nowPlayingLyricsLanguageOptions": {
     "description": "Tooltip for the player menu that shows or hides existing lyric pronunciation and translation"
   },
-  "nowPlayingHidePronunciation": "Hide Pronunciation",
-  "nowPlayingShowPronunciation": "Show Pronunciation",
-  "nowPlayingHideTranslation": "Hide Translation",
-  "nowPlayingShowTranslation": "Show Translation",
+  "nowPlayingHidePronunciation": "Aussprache ausblenden",
+  "nowPlayingShowPronunciation": "Aussprache anzeigen",
+  "nowPlayingHideTranslation": "Übersetzung ausblenden",
+  "nowPlayingShowTranslation": "Übersetzung anzeigen",
   "nowPlayingShuffleOn": "Shuffle an",
   "@nowPlayingShuffleOn": {
     "description": "Tooltip when shuffle mode is enabled"
@@ -2260,11 +2260,11 @@
   "@nowPlayingPlayInOrder": {
     "description": "Tooltip when shuffle mode is disabled"
   },
-  "nowPlayingQueueEmpty": "Queue is empty",
+  "nowPlayingQueueEmpty": "Die Warteschlange ist leer",
   "@nowPlayingQueueEmpty": {
     "description": "Empty state when the playback queue has no items"
   },
-  "nowPlayingNoMetadata": "No metadata available",
+  "nowPlayingNoMetadata": "Keine Metadaten verfügbar",
   "@nowPlayingNoMetadata": {
     "description": "Empty state when track metadata cannot be loaded"
   },
@@ -2277,7 +2277,7 @@
       }
     }
   },
-  "actionShuffle": "Shuffle",
+  "actionShuffle": "Zufallswiedergabe",
   "@actionShuffle": {
     "description": "Tooltip for shuffle playback action"
   },
@@ -2293,11 +2293,11 @@
   "@trackAddToQueue": {
     "description": "Menu action to add a track to the playback queue"
   },
-  "settingsSearchHint": "Search settings",
+  "settingsSearchHint": "Einstellungen durchsuchen",
   "@settingsSearchHint": {
     "description": "Placeholder of the search field on the Settings tab"
   },
-  "settingsSearchNoResults": "No settings match \"{query}\"",
+  "settingsSearchNoResults": "Keine Einstellungen für „{query}“ gefunden",
   "@settingsSearchNoResults": {
     "description": "Shown when a Settings search returns nothing",
     "placeholders": {
@@ -2306,11 +2306,11 @@
       }
     }
   },
-  "libraryFilterMetadataMissingLyrics": "Missing lyrics",
+  "libraryFilterMetadataMissingLyrics": "Fehlende Liedtexte",
   "@libraryFilterMetadataMissingLyrics": {
     "description": "Filter option for tracks without embedded or sidecar lyrics"
   },
-  "libraryFilterMetadataMissingReplayGain": "Missing ReplayGain",
+  "libraryFilterMetadataMissingReplayGain": "Fehlendes ReplayGain",
   "@libraryFilterMetadataMissingReplayGain": {
     "description": "Filter option for scanned tracks without ReplayGain gain tags"
   },
@@ -2319,7 +2319,7 @@
   "libraryAlbumCompletenessUnknown": "Vollständigkeit des Albums unbekannt",
   "libraryAlbumMissingTracks": "{present}/{expected} Titel · {missing} fehlen",
   "appSearch": "Suche",
-  "appContinuePlaying": "Continue Playing",
+  "appContinuePlaying": "Weiter abspielen",
   "appFavorite": "Favorit",
   "@appFavorite": {
     "description": "Compact context menu action that adds a track to Loved"
@@ -2329,27 +2329,27 @@
   "@appFavorited": {
     "description": "Selected state of the compact favorite action"
   },
-  "autoMixDescription": "Blend songs with beat matching and pitch-preserving tempo adjustment. Uses crossfade when beats cannot be matched.",
+  "autoMixDescription": "Mischt Songs mit Beat-Matching und tonhöhenerhaltender Tempoanpassung. Nutzt Crossfade, wenn keine Beats zugeordnet werden können.",
   "autoMixOn": "AutoMix an",
   "autoMixOff": "AutoMix aus",
   "autoplayOn": "Autoplay an",
   "autoplayOff": "Autoplay aus",
-  "autoplayFromLibrary": "Autoplay from your Library",
+  "autoplayFromLibrary": "Autoplay aus deiner Bibliothek",
   "autoplayDescription": "Setzt nach dem Ende der Warteschlange mit verwandten Songs aus deiner Bibliothek fort.",
   "autoplayPersonalization": "Personalisierte Autoplay",
   "autoplayPersonalizationDescription": "Lernt privat auf diesem Gerät aus Songs, die du hörst und überspringst. Ausschalten beendet das Lernen und stellt das normale Autoplay wieder her.",
   "autoplayResetLearning": "Empfehlungslernen zurücksetzen",
   "autoplayResetLearningConfirm": "Zurücksetzen",
   "profileTitle": "Profil",
-  "profileSetUp": "Set up your profile",
-  "profileEdit": "Edit name and photo",
-  "backupIncludesProfile": "Includes your profile name and photo",
+  "profileSetUp": "Profil einrichten",
+  "profileEdit": "Name und Foto bearbeiten",
+  "backupIncludesProfile": "Enthält deinen Profilnamen und dein Foto",
   "profileName": "Name",
   "profileNameHint": "Dein Name",
   "profileChangePhoto": "Bild wählen",
   "profileRemovePhoto": "Bild entfernen",
-  "profilePhotoError": "Choose a valid image smaller than 20 MB.",
-  "profileSaveError": "Could not save your profile. Please try again.",
+  "profilePhotoError": "Wähle ein gültiges Bild, das kleiner als 20 MB ist.",
+  "profileSaveError": "Dein Profil konnte nicht gespeichert werden. Bitte versuche es erneut.",
   "motionArtwork": "Animiertes Cover",
   "listeningStats": "Einblicke",
   "listeningStatsDescription": "Nur auf diesem Gerät gespeichert, ab jetzt. Zeichnet nur den integrierten Player auf; Pausen, Pufferung und Spulen addieren keine Hörzeit. Ein Abspielvorgang zählt ab 30 Sekunden.",
@@ -2372,7 +2372,7 @@
   "autoMixAutomaticDuration": "Automatische Dauer",
   "autoMixDuration": "Mix-Dauer",
   "autoMixEffect": "Übergangseffekt",
-  "autoMixEffectAuto": "Auto",
+  "autoMixEffectAuto": "Automatisch",
   "autoMixEffectCrossfade": "Crossfade",
   "autoMixEffectMuffled": "Gedämpft",
   "autoMixEffectEcho": "Echo",
@@ -2460,7 +2460,7 @@
   "@cueSplitTitle": {
     "description": "Title for CUE split bottom sheet"
   },
-  "snackbarAddedToQueueGeneric": "Added to queue",
+  "snackbarAddedToQueueGeneric": "Zur Warteschlange hinzugefügt",
   "@snackbarAddedToQueueGeneric": {
     "description": "Snackbar when a track is added to the playback queue without naming it"
   },
@@ -2472,7 +2472,7 @@
   "@trackCopyFilePath": {
     "description": "Action - copy file path"
   },
-  "trackDeleteConfirmMessage": "This permanently deletes the local audio file and removes it from your library.",
+  "trackDeleteConfirmMessage": "Dies löscht die lokale Audiodatei dauerhaft und entfernt sie aus deiner Bibliothek.",
   "trackDeleteConfirmTitle": "Vom Gerät entfernen?",
   "@trackDeleteConfirmTitle": {
     "description": "Delete confirmation title"
@@ -2683,18 +2683,18 @@
   "updateDownloadFailed": "Download fehlgeschlagen",
   "updateFailedMessage": "Das Update konnte nicht heruntergeladen werden",
   "updateNewVersionReady": "Eine neue Version ist verfügbar",
-  "updateRequiredTitle": "Update required",
-  "updateRequiredNotice": "This version is {count} releases behind and is no longer supported. Update to keep using the app.",
+  "updateRequiredTitle": "Update erforderlich",
+  "updateRequiredNotice": "Diese Version ist {count} Releases zurück und wird nicht mehr unterstützt. Aktualisiere, um die App weiter zu nutzen.",
   "updateCurrent": "Aktuell",
   "updateNew": "Neu",
   "updateDownloading": "Wird heruntergeladen...",
   "updateWhatsNew": "Was ist neu",
   "updateDownloadInstall": "Herunterladen & Installieren",
   "updateDontRemind": "Nicht erinnern",
-  "updateViewRelease": "View Release",
-  "updateSeeReleaseNotes": "See release notes for details.",
+  "updateViewRelease": "Version ansehen",
+  "updateSeeReleaseNotes": "Details findest du in den Versionshinweisen.",
   "notifDownloadingUpdate": "Sistrum v{version} wird heruntergeladen",
-  "notifUpdateProgress": "{received} / {total} MB • {percentage}%",
+  "notifUpdateProgress": "{received} / {total} MB • {percentage} %",
   "notifUpdateReady": "Update bereit",
   "notifUpdateReadyBody": "Sistrum v{version} heruntergeladen. Zum Installieren tippen.",
   "notifUpdateFailed": "Update fehlgeschlagen",

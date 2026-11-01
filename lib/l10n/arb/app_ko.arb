@@ -22,7 +22,7 @@
   "dapExclusiveUnavailable": "이 트랙과 현재 출력에서는 AAudio 전용 접근을 사용할 수 없습니다. 일반 재생 방식으로 전환합니다. USB DAC을 사용하는 경우 다이렉트 USB 드라이버를 사용해 보세요",
   "usbDirect": "다이렉트 USB 드라이버",
   "usbDirectDescription": "FLAC/WAV, DSF/DFF 및 WavPack DSD를 재생하려면 독점 USB 오디오를 사용하며, Android의 USB 권한이 필요합니다. 네이티브 DSD는 인식된 호환 DAC이 필요합니다. 그 외의 PCM 형식은 일반 재생 방식을 사용합니다. 이 설정은 다음 트랙부터 적용됩니다",
-  "usbDsdOverPcm": "DSD over PCM (DoP)",
+  "usbDsdOverPcm": "PCM 위의 DSD (DoP)",
   "usbDsdOverPcmDescription": "DAC이 DoP를 명시적으로 지원하는 경우에만 활성화하세요. 네이티브 DSD를 사용할 수 없을 때 DSF/DFF 및 WavPack DSD를 PCM 데이터 안에 담아 전송합니다. 호환되지 않는 기기에서는 잡음이 재생될 수 있으므로, 일반 USB 헤드셋에서는 이 기능을 꺼두세요",
   "usbDsdUnsupported": "이 DSD 형식 또는 연결된 DAC은 지원되지 않습니다. 재생이 중지되었습니다",
   "usbPermissionDenied": "USB 권한이 부여되지 않았습니다. 일반 재생을 사용합니다",
@@ -2474,7 +2474,7 @@
   "@trackCopyFilePath": {
     "description": "Action - copy file path"
   },
-  "trackDeleteConfirmMessage": "This permanently deletes the local audio file and removes it from your library.",
+  "trackDeleteConfirmMessage": "로컬 오디오 파일을 영구히 삭제하고 라이브러리에서도 제거합니다.",
   "trackDeleteConfirmTitle": "기기에서 제거하시겠습니까?",
   "@trackDeleteConfirmTitle": {
     "description": "Delete confirmation title"
@@ -2693,7 +2693,7 @@
   "updateWhatsNew": "새 기능",
   "updateDownloadInstall": "다운로드 및 설치",
   "updateDontRemind": "알림 안 함",
-  "updateViewRelease": "View Release",
+  "updateViewRelease": "릴리스 보기",
   "updateSeeReleaseNotes": "자세한 내용은 릴리스 노트를 참조하세요",
   "notifDownloadingUpdate": "Sistrum v{version}을 다운로드하는 중",
   "notifUpdateProgress": "{received} / {total} MB • {percentage}%",

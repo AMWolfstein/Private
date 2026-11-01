@@ -2474,7 +2474,7 @@
   "@trackCopyFilePath": {
     "description": "Action - copy file path"
   },
-  "trackDeleteConfirmMessage": "This permanently deletes the local audio file and removes it from your library.",
+  "trackDeleteConfirmMessage": "Це назавжди видалить локальний аудіофайл і прибере його з медіатеки.",
   "trackDeleteConfirmTitle": "Видалити з пристрою?",
   "@trackDeleteConfirmTitle": {
     "description": "Delete confirmation title"
@@ -2501,9 +2501,9 @@
   "audioInfoOutput": "Вихід",
   "audioInfoAnalysis": "Аналіз спектра та рівня",
   "audioInfoQuality": "Якість",
-  "audioInfoHiResLossless": "Hi-Res Lossless",
-  "audioInfoLossless": "Lossless",
-  "audioInfoLossy": "Lossy",
+  "audioInfoHiResLossless": "Hi-Res без втрат",
+  "audioInfoLossless": "Без втрат",
+  "audioInfoLossy": "Із втратами",
   "audioInfoFormat": "Формат",
   "audioInfoCodec": "Кодек",
   "audioInfoSampleRate": "Частота дискретизації",
@@ -2544,7 +2544,7 @@
   "audioInfoTempo": "Темп",
   "audioInfoResampling": "Ресемплінг",
   "audioInfoResamplingNone": "Немає, частоти збігаються",
-  "audioInfoBitPerfect": "Bit-perfect",
+  "audioInfoBitPerfect": "Бітово точний",
   "audioInfoBitPerfectActive": "Так, незмінні семпли",
   "audioInfoBitPerfectNo": "Ні, мікшується системою",
   "audioInfoDevice": "Пристрій",
@@ -2693,7 +2693,7 @@
   "updateWhatsNew": "Що нового",
   "updateDownloadInstall": "Завантажити та встановити",
   "updateDontRemind": "Не нагадувати",
-  "updateViewRelease": "View Release",
+  "updateViewRelease": "Переглянути випуск",
   "updateSeeReleaseNotes": "Детальнішу інформацію див. у примітках до випуску.",
   "notifDownloadingUpdate": "Завантаження Sistrum v{version}",
   "notifUpdateProgress": "{received} / {total} МБ • {percentage}%",

@@ -44,8 +44,8 @@
   "appearanceGlassClarity": "Прозрачность стекла",
   "appearanceGlassOutlines": "Контуры стекла",
   "appearanceGlassOutlinesSubtitle": "Показывать светлую кромку вокруг стекла Sistrum. Выключение не меняет само стекло.",
-  "appearanceGlassClaritySubtitle": "Adjust transparency in Sistrum menus and navigation. Text contrast is preserved.",
-  "appearanceGlassTinted": "Tinted",
+  "appearanceGlassClaritySubtitle": "Настройте прозрачность в меню и навигации Sistrum. Контраст текста сохраняется.",
+  "appearanceGlassTinted": "С тонировкой",
   "appearanceGlassClear": "Очистить",
   "appearanceGlassClearPerformance": "Очень прозрачное стекло может расходовать больше энергии и работать менее плавно на старых устройствах. При необходимости уменьшите прозрачность.",
   "appearanceGlassQuality": "Качество стекла",
@@ -612,8 +612,8 @@
   "@sectionLyrics": {
     "description": "Settings section header"
   },
-  "lyricsKeepScreenOn": "Keep screen on while viewing lyrics",
-  "lyricsKeepScreenOnSubtitle": "Prevent screen timeout while lyrics are open, including when playback is paused.",
+  "lyricsKeepScreenOn": "Не выключать экран во время просмотра текста",
+  "lyricsKeepScreenOnSubtitle": "Не давать экрану гаснуть, пока открыт текст песни, в том числе когда воспроизведение на паузе.",
   "sectionColor": "Цвет",
   "@sectionColor": {
     "description": "Settings section header"
@@ -1669,7 +1669,7 @@
   "@audioAnalysisSampleRate": {
     "description": "Sample rate metric label"
   },
-  "audioAnalysisCodec": "Codec",
+  "audioAnalysisCodec": "Кодек",
   "@audioAnalysisCodec": {
     "description": "Audio codec metric label"
   },
@@ -1693,7 +1693,7 @@
   "@audioAnalysisDuration": {
     "description": "Duration metric label"
   },
-  "audioAnalysisNyquist": "Nyquist",
+  "audioAnalysisNyquist": "Найквист",
   "@audioAnalysisNyquist": {
     "description": "Nyquist frequency metric label"
   },
@@ -1831,7 +1831,7 @@
   "@notifLibraryScanPaused": {
     "description": "Notification title when the user pauses a library scan"
   },
-  "notifLibraryScanPausedBody": "{count} files scanned. Resume in Local Library settings to continue from here.",
+  "notifLibraryScanPausedBody": "Просканировано файлов: {count}. Чтобы продолжить отсюда, возобновите сканирование в настройках локальной медиатеки.",
   "@notifLibraryScanPausedBody": {
     "description": "Notification body for a paused library scan - files scanned so far",
     "placeholders": {
@@ -2473,7 +2473,7 @@
   "@trackCopyFilePath": {
     "description": "Action - copy file path"
   },
-  "trackDeleteConfirmMessage": "This permanently deletes the local audio file and removes it from your library.",
+  "trackDeleteConfirmMessage": "Это навсегда удалит локальный аудиофайл и уберёт его из медиатеки.",
   "trackDeleteConfirmTitle": "Удалить с устройства?",
   "@trackDeleteConfirmTitle": {
     "description": "Delete confirmation title"
@@ -2543,7 +2543,7 @@
   "audioInfoTempo": "Темп",
   "audioInfoResampling": "Пересэмплирование",
   "audioInfoResamplingNone": "Нет, частоты совпадают",
-  "audioInfoBitPerfect": "Bit-perfect",
+  "audioInfoBitPerfect": "Бит-в-бит",
   "audioInfoBitPerfectActive": "Да, сэмплы без изменений",
   "audioInfoBitPerfectNo": "Нет, микшируется системой",
   "audioInfoDevice": "Устройство",
@@ -2692,7 +2692,7 @@
   "updateWhatsNew": "Что нового",
   "updateDownloadInstall": "Скачать и установить",
   "updateDontRemind": "Не напоминать",
-  "updateViewRelease": "View Release",
+  "updateViewRelease": "Открыть релиз",
   "updateSeeReleaseNotes": "Смотрите примечания к релизу для подробностей.",
   "notifDownloadingUpdate": "Скачивание Sistrum v{version}",
   "notifUpdateProgress": "{received} / {total} МБ • {percentage}%",
