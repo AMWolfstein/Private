@@ -7,17 +7,10 @@ The map never proves that tests pass, that the architecture is right or that a r
 
 ## Install
 
-Graphify is off by default (`extractor.enabled: false` in `workflow/work/map.json`, status `disabled`). Nothing
-needs installing: without it the map still holds imports, channels, tests and declarations, and every packet says
-structure is disabled. Dart and Kotlin are covered by pattern scans either way.
-
-To add symbols, calls and references for the other languages, install the pinned version and enable it:
-
-```sh
-python3 -m pip install graphifyy==0.9.97   # PyPI name has two y's; the module is `graphify`
-# then set "enabled": true under "extractor" in workflow/work/map.json
-python3 workflow/scripts/work/work.py map update
-```
+The map runs on its built-in pattern scan and needs nothing installed. Graphify is not used by this workflow:
+`extractor.enabled` is `false` in `workflow/work/map.json` (status `disabled`), and the adapter stays in place only
+so that a later decision can turn it on. Dart and Kotlin declarations, imports, channels and tests come from the
+pattern scan. Other languages get no symbols or calls until one of them is added to the scan.
 
 - Verified version: graphifyy 0.9.97 (Apache-2.0, `graphifyy-0.9.97.dist-info/licenses/`). It pulls in
   networkx, numpy, rapidfuzz, pyyaml, tree-sitter 0.25 and about 25 tree-sitter grammar packages; it is not
