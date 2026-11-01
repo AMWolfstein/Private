@@ -5,6 +5,18 @@ import 'package:sistrum/providers/library/library_collections_provider.dart';
 import 'package:sistrum/providers/playback/music_player_provider.dart';
 import 'package:sistrum/services/playback/notification/playback_notification.dart';
 
+/// Stable for the shell lifetime: per-track notification rebuilds must not
+/// replace the subscription while a headless collection transaction commits.
+final backgroundCollectionSyncProvider = Provider.autoDispose<void>((ref) {
+  final subscription = ref
+      .watch(musicPlayerRuntimeProvider)
+      .backgroundCollectionChanges
+      .listen((_) {
+        if (ref.mounted) ref.invalidate(libraryCollectionsProvider);
+      });
+  ref.onDispose(() => unawaited(subscription.cancel()));
+});
+
 /// Kept alive by the app shell so notification favorites share the exact
 /// Library identity and refresh when the same track is starred inside the app.
 final playbackNotificationProvider = Provider.autoDispose
@@ -17,6 +29,7 @@ final playbackNotificationProvider = Provider.autoDispose
         String shuffleOff,
       })
     >((ref, labels) {
+      ref.watch(backgroundCollectionSyncProvider);
       const sistrum = true;
       final item = ref.watch(currentMediaItemProvider).value;
       final track = item == null

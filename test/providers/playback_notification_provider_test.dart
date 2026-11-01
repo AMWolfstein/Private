@@ -12,6 +12,8 @@ import '../support/library_section_harness.dart';
 
 /// Records the notification the provider configures, instead of posting one.
 class _RecordingRuntime implements MusicPlayerRuntime {
+  @override
+  Stream<int> get backgroundCollectionChanges => const Stream.empty();
   PlaybackNotification? presentation;
   int configured = 0;
 

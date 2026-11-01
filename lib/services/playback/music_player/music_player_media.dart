@@ -15,6 +15,8 @@ extension _MusicPlayerHandlerMedia on MusicPlayerHandler {
           shuffle: _shuffle,
         ),
         systemActions: const {
+          MediaAction.playFromMediaId,
+          MediaAction.playFromSearch,
           MediaAction.seek,
           MediaAction.seekForward,
           MediaAction.seekBackward,

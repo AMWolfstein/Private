@@ -3,6 +3,7 @@ import 'package:sistrum/services/playback/music_player/music_player_helpers.dart
 import 'package:sistrum/services/playback/music_player/music_player_session_restore.dart';
 import 'package:sistrum/services/playback/core/music_haptics.dart';
 import 'dart:async';
+import 'package:sistrum/services/playback/browser/media_library_browser.dart';
 import 'dart:math';
 
 import 'package:audio_service/audio_service.dart';
@@ -78,6 +79,7 @@ class MusicPlayerHandler extends PlaybackHandler {
   final List<StreamSubscription<dynamic>> _subscriptions = [];
   int _index = -1;
   int _playRequestGeneration = 0;
+  int _browserRequestGeneration = 0;
   String? _activeResolvedPath;
   bool _disposed = false;
   Future<void>? _disposeFuture;
@@ -373,6 +375,16 @@ class MusicPlayerHandler extends PlaybackHandler {
     String parentMediaId, [
     Map<String, dynamic>? options,
   ]) => _getChildrenImpl(parentMediaId, options);
+
+  @override
+  Future<List<MediaItem>> search(
+    String query, [
+    Map<String, dynamic>? extras,
+  ]) => _runtime.browser.search(query);
+
+  @override
+  Future<void> playFromSearch(String query, [Map<String, dynamic>? extras]) =>
+      _playFromSearchImpl(query, extras);
 
   @override
   Future<MediaItem?> getMediaItem(String mediaId) => _getMediaItemImpl(mediaId);

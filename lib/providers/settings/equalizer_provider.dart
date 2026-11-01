@@ -22,7 +22,7 @@ final equalizerProvider = NotifierProvider<EqualizerController, EqualizerState>(
 );
 
 class EqualizerController extends Notifier<EqualizerState> {
-  static const storageKey = 'playback_equalizer_v1';
+  static const storageKey = kPlaybackEqualizerStorageKey;
   int _revision = 0;
   bool _disposed = false;
   String? _pending;
@@ -49,9 +49,7 @@ class EqualizerController extends Notifier<EqualizerState> {
       final raw = prefs.getString(storageKey);
       if (_disposed || raw == null) return;
       final data = jsonDecode(raw) as Map<String, dynamic>;
-      final settings = EqualizerSettings.fromJson(
-        Map<String, dynamic>.from(data['settings'] as Map),
-      );
+      final settings = decodePlaybackEqualizerSettings(data);
       final presets = (data['presets'] as List? ?? const [])
           .take(100)
           .map(

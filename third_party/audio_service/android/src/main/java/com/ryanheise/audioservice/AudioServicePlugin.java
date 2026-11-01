@@ -63,12 +63,43 @@ public class AudioServicePlugin implements FlutterPlugin, ActivityAware {
     private static String flutterEngineId = "audio_service_engine";
     private static String[] flutterEngineArguments;
 
+    /** Configures each shared engine after it is created and before Dart starts. */
+    public interface FlutterEngineConfigurator {
+        void configure(Context applicationContext, FlutterEngine engine);
+    }
+
+    private static FlutterEngineConfigurator flutterEngineConfigurator;
+
+
+
+    /**
+     * Maps a queue item's artwork URI to one other apps can load, or answers
+     * null to keep it. Only the session queue's descriptions use the result;
+     * the item's metadata keeps its own artwork.
+     */
+    public interface QueueArtResolver {
+        Uri resolve(Uri artUri);
+    }
+
+    private static volatile QueueArtResolver queueArtResolver;
+
+    public static void setQueueArtResolver(QueueArtResolver resolver) {
+        queueArtResolver = resolver;
+    }
+
     /** Configure renderer flags in Application.onCreate, before the shared engine exists. */
     public static synchronized void setFlutterEngineArguments(String[] arguments) {
         if (FlutterEngineCache.getInstance().get(flutterEngineId) != null) {
             throw new IllegalStateException("Flutter engine arguments must be set before engine creation");
         }
         flutterEngineArguments = arguments.clone();
+    }
+
+    public static synchronized void setFlutterEngineConfigurator(FlutterEngineConfigurator configurator) {
+        if (FlutterEngineCache.getInstance().get(flutterEngineId) != null) {
+            throw new IllegalStateException("The Flutter engine configurator must be set before engine creation");
+        }
+        flutterEngineConfigurator = configurator;
     }
 
     /** Must be called BEFORE any FlutterEngine is created. e.g. in Application class. */
@@ -118,6 +149,9 @@ public class AudioServicePlugin implements FlutterPlugin, ActivityAware {
                 initialRoute = "/";
             }
             flutterEngine.getNavigationChannel().setInitialRoute(initialRoute);
+            if (flutterEngineConfigurator != null) {
+                flutterEngineConfigurator.configure(context.getApplicationContext(), flutterEngine);
+            }
             flutterEngine.getDartExecutor().executeDartEntrypoint(DartExecutor.DartEntrypoint.createDefault());
             FlutterEngineCache.getInstance().put(flutterEngineId, flutterEngine);
         }
@@ -1263,10 +1297,34 @@ public class AudioServicePlugin implements FlutterPlugin, ActivityAware {
             MediaMetadataCompat mediaMetadata = createMediaMetadata(rawMediaItem, service);
             metadata.put(mediaMetadata.getString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID), mediaMetadata);
             MediaDescriptionCompat description = addExtrasToMediaDescription(mediaMetadata.getDescription(), (Map<?, ?>)rawMediaItem.get("extras"));
-            queue.add(new MediaSessionCompat.QueueItem(description, i));
+            queue.add(new MediaSessionCompat.QueueItem(withQueueArt(description), i));
             i++;
         }
         return queue;
+    }
+
+    private static MediaDescriptionCompat withQueueArt(MediaDescriptionCompat description) {
+        QueueArtResolver resolver = queueArtResolver;
+        Uri art = description.getIconUri();
+        if (resolver == null || art == null) return description;
+        Uri shared;
+        try {
+            shared = resolver.resolve(art);
+        } catch (RuntimeException e) {
+            Log.w("AudioServicePlugin", "Queue artwork kept as it is", e);
+            return description;
+        }
+        if (shared == null || shared.equals(art)) return description;
+        return new MediaDescriptionCompat.Builder()
+                .setMediaId(description.getMediaId())
+                .setTitle(description.getTitle())
+                .setSubtitle(description.getSubtitle())
+                .setDescription(description.getDescription())
+                .setIconBitmap(MediaArtwork.copy(description.getIconBitmap(), 512))
+                .setIconUri(shared)
+                .setMediaUri(description.getMediaUri())
+                .setExtras(description.getExtras())
+                .build();
     }
 
     public static Long getLong(Object o) {

@@ -158,9 +158,8 @@ class MainActivity: FlutterFragmentActivity() {
 
     private var libraryScanProgressChannel: EventChannel? = null
     private var flutterBackCallback: OnBackPressedCallback? = null
-    private val playbackLeaseLock = Any()
-    private val playbackLeases = LinkedHashMap<String, ParcelFileDescriptor>()
-    private val MAX_PLAYBACK_LEASES = 8
+    private var playbackEngine: FlutterEngine? = null
+    private var playbackLeaseOwner: Any? = null
     private val safTreeLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { activityResult ->
@@ -462,47 +461,7 @@ class MainActivity: FlutterFragmentActivity() {
         }
     }
 
-    /**
-     * Creates an install-scoped marker in noBackupFilesDir. A platform restore
-     * can bring SharedPreferences back after reinstall, but this marker is never
-     * backed up. Package timestamps distinguish that case from the first app
-     * update after this marker was introduced, so existing users are not sent
-     * through onboarding again.
-     */
-    private fun ensureInstallMarker(): Map<String, Any> {
-        val marker = File(noBackupFilesDir, "installation_state_v1")
-        val markerExisted = marker.isFile
-        val packageInfo = @Suppress("DEPRECATION")
-        packageManager.getPackageInfo(packageName, 0)
-        val installTimestampDelta = kotlin.math.abs(
-            packageInfo.lastUpdateTime - packageInfo.firstInstallTime
-        )
-        val looksLikeFreshPackageInstall = installTimestampDelta <= 10_000L
-
-        var markerCreated = markerExisted
-        if (!markerExisted) {
-            markerCreated = try {
-                marker.parentFile?.mkdirs()
-                marker.writeText(
-                    "created_at=${System.currentTimeMillis()}\n" +
-                        "version_code=${BuildConfig.VERSION_CODE}\n"
-                )
-                true
-            } catch (e: Exception) {
-                android.util.Log.w(
-                    "Sistrum",
-                    "Failed to create installation marker: ${e.message}"
-                )
-                false
-            }
-        }
-
-        return mapOf(
-            "marker_existed" to markerExisted,
-            "marker_created" to markerCreated,
-            "fresh_package_install" to looksLikeFreshPackageInstall,
-        )
-    }
+    private fun ensureInstallMarker() = InstallationMarker.ensure(applicationContext)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         // Ensure the shared audio_service engine exists before the activity
@@ -533,72 +492,11 @@ class MainActivity: FlutterFragmentActivity() {
         }
     }
 
-    /**
-     * Opens a short-lived descriptor lease for zero-copy SAF playback. The
-     * returned proc path identifies the lease. The Android audio plugin must
-     * duplicate this descriptor, never reopen it (AppFuse rejects reopening).
-     * A small hard cap protects against abandoned method calls.
-     */
-    private fun openSafPlaybackLease(uriStr: String): Map<String, String>? {
-        if (!uriStr.startsWith("content://")) return null
-        val descriptor = try {
-            contentResolver.openFileDescriptor(Uri.parse(uriStr), "r")
-        } catch (e: Exception) {
-            android.util.Log.w("Sistrum", "Failed to open SAF playback descriptor: ${e.message}")
-            null
-        } ?: return null
-
-        if (!isSeekableSafDescriptor(descriptor)) {
-            descriptor.close()
-            return null
-        }
-        val token = UUID.randomUUID().toString()
-        // Never evict a lease: Dart may still be opening the /proc/self/fd path it
-        // names. A full table means no lease, and Dart uses its copy fallback.
-        val accepted = synchronized(playbackLeaseLock) {
-            if (playbackLeases.size >= MAX_PLAYBACK_LEASES) {
-                false
-            } else {
-                playbackLeases[token] = descriptor
-                true
-            }
-        }
-        if (!accepted) {
-            android.util.Log.w("Sistrum", "Playback lease table full; using fallback")
-            try {
-                descriptor.close()
-            } catch (_: Exception) {}
-            return null
-        }
-        return mapOf(
-            "token" to token,
-            "path" to "/proc/self/fd/${descriptor.fd}",
-            "display_name" to buildUriDisplayName(Uri.parse(uriStr)),
-        )
+    private fun openSafPlaybackLease(uri: String): Map<String, String>? {
+        val owner = playbackLeaseOwner ?: return null
+        return PlaybackFileLeases.open(applicationContext, uri, owner)
     }
-
-    private fun closeSafPlaybackLease(token: String) {
-        if (token.isBlank()) return
-        val descriptor = synchronized(playbackLeaseLock) {
-            playbackLeases.remove(token)
-        } ?: return
-        try {
-            descriptor.close()
-        } catch (_: Exception) {}
-    }
-
-    private fun closeAllSafPlaybackLeases() {
-        val descriptors = synchronized(playbackLeaseLock) {
-            val openDescriptors = playbackLeases.values.toList()
-            playbackLeases.clear()
-            openDescriptors
-        }
-        descriptors.forEach { descriptor ->
-            try {
-                descriptor.close()
-            } catch (_: Exception) {}
-        }
-    }
+    private fun closeSafPlaybackLease(token: String) = PlaybackFileLeases.close(token)
 
     override fun onDestroy() {
         if (isFinishing) {
@@ -613,6 +511,9 @@ class MainActivity: FlutterFragmentActivity() {
         // fresh ones in configureFlutterEngine.
         backendChannel?.setMethodCallHandler(null)
         backendChannel = null
+        playbackEngine?.let { SharedEngineChannels.restoreBackend(it) }
+        playbackEngine = null
+        playbackLeaseOwner = null
         libraryScanProgressChannel?.setStreamHandler(null)
         libraryScanProgressChannel = null
         libraryStorageReceiver?.let {
@@ -626,14 +527,15 @@ class MainActivity: FlutterFragmentActivity() {
         if (isFinishing) {
             stopLibraryScanProgressStream()
             scope.cancel()
-            // Recreation keeps the engine and Dart's leases; only a real exit releases them.
-            closeAllSafPlaybackLeases()
+            // Playback descriptors belong to the shared engine, not this Activity.
         }
         super.onDestroy()
     }
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
+        playbackEngine = flutterEngine
+        playbackLeaseOwner = SharedEngineChannels.leaseOwner(flutterEngine)
         PlayerWidgetBridge.attach(this, flutterEngine)
         // Select and initialize the runtime before Flutter can dispatch a call.
         val selectedBackend = coreBackend

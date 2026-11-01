@@ -1,5 +1,7 @@
 package com.ryanheise.audioservice;
 
+import android.util.Log;
+
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -24,7 +26,6 @@ import android.support.v4.media.RatingCompat;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
-import android.util.LruCache;
 import android.util.Size;
 import android.view.KeyEvent;
 
@@ -178,7 +179,8 @@ public class AudioService extends MediaBrowserServiceCompat {
 
     Bitmap loadArtBitmap(String artUriString, String loadThumbnailUri) {
         Bitmap bitmap = artBitmapCache.get(artUriString);
-        if (bitmap != null) return bitmap;
+        if (bitmap != null && !bitmap.isRecycled()) return bitmap;
+        if (bitmap != null) artBitmapCache.remove(artUriString);
         try {
             // There are 3 cases handled by this function:
             //   1. content URI with openFileDescriptor
@@ -243,6 +245,8 @@ public class AudioService extends MediaBrowserServiceCompat {
                     }
                 }
             }
+            if (bitmap == null || bitmap.isRecycled()) return null;
+            bitmap = MediaArtwork.bound(bitmap);
             artBitmapCache.put(artUriString, bitmap);
             return bitmap;
         } catch (Exception e) {
@@ -280,7 +284,7 @@ public class AudioService extends MediaBrowserServiceCompat {
     private MediaMetadataCompat mediaMetadata;
     private Bitmap artBitmap;
     private String notificationChannelId;
-    private LruCache<String, Bitmap> artBitmapCache;
+    private RecentArtCache<Bitmap> artBitmapCache;
     private boolean playing = false;
     private AudioProcessingState processingState = AudioProcessingState.idle;
     private int repeatMode;
@@ -329,22 +333,9 @@ public class AudioService extends MediaBrowserServiceCompat {
         PowerManager pm = (PowerManager)getSystemService(Context.POWER_SERVICE);
         wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, AudioService.class.getName());
 
-        // Get max available VM memory, exceeding this amount will throw an
-        // OutOfMemory exception. Stored in kilobytes as LruCache takes an
-        // int in its constructor.
-        final int maxMemory = (int)(Runtime.getRuntime().maxMemory() / 1024);
-
-        // Use 1/8th of the available memory for this memory cache.
-        final int cacheSize = maxMemory / 8;
-
-        artBitmapCache = new LruCache<String, Bitmap>(cacheSize) {
-            @Override
-            protected int sizeOf(String key, Bitmap bitmap) {
-                // The cache size will be measured in kilobytes rather than
-                // number of items.
-                return bitmap.getByteCount() / 1024;
-            }
-        };
+        // Three decoded covers, each bounded to 512 px. Do not account by a
+        // bitmap's mutable byte count: framework recycling can change it later.
+        artBitmapCache = new RecentArtCache<>(3);
 
         flutterEngine = AudioServicePlugin.getFlutterEngine(this);
         System.out.println("flutterEngine warmed up");
@@ -359,6 +350,12 @@ public class AudioService extends MediaBrowserServiceCompat {
     public void stop() {
         deactivateMediaSession();
         stopSelf();
+    }
+
+    @Override
+    public void onTrimMemory(int level) {
+        super.onTrimMemory(level);
+        if (level >= TRIM_MEMORY_RUNNING_LOW) artBitmapCache.evictAllExcept(artBitmap);
     }
 
     @Override
@@ -667,7 +664,7 @@ public class AudioService extends MediaBrowserServiceCompat {
             if (description.getDescription() != null)
                 builder.setSubText(description.getDescription());
             if (artBitmap != null)
-                builder.setLargeIcon(artBitmap);
+                builder.setLargeIcon(MediaArtwork.copy(artBitmap, 256));
         }
         if (config.androidNotificationClickStartsActivity)
             builder.setContentIntent(mediaSession.getController().getSessionActivity());
@@ -849,12 +846,19 @@ public class AudioService extends MediaBrowserServiceCompat {
         // after the new track is already playing, so refresh the latest state
         // with its new media ID without changing playback or its position clock.
         if (destroyed || mediaSession == null) return;
+        mediaMetadata = MediaArtwork.sanitize(mediaMetadata);
+        try {
+            mediaSession.setMetadata(MediaArtwork.forSession(mediaMetadata));
+        } catch (IllegalArgumentException | IllegalStateException error) {
+            Log.w("AudioService", "Artwork rejected; publishing text metadata", error);
+            mediaMetadata = MediaArtwork.withoutArtwork(mediaMetadata);
+            mediaSession.setMetadata(mediaMetadata);
+        }
         synchronized (mediaMetadataCache) {
             mediaMetadataCache.setCurrent(mediaMetadata.getString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID), mediaMetadata);
         }
         this.mediaMetadata = mediaMetadata;
-        artBitmap = bitmap;
-        mediaSession.setMetadata(mediaMetadata);
+        artBitmap = bitmap != null && !bitmap.isRecycled() ? bitmap : null;
         PlaybackStateCompat state = mediaSession.getController().getPlaybackState();
         if (state != null) {
             Bundle extras = state.getExtras() == null ? new Bundle() : new Bundle(state.getExtras());

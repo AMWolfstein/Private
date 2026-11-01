@@ -27,25 +27,66 @@ extension _MusicPlayerHandlerDelegates2 on MusicPlayerHandler {
     String parentMediaId, [
     Map<String, dynamic>? options,
   ]) async {
-    if (parentMediaId == AudioService.browsableRootId ||
-        parentMediaId == AudioService.recentRootId) {
-      return List<MediaItem>.unmodifiable(_queueItems);
+    if (parentMediaId == AudioService.recentRootId) {
+      await _runtime.restoreSession();
+      final item = mediaItem.value;
+      return item == null ? const [] : [await _runtime.browser.present(item)];
     }
-    return const [];
+    return _runtime.browser.children(parentMediaId, options);
   }
 
   Future<MediaItem?> _getMediaItemImpl(String mediaId) async {
     final index = _media.indexWhere((m) => m.id == mediaId);
-    if (index < 0) return null;
-    return _queueItems[index];
+    return index < 0
+        ? _runtime.browser.item(mediaId)
+        : _runtime.browser.present(_queueItems[index]);
   }
 
   Future<void> _playFromMediaIdImpl(
     String mediaId, [
     Map<String, dynamic>? extras,
   ]) async {
-    final index = _media.indexWhere((m) => m.id == mediaId);
-    if (index >= 0) await _playIndex(index);
+    if (!MediaLibraryBrowser.isBrowserId(mediaId)) {
+      final index = _media.indexWhere((m) => m.id == mediaId);
+      if (index >= 0) await _playIndex(index);
+      return;
+    }
+    await _resolveBrowserQueue(
+      (current) => _runtime.browser.queueFor(mediaId, current: current),
+    );
+  }
+
+  Future<void> _playFromSearchImpl(
+    String query, [
+    Map<String, dynamic>? extras,
+  ]) async {
+    // Empty assistant requests resume a session; structured media focus still
+    // selects the named album/artist rather than ignoring that request.
+    if (MediaLibraryBrowser.searchText(query, extras).isEmpty) {
+      await _runtime.restoreSession();
+      if (_media.isNotEmpty) return play();
+    }
+    await _resolveBrowserQueue(
+      (current) => _runtime.browser.queueForSearch(query, extras, current),
+    );
+  }
+
+  Future<void> _resolveBrowserQueue(
+    Future<BrowserQueue?> Function(bool Function()) resolve,
+  ) async {
+    final request = ++_browserRequestGeneration;
+    final playback = _playRequestGeneration;
+    final revision = _sessionQueueRevision;
+    bool current() =>
+        !_disposed &&
+        request == _browserRequestGeneration &&
+        playback == _playRequestGeneration &&
+        revision == _sessionQueueRevision;
+    final result = await resolve(current);
+    if (result == null || result.items.isEmpty || !current()) return;
+    // No await between the final ownership check and publishing this queue.
+    _shuffle = result.shuffle;
+    await _setQueueAndPlayImpl(result.items, initialIndex: result.index);
   }
 
   Future<void> _playMediaItemImpl(MediaItem mediaItem) =>

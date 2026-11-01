@@ -65,6 +65,13 @@
 
         </activity>
 
+        <!-- Only validated cached cover images are exposed; no listings or writes. -->
+        <provider
+            android:name=".CoverContentProvider"
+            android:authorities="${applicationId}.covers"
+            android:exported="true"
+            android:grantUriPermissions="false" />
+
         <!-- Home screen player -->
         <receiver
             android:name=".PlayerWidgetProvider"

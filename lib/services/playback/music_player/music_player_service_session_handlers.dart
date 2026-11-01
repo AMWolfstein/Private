@@ -258,6 +258,7 @@ extension _MusicPlayerHandlerDelegates1 on MusicPlayerHandler {
   }
 
   Future<void> _playImpl() async {
+    _browserRequestGeneration++;
     _playbackAutomation.manualPlaybackRequested();
     final activeOperation = _activePlayOperation;
     if (activeOperation != null &&
@@ -304,6 +305,7 @@ extension _MusicPlayerHandlerDelegates1 on MusicPlayerHandler {
   }
 
   Future<void> _seekImpl(Duration position) async {
+    _browserRequestGeneration++;
     if (position <= const Duration(seconds: 1) &&
         playbackState.value.position >= const Duration(seconds: 30)) {
       _runtime.personalization.replayed();

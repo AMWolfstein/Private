@@ -1,5 +1,10 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:sistrum/services/playback/browser/background_favorites.dart';
+import 'package:sistrum/services/playback/browser/media_library_browser.dart';
+import 'package:sistrum/services/playback/browser/media_library_catalog.dart';
+import 'package:sistrum/services/library/collections/library_collections_database.dart';
+import 'package:sistrum/l10n/supported_locales.dart';
 
 import 'package:audio_service/audio_service.dart';
 import 'package:audio_session/audio_session.dart';
@@ -47,12 +52,15 @@ class PlaybackDependencies {
     this.autoMixStatus,
     this.createPersonalization = AutoplayPersonalization.new,
     AppStateDatabase? sessionDatabase,
+    LibraryCollectionsDatabase? collectionsDatabase,
+    this.mediaLibraryCatalog,
     required LibraryDatabase libraryDatabase,
     ListeningRecorder? recorder,
     SourceDeletionEvents? sourceDeletionEvents,
     Stream<double>? volumeChanges,
     bool? isAndroid,
-  }) : _sessionDatabase = sessionDatabase,
+  }) : _collectionsDatabase = collectionsDatabase,
+       _sessionDatabase = sessionDatabase,
        _libraryDatabase = libraryDatabase,
        _recorder = recorder,
        _sourceDeletionEvents = sourceDeletionEvents,
@@ -69,6 +77,10 @@ class PlaybackDependencies {
   initializeHandler;
   final AutoplayPersonalization Function() createPersonalization;
   final AppStateDatabase? _sessionDatabase;
+  final LibraryCollectionsDatabase? _collectionsDatabase;
+  final MediaLibraryCatalog? mediaLibraryCatalog;
+  LibraryCollectionsDatabase get collectionsDatabase =>
+      _collectionsDatabase ?? LibraryCollectionsDatabase.instance;
   final LibraryDatabase _libraryDatabase;
   final ListeningRecorder? _recorder;
   final SourceDeletionEvents? _sourceDeletionEvents;
@@ -103,6 +115,7 @@ class PlaybackDependencies {
     androidNotificationIcon: 'drawable/ic_stat_sistrum',
     androidNotificationOngoing: true,
     androidStopForegroundOnPause: true,
+    androidBrowsableRootExtras: MediaLibraryBrowser.rootExtras,
   );
 
   static Future<PlaybackHandler> _initializeAudioHandler(
@@ -129,12 +142,27 @@ class MusicPlayerRuntime {
   Future<PlaybackRestoreOutcome>? _restoreFuture;
   final _handlers = StreamController<PlaybackHandler?>.broadcast(sync: true);
   final _mutedPlaybackEvents = StreamController<void>.broadcast();
+  final _backgroundCollectionChanges = StreamController<int>.broadcast();
+  int _backgroundCollectionRevision = 0;
+  Stream<int> get backgroundCollectionChanges =>
+      _backgroundCollectionChanges.stream;
   bool _initializing = false;
   bool _disposed = false;
   Future<void>? _disposeFuture;
   String _unknownTitle = 'Unknown title', _unknownArtist = 'Unknown artist';
   PlaybackNotification _notification = const PlaybackNotification();
   Future<bool> Function(MediaItem)? _toggleFavorite;
+  StreamSubscription<MediaItem?>? _backgroundFavorites;
+
+  late final browser = MediaLibraryBrowser(
+    catalog:
+        dependencies.mediaLibraryCatalog ??
+        LocalMediaLibraryCatalog(
+          library: dependencies.libraryDatabase,
+          collections: dependencies.collectionsDatabase,
+        ),
+    strings: () => appLocalizationsFor(_settings.locale),
+  );
   Future<void> Function()? exclusiveAudioHook;
 
   AppSettings get settings => _settings;
@@ -164,17 +192,69 @@ class MusicPlayerRuntime {
     _unknownArtist = unknownArtist;
   }
 
+  void configureBackgroundNotification({
+    required PlaybackNotification presentation,
+    required BackgroundFavorites favorites,
+  }) {
+    if (_disposed || _toggleFavorite != null) return;
+    _notification = presentation;
+    _toggleFavorite = favorites.toggle;
+    _handler?.refreshNotificationControls();
+    (String, Object?)? shown;
+    var favoriteRequest = 0;
+    _backgroundFavorites = mediaItemEvents().listen((item) async {
+      final identity = item == null ? null : (item.id, item.extras?['source']);
+      if (item == null || shown == identity) return;
+      shown = identity;
+      final request = ++favoriteRequest;
+      try {
+        final loved = await favorites.isLoved(item);
+        if (!_disposed &&
+            _backgroundFavorites != null &&
+            shown == identity &&
+            request == favoriteRequest) {
+          updateFavorite(item, loved);
+        }
+      } catch (error) {
+        _log.w('Headless favorite state unavailable: $error');
+      }
+    });
+  }
+
   void configureNotification({
     required PlaybackNotification presentation,
     required Future<bool> Function(MediaItem) toggleFavorite,
   }) {
+    unawaited(_backgroundFavorites?.cancel());
+    _backgroundFavorites = null;
     _notification = presentation;
     _toggleFavorite = toggleFavorite;
     _handler?.refreshNotificationControls();
   }
 
-  Future<bool?> toggleFavorite(MediaItem item) async =>
-      _toggleFavorite?.call(item);
+  Future<bool?> toggleFavorite(MediaItem item) async {
+    final background = _backgroundFavorites != null;
+    final result = await _toggleFavorite?.call(item);
+    // A headless transaction can finish after the UI has taken over controls.
+    // Its committed collection must still reach that newly loaded UI state.
+    if (background && result != null && !_disposed) {
+      if (result) {
+        personalization.endorse(
+          AutoplayLearningTrack(
+            source: item.extras?['source']?.toString() ?? item.id,
+            title: item.title,
+            artist: item.artist ?? '',
+            album: item.album ?? '',
+            genre: item.genre ?? '',
+            duration: item.duration,
+          ),
+          AutoplayFeedbackKind.loved,
+        );
+      }
+      _backgroundCollectionChanges.add(++_backgroundCollectionRevision);
+    }
+    return result;
+  }
 
   void updateFavorite(MediaItem item, bool loved) {
     _notification = _notification.withFavorite(item, loved);
@@ -272,9 +352,14 @@ class MusicPlayerRuntime {
 
   Future<void> _dispose() async {
     _disposed = true;
+    final backgroundFavorites = _backgroundFavorites;
+    _backgroundFavorites = null;
     _toggleFavorite = null;
     exclusiveAudioHook = null;
-    await _handler?.dispose();
+    // Retire a pending handler synchronously, before subscription awaits.
+    final handlerDisposal = _handler?.dispose();
+    await backgroundFavorites?.cancel();
+    await handlerDisposal;
     try {
       await _initFuture;
     } catch (_) {
@@ -283,6 +368,7 @@ class MusicPlayerRuntime {
     await _personalization?.dispose();
     await _handlers.close();
     await _mutedPlaybackEvents.close();
+    await _backgroundCollectionChanges.close();
   }
 
   Stream<T> _events<T>(

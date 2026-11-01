@@ -62,7 +62,16 @@ class _StartupBenchmark {
   }
 }
 
-Future<void> _prepareAndroidInstallationState(SharedPreferences prefs) async {
+Future<void>? _androidInstallationPreparation;
+
+Future<void> _prepareAndroidInstallationState(SharedPreferences prefs) =>
+    _androidInstallationPreparation ??= _prepareAndroidInstallationStateOnce(
+      prefs,
+    );
+
+Future<void> _prepareAndroidInstallationStateOnce(
+  SharedPreferences prefs,
+) async {
   if (!Platform.isAndroid) return;
 
   try {

@@ -18,6 +18,7 @@ extension _MusicPlayerHandlerPlayback on MusicPlayerHandler {
     Duration startPosition = Duration.zero,
   }) async {
     if (_disposed || index < 0 || index >= _media.length) return;
+    _browserRequestGeneration++;
     _runtime.personalization.finish(
       skipped:
           userSkip &&
@@ -313,6 +314,7 @@ extension _MusicPlayerHandlerPlayback on MusicPlayerHandler {
   }
 
   Future<void> _pausePlayback() async {
+    _browserRequestGeneration++;
     _runtime.personalization.updatePlayback(
       source: mediaItem.value?.extras?['source'] as String?,
       playing: false,

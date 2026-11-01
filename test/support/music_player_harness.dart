@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:sistrum/services/playback/browser/media_library_catalog.dart';
 
 import 'package:audio_session/audio_session.dart';
 import 'package:flutter/foundation.dart';
@@ -247,6 +248,7 @@ MusicPlayerRuntime musicPlayerRuntimeFor({
   FakeAudioSession? session,
   FakeSessionStore? sessionStore,
   PlaybackRestore? restoreSession,
+  MediaLibraryCatalog? mediaLibraryCatalog,
   bool isAndroid = false,
   void Function(PlaybackHandler handler)? bindPlayerWidget,
   ValueNotifier<AutoMixStatus>? autoMixStatus,
@@ -259,6 +261,7 @@ MusicPlayerRuntime musicPlayerRuntimeFor({
       createHandler: createMusicPlayerHandler,
       restoreSession: restoreSession ?? restorePlaybackSession,
       libraryDatabase: LibraryDatabase.instance,
+      mediaLibraryCatalog: mediaLibraryCatalog,
       bindPlayerWidget: bindPlayerWidget,
       autoMixStatus: autoMixStatus,
       createPersonalization:

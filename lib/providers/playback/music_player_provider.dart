@@ -1,3 +1,5 @@
+export 'package:sistrum/services/playback/core/playable_media_factory.dart';
+import 'package:sistrum/services/playback/core/playable_media_factory.dart';
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/core/models/local_library_item.dart';
@@ -5,7 +7,7 @@ import 'package:sistrum/core/models/track.dart';
 import 'package:sistrum/core/models/unified_library_item.dart';
 import 'package:sistrum/services/library/database/library_database.dart';
 import 'package:sistrum/services/playback/music_player/music_player_service.dart';
-import 'package:sistrum/utils/logging/logger.dart';
+import 'package:sistrum/services/playback/browser/background_favorites.dart';
 import 'package:sistrum/services/playback/music_player/music_player_runtime.dart';
 import 'package:sistrum/services/playback/core/playback_handler.dart';
 
@@ -37,47 +39,17 @@ class CurrentMediaItemNotifier extends StreamNotifier<MediaItem?> {
   }
 }
 
-final _log = AppLogger('PlayerCollectionTrack');
-
 /// Use the Library's identity for favorites, including restored queues and
 /// playback started from a file path rather than a Library row ID. A track
 /// missing from the library falls back to the media item's own fields; that is
 /// logged so favorite and identity problems can be traced to it.
 final playerCollectionTrackProvider = FutureProvider.autoDispose
     .family<Track, MediaItem>((ref, item) async {
-      final source = item.extras?['source']?.toString() ?? '';
       final database = ref
           .watch(musicPlayerRuntimeProvider)
           .dependencies
           .libraryDatabase;
-      final row = await database.getById(item.id);
-      if (row != null) {
-        return UnifiedLibraryItem.fromLocalLibrary(
-          LocalLibraryItem.fromJson(row),
-        ).toTrack();
-      }
-      if (source.isNotEmpty) {
-        final matches = await database.findByTrackAndArtist(
-          item.title,
-          item.artist ?? '',
-        );
-        for (final row in matches) {
-          final local = LocalLibraryItem.fromJson(row);
-          if (local.filePath == source) {
-            return UnifiedLibraryItem.fromLocalLibrary(local).toTrack();
-          }
-        }
-      }
-      _log.d('No library row for ${item.id}; using the playback item fields');
-      return Track(
-        id: item.id,
-        name: item.title,
-        artistName: item.artist ?? '',
-        albumName: item.album ?? '',
-        coverUrl: item.artUri?.toString(),
-        duration: item.duration?.inSeconds ?? 0,
-        source: 'local',
-      );
+      return collectionTrackForMedia(item, database);
     });
 
 final playbackStateProvider = StreamProvider<PlaybackState>((ref) {
@@ -253,29 +225,3 @@ final musicPlayerControllerProvider = Provider<MusicPlayerController>(
   (ref) =>
       MusicPlayerController(runtime: ref.watch(musicPlayerRuntimeProvider)),
 );
-
-PlayableMedia playableFromLocal(LocalLibraryItem item) {
-  String? art;
-  final cover = item.coverPath;
-  // A legacy remote URL is not artwork here: keep it out of playback state.
-  if (cover != null && cover.trim().isNotEmpty && !cover.startsWith('http')) {
-    art = cover.startsWith('content://') ? cover : Uri.file(cover).toString();
-  }
-  return PlayableMedia(
-    id: item.id,
-    source: item.filePath,
-    title: item.trackName,
-    artist: item.artistName,
-    album: item.albumName,
-    artUri: art,
-    duration: (item.duration != null && item.duration! > 0)
-        ? Duration(seconds: item.duration!)
-        : null,
-    bitDepth: item.bitDepth,
-    sampleRate: item.sampleRate,
-    bitrate: item.bitrate,
-    format: item.format,
-    explicit: item.explicit,
-    genre: item.genre,
-  );
-}

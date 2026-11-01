@@ -1,3 +1,5 @@
+import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/foundation.dart';
 import 'package:sistrum/core/models/equalizer_settings.dart';
 
@@ -18,4 +20,25 @@ void reportEqualizerError(String playerId, String? error) {
     _errors[playerId] = error;
   }
   playbackEqualizerError.value = _errors.isEmpty ? null : _errors.values.first;
+}
+
+const kPlaybackEqualizerStorageKey = 'playback_equalizer_v1';
+
+EqualizerSettings decodePlaybackEqualizerSettings(Map<String, dynamic> data) =>
+    EqualizerSettings.fromJson(
+      Map<String, dynamic>.from(data['settings'] as Map),
+    );
+
+/// Startup reads the same settings before a UI provider exists. Invalid saved
+/// data is a neutral EQ; no headless read rewrites user preferences.
+EqualizerSettings loadBootstrapEqualizer(SharedPreferences prefs) {
+  try {
+    final raw = prefs.getString(kPlaybackEqualizerStorageKey);
+    if (raw == null) return const EqualizerSettings();
+    return decodePlaybackEqualizerSettings(
+      Map<String, dynamic>.from(jsonDecode(raw) as Map),
+    );
+  } catch (_) {
+    return const EqualizerSettings();
+  }
 }

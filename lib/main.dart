@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'package:sistrum/services/playback/audio/playback_equalizer.dart';
+import 'package:sistrum/services/playback/browser/background_playback.dart';
 import 'dart:convert';
 import 'dart:io';
 import 'package:crypto/crypto.dart';
@@ -49,12 +51,18 @@ void main() {
       if (Platform.isAndroid) {
         // A media service can start the shared engine before MainActivity
         // registers the local backend and platform channels.
+        if (!isActivityAttached(binding)) {
+          unawaited(_startBackgroundPlayback());
+        }
         await waitForActivityAttachment(binding);
       }
       // PERF-604: the orientation lock is independent of the prefs and
       // installation steps; run it in parallel and await it before runApp.
       final orientation = setAppOrientation();
       LicenseRegistry.addLicense(() async* {
+        yield LicenseEntryWithLineBreaks(const [
+          'Mornye Android Auto integration',
+        ], await rootBundle.loadString('assets/licenses/android_auto.txt'));
         yield LicenseEntryWithLineBreaks(
           const ['Mornye local Autoplay personalization'],
           await rootBundle.loadString('assets/licenses/autoplay_learning.txt'),
@@ -112,7 +120,18 @@ void main() {
       final prefs = await SharedPreferences.getInstance();
       await _prepareAndroidInstallationState(prefs);
       final bootstrapSettings = loadBootstrapSettings(prefs);
+      playbackEqualizer.value = loadBootstrapEqualizer(prefs);
       musicPlayerRuntime.configure(bootstrapSettings);
+      if (Platform.isAndroid) {
+        unawaited(
+          initializeMediaBrowser(musicPlayerRuntime).catchError((
+            Object error,
+            StackTrace stack,
+          ) {
+            _log.e('Media browser initialization failed', error, stack);
+          }),
+        );
+      }
       final bootstrapTheme = loadBootstrapThemeSettings(prefs);
       final runtimeProfile = await _resolveRuntimeProfile(prefs);
       _configureImageCache(runtimeProfile);
@@ -231,5 +250,19 @@ final class NativeInstallation {
     if (!Platform.isAndroid) return const InstallationState.unsupported();
     final result = await nativeInvokeMap('ensureInstallMarker');
     return InstallationState.fromMap(result);
+  }
+}
+
+Future<void> _startBackgroundPlayback() async {
+  try {
+    final prefs = await SharedPreferences.getInstance();
+    if (isActivityAttached(WidgetsBinding.instance)) return;
+    await _prepareAndroidInstallationState(prefs);
+    if (isActivityAttached(WidgetsBinding.instance)) return;
+    playbackEqualizer.value = loadBootstrapEqualizer(prefs);
+    musicPlayerRuntime.configure(loadBootstrapSettings(prefs));
+    await initializeMediaBrowser(musicPlayerRuntime);
+  } catch (error, stack) {
+    _log.e('Headless playback initialization failed', error, stack);
   }
 }

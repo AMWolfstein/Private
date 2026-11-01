@@ -119,6 +119,7 @@ flutter:
     - assets/licenses/ffmpeg.txt
     - assets/licenses/lgpl-3.0.txt
     - assets/licenses/autoplay_learning.txt
+    - assets/licenses/android_auto.txt
     - assets/licenses/native_palette.txt
     - assets/licenses/native_data_jobs.txt
 

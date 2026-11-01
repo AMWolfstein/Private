@@ -2,6 +2,10 @@ import 'dart:async';
 
 import 'package:flutter/widgets.dart';
 
+bool isActivityAttached(WidgetsBinding binding) =>
+    binding.lifecycleState == AppLifecycleState.resumed ||
+    binding.lifecycleState == AppLifecycleState.inactive;
+
 /// Completes once an Activity is attached to the Flutter engine.
 ///
 /// A media service (for example media resumption after boot) can start the
