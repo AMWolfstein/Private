@@ -44,8 +44,8 @@
   "appearanceGlassClarity": "Прозрачность стекла",
   "appearanceGlassOutlines": "Контуры стекла",
   "appearanceGlassOutlinesSubtitle": "Показывать светлую кромку вокруг стекла Sistrum. Выключение не меняет само стекло.",
-  "appearanceGlassClaritySubtitle": "Adjust transparency in Sistrum menus and navigation. Text contrast is preserved.",
-  "appearanceGlassTinted": "Tinted",
+  "appearanceGlassClaritySubtitle": "Настройте прозрачность в меню и навигации Sistrum. Контраст текста сохраняется.",
+  "appearanceGlassTinted": "С тонировкой",
   "appearanceGlassClear": "Очистить",
   "appearanceGlassClearPerformance": "Очень прозрачное стекло может расходовать больше энергии и работать менее плавно на старых устройствах. При необходимости уменьшите прозрачность.",
   "appearanceGlassQuality": "Качество стекла",
@@ -612,8 +612,8 @@
   "@sectionLyrics": {
     "description": "Settings section header"
   },
-  "lyricsKeepScreenOn": "Keep screen on while viewing lyrics",
-  "lyricsKeepScreenOnSubtitle": "Prevent screen timeout while lyrics are open, including when playback is paused.",
+  "lyricsKeepScreenOn": "Не выключать экран во время просмотра текста",
+  "lyricsKeepScreenOnSubtitle": "Не давать экрану гаснуть, пока открыт текст песни, в том числе когда воспроизведение на паузе.",
   "sectionColor": "Цвет",
   "@sectionColor": {
     "description": "Settings section header"
@@ -1669,7 +1669,7 @@
   "@audioAnalysisSampleRate": {
     "description": "Sample rate metric label"
   },
-  "audioAnalysisCodec": "Codec",
+  "audioAnalysisCodec": "Кодек",
   "@audioAnalysisCodec": {
     "description": "Audio codec metric label"
   },
@@ -1693,7 +1693,7 @@
   "@audioAnalysisDuration": {
     "description": "Duration metric label"
   },
-  "audioAnalysisNyquist": "Nyquist",
+  "audioAnalysisNyquist": "Найквист",
   "@audioAnalysisNyquist": {
     "description": "Nyquist frequency metric label"
   },
@@ -1831,7 +1831,7 @@
   "@notifLibraryScanPaused": {
     "description": "Notification title when the user pauses a library scan"
   },
-  "notifLibraryScanPausedBody": "{count} files scanned. Resume in Local Library settings to continue from here.",
+  "notifLibraryScanPausedBody": "Просканировано файлов: {count}. Чтобы продолжить отсюда, возобновите сканирование в настройках локальной медиатеки.",
   "@notifLibraryScanPausedBody": {
     "description": "Notification body for a paused library scan - files scanned so far",
     "placeholders": {
@@ -2352,7 +2352,7 @@
   "profilePhotoError": "Выберите изображение размером менее 20 МБ.",
   "profileSaveError": "Не удалось сохранить ваш профиль. Пожалуйста, попробуйте еще раз.",
   "motionArtwork": "Анимированные обложки",
-  "listeningStats": "Статистика прослушивания",
+  "listeningStats": "Статистика",
   "listeningStatsDescription": "Хранится только на этом устройстве, начиная с текущего момента. Записывается только встроенный плеер; паузы, буферизация и перемотка не добавляют время. Воспроизведение засчитывается после 30 секунд.",
   "listeningStatsEmpty": "Слушайте музыку во встроенном плеере, чтобы начать свою сводку. Прошлое прослушивание восстановить нельзя.",
   "listeningStatsDays": "{days} дн.",
@@ -2473,7 +2473,7 @@
   "@trackCopyFilePath": {
     "description": "Action - copy file path"
   },
-  "trackDeleteConfirmMessage": "This permanently deletes the local audio file and removes it from your library.",
+  "trackDeleteConfirmMessage": "Это навсегда удалит локальный аудиофайл и уберёт его из медиатеки.",
   "trackDeleteConfirmTitle": "Удалить с устройства?",
   "@trackDeleteConfirmTitle": {
     "description": "Delete confirmation title"
@@ -2543,7 +2543,7 @@
   "audioInfoTempo": "Темп",
   "audioInfoResampling": "Пересэмплирование",
   "audioInfoResamplingNone": "Нет, частоты совпадают",
-  "audioInfoBitPerfect": "Bit-perfect",
+  "audioInfoBitPerfect": "Бит-в-бит",
   "audioInfoBitPerfectActive": "Да, сэмплы без изменений",
   "audioInfoBitPerfectNo": "Нет, микшируется системой",
   "audioInfoDevice": "Устройство",
@@ -2692,12 +2692,53 @@
   "updateWhatsNew": "Что нового",
   "updateDownloadInstall": "Скачать и установить",
   "updateDontRemind": "Не напоминать",
-  "updateViewRelease": "View Release",
+  "updateViewRelease": "Открыть релиз",
   "updateSeeReleaseNotes": "Смотрите примечания к релизу для подробностей.",
   "notifDownloadingUpdate": "Скачивание Sistrum v{version}",
   "notifUpdateProgress": "{received} / {total} МБ • {percentage}%",
   "notifUpdateReady": "Обновление готово",
   "notifUpdateReadyBody": "Sistrum v{version} скачана. Нажмите, чтобы установить.",
   "notifUpdateFailed": "Ошибка обновления",
-  "notifUpdateFailedBody": "Не удалось скачать обновление. Попробуйте позже."
+  "notifUpdateFailedBody": "Не удалось скачать обновление. Попробуйте позже.",
+  "metadataSeparatorsDescription": "Выберите разделители, которые разбивают имена исполнителей и жанров в вашей медиатеке. Имена из списка «не разделять» никогда не разбиваются.",
+  "tagSeparatorsArtists": "Исполнители",
+  "tagSeparatorsArtistsFields": "Исполнитель, Исполнитель альбома, Композитор",
+  "tagSeparatorsGenre": "Жанр",
+  "tagSeparatorsAll": "Все",
+  "tagSeparatorsAdd": "Добавить разделитель",
+  "tagSeparatorsAddHint": "Разделитель",
+  "tagSeparatorsDuplicate": "Этот разделитель уже есть в списке.",
+  "tagSeparatorsRemoveTitle": "Удалить разделитель?",
+  "tagSeparatorsRemoveMessage": "Он будет удалён из этого раздела. Уже сохранённые теги не изменятся.",
+  "tagKeepTogether": "Не разделять",
+  "tagKeepTogetherDescription": "Имена из этого списка никогда не разбиваются, даже если содержат разделитель.",
+  "tagKeepTogetherHint": "Имя, например Tyler, The Creator",
+  "tagKeepTogetherAdd": "Добавить имя",
+  "tagKeepTogetherRemoveTooltip": "Удалить имя",
+  "artistAppearsOn": "Появляется в",
+  "tagKeepTogetherDuplicate": "Это имя уже есть в списке.",
+  "setupChooseMusicFolder": "Выбрать папку с музыкой",
+  "setupLibraryFolderDescription": "Выберите папку с вашей музыкой. Sistrum читает её через ограниченный доступ к папке, поэтому разрешение на все файлы не требуется.",
+  "searchAlbumArtists": "Исполнители альбома",
+  "logFilterFull": "Полный",
+  "tutorialGuideTitle": "Начало работы",
+  "tutorialGuideDesc": "Краткие советы по поиску, воспроизведению и упорядочиванию локальной музыки.",
+  "backupUnsupportedVersion": "Эта резервная копия создана в другой версии Sistrum",
+  "backupReadFailed": "Не удалось прочитать файл резервной копии. Проверьте, что он всё ещё доступен",
+  "snackbarMetadataSavedIndexStale": "Метаданные сохранены, но медиатеку не удалось обновить",
+  "actionGoToComposer": "Перейти к композитору",
+  "autoplayResetLearningConfirmMessage": "Автовоспроизведение забудет всё, что узнало из вашего прослушивания и пропусков. Это нельзя отменить.",
+  "motionArtworkSubtitle": "Медленно перемещать обложки альбомов и обложку плеера",
+  "lyricsAboveSeekBar": "Текст над полосой прокрутки",
+  "lyricsAboveSeekBarSubtitle": "Показывать над полосой прогресса в плеере строку, которая сейчас поётся",
+  "updateDownloadIntegrityFailed": "Скачанное обновление не прошло проверку. Попробуйте позже.",
+  "updateDownloadNetworkFailed": "Не удалось скачать обновление. Проверьте подключение и попробуйте снова.",
+  "updateInstallFailed": "Не удалось открыть установщик обновления.",
+  "settingsUpdates": "Обновления",
+  "settingsUpdatesSubtitle": "Проверять новые версии",
+  "updateCheckNow": "Проверить сейчас",
+  "updateChecking": "Проверка…",
+  "updateUpToDate": "У вас последняя версия",
+  "updateCheckFailed": "Не удалось проверить обновления",
+  "retry": "Повторить"
 }

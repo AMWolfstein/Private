@@ -51,7 +51,7 @@
   "appearanceGlassQuality": "Kualitas kaca",
   "appearanceGlassQualityAuto": "Otomatis",
   "appearanceGlassQualityLite": "Lite",
-  "appearanceGlassQualityFull": "Full",
+  "appearanceGlassQualityFull": "Penuh",
   "appearanceGlassQualityOff": "Mati",
   "appearanceGlassQualitySubtitle": "Otomatis memilih Full, Lite, atau Mati untuk perangkat ini. Lite melewatkan refraksi untuk menghemat daya.",
   "appearanceGlassLevelFrosted": "Buram",
@@ -1002,7 +1002,7 @@
   "@libraryFilterTitle": {
     "description": "Filter bottom sheet title"
   },
-  "libraryFilterReset": "Reset",
+  "libraryFilterReset": "Atur ulang",
   "@libraryFilterReset": {
     "description": "Reset all filters button"
   },
@@ -1278,7 +1278,7 @@
   "@collectionFavoriteArtists": {
     "description": "Custom folder for favorite artists"
   },
-  "collectionPlaylist": "Playlist",
+  "collectionPlaylist": "Daftar putar",
   "@collectionPlaylist": {
     "description": "Single playlist label"
   },
@@ -1672,7 +1672,7 @@
   "@audioAnalysisAnalyzing": {
     "description": "Loading text while analyzing audio"
   },
-  "audioAnalysisSampleRate": "Sample Rate",
+  "audioAnalysisSampleRate": "Sample rate",
   "@audioAnalysisSampleRate": {
     "description": "Sample rate metric label"
   },
@@ -1680,7 +1680,7 @@
   "@audioAnalysisCodec": {
     "description": "Audio codec metric label"
   },
-  "audioAnalysisContainer": "Container",
+  "audioAnalysisContainer": "Kontainer",
   "@audioAnalysisContainer": {
     "description": "Audio container metric label"
   },
@@ -1688,7 +1688,7 @@
   "@audioAnalysisDecodedFormat": {
     "description": "Decoded sample format metric label"
   },
-  "audioAnalysisBitDepth": "Bit Depth",
+  "audioAnalysisBitDepth": "Kedalaman bit",
   "@audioAnalysisBitDepth": {
     "description": "Bit depth metric label"
   },
@@ -1712,7 +1712,7 @@
   "@audioAnalysisDynamicRange": {
     "description": "Dynamic range metric label"
   },
-  "audioAnalysisPeak": "Peak",
+  "audioAnalysisPeak": "Puncak",
   "@audioAnalysisPeak": {
     "description": "Peak amplitude metric label"
   },
@@ -2385,7 +2385,7 @@
   "profilePhotoError": "Pilih foto yang di bawah 20MB.",
   "profileSaveError": "Tidak dapat menyimpan profil Anda. Coba lagi.",
   "motionArtwork": "Artwork bergerak",
-  "listeningStats": "Statistik mendengarkan",
+  "listeningStats": "Wawasan",
   "listeningStatsDescription": "Disimpan hanya di perangkat ini, mulai sekarang. Hanya mencatat player bawaan; pause, buffering, dan seek tidak menambah waktu dengar. Pemutaran dihitung setelah 30 detik.",
   "listeningStatsEmpty": "Putar musik dengan player bawaan untuk memulai ringkasan mendengarkan. Riwayat sebelumnya tidak dapat dipulihkan.",
   "listeningStatsDays": "{days} hari",
@@ -2506,7 +2506,7 @@
   "@trackCopyFilePath": {
     "description": "Action - copy file path"
   },
-  "trackDeleteConfirmMessage": "This permanently deletes the local audio file and removes it from your library.",
+  "trackDeleteConfirmMessage": "Ini menghapus file audio lokal secara permanen dan menghapusnya dari pustaka Anda.",
   "trackDeleteConfirmTitle": "Hapus dari perangkat?",
   "@trackDeleteConfirmTitle": {
     "description": "Delete confirmation title"
@@ -2611,7 +2611,7 @@
   "musicHapticsDescription": "Bergetar mengikuti ketukan lagu unduhan dan lokal",
   "musicHapticsSensitivity": "Sensitivitas",
   "musicHapticsStrength": "Kekuatan",
-  "listeningRewind": "Rewind",
+  "listeningRewind": "Mundur",
   "listeningRewindDescription": "Nikmati kembali sorotan beberapa minggu dan bulan terakhir Anda",
   "listeningRewindChoosePeriod": "Pilih periode",
   "listeningRewindLastWeeks": "{weeks} minggu terakhir",
@@ -2696,7 +2696,7 @@
   "equalizerPresetName": "Nama preset",
   "equalizerImport": "Impor preset",
   "equalizerExport": "Bagikan preset",
-  "equalizerResetTitle": "Reset equalizer?",
+  "equalizerResetTitle": "Atur ulang equalizer?",
   "equalizerResetDescription": "Kembalikan kurva datar dan pengaturan nada serta dinamika default. Preset yang disimpan tetap dipertahankan.",
   "equalizerBypass": "Bit-perfect, USB langsung, dan output Hi-Res eksklusif melewati EQ. Nonaktifkan output bit-perfect untuk memakai EQ.",
   "equalizerEffectivePreamp": "Gain input setelah headroom",
@@ -2732,5 +2732,46 @@
   "notifUpdateReady": "Update Siap",
   "notifUpdateReadyBody": "Sistrum v{version} didownload. Ketuk untuk instal.",
   "notifUpdateFailed": "Update Gagal",
-  "notifUpdateFailedBody": "Tidak dapat mendownload update. Coba lagi nanti."
+  "notifUpdateFailedBody": "Tidak dapat mendownload update. Coba lagi nanti.",
+  "metadataSeparatorsDescription": "Pilih pemisah yang memisahkan nama artis dan genre di pustaka Anda. Nama yang disimpan bersama tidak pernah dipisah.",
+  "tagSeparatorsArtists": "Artis",
+  "tagSeparatorsArtistsFields": "Artis, Artis Album, Komposer",
+  "tagSeparatorsGenre": "Genre",
+  "tagSeparatorsAll": "Semua",
+  "tagSeparatorsAdd": "Tambah pemisah",
+  "tagSeparatorsAddHint": "Pemisah",
+  "tagSeparatorsDuplicate": "Pemisah ini sudah ada di daftar.",
+  "tagSeparatorsRemoveTitle": "Hapus pemisah?",
+  "tagSeparatorsRemoveMessage": "Pemisah akan dihapus dari bagian ini. Tag yang sudah disimpan tidak berubah.",
+  "tagKeepTogether": "Simpan bersama",
+  "tagKeepTogetherDescription": "Nama yang tercantum di sini tidak pernah dipisah, meskipun mengandung pemisah.",
+  "tagKeepTogetherHint": "Nama, misalnya Tyler, The Creator",
+  "tagKeepTogetherAdd": "Tambah nama",
+  "tagKeepTogetherRemoveTooltip": "Hapus nama",
+  "artistAppearsOn": "Tampil di",
+  "tagKeepTogetherDuplicate": "Nama ini sudah ada di daftar.",
+  "setupChooseMusicFolder": "Pilih Folder Musik",
+  "setupLibraryFolderDescription": "Pilih folder yang berisi musik Anda. Sistrum membacanya melalui akses folder terbatas, jadi izin untuk semua file tidak diperlukan.",
+  "searchAlbumArtists": "Artis Album",
+  "logFilterFull": "Lengkap",
+  "tutorialGuideTitle": "Memulai",
+  "tutorialGuideDesc": "Tips singkat untuk mencari, memutar, dan mengatur musik lokal Anda.",
+  "backupUnsupportedVersion": "Cadangan ini dibuat dengan versi Sistrum yang berbeda",
+  "backupReadFailed": "File cadangan tidak dapat dibaca. Pastikan file masih tersedia",
+  "snackbarMetadataSavedIndexStale": "Metadata disimpan, tetapi pustaka tidak dapat diperbarui",
+  "actionGoToComposer": "Buka Komposer",
+  "autoplayResetLearningConfirm": "Atur ulang",
+  "motionArtworkSubtitle": "Gerakkan sampul album dan sampul pemutar perlahan",
+  "lyricsAboveSeekBar": "Lirik di atas bilah progres",
+  "lyricsAboveSeekBarSubtitle": "Tampilkan baris yang sedang dinyanyikan di atas bilah progres pemutar",
+  "updateDownloadIntegrityFailed": "Pembaruan yang diunduh gagal diverifikasi. Coba lagi nanti.",
+  "updateDownloadNetworkFailed": "Pembaruan tidak dapat diunduh. Periksa koneksi Anda dan coba lagi.",
+  "updateInstallFailed": "Tidak dapat membuka penginstal pembaruan.",
+  "settingsUpdates": "Pembaruan",
+  "settingsUpdatesSubtitle": "Periksa versi baru",
+  "updateCheckNow": "Periksa sekarang",
+  "updateChecking": "Memeriksa…",
+  "updateUpToDate": "Anda menggunakan versi terbaru",
+  "updateCheckFailed": "Tidak dapat memeriksa pembaruan",
+  "retry": "Coba lagi"
 }

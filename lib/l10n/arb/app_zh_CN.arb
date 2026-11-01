@@ -11,7 +11,7 @@
   "usbBitPerfectDescription": "在兼容输出上保持源精度。选择直接USB或AAudio独占；否则Android USB输出需要Android 14及以上。从下一曲目生效，不使用AutoMix或标准化。系统音量可能无法控制直接USB。",
   "usbHardwareVolume": "DAC硬件音量",
   "usbVolumeWarningTitle": "检查你的聆听音量",
-  "usbVolumeWarning": "Direct USB audio can be much louder than normal playback, and phone volume buttons may not control it. Lower your DAC or amplifier volume before starting. When supported, Sistrum sets the DAC to at most −40 dB on connection; this does not guarantee a safe listening level on every amplifier or headphone.",
+  "usbVolumeWarning": "直接 USB 音频可能比正常播放响得多，手机的音量按钮也可能无法控制它。开始前请先降低 DAC 或功放的音量。支持时，Sistrum 会在连接时把 DAC 设为最多 −40 dB；但这不能保证每台功放或耳机都达到安全的聆听音量。",
   "usbVolumeAccept": "我知道了",
   "usbVolumeUnavailable": "播放已暂停，因为此DAC没有经过验证的硬件音量控制。降低DAC或放大器音量，然后在需要时启用固定音量输出并重新选择曲目。",
   "usbFixedVolume": "允许固定音量USB输出",
@@ -44,7 +44,7 @@
   "appearanceGlassClarity": "毛玻璃清晰度",
   "appearanceGlassOutlines": "玻璃描边",
   "appearanceGlassOutlinesSubtitle": "在 Sistrum 玻璃周围显示浅色边框。关闭后，玻璃本身保持不变。",
-  "appearanceGlassClaritySubtitle": "Adjust transparency in Sistrum menus and navigation. Text contrast is preserved.",
+  "appearanceGlassClaritySubtitle": "调整 Sistrum 菜单和导航的透明度。文字对比度会保持不变。",
   "appearanceGlassTinted": "着色",
   "appearanceGlassClear": "清晰",
   "appearanceGlassClearPerformance": "非常通透的玻璃可能更耗电，在较旧的设备上也可能不够流畅。如有需要，请降低清晰度。",
@@ -792,7 +792,7 @@
   "@libraryRemoveFolder": {
     "description": "Action to remove one indexed library source"
   },
-  "libraryRemoveFolderMessage": "Remove this folder and its indexed tracks from Sistrum? Audio files on the storage will not be deleted.",
+  "libraryRemoveFolderMessage": "要从 Sistrum 中移除此文件夹及其已索引的曲目吗？存储中的音频文件不会被删除。",
   "@libraryRemoveFolderMessage": {
     "description": "Confirmation shown before removing a library source"
   },
@@ -983,7 +983,7 @@
   "@libraryStorageAccessRequired": {
     "description": "Dialog title for storage permission"
   },
-  "libraryStorageAccessMessage": "Sistrum needs storage access to scan your music library. Please grant permission in settings.",
+  "libraryStorageAccessMessage": "Sistrum 需要存储访问权限才能扫描你的音乐库。请在设置中授予权限。",
   "@libraryStorageAccessMessage": {
     "description": "Dialog message for storage permission"
   },
@@ -1122,7 +1122,7 @@
   },
   "tutorialSettingsDesc": "调整播放、资料库扫描、歌词、Sistrum 外观和本地存储。",
   "tutorialSettingsTip1": "管理音乐文件夹和本地文件访问",
-  "tutorialSettingsTip2": "Adjust your local library, playback, and appearance preferences.",
+  "tutorialSettingsTip2": "调整本地音乐库、播放和外观偏好设置。",
   "@tutorialSettingsTip2": {
     "description": "Tutorial settings tip 2"
   },
@@ -1255,7 +1255,7 @@
   "@trackEditMetadata": {
     "description": "Menu action - edit embedded metadata"
   },
-  "audioBitrate": "Bitrate",
+  "audioBitrate": "比特率",
   "@audioBitrate": {
     "description": "Label for bitrate selection"
   },
@@ -1335,7 +1335,7 @@
     "description": "Snackbar after renaming playlist"
   },
   "collectionRemovedTracks": "{count, plural, =1{已移除 1 首曲目} other{已移除 {count} 首曲目}}",
-  "collectionLovedEmptyTitle": "No loved songs yet",
+  "collectionLovedEmptyTitle": "还没有喜欢的歌曲",
   "@collectionLovedEmptyTitle": {
     "description": "Loved empty state title"
   },
@@ -1456,7 +1456,7 @@
   "@backupRestoreFailed": {
     "description": "Snackbar when restore fails"
   },
-  "backupInvalidFile": "This file is not a valid Sistrum backup",
+  "backupInvalidFile": "此文件不是有效的 Sistrum 备份",
   "@backupInvalidFile": {
     "description": "Snackbar when the chosen file is not a valid backup"
   },
@@ -1470,7 +1470,7 @@
   },
   "backupSettingsOnly": "仅设置",
   "backupSelectCollections": "乐库收藏",
-  "backupSelectCollectionsDescription": "Liked tracks, favorite artists, playlists and playlist covers.",
+  "backupSelectCollectionsDescription": "喜欢的曲目、收藏的艺术家、播放列表和播放列表封面。",
   "backupSelectedExportDescription": "将选定的类别保存到备份文件。不包含音频文件。",
   "backupSelectAtLeastOne": "至少选择一个类别以创建备份。",
   "backupSelectedRestoreMessage": "仅恢复下面列出的类别。备份中不包含的类别不会被更改。",
@@ -1969,7 +1969,7 @@
   "@editMetadataFieldExplicitHint": {
     "description": "Description for the explicit content metadata switch"
   },
-  "metadataExplicitValue": "Explicit",
+  "metadataExplicitValue": "显式内容",
   "@metadataExplicitValue": {
     "description": "Displayed value when a track is marked explicit"
   },
@@ -2318,14 +2318,14 @@
   "libraryFilterIncompleteAlbums": "不完整的专辑",
   "libraryAlbumCompletenessUnknown": "专辑完整度未知",
   "libraryAlbumMissingTracks": "{present}/{expected} 首曲目 · 缺失 {missing} 首",
-  "appSearch": "Search",
-  "appContinuePlaying": "Continue Playing",
-  "appFavorite": "Favorite",
+  "appSearch": "搜索",
+  "appContinuePlaying": "继续播放",
+  "appFavorite": "收藏",
   "@appFavorite": {
     "description": "Compact context menu action that adds a track to Loved"
   },
-  "appGoToArtist": "Go to Artist",
-  "appFavorited": "Favorited",
+  "appGoToArtist": "前往艺术家",
+  "appFavorited": "已收藏",
   "@appFavorited": {
     "description": "Selected state of the compact favorite action"
   },
@@ -2353,7 +2353,7 @@
   "profilePhotoError": "请选择小于20MB的有效图片。",
   "profileSaveError": "无法保存你的个人资料，请重试。",
   "motionArtwork": "动态封面",
-  "listeningStats": "收听统计",
+  "listeningStats": "洞察",
   "listeningStatsDescription": "从现在开始仅存储在本设备上。仅记录内置播放器的播放；暂停、缓冲和拖动进度不计入收听时长。播放满 30 秒即计为一次播放。",
   "listeningStatsEmpty": "使用内置播放器播放音乐，即可开始你的收听回顾。之前的收听记录无法恢复。",
   "listeningStatsDays": "{days} 天",
@@ -2474,7 +2474,7 @@
   "@trackCopyFilePath": {
     "description": "Action - copy file path"
   },
-  "trackDeleteConfirmMessage": "This permanently deletes the local audio file and removes it from your library.",
+  "trackDeleteConfirmMessage": "这将永久删除本地音频文件，并将其从你的音乐库中移除。",
   "trackDeleteConfirmTitle": "从设备移除？",
   "@trackDeleteConfirmTitle": {
     "description": "Delete confirmation title"
@@ -2693,12 +2693,52 @@
   "updateWhatsNew": "新功能",
   "updateDownloadInstall": "下载并安装",
   "updateDontRemind": "不再提醒",
-  "updateViewRelease": "View Release",
+  "updateViewRelease": "查看发行版",
   "updateSeeReleaseNotes": "查看发行说明了解详情。",
-  "notifDownloadingUpdate": "Downloading Sistrum v{version}",
+  "notifDownloadingUpdate": "正在下载 Sistrum v{version}",
   "notifUpdateProgress": "{received} / {total} MB · {percentage}%",
   "notifUpdateReady": "更新就绪",
-  "notifUpdateReadyBody": "Sistrum v{version} downloaded. Tap to install.",
+  "notifUpdateReadyBody": "Sistrum v{version} 已下载。点按即可安装。",
   "notifUpdateFailed": "更新失败",
-  "notifUpdateFailedBody": "无法下载更新，请稍后重试。"
+  "notifUpdateFailedBody": "无法下载更新，请稍后重试。",
+  "metadataSeparatorsDescription": "选择用于拆分资料库中艺术家和流派名称的分隔符。保持在一起的名称永远不会被拆分。",
+  "tagSeparatorsArtists": "艺术家",
+  "tagSeparatorsArtistsFields": "艺术家、专辑艺术家、作曲者",
+  "tagSeparatorsGenre": "流派",
+  "tagSeparatorsAll": "全部",
+  "tagSeparatorsAdd": "添加分隔符",
+  "tagSeparatorsAddHint": "分隔符",
+  "tagSeparatorsDuplicate": "该分隔符已在列表中。",
+  "tagSeparatorsRemoveTitle": "移除分隔符？",
+  "tagSeparatorsRemoveMessage": "将从此部分移除。已保存的标签不会更改。",
+  "tagKeepTogether": "保持在一起",
+  "tagKeepTogetherDescription": "此处列出的名称即使包含分隔符也永远不会被拆分。",
+  "tagKeepTogetherHint": "名称，例如 Tyler, The Creator",
+  "tagKeepTogetherAdd": "添加名称",
+  "tagKeepTogetherRemoveTooltip": "移除名称",
+  "artistAppearsOn": "出现于",
+  "tagKeepTogetherDuplicate": "该名称已在列表中。",
+  "setupChooseMusicFolder": "选择音乐文件夹",
+  "setupLibraryFolderDescription": "选择存放音乐的文件夹。Sistrum 通过受限的文件夹访问来读取，因此不需要所有文件的权限。",
+  "searchAlbumArtists": "专辑艺术家",
+  "logFilterFull": "全部",
+  "tutorialGuideTitle": "入门指南",
+  "tutorialGuideDesc": "快速查找、播放和整理本地音乐的小技巧。",
+  "backupUnsupportedVersion": "此备份由不同版本的 Sistrum 创建",
+  "backupReadFailed": "无法读取备份文件。请确认该文件仍然可用",
+  "snackbarMetadataSavedIndexStale": "元数据已保存，但无法刷新资料库",
+  "actionGoToComposer": "前往作曲者",
+  "motionArtworkSubtitle": "让专辑封面和播放器封面缓慢移动",
+  "lyricsAboveSeekBar": "进度条上方显示歌词",
+  "lyricsAboveSeekBarSubtitle": "在播放器的进度条上方显示正在演唱的歌词行",
+  "updateDownloadIntegrityFailed": "下载的更新未通过验证。请稍后重试。",
+  "updateDownloadNetworkFailed": "无法下载更新。请检查网络连接后重试。",
+  "updateInstallFailed": "无法打开更新安装程序。",
+  "settingsUpdates": "更新",
+  "settingsUpdatesSubtitle": "检查新版本",
+  "updateCheckNow": "立即检查",
+  "updateChecking": "正在检查…",
+  "updateUpToDate": "你已是最新版本",
+  "updateCheckFailed": "无法检查更新",
+  "retry": "重试"
 }

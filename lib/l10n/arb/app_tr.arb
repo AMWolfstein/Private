@@ -11,7 +11,7 @@
   "usbBitPerfectDescription": "Uyumlu çıkışlarda kaynağın hassasiyetini korur. Aşağıdan doğrudan USB veya AAudio özel modunu seçin; aksi halde Android USB çıkışı Android 14 veya üstünü gerektirir. AutoMix ve normalizasyon olmadan bir sonraki parçadan itibaren uygulanır. Sistem ses düzeyi doğrudan USB'yi kontrol etmeyebilir.",
   "usbHardwareVolume": "DAC donanım ses düzeyi",
   "usbVolumeWarningTitle": "Dinleme ses düzeyinizi kontrol edin",
-  "usbVolumeWarning": "Direct USB audio can be much louder than normal playback, and phone volume buttons may not control it. Lower your DAC or amplifier volume before starting. When supported, Sistrum sets the DAC to at most −40 dB on connection; this does not guarantee a safe listening level on every amplifier or headphone.",
+  "usbVolumeWarning": "Doğrudan USB ses, normal oynatmadan çok daha yüksek olabilir ve telefonun ses düğmeleri bunu kontrol edemeyebilir. Başlatmadan önce DAC veya amfinizin sesini düşürün. Destekleniyorsa Sistrum bağlantıda DAC'ı en fazla −40 dB'ye ayarlar; ancak bu, her amfi ve kulaklıkta güvenli bir dinleme seviyesi sağlamaz.",
   "usbVolumeAccept": "Anladım",
   "usbVolumeUnavailable": "Bu DAC'te doğrulanmış donanım ses kontrolü olmadığı için oynatma duraklatıldı. DAC veya amplifikatör sesini düşürün, gerekirse sabit ses düzeyli çıkışı etkinleştirin ve parçayı yeniden seçin.",
   "usbFixedVolume": "Sabit ses düzeyli USB çıkışına izin ver",
@@ -22,7 +22,7 @@
   "dapExclusiveUnavailable": "Bu parça ve mevcut çıkış için AAudio özel erişimi kullanılamıyor. Normal oynatma kullanılıyor. USB DAC için doğrudan USB sürücüsünü deneyin.",
   "usbDirect": "Doğrudan USB sürücüsü",
   "usbDirectDescription": "Android USB izniyle FLAC/WAV, DSF/DFF ve WavPack DSD için özel USB sesi kullanır. Yerel DSD, tanınan uyumlu bir DAC gerektirir. Diğer PCM formatları normal oynatmayı kullanır. Bir sonraki parçadan itibaren uygulanır.",
-  "usbDsdOverPcm": "DSD over PCM (DoP)",
+  "usbDsdOverPcm": "PCM üzerinden DSD (DoP)",
   "usbDsdOverPcmDescription": "Yalnızca DAC'iniz DoP'yi açıkça destekliyorsa etkinleştirin. Yerel DSD kullanılamadığında DSF/DFF ve WavPack DSD'yi bir PCM taşıyıcısı içinde gönderir. Uyumsuz bir cihaz gürültü çalabilir; sıradan USB kulaklıklar için kapalı bırakın.",
   "usbDsdUnsupported": "Bu DSD formatı veya bağlı DAC desteklenmiyor. Oynatma durduruldu.",
   "usbPermissionDenied": "USB izni verilmedi. Normal oynatma kullanılıyor.",
@@ -44,7 +44,7 @@
   "appearanceGlassClarity": "Cam netliği",
   "appearanceGlassOutlines": "Cam çerçeveleri",
   "appearanceGlassOutlinesSubtitle": "Sistrum camının etrafında hafif bir kenar göster. Kapatmak camın kendisini değiştirmez.",
-  "appearanceGlassClaritySubtitle": "Adjust transparency in Sistrum menus and navigation. Text contrast is preserved.",
+  "appearanceGlassClaritySubtitle": "Sistrum menülerinin ve gezinmenin saydamlığını ayarlayın. Metin kontrastı korunur.",
   "appearanceGlassTinted": "Renkli",
   "appearanceGlassClear": "Şeffaf",
   "appearanceGlassClearPerformance": "Çok şeffaf cam daha fazla güç tüketebilir ve eski cihazlarda daha az akıcı hissettirebilir. Gerekirse netliği düşürün.",
@@ -792,7 +792,7 @@
   "@libraryRemoveFolder": {
     "description": "Action to remove one indexed library source"
   },
-  "libraryRemoveFolderMessage": "Remove this folder and its indexed tracks from Sistrum? Audio files on the storage will not be deleted.",
+  "libraryRemoveFolderMessage": "Bu klasör ve dizinlenmiş parçaları Sistrum'dan kaldırılsın mı? Depolamadaki ses dosyaları silinmez.",
   "@libraryRemoveFolderMessage": {
     "description": "Confirmation shown before removing a library source"
   },
@@ -1019,7 +1019,7 @@
   "@libraryFilterQualityLossy": {
     "description": "Filter option - lossy compressed audio"
   },
-  "libraryFilterFormat": "Format",
+  "libraryFilterFormat": "Biçim",
   "@libraryFilterFormat": {
     "description": "Filter section - file format"
   },
@@ -1122,7 +1122,7 @@
   },
   "tutorialSettingsDesc": "Oynatmayı, kitaplık taramasını, şarkı sözlerini, Sistrum görünümünü ve yerel depolamayı ayarlayın.",
   "tutorialSettingsTip1": "Müzik klasörlerini ve yerel dosya erişimini yönetin",
-  "tutorialSettingsTip2": "Adjust your local library, playback, and appearance preferences.",
+  "tutorialSettingsTip2": "Yerel kitaplık, oynatma ve görünüm tercihlerinizi ayarlayın.",
   "@tutorialSettingsTip2": {
     "description": "Tutorial settings tip 2"
   },
@@ -1255,7 +1255,7 @@
   "@trackEditMetadata": {
     "description": "Menu action - edit embedded metadata"
   },
-  "audioBitrate": "Bitrate",
+  "audioBitrate": "Bit hızı",
   "@audioBitrate": {
     "description": "Label for bitrate selection"
   },
@@ -1456,7 +1456,7 @@
   "@backupRestoreFailed": {
     "description": "Snackbar when restore fails"
   },
-  "backupInvalidFile": "This file is not a valid Sistrum backup",
+  "backupInvalidFile": "Bu dosya geçerli bir Sistrum yedeği değil",
   "@backupInvalidFile": {
     "description": "Snackbar when the chosen file is not a valid backup"
   },
@@ -1470,7 +1470,7 @@
   },
   "backupSettingsOnly": "Yalnızca ayarlar",
   "backupSelectCollections": "Kitaplık koleksiyonları",
-  "backupSelectCollectionsDescription": "Liked tracks, favorite artists, playlists and playlist covers.",
+  "backupSelectCollectionsDescription": "Beğenilen parçalar, favori sanatçılar, çalma listeleri ve çalma listesi kapakları.",
   "backupSelectedExportDescription": "Seçilen kategorileri bir yedek dosyasına kaydedin. Ses dosyaları dahil edilmez.",
   "backupSelectAtLeastOne": "Yedek oluşturmak için en az bir kategori seçin.",
   "backupSelectedRestoreMessage": "Yalnızca aşağıda listelenen kategoriler geri yüklenir. Bu yedeğe dahil olmayan kategoriler değişmeden kalır. Geri yükleme mevcut verilerin yerini alabilir ve geri alınamaz.",
@@ -1717,7 +1717,7 @@
   "@audioAnalysisLufs": {
     "description": "Integrated loudness metric label"
   },
-  "audioAnalysisTruePeak": "True Peak",
+  "audioAnalysisTruePeak": "Gerçek tepe",
   "@audioAnalysisTruePeak": {
     "description": "True peak metric label"
   },
@@ -1961,7 +1961,7 @@
   "@editMetadataFieldAlbumTypeHint": {
     "description": "Hint for the release type metadata field"
   },
-  "editMetadataFieldExplicit": "Explicit",
+  "editMetadataFieldExplicit": "Açık içerik",
   "@editMetadataFieldExplicit": {
     "description": "Label for the explicit content metadata field"
   },
@@ -1969,7 +1969,7 @@
   "@editMetadataFieldExplicitHint": {
     "description": "Description for the explicit content metadata switch"
   },
-  "metadataExplicitValue": "Explicit",
+  "metadataExplicitValue": "Açık içerik",
   "@metadataExplicitValue": {
     "description": "Displayed value when a track is marked explicit"
   },
@@ -2318,14 +2318,14 @@
   "libraryFilterIncompleteAlbums": "Eksik albümler",
   "libraryAlbumCompletenessUnknown": "Albüm tamlığı bilinmiyor",
   "libraryAlbumMissingTracks": "{present}/{expected} parça · {missing} eksik",
-  "appSearch": "Search",
-  "appContinuePlaying": "Continue Playing",
-  "appFavorite": "Favorite",
+  "appSearch": "Ara",
+  "appContinuePlaying": "Çalmaya devam et",
+  "appFavorite": "Favori",
   "@appFavorite": {
     "description": "Compact context menu action that adds a track to Loved"
   },
-  "appGoToArtist": "Go to Artist",
-  "appFavorited": "Favorited",
+  "appGoToArtist": "Sanatçıya git",
+  "appFavorited": "Favorilere eklendi",
   "@appFavorited": {
     "description": "Selected state of the compact favorite action"
   },
@@ -2352,7 +2352,7 @@
   "profilePhotoError": "20 MB'tan küçük geçerli bir görsel seçin.",
   "profileSaveError": "Profiliniz kaydedilemedi. Lütfen tekrar deneyin.",
   "motionArtwork": "Hareketli kapak resmi",
-  "listeningStats": "Dinleme istatistikleri",
+  "listeningStats": "İstatistikler",
   "listeningStatsDescription": "Yalnızca bu cihazda, şimdiden itibaren saklanır. Yalnızca yerleşik oynatıcıyı kaydeder; duraklatma, arabelleğe alma ve ileri sarma dinleme süresine eklenmez. 30 saniyeden sonra bir oynatma sayılır.",
   "listeningStatsEmpty": "Dinleme özetinizi başlatmak için yerleşik oynatıcıyla müzik çalın. Önceki dinleme verileri geri getirilemez.",
   "listeningStatsDays": "{days} gün",
@@ -2473,7 +2473,7 @@
   "@trackCopyFilePath": {
     "description": "Action - copy file path"
   },
-  "trackDeleteConfirmMessage": "This permanently deletes the local audio file and removes it from your library.",
+  "trackDeleteConfirmMessage": "Bu işlem yerel ses dosyasını kalıcı olarak siler ve kitaplığınızdan kaldırır.",
   "trackDeleteConfirmTitle": "Cihazdan kaldırılsın mı?",
   "@trackDeleteConfirmTitle": {
     "description": "Delete confirmation title"
@@ -2578,7 +2578,7 @@
   "musicHapticsDescription": "İndirilen ve yerel şarkıların ritmiyle titreşsin",
   "musicHapticsSensitivity": "Hassasiyet",
   "musicHapticsStrength": "Şiddet",
-  "listeningRewind": "Rewind",
+  "listeningRewind": "Geri sar",
   "listeningRewindDescription": "Son hafta ve aylarınızın öne çıkanlarını yeniden yaşayın",
   "listeningRewindChoosePeriod": "Bir dönem seçin",
   "listeningRewindLastWeeks": "Son {weeks} hafta",
@@ -2692,12 +2692,53 @@
   "updateWhatsNew": "Yenilikler",
   "updateDownloadInstall": "İndir & Yükle",
   "updateDontRemind": "Bir daha sorma",
-  "updateViewRelease": "View Release",
+  "updateViewRelease": "Sürümü görüntüle",
   "updateSeeReleaseNotes": "Ayrıntılar için sürüm notlarına bakın.",
-  "notifDownloadingUpdate": "Downloading Sistrum v{version}",
+  "notifDownloadingUpdate": "Sistrum v{version} indiriliyor",
   "notifUpdateProgress": "{received} / {total} MB • %{percentage}",
   "notifUpdateReady": "Güncelleme Hazır",
-  "notifUpdateReadyBody": "Sistrum v{version} downloaded. Tap to install.",
+  "notifUpdateReadyBody": "Sistrum v{version} indirildi. Yüklemek için dokunun.",
   "notifUpdateFailed": "Güncelleme başarısız",
-  "notifUpdateFailedBody": "Güncelleme indirilemedi. Daha sonra tekrar deneyin."
+  "notifUpdateFailedBody": "Güncelleme indirilemedi. Daha sonra tekrar deneyin.",
+  "metadataSeparatorsDescription": "Kitaplığınızdaki sanatçı ve tür adlarını ayıran ayırıcıları seçin. Birlikte tutulan adlar asla bölünmez.",
+  "tagSeparatorsArtists": "Sanatçılar",
+  "tagSeparatorsArtistsFields": "Sanatçı, Albüm sanatçısı, Besteci",
+  "tagSeparatorsGenre": "Tür",
+  "tagSeparatorsAll": "Tümü",
+  "tagSeparatorsAdd": "Ayırıcı ekle",
+  "tagSeparatorsAddHint": "Ayırıcı",
+  "tagSeparatorsDuplicate": "Bu ayırıcı zaten listede.",
+  "tagSeparatorsRemoveTitle": "Ayırıcı kaldırılsın mı?",
+  "tagSeparatorsRemoveMessage": "Bu bölümden kaldırılır. Daha önce kaydettiğiniz etiketler değişmez.",
+  "tagKeepTogether": "Birlikte tut",
+  "tagKeepTogetherDescription": "Burada listelenen adlar, ayırıcı içerseler bile asla bölünmez.",
+  "tagKeepTogetherHint": "Ad, örneğin Tyler, The Creator",
+  "tagKeepTogetherAdd": "Ad ekle",
+  "tagKeepTogetherRemoveTooltip": "Adı kaldır",
+  "artistAppearsOn": "Yer aldığı albümler",
+  "tagKeepTogetherDuplicate": "Bu ad zaten listede.",
+  "setupChooseMusicFolder": "Müzik klasörünü seç",
+  "setupLibraryFolderDescription": "Müziğinizi içeren klasörü seçin. Sistrum bu klasöre sınırlı erişimle okur, bu yüzden tüm dosyalar için izin gerekmez.",
+  "searchAlbumArtists": "Albüm sanatçıları",
+  "logFilterFull": "Tümü",
+  "tutorialGuideTitle": "Başlarken",
+  "tutorialGuideDesc": "Yerel müziğinizi bulmak, çalmak ve düzenlemek için hızlı ipuçları.",
+  "backupUnsupportedVersion": "Bu yedek, Sistrum'un farklı bir sürümüyle oluşturuldu",
+  "backupReadFailed": "Yedek dosyası okunamadı. Dosyanın hâlâ kullanılabilir olduğunu kontrol edin",
+  "snackbarMetadataSavedIndexStale": "Üst veriler kaydedildi, ancak kitaplık yenilenemedi",
+  "actionGoToComposer": "Besteciye git",
+  "autoplayResetLearningConfirmMessage": "Otomatik oynatma, dinleme ve atlama alışkanlıklarınızdan öğrendiklerini unutacak. Bu işlem geri alınamaz.",
+  "motionArtworkSubtitle": "Albüm kapaklarını ve oynatıcı kapağını yavaşça hareket ettir",
+  "lyricsAboveSeekBar": "Şarkı sözleri ilerleme çubuğunun üstünde",
+  "lyricsAboveSeekBarSubtitle": "Oynatıcıda ilerleme çubuğunun üstünde şu anda söylenen satırı göster",
+  "updateDownloadIntegrityFailed": "İndirilen güncelleme doğrulamadan geçemedi. Daha sonra tekrar deneyin.",
+  "updateDownloadNetworkFailed": "Güncelleme indirilemedi. Bağlantınızı kontrol edip tekrar deneyin.",
+  "updateInstallFailed": "Güncelleme yükleyicisi açılamadı.",
+  "settingsUpdates": "Güncellemeler",
+  "settingsUpdatesSubtitle": "Yeni sürümleri kontrol et",
+  "updateCheckNow": "Şimdi kontrol et",
+  "updateChecking": "Kontrol ediliyor…",
+  "updateUpToDate": "En son sürümü kullanıyorsunuz",
+  "updateCheckFailed": "Güncellemeler kontrol edilemedi",
+  "retry": "Yeniden dene"
 }

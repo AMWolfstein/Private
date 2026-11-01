@@ -9,47 +9,47 @@
   "sectionAudioOutput": "Audio uitvoer",
   "usbBitPerfect": "Hi-res en bit-perfecte audio",
   "usbBitPerfectDescription": "Behoud de bron precisie op ondersteunde uitvoeren. Kies direct USB of AAudio hieronder; anders vereist Android USB uitvoer Android 14 of nieuwer. Van toepassing vanaf het volgende nummer, zonder automix of normalisatie. Systeem volume kan mogelijk geen directe USB aanpassen.",
-  "usbHardwareVolume": "DAC hardware volume",
+  "usbHardwareVolume": "Hardwarevolume van dac",
   "usbVolumeWarningTitle": "Controleer uw luistervolume",
-  "usbVolumeWarning": "Direct USB audio can be much louder than normal playback, and phone volume buttons may not control it. Lower your DAC or amplifier volume before starting. When supported, Sistrum sets the DAC to at most −40 dB on connection; this does not guarantee a safe listening level on every amplifier or headphone.",
+  "usbVolumeWarning": "Direct USB-audio kan veel harder zijn dan normaal afspelen, en de volumeknoppen van de telefoon regelen dit mogelijk niet. Verlaag het volume van je dac of versterker voordat je begint. Als het wordt ondersteund, zet Sistrum de dac bij het aansluiten op maximaal −40 dB; dit garandeert echter niet een veilig luisterniveau bij elke versterker of koptelefoon.",
   "usbVolumeAccept": "Ik begrijp het",
   "usbVolumeUnavailable": "Afspelen is gepauzeerd omdat deze DAC geen geverifieerde hardware volumeregeling heeft. Zet het volume van de DAC of amplifier zachter en schakel daarna fixed-volume uitvoer in als dat nodig is, en selecteer het nummer daarna opnieuw.",
   "usbFixedVolume": "Sta fixed-volume USB uitvoer toe",
-  "usbFixedVolumeDescription": "For DACs without a volume control accessible to the app. Keep off for USB headsets without their own volume control. Applies from the next track.",
+  "usbFixedVolumeDescription": "Voor dacs zonder volumeregeling die toegankelijk is voor de app. Laat uit voor USB-headsets zonder eigen volumeregeling. Geldt vanaf het volgende nummer.",
   "usbFixedVolumeWarning": "De app kan het volume niet verlagen op deze uitvoer. Audio kan starten op het hoogste volume en de volumeregeling van uw telefoon zal niet helpen. Ga alleen verder na het verlagen van uw volume van uw DAC of externe amplifier. Zet dit niet aan voor een headset zonder eigen volumeregelaar.",
   "dapExclusive": "DAP hi-res (alleen voor AAudio)",
-  "dapExclusiveDescription": "Use Oboe/AAudio at the track's original rate and precision for FLAC/WAV PCM. Requires Android 8.1 or later and compatible hardware. Exclusive access is checked; unavailable formats use normal playback. DSD requires the direct USB driver. Applies from the next track.",
-  "dapExclusiveUnavailable": "AAudio exclusive access is unavailable for this track and current output. Using normal playback. For a USB DAC, try the direct USB driver.",
-  "usbDirect": "Direct USB driver",
-  "usbDirectDescription": "Use exclusive USB audio for FLAC/WAV, DSF/DFF and WavPack DSD, with Android USB permission. Native DSD requires a recognized compatible DAC. Other PCM formats use normal playback. Applies from the next track.",
-  "usbDsdOverPcm": "DSD over PCM (DoP)",
-  "usbDsdOverPcmDescription": "Enable only if your DAC explicitly supports DoP. Sends DSF/DFF and WavPack DSD inside a PCM carrier when native DSD is unavailable. An incompatible device may play noise; leave off for ordinary USB headsets.",
-  "usbDsdUnsupported": "This DSD format or connected DAC is not supported. Playback stopped.",
-  "usbPermissionDenied": "USB permission was not granted. Using normal playback.",
-  "usbBitPerfectPending": "Waiting for the next track and a compatible USB output.",
-  "usbBitPerfectNoDevice": "No USB DAC connected. Using normal audio output.",
-  "usbBitPerfectFallback": "This device or audio format does not support bit-perfect output. Using normal playback.",
-  "usbBitPerfectRouteChanged": "The USB audio route changed. Playback paused; select a track to reconnect.",
+  "dapExclusiveDescription": "Gebruik Oboe/AAudio met de oorspronkelijke snelheid en precisie van het nummer voor FLAC/WAV-PCM. Vereist Android 8.1 of nieuwer en compatibele hardware. Exclusieve toegang wordt gecontroleerd; niet-beschikbare formaten gebruiken normaal afspelen. DSD vereist het directe USB-stuurprogramma. Geldt vanaf het volgende nummer.",
+  "dapExclusiveUnavailable": "Exclusieve AAudio-toegang is niet beschikbaar voor dit nummer en de huidige uitvoer. Normaal afspelen wordt gebruikt. Probeer voor een USB-dac het directe USB-stuurprogramma.",
+  "usbDirect": "Direct USB-stuurprogramma",
+  "usbDirectDescription": "Gebruik exclusieve USB-audio voor FLAC/WAV, DSF/DFF en WavPack DSD, met Android USB-toestemming. Native DSD vereist een herkende compatibele dac. Andere PCM-formaten gebruiken normaal afspelen. Geldt vanaf het volgende nummer.",
+  "usbDsdOverPcm": "DSD via PCM (DoP)",
+  "usbDsdOverPcmDescription": "Alleen inschakelen als je dac DoP expliciet ondersteunt. Stuurt DSF/DFF en WavPack DSD binnen een PCM-drager wanneer native DSD niet beschikbaar is. Een incompatibel apparaat kan ruis afspelen; laat uit voor gewone USB-headsets.",
+  "usbDsdUnsupported": "Dit DSD-formaat of de aangesloten dac wordt niet ondersteund. Afspelen gestopt.",
+  "usbPermissionDenied": "USB-toestemming niet verleend. Normaal afspelen wordt gebruikt.",
+  "usbBitPerfectPending": "Wachten op het volgende nummer en een compatibele USB-uitvoer.",
+  "usbBitPerfectNoDevice": "Geen USB-dac aangesloten. Normale audio-uitvoer wordt gebruikt.",
+  "usbBitPerfectFallback": "Dit apparaat of audioformaat ondersteunt geen bit-perfect uitvoer. Normaal afspelen wordt gebruikt.",
+  "usbBitPerfectRouteChanged": "De USB-audioroute is gewijzigd. Afspelen gepauzeerd; selecteer een nummer om opnieuw te verbinden.",
   "nowPlayingVolume": "Volume",
   "@nowPlayingVolume": {
     "description": "System volume control label in the Sistrum player"
   },
-  "appearanceAccentRed": "Red (default)",
-  "appearanceAccentOrange": "Orange",
-  "appearanceAccentGreen": "Green",
-  "appearanceAccentTeal": "Teal",
-  "appearanceAccentBlue": "Blue",
-  "appearanceAccentPurple": "Purple",
-  "appearanceAccentPink": "Pink",
-  "appearanceGlassClarity": "Glass clarity",
+  "appearanceAccentRed": "Rood (standaard)",
+  "appearanceAccentOrange": "Oranje",
+  "appearanceAccentGreen": "Groen",
+  "appearanceAccentTeal": "Blauwgroen",
+  "appearanceAccentBlue": "Blauw",
+  "appearanceAccentPurple": "Paars",
+  "appearanceAccentPink": "Roze",
+  "appearanceGlassClarity": "Glasdoorzichtigheid",
   "appearanceGlassOutlines": "Glasranden",
   "appearanceGlassOutlinesSubtitle": "Toon een lichte rand rond Sistrum-glas. Uitschakelen laat het glas zelf ongewijzigd.",
-  "appearanceGlassClaritySubtitle": "Adjust transparency in Sistrum menus and navigation. Text contrast is preserved.",
-  "appearanceGlassTinted": "Tinted",
-  "appearanceGlassClear": "Clear",
+  "appearanceGlassClaritySubtitle": "Pas de transparantie aan in Sistrum-menu's en navigatie. Tekstcontrast blijft behouden.",
+  "appearanceGlassTinted": "Getint",
+  "appearanceGlassClear": "Helder",
   "appearanceGlassClearPerformance": "Heel helder glas kan meer energie gebruiken en op oudere toestellen minder soepel aanvoelen. Verlaag de helderheid indien nodig.",
   "appearanceGlassQuality": "Glaskwaliteit",
-  "appearanceGlassQualityAuto": "Auto",
+  "appearanceGlassQualityAuto": "Automatisch",
   "appearanceGlassQualityLite": "Lite",
   "appearanceGlassQualityFull": "Volledig",
   "appearanceGlassQualityOff": "Uit",
@@ -64,25 +64,25 @@
   "appearanceGlassClarityContrast": "Je systeem vraagt om hoger contrast, dus glas blijft ondoorzichtig. Kies Lite of Volledig om toch glas te gebruiken; tekstcontrast blijft behouden.",
   "appearanceGlassAutoMeasured": "Gemeten op dit toestel: Auto gebruikt {quality}.",
   "appearanceGlassClarityAutoFrosted": "Auto heeft dit toestel gemeten en gebruikt Mat. Kies Lite of Volledig om de helderheid in te stellen.",
-  "appearanceUseSystemFont": "Use system font",
-  "appearanceUseSystemFontSubtitle": "Use your device’s default typeface for app text.",
+  "appearanceUseSystemFont": "Systeemlettertype gebruiken",
+  "appearanceUseSystemFontSubtitle": "Gebruik het standaardlettertype van je apparaat voor app-tekst.",
   "appName": "Sistrum",
   "@appName": {
     "description": "App name - DO NOT TRANSLATE"
   },
-  "navHome": "Home",
+  "navHome": "Start",
   "@navHome": {
     "description": "Bottom navigation - Home tab"
   },
-  "navLibrary": "Library",
+  "navLibrary": "Bibliotheek",
   "@navLibrary": {
     "description": "Bottom navigation - Library tab"
   },
-  "homeTitle": "Home",
+  "homeTitle": "Start",
   "@homeTitle": {
     "description": "Home screen title"
   },
-  "libraryKindAll": "All",
+  "libraryKindAll": "Alles",
   "@libraryKindAll": {
     "description": "Filter chip - show all items"
   },
@@ -92,41 +92,41 @@
   },
   "homeLatestReleases": "Nieuwste releases in je bibliotheek",
   "artistPopular": "Populair",
-  "libraryRecentlyAdded": "Recently Added",
+  "libraryRecentlyAdded": "Onlangs toegevoegd",
   "homeChooseLibraryFolder": "Kies een muziekmap in de instellingen van de lokale bibliotheek.",
   "homeLibraryEmpty": "Voeg muziek toe aan je bibliotheekmappen en scan daarna je bibliotheek.",
-  "libraryEmptyCollection": "Your music will appear here",
-  "settingsTitle": "Settings",
+  "libraryEmptyCollection": "Je muziek verschijnt hier",
+  "settingsTitle": "Instellingen",
   "@settingsTitle": {
     "description": "Settings screen title"
   },
-  "settingsAppearance": "Appearance",
+  "settingsAppearance": "Weergave",
   "@settingsAppearance": {
     "description": "Settings section - visual customization"
   },
-  "settingsAbout": "About",
+  "settingsAbout": "Over",
   "@settingsAbout": {
     "description": "Settings section - app info"
   },
-  "appearanceTitle": "Appearance",
+  "appearanceTitle": "Weergave",
   "@appearanceTitle": {
     "description": "Appearance settings page title"
   },
-  "appearanceThemeSystem": "System",
+  "appearanceThemeSystem": "Systeem",
   "@appearanceThemeSystem": {
     "description": "Follow system theme"
   },
-  "appearanceThemeLight": "Light",
+  "appearanceThemeLight": "Licht",
   "@appearanceThemeLight": {
     "description": "Light theme"
   },
-  "appearanceThemeDark": "Dark",
+  "appearanceThemeDark": "Donker",
   "@appearanceThemeDark": {
     "description": "Dark theme"
   },
-  "trackRemoveReplayGain": "Remove ReplayGain",
-  "replayGainRemoving": "Removing ReplayGain...",
-  "replayGainRemoveConfirmMessage": "Remove track and album ReplayGain tags from {count} track(s)? Audio, artwork, and other metadata will be preserved.",
+  "trackRemoveReplayGain": "ReplayGain verwijderen",
+  "replayGainRemoving": "ReplayGain verwijderen...",
+  "replayGainRemoveConfirmMessage": "ReplayGain-tags van nummer en album verwijderen uit {count} nummer(s)? Audio, hoes en andere metadata blijven behouden.",
   "@replayGainRemoveConfirmMessage": {
     "placeholders": {
       "count": {
@@ -134,7 +134,7 @@
       }
     }
   },
-  "selectionRemoveReplayGainCount": "Remove RG ({count})",
+  "selectionRemoveReplayGainCount": "RG verwijderen ({count})",
   "@selectionRemoveReplayGainCount": {
     "description": "Compact selection action label. RG abbreviates ReplayGain; keep this short for a two-column toolbar.",
     "placeholders": {
@@ -143,7 +143,7 @@
       }
     }
   },
-  "replayGainRemoveBatchSuccess": "ReplayGain removed from {success} of {total} tracks",
+  "replayGainRemoveBatchSuccess": "ReplayGain verwijderd uit {success} van {total} nummers",
   "@replayGainRemoveBatchSuccess": {
     "placeholders": {
       "success": {
@@ -163,11 +163,11 @@
       }
     }
   },
-  "replayGainBatchConfirmTitle": "Add ReplayGain",
+  "replayGainBatchConfirmTitle": "ReplayGain toevoegen",
   "@replayGainBatchConfirmTitle": {
     "description": "Title of the batch ReplayGain confirmation dialog"
   },
-  "replayGainBatchConfirmMessage": "Analyze loudness and write ReplayGain tags to {count} track(s)?",
+  "replayGainBatchConfirmMessage": "Luidheid analyseren en ReplayGain-tags schrijven naar {count} nummer(s)?",
   "@replayGainBatchConfirmMessage": {
     "description": "Message of the batch ReplayGain confirmation dialog",
     "placeholders": {
@@ -176,11 +176,11 @@
       }
     }
   },
-  "replayGainBatchAnalyzing": "Analyzing ReplayGain...",
+  "replayGainBatchAnalyzing": "ReplayGain analyseren...",
   "@replayGainBatchAnalyzing": {
     "description": "Progress dialog title while batch scanning ReplayGain"
   },
-  "replayGainBatchSuccess": "ReplayGain added to {success} of {total} tracks",
+  "replayGainBatchSuccess": "ReplayGain toegevoegd aan {success} van {total} nummers",
   "@replayGainBatchSuccess": {
     "description": "Snackbar after batch ReplayGain completes",
     "placeholders": {
@@ -192,14 +192,14 @@
       }
     }
   },
-  "replayGainUnsupportedDecoder": "Some tracks could not be analyzed because their audio codec is not supported by the ReplayGain decoder. Their files were not changed.",
+  "replayGainUnsupportedDecoder": "Sommige nummers konden niet worden geanalyseerd omdat hun audiocodec niet wordt ondersteund door de ReplayGain-decoder. Hun bestanden zijn niet gewijzigd.",
   "metadataSeparators": "Tagscheidingstekens",
   "metadataSeparatorInvalid": "Gebruik 1–16 tekens zonder regeleinden of besturingstekens.",
-  "settingDisabled": "Disabled",
+  "settingDisabled": "Uitgeschakeld",
   "@settingDisabled": {
     "description": "Extension status - inactive"
   },
-  "aboutTitle": "About",
+  "aboutTitle": "Over",
   "@aboutTitle": {
     "description": "About page title"
   },
@@ -207,7 +207,7 @@
   "@aboutApp": {
     "description": "Section for app info"
   },
-  "aboutVersion": "Version",
+  "aboutVersion": "Versie",
   "@aboutVersion": {
     "description": "Version info label"
   },
@@ -223,23 +223,23 @@
   "aboutRemeasureGlass": "Auto-glas opnieuw meten",
   "aboutRemeasureGlassSubtitle": "Auto meet de frametijden opnieuw en kiest Volledig, Lite of Lite Mat.",
   "aboutAppDescription": "Speel je lokale muziek af en beheer die, met bewerken van metadata en songteksten.",
-  "trackMetadataShare": "Share",
+  "trackMetadataShare": "Delen",
   "@trackMetadataShare": {
     "description": "Action button - share track"
   },
-  "setupGrantPermission": "Grant Permission",
+  "setupGrantPermission": "Toestemming geven",
   "@setupGrantPermission": {
     "description": "Button to request permission"
   },
-  "setupOpenSettings": "Open Settings",
+  "setupOpenSettings": "Instellingen openen",
   "@setupOpenSettings": {
     "description": "Button to open system settings"
   },
-  "setupPermissionDeniedMessage": "Permission denied. Please grant all permissions to continue.",
+  "setupPermissionDeniedMessage": "Toestemming geweigerd. Verleen alle toestemmingen om door te gaan.",
   "@setupPermissionDeniedMessage": {
     "description": "Error when permission denied"
   },
-  "setupPermissionRequired": "{permissionType} Permission Required",
+  "setupPermissionRequired": "{permissionType}-toestemming vereist",
   "@setupPermissionRequired": {
     "description": "Generic permission required title",
     "placeholders": {
@@ -249,7 +249,7 @@
       }
     }
   },
-  "setupPermissionRequiredMessage": "{permissionType} permission is required for the best experience. You can change this later in Settings.",
+  "setupPermissionRequiredMessage": "{permissionType}-toestemming is nodig voor de beste ervaring. Je kunt dit later wijzigen in Instellingen.",
   "@setupPermissionRequiredMessage": {
     "description": "Generic permission required message",
     "placeholders": {
@@ -258,85 +258,85 @@
       }
     }
   },
-  "setupStorageGranted": "Storage Permission Granted!",
+  "setupStorageGranted": "Opslagtoestemming verleend!",
   "@setupStorageGranted": {
     "description": "Success message for storage permission"
   },
-  "setupStorageRequired": "Storage Permission Required",
+  "setupStorageRequired": "Opslagtoestemming vereist",
   "@setupStorageRequired": {
     "description": "Title when storage permission needed"
   },
   "setupStorageDescription": "Sta opslagtoegang toe om je lokale muziekbestanden te scannen en te bewerken.",
-  "setupNotificationGranted": "Notification Permission Granted!",
+  "setupNotificationGranted": "Meldingstoestemming verleend!",
   "@setupNotificationGranted": {
     "description": "Success message for notification permission"
   },
-  "setupNotificationEnable": "Enable Notifications",
+  "setupNotificationEnable": "Meldingen inschakelen",
   "@setupNotificationEnable": {
     "description": "Button to enable notifications"
   },
-  "setupEnableNotifications": "Enable Notifications",
+  "setupEnableNotifications": "Meldingen inschakelen",
   "@setupEnableNotifications": {
     "description": "Button to enable notifications"
   },
   "setupNotificationBackgroundDescription": "Sta afspeelbediening en voortgangsmeldingen toe voor lokale scans.",
-  "setupSkipForNow": "Skip for now",
+  "setupSkipForNow": "Nu overslaan",
   "@setupSkipForNow": {
     "description": "Skip button text"
   },
-  "setupNext": "Next",
+  "setupNext": "Volgende",
   "@setupNext": {
     "description": "Next button text"
   },
-  "setupGetStarted": "Get Started",
+  "setupGetStarted": "Aan de slag",
   "@setupGetStarted": {
     "description": "Final setup button"
   },
-  "setupLanguageTitle": "Choose Language",
+  "setupLanguageTitle": "Kies een taal",
   "@setupLanguageTitle": {
     "description": "Title for the language selection step in setup"
   },
-  "setupLanguageDescription": "Select your preferred language for the app. You can change this later in Settings.",
+  "setupLanguageDescription": "Kies je voorkeurstaal voor de app. Je kunt dit later wijzigen in Instellingen.",
   "@setupLanguageDescription": {
     "description": "Description for the language selection step in setup"
   },
-  "setupLanguageSystemDefault": "System Default",
+  "setupLanguageSystemDefault": "Systeemstandaard",
   "@setupLanguageSystemDefault": {
     "description": "Option to use the system language"
   },
-  "dialogCancel": "Cancel",
+  "dialogCancel": "Annuleren",
   "@dialogCancel": {
     "description": "Dialog button - cancel action"
   },
-  "dialogSave": "Save",
+  "dialogSave": "Opslaan",
   "@dialogSave": {
     "description": "Dialog button - save changes"
   },
-  "dialogDelete": "Delete",
+  "dialogDelete": "Verwijderen",
   "@dialogDelete": {
     "description": "Dialog button - delete item"
   },
-  "dialogRetry": "Retry",
+  "dialogRetry": "Opnieuw proberen",
   "@dialogRetry": {
     "description": "Dialog button - retry action"
   },
-  "dialogClear": "Clear",
+  "dialogClear": "Wissen",
   "@dialogClear": {
     "description": "Dialog button - clear items"
   },
-  "dialogDone": "Done",
+  "dialogDone": "Klaar",
   "@dialogDone": {
     "description": "Dialog button - action completed"
   },
-  "dialogRemove": "Remove",
+  "dialogRemove": "Verwijderen",
   "@dialogRemove": {
     "description": "Dialog button - remove item"
   },
-  "dialogDeleteSelectedTitle": "Delete Selected",
+  "dialogDeleteSelectedTitle": "Geselecteerde verwijderen",
   "@dialogDeleteSelectedTitle": {
     "description": "Dialog title - delete selected items"
   },
-  "dialogDeleteSelectedMessage": "Delete {count} {count, plural, =1{track} other{tracks}} from history?\n\nThis will also delete the files from storage.",
+  "dialogDeleteSelectedMessage": "{count} {count, plural, =1{nummer} other{nummers}} uit de geschiedenis verwijderen?\n\nDit verwijdert ook de bestanden uit de opslag.",
   "@dialogDeleteSelectedMessage": {
     "description": "Dialog message - delete selected tracks",
     "placeholders": {
@@ -345,11 +345,11 @@
       }
     }
   },
-  "collectionExportM3u": "Export as M3U8",
+  "collectionExportM3u": "Exporteren als M3U8",
   "@collectionExportM3u": {
     "description": "Tooltip on the collection screen action that exports the track list as an M3U8 playlist file"
   },
-  "collectionExportM3uDone": "Exported {exported} of {total} tracks",
+  "collectionExportM3uDone": "{exported} van {total} nummers geëxporteerd",
   "@collectionExportM3uDone": {
     "description": "Snackbar after M3U8 export; tracks without a local file are not exported",
     "placeholders": {
@@ -362,35 +362,35 @@
     }
   },
   "collectionExportM3uNone": "Geen lokale audiobestanden om te exporteren",
-  "collectionExportM3uFailed": "Export failed",
+  "collectionExportM3uFailed": "Exporteren mislukt",
   "@collectionExportM3uFailed": {
     "description": "Snackbar when writing or sharing the M3U8 export fails"
   },
-  "libraryReviewDuplicates": "Review duplicates",
+  "libraryReviewDuplicates": "Duplicaten controleren",
   "@libraryReviewDuplicates": {
     "description": "Library settings row opening the duplicate review sheet"
   },
-  "libraryReviewDuplicatesSubtitle": "Find tracks stored more than once",
+  "libraryReviewDuplicatesSubtitle": "Nummers zoeken die meer dan één keer zijn opgeslagen",
   "@libraryReviewDuplicatesSubtitle": {
     "description": "Subtitle for the duplicate review settings row"
   },
-  "duplicatesTitle": "Duplicates",
+  "duplicatesTitle": "Duplicaten",
   "@duplicatesTitle": {
     "description": "Title of the duplicate review sheet"
   },
-  "duplicatesEmpty": "No duplicate tracks found.",
+  "duplicatesEmpty": "Geen dubbele nummers gevonden.",
   "@duplicatesEmpty": {
     "description": "Shown when the duplicate review sheet finds nothing"
   },
-  "duplicatesKeepBest": "Keep best",
+  "duplicatesKeepBest": "Beste behouden",
   "@duplicatesKeepBest": {
     "description": "Button that deletes all but the highest-quality copy in a duplicate group"
   },
-  "duplicatesKeepBestAll": "Keep best for all",
+  "duplicatesKeepBestAll": "Beste behouden voor alle",
   "@duplicatesKeepBestAll": {
     "description": "Button that keeps the highest-quality copy in every duplicate group and deletes the rest"
   },
-  "duplicatesKeepBestAllMessage": "Keep the best copy of {groupCount} {groupCount, plural, =1{track} other{tracks}} and delete {count} lower-quality {count, plural, =1{copy} other{copies}}?\n\nThe deleted files will be removed from storage.",
+  "duplicatesKeepBestAllMessage": "De beste kopie van {groupCount} {groupCount, plural, =1{nummer} other{nummers}} behouden en {count} kopieën van mindere kwaliteit verwijderen?",
   "@duplicatesKeepBestAllMessage": {
     "description": "Confirmation message for keeping the best copy across every duplicate group",
     "placeholders": {
@@ -402,7 +402,7 @@
       }
     }
   },
-  "duplicatesKeepBestMessage": "Delete {count} lower-quality copies of \"{trackName}\"?",
+  "duplicatesKeepBestMessage": "{count} kopieën van mindere kwaliteit van \"{trackName}\" verwijderen?",
   "@duplicatesKeepBestMessage": {
     "description": "Confirmation message for the keep-best action",
     "placeholders": {
@@ -414,7 +414,7 @@
       }
     }
   },
-  "duplicatesDeleteCopyMessage": "Delete this copy of \"{trackName}\"?",
+  "duplicatesDeleteCopyMessage": "Deze kopie van \"{trackName}\" verwijderen?",
   "@duplicatesDeleteCopyMessage": {
     "description": "Confirmation message for deleting one duplicate copy",
     "placeholders": {
@@ -423,7 +423,7 @@
       }
     }
   },
-  "snackbarDeletedTracks": "Deleted {count} {count, plural, =1{track} other{tracks}}",
+  "snackbarDeletedTracks": "{count} {count, plural, =1{nummer} other{nummers}} verwijderd",
   "@snackbarDeletedTracks": {
     "description": "Snackbar - tracks deleted",
     "placeholders": {
@@ -432,7 +432,7 @@
       }
     }
   },
-  "snackbarCannotOpenFile": "Cannot open file: {error}",
+  "snackbarCannotOpenFile": "Kan bestand niet openen: {error}",
   "@snackbarCannotOpenFile": {
     "description": "Snackbar - file open error",
     "placeholders": {
@@ -441,43 +441,43 @@
       }
     }
   },
-  "snackbarFileNotFound": "File not found",
+  "snackbarFileNotFound": "Bestand niet gevonden",
   "@snackbarFileNotFound": {
     "description": "Snackbar - file doesn't exist"
   },
-  "errorRateLimited": "Rate Limited",
+  "errorRateLimited": "Te veel verzoeken",
   "@errorRateLimited": {
     "description": "Error title - too many requests"
   },
-  "errorRateLimitedMessage": "Too many requests. Please wait a moment before searching again.",
+  "errorRateLimitedMessage": "Te veel verzoeken. Wacht even voordat je opnieuw zoekt.",
   "@errorRateLimitedMessage": {
     "description": "Error message - rate limit explanation"
   },
-  "searchEmptyResultSubtitle": "Try another keyword",
+  "searchEmptyResultSubtitle": "Probeer een ander zoekwoord",
   "@searchEmptyResultSubtitle": {
     "description": "Subtitle shown under the empty search result state on the home screen"
   },
-  "actionPause": "Pause",
+  "actionPause": "Pauzeren",
   "@actionPause": {
     "description": "Action button - pause download"
   },
-  "actionResume": "Resume",
+  "actionResume": "Hervatten",
   "@actionResume": {
     "description": "Action button - resume download"
   },
-  "actionCancel": "Cancel",
+  "actionCancel": "Annuleren",
   "@actionCancel": {
     "description": "Action button - cancel operation"
   },
-  "actionSelectAll": "Select All",
+  "actionSelectAll": "Alles selecteren",
   "@actionSelectAll": {
     "description": "Action button - select all items"
   },
-  "actionDeselect": "Deselect",
+  "actionDeselect": "Deselecteren",
   "@actionDeselect": {
     "description": "Action button - deselect all"
   },
-  "selectionSelected": "{count} selected",
+  "selectionSelected": "{count} geselecteerd",
   "@selectionSelected": {
     "description": "Selection count indicator",
     "placeholders": {
@@ -486,19 +486,19 @@
       }
     }
   },
-  "selectionAllSelected": "All tracks selected",
+  "selectionAllSelected": "Alle nummers geselecteerd",
   "@selectionAllSelected": {
     "description": "Status - all items selected"
   },
-  "selectionSelectToDelete": "Select tracks to delete",
+  "selectionSelectToDelete": "Selecteer nummers om te verwijderen",
   "@selectionSelectToDelete": {
     "description": "Placeholder when nothing selected"
   },
-  "searchSongs": "Songs",
+  "searchSongs": "Nummers",
   "@searchSongs": {
     "description": "Search result category - songs"
   },
-  "searchArtists": "Artists",
+  "searchArtists": "Artiesten",
   "@searchArtists": {
     "description": "Search result category - artists"
   },
@@ -506,55 +506,55 @@
   "@searchAlbums": {
     "description": "Search result category - albums"
   },
-  "searchPlaylists": "Playlists",
+  "searchPlaylists": "Afspeellijsten",
   "@searchPlaylists": {
     "description": "Search result category - playlists"
   },
-  "searchSortTitle": "Sort Results",
+  "searchSortTitle": "Resultaten sorteren",
   "@searchSortTitle": {
     "description": "Bottom sheet title for search sort options"
   },
-  "searchSortTitleAZ": "Title (A-Z)",
+  "searchSortTitleAZ": "Titel (A-Z)",
   "@searchSortTitleAZ": {
     "description": "Sort option - title ascending"
   },
-  "searchSortTitleZA": "Title (Z-A)",
+  "searchSortTitleZA": "Titel (Z-A)",
   "@searchSortTitleZA": {
     "description": "Sort option - title descending"
   },
-  "searchSortArtistAZ": "Artist (A-Z)",
+  "searchSortArtistAZ": "Artiest (A-Z)",
   "@searchSortArtistAZ": {
     "description": "Sort option - artist ascending"
   },
-  "searchSortArtistZA": "Artist (Z-A)",
+  "searchSortArtistZA": "Artiest (Z-A)",
   "@searchSortArtistZA": {
     "description": "Sort option - artist descending"
   },
-  "searchSortDateOldest": "Release Date (Oldest)",
+  "searchSortDateOldest": "Releasedatum (oudste)",
   "@searchSortDateOldest": {
     "description": "Sort option - oldest release first"
   },
-  "searchSortDateNewest": "Release Date (Newest)",
+  "searchSortDateNewest": "Releasedatum (nieuwste)",
   "@searchSortDateNewest": {
     "description": "Sort option - newest release first"
   },
-  "tooltipPlay": "Play",
+  "tooltipPlay": "Afspelen",
   "@tooltipPlay": {
     "description": "Tooltip - play button"
   },
-  "logTitle": "Logs",
+  "logTitle": "Logboeken",
   "@logTitle": {
     "description": "Logs screen title"
   },
-  "logCopied": "Logs copied to clipboard",
+  "logCopied": "Logboeken naar klembord gekopieerd",
   "@logCopied": {
     "description": "Snackbar - logs copied"
   },
-  "logSearchHint": "Search logs...",
+  "logSearchHint": "Logboeken doorzoeken...",
   "@logSearchHint": {
     "description": "Log search placeholder"
   },
-  "logFilterLevel": "Level",
+  "logFilterLevel": "Niveau",
   "@logFilterLevel": {
     "description": "Filter by log level"
   },
@@ -562,35 +562,35 @@
   "@logFilterSection": {
     "description": "Filter section title"
   },
-  "logShareLogs": "Share logs",
+  "logShareLogs": "Logboeken delen",
   "@logShareLogs": {
     "description": "Share button tooltip"
   },
-  "logClearLogs": "Clear logs",
+  "logClearLogs": "Logboeken wissen",
   "@logClearLogs": {
     "description": "Clear button tooltip"
   },
-  "logClearLogsTitle": "Clear Logs",
+  "logClearLogsTitle": "Logboeken wissen",
   "@logClearLogsTitle": {
     "description": "Clear logs dialog title"
   },
-  "logClearLogsMessage": "Are you sure you want to clear all logs?",
+  "logClearLogsMessage": "Weet je zeker dat je alle logboeken wilt wissen?",
   "@logClearLogsMessage": {
     "description": "Clear logs confirmation message"
   },
-  "logFilterBySeverity": "Filter logs by severity",
+  "logFilterBySeverity": "Logboeken filteren op ernst",
   "@logFilterBySeverity": {
     "description": "Filter dialog title"
   },
-  "logNoLogsYet": "No logs yet",
+  "logNoLogsYet": "Nog geen logboeken",
   "@logNoLogsYet": {
     "description": "Empty state title"
   },
-  "logNoLogsYetSubtitle": "Logs will appear here as you use the app",
+  "logNoLogsYetSubtitle": "Logboeken verschijnen hier terwijl je de app gebruikt",
   "@logNoLogsYetSubtitle": {
     "description": "Empty state subtitle"
   },
-  "logEntriesFiltered": "Entries ({count} filtered)",
+  "logEntriesFiltered": "Items ({count} gefilterd)",
   "@logEntriesFiltered": {
     "description": "Log count with filter active",
     "placeholders": {
@@ -599,7 +599,7 @@
       }
     }
   },
-  "logEntries": "Entries ({count})",
+  "logEntries": "Items ({count})",
   "@logEntries": {
     "description": "Total log count",
     "placeholders": {
@@ -608,41 +608,41 @@
       }
     }
   },
-  "sectionLyrics": "Lyrics",
+  "sectionLyrics": "Songteksten",
   "@sectionLyrics": {
     "description": "Settings section header"
   },
-  "lyricsKeepScreenOn": "Keep screen on while viewing lyrics",
-  "lyricsKeepScreenOnSubtitle": "Prevent screen timeout while lyrics are open, including when playback is paused.",
-  "sectionColor": "Color",
+  "lyricsKeepScreenOn": "Scherm aan houden tijdens het bekijken van songteksten",
+  "lyricsKeepScreenOnSubtitle": "Voorkomt dat het scherm uitgaat terwijl songteksten open zijn, ook als het afspelen is gepauzeerd.",
+  "sectionColor": "Kleur",
   "@sectionColor": {
     "description": "Settings section header"
   },
-  "sectionTheme": "Theme",
+  "sectionTheme": "Thema",
   "@sectionTheme": {
     "description": "Settings section header"
   },
-  "sectionLanguage": "Language",
+  "sectionLanguage": "Taal",
   "@sectionLanguage": {
     "description": "Settings section header for language"
   },
-  "appearanceLanguage": "App Language",
+  "appearanceLanguage": "Taal van de app",
   "@appearanceLanguage": {
     "description": "Language setting title"
   },
-  "settingsAppearanceSubtitle": "Theme, colors, display",
+  "settingsAppearanceSubtitle": "Thema, kleuren, weergave",
   "@settingsAppearanceSubtitle": {
     "description": "Appearance settings description"
   },
-  "settingsLogsSubtitle": "View app logs for debugging",
+  "settingsLogsSubtitle": "App-logboeken bekijken voor foutopsporing",
   "@settingsLogsSubtitle": {
     "description": "Logs settings description"
   },
-  "pressBackAgainToExit": "Press back again to exit",
+  "pressBackAgainToExit": "Druk nogmaals op terug om af te sluiten",
   "@pressBackAgainToExit": {
     "description": "Exit confirmation message"
   },
-  "tracksCount": "{count, plural, =1{1 track} other{{count} tracks}}",
+  "tracksCount": "{count, plural, =1{1 nummer} other{{count} nummers}}",
   "@tracksCount": {
     "description": "Track count display",
     "placeholders": {
@@ -655,7 +655,7 @@
   "@trackMetadata": {
     "description": "Tab title - track metadata"
   },
-  "trackLyrics": "Lyrics",
+  "trackLyrics": "Songteksten",
   "@trackLyrics": {
     "description": "Tab title - lyrics"
   },
@@ -663,12 +663,12 @@
   "@trackAlbum": {
     "description": "Metadata label - album name"
   },
-  "trackCopiedToClipboard": "Copied to clipboard",
+  "trackCopiedToClipboard": "Gekopieerd naar klembord",
   "@trackCopiedToClipboard": {
     "description": "Snackbar - content copied"
   },
   "snackbarDeleteTracksFailed": "Kon {count} {count, plural, =1{nummer} other{nummers}} niet verwijderen. Controleer de opslagtoegang en probeer het opnieuw.",
-  "dateDaysAgo": "{count} days ago",
+  "dateDaysAgo": "{count} dagen geleden",
   "@dateDaysAgo": {
     "description": "Relative date - days ago",
     "placeholders": {
@@ -677,19 +677,19 @@
       }
     }
   },
-  "appearanceHeroAnimations": "Hero animations",
+  "appearanceHeroAnimations": "Heldenanimaties",
   "@appearanceHeroAnimations": {
     "description": "Toggle for shared-element (Hero) transitions"
   },
-  "appearanceHeroAnimationsSubtitle": "Fly covers between screens, e.g. when opening the player",
+  "appearanceHeroAnimationsSubtitle": "Hoezen tussen schermen laten vliegen, bijvoorbeeld bij het openen van de speler",
   "@appearanceHeroAnimationsSubtitle": {
     "description": "Subtitle for the Hero animations toggle"
   },
-  "collectionDeleteSelected": "Delete Selected",
+  "collectionDeleteSelected": "Geselecteerde verwijderen",
   "@collectionDeleteSelected": {
     "description": "Button - delete selected tracks"
   },
-  "collectionDeleteMessage": "Delete {count} {count, plural, =1{track} other{tracks}} from this album?\n\nThis will also delete the files from storage.",
+  "collectionDeleteMessage": "{count} {count, plural, =1{nummer} other{nummers}} uit dit album verwijderen?\n\nDit verwijdert ook de bestanden uit de opslag.",
   "@collectionDeleteMessage": {
     "description": "Delete confirmation with count",
     "placeholders": {
@@ -698,11 +698,11 @@
       }
     }
   },
-  "collectionTapToSelect": "Tap tracks to select",
+  "collectionTapToSelect": "Tik op nummers om ze te selecteren",
   "@collectionTapToSelect": {
     "description": "Selection hint"
   },
-  "collectionDeleteCount": "Delete {count} {count, plural, =1{track} other{tracks}}",
+  "collectionDeleteCount": "{count} {count, plural, =1{nummer} other{nummers}} verwijderen",
   "@collectionDeleteCount": {
     "description": "Delete button text with count",
     "placeholders": {
@@ -711,11 +711,11 @@
       }
     }
   },
-  "collectionSelectToDelete": "Select tracks to delete",
+  "collectionSelectToDelete": "Selecteer nummers om te verwijderen",
   "@collectionSelectToDelete": {
     "description": "Placeholder when nothing selected"
   },
-  "collectionDiscHeader": "Disc {discNumber}",
+  "collectionDiscHeader": "Schijf {discNumber}",
   "@collectionDiscHeader": {
     "description": "Header for disc separator in multi-disc albums",
     "placeholders": {
@@ -725,51 +725,51 @@
       }
     }
   },
-  "settingsLocalLibrary": "Local Library",
+  "settingsLocalLibrary": "Lokale bibliotheek",
   "@settingsLocalLibrary": {
     "description": "Settings menu item - local library"
   },
-  "settingsLocalLibrarySubtitle": "Scan music & detect duplicates",
+  "settingsLocalLibrarySubtitle": "Muziek scannen en duplicaten vinden",
   "@settingsLocalLibrarySubtitle": {
     "description": "Subtitle for local library settings"
   },
-  "settingsCache": "Storage & Cache",
+  "settingsCache": "Opslag en cache",
   "@settingsCache": {
     "description": "Settings menu item - cache management"
   },
-  "settingsCacheSubtitle": "View size and clear cached data",
+  "settingsCacheSubtitle": "Grootte bekijken en gecachte gegevens wissen",
   "@settingsCacheSubtitle": {
     "description": "Subtitle for cache management menu"
   },
-  "libraryTitle": "Local Library",
+  "libraryTitle": "Lokale bibliotheek",
   "@libraryTitle": {
     "description": "Library settings page title"
   },
-  "libraryScanSettings": "Scan Settings",
+  "libraryScanSettings": "Scaninstellingen",
   "@libraryScanSettings": {
     "description": "Section header for scan settings"
   },
-  "libraryFolderHint": "Tap to select folder",
+  "libraryFolderHint": "Tik om een map te selecteren",
   "@libraryFolderHint": {
     "description": "Placeholder when no folder selected"
   },
-  "libraryAddFolder": "Add library folder",
+  "libraryAddFolder": "Bibliotheekmap toevoegen",
   "@libraryAddFolder": {
     "description": "Action to add another local library source"
   },
-  "libraryAddFolderSubtitle": "Internal storage, SD card, SSD, or another external drive",
+  "libraryAddFolderSubtitle": "Interne opslag, sd-kaart, ssd of een andere externe schijf",
   "@libraryAddFolderSubtitle": {
     "description": "Supported storage locations for local library sources"
   },
-  "librarySourceOffline": "Offline. Reconnect the storage to restore these tracks",
+  "librarySourceOffline": "Offline. Verbind de opslag opnieuw om deze nummers te herstellen",
   "@librarySourceOffline": {
     "description": "Library source is temporarily disconnected"
   },
-  "librarySourceDisabled": "Disabled",
+  "librarySourceDisabled": "Uitgeschakeld",
   "@librarySourceDisabled": {
     "description": "Library source has been disabled by the user"
   },
-  "librarySourceScanCount": "{scanned} of {total} files scanned ({progress}%)",
+  "librarySourceScanCount": "{scanned} van {total} bestanden gescand ({progress}%)",
   "@librarySourceScanCount": {
     "description": "Live progress for one library folder scan",
     "placeholders": {
@@ -784,15 +784,15 @@
       }
     }
   },
-  "libraryExternalStorage": "External storage",
+  "libraryExternalStorage": "Externe opslag",
   "@libraryExternalStorage": {
     "description": "Label for a removable or external library source"
   },
-  "libraryRemoveFolder": "Remove library folder",
+  "libraryRemoveFolder": "Bibliotheekmap verwijderen",
   "@libraryRemoveFolder": {
     "description": "Action to remove one indexed library source"
   },
-  "libraryRemoveFolderMessage": "Remove this folder and its indexed tracks from Sistrum? Audio files on the storage will not be deleted.",
+  "libraryRemoveFolderMessage": "Deze map en de geïndexeerde nummers ervan uit Sistrum verwijderen? Audiobestanden op de opslag worden niet verwijderd.",
   "@libraryRemoveFolderMessage": {
     "description": "Confirmation shown before removing a library source"
   },
@@ -834,84 +834,84 @@
       }
     }
   },
-  "libraryShowDuplicateIndicator": "Show Duplicate Indicator",
+  "libraryShowDuplicateIndicator": "Duplicaatindicator tonen",
   "@libraryShowDuplicateIndicator": {
     "description": "Toggle for duplicate indicator in search"
   },
-  "libraryShowDuplicateIndicatorSubtitle": "Show when searching for existing tracks",
+  "libraryShowDuplicateIndicatorSubtitle": "Tonen bij het zoeken naar bestaande nummers",
   "@libraryShowDuplicateIndicatorSubtitle": {
     "description": "Subtitle for duplicate indicator toggle"
   },
-  "libraryAutoScan": "Auto Scan",
+  "libraryAutoScan": "Automatisch scannen",
   "@libraryAutoScan": {
     "description": "Setting for automatic library scanning"
   },
-  "libraryAutoScanSubtitle": "Automatically scan your library for new files",
+  "libraryAutoScanSubtitle": "Bibliotheek automatisch scannen op nieuwe bestanden",
   "@libraryAutoScanSubtitle": {
     "description": "Subtitle for auto scan setting"
   },
-  "libraryAutoScanOff": "Off",
+  "libraryAutoScanOff": "Uit",
   "@libraryAutoScanOff": {
     "description": "Auto scan disabled"
   },
-  "libraryAutoScanOnOpen": "Every app open",
+  "libraryAutoScanOnOpen": "Bij elke app-start",
   "@libraryAutoScanOnOpen": {
     "description": "Auto scan when app opens"
   },
-  "libraryAutoScanDaily": "Daily",
+  "libraryAutoScanDaily": "Dagelijks",
   "@libraryAutoScanDaily": {
     "description": "Auto scan once per day"
   },
-  "libraryAutoScanWeekly": "Weekly",
+  "libraryAutoScanWeekly": "Wekelijks",
   "@libraryAutoScanWeekly": {
     "description": "Auto scan once per week"
   },
-  "libraryActions": "Actions",
+  "libraryActions": "Acties",
   "@libraryActions": {
     "description": "Section header for library actions"
   },
-  "libraryScan": "Scan Library",
+  "libraryScan": "Bibliotheek scannen",
   "@libraryScan": {
     "description": "Button to start library scan"
   },
-  "libraryScanSubtitle": "Scan for audio files",
+  "libraryScanSubtitle": "Naar audiobestanden zoeken",
   "@libraryScanSubtitle": {
     "description": "Subtitle for scan button"
   },
-  "libraryScanSelectFolderFirst": "Select a folder first",
+  "libraryScanSelectFolderFirst": "Selecteer eerst een map",
   "@libraryScanSelectFolderFirst": {
     "description": "Message when trying to scan without folder"
   },
-  "libraryCleanupMissingFiles": "Cleanup Missing Files",
+  "libraryCleanupMissingFiles": "Ontbrekende bestanden opschonen",
   "@libraryCleanupMissingFiles": {
     "description": "Button to remove entries for missing files"
   },
-  "libraryCleanupMissingFilesSubtitle": "Remove entries for files that no longer exist",
+  "libraryCleanupMissingFilesSubtitle": "Items verwijderen voor bestanden die niet meer bestaan",
   "@libraryCleanupMissingFilesSubtitle": {
     "description": "Subtitle for cleanup button"
   },
-  "libraryClear": "Clear Library",
+  "libraryClear": "Bibliotheek wissen",
   "@libraryClear": {
     "description": "Button to clear all library entries"
   },
-  "libraryClearSubtitle": "Remove all scanned tracks",
+  "libraryClearSubtitle": "Alle gescande nummers verwijderen",
   "@libraryClearSubtitle": {
     "description": "Subtitle for clear button"
   },
-  "libraryClearConfirmTitle": "Clear Library",
+  "libraryClearConfirmTitle": "Bibliotheek wissen",
   "@libraryClearConfirmTitle": {
     "description": "Dialog title for clear confirmation"
   },
-  "libraryClearConfirmMessage": "This will remove all scanned tracks from your library. Your actual music files will not be deleted.",
+  "libraryClearConfirmMessage": "Hiermee worden alle gescande nummers uit je bibliotheek verwijderd. Je werkelijke muziekbestanden worden niet verwijderd.",
   "@libraryClearConfirmMessage": {
     "description": "Dialog message for clear confirmation"
   },
-  "libraryAbout": "About Local Library",
+  "libraryAbout": "Over de lokale bibliotheek",
   "@libraryAbout": {
     "description": "Section header for about info"
   },
   "libraryAboutDescription": "Scan je muziekmappen en blader door tags die in lokale audiobestanden zijn opgeslagen. Ondersteunt FLAC, ALAC, M4A, MP3, Opus, OGG, WAV, AIFF en APE.",
-  "libraryTracksUnit": "{count, plural, =1{track} other{tracks}}",
+  "libraryTracksUnit": "{count, plural, =1{nummer} other{nummers}}",
   "@libraryTracksUnit": {
     "description": "Unit label for tracks count (without the number itself)",
     "placeholders": {
@@ -920,7 +920,7 @@
       }
     }
   },
-  "libraryFilesUnit": "{count, plural, =1{file} other{files}}",
+  "libraryFilesUnit": "{count, plural, =1{bestand} other{bestanden}}",
   "@libraryFilesUnit": {
     "description": "Unit label for files count during library scanning",
     "placeholders": {
@@ -929,7 +929,7 @@
       }
     }
   },
-  "libraryLastScanned": "Last scanned: {time}",
+  "libraryLastScanned": "Laatst gescand: {time}",
   "@libraryLastScanned": {
     "description": "Last scan time display",
     "placeholders": {
@@ -938,23 +938,23 @@
       }
     }
   },
-  "libraryLastScannedNever": "Never",
+  "libraryLastScannedNever": "Nooit",
   "@libraryLastScannedNever": {
     "description": "Shown when library has never been scanned"
   },
-  "libraryScanning": "Scanning...",
+  "libraryScanning": "Scannen...",
   "@libraryScanning": {
     "description": "Status during scan"
   },
-  "libraryScanFinalizing": "Finalizing library...",
+  "libraryScanFinalizing": "Bibliotheek afronden...",
   "@libraryScanFinalizing": {
     "description": "Status shown after file scanning finishes but library persistence is still running"
   },
-  "libraryScanPaused": "Scan paused",
+  "libraryScanPaused": "Scan gepauzeerd",
   "@libraryScanPaused": {
     "description": "Status shown while a library scan is paused by the user"
   },
-  "libraryScanProgress": "{progress}% of {total} files",
+  "libraryScanProgress": "{progress}% van {total} bestanden",
   "@libraryScanProgress": {
     "description": "Scan progress display",
     "placeholders": {
@@ -966,7 +966,7 @@
       }
     }
   },
-  "libraryRemovedMissingFiles": "Removed {count} missing files from library",
+  "libraryRemovedMissingFiles": "{count} ontbrekende bestanden uit de bibliotheek verwijderd",
   "@libraryRemovedMissingFiles": {
     "description": "Snackbar after cleanup",
     "placeholders": {
@@ -975,19 +975,19 @@
       }
     }
   },
-  "libraryCleared": "Library cleared",
+  "libraryCleared": "Bibliotheek gewist",
   "@libraryCleared": {
     "description": "Snackbar after clearing library"
   },
-  "libraryStorageAccessRequired": "Storage Access Required",
+  "libraryStorageAccessRequired": "Opslagtoegang vereist",
   "@libraryStorageAccessRequired": {
     "description": "Dialog title for storage permission"
   },
-  "libraryStorageAccessMessage": "Sistrum needs storage access to scan your music library. Please grant permission in settings.",
+  "libraryStorageAccessMessage": "Sistrum heeft opslagtoegang nodig om je muziekbibliotheek te scannen. Verleen toestemming in de instellingen.",
   "@libraryStorageAccessMessage": {
     "description": "Dialog message for storage permission"
   },
-  "libraryFilterAll": "All",
+  "libraryFilterAll": "Alles",
   "@libraryFilterAll": {
     "description": "Filter chip - show all library items"
   },
@@ -995,31 +995,31 @@
   "@libraryFilterTitle": {
     "description": "Filter bottom sheet title"
   },
-  "libraryFilterReset": "Reset",
+  "libraryFilterReset": "Resetten",
   "@libraryFilterReset": {
     "description": "Reset all filters button"
   },
-  "libraryFilterApply": "Apply",
+  "libraryFilterApply": "Toepassen",
   "@libraryFilterApply": {
     "description": "Apply filters button"
   },
-  "libraryFilterQuality": "Quality",
+  "libraryFilterQuality": "Kwaliteit",
   "@libraryFilterQuality": {
     "description": "Filter section - audio quality"
   },
-  "libraryFilterQualityHiRes": "Hi-Res (24bit)",
+  "libraryFilterQualityHiRes": "Hi-Res (24 bit)",
   "@libraryFilterQualityHiRes": {
     "description": "Filter option - high resolution audio"
   },
-  "libraryFilterQualityCD": "CD (16bit)",
+  "libraryFilterQualityCD": "CD (16 bit)",
   "@libraryFilterQualityCD": {
     "description": "Filter option - CD quality audio"
   },
-  "libraryFilterQualityLossy": "Lossy",
+  "libraryFilterQualityLossy": "Verliesgevend",
   "@libraryFilterQualityLossy": {
     "description": "Filter option - lossy compressed audio"
   },
-  "libraryFilterFormat": "Format",
+  "libraryFilterFormat": "Indeling",
   "@libraryFilterFormat": {
     "description": "Filter section - file format"
   },
@@ -1027,35 +1027,35 @@
   "@libraryFilterMetadata": {
     "description": "Filter section - metadata completeness"
   },
-  "libraryFilterMetadataComplete": "Complete metadata",
+  "libraryFilterMetadataComplete": "Volledige metadata",
   "@libraryFilterMetadataComplete": {
     "description": "Filter option - items with complete metadata"
   },
-  "libraryFilterMetadataMissingAny": "Missing any metadata",
+  "libraryFilterMetadataMissingAny": "Ontbrekende metadata",
   "@libraryFilterMetadataMissingAny": {
     "description": "Filter option - items missing any tracked metadata field"
   },
-  "libraryFilterMetadataMissingYear": "Missing year",
+  "libraryFilterMetadataMissingYear": "Jaar ontbreekt",
   "@libraryFilterMetadataMissingYear": {
     "description": "Filter option - items missing release year/date"
   },
-  "libraryFilterMetadataMissingGenre": "Missing genre",
+  "libraryFilterMetadataMissingGenre": "Genre ontbreekt",
   "@libraryFilterMetadataMissingGenre": {
     "description": "Filter option - items missing genre"
   },
-  "libraryFilterMetadataMissingAlbumArtist": "Missing album artist",
+  "libraryFilterMetadataMissingAlbumArtist": "Albumartiest ontbreekt",
   "@libraryFilterMetadataMissingAlbumArtist": {
     "description": "Filter option - items missing album artist"
   },
-  "libraryFilterSort": "Sort",
+  "libraryFilterSort": "Sorteren",
   "@libraryFilterSort": {
     "description": "Filter section - sort order"
   },
-  "libraryFilterSortLatest": "Latest",
+  "libraryFilterSortLatest": "Nieuwste",
   "@libraryFilterSortLatest": {
     "description": "Sort option - newest first"
   },
-  "libraryFilterSortOldest": "Oldest",
+  "libraryFilterSortOldest": "Oudste",
   "@libraryFilterSortOldest": {
     "description": "Sort option - oldest first"
   },
@@ -1075,11 +1075,11 @@
   "@libraryFilterSortGenreDesc": {
     "description": "Sort option - genre descending"
   },
-  "timeJustNow": "Just now",
+  "timeJustNow": "Zojuist",
   "@timeJustNow": {
     "description": "Relative time - less than a minute ago"
   },
-  "timeMinutesAgo": "{count, plural, =1{1 minute ago} other{{count} minutes ago}}",
+  "timeMinutesAgo": "{count, plural, =1{1 minuut geleden} other{{count} minuten geleden}}",
   "@timeMinutesAgo": {
     "description": "Relative time - minutes ago",
     "placeholders": {
@@ -1088,7 +1088,7 @@
       }
     }
   },
-  "timeHoursAgo": "{count, plural, =1{1 hour ago} other{{count} hours ago}}",
+  "timeHoursAgo": "{count, plural, =1{1 uur geleden} other{{count} uur geleden}}",
   "@timeHoursAgo": {
     "description": "Relative time - hours ago",
     "placeholders": {
@@ -1097,58 +1097,58 @@
       }
     }
   },
-  "tutorialSearchTitle": "Finding Music",
+  "tutorialSearchTitle": "Muziek vinden",
   "@tutorialSearchTitle": {
     "description": "Tutorial search page title"
   },
   "tutorialSearchDesc": "Zoek na het scannen van je bibliotheek naar lokale nummers, artiesten en albums.",
-  "tutorialLibraryTitle": "Your Library",
+  "tutorialLibraryTitle": "Je bibliotheek",
   "@tutorialLibraryTitle": {
     "description": "Tutorial library page title"
   },
   "tutorialLibraryDesc": "Je gescande muziek is ingedeeld in nummers, artiesten, albums en afspeellijsten.",
   "tutorialLibraryTip1": "Blader door en zoek naar nummers die al op je apparaat staan",
-  "tutorialLibraryTip2": "Tap a track to play it with the built-in player",
+  "tutorialLibraryTip2": "Tik op een nummer om het af te spelen met de ingebouwde speler",
   "@tutorialLibraryTip2": {
     "description": "Tutorial library tip 2"
   },
-  "tutorialLibraryTip3": "Browse tracks, albums, and playlists in list or grid views",
+  "tutorialLibraryTip3": "Blader door nummers, albums en afspeellijsten in lijst- of rasterweergave",
   "@tutorialLibraryTip3": {
     "description": "Tutorial library tip 3"
   },
-  "tutorialSettingsTitle": "Customize Your Experience",
+  "tutorialSettingsTitle": "Pas je ervaring aan",
   "@tutorialSettingsTitle": {
     "description": "Tutorial settings page title"
   },
   "tutorialSettingsDesc": "Pas afspelen, bibliotheekscan, songteksten, Sistrum-weergave en lokale opslag aan.",
   "tutorialSettingsTip1": "Beheer muziekmappen en toegang tot lokale bestanden",
-  "tutorialSettingsTip2": "Adjust your local library, playback, and appearance preferences.",
+  "tutorialSettingsTip2": "Pas je voorkeuren voor lokale bibliotheek, afspelen en weergave aan.",
   "@tutorialSettingsTip2": {
     "description": "Tutorial settings tip 2"
   },
-  "tutorialSettingsTip3": "Customize app theme and appearance",
+  "tutorialSettingsTip3": "Pas app-thema en weergave aan",
   "@tutorialSettingsTip3": {
     "description": "Tutorial settings tip 3"
   },
   "tutorialReadyMessage": "Kies een muziekmap, scan je bibliotheek en begin met luisteren.",
-  "libraryForceFullScan": "Force Full Scan",
+  "libraryForceFullScan": "Volledige scan forceren",
   "@libraryForceFullScan": {
     "description": "Button to force a complete rescan of library"
   },
-  "libraryForceFullScanSubtitle": "Rescan all files, ignoring cache",
+  "libraryForceFullScanSubtitle": "Alle bestanden opnieuw scannen, cache negeren",
   "@libraryForceFullScanSubtitle": {
     "description": "Subtitle for force full scan button"
   },
-  "cacheTitle": "Storage & Cache",
+  "cacheTitle": "Opslag en cache",
   "@cacheTitle": {
     "description": "Cache management page title"
   },
-  "cacheSummaryTitle": "Cache overview",
+  "cacheSummaryTitle": "Cacheoverzicht",
   "@cacheSummaryTitle": {
     "description": "Heading for cache summary card"
   },
   "cacheSummarySubtitle": "Cache wissen houdt je oorspronkelijke muziekbestanden.",
-  "cacheEstimatedTotal": "Estimated cache usage: {size}",
+  "cacheEstimatedTotal": "Geschat cachegebruik: {size}",
   "@cacheEstimatedTotal": {
     "description": "Total cache size shown in summary",
     "placeholders": {
@@ -1157,57 +1157,57 @@
       }
     }
   },
-  "cacheSectionStorage": "Cached Data",
+  "cacheSectionStorage": "Gecachete gegevens",
   "@cacheSectionStorage": {
     "description": "Section header for cache entries"
   },
-  "cacheSectionMaintenance": "Maintenance",
+  "cacheSectionMaintenance": "Onderhoud",
   "@cacheSectionMaintenance": {
     "description": "Section header for cleanup actions"
   },
-  "cacheAppDirectory": "App cache directory",
+  "cacheAppDirectory": "App-cachemap",
   "@cacheAppDirectory": {
     "description": "Cache item title for app cache directory"
   },
-  "cacheAppDirectoryDesc": "HTTP responses, WebView data, and other temporary app data.",
+  "cacheAppDirectoryDesc": "HTTP-antwoorden, WebView-gegevens en andere tijdelijke app-gegevens.",
   "@cacheAppDirectoryDesc": {
     "description": "Description of what app cache directory contains"
   },
-  "cacheTempDirectory": "Temporary directory",
+  "cacheTempDirectory": "Tijdelijke map",
   "@cacheTempDirectory": {
     "description": "Cache item title for temporary files directory"
   },
   "cacheTempDirectoryDesc": "Tijdelijke lokale afbeeldingen en audioverwerkingsbestanden.",
-  "cacheLibraryCover": "Library cover cache",
+  "cacheLibraryCover": "Cache van bibliotheekhoezen",
   "@cacheLibraryCover": {
     "description": "Cache item title for local library cover art images"
   },
-  "cacheLibraryCoverDesc": "Cover art extracted from local music files. Will re-extract on next scan.",
+  "cacheLibraryCoverDesc": "Hoesafbeeldingen uit lokale muziekbestanden. Worden bij de volgende scan opnieuw geëxtraheerd.",
   "@cacheLibraryCoverDesc": {
     "description": "Description of what library cover cache contains"
   },
-  "libraryPlaybackNormalization": "Volume normalization",
+  "libraryPlaybackNormalization": "Volumenormalisatie",
   "@libraryPlaybackNormalization": {
     "description": "Toggle title for ReplayGain playback normalization in the built-in player"
   },
-  "libraryPlaybackNormalizationSubtitle": "Even out loudness between tracks using their ReplayGain or R128 tags, when present",
+  "libraryPlaybackNormalizationSubtitle": "Gelijkmaken van luidheid tussen nummers met hun ReplayGain- of R128-tags, indien aanwezig",
   "@libraryPlaybackNormalizationSubtitle": {
     "description": "Subtitle explaining playback volume normalization"
   },
-  "cacheAudioAnalysis": "Audio analysis cache",
+  "cacheAudioAnalysis": "Cache voor audioanalyse",
   "@cacheAudioAnalysis": {
     "description": "Cache item title for saved audio analysis results"
   },
-  "cacheAudioAnalysisDesc": "Saved spectrograms and analysis results. Will re-analyze on next open.",
+  "cacheAudioAnalysisDesc": "Opgeslagen spectrogrammen en analyseresultaten. Worden bij de volgende opening opnieuw geanalyseerd.",
   "@cacheAudioAnalysisDesc": {
     "description": "Description of what audio analysis cache contains"
   },
   "cacheCleanupUnusedDesc": "Verwijder bibliotheekitems waarvan de lokale bestanden ontbreken.",
-  "cacheNoData": "No cached data",
+  "cacheNoData": "Geen gecachete gegevens",
   "@cacheNoData": {
     "description": "Label when cache category has no data"
   },
-  "cacheSizeWithFiles": "{size} in {count} files",
+  "cacheSizeWithFiles": "{size} in {count} bestanden",
   "@cacheSizeWithFiles": {
     "description": "Cache size and file count",
     "placeholders": {
@@ -1219,7 +1219,7 @@
       }
     }
   },
-  "cacheClearSuccess": "Cleared: {target}",
+  "cacheClearSuccess": "Gewist: {target}",
   "@cacheClearSuccess": {
     "description": "Snackbar after clearing selected cache",
     "placeholders": {
@@ -1228,38 +1228,38 @@
       }
     }
   },
-  "cacheClearConfirmTitle": "Clear cache?",
+  "cacheClearConfirmTitle": "Cache wissen?",
   "@cacheClearConfirmTitle": {
     "description": "Dialog title before clearing one cache category"
   },
   "cacheClearConfirmMessage": "Gecachte gegevens voor {target} wissen? Oorspronkelijke muziekbestanden blijven bewaard.",
-  "cacheClearAllConfirmTitle": "Clear all cache?",
+  "cacheClearAllConfirmTitle": "Alle cache wissen?",
   "@cacheClearAllConfirmTitle": {
     "description": "Dialog title before clearing all caches"
   },
   "cacheClearAllConfirmMessage": "Alle cachecategorieën op deze pagina wissen? Oorspronkelijke muziekbestanden blijven bewaard.",
-  "cacheClearAll": "Clear all cache",
+  "cacheClearAll": "Alle cache wissen",
   "@cacheClearAll": {
     "description": "Button label to clear all caches"
   },
-  "cacheCleanupUnused": "Cleanup unused data",
+  "cacheCleanupUnused": "Ongebruikte gegevens opschonen",
   "@cacheCleanupUnused": {
     "description": "Action title for cleaning unused entries"
   },
   "cacheCleanupUnusedSubtitle": "Verwijder ontbrekende lokale bestanden uit de bibliotheekindex",
-  "cacheRefreshStats": "Refresh stats",
+  "cacheRefreshStats": "Statistieken vernieuwen",
   "@cacheRefreshStats": {
     "description": "Button label to refresh cache statistics"
   },
-  "trackEditMetadata": "Edit Metadata",
+  "trackEditMetadata": "Metadata bewerken",
   "@trackEditMetadata": {
     "description": "Menu action - edit embedded metadata"
   },
-  "audioBitrate": "Bitrate",
+  "audioBitrate": "Bitsnelheid",
   "@audioBitrate": {
     "description": "Label for bitrate selection"
   },
-  "actionCreate": "Create",
+  "actionCreate": "Maken",
   "@actionCreate": {
     "description": "Generic action button - create"
   },
@@ -1267,27 +1267,27 @@
   "@collectionLoved": {
     "description": "Custom folder for favorite tracks"
   },
-  "collectionFavoriteArtists": "Favorite Artists",
+  "collectionFavoriteArtists": "Favoriete artiesten",
   "@collectionFavoriteArtists": {
     "description": "Custom folder for favorite artists"
   },
-  "collectionPlaylist": "Playlist",
+  "collectionPlaylist": "Afspeellijst",
   "@collectionPlaylist": {
     "description": "Single playlist label"
   },
-  "collectionAddToPlaylist": "Add to playlist",
+  "collectionAddToPlaylist": "Toevoegen aan afspeellijst",
   "@collectionAddToPlaylist": {
     "description": "Action to add a track to user playlist"
   },
-  "collectionCreatePlaylist": "Create playlist",
+  "collectionCreatePlaylist": "Afspeellijst maken",
   "@collectionCreatePlaylist": {
     "description": "Action to create a new playlist"
   },
-  "collectionNoPlaylistsYet": "No playlists yet",
+  "collectionNoPlaylistsYet": "Nog geen afspeellijsten",
   "@collectionNoPlaylistsYet": {
     "description": "Empty state title when user has no playlists"
   },
-  "collectionPlaylistTracks": "{count, plural, =1{1 track} other{{count} tracks}}",
+  "collectionPlaylistTracks": "{count, plural, =1{1 nummer} other{{count} nummers}}",
   "@collectionPlaylistTracks": {
     "description": "Track count label for custom playlists",
     "placeholders": {
@@ -1296,7 +1296,7 @@
       }
     }
   },
-  "collectionAddedToPlaylist": "Added to \"{playlistName}\"",
+  "collectionAddedToPlaylist": "Toegevoegd aan \"{playlistName}\"",
   "@collectionAddedToPlaylist": {
     "description": "Snackbar after adding track to playlist",
     "placeholders": {
@@ -1305,7 +1305,7 @@
       }
     }
   },
-  "collectionAlreadyInPlaylist": "Already in \"{playlistName}\"",
+  "collectionAlreadyInPlaylist": "Al in \"{playlistName}\"",
   "@collectionAlreadyInPlaylist": {
     "description": "Snackbar when track already exists in playlist",
     "placeholders": {
@@ -1314,60 +1314,60 @@
       }
     }
   },
-  "collectionPlaylistNameHint": "Playlist name",
+  "collectionPlaylistNameHint": "Naam van afspeellijst",
   "@collectionPlaylistNameHint": {
     "description": "Hint text for playlist name input"
   },
-  "collectionPlaylistNameRequired": "Playlist name is required",
+  "collectionPlaylistNameRequired": "Naam van afspeellijst is verplicht",
   "@collectionPlaylistNameRequired": {
     "description": "Validation error for empty playlist name"
   },
-  "collectionRenamePlaylist": "Rename playlist",
+  "collectionRenamePlaylist": "Afspeellijst hernoemen",
   "@collectionRenamePlaylist": {
     "description": "Action to rename playlist"
   },
-  "collectionDeletePlaylist": "Delete playlist",
+  "collectionDeletePlaylist": "Afspeellijst verwijderen",
   "@collectionDeletePlaylist": {
     "description": "Action to delete playlist"
   },
-  "collectionPlaylistRenamed": "Playlist renamed",
+  "collectionPlaylistRenamed": "Afspeellijst hernoemd",
   "@collectionPlaylistRenamed": {
     "description": "Snackbar after renaming playlist"
   },
   "collectionRemovedTracks": "{count, plural, =1{1 nummer verwijderd} other{{count} nummers verwijderd}}",
-  "collectionLovedEmptyTitle": "No loved songs yet",
+  "collectionLovedEmptyTitle": "Nog geen favoriete nummers",
   "@collectionLovedEmptyTitle": {
     "description": "Loved empty state title"
   },
-  "collectionLovedEmptySubtitle": "Tap love on tracks to keep your favorites",
+  "collectionLovedEmptySubtitle": "Tik op het hartje bij nummers om je favorieten te bewaren",
   "@collectionLovedEmptySubtitle": {
     "description": "Loved empty state subtitle"
   },
-  "collectionFavoriteArtistsEmptyTitle": "No favorite artists yet",
+  "collectionFavoriteArtistsEmptyTitle": "Nog geen favoriete artiesten",
   "@collectionFavoriteArtistsEmptyTitle": {
     "description": "Favorite artists empty state title"
   },
-  "collectionFavoriteArtistsEmptySubtitle": "Tap the heart on an artist page to keep them here",
+  "collectionFavoriteArtistsEmptySubtitle": "Tik op het hartje op de pagina van een artiest om hem hier te bewaren",
   "@collectionFavoriteArtistsEmptySubtitle": {
     "description": "Favorite artists empty state subtitle"
   },
-  "collectionPlaylistEmptyTitle": "Playlist is empty",
+  "collectionPlaylistEmptyTitle": "Afspeellijst is leeg",
   "@collectionPlaylistEmptyTitle": {
     "description": "Playlist empty state title"
   },
-  "collectionPlaylistEmptySubtitle": "Long-press + on any track to add it here",
+  "collectionPlaylistEmptySubtitle": "Houd + lang ingedrukt bij een nummer om het hier toe te voegen",
   "@collectionPlaylistEmptySubtitle": {
     "description": "Playlist empty state subtitle"
   },
-  "collectionRemoveFromPlaylist": "Remove from playlist",
+  "collectionRemoveFromPlaylist": "Verwijderen uit afspeellijst",
   "@collectionRemoveFromPlaylist": {
     "description": "Tooltip for removing track from playlist"
   },
-  "collectionRemoveFromFolder": "Remove from folder",
+  "collectionRemoveFromFolder": "Verwijderen uit map",
   "@collectionRemoveFromFolder": {
     "description": "Tooltip for removing track from Loved folder"
   },
-  "collectionRemovedFromFavoriteArtists": "\"{artistName}\" removed from Favorite Artists",
+  "collectionRemovedFromFavoriteArtists": "\"{artistName}\" verwijderd uit favoriete artiesten",
   "@collectionRemovedFromFavoriteArtists": {
     "description": "Snackbar after removing artist from favorite artists",
     "placeholders": {
@@ -1376,109 +1376,109 @@
       }
     }
   },
-  "trackOptionAddToLoved": "Add to Loved",
+  "trackOptionAddToLoved": "Toevoegen aan favorieten",
   "@trackOptionAddToLoved": {
     "description": "Bottom sheet action label - add track to loved folder"
   },
-  "trackOptionRemoveFromLoved": "Remove from Loved",
+  "trackOptionRemoveFromLoved": "Verwijderen uit favorieten",
   "@trackOptionRemoveFromLoved": {
     "description": "Bottom sheet action label - remove track from loved folder"
   },
-  "artistOptionRemoveFromFavorites": "Remove from Favorite Artists",
+  "artistOptionRemoveFromFavorites": "Verwijderen uit favoriete artiesten",
   "@artistOptionRemoveFromFavorites": {
     "description": "Action label - remove artist from favorite artists"
   },
-  "collectionPlaylistChangeCover": "Change cover image",
+  "collectionPlaylistChangeCover": "Hoesafbeelding wijzigen",
   "@collectionPlaylistChangeCover": {
     "description": "Bottom sheet action to pick a custom cover image for a playlist"
   },
-  "collectionPlaylistRemoveCover": "Remove cover image",
+  "collectionPlaylistRemoveCover": "Hoesafbeelding verwijderen",
   "@collectionPlaylistRemoveCover": {
     "description": "Bottom sheet action to remove custom cover image from a playlist"
   },
-  "settingsBackup": "Backup & Restore",
+  "settingsBackup": "Back-up en herstel",
   "@settingsBackup": {
     "description": "Settings menu item - backup and restore page"
   },
-  "settingsBackupSubtitle": "Move your library, history and settings to a new device",
+  "settingsBackupSubtitle": "Je bibliotheek, geschiedenis en instellingen naar een nieuw apparaat verplaatsen",
   "@settingsBackupSubtitle": {
     "description": "Subtitle for backup and restore settings item"
   },
-  "backupTitle": "Backup & Restore",
+  "backupTitle": "Back-up en herstel",
   "@backupTitle": {
     "description": "App bar title for the backup and restore page"
   },
-  "backupExportSectionTitle": "Create backup",
+  "backupExportSectionTitle": "Back-up maken",
   "@backupExportSectionTitle": {
     "description": "Section title for the export/backup card"
   },
   "backupExportSectionDescription": "Sla instellingen, lokale profielen, collecties en optionele verouderde bibliotheekgegevens op in een back-upbestand.",
-  "backupExportButton": "Create backup file",
+  "backupExportButton": "Back-upbestand maken",
   "@backupExportButton": {
     "description": "Button to create and share a backup file"
   },
-  "backupImportSectionTitle": "Restore backup",
+  "backupImportSectionTitle": "Back-up herstellen",
   "@backupImportSectionTitle": {
     "description": "Section title for the import/restore card"
   },
-  "backupImportSectionDescription": "Pick a backup file to restore your data. This replaces the current settings, history and library on this device.",
+  "backupImportSectionDescription": "Kies een back-upbestand om je gegevens te herstellen. Dit vervangt de huidige instellingen, geschiedenis en bibliotheek op dit apparaat.",
   "@backupImportSectionDescription": {
     "description": "Description for the restore action"
   },
-  "backupImportButton": "Choose backup file",
+  "backupImportButton": "Back-upbestand kiezen",
   "@backupImportButton": {
     "description": "Button to pick a backup file to restore"
   },
-  "backupCreated": "Backup created",
+  "backupCreated": "Back-up gemaakt",
   "@backupCreated": {
     "description": "Snackbar after a backup file is created"
   },
-  "backupCreateFailed": "Failed to create backup",
+  "backupCreateFailed": "Back-up maken mislukt",
   "@backupCreateFailed": {
     "description": "Snackbar when backup creation fails"
   },
   "backupTooLarge": "Deze back-up is te groot om terug te zetten. Neem minder categorieën op en probeer het opnieuw.",
   "backupRestorePartiallyFailed": "Terugzetten van back-up mislukt. Al teruggezet: {categories}",
   "backupListeningStatisticsExcluded": "Luisterstatistieken en aantal keren afgespeeld zijn niet opgenomen.",
-  "backupRestoreConfirmTitle": "Restore this backup?",
+  "backupRestoreConfirmTitle": "Deze back-up herstellen?",
   "@backupRestoreConfirmTitle": {
     "description": "Confirmation dialog title before restoring a backup"
   },
-  "backupRestoreConfirmButton": "Restore",
+  "backupRestoreConfirmButton": "Herstellen",
   "@backupRestoreConfirmButton": {
     "description": "Confirm button to proceed with restore"
   },
-  "backupRestored": "Backup restored successfully",
+  "backupRestored": "Back-up succesvol hersteld",
   "@backupRestored": {
     "description": "Snackbar after a successful restore"
   },
-  "backupRestoreFailed": "Failed to restore backup",
+  "backupRestoreFailed": "Herstellen van back-up mislukt",
   "@backupRestoreFailed": {
     "description": "Snackbar when restore fails"
   },
-  "backupInvalidFile": "This file is not a valid Sistrum backup",
+  "backupInvalidFile": "Dit bestand is geen geldige Sistrum-back-up",
   "@backupInvalidFile": {
     "description": "Snackbar when the chosen file is not a valid backup"
   },
-  "backupRestoreRestartHint": "Restart the app to make sure every change is applied.",
+  "backupRestoreRestartHint": "Start de app opnieuw om zeker te zijn dat alle wijzigingen zijn toegepast.",
   "@backupRestoreRestartHint": {
     "description": "Hint shown after restoring that an app restart is recommended"
   },
-  "backupContentsTitle": "Backup contents",
+  "backupContentsTitle": "Inhoud van de back-up",
   "@backupContentsTitle": {
     "description": "Header above the list summarizing what the backup contains"
   },
-  "backupSettingsOnly": "Settings only",
-  "backupSelectCollections": "Library collections",
-  "backupSelectCollectionsDescription": "Liked tracks, favorite artists, playlists and playlist covers.",
-  "backupSelectedExportDescription": "Save the selected categories to a backup file. Audio files are not included.",
-  "backupSelectAtLeastOne": "Select at least one category to create a backup.",
-  "backupSelectedRestoreMessage": "Only the categories listed below will be restored. Categories not included in this backup will stay unchanged. Restoring can replace existing data and cannot be undone.",
-  "backupContentsSettings": "App settings",
+  "backupSettingsOnly": "Alleen instellingen",
+  "backupSelectCollections": "Bibliotheekcollecties",
+  "backupSelectCollectionsDescription": "Geliefde nummers, favoriete artiesten, afspeellijsten en afspeellijsthoezen.",
+  "backupSelectedExportDescription": "Sla de geselecteerde categorieën op in een back-upbestand. Audiobestanden zijn niet inbegrepen.",
+  "backupSelectAtLeastOne": "Selecteer minstens één categorie om een back-up te maken.",
+  "backupSelectedRestoreMessage": "Alleen de hieronder vermelde categorieën worden hersteld. Categorieën die niet in deze back-up zitten, blijven ongewijzigd.",
+  "backupContentsSettings": "App-instellingen",
   "@backupContentsSettings": {
     "description": "Backup contents row label for settings"
   },
-  "backupContentsLiked": "{count} liked {count, plural, =1{track} other{tracks}}",
+  "backupContentsLiked": "{count} {count, plural, =1{geliefd nummer} other{geliefde nummers}}",
   "@backupContentsLiked": {
     "description": "Backup contents row for liked tracks count",
     "placeholders": {
@@ -1487,7 +1487,7 @@
       }
     }
   },
-  "backupContentsPlaylists": "{count, plural, =1{1 playlist} other{{count} playlists}}",
+  "backupContentsPlaylists": "{count, plural, =1{1 afspeellijst} other{{count} afspeellijsten}}",
   "@backupContentsPlaylists": {
     "description": "Backup contents row for playlist count",
     "placeholders": {
@@ -1496,7 +1496,7 @@
       }
     }
   },
-  "backupContentsArtists": "{count, plural, =1{1 favorite artist} other{{count} favorite artists}}",
+  "backupContentsArtists": "{count, plural, =1{1 favoriete artiest} other{{count} favoriete artiesten}}",
   "@backupContentsArtists": {
     "description": "Backup contents row for favorite artists count",
     "placeholders": {
@@ -1505,7 +1505,7 @@
       }
     }
   },
-  "snackbarRemovedTracksFromLoved": "Removed {count} tracks from Loved",
+  "snackbarRemovedTracksFromLoved": "{count} nummers verwijderd uit favorieten",
   "@snackbarRemovedTracksFromLoved": {
     "description": "Snackbar after removing multiple tracks from Loved folder",
     "placeholders": {
@@ -1514,7 +1514,7 @@
       }
     }
   },
-  "snackbarAddedTracksToLoved": "Added {count} tracks to Loved",
+  "snackbarAddedTracksToLoved": "{count} nummers toegevoegd aan favorieten",
   "@snackbarAddedTracksToLoved": {
     "description": "Snackbar after adding multiple tracks to Loved folder",
     "placeholders": {
@@ -1523,15 +1523,15 @@
       }
     }
   },
-  "homeGoToAlbum": "Go to Album",
+  "homeGoToAlbum": "Naar album gaan",
   "@homeGoToAlbum": {
     "description": "Context menu item to navigate to the album page"
   },
-  "snackbarMetadataSaved": "Metadata saved successfully",
+  "snackbarMetadataSaved": "Metadata succesvol opgeslagen",
   "@snackbarMetadataSaved": {
     "description": "Snackbar after successfully saving track metadata"
   },
-  "snackbarError": "Error: {error}",
+  "snackbarError": "Fout: {error}",
   "@snackbarError": {
     "description": "Generic error snackbar with error detail",
     "placeholders": {
@@ -1540,11 +1540,11 @@
       }
     }
   },
-  "noTracksFoundForAlbum": "No tracks found for this album",
+  "noTracksFoundForAlbum": "Geen nummers gevonden voor dit album",
   "@noTracksFoundForAlbum": {
     "description": "Empty state message when an album has no tracks"
   },
-  "snackbarUnsupportedAudioFormat": "Unsupported audio format",
+  "snackbarUnsupportedAudioFormat": "Niet-ondersteund audioformaat",
   "@snackbarUnsupportedAudioFormat": {
     "description": "Snackbar when the audio format is not supported for the requested operation"
   },
@@ -1552,11 +1552,11 @@
   "@cacheRefresh": {
     "description": "Tooltip for refresh button on cache management page"
   },
-  "editMetadataFieldTitle": "Title",
+  "editMetadataFieldTitle": "Titel",
   "@editMetadataFieldTitle": {
     "description": "Chip label for title field in auto-fill selector"
   },
-  "editMetadataFieldArtist": "Artist",
+  "editMetadataFieldArtist": "Artiest",
   "@editMetadataFieldArtist": {
     "description": "Chip label for artist field in auto-fill selector"
   },
@@ -1564,19 +1564,19 @@
   "@editMetadataFieldAlbum": {
     "description": "Chip label for album field in auto-fill selector"
   },
-  "editMetadataFieldAlbumArtist": "Album Artist",
+  "editMetadataFieldAlbumArtist": "Albumartiest",
   "@editMetadataFieldAlbumArtist": {
     "description": "Chip label for album artist field in auto-fill selector"
   },
-  "editMetadataFieldDate": "Date",
+  "editMetadataFieldDate": "Datum",
   "@editMetadataFieldDate": {
     "description": "Chip label for date field in auto-fill selector"
   },
-  "editMetadataFieldTrackNum": "Track #",
+  "editMetadataFieldTrackNum": "Nr. nummer",
   "@editMetadataFieldTrackNum": {
     "description": "Chip label for track number field in auto-fill selector"
   },
-  "editMetadataFieldDiscNum": "Disc #",
+  "editMetadataFieldDiscNum": "Nr. schijf",
   "@editMetadataFieldDiscNum": {
     "description": "Chip label for disc number field in auto-fill selector"
   },
@@ -1592,19 +1592,19 @@
   "@editMetadataFieldLabel": {
     "description": "Chip label for label field in auto-fill selector"
   },
-  "editMetadataFieldCopyright": "Copyright",
+  "editMetadataFieldCopyright": "Auteursrecht",
   "@editMetadataFieldCopyright": {
     "description": "Chip label for copyright field in auto-fill selector"
   },
-  "editMetadataFieldCover": "Cover Art",
+  "editMetadataFieldCover": "Hoesafbeelding",
   "@editMetadataFieldCover": {
     "description": "Chip label for cover art field in auto-fill selector"
   },
-  "queueFilteringIndicator": "Filtering...",
+  "queueFilteringIndicator": "Filteren...",
   "@queueFilteringIndicator": {
     "description": "Shown while filter results are being computed"
   },
-  "queueTrackCount": "{count, plural, =1{1 track} other{{count} tracks}}",
+  "queueTrackCount": "{count, plural, =1{1 nummer} other{{count} nummers}}",
   "@queueTrackCount": {
     "description": "Track count label with plural support",
     "placeholders": {
@@ -1626,7 +1626,7 @@
   "queueEmptyAlbumsSubtitle": "Scan een muziekmap om albums toe te voegen",
   "queueEmptySingles": "Geen lokale singles",
   "queueEmptySinglesSubtitle": "Gescande singles verschijnen hier",
-  "queuePlaylistCount": "{count, plural, =1{1 playlist} other{{count} playlists}}",
+  "queuePlaylistCount": "{count, plural, =1{1 afspeellijst} other{{count} afspeellijsten}}",
   "@queuePlaylistCount": {
     "description": "Playlist count label with plural support",
     "placeholders": {
@@ -1635,37 +1635,37 @@
       }
     }
   },
-  "queueEmptyPlaylistsSubtitle": "Create a playlist to organize your tracks",
+  "queueEmptyPlaylistsSubtitle": "Maak een afspeellijst om je nummers te ordenen",
   "@queueEmptyPlaylistsSubtitle": {
     "description": "Empty state subtitle for the playlists library view"
   },
   "libraryEmpty": "Geen lokale nummers",
   "libraryEmptySubtitle": "Scan een muziekmap om je bibliotheek te vullen",
-  "selectionAllPlaylistsSelected": "All playlists selected",
+  "selectionAllPlaylistsSelected": "Alle afspeellijsten geselecteerd",
   "@selectionAllPlaylistsSelected": {
     "description": "Shown when all playlists are selected in selection mode"
   },
-  "selectionTapPlaylistsToSelect": "Tap playlists to select",
+  "selectionTapPlaylistsToSelect": "Tik op afspeellijsten om ze te selecteren",
   "@selectionTapPlaylistsToSelect": {
     "description": "Hint shown in playlist selection mode"
   },
-  "selectionSelectPlaylistsToDelete": "Select playlists to delete",
+  "selectionSelectPlaylistsToDelete": "Selecteer afspeellijsten om te verwijderen",
   "@selectionSelectPlaylistsToDelete": {
     "description": "Hint shown when no playlists are selected for deletion"
   },
-  "audioAnalysisTitle": "Audio Quality Analysis",
+  "audioAnalysisTitle": "Analyse van audiokwaliteit",
   "@audioAnalysisTitle": {
     "description": "Title for audio analysis section"
   },
-  "audioAnalysisDescription": "Verify lossless quality with spectrum analysis",
+  "audioAnalysisDescription": "Controleer de verliesvrije kwaliteit met een spectrumanalyse",
   "@audioAnalysisDescription": {
     "description": "Description for audio analysis tap-to-analyze prompt"
   },
-  "audioAnalysisAnalyzing": "Analyzing audio...",
+  "audioAnalysisAnalyzing": "Audio analyseren...",
   "@audioAnalysisAnalyzing": {
     "description": "Loading text while analyzing audio"
   },
-  "audioAnalysisSampleRate": "Sample Rate",
+  "audioAnalysisSampleRate": "Samplefrequentie",
   "@audioAnalysisSampleRate": {
     "description": "Sample rate metric label"
   },
@@ -1677,19 +1677,19 @@
   "@audioAnalysisContainer": {
     "description": "Audio container metric label"
   },
-  "audioAnalysisDecodedFormat": "Decoded Format",
+  "audioAnalysisDecodedFormat": "Gedecodeerd formaat",
   "@audioAnalysisDecodedFormat": {
     "description": "Decoded sample format metric label"
   },
-  "audioAnalysisBitDepth": "Bit Depth",
+  "audioAnalysisBitDepth": "Bitdiepte",
   "@audioAnalysisBitDepth": {
     "description": "Bit depth metric label"
   },
-  "audioAnalysisChannels": "Channels",
+  "audioAnalysisChannels": "Kanalen",
   "@audioAnalysisChannels": {
     "description": "Channels metric label"
   },
-  "audioAnalysisDuration": "Duration",
+  "audioAnalysisDuration": "Duur",
   "@audioAnalysisDuration": {
     "description": "Duration metric label"
   },
@@ -1697,15 +1697,15 @@
   "@audioAnalysisNyquist": {
     "description": "Nyquist frequency metric label"
   },
-  "audioAnalysisFileSize": "Size",
+  "audioAnalysisFileSize": "Grootte",
   "@audioAnalysisFileSize": {
     "description": "File size metric label"
   },
-  "audioAnalysisDynamicRange": "Dynamic Range",
+  "audioAnalysisDynamicRange": "Dynamisch bereik",
   "@audioAnalysisDynamicRange": {
     "description": "Dynamic range metric label"
   },
-  "audioAnalysisPeak": "Peak",
+  "audioAnalysisPeak": "Piek",
   "@audioAnalysisPeak": {
     "description": "Peak amplitude metric label"
   },
@@ -1725,19 +1725,19 @@
   "@audioAnalysisClipping": {
     "description": "Clipping metric label"
   },
-  "audioAnalysisNoClipping": "No clipping",
+  "audioAnalysisNoClipping": "Geen clipping",
   "@audioAnalysisNoClipping": {
     "description": "Displayed when no clipped samples were detected"
   },
-  "audioAnalysisSpectralCutoff": "Spectral Cutoff",
+  "audioAnalysisSpectralCutoff": "Spectrale afsnijding",
   "@audioAnalysisSpectralCutoff": {
     "description": "Estimated spectral cutoff metric label"
   },
-  "audioAnalysisCutoffNotDetected": "Not detected",
+  "audioAnalysisCutoffNotDetected": "Niet gedetecteerd",
   "@audioAnalysisCutoffNotDetected": {
     "description": "Displayed when no reliable broadband spectral cutoff can be detected"
   },
-  "audioAnalysisChannelStats": "Per-channel Stats",
+  "audioAnalysisChannelStats": "Statistieken per kanaal",
   "@audioAnalysisChannelStats": {
     "description": "Per-channel audio analysis section label"
   },
@@ -1745,30 +1745,30 @@
   "@audioAnalysisSamples": {
     "description": "Total samples metric label"
   },
-  "audioAnalysisRescan": "Re-analyze",
+  "audioAnalysisRescan": "Opnieuw analyseren",
   "@audioAnalysisRescan": {
     "description": "Tooltip/label for the button that re-runs the audio analysis, discarding cached results"
   },
   "audioAnalysisSaveSpectrogram": "Spectrogram opslaan",
   "audioAnalysisSpectrogramSaved": "Spectrogram opgeslagen in {fileName}",
   "audioAnalysisSpectrogramSaveFailed": "Kon het spectrogram niet opslaan",
-  "audioAnalysisRescanning": "Re-analyzing audio...",
+  "audioAnalysisRescanning": "Audio opnieuw analyseren...",
   "@audioAnalysisRescanning": {
     "description": "Loading text while audio is being re-analyzed after an explicit refresh"
   },
-  "metadataSaveFailedFfmpeg": "Failed to save metadata via FFmpeg",
+  "metadataSaveFailedFfmpeg": "Metadata opslaan via FFmpeg mislukt",
   "@metadataSaveFailedFfmpeg": {
     "description": "Snackbar error when FFmpeg fails to write metadata"
   },
-  "metadataSaveFailedStorage": "Failed to write metadata back to storage",
+  "metadataSaveFailedStorage": "Metadata terugschrijven naar de opslag mislukt",
   "@metadataSaveFailedStorage": {
     "description": "Snackbar error when writing metadata file back to storage fails"
   },
-  "notifScanningLibrary": "Scanning local library",
+  "notifScanningLibrary": "Lokale bibliotheek scannen",
   "@notifScanningLibrary": {
     "description": "Notification title while scanning local library"
   },
-  "notifLibraryScanProgressWithTotal": "{scanned}/{total} files • {percentage}%",
+  "notifLibraryScanProgressWithTotal": "{scanned}/{total} bestanden • {percentage}%",
   "@notifLibraryScanProgressWithTotal": {
     "description": "Notification body for library scan progress when total is known",
     "placeholders": {
@@ -1783,7 +1783,7 @@
       }
     }
   },
-  "notifLibraryScanProgressNoTotal": "{scanned} files scanned",
+  "notifLibraryScanProgressNoTotal": "{scanned} bestanden gescand",
   "@notifLibraryScanProgressNoTotal": {
     "description": "Notification body for library scan progress when total is unknown",
     "placeholders": {
@@ -1792,11 +1792,11 @@
       }
     }
   },
-  "notifLibraryScanComplete": "Library scan complete",
+  "notifLibraryScanComplete": "Bibliotheekscan voltooid",
   "@notifLibraryScanComplete": {
     "description": "Notification title when library scan finishes"
   },
-  "notifLibraryScanCompleteBody": "{count} tracks indexed",
+  "notifLibraryScanCompleteBody": "{count} nummers geïndexeerd",
   "@notifLibraryScanCompleteBody": {
     "description": "Notification body for library scan complete - number of indexed tracks",
     "placeholders": {
@@ -1805,7 +1805,7 @@
       }
     }
   },
-  "notifLibraryScanErrors": "{count} errors",
+  "notifLibraryScanErrors": "{count} fouten",
   "@notifLibraryScanErrors": {
     "description": "Library scan complete suffix - error count",
     "placeholders": {
@@ -1814,24 +1814,24 @@
       }
     }
   },
-  "notifLibraryScanFailed": "Library scan failed",
+  "notifLibraryScanFailed": "Bibliotheekscan mislukt",
   "@notifLibraryScanFailed": {
     "description": "Notification title when library scan fails"
   },
   "notifLibraryScanInterruptedBody": "De vorige bibliotheekscan is onderbroken. Scan de map opnieuw om verder te gaan. Je geïndexeerde nummers blijven beschikbaar.",
-  "notifLibraryScanCancelled": "Library scan cancelled",
+  "notifLibraryScanCancelled": "Bibliotheekscan geannuleerd",
   "@notifLibraryScanCancelled": {
     "description": "Notification title when library scan is cancelled by the user"
   },
-  "notifLibraryScanStopped": "Scan stopped before completion.",
+  "notifLibraryScanStopped": "Scan gestopt voordat deze was voltooid.",
   "@notifLibraryScanStopped": {
     "description": "Notification body when library scan is cancelled"
   },
-  "notifLibraryScanPaused": "Library scan paused",
+  "notifLibraryScanPaused": "Bibliotheekscan gepauzeerd",
   "@notifLibraryScanPaused": {
     "description": "Notification title when the user pauses a library scan"
   },
-  "notifLibraryScanPausedBody": "{count} files scanned. Resume in Local Library settings to continue from here.",
+  "notifLibraryScanPausedBody": "{count} bestanden gescand. Hervat in de instellingen van de lokale bibliotheek om hier verder te gaan.",
   "@notifLibraryScanPausedBody": {
     "description": "Notification body for a paused library scan - files scanned so far",
     "placeholders": {
@@ -1848,63 +1848,63 @@
   "@tutorialSearchHint": {
     "description": "Placeholder shown in the tutorial search demo"
   },
-  "trackCoverNoEmbeddedArt": "No embedded album art found",
+  "trackCoverNoEmbeddedArt": "Geen ingesloten albumhoes gevonden",
   "@trackCoverNoEmbeddedArt": {
     "description": "Message shown when a track file has no embedded cover art"
   },
-  "trackCoverReplace": "Replace Cover",
+  "trackCoverReplace": "Hoes vervangen",
   "@trackCoverReplace": {
     "description": "Button label for replacing selected cover art"
   },
-  "trackCoverPick": "Pick Cover",
+  "trackCoverPick": "Hoes kiezen",
   "@trackCoverPick": {
     "description": "Button label for selecting cover art"
   },
-  "trackCoverClearSelected": "Clear selected cover",
+  "trackCoverClearSelected": "Geselecteerde hoes wissen",
   "@trackCoverClearSelected": {
     "description": "Tooltip for clearing the newly selected cover art"
   },
-  "trackCoverCurrent": "Current cover",
+  "trackCoverCurrent": "Huidige hoes",
   "@trackCoverCurrent": {
     "description": "Label for the currently embedded cover preview"
   },
-  "trackCoverSelected": "Selected cover",
+  "trackCoverSelected": "Geselecteerde hoes",
   "@trackCoverSelected": {
     "description": "Label for the newly selected cover preview"
   },
-  "trackCoverReplaceNotice": "The selected cover will replace the current embedded cover when you tap Save.",
+  "trackCoverReplaceNotice": "De geselecteerde hoes vervangt de huidige ingesloten hoes wanneer je op Opslaan tikt.",
   "@trackCoverReplaceNotice": {
     "description": "Notice shown when a new cover has been selected but not saved yet"
   },
-  "nowPlayingRepeatOff": "Repeat off",
+  "nowPlayingRepeatOff": "Herhalen uit",
   "@nowPlayingRepeatOff": {
     "description": "Repeat toggle tooltip when repeat is disabled"
   },
-  "nowPlayingRepeatAll": "Repeat all",
+  "nowPlayingRepeatAll": "Alles herhalen",
   "@nowPlayingRepeatAll": {
     "description": "Repeat toggle tooltip when the whole queue repeats"
   },
-  "nowPlayingRepeatOne": "Repeat one",
+  "nowPlayingRepeatOne": "Eén herhalen",
   "@nowPlayingRepeatOne": {
     "description": "Repeat toggle tooltip when the current track repeats"
   },
-  "logAutoScrollOn": "Auto-scroll ON",
+  "logAutoScrollOn": "Automatisch scrollen AAN",
   "@logAutoScrollOn": {
     "description": "Tooltip when auto-scroll is enabled on the log screen"
   },
-  "logAutoScrollOff": "Auto-scroll OFF",
+  "logAutoScrollOff": "Automatisch scrollen UIT",
   "@logAutoScrollOff": {
     "description": "Tooltip when auto-scroll is disabled on the log screen"
   },
-  "logCopyLogs": "Copy logs",
+  "logCopyLogs": "Logboeken kopiëren",
   "@logCopyLogs": {
     "description": "Tooltip for copying logs"
   },
-  "logClearSearch": "Clear search",
+  "logClearSearch": "Zoekopdracht wissen",
   "@logClearSearch": {
     "description": "Tooltip for clearing the log search field"
   },
-  "clickableInformationUnavailable": "{type} information not available",
+  "clickableInformationUnavailable": "{type}-informatie niet beschikbaar",
   "@clickableInformationUnavailable": {
     "description": "Snackbar shown when clickable metadata cannot open a destination",
     "placeholders": {
@@ -1913,7 +1913,7 @@
       }
     }
   },
-  "a11yOpenAlbumByArtistTrackCount": "Open album {albumName} by {artistName}, {trackCount} tracks",
+  "a11yOpenAlbumByArtistTrackCount": "Album {albumName} van {artistName} openen, {trackCount} nummers",
   "@a11yOpenAlbumByArtistTrackCount": {
     "description": "Accessibility label for opening an album item with track count",
     "placeholders": {
@@ -1928,88 +1928,88 @@
       }
     }
   },
-  "settingsLyrics": "Lyrics",
+  "settingsLyrics": "Songteksten",
   "@settingsLyrics": {
     "description": "Settings menu item - lyrics settings"
   },
   "settingsLyricsSubtitle": "Lokale songteksten, opslagmodus en tekstgrootte",
-  "editMetadataFieldDateHint": "YYYY-MM-DD or YYYY",
+  "editMetadataFieldDateHint": "JJJJ-MM-DD of JJJJ",
   "@editMetadataFieldDateHint": {
     "description": "Hint text for the edit metadata date field"
   },
-  "editMetadataFieldTrackTotal": "Track Total",
+  "editMetadataFieldTrackTotal": "Totaal nummers",
   "@editMetadataFieldTrackTotal": {
     "description": "Label for total tracks field in the edit metadata sheet"
   },
-  "editMetadataFieldDiscTotal": "Disc Total",
+  "editMetadataFieldDiscTotal": "Totaal schijven",
   "@editMetadataFieldDiscTotal": {
     "description": "Label for total discs field in the edit metadata sheet"
   },
-  "editMetadataFieldComposer": "Composer",
+  "editMetadataFieldComposer": "Componist",
   "@editMetadataFieldComposer": {
     "description": "Label for composer field in the edit metadata sheet"
   },
-  "editMetadataFieldComment": "Comment",
+  "editMetadataFieldComment": "Opmerking",
   "@editMetadataFieldComment": {
     "description": "Label for comment field in the edit metadata sheet"
   },
-  "trackAlbumType": "Release Type",
+  "trackAlbumType": "Releasetype",
   "@trackAlbumType": {
     "description": "Label for an album or release type metadata value"
   },
-  "editMetadataFieldAlbumTypeHint": "Album, single, EP, compilation...",
+  "editMetadataFieldAlbumTypeHint": "Album, single, ep, compilatie...",
   "@editMetadataFieldAlbumTypeHint": {
     "description": "Hint for the release type metadata field"
   },
-  "editMetadataFieldExplicit": "Explicit",
+  "editMetadataFieldExplicit": "Expliciet",
   "@editMetadataFieldExplicit": {
     "description": "Label for the explicit content metadata field"
   },
-  "editMetadataFieldExplicitHint": "Mark this track as containing explicit content",
+  "editMetadataFieldExplicitHint": "Markeer dit nummer als expliciete inhoud",
   "@editMetadataFieldExplicitHint": {
     "description": "Description for the explicit content metadata switch"
   },
-  "metadataExplicitValue": "Explicit",
+  "metadataExplicitValue": "Expliciet",
   "@metadataExplicitValue": {
     "description": "Displayed value when a track is marked explicit"
   },
-  "editMetadataFieldUpc": "UPC / Barcode",
+  "editMetadataFieldUpc": "UPC / barcode",
   "@editMetadataFieldUpc": {
     "description": "Label for the release barcode metadata field"
   },
-  "editMetadataFieldUpcHint": "Numeric UPC, EAN, or GTIN",
+  "editMetadataFieldUpcHint": "Numerieke UPC, EAN of GTIN",
   "@editMetadataFieldUpcHint": {
     "description": "Hint for the release barcode metadata field"
   },
-  "editMetadataAdvanced": "Advanced",
+  "editMetadataAdvanced": "Geavanceerd",
   "@editMetadataAdvanced": {
     "description": "Expandable section label for advanced metadata fields"
   },
-  "libraryFilterMetadataMissingTrackNumber": "Missing track number",
+  "libraryFilterMetadataMissingTrackNumber": "Nummer ontbreekt",
   "@libraryFilterMetadataMissingTrackNumber": {
     "description": "Filter option - items missing track number"
   },
-  "libraryFilterMetadataMissingDiscNumber": "Missing disc number",
+  "libraryFilterMetadataMissingDiscNumber": "Schijfnummer ontbreekt",
   "@libraryFilterMetadataMissingDiscNumber": {
     "description": "Filter option - items missing disc number"
   },
-  "libraryFilterMetadataMissingArtist": "Missing artist",
+  "libraryFilterMetadataMissingArtist": "Artiest ontbreekt",
   "@libraryFilterMetadataMissingArtist": {
     "description": "Filter option - items missing artist"
   },
-  "libraryFilterMetadataIncorrectIsrcFormat": "Incorrect ISRC format",
+  "libraryFilterMetadataIncorrectIsrcFormat": "Onjuist ISRC-formaat",
   "@libraryFilterMetadataIncorrectIsrcFormat": {
     "description": "Filter option - items with an invalid ISRC format"
   },
-  "libraryFilterMetadataMissingIsrc": "Missing ISRC",
+  "libraryFilterMetadataMissingIsrc": "ISRC ontbreekt",
   "@libraryFilterMetadataMissingIsrc": {
     "description": "Filter option - items without any ISRC tag"
   },
-  "libraryFilterMetadataMissingLabel": "Missing label",
+  "libraryFilterMetadataMissingLabel": "Label ontbreekt",
   "@libraryFilterMetadataMissingLabel": {
     "description": "Filter option - items missing record label"
   },
-  "collectionDeletePlaylistsMessage": "Delete {count} {count, plural, =1{playlist} other{playlists}}?",
+  "collectionDeletePlaylistsMessage": "{count} {count, plural, =1{afspeellijst} other{afspeellijsten}} verwijderen?",
   "@collectionDeletePlaylistsMessage": {
     "description": "Confirmation message for deleting selected playlists",
     "placeholders": {
@@ -2018,7 +2018,7 @@
       }
     }
   },
-  "collectionPlaylistsDeleted": "{count} {count, plural, =1{playlist} other{playlists}} deleted",
+  "collectionPlaylistsDeleted": "{count} {count, plural, =1{afspeellijst} other{afspeellijsten}} verwijderd",
   "@collectionPlaylistsDeleted": {
     "description": "Snackbar after deleting selected playlists",
     "placeholders": {
@@ -2027,7 +2027,7 @@
       }
     }
   },
-  "collectionAddedTracksToPlaylist": "Added {count} {count, plural, =1{track} other{tracks}} to {playlistName}",
+  "collectionAddedTracksToPlaylist": "{count} {count, plural, =1{nummer} other{nummers}} toegevoegd aan {playlistName}",
   "@collectionAddedTracksToPlaylist": {
     "description": "Snackbar after adding multiple tracks to a playlist",
     "placeholders": {
@@ -2039,7 +2039,7 @@
       }
     }
   },
-  "collectionAddedTracksToPlaylistWithExisting": "Added {count} {count, plural, =1{track} other{tracks}} to {playlistName} ({alreadyCount} already in playlist)",
+  "collectionAddedTracksToPlaylistWithExisting": "{count} {count, plural, =1{nummer} other{nummers}} toegevoegd aan {playlistName} ({alreadyCount} stonden er al in)",
   "@collectionAddedTracksToPlaylistWithExisting": {
     "description": "Snackbar after adding multiple tracks to a playlist when some were already present",
     "placeholders": {
@@ -2063,7 +2063,7 @@
       }
     }
   },
-  "selectionDeleteTracksCount": "Delete {count} {count, plural, =1{track} other{tracks}}",
+  "selectionDeleteTracksCount": "{count} {count, plural, =1{nummer} other{nummers}} verwijderen",
   "@selectionDeleteTracksCount": {
     "description": "Button label for deleting selected tracks",
     "placeholders": {
@@ -2072,15 +2072,15 @@
       }
     }
   },
-  "a11ySelectTrack": "Select track",
+  "a11ySelectTrack": "Nummer selecteren",
   "@a11ySelectTrack": {
     "description": "Accessibility label for selecting a track"
   },
-  "a11yDeselectTrack": "Deselect track",
+  "a11yDeselectTrack": "Nummer deselecteren",
   "@a11yDeselectTrack": {
     "description": "Accessibility label for deselecting a track"
   },
-  "a11yPlayTrackByArtist": "Play {trackName} by {artistName}",
+  "a11yPlayTrackByArtist": "{trackName} van {artistName} afspelen",
   "@a11yPlayTrackByArtist": {
     "description": "Accessibility label for playing a local library track",
     "placeholders": {
@@ -2102,11 +2102,11 @@
   "a11yPlaybackPosition": "Afspeelpositie",
   "a11ySavingTrackDetails": "Nummerdetails opslaan",
   "cacheClearFor": "Wis {target}",
-  "logIssueSummary": "Issue Summary",
+  "logIssueSummary": "Overzicht van problemen",
   "@logIssueSummary": {
     "description": "Header for log issue analysis summary"
   },
-  "logTotalErrors": "Total errors: {count}",
+  "logTotalErrors": "Totaal aantal fouten: {count}",
   "@logTotalErrors": {
     "description": "Total error count in log issue analysis",
     "placeholders": {
@@ -2115,11 +2115,11 @@
       }
     }
   },
-  "libraryScanCancelled": "Scan cancelled",
+  "libraryScanCancelled": "Scan geannuleerd",
   "@libraryScanCancelled": {
     "description": "Library scan status when a scan was cancelled"
   },
-  "libraryScanCancelledSubtitle": "You can retry the scan when ready.",
+  "libraryScanCancelledSubtitle": "Je kunt de scan opnieuw proberen wanneer je wilt.",
   "@libraryScanCancelledSubtitle": {
     "description": "Library scan status subtitle after cancellation"
   },
@@ -2131,36 +2131,36 @@
   "@audioAnalysisMono": {
     "description": "Audio channel layout label - mono"
   },
-  "unknownArtist": "Unknown Artist",
+  "unknownArtist": "Onbekende artiest",
   "@unknownArtist": {
     "description": "Fallback artist name when metadata is missing"
   },
-  "permissionStorage": "Storage",
+  "permissionStorage": "Opslag",
   "@permissionStorage": {
     "description": "Storage permission type label"
   },
-  "permissionNotification": "Notification",
+  "permissionNotification": "Melding",
   "@permissionNotification": {
     "description": "Notification permission type label"
   },
-  "libraryPlayback": "Playback",
+  "libraryPlayback": "Afspelen",
   "@libraryPlayback": {
     "description": "Section header for playback settings in library settings"
   },
-  "nowPlayingNothingPlaying": "Nothing is playing",
+  "nowPlayingNothingPlaying": "Er wordt niets afgespeeld",
   "@nowPlayingNothingPlaying": {
     "description": "Empty state when no track is currently playing"
   },
-  "nowPlayingMinimize": "Minimize",
+  "nowPlayingMinimize": "Minimaliseren",
   "@nowPlayingMinimize": {
     "description": "Tooltip for minimizing the now playing screen"
   },
-  "nowPlayingUpNext": "Up next",
+  "nowPlayingUpNext": "Hierna",
   "@nowPlayingUpNext": {
     "description": "Title for the playback queue sheet"
   },
-  "nowPlayingAudioOutput": "Audio Output",
-  "nowPlayingWrittenBy": "Written by: {writers}",
+  "nowPlayingAudioOutput": "Audio-uitvoer",
+  "nowPlayingWrittenBy": "Geschreven door: {writers}",
   "@nowPlayingWrittenBy": {
     "placeholders": {
       "writers": {
@@ -2168,7 +2168,7 @@
       }
     }
   },
-  "nowPlayingLyricsSource": "Lyrics: {provider}",
+  "nowPlayingLyricsSource": "Songtekst: {provider}",
   "@nowPlayingLyricsSource": {
     "placeholders": {
       "provider": {
@@ -2176,12 +2176,12 @@
       }
     }
   },
-  "nowPlayingAudioOutputUnavailable": "Unable to open audio output settings.",
-  "nowPlayingPreviousTrack": "Previous track",
+  "nowPlayingAudioOutputUnavailable": "Kan de instellingen voor audio-uitvoer niet openen.",
+  "nowPlayingPreviousTrack": "Vorig nummer",
   "@nowPlayingPreviousTrack": {
     "description": "Tooltip for the previous-track playback control"
   },
-  "nowPlayingNextTrack": "Next track",
+  "nowPlayingNextTrack": "Volgend nummer",
   "@nowPlayingNextTrack": {
     "description": "Tooltip for the next-track playback control"
   },
@@ -2189,11 +2189,11 @@
   "@nowPlayingDetails": {
     "description": "Menu item and section title for track metadata details"
   },
-  "nowPlayingSleepTimer": "Sleep timer",
+  "nowPlayingSleepTimer": "Slaaptimer",
   "@nowPlayingSleepTimer": {
     "description": "Menu item and sheet title for the playback sleep timer"
   },
-  "nowPlayingSleepTimerActive": "Ends at {time}",
+  "nowPlayingSleepTimerActive": "Eindigt om {time}",
   "@nowPlayingSleepTimerActive": {
     "description": "Active sleep timer deadline shown in the player menu",
     "placeholders": {
@@ -2202,7 +2202,7 @@
       }
     }
   },
-  "nowPlayingSleepTimerMinutes": "{minutes, plural, =1{1 minute} other{{minutes} minutes}}",
+  "nowPlayingSleepTimerMinutes": "{minutes, plural, =1{1 minuut} other{{minutes} minuten}}",
   "@nowPlayingSleepTimerMinutes": {
     "description": "Duration choice for the playback sleep timer",
     "placeholders": {
@@ -2211,11 +2211,11 @@
       }
     }
   },
-  "nowPlayingSleepTimerOff": "Turn off sleep timer",
+  "nowPlayingSleepTimerOff": "Slaaptimer uitzetten",
   "@nowPlayingSleepTimerOff": {
     "description": "Action to cancel the active playback sleep timer"
   },
-  "nowPlayingSleepTimerSet": "Sleep timer set for {duration}",
+  "nowPlayingSleepTimerSet": "Slaaptimer ingesteld op {duration}",
   "@nowPlayingSleepTimerSet": {
     "description": "Confirmation after setting the playback sleep timer",
     "placeholders": {
@@ -2224,7 +2224,7 @@
       }
     }
   },
-  "nowPlayingSleepTimerCancelled": "Sleep timer turned off",
+  "nowPlayingSleepTimerCancelled": "Slaaptimer uitgeschakeld",
   "@nowPlayingSleepTimerCancelled": {
     "description": "Confirmation after cancelling the playback sleep timer"
   },
@@ -2232,43 +2232,43 @@
   "@nowPlayingTabPlayer": {
     "description": "Tab label for the player view"
   },
-  "nowPlayingTabLyrics": "Lyrics",
+  "nowPlayingTabLyrics": "Songteksten",
   "@nowPlayingTabLyrics": {
     "description": "Tab label for the lyrics view"
   },
-  "nowPlayingNoLyrics": "No lyrics in this file",
+  "nowPlayingNoLyrics": "Geen songtekst in dit bestand",
   "@nowPlayingNoLyrics": {
     "description": "Empty state when the playing file has no embedded lyrics"
   },
-  "nowPlayingInstrumental": "Instrumental",
+  "nowPlayingInstrumental": "Instrumentaal",
   "@nowPlayingInstrumental": {
     "description": "Accessibility label for the three-dot countdown during an instrumental break before lyrics resume"
   },
-  "nowPlayingLyricsLanguageOptions": "Lyrics language options",
+  "nowPlayingLyricsLanguageOptions": "Opties voor taal van songtekst",
   "@nowPlayingLyricsLanguageOptions": {
     "description": "Tooltip for the player menu that shows or hides existing lyric pronunciation and translation"
   },
-  "nowPlayingHidePronunciation": "Hide Pronunciation",
-  "nowPlayingShowPronunciation": "Show Pronunciation",
-  "nowPlayingHideTranslation": "Hide Translation",
-  "nowPlayingShowTranslation": "Show Translation",
-  "nowPlayingShuffleOn": "Shuffle on",
+  "nowPlayingHidePronunciation": "Uitspraak verbergen",
+  "nowPlayingShowPronunciation": "Uitspraak tonen",
+  "nowPlayingHideTranslation": "Vertaling verbergen",
+  "nowPlayingShowTranslation": "Vertaling tonen",
+  "nowPlayingShuffleOn": "Shuffle aan",
   "@nowPlayingShuffleOn": {
     "description": "Tooltip when shuffle mode is enabled"
   },
-  "nowPlayingPlayInOrder": "Play in order",
+  "nowPlayingPlayInOrder": "In volgorde afspelen",
   "@nowPlayingPlayInOrder": {
     "description": "Tooltip when shuffle mode is disabled"
   },
-  "nowPlayingQueueEmpty": "Queue is empty",
+  "nowPlayingQueueEmpty": "Wachtrij is leeg",
   "@nowPlayingQueueEmpty": {
     "description": "Empty state when the playback queue has no items"
   },
-  "nowPlayingNoMetadata": "No metadata available",
+  "nowPlayingNoMetadata": "Geen metadata beschikbaar",
   "@nowPlayingNoMetadata": {
     "description": "Empty state when track metadata cannot be loaded"
   },
-  "selectionDeletePlaylistsCount": "Delete {count} {count, plural, =1{playlist} other{playlists}}",
+  "selectionDeletePlaylistsCount": "{count} {count, plural, =1{afspeellijst} other{afspeellijsten}} verwijderen",
   "@selectionDeletePlaylistsCount": {
     "description": "Button label for deleting multiple selected playlists",
     "placeholders": {
@@ -2281,23 +2281,23 @@
   "@actionShuffle": {
     "description": "Tooltip for shuffle playback action"
   },
-  "unknownTitle": "Unknown title",
+  "unknownTitle": "Onbekende titel",
   "@unknownTitle": {
     "description": "Fallback track title when metadata is missing"
   },
-  "trackPlayNext": "Play next",
+  "trackPlayNext": "Hierna afspelen",
   "@trackPlayNext": {
     "description": "Menu action to play a track as the next queue item"
   },
-  "trackAddToQueue": "Add to queue",
+  "trackAddToQueue": "Toevoegen aan wachtrij",
   "@trackAddToQueue": {
     "description": "Menu action to add a track to the playback queue"
   },
-  "settingsSearchHint": "Search settings",
+  "settingsSearchHint": "Instellingen doorzoeken",
   "@settingsSearchHint": {
     "description": "Placeholder of the search field on the Settings tab"
   },
-  "settingsSearchNoResults": "No settings match \"{query}\"",
+  "settingsSearchNoResults": "Geen instellingen komen overeen met \"{query}\"",
   "@settingsSearchNoResults": {
     "description": "Shown when a Settings search returns nothing",
     "placeholders": {
@@ -2306,11 +2306,11 @@
       }
     }
   },
-  "libraryFilterMetadataMissingLyrics": "Missing lyrics",
+  "libraryFilterMetadataMissingLyrics": "Songtekst ontbreekt",
   "@libraryFilterMetadataMissingLyrics": {
     "description": "Filter option for tracks without embedded or sidecar lyrics"
   },
-  "libraryFilterMetadataMissingReplayGain": "Missing ReplayGain",
+  "libraryFilterMetadataMissingReplayGain": "ReplayGain ontbreekt",
   "@libraryFilterMetadataMissingReplayGain": {
     "description": "Filter option for scanned tracks without ReplayGain gain tags"
   },
@@ -2318,39 +2318,39 @@
   "libraryFilterIncompleteAlbums": "Onvolledige albums",
   "libraryAlbumCompletenessUnknown": "Volledigheid van album onbekend",
   "libraryAlbumMissingTracks": "{present}/{expected} nummers · {missing} ontbrekend",
-  "appSearch": "Search",
-  "appContinuePlaying": "Continue Playing",
-  "appFavorite": "Favorite",
+  "appSearch": "Zoeken",
+  "appContinuePlaying": "Doorgaan met afspelen",
+  "appFavorite": "Favoriet",
   "@appFavorite": {
     "description": "Compact context menu action that adds a track to Loved"
   },
-  "appGoToArtist": "Go to Artist",
-  "appFavorited": "Favorited",
+  "appGoToArtist": "Naar artiest gaan",
+  "appFavorited": "Toegevoegd aan favorieten",
   "@appFavorited": {
     "description": "Selected state of the compact favorite action"
   },
-  "autoMixDescription": "Blend songs with beat matching and pitch-preserving tempo adjustment. Uses crossfade when beats cannot be matched.",
-  "autoMixOn": "AutoMix on",
-  "autoMixOff": "AutoMix off",
-  "autoplayOn": "Autoplay on",
-  "autoplayOff": "Autoplay off",
-  "autoplayFromLibrary": "Autoplay from your Library",
+  "autoMixDescription": "Mengt nummers met beatmatching en tempo-aanpassing die de toonhoogte behoudt. Gebruikt crossfade wanneer beats niet kunnen worden gekoppeld.",
+  "autoMixOn": "AutoMix aan",
+  "autoMixOff": "AutoMix uit",
+  "autoplayOn": "Automatisch afspelen aan",
+  "autoplayOff": "Automatisch afspelen uit",
+  "autoplayFromLibrary": "Automatisch afspelen uit je bibliotheek",
   "autoplayDescription": "Ga door met verwante nummers uit je bibliotheek wanneer de wachtrij eindigt.",
   "autoplayPersonalization": "Gepersonaliseerde automatische weergave",
   "autoplayPersonalizationDescription": "Leert van nummers die je beluistert en overslaat, privé op dit toestel. Uitschakelen stopt het leren en herstelt gewone automatische weergave.",
   "autoplayResetLearning": "Aanbevelingsleren resetten",
-  "profileTitle": "Profile",
-  "profileSetUp": "Set up your profile",
-  "profileEdit": "Edit name and photo",
-  "backupIncludesProfile": "Includes your profile name and photo",
+  "profileTitle": "Profiel",
+  "profileSetUp": "Stel je profiel in",
+  "profileEdit": "Naam en foto bewerken",
+  "backupIncludesProfile": "Bevat je profielnaam en foto",
   "profileName": "Naam",
-  "profileNameHint": "Your name",
-  "profileChangePhoto": "Choose photo",
-  "profileRemovePhoto": "Remove photo",
-  "profilePhotoError": "Choose a valid image smaller than 20 MB.",
-  "profileSaveError": "Could not save your profile. Please try again.",
+  "profileNameHint": "Je naam",
+  "profileChangePhoto": "Foto kiezen",
+  "profileRemovePhoto": "Foto verwijderen",
+  "profilePhotoError": "Kies een geldige afbeelding kleiner dan 20 MB.",
+  "profileSaveError": "Je profiel kon niet worden opgeslagen. Probeer het opnieuw.",
   "motionArtwork": "Geanimeerde hoes",
-  "listeningStats": "Luisterstatistieken",
+  "listeningStats": "Inzichten",
   "listeningStatsDescription": "Alleen vanaf nu op dit toestel opgeslagen. Registreert alleen de ingebouwde speler; pauzes, buffering en zoeken tellen niet mee. Een keer afspelen telt na 30 seconden.",
   "listeningStatsEmpty": "Speel muziek af met de ingebouwde speler om je luisteroverzicht te starten. Eerder luisteren kan niet worden hersteld.",
   "listeningStatsDays": "{days} dagen",
@@ -2371,7 +2371,7 @@
   "autoMixAutomaticDuration": "Automatische duur",
   "autoMixDuration": "Mixduur",
   "autoMixEffect": "Overgangseffect",
-  "autoMixEffectAuto": "Auto",
+  "autoMixEffectAuto": "Automatisch",
   "autoMixEffectCrossfade": "Crossfade",
   "autoMixEffectMuffled": "Gedempt",
   "autoMixEffectEcho": "Echo",
@@ -2408,7 +2408,7 @@
   "tutorialPlaybackTip1": "Speel muziek af of pauzeer met de ingebouwde speler",
   "tutorialPlaybackTip2": "Voeg lokale nummers toe aan de wachtrij en afspeellijsten",
   "tutorialPlaybackTip3": "Lees ingesloten of naast het bestand staande songteksten tijdens het luisteren",
-  "cueSplitButton": "Split into Tracks",
+  "cueSplitButton": "Splitsen in nummers",
   "@cueSplitButton": {
     "description": "Button text to start CUE splitting"
   },
@@ -2424,15 +2424,15 @@
       }
     }
   },
-  "cueSplitConfirmTitle": "Split CUE Album",
+  "cueSplitConfirmTitle": "CUE-album splitsen",
   "@cueSplitConfirmTitle": {
     "description": "CUE split confirmation dialog title"
   },
-  "cueSplitFailed": "CUE split failed",
+  "cueSplitFailed": "CUE splitsen mislukt",
   "@cueSplitFailed": {
     "description": "Snackbar when CUE split fails"
   },
-  "cueSplitSplitting": "Splitting CUE sheet... ({current}/{total})",
+  "cueSplitSplitting": "CUE-blad splitsen... ({current}/{total})",
   "@cueSplitSplitting": {
     "description": "Snackbar while splitting CUE",
     "placeholders": {
@@ -2444,7 +2444,7 @@
       }
     }
   },
-  "cueSplitSuccess": "Split into {count} tracks successfully",
+  "cueSplitSuccess": "Met succes gesplitst in {count} nummers",
   "@cueSplitSuccess": {
     "description": "Snackbar after successful CUE split",
     "placeholders": {
@@ -2455,32 +2455,32 @@
   },
   "cueSplitPartialSuccess": "Gesplitst in {count} nummers; {failed} konden niet worden aangemaakt",
   "cueSplitSavedOutsideLibrary": "Nummers zijn buiten je muziekbibliotheek opgeslagen. Voeg die map toe onder Lokale bibliotheek om ze te zien.",
-  "cueSplitTitle": "Split CUE Sheet",
+  "cueSplitTitle": "CUE-blad splitsen",
   "@cueSplitTitle": {
     "description": "Title for CUE split bottom sheet"
   },
-  "snackbarAddedToQueueGeneric": "Added to queue",
+  "snackbarAddedToQueueGeneric": "Toegevoegd aan wachtrij",
   "@snackbarAddedToQueueGeneric": {
     "description": "Snackbar when a track is added to the playback queue without naming it"
   },
-  "snackbarPlayingNext": "Playing next",
+  "snackbarPlayingNext": "Wordt hierna afgespeeld",
   "@snackbarPlayingNext": {
     "description": "Snackbar when a track is inserted as the next queue item"
   },
-  "trackCopyFilePath": "Copy file path",
+  "trackCopyFilePath": "Bestandspad kopiëren",
   "@trackCopyFilePath": {
     "description": "Action - copy file path"
   },
-  "trackDeleteConfirmMessage": "This permanently deletes the local audio file and removes it from your library.",
-  "trackDeleteConfirmTitle": "Remove from device?",
+  "trackDeleteConfirmMessage": "Dit verwijdert het lokale audiobestand definitief en haalt het uit je bibliotheek.",
+  "trackDeleteConfirmTitle": "Van apparaat verwijderen?",
   "@trackDeleteConfirmTitle": {
     "description": "Delete confirmation title"
   },
-  "trackRemoveFromDevice": "Remove from device",
+  "trackRemoveFromDevice": "Van apparaat verwijderen",
   "@trackRemoveFromDevice": {
     "description": "Action - delete downloaded file"
   },
-  "trackReplayGain": "Rescan ReplayGain",
+  "trackReplayGain": "ReplayGain opnieuw scannen",
   "@trackReplayGain": {
     "description": "Three-dot menu option to scan loudness and write ReplayGain tags"
   },
@@ -2498,16 +2498,16 @@
   "audioInfoOutput": "Uitvoer",
   "audioInfoAnalysis": "Spectrum- en niveauanalyse",
   "audioInfoQuality": "Kwaliteit",
-  "audioInfoHiResLossless": "Hi-Res Lossless",
+  "audioInfoHiResLossless": "Hi-Res lossless",
   "audioInfoLossless": "Lossless",
-  "audioInfoLossy": "Lossy",
+  "audioInfoLossy": "Verliesgevend",
   "audioInfoFormat": "Formaat",
   "audioInfoCodec": "Codec",
   "audioInfoSampleRate": "Samplefrequentie",
   "audioInfoBitDepth": "Bitdiepte",
   "audioInfoChannels": "Kanalen",
   "audioInfoChannelCount": "{count, plural, =1{Mono} =2{Stereo} other{{count} kanalen}}",
-  "audioInfoBitrate": "Bitrate",
+  "audioInfoBitrate": "Bitsnelheid",
   "audioInfoDuration": "Duur",
   "audioInfoFileSize": "Bestandsgrootte",
   "audioInfoCompression": "Compressie",
@@ -2673,29 +2673,72 @@
   "@updateLater": {
     "description": "Update button - dismiss"
   },
-  "optionsCheckUpdates": "Check for Updates",
-  "optionsCheckUpdatesSubtitle": "Notify when new version is available",
-  "optionsUpdateChannelPreview": "Get preview releases",
-  "optionsUpdateChannelWarning": "Preview may contain bugs or incomplete features",
-  "updateAvailable": "Update Available",
-  "updateStartingDownload": "Starting download...",
-  "updateDownloadFailed": "Download failed",
-  "updateFailedMessage": "Failed to download update",
-  "updateNewVersionReady": "A new version is ready",
-  "updateRequiredTitle": "Update required",
-  "updateRequiredNotice": "This version is {count} releases behind and is no longer supported. Update to keep using the app.",
-  "updateCurrent": "Current",
-  "updateNew": "New",
-  "updateDownloading": "Downloading...",
-  "updateWhatsNew": "What's New",
-  "updateDownloadInstall": "Download & Install",
-  "updateDontRemind": "Don't remind",
-  "updateViewRelease": "View Release",
-  "updateSeeReleaseNotes": "See release notes for details.",
-  "notifDownloadingUpdate": "Downloading Sistrum v{version}",
+  "optionsCheckUpdates": "Op updates controleren",
+  "optionsCheckUpdatesSubtitle": "Melden wanneer een nieuwe versie beschikbaar is",
+  "optionsUpdateChannelPreview": "Previewversies ontvangen",
+  "optionsUpdateChannelWarning": "Previews kunnen bugs of onvolledige functies bevatten",
+  "updateAvailable": "Update beschikbaar",
+  "updateStartingDownload": "Download starten...",
+  "updateDownloadFailed": "Download mislukt",
+  "updateFailedMessage": "Update kon niet worden gedownload",
+  "updateNewVersionReady": "Een nieuwe versie is klaar",
+  "updateRequiredTitle": "Update vereist",
+  "updateRequiredNotice": "Deze versie is {count} releases achter en wordt niet langer ondersteund. Werk bij om de app te blijven gebruiken.",
+  "updateCurrent": "Huidig",
+  "updateNew": "Nieuw",
+  "updateDownloading": "Downloaden...",
+  "updateWhatsNew": "Wat is er nieuw",
+  "updateDownloadInstall": "Downloaden en installeren",
+  "updateDontRemind": "Niet meer herinneren",
+  "updateViewRelease": "Release bekijken",
+  "updateSeeReleaseNotes": "Zie de releaseopmerkingen voor details.",
+  "notifDownloadingUpdate": "Sistrum v{version} downloaden",
   "notifUpdateProgress": "{received} / {total} MB • {percentage}%",
-  "notifUpdateReady": "Update Ready",
-  "notifUpdateReadyBody": "Sistrum v{version} downloaded. Tap to install.",
-  "notifUpdateFailed": "Update Failed",
-  "notifUpdateFailedBody": "Could not download update. Try again later."
+  "notifUpdateReady": "Update klaar",
+  "notifUpdateReadyBody": "Sistrum v{version} gedownload. Tik om te installeren.",
+  "notifUpdateFailed": "Update mislukt",
+  "notifUpdateFailedBody": "Update kon niet worden gedownload. Probeer het later opnieuw.",
+  "metadataSeparatorsDescription": "Kies de scheidingstekens die artiest- en genrenamen in je bibliotheek splitsen. Namen die bij elkaar blijven, worden nooit gesplitst.",
+  "tagSeparatorsArtists": "Artiesten",
+  "tagSeparatorsArtistsFields": "Artiest, Albumartiest, Componist",
+  "tagSeparatorsGenre": "Genre",
+  "tagSeparatorsAll": "Alles",
+  "tagSeparatorsAdd": "Scheidingsteken toevoegen",
+  "tagSeparatorsAddHint": "Scheidingsteken",
+  "tagSeparatorsDuplicate": "Dit scheidingsteken staat al in de lijst.",
+  "tagSeparatorsRemoveTitle": "Scheidingsteken verwijderen?",
+  "tagSeparatorsRemoveMessage": "Het wordt uit dit gedeelte verwijderd. Tags die je al hebt opgeslagen, blijven ongewijzigd.",
+  "tagKeepTogether": "Samen houden",
+  "tagKeepTogetherDescription": "Namen in deze lijst worden nooit gesplitst, ook niet als ze een scheidingsteken bevatten.",
+  "tagKeepTogetherHint": "Naam, bijvoorbeeld Tyler, The Creator",
+  "tagKeepTogetherAdd": "Naam toevoegen",
+  "tagKeepTogetherRemoveTooltip": "Naam verwijderen",
+  "artistAppearsOn": "Staat op",
+  "tagKeepTogetherDuplicate": "Deze naam staat al in de lijst.",
+  "setupChooseMusicFolder": "Muziekmap kiezen",
+  "setupLibraryFolderDescription": "Kies de map met je muziek. Sistrum leest die via beperkte maptoegang, dus er is geen toestemming voor alle bestanden nodig.",
+  "searchAlbumArtists": "Albumartiesten",
+  "logFilterFull": "Volledig",
+  "tutorialGuideTitle": "Aan de slag",
+  "tutorialGuideDesc": "Snelle tips om je lokale muziek te vinden, af te spelen en te ordenen.",
+  "backupUnsupportedVersion": "Deze back-up is gemaakt met een andere versie van Sistrum",
+  "backupReadFailed": "Het back-upbestand kon niet worden gelezen. Controleer of het nog beschikbaar is",
+  "snackbarMetadataSavedIndexStale": "Metadata opgeslagen, maar de bibliotheek kon niet worden vernieuwd",
+  "actionGoToComposer": "Naar componist gaan",
+  "autoplayResetLearningConfirmTitle": "Aanbevelingen opnieuw instellen?",
+  "autoplayResetLearningConfirmMessage": "Automatisch afspelen vergeet wat het heeft geleerd van je luistergedrag en overgeslagen nummers. Dit kan niet ongedaan worden gemaakt.",
+  "autoplayResetLearningConfirm": "Opnieuw instellen",
+  "motionArtworkSubtitle": "Laat albumhoezen en de hoes van de speler langzaam bewegen",
+  "lyricsAboveSeekBar": "Songtekst boven de voortgangsbalk",
+  "lyricsAboveSeekBarSubtitle": "Toon de regel die wordt gezongen boven de voortgangsbalk van de speler",
+  "updateDownloadIntegrityFailed": "De gedownloade update is niet geverifieerd. Probeer het later opnieuw.",
+  "updateDownloadNetworkFailed": "De update kon niet worden gedownload. Controleer je verbinding en probeer het opnieuw.",
+  "updateInstallFailed": "Het updateprogramma kon niet worden geopend.",
+  "settingsUpdates": "Updates",
+  "settingsUpdatesSubtitle": "Controleren op nieuwe versies",
+  "updateCheckNow": "Nu controleren",
+  "updateChecking": "Controleren…",
+  "updateUpToDate": "Je gebruikt de nieuwste versie",
+  "updateCheckFailed": "Kan niet controleren op updates",
+  "retry": "Opnieuw proberen"
 }

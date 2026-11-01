@@ -4,48 +4,48 @@
   "appearancePlayerView": "プレイヤー表示",
   "appearancePlayerViewNormal": "通常表示",
   "appearancePlayerViewImmersive": "没入表示",
-  "settingsPlaybackSubtitle": "Player, volume, AutoMix, and audio output",
-  "sectionVolumeAndTransitions": "Volume and transitions",
-  "sectionAudioOutput": "Audio output",
-  "usbBitPerfect": "Hi-res and bit-perfect audio",
-  "usbBitPerfectDescription": "Preserve source precision on compatible outputs. Choose direct USB or AAudio exclusive below; otherwise Android USB output requires Android 14 or later. Applies from the next track, without AutoMix or normalization. System volume may not control direct USB.",
-  "usbHardwareVolume": "DAC hardware volume",
-  "usbVolumeWarningTitle": "Check your listening volume",
-  "usbVolumeWarning": "Direct USB audio can be much louder than normal playback, and phone volume buttons may not control it. Lower your DAC or amplifier volume before starting. When supported, Sistrum sets the DAC to at most −40 dB on connection; this does not guarantee a safe listening level on every amplifier or headphone.",
-  "usbVolumeAccept": "I understand",
-  "usbVolumeUnavailable": "Playback is paused because this DAC has no verified hardware volume control. Lower the DAC or amplifier volume, then enable fixed-volume output if needed and select the track again.",
-  "usbFixedVolume": "Allow fixed-volume USB output",
-  "usbFixedVolumeDescription": "For DACs without a volume control accessible to the app. Keep off for USB headsets without their own volume control. Applies from the next track.",
-  "usbFixedVolumeWarning": "The app cannot lower the volume on this output. Audio may start at full level, and the phone volume slider will not help. Only continue after lowering the volume on your DAC or external amplifier. Do not enable this for a headset without its own volume control.",
-  "dapExclusive": "DAP hi-res (AAudio exclusive)",
-  "dapExclusiveDescription": "Use Oboe/AAudio at the track's original rate and precision for FLAC/WAV PCM. Requires Android 8.1 or later and compatible hardware. Exclusive access is checked; unavailable formats use normal playback. DSD requires the direct USB driver. Applies from the next track.",
-  "dapExclusiveUnavailable": "AAudio exclusive access is unavailable for this track and current output. Using normal playback. For a USB DAC, try the direct USB driver.",
-  "usbDirect": "Direct USB driver",
-  "usbDirectDescription": "Use exclusive USB audio for FLAC/WAV, DSF/DFF and WavPack DSD, with Android USB permission. Native DSD requires a recognized compatible DAC. Other PCM formats use normal playback. Applies from the next track.",
-  "usbDsdOverPcm": "DSD over PCM (DoP)",
-  "usbDsdOverPcmDescription": "Enable only if your DAC explicitly supports DoP. Sends DSF/DFF and WavPack DSD inside a PCM carrier when native DSD is unavailable. An incompatible device may play noise; leave off for ordinary USB headsets.",
-  "usbDsdUnsupported": "This DSD format or connected DAC is not supported. Playback stopped.",
-  "usbPermissionDenied": "USB permission was not granted. Using normal playback.",
-  "usbBitPerfectPending": "Waiting for the next track and a compatible USB output.",
-  "usbBitPerfectNoDevice": "No USB DAC connected. Using normal audio output.",
-  "usbBitPerfectFallback": "This device or audio format does not support bit-perfect output. Using normal playback.",
-  "usbBitPerfectRouteChanged": "The USB audio route changed. Playback paused; select a track to reconnect.",
-  "nowPlayingVolume": "Volume",
+  "settingsPlaybackSubtitle": "プレーヤー、音量、AutoMix、オーディオ出力",
+  "sectionVolumeAndTransitions": "音量とトランジション",
+  "sectionAudioOutput": "オーディオ出力",
+  "usbBitPerfect": "Hi-Res とビットパーフェクトのオーディオ",
+  "usbBitPerfectDescription": "対応する出力では元の精度を保ちます。下の直接 USB または AAudio 排他を選んでください。そうしないと、Android の USB 出力には Android 14 以降が必要です。",
+  "usbHardwareVolume": "DAC のハードウェア音量",
+  "usbVolumeWarningTitle": "聴取音量を確認してください",
+  "usbVolumeWarning": "直接 USB オーディオは通常の再生より大幅に大きくなることがあり、スマートフォンの音量ボタンでは制御できない場合があります。開始前に DAC またはアンプの音量を下げてください。対応している場合、Sistrum は接続時に DAC を最大 −40 dB に設定しますが、どのアンプやヘッドホンでも安全な音量になることは保証されません。",
+  "usbVolumeAccept": "理解しました",
+  "usbVolumeUnavailable": "この DAC には確認済みのハードウェア音量調整がないため、再生を一時停止しました。DAC またはアンプの音量を下げてから、必要に応じて固定音量の出力を有効にしてください。",
+  "usbFixedVolume": "固定音量の USB 出力を許可",
+  "usbFixedVolumeDescription": "アプリから音量を調整できない DAC 向けです。独自の音量調整がない USB ヘッドセットではオフのままにしてください。次のトラックから適用されます。",
+  "usbFixedVolumeWarning": "アプリはこの出力の音量を下げられません。音声が最大音量で始まることがあり、スマートフォンの音量スライダーは効果がありません。音量を下げてからのみ続行してください。",
+  "dapExclusive": "DAP Hi-Res（AAudio 排他）",
+  "dapExclusiveDescription": "FLAC/WAV PCM では、トラック本来のレートと精度で Oboe/AAudio を使用します。Android 8.1 以降と対応ハードウェアが必要です。排他アクセスを確認し、利用できない形式は通常再生になります。DSD には直接 USB ドライバーが必要です。次のトラックから適用されます。",
+  "dapExclusiveUnavailable": "このトラックと現在の出力では AAudio の排他アクセスを利用できません。通常の再生を使用します。USB DAC の場合は、直接 USB ドライバーをお試しください。",
+  "usbDirect": "直接 USB ドライバー",
+  "usbDirectDescription": "Android の USB 権限のもとで、FLAC/WAV、DSF/DFF、WavPack DSD に排他 USB オーディオを使用します。ネイティブ DSD には認識された対応 DAC が必要です。その他の PCM 形式は通常再生になります。次のトラックから適用されます。",
+  "usbDsdOverPcm": "PCM 上の DSD（DoP）",
+  "usbDsdOverPcmDescription": "DAC が DoP を明示的にサポートしている場合のみ有効にしてください。ネイティブ DSD が使えないとき、DSF/DFF と WavPack DSD を PCM キャリア内で送信します。非対応機器ではノイズが再生されることがあります。通常の USB ヘッドセットではオフのままにしてください。",
+  "usbDsdUnsupported": "この DSD 形式または接続された DAC はサポートされていません。再生を停止しました。",
+  "usbPermissionDenied": "USB の許可が与えられませんでした。通常再生を使用します。",
+  "usbBitPerfectPending": "次のトラックと対応する USB 出力を待機しています。",
+  "usbBitPerfectNoDevice": "USB DAC が接続されていません。通常のオーディオ出力を使用します。",
+  "usbBitPerfectFallback": "この機器またはオーディオ形式はビットパーフェクト出力に対応していません。通常再生を使用します。",
+  "usbBitPerfectRouteChanged": "USB オーディオの経路が変わりました。再生を一時停止しました。再接続するにはトラックを選択してください。",
+  "nowPlayingVolume": "音量",
   "@nowPlayingVolume": {
     "description": "System volume control label in the Sistrum player"
   },
-  "appearanceAccentRed": "Red (default)",
-  "appearanceAccentOrange": "Orange",
-  "appearanceAccentGreen": "Green",
-  "appearanceAccentTeal": "Teal",
-  "appearanceAccentBlue": "Blue",
-  "appearanceAccentPurple": "Purple",
-  "appearanceAccentPink": "Pink",
-  "appearanceGlassClarity": "Glass clarity",
+  "appearanceAccentRed": "赤（既定）",
+  "appearanceAccentOrange": "オレンジ",
+  "appearanceAccentGreen": "緑",
+  "appearanceAccentTeal": "ティール",
+  "appearanceAccentBlue": "青",
+  "appearanceAccentPurple": "紫",
+  "appearanceAccentPink": "ピンク",
+  "appearanceGlassClarity": "ガラスの透明度",
   "appearanceGlassOutlines": "ガラスの輪郭",
   "appearanceGlassOutlinesSubtitle": "Sistrum のガラスの周りに薄い縁を表示します。オフにしてもガラス自体は変わりません。",
-  "appearanceGlassClaritySubtitle": "Adjust transparency in Sistrum menus and navigation. Text contrast is preserved.",
-  "appearanceGlassTinted": "Tinted",
+  "appearanceGlassClaritySubtitle": "Sistrum のメニューとナビゲーションの透明度を調整します。テキストのコントラストは維持されます。",
+  "appearanceGlassTinted": "色付き",
   "appearanceGlassClear": "消去",
   "appearanceGlassClearPerformance": "透明度を高いガラスは、古い端末では消費電力が増え、動きがなめらかでなく感じられることがあります。必要に応じて透明度を下げてください。",
   "appearanceGlassQuality": "ガラスの品質",
@@ -64,8 +64,8 @@
   "appearanceGlassClarityContrast": "システムでコントラストの強調が要求されているため、ガラスは不透明のままです。それでもガラスを使うには、軽量またはフルを選んでください。文字のコントラストは保たれます。",
   "appearanceGlassAutoMeasured": "この端末で測定済み: 自動では {quality} を使用します。",
   "appearanceGlassClarityAutoFrosted": "自動がこの端末を測定し、すりガラスを使用しています。透明度を設定するには、軽量またはフルを選んでください。",
-  "appearanceUseSystemFont": "Use system font",
-  "appearanceUseSystemFontSubtitle": "Use your device’s default typeface for app text.",
+  "appearanceUseSystemFont": "システムフォントを使用",
+  "appearanceUseSystemFontSubtitle": "アプリのテキストに端末の既定の書体を使用します。",
   "appName": "Sistrum",
   "@appName": {
     "description": "App name - DO NOT TRANSLATE"
@@ -92,10 +92,10 @@
   },
   "homeLatestReleases": "ライブラリの最新リリース",
   "artistPopular": "人気",
-  "libraryRecentlyAdded": "Recently Added",
+  "libraryRecentlyAdded": "最近追加",
   "homeChooseLibraryFolder": "ローカルライブラリの設定で音楽フォルダを選択してください。",
   "homeLibraryEmpty": "ライブラリのフォルダに音楽を追加してから、ライブラリをスキャンしてください。",
-  "libraryEmptyCollection": "Your music will appear here",
+  "libraryEmptyCollection": "ここに音楽が表示されます",
   "settingsTitle": "設定",
   "@settingsTitle": {
     "description": "Settings screen title"
@@ -124,9 +124,9 @@
   "@appearanceThemeDark": {
     "description": "Dark theme"
   },
-  "trackRemoveReplayGain": "Remove ReplayGain",
-  "replayGainRemoving": "Removing ReplayGain...",
-  "replayGainRemoveConfirmMessage": "Remove track and album ReplayGain tags from {count} track(s)? Audio, artwork, and other metadata will be preserved.",
+  "trackRemoveReplayGain": "ReplayGain を削除",
+  "replayGainRemoving": "ReplayGain を削除しています...",
+  "replayGainRemoveConfirmMessage": "{count} 曲からトラックとアルバムの ReplayGain タグを削除しますか？オーディオ、アートワーク、その他のメタデータは保持されます。",
   "@replayGainRemoveConfirmMessage": {
     "placeholders": {
       "count": {
@@ -134,7 +134,7 @@
       }
     }
   },
-  "selectionRemoveReplayGainCount": "Remove RG ({count})",
+  "selectionRemoveReplayGainCount": "RG を削除（{count}）",
   "@selectionRemoveReplayGainCount": {
     "description": "Compact selection action label. RG abbreviates ReplayGain; keep this short for a two-column toolbar.",
     "placeholders": {
@@ -143,7 +143,7 @@
       }
     }
   },
-  "replayGainRemoveBatchSuccess": "ReplayGain removed from {success} of {total} tracks",
+  "replayGainRemoveBatchSuccess": "{total} 曲中 {success} 曲から ReplayGain を削除しました",
   "@replayGainRemoveBatchSuccess": {
     "placeholders": {
       "success": {
@@ -154,7 +154,7 @@
       }
     }
   },
-  "selectionReplayGainCount": "ReplayGain ({count})",
+  "selectionReplayGainCount": "ReplayGain（{count}）",
   "@selectionReplayGainCount": {
     "description": "Batch selection action button label for ReplayGain",
     "placeholders": {
@@ -163,11 +163,11 @@
       }
     }
   },
-  "replayGainBatchConfirmTitle": "Add ReplayGain",
+  "replayGainBatchConfirmTitle": "ReplayGain を追加",
   "@replayGainBatchConfirmTitle": {
     "description": "Title of the batch ReplayGain confirmation dialog"
   },
-  "replayGainBatchConfirmMessage": "Analyze loudness and write ReplayGain tags to {count} track(s)?",
+  "replayGainBatchConfirmMessage": "{count} 曲のラウドネスを解析し、ReplayGain タグを書き込みますか？",
   "@replayGainBatchConfirmMessage": {
     "description": "Message of the batch ReplayGain confirmation dialog",
     "placeholders": {
@@ -176,11 +176,11 @@
       }
     }
   },
-  "replayGainBatchAnalyzing": "Analyzing ReplayGain...",
+  "replayGainBatchAnalyzing": "ReplayGain を解析しています...",
   "@replayGainBatchAnalyzing": {
     "description": "Progress dialog title while batch scanning ReplayGain"
   },
-  "replayGainBatchSuccess": "ReplayGain added to {success} of {total} tracks",
+  "replayGainBatchSuccess": "{total} 曲中 {success} 曲に ReplayGain を追加しました",
   "@replayGainBatchSuccess": {
     "description": "Snackbar after batch ReplayGain completes",
     "placeholders": {
@@ -192,7 +192,7 @@
       }
     }
   },
-  "replayGainUnsupportedDecoder": "Some tracks could not be analyzed because their audio codec is not supported by the ReplayGain decoder. Their files were not changed.",
+  "replayGainUnsupportedDecoder": "一部のトラックは、オーディオコーデックが ReplayGain デコーダーで未対応のため解析できませんでした。それらのファイルは変更されていません。",
   "metadataSeparators": "タグの区切り文字",
   "metadataSeparatorInvalid": "改行や制御文字を含まない 1～16 文字を使用してください。",
   "settingDisabled": "無効",
@@ -235,7 +235,7 @@
   "@setupOpenSettings": {
     "description": "Button to open system settings"
   },
-  "setupPermissionDeniedMessage": "Permission denied. Please grant all permissions to continue.",
+  "setupPermissionDeniedMessage": "許可が拒否されました。続行するにはすべての許可を与えてください。",
   "@setupPermissionDeniedMessage": {
     "description": "Error when permission denied"
   },
@@ -288,15 +288,15 @@
   "@setupNext": {
     "description": "Next button text"
   },
-  "setupGetStarted": "Get Started",
+  "setupGetStarted": "はじめる",
   "@setupGetStarted": {
     "description": "Final setup button"
   },
-  "setupLanguageTitle": "Choose Language",
+  "setupLanguageTitle": "言語を選択",
   "@setupLanguageTitle": {
     "description": "Title for the language selection step in setup"
   },
-  "setupLanguageDescription": "Select your preferred language for the app. You can change this later in Settings.",
+  "setupLanguageDescription": "アプリで使用する言語を選択してください。後から設定で変更できます。",
   "@setupLanguageDescription": {
     "description": "Description for the language selection step in setup"
   },
@@ -336,7 +336,7 @@
   "@dialogDeleteSelectedTitle": {
     "description": "Dialog title - delete selected items"
   },
-  "dialogDeleteSelectedMessage": "Delete {count} {count, plural, =1{track} other{tracks}} from history?\n\nThis will also delete the files from storage.",
+  "dialogDeleteSelectedMessage": "履歴から {count} 曲を削除しますか？\n\nストレージからファイルも削除されます。",
   "@dialogDeleteSelectedMessage": {
     "description": "Dialog message - delete selected tracks",
     "placeholders": {
@@ -345,11 +345,11 @@
       }
     }
   },
-  "collectionExportM3u": "Export as M3U8",
+  "collectionExportM3u": "M3U8 としてエクスポート",
   "@collectionExportM3u": {
     "description": "Tooltip on the collection screen action that exports the track list as an M3U8 playlist file"
   },
-  "collectionExportM3uDone": "Exported {exported} of {total} tracks",
+  "collectionExportM3uDone": "{total} 曲中 {exported} 曲をエクスポートしました",
   "@collectionExportM3uDone": {
     "description": "Snackbar after M3U8 export; tracks without a local file are not exported",
     "placeholders": {
@@ -362,35 +362,35 @@
     }
   },
   "collectionExportM3uNone": "書き出せるローカルの音声ファイルがありません",
-  "collectionExportM3uFailed": "Export failed",
+  "collectionExportM3uFailed": "エクスポートに失敗しました",
   "@collectionExportM3uFailed": {
     "description": "Snackbar when writing or sharing the M3U8 export fails"
   },
-  "libraryReviewDuplicates": "Review duplicates",
+  "libraryReviewDuplicates": "重複を確認",
   "@libraryReviewDuplicates": {
     "description": "Library settings row opening the duplicate review sheet"
   },
-  "libraryReviewDuplicatesSubtitle": "Find tracks stored more than once",
+  "libraryReviewDuplicatesSubtitle": "複数回保存されているトラックを探す",
   "@libraryReviewDuplicatesSubtitle": {
     "description": "Subtitle for the duplicate review settings row"
   },
-  "duplicatesTitle": "Duplicates",
+  "duplicatesTitle": "重複",
   "@duplicatesTitle": {
     "description": "Title of the duplicate review sheet"
   },
-  "duplicatesEmpty": "No duplicate tracks found.",
+  "duplicatesEmpty": "重複したトラックは見つかりませんでした。",
   "@duplicatesEmpty": {
     "description": "Shown when the duplicate review sheet finds nothing"
   },
-  "duplicatesKeepBest": "Keep best",
+  "duplicatesKeepBest": "最良を残す",
   "@duplicatesKeepBest": {
     "description": "Button that deletes all but the highest-quality copy in a duplicate group"
   },
-  "duplicatesKeepBestAll": "Keep best for all",
+  "duplicatesKeepBestAll": "すべてで最良を残す",
   "@duplicatesKeepBestAll": {
     "description": "Button that keeps the highest-quality copy in every duplicate group and deletes the rest"
   },
-  "duplicatesKeepBestAllMessage": "Keep the best copy of {groupCount} {groupCount, plural, =1{track} other{tracks}} and delete {count} lower-quality {count, plural, =1{copy} other{copies}}?\n\nThe deleted files will be removed from storage.",
+  "duplicatesKeepBestAllMessage": "{groupCount} 曲の最良のコピーを残し、画質の低い {count} 件のコピーを削除しますか？",
   "@duplicatesKeepBestAllMessage": {
     "description": "Confirmation message for keeping the best copy across every duplicate group",
     "placeholders": {
@@ -402,7 +402,7 @@
       }
     }
   },
-  "duplicatesKeepBestMessage": "Delete {count} lower-quality copies of \"{trackName}\"?",
+  "duplicatesKeepBestMessage": "「{trackName}」の画質の低いコピー {count} 件を削除しますか？",
   "@duplicatesKeepBestMessage": {
     "description": "Confirmation message for the keep-best action",
     "placeholders": {
@@ -414,7 +414,7 @@
       }
     }
   },
-  "duplicatesDeleteCopyMessage": "Delete this copy of \"{trackName}\"?",
+  "duplicatesDeleteCopyMessage": "「{trackName}」のこのコピーを削除しますか？",
   "@duplicatesDeleteCopyMessage": {
     "description": "Confirmation message for deleting one duplicate copy",
     "placeholders": {
@@ -449,11 +449,11 @@
   "@errorRateLimited": {
     "description": "Error title - too many requests"
   },
-  "errorRateLimitedMessage": "Too many requests. Please wait a moment before searching again.",
+  "errorRateLimitedMessage": "リクエストが多すぎます。少し待ってから再検索してください。",
   "@errorRateLimitedMessage": {
     "description": "Error message - rate limit explanation"
   },
-  "searchEmptyResultSubtitle": "Try another keyword",
+  "searchEmptyResultSubtitle": "別のキーワードをお試しください",
   "@searchEmptyResultSubtitle": {
     "description": "Subtitle shown under the empty search result state on the home screen"
   },
@@ -510,31 +510,31 @@
   "@searchPlaylists": {
     "description": "Search result category - playlists"
   },
-  "searchSortTitle": "Sort Results",
+  "searchSortTitle": "結果の並べ替え",
   "@searchSortTitle": {
     "description": "Bottom sheet title for search sort options"
   },
-  "searchSortTitleAZ": "Title (A-Z)",
+  "searchSortTitleAZ": "タイトル（A-Z）",
   "@searchSortTitleAZ": {
     "description": "Sort option - title ascending"
   },
-  "searchSortTitleZA": "Title (Z-A)",
+  "searchSortTitleZA": "タイトル（Z-A）",
   "@searchSortTitleZA": {
     "description": "Sort option - title descending"
   },
-  "searchSortArtistAZ": "Artist (A-Z)",
+  "searchSortArtistAZ": "アーティスト（A-Z）",
   "@searchSortArtistAZ": {
     "description": "Sort option - artist ascending"
   },
-  "searchSortArtistZA": "Artist (Z-A)",
+  "searchSortArtistZA": "アーティスト（Z-A）",
   "@searchSortArtistZA": {
     "description": "Sort option - artist descending"
   },
-  "searchSortDateOldest": "Release Date (Oldest)",
+  "searchSortDateOldest": "リリース日（古い順）",
   "@searchSortDateOldest": {
     "description": "Sort option - oldest release first"
   },
-  "searchSortDateNewest": "Release Date (Newest)",
+  "searchSortDateNewest": "リリース日（新しい順）",
   "@searchSortDateNewest": {
     "description": "Sort option - newest release first"
   },
@@ -578,7 +578,7 @@
   "@logClearLogsMessage": {
     "description": "Clear logs confirmation message"
   },
-  "logFilterBySeverity": "Filter logs by severity",
+  "logFilterBySeverity": "重大度でログを絞り込む",
   "@logFilterBySeverity": {
     "description": "Filter dialog title"
   },
@@ -586,7 +586,7 @@
   "@logNoLogsYet": {
     "description": "Empty state title"
   },
-  "logNoLogsYetSubtitle": "Logs will appear here as you use the app",
+  "logNoLogsYetSubtitle": "アプリを使うと、ここにログが表示されます",
   "@logNoLogsYetSubtitle": {
     "description": "Empty state subtitle"
   },
@@ -612,8 +612,8 @@
   "@sectionLyrics": {
     "description": "Settings section header"
   },
-  "lyricsKeepScreenOn": "Keep screen on while viewing lyrics",
-  "lyricsKeepScreenOnSubtitle": "Prevent screen timeout while lyrics are open, including when playback is paused.",
+  "lyricsKeepScreenOn": "歌詞の表示中は画面をオンのままにする",
+  "lyricsKeepScreenOnSubtitle": "歌詞を開いている間は、再生が一時停止中でも画面がスリープしないようにします。",
   "sectionColor": "カラー",
   "@sectionColor": {
     "description": "Settings section header"
@@ -638,7 +638,7 @@
   "@settingsLogsSubtitle": {
     "description": "Logs settings description"
   },
-  "pressBackAgainToExit": "Press back again to exit",
+  "pressBackAgainToExit": "終了するには、もう一度戻るを押してください",
   "@pressBackAgainToExit": {
     "description": "Exit confirmation message"
   },
@@ -677,11 +677,11 @@
       }
     }
   },
-  "appearanceHeroAnimations": "Hero animations",
+  "appearanceHeroAnimations": "ヒーローアニメーション",
   "@appearanceHeroAnimations": {
     "description": "Toggle for shared-element (Hero) transitions"
   },
-  "appearanceHeroAnimationsSubtitle": "Fly covers between screens, e.g. when opening the player",
+  "appearanceHeroAnimationsSubtitle": "画面間でアートワークを移動させます（例：プレーヤーを開くとき）",
   "@appearanceHeroAnimationsSubtitle": {
     "description": "Subtitle for the Hero animations toggle"
   },
@@ -689,7 +689,7 @@
   "@collectionDeleteSelected": {
     "description": "Button - delete selected tracks"
   },
-  "collectionDeleteMessage": "Delete {count} {count, plural, =1{track} other{tracks}} from this album?\n\nThis will also delete the files from storage.",
+  "collectionDeleteMessage": "このアルバムから {count} 曲を削除しますか？\n\nストレージからファイルも削除されます。",
   "@collectionDeleteMessage": {
     "description": "Delete confirmation with count",
     "placeholders": {
@@ -729,7 +729,7 @@
   "@settingsLocalLibrary": {
     "description": "Settings menu item - local library"
   },
-  "settingsLocalLibrarySubtitle": "Scan music & detect duplicates",
+  "settingsLocalLibrarySubtitle": "音楽をスキャンし、重複を検出",
   "@settingsLocalLibrarySubtitle": {
     "description": "Subtitle for local library settings"
   },
@@ -737,7 +737,7 @@
   "@settingsCache": {
     "description": "Settings menu item - cache management"
   },
-  "settingsCacheSubtitle": "View size and clear cached data",
+  "settingsCacheSubtitle": "キャッシュのサイズを確認し、キャッシュデータを消去",
   "@settingsCacheSubtitle": {
     "description": "Subtitle for cache management menu"
   },
@@ -753,15 +753,15 @@
   "@libraryFolderHint": {
     "description": "Placeholder when no folder selected"
   },
-  "libraryAddFolder": "Add library folder",
+  "libraryAddFolder": "ライブラリのフォルダを追加",
   "@libraryAddFolder": {
     "description": "Action to add another local library source"
   },
-  "libraryAddFolderSubtitle": "Internal storage, SD card, SSD, or another external drive",
+  "libraryAddFolderSubtitle": "内部ストレージ、SD カード、SSD、その他の外部ドライブ",
   "@libraryAddFolderSubtitle": {
     "description": "Supported storage locations for local library sources"
   },
-  "librarySourceOffline": "Offline. Reconnect the storage to restore these tracks",
+  "librarySourceOffline": "オフライン。これらのトラックを復元するにはストレージを再接続してください",
   "@librarySourceOffline": {
     "description": "Library source is temporarily disconnected"
   },
@@ -769,7 +769,7 @@
   "@librarySourceDisabled": {
     "description": "Library source has been disabled by the user"
   },
-  "librarySourceScanCount": "{scanned} of {total} files scanned ({progress}%)",
+  "librarySourceScanCount": "{total} ファイル中 {scanned} ファイルをスキャン（{progress}%）",
   "@librarySourceScanCount": {
     "description": "Live progress for one library folder scan",
     "placeholders": {
@@ -784,15 +784,15 @@
       }
     }
   },
-  "libraryExternalStorage": "External storage",
+  "libraryExternalStorage": "外部ストレージ",
   "@libraryExternalStorage": {
     "description": "Label for a removable or external library source"
   },
-  "libraryRemoveFolder": "Remove library folder",
+  "libraryRemoveFolder": "ライブラリのフォルダを削除",
   "@libraryRemoveFolder": {
     "description": "Action to remove one indexed library source"
   },
-  "libraryRemoveFolderMessage": "Remove this folder and its indexed tracks from Sistrum? Audio files on the storage will not be deleted.",
+  "libraryRemoveFolderMessage": "このフォルダとそのインデックス済みのトラックを Sistrum から削除しますか？ストレージ上のオーディオファイルは削除されません。",
   "@libraryRemoveFolderMessage": {
     "description": "Confirmation shown before removing a library source"
   },
@@ -834,35 +834,35 @@
       }
     }
   },
-  "libraryShowDuplicateIndicator": "Show Duplicate Indicator",
+  "libraryShowDuplicateIndicator": "重複インジケーターを表示",
   "@libraryShowDuplicateIndicator": {
     "description": "Toggle for duplicate indicator in search"
   },
-  "libraryShowDuplicateIndicatorSubtitle": "Show when searching for existing tracks",
+  "libraryShowDuplicateIndicatorSubtitle": "既存のトラックを検索するときに表示",
   "@libraryShowDuplicateIndicatorSubtitle": {
     "description": "Subtitle for duplicate indicator toggle"
   },
-  "libraryAutoScan": "Auto Scan",
+  "libraryAutoScan": "自動スキャン",
   "@libraryAutoScan": {
     "description": "Setting for automatic library scanning"
   },
-  "libraryAutoScanSubtitle": "Automatically scan your library for new files",
+  "libraryAutoScanSubtitle": "ライブラリを自動でスキャンして新しいファイルを探します",
   "@libraryAutoScanSubtitle": {
     "description": "Subtitle for auto scan setting"
   },
-  "libraryAutoScanOff": "Off",
+  "libraryAutoScanOff": "オフ",
   "@libraryAutoScanOff": {
     "description": "Auto scan disabled"
   },
-  "libraryAutoScanOnOpen": "Every app open",
+  "libraryAutoScanOnOpen": "アプリを開くたび",
   "@libraryAutoScanOnOpen": {
     "description": "Auto scan when app opens"
   },
-  "libraryAutoScanDaily": "Daily",
+  "libraryAutoScanDaily": "毎日",
   "@libraryAutoScanDaily": {
     "description": "Auto scan once per day"
   },
-  "libraryAutoScanWeekly": "Weekly",
+  "libraryAutoScanWeekly": "毎週",
   "@libraryAutoScanWeekly": {
     "description": "Auto scan once per week"
   },
@@ -878,15 +878,15 @@
   "@libraryScanSubtitle": {
     "description": "Subtitle for scan button"
   },
-  "libraryScanSelectFolderFirst": "Select a folder first",
+  "libraryScanSelectFolderFirst": "先にフォルダを選択してください",
   "@libraryScanSelectFolderFirst": {
     "description": "Message when trying to scan without folder"
   },
-  "libraryCleanupMissingFiles": "Cleanup Missing Files",
+  "libraryCleanupMissingFiles": "見つからないファイルを整理",
   "@libraryCleanupMissingFiles": {
     "description": "Button to remove entries for missing files"
   },
-  "libraryCleanupMissingFilesSubtitle": "Remove entries for files that no longer exist",
+  "libraryCleanupMissingFilesSubtitle": "存在しなくなったファイルの項目を削除します",
   "@libraryCleanupMissingFilesSubtitle": {
     "description": "Subtitle for cleanup button"
   },
@@ -894,7 +894,7 @@
   "@libraryClear": {
     "description": "Button to clear all library entries"
   },
-  "libraryClearSubtitle": "Remove all scanned tracks",
+  "libraryClearSubtitle": "スキャン済みのトラックをすべて削除",
   "@libraryClearSubtitle": {
     "description": "Subtitle for clear button"
   },
@@ -902,7 +902,7 @@
   "@libraryClearConfirmTitle": {
     "description": "Dialog title for clear confirmation"
   },
-  "libraryClearConfirmMessage": "This will remove all scanned tracks from your library. Your actual music files will not be deleted.",
+  "libraryClearConfirmMessage": "ライブラリからスキャン済みのトラックをすべて削除します。実際の音楽ファイルは削除されません。",
   "@libraryClearConfirmMessage": {
     "description": "Dialog message for clear confirmation"
   },
@@ -911,7 +911,7 @@
     "description": "Section header for about info"
   },
   "libraryAboutDescription": "音楽フォルダをスキャンし、ローカルの音声ファイルに保存されたタグを表示します。FLAC、ALAC、M4A、MP3、Opus、OGG、WAV、AIFF、APE に対応しています。",
-  "libraryTracksUnit": "{count, plural, =1{track} other{tracks}}",
+  "libraryTracksUnit": "{count} 曲",
   "@libraryTracksUnit": {
     "description": "Unit label for tracks count (without the number itself)",
     "placeholders": {
@@ -920,7 +920,7 @@
       }
     }
   },
-  "libraryFilesUnit": "{count, plural, =1{file} other{files}}",
+  "libraryFilesUnit": "{count} ファイル",
   "@libraryFilesUnit": {
     "description": "Unit label for files count during library scanning",
     "placeholders": {
@@ -938,7 +938,7 @@
       }
     }
   },
-  "libraryLastScannedNever": "Never",
+  "libraryLastScannedNever": "なし",
   "@libraryLastScannedNever": {
     "description": "Shown when library has never been scanned"
   },
@@ -946,15 +946,15 @@
   "@libraryScanning": {
     "description": "Status during scan"
   },
-  "libraryScanFinalizing": "Finalizing library...",
+  "libraryScanFinalizing": "ライブラリを仕上げています...",
   "@libraryScanFinalizing": {
     "description": "Status shown after file scanning finishes but library persistence is still running"
   },
-  "libraryScanPaused": "Scan paused",
+  "libraryScanPaused": "スキャンを一時停止中",
   "@libraryScanPaused": {
     "description": "Status shown while a library scan is paused by the user"
   },
-  "libraryScanProgress": "{progress}% of {total} files",
+  "libraryScanProgress": "{total} ファイル中 {progress}%",
   "@libraryScanProgress": {
     "description": "Scan progress display",
     "placeholders": {
@@ -966,7 +966,7 @@
       }
     }
   },
-  "libraryRemovedMissingFiles": "Removed {count} missing files from library",
+  "libraryRemovedMissingFiles": "ライブラリから見つからないファイルを {count} 件削除しました",
   "@libraryRemovedMissingFiles": {
     "description": "Snackbar after cleanup",
     "placeholders": {
@@ -975,7 +975,7 @@
       }
     }
   },
-  "libraryCleared": "Library cleared",
+  "libraryCleared": "ライブラリを消去しました",
   "@libraryCleared": {
     "description": "Snackbar after clearing library"
   },
@@ -983,7 +983,7 @@
   "@libraryStorageAccessRequired": {
     "description": "Dialog title for storage permission"
   },
-  "libraryStorageAccessMessage": "Sistrum needs storage access to scan your music library. Please grant permission in settings.",
+  "libraryStorageAccessMessage": "Sistrum は音楽ライブラリをスキャンするためにストレージへのアクセスが必要です。設定で許可してください。",
   "@libraryStorageAccessMessage": {
     "description": "Dialog message for storage permission"
   },
@@ -1011,11 +1011,11 @@
   "@libraryFilterQualityHiRes": {
     "description": "Filter option - high resolution audio"
   },
-  "libraryFilterQualityCD": "CD (16bit)",
+  "libraryFilterQualityCD": "CD（16bit）",
   "@libraryFilterQualityCD": {
     "description": "Filter option - CD quality audio"
   },
-  "libraryFilterQualityLossy": "Lossy",
+  "libraryFilterQualityLossy": "非可逆",
   "@libraryFilterQualityLossy": {
     "description": "Filter option - lossy compressed audio"
   },
@@ -1027,55 +1027,55 @@
   "@libraryFilterMetadata": {
     "description": "Filter section - metadata completeness"
   },
-  "libraryFilterMetadataComplete": "Complete metadata",
+  "libraryFilterMetadataComplete": "メタデータが完全",
   "@libraryFilterMetadataComplete": {
     "description": "Filter option - items with complete metadata"
   },
-  "libraryFilterMetadataMissingAny": "Missing any metadata",
+  "libraryFilterMetadataMissingAny": "メタデータが欠けている",
   "@libraryFilterMetadataMissingAny": {
     "description": "Filter option - items missing any tracked metadata field"
   },
-  "libraryFilterMetadataMissingYear": "Missing year",
+  "libraryFilterMetadataMissingYear": "年が未設定",
   "@libraryFilterMetadataMissingYear": {
     "description": "Filter option - items missing release year/date"
   },
-  "libraryFilterMetadataMissingGenre": "Missing genre",
+  "libraryFilterMetadataMissingGenre": "ジャンルが未設定",
   "@libraryFilterMetadataMissingGenre": {
     "description": "Filter option - items missing genre"
   },
-  "libraryFilterMetadataMissingAlbumArtist": "Missing album artist",
+  "libraryFilterMetadataMissingAlbumArtist": "アルバムアーティストが未設定",
   "@libraryFilterMetadataMissingAlbumArtist": {
     "description": "Filter option - items missing album artist"
   },
-  "libraryFilterSort": "Sort",
+  "libraryFilterSort": "並べ替え",
   "@libraryFilterSort": {
     "description": "Filter section - sort order"
   },
-  "libraryFilterSortLatest": "Latest",
+  "libraryFilterSortLatest": "新しい順",
   "@libraryFilterSortLatest": {
     "description": "Sort option - newest first"
   },
-  "libraryFilterSortOldest": "Oldest",
+  "libraryFilterSortOldest": "古い順",
   "@libraryFilterSortOldest": {
     "description": "Sort option - oldest first"
   },
-  "libraryFilterSortAlbumAsc": "Album (A-Z)",
+  "libraryFilterSortAlbumAsc": "アルバム（A-Z）",
   "@libraryFilterSortAlbumAsc": {
     "description": "Sort option - album ascending"
   },
-  "libraryFilterSortAlbumDesc": "Album (Z-A)",
+  "libraryFilterSortAlbumDesc": "アルバム（Z-A）",
   "@libraryFilterSortAlbumDesc": {
     "description": "Sort option - album descending"
   },
-  "libraryFilterSortGenreAsc": "Genre (A-Z)",
+  "libraryFilterSortGenreAsc": "ジャンル（A-Z）",
   "@libraryFilterSortGenreAsc": {
     "description": "Sort option - genre ascending"
   },
-  "libraryFilterSortGenreDesc": "Genre (Z-A)",
+  "libraryFilterSortGenreDesc": "ジャンル（Z-A）",
   "@libraryFilterSortGenreDesc": {
     "description": "Sort option - genre descending"
   },
-  "timeJustNow": "Just now",
+  "timeJustNow": "たった今",
   "@timeJustNow": {
     "description": "Relative time - less than a minute ago"
   },
@@ -1097,7 +1097,7 @@
       }
     }
   },
-  "tutorialSearchTitle": "Finding Music",
+  "tutorialSearchTitle": "音楽を探す",
   "@tutorialSearchTitle": {
     "description": "Tutorial search page title"
   },
@@ -1108,25 +1108,25 @@
   },
   "tutorialLibraryDesc": "スキャンした音楽は、曲、アーティスト、アルバム、プレイリストに整理されます。",
   "tutorialLibraryTip1": "端末にある曲を閲覧・検索できます",
-  "tutorialLibraryTip2": "Tap a track to play it with the built-in player",
+  "tutorialLibraryTip2": "トラックをタップすると、内蔵プレーヤーで再生します",
   "@tutorialLibraryTip2": {
     "description": "Tutorial library tip 2"
   },
-  "tutorialLibraryTip3": "Browse tracks, albums, and playlists in list or grid views",
+  "tutorialLibraryTip3": "リストまたはグリッド表示で、トラック、アルバム、プレイリストを閲覧できます",
   "@tutorialLibraryTip3": {
     "description": "Tutorial library tip 3"
   },
-  "tutorialSettingsTitle": "Customize Your Experience",
+  "tutorialSettingsTitle": "体験をカスタマイズ",
   "@tutorialSettingsTitle": {
     "description": "Tutorial settings page title"
   },
   "tutorialSettingsDesc": "再生、ライブラリのスキャン、歌詞、Sistrum の外観、ローカルストレージを調整できます。",
   "tutorialSettingsTip1": "音楽フォルダとローカルファイルへのアクセスを管理します",
-  "tutorialSettingsTip2": "Adjust your local library, playback, and appearance preferences.",
+  "tutorialSettingsTip2": "ローカルライブラリ、再生、外観の設定を調整してください。",
   "@tutorialSettingsTip2": {
     "description": "Tutorial settings tip 2"
   },
-  "tutorialSettingsTip3": "Customize app theme and appearance",
+  "tutorialSettingsTip3": "アプリのテーマと外観をカスタマイズ",
   "@tutorialSettingsTip3": {
     "description": "Tutorial settings tip 3"
   },
@@ -1135,7 +1135,7 @@
   "@libraryForceFullScan": {
     "description": "Button to force a complete rescan of library"
   },
-  "libraryForceFullScanSubtitle": "Rescan all files, ignoring cache",
+  "libraryForceFullScanSubtitle": "キャッシュを無視して全ファイルを再スキャンします",
   "@libraryForceFullScanSubtitle": {
     "description": "Subtitle for force full scan button"
   },
@@ -1148,7 +1148,7 @@
     "description": "Heading for cache summary card"
   },
   "cacheSummarySubtitle": "キャッシュを消去しても、元の音楽ファイルは残ります。",
-  "cacheEstimatedTotal": "Estimated cache usage: {size}",
+  "cacheEstimatedTotal": "推定キャッシュ使用量：{size}",
   "@cacheEstimatedTotal": {
     "description": "Total cache size shown in summary",
     "placeholders": {
@@ -1169,7 +1169,7 @@
   "@cacheAppDirectory": {
     "description": "Cache item title for app cache directory"
   },
-  "cacheAppDirectoryDesc": "HTTP responses, WebView data, and other temporary app data.",
+  "cacheAppDirectoryDesc": "HTTP 応答、WebView のデータ、その他の一時的なアプリデータ。",
   "@cacheAppDirectoryDesc": {
     "description": "Description of what app cache directory contains"
   },
@@ -1182,23 +1182,23 @@
   "@cacheLibraryCover": {
     "description": "Cache item title for local library cover art images"
   },
-  "cacheLibraryCoverDesc": "Cover art extracted from local music files. Will re-extract on next scan.",
+  "cacheLibraryCoverDesc": "ローカルの音楽ファイルから抽出されたカバーアート。次回のスキャンで再抽出されます。",
   "@cacheLibraryCoverDesc": {
     "description": "Description of what library cover cache contains"
   },
-  "libraryPlaybackNormalization": "Volume normalization",
+  "libraryPlaybackNormalization": "音量の正規化",
   "@libraryPlaybackNormalization": {
     "description": "Toggle title for ReplayGain playback normalization in the built-in player"
   },
-  "libraryPlaybackNormalizationSubtitle": "Even out loudness between tracks using their ReplayGain or R128 tags, when present",
+  "libraryPlaybackNormalizationSubtitle": "ReplayGain または R128 タグがあれば、それを使ってトラック間のラウドネスをそろえます",
   "@libraryPlaybackNormalizationSubtitle": {
     "description": "Subtitle explaining playback volume normalization"
   },
-  "cacheAudioAnalysis": "Audio analysis cache",
+  "cacheAudioAnalysis": "オーディオ解析のキャッシュ",
   "@cacheAudioAnalysis": {
     "description": "Cache item title for saved audio analysis results"
   },
-  "cacheAudioAnalysisDesc": "Saved spectrograms and analysis results. Will re-analyze on next open.",
+  "cacheAudioAnalysisDesc": "保存されたスペクトログラムと解析結果。次回開くときに再解析されます。",
   "@cacheAudioAnalysisDesc": {
     "description": "Description of what audio analysis cache contains"
   },
@@ -1207,7 +1207,7 @@
   "@cacheNoData": {
     "description": "Label when cache category has no data"
   },
-  "cacheSizeWithFiles": "{size} in {count} files",
+  "cacheSizeWithFiles": "{count} ファイル、{size}",
   "@cacheSizeWithFiles": {
     "description": "Cache size and file count",
     "placeholders": {
@@ -1259,7 +1259,7 @@
   "@audioBitrate": {
     "description": "Label for bitrate selection"
   },
-  "actionCreate": "Create",
+  "actionCreate": "作成",
   "@actionCreate": {
     "description": "Generic action button - create"
   },
@@ -1267,7 +1267,7 @@
   "@collectionLoved": {
     "description": "Custom folder for favorite tracks"
   },
-  "collectionFavoriteArtists": "Favorite Artists",
+  "collectionFavoriteArtists": "お気に入りのアーティスト",
   "@collectionFavoriteArtists": {
     "description": "Custom folder for favorite artists"
   },
@@ -1275,15 +1275,15 @@
   "@collectionPlaylist": {
     "description": "Single playlist label"
   },
-  "collectionAddToPlaylist": "Add to playlist",
+  "collectionAddToPlaylist": "プレイリストに追加",
   "@collectionAddToPlaylist": {
     "description": "Action to add a track to user playlist"
   },
-  "collectionCreatePlaylist": "Create playlist",
+  "collectionCreatePlaylist": "プレイリストを作成",
   "@collectionCreatePlaylist": {
     "description": "Action to create a new playlist"
   },
-  "collectionNoPlaylistsYet": "No playlists yet",
+  "collectionNoPlaylistsYet": "まだプレイリストがありません",
   "@collectionNoPlaylistsYet": {
     "description": "Empty state title when user has no playlists"
   },
@@ -1296,7 +1296,7 @@
       }
     }
   },
-  "collectionAddedToPlaylist": "Added to \"{playlistName}\"",
+  "collectionAddedToPlaylist": "「{playlistName}」に追加しました",
   "@collectionAddedToPlaylist": {
     "description": "Snackbar after adding track to playlist",
     "placeholders": {
@@ -1305,7 +1305,7 @@
       }
     }
   },
-  "collectionAlreadyInPlaylist": "Already in \"{playlistName}\"",
+  "collectionAlreadyInPlaylist": "「{playlistName}」にすでにあります",
   "@collectionAlreadyInPlaylist": {
     "description": "Snackbar when track already exists in playlist",
     "placeholders": {
@@ -1314,52 +1314,52 @@
       }
     }
   },
-  "collectionPlaylistNameHint": "Playlist name",
+  "collectionPlaylistNameHint": "プレイリスト名",
   "@collectionPlaylistNameHint": {
     "description": "Hint text for playlist name input"
   },
-  "collectionPlaylistNameRequired": "Playlist name is required",
+  "collectionPlaylistNameRequired": "プレイリスト名は必須です",
   "@collectionPlaylistNameRequired": {
     "description": "Validation error for empty playlist name"
   },
-  "collectionRenamePlaylist": "Rename playlist",
+  "collectionRenamePlaylist": "プレイリスト名を変更",
   "@collectionRenamePlaylist": {
     "description": "Action to rename playlist"
   },
-  "collectionDeletePlaylist": "Delete playlist",
+  "collectionDeletePlaylist": "プレイリストを削除",
   "@collectionDeletePlaylist": {
     "description": "Action to delete playlist"
   },
-  "collectionPlaylistRenamed": "Playlist renamed",
+  "collectionPlaylistRenamed": "プレイリスト名を変更しました",
   "@collectionPlaylistRenamed": {
     "description": "Snackbar after renaming playlist"
   },
   "collectionRemovedTracks": "{count, plural, =1{1 曲を削除しました} other{{count} 曲を削除しました}}",
-  "collectionLovedEmptyTitle": "No loved songs yet",
+  "collectionLovedEmptyTitle": "お気に入りの曲はまだありません",
   "@collectionLovedEmptyTitle": {
     "description": "Loved empty state title"
   },
-  "collectionLovedEmptySubtitle": "Tap love on tracks to keep your favorites",
+  "collectionLovedEmptySubtitle": "トラックのハートをタップして、お気に入りを保存します",
   "@collectionLovedEmptySubtitle": {
     "description": "Loved empty state subtitle"
   },
-  "collectionFavoriteArtistsEmptyTitle": "No favorite artists yet",
+  "collectionFavoriteArtistsEmptyTitle": "お気に入りのアーティストはまだありません",
   "@collectionFavoriteArtistsEmptyTitle": {
     "description": "Favorite artists empty state title"
   },
-  "collectionFavoriteArtistsEmptySubtitle": "Tap the heart on an artist page to keep them here",
+  "collectionFavoriteArtistsEmptySubtitle": "アーティストのページでハートをタップすると、ここに表示されます",
   "@collectionFavoriteArtistsEmptySubtitle": {
     "description": "Favorite artists empty state subtitle"
   },
-  "collectionPlaylistEmptyTitle": "Playlist is empty",
+  "collectionPlaylistEmptyTitle": "プレイリストは空です",
   "@collectionPlaylistEmptyTitle": {
     "description": "Playlist empty state title"
   },
-  "collectionPlaylistEmptySubtitle": "Long-press + on any track to add it here",
+  "collectionPlaylistEmptySubtitle": "任意のトラックの + を長押しして、ここに追加します",
   "@collectionPlaylistEmptySubtitle": {
     "description": "Playlist empty state subtitle"
   },
-  "collectionRemoveFromPlaylist": "Remove from playlist",
+  "collectionRemoveFromPlaylist": "プレイリストから削除",
   "@collectionRemoveFromPlaylist": {
     "description": "Tooltip for removing track from playlist"
   },
@@ -1367,7 +1367,7 @@
   "@collectionRemoveFromFolder": {
     "description": "Tooltip for removing track from Loved folder"
   },
-  "collectionRemovedFromFavoriteArtists": "\"{artistName}\" removed from Favorite Artists",
+  "collectionRemovedFromFavoriteArtists": "「{artistName}」をお気に入りのアーティストから削除しました",
   "@collectionRemovedFromFavoriteArtists": {
     "description": "Snackbar after removing artist from favorite artists",
     "placeholders": {
@@ -1376,15 +1376,15 @@
       }
     }
   },
-  "trackOptionAddToLoved": "Add to Loved",
+  "trackOptionAddToLoved": "お気に入りに追加",
   "@trackOptionAddToLoved": {
     "description": "Bottom sheet action label - add track to loved folder"
   },
-  "trackOptionRemoveFromLoved": "Remove from Loved",
+  "trackOptionRemoveFromLoved": "お気に入りから削除",
   "@trackOptionRemoveFromLoved": {
     "description": "Bottom sheet action label - remove track from loved folder"
   },
-  "artistOptionRemoveFromFavorites": "Remove from Favorite Artists",
+  "artistOptionRemoveFromFavorites": "お気に入りのアーティストから削除",
   "@artistOptionRemoveFromFavorites": {
     "description": "Action label - remove artist from favorite artists"
   },
@@ -1396,89 +1396,89 @@
   "@collectionPlaylistRemoveCover": {
     "description": "Bottom sheet action to remove custom cover image from a playlist"
   },
-  "settingsBackup": "Backup & Restore",
+  "settingsBackup": "バックアップと復元",
   "@settingsBackup": {
     "description": "Settings menu item - backup and restore page"
   },
-  "settingsBackupSubtitle": "Move your library, history and settings to a new device",
+  "settingsBackupSubtitle": "ライブラリ、履歴、設定を新しい端末に移行します",
   "@settingsBackupSubtitle": {
     "description": "Subtitle for backup and restore settings item"
   },
-  "backupTitle": "Backup & Restore",
+  "backupTitle": "バックアップと復元",
   "@backupTitle": {
     "description": "App bar title for the backup and restore page"
   },
-  "backupExportSectionTitle": "Create backup",
+  "backupExportSectionTitle": "バックアップを作成",
   "@backupExportSectionTitle": {
     "description": "Section title for the export/backup card"
   },
   "backupExportSectionDescription": "設定、ローカルプロフィール、コレクション、任意の旧ライブラリ記録を、バックアップファイルに保存します。",
-  "backupExportButton": "Create backup file",
+  "backupExportButton": "バックアップファイルを作成",
   "@backupExportButton": {
     "description": "Button to create and share a backup file"
   },
-  "backupImportSectionTitle": "Restore backup",
+  "backupImportSectionTitle": "バックアップを復元",
   "@backupImportSectionTitle": {
     "description": "Section title for the import/restore card"
   },
-  "backupImportSectionDescription": "Pick a backup file to restore your data. This replaces the current settings, history and library on this device.",
+  "backupImportSectionDescription": "データを復元するバックアップファイルを選んでください。この端末の現在の設定、履歴、ライブラリは置き換えられます。",
   "@backupImportSectionDescription": {
     "description": "Description for the restore action"
   },
-  "backupImportButton": "Choose backup file",
+  "backupImportButton": "バックアップファイルを選択",
   "@backupImportButton": {
     "description": "Button to pick a backup file to restore"
   },
-  "backupCreated": "Backup created",
+  "backupCreated": "バックアップを作成しました",
   "@backupCreated": {
     "description": "Snackbar after a backup file is created"
   },
-  "backupCreateFailed": "Failed to create backup",
+  "backupCreateFailed": "バックアップの作成に失敗しました",
   "@backupCreateFailed": {
     "description": "Snackbar when backup creation fails"
   },
   "backupTooLarge": "このバックアップは大きすぎて復元できません。項目を減らして、もう一度お試しください。",
   "backupRestorePartiallyFailed": "バックアップの復元に失敗しました。復元済み: {categories}",
   "backupListeningStatisticsExcluded": "再生統計と再生回数は含まれません。",
-  "backupRestoreConfirmTitle": "Restore this backup?",
+  "backupRestoreConfirmTitle": "このバックアップを復元しますか？",
   "@backupRestoreConfirmTitle": {
     "description": "Confirmation dialog title before restoring a backup"
   },
-  "backupRestoreConfirmButton": "Restore",
+  "backupRestoreConfirmButton": "復元",
   "@backupRestoreConfirmButton": {
     "description": "Confirm button to proceed with restore"
   },
-  "backupRestored": "Backup restored successfully",
+  "backupRestored": "バックアップを復元しました",
   "@backupRestored": {
     "description": "Snackbar after a successful restore"
   },
-  "backupRestoreFailed": "Failed to restore backup",
+  "backupRestoreFailed": "バックアップの復元に失敗しました",
   "@backupRestoreFailed": {
     "description": "Snackbar when restore fails"
   },
-  "backupInvalidFile": "This file is not a valid Sistrum backup",
+  "backupInvalidFile": "このファイルは有効な Sistrum のバックアップではありません",
   "@backupInvalidFile": {
     "description": "Snackbar when the chosen file is not a valid backup"
   },
-  "backupRestoreRestartHint": "Restart the app to make sure every change is applied.",
+  "backupRestoreRestartHint": "すべての変更が適用されるように、アプリを再起動してください。",
   "@backupRestoreRestartHint": {
     "description": "Hint shown after restoring that an app restart is recommended"
   },
-  "backupContentsTitle": "Backup contents",
+  "backupContentsTitle": "バックアップの内容",
   "@backupContentsTitle": {
     "description": "Header above the list summarizing what the backup contains"
   },
-  "backupSettingsOnly": "Settings only",
-  "backupSelectCollections": "Library collections",
-  "backupSelectCollectionsDescription": "Liked tracks, favorite artists, playlists and playlist covers.",
-  "backupSelectedExportDescription": "Save the selected categories to a backup file. Audio files are not included.",
-  "backupSelectAtLeastOne": "Select at least one category to create a backup.",
-  "backupSelectedRestoreMessage": "Only the categories listed below will be restored. Categories not included in this backup will stay unchanged. Restoring can replace existing data and cannot be undone.",
-  "backupContentsSettings": "App settings",
+  "backupSettingsOnly": "設定のみ",
+  "backupSelectCollections": "ライブラリのコレクション",
+  "backupSelectCollectionsDescription": "お気に入りのトラック、お気に入りのアーティスト、プレイリスト、プレイリストのカバー。",
+  "backupSelectedExportDescription": "選択したカテゴリをバックアップファイルに保存します。オーディオファイルは含まれません。",
+  "backupSelectAtLeastOne": "バックアップを作成するには、カテゴリを 1 つ以上選択してください。",
+  "backupSelectedRestoreMessage": "以下に示すカテゴリのみ復元されます。このバックアップに含まれないカテゴリは変更されません。",
+  "backupContentsSettings": "アプリの設定",
   "@backupContentsSettings": {
     "description": "Backup contents row label for settings"
   },
-  "backupContentsLiked": "{count} liked {count, plural, =1{track} other{tracks}}",
+  "backupContentsLiked": "お気に入りのトラック {count} 曲",
   "@backupContentsLiked": {
     "description": "Backup contents row for liked tracks count",
     "placeholders": {
@@ -1487,7 +1487,7 @@
       }
     }
   },
-  "backupContentsPlaylists": "{count, plural, =1{1 playlist} other{{count} playlists}}",
+  "backupContentsPlaylists": "{count} 件のプレイリスト",
   "@backupContentsPlaylists": {
     "description": "Backup contents row for playlist count",
     "placeholders": {
@@ -1496,7 +1496,7 @@
       }
     }
   },
-  "backupContentsArtists": "{count, plural, =1{1 favorite artist} other{{count} favorite artists}}",
+  "backupContentsArtists": "お気に入りのアーティスト {count} 件",
   "@backupContentsArtists": {
     "description": "Backup contents row for favorite artists count",
     "placeholders": {
@@ -1505,7 +1505,7 @@
       }
     }
   },
-  "snackbarRemovedTracksFromLoved": "Removed {count} tracks from Loved",
+  "snackbarRemovedTracksFromLoved": "お気に入りから {count} 曲を削除しました",
   "@snackbarRemovedTracksFromLoved": {
     "description": "Snackbar after removing multiple tracks from Loved folder",
     "placeholders": {
@@ -1514,7 +1514,7 @@
       }
     }
   },
-  "snackbarAddedTracksToLoved": "Added {count} tracks to Loved",
+  "snackbarAddedTracksToLoved": "お気に入りに {count} 曲を追加しました",
   "@snackbarAddedTracksToLoved": {
     "description": "Snackbar after adding multiple tracks to Loved folder",
     "placeholders": {
@@ -1523,11 +1523,11 @@
       }
     }
   },
-  "homeGoToAlbum": "Go to Album",
+  "homeGoToAlbum": "アルバムへ移動",
   "@homeGoToAlbum": {
     "description": "Context menu item to navigate to the album page"
   },
-  "snackbarMetadataSaved": "Metadata saved successfully",
+  "snackbarMetadataSaved": "メタデータを保存しました",
   "@snackbarMetadataSaved": {
     "description": "Snackbar after successfully saving track metadata"
   },
@@ -1540,19 +1540,19 @@
       }
     }
   },
-  "noTracksFoundForAlbum": "No tracks found for this album",
+  "noTracksFoundForAlbum": "このアルバムのトラックは見つかりませんでした",
   "@noTracksFoundForAlbum": {
     "description": "Empty state message when an album has no tracks"
   },
-  "snackbarUnsupportedAudioFormat": "Unsupported audio format",
+  "snackbarUnsupportedAudioFormat": "未対応のオーディオ形式です",
   "@snackbarUnsupportedAudioFormat": {
     "description": "Snackbar when the audio format is not supported for the requested operation"
   },
-  "cacheRefresh": "Refresh",
+  "cacheRefresh": "更新",
   "@cacheRefresh": {
     "description": "Tooltip for refresh button on cache management page"
   },
-  "editMetadataFieldTitle": "Title",
+  "editMetadataFieldTitle": "タイトル",
   "@editMetadataFieldTitle": {
     "description": "Chip label for title field in auto-fill selector"
   },
@@ -1564,11 +1564,11 @@
   "@editMetadataFieldAlbum": {
     "description": "Chip label for album field in auto-fill selector"
   },
-  "editMetadataFieldAlbumArtist": "Album Artist",
+  "editMetadataFieldAlbumArtist": "アルバムアーティスト",
   "@editMetadataFieldAlbumArtist": {
     "description": "Chip label for album artist field in auto-fill selector"
   },
-  "editMetadataFieldDate": "Date",
+  "editMetadataFieldDate": "日付",
   "@editMetadataFieldDate": {
     "description": "Chip label for date field in auto-fill selector"
   },
@@ -1576,7 +1576,7 @@
   "@editMetadataFieldTrackNum": {
     "description": "Chip label for track number field in auto-fill selector"
   },
-  "editMetadataFieldDiscNum": "Disc #",
+  "editMetadataFieldDiscNum": "ディスク番号",
   "@editMetadataFieldDiscNum": {
     "description": "Chip label for disc number field in auto-fill selector"
   },
@@ -1596,11 +1596,11 @@
   "@editMetadataFieldCopyright": {
     "description": "Chip label for copyright field in auto-fill selector"
   },
-  "editMetadataFieldCover": "Cover Art",
+  "editMetadataFieldCover": "カバーアート",
   "@editMetadataFieldCover": {
     "description": "Chip label for cover art field in auto-fill selector"
   },
-  "queueFilteringIndicator": "Filtering...",
+  "queueFilteringIndicator": "絞り込み中...",
   "@queueFilteringIndicator": {
     "description": "Shown while filter results are being computed"
   },
@@ -1626,7 +1626,7 @@
   "queueEmptyAlbumsSubtitle": "音楽フォルダをスキャンして、アルバムを追加してください",
   "queueEmptySingles": "ローカルのシングルはありません",
   "queueEmptySinglesSubtitle": "スキャンした単独の曲がここに表示されます",
-  "queuePlaylistCount": "{count, plural, =1{1 playlist} other{{count} playlists}}",
+  "queuePlaylistCount": "{count, plural, other{{count} 件のプレイリスト}}",
   "@queuePlaylistCount": {
     "description": "Playlist count label with plural support",
     "placeholders": {
@@ -1635,57 +1635,57 @@
       }
     }
   },
-  "queueEmptyPlaylistsSubtitle": "Create a playlist to organize your tracks",
+  "queueEmptyPlaylistsSubtitle": "プレイリストを作成して、トラックを整理しましょう",
   "@queueEmptyPlaylistsSubtitle": {
     "description": "Empty state subtitle for the playlists library view"
   },
   "libraryEmpty": "ローカルの曲はありません",
   "libraryEmptySubtitle": "音楽フォルダをスキャンして、ライブラリを埋めてください",
-  "selectionAllPlaylistsSelected": "All playlists selected",
+  "selectionAllPlaylistsSelected": "すべてのプレイリストを選択しました",
   "@selectionAllPlaylistsSelected": {
     "description": "Shown when all playlists are selected in selection mode"
   },
-  "selectionTapPlaylistsToSelect": "Tap playlists to select",
+  "selectionTapPlaylistsToSelect": "プレイリストをタップして選択",
   "@selectionTapPlaylistsToSelect": {
     "description": "Hint shown in playlist selection mode"
   },
-  "selectionSelectPlaylistsToDelete": "Select playlists to delete",
+  "selectionSelectPlaylistsToDelete": "削除するプレイリストを選択",
   "@selectionSelectPlaylistsToDelete": {
     "description": "Hint shown when no playlists are selected for deletion"
   },
-  "audioAnalysisTitle": "Audio Quality Analysis",
+  "audioAnalysisTitle": "オーディオ品質の解析",
   "@audioAnalysisTitle": {
     "description": "Title for audio analysis section"
   },
-  "audioAnalysisDescription": "Verify lossless quality with spectrum analysis",
+  "audioAnalysisDescription": "スペクトラム解析でロスレス品質を確認します",
   "@audioAnalysisDescription": {
     "description": "Description for audio analysis tap-to-analyze prompt"
   },
-  "audioAnalysisAnalyzing": "Analyzing audio...",
+  "audioAnalysisAnalyzing": "オーディオを解析しています...",
   "@audioAnalysisAnalyzing": {
     "description": "Loading text while analyzing audio"
   },
-  "audioAnalysisSampleRate": "Sample Rate",
+  "audioAnalysisSampleRate": "サンプルレート",
   "@audioAnalysisSampleRate": {
     "description": "Sample rate metric label"
   },
-  "audioAnalysisCodec": "Codec",
+  "audioAnalysisCodec": "コーデック",
   "@audioAnalysisCodec": {
     "description": "Audio codec metric label"
   },
-  "audioAnalysisContainer": "Container",
+  "audioAnalysisContainer": "コンテナ",
   "@audioAnalysisContainer": {
     "description": "Audio container metric label"
   },
-  "audioAnalysisDecodedFormat": "Decoded Format",
+  "audioAnalysisDecodedFormat": "デコード後の形式",
   "@audioAnalysisDecodedFormat": {
     "description": "Decoded sample format metric label"
   },
-  "audioAnalysisBitDepth": "Bit Depth",
+  "audioAnalysisBitDepth": "ビット深度",
   "@audioAnalysisBitDepth": {
     "description": "Bit depth metric label"
   },
-  "audioAnalysisChannels": "Channels",
+  "audioAnalysisChannels": "チャンネル",
   "@audioAnalysisChannels": {
     "description": "Channels metric label"
   },
@@ -1693,19 +1693,19 @@
   "@audioAnalysisDuration": {
     "description": "Duration metric label"
   },
-  "audioAnalysisNyquist": "Nyquist",
+  "audioAnalysisNyquist": "ナイキスト",
   "@audioAnalysisNyquist": {
     "description": "Nyquist frequency metric label"
   },
-  "audioAnalysisFileSize": "Size",
+  "audioAnalysisFileSize": "サイズ",
   "@audioAnalysisFileSize": {
     "description": "File size metric label"
   },
-  "audioAnalysisDynamicRange": "Dynamic Range",
+  "audioAnalysisDynamicRange": "ダイナミックレンジ",
   "@audioAnalysisDynamicRange": {
     "description": "Dynamic range metric label"
   },
-  "audioAnalysisPeak": "Peak",
+  "audioAnalysisPeak": "ピーク",
   "@audioAnalysisPeak": {
     "description": "Peak amplitude metric label"
   },
@@ -1717,58 +1717,58 @@
   "@audioAnalysisLufs": {
     "description": "Integrated loudness metric label"
   },
-  "audioAnalysisTruePeak": "True Peak",
+  "audioAnalysisTruePeak": "トゥルーピーク",
   "@audioAnalysisTruePeak": {
     "description": "True peak metric label"
   },
-  "audioAnalysisClipping": "Clipping",
+  "audioAnalysisClipping": "クリッピング",
   "@audioAnalysisClipping": {
     "description": "Clipping metric label"
   },
-  "audioAnalysisNoClipping": "No clipping",
+  "audioAnalysisNoClipping": "クリッピングなし",
   "@audioAnalysisNoClipping": {
     "description": "Displayed when no clipped samples were detected"
   },
-  "audioAnalysisSpectralCutoff": "Spectral Cutoff",
+  "audioAnalysisSpectralCutoff": "スペクトルのカットオフ",
   "@audioAnalysisSpectralCutoff": {
     "description": "Estimated spectral cutoff metric label"
   },
-  "audioAnalysisCutoffNotDetected": "Not detected",
+  "audioAnalysisCutoffNotDetected": "検出されませんでした",
   "@audioAnalysisCutoffNotDetected": {
     "description": "Displayed when no reliable broadband spectral cutoff can be detected"
   },
-  "audioAnalysisChannelStats": "Per-channel Stats",
+  "audioAnalysisChannelStats": "チャンネルごとの統計",
   "@audioAnalysisChannelStats": {
     "description": "Per-channel audio analysis section label"
   },
-  "audioAnalysisSamples": "Samples",
+  "audioAnalysisSamples": "サンプル数",
   "@audioAnalysisSamples": {
     "description": "Total samples metric label"
   },
-  "audioAnalysisRescan": "Re-analyze",
+  "audioAnalysisRescan": "再解析",
   "@audioAnalysisRescan": {
     "description": "Tooltip/label for the button that re-runs the audio analysis, discarding cached results"
   },
   "audioAnalysisSaveSpectrogram": "スペクトログラムを保存",
   "audioAnalysisSpectrogramSaved": "スペクトログラムを {fileName} に保存しました",
   "audioAnalysisSpectrogramSaveFailed": "スペクトログラムを保存できませんでした",
-  "audioAnalysisRescanning": "Re-analyzing audio...",
+  "audioAnalysisRescanning": "オーディオを再解析しています...",
   "@audioAnalysisRescanning": {
     "description": "Loading text while audio is being re-analyzed after an explicit refresh"
   },
-  "metadataSaveFailedFfmpeg": "Failed to save metadata via FFmpeg",
+  "metadataSaveFailedFfmpeg": "FFmpeg でメタデータを保存できませんでした",
   "@metadataSaveFailedFfmpeg": {
     "description": "Snackbar error when FFmpeg fails to write metadata"
   },
-  "metadataSaveFailedStorage": "Failed to write metadata back to storage",
+  "metadataSaveFailedStorage": "メタデータをストレージに書き戻せませんでした",
   "@metadataSaveFailedStorage": {
     "description": "Snackbar error when writing metadata file back to storage fails"
   },
-  "notifScanningLibrary": "Scanning local library",
+  "notifScanningLibrary": "ローカルライブラリをスキャンしています",
   "@notifScanningLibrary": {
     "description": "Notification title while scanning local library"
   },
-  "notifLibraryScanProgressWithTotal": "{scanned}/{total} files • {percentage}%",
+  "notifLibraryScanProgressWithTotal": "{scanned}/{total} ファイル • {percentage}%",
   "@notifLibraryScanProgressWithTotal": {
     "description": "Notification body for library scan progress when total is known",
     "placeholders": {
@@ -1783,7 +1783,7 @@
       }
     }
   },
-  "notifLibraryScanProgressNoTotal": "{scanned} files scanned",
+  "notifLibraryScanProgressNoTotal": "{scanned} ファイルをスキャンしました",
   "@notifLibraryScanProgressNoTotal": {
     "description": "Notification body for library scan progress when total is unknown",
     "placeholders": {
@@ -1792,11 +1792,11 @@
       }
     }
   },
-  "notifLibraryScanComplete": "Library scan complete",
+  "notifLibraryScanComplete": "ライブラリのスキャンが完了しました",
   "@notifLibraryScanComplete": {
     "description": "Notification title when library scan finishes"
   },
-  "notifLibraryScanCompleteBody": "{count} tracks indexed",
+  "notifLibraryScanCompleteBody": "{count} 曲をインデックスしました",
   "@notifLibraryScanCompleteBody": {
     "description": "Notification body for library scan complete - number of indexed tracks",
     "placeholders": {
@@ -1805,7 +1805,7 @@
       }
     }
   },
-  "notifLibraryScanErrors": "{count} errors",
+  "notifLibraryScanErrors": "{count} 件のエラー",
   "@notifLibraryScanErrors": {
     "description": "Library scan complete suffix - error count",
     "placeholders": {
@@ -1814,24 +1814,24 @@
       }
     }
   },
-  "notifLibraryScanFailed": "Library scan failed",
+  "notifLibraryScanFailed": "ライブラリのスキャンに失敗しました",
   "@notifLibraryScanFailed": {
     "description": "Notification title when library scan fails"
   },
   "notifLibraryScanInterruptedBody": "前回のライブラリのスキャンが中断されました。続けるには、もう一度フォルダをスキャンしてください。索引に登録された曲は引き続き利用できます。",
-  "notifLibraryScanCancelled": "Library scan cancelled",
+  "notifLibraryScanCancelled": "ライブラリのスキャンをキャンセルしました",
   "@notifLibraryScanCancelled": {
     "description": "Notification title when library scan is cancelled by the user"
   },
-  "notifLibraryScanStopped": "Scan stopped before completion.",
+  "notifLibraryScanStopped": "完了前にスキャンが停止しました。",
   "@notifLibraryScanStopped": {
     "description": "Notification body when library scan is cancelled"
   },
-  "notifLibraryScanPaused": "Library scan paused",
+  "notifLibraryScanPaused": "ライブラリのスキャンを一時停止中",
   "@notifLibraryScanPaused": {
     "description": "Notification title when the user pauses a library scan"
   },
-  "notifLibraryScanPausedBody": "{count} files scanned. Resume in Local Library settings to continue from here.",
+  "notifLibraryScanPausedBody": "{count} ファイルをスキャンしました。ここから続けるには、ローカルライブラリの設定で再開してください。",
   "@notifLibraryScanPausedBody": {
     "description": "Notification body for a paused library scan - files scanned so far",
     "placeholders": {
@@ -1848,63 +1848,63 @@
   "@tutorialSearchHint": {
     "description": "Placeholder shown in the tutorial search demo"
   },
-  "trackCoverNoEmbeddedArt": "No embedded album art found",
+  "trackCoverNoEmbeddedArt": "埋め込みのアルバムアートが見つかりません",
   "@trackCoverNoEmbeddedArt": {
     "description": "Message shown when a track file has no embedded cover art"
   },
-  "trackCoverReplace": "Replace Cover",
+  "trackCoverReplace": "カバーを置き換え",
   "@trackCoverReplace": {
     "description": "Button label for replacing selected cover art"
   },
-  "trackCoverPick": "Pick Cover",
+  "trackCoverPick": "カバーを選択",
   "@trackCoverPick": {
     "description": "Button label for selecting cover art"
   },
-  "trackCoverClearSelected": "Clear selected cover",
+  "trackCoverClearSelected": "選択したカバーを消去",
   "@trackCoverClearSelected": {
     "description": "Tooltip for clearing the newly selected cover art"
   },
-  "trackCoverCurrent": "Current cover",
+  "trackCoverCurrent": "現在のカバー",
   "@trackCoverCurrent": {
     "description": "Label for the currently embedded cover preview"
   },
-  "trackCoverSelected": "Selected cover",
+  "trackCoverSelected": "選択したカバー",
   "@trackCoverSelected": {
     "description": "Label for the newly selected cover preview"
   },
-  "trackCoverReplaceNotice": "The selected cover will replace the current embedded cover when you tap Save.",
+  "trackCoverReplaceNotice": "保存をタップすると、選択したカバーが現在の埋め込みカバーに置き換わります。",
   "@trackCoverReplaceNotice": {
     "description": "Notice shown when a new cover has been selected but not saved yet"
   },
-  "nowPlayingRepeatOff": "Repeat off",
+  "nowPlayingRepeatOff": "リピートオフ",
   "@nowPlayingRepeatOff": {
     "description": "Repeat toggle tooltip when repeat is disabled"
   },
-  "nowPlayingRepeatAll": "Repeat all",
+  "nowPlayingRepeatAll": "すべてリピート",
   "@nowPlayingRepeatAll": {
     "description": "Repeat toggle tooltip when the whole queue repeats"
   },
-  "nowPlayingRepeatOne": "Repeat one",
+  "nowPlayingRepeatOne": "1 曲をリピート",
   "@nowPlayingRepeatOne": {
     "description": "Repeat toggle tooltip when the current track repeats"
   },
-  "logAutoScrollOn": "Auto-scroll ON",
+  "logAutoScrollOn": "自動スクロール オン",
   "@logAutoScrollOn": {
     "description": "Tooltip when auto-scroll is enabled on the log screen"
   },
-  "logAutoScrollOff": "Auto-scroll OFF",
+  "logAutoScrollOff": "自動スクロール オフ",
   "@logAutoScrollOff": {
     "description": "Tooltip when auto-scroll is disabled on the log screen"
   },
-  "logCopyLogs": "Copy logs",
+  "logCopyLogs": "ログをコピー",
   "@logCopyLogs": {
     "description": "Tooltip for copying logs"
   },
-  "logClearSearch": "Clear search",
+  "logClearSearch": "検索をクリア",
   "@logClearSearch": {
     "description": "Tooltip for clearing the log search field"
   },
-  "clickableInformationUnavailable": "{type} information not available",
+  "clickableInformationUnavailable": "{type} の情報は利用できません",
   "@clickableInformationUnavailable": {
     "description": "Snackbar shown when clickable metadata cannot open a destination",
     "placeholders": {
@@ -1913,7 +1913,7 @@
       }
     }
   },
-  "a11yOpenAlbumByArtistTrackCount": "Open album {albumName} by {artistName}, {trackCount} tracks",
+  "a11yOpenAlbumByArtistTrackCount": "{artistName} のアルバム {albumName} を開く（{trackCount} 曲）",
   "@a11yOpenAlbumByArtistTrackCount": {
     "description": "Accessibility label for opening an album item with track count",
     "placeholders": {
@@ -1933,83 +1933,83 @@
     "description": "Settings menu item - lyrics settings"
   },
   "settingsLyricsSubtitle": "ローカルの歌詞、保存方法、文字サイズ",
-  "editMetadataFieldDateHint": "YYYY-MM-DD or YYYY",
+  "editMetadataFieldDateHint": "YYYY-MM-DD または YYYY",
   "@editMetadataFieldDateHint": {
     "description": "Hint text for the edit metadata date field"
   },
-  "editMetadataFieldTrackTotal": "Track Total",
+  "editMetadataFieldTrackTotal": "トラック総数",
   "@editMetadataFieldTrackTotal": {
     "description": "Label for total tracks field in the edit metadata sheet"
   },
-  "editMetadataFieldDiscTotal": "Disc Total",
+  "editMetadataFieldDiscTotal": "ディスク総数",
   "@editMetadataFieldDiscTotal": {
     "description": "Label for total discs field in the edit metadata sheet"
   },
-  "editMetadataFieldComposer": "Composer",
+  "editMetadataFieldComposer": "作曲者",
   "@editMetadataFieldComposer": {
     "description": "Label for composer field in the edit metadata sheet"
   },
-  "editMetadataFieldComment": "Comment",
+  "editMetadataFieldComment": "コメント",
   "@editMetadataFieldComment": {
     "description": "Label for comment field in the edit metadata sheet"
   },
-  "trackAlbumType": "Release Type",
+  "trackAlbumType": "リリース形式",
   "@trackAlbumType": {
     "description": "Label for an album or release type metadata value"
   },
-  "editMetadataFieldAlbumTypeHint": "Album, single, EP, compilation...",
+  "editMetadataFieldAlbumTypeHint": "アルバム、シングル、EP、コンピレーション...",
   "@editMetadataFieldAlbumTypeHint": {
     "description": "Hint for the release type metadata field"
   },
-  "editMetadataFieldExplicit": "Explicit",
+  "editMetadataFieldExplicit": "露骨な表現",
   "@editMetadataFieldExplicit": {
     "description": "Label for the explicit content metadata field"
   },
-  "editMetadataFieldExplicitHint": "Mark this track as containing explicit content",
+  "editMetadataFieldExplicitHint": "このトラックに露骨な表現が含まれることを示します",
   "@editMetadataFieldExplicitHint": {
     "description": "Description for the explicit content metadata switch"
   },
-  "metadataExplicitValue": "Explicit",
+  "metadataExplicitValue": "露骨な表現",
   "@metadataExplicitValue": {
     "description": "Displayed value when a track is marked explicit"
   },
-  "editMetadataFieldUpc": "UPC / Barcode",
+  "editMetadataFieldUpc": "UPC / バーコード",
   "@editMetadataFieldUpc": {
     "description": "Label for the release barcode metadata field"
   },
-  "editMetadataFieldUpcHint": "Numeric UPC, EAN, or GTIN",
+  "editMetadataFieldUpcHint": "数字の UPC、EAN、GTIN",
   "@editMetadataFieldUpcHint": {
     "description": "Hint for the release barcode metadata field"
   },
-  "editMetadataAdvanced": "Advanced",
+  "editMetadataAdvanced": "詳細設定",
   "@editMetadataAdvanced": {
     "description": "Expandable section label for advanced metadata fields"
   },
-  "libraryFilterMetadataMissingTrackNumber": "Missing track number",
+  "libraryFilterMetadataMissingTrackNumber": "トラック番号が未設定",
   "@libraryFilterMetadataMissingTrackNumber": {
     "description": "Filter option - items missing track number"
   },
-  "libraryFilterMetadataMissingDiscNumber": "Missing disc number",
+  "libraryFilterMetadataMissingDiscNumber": "ディスク番号が未設定",
   "@libraryFilterMetadataMissingDiscNumber": {
     "description": "Filter option - items missing disc number"
   },
-  "libraryFilterMetadataMissingArtist": "Missing artist",
+  "libraryFilterMetadataMissingArtist": "アーティストが未設定",
   "@libraryFilterMetadataMissingArtist": {
     "description": "Filter option - items missing artist"
   },
-  "libraryFilterMetadataIncorrectIsrcFormat": "Incorrect ISRC format",
+  "libraryFilterMetadataIncorrectIsrcFormat": "ISRC の形式が正しくありません",
   "@libraryFilterMetadataIncorrectIsrcFormat": {
     "description": "Filter option - items with an invalid ISRC format"
   },
-  "libraryFilterMetadataMissingIsrc": "Missing ISRC",
+  "libraryFilterMetadataMissingIsrc": "ISRC が未設定",
   "@libraryFilterMetadataMissingIsrc": {
     "description": "Filter option - items without any ISRC tag"
   },
-  "libraryFilterMetadataMissingLabel": "Missing label",
+  "libraryFilterMetadataMissingLabel": "レーベルが未設定",
   "@libraryFilterMetadataMissingLabel": {
     "description": "Filter option - items missing record label"
   },
-  "collectionDeletePlaylistsMessage": "Delete {count} {count, plural, =1{playlist} other{playlists}}?",
+  "collectionDeletePlaylistsMessage": "{count} 件のプレイリストを削除しますか？",
   "@collectionDeletePlaylistsMessage": {
     "description": "Confirmation message for deleting selected playlists",
     "placeholders": {
@@ -2018,7 +2018,7 @@
       }
     }
   },
-  "collectionPlaylistsDeleted": "{count} {count, plural, =1{playlist} other{playlists}} deleted",
+  "collectionPlaylistsDeleted": "{count} 件のプレイリストを削除しました",
   "@collectionPlaylistsDeleted": {
     "description": "Snackbar after deleting selected playlists",
     "placeholders": {
@@ -2027,7 +2027,7 @@
       }
     }
   },
-  "collectionAddedTracksToPlaylist": "Added {count} {count, plural, =1{track} other{tracks}} to {playlistName}",
+  "collectionAddedTracksToPlaylist": "{playlistName} に {count} 曲を追加しました",
   "@collectionAddedTracksToPlaylist": {
     "description": "Snackbar after adding multiple tracks to a playlist",
     "placeholders": {
@@ -2039,7 +2039,7 @@
       }
     }
   },
-  "collectionAddedTracksToPlaylistWithExisting": "Added {count} {count, plural, =1{track} other{tracks}} to {playlistName} ({alreadyCount} already in playlist)",
+  "collectionAddedTracksToPlaylistWithExisting": "{playlistName} に {count} 曲を追加しました（{alreadyCount} 曲はすでにプレイリストにあります）",
   "@collectionAddedTracksToPlaylistWithExisting": {
     "description": "Snackbar after adding multiple tracks to a playlist when some were already present",
     "placeholders": {
@@ -2054,7 +2054,7 @@
       }
     }
   },
-  "itemCount": "{count} {count, plural, =1{item} other{items}}",
+  "itemCount": "{count} 件",
   "@itemCount": {
     "description": "Generic item count label",
     "placeholders": {
@@ -2072,15 +2072,15 @@
       }
     }
   },
-  "a11ySelectTrack": "Select track",
+  "a11ySelectTrack": "トラックを選択",
   "@a11ySelectTrack": {
     "description": "Accessibility label for selecting a track"
   },
-  "a11yDeselectTrack": "Deselect track",
+  "a11yDeselectTrack": "トラックの選択を解除",
   "@a11yDeselectTrack": {
     "description": "Accessibility label for deselecting a track"
   },
-  "a11yPlayTrackByArtist": "Play {trackName} by {artistName}",
+  "a11yPlayTrackByArtist": "{artistName} の {trackName} を再生",
   "@a11yPlayTrackByArtist": {
     "description": "Accessibility label for playing a local library track",
     "placeholders": {
@@ -2115,23 +2115,23 @@
       }
     }
   },
-  "libraryScanCancelled": "Scan cancelled",
+  "libraryScanCancelled": "スキャンをキャンセルしました",
   "@libraryScanCancelled": {
     "description": "Library scan status when a scan was cancelled"
   },
-  "libraryScanCancelledSubtitle": "You can retry the scan when ready.",
+  "libraryScanCancelledSubtitle": "準備ができたら、スキャンをやり直せます。",
   "@libraryScanCancelledSubtitle": {
     "description": "Library scan status subtitle after cancellation"
   },
-  "audioAnalysisStereo": "Stereo",
+  "audioAnalysisStereo": "ステレオ",
   "@audioAnalysisStereo": {
     "description": "Audio channel layout label - stereo"
   },
-  "audioAnalysisMono": "Mono",
+  "audioAnalysisMono": "モノラル",
   "@audioAnalysisMono": {
     "description": "Audio channel layout label - mono"
   },
-  "unknownArtist": "Unknown Artist",
+  "unknownArtist": "不明なアーティスト",
   "@unknownArtist": {
     "description": "Fallback artist name when metadata is missing"
   },
@@ -2143,24 +2143,24 @@
   "@permissionNotification": {
     "description": "Notification permission type label"
   },
-  "libraryPlayback": "Playback",
+  "libraryPlayback": "再生",
   "@libraryPlayback": {
     "description": "Section header for playback settings in library settings"
   },
-  "nowPlayingNothingPlaying": "Nothing is playing",
+  "nowPlayingNothingPlaying": "再生中の曲はありません",
   "@nowPlayingNothingPlaying": {
     "description": "Empty state when no track is currently playing"
   },
-  "nowPlayingMinimize": "Minimize",
+  "nowPlayingMinimize": "最小化",
   "@nowPlayingMinimize": {
     "description": "Tooltip for minimizing the now playing screen"
   },
-  "nowPlayingUpNext": "Up next",
+  "nowPlayingUpNext": "次に再生",
   "@nowPlayingUpNext": {
     "description": "Title for the playback queue sheet"
   },
-  "nowPlayingAudioOutput": "Audio Output",
-  "nowPlayingWrittenBy": "Written by: {writers}",
+  "nowPlayingAudioOutput": "オーディオ出力",
+  "nowPlayingWrittenBy": "作詞・作曲：{writers}",
   "@nowPlayingWrittenBy": {
     "placeholders": {
       "writers": {
@@ -2168,7 +2168,7 @@
       }
     }
   },
-  "nowPlayingLyricsSource": "Lyrics: {provider}",
+  "nowPlayingLyricsSource": "歌詞：{provider}",
   "@nowPlayingLyricsSource": {
     "placeholders": {
       "provider": {
@@ -2176,24 +2176,24 @@
       }
     }
   },
-  "nowPlayingAudioOutputUnavailable": "Unable to open audio output settings.",
-  "nowPlayingPreviousTrack": "Previous track",
+  "nowPlayingAudioOutputUnavailable": "オーディオ出力の設定を開けません。",
+  "nowPlayingPreviousTrack": "前のトラック",
   "@nowPlayingPreviousTrack": {
     "description": "Tooltip for the previous-track playback control"
   },
-  "nowPlayingNextTrack": "Next track",
+  "nowPlayingNextTrack": "次のトラック",
   "@nowPlayingNextTrack": {
     "description": "Tooltip for the next-track playback control"
   },
-  "nowPlayingDetails": "Details",
+  "nowPlayingDetails": "詳細",
   "@nowPlayingDetails": {
     "description": "Menu item and section title for track metadata details"
   },
-  "nowPlayingSleepTimer": "Sleep timer",
+  "nowPlayingSleepTimer": "スリープタイマー",
   "@nowPlayingSleepTimer": {
     "description": "Menu item and sheet title for the playback sleep timer"
   },
-  "nowPlayingSleepTimerActive": "Ends at {time}",
+  "nowPlayingSleepTimerActive": "{time} に終了",
   "@nowPlayingSleepTimerActive": {
     "description": "Active sleep timer deadline shown in the player menu",
     "placeholders": {
@@ -2202,7 +2202,7 @@
       }
     }
   },
-  "nowPlayingSleepTimerMinutes": "{minutes, plural, =1{1 minute} other{{minutes} minutes}}",
+  "nowPlayingSleepTimerMinutes": "{minutes} 分",
   "@nowPlayingSleepTimerMinutes": {
     "description": "Duration choice for the playback sleep timer",
     "placeholders": {
@@ -2211,11 +2211,11 @@
       }
     }
   },
-  "nowPlayingSleepTimerOff": "Turn off sleep timer",
+  "nowPlayingSleepTimerOff": "スリープタイマーをオフ",
   "@nowPlayingSleepTimerOff": {
     "description": "Action to cancel the active playback sleep timer"
   },
-  "nowPlayingSleepTimerSet": "Sleep timer set for {duration}",
+  "nowPlayingSleepTimerSet": "スリープタイマーを {duration} に設定しました",
   "@nowPlayingSleepTimerSet": {
     "description": "Confirmation after setting the playback sleep timer",
     "placeholders": {
@@ -2224,11 +2224,11 @@
       }
     }
   },
-  "nowPlayingSleepTimerCancelled": "Sleep timer turned off",
+  "nowPlayingSleepTimerCancelled": "スリープタイマーをオフにしました",
   "@nowPlayingSleepTimerCancelled": {
     "description": "Confirmation after cancelling the playback sleep timer"
   },
-  "nowPlayingTabPlayer": "Player",
+  "nowPlayingTabPlayer": "プレーヤー",
   "@nowPlayingTabPlayer": {
     "description": "Tab label for the player view"
   },
@@ -2236,39 +2236,39 @@
   "@nowPlayingTabLyrics": {
     "description": "Tab label for the lyrics view"
   },
-  "nowPlayingNoLyrics": "No lyrics in this file",
+  "nowPlayingNoLyrics": "このファイルには歌詞がありません",
   "@nowPlayingNoLyrics": {
     "description": "Empty state when the playing file has no embedded lyrics"
   },
-  "nowPlayingInstrumental": "Instrumental",
+  "nowPlayingInstrumental": "インストゥルメンタル",
   "@nowPlayingInstrumental": {
     "description": "Accessibility label for the three-dot countdown during an instrumental break before lyrics resume"
   },
-  "nowPlayingLyricsLanguageOptions": "Lyrics language options",
+  "nowPlayingLyricsLanguageOptions": "歌詞の言語オプション",
   "@nowPlayingLyricsLanguageOptions": {
     "description": "Tooltip for the player menu that shows or hides existing lyric pronunciation and translation"
   },
-  "nowPlayingHidePronunciation": "Hide Pronunciation",
-  "nowPlayingShowPronunciation": "Show Pronunciation",
-  "nowPlayingHideTranslation": "Hide Translation",
-  "nowPlayingShowTranslation": "Show Translation",
-  "nowPlayingShuffleOn": "Shuffle on",
+  "nowPlayingHidePronunciation": "読み仮名を非表示",
+  "nowPlayingShowPronunciation": "読み仮名を表示",
+  "nowPlayingHideTranslation": "翻訳を非表示",
+  "nowPlayingShowTranslation": "翻訳を表示",
+  "nowPlayingShuffleOn": "シャッフル オン",
   "@nowPlayingShuffleOn": {
     "description": "Tooltip when shuffle mode is enabled"
   },
-  "nowPlayingPlayInOrder": "Play in order",
+  "nowPlayingPlayInOrder": "順番に再生",
   "@nowPlayingPlayInOrder": {
     "description": "Tooltip when shuffle mode is disabled"
   },
-  "nowPlayingQueueEmpty": "Queue is empty",
+  "nowPlayingQueueEmpty": "キューは空です",
   "@nowPlayingQueueEmpty": {
     "description": "Empty state when the playback queue has no items"
   },
-  "nowPlayingNoMetadata": "No metadata available",
+  "nowPlayingNoMetadata": "利用できるメタデータはありません",
   "@nowPlayingNoMetadata": {
     "description": "Empty state when track metadata cannot be loaded"
   },
-  "selectionDeletePlaylistsCount": "Delete {count} {count, plural, =1{playlist} other{playlists}}",
+  "selectionDeletePlaylistsCount": "{count} 件のプレイリストを削除",
   "@selectionDeletePlaylistsCount": {
     "description": "Button label for deleting multiple selected playlists",
     "placeholders": {
@@ -2277,27 +2277,27 @@
       }
     }
   },
-  "actionShuffle": "Shuffle",
+  "actionShuffle": "シャッフル",
   "@actionShuffle": {
     "description": "Tooltip for shuffle playback action"
   },
-  "unknownTitle": "Unknown title",
+  "unknownTitle": "タイトル不明",
   "@unknownTitle": {
     "description": "Fallback track title when metadata is missing"
   },
-  "trackPlayNext": "Play next",
+  "trackPlayNext": "次に再生",
   "@trackPlayNext": {
     "description": "Menu action to play a track as the next queue item"
   },
-  "trackAddToQueue": "Add to queue",
+  "trackAddToQueue": "キューに追加",
   "@trackAddToQueue": {
     "description": "Menu action to add a track to the playback queue"
   },
-  "settingsSearchHint": "Search settings",
+  "settingsSearchHint": "設定を検索",
   "@settingsSearchHint": {
     "description": "Placeholder of the search field on the Settings tab"
   },
-  "settingsSearchNoResults": "No settings match \"{query}\"",
+  "settingsSearchNoResults": "「{query}」に一致する設定はありません",
   "@settingsSearchNoResults": {
     "description": "Shown when a Settings search returns nothing",
     "placeholders": {
@@ -2306,11 +2306,11 @@
       }
     }
   },
-  "libraryFilterMetadataMissingLyrics": "Missing lyrics",
+  "libraryFilterMetadataMissingLyrics": "歌詞が未設定",
   "@libraryFilterMetadataMissingLyrics": {
     "description": "Filter option for tracks without embedded or sidecar lyrics"
   },
-  "libraryFilterMetadataMissingReplayGain": "Missing ReplayGain",
+  "libraryFilterMetadataMissingReplayGain": "ReplayGain が未設定",
   "@libraryFilterMetadataMissingReplayGain": {
     "description": "Filter option for scanned tracks without ReplayGain gain tags"
   },
@@ -2318,40 +2318,40 @@
   "libraryFilterIncompleteAlbums": "不完全なアルバム",
   "libraryAlbumCompletenessUnknown": "アルバムの完全性は不明です",
   "libraryAlbumMissingTracks": "{present}/{expected} 曲 · {missing} 曲不足",
-  "appSearch": "Search",
-  "appContinuePlaying": "Continue Playing",
-  "appFavorite": "Favorite",
+  "appSearch": "検索",
+  "appContinuePlaying": "続けて再生",
+  "appFavorite": "お気に入り",
   "@appFavorite": {
     "description": "Compact context menu action that adds a track to Loved"
   },
-  "appGoToArtist": "Go to Artist",
-  "appFavorited": "Favorited",
+  "appGoToArtist": "アーティストへ移動",
+  "appFavorited": "お気に入り済み",
   "@appFavorited": {
     "description": "Selected state of the compact favorite action"
   },
-  "autoMixDescription": "Blend songs with beat matching and pitch-preserving tempo adjustment. Uses crossfade when beats cannot be matched.",
-  "autoMixOn": "AutoMix on",
-  "autoMixOff": "AutoMix off",
-  "autoplayOn": "Autoplay on",
-  "autoplayOff": "Autoplay off",
-  "autoplayFromLibrary": "Autoplay from your Library",
+  "autoMixDescription": "ビートマッチとピッチを保つテンポ調整で曲をつなぎます。ビートが合わせられない場合はクロスフェードを使用します。",
+  "autoMixOn": "AutoMix オン",
+  "autoMixOff": "AutoMix オフ",
+  "autoplayOn": "自動再生 オン",
+  "autoplayOff": "自動再生 オフ",
+  "autoplayFromLibrary": "ライブラリから自動再生",
   "autoplayDescription": "キューが終わると、ライブラリの関連する曲を続けて再生します。",
   "autoplayPersonalization": "パーソナライズされた自動再生",
   "autoplayPersonalizationDescription": "聴いた曲やスキップした曲から、この端末内だけで学習します。オフにすると学習は止まり、通常の自動再生に戻ります。",
   "autoplayResetLearning": "おすすめの学習をリセット",
   "autoplayResetLearningConfirm": "リセット",
-  "profileTitle": "Profile",
-  "profileSetUp": "Set up your profile",
-  "profileEdit": "Edit name and photo",
-  "backupIncludesProfile": "Includes your profile name and photo",
-  "profileName": "Name",
-  "profileNameHint": "Your name",
-  "profileChangePhoto": "Choose photo",
-  "profileRemovePhoto": "Remove photo",
-  "profilePhotoError": "Choose a valid image smaller than 20 MB.",
-  "profileSaveError": "Could not save your profile. Please try again.",
+  "profileTitle": "プロフィール",
+  "profileSetUp": "プロフィールを設定",
+  "profileEdit": "名前と写真を編集",
+  "backupIncludesProfile": "プロフィールの名前と写真を含みます",
+  "profileName": "名前",
+  "profileNameHint": "あなたの名前",
+  "profileChangePhoto": "写真を選択",
+  "profileRemovePhoto": "写真を削除",
+  "profilePhotoError": "20 MB 未満の有効な画像を選んでください。",
+  "profileSaveError": "プロフィールを保存できませんでした。もう一度お試しください。",
   "motionArtwork": "動くアートワーク",
-  "listeningStats": "再生統計",
+  "listeningStats": "インサイト",
   "listeningStatsDescription": "今から、この端末にのみ保存されます。内蔵プレイヤーでの再生のみを記録し、一時停止、バッファリング、シークでは再生時間に加算されません。30 秒経過すると再生として数えられます。",
   "listeningStatsEmpty": "内蔵プレイヤーで音楽を再生すると、再生の振り返りが始まります。それ以前の再生は復元できません。",
   "listeningStatsDays": "{days} 日",
@@ -2409,7 +2409,7 @@
   "tutorialPlaybackTip1": "内蔵プレイヤーで音楽を再生・一時停止します",
   "tutorialPlaybackTip2": "ローカルの曲をキューやプレイリストに追加します",
   "tutorialPlaybackTip3": "聴きながら、埋め込みの歌詞または付属の歌詞を読みます",
-  "cueSplitButton": "Split into Tracks",
+  "cueSplitButton": "トラックに分割",
   "@cueSplitButton": {
     "description": "Button text to start CUE splitting"
   },
@@ -2425,15 +2425,15 @@
       }
     }
   },
-  "cueSplitConfirmTitle": "Split CUE Album",
+  "cueSplitConfirmTitle": "CUE アルバムを分割",
   "@cueSplitConfirmTitle": {
     "description": "CUE split confirmation dialog title"
   },
-  "cueSplitFailed": "CUE split failed",
+  "cueSplitFailed": "CUE の分割に失敗しました",
   "@cueSplitFailed": {
     "description": "Snackbar when CUE split fails"
   },
-  "cueSplitSplitting": "Splitting CUE sheet... ({current}/{total})",
+  "cueSplitSplitting": "CUE シートを分割しています...（{current}/{total}）",
   "@cueSplitSplitting": {
     "description": "Snackbar while splitting CUE",
     "placeholders": {
@@ -2445,7 +2445,7 @@
       }
     }
   },
-  "cueSplitSuccess": "Split into {count} tracks successfully",
+  "cueSplitSuccess": "{count} トラックに分割しました",
   "@cueSplitSuccess": {
     "description": "Snackbar after successful CUE split",
     "placeholders": {
@@ -2460,11 +2460,11 @@
   "@cueSplitTitle": {
     "description": "Title for CUE split bottom sheet"
   },
-  "snackbarAddedToQueueGeneric": "Added to queue",
+  "snackbarAddedToQueueGeneric": "キューに追加しました",
   "@snackbarAddedToQueueGeneric": {
     "description": "Snackbar when a track is added to the playback queue without naming it"
   },
-  "snackbarPlayingNext": "Playing next",
+  "snackbarPlayingNext": "次に再生します",
   "@snackbarPlayingNext": {
     "description": "Snackbar when a track is inserted as the next queue item"
   },
@@ -2472,7 +2472,7 @@
   "@trackCopyFilePath": {
     "description": "Action - copy file path"
   },
-  "trackDeleteConfirmMessage": "This permanently deletes the local audio file and removes it from your library.",
+  "trackDeleteConfirmMessage": "ローカルのオーディオファイルを完全に削除し、ライブラリからも削除します。",
   "trackDeleteConfirmTitle": "デバイスから削除しますか？",
   "@trackDeleteConfirmTitle": {
     "description": "Delete confirmation title"
@@ -2481,7 +2481,7 @@
   "@trackRemoveFromDevice": {
     "description": "Action - delete downloaded file"
   },
-  "trackReplayGain": "Rescan ReplayGain",
+  "trackReplayGain": "ReplayGain を再スキャン",
   "@trackReplayGain": {
     "description": "Three-dot menu option to scan loudness and write ReplayGain tags"
   },
@@ -2675,28 +2675,70 @@
     "description": "Update button - dismiss"
   },
   "optionsCheckUpdates": "更新を確認",
-  "optionsCheckUpdatesSubtitle": "Notify when new version is available",
+  "optionsCheckUpdatesSubtitle": "新しいバージョンがあれば通知します",
   "optionsUpdateChannelPreview": "プレビューリリースを入手",
-  "optionsUpdateChannelWarning": "Preview may contain bugs or incomplete features",
+  "optionsUpdateChannelWarning": "プレビュー版にはバグや未完成の機能が含まれる場合があります",
   "updateAvailable": "更新が利用可能です",
   "updateStartingDownload": "ダウンロードを開始中...",
   "updateDownloadFailed": "ダウンロードに失敗しました",
   "updateFailedMessage": "更新のダウンロードに失敗しました",
   "updateNewVersionReady": "新しいバージョンの準備ができています",
-  "updateRequiredTitle": "Update required",
-  "updateRequiredNotice": "This version is {count} releases behind and is no longer supported. Update to keep using the app.",
+  "updateRequiredTitle": "アップデートが必要です",
+  "updateRequiredNotice": "このバージョンは {count} リリース遅れており、サポートされていません。アプリを使い続けるにはアップデートしてください。",
   "updateCurrent": "現在",
   "updateNew": "新着",
   "updateDownloading": "ダウンロード中...",
   "updateWhatsNew": "新着情報",
   "updateDownloadInstall": "ダウンロードとインストール",
   "updateDontRemind": "通知しない",
-  "updateViewRelease": "View Release",
-  "updateSeeReleaseNotes": "See release notes for details.",
-  "notifDownloadingUpdate": "Downloading Sistrum v{version}",
+  "updateViewRelease": "リリースを表示",
+  "updateSeeReleaseNotes": "詳細はリリースノートをご覧ください。",
+  "notifDownloadingUpdate": "Sistrum v{version} をダウンロードしています",
   "notifUpdateProgress": "{received} / {total} MB • {percentage}%",
-  "notifUpdateReady": "Update Ready",
-  "notifUpdateReadyBody": "Sistrum v{version} downloaded. Tap to install.",
-  "notifUpdateFailed": "Update Failed",
-  "notifUpdateFailedBody": "Could not download update. Try again later."
+  "notifUpdateReady": "アップデートの準備完了",
+  "notifUpdateReadyBody": "Sistrum v{version} をダウンロードしました。タップしてインストールします。",
+  "notifUpdateFailed": "アップデートに失敗しました",
+  "notifUpdateFailedBody": "アップデートをダウンロードできませんでした。後でもう一度お試しください。",
+  "metadataSeparatorsDescription": "ライブラリ内のアーティスト名とジャンル名を区切る区切り文字を選びます。まとめて扱う名前は分割されません。",
+  "tagSeparatorsArtists": "アーティスト",
+  "tagSeparatorsArtistsFields": "アーティスト、アルバムアーティスト、作曲者",
+  "tagSeparatorsGenre": "ジャンル",
+  "tagSeparatorsAll": "すべて",
+  "tagSeparatorsAdd": "区切り文字を追加",
+  "tagSeparatorsAddHint": "区切り文字",
+  "tagSeparatorsDuplicate": "この区切り文字はすでにリストにあります。",
+  "tagSeparatorsRemoveTitle": "区切り文字を削除しますか？",
+  "tagSeparatorsRemoveMessage": "このセクションから削除されます。保存済みのタグは変更されません。",
+  "tagKeepTogether": "まとめて扱う",
+  "tagKeepTogetherDescription": "ここに並べた名前は、区切り文字を含んでいても分割されません。",
+  "tagKeepTogetherHint": "名前（例: Tyler, The Creator）",
+  "tagKeepTogetherAdd": "名前を追加",
+  "tagKeepTogetherRemoveTooltip": "名前を削除",
+  "artistAppearsOn": "収録作品",
+  "tagKeepTogetherDuplicate": "この名前はすでにリストにあります。",
+  "setupChooseMusicFolder": "音楽フォルダを選択",
+  "setupLibraryFolderDescription": "音楽が入っているフォルダを選択してください。Sistrum は限定されたフォルダへのアクセスで読み取るため、すべてのファイルへの許可は不要です。",
+  "searchAlbumArtists": "アルバムアーティスト",
+  "logFilterFull": "すべて",
+  "tutorialGuideTitle": "はじめに",
+  "tutorialGuideDesc": "ローカルの音楽を探す、再生する、整理するためのヒント。",
+  "backupUnsupportedVersion": "このバックアップは別バージョンの Sistrum で作成されました",
+  "backupReadFailed": "バックアップファイルを読み取れませんでした。ファイルがまだ利用可能か確認してください",
+  "snackbarMetadataSavedIndexStale": "メタデータを保存しましたが、ライブラリを更新できませんでした",
+  "actionGoToComposer": "作曲者へ移動",
+  "autoplayResetLearningConfirmTitle": "おすすめの学習をリセットしますか？",
+  "autoplayResetLearningConfirmMessage": "自動再生は、再生やスキップから学習した内容を忘れます。この操作は元に戻せません。",
+  "motionArtworkSubtitle": "アルバムアートとプレーヤーのアートワークをゆっくり動かします",
+  "lyricsAboveSeekBar": "シークバーの上に歌詞を表示",
+  "lyricsAboveSeekBarSubtitle": "プレーヤーのシークバーの上に、歌われている行を表示します",
+  "updateDownloadIntegrityFailed": "ダウンロードしたアップデートの検証に失敗しました。後でもう一度お試しください。",
+  "updateDownloadNetworkFailed": "アップデートをダウンロードできませんでした。接続を確認して再試行してください。",
+  "updateInstallFailed": "アップデートのインストーラーを開けませんでした。",
+  "settingsUpdates": "アップデート",
+  "settingsUpdatesSubtitle": "新しいバージョンを確認",
+  "updateCheckNow": "今すぐ確認",
+  "updateChecking": "確認中…",
+  "updateUpToDate": "最新バージョンを使用しています",
+  "updateCheckFailed": "アップデートを確認できませんでした",
+  "retry": "再試行"
 }

@@ -4,49 +4,49 @@
   "appearancePlayerView": "播放器檢視",
   "appearancePlayerViewNormal": "一般檢視",
   "appearancePlayerViewImmersive": "沉浸檢視",
-  "settingsPlaybackSubtitle": "Player, volume, AutoMix, and audio output",
-  "sectionVolumeAndTransitions": "Volume and transitions",
-  "sectionAudioOutput": "Audio output",
-  "usbBitPerfect": "Hi-res and bit-perfect audio",
-  "usbBitPerfectDescription": "Preserve source precision on compatible outputs. Choose direct USB or AAudio exclusive below; otherwise Android USB output requires Android 14 or later. Applies from the next track, without AutoMix or normalization. System volume may not control direct USB.",
-  "usbHardwareVolume": "DAC hardware volume",
-  "usbVolumeWarningTitle": "Check your listening volume",
-  "usbVolumeWarning": "Direct USB audio can be much louder than normal playback, and phone volume buttons may not control it. Lower your DAC or amplifier volume before starting. When supported, Sistrum sets the DAC to at most −40 dB on connection; this does not guarantee a safe listening level on every amplifier or headphone.",
-  "usbVolumeAccept": "I understand",
-  "usbVolumeUnavailable": "Playback is paused because this DAC has no verified hardware volume control. Lower the DAC or amplifier volume, then enable fixed-volume output if needed and select the track again.",
-  "usbFixedVolume": "Allow fixed-volume USB output",
-  "usbFixedVolumeDescription": "For DACs without a volume control accessible to the app. Keep off for USB headsets without their own volume control. Applies from the next track.",
-  "usbFixedVolumeWarning": "The app cannot lower the volume on this output. Audio may start at full level, and the phone volume slider will not help. Only continue after lowering the volume on your DAC or external amplifier. Do not enable this for a headset without its own volume control.",
-  "dapExclusive": "DAP hi-res (AAudio exclusive)",
-  "dapExclusiveDescription": "Use Oboe/AAudio at the track's original rate and precision for FLAC/WAV PCM. Requires Android 8.1 or later and compatible hardware. Exclusive access is checked; unavailable formats use normal playback. DSD requires the direct USB driver. Applies from the next track.",
-  "dapExclusiveUnavailable": "AAudio exclusive access is unavailable for this track and current output. Using normal playback. For a USB DAC, try the direct USB driver.",
-  "usbDirect": "Direct USB driver",
-  "usbDirectDescription": "Use exclusive USB audio for FLAC/WAV, DSF/DFF and WavPack DSD, with Android USB permission. Native DSD requires a recognized compatible DAC. Other PCM formats use normal playback. Applies from the next track.",
-  "usbDsdOverPcm": "DSD over PCM (DoP)",
-  "usbDsdOverPcmDescription": "Enable only if your DAC explicitly supports DoP. Sends DSF/DFF and WavPack DSD inside a PCM carrier when native DSD is unavailable. An incompatible device may play noise; leave off for ordinary USB headsets.",
-  "usbDsdUnsupported": "This DSD format or connected DAC is not supported. Playback stopped.",
-  "usbPermissionDenied": "USB permission was not granted. Using normal playback.",
-  "usbBitPerfectPending": "Waiting for the next track and a compatible USB output.",
-  "usbBitPerfectNoDevice": "No USB DAC connected. Using normal audio output.",
-  "usbBitPerfectFallback": "This device or audio format does not support bit-perfect output. Using normal playback.",
-  "usbBitPerfectRouteChanged": "The USB audio route changed. Playback paused; select a track to reconnect.",
-  "nowPlayingVolume": "Volume",
+  "settingsPlaybackSubtitle": "播放器、音量、AutoMix 與音訊輸出",
+  "sectionVolumeAndTransitions": "音量與轉場",
+  "sectionAudioOutput": "音訊輸出",
+  "usbBitPerfect": "Hi-Res 與 bit-perfect 音訊",
+  "usbBitPerfectDescription": "在相容的輸出裝置上保留來源的精確度。請在下方選擇直接 USB 或 AAudio 獨佔；否則 Android 的 USB 輸出需要 Android 14 或更新版本。",
+  "usbHardwareVolume": "DAC 硬體音量",
+  "usbVolumeWarningTitle": "請確認聆聽音量",
+  "usbVolumeWarning": "直接 USB 音訊可能比一般播放大得多，手機的音量按鈕也可能無法控制它。開始前請先降低 DAC 或擴大機的音量。支援時，Sistrum 會在連接時將 DAC 設為最多 −40 dB；但這不保證每個擴大機或耳機都是安全的聆聽音量。",
+  "usbVolumeAccept": "我了解",
+  "usbVolumeUnavailable": "此 DAC 沒有已驗證的硬體音量控制，因此播放已暫停。請降低 DAC 或擴大機的音量，然後視需要啟用固定音量輸出。",
+  "usbFixedVolume": "允許固定音量的 USB 輸出",
+  "usbFixedVolumeDescription": "適用於應用程式無法調整音量的 DAC。若 USB 耳機本身沒有音量控制，請保持關閉。從下一首曲目開始套用。",
+  "usbFixedVolumeWarning": "應用程式無法降低此輸出的音量。音訊可能以最大音量開始，手機的音量滑桿也無效。請先降低音量再繼續。",
+  "dapExclusive": "DAP Hi-Res（AAudio 獨佔）",
+  "dapExclusiveDescription": "對 FLAC/WAV PCM 使用 Oboe/AAudio，並保留曲目原始的取樣率與精確度。需要 Android 8.1 或更新版本及相容硬體。會檢查獨佔存取；無法使用的格式將以一般播放。DSD 需要直接 USB 驅動程式。從下一首曲目開始套用。",
+  "dapExclusiveUnavailable": "此曲目與目前的輸出無法使用 AAudio 獨佔存取，改用一般播放。若是 USB DAC，請嘗試直接 USB 驅動程式。",
+  "usbDirect": "直接 USB 驅動程式",
+  "usbDirectDescription": "在 Android USB 權限下，對 FLAC/WAV、DSF/DFF 與 WavPack DSD 使用獨佔 USB 音訊。原生 DSD 需要已辨識的相容 DAC。其他 PCM 格式會以一般播放。從下一首曲目開始套用。",
+  "usbDsdOverPcm": "透過 PCM 傳送 DSD（DoP）",
+  "usbDsdOverPcmDescription": "僅在您的 DAC 明確支援 DoP 時啟用。當原生 DSD 無法使用時，會將 DSF/DFF 與 WavPack DSD 包在 PCM 載波中傳送。不相容的裝置可能會播放出雜音；一般 USB 耳機請保持關閉。",
+  "usbDsdUnsupported": "不支援此 DSD 格式或已連接的 DAC。播放已停止。",
+  "usbPermissionDenied": "未取得 USB 權限，改用一般播放。",
+  "usbBitPerfectPending": "等待下一首曲目與相容的 USB 輸出。",
+  "usbBitPerfectNoDevice": "未連接 USB DAC，改用一般音訊輸出。",
+  "usbBitPerfectFallback": "此裝置或音訊格式不支援 bit-perfect 輸出，改用一般播放。",
+  "usbBitPerfectRouteChanged": "USB 音訊路由已變更。播放已暫停；請選擇一首曲目以重新連接。",
+  "nowPlayingVolume": "音量",
   "@nowPlayingVolume": {
     "description": "System volume control label in the Sistrum player"
   },
-  "appearanceAccentRed": "Red (default)",
-  "appearanceAccentOrange": "Orange",
-  "appearanceAccentGreen": "Green",
-  "appearanceAccentTeal": "Teal",
-  "appearanceAccentBlue": "Blue",
-  "appearanceAccentPurple": "Purple",
-  "appearanceAccentPink": "Pink",
-  "appearanceGlassClarity": "Glass clarity",
+  "appearanceAccentRed": "紅色（預設）",
+  "appearanceAccentOrange": "橙色",
+  "appearanceAccentGreen": "綠色",
+  "appearanceAccentTeal": "藍綠色",
+  "appearanceAccentBlue": "藍色",
+  "appearanceAccentPurple": "紫色",
+  "appearanceAccentPink": "粉紅色",
+  "appearanceGlassClarity": "玻璃清晰度",
   "appearanceGlassOutlines": "玻璃邊框",
   "appearanceGlassOutlinesSubtitle": "在 Sistrum 玻璃周圍顯示淡色邊框。關閉後玻璃本身不變。",
-  "appearanceGlassClaritySubtitle": "Adjust transparency in Sistrum menus and navigation. Text contrast is preserved.",
-  "appearanceGlassTinted": "Tinted",
-  "appearanceGlassClear": "Clear",
+  "appearanceGlassClaritySubtitle": "調整 Sistrum 選單與導覽列的透明度。文字對比會保持不變。",
+  "appearanceGlassTinted": "著色",
+  "appearanceGlassClear": "清透",
   "appearanceGlassClearPerformance": "非常透明的玻璃在較舊的裝置上可能耗電較多，運作也較不順暢。必要時請降低透明度。",
   "appearanceGlassQuality": "玻璃品質",
   "appearanceGlassQualityAuto": "自動",
@@ -64,8 +64,8 @@
   "appearanceGlassClarityContrast": "系統要求較高對比，因此玻璃維持不透明。若仍要使用玻璃，請選擇「精簡」或「完整」；文字對比會保留。",
   "appearanceGlassAutoMeasured": "已在此裝置上測量：「自動」使用{quality}。",
   "appearanceGlassClarityAutoFrosted": "「自動」已測量此裝置並使用霧面。請選擇「精簡」或「完整」以設定透明度。",
-  "appearanceUseSystemFont": "Use system font",
-  "appearanceUseSystemFontSubtitle": "Use your device’s default typeface for app text.",
+  "appearanceUseSystemFont": "使用系統字型",
+  "appearanceUseSystemFontSubtitle": "應用程式文字使用裝置預設的字型。",
   "appName": "Sistrum",
   "@appName": {
     "description": "App name - DO NOT TRANSLATE"
@@ -92,10 +92,10 @@
   },
   "homeLatestReleases": "你的音樂庫中的最新發行",
   "artistPopular": "熱門",
-  "libraryRecentlyAdded": "Recently Added",
+  "libraryRecentlyAdded": "最近新增",
   "homeChooseLibraryFolder": "請在本機音樂庫設定中選擇音樂資料夾。",
   "homeLibraryEmpty": "將音樂加入音樂庫資料夾，然後掃描音樂庫。",
-  "libraryEmptyCollection": "Your music will appear here",
+  "libraryEmptyCollection": "你的音樂將顯示在這裡",
   "settingsTitle": "設定",
   "@settingsTitle": {
     "description": "Settings screen title"
@@ -124,9 +124,9 @@
   "@appearanceThemeDark": {
     "description": "Dark theme"
   },
-  "trackRemoveReplayGain": "Remove ReplayGain",
-  "replayGainRemoving": "Removing ReplayGain...",
-  "replayGainRemoveConfirmMessage": "Remove track and album ReplayGain tags from {count} track(s)? Audio, artwork, and other metadata will be preserved.",
+  "trackRemoveReplayGain": "移除 ReplayGain",
+  "replayGainRemoving": "正在移除 ReplayGain…",
+  "replayGainRemoveConfirmMessage": "要從 {count} 首曲目移除曲目與專輯的 ReplayGain 標籤嗎？音訊、封面與其他中繼資料會保留。",
   "@replayGainRemoveConfirmMessage": {
     "placeholders": {
       "count": {
@@ -134,7 +134,7 @@
       }
     }
   },
-  "selectionRemoveReplayGainCount": "Remove RG ({count})",
+  "selectionRemoveReplayGainCount": "移除 RG（{count}）",
   "@selectionRemoveReplayGainCount": {
     "description": "Compact selection action label. RG abbreviates ReplayGain; keep this short for a two-column toolbar.",
     "placeholders": {
@@ -143,7 +143,7 @@
       }
     }
   },
-  "replayGainRemoveBatchSuccess": "ReplayGain removed from {success} of {total} tracks",
+  "replayGainRemoveBatchSuccess": "已從 {total} 首曲目中的 {success} 首移除 ReplayGain",
   "@replayGainRemoveBatchSuccess": {
     "placeholders": {
       "success": {
@@ -192,7 +192,7 @@
       }
     }
   },
-  "replayGainUnsupportedDecoder": "Some tracks could not be analyzed because their audio codec is not supported by the ReplayGain decoder. Their files were not changed.",
+  "replayGainUnsupportedDecoder": "部分曲目因音訊編碼不受 ReplayGain 解碼器支援而無法分析，這些檔案未被變更。",
   "metadataSeparators": "標籤分隔符號",
   "metadataSeparatorInvalid": "請使用 1–16 個字元，且不含換行或控制字元。",
   "settingDisabled": "已停用",
@@ -258,24 +258,24 @@
       }
     }
   },
-  "setupStorageGranted": "Storage Permission Granted!",
+  "setupStorageGranted": "已授予儲存空間權限！",
   "@setupStorageGranted": {
     "description": "Success message for storage permission"
   },
-  "setupStorageRequired": "Storage Permission Required",
+  "setupStorageRequired": "需要儲存空間權限",
   "@setupStorageRequired": {
     "description": "Title when storage permission needed"
   },
   "setupStorageDescription": "允許儲存空間存取，以掃描並編輯你的本機音樂檔案。",
-  "setupNotificationGranted": "Notification Permission Granted!",
+  "setupNotificationGranted": "已授予通知權限！",
   "@setupNotificationGranted": {
     "description": "Success message for notification permission"
   },
-  "setupNotificationEnable": "Enable Notifications",
+  "setupNotificationEnable": "啟用通知",
   "@setupNotificationEnable": {
     "description": "Button to enable notifications"
   },
-  "setupEnableNotifications": "Enable Notifications",
+  "setupEnableNotifications": "啟用通知",
   "@setupEnableNotifications": {
     "description": "Button to enable notifications"
   },
@@ -284,31 +284,31 @@
   "@setupSkipForNow": {
     "description": "Skip button text"
   },
-  "setupNext": "Next",
+  "setupNext": "下一步",
   "@setupNext": {
     "description": "Next button text"
   },
-  "setupGetStarted": "Get Started",
+  "setupGetStarted": "開始使用",
   "@setupGetStarted": {
     "description": "Final setup button"
   },
-  "setupLanguageTitle": "Choose Language",
+  "setupLanguageTitle": "選擇語言",
   "@setupLanguageTitle": {
     "description": "Title for the language selection step in setup"
   },
-  "setupLanguageDescription": "Select your preferred language for the app. You can change this later in Settings.",
+  "setupLanguageDescription": "選擇應用程式偏好的語言。之後可在設定中變更。",
   "@setupLanguageDescription": {
     "description": "Description for the language selection step in setup"
   },
-  "setupLanguageSystemDefault": "System Default",
+  "setupLanguageSystemDefault": "系統預設",
   "@setupLanguageSystemDefault": {
     "description": "Option to use the system language"
   },
-  "dialogCancel": "Cancel",
+  "dialogCancel": "取消",
   "@dialogCancel": {
     "description": "Dialog button - cancel action"
   },
-  "dialogSave": "Save",
+  "dialogSave": "儲存",
   "@dialogSave": {
     "description": "Dialog button - save changes"
   },
@@ -316,27 +316,27 @@
   "@dialogDelete": {
     "description": "Dialog button - delete item"
   },
-  "dialogRetry": "Retry",
+  "dialogRetry": "重試",
   "@dialogRetry": {
     "description": "Dialog button - retry action"
   },
-  "dialogClear": "Clear",
+  "dialogClear": "清除",
   "@dialogClear": {
     "description": "Dialog button - clear items"
   },
-  "dialogDone": "Done",
+  "dialogDone": "完成",
   "@dialogDone": {
     "description": "Dialog button - action completed"
   },
-  "dialogRemove": "Remove",
+  "dialogRemove": "移除",
   "@dialogRemove": {
     "description": "Dialog button - remove item"
   },
-  "dialogDeleteSelectedTitle": "Delete Selected",
+  "dialogDeleteSelectedTitle": "刪除所選項目",
   "@dialogDeleteSelectedTitle": {
     "description": "Dialog title - delete selected items"
   },
-  "dialogDeleteSelectedMessage": "Delete {count} {count, plural, =1{track} other{tracks}} from history?\n\nThis will also delete the files from storage.",
+  "dialogDeleteSelectedMessage": "要從記錄中刪除 {count} 首曲目嗎？\n\n這也會從儲存空間中刪除檔案。",
   "@dialogDeleteSelectedMessage": {
     "description": "Dialog message - delete selected tracks",
     "placeholders": {
@@ -345,11 +345,11 @@
       }
     }
   },
-  "collectionExportM3u": "Export as M3U8",
+  "collectionExportM3u": "匯出為 M3U8",
   "@collectionExportM3u": {
     "description": "Tooltip on the collection screen action that exports the track list as an M3U8 playlist file"
   },
-  "collectionExportM3uDone": "Exported {exported} of {total} tracks",
+  "collectionExportM3uDone": "已匯出 {total} 首中的 {exported} 首",
   "@collectionExportM3uDone": {
     "description": "Snackbar after M3U8 export; tracks without a local file are not exported",
     "placeholders": {
@@ -362,35 +362,35 @@
     }
   },
   "collectionExportM3uNone": "沒有可匯出的本機音訊檔案",
-  "collectionExportM3uFailed": "Export failed",
+  "collectionExportM3uFailed": "匯出失敗",
   "@collectionExportM3uFailed": {
     "description": "Snackbar when writing or sharing the M3U8 export fails"
   },
-  "libraryReviewDuplicates": "Review duplicates",
+  "libraryReviewDuplicates": "檢查重複項目",
   "@libraryReviewDuplicates": {
     "description": "Library settings row opening the duplicate review sheet"
   },
-  "libraryReviewDuplicatesSubtitle": "Find tracks stored more than once",
+  "libraryReviewDuplicatesSubtitle": "尋找被儲存超過一次的曲目",
   "@libraryReviewDuplicatesSubtitle": {
     "description": "Subtitle for the duplicate review settings row"
   },
-  "duplicatesTitle": "Duplicates",
+  "duplicatesTitle": "重複項目",
   "@duplicatesTitle": {
     "description": "Title of the duplicate review sheet"
   },
-  "duplicatesEmpty": "No duplicate tracks found.",
+  "duplicatesEmpty": "找不到重複的曲目。",
   "@duplicatesEmpty": {
     "description": "Shown when the duplicate review sheet finds nothing"
   },
-  "duplicatesKeepBest": "Keep best",
+  "duplicatesKeepBest": "保留最佳",
   "@duplicatesKeepBest": {
     "description": "Button that deletes all but the highest-quality copy in a duplicate group"
   },
-  "duplicatesKeepBestAll": "Keep best for all",
+  "duplicatesKeepBestAll": "全部保留最佳",
   "@duplicatesKeepBestAll": {
     "description": "Button that keeps the highest-quality copy in every duplicate group and deletes the rest"
   },
-  "duplicatesKeepBestAllMessage": "Keep the best copy of {groupCount} {groupCount, plural, =1{track} other{tracks}} and delete {count} lower-quality {count, plural, =1{copy} other{copies}}?\n\nThe deleted files will be removed from storage.",
+  "duplicatesKeepBestAllMessage": "保留 {groupCount} 首{groupCount, plural, =1{曲目} other{曲目}}的最佳版本，並刪除 {count} 個較低品質的副本？",
   "@duplicatesKeepBestAllMessage": {
     "description": "Confirmation message for keeping the best copy across every duplicate group",
     "placeholders": {
@@ -402,7 +402,7 @@
       }
     }
   },
-  "duplicatesKeepBestMessage": "Delete {count} lower-quality copies of \"{trackName}\"?",
+  "duplicatesKeepBestMessage": "要刪除「{trackName}」的 {count} 個較低品質副本嗎？",
   "@duplicatesKeepBestMessage": {
     "description": "Confirmation message for the keep-best action",
     "placeholders": {
@@ -414,7 +414,7 @@
       }
     }
   },
-  "duplicatesDeleteCopyMessage": "Delete this copy of \"{trackName}\"?",
+  "duplicatesDeleteCopyMessage": "要刪除「{trackName}」的此副本嗎？",
   "@duplicatesDeleteCopyMessage": {
     "description": "Confirmation message for deleting one duplicate copy",
     "placeholders": {
@@ -423,7 +423,7 @@
       }
     }
   },
-  "snackbarDeletedTracks": "Deleted {count} {count, plural, =1{track} other{tracks}}",
+  "snackbarDeletedTracks": "已刪除 {count} 首曲目",
   "@snackbarDeletedTracks": {
     "description": "Snackbar - tracks deleted",
     "placeholders": {
@@ -432,7 +432,7 @@
       }
     }
   },
-  "snackbarCannotOpenFile": "Cannot open file: {error}",
+  "snackbarCannotOpenFile": "無法開啟檔案：{error}",
   "@snackbarCannotOpenFile": {
     "description": "Snackbar - file open error",
     "placeholders": {
@@ -441,43 +441,43 @@
       }
     }
   },
-  "snackbarFileNotFound": "File not found",
+  "snackbarFileNotFound": "找不到檔案",
   "@snackbarFileNotFound": {
     "description": "Snackbar - file doesn't exist"
   },
-  "errorRateLimited": "Rate Limited",
+  "errorRateLimited": "請求過於頻繁",
   "@errorRateLimited": {
     "description": "Error title - too many requests"
   },
-  "errorRateLimitedMessage": "Too many requests. Please wait a moment before searching again.",
+  "errorRateLimitedMessage": "請求過多。請稍候片刻再搜尋。",
   "@errorRateLimitedMessage": {
     "description": "Error message - rate limit explanation"
   },
-  "searchEmptyResultSubtitle": "Try another keyword",
+  "searchEmptyResultSubtitle": "請嘗試其他關鍵字",
   "@searchEmptyResultSubtitle": {
     "description": "Subtitle shown under the empty search result state on the home screen"
   },
-  "actionPause": "Pause",
+  "actionPause": "暫停",
   "@actionPause": {
     "description": "Action button - pause download"
   },
-  "actionResume": "Resume",
+  "actionResume": "繼續",
   "@actionResume": {
     "description": "Action button - resume download"
   },
-  "actionCancel": "Cancel",
+  "actionCancel": "取消",
   "@actionCancel": {
     "description": "Action button - cancel operation"
   },
-  "actionSelectAll": "Select All",
+  "actionSelectAll": "全選",
   "@actionSelectAll": {
     "description": "Action button - select all items"
   },
-  "actionDeselect": "Deselect",
+  "actionDeselect": "取消選取",
   "@actionDeselect": {
     "description": "Action button - deselect all"
   },
-  "selectionSelected": "{count} selected",
+  "selectionSelected": "已選取 {count} 項",
   "@selectionSelected": {
     "description": "Selection count indicator",
     "placeholders": {
@@ -486,19 +486,19 @@
       }
     }
   },
-  "selectionAllSelected": "All tracks selected",
+  "selectionAllSelected": "已選取所有曲目",
   "@selectionAllSelected": {
     "description": "Status - all items selected"
   },
-  "selectionSelectToDelete": "Select tracks to delete",
+  "selectionSelectToDelete": "選擇要刪除的曲目",
   "@selectionSelectToDelete": {
     "description": "Placeholder when nothing selected"
   },
-  "searchSongs": "Songs",
+  "searchSongs": "歌曲",
   "@searchSongs": {
     "description": "Search result category - songs"
   },
-  "searchArtists": "Artists",
+  "searchArtists": "藝人",
   "@searchArtists": {
     "description": "Search result category - artists"
   },
@@ -506,35 +506,35 @@
   "@searchAlbums": {
     "description": "Search result category - albums"
   },
-  "searchPlaylists": "Playlists",
+  "searchPlaylists": "播放清單",
   "@searchPlaylists": {
     "description": "Search result category - playlists"
   },
-  "searchSortTitle": "Sort Results",
+  "searchSortTitle": "排序結果",
   "@searchSortTitle": {
     "description": "Bottom sheet title for search sort options"
   },
-  "searchSortTitleAZ": "Title (A-Z)",
+  "searchSortTitleAZ": "標題（A-Z）",
   "@searchSortTitleAZ": {
     "description": "Sort option - title ascending"
   },
-  "searchSortTitleZA": "Title (Z-A)",
+  "searchSortTitleZA": "標題（Z-A）",
   "@searchSortTitleZA": {
     "description": "Sort option - title descending"
   },
-  "searchSortArtistAZ": "Artist (A-Z)",
+  "searchSortArtistAZ": "藝人（A-Z）",
   "@searchSortArtistAZ": {
     "description": "Sort option - artist ascending"
   },
-  "searchSortArtistZA": "Artist (Z-A)",
+  "searchSortArtistZA": "藝人（Z-A）",
   "@searchSortArtistZA": {
     "description": "Sort option - artist descending"
   },
-  "searchSortDateOldest": "Release Date (Oldest)",
+  "searchSortDateOldest": "發行日期（最舊）",
   "@searchSortDateOldest": {
     "description": "Sort option - oldest release first"
   },
-  "searchSortDateNewest": "Release Date (Newest)",
+  "searchSortDateNewest": "發行日期（最新）",
   "@searchSortDateNewest": {
     "description": "Sort option - newest release first"
   },
@@ -542,55 +542,55 @@
   "@tooltipPlay": {
     "description": "Tooltip - play button"
   },
-  "logTitle": "Logs",
+  "logTitle": "記錄",
   "@logTitle": {
     "description": "Logs screen title"
   },
-  "logCopied": "Logs copied to clipboard",
+  "logCopied": "記錄已複製到剪貼簿",
   "@logCopied": {
     "description": "Snackbar - logs copied"
   },
-  "logSearchHint": "Search logs...",
+  "logSearchHint": "搜尋記錄……",
   "@logSearchHint": {
     "description": "Log search placeholder"
   },
-  "logFilterLevel": "Level",
+  "logFilterLevel": "層級",
   "@logFilterLevel": {
     "description": "Filter by log level"
   },
-  "logFilterSection": "Filter",
+  "logFilterSection": "篩選",
   "@logFilterSection": {
     "description": "Filter section title"
   },
-  "logShareLogs": "Share logs",
+  "logShareLogs": "分享記錄",
   "@logShareLogs": {
     "description": "Share button tooltip"
   },
-  "logClearLogs": "Clear logs",
+  "logClearLogs": "清除記錄",
   "@logClearLogs": {
     "description": "Clear button tooltip"
   },
-  "logClearLogsTitle": "Clear Logs",
+  "logClearLogsTitle": "清除記錄",
   "@logClearLogsTitle": {
     "description": "Clear logs dialog title"
   },
-  "logClearLogsMessage": "Are you sure you want to clear all logs?",
+  "logClearLogsMessage": "確定要清除所有記錄嗎？",
   "@logClearLogsMessage": {
     "description": "Clear logs confirmation message"
   },
-  "logFilterBySeverity": "Filter logs by severity",
+  "logFilterBySeverity": "依嚴重程度篩選記錄",
   "@logFilterBySeverity": {
     "description": "Filter dialog title"
   },
-  "logNoLogsYet": "No logs yet",
+  "logNoLogsYet": "尚無記錄",
   "@logNoLogsYet": {
     "description": "Empty state title"
   },
-  "logNoLogsYetSubtitle": "Logs will appear here as you use the app",
+  "logNoLogsYetSubtitle": "使用應用程式時，記錄會顯示在這裡",
   "@logNoLogsYetSubtitle": {
     "description": "Empty state subtitle"
   },
-  "logEntriesFiltered": "Entries ({count} filtered)",
+  "logEntriesFiltered": "項目（已篩選 {count} 筆）",
   "@logEntriesFiltered": {
     "description": "Log count with filter active",
     "placeholders": {
@@ -599,7 +599,7 @@
       }
     }
   },
-  "logEntries": "Entries ({count})",
+  "logEntries": "項目（{count}）",
   "@logEntries": {
     "description": "Total log count",
     "placeholders": {
@@ -608,41 +608,41 @@
       }
     }
   },
-  "sectionLyrics": "Lyrics",
+  "sectionLyrics": "歌詞",
   "@sectionLyrics": {
     "description": "Settings section header"
   },
-  "lyricsKeepScreenOn": "Keep screen on while viewing lyrics",
-  "lyricsKeepScreenOnSubtitle": "Prevent screen timeout while lyrics are open, including when playback is paused.",
-  "sectionColor": "Color",
+  "lyricsKeepScreenOn": "檢視歌詞時保持螢幕開啟",
+  "lyricsKeepScreenOnSubtitle": "歌詞開啟時防止螢幕逾時，即使播放已暫停也一樣。",
+  "sectionColor": "顏色",
   "@sectionColor": {
     "description": "Settings section header"
   },
-  "sectionTheme": "Theme",
+  "sectionTheme": "主題",
   "@sectionTheme": {
     "description": "Settings section header"
   },
-  "sectionLanguage": "Language",
+  "sectionLanguage": "語言",
   "@sectionLanguage": {
     "description": "Settings section header for language"
   },
-  "appearanceLanguage": "App Language",
+  "appearanceLanguage": "應用程式語言",
   "@appearanceLanguage": {
     "description": "Language setting title"
   },
-  "settingsAppearanceSubtitle": "Theme, colors, display",
+  "settingsAppearanceSubtitle": "主題、顏色、顯示",
   "@settingsAppearanceSubtitle": {
     "description": "Appearance settings description"
   },
-  "settingsLogsSubtitle": "View app logs for debugging",
+  "settingsLogsSubtitle": "檢視應用程式記錄以進行除錯",
   "@settingsLogsSubtitle": {
     "description": "Logs settings description"
   },
-  "pressBackAgainToExit": "Press back again to exit",
+  "pressBackAgainToExit": "再按一次返回即可離開",
   "@pressBackAgainToExit": {
     "description": "Exit confirmation message"
   },
-  "tracksCount": "{count, plural, =1{1 track} other{{count} tracks}}",
+  "tracksCount": "{count, plural, =1{1 首曲目} other{{count} 首曲目}}",
   "@tracksCount": {
     "description": "Track count display",
     "placeholders": {
@@ -651,24 +651,24 @@
       }
     }
   },
-  "trackMetadata": "Metadata",
+  "trackMetadata": "中繼資料",
   "@trackMetadata": {
     "description": "Tab title - track metadata"
   },
-  "trackLyrics": "Lyrics",
+  "trackLyrics": "歌詞",
   "@trackLyrics": {
     "description": "Tab title - lyrics"
   },
-  "trackAlbum": "Album",
+  "trackAlbum": "專輯",
   "@trackAlbum": {
     "description": "Metadata label - album name"
   },
-  "trackCopiedToClipboard": "Copied to clipboard",
+  "trackCopiedToClipboard": "已複製到剪貼簿",
   "@trackCopiedToClipboard": {
     "description": "Snackbar - content copied"
   },
   "snackbarDeleteTracksFailed": "無法刪除 {count, plural, =1{1 首歌曲} other{{count} 首歌曲}}。請檢查儲存空間存取權後再試一次。",
-  "dateDaysAgo": "{count} days ago",
+  "dateDaysAgo": "{count} 天前",
   "@dateDaysAgo": {
     "description": "Relative date - days ago",
     "placeholders": {
@@ -677,19 +677,19 @@
       }
     }
   },
-  "appearanceHeroAnimations": "Hero animations",
+  "appearanceHeroAnimations": "主視覺動畫",
   "@appearanceHeroAnimations": {
     "description": "Toggle for shared-element (Hero) transitions"
   },
-  "appearanceHeroAnimationsSubtitle": "Fly covers between screens, e.g. when opening the player",
+  "appearanceHeroAnimationsSubtitle": "在畫面之間飛移封面，例如開啟播放器時",
   "@appearanceHeroAnimationsSubtitle": {
     "description": "Subtitle for the Hero animations toggle"
   },
-  "collectionDeleteSelected": "Delete Selected",
+  "collectionDeleteSelected": "刪除所選項目",
   "@collectionDeleteSelected": {
     "description": "Button - delete selected tracks"
   },
-  "collectionDeleteMessage": "Delete {count} {count, plural, =1{track} other{tracks}} from this album?\n\nThis will also delete the files from storage.",
+  "collectionDeleteMessage": "要從此專輯刪除 {count} 首曲目嗎？\n\n這也會從儲存空間中刪除檔案。",
   "@collectionDeleteMessage": {
     "description": "Delete confirmation with count",
     "placeholders": {
@@ -698,11 +698,11 @@
       }
     }
   },
-  "collectionTapToSelect": "Tap tracks to select",
+  "collectionTapToSelect": "點選曲目以選取",
   "@collectionTapToSelect": {
     "description": "Selection hint"
   },
-  "collectionDeleteCount": "Delete {count} {count, plural, =1{track} other{tracks}}",
+  "collectionDeleteCount": "刪除 {count} 首曲目",
   "@collectionDeleteCount": {
     "description": "Delete button text with count",
     "placeholders": {
@@ -711,11 +711,11 @@
       }
     }
   },
-  "collectionSelectToDelete": "Select tracks to delete",
+  "collectionSelectToDelete": "選擇要刪除的曲目",
   "@collectionSelectToDelete": {
     "description": "Placeholder when nothing selected"
   },
-  "collectionDiscHeader": "Disc {discNumber}",
+  "collectionDiscHeader": "第 {discNumber} 片光碟",
   "@collectionDiscHeader": {
     "description": "Header for disc separator in multi-disc albums",
     "placeholders": {
@@ -725,43 +725,43 @@
       }
     }
   },
-  "settingsLocalLibrary": "Local Library",
+  "settingsLocalLibrary": "本機音樂庫",
   "@settingsLocalLibrary": {
     "description": "Settings menu item - local library"
   },
-  "settingsLocalLibrarySubtitle": "Scan music & detect duplicates",
+  "settingsLocalLibrarySubtitle": "掃描音樂並偵測重複項目",
   "@settingsLocalLibrarySubtitle": {
     "description": "Subtitle for local library settings"
   },
-  "settingsCache": "Storage & Cache",
+  "settingsCache": "儲存空間與快取",
   "@settingsCache": {
     "description": "Settings menu item - cache management"
   },
-  "settingsCacheSubtitle": "View size and clear cached data",
+  "settingsCacheSubtitle": "檢視大小並清除快取資料",
   "@settingsCacheSubtitle": {
     "description": "Subtitle for cache management menu"
   },
-  "libraryTitle": "Local Library",
+  "libraryTitle": "本機音樂庫",
   "@libraryTitle": {
     "description": "Library settings page title"
   },
-  "libraryScanSettings": "Scan Settings",
+  "libraryScanSettings": "掃描設定",
   "@libraryScanSettings": {
     "description": "Section header for scan settings"
   },
-  "libraryFolderHint": "Tap to select folder",
+  "libraryFolderHint": "點選以選擇資料夾",
   "@libraryFolderHint": {
     "description": "Placeholder when no folder selected"
   },
-  "libraryAddFolder": "Add library folder",
+  "libraryAddFolder": "新增音樂庫資料夾",
   "@libraryAddFolder": {
     "description": "Action to add another local library source"
   },
-  "libraryAddFolderSubtitle": "Internal storage, SD card, SSD, or another external drive",
+  "libraryAddFolderSubtitle": "內部儲存空間、SD 卡、SSD 或其他外接磁碟",
   "@libraryAddFolderSubtitle": {
     "description": "Supported storage locations for local library sources"
   },
-  "librarySourceOffline": "Offline. Reconnect the storage to restore these tracks",
+  "librarySourceOffline": "離線。請重新連接儲存裝置以還原這些曲目",
   "@librarySourceOffline": {
     "description": "Library source is temporarily disconnected"
   },
@@ -769,7 +769,7 @@
   "@librarySourceDisabled": {
     "description": "Library source has been disabled by the user"
   },
-  "librarySourceScanCount": "{scanned} of {total} files scanned ({progress}%)",
+  "librarySourceScanCount": "已掃描 {total} 個檔案中的 {scanned} 個（{progress}%）",
   "@librarySourceScanCount": {
     "description": "Live progress for one library folder scan",
     "placeholders": {
@@ -784,15 +784,15 @@
       }
     }
   },
-  "libraryExternalStorage": "External storage",
+  "libraryExternalStorage": "外部儲存空間",
   "@libraryExternalStorage": {
     "description": "Label for a removable or external library source"
   },
-  "libraryRemoveFolder": "Remove library folder",
+  "libraryRemoveFolder": "移除音樂庫資料夾",
   "@libraryRemoveFolder": {
     "description": "Action to remove one indexed library source"
   },
-  "libraryRemoveFolderMessage": "Remove this folder and its indexed tracks from Sistrum? Audio files on the storage will not be deleted.",
+  "libraryRemoveFolderMessage": "要從 Sistrum 移除此資料夾及其已建立索引的曲目嗎？儲存空間中的音訊檔案不會被刪除。",
   "@libraryRemoveFolderMessage": {
     "description": "Confirmation shown before removing a library source"
   },
@@ -834,84 +834,84 @@
       }
     }
   },
-  "libraryShowDuplicateIndicator": "Show Duplicate Indicator",
+  "libraryShowDuplicateIndicator": "顯示重複標示",
   "@libraryShowDuplicateIndicator": {
     "description": "Toggle for duplicate indicator in search"
   },
-  "libraryShowDuplicateIndicatorSubtitle": "Show when searching for existing tracks",
+  "libraryShowDuplicateIndicatorSubtitle": "搜尋既有曲目時顯示",
   "@libraryShowDuplicateIndicatorSubtitle": {
     "description": "Subtitle for duplicate indicator toggle"
   },
-  "libraryAutoScan": "Auto Scan",
+  "libraryAutoScan": "自動掃描",
   "@libraryAutoScan": {
     "description": "Setting for automatic library scanning"
   },
-  "libraryAutoScanSubtitle": "Automatically scan your library for new files",
+  "libraryAutoScanSubtitle": "自動掃描音樂庫中的新檔案",
   "@libraryAutoScanSubtitle": {
     "description": "Subtitle for auto scan setting"
   },
-  "libraryAutoScanOff": "Off",
+  "libraryAutoScanOff": "關閉",
   "@libraryAutoScanOff": {
     "description": "Auto scan disabled"
   },
-  "libraryAutoScanOnOpen": "Every app open",
+  "libraryAutoScanOnOpen": "每次開啟應用程式",
   "@libraryAutoScanOnOpen": {
     "description": "Auto scan when app opens"
   },
-  "libraryAutoScanDaily": "Daily",
+  "libraryAutoScanDaily": "每天",
   "@libraryAutoScanDaily": {
     "description": "Auto scan once per day"
   },
-  "libraryAutoScanWeekly": "Weekly",
+  "libraryAutoScanWeekly": "每週",
   "@libraryAutoScanWeekly": {
     "description": "Auto scan once per week"
   },
-  "libraryActions": "Actions",
+  "libraryActions": "動作",
   "@libraryActions": {
     "description": "Section header for library actions"
   },
-  "libraryScan": "Scan Library",
+  "libraryScan": "掃描音樂庫",
   "@libraryScan": {
     "description": "Button to start library scan"
   },
-  "libraryScanSubtitle": "Scan for audio files",
+  "libraryScanSubtitle": "掃描音訊檔案",
   "@libraryScanSubtitle": {
     "description": "Subtitle for scan button"
   },
-  "libraryScanSelectFolderFirst": "Select a folder first",
+  "libraryScanSelectFolderFirst": "請先選擇資料夾",
   "@libraryScanSelectFolderFirst": {
     "description": "Message when trying to scan without folder"
   },
-  "libraryCleanupMissingFiles": "Cleanup Missing Files",
+  "libraryCleanupMissingFiles": "清理遺失的檔案",
   "@libraryCleanupMissingFiles": {
     "description": "Button to remove entries for missing files"
   },
-  "libraryCleanupMissingFilesSubtitle": "Remove entries for files that no longer exist",
+  "libraryCleanupMissingFilesSubtitle": "移除已不存在檔案的項目",
   "@libraryCleanupMissingFilesSubtitle": {
     "description": "Subtitle for cleanup button"
   },
-  "libraryClear": "Clear Library",
+  "libraryClear": "清空音樂庫",
   "@libraryClear": {
     "description": "Button to clear all library entries"
   },
-  "libraryClearSubtitle": "Remove all scanned tracks",
+  "libraryClearSubtitle": "移除所有已掃描的曲目",
   "@libraryClearSubtitle": {
     "description": "Subtitle for clear button"
   },
-  "libraryClearConfirmTitle": "Clear Library",
+  "libraryClearConfirmTitle": "清空音樂庫",
   "@libraryClearConfirmTitle": {
     "description": "Dialog title for clear confirmation"
   },
-  "libraryClearConfirmMessage": "This will remove all scanned tracks from your library. Your actual music files will not be deleted.",
+  "libraryClearConfirmMessage": "這會從音樂庫移除所有已掃描的曲目。你實際的音樂檔案不會被刪除。",
   "@libraryClearConfirmMessage": {
     "description": "Dialog message for clear confirmation"
   },
-  "libraryAbout": "About Local Library",
+  "libraryAbout": "關於本機音樂庫",
   "@libraryAbout": {
     "description": "Section header for about info"
   },
   "libraryAboutDescription": "掃描你的音樂資料夾，並瀏覽本機音訊檔案中儲存的標籤。支援 FLAC、ALAC、M4A、MP3、Opus、OGG、WAV、AIFF 與 APE。",
-  "libraryTracksUnit": "{count, plural, =1{track} other{tracks}}",
+  "libraryTracksUnit": "{count, plural, =1{首曲目} other{首曲目}}",
   "@libraryTracksUnit": {
     "description": "Unit label for tracks count (without the number itself)",
     "placeholders": {
@@ -920,7 +920,7 @@
       }
     }
   },
-  "libraryFilesUnit": "{count, plural, =1{file} other{files}}",
+  "libraryFilesUnit": "{count, plural, =1{個檔案} other{個檔案}}",
   "@libraryFilesUnit": {
     "description": "Unit label for files count during library scanning",
     "placeholders": {
@@ -929,7 +929,7 @@
       }
     }
   },
-  "libraryLastScanned": "Last scanned: {time}",
+  "libraryLastScanned": "上次掃描：{time}",
   "@libraryLastScanned": {
     "description": "Last scan time display",
     "placeholders": {
@@ -938,23 +938,23 @@
       }
     }
   },
-  "libraryLastScannedNever": "Never",
+  "libraryLastScannedNever": "從未",
   "@libraryLastScannedNever": {
     "description": "Shown when library has never been scanned"
   },
-  "libraryScanning": "Scanning...",
+  "libraryScanning": "掃描中…",
   "@libraryScanning": {
     "description": "Status during scan"
   },
-  "libraryScanFinalizing": "Finalizing library...",
+  "libraryScanFinalizing": "正在完成音樂庫…",
   "@libraryScanFinalizing": {
     "description": "Status shown after file scanning finishes but library persistence is still running"
   },
-  "libraryScanPaused": "Scan paused",
+  "libraryScanPaused": "掃描已暫停",
   "@libraryScanPaused": {
     "description": "Status shown while a library scan is paused by the user"
   },
-  "libraryScanProgress": "{progress}% of {total} files",
+  "libraryScanProgress": "{total} 個檔案中的 {progress}%",
   "@libraryScanProgress": {
     "description": "Scan progress display",
     "placeholders": {
@@ -966,7 +966,7 @@
       }
     }
   },
-  "libraryRemovedMissingFiles": "Removed {count} missing files from library",
+  "libraryRemovedMissingFiles": "已從音樂庫移除 {count} 個遺失的檔案",
   "@libraryRemovedMissingFiles": {
     "description": "Snackbar after cleanup",
     "placeholders": {
@@ -975,7 +975,7 @@
       }
     }
   },
-  "libraryCleared": "Library cleared",
+  "libraryCleared": "音樂庫已清空",
   "@libraryCleared": {
     "description": "Snackbar after clearing library"
   },
@@ -983,7 +983,7 @@
   "@libraryStorageAccessRequired": {
     "description": "Dialog title for storage permission"
   },
-  "libraryStorageAccessMessage": "Sistrum needs storage access to scan your music library. Please grant permission in settings.",
+  "libraryStorageAccessMessage": "Sistrum 需要儲存空間存取權限才能掃描你的音樂庫。請在設定中授予權限。",
   "@libraryStorageAccessMessage": {
     "description": "Dialog message for storage permission"
   },
@@ -991,95 +991,95 @@
   "@libraryFilterAll": {
     "description": "Filter chip - show all library items"
   },
-  "libraryFilterTitle": "Filters",
+  "libraryFilterTitle": "篩選",
   "@libraryFilterTitle": {
     "description": "Filter bottom sheet title"
   },
-  "libraryFilterReset": "Reset",
+  "libraryFilterReset": "重設",
   "@libraryFilterReset": {
     "description": "Reset all filters button"
   },
-  "libraryFilterApply": "Apply",
+  "libraryFilterApply": "套用",
   "@libraryFilterApply": {
     "description": "Apply filters button"
   },
-  "libraryFilterQuality": "Quality",
+  "libraryFilterQuality": "音質",
   "@libraryFilterQuality": {
     "description": "Filter section - audio quality"
   },
-  "libraryFilterQualityHiRes": "Hi-Res (24bit)",
+  "libraryFilterQualityHiRes": "Hi-Res（24 位元）",
   "@libraryFilterQualityHiRes": {
     "description": "Filter option - high resolution audio"
   },
-  "libraryFilterQualityCD": "CD (16bit)",
+  "libraryFilterQualityCD": "CD（16 位元）",
   "@libraryFilterQualityCD": {
     "description": "Filter option - CD quality audio"
   },
-  "libraryFilterQualityLossy": "Lossy",
+  "libraryFilterQualityLossy": "有損",
   "@libraryFilterQualityLossy": {
     "description": "Filter option - lossy compressed audio"
   },
-  "libraryFilterFormat": "Format",
+  "libraryFilterFormat": "格式",
   "@libraryFilterFormat": {
     "description": "Filter section - file format"
   },
-  "libraryFilterMetadata": "Metadata",
+  "libraryFilterMetadata": "中繼資料",
   "@libraryFilterMetadata": {
     "description": "Filter section - metadata completeness"
   },
-  "libraryFilterMetadataComplete": "Complete metadata",
+  "libraryFilterMetadataComplete": "中繼資料完整",
   "@libraryFilterMetadataComplete": {
     "description": "Filter option - items with complete metadata"
   },
-  "libraryFilterMetadataMissingAny": "Missing any metadata",
+  "libraryFilterMetadataMissingAny": "缺少任何中繼資料",
   "@libraryFilterMetadataMissingAny": {
     "description": "Filter option - items missing any tracked metadata field"
   },
-  "libraryFilterMetadataMissingYear": "Missing year",
+  "libraryFilterMetadataMissingYear": "缺少年份",
   "@libraryFilterMetadataMissingYear": {
     "description": "Filter option - items missing release year/date"
   },
-  "libraryFilterMetadataMissingGenre": "Missing genre",
+  "libraryFilterMetadataMissingGenre": "缺少曲風",
   "@libraryFilterMetadataMissingGenre": {
     "description": "Filter option - items missing genre"
   },
-  "libraryFilterMetadataMissingAlbumArtist": "Missing album artist",
+  "libraryFilterMetadataMissingAlbumArtist": "缺少專輯藝人",
   "@libraryFilterMetadataMissingAlbumArtist": {
     "description": "Filter option - items missing album artist"
   },
-  "libraryFilterSort": "Sort",
+  "libraryFilterSort": "排序",
   "@libraryFilterSort": {
     "description": "Filter section - sort order"
   },
-  "libraryFilterSortLatest": "Latest",
+  "libraryFilterSortLatest": "最新",
   "@libraryFilterSortLatest": {
     "description": "Sort option - newest first"
   },
-  "libraryFilterSortOldest": "Oldest",
+  "libraryFilterSortOldest": "最舊",
   "@libraryFilterSortOldest": {
     "description": "Sort option - oldest first"
   },
-  "libraryFilterSortAlbumAsc": "Album (A-Z)",
+  "libraryFilterSortAlbumAsc": "專輯（A-Z）",
   "@libraryFilterSortAlbumAsc": {
     "description": "Sort option - album ascending"
   },
-  "libraryFilterSortAlbumDesc": "Album (Z-A)",
+  "libraryFilterSortAlbumDesc": "專輯（Z-A）",
   "@libraryFilterSortAlbumDesc": {
     "description": "Sort option - album descending"
   },
-  "libraryFilterSortGenreAsc": "Genre (A-Z)",
+  "libraryFilterSortGenreAsc": "曲風（A-Z）",
   "@libraryFilterSortGenreAsc": {
     "description": "Sort option - genre ascending"
   },
-  "libraryFilterSortGenreDesc": "Genre (Z-A)",
+  "libraryFilterSortGenreDesc": "曲風（Z-A）",
   "@libraryFilterSortGenreDesc": {
     "description": "Sort option - genre descending"
   },
-  "timeJustNow": "Just now",
+  "timeJustNow": "剛剛",
   "@timeJustNow": {
     "description": "Relative time - less than a minute ago"
   },
-  "timeMinutesAgo": "{count, plural, =1{1 minute ago} other{{count} minutes ago}}",
+  "timeMinutesAgo": "{count, plural, =1{1 分鐘前} other{{count} 分鐘前}}",
   "@timeMinutesAgo": {
     "description": "Relative time - minutes ago",
     "placeholders": {
@@ -1088,7 +1088,7 @@
       }
     }
   },
-  "timeHoursAgo": "{count, plural, =1{1 hour ago} other{{count} hours ago}}",
+  "timeHoursAgo": "{count, plural, =1{1 小時前} other{{count} 小時前}}",
   "@timeHoursAgo": {
     "description": "Relative time - hours ago",
     "placeholders": {
@@ -1097,58 +1097,58 @@
       }
     }
   },
-  "tutorialSearchTitle": "Finding Music",
+  "tutorialSearchTitle": "尋找音樂",
   "@tutorialSearchTitle": {
     "description": "Tutorial search page title"
   },
   "tutorialSearchDesc": "掃描音樂庫後，可搜尋本機歌曲、歌手與專輯。",
-  "tutorialLibraryTitle": "Your Library",
+  "tutorialLibraryTitle": "你的音樂庫",
   "@tutorialLibraryTitle": {
     "description": "Tutorial library page title"
   },
   "tutorialLibraryDesc": "已掃描的音樂會依歌曲、歌手、專輯與播放清單整理。",
   "tutorialLibraryTip1": "瀏覽並搜尋裝置上已有的歌曲",
-  "tutorialLibraryTip2": "Tap a track to play it with the built-in player",
+  "tutorialLibraryTip2": "點選曲目即可用內建播放器播放",
   "@tutorialLibraryTip2": {
     "description": "Tutorial library tip 2"
   },
-  "tutorialLibraryTip3": "Browse tracks, albums, and playlists in list or grid views",
+  "tutorialLibraryTip3": "以清單或格狀檢視瀏覽曲目、專輯與播放清單",
   "@tutorialLibraryTip3": {
     "description": "Tutorial library tip 3"
   },
-  "tutorialSettingsTitle": "Customize Your Experience",
+  "tutorialSettingsTitle": "自訂你的體驗",
   "@tutorialSettingsTitle": {
     "description": "Tutorial settings page title"
   },
   "tutorialSettingsDesc": "調整播放、音樂庫掃描、歌詞、Sistrum 外觀與本機儲存空間。",
   "tutorialSettingsTip1": "管理音樂資料夾與本機檔案存取",
-  "tutorialSettingsTip2": "Adjust your local library, playback, and appearance preferences.",
+  "tutorialSettingsTip2": "調整本機音樂庫、播放與外觀偏好設定。",
   "@tutorialSettingsTip2": {
     "description": "Tutorial settings tip 2"
   },
-  "tutorialSettingsTip3": "Customize app theme and appearance",
+  "tutorialSettingsTip3": "自訂應用程式主題與外觀",
   "@tutorialSettingsTip3": {
     "description": "Tutorial settings tip 3"
   },
   "tutorialReadyMessage": "選擇音樂資料夾、掃描音樂庫，然後開始聆聽。",
-  "libraryForceFullScan": "Force Full Scan",
+  "libraryForceFullScan": "強制完整掃描",
   "@libraryForceFullScan": {
     "description": "Button to force a complete rescan of library"
   },
-  "libraryForceFullScanSubtitle": "Rescan all files, ignoring cache",
+  "libraryForceFullScanSubtitle": "忽略快取，重新掃描所有檔案",
   "@libraryForceFullScanSubtitle": {
     "description": "Subtitle for force full scan button"
   },
-  "cacheTitle": "Storage & Cache",
+  "cacheTitle": "儲存空間與快取",
   "@cacheTitle": {
     "description": "Cache management page title"
   },
-  "cacheSummaryTitle": "Cache overview",
+  "cacheSummaryTitle": "快取概覽",
   "@cacheSummaryTitle": {
     "description": "Heading for cache summary card"
   },
   "cacheSummarySubtitle": "清除快取不會刪除你的原始音樂檔案。",
-  "cacheEstimatedTotal": "Estimated cache usage: {size}",
+  "cacheEstimatedTotal": "預估快取用量：{size}",
   "@cacheEstimatedTotal": {
     "description": "Total cache size shown in summary",
     "placeholders": {
@@ -1157,57 +1157,57 @@
       }
     }
   },
-  "cacheSectionStorage": "Cached Data",
+  "cacheSectionStorage": "快取資料",
   "@cacheSectionStorage": {
     "description": "Section header for cache entries"
   },
-  "cacheSectionMaintenance": "Maintenance",
+  "cacheSectionMaintenance": "維護",
   "@cacheSectionMaintenance": {
     "description": "Section header for cleanup actions"
   },
-  "cacheAppDirectory": "App cache directory",
+  "cacheAppDirectory": "應用程式快取目錄",
   "@cacheAppDirectory": {
     "description": "Cache item title for app cache directory"
   },
-  "cacheAppDirectoryDesc": "HTTP responses, WebView data, and other temporary app data.",
+  "cacheAppDirectoryDesc": "HTTP 回應、WebView 資料與其他暫存的應用程式資料。",
   "@cacheAppDirectoryDesc": {
     "description": "Description of what app cache directory contains"
   },
-  "cacheTempDirectory": "Temporary directory",
+  "cacheTempDirectory": "暫存目錄",
   "@cacheTempDirectory": {
     "description": "Cache item title for temporary files directory"
   },
   "cacheTempDirectoryDesc": "暫存的本機封面與音訊處理檔案。",
-  "cacheLibraryCover": "Library cover cache",
+  "cacheLibraryCover": "音樂庫封面快取",
   "@cacheLibraryCover": {
     "description": "Cache item title for local library cover art images"
   },
-  "cacheLibraryCoverDesc": "Cover art extracted from local music files. Will re-extract on next scan.",
+  "cacheLibraryCoverDesc": "從本機音樂檔案擷取的封面。下次掃描時會重新擷取。",
   "@cacheLibraryCoverDesc": {
     "description": "Description of what library cover cache contains"
   },
-  "libraryPlaybackNormalization": "Volume normalization",
+  "libraryPlaybackNormalization": "音量正規化",
   "@libraryPlaybackNormalization": {
     "description": "Toggle title for ReplayGain playback normalization in the built-in player"
   },
-  "libraryPlaybackNormalizationSubtitle": "Even out loudness between tracks using their ReplayGain or R128 tags, when present",
+  "libraryPlaybackNormalizationSubtitle": "若存在 ReplayGain 或 R128 標籤，則使用它們讓曲目之間的響度保持一致",
   "@libraryPlaybackNormalizationSubtitle": {
     "description": "Subtitle explaining playback volume normalization"
   },
-  "cacheAudioAnalysis": "Audio analysis cache",
+  "cacheAudioAnalysis": "音訊分析快取",
   "@cacheAudioAnalysis": {
     "description": "Cache item title for saved audio analysis results"
   },
-  "cacheAudioAnalysisDesc": "Saved spectrograms and analysis results. Will re-analyze on next open.",
+  "cacheAudioAnalysisDesc": "已儲存的頻譜圖與分析結果。下次開啟時會重新分析。",
   "@cacheAudioAnalysisDesc": {
     "description": "Description of what audio analysis cache contains"
   },
   "cacheCleanupUnusedDesc": "移除本機檔案已遺失的音樂庫項目。",
-  "cacheNoData": "No cached data",
+  "cacheNoData": "沒有快取資料",
   "@cacheNoData": {
     "description": "Label when cache category has no data"
   },
-  "cacheSizeWithFiles": "{size} in {count} files",
+  "cacheSizeWithFiles": "{size}，共 {count} 個檔案",
   "@cacheSizeWithFiles": {
     "description": "Cache size and file count",
     "placeholders": {
@@ -1219,7 +1219,7 @@
       }
     }
   },
-  "cacheClearSuccess": "Cleared: {target}",
+  "cacheClearSuccess": "已清除：{target}",
   "@cacheClearSuccess": {
     "description": "Snackbar after clearing selected cache",
     "placeholders": {
@@ -1228,38 +1228,38 @@
       }
     }
   },
-  "cacheClearConfirmTitle": "Clear cache?",
+  "cacheClearConfirmTitle": "清除快取？",
   "@cacheClearConfirmTitle": {
     "description": "Dialog title before clearing one cache category"
   },
   "cacheClearConfirmMessage": "要清除 {target} 的快取資料嗎？原始音樂檔案會保留。",
-  "cacheClearAllConfirmTitle": "Clear all cache?",
+  "cacheClearAllConfirmTitle": "清除所有快取？",
   "@cacheClearAllConfirmTitle": {
     "description": "Dialog title before clearing all caches"
   },
   "cacheClearAllConfirmMessage": "要清除此頁面上的所有快取類別嗎？原始音樂檔案會保留。",
-  "cacheClearAll": "Clear all cache",
+  "cacheClearAll": "清除所有快取",
   "@cacheClearAll": {
     "description": "Button label to clear all caches"
   },
-  "cacheCleanupUnused": "Cleanup unused data",
+  "cacheCleanupUnused": "清理未使用的資料",
   "@cacheCleanupUnused": {
     "description": "Action title for cleaning unused entries"
   },
   "cacheCleanupUnusedSubtitle": "從音樂庫索引中移除遺失的本機檔案",
-  "cacheRefreshStats": "Refresh stats",
+  "cacheRefreshStats": "重新整理統計",
   "@cacheRefreshStats": {
     "description": "Button label to refresh cache statistics"
   },
-  "trackEditMetadata": "Edit Metadata",
+  "trackEditMetadata": "編輯中繼資料",
   "@trackEditMetadata": {
     "description": "Menu action - edit embedded metadata"
   },
-  "audioBitrate": "Bitrate",
+  "audioBitrate": "位元速率",
   "@audioBitrate": {
     "description": "Label for bitrate selection"
   },
-  "actionCreate": "Create",
+  "actionCreate": "建立",
   "@actionCreate": {
     "description": "Generic action button - create"
   },
@@ -1267,27 +1267,27 @@
   "@collectionLoved": {
     "description": "Custom folder for favorite tracks"
   },
-  "collectionFavoriteArtists": "Favorite Artists",
+  "collectionFavoriteArtists": "喜愛的藝人",
   "@collectionFavoriteArtists": {
     "description": "Custom folder for favorite artists"
   },
-  "collectionPlaylist": "Playlist",
+  "collectionPlaylist": "播放清單",
   "@collectionPlaylist": {
     "description": "Single playlist label"
   },
-  "collectionAddToPlaylist": "Add to playlist",
+  "collectionAddToPlaylist": "加入播放清單",
   "@collectionAddToPlaylist": {
     "description": "Action to add a track to user playlist"
   },
-  "collectionCreatePlaylist": "Create playlist",
+  "collectionCreatePlaylist": "建立播放清單",
   "@collectionCreatePlaylist": {
     "description": "Action to create a new playlist"
   },
-  "collectionNoPlaylistsYet": "No playlists yet",
+  "collectionNoPlaylistsYet": "尚無播放清單",
   "@collectionNoPlaylistsYet": {
     "description": "Empty state title when user has no playlists"
   },
-  "collectionPlaylistTracks": "{count, plural, =1{1 track} other{{count} tracks}}",
+  "collectionPlaylistTracks": "{count, plural, =1{1 首曲目} other{{count} 首曲目}}",
   "@collectionPlaylistTracks": {
     "description": "Track count label for custom playlists",
     "placeholders": {
@@ -1296,7 +1296,7 @@
       }
     }
   },
-  "collectionAddedToPlaylist": "Added to \"{playlistName}\"",
+  "collectionAddedToPlaylist": "已加入「{playlistName}」",
   "@collectionAddedToPlaylist": {
     "description": "Snackbar after adding track to playlist",
     "placeholders": {
@@ -1305,7 +1305,7 @@
       }
     }
   },
-  "collectionAlreadyInPlaylist": "Already in \"{playlistName}\"",
+  "collectionAlreadyInPlaylist": "已在「{playlistName}」中",
   "@collectionAlreadyInPlaylist": {
     "description": "Snackbar when track already exists in playlist",
     "placeholders": {
@@ -1314,60 +1314,60 @@
       }
     }
   },
-  "collectionPlaylistNameHint": "Playlist name",
+  "collectionPlaylistNameHint": "播放清單名稱",
   "@collectionPlaylistNameHint": {
     "description": "Hint text for playlist name input"
   },
-  "collectionPlaylistNameRequired": "Playlist name is required",
+  "collectionPlaylistNameRequired": "需要播放清單名稱",
   "@collectionPlaylistNameRequired": {
     "description": "Validation error for empty playlist name"
   },
-  "collectionRenamePlaylist": "Rename playlist",
+  "collectionRenamePlaylist": "重新命名播放清單",
   "@collectionRenamePlaylist": {
     "description": "Action to rename playlist"
   },
-  "collectionDeletePlaylist": "Delete playlist",
+  "collectionDeletePlaylist": "刪除播放清單",
   "@collectionDeletePlaylist": {
     "description": "Action to delete playlist"
   },
-  "collectionPlaylistRenamed": "Playlist renamed",
+  "collectionPlaylistRenamed": "播放清單已重新命名",
   "@collectionPlaylistRenamed": {
     "description": "Snackbar after renaming playlist"
   },
   "collectionRemovedTracks": "{count, plural, =1{已移除 1 首歌曲} other{已移除 {count} 首歌曲}}",
-  "collectionLovedEmptyTitle": "No loved songs yet",
+  "collectionLovedEmptyTitle": "尚無喜愛的歌曲",
   "@collectionLovedEmptyTitle": {
     "description": "Loved empty state title"
   },
-  "collectionLovedEmptySubtitle": "Tap love on tracks to keep your favorites",
+  "collectionLovedEmptySubtitle": "點選曲目上的愛心以保留你喜愛的歌曲",
   "@collectionLovedEmptySubtitle": {
     "description": "Loved empty state subtitle"
   },
-  "collectionFavoriteArtistsEmptyTitle": "No favorite artists yet",
+  "collectionFavoriteArtistsEmptyTitle": "尚無喜愛的藝人",
   "@collectionFavoriteArtistsEmptyTitle": {
     "description": "Favorite artists empty state title"
   },
-  "collectionFavoriteArtistsEmptySubtitle": "Tap the heart on an artist page to keep them here",
+  "collectionFavoriteArtistsEmptySubtitle": "在藝人頁面點選愛心，即可將其保留在這裡",
   "@collectionFavoriteArtistsEmptySubtitle": {
     "description": "Favorite artists empty state subtitle"
   },
-  "collectionPlaylistEmptyTitle": "Playlist is empty",
+  "collectionPlaylistEmptyTitle": "播放清單是空的",
   "@collectionPlaylistEmptyTitle": {
     "description": "Playlist empty state title"
   },
-  "collectionPlaylistEmptySubtitle": "Long-press + on any track to add it here",
+  "collectionPlaylistEmptySubtitle": "長按任一曲目上的 +，即可將它加到這裡",
   "@collectionPlaylistEmptySubtitle": {
     "description": "Playlist empty state subtitle"
   },
-  "collectionRemoveFromPlaylist": "Remove from playlist",
+  "collectionRemoveFromPlaylist": "從播放清單移除",
   "@collectionRemoveFromPlaylist": {
     "description": "Tooltip for removing track from playlist"
   },
-  "collectionRemoveFromFolder": "Remove from folder",
+  "collectionRemoveFromFolder": "從資料夾移除",
   "@collectionRemoveFromFolder": {
     "description": "Tooltip for removing track from Loved folder"
   },
-  "collectionRemovedFromFavoriteArtists": "\"{artistName}\" removed from Favorite Artists",
+  "collectionRemovedFromFavoriteArtists": "已將「{artistName}」從喜愛的藝人中移除",
   "@collectionRemovedFromFavoriteArtists": {
     "description": "Snackbar after removing artist from favorite artists",
     "placeholders": {
@@ -1376,109 +1376,109 @@
       }
     }
   },
-  "trackOptionAddToLoved": "Add to Loved",
+  "trackOptionAddToLoved": "加入喜愛",
   "@trackOptionAddToLoved": {
     "description": "Bottom sheet action label - add track to loved folder"
   },
-  "trackOptionRemoveFromLoved": "Remove from Loved",
+  "trackOptionRemoveFromLoved": "從喜愛中移除",
   "@trackOptionRemoveFromLoved": {
     "description": "Bottom sheet action label - remove track from loved folder"
   },
-  "artistOptionRemoveFromFavorites": "Remove from Favorite Artists",
+  "artistOptionRemoveFromFavorites": "從喜愛的藝人中移除",
   "@artistOptionRemoveFromFavorites": {
     "description": "Action label - remove artist from favorite artists"
   },
-  "collectionPlaylistChangeCover": "Change cover image",
+  "collectionPlaylistChangeCover": "變更封面圖片",
   "@collectionPlaylistChangeCover": {
     "description": "Bottom sheet action to pick a custom cover image for a playlist"
   },
-  "collectionPlaylistRemoveCover": "Remove cover image",
+  "collectionPlaylistRemoveCover": "移除封面圖片",
   "@collectionPlaylistRemoveCover": {
     "description": "Bottom sheet action to remove custom cover image from a playlist"
   },
-  "settingsBackup": "Backup & Restore",
+  "settingsBackup": "備份與還原",
   "@settingsBackup": {
     "description": "Settings menu item - backup and restore page"
   },
-  "settingsBackupSubtitle": "Move your library, history and settings to a new device",
+  "settingsBackupSubtitle": "將你的音樂庫、記錄與設定移至新裝置",
   "@settingsBackupSubtitle": {
     "description": "Subtitle for backup and restore settings item"
   },
-  "backupTitle": "Backup & Restore",
+  "backupTitle": "備份與還原",
   "@backupTitle": {
     "description": "App bar title for the backup and restore page"
   },
-  "backupExportSectionTitle": "Create backup",
+  "backupExportSectionTitle": "建立備份",
   "@backupExportSectionTitle": {
     "description": "Section title for the export/backup card"
   },
   "backupExportSectionDescription": "將設定、本機個人檔案、收藏與可選的舊版音樂庫紀錄儲存到備份檔案中。",
-  "backupExportButton": "Create backup file",
+  "backupExportButton": "建立備份檔案",
   "@backupExportButton": {
     "description": "Button to create and share a backup file"
   },
-  "backupImportSectionTitle": "Restore backup",
+  "backupImportSectionTitle": "還原備份",
   "@backupImportSectionTitle": {
     "description": "Section title for the import/restore card"
   },
-  "backupImportSectionDescription": "Pick a backup file to restore your data. This replaces the current settings, history and library on this device.",
+  "backupImportSectionDescription": "選擇備份檔案以還原你的資料。這會取代此裝置目前的設定、記錄與音樂庫。",
   "@backupImportSectionDescription": {
     "description": "Description for the restore action"
   },
-  "backupImportButton": "Choose backup file",
+  "backupImportButton": "選擇備份檔案",
   "@backupImportButton": {
     "description": "Button to pick a backup file to restore"
   },
-  "backupCreated": "Backup created",
+  "backupCreated": "已建立備份",
   "@backupCreated": {
     "description": "Snackbar after a backup file is created"
   },
-  "backupCreateFailed": "Failed to create backup",
+  "backupCreateFailed": "建立備份失敗",
   "@backupCreateFailed": {
     "description": "Snackbar when backup creation fails"
   },
   "backupTooLarge": "此備份太大而無法還原。請減少包含的類別後再試一次。",
   "backupRestorePartiallyFailed": "還原備份失敗。已還原：{categories}",
   "backupListeningStatisticsExcluded": "不包含聆聽統計與播放次數。",
-  "backupRestoreConfirmTitle": "Restore this backup?",
+  "backupRestoreConfirmTitle": "要還原此備份嗎？",
   "@backupRestoreConfirmTitle": {
     "description": "Confirmation dialog title before restoring a backup"
   },
-  "backupRestoreConfirmButton": "Restore",
+  "backupRestoreConfirmButton": "還原",
   "@backupRestoreConfirmButton": {
     "description": "Confirm button to proceed with restore"
   },
-  "backupRestored": "Backup restored successfully",
+  "backupRestored": "已成功還原備份",
   "@backupRestored": {
     "description": "Snackbar after a successful restore"
   },
-  "backupRestoreFailed": "Failed to restore backup",
+  "backupRestoreFailed": "還原備份失敗",
   "@backupRestoreFailed": {
     "description": "Snackbar when restore fails"
   },
-  "backupInvalidFile": "This file is not a valid Sistrum backup",
+  "backupInvalidFile": "此檔案不是有效的 Sistrum 備份",
   "@backupInvalidFile": {
     "description": "Snackbar when the chosen file is not a valid backup"
   },
-  "backupRestoreRestartHint": "Restart the app to make sure every change is applied.",
+  "backupRestoreRestartHint": "請重新啟動應用程式，以確保所有變更都已套用。",
   "@backupRestoreRestartHint": {
     "description": "Hint shown after restoring that an app restart is recommended"
   },
-  "backupContentsTitle": "Backup contents",
+  "backupContentsTitle": "備份內容",
   "@backupContentsTitle": {
     "description": "Header above the list summarizing what the backup contains"
   },
-  "backupSettingsOnly": "Settings only",
-  "backupSelectCollections": "Library collections",
-  "backupSelectCollectionsDescription": "Liked tracks, favorite artists, playlists and playlist covers.",
-  "backupSelectedExportDescription": "Save the selected categories to a backup file. Audio files are not included.",
-  "backupSelectAtLeastOne": "Select at least one category to create a backup.",
-  "backupSelectedRestoreMessage": "Only the categories listed below will be restored. Categories not included in this backup will stay unchanged. Restoring can replace existing data and cannot be undone.",
-  "backupContentsSettings": "App settings",
+  "backupSettingsOnly": "僅設定",
+  "backupSelectCollections": "音樂庫收藏",
+  "backupSelectCollectionsDescription": "喜愛的曲目、喜愛的藝人、播放清單與播放清單封面。",
+  "backupSelectedExportDescription": "將所選類別儲存為備份檔案。不包含音訊檔案。",
+  "backupSelectAtLeastOne": "請至少選擇一個類別以建立備份。",
+  "backupSelectedRestoreMessage": "只會還原以下列出的類別。未包含在此備份中的類別將保持不變。",
+  "backupContentsSettings": "應用程式設定",
   "@backupContentsSettings": {
     "description": "Backup contents row label for settings"
   },
-  "backupContentsLiked": "{count} liked {count, plural, =1{track} other{tracks}}",
+  "backupContentsLiked": "{count} 首喜愛的曲目",
   "@backupContentsLiked": {
     "description": "Backup contents row for liked tracks count",
     "placeholders": {
@@ -1487,7 +1487,7 @@
       }
     }
   },
-  "backupContentsPlaylists": "{count, plural, =1{1 playlist} other{{count} playlists}}",
+  "backupContentsPlaylists": "{count, plural, =1{1 個播放清單} other{{count} 個播放清單}}",
   "@backupContentsPlaylists": {
     "description": "Backup contents row for playlist count",
     "placeholders": {
@@ -1496,7 +1496,7 @@
       }
     }
   },
-  "backupContentsArtists": "{count, plural, =1{1 favorite artist} other{{count} favorite artists}}",
+  "backupContentsArtists": "{count, plural, =1{1 位喜愛的藝人} other{{count} 位喜愛的藝人}}",
   "@backupContentsArtists": {
     "description": "Backup contents row for favorite artists count",
     "placeholders": {
@@ -1505,7 +1505,7 @@
       }
     }
   },
-  "snackbarRemovedTracksFromLoved": "Removed {count} tracks from Loved",
+  "snackbarRemovedTracksFromLoved": "已從喜愛中移除 {count} 首曲目",
   "@snackbarRemovedTracksFromLoved": {
     "description": "Snackbar after removing multiple tracks from Loved folder",
     "placeholders": {
@@ -1514,7 +1514,7 @@
       }
     }
   },
-  "snackbarAddedTracksToLoved": "Added {count} tracks to Loved",
+  "snackbarAddedTracksToLoved": "已將 {count} 首曲目加入喜愛",
   "@snackbarAddedTracksToLoved": {
     "description": "Snackbar after adding multiple tracks to Loved folder",
     "placeholders": {
@@ -1523,15 +1523,15 @@
       }
     }
   },
-  "homeGoToAlbum": "Go to Album",
+  "homeGoToAlbum": "前往專輯",
   "@homeGoToAlbum": {
     "description": "Context menu item to navigate to the album page"
   },
-  "snackbarMetadataSaved": "Metadata saved successfully",
+  "snackbarMetadataSaved": "中繼資料已成功儲存",
   "@snackbarMetadataSaved": {
     "description": "Snackbar after successfully saving track metadata"
   },
-  "snackbarError": "Error: {error}",
+  "snackbarError": "錯誤：{error}",
   "@snackbarError": {
     "description": "Generic error snackbar with error detail",
     "placeholders": {
@@ -1540,47 +1540,47 @@
       }
     }
   },
-  "noTracksFoundForAlbum": "No tracks found for this album",
+  "noTracksFoundForAlbum": "找不到此專輯的曲目",
   "@noTracksFoundForAlbum": {
     "description": "Empty state message when an album has no tracks"
   },
-  "snackbarUnsupportedAudioFormat": "Unsupported audio format",
+  "snackbarUnsupportedAudioFormat": "不支援的音訊格式",
   "@snackbarUnsupportedAudioFormat": {
     "description": "Snackbar when the audio format is not supported for the requested operation"
   },
-  "cacheRefresh": "Refresh",
+  "cacheRefresh": "重新整理",
   "@cacheRefresh": {
     "description": "Tooltip for refresh button on cache management page"
   },
-  "editMetadataFieldTitle": "Title",
+  "editMetadataFieldTitle": "標題",
   "@editMetadataFieldTitle": {
     "description": "Chip label for title field in auto-fill selector"
   },
-  "editMetadataFieldArtist": "Artist",
+  "editMetadataFieldArtist": "藝人",
   "@editMetadataFieldArtist": {
     "description": "Chip label for artist field in auto-fill selector"
   },
-  "editMetadataFieldAlbum": "Album",
+  "editMetadataFieldAlbum": "專輯",
   "@editMetadataFieldAlbum": {
     "description": "Chip label for album field in auto-fill selector"
   },
-  "editMetadataFieldAlbumArtist": "Album Artist",
+  "editMetadataFieldAlbumArtist": "專輯藝人",
   "@editMetadataFieldAlbumArtist": {
     "description": "Chip label for album artist field in auto-fill selector"
   },
-  "editMetadataFieldDate": "Date",
+  "editMetadataFieldDate": "日期",
   "@editMetadataFieldDate": {
     "description": "Chip label for date field in auto-fill selector"
   },
-  "editMetadataFieldTrackNum": "Track #",
+  "editMetadataFieldTrackNum": "曲目編號",
   "@editMetadataFieldTrackNum": {
     "description": "Chip label for track number field in auto-fill selector"
   },
-  "editMetadataFieldDiscNum": "Disc #",
+  "editMetadataFieldDiscNum": "光碟編號",
   "@editMetadataFieldDiscNum": {
     "description": "Chip label for disc number field in auto-fill selector"
   },
-  "editMetadataFieldGenre": "Genre",
+  "editMetadataFieldGenre": "曲風",
   "@editMetadataFieldGenre": {
     "description": "Chip label for genre field in auto-fill selector"
   },
@@ -1588,23 +1588,23 @@
   "@editMetadataFieldIsrc": {
     "description": "Chip label for ISRC field in auto-fill selector"
   },
-  "editMetadataFieldLabel": "Label",
+  "editMetadataFieldLabel": "唱片公司",
   "@editMetadataFieldLabel": {
     "description": "Chip label for label field in auto-fill selector"
   },
-  "editMetadataFieldCopyright": "Copyright",
+  "editMetadataFieldCopyright": "版權",
   "@editMetadataFieldCopyright": {
     "description": "Chip label for copyright field in auto-fill selector"
   },
-  "editMetadataFieldCover": "Cover Art",
+  "editMetadataFieldCover": "封面",
   "@editMetadataFieldCover": {
     "description": "Chip label for cover art field in auto-fill selector"
   },
-  "queueFilteringIndicator": "Filtering...",
+  "queueFilteringIndicator": "篩選中…",
   "@queueFilteringIndicator": {
     "description": "Shown while filter results are being computed"
   },
-  "queueTrackCount": "{count, plural, =1{1 track} other{{count} tracks}}",
+  "queueTrackCount": "{count, plural, =1{1 首曲目} other{{count} 首曲目}}",
   "@queueTrackCount": {
     "description": "Track count label with plural support",
     "placeholders": {
@@ -1613,7 +1613,7 @@
       }
     }
   },
-  "queueAlbumCount": "{count, plural, =1{1 album} other{{count} albums}}",
+  "queueAlbumCount": "{count, plural, =1{1 張專輯} other{{count} 張專輯}}",
   "@queueAlbumCount": {
     "description": "Album count label with plural support",
     "placeholders": {
@@ -1626,7 +1626,7 @@
   "queueEmptyAlbumsSubtitle": "掃描音樂資料夾以加入專輯",
   "queueEmptySingles": "沒有本機單曲",
   "queueEmptySinglesSubtitle": "掃描到的單曲會顯示在這裡",
-  "queuePlaylistCount": "{count, plural, =1{1 playlist} other{{count} playlists}}",
+  "queuePlaylistCount": "{count, plural, =1{1 個播放清單} other{{count} 個播放清單}}",
   "@queuePlaylistCount": {
     "description": "Playlist count label with plural support",
     "placeholders": {
@@ -1635,77 +1635,77 @@
       }
     }
   },
-  "queueEmptyPlaylistsSubtitle": "Create a playlist to organize your tracks",
+  "queueEmptyPlaylistsSubtitle": "建立播放清單來整理你的曲目",
   "@queueEmptyPlaylistsSubtitle": {
     "description": "Empty state subtitle for the playlists library view"
   },
   "libraryEmpty": "沒有本機歌曲",
   "libraryEmptySubtitle": "掃描音樂資料夾以填入你的音樂庫",
-  "selectionAllPlaylistsSelected": "All playlists selected",
+  "selectionAllPlaylistsSelected": "已選取所有播放清單",
   "@selectionAllPlaylistsSelected": {
     "description": "Shown when all playlists are selected in selection mode"
   },
-  "selectionTapPlaylistsToSelect": "Tap playlists to select",
+  "selectionTapPlaylistsToSelect": "點選播放清單以選取",
   "@selectionTapPlaylistsToSelect": {
     "description": "Hint shown in playlist selection mode"
   },
-  "selectionSelectPlaylistsToDelete": "Select playlists to delete",
+  "selectionSelectPlaylistsToDelete": "選擇要刪除的播放清單",
   "@selectionSelectPlaylistsToDelete": {
     "description": "Hint shown when no playlists are selected for deletion"
   },
-  "audioAnalysisTitle": "Audio Quality Analysis",
+  "audioAnalysisTitle": "音訊品質分析",
   "@audioAnalysisTitle": {
     "description": "Title for audio analysis section"
   },
-  "audioAnalysisDescription": "Verify lossless quality with spectrum analysis",
+  "audioAnalysisDescription": "透過頻譜分析驗證無損品質",
   "@audioAnalysisDescription": {
     "description": "Description for audio analysis tap-to-analyze prompt"
   },
-  "audioAnalysisAnalyzing": "Analyzing audio...",
+  "audioAnalysisAnalyzing": "分析音訊中…",
   "@audioAnalysisAnalyzing": {
     "description": "Loading text while analyzing audio"
   },
-  "audioAnalysisSampleRate": "Sample Rate",
+  "audioAnalysisSampleRate": "取樣率",
   "@audioAnalysisSampleRate": {
     "description": "Sample rate metric label"
   },
-  "audioAnalysisCodec": "Codec",
+  "audioAnalysisCodec": "編解碼器",
   "@audioAnalysisCodec": {
     "description": "Audio codec metric label"
   },
-  "audioAnalysisContainer": "Container",
+  "audioAnalysisContainer": "容器",
   "@audioAnalysisContainer": {
     "description": "Audio container metric label"
   },
-  "audioAnalysisDecodedFormat": "Decoded Format",
+  "audioAnalysisDecodedFormat": "解碼後格式",
   "@audioAnalysisDecodedFormat": {
     "description": "Decoded sample format metric label"
   },
-  "audioAnalysisBitDepth": "Bit Depth",
+  "audioAnalysisBitDepth": "位元深度",
   "@audioAnalysisBitDepth": {
     "description": "Bit depth metric label"
   },
-  "audioAnalysisChannels": "Channels",
+  "audioAnalysisChannels": "聲道",
   "@audioAnalysisChannels": {
     "description": "Channels metric label"
   },
-  "audioAnalysisDuration": "Duration",
+  "audioAnalysisDuration": "長度",
   "@audioAnalysisDuration": {
     "description": "Duration metric label"
   },
-  "audioAnalysisNyquist": "Nyquist",
+  "audioAnalysisNyquist": "奈奎斯特",
   "@audioAnalysisNyquist": {
     "description": "Nyquist frequency metric label"
   },
-  "audioAnalysisFileSize": "Size",
+  "audioAnalysisFileSize": "大小",
   "@audioAnalysisFileSize": {
     "description": "File size metric label"
   },
-  "audioAnalysisDynamicRange": "Dynamic Range",
+  "audioAnalysisDynamicRange": "動態範圍",
   "@audioAnalysisDynamicRange": {
     "description": "Dynamic range metric label"
   },
-  "audioAnalysisPeak": "Peak",
+  "audioAnalysisPeak": "峰值",
   "@audioAnalysisPeak": {
     "description": "Peak amplitude metric label"
   },
@@ -1717,58 +1717,58 @@
   "@audioAnalysisLufs": {
     "description": "Integrated loudness metric label"
   },
-  "audioAnalysisTruePeak": "True Peak",
+  "audioAnalysisTruePeak": "真峰值",
   "@audioAnalysisTruePeak": {
     "description": "True peak metric label"
   },
-  "audioAnalysisClipping": "Clipping",
+  "audioAnalysisClipping": "削波",
   "@audioAnalysisClipping": {
     "description": "Clipping metric label"
   },
-  "audioAnalysisNoClipping": "No clipping",
+  "audioAnalysisNoClipping": "無削波",
   "@audioAnalysisNoClipping": {
     "description": "Displayed when no clipped samples were detected"
   },
-  "audioAnalysisSpectralCutoff": "Spectral Cutoff",
+  "audioAnalysisSpectralCutoff": "頻譜截止",
   "@audioAnalysisSpectralCutoff": {
     "description": "Estimated spectral cutoff metric label"
   },
-  "audioAnalysisCutoffNotDetected": "Not detected",
+  "audioAnalysisCutoffNotDetected": "未偵測到",
   "@audioAnalysisCutoffNotDetected": {
     "description": "Displayed when no reliable broadband spectral cutoff can be detected"
   },
-  "audioAnalysisChannelStats": "Per-channel Stats",
+  "audioAnalysisChannelStats": "各聲道統計",
   "@audioAnalysisChannelStats": {
     "description": "Per-channel audio analysis section label"
   },
-  "audioAnalysisSamples": "Samples",
+  "audioAnalysisSamples": "取樣數",
   "@audioAnalysisSamples": {
     "description": "Total samples metric label"
   },
-  "audioAnalysisRescan": "Re-analyze",
+  "audioAnalysisRescan": "重新分析",
   "@audioAnalysisRescan": {
     "description": "Tooltip/label for the button that re-runs the audio analysis, discarding cached results"
   },
   "audioAnalysisSaveSpectrogram": "儲存頻譜圖",
   "audioAnalysisSpectrogramSaved": "頻譜圖已儲存至 {fileName}",
   "audioAnalysisSpectrogramSaveFailed": "無法儲存頻譜圖",
-  "audioAnalysisRescanning": "Re-analyzing audio...",
+  "audioAnalysisRescanning": "重新分析音訊中…",
   "@audioAnalysisRescanning": {
     "description": "Loading text while audio is being re-analyzed after an explicit refresh"
   },
-  "metadataSaveFailedFfmpeg": "Failed to save metadata via FFmpeg",
+  "metadataSaveFailedFfmpeg": "透過 FFmpeg 儲存中繼資料失敗",
   "@metadataSaveFailedFfmpeg": {
     "description": "Snackbar error when FFmpeg fails to write metadata"
   },
-  "metadataSaveFailedStorage": "Failed to write metadata back to storage",
+  "metadataSaveFailedStorage": "無法將中繼資料寫回儲存空間",
   "@metadataSaveFailedStorage": {
     "description": "Snackbar error when writing metadata file back to storage fails"
   },
-  "notifScanningLibrary": "Scanning local library",
+  "notifScanningLibrary": "正在掃描本機音樂庫",
   "@notifScanningLibrary": {
     "description": "Notification title while scanning local library"
   },
-  "notifLibraryScanProgressWithTotal": "{scanned}/{total} files • {percentage}%",
+  "notifLibraryScanProgressWithTotal": "{scanned}/{total} 個檔案 • {percentage}%",
   "@notifLibraryScanProgressWithTotal": {
     "description": "Notification body for library scan progress when total is known",
     "placeholders": {
@@ -1783,7 +1783,7 @@
       }
     }
   },
-  "notifLibraryScanProgressNoTotal": "{scanned} files scanned",
+  "notifLibraryScanProgressNoTotal": "已掃描 {scanned} 個檔案",
   "@notifLibraryScanProgressNoTotal": {
     "description": "Notification body for library scan progress when total is unknown",
     "placeholders": {
@@ -1792,11 +1792,11 @@
       }
     }
   },
-  "notifLibraryScanComplete": "Library scan complete",
+  "notifLibraryScanComplete": "音樂庫掃描完成",
   "@notifLibraryScanComplete": {
     "description": "Notification title when library scan finishes"
   },
-  "notifLibraryScanCompleteBody": "{count} tracks indexed",
+  "notifLibraryScanCompleteBody": "已建立 {count} 首曲目的索引",
   "@notifLibraryScanCompleteBody": {
     "description": "Notification body for library scan complete - number of indexed tracks",
     "placeholders": {
@@ -1805,7 +1805,7 @@
       }
     }
   },
-  "notifLibraryScanErrors": "{count} errors",
+  "notifLibraryScanErrors": "{count} 個錯誤",
   "@notifLibraryScanErrors": {
     "description": "Library scan complete suffix - error count",
     "placeholders": {
@@ -1814,24 +1814,24 @@
       }
     }
   },
-  "notifLibraryScanFailed": "Library scan failed",
+  "notifLibraryScanFailed": "音樂庫掃描失敗",
   "@notifLibraryScanFailed": {
     "description": "Notification title when library scan fails"
   },
   "notifLibraryScanInterruptedBody": "上一次音樂庫掃描已中斷。請再次掃描資料夾以繼續。已索引的歌曲仍可使用。",
-  "notifLibraryScanCancelled": "Library scan cancelled",
+  "notifLibraryScanCancelled": "音樂庫掃描已取消",
   "@notifLibraryScanCancelled": {
     "description": "Notification title when library scan is cancelled by the user"
   },
-  "notifLibraryScanStopped": "Scan stopped before completion.",
+  "notifLibraryScanStopped": "掃描在完成前已停止。",
   "@notifLibraryScanStopped": {
     "description": "Notification body when library scan is cancelled"
   },
-  "notifLibraryScanPaused": "Library scan paused",
+  "notifLibraryScanPaused": "音樂庫掃描已暫停",
   "@notifLibraryScanPaused": {
     "description": "Notification title when the user pauses a library scan"
   },
-  "notifLibraryScanPausedBody": "{count} files scanned. Resume in Local Library settings to continue from here.",
+  "notifLibraryScanPausedBody": "已掃描 {count} 個檔案。請在本機音樂庫設定中繼續，從此處接續。",
   "@notifLibraryScanPausedBody": {
     "description": "Notification body for a paused library scan - files scanned so far",
     "placeholders": {
@@ -1848,63 +1848,63 @@
   "@tutorialSearchHint": {
     "description": "Placeholder shown in the tutorial search demo"
   },
-  "trackCoverNoEmbeddedArt": "No embedded album art found",
+  "trackCoverNoEmbeddedArt": "找不到內嵌的專輯封面",
   "@trackCoverNoEmbeddedArt": {
     "description": "Message shown when a track file has no embedded cover art"
   },
-  "trackCoverReplace": "Replace Cover",
+  "trackCoverReplace": "取代封面",
   "@trackCoverReplace": {
     "description": "Button label for replacing selected cover art"
   },
-  "trackCoverPick": "Pick Cover",
+  "trackCoverPick": "選擇封面",
   "@trackCoverPick": {
     "description": "Button label for selecting cover art"
   },
-  "trackCoverClearSelected": "Clear selected cover",
+  "trackCoverClearSelected": "清除所選封面",
   "@trackCoverClearSelected": {
     "description": "Tooltip for clearing the newly selected cover art"
   },
-  "trackCoverCurrent": "Current cover",
+  "trackCoverCurrent": "目前的封面",
   "@trackCoverCurrent": {
     "description": "Label for the currently embedded cover preview"
   },
-  "trackCoverSelected": "Selected cover",
+  "trackCoverSelected": "所選封面",
   "@trackCoverSelected": {
     "description": "Label for the newly selected cover preview"
   },
-  "trackCoverReplaceNotice": "The selected cover will replace the current embedded cover when you tap Save.",
+  "trackCoverReplaceNotice": "點選「儲存」後，所選封面將取代目前內嵌的封面。",
   "@trackCoverReplaceNotice": {
     "description": "Notice shown when a new cover has been selected but not saved yet"
   },
-  "nowPlayingRepeatOff": "Repeat off",
+  "nowPlayingRepeatOff": "關閉重複",
   "@nowPlayingRepeatOff": {
     "description": "Repeat toggle tooltip when repeat is disabled"
   },
-  "nowPlayingRepeatAll": "Repeat all",
+  "nowPlayingRepeatAll": "全部重複",
   "@nowPlayingRepeatAll": {
     "description": "Repeat toggle tooltip when the whole queue repeats"
   },
-  "nowPlayingRepeatOne": "Repeat one",
+  "nowPlayingRepeatOne": "單曲重複",
   "@nowPlayingRepeatOne": {
     "description": "Repeat toggle tooltip when the current track repeats"
   },
-  "logAutoScrollOn": "Auto-scroll ON",
+  "logAutoScrollOn": "自動捲動：開",
   "@logAutoScrollOn": {
     "description": "Tooltip when auto-scroll is enabled on the log screen"
   },
-  "logAutoScrollOff": "Auto-scroll OFF",
+  "logAutoScrollOff": "自動捲動：關",
   "@logAutoScrollOff": {
     "description": "Tooltip when auto-scroll is disabled on the log screen"
   },
-  "logCopyLogs": "Copy logs",
+  "logCopyLogs": "複製記錄",
   "@logCopyLogs": {
     "description": "Tooltip for copying logs"
   },
-  "logClearSearch": "Clear search",
+  "logClearSearch": "清除搜尋",
   "@logClearSearch": {
     "description": "Tooltip for clearing the log search field"
   },
-  "clickableInformationUnavailable": "{type} information not available",
+  "clickableInformationUnavailable": "無法使用 {type} 資訊",
   "@clickableInformationUnavailable": {
     "description": "Snackbar shown when clickable metadata cannot open a destination",
     "placeholders": {
@@ -1913,7 +1913,7 @@
       }
     }
   },
-  "a11yOpenAlbumByArtistTrackCount": "Open album {albumName} by {artistName}, {trackCount} tracks",
+  "a11yOpenAlbumByArtistTrackCount": "開啟 {artistName} 的專輯 {albumName}，共 {trackCount} 首曲目",
   "@a11yOpenAlbumByArtistTrackCount": {
     "description": "Accessibility label for opening an album item with track count",
     "placeholders": {
@@ -1928,88 +1928,88 @@
       }
     }
   },
-  "settingsLyrics": "Lyrics",
+  "settingsLyrics": "歌詞",
   "@settingsLyrics": {
     "description": "Settings menu item - lyrics settings"
   },
   "settingsLyricsSubtitle": "本機歌詞、儲存模式與文字大小",
-  "editMetadataFieldDateHint": "YYYY-MM-DD or YYYY",
+  "editMetadataFieldDateHint": "YYYY-MM-DD 或 YYYY",
   "@editMetadataFieldDateHint": {
     "description": "Hint text for the edit metadata date field"
   },
-  "editMetadataFieldTrackTotal": "Track Total",
+  "editMetadataFieldTrackTotal": "曲目總數",
   "@editMetadataFieldTrackTotal": {
     "description": "Label for total tracks field in the edit metadata sheet"
   },
-  "editMetadataFieldDiscTotal": "Disc Total",
+  "editMetadataFieldDiscTotal": "光碟總數",
   "@editMetadataFieldDiscTotal": {
     "description": "Label for total discs field in the edit metadata sheet"
   },
-  "editMetadataFieldComposer": "Composer",
+  "editMetadataFieldComposer": "作曲者",
   "@editMetadataFieldComposer": {
     "description": "Label for composer field in the edit metadata sheet"
   },
-  "editMetadataFieldComment": "Comment",
+  "editMetadataFieldComment": "註解",
   "@editMetadataFieldComment": {
     "description": "Label for comment field in the edit metadata sheet"
   },
-  "trackAlbumType": "Release Type",
+  "trackAlbumType": "發行類型",
   "@trackAlbumType": {
     "description": "Label for an album or release type metadata value"
   },
-  "editMetadataFieldAlbumTypeHint": "Album, single, EP, compilation...",
+  "editMetadataFieldAlbumTypeHint": "專輯、單曲、EP、合輯…",
   "@editMetadataFieldAlbumTypeHint": {
     "description": "Hint for the release type metadata field"
   },
-  "editMetadataFieldExplicit": "Explicit",
+  "editMetadataFieldExplicit": "露骨內容",
   "@editMetadataFieldExplicit": {
     "description": "Label for the explicit content metadata field"
   },
-  "editMetadataFieldExplicitHint": "Mark this track as containing explicit content",
+  "editMetadataFieldExplicitHint": "標示此曲目包含露骨內容",
   "@editMetadataFieldExplicitHint": {
     "description": "Description for the explicit content metadata switch"
   },
-  "metadataExplicitValue": "Explicit",
+  "metadataExplicitValue": "露骨內容",
   "@metadataExplicitValue": {
     "description": "Displayed value when a track is marked explicit"
   },
-  "editMetadataFieldUpc": "UPC / Barcode",
+  "editMetadataFieldUpc": "UPC / 條碼",
   "@editMetadataFieldUpc": {
     "description": "Label for the release barcode metadata field"
   },
-  "editMetadataFieldUpcHint": "Numeric UPC, EAN, or GTIN",
+  "editMetadataFieldUpcHint": "數字 UPC、EAN 或 GTIN",
   "@editMetadataFieldUpcHint": {
     "description": "Hint for the release barcode metadata field"
   },
-  "editMetadataAdvanced": "Advanced",
+  "editMetadataAdvanced": "進階",
   "@editMetadataAdvanced": {
     "description": "Expandable section label for advanced metadata fields"
   },
-  "libraryFilterMetadataMissingTrackNumber": "Missing track number",
+  "libraryFilterMetadataMissingTrackNumber": "缺少曲目編號",
   "@libraryFilterMetadataMissingTrackNumber": {
     "description": "Filter option - items missing track number"
   },
-  "libraryFilterMetadataMissingDiscNumber": "Missing disc number",
+  "libraryFilterMetadataMissingDiscNumber": "缺少光碟編號",
   "@libraryFilterMetadataMissingDiscNumber": {
     "description": "Filter option - items missing disc number"
   },
-  "libraryFilterMetadataMissingArtist": "Missing artist",
+  "libraryFilterMetadataMissingArtist": "缺少藝人",
   "@libraryFilterMetadataMissingArtist": {
     "description": "Filter option - items missing artist"
   },
-  "libraryFilterMetadataIncorrectIsrcFormat": "Incorrect ISRC format",
+  "libraryFilterMetadataIncorrectIsrcFormat": "ISRC 格式不正確",
   "@libraryFilterMetadataIncorrectIsrcFormat": {
     "description": "Filter option - items with an invalid ISRC format"
   },
-  "libraryFilterMetadataMissingIsrc": "Missing ISRC",
+  "libraryFilterMetadataMissingIsrc": "缺少 ISRC",
   "@libraryFilterMetadataMissingIsrc": {
     "description": "Filter option - items without any ISRC tag"
   },
-  "libraryFilterMetadataMissingLabel": "Missing label",
+  "libraryFilterMetadataMissingLabel": "缺少唱片公司",
   "@libraryFilterMetadataMissingLabel": {
     "description": "Filter option - items missing record label"
   },
-  "collectionDeletePlaylistsMessage": "Delete {count} {count, plural, =1{playlist} other{playlists}}?",
+  "collectionDeletePlaylistsMessage": "要刪除 {count} 個播放清單嗎？",
   "@collectionDeletePlaylistsMessage": {
     "description": "Confirmation message for deleting selected playlists",
     "placeholders": {
@@ -2018,7 +2018,7 @@
       }
     }
   },
-  "collectionPlaylistsDeleted": "{count} {count, plural, =1{playlist} other{playlists}} deleted",
+  "collectionPlaylistsDeleted": "已刪除 {count} 個播放清單",
   "@collectionPlaylistsDeleted": {
     "description": "Snackbar after deleting selected playlists",
     "placeholders": {
@@ -2027,7 +2027,7 @@
       }
     }
   },
-  "collectionAddedTracksToPlaylist": "Added {count} {count, plural, =1{track} other{tracks}} to {playlistName}",
+  "collectionAddedTracksToPlaylist": "已將 {count} 首曲目加入 {playlistName}",
   "@collectionAddedTracksToPlaylist": {
     "description": "Snackbar after adding multiple tracks to a playlist",
     "placeholders": {
@@ -2039,7 +2039,7 @@
       }
     }
   },
-  "collectionAddedTracksToPlaylistWithExisting": "Added {count} {count, plural, =1{track} other{tracks}} to {playlistName} ({alreadyCount} already in playlist)",
+  "collectionAddedTracksToPlaylistWithExisting": "已將 {count} 首曲目加入 {playlistName}（其中 {alreadyCount} 首已在播放清單中）",
   "@collectionAddedTracksToPlaylistWithExisting": {
     "description": "Snackbar after adding multiple tracks to a playlist when some were already present",
     "placeholders": {
@@ -2054,7 +2054,7 @@
       }
     }
   },
-  "itemCount": "{count} {count, plural, =1{item} other{items}}",
+  "itemCount": "{count} 項",
   "@itemCount": {
     "description": "Generic item count label",
     "placeholders": {
@@ -2063,7 +2063,7 @@
       }
     }
   },
-  "selectionDeleteTracksCount": "Delete {count} {count, plural, =1{track} other{tracks}}",
+  "selectionDeleteTracksCount": "刪除 {count} 首曲目",
   "@selectionDeleteTracksCount": {
     "description": "Button label for deleting selected tracks",
     "placeholders": {
@@ -2072,15 +2072,15 @@
       }
     }
   },
-  "a11ySelectTrack": "Select track",
+  "a11ySelectTrack": "選取曲目",
   "@a11ySelectTrack": {
     "description": "Accessibility label for selecting a track"
   },
-  "a11yDeselectTrack": "Deselect track",
+  "a11yDeselectTrack": "取消選取曲目",
   "@a11yDeselectTrack": {
     "description": "Accessibility label for deselecting a track"
   },
-  "a11yPlayTrackByArtist": "Play {trackName} by {artistName}",
+  "a11yPlayTrackByArtist": "播放 {artistName} 的 {trackName}",
   "@a11yPlayTrackByArtist": {
     "description": "Accessibility label for playing a local library track",
     "placeholders": {
@@ -2102,11 +2102,11 @@
   "a11yPlaybackPosition": "播放位置",
   "a11ySavingTrackDetails": "正在儲存歌曲詳細資訊",
   "cacheClearFor": "清除 {target}",
-  "logIssueSummary": "Issue Summary",
+  "logIssueSummary": "問題摘要",
   "@logIssueSummary": {
     "description": "Header for log issue analysis summary"
   },
-  "logTotalErrors": "Total errors: {count}",
+  "logTotalErrors": "錯誤總數：{count}",
   "@logTotalErrors": {
     "description": "Total error count in log issue analysis",
     "placeholders": {
@@ -2115,52 +2115,52 @@
       }
     }
   },
-  "libraryScanCancelled": "Scan cancelled",
+  "libraryScanCancelled": "掃描已取消",
   "@libraryScanCancelled": {
     "description": "Library scan status when a scan was cancelled"
   },
-  "libraryScanCancelledSubtitle": "You can retry the scan when ready.",
+  "libraryScanCancelledSubtitle": "準備好後可重新掃描。",
   "@libraryScanCancelledSubtitle": {
     "description": "Library scan status subtitle after cancellation"
   },
-  "audioAnalysisStereo": "Stereo",
+  "audioAnalysisStereo": "立體聲",
   "@audioAnalysisStereo": {
     "description": "Audio channel layout label - stereo"
   },
-  "audioAnalysisMono": "Mono",
+  "audioAnalysisMono": "單聲道",
   "@audioAnalysisMono": {
     "description": "Audio channel layout label - mono"
   },
-  "unknownArtist": "Unknown Artist",
+  "unknownArtist": "未知藝人",
   "@unknownArtist": {
     "description": "Fallback artist name when metadata is missing"
   },
-  "permissionStorage": "Storage",
+  "permissionStorage": "儲存空間",
   "@permissionStorage": {
     "description": "Storage permission type label"
   },
-  "permissionNotification": "Notification",
+  "permissionNotification": "通知",
   "@permissionNotification": {
     "description": "Notification permission type label"
   },
-  "libraryPlayback": "Playback",
+  "libraryPlayback": "播放",
   "@libraryPlayback": {
     "description": "Section header for playback settings in library settings"
   },
-  "nowPlayingNothingPlaying": "Nothing is playing",
+  "nowPlayingNothingPlaying": "目前沒有播放內容",
   "@nowPlayingNothingPlaying": {
     "description": "Empty state when no track is currently playing"
   },
-  "nowPlayingMinimize": "Minimize",
+  "nowPlayingMinimize": "最小化",
   "@nowPlayingMinimize": {
     "description": "Tooltip for minimizing the now playing screen"
   },
-  "nowPlayingUpNext": "Up next",
+  "nowPlayingUpNext": "接下來",
   "@nowPlayingUpNext": {
     "description": "Title for the playback queue sheet"
   },
-  "nowPlayingAudioOutput": "Audio Output",
-  "nowPlayingWrittenBy": "Written by: {writers}",
+  "nowPlayingAudioOutput": "音訊輸出",
+  "nowPlayingWrittenBy": "作詞／作曲：{writers}",
   "@nowPlayingWrittenBy": {
     "placeholders": {
       "writers": {
@@ -2168,7 +2168,7 @@
       }
     }
   },
-  "nowPlayingLyricsSource": "Lyrics: {provider}",
+  "nowPlayingLyricsSource": "歌詞：{provider}",
   "@nowPlayingLyricsSource": {
     "placeholders": {
       "provider": {
@@ -2176,24 +2176,24 @@
       }
     }
   },
-  "nowPlayingAudioOutputUnavailable": "Unable to open audio output settings.",
-  "nowPlayingPreviousTrack": "Previous track",
+  "nowPlayingAudioOutputUnavailable": "無法開啟音訊輸出設定。",
+  "nowPlayingPreviousTrack": "上一首",
   "@nowPlayingPreviousTrack": {
     "description": "Tooltip for the previous-track playback control"
   },
-  "nowPlayingNextTrack": "Next track",
+  "nowPlayingNextTrack": "下一首",
   "@nowPlayingNextTrack": {
     "description": "Tooltip for the next-track playback control"
   },
-  "nowPlayingDetails": "Details",
+  "nowPlayingDetails": "詳細資訊",
   "@nowPlayingDetails": {
     "description": "Menu item and section title for track metadata details"
   },
-  "nowPlayingSleepTimer": "Sleep timer",
+  "nowPlayingSleepTimer": "睡眠計時器",
   "@nowPlayingSleepTimer": {
     "description": "Menu item and sheet title for the playback sleep timer"
   },
-  "nowPlayingSleepTimerActive": "Ends at {time}",
+  "nowPlayingSleepTimerActive": "將於 {time} 結束",
   "@nowPlayingSleepTimerActive": {
     "description": "Active sleep timer deadline shown in the player menu",
     "placeholders": {
@@ -2202,7 +2202,7 @@
       }
     }
   },
-  "nowPlayingSleepTimerMinutes": "{minutes, plural, =1{1 minute} other{{minutes} minutes}}",
+  "nowPlayingSleepTimerMinutes": "{minutes, plural, =1{1 分鐘} other{{minutes} 分鐘}}",
   "@nowPlayingSleepTimerMinutes": {
     "description": "Duration choice for the playback sleep timer",
     "placeholders": {
@@ -2211,11 +2211,11 @@
       }
     }
   },
-  "nowPlayingSleepTimerOff": "Turn off sleep timer",
+  "nowPlayingSleepTimerOff": "關閉睡眠計時器",
   "@nowPlayingSleepTimerOff": {
     "description": "Action to cancel the active playback sleep timer"
   },
-  "nowPlayingSleepTimerSet": "Sleep timer set for {duration}",
+  "nowPlayingSleepTimerSet": "已將睡眠計時器設為 {duration}",
   "@nowPlayingSleepTimerSet": {
     "description": "Confirmation after setting the playback sleep timer",
     "placeholders": {
@@ -2224,51 +2224,51 @@
       }
     }
   },
-  "nowPlayingSleepTimerCancelled": "Sleep timer turned off",
+  "nowPlayingSleepTimerCancelled": "已關閉睡眠計時器",
   "@nowPlayingSleepTimerCancelled": {
     "description": "Confirmation after cancelling the playback sleep timer"
   },
-  "nowPlayingTabPlayer": "Player",
+  "nowPlayingTabPlayer": "播放器",
   "@nowPlayingTabPlayer": {
     "description": "Tab label for the player view"
   },
-  "nowPlayingTabLyrics": "Lyrics",
+  "nowPlayingTabLyrics": "歌詞",
   "@nowPlayingTabLyrics": {
     "description": "Tab label for the lyrics view"
   },
-  "nowPlayingNoLyrics": "No lyrics in this file",
+  "nowPlayingNoLyrics": "此檔案沒有歌詞",
   "@nowPlayingNoLyrics": {
     "description": "Empty state when the playing file has no embedded lyrics"
   },
-  "nowPlayingInstrumental": "Instrumental",
+  "nowPlayingInstrumental": "純音樂",
   "@nowPlayingInstrumental": {
     "description": "Accessibility label for the three-dot countdown during an instrumental break before lyrics resume"
   },
-  "nowPlayingLyricsLanguageOptions": "Lyrics language options",
+  "nowPlayingLyricsLanguageOptions": "歌詞語言選項",
   "@nowPlayingLyricsLanguageOptions": {
     "description": "Tooltip for the player menu that shows or hides existing lyric pronunciation and translation"
   },
-  "nowPlayingHidePronunciation": "Hide Pronunciation",
-  "nowPlayingShowPronunciation": "Show Pronunciation",
-  "nowPlayingHideTranslation": "Hide Translation",
-  "nowPlayingShowTranslation": "Show Translation",
-  "nowPlayingShuffleOn": "Shuffle on",
+  "nowPlayingHidePronunciation": "隱藏發音",
+  "nowPlayingShowPronunciation": "顯示發音",
+  "nowPlayingHideTranslation": "隱藏翻譯",
+  "nowPlayingShowTranslation": "顯示翻譯",
+  "nowPlayingShuffleOn": "隨機播放：開",
   "@nowPlayingShuffleOn": {
     "description": "Tooltip when shuffle mode is enabled"
   },
-  "nowPlayingPlayInOrder": "Play in order",
+  "nowPlayingPlayInOrder": "依序播放",
   "@nowPlayingPlayInOrder": {
     "description": "Tooltip when shuffle mode is disabled"
   },
-  "nowPlayingQueueEmpty": "Queue is empty",
+  "nowPlayingQueueEmpty": "播放佇列是空的",
   "@nowPlayingQueueEmpty": {
     "description": "Empty state when the playback queue has no items"
   },
-  "nowPlayingNoMetadata": "No metadata available",
+  "nowPlayingNoMetadata": "沒有可用的中繼資料",
   "@nowPlayingNoMetadata": {
     "description": "Empty state when track metadata cannot be loaded"
   },
-  "selectionDeletePlaylistsCount": "Delete {count} {count, plural, =1{playlist} other{playlists}}",
+  "selectionDeletePlaylistsCount": "刪除 {count} 個播放清單",
   "@selectionDeletePlaylistsCount": {
     "description": "Button label for deleting multiple selected playlists",
     "placeholders": {
@@ -2277,27 +2277,27 @@
       }
     }
   },
-  "actionShuffle": "Shuffle",
+  "actionShuffle": "隨機播放",
   "@actionShuffle": {
     "description": "Tooltip for shuffle playback action"
   },
-  "unknownTitle": "Unknown title",
+  "unknownTitle": "未知標題",
   "@unknownTitle": {
     "description": "Fallback track title when metadata is missing"
   },
-  "trackPlayNext": "Play next",
+  "trackPlayNext": "接著播放",
   "@trackPlayNext": {
     "description": "Menu action to play a track as the next queue item"
   },
-  "trackAddToQueue": "Add to queue",
+  "trackAddToQueue": "加入佇列",
   "@trackAddToQueue": {
     "description": "Menu action to add a track to the playback queue"
   },
-  "settingsSearchHint": "Search settings",
+  "settingsSearchHint": "搜尋設定",
   "@settingsSearchHint": {
     "description": "Placeholder of the search field on the Settings tab"
   },
-  "settingsSearchNoResults": "No settings match \"{query}\"",
+  "settingsSearchNoResults": "沒有符合「{query}」的設定",
   "@settingsSearchNoResults": {
     "description": "Shown when a Settings search returns nothing",
     "placeholders": {
@@ -2306,11 +2306,11 @@
       }
     }
   },
-  "libraryFilterMetadataMissingLyrics": "Missing lyrics",
+  "libraryFilterMetadataMissingLyrics": "缺少歌詞",
   "@libraryFilterMetadataMissingLyrics": {
     "description": "Filter option for tracks without embedded or sidecar lyrics"
   },
-  "libraryFilterMetadataMissingReplayGain": "Missing ReplayGain",
+  "libraryFilterMetadataMissingReplayGain": "缺少 ReplayGain",
   "@libraryFilterMetadataMissingReplayGain": {
     "description": "Filter option for scanned tracks without ReplayGain gain tags"
   },
@@ -2318,39 +2318,39 @@
   "libraryFilterIncompleteAlbums": "不完整的專輯",
   "libraryAlbumCompletenessUnknown": "專輯完整度未知",
   "libraryAlbumMissingTracks": "{present}/{expected} 首歌曲 · 缺少 {missing} 首",
-  "appSearch": "Search",
-  "appContinuePlaying": "Continue Playing",
-  "appFavorite": "Favorite",
+  "appSearch": "搜尋",
+  "appContinuePlaying": "繼續播放",
+  "appFavorite": "喜愛",
   "@appFavorite": {
     "description": "Compact context menu action that adds a track to Loved"
   },
-  "appGoToArtist": "Go to Artist",
-  "appFavorited": "Favorited",
+  "appGoToArtist": "前往藝人",
+  "appFavorited": "已加入喜愛",
   "@appFavorited": {
     "description": "Selected state of the compact favorite action"
   },
-  "autoMixDescription": "Blend songs with beat matching and pitch-preserving tempo adjustment. Uses crossfade when beats cannot be matched.",
-  "autoMixOn": "AutoMix on",
-  "autoMixOff": "AutoMix off",
-  "autoplayOn": "Autoplay on",
-  "autoplayOff": "Autoplay off",
-  "autoplayFromLibrary": "Autoplay from your Library",
+  "autoMixDescription": "以節拍對齊與保持音高的速度調整來銜接歌曲。無法對齊節拍時會使用交叉淡化。",
+  "autoMixOn": "AutoMix：開",
+  "autoMixOff": "AutoMix：關",
+  "autoplayOn": "自動播放：開",
+  "autoplayOff": "自動播放：關",
+  "autoplayFromLibrary": "從你的音樂庫自動播放",
   "autoplayDescription": "佇列結束時，接續播放音樂庫中的相關歌曲。",
   "autoplayPersonalization": "個人化自動播放",
   "autoplayPersonalizationDescription": "在此裝置上私下學習你聆聽與跳過的歌曲。關閉後會停止學習，並恢復一般自動播放。",
   "autoplayResetLearning": "重設推薦學習",
-  "profileTitle": "Profile",
-  "profileSetUp": "Set up your profile",
-  "profileEdit": "Edit name and photo",
-  "backupIncludesProfile": "Includes your profile name and photo",
-  "profileName": "Name",
-  "profileNameHint": "Your name",
-  "profileChangePhoto": "Choose photo",
-  "profileRemovePhoto": "Remove photo",
-  "profilePhotoError": "Choose a valid image smaller than 20 MB.",
-  "profileSaveError": "Could not save your profile. Please try again.",
+  "profileTitle": "個人檔案",
+  "profileSetUp": "設定你的個人檔案",
+  "profileEdit": "編輯名稱與照片",
+  "backupIncludesProfile": "包含你的個人檔案名稱與照片",
+  "profileName": "名稱",
+  "profileNameHint": "你的名稱",
+  "profileChangePhoto": "選擇照片",
+  "profileRemovePhoto": "移除照片",
+  "profilePhotoError": "請選擇小於 20 MB 的有效圖片。",
+  "profileSaveError": "無法儲存你的個人檔案。請再試一次。",
   "motionArtwork": "動態封面",
-  "listeningStats": "聆聽統計",
+  "listeningStats": "洞察",
   "listeningStatsDescription": "從現在開始僅儲存在此裝置上。只記錄內建播放器的播放；暫停、緩衝與拖曳不計入聆聽時間。播放超過 30 秒才會計為一次播放。",
   "listeningStatsEmpty": "使用內建播放器播放音樂，即可開始你的聆聽回顧。先前的聆聽紀錄無法復原。",
   "listeningStatsDays": "{days} 天",
@@ -2408,7 +2408,7 @@
   "tutorialPlaybackTip1": "使用內建播放器播放或暫停音樂",
   "tutorialPlaybackTip2": "將本機歌曲加入佇列與播放清單",
   "tutorialPlaybackTip3": "聆聽時讀取內嵌或附屬的歌詞",
-  "cueSplitButton": "Split into Tracks",
+  "cueSplitButton": "拆分為曲目",
   "@cueSplitButton": {
     "description": "Button text to start CUE splitting"
   },
@@ -2424,15 +2424,15 @@
       }
     }
   },
-  "cueSplitConfirmTitle": "Split CUE Album",
+  "cueSplitConfirmTitle": "拆分 CUE 專輯",
   "@cueSplitConfirmTitle": {
     "description": "CUE split confirmation dialog title"
   },
-  "cueSplitFailed": "CUE split failed",
+  "cueSplitFailed": "CUE 拆分失敗",
   "@cueSplitFailed": {
     "description": "Snackbar when CUE split fails"
   },
-  "cueSplitSplitting": "Splitting CUE sheet... ({current}/{total})",
+  "cueSplitSplitting": "正在拆分 CUE 清單…（{current}/{total}）",
   "@cueSplitSplitting": {
     "description": "Snackbar while splitting CUE",
     "placeholders": {
@@ -2444,7 +2444,7 @@
       }
     }
   },
-  "cueSplitSuccess": "Split into {count} tracks successfully",
+  "cueSplitSuccess": "已成功拆分為 {count} 首曲目",
   "@cueSplitSuccess": {
     "description": "Snackbar after successful CUE split",
     "placeholders": {
@@ -2455,28 +2455,28 @@
   },
   "cueSplitPartialSuccess": "已分割為 {count} 首歌曲；{failed} 首無法建立",
   "cueSplitSavedOutsideLibrary": "歌曲已儲存在你的音樂庫之外。請在本機音樂庫下加入該資料夾以顯示它們。",
-  "cueSplitTitle": "Split CUE Sheet",
+  "cueSplitTitle": "拆分 CUE 清單",
   "@cueSplitTitle": {
     "description": "Title for CUE split bottom sheet"
   },
-  "snackbarAddedToQueueGeneric": "Added to queue",
+  "snackbarAddedToQueueGeneric": "已加入佇列",
   "@snackbarAddedToQueueGeneric": {
     "description": "Snackbar when a track is added to the playback queue without naming it"
   },
-  "snackbarPlayingNext": "Playing next",
+  "snackbarPlayingNext": "接著播放",
   "@snackbarPlayingNext": {
     "description": "Snackbar when a track is inserted as the next queue item"
   },
-  "trackCopyFilePath": "Copy file path",
+  "trackCopyFilePath": "複製檔案路徑",
   "@trackCopyFilePath": {
     "description": "Action - copy file path"
   },
-  "trackDeleteConfirmMessage": "This permanently deletes the local audio file and removes it from your library.",
-  "trackDeleteConfirmTitle": "Remove from device?",
+  "trackDeleteConfirmMessage": "這會永久刪除本機音訊檔案，並將其從你的音樂庫中移除。",
+  "trackDeleteConfirmTitle": "要從裝置移除嗎？",
   "@trackDeleteConfirmTitle": {
     "description": "Delete confirmation title"
   },
-  "trackRemoveFromDevice": "Remove from device",
+  "trackRemoveFromDevice": "從裝置移除",
   "@trackRemoveFromDevice": {
     "description": "Action - delete downloaded file"
   },
@@ -2669,7 +2669,7 @@
   "equalizerCustom": "自訂",
   "releaseTypeSingle": "單曲",
   "@@last_modified": "2026-04-28",
-  "updateLater": "Later",
+  "updateLater": "稍後",
   "@updateLater": {
     "description": "Update button - dismiss"
   },
@@ -2677,25 +2677,68 @@
   "optionsCheckUpdatesSubtitle": "當有新版本可用時通知",
   "optionsUpdateChannelPreview": "取得預覽版更新",
   "optionsUpdateChannelWarning": "預覽版本可能包含錯誤或未完成的功能",
-  "updateAvailable": "Update Available",
-  "updateStartingDownload": "Starting download...",
-  "updateDownloadFailed": "Download failed",
-  "updateFailedMessage": "Failed to download update",
-  "updateNewVersionReady": "A new version is ready",
-  "updateRequiredTitle": "Update required",
-  "updateRequiredNotice": "This version is {count} releases behind and is no longer supported. Update to keep using the app.",
-  "updateCurrent": "Current",
-  "updateNew": "New",
-  "updateDownloading": "Downloading...",
-  "updateWhatsNew": "What's New",
-  "updateDownloadInstall": "Download & Install",
-  "updateDontRemind": "Don't remind",
-  "updateViewRelease": "View Release",
-  "updateSeeReleaseNotes": "See release notes for details.",
-  "notifDownloadingUpdate": "Downloading Sistrum v{version}",
+  "updateAvailable": "有可用的更新",
+  "updateStartingDownload": "開始下載…",
+  "updateDownloadFailed": "下載失敗",
+  "updateFailedMessage": "下載更新失敗",
+  "updateNewVersionReady": "新版本已就緒",
+  "updateRequiredTitle": "需要更新",
+  "updateRequiredNotice": "此版本落後 {count} 個發行版本，已不再受支援。請更新以繼續使用應用程式。",
+  "updateCurrent": "目前",
+  "updateNew": "新版本",
+  "updateDownloading": "下載中…",
+  "updateWhatsNew": "新功能",
+  "updateDownloadInstall": "下載並安裝",
+  "updateDontRemind": "不再提醒",
+  "updateViewRelease": "檢視發行版本",
+  "updateSeeReleaseNotes": "詳情請參閱發行說明。",
+  "notifDownloadingUpdate": "正在下載 Sistrum v{version}",
   "notifUpdateProgress": "{received} / {total} MB • {percentage}%",
-  "notifUpdateReady": "Update Ready",
-  "notifUpdateReadyBody": "Sistrum v{version} downloaded. Tap to install.",
-  "notifUpdateFailed": "Update Failed",
-  "notifUpdateFailedBody": "Could not download update. Try again later."
+  "notifUpdateReady": "更新已就緒",
+  "notifUpdateReadyBody": "已下載 Sistrum v{version}。點選即可安裝。",
+  "notifUpdateFailed": "更新失敗",
+  "notifUpdateFailedBody": "無法下載更新。請稍後再試。",
+  "metadataSeparatorsDescription": "選擇用於拆分資料庫中藝人和曲風名稱的分隔符號。保持在一起的名稱永遠不會被拆分。",
+  "tagSeparatorsArtists": "藝人",
+  "tagSeparatorsArtistsFields": "藝人、專輯藝人、作曲者",
+  "tagSeparatorsGenre": "曲風",
+  "tagSeparatorsAll": "全部",
+  "tagSeparatorsAdd": "新增分隔符號",
+  "tagSeparatorsAddHint": "分隔符號",
+  "tagSeparatorsDuplicate": "此分隔符號已在清單中。",
+  "tagSeparatorsRemoveTitle": "移除分隔符號？",
+  "tagSeparatorsRemoveMessage": "將從此區段移除。已儲存的標籤不會變更。",
+  "tagKeepTogether": "保持在一起",
+  "tagKeepTogetherDescription": "此處列出的名稱即使包含分隔符號也永遠不會被拆分。",
+  "tagKeepTogetherHint": "名稱，例如 Tyler, The Creator",
+  "tagKeepTogetherAdd": "新增名稱",
+  "tagKeepTogetherRemoveTooltip": "移除名稱",
+  "artistAppearsOn": "出現於",
+  "tagKeepTogetherDuplicate": "此名稱已在清單中。",
+  "setupChooseMusicFolder": "選擇音樂資料夾",
+  "setupLibraryFolderDescription": "選擇存放音樂的資料夾。Sistrum 透過受限的資料夾存取來讀取，因此不需要所有檔案的權限。",
+  "searchAlbumArtists": "專輯藝人",
+  "logFilterFull": "全部",
+  "tutorialGuideTitle": "開始使用",
+  "tutorialGuideDesc": "快速尋找、播放和整理本機音樂的小技巧。",
+  "backupUnsupportedVersion": "此備份由不同版本的 Sistrum 建立",
+  "backupReadFailed": "無法讀取備份檔案。請確認該檔案仍然可用",
+  "snackbarMetadataSavedIndexStale": "中繼資料已儲存，但無法重新整理資料庫",
+  "actionGoToComposer": "前往作曲者",
+  "autoplayResetLearningConfirmTitle": "重設推薦學習？",
+  "autoplayResetLearningConfirmMessage": "自動播放將忘記它從你的聆聽和略過行為中學到的內容。此操作無法復原。",
+  "autoplayResetLearningConfirm": "重設",
+  "motionArtworkSubtitle": "讓專輯封面和播放器封面緩慢移動",
+  "lyricsAboveSeekBar": "進度條上方顯示歌詞",
+  "lyricsAboveSeekBarSubtitle": "在播放器的進度條上方顯示正在演唱的歌詞行",
+  "updateDownloadIntegrityFailed": "下載的更新未通過驗證。請稍後再試。",
+  "updateDownloadNetworkFailed": "無法下載更新。請檢查網路連線後再試。",
+  "updateInstallFailed": "無法開啟更新安裝程式。",
+  "settingsUpdates": "更新",
+  "settingsUpdatesSubtitle": "檢查新版本",
+  "updateCheckNow": "立即檢查",
+  "updateChecking": "正在檢查…",
+  "updateUpToDate": "你已是最新版本",
+  "updateCheckFailed": "無法檢查更新",
+  "retry": "重試"
 }

@@ -49,7 +49,7 @@
   "appearanceGlassClear": "Effacer",
   "appearanceGlassClearPerformance": "Un verre très transparent peut consommer davantage et être moins fluide sur les anciens appareils. Réduisez la clarté si nécessaire.",
   "appearanceGlassQuality": "Qualité du verre",
-  "appearanceGlassQualityAuto": "Auto",
+  "appearanceGlassQualityAuto": "Automatique",
   "appearanceGlassQualityLite": "Léger",
   "appearanceGlassQualityFull": "Complet",
   "appearanceGlassQualityOff": "Désactivé",
@@ -506,7 +506,7 @@
   "@searchAlbums": {
     "description": "Search result category - albums"
   },
-  "searchPlaylists": "Playlists",
+  "searchPlaylists": "Listes de lecture",
   "@searchPlaylists": {
     "description": "Search result category - playlists"
   },
@@ -1271,7 +1271,7 @@
   "@collectionFavoriteArtists": {
     "description": "Custom folder for favorite artists"
   },
-  "collectionPlaylist": "Playlist",
+  "collectionPlaylist": "Liste de lecture",
   "@collectionPlaylist": {
     "description": "Single playlist label"
   },
@@ -1487,7 +1487,7 @@
       }
     }
   },
-  "backupContentsPlaylists": "{count, plural, =1{1 playlist} other{{count} playlists}}",
+  "backupContentsPlaylists": "{count, plural, =1{1 liste de lecture} other{{count} listes de lecture}}",
   "@backupContentsPlaylists": {
     "description": "Backup contents row for playlist count",
     "placeholders": {
@@ -1626,7 +1626,7 @@
   "queueEmptyAlbumsSubtitle": "Analysez un dossier musical pour ajouter des albums",
   "queueEmptySingles": "Aucun single local",
   "queueEmptySinglesSubtitle": "Les titres uniques analysés apparaissent ici",
-  "queuePlaylistCount": "{count, plural, =1{1 playlist} other{{count} playlists}}",
+  "queuePlaylistCount": "{count, plural, =1{1 liste de lecture} other{{count} listes de lecture}}",
   "@queuePlaylistCount": {
     "description": "Playlist count label with plural support",
     "placeholders": {
@@ -1717,7 +1717,7 @@
   "@audioAnalysisLufs": {
     "description": "Integrated loudness metric label"
   },
-  "audioAnalysisTruePeak": "True Peak",
+  "audioAnalysisTruePeak": "Crête réelle",
   "@audioAnalysisTruePeak": {
     "description": "True peak metric label"
   },
@@ -1957,7 +1957,7 @@
   "@trackAlbumType": {
     "description": "Label for an album or release type metadata value"
   },
-  "editMetadataFieldAlbumTypeHint": "Album, single, EP, compilation...",
+  "editMetadataFieldAlbumTypeHint": "Album, single, EP, compilation…",
   "@editMetadataFieldAlbumTypeHint": {
     "description": "Hint for the release type metadata field"
   },
@@ -2139,7 +2139,7 @@
   "@permissionStorage": {
     "description": "Storage permission type label"
   },
-  "permissionNotification": "Notification",
+  "permissionNotification": "Notifications",
   "@permissionNotification": {
     "description": "Notification permission type label"
   },
@@ -2351,7 +2351,7 @@
   "profilePhotoError": "Choisissez une image valide dont la taille est inférieure à 20 Mo.",
   "profileSaveError": "Impossible d'enregistrer votre profil. Veuillez réessayer.",
   "motionArtwork": "Pochettes animées",
-  "listeningStats": "Statistiques d'écoute",
+  "listeningStats": "Statistiques",
   "listeningStatsDescription": "Stocké uniquement sur cet appareil, à partir de maintenant. N'enregistre que le lecteur intégré ; les pauses, la mise en mémoire tampon et la navigation ne comptent pas comme temps d'écoute. Une lecture compte après 30 secondes.",
   "listeningStatsEmpty": "Lisez de la musique avec le lecteur intégré pour commencer votre récapitulatif d'écoute. L'écoute antérieure ne peut pas être récupérée.",
   "listeningStatsDays": "{days} jours",
@@ -2372,7 +2372,7 @@
   "autoMixAutomaticDuration": "Durée automatique",
   "autoMixDuration": "Durée du mix",
   "autoMixEffect": "Effet de transition",
-  "autoMixEffectAuto": "Auto",
+  "autoMixEffectAuto": "Automatique",
   "autoMixEffectCrossfade": "Fondu enchaîné",
   "autoMixEffectMuffled": "Étouffé",
   "autoMixEffectEcho": "Écho",
@@ -2472,7 +2472,7 @@
   "@trackCopyFilePath": {
     "description": "Action - copy file path"
   },
-  "trackDeleteConfirmMessage": "This permanently deletes the local audio file and removes it from your library.",
+  "trackDeleteConfirmMessage": "Cela supprime définitivement le fichier audio local et le retire de votre bibliothèque.",
   "trackDeleteConfirmTitle": "Supprimer de l'appareil ?",
   "@trackDeleteConfirmTitle": {
     "description": "Delete confirmation title"
@@ -2577,7 +2577,7 @@
   "musicHapticsDescription": "Vibre au rythme des titres téléchargés et locaux",
   "musicHapticsSensitivity": "Sensibilité",
   "musicHapticsStrength": "Intensité",
-  "listeningRewind": "Rewind",
+  "listeningRewind": "Retour en arrière",
   "listeningRewindDescription": "Revivez les moments forts de vos dernières semaines et de vos derniers mois",
   "listeningRewindChoosePeriod": "Choisissez une période",
   "listeningRewindLastWeeks": "{weeks} dernières semaines",
@@ -2691,12 +2691,54 @@
   "updateWhatsNew": "Quoi de neuf ?",
   "updateDownloadInstall": "Télécharger & Installer",
   "updateDontRemind": "Ne plus me le rappeler",
-  "updateViewRelease": "View Release",
+  "updateViewRelease": "Voir la version",
   "updateSeeReleaseNotes": "Pour plus de détails, consultez les notes de mise à jour.",
   "notifDownloadingUpdate": "Télécharger Sistrum v{version}",
   "notifUpdateProgress": "{received} / {total} Mo • {percentage}%",
   "notifUpdateReady": "Prêt pour la mise à jour",
   "notifUpdateReadyBody": "Sistrum v{version} a été téléchargé. Appuyez pour l'installer.",
   "notifUpdateFailed": "Échec de la mise à jour",
-  "notifUpdateFailedBody": "Impossible de télécharger la mise à jour. Veuillez réessayer plus tard."
+  "notifUpdateFailedBody": "Impossible de télécharger la mise à jour. Veuillez réessayer plus tard.",
+  "metadataSeparatorsDescription": "Choisissez les séparateurs qui divisent les noms d'artistes et de genres dans votre bibliothèque. Les noms à garder ensemble ne sont jamais divisés.",
+  "tagSeparatorsArtists": "Artistes",
+  "tagSeparatorsArtistsFields": "Artiste, Artiste de l'album, Compositeur",
+  "tagSeparatorsGenre": "Genre",
+  "tagSeparatorsAll": "Tous",
+  "tagSeparatorsAdd": "Ajouter un séparateur",
+  "tagSeparatorsAddHint": "Séparateur",
+  "tagSeparatorsDuplicate": "Ce séparateur est déjà dans la liste.",
+  "tagSeparatorsRemoveTitle": "Retirer le séparateur ?",
+  "tagSeparatorsRemoveMessage": "Il sera retiré de cette section. Les balises déjà enregistrées ne sont pas modifiées.",
+  "tagKeepTogether": "Garder ensemble",
+  "tagKeepTogetherDescription": "Les noms listés ici ne sont jamais divisés, même s'ils contiennent un séparateur.",
+  "tagKeepTogetherHint": "Nom, par exemple Tyler, The Creator",
+  "tagKeepTogetherAdd": "Ajouter un nom",
+  "tagKeepTogetherRemoveTooltip": "Retirer le nom",
+  "artistAppearsOn": "Apparaît sur",
+  "tagKeepTogetherDuplicate": "Ce nom est déjà dans la liste.",
+  "setupChooseMusicFolder": "Choisir le dossier musical",
+  "setupLibraryFolderDescription": "Choisissez le dossier qui contient votre musique. Sistrum le lit via un accès limité à ce dossier, donc aucune autorisation pour tous les fichiers n'est nécessaire.",
+  "searchAlbumArtists": "Artistes de l'album",
+  "logFilterFull": "Complet",
+  "tutorialGuideTitle": "Premiers pas",
+  "tutorialGuideDesc": "Des conseils rapides pour trouver, lire et organiser votre musique locale.",
+  "backupUnsupportedVersion": "Cette sauvegarde a été créée avec une autre version de Sistrum",
+  "backupReadFailed": "Le fichier de sauvegarde n'a pas pu être lu. Vérifiez qu'il est toujours disponible",
+  "snackbarMetadataSavedIndexStale": "Métadonnées enregistrées, mais la bibliothèque n'a pas pu être actualisée",
+  "actionGoToComposer": "Aller au compositeur",
+  "autoplayResetLearningConfirmTitle": "Réinitialiser l'apprentissage des recommandations ?",
+  "autoplayResetLearningConfirmMessage": "La lecture automatique oubliera ce qu'elle a appris de votre écoute et des morceaux passés. Cette action est irréversible.",
+  "motionArtworkSubtitle": "Faire doucement dériver les pochettes d'albums et celle du lecteur",
+  "lyricsAboveSeekBar": "Paroles au-dessus de la barre de progression",
+  "lyricsAboveSeekBarSubtitle": "Afficher la ligne chantée au-dessus de la barre de progression du lecteur",
+  "updateDownloadIntegrityFailed": "La mise à jour téléchargée n'a pas passé la vérification. Réessayez plus tard.",
+  "updateDownloadNetworkFailed": "La mise à jour n'a pas pu être téléchargée. Vérifiez votre connexion et réessayez.",
+  "updateInstallFailed": "Impossible d'ouvrir l'installateur de mise à jour.",
+  "settingsUpdates": "Mises à jour",
+  "settingsUpdatesSubtitle": "Rechercher de nouvelles versions",
+  "updateCheckNow": "Vérifier maintenant",
+  "updateChecking": "Vérification…",
+  "updateUpToDate": "Vous utilisez la dernière version",
+  "updateCheckFailed": "Impossible de rechercher les mises à jour",
+  "retry": "Réessayer"
 }
