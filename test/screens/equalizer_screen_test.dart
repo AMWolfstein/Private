@@ -77,45 +77,68 @@ void main() {
     );
   }
 
-  testWidgets('Sistrum EQ band names start-align under their faders', (
-    tester,
-  ) async {
-    SharedPreferences.setMockInitialValues({});
-    playbackEqualizer.value = const EqualizerSettings(enabled: true);
-    tester.view.physicalSize = const Size(400, 900);
-    tester.view.devicePixelRatio = 1;
-    addTearDown(tester.view.reset);
-    final container = ProviderContainer();
-    addTearDown(container.dispose);
-    await tester.pumpWidget(
-      UncontrolledProviderScope(
-        container: container,
-        child: MaterialApp(
-          theme: AppTheme.build(Brightness.dark),
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
-          supportedLocales: AppLocalizations.supportedLocales,
-          home: const EqualizerScreen(),
-        ),
-      ),
-    );
-    await tester.pumpAndSettle();
-    final label = find.textContaining(RegExp(r'\d (k?Hz)$')).first;
-    await tester.ensureVisible(label);
-    await tester.pumpAndSettle();
-    final column = find
-        .ancestor(
-          of: label,
-          matching: find.byWidgetPredicate(
-            (widget) => widget is SizedBox && widget.width == 66,
+  testWidgets(
+    'EQ overview, band reset and compressor controls share live settings',
+    (tester) async {
+      SharedPreferences.setMockInitialValues({});
+      playbackEqualizer.value = const EqualizerSettings();
+      tester.view.physicalSize = const Size(400, 900);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.reset);
+      final container = ProviderContainer();
+      addTearDown(container.dispose);
+      await tester.pumpWidget(
+        UncontrolledProviderScope(
+          container: container,
+          child: MaterialApp(
+            theme: AppTheme.build(Brightness.dark),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: const EqualizerScreen(),
           ),
-        )
-        .first;
-    // The column pads its contents by 8; a centred name would sit further in.
-    expect(
-      tester.getTopLeft(label).dx,
-      closeTo(tester.getTopLeft(column).dx + 8, 0.5),
-    );
-    expect(tester.takeException(), isNull);
-    await tester.pumpWidget(const SizedBox.shrink());
-  });
+        ),
+      );
+      await tester.pumpAndSettle();
+      final control = container.read(equalizerProvider.notifier);
+      control.update(
+        EqualizerSettings(enabled: true, gains: [3, ...List.filled(9, 0.0)]),
+      );
+      await tester.pumpAndSettle();
+      expect(find.text('Custom'), findsWidgets);
+      expect(find.byType(CustomPaint), findsWidgets);
+      final faders = find.byWidgetPredicate(
+        (w) => w is AppLevelSlider && w.vertical,
+      );
+      await tester.ensureVisible(faders.first);
+      await tester.pumpAndSettle();
+      final fader = tester.widget<AppLevelSlider>(faders.first);
+      expect(fader.value, 3);
+      final reset = find.byTooltip('Reset ${fader.semanticLabel}');
+      await Scrollable.ensureVisible(tester.element(reset), alignment: .4);
+      await tester.pumpAndSettle();
+      await tester.tap(reset);
+      await tester.pumpAndSettle();
+      expect(container.read(equalizerProvider).settings.gains.first, 0);
+      control.update(
+        container.read(equalizerProvider).settings.copyWith(compressor: true),
+      );
+      await tester.pumpAndSettle();
+      final attack = find.byWidgetPredicate(
+        (w) => w is AppLevelSlider && w.semanticLabel == 'Attack',
+      );
+      expect(container.read(equalizerProvider).settings.compressor, true);
+      // Vertical gestures over a band belong to the fader, so scroll the
+      // page position to the dynamics group rather than editing another band.
+      final position = tester
+          .state<ScrollableState>(find.byType(Scrollable).first)
+          .position;
+      position.jumpTo(position.maxScrollExtent);
+      await tester.pumpAndSettle();
+      tester.widget<AppLevelSlider>(attack).onChanged!(25);
+      await tester.pumpAndSettle();
+      expect(container.read(equalizerProvider).settings.attack, 25);
+      expect(tester.takeException(), isNull);
+      await tester.pumpWidget(const SizedBox.shrink());
+    },
+  );
 }

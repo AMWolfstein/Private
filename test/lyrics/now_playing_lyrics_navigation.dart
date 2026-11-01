@@ -224,6 +224,53 @@ void _registerNowPlayingLyricsNavigation() {
         .setMockMethodCallHandler(secureStorageChannel, null);
   });
 
+  for (final view in PlayerView.values) {
+    for (final size in [const Size(393, 852), const Size(852, 393)]) {
+      testWidgets(
+        'volume menu persists and restores visibility ($view, $size)',
+        (tester) async {
+          await _pumpNowPlaying(
+            tester,
+            theme: AppTheme.build(Brightness.dark),
+            playerView: view,
+            size: size,
+          );
+          mediaItems.add(_item('first'));
+          await _settlePlayer(tester);
+          expect(find.byType(AppVolumeControl), findsOneWidget);
+          await tester.tap(find.byIcon(CupertinoIcons.ellipsis).hitTestable());
+          await _settlePlayer(tester);
+          await tester.ensureVisible(find.text('Hide volume slider'));
+          await tester.tap(find.text('Hide volume slider'));
+          await _settlePlayer(tester);
+          expect(find.byType(AppVolumeControl), findsNothing);
+          expect(volumeWrites, isEmpty);
+          final prefs = await SharedPreferences.getInstance();
+          expect(loadBootstrapSettings(prefs).playerShowVolume, false);
+          await tester.pumpWidget(const SizedBox.shrink());
+          await _pumpNowPlaying(
+            tester,
+            theme: AppTheme.build(Brightness.dark),
+            playerView: view,
+            size: size,
+          );
+          mediaItems.add(_item('first'));
+          await _settlePlayer(tester);
+          expect(find.byType(AppVolumeControl), findsNothing);
+          await tester.tap(find.byIcon(CupertinoIcons.ellipsis).hitTestable());
+          await _settlePlayer(tester);
+          await tester.ensureVisible(find.text('Show volume slider'));
+          await tester.tap(find.text('Show volume slider'));
+          await _settlePlayer(tester);
+          expect(find.byType(AppVolumeControl), findsOneWidget);
+          expect(loadBootstrapSettings(prefs).playerShowVolume, true);
+          expect(volumeWrites, isEmpty);
+          expect(tester.takeException(), isNull);
+        },
+      );
+    }
+  }
+
   for (final brightness in [Brightness.light, Brightness.dark]) {
     testWidgets('swiping up the mini player opens the player '
         '(Sistrum: $brightness)', (tester) async {

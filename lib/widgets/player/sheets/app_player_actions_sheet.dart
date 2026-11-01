@@ -1,6 +1,7 @@
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:sistrum/providers/settings/settings_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/providers/library/library_collections_provider.dart';
@@ -125,6 +126,14 @@ class AppPlayerActionsSheet extends ConsumerWidget {
             ),
           ],
           [
+            _action(
+              context,
+              'volume',
+              ref.watch(settingsProvider.select((s) => s.playerShowVolume))
+                  ? context.l10n.nowPlayingHideVolumeSlider
+                  : context.l10n.nowPlayingShowVolumeSlider,
+              CupertinoIcons.speaker_2,
+            ),
             _action(
               context,
               'equalizer',

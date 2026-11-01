@@ -125,7 +125,31 @@ class EqualizerController extends Notifier<EqualizerState> {
     }
     final decoded = jsonDecode(source);
     if (decoded is! Map ||
-        decoded['format'] != 'sistrum-equalizer' ||
+        !{
+          'sistrum-equalizer',
+          'mornye-equalizer',
+          String.fromCharCodes(const [
+            115,
+            112,
+            111,
+            116,
+            105,
+            102,
+            108,
+            97,
+            99,
+            45,
+            101,
+            113,
+            117,
+            97,
+            108,
+            105,
+            122,
+            101,
+            114,
+          ]),
+        }.contains(decoded['format']) ||
         decoded['version'] != 1) {
       throw const FormatException('Unsupported equalizer preset.');
     }

@@ -1,96 +1,96 @@
+// SPDX-License-Identifier: LGPL-3.0-only
+// Copyright 2026 zarzet and contributors; adapted from Mornye v5.3.0.
 import 'dart:convert';
+import 'dart:math' as math;
 import 'dart:typed_data';
-
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/core/models/equalizer_settings.dart';
 import 'package:sistrum/providers/settings/equalizer_provider.dart';
 import 'package:sistrum/services/playback/audio/playback_equalizer.dart';
+import 'package:sistrum/core/theme/app_tokens.dart';
 import 'package:sistrum/core/theme/app_theme.dart';
+import 'package:sistrum/core/theme/app_icons.dart';
 import 'package:sistrum/widgets/primitives/app_alert_dialog.dart';
 import 'package:sistrum/widgets/primitives/app_bottom_sheet.dart';
-import 'package:sistrum/widgets/primitives/app_choice_chip.dart';
 import 'package:sistrum/widgets/primitives/app_level_slider.dart';
 import 'package:sistrum/widgets/primitives/app_sliver_header.dart';
+import 'package:sistrum/widgets/glass/chrome/app_chrome_controls.dart';
 import 'package:sistrum/widgets/settings/settings_group.dart';
 import 'package:sistrum/widgets/settings/settings_item_rows.dart';
+import 'package:sistrum/widgets/settings/settings_chips_and_cards.dart';
+import 'package:sistrum/widgets/settings/settings_search_highlight.dart';
 import 'package:sistrum/widgets/status/beta_badge.dart';
+import 'package:sistrum/utils/layout/adaptive_layout.dart';
+import 'package:sistrum/utils/layout/nav_bar_inset.dart';
 
-/// The retained Sistrum Settings surfaces around the upstream per-player DSP.
-class EqualizerScreen extends ConsumerWidget {
+part 'equalizer_widgets.dart';
+part 'equalizer_curve.dart';
+
+class EqualizerScreen extends ConsumerStatefulWidget {
   const EqualizerScreen({super.key});
 
-  Future<void> _presetName(BuildContext context, WidgetRef ref) async {
-    final controller = TextEditingController();
+  @override
+  ConsumerState<EqualizerScreen> createState() => _EqualizerScreenState();
+}
+
+class _EqualizerScreenState extends ConsumerState<EqualizerScreen> {
+  bool _busy = false;
+
+  void _message(String message) => ScaffoldMessenger.of(
+    context,
+  ).showSnackBar(SnackBar(content: Text(message)));
+
+  Future<void> _savePreset() async {
+    final name = await showAppDialog<String>(
+      context: context,
+      builder: (context) => const _PresetNameDialog(),
+    );
+    if (!mounted || name == null) return;
     try {
-      final name = await showAppDialog<String>(
-        context: context,
-        builder: (context) => AppAlertDialog(
-          title: Text(context.l10n.equalizerSavePreset),
-          content: TextField(
-            controller: controller,
-            maxLength: 80,
-            autofocus: true,
-            decoration: InputDecoration(
-              labelText: context.l10n.equalizerPresetName,
-            ),
-          ),
-          actions: [
-            AppDialogAction(
-              onPressed: () => Navigator.pop(context),
-              child: Text(context.l10n.dialogCancel),
-            ),
-            AppDialogAction(
-              onPressed: () => Navigator.pop(context, controller.text),
-              child: Text(context.l10n.dialogSave),
-            ),
-          ],
-        ),
-      );
-      if (name != null && name.trim().isNotEmpty) {
-        ref.read(equalizerProvider.notifier).savePreset(name);
-      }
-    } catch (error) {
-      if (context.mounted) _error(context, error);
-    } finally {
-      controller.dispose();
+      ref.read(equalizerProvider.notifier).savePreset(name);
+      _message(context.l10n.equalizerSaved);
+    } on FormatException catch (error) {
+      _message(error.message);
     }
   }
 
-  Future<void> _import(BuildContext context, WidgetRef ref) async {
+  Future<void> _import() async {
+    setState(() => _busy = true);
     try {
       final file = await FilePicker.pickFile(
         type: FileType.custom,
         allowedExtensions: ['json'],
       );
-      if (file == null || !context.mounted) return;
+      if (file == null) return;
       final source = await readEqualizerPreset(
         file.readAsByteStream(),
         declaredSize: file.lengthSync(),
       );
-      if (!context.mounted) return;
+      if (!mounted) return;
       ref.read(equalizerProvider.notifier).importPreset(source);
-    } catch (error) {
-      if (context.mounted) _error(context, error);
+      _message(context.l10n.equalizerSaved);
+    } catch (_) {
+      if (mounted) _message(context.l10n.equalizerImportInvalid);
+    } finally {
+      if (mounted) setState(() => _busy = false);
     }
   }
 
-  Future<void> _export(BuildContext context, WidgetRef ref) async {
+  Future<void> _export() async {
+    final source = ref
+        .read(equalizerProvider.notifier)
+        .exportPreset('Custom EQ');
+    final box = context.findRenderObject() as RenderBox?;
     try {
-      final data = ref
-          .read(equalizerProvider.notifier)
-          .exportPreset(context.l10n.equalizerCustom);
-      final box = context.findRenderObject() as RenderBox?;
       await SharePlus.instance.share(
         ShareParams(
           files: [
             XFile.fromData(
-              Uint8List.fromList(utf8.encode(data)),
+              Uint8List.fromList(utf8.encode(source)),
               mimeType: 'application/json',
             ),
           ],
@@ -101,377 +101,343 @@ class EqualizerScreen extends ConsumerWidget {
         ),
       );
     } catch (error) {
-      if (context.mounted) _error(context, error);
+      if (mounted) _message(context.l10n.snackbarError(error.toString()));
     }
   }
 
-  void _error(BuildContext context, Object error) {
-    showAppDialog<void>(
-      context: context,
-      builder: (context) => AppAlertDialog(
-        title: Text(context.l10n.equalizerTitle),
-        content: Text(error.toString()),
-        actions: [
-          AppDialogAction(
-            onPressed: () => Navigator.pop(context),
-            child: Text(context.l10n.dialogCancel),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Future<void> _presets(BuildContext context) => showAppBottomSheet<void>(
+  Future<void> _presets() => showAppBottomSheet<void>(
     context: context,
+    useRootNavigator: true,
     title: context.l10n.equalizerPresets,
     maxHeightFactor: 0.85,
-    builder: (context) => Consumer(
+    builder: (sheetContext) => Consumer(
       builder: (context, ref, _) {
         final state = ref.watch(equalizerProvider);
-        final presets = [...EqualizerPreset.builtIn, ...state.presets];
-        return ListView.builder(
-          shrinkWrap: true,
-          itemCount: presets.length,
-          itemBuilder: (context, index) {
-            final preset = presets[index];
-            return ListTile(
-              title: Text(preset.name),
-              trailing: state.presets.contains(preset)
-                  ? IconButton(
-                      tooltip: context.l10n.equalizerDeletePreset,
-                      icon: const Icon(CupertinoIcons.delete),
-                      onPressed: () => ref
-                          .read(equalizerProvider.notifier)
-                          .deletePreset(preset.name),
-                    )
-                  : null,
-              onTap: () {
-                ref.read(equalizerProvider.notifier).applyPreset(preset);
-                Navigator.pop(context);
-              },
-            );
-          },
+        final selected = _matchingPreset(state);
+        final mornye = context.isAppTheme;
+        return SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              for (final preset in [
+                ...EqualizerPreset.builtIn,
+                ...state.presets,
+              ])
+                AppSheetOption(
+                  title: Text(preset.name),
+                  selected: preset == selected,
+                  // iOS lists mark the choice with a trailing checkmark.
+                  leading: mornye
+                      ? null
+                      : preset == selected
+                      ? const _AppEqualizerIcon(Icons.check)
+                      : const _AppEqualizerIcon(Icons.graphic_eq),
+                  trailing:
+                      (mornye && preset == selected) ||
+                          state.presets.contains(preset)
+                      ? Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            if (mornye && preset == selected)
+                              _AppEqualizerIcon(
+                                Icons.check,
+                                color: Theme.of(context).colorScheme.primary,
+                              ),
+                            if (state.presets.contains(preset))
+                              IconButton(
+                                tooltip: context.l10n.equalizerDeletePreset,
+                                icon: const _AppEqualizerIcon(
+                                  Icons.delete_outline,
+                                ),
+                                onPressed: () => ref
+                                    .read(equalizerProvider.notifier)
+                                    .deletePreset(preset.name),
+                              ),
+                          ],
+                        )
+                      : null,
+                  onTap: () {
+                    ref.read(equalizerProvider.notifier).applyPreset(preset);
+                    Navigator.pop(sheetContext);
+                  },
+                ),
+            ],
+          ),
         );
       },
     ),
   );
 
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(equalizerProvider);
-    final settings = state.settings;
-    final control = ref.read(equalizerProvider.notifier);
-    final l10n = context.l10n;
-    Widget slider(
-      String label,
-      double value,
-      double min,
-      double max,
-      ValueChanged<double> changed, {
-      String unit = 'dB',
-    }) => Padding(
-      padding: const EdgeInsets.fromLTRB(20, 12, 20, 16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text('$label · ${value.toStringAsFixed(1)} $unit'),
-          SizedBox(
-            height: 48,
-            child: AppLevelSlider(
-              value: value,
-              min: min,
-              max: max,
-              origin: min <= 0 && max >= 0 ? 0 : min,
-              semanticLabel: label,
-              onChanged: settings.enabled ? changed : null,
-            ),
+  Future<void> _reset() async {
+    final accepted = await showAppDialog<bool>(
+      context: context,
+      builder: (context) => AppAlertDialog(
+        title: Text(context.l10n.equalizerResetTitle),
+        content: Text(context.l10n.equalizerResetDescription),
+        actions: [
+          AppDialogAction(
+            onPressed: () => Navigator.pop(context),
+            child: Text(context.l10n.dialogCancel),
+          ),
+          AppDialogAction(
+            onPressed: () => Navigator.pop(context, true),
+            child: Text(context.l10n.libraryFilterReset),
           ),
         ],
       ),
     );
-    return AppSettingsTheme(
-      child: Scaffold(
-        body: CustomScrollView(
-          slivers: [
-            AppSliverHeader.page(title: l10n.equalizerTitle),
-            SliverToBoxAdapter(
-              child: Column(
+    if (mounted && accepted == true) {
+      final enabled = ref.read(equalizerProvider).settings.enabled;
+      ref
+          .read(equalizerProvider.notifier)
+          .update(EqualizerSettings(enabled: enabled));
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) => AppSettingsTheme(
+    // Reached from Playback and Now Playing alike, so the page brings its own
+    // inset grouped surfaces in Mornye.
+    child: Builder(builder: _buildPage),
+  );
+
+  Widget _buildPage(BuildContext context) {
+    final state = ref.watch(equalizerProvider);
+    final settings = state.settings;
+    final notifier = ref.read(equalizerProvider.notifier);
+    final l10n = context.l10n;
+    final selectedPreset = _matchingPreset(state);
+    final presetName = selectedPreset?.name ?? l10n.equalizerCustom;
+    void update(EqualizerSettings next) => notifier.update(next);
+    void setEnabled(bool v) => update(settings.copyWith(enabled: v));
+    Widget section(Widget child) => SliverToBoxAdapter(child: child);
+    final error = section(
+      ValueListenableBuilder<String?>(
+        valueListenable: playbackEqualizerError,
+        builder: (context, error, _) {
+          final message = error ?? state.error;
+          return message == null
+              ? const SizedBox.shrink()
+              : SettingsInfoCard(
+                  message: message,
+                  icon: Icons.error_outline,
+                  glass: true,
+                );
+        },
+      ),
+    );
+    return Scaffold(
+      body: CustomScrollView(
+        slivers: [
+          AppSliverHeader.page(title: l10n.equalizerTitle),
+          // iOS order: the master switch, its footnote, then the response.
+          section(
+            SettingsGroup(
+              children: [
+                SettingsSwitchItem(
+                  icon: Icons.graphic_eq,
+                  title: l10n.equalizerEnable,
+                  titleTrailing: const BetaBadge(),
+                  value: settings.enabled,
+                  onChanged: setEnabled,
+                  showDivider: false,
+                ),
+              ],
+            ),
+          ),
+          section(_Footnote(l10n.equalizerBypass)),
+          error,
+          section(
+            SettingsGroup(
+              children: [
+                _EqualizerOverview(settings: settings, presetName: presetName),
+              ],
+            ),
+          ),
+          // The value cell names the group, so it needs no header.
+          const SliverToBoxAdapter(child: SizedBox(height: 28)),
+          section(
+            SettingsGroup(
+              children: [
+                SettingsItem(
+                  title: l10n.equalizerPresets,
+                  trailing: _DetailValue(presetName),
+                  onTap: _presets,
+                ),
+                _ActionRow(label: l10n.equalizerSavePreset, onTap: _savePreset),
+                _ActionRow(
+                  label: l10n.equalizerImport,
+                  onTap: _busy ? null : _import,
+                ),
+                _ActionRow(
+                  label: l10n.equalizerExport,
+                  onTap: _export,
+                  last: true,
+                ),
+              ],
+            ),
+          ),
+          section(SettingsSectionHeader(title: l10n.equalizerBands)),
+          section(
+            SettingsGroup(
+              children: [_BandEditor(settings: settings, onChanged: update)],
+            ),
+          ),
+          section(SettingsSectionHeader(title: l10n.equalizerTone)),
+          section(
+            SettingsGroup(
+              children: [
+                _SliderTile(
+                  title: l10n.equalizerPreamp,
+                  subtitle:
+                      '${l10n.equalizerEffectivePreamp}: ${_signed(settings.inputGain)} dB',
+                  value: settings.preamp,
+                  min: -24,
+                  max: 12,
+                  step: 0.5,
+                  unit: 'dB',
+                  onChanged: (v) => update(settings.copyWith(preamp: v)),
+                ),
+                _SliderTile(
+                  title: l10n.equalizerBass,
+                  value: settings.bass,
+                  min: -12,
+                  max: 12,
+                  step: 0.5,
+                  unit: 'dB',
+                  centered: true,
+                  onChanged: (v) => update(settings.copyWith(bass: v)),
+                ),
+                _SliderTile(
+                  title: l10n.equalizerTreble,
+                  value: settings.treble,
+                  min: -12,
+                  max: 12,
+                  step: 0.5,
+                  unit: 'dB',
+                  centered: true,
+                  onChanged: (v) => update(settings.copyWith(treble: v)),
+                ),
+                _SliderTile(
+                  title: l10n.equalizerBalance,
+                  value: settings.balance * 100,
+                  min: -100,
+                  max: 100,
+                  step: 1,
+                  unit: '%',
+                  centered: true,
+                  last: true,
+                  onChanged: (v) => update(settings.copyWith(balance: v / 100)),
+                ),
+              ],
+            ),
+          ),
+          section(SettingsSectionHeader(title: l10n.equalizerDynamics)),
+          section(
+            SettingsGroup(
+              children: [
+                SettingsSwitchItem(
+                  icon: Icons.vertical_align_bottom,
+                  title: l10n.equalizerHeadroom,
+                  subtitle: l10n.equalizerHeadroomDescription,
+                  value: settings.autoHeadroom,
+                  onChanged: (v) => update(settings.copyWith(autoHeadroom: v)),
+                ),
+                SettingsSwitchItem(
+                  icon: Icons.health_and_safety_outlined,
+                  title: l10n.equalizerLimiter,
+                  subtitle: l10n.equalizerLimiterDescription,
+                  value: settings.limiter,
+                  onChanged: (v) => update(settings.copyWith(limiter: v)),
+                ),
+                SettingsSwitchItem(
+                  icon: Icons.compress,
+                  title: l10n.equalizerCompressor,
+                  subtitle: l10n.equalizerCompressorDescription,
+                  value: settings.compressor,
+                  onChanged: (v) => update(settings.copyWith(compressor: v)),
+                  showDivider: settings.compressor,
+                ),
+                if (settings.compressor) ...[
+                  _SliderTile(
+                    title: l10n.equalizerThreshold,
+                    value: settings.threshold,
+                    min: -60,
+                    max: 0,
+                    step: 0.5,
+                    unit: 'dB',
+                    onChanged: (v) => update(settings.copyWith(threshold: v)),
+                  ),
+                  _SliderTile(
+                    title: l10n.equalizerRatio,
+                    value: settings.ratio,
+                    min: 1,
+                    max: 20,
+                    step: 0.5,
+                    unit: ':1',
+                    signed: false,
+                    onChanged: (v) => update(settings.copyWith(ratio: v)),
+                  ),
+                  _SliderTile(
+                    title: l10n.equalizerAttack,
+                    value: settings.attack,
+                    min: 1,
+                    max: 100,
+                    step: 1,
+                    unit: 'ms',
+                    signed: false,
+                    onChanged: (v) => update(settings.copyWith(attack: v)),
+                  ),
+                  _SliderTile(
+                    title: l10n.equalizerRelease,
+                    value: settings.release,
+                    min: 20,
+                    max: 1000,
+                    step: 10,
+                    unit: 'ms',
+                    signed: false,
+                    last: true,
+                    onChanged: (v) => update(settings.copyWith(release: v)),
+                  ),
+                ],
+              ],
+            ),
+          ),
+          ...[
+            // iOS keeps a destructive command in its own group at the end.
+            const SliverToBoxAdapter(child: SizedBox(height: 28)),
+            section(
+              SettingsGroup(
                 children: [
-                  SettingsGroup(
-                    children: [
-                      SettingsSwitchItem(
-                        title: l10n.equalizerEnable,
-                        titleTrailing: const BetaBadge(),
-                        value: settings.enabled,
-                        onChanged: (value) =>
-                            control.update(settings.copyWith(enabled: value)),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(20),
-                        child: Text(l10n.equalizerBypass),
-                      ),
-                      ValueListenableBuilder<String?>(
-                        valueListenable: playbackEqualizerError,
-                        builder: (context, error, _) =>
-                            error == null && state.error == null
-                            ? const SizedBox.shrink()
-                            : Padding(
-                                padding: const EdgeInsets.all(20),
-                                child: Text(
-                                  error ?? state.error!,
-                                  style: TextStyle(
-                                    color: Theme.of(context).colorScheme.error,
-                                  ),
-                                ),
-                              ),
-                      ),
-                    ],
+                  _ActionRow(
+                    label: l10n.libraryFilterReset,
+                    onTap: _reset,
+                    destructive: true,
+                    last: true,
                   ),
-                  SettingsGroup(
-                    children: [
-                      SettingsItem(
-                        title: l10n.equalizerPresets,
-                        onTap: () => _presets(context),
-                        trailing: const Icon(CupertinoIcons.forward),
-                      ),
-                      SettingsItem(
-                        title: l10n.equalizerSavePreset,
-                        onTap: () => _presetName(context, ref),
-                      ),
-                      SettingsItem(
-                        title: l10n.equalizerImport,
-                        onTap: () => _import(context, ref),
-                      ),
-                      SettingsItem(
-                        title: l10n.equalizerExport,
-                        onTap: () => _export(context, ref),
-                      ),
-                      SettingsItem(
-                        title: l10n.equalizerResetTitle,
-                        onTap: () async {
-                          final reset = await showAppDialog<bool>(
-                            context: context,
-                            builder: (context) => AppAlertDialog(
-                              title: Text(l10n.equalizerResetTitle),
-                              content: Text(l10n.equalizerResetDescription),
-                              actions: [
-                                AppDialogAction(
-                                  onPressed: () =>
-                                      Navigator.pop(context, false),
-                                  child: Text(l10n.dialogCancel),
-                                ),
-                                AppDialogAction(
-                                  onPressed: () => Navigator.pop(context, true),
-                                  child: Text(l10n.dialogDone),
-                                ),
-                              ],
-                            ),
-                          );
-                          if (reset == true) {
-                            control.update(
-                              EqualizerSettings(enabled: settings.enabled),
-                            );
-                          }
-                        },
-                      ),
-                    ],
-                  ),
-                  SettingsSectionHeader(title: l10n.equalizerBands),
-                  SettingsGroup(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Wrap(
-                          spacing: 8,
-                          children: [
-                            for (final count in EqualizerSettings.bandCounts)
-                              AppChoiceChip(
-                                label: Text('$count'),
-                                selected: settings.gains.length == count,
-                                onSelected: (_) => control.update(
-                                  settings.withBandCount(count),
-                                ),
-                              ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(
-                        height: 250,
-                        child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: settings.gains.length,
-                          itemBuilder: (context, index) {
-                            final hz = settings.frequencies[index];
-                            final label = hz < 1000
-                                ? '${hz.round()} Hz'
-                                : '${(hz / 1000).toStringAsFixed(1)} kHz';
-                            return SizedBox(
-                              width: 66,
-                              child: Padding(
-                                padding: const EdgeInsets.all(8),
-                                child: Column(
-                                  children: [
-                                    Text(
-                                      settings.gains[index].toStringAsFixed(1),
-                                    ),
-                                    const SizedBox(height: 8),
-                                    Expanded(
-                                      child: AppLevelSlider(
-                                        vertical: true,
-                                        knobRadius: 10,
-                                        value: settings.gains[index],
-                                        min: -15,
-                                        max: 15,
-                                        origin: 0,
-                                        semanticLabel: label,
-                                        onChanged: settings.enabled
-                                            ? (value) {
-                                                final gains = [
-                                                  ...settings.gains,
-                                                ];
-                                                gains[index] = value;
-                                                control.update(
-                                                  settings.copyWith(
-                                                    gains: gains,
-                                                  ),
-                                                );
-                                              }
-                                            : null,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 8),
-                                    SizedBox(
-                                      width: double.infinity,
-                                      child: Text(label),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                  SettingsSectionHeader(title: l10n.equalizerTone),
-                  SettingsGroup(
-                    children: [
-                      slider(
-                        l10n.equalizerPreamp,
-                        settings.preamp,
-                        -24,
-                        12,
-                        (value) =>
-                            control.update(settings.copyWith(preamp: value)),
-                      ),
-                      slider(
-                        l10n.equalizerBass,
-                        settings.bass,
-                        -12,
-                        12,
-                        (value) =>
-                            control.update(settings.copyWith(bass: value)),
-                      ),
-                      slider(
-                        l10n.equalizerTreble,
-                        settings.treble,
-                        -12,
-                        12,
-                        (value) =>
-                            control.update(settings.copyWith(treble: value)),
-                      ),
-                      slider(
-                        l10n.equalizerBalance,
-                        settings.balance,
-                        -1,
-                        1,
-                        (value) =>
-                            control.update(settings.copyWith(balance: value)),
-                        unit: '',
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(20),
-                        child: Text(
-                          '${l10n.equalizerEffectivePreamp}: ${settings.inputGain.toStringAsFixed(1)} dB',
-                        ),
-                      ),
-                    ],
-                  ),
-                  SettingsSectionHeader(title: l10n.equalizerDynamics),
-                  SettingsGroup(
-                    children: [
-                      SettingsSwitchItem(
-                        title: l10n.equalizerHeadroom,
-                        subtitle: l10n.equalizerHeadroomDescription,
-                        value: settings.autoHeadroom,
-                        onChanged: (value) => control.update(
-                          settings.copyWith(autoHeadroom: value),
-                        ),
-                      ),
-                      SettingsSwitchItem(
-                        title: l10n.equalizerLimiter,
-                        subtitle: l10n.equalizerLimiterDescription,
-                        value: settings.limiter,
-                        onChanged: (value) =>
-                            control.update(settings.copyWith(limiter: value)),
-                      ),
-                      SettingsSwitchItem(
-                        title: l10n.equalizerCompressor,
-                        subtitle: l10n.equalizerCompressorDescription,
-                        value: settings.compressor,
-                        onChanged: (value) => control.update(
-                          settings.copyWith(compressor: value),
-                        ),
-                      ),
-                      if (settings.compressor) ...[
-                        slider(
-                          l10n.equalizerThreshold,
-                          settings.threshold,
-                          -60,
-                          0,
-                          (value) => control.update(
-                            settings.copyWith(threshold: value),
-                          ),
-                        ),
-                        slider(
-                          l10n.equalizerRatio,
-                          settings.ratio,
-                          1,
-                          20,
-                          (value) =>
-                              control.update(settings.copyWith(ratio: value)),
-                          unit: ':1',
-                        ),
-                        slider(
-                          l10n.equalizerAttack,
-                          settings.attack,
-                          1,
-                          100,
-                          (value) =>
-                              control.update(settings.copyWith(attack: value)),
-                          unit: 'ms',
-                        ),
-                        slider(
-                          l10n.equalizerRelease,
-                          settings.release,
-                          20,
-                          1000,
-                          (value) =>
-                              control.update(settings.copyWith(release: value)),
-                          unit: 'ms',
-                        ),
-                      ],
-                    ],
-                  ),
-                  const SizedBox(height: 32),
                 ],
               ),
             ),
           ],
-        ),
+          const SliverToBoxAdapter(child: SizedBox(height: 40)),
+          const NavBarSliverSpacer(),
+        ],
       ),
     );
   }
+}
+
+/// The preset whose curve, tone and dynamics match the current settings.
+EqualizerPreset? _matchingPreset(EqualizerState state) {
+  // Matches when applying the preset would change nothing.
+  String key(EqualizerSettings settings) => jsonEncode(settings.toJson());
+  final current = key(state.settings);
+  for (final preset in [...EqualizerPreset.builtIn, ...state.presets]) {
+    if (key(state.settings.withToneOf(preset.settings)) == current) {
+      return preset;
+    }
+  }
+  return null;
 }
 
 /// Bound preset input before accumulation, including providers with no size.

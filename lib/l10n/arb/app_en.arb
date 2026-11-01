@@ -3549,5 +3549,14 @@
   "audioInfoSystemDefaultRate": "System default sample rate",
   "audioInfoAndroidPcmRates": "Android PCM sample rates",
   "audioInfoAndroidPcmFormats": "Android PCM formats",
-  "audioInfoSystemDefaultBuffer": "System default buffer"
+  "audioInfoSystemDefaultBuffer": "System default buffer",
+  "lyricsBlur": "Lyrics blur strength",
+  "lyricsBlurDescription": "Soften surrounding lines while keeping the current line clear.",
+  "lyricsBlurOff": "Off",
+  "nowPlayingHideVolumeSlider": "Hide volume slider",
+  "nowPlayingShowVolumeSlider": "Show volume slider",
+  "equalizerCurve": "EQ curve (estimated)",
+  "equalizerCurveDescription": "The curve shows band gains; the exact response depends on the output engine.",
+  "equalizerImportInvalid": "Choose a valid Mornye equalizer preset (JSON, up to 64 KB).",
+  "equalizerSaved": "Preset saved"
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sistrum/widgets/lyrics/app_lyrics_blur_setting.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -13,6 +14,58 @@ import 'package:sistrum/widgets/player/lyrics/player_lyrics.dart';
 
 void main() {
   setUp(() => SharedPreferences.setMockInitialValues({}));
+
+  test(
+    'blur values normalize and survive theme serialization/bootstrap',
+    () async {
+      expect(normalizeLyricsBlur(double.nan), 1);
+      expect(normalizeLyricsBlur(double.infinity), 1);
+      expect(normalizeLyricsBlur(-1), 0);
+      expect(normalizeLyricsBlur(4), 1.5);
+      final settings = const ThemeSettings().copyWith(lyricsBlur: .6);
+      expect(ThemeSettings.fromJson(settings.toJson()), settings);
+      expect(ThemeSettings.fromJson({'lyrics_blur': 'bad'}).lyricsBlur, 1);
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setDouble(kLyricsBlurKey, .6);
+      expect(loadBootstrapThemeSettings(prefs).lyricsBlur, .6);
+    },
+  );
+
+  testWidgets('blur slider previews, persists on release and resets', (
+    tester,
+  ) async {
+    final container = ProviderContainer();
+    addTearDown(container.dispose);
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: container,
+        child: MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: const Scaffold(body: AppLyricsBlurSetting()),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    final semantics = tester.ensureSemantics();
+    expect(
+      tester.getSemantics(find.byType(Slider)).label,
+      contains('Lyrics blur strength'),
+    );
+    semantics.dispose();
+    final slider = tester.widget<Slider>(find.byType(Slider));
+    slider.onChanged!(.5);
+    await tester.pump();
+    expect(find.text('50%'), findsOneWidget);
+    final prefs = await SharedPreferences.getInstance();
+    expect(prefs.get(kLyricsBlurKey), isNull);
+    slider.onChangeEnd!(.5);
+    await tester.pumpAndSettle();
+    expect(loadBootstrapThemeSettings(prefs).lyricsBlur, .5);
+    await tester.tap(find.byTooltip('Reset'));
+    await tester.pumpAndSettle();
+    expect(loadBootstrapThemeSettings(prefs).lyricsBlur, 1);
+  });
 
   test('lyric scaling respects accessibility and validates stored bounds', () {
     const scale = LyricsTextScaler(TextScaler.linear(1.5), 1.2);

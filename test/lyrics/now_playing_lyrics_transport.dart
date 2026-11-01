@@ -1,6 +1,54 @@
 part of 'now_playing_lyrics_transition_test.dart';
 
 void _registerNowPlayingLyricsTransport() {
+  for (final strength in [0.0, .5, 1.5]) {
+    testWidgets(
+      'lyrics apply blur strength $strength and keep active text sharp',
+      (tester) async {
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setDouble(kLyricsBlurKey, strength);
+        metadataOverrides['lyrics'] =
+            '[00:00.00]First line\n[00:02.00]Second line\n[00:04.00]Third line';
+        await _pumpNowPlaying(
+          tester,
+          theme: AppTheme.build(Brightness.dark),
+          size: const Size(393, 780),
+          playback: PlaybackState(updatePosition: const Duration(seconds: 2)),
+        );
+        mediaItems.add(_item('many'));
+        await _settlePlayer(tester);
+        await tester.tap(find.byIcon(CupertinoIcons.quote_bubble));
+        await _settlePlayer(tester);
+        final inactive = tester.widgetList<ImageFiltered>(
+          find.ancestor(
+            of: find.text('Third line'),
+            matching: find.byType(ImageFiltered),
+          ),
+        );
+        expect(
+          inactive.any(
+            (f) =>
+                f.enabled == (strength > 0) &&
+                f.imageFilter ==
+                    ImageFilter.blur(
+                      sigmaX: strength * 2.4,
+                      sigmaY: strength * 2.4,
+                    ),
+          ),
+          true,
+        );
+        final active = tester.widgetList<ImageFiltered>(
+          find.ancestor(
+            of: find.text('Second line'),
+            matching: find.byType(ImageFiltered),
+          ),
+        );
+        expect(active.any((f) => !f.enabled), true);
+        expect(tester.takeException(), isNull);
+      },
+    );
+  }
+
   testWidgets('Sistrum lyrics stay blurred until playback starts', (
     tester,
   ) async {

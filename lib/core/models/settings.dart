@@ -120,6 +120,7 @@ class AppSettings {
 
   final bool playerShowPronunciation;
   final bool playerShowTranslation;
+  final bool playerShowVolume;
 
   const AppSettings({
     this.tagCredits = const TagCreditSettings(),
@@ -167,6 +168,7 @@ class AppSettings {
     this.hasCompletedTutorial = false,
     this.playerShowPronunciation = true,
     this.playerShowTranslation = true,
+    this.playerShowVolume = true,
   });
 
   AppSettings copyWith({
@@ -215,6 +217,7 @@ class AppSettings {
     bool? hasCompletedTutorial,
     bool? playerShowPronunciation,
     bool? playerShowTranslation,
+    bool? playerShowVolume,
   }) {
     return AppSettings(
       tagCredits: tagCredits ?? this.tagCredits,
@@ -276,6 +279,7 @@ class AppSettings {
           playerShowPronunciation ?? this.playerShowPronunciation,
       playerShowTranslation:
           playerShowTranslation ?? this.playerShowTranslation,
+      playerShowVolume: playerShowVolume ?? this.playerShowVolume,
     );
   }
 

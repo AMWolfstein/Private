@@ -1,6 +1,7 @@
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter/foundation.dart' show ValueListenable;
 import 'package:flutter/material.dart';
+import 'package:sistrum/providers/settings/settings_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:sistrum/providers/playback/player_metadata_controller.dart';
@@ -79,6 +80,9 @@ class AppPlayerLayout extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final controller = ref.read(musicPlayerControllerProvider);
+    final showVolume = ref.watch(
+      settingsProvider.select((s) => s.playerShowVolume),
+    );
     final showLyrics = page == 1;
     final showQueue = page == 2;
     final compactStage = showLyrics || showQueue;
@@ -388,7 +392,7 @@ class AppPlayerLayout extends ConsumerWidget {
             lyricsOptions: showLyrics ? lyricsOptions : null,
             queue: AppPlayerQueue(colorScheme: colorScheme),
             controls: controls(),
-            volume: const AppVolumeControl(),
+            volume: showVolume ? const AppVolumeControl() : null,
           );
         }
 
@@ -437,14 +441,16 @@ class AppPlayerLayout extends ConsumerWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 controls(),
-                SizedBox(height: volumeGap - transportShift),
-                AnimatedBuilder(
-                  animation: artworkForeground,
-                  builder: (context, _) => AppVolumeControl(
-                    key: artworkKeys.volume,
-                    foreground: foreground('volume').onSurface,
+                if (showVolume) ...[
+                  SizedBox(height: volumeGap - transportShift),
+                  AnimatedBuilder(
+                    animation: artworkForeground,
+                    builder: (context, _) => AppVolumeControl(
+                      key: artworkKeys.volume,
+                      foreground: foreground('volume').onSurface,
+                    ),
                   ),
-                ),
+                ],
                 const SizedBox(height: 8),
               ],
             ),

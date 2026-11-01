@@ -29,7 +29,7 @@ class AppLandscapePlayer extends StatefulWidget {
   final Widget lyrics;
   final Widget queue;
   final Widget controls;
-  final Widget volume;
+  final Widget? volume;
   final int page;
   final bool isPlaying;
   final bool controlsHeldOpen;
@@ -155,7 +155,8 @@ class _AppLandscapePlayerState extends State<AppLandscapePlayer> {
                                           MainAxisAlignment.spaceEvenly,
                                       children: [
                                         widget.controls,
-                                        widget.volume,
+                                        if (widget.volume != null)
+                                          widget.volume!,
                                         const SizedBox(height: 48),
                                       ],
                                     ),

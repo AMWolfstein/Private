@@ -372,4 +372,9 @@ extension SettingsActions on SettingsNotifier {
     _current = _current.copyWith(playerShowTranslation: visible);
     _saveSettings();
   }
+
+  void setPlayerShowVolume(bool visible) {
+    _current = _current.copyWith(playerShowVolume: visible);
+    _saveSettings();
+  }
 }

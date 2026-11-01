@@ -200,6 +200,11 @@ extension _NowPlayingMenus on _NowPlayingScreenState {
           ),
         );
         break;
+      case 'volume':
+        ref
+            .read(settingsProvider.notifier)
+            .setPlayerShowVolume(!ref.read(settingsProvider).playerShowVolume);
+        break;
       case 'equalizer':
         await Navigator.of(context).push<void>(
           MaterialPageRoute(builder: (_) => const EqualizerScreen()),

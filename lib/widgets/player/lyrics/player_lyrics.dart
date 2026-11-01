@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:sistrum/providers/settings/theme_provider.dart';
 import 'dart:collection';
 import 'dart:ui' show BoxHeightStyle, ImageFilter;
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sistrum/widgets/lyrics/app_lyrics_blur_setting.dart';
 import 'package:sistrum/widgets/lyrics/app_lyrics_timing_setting.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/l10n/l10n.dart';
@@ -33,6 +34,10 @@ class LyricsSettingsPage extends ConsumerWidget {
                   SettingsSearchTarget(
                     label: context.l10n.lyricsTextSize,
                     child: const LyricsSizeSetting(),
+                  ),
+                  SettingsSearchTarget(
+                    label: context.l10n.lyricsBlur,
+                    child: const AppLyricsBlurSetting(),
                   ),
                   const AppLyricsTimingSetting(),
                   SettingsSwitchItem(

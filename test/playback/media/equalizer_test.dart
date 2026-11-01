@@ -175,6 +175,9 @@ void main() {
     notifier.update(const EqualizerSettings(enabled: true, preamp: -8));
     final export = notifier.exportPreset('Portable');
     notifier.importPreset(export);
+    notifier.importPreset(
+      export.replaceFirst('sistrum-equalizer', 'mornye-equalizer'),
+    );
     expect(container.read(equalizerProvider).presets.map((v) => v.name), [
       'Headphones',
       'Desk',

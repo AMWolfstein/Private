@@ -10,7 +10,11 @@ extension _SyncedLyricsViewStatePart3 on _SyncedLyricsViewState {
         : ref.read(playbackLoadingProvider);
     final sistrum = context.isAppTheme;
     final highContrast = MediaQuery.highContrastOf(context);
+    final blurStrength = ref.watch(
+      themeProvider.select((theme) => theme.lyricsBlur),
+    );
     final blurLyrics =
+        blurStrength > 0 &&
         !highContrast &&
         // Every defocused line is filtered again on each playback frame.
         ref.watch(appLiquidGlassProvider);
@@ -309,13 +313,14 @@ extension _SyncedLyricsViewStatePart3 on _SyncedLyricsViewState {
                 // progressively soften lines further from the current one.
                 final sigma = !blurLyrics || isActive || leadIndex == activeLead
                     ? 0.0
-                    : active < 0
-                    ? 4.8
-                    : distance == 1
-                    ? 2.4
-                    : distance == 2
-                    ? 3.6
-                    : 4.8;
+                    : blurStrength *
+                          (active < 0
+                              ? 4.8
+                              : distance == 1
+                              ? 2.4
+                              : distance == 2
+                              ? 3.6
+                              : 4.8);
                 content = TweenAnimationBuilder<double>(
                   tween: Tween(end: sigma),
                   duration: motion,

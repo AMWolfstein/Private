@@ -314,6 +314,12 @@ class SettingsSearchCatalog {
           keywords: const ['lyrics offset', 'delay', 'sync', 'timing'],
         ),
         SettingsSearchEntry(
+          icon: Icons.blur_on,
+          title: l10n.lyricsBlur,
+          subtitle: l10n.lyricsBlurDescription,
+          keywords: const ['lyrics blur', 'defocus', 'soften', 'strength'],
+        ),
+        SettingsSearchEntry(
           icon: Icons.format_size,
           title: l10n.lyricsTextSize,
           keywords: const ['lyrics font size', 'scale', 'text size'],

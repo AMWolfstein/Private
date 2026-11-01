@@ -21,6 +21,11 @@ ThemeSettings loadBootstrapThemeSettings(SharedPreferences prefs) {
     lyricsTimingOffsetMs: normalizeLyricsTimingOffset(
       prefs.getInt(kLyricsTimingOffsetKey),
     ),
+    lyricsBlur: normalizeLyricsBlur(
+      prefs.get(kLyricsBlurKey) is num
+          ? prefs.get(kLyricsBlurKey) as num
+          : null,
+    ),
     appGlassOutlines: prefs.getBool(kAppGlassOutlinesKey) ?? true,
   );
 }
@@ -79,6 +84,7 @@ class ThemeNotifier extends Notifier<ThemeSettings> {
       await prefs.setString(kCustomFontIdKey, snapshot.customFontId);
       await prefs.setString(kCustomFontNameKey, snapshot.customFontName);
       await prefs.setDouble(kLyricsTextScaleKey, snapshot.lyricsTextScale);
+      await prefs.setDouble(kLyricsBlurKey, snapshot.lyricsBlur);
       await prefs.setInt(kLyricsTimingOffsetKey, snapshot.lyricsTimingOffsetMs);
       await prefs.setBool(kAppGlassOutlinesKey, snapshot.appGlassOutlines);
     } catch (e) {
@@ -115,6 +121,11 @@ class ThemeNotifier extends Notifier<ThemeSettings> {
 
   Future<void> setLyricsTextScale(double value, {bool persist = true}) async {
     _editState((current) => current.copyWith(lyricsTextScale: value));
+    if (persist) await _saveToStorage();
+  }
+
+  Future<void> setLyricsBlur(double value, {bool persist = true}) async {
+    _editState((current) => current.copyWith(lyricsBlur: value));
     if (persist) await _saveToStorage();
   }
 
