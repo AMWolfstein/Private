@@ -241,10 +241,18 @@ class NowPlayingRoute extends PageRoute<void> {
       // Same tree shape as the dismissal above, so the page is not remounted
       // when the open animation ends or a drag or dismissal takes over.
       final size = MediaQuery.sizeOf(context);
-      final progress = _interactiveTransition
-          ? animation.value.clamp(0.0, 1.0)
-          : Easing.emphasizedDecelerate.transform(animation.value);
-      final bounds = Rect.lerp(origin, Offset.zero & size, progress)!;
+      // A drag keeps the page sliding under the finger; only the programmatic
+      // open grows out of the mini player.
+      final dragging = _interactiveTransition;
+      final grow = Easing.emphasizedDecelerate.transform(animation.value);
+      final bounds = dragging
+          ? Rect.fromLTWH(
+              0,
+              size.height * (1 - animation.value.clamp(0.0, 1.0)),
+              size.width,
+              size.height,
+            )
+          : Rect.lerp(origin, Offset.zero & size, grow)!;
       return Stack(
         fit: StackFit.expand,
         children: [
@@ -252,7 +260,9 @@ class NowPlayingRoute extends PageRoute<void> {
             rect: bounds,
             child: ClipRRect(
               key: const ValueKey('player-minimize-surface'),
-              borderRadius: BorderRadius.circular(28 * (1 - progress)),
+              borderRadius: BorderRadius.circular(
+                dragging ? 0 : 28 * (1 - grow),
+              ),
               child: OverflowBox(
                 alignment: Alignment.topLeft,
                 minWidth: size.width,
@@ -263,7 +273,9 @@ class NowPlayingRoute extends PageRoute<void> {
                   scale: bounds.width / size.width,
                   alignment: Alignment.topLeft,
                   child: Opacity(
-                    opacity: const Interval(0, 0.6).transform(progress),
+                    opacity: dragging
+                        ? 1
+                        : const Interval(0, 0.6).transform(grow),
                     child: child,
                   ),
                 ),
