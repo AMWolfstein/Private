@@ -89,7 +89,7 @@ updates never invalidate check evidence or review rounds, and real source or con
 Globs use fnmatch, `*` crosses `/`. Files ignored by git are never read.
 
 The default `include` covers the source code of every language Graphify extracts in this repository: Dart,
-Kotlin, Rust, C/C++, Java, Python, Swift, shell, Gradle, and a few more. Configuration and data formats (JSON,
+Kotlin, Rust, C/C++, Java, Python, shell, Gradle, and a few more. Configuration and data formats (JSON,
 YAML, XML, project and lock files, Markdown, images) are not code and are not indexed.
 
 Default exclusions: the workflow itself, hidden top-level and hidden folders (`.*`), `.work/`, an old
