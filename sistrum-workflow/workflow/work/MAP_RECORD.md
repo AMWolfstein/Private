@@ -1,3 +1,13 @@
+# Code-map migration record
+
+Current engine: CodeGraph 1.6.2. See `guides/map.md` for the active installation, schemas and limitations.
+Graphify and regex call inference were retired; historical measurements below do not describe the current engine.
+Current validation and review results are recorded in `CODEGRAPH_MIGRATION.md`.
+
+---
+
+## Archived Graphify implementation history (not current instructions)
+
 # Code map implementation record
 
 Resume point for the Graphify integration. Not a change record; no spec or gate depends on it.

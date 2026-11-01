@@ -1,7 +1,8 @@
 # Sistrum engineering workflow
 
-This repository carries its own workflow. It needs Git and Python 3.10+; the optional code map uses the pinned
-Graphify (`pip install graphifyy==0.9.97`) and still works, with less detail, without it.
+This repository carries its own workflow. It needs Git and Python 3.10+; the code map uses pinned
+CodeGraph 1.6.2 (see workflow/work/guides/map.md for project-local installation). Without it, structural coverage
+is explicitly unavailable; fallback navigation never fabricates call relationships.
 Keep this AGENTS.md at the repository root and the workflow/ directory beside it. All paths below are relative to the repository root.
 
 For every request about this repository (a bug report or screenshot, a feature, a plan or discussion, a review,

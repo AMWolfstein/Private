@@ -2,7 +2,7 @@
 
 A repo-local engineering workflow for coding agents. The skills and reviewer agents are Markdown, the tool is
 standard-library Python 3.10+, and the checks are the repository's own commands. The code map can use the pinned
-Graphify (optional, `pip install graphifyy==0.9.97`); without it the map keeps imports, channels, tests and
+CodeGraph 1.6.2 (local CLI); without it the map keeps imports, channels, tests and
 declarations and says that structure is unavailable.
 
 The owner talks normally. The `work` skill decides whether a request is a question, a discussion, a small fix, a
@@ -17,7 +17,7 @@ feature, an architecture change, a review or a release, and follows the matching
 | Plans with a check per step, bounded attempts, "same failure twice: question the assumption", evidence in the same message as the claim, append-only log, repeated mistakes become enforced checks | aicodeking/deepseek-stack | `implement`, `fix` and `ship` skills, `log.md`, `workflow/work/LESSONS.md` |
 | Read callers before editing; the reuse ladder; economical solution, complete change; the never-cut list; `shortcut:` comments; review sweep order with a concrete case per finding | DietrichGebert/ponytail | `fix` and `implement` skills, constitution article III, `code-reviewer` |
 | Mechanical evidence kept apart from judgment review; blind review packets without targets; finding statuses with evidence; a finding that disappears is not fixed | peteromallet/desloppify | `work.py check` and `packet`, `findings.md` statuses, `work.py lint` |
-| Small, current, scoped context from a code graph instead of whole files or reports | Graphify-Labs/graphify (AST extraction only) | `work.py map` and `context`, `workflow/work/map.json`, `workflow/work/architecture.json`, [map guide](work/guides/map.md) |
+| Small, current, scoped context from a code graph instead of whole files or reports | colbymchenry/codegraph (AST and resolver adapter) | `work.py map` and `context`, `workflow/work/map.json`, `workflow/work/architecture.json`, [map guide](work/guides/map.md) |
 
 Left out on purpose: scores (they can be gamed and do not measure correctness), installed CLIs, swarms of
 reviewers, and records for small fixes.
@@ -110,7 +110,7 @@ new-repository/
     │   ├── work.py              # CLI, gates, evidence
     │   ├── workmap.py           # code map and context
     │   ├── worklib.py           # shared helpers
-    │   ├── graphify_adapter.py  # process boundary to Graphify
+    │   ├── codegraph_adapter.py # private CLI/SQLite boundary to CodeGraph
     │   ├── test_work.py
     │   ├── test_workmap.py
     │   └── fixtures/            # mock extractor for tests
@@ -127,30 +127,26 @@ new-repository/
 Keep AGENTS.md at the root: it directs the agent into workflow/. Merge existing AGENTS.md and .gitignore
 rather than overwriting project content. Copy hidden directories too. No dependency on the old repository remains.
 
-Requirements: Git and Python 3.10+, an initialized checkout with at least one commit, and POSIX file locking
-(Linux or macOS) for map updates. Nothing else is installed: the map runs on its built-in pattern scan
-(declarations for Dart, Kotlin, Rust, Python, Java, C, C++ and shell; imports, channels, tests). Graphify is not used by this workflow; its adapter
-stays in place, disabled, for a future decision.
+Requirements: Git and Python 3.10+, an initialized checkout with at least one commit. Install CodeGraph
+1.6.2 for AST/resolver analysis (see [map guide](work/guides/map.md)); Graphify is not required. For a project-local
+npm install, use `npm install --prefix .work/tools @colbymchenry/codegraph@1.6.2` and configure
+`extractor.command` for that executable or put it on PATH. No automatic downloads or agent configuration edits.
 
 From the repository root:
 
 ```sh
-python3 -m unittest discover -s workflow/scripts/work -p 'test_*.py'   # RealGraphify tests skip while Graphify is off
-python3 workflow/scripts/work/work.py status
+python3 -m unittest discover -s workflow/scripts/work -p 'test_*.py'
 python3 workflow/scripts/work/work.py map update
+python3 workflow/scripts/work/work.py map coverage
+python3 workflow/scripts/work/work.py status
 ```
 
-An empty repository is a valid start: the map is built with zero files and fills in as code arrives. Map
-declarations start empty (`architecture.json`); add modules only for paths that exist and decisions that were
-made. Do not copy an old repository's `graphify-out/` or `.work/`.
-
 Make the agent read root AGENTS.md if it does not discover it automatically. All commands run from the repository
-root, not inside workflow/. Runtime logs remain in root `.work/`, ignored by the supplied .gitignore.
-
-Product checks require actual Flutter/Android/Rust toolchains for changed domains. Android uses the project's
-Gradle wrapper and testDebugUnitTest; Rust uses Cargo directly, without old-repository helper scripts. No Rust
-installation is needed for Flutter/Kotlin-only changes. Adjust commands for actual flavors/modules when created.
-Missing project files/tools block the relevant check; they do not count as successful validation.
+root, not inside workflow/. Logs, graph and private engine mirror remain in ignored root `.work/`.
+Missing CodeGraph permits explicitly limited fallback navigation, with no guessed call graph. Parser failures,
+unsupported inputs and unresolved references are visible in coverage. Shell is not structurally indexed by the
+pinned engine in our fixture. Product checks still require the actual Flutter/Android/Rust toolchains when
+those domains change. No old graphify-out/ directory or machine-specific paths should be copied.
 
 ### Optional agent integrations
 
@@ -177,5 +173,5 @@ in a fresh context. If those capabilities are unavailable, report self-review; d
 - Host checks never prove device behaviour. Device checks stay pending until the owner runs them.
 - Discovery, hooks and read-only reviewer isolation depend on the host agent. Instructions alone do not
   guarantee enforcement; missing independent-review capability must be reported.
-- The code map's entry points are lexical, Graphify 0.9.97 emits no Dart call edges (the map infers unqualified ones by name), and channel scans are
-  patterns. A current map says the facts match the tree, not that they are complete; see the map guide.
+- Map ranking is lexical; structural relationships are resolver candidates, not compiler or runtime proof.
+  Review per-file coverage and native-boundary gaps; no complete-call-graph claim is made.
