@@ -1656,9 +1656,9 @@
     "semantic_hash": "bfee1356e4c394e0644e2bbc91d17bec"
   },
   "LOCAL_OFFLINE_MIGRATION_PLAN.md": {
-    "mtime": 1793567765.6787193,
-    "seen": 1793567767.8506448,
-    "ast_hash": "6e3c69eba46afe37fab9917c977ce2c3",
+    "mtime": 1793567783.2106996,
+    "seen": 1793567820.153222,
+    "ast_hash": "beefc8931511a6d0e5e21a0352c673c9",
     "semantic_hash": ""
   },
   "third_party/audio_service/CHANGELOG.md": {
@@ -3198,9 +3198,9 @@
     "semantic_hash": ""
   },
   "lib/widgets/player/mini_player.dart": {
-    "mtime": 1793436727.2924254,
-    "seen": 1793551931.342772,
-    "ast_hash": "7005c5adf79a7fc5577fd85b6896dc0f",
+    "mtime": 1793567783.2419012,
+    "seen": 1793567820.1229808,
+    "ast_hash": "f72608a97e3daa5b368c81f6712150c5",
     "semantic_hash": ""
   },
   "scripts/find_dead_code.py": {
@@ -7710,9 +7710,9 @@
     "semantic_hash": ""
   },
   "lib/core/navigation/now_playing_route.dart": {
-    "mtime": 1793436727.261682,
-    "seen": 1793551931.3422806,
-    "ast_hash": "690f1b915bdf803823357bde9d29bd93",
+    "mtime": 1793567783.2419012,
+    "seen": 1793567820.112622,
+    "ast_hash": "4907cccfe63e7c3fa4b6915b34bde6ff",
     "semantic_hash": ""
   },
   "lib/core/navigation/shell_navigation.dart": {
@@ -11904,9 +11904,9 @@
     "semantic_hash": ""
   },
   "docs/ANDROID_AUTO.md": {
-    "mtime": 1793567733.187248,
-    "seen": 1793567767.8509264,
-    "ast_hash": "83a3e28ab121f03e3daaf5417c44f574",
+    "mtime": 1793567811.5966418,
+    "seen": 1793567820.1535408,
+    "ast_hash": "90777ff341b820ad30c5bc612fe51048",
     "semantic_hash": ""
   }
 }
