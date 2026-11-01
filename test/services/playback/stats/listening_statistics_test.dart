@@ -18,6 +18,38 @@ const _two = ListeningTrack(
 
 void main() {
   test(
+    'idle includes queued writes and a failed write stays retryable',
+    () async {
+      var elapsed = Duration.zero;
+      final first = Completer<void>();
+      var writes = 0;
+      final recorder = ListeningRecorder(
+        write: (_) async {
+          writes++;
+          if (writes == 1) {
+            await first.future;
+            throw StateError('retry');
+          }
+        },
+        elapsed: () => elapsed,
+        now: () => DateTime(2026).add(elapsed),
+      );
+      expect(recorder.idle, true);
+      recorder.update(_one, playing: true);
+      elapsed = const Duration(seconds: 5);
+      recorder.update(_one, playing: false);
+      final flush = recorder.flush();
+      expect(recorder.idle, false);
+      first.complete();
+      await flush;
+      expect(recorder.idle, false);
+      await recorder.flush();
+      expect(writes, 2);
+      expect(recorder.idle, true);
+    },
+  );
+
+  test(
     'counts elapsed playback once, excluding pauses and seek-like updates',
     () async {
       var elapsed = Duration.zero;

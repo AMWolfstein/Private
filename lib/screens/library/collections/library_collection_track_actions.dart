@@ -229,32 +229,71 @@ extension _LibraryCollectionTracksScreenStatePart1
         else
           SliverPadding(
             padding: EdgeInsets.symmetric(horizontal: wideListInset(context)),
-            sliver: SliverList(
-              delegate: SliverChildBuilderDelegate((context, index) {
-                final entry = entries[index];
-                final isSelected = selectedIds.contains(entry.key);
-                return KeyedSubtree(
-                  key: ValueKey(entry.key),
-                  // Collection contents must remain visible even when route
-                  // or tab transitions pause animation tickers.
-                  child: CollectionTrackTile(
-                    entry: entry,
-                    mode: widget.mode,
-                    playlistId: widget.playlistId,
-                    folderTracks: folderTracks,
-                    trackIndex: index,
-                    isSelectionMode: isSelectionMode,
-                    isSelected: isSelected,
-                    onTap: isSelectionMode
-                        ? () => toggleSelection(entry.key)
-                        : null,
-                    onLongPress: isSelectionMode
-                        ? null
-                        : () => enterSelectionMode(entry.key),
+            sliver: _reordering && !isSelectionMode
+                ? SliverReorderableList(
+                    itemCount: entries.length,
+                    onReorderItem: (oldIndex, newIndex) async {
+                      if (_orderSaving) return;
+                      final keys = entries.map((e) => e.key).toList();
+                      keys.insert(newIndex, keys.removeAt(oldIndex));
+                      _rebuild(() => _orderSaving = true);
+                      try {
+                        await ref
+                            .read(libraryCollectionsProvider.notifier)
+                            .reorderTracks(
+                              keys,
+                              playlistId:
+                                  widget.mode == LibraryCollectionMode.playlist
+                                  ? widget.playlistId
+                                  : null,
+                            );
+                      } catch (error) {
+                        _log.w('Collection reorder failed: $error');
+                        if (context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                context.l10n.collectionReorderFailed,
+                              ),
+                            ),
+                          );
+                        }
+                      } finally {
+                        if (mounted) {
+                          _rebuild(() => _orderSaving = false);
+                        }
+                      }
+                    },
+                    itemBuilder: (context, index) => Row(
+                      key: ValueKey(entries[index].key),
+                      children: [
+                        Expanded(
+                          child: _orderedTrackTile(
+                            entries,
+                            folderTracks,
+                            index,
+                          ),
+                        ),
+                        ReorderableDragStartListener(
+                          index: index,
+                          enabled: !_orderSaving,
+                          child: const Padding(
+                            padding: EdgeInsets.all(16),
+                            child: Icon(Icons.drag_handle),
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                : SliverList(
+                    delegate: SliverChildBuilderDelegate(
+                      (context, index) => KeyedSubtree(
+                        key: ValueKey(entries[index].key),
+                        child: _orderedTrackTile(entries, folderTracks, index),
+                      ),
+                      childCount: entries.length,
+                    ),
                   ),
-                );
-              }, childCount: entries.length),
-            ),
           ),
         if (!loading && entries.isNotEmpty)
           buildTrackListFooter(
@@ -384,5 +423,26 @@ extension _LibraryCollectionTracksScreenStatePart1
         // The cover has already been normalized into app storage.
       }
     }
+  }
+
+  Widget _orderedTrackTile(
+    List<CollectionTrackEntry> entries,
+    List<Track> tracks,
+    int index,
+  ) {
+    final entry = entries[index];
+    return CollectionTrackTile(
+      entry: entry,
+      mode: widget.mode,
+      playlistId: widget.playlistId,
+      folderTracks: tracks,
+      trackIndex: index,
+      isSelectionMode: isSelectionMode,
+      isSelected: selectedIds.contains(entry.key),
+      onTap: isSelectionMode ? () => toggleSelection(entry.key) : null,
+      onLongPress: isSelectionMode || _reordering
+          ? null
+          : () => enterSelectionMode(entry.key),
+    );
   }
 }

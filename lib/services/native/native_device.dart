@@ -5,6 +5,17 @@ import 'package:sistrum/services/native/native_channel.dart';
 final class NativeDevice {
   NativeDevice._();
 
+  static Future<int?> androidSdkVersion() async {
+    if (defaultTargetPlatform != TargetPlatform.android) return null;
+    try {
+      return await nativeBackendChannel.invokeMethod<int>(
+        'getAndroidSdkVersion',
+      );
+    } catch (_) {
+      return null;
+    } // Optional probe; setup retains device_info fallback.
+  }
+
   static Future<void> setScreenAwake(bool enabled) async {
     if (defaultTargetPlatform != TargetPlatform.android) return;
     await nativeBackendChannel.invokeMethod<void>('setScreenAwake', {

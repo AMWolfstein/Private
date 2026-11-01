@@ -14,7 +14,7 @@ class AutoplaySoundStore {
   Future<Directory> _createDirectory() async {
     final support = await getApplicationSupportDirectory();
     return Directory(
-      '${support.path}/autoplay_sound_v1',
+      '${support.path}/autoplay_sound_v2',
     ).create(recursive: true);
   }
 
@@ -48,7 +48,7 @@ class AutoplaySoundStore {
       final data = jsonDecode(await file.readAsString());
       final stamp = await _stamp(source);
       if (data is! Map ||
-          data['version'] != 1 ||
+          data['version'] != 2 ||
           data['source'] != source ||
           data['size'] != stamp.$1 ||
           data['modified'] != stamp.$2) {
@@ -75,7 +75,7 @@ class AutoplaySoundStore {
       try {
         await temp.writeAsString(
           jsonEncode({
-            'version': 1,
+            'version': 2,
             'source': source,
             'size': originalStamp.$1,
             'modified': originalStamp.$2,

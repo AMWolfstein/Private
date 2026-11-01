@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:sistrum/services/native/native_device.dart';
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';

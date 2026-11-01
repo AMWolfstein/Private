@@ -1,3 +1,5 @@
+Additional adapted v5.3.0 sources (2026-11-01): song_features.dart, autoplay_sound_signal.dart, native_audio_features.rs and radix-2 FFT helper, with their associated tests. Copyright 2026 zarzet and contributors. LGPL-3.0-only; full terms below also apply to these adaptations.
+
 Mornye local Autoplay personalization
 Copyright 2026 zarzet and contributors
 SPDX-License-Identifier: LGPL-3.0-only

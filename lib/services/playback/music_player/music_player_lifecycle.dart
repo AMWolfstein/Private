@@ -33,6 +33,7 @@ extension _MusicPlayerHandlerLifecycle on MusicPlayerHandler {
             state.processingState == AudioProcessingState.completed ||
             state.processingState == AudioProcessingState.idle,
       );
+      _scheduleListeningFlushes();
     }
 
     _subscriptions.add(mediaItem.listen((_) => recordListening()));
@@ -56,15 +57,27 @@ extension _MusicPlayerHandlerLifecycle on MusicPlayerHandler {
     );
     _subscriptions.add(mediaItem.listen((_) => _updateHaptics()));
     _subscriptions.add(playbackState.listen((_) => _updateHaptics()));
-    _listeningTimer = Timer.periodic(const Duration(seconds: 10), (_) {
-      unawaited(_dependencies.recorder.flush());
-    });
     _player.setReleaseMode(ReleaseMode.stop);
     unawaited(_player.setAudioContext(musicAudioContext));
     unawaited(_configureAudioSession());
     _refreshPlaybackAutomation();
 
     _listenToPlayer(_player);
+  }
+
+  void _scheduleListeningFlushes() {
+    if (_disposed || _dependencies.recorder.idle) return;
+    _listeningTimer ??= Timer.periodic(const Duration(seconds: 10), (_) {
+      unawaited(_flushListening());
+    });
+  }
+
+  Future<void> _flushListening() async {
+    final recorder = _dependencies.recorder;
+    await recorder.flush();
+    if (_disposed || !recorder.idle) return;
+    _listeningTimer?.cancel();
+    _listeningTimer = null;
   }
 
   /// Haptics follow only decodable local files; streams have no full copy.

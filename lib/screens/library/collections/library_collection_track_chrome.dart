@@ -123,6 +123,16 @@ extension _LibraryCollectionTracksScreenStatePart2
           ? _buildPlayAllCenterButton(entries)
           : null,
       appBarActions: [
+        if (!isSelectionMode && entries.length > 1)
+          IconButton(
+            icon: Icon(_reordering ? Icons.check : Icons.swap_vert),
+            tooltip: _reordering
+                ? context.l10n.dialogDone
+                : context.l10n.collectionReorder,
+            onPressed: _orderSaving
+                ? null
+                : () => _rebuild(() => _reordering = !_reordering),
+          ),
         if (!isSelectionMode && entries.isNotEmpty)
           IconButton(
             icon: Icon(appIconFor(Icons.ios_share)),

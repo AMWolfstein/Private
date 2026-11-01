@@ -7,6 +7,8 @@ pub mod lyrics;
 pub mod matching;
 pub mod media;
 pub mod native_audio_analysis;
+pub mod native_audio_features;
+mod native_fft;
 pub mod native_palette;
 pub mod tags;
 mod text;

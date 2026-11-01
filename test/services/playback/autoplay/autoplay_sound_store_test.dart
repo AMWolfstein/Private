@@ -28,7 +28,7 @@ void main() {
       ).writeAsBytes([1, 2, 3]);
       final store = AutoplaySoundStore();
       final stamp = (await store.stamp(source.path))!;
-      const profile = AutoplaySoundProfile([0.1, 0.2, 0.7, 0.6, 0.5, 0.4]);
+      final profile = AutoplaySoundProfile(List.filled(42, 0.0));
       expect(await store.load(source.path), isNull);
       await store.save(source.path, profile, stamp);
       expect((await store.load(source.path))!.values, profile.values);
@@ -42,7 +42,7 @@ void main() {
       expect(await store.load(source.path), isNull);
       final fresh = (await store.stamp(source.path))!;
       await store.save(source.path, profile, fresh);
-      final directory = Directory('${root.path}/autoplay_sound_v1');
+      final directory = Directory('${root.path}/autoplay_sound_v2');
       final file = (await directory.list().toList()).whereType<File>().single;
       await file.writeAsString('{incomplete');
       expect(await store.load(source.path), isNull);

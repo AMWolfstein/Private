@@ -146,6 +146,8 @@ class ListeningRecorder {
   ListeningTrack? _track;
   Duration? _lastElapsed;
   DateTime? _lastDate;
+  int _writing = 0;
+  bool get idle => !_playing && _pending.isEmpty && _writing == 0;
   bool _playing = false;
   bool _clearing = false;
   int _sessionMilliseconds = 0;
@@ -208,6 +210,7 @@ class ListeningRecorder {
     checkpoint();
     final batch = _pending.values.toList(growable: false);
     _pending.clear();
+    if (batch.isNotEmpty) _writing++;
     _writeTail = _writeTail.then((_) async {
       if (batch.isEmpty) return;
       try {
@@ -225,6 +228,8 @@ class ListeningRecorder {
           }
         }
         _log.w('Could not persist listening statistics: $error');
+      } finally {
+        _writing--;
       }
     });
     return _writeTail;

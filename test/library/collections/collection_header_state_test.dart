@@ -51,6 +51,35 @@ class _Collections extends LibraryCollectionsNotifier {
   void finish() => state = LibraryCollectionsState(isLoaded: true);
 }
 
+class _ReorderCollections extends _Collections {
+  List<String>? saved;
+  @override
+  LibraryCollectionsState build() => LibraryCollectionsState(
+    isLoaded: true,
+    loved: [
+      for (var i = 0; i < 3; i++)
+        CollectionTrackEntry(
+          key: 'local:$i',
+          track: Track(
+            id: '$i',
+            name: 'Song $i',
+            duration: 120,
+            artistName: 'Artist',
+            albumName: 'Album',
+            source: 'local',
+          ),
+          addedAt: DateTime(2026),
+        ),
+    ],
+  );
+  @override
+  Future<void> reorderTracks(List<String> keys, {String? playlistId}) async {
+    saved = keys;
+    final byKey = {for (final e in state.loved) e.key: e};
+    state = state.copyWith(loved: [for (final key in keys) byKey[key]!]);
+  }
+}
+
 class _Player extends MusicPlayerController {
   final toggles = <bool>[];
   @override
@@ -81,6 +110,38 @@ void main() {
         home: page,
       ),
     );
+    testWidgets(
+      'Loved reorders in place and returns to ordinary songs ($brightness)',
+      (tester) async {
+        tester.view.physicalSize = const Size(430, 1200);
+        tester.view.devicePixelRatio = 1;
+        addTearDown(tester.view.reset);
+        final collections = _ReorderCollections();
+        await tester.pumpWidget(
+          host(
+            const LibraryCollectionTracksScreen(
+              mode: LibraryCollectionMode.loved,
+            ),
+            collections: collections,
+          ),
+        );
+        await tester.pumpAndSettle();
+        await tester.tap(find.byTooltip('Reorder songs'));
+        await tester.pumpAndSettle();
+        expect(find.byType(ReorderableDragStartListener), findsNWidgets(3));
+        final sliver = tester.widget<SliverReorderableList>(
+          find.byType(SliverReorderableList),
+        );
+        sliver.onReorderItem!(0, 2);
+        await tester.pumpAndSettle();
+        expect(collections.saved, ['local:1', 'local:2', 'local:0']);
+        await tester.tap(find.byTooltip('Done'));
+        await tester.pumpAndSettle();
+        expect(find.byType(ReorderableDragStartListener), findsNothing);
+        expect(tester.takeException(), isNull);
+      },
+    );
+
     testWidgets(
       'album selection owns the header and closes without leaving ($brightness)',
       (tester) async {

@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:sistrum/services/library/collections/collection_track_ordering.dart';
 import 'package:sistrum/providers/library/library_preference_events_provider.dart';
 import 'package:sistrum/services/library/collections/library_preference_events.dart';
 
@@ -290,6 +291,44 @@ class LibraryCollectionsNotifier extends Notifier<LibraryCollectionsState> {
       }
     });
   }
+
+  /// Persists before publication; stale/incomplete membership fails atomically.
+  Future<void> reorderTracks(List<String> keys, {String? playlistId}) =>
+      _mutate(() async {
+        if (playlistId != null) await ensurePlaylistLoaded(playlistId);
+        final entries = playlistId == null
+            ? state.loved
+            : state.playlistById(playlistId)?.tracks;
+        if (entries == null) throw StateError('Playlist no longer exists');
+        final byKey = {for (final e in entries) e.key: e};
+        if (keys.length != byKey.length ||
+            keys.toSet().length != keys.length ||
+            !keys.every(byKey.containsKey)) {
+          throw ArgumentError('Incomplete collection order');
+        }
+        if (keys.indexed.every((e) => entries[e.$1].key == e.$2)) return;
+        final times = await CollectionTrackOrdering(
+          await _db.database,
+        ).reorder(keys, playlistId: playlistId);
+        if (!ref.mounted) return;
+        final reordered = [
+          for (final key in keys)
+            CollectionTrackEntry(
+              key: key,
+              track: byKey[key]!.track,
+              addedAt: times[key]!,
+            ),
+        ];
+        if (playlistId == null) {
+          state = state.copyWith(loved: reordered);
+        } else {
+          _replacePlaylistById(
+            playlistId,
+            (p) => p.copyWith(tracks: reordered, updatedAt: DateTime.now()),
+          );
+        }
+        _invalidatePlaylistPickerSummaries();
+      });
 
   Future<String> createPlaylist(String name) => _mutate(() async {
     final now = DateTime.now();

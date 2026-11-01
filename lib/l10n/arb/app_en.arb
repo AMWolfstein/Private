@@ -3541,5 +3541,13 @@
   "@homeMixTrackCount": {"placeholders": {"count": {"type": "int"}}},
   "autoplaySoundMatching": "Match the sound",
   "autoplaySoundMatchingDescription": "Use local audio summaries to find similar-sounding songs. Short windows are analyzed in the background while Autoplay is enabled. No audio leaves this device.",
-  "nowPlayingShuffleLibrary": "Shuffle library"
+  "nowPlayingShuffleLibrary": "Shuffle library",
+  "collectionReorder": "Reorder songs",
+  "collectionReorderFailed": "Could not save the order. Reload the collection and try again.",
+  "audioInfoBluetoothFormat": "Bluetooth codec format",
+  "audioInfoAndroidNotReported": "Not reported by Android",
+  "audioInfoSystemDefaultRate": "System default sample rate",
+  "audioInfoAndroidPcmRates": "Android PCM sample rates",
+  "audioInfoAndroidPcmFormats": "Android PCM formats",
+  "audioInfoSystemDefaultBuffer": "System default buffer"
 }

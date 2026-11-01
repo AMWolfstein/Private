@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:sistrum/services/playback/notification/media_session_filter.dart';
 import 'package:sistrum/services/playback/browser/background_favorites.dart';
 import 'package:sistrum/services/playback/browser/media_library_browser.dart';
 import 'package:sistrum/services/playback/browser/media_library_catalog.dart';
@@ -120,7 +121,10 @@ class PlaybackDependencies {
 
   static Future<PlaybackHandler> _initializeAudioHandler(
     PlaybackHandler Function() builder,
-  ) => AudioService.init(builder: builder, config: notificationConfig);
+  ) {
+    installMediaSessionFilter();
+    return AudioService.init(builder: builder, config: notificationConfig);
+  }
 }
 
 /// Owns a player lifetime and its latest immutable settings. Configuration is

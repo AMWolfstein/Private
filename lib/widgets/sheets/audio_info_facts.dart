@@ -251,12 +251,17 @@ class AudioInfoFacts {
   // A preferred mixer format is configuration, not proof of active playback.
   bool get _bitPerfect => direct;
 
+  bool get _bluetoothFormatUnreported =>
+      !direct && route?.bluetoothFormatUnreported == true;
+
   int? get _outputRate {
     if (direct) return usb.sampleRate;
+    if (_bluetoothFormatUnreported) return null;
     return route?.device?.mixerSampleRate ?? route?.mixerSampleRate;
   }
 
   String? get _resampling {
+    if (_bluetoothFormatUnreported) return l10n.audioInfoAndroidNotReported;
     final source = sampleRate, output = _outputRate;
     if (source == null || output == null) return null;
     if (_bitPerfect || source == output) return l10n.audioInfoResamplingNone;
@@ -282,6 +287,14 @@ class AudioInfoFacts {
         ),
       if (_outputRate case final rate?)
         AudioInfoFact(l10n.audioInfoOutputRate, _khz(rate)),
+      if (_bluetoothFormatUnreported) ...[
+        AudioInfoFact(
+          l10n.audioInfoBluetoothFormat,
+          l10n.audioInfoAndroidNotReported,
+        ),
+        if (route?.mixerSampleRate case final rate?)
+          AudioInfoFact(l10n.audioInfoSystemDefaultRate, _khz(rate)),
+      ],
       if (direct && usb.bitDepth != null)
         AudioInfoFact(
           l10n.audioInfoOutputFormat,
@@ -290,18 +303,23 @@ class AudioInfoFacts {
             if (usb.transport != 'pcm') usb.transport.toUpperCase(),
           ].join(' · '),
         )
-      else if (device?.mixerBitDepth case final bits?)
+      else if (device?.mixerBitDepth case final bits?
+          when !_bluetoothFormatUnreported)
         AudioInfoFact(l10n.audioInfoOutputFormat, '$bits-bit'),
       if (device != null && route?.platform == 'android')
         AudioInfoFact(
-          l10n.audioInfoDeviceRates,
+          _bluetoothFormatUnreported
+              ? l10n.audioInfoAndroidPcmRates
+              : l10n.audioInfoDeviceRates,
           device.sampleRates.isEmpty
               ? l10n.audioInfoAnyRate
               : device.sampleRates.map(_khz).join(', '),
         ),
       if (device != null && (device.bitDepths.isNotEmpty || device.floatOutput))
         AudioInfoFact(
-          l10n.audioInfoDeviceFormats,
+          _bluetoothFormatUnreported
+              ? l10n.audioInfoAndroidPcmFormats
+              : l10n.audioInfoDeviceFormats,
           [
             for (final bits in device.bitDepths)
               if (bits != 32 || !device.floatOutput) '$bits-bit',
@@ -315,7 +333,9 @@ class AudioInfoFacts {
         ),
       if (bufferMs != null)
         AudioInfoFact(
-          l10n.audioInfoBuffer,
+          _bluetoothFormatUnreported
+              ? l10n.audioInfoSystemDefaultBuffer
+              : l10n.audioInfoBuffer,
           [
             '${bufferMs.toStringAsFixed(1)} ms',
             if (route?.framesPerBuffer case final frames?) '$frames frames',

@@ -7,8 +7,17 @@ extension _SetupScreenStatePart1 on _SetupScreenState {
     try {
       await ref.read(settingsProvider.notifier).ensureLoaded();
       if (_platform == TargetPlatform.android) {
-        final androidInfo = await DeviceInfoPlugin().androidInfo;
-        _androidSdkVersion = androidInfo.version.sdkInt;
+        final nativeSdk = await NativeDevice.androidSdkVersion();
+        if (nativeSdk != null) {
+          _androidSdkVersion = nativeSdk;
+        } else {
+          try {
+            _androidSdkVersion =
+                (await DeviceInfoPlugin().androidInfo).version.sdkInt;
+          } catch (error) {
+            _log.w('Android SDK lookup unavailable: $error');
+          }
+        }
       }
       final prefs = await _prefs;
       if (!mounted) return;

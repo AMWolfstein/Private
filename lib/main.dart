@@ -58,7 +58,9 @@ void main() {
       }
       // PERF-604: the orientation lock is independent of the prefs and
       // installation steps; run it in parallel and await it before runApp.
-      final orientation = setAppOrientation();
+      final orientation = setAppOrientation().catchError((Object error) {
+        _log.w('Initial screen orientation unavailable: $error');
+      });
       LicenseRegistry.addLicense(() async* {
         yield LicenseEntryWithLineBreaks(const [
           'Mornye Android Auto integration',

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:math';
 import 'package:sistrum/services/playback/autoplay/autoplay_sound_profile.dart';
+import 'package:sistrum/services/playback/autoplay/autoplay_sound_signal.dart';
 import 'package:sistrum/services/playback/autoplay/autoplay_sound_store.dart';
 import 'package:sistrum/services/playback/automix/automix_analyzer.dart';
 import 'package:sistrum/services/native/media_file_bridge.dart';
@@ -100,7 +101,9 @@ List<PlayableMedia> selectAutoplayTracks({
   required Random random,
   int limit = 6,
   double Function(PlayableMedia)? preferenceAdjustment,
+  SoundAutoplaySignal? sound,
 }) {
+  sound?.prepare([...recent, seed], candidates);
   String normalized(String? value) => normalizeLookupText(value);
   String songKey(PlayableMedia item) =>
       '${normalized(item.artist)}|${normalized(item.title)}';
@@ -143,6 +146,7 @@ List<PlayableMedia> selectAutoplayTracks({
       score += 4;
     }
     if (preferenceAdjustment != null) score += preferenceAdjustment(item);
+    if (sound != null) score += (sound.score(item) - 2.5).clamp(-2.5, 2.5);
     // Match the latest source OR normalized song occurrence without walking
     // the entire listening history again for every candidate.
     final played = max(
@@ -154,7 +158,14 @@ List<PlayableMedia> selectAutoplayTracks({
   }
   final selected = <PlayableMedia>[];
   while (selected.length < limit && scored.isNotEmpty) {
-    scored.sort((a, b) => b.$2.compareTo(a.$2));
+    final previous = selected.isNotEmpty
+        ? selected.last
+        : upcoming.isNotEmpty
+        ? upcoming.last
+        : seed;
+    double rank((PlayableMedia, double, String) entry) =>
+        entry.$2 + (sound?.follow(previous, entry.$1) ?? 0).clamp(-3.0, .5);
+    scored.sort((a, b) => rank(b).compareTo(rank(a)));
     final next = scored.removeAt(0);
     selected.add(next.$1);
     for (var i = 0; i < scored.length; i++) {
@@ -247,7 +258,10 @@ class MusicAutoplay {
               !_soundMatching()) {
             return;
           }
-          final profile = await _soundAnalyzer.analyzeSound(path);
+          final profile = await _soundAnalyzer.analyzeSound(
+            path,
+            duration: item.duration,
+          );
           if (profile != null &&
               generation == _generation &&
               _soundMatching() &&
@@ -367,10 +381,7 @@ class MusicAutoplay {
             ], generation)
           : <String, AutoplaySoundProfile>{};
       if (generation != _generation || view.isDisposed || !enabled) return;
-      final soundContext = [
-        current.source,
-        ...recent.reversed.take(11).map((t) => t.source),
-      ];
+      final sound = _soundSignal(profiles);
       final model = view.preferenceModel;
       final random = view.random;
       List<PlayableMedia> ordinaryRanking() => selectAutoplayTracks(
@@ -381,8 +392,7 @@ class MusicAutoplay {
         dismissedSources: _dismissed,
         random: random,
         limit: 6 - upcoming.length,
-        preferenceAdjustment: (track) =>
-            autoplaySoundAdjustment(track.source, soundContext, profiles),
+        sound: sound,
       );
       List<PlayableMedia> selected;
       if (model == null) {
@@ -463,6 +473,7 @@ List<PlayableMedia> _rankPersonalizedAutoplay(_AutoplayRankingInput input) {
     limit,
     profiles,
   ) = input;
+  final sound = _soundSignal(profiles);
   final learningSeed = autoplayLearningTrack(seed);
   final exploration = model.explore(Random(randomSeed ^ 0x51a7));
   return selectAutoplayTracks(
@@ -473,16 +484,20 @@ List<PlayableMedia> _rankPersonalizedAutoplay(_AutoplayRankingInput input) {
     dismissedSources: dismissed,
     random: Random(randomSeed),
     limit: limit,
+    sound: sound,
     preferenceAdjustment: (track) =>
         model.rankAdjustment(
           autoplayLearningTrack(track),
           previous: learningSeed,
           at: at,
         ) +
-        exploration.adjustment(autoplayLearningTrack(track)) +
-        autoplaySoundAdjustment(track.source, [
-          seed.source,
-          ...recent.reversed.take(11).map((t) => t.source),
-        ], profiles),
+        exploration.adjustment(autoplayLearningTrack(track)),
   );
 }
+
+SoundAutoplaySignal? _soundSignal(Map<String, AutoplaySoundProfile> profiles) =>
+    profiles.isEmpty
+    ? null
+    : SoundAutoplaySignal({
+        for (final e in profiles.entries) e.key: e.value.vector,
+      });

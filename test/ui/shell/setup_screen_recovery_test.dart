@@ -139,6 +139,7 @@ void main() {
       throw StateError('Unexpected permission request: ${call.method}');
     });
     messenger.setMockMethodCallHandler(_backend, (call) async {
+      if (call.method == 'getAndroidSdkVersion') return sdkVersion;
       if (call.method == 'pickSafTree') pickerCalls++;
       throw StateError(
         'Setup must not call the folder backend: ${call.method}',

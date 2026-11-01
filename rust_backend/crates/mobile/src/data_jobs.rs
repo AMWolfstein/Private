@@ -65,6 +65,22 @@ fn execute(
             let colors = sistrum_core::native_palette::quantize_rgba(bytes, check)?;
             Ok(json!({"colors": colors}))
         }
+        "audio_features" => {
+            let paths = request
+                .get("paths")
+                .and_then(Value::as_array)
+                .ok_or("Missing paths")?;
+            let paths = paths
+                .iter()
+                .map(|p| p.as_str().ok_or("Invalid path"))
+                .collect::<Result<Vec<_>, _>>()?;
+            let features =
+                sistrum_core::native_audio_features::analyze_audio_features_files(&paths, check)?;
+            Ok(
+                json!({"version": sistrum_core::native_audio_features::AUDIO_FEATURES_VERSION,
+                "features": features.map(|f| f.to_vector())}),
+            )
+        }
         "automix" => {
             let grid = sistrum_core::native_audio_analysis::analyze_automix_pcm_file(
                 string(request, "path")?,
@@ -121,4 +137,43 @@ pub(crate) fn string<'a>(request: &'a Value, name: &str) -> Result<&'a str, Stri
         .get(name)
         .and_then(Value::as_str)
         .ok_or_else(|| format!("Missing native data field: {name}"))
+}
+
+#[cfg(test)]
+mod audio_feature_tests {
+    use super::*;
+    #[test]
+    fn features_job_validates_windows_and_reports_silence() {
+        assert!(
+            execute(
+                &json!({"operation":"audio_features", "paths":[]}),
+                &[],
+                &|| Ok(()),
+                None
+            )
+            .is_err()
+        );
+        assert!(
+            execute(
+                &json!({"operation":"audio_features", "paths":[1]}),
+                &[],
+                &|| Ok(()),
+                None
+            )
+            .is_err()
+        );
+        let path =
+            std::env::temp_dir().join(format!("sistrum-feature-job-{}.pcm", std::process::id()));
+        std::fs::write(&path, vec![0_u8; 22_050 * 2 * 4]).unwrap();
+        let result = execute(
+            &json!({"operation":"audio_features", "paths":[path]}),
+            &[],
+            &|| Ok(()),
+            None,
+        );
+        std::fs::remove_file(path).unwrap();
+        let value = result.unwrap();
+        assert_eq!(value["version"], 1);
+        assert!(value["features"].is_null());
+    }
 }

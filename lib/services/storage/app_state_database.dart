@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 
 import 'package:sqflite/sqflite.dart';
 import 'package:sistrum/services/library/database/sqlite_helpers.dart'
@@ -96,7 +97,9 @@ class AppStateDatabase {
     final raw = row['media_json'] as String?;
     if (raw == null || raw.isEmpty) return null;
     try {
-      final decoded = jsonDecode(raw);
+      final decoded = raw.length > 64 * 1024
+          ? await compute(jsonDecode, raw)
+          : jsonDecode(raw);
       if (decoded is! List) return null;
       return {
         'version': 2,
@@ -114,9 +117,13 @@ class AppStateDatabase {
 
   Future<void> savePlaybackSession(Map<String, dynamic> session) async {
     final db = await database;
+    final media = session['media'];
+    final row = media is List && media.length > 128
+        ? await compute(_playbackSessionRow, session)
+        : _playbackSessionRow(session);
     await db.insert(
       _playbackSessionTable,
-      _playbackSessionRow(session),
+      row,
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
   }

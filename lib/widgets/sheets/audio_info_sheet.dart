@@ -1,6 +1,7 @@
 import 'package:sistrum/services/native/media_file_bridge.dart';
 import 'package:sistrum/services/playback/audio/playback_equalizer.dart';
 import 'dart:io';
+import 'dart:async';
 
 import 'package:flutter/cupertino.dart' show CupertinoButton;
 import 'package:flutter/material.dart';
@@ -40,7 +41,8 @@ class _AudioInfoSheet extends StatefulWidget {
   State<_AudioInfoSheet> createState() => _AudioInfoSheetState();
 }
 
-class _AudioInfoSheetState extends State<_AudioInfoSheet> {
+class _AudioInfoSheetState extends State<_AudioInfoSheet>
+    with WidgetsBindingObserver {
   final _controller = ScrollController();
   AudioRouteInfo? _route;
   int? _fileSize;
@@ -51,20 +53,27 @@ class _AudioInfoSheetState extends State<_AudioInfoSheet> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     widget.metadata.addListener(_load);
     _load();
   }
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     widget.metadata.removeListener(_load);
     _controller.dispose();
     super.dispose();
   }
 
-  Future<void> _load() async {
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) unawaited(_load(force: true));
+  }
+
+  Future<void> _load({bool force = false}) async {
     final path = widget.metadata.filePath;
-    if (path == _loadedPath && (_loading || _route != null)) return;
+    if (!force && path == _loadedPath && (_loading || _route != null)) return;
     final generation = ++_loadGeneration;
     _loadedPath = path;
     _loading = true;

@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:sistrum/services/playback/autoplay/autoplay_sound_profile.dart';
 
 import 'package:ffmpeg_kit_flutter_new_audio/ffmpeg_kit.dart';
 import 'package:ffmpeg_kit_flutter_new_audio/return_code.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sistrum/services/audio_analysis/audio_analysis_jobs.dart';
@@ -122,53 +122,78 @@ class AutoMixAnalyzer {
 
   /// Uses the same bounded decoder and cancellation owner as AutoMix, without
   /// running tempo detection. The caller owns any SAF descriptor lease.
-  Future<AutoplaySoundProfile?> analyzeSound(String path) async {
+  Future<AutoplaySoundProfile?> analyzeSound(
+    String path, {
+    Duration? duration,
+  }) async {
     final generation = _generation;
     Directory? work;
     try {
       work = await Directory(
         (await getTemporaryDirectory()).path,
       ).createTemp('autoplay-sound-');
-      final output = File('${work.path}/window.pcm');
-      final success = await _jobs.run([
-        '-hide_banner',
-        '-loglevel',
-        'error',
-        '-nostdin',
-        '-y',
-        '-threads',
-        '1',
-        '-filter_threads',
-        '1',
-        '-i',
-        path,
-        '-t',
-        '$windowSeconds',
-        '-vn',
-        '-sn',
-        '-dn',
-        '-ac',
-        '1',
-        '-ar',
-        '11025',
-        '-c:a',
-        'pcm_s16le',
-        '-f',
-        's16le',
-        output.path,
-      ]);
-      if (!success ||
-          generation != _generation ||
-          !await output.exists() ||
-          await output.length() > 11025 * 2 * 25) {
-        return null;
+      final seconds = (duration?.inMilliseconds ?? 0) / 1000;
+      final offsets = seconds <= 0
+          ? <double>[30, 90]
+          : seconds < 54
+          ? <double>[((seconds - windowSeconds) / 2).clamp(0, seconds)]
+          : <double>[
+              (seconds * .3).clamp(0, seconds - windowSeconds),
+              (seconds * .6).clamp(0, seconds - windowSeconds),
+            ];
+      final paths = <String>[];
+      for (final (index, offset) in offsets.indexed) {
+        final output = File('${work.path}/window$index.pcm');
+        final success = await _jobs.run([
+          '-hide_banner',
+          '-loglevel',
+          'error',
+          '-nostdin',
+          '-y',
+          '-threads',
+          '1',
+          '-filter_threads',
+          '1',
+          '-ss',
+          '$offset',
+          '-i',
+          path,
+          '-t',
+          '$windowSeconds',
+          '-vn',
+          '-sn',
+          '-dn',
+          '-ac',
+          '1',
+          '-ar',
+          '22050',
+          '-c:a',
+          'pcm_s16le',
+          '-f',
+          's16le',
+          output.path,
+        ]);
+        if (generation != _generation) return null;
+        if (!success || !await output.exists()) break;
+        final size = await output.length();
+        if (size > 22050 * 2 * 25) return null;
+        if (size >= 22050 * 2) paths.add(output.path);
       }
-      final profile = await compute(
-        analyzeAutoplaySoundPcm,
-        await output.readAsBytes(),
-      );
-      return generation == _generation ? profile : null;
-    } catch (_) {
+      if (paths.isEmpty || generation != _generation) return null;
+      final request = 'autoplay-features-${work.path}';
+      _nativeRequests.add(request);
+      try {
+        final result = await NativeDataJobs.run({
+          'operation': 'audio_features',
+          'paths': paths,
+        }, requestId: request);
+        if (generation != _generation || result['version'] != 1) return null;
+        return AutoplaySoundProfile.decode(result['features']);
+      } finally {
+        _nativeRequests.remove(request);
+      }
+    } catch (error) {
+      _log.w('Optional acoustic features unavailable: $error');
       return null;
     } finally {
       if (work != null && await work.exists()) {

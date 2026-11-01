@@ -1,5 +1,6 @@
 import 'package:sistrum/widgets/animation/animation_skeletons.dart';
 import 'dart:math';
+import 'package:sistrum/utils/logging/logger.dart';
 import 'dart:io';
 
 import 'package:sistrum/widgets/sheets/track_detail_actions.dart';
@@ -41,6 +42,8 @@ import 'package:sistrum/screens/library/collections/collection_empty_folder_stat
 part 'library_collection_track_actions.dart';
 part 'library_collection_track_chrome.dart';
 
+final _log = AppLogger('CollectionTracks');
+
 class LibraryCollectionTracksScreen extends ConsumerStatefulWidget {
   final LibraryCollectionMode mode;
   final String? playlistId;
@@ -62,6 +65,9 @@ class _LibraryCollectionTracksScreenState
         SelectionModeMixin<LibraryCollectionTracksScreen>,
         CollapsingHeaderScrollMixin<LibraryCollectionTracksScreen> {
   UserPlaylistCollection? playlist;
+  bool _reordering = false;
+  bool _orderSaving = false;
+  void _rebuild(VoidCallback action) => setState(action);
   final _folderData = LibraryTracksFolderData();
 
   @override

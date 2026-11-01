@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:isolate';
 
 import 'package:crypto/crypto.dart';
 import 'package:flutter/services.dart';
@@ -52,9 +53,21 @@ class CustomFontService {
     }
   }
 
-  Future<String> import(Uint8List bytes) async {
+  static String _validatedId(Uint8List bytes) {
     validate(bytes);
-    final id = sha256.convert(bytes).toString();
+    return sha256.convert(bytes).toString();
+  }
+
+  static Future<Uint8List?> _readStored(String path, String id) =>
+      Isolate.run(() async {
+        final file = File(path);
+        if (await file.length() > maxBytes) return null;
+        final bytes = await file.readAsBytes();
+        return _validatedId(bytes) == id ? bytes : null;
+      });
+
+  Future<String> import(Uint8List bytes) async {
+    final id = await Isolate.run(() => _validatedId(bytes));
     await _load(id, bytes);
     final directory = await _directory();
     final destination = File('${directory.path}/$id.font');
@@ -82,11 +95,11 @@ class CustomFontService {
   Future<String?> restore(String id) async {
     if (!_idPattern.hasMatch(id)) return null;
     try {
-      final file = File('${(await _directory()).path}/$id.font');
-      if (await file.length() > maxBytes) return null;
-      final bytes = await file.readAsBytes();
-      validate(bytes);
-      if (sha256.convert(bytes).toString() != id) return null;
+      final bytes = await _readStored(
+        '${(await _directory()).path}/$id.font',
+        id,
+      );
+      if (bytes == null) return null;
       return await _load(id, bytes);
     } catch (_) {
       // Missing fonts after restoring preferences fall back to the theme font.

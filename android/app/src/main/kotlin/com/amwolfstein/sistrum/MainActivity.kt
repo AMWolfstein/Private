@@ -611,6 +611,7 @@ class MainActivity: FlutterFragmentActivity() {
                         return@launch
                     }
                     when (call.method) {
+                        "getAndroidSdkVersion" -> result.success(android.os.Build.VERSION.SDK_INT)
 
                         "setScreenAwake" -> {
                             val flag = android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON

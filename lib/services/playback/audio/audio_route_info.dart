@@ -56,6 +56,10 @@ class AudioRouteInfo {
   }
 
   final String? platform;
+
+  /// Default Android PCM properties do not measure a Bluetooth codec.
+  bool get bluetoothFormatUnreported =>
+      platform == 'android' && device?.isBluetooth == true;
   final int? sdk;
 
   /// The system mixer's native rate; sources at other rates are resampled
@@ -118,6 +122,8 @@ class AudioRouteDevice {
   }
 
   /// speaker, wired_headphones, bluetooth, usb, airplay, … (see natives).
+  bool get isBluetooth =>
+      const {'bluetooth', 'bluetooth_le', 'hearing_aid'}.contains(type);
   final String type;
   final String name;
 
