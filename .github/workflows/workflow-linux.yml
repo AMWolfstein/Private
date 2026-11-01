@@ -1,0 +1,59 @@
+name: Workflow Linux
+on:
+  push:
+    paths:
+      - 'sistrum-workflow/**'
+      - 'workflow/**'
+      - 'AGENTS.md'
+      - '.gitignore'
+      - '.github/workflows/workflow-linux.yml'
+  pull_request:
+    paths:
+      - 'sistrum-workflow/**'
+      - 'workflow/**'
+      - 'AGENTS.md'
+      - '.gitignore'
+      - '.github/workflows/workflow-linux.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  python:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ['3.10', '3.12', '3.14']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Real installed-workflow verification
+        shell: bash
+        run: |
+          if [[ -f workflow/scripts/work/ci_linux.py ]]; then
+            python3 workflow/scripts/work/ci_linux.py
+          else
+            python3 sistrum-workflow/workflow/scripts/work/ci_linux.py
+          fi
+  fedora:
+    runs-on: ubuntu-24.04
+    container: fedora:44
+    timeout-minutes: 20
+    steps:
+      - name: Container prerequisites
+        run: dnf -y install git python3 python3-pip nodejs npm && dnf clean all
+      - uses: actions/checkout@v4
+      - name: Real Fedora installation and parser tests
+        shell: bash
+        run: |
+          if [[ -f workflow/scripts/work/ci_linux.py ]]; then
+            python3 workflow/scripts/work/ci_linux.py
+          else
+            python3 sistrum-workflow/workflow/scripts/work/ci_linux.py
+          fi

@@ -30,7 +30,7 @@
       "timeout": 2400
     },
     "workflow": {
-      "run": ["{python}", "-m", "unittest", "discover", "-s", "workflow/scripts/work", "-p", "test_*.py"],
+      "run": ["{python}", "workflow/scripts/work/run_tests.py"],
       "requires": ["workflow/scripts/work/test_work.py"],
       "timeout": 300
     }

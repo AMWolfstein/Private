@@ -36,6 +36,7 @@ from pathlib import Path
 
 import native_bindings
 import resource_index
+import workflow_env
 
 from worklib import Blocked, atomic_write, domains_for, is_test, now, snapshot
 
@@ -187,9 +188,7 @@ def load_config(root: Path) -> dict:
         raise Blocked('Unsupported extractor: migrate map.json to codegraph')
     if not isinstance(extractor['enabled'], bool) or not isinstance(extractor['command'], list) or not extractor['command'] or not all(isinstance(v, str) and v for v in extractor['command']):
         raise Blocked('extractor.enabled must be boolean and command must be a nonempty argv list')
-    command = extractor['command']
-    if ('/' in command[0] or '\\' in command[0]) and not Path(command[0]).is_absolute():
-        extractor['command'] = [str((root / command[0]).resolve()), *command[1:]]
+    extractor['command'] = workflow_env.resolve_command(root, extractor['command'])
     for wrapper in config['bridges']['dart_wrappers']:
         if not (isinstance(wrapper, dict) and isinstance(wrapper.get('function'), str)
                 and isinstance(wrapper.get('channel'), str)):

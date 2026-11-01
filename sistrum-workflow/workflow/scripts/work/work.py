@@ -22,6 +22,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+import workflow_env
 import workmap  # noqa: E402  (map and context retrieval)
 from worklib import Blocked, atomic_write, domains_for, git, is_test, now, snapshot  # noqa: E402,F401
 
@@ -840,6 +841,9 @@ def main(argv: list[str] | None = None) -> int:
     s = sub.add_parser('packet'); s.add_argument('--base', default='HEAD'); s.add_argument('--goal')
     s.add_argument('--change'); s.add_argument('--out', default='.work/review/packet.md')
     sub.add_parser('hook-bash')
+    s = sub.add_parser('setup', help='provision Linux project-local Python and CodeGraph tools')
+    s.add_argument('--offline', action='store_true', help='validate/reuse only; never download')
+    sub.add_parser('doctor', help='read-only tool/version/parser diagnostics')
     s = sub.add_parser('map', help='code map: build (full), update (incremental), status')
     s.add_argument('op', choices=('build', 'update', 'status', 'coverage'))
     s = sub.add_parser('context', help='bounded context packet for a task from the code map')
@@ -859,6 +863,8 @@ def main(argv: list[str] | None = None) -> int:
         return code
     try:
         root = (args.root or Path(git(Path.cwd(), 'rev-parse', '--show-toplevel').strip())).resolve()
+        if __name__ == '__main__' and args.action not in ('setup', 'doctor'):
+            workflow_env.reexec(root)
         if args.action == 'hook-bash':
             code, message = hook_bash(sys.stdin.read())
             if message:
@@ -870,7 +876,11 @@ def main(argv: list[str] | None = None) -> int:
                 text = 'Workflow active (work skill, constitution). ' + text.replace('\n', ' | ')
             print(text)
             return 0
-        if args.action == 'new':
+        if args.action == 'setup':
+            result = workflow_env.setup(root, args.offline)
+        elif args.action == 'doctor':
+            result = workflow_env.doctor(root)
+        elif args.action == 'new':
             result = {'status': 'PASS', 'folder': new_change(root, args.title, args.size).relative_to(root).as_posix()}
         elif args.action == 'advance':
             result = advance(root, args.change, args.phase)
