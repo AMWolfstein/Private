@@ -3,6 +3,9 @@ part of 'music_player_service.dart';
 extension _MusicPlayerHandlerDelegates1 on MusicPlayerHandler {
   void _applySettingsImpl(AppSettings previous) {
     final settings = _settings;
+    if (previous.autoplaySoundMatching != settings.autoplaySoundMatching) {
+      _autoplay.updateMode();
+    }
     if (previous.autoplayPersonalization != settings.autoplayPersonalization) {
       _configurePersonalization();
     }
@@ -15,7 +18,9 @@ extension _MusicPlayerHandlerDelegates1 on MusicPlayerHandler {
     }
     if (previous.autoMix != settings.autoMix ||
         previous.autoMixOptions != settings.autoMixOptions ||
-        previous.usbBitPerfect != settings.usbBitPerfect) {
+        previous.usbBitPerfect != settings.usbBitPerfect ||
+        previous.usbDirect != settings.usbDirect ||
+        previous.dapExclusive != settings.dapExclusive) {
       unawaited(_autoMix.cancel());
     }
     // USB changes apply at the next source boundary, without raising volume.
@@ -299,6 +304,10 @@ extension _MusicPlayerHandlerDelegates1 on MusicPlayerHandler {
   }
 
   Future<void> _seekImpl(Duration position) async {
+    if (position <= const Duration(seconds: 1) &&
+        playbackState.value.position >= const Duration(seconds: 30)) {
+      _runtime.personalization.replayed();
+    }
     final generation = _playRequestGeneration;
     if (_disposed || _index < 0 || _index >= _media.length) return;
     if (!_sourceReady) {

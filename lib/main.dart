@@ -55,6 +55,10 @@ void main() {
       // installation steps; run it in parallel and await it before runApp.
       final orientation = setAppOrientation();
       LicenseRegistry.addLicense(() async* {
+        yield LicenseEntryWithLineBreaks(
+          const ['Mornye local Autoplay personalization'],
+          await rootBundle.loadString('assets/licenses/autoplay_learning.txt'),
+        );
         yield LicenseEntryWithLineBreaks(const [
           'Inter',
         ], await rootBundle.loadString('assets/fonts/Inter-LICENSE.txt'));

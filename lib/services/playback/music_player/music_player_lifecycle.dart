@@ -105,7 +105,7 @@ extension _MusicPlayerHandlerLifecycle on MusicPlayerHandler {
   }
 
   Future<void> _dispose() async {
-    _autoplay.reset();
+    _autoplay.dispose();
     _disposed = true;
     _runtime.personalization.finish();
     await _runtime.personalization.flush();

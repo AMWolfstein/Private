@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/providers/playback/music_player_provider.dart';
+import 'package:sistrum/providers/settings/theme_provider.dart';
 import 'package:sistrum/utils/lyrics/lyric_direction.dart';
 import 'package:sistrum/utils/lyrics/lyric_models.dart';
 import 'package:sistrum/utils/lyrics/lyrics_parser.dart';
@@ -27,9 +28,14 @@ class PlayerLyricStrip extends ConsumerWidget {
     if (!lyrics.synced || lyrics.lines.isEmpty) {
       return const SizedBox(height: kPlayerLyricStripHeight);
     }
+    final offset = Duration(
+      milliseconds: ref.watch(
+        themeProvider.select((s) => s.lyricsTimingOffsetMs),
+      ),
+    );
     final index = ref.watch(
       playbackPositionProvider.select(
-        (position) => LyricsParser.activeIndex(lyrics.lines, position),
+        (position) => LyricsParser.activeIndex(lyrics.lines, position - offset),
       ),
     );
     final text = index < 0 ? '' : lyrics.lines[index].text.trim();

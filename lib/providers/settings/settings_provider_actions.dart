@@ -112,6 +112,11 @@ extension SettingsActions on SettingsNotifier {
     _saveSettings();
   }
 
+  void setAutoplaySoundMatching(bool enabled) {
+    _current = _current.copyWith(autoplaySoundMatching: enabled);
+    _saveSettings();
+  }
+
   void setAutoplayPersonalization(bool enabled) {
     _current = _current.copyWith(autoplayPersonalization: enabled);
     _saveSettings();

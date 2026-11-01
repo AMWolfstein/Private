@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sistrum/widgets/lyrics/app_lyrics_timing_setting.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/providers/settings/settings_provider.dart';
@@ -33,6 +34,7 @@ class LyricsSettingsPage extends ConsumerWidget {
                     label: context.l10n.lyricsTextSize,
                     child: const LyricsSizeSetting(),
                   ),
+                  const AppLyricsTimingSetting(),
                   SettingsSwitchItem(
                     icon: Icons.light_mode_outlined,
                     title: context.l10n.lyricsKeepScreenOn,

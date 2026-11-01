@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sistrum/core/models/theme_settings.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/providers/playback/music_player_provider.dart';
@@ -31,6 +33,22 @@ Future<void> _pump(
 );
 
 void main() {
+  setUp(() => SharedPreferences.setMockInitialValues({}));
+  for (final offset in [1000, -1000]) {
+    testWidgets('strip follows the global lyric offset ($offset ms)', (
+      tester,
+    ) async {
+      SharedPreferences.setMockInitialValues({kLyricsTimingOffsetKey: offset});
+      final position = ValueNotifier(const Duration(milliseconds: 4500));
+      addTearDown(position.dispose);
+      await _pump(tester, _lyrics, position);
+      await tester.pumpAndSettle();
+      expect(
+        find.text(offset > 0 ? 'First line' : 'مرحبا بالعالم'),
+        findsOneWidget,
+      );
+    });
+  }
   testWidgets('shows the line whose time has passed', (tester) async {
     final position = ValueNotifier(const Duration(seconds: 2));
     await _pump(tester, _lyrics, position);

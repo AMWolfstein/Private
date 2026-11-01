@@ -74,3 +74,28 @@ class ParsedLyrics {
     plainText: '',
   );
 }
+
+/// Changes display timing only. Keep the original lyrics for seek/share/export.
+LyricLine offsetLyricLine(LyricLine line, Duration offset) {
+  if (offset == Duration.zero) return line;
+  List<LyricWord> words(List<LyricWord> values) => [
+    for (final word in values)
+      LyricWord(
+        time: word.time + offset,
+        end: word.end == null ? null : word.end! + offset,
+        text: word.text,
+      ),
+  ];
+  return LyricLine(
+    time: line.time + offset,
+    end: line.end == null ? null : line.end! + offset,
+    text: line.text,
+    words: words(line.words),
+    romanization: line.romanization,
+    romanizationWords: words(line.romanizationWords),
+    translation: line.translation,
+    voice: line.voice,
+    isBackground: line.isBackground,
+    vocalGroup: line.vocalGroup,
+  );
+}

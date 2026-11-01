@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:sistrum/providers/playback/autoplay_learning_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter/services.dart';
@@ -123,6 +124,7 @@ class _MainShellState extends ConsumerState<MainShell>
 
   @override
   Widget build(BuildContext context) {
+    ref.watch(autoplayLearningProvider);
     ref.watch(
       playbackNotificationProvider((
         favorite: context.l10n.trackOptionAddToLoved,

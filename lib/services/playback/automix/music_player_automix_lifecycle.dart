@@ -30,6 +30,15 @@ extension MusicAutoMixPart7 on MusicAutoMix {
     _starting = false;
     _attempt = null;
     try {
+      final linked = _gaplessOutgoing;
+      _gaplessOutgoing = null;
+      if (linked != null) {
+        try {
+          await linked.setNextDeck(null);
+        } catch (error) {
+          _log.w('Gapless unlink: $error');
+        }
+      }
       await _fadeWrite;
       if (prepared != null) await host.disposeDeck(prepared);
       if (outgoing != null) await host.disposeDeck(outgoing);

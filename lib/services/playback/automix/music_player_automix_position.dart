@@ -3,6 +3,10 @@ part of 'music_player_automix.dart';
 extension MusicAutoMixPart4 on MusicAutoMix {
   void onPosition(Duration position) {
     if (!_canMix || _cancelling > 0 || _starting || _fadeTimer != null) return;
+    if (!host.settings.autoMix) {
+      _onGaplessPosition(position);
+      return;
+    }
     final plan = _plan;
     if (plan != null) {
       if (!_current(_generation)) {

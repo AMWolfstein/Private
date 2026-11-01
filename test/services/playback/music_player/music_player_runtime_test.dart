@@ -46,6 +46,10 @@ class _Deck implements MusicPlaybackDeck {
   Completer<void> resumeStarted = Completer<void>();
 
   @override
+  bool get supportsGapless => false;
+  @override
+  Future<void> setNextDeck(MusicPlaybackDeck? next) async {}
+  @override
   bool get isDirect => false;
   @override
   bool get needsSourceReload => false;

@@ -71,6 +71,47 @@ extension _LocalHomeFeedUI on _HomeTabState {
       _buildRecentlyAdded(colors),
       SliverToBoxAdapter(
         child: ref
+            .watch(localLibraryMixesProvider)
+            .when(
+              skipLoadingOnReload: true,
+              data: (mixes) => _feedShelf(
+                context.l10n.homeLocalMixes,
+                mixes
+                    .map(
+                      (mix) => _feedCard(
+                        cardKey: ValueKey('home-mix-${mix.id}'),
+                        semanticType: context.l10n.homeLocalMixes,
+                        name: switch (mix.kind) {
+                          LocalMixKind.daily => context.l10n.homeDailyMix,
+                          LocalMixKind.favorites =>
+                            context.l10n.homeFavoritesMix,
+                          LocalMixKind.fresh => context.l10n.homeFreshMix,
+                          _ => context.l10n.homeNamedMix(mix.label),
+                        },
+                        subtitle: context.l10n.homeMixTrackCount(
+                          mix.tracks.length,
+                        ),
+                        cover: mix.tracks.first.coverPath,
+                        samplePath: mix.tracks.first.filePath,
+                        icon: Icons.auto_awesome,
+                        colors: colors,
+                        onTap: () => ref
+                            .read(playbackProvider.notifier)
+                            .playLocalLibraryQueue(
+                              mix.tracks,
+                              startItem: mix.tracks.first,
+                            ),
+                      ),
+                    )
+                    .toList(),
+              ),
+              loading: () => const SizedBox.shrink(),
+              error: (_, _) =>
+                  _feedRetry(() => ref.invalidate(localLibraryMixesProvider)),
+            ),
+      ),
+      SliverToBoxAdapter(
+        child: ref
             .watch(albums)
             .when(
               skipLoadingOnReload: true,
@@ -153,6 +194,7 @@ extension _LocalHomeFeedUI on _HomeTabState {
       ref.invalidate(libraryBrowseProvider(request));
     }
     ref.invalidate(localHomeTracksProvider);
+    ref.invalidate(localLibraryMixesProvider);
     // Errors stay in their respective shelf's retry card.
     await Future.wait<void>([
       for (final request in requests)

@@ -10,6 +10,11 @@ class MediaPlayerWrapper(
     private val wrappedPlayer: WrappedPlayer,
 ) : PlayerWrapper {
     private val mediaPlayer = createMediaPlayer(wrappedPlayer)
+    fun setNextPlayer(next: MediaPlayerWrapper?) {
+        check(next !== this) { "A player cannot follow itself" }
+        mediaPlayer.setNextMediaPlayer(next?.mediaPlayer)
+    }
+
     private var playbackParamsApplied = false
 
     private var equalizer: PlaybackEqualizer? = null

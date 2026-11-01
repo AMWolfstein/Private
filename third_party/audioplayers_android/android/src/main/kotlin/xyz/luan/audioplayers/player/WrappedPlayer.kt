@@ -29,6 +29,18 @@ class WrappedPlayer internal constructor(
         if (output != null) output.setEqualizer(configuration)
     }
 
+    private var nextPlayer: WrappedPlayer? = null
+
+    fun setNextPlayer(next: WrappedPlayer?) {
+        check(next !== this) { "A player cannot follow itself" }
+        val current = player as? MediaPlayerWrapper ?: error("Gapless requires MediaPlayer")
+        check(next == null || (next.prepared && !next.playing)) { "Next player is not ready" }
+        val output = next?.player as? MediaPlayerWrapper
+        check(next == null || output != null) { "Next player requires MediaPlayer" }
+        current.setNextPlayer(output)
+        nextPlayer = next
+    }
+
     var source: Source? = null
         set(value) {
             if (field != value) {
@@ -301,6 +313,16 @@ class WrappedPlayer internal constructor(
     }
 
     fun onCompletion() {
+        val next = nextPlayer
+        nextPlayer = null
+        if (next != null && next.prepared && !next.released) {
+            // Android already started the linked MediaPlayer on its audio clock.
+            // Avoid stop()/seek(0) here, which would disturb the handoff.
+            playing = false
+            next.playing = true
+            ref.handleComplete(this)
+            return
+        }
         if (releaseMode != ReleaseMode.LOOP) {
             stop()
         }

@@ -1,5 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:sistrum/providers/library/library_preference_events_provider.dart';
+import 'package:sistrum/services/library/collections/library_preference_events.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path/path.dart' as p;
@@ -135,6 +137,9 @@ class LibraryCollectionsNotifier extends Notifier<LibraryCollectionsState> {
     );
     if (ref.mounted) {
       state = state.copyWith(loved: [entry, ...state.loved]);
+      ref
+          .read(libraryPreferenceEventsProvider)
+          .publish(track, LibraryPreferenceKind.loved);
     }
     return true;
   });
@@ -185,6 +190,10 @@ class LibraryCollectionsNotifier extends Notifier<LibraryCollectionsState> {
         state = state.copyWith(
           loved: [...prepared.entries.reversed, ...state.loved],
         );
+        final endorse = ref.read(libraryPreferenceEventsProvider);
+        for (final entry in prepared.entries) {
+          endorse.publish(entry.track, LibraryPreferenceKind.loved);
+        }
       }
       return (removed: false, count: prepared.entries.length);
     } finally {
@@ -384,7 +393,17 @@ class LibraryCollectionsNotifier extends Notifier<LibraryCollectionsState> {
           updatedAt: now,
         );
       });
-      if (changed) _invalidatePlaylistPickerSummaries();
+      if (changed) {
+        _invalidatePlaylistPickerSummaries();
+        // Import preserves occurrences; importing a playlist is not a new
+        // endorsement of each song. Ordinary picker additions are choices.
+        if (!preserveOccurrences) {
+          final events = ref.read(libraryPreferenceEventsProvider);
+          for (final entry in prepared.entries) {
+            events.publish(entry.track, LibraryPreferenceKind.playlisted);
+          }
+        }
+      }
       return PlaylistAddBatchResult(
         addedCount: changed ? prepared.entries.length : 0,
         alreadyInPlaylistCount: prepared.duplicates,

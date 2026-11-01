@@ -66,6 +66,7 @@ class LyricsCoveredBottom extends InheritedWidget {
 
 class SyncedLyricsView extends ConsumerStatefulWidget {
   final ParsedLyrics lyrics;
+  final Duration timingOffset;
   final ValueListenable<Duration?> seekPreview;
   final LyricsCredits? credits;
   final ColorScheme colorScheme;
@@ -77,6 +78,7 @@ class SyncedLyricsView extends ConsumerStatefulWidget {
   const SyncedLyricsView({
     super.key,
     required this.lyrics,
+    this.timingOffset = Duration.zero,
     required this.seekPreview,
     this.credits,
     required this.colorScheme,
@@ -182,7 +184,8 @@ class _SyncedLyricsViewState extends ConsumerState<SyncedLyricsView>
       oldWidget.seekPreview.removeListener(_previewChanged);
       widget.seekPreview.addListener(_previewChanged);
     }
-    if (oldWidget.lyrics != widget.lyrics) {
+    if (oldWidget.lyrics != widget.lyrics ||
+        oldWidget.timingOffset != widget.timingOffset) {
       _resetLineKeys();
     }
     if (oldWidget.showPronunciation != widget.showPronunciation ||
@@ -196,7 +199,8 @@ class _SyncedLyricsViewState extends ConsumerState<SyncedLyricsView>
       });
     }
     if (oldWidget.isActive != widget.isActive ||
-        oldWidget.lyrics != widget.lyrics) {
+        oldWidget.lyrics != widget.lyrics ||
+        oldWidget.timingOffset != widget.timingOffset) {
       _syncPositionSubscription();
     }
   }

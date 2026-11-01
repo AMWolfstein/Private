@@ -152,6 +152,15 @@ class _PlaybackSettingsPageState extends ConsumerState<PlaybackSettingsPage> {
                       .setAutoplayPersonalization(value),
                   showDivider: settings.autoplayPersonalization,
                 ),
+                SettingsSwitchItem(
+                  icon: Icons.graphic_eq,
+                  title: context.l10n.autoplaySoundMatching,
+                  subtitle: context.l10n.autoplaySoundMatchingDescription,
+                  value: settings.autoplaySoundMatching,
+                  onChanged: (value) => ref
+                      .read(settingsProvider.notifier)
+                      .setAutoplaySoundMatching(value),
+                ),
                 if (settings.autoplayPersonalization)
                   SettingsItem(
                     icon: Icons.restart_alt,

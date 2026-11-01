@@ -105,6 +105,10 @@ class AudioplayersPlugin : FlutterPlugin {
         val player = getPlayer(playerId)
         try {
             when (call.method) {
+                "setNextPlayer" -> {
+                    val nextId = call.argument<String>("nextPlayerId")
+                    player.setNextPlayer(nextId?.let { getPlayer(it) })
+                }
                 "setEqualizer" -> {
                     val configuration = call.argument<Map<String, Any?>>("configuration")
                         ?: error("Equalizer configuration is required")

@@ -1,6 +1,10 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:math';
+import 'package:sistrum/services/playback/autoplay/autoplay_sound_profile.dart';
+import 'package:sistrum/services/playback/autoplay/autoplay_sound_store.dart';
+import 'package:sistrum/services/playback/automix/automix_analyzer.dart';
+import 'package:sistrum/services/native/media_file_bridge.dart';
 
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter/foundation.dart' show compute;
@@ -184,7 +188,97 @@ abstract interface class AutoplayQueueView {
 }
 
 class MusicAutoplay {
-  MusicAutoplay(this.view, this.loadLibrary);
+  MusicAutoplay(this.view, this.loadLibrary, {bool Function()? soundMatching})
+    : _soundMatching = soundMatching ?? (() => false);
+
+  final bool Function() _soundMatching;
+  final _soundStore = AutoplaySoundStore();
+  final _soundAnalyzer = AutoMixAnalyzer();
+  Future<void>? _soundPending;
+
+  Future<Map<String, AutoplaySoundProfile>> _loadSounds(
+    Iterable<PlayableMedia> media,
+    int generation,
+  ) async {
+    final sources = media.map((m) => m.source).toSet().toList();
+    final profiles = <String, AutoplaySoundProfile>{};
+    var cursor = 0;
+    Future<void> worker() async {
+      while (cursor < sources.length &&
+          generation == _generation &&
+          _soundMatching() &&
+          !view.isDisposed) {
+        final source = sources[cursor++];
+        final profile = await _soundStore.load(source);
+        if (profile != null) profiles[source] = profile;
+      }
+    }
+
+    await Future.wait(List.generate(4, (_) => worker()));
+    return profiles;
+  }
+
+  void _scheduleSoundAnalysis(List<PlayableMedia> media, int generation) {
+    if (_soundPending != null || !_soundMatching()) return;
+    final operation = () async {
+      // The queue is already filled; decoding never delays its publication.
+      for (final item in media.take(9)) {
+        if (generation != _generation ||
+            view.isDisposed ||
+            !_soundMatching() ||
+            !enabled) {
+          return;
+        }
+        if (await _soundStore.load(item.source) != null) continue;
+        final stamp = await _soundStore.stamp(item.source);
+        if (stamp == null) continue;
+        ContentUriPlaybackLease? lease;
+        try {
+          var path = item.source;
+          if (item.isContentUri) {
+            lease = await MediaFileBridge.openContentUriPlaybackLease(
+              item.source,
+            );
+            if (lease == null) continue;
+            path = lease.path;
+          }
+          if (generation != _generation ||
+              view.isDisposed ||
+              !_soundMatching()) {
+            return;
+          }
+          final profile = await _soundAnalyzer.analyzeSound(path);
+          if (profile != null &&
+              generation == _generation &&
+              _soundMatching() &&
+              !view.isDisposed) {
+            await _soundStore.save(item.source, profile, stamp);
+          }
+        } catch (error) {
+          _log.w('Optional sound analysis unavailable: $error');
+        } finally {
+          if (lease != null) {
+            await MediaFileBridge.closeContentUriPlaybackLease(lease.token);
+          }
+        }
+      }
+    }();
+    _soundPending = operation;
+    unawaited(
+      operation
+          .catchError((Object error) {
+            _log.w('Optional sound analysis stopped: $error');
+          })
+          .whenComplete(() {
+            if (identical(_soundPending, operation)) _soundPending = null;
+          }),
+    );
+  }
+
+  void dispose() {
+    reset();
+    _soundAnalyzer.dispose();
+  }
 
   final AutoplayQueueView view;
   final AutoplayLibraryLoader loadLibrary;
@@ -205,6 +299,7 @@ class MusicAutoplay {
 
   void reset() {
     _generation++;
+    _soundAnalyzer.cancel();
     _pending = null;
     _attempt = null;
     _dismissed.clear();
@@ -263,8 +358,20 @@ class MusicAutoplay {
       final upcoming = view.upcoming();
       if (upcoming.length >= 3) return;
       final recent = view.recentlyPlayed();
-      final model = view.preferenceModel;
       final revision = view.sessionQueueRevision;
+      final profiles = _soundMatching()
+          ? await _loadSounds([
+              current,
+              ...recent.reversed.take(11),
+              ...candidates,
+            ], generation)
+          : <String, AutoplaySoundProfile>{};
+      if (generation != _generation || view.isDisposed || !enabled) return;
+      final soundContext = [
+        current.source,
+        ...recent.reversed.take(11).map((t) => t.source),
+      ];
+      final model = view.preferenceModel;
       final random = view.random;
       List<PlayableMedia> ordinaryRanking() => selectAutoplayTracks(
         seed: current,
@@ -274,6 +381,8 @@ class MusicAutoplay {
         dismissedSources: _dismissed,
         random: random,
         limit: 6 - upcoming.length,
+        preferenceAdjustment: (track) =>
+            autoplaySoundAdjustment(track.source, soundContext, profiles),
       );
       List<PlayableMedia> selected;
       if (model == null) {
@@ -290,6 +399,7 @@ class MusicAutoplay {
             random.nextInt(1 << 31),
             DateTime.now(),
             6 - upcoming.length,
+            profiles,
           ), debugLabel: 'autoplay-ranking');
         } catch (error) {
           _log.w(
@@ -313,6 +423,13 @@ class MusicAutoplay {
         for (final item in selected)
           PlayableMedia.fromJson({...item.toJson(), 'autoplay': true})!,
       ]);
+      final explorationPool = List<PlayableMedia>.of(candidates)
+        ..shuffle(random);
+      _scheduleSoundAnalysis([
+        current,
+        ...selected.take(4),
+        ...explorationPool.take(4),
+      ], generation);
     } catch (error) {
       _log.w('Could not prepare Library Autoplay: $error');
     }
@@ -329,6 +446,7 @@ typedef _AutoplayRankingInput = (
   int,
   DateTime,
   int,
+  Map<String, AutoplaySoundProfile>,
 );
 
 /// Pass metadata and a frozen 64 KiB model only, never the player/runtime.
@@ -343,8 +461,10 @@ List<PlayableMedia> _rankPersonalizedAutoplay(_AutoplayRankingInput input) {
     randomSeed,
     at,
     limit,
+    profiles,
   ) = input;
   final learningSeed = autoplayLearningTrack(seed);
+  final exploration = model.explore(Random(randomSeed ^ 0x51a7));
   return selectAutoplayTracks(
     seed: seed,
     candidates: candidates,
@@ -353,10 +473,16 @@ List<PlayableMedia> _rankPersonalizedAutoplay(_AutoplayRankingInput input) {
     dismissedSources: dismissed,
     random: Random(randomSeed),
     limit: limit,
-    preferenceAdjustment: (track) => model.rankAdjustment(
-      autoplayLearningTrack(track),
-      previous: learningSeed,
-      at: at,
-    ),
+    preferenceAdjustment: (track) =>
+        model.rankAdjustment(
+          autoplayLearningTrack(track),
+          previous: learningSeed,
+          at: at,
+        ) +
+        exploration.adjustment(autoplayLearningTrack(track)) +
+        autoplaySoundAdjustment(track.source, [
+          seed.source,
+          ...recent.reversed.take(11).map((t) => t.source),
+        ], profiles),
   );
 }

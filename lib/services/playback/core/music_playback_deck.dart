@@ -108,6 +108,19 @@ class MusicPlaybackDeck {
     ]);
   }
 
+  bool get supportsGapless => _nativeAvailable && !_direct && !_disposed;
+
+  Future<void> setNextDeck(MusicPlaybackDeck? next) async {
+    if (!supportsGapless) return;
+    if (next != null && !next.supportsGapless) {
+      throw StateError('Gapless requires two ordinary Android decks');
+    }
+    await _effects.invokeMethod<void>('setNextPlayer', {
+      'playerId': _ordinary.playerId,
+      'nextPlayerId': next?._ordinary.playerId,
+    });
+  }
+
   final UsbPcmBridge _usb;
   final AudioPlayer _ordinary;
   final bool _equalizerAvailable;

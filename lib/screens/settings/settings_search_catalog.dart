@@ -202,6 +202,12 @@ class SettingsSearchCatalog {
       ],
       playback = [
         SettingsSearchEntry(
+          icon: Icons.graphic_eq,
+          title: l10n.autoplaySoundMatching,
+          subtitle: l10n.autoplaySoundMatchingDescription,
+          keywords: const ['sound', 'acoustic', 'timbre', 'local analysis'],
+        ),
+        SettingsSearchEntry(
           icon: Icons.playlist_play_rounded,
           title: l10n.autoplayFromLibrary,
           subtitle: l10n.autoplayDescription,
@@ -301,6 +307,12 @@ class SettingsSearchCatalog {
         ],
       ],
       lyrics = [
+        SettingsSearchEntry(
+          icon: Icons.timer_outlined,
+          title: l10n.lyricsTimingOffset,
+          subtitle: l10n.lyricsTimingOffsetDescription,
+          keywords: const ['lyrics offset', 'delay', 'sync', 'timing'],
+        ),
         SettingsSearchEntry(
           icon: Icons.format_size,
           title: l10n.lyricsTextSize,

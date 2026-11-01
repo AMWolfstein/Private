@@ -256,7 +256,7 @@ extension _MusicPlayerHandlerPlayback on MusicPlayerHandler {
     _completing = true;
     try {
       _runtime.personalization.finish();
-      await _onComplete();
+      if (!await _autoMix.completeGapless()) await _onComplete();
     } finally {
       _completing = false;
     }

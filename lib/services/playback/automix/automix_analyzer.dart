@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:sistrum/services/playback/autoplay/autoplay_sound_profile.dart';
 
 import 'package:ffmpeg_kit_flutter_new_audio/ffmpeg_kit.dart';
 import 'package:ffmpeg_kit_flutter_new_audio/return_code.dart';
@@ -117,6 +118,63 @@ class AutoMixAnalyzer {
       );
     }
     return first;
+  }
+
+  /// Uses the same bounded decoder and cancellation owner as AutoMix, without
+  /// running tempo detection. The caller owns any SAF descriptor lease.
+  Future<AutoplaySoundProfile?> analyzeSound(String path) async {
+    final generation = _generation;
+    Directory? work;
+    try {
+      work = await Directory(
+        (await getTemporaryDirectory()).path,
+      ).createTemp('autoplay-sound-');
+      final output = File('${work.path}/window.pcm');
+      final success = await _jobs.run([
+        '-hide_banner',
+        '-loglevel',
+        'error',
+        '-nostdin',
+        '-y',
+        '-threads',
+        '1',
+        '-filter_threads',
+        '1',
+        '-i',
+        path,
+        '-t',
+        '$windowSeconds',
+        '-vn',
+        '-sn',
+        '-dn',
+        '-ac',
+        '1',
+        '-ar',
+        '11025',
+        '-c:a',
+        'pcm_s16le',
+        '-f',
+        's16le',
+        output.path,
+      ]);
+      if (!success ||
+          generation != _generation ||
+          !await output.exists() ||
+          await output.length() > 11025 * 2 * 25) {
+        return null;
+      }
+      final profile = await compute(
+        analyzeAutoplaySoundPcm,
+        await output.readAsBytes(),
+      );
+      return generation == _generation ? profile : null;
+    } catch (_) {
+      return null;
+    } finally {
+      if (work != null && await work.exists()) {
+        await work.delete(recursive: true);
+      }
+    }
   }
 
   Future<AutoMixBeatGrid?> analyze(String path, {double offset = 0}) async {

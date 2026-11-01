@@ -101,6 +101,9 @@ extension LibraryCollectionsMutations on LibraryCollectionsNotifier {
         );
       });
       if (!changed) return false;
+      _ref
+          .read(libraryPreferenceEventsProvider)
+          .publish(track, LibraryPreferenceKind.playlisted);
       _invalidatePlaylistPickerSummaries();
       return true;
     },

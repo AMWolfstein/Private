@@ -4,7 +4,12 @@ part of 'music_player_service.dart';
 extension _MusicPlayerHandlerSession on MusicPlayerHandler {
   int get _sessionQueueRevision => _sessionWriter.queueRevision;
 
-  void _markSessionQueueChanged() => _sessionWriter.queueChanged();
+  void _markSessionQueueChanged() {
+    _sessionWriter.queueChanged();
+    // A linked native player must be detached immediately after queue edits;
+    // waiting for another position tick could start an obsolete next song.
+    unawaited(_autoMix.cancel());
+  }
 
   List<Map<String, dynamic>> _sessionMedia() {
     final original = _originalQueueOrder;

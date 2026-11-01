@@ -6,6 +6,11 @@ const String kUseSystemFontKey = 'use_system_font';
 const String kCustomFontIdKey = 'custom_font_id';
 const String kCustomFontNameKey = 'custom_font_name';
 const String kPlayerViewKey = 'player_view';
+const String kLyricsTimingOffsetKey = 'lyrics_timing_offset_ms';
+
+int normalizeLyricsTimingOffset(num? value) =>
+    value != null && value.isFinite ? value.round().clamp(-2000, 2000) : 0;
+
 const String kLyricsTextScaleKey = 'lyrics_text_scale';
 
 double normalizeLyricsTextScale(num? value) =>
@@ -35,6 +40,7 @@ class ThemeSettings {
   final String customFontId;
   final String customFontName;
   final double lyricsTextScale;
+  final int lyricsTimingOffsetMs;
   final bool appGlassOutlines;
 
   const ThemeSettings({
@@ -46,6 +52,7 @@ class ThemeSettings {
     this.customFontId = '',
     this.customFontName = '',
     this.lyricsTextScale = 1,
+    this.lyricsTimingOffsetMs = 0,
     this.appGlassOutlines = true,
   });
 
@@ -58,6 +65,7 @@ class ThemeSettings {
     String? customFontId,
     String? customFontName,
     double? lyricsTextScale,
+    int? lyricsTimingOffsetMs,
     bool? appGlassOutlines,
   }) {
     return ThemeSettings(
@@ -71,6 +79,9 @@ class ThemeSettings {
       lyricsTextScale: normalizeLyricsTextScale(
         lyricsTextScale ?? this.lyricsTextScale,
       ),
+      lyricsTimingOffsetMs: normalizeLyricsTimingOffset(
+        lyricsTimingOffsetMs ?? this.lyricsTimingOffsetMs,
+      ),
       appGlassOutlines: appGlassOutlines ?? this.appGlassOutlines,
     );
   }
@@ -83,6 +94,7 @@ class ThemeSettings {
     kCustomFontIdKey: customFontId,
     kCustomFontNameKey: customFontName,
     kLyricsTextScaleKey: lyricsTextScale,
+    kLyricsTimingOffsetKey: normalizeLyricsTimingOffset(lyricsTimingOffsetMs),
     kAppGlassOutlinesKey: appGlassOutlines,
   };
 
@@ -97,6 +109,9 @@ class ThemeSettings {
       customFontName: json[kCustomFontNameKey] as String? ?? '',
       lyricsTextScale: normalizeLyricsTextScale(
         json[kLyricsTextScaleKey] as num?,
+      ),
+      lyricsTimingOffsetMs: normalizeLyricsTimingOffset(
+        json[kLyricsTimingOffsetKey] as num?,
       ),
       appGlassOutlines: json[kAppGlassOutlinesKey] as bool? ?? true,
     );
@@ -113,6 +128,7 @@ class ThemeSettings {
         other.customFontId == customFontId &&
         other.customFontName == customFontName &&
         other.lyricsTextScale == lyricsTextScale &&
+        other.lyricsTimingOffsetMs == lyricsTimingOffsetMs &&
         other.appGlassOutlines == appGlassOutlines;
   }
 
@@ -125,6 +141,7 @@ class ThemeSettings {
       customFontId.hashCode ^
       customFontName.hashCode ^
       lyricsTextScale.hashCode ^
+      lyricsTimingOffsetMs.hashCode ^
       appGlassOutlines.hashCode;
 }
 

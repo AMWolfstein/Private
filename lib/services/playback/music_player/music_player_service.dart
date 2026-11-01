@@ -180,6 +180,7 @@ class MusicPlayerHandler extends PlaybackHandler {
     _autoplay = MusicAutoplay(
       _HandlerAutoplayQueue(this),
       autoplayLibraryLoader ?? (seed) => loadAutoplayLibrary(seed, _runtime),
+      soundMatching: () => _settings.autoplaySoundMatching,
     );
     try {
       _init();

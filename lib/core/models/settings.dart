@@ -69,6 +69,7 @@ class AppSettings {
   final bool dapExclusive;
   final bool autoplay;
   final bool autoplayPersonalization;
+  final bool autoplaySoundMatching;
   final bool isFirstLaunch;
 
   final String libraryFilterMode;
@@ -144,6 +145,7 @@ class AppSettings {
     this.dapExclusive = false,
     this.autoplay = false,
     this.autoplayPersonalization = true,
+    this.autoplaySoundMatching = false,
     this.isFirstLaunch = true,
 
     this.libraryFilterMode = 'all',
@@ -191,6 +193,7 @@ class AppSettings {
     bool? dapExclusive,
     bool? autoplay,
     bool? autoplayPersonalization,
+    bool? autoplaySoundMatching,
     bool? isFirstLaunch,
 
     String? libraryFilterMode,
@@ -241,6 +244,8 @@ class AppSettings {
       usbAllowFixedVolume: usbAllowFixedVolume ?? this.usbAllowFixedVolume,
       dapExclusive: dapExclusive ?? this.dapExclusive,
       autoplay: autoplay ?? this.autoplay,
+      autoplaySoundMatching:
+          autoplaySoundMatching ?? this.autoplaySoundMatching,
       autoplayPersonalization:
           autoplayPersonalization ?? this.autoplayPersonalization,
       isFirstLaunch: isFirstLaunch ?? this.isFirstLaunch,

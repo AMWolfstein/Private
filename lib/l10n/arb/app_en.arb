@@ -3528,5 +3528,17 @@
   "retry": "Retry",
   "@retry": {
     "description": "Snackbar action that repeats the failed operation"
-  }
+  },
+  "lyricsTimingOffset": "Lyrics timing",
+  "lyricsTimingOffsetDescription": "Negative values show lyrics earlier; positive values show them later.",
+  "homeLocalMixes": "Made from your library",
+  "homeDailyMix": "Daily mix",
+  "homeFavoritesMix": "Favorites mix",
+  "homeFreshMix": "Fresh finds",
+  "homeNamedMix": "{name} mix",
+  "@homeNamedMix": {"placeholders": {"name": {"type": "String"}}},
+  "homeMixTrackCount": "{count} songs · Offline",
+  "@homeMixTrackCount": {"placeholders": {"count": {"type": "int"}}},
+  "autoplaySoundMatching": "Match the sound",
+  "autoplaySoundMatchingDescription": "Use local audio summaries to find similar-sounding songs. Short windows are analyzed in the background while Autoplay is enabled. No audio leaves this device."
 }

@@ -71,7 +71,12 @@ extension _SyncedLyricsViewStatePart1 on _SyncedLyricsViewState {
     _hasStarted = false;
     _lineExtents = null;
     _lineLayoutKey = null;
-    _lines = lyricsWithDisplayEnds(lyricsTimelineWithGaps(widget.lyrics.lines));
+    _lines = lyricsWithDisplayEnds(
+      lyricsTimelineWithGaps([
+        for (final line in widget.lyrics.lines)
+          offsetLyricLine(line, widget.timingOffset),
+      ]),
+    );
     _timeline = LyricTimelineIndex(_lines);
     _rowReveal.stop();
     _revealFrom = _revealTo = [

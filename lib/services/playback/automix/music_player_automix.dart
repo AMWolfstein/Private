@@ -12,6 +12,7 @@ import 'package:sistrum/services/playback/automix/automix_status.dart';
 import 'package:sistrum/services/playback/core/music_playback_deck.dart';
 import 'package:sistrum/utils/logging/logger.dart';
 
+part 'music_player_gapless.dart';
 part 'music_player_automix_status.dart';
 part 'music_player_automix_pins.dart';
 part 'music_player_automix_generation.dart';
@@ -70,6 +71,7 @@ class MusicAutoMix {
   final AutoMixEffectRenderer renderer;
   final _preparationPins = <int, Set<String>>{};
   final _mixPins = <String>{};
+  MusicPlaybackDeck? _gaplessOutgoing;
   MusicPlaybackDeck? _prepared;
   MusicPlaybackDeck? _outgoing;
   MusicPlaybackDeck? _effectDry;

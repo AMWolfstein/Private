@@ -352,12 +352,14 @@ extension _SyncedLyricsViewStatePart3 on _SyncedLyricsViewState {
                     child: GestureDetector(
                       onTap: () => ref
                           .read(musicPlayerControllerProvider)
-                          .seek(line.time),
+                          .seek(line.time - widget.timingOffset),
                       onLongPress: widget.onLongPressLine == null
                           ? null
                           : () {
                               HapticFeedback.mediumImpact();
-                              widget.onLongPressLine!(line);
+                              widget.onLongPressLine!(
+                                offsetLyricLine(line, -widget.timingOffset),
+                              );
                             },
                       child: AnimatedScale(
                         scale: isActive ? 1.0 : 0.96,

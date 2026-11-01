@@ -1,6 +1,7 @@
 import 'package:flutter/services.dart' show HapticFeedback;
 import 'package:sistrum/utils/lyrics/lyric_models.dart';
 import 'package:flutter/material.dart';
+import 'package:sistrum/providers/settings/theme_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/providers/playback/player_metadata_controller.dart';
 import 'package:sistrum/l10n/l10n.dart';
@@ -36,13 +37,23 @@ class PlayerLyricsSection extends ConsumerWidget {
             (settings.playerShowPronunciation, settings.playerShowTranslation),
       ),
     );
+    final timingOffset = Duration(
+      milliseconds: ref.watch(
+        themeProvider.select((s) => s.lyricsTimingOffsetMs),
+      ),
+    );
     return ListenableBuilder(
       listenable: metadata,
-      builder: (context, _) => _buildLyricsSection(context, visibility),
+      builder: (context, _) =>
+          _buildLyricsSection(context, visibility, timingOffset),
     );
   }
 
-  Widget _buildLyricsSection(BuildContext context, (bool, bool) visibility) {
+  Widget _buildLyricsSection(
+    BuildContext context,
+    (bool, bool) visibility,
+    Duration timingOffset,
+  ) {
     // Center in the part the player's controls leave visible.
     final covered = LyricsCoveredBottom.of(context);
     if (metadata.loading) {
@@ -98,6 +109,8 @@ class PlayerLyricsSection extends ConsumerWidget {
         fit: StackFit.expand,
         children: [
           SyncedLyricsView(
+            key: ValueKey(timingOffset),
+            timingOffset: timingOffset,
             lyrics: metadata.lyrics,
             seekPreview: seekPreview,
             credits: _lyricsCredits(),

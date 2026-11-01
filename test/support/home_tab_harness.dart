@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sistrum/providers/library/local_library_mixes_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -54,6 +55,7 @@ Future<void> pumpHome(
         settingsProvider.overrideWith(HomeSettings.new),
         localLibraryProvider.overrideWith(HomeLocalLibrary.new),
         libraryCollectionsProvider.overrideWith(HomeCollections.new),
+        localLibraryMixesProvider.overrideWith((ref) async => const []),
         localHomeTracksProvider.overrideWith((ref) async => const []),
         libraryBrowsePageLoaderProvider.overrideWithValue(loader),
       ],
