@@ -28,7 +28,7 @@ extension _LocalAlbumHeader on _LocalAlbumScreenState {
 
     return AlbumDetailHeader(
       title: widget.albumName,
-      appBarActions: [appLibrarySortButton(context, ref)],
+      appBarActions: [appLibrarySortButton(context, ref, releaseDate: true)],
       appBarTitle: isSelectionMode
           ? context.l10n.selectionSelected(selectedIds.length)
           : null,

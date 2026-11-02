@@ -1,4 +1,12 @@
 {
+  "libraryFilterSortSizeLargest": "Tamaño (más grande primero)",
+  "@libraryFilterSortSizeLargest": {
+    "description": "Library sort option - largest files first"
+  },
+  "libraryFilterSortSizeSmallest": "Tamaño (más pequeño primero)",
+  "@libraryFilterSortSizeSmallest": {
+    "description": "Library sort option - smallest files first"
+  },
   "@@locale": "es",
   "libraryGenres": "Géneros",
   "appearancePlayerView": "Vista del reproductor",

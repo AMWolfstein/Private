@@ -98,6 +98,17 @@ void main() {
     await tester.tap(find.text('Z–A'));
     await tester.pumpAndSettle();
     expect(requests.last.sort, 'z-a');
+    await tester.tap(find.byTooltip('Sort'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Size (Largest first)'));
+    await tester.pumpAndSettle();
+    expect(requests.last.sort, 'size-desc');
+    await tester.tap(find.byTooltip('Sort'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Release Date (Newest)'));
+    await tester.pumpAndSettle();
+    expect(requests.last.sort, 'release-newest');
+
     expect(tester.takeException(), isNull);
   });
 

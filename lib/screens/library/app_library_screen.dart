@@ -50,7 +50,11 @@ class _AppLibraryScreenState extends ConsumerState<AppLibraryScreen> {
   final _scroll = ScrollController();
   final _alphabetScroll = AppLibrarySectionController();
   int _alphabetGeneration = 0;
-  String get _sort => ref.read(librarySortProvider);
+  String get _sort {
+    final mode = ref.read(librarySortProvider);
+    return _artists && !const ['a-z', 'z-a'].contains(mode) ? 'a-z' : mode;
+  }
+
   List<LibraryBrowseEntry> _rows = const [];
   bool _loading = true;
 
@@ -113,7 +117,14 @@ class _AppLibraryScreenState extends ConsumerState<AppLibraryScreen> {
             : _artists
             ? context.l10n.searchArtists
             : context.l10n.searchAlbums);
-    final actions = <Widget>[appLibrarySortButton(context, ref)];
+    final actions = <Widget>[
+      appLibrarySortButton(
+        context,
+        ref,
+        fileSize: !_artists,
+        releaseDate: !_artists,
+      ),
+    ];
     final content = RefreshIndicator(
       onRefresh: _refresh,
       child: CustomScrollView(

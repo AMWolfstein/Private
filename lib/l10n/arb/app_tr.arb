@@ -1,4 +1,12 @@
 {
+  "libraryFilterSortSizeLargest": "Boyut (önce en büyük)",
+  "@libraryFilterSortSizeLargest": {
+    "description": "Library sort option - largest files first"
+  },
+  "libraryFilterSortSizeSmallest": "Boyut (önce en küçük)",
+  "@libraryFilterSortSizeSmallest": {
+    "description": "Library sort option - smallest files first"
+  },
   "@@locale": "tr",
   "libraryGenres": "Türler",
   "appearancePlayerView": "Oynatıcı görünümü",

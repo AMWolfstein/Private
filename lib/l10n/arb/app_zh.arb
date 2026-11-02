@@ -1,4 +1,12 @@
 {
+  "libraryFilterSortSizeLargest": "大小（从大到小）",
+  "@libraryFilterSortSizeLargest": {
+    "description": "Library sort option - largest files first"
+  },
+  "libraryFilterSortSizeSmallest": "大小（从小到大）",
+  "@libraryFilterSortSizeSmallest": {
+    "description": "Library sort option - smallest files first"
+  },
   "@@locale": "zh",
   "libraryGenres": "流派",
   "appearancePlayerView": "播放器视图",

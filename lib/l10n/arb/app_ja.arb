@@ -1,4 +1,12 @@
 {
+  "libraryFilterSortSizeLargest": "サイズ（大きい順）",
+  "@libraryFilterSortSizeLargest": {
+    "description": "Library sort option - largest files first"
+  },
+  "libraryFilterSortSizeSmallest": "サイズ（小さい順）",
+  "@libraryFilterSortSizeSmallest": {
+    "description": "Library sort option - smallest files first"
+  },
   "@@locale": "ja",
   "libraryGenres": "ジャンル",
   "appearancePlayerView": "プレイヤー表示",

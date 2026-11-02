@@ -1,4 +1,12 @@
 {
+  "libraryFilterSortSizeLargest": "Grootte (grootste eerst)",
+  "@libraryFilterSortSizeLargest": {
+    "description": "Library sort option - largest files first"
+  },
+  "libraryFilterSortSizeSmallest": "Grootte (kleinste eerst)",
+  "@libraryFilterSortSizeSmallest": {
+    "description": "Library sort option - smallest files first"
+  },
   "@@locale": "nl",
   "libraryGenres": "Genres",
   "appearancePlayerView": "Spelerweergave",

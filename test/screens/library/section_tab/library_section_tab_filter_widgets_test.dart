@@ -35,8 +35,11 @@ void main() {
     }
     expect(find.text('Original order'), findsNothing);
     expect(find.text('Latest'), findsNothing);
-    expect(find.text('Size (Largest first)'), findsNothing);
-    expect(find.byType(ListTile), findsNWidgets(2));
+    expect(find.text('Size (Largest first)'), findsOneWidget);
+    expect(find.text('Size (Smallest first)'), findsOneWidget);
+    expect(find.text('Release Date (Newest)'), findsOneWidget);
+    expect(find.text('Release Date (Oldest)'), findsOneWidget);
+    expect(find.byType(ListTile), findsNWidgets(6));
     expect(find.text('A–Z'), findsOneWidget);
     await tester.tap(find.text('A–Z'));
     await tester.pumpAndSettle();

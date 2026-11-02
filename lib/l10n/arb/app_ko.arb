@@ -1,4 +1,12 @@
 {
+  "libraryFilterSortSizeLargest": "크기 (큰 순)",
+  "@libraryFilterSortSizeLargest": {
+    "description": "Library sort option - largest files first"
+  },
+  "libraryFilterSortSizeSmallest": "크기 (작은 순)",
+  "@libraryFilterSortSizeSmallest": {
+    "description": "Library sort option - smallest files first"
+  },
   "@@locale": "ko",
   "libraryGenres": "장르",
   "appearancePlayerView": "플레이어 보기",

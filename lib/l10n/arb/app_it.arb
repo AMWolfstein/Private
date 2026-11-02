@@ -1,4 +1,12 @@
 {
+  "libraryFilterSortSizeLargest": "Dimensione (dal più grande)",
+  "@libraryFilterSortSizeLargest": {
+    "description": "Library sort option - largest files first"
+  },
+  "libraryFilterSortSizeSmallest": "Dimensione (dal più piccolo)",
+  "@libraryFilterSortSizeSmallest": {
+    "description": "Library sort option - smallest files first"
+  },
   "@@locale": "it",
   "libraryGenres": "Generi",
   "appearancePlayerView": "Vista player",

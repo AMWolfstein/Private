@@ -6,8 +6,20 @@ import 'package:sistrum/widgets/primitives/app_bottom_sheet.dart';
 import 'package:sistrum/core/models/track.dart';
 
 /// Returns the IconButton itself so header actions share their glass capsule.
-IconButton appLibrarySortButton(BuildContext context, WidgetRef ref) {
-  final selected = ref.watch(librarySortProvider);
+IconButton appLibrarySortButton(
+  BuildContext context,
+  WidgetRef ref, {
+  bool fileSize = false,
+  bool releaseDate = false,
+}) {
+  final options = [
+    'a-z',
+    'z-a',
+    if (fileSize) ...['size-desc', 'size-asc'],
+    if (releaseDate) ...['release-newest', 'release-oldest'],
+  ];
+  final requested = ref.watch(librarySortProvider);
+  final selected = options.contains(requested) ? requested : 'a-z';
   return IconButton(
     tooltip: context.l10n.librarySortTitle,
     icon: const Icon(Icons.sort),
@@ -19,9 +31,19 @@ IconButton appLibrarySortButton(BuildContext context, WidgetRef ref) {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              for (final mode in const ['a-z', 'z-a'])
+              for (final mode in options)
                 ListTile(
-                  title: Text(mode == 'a-z' ? 'A–Z' : 'Z–A'),
+                  title: Text(switch (mode) {
+                    'a-z' => 'A–Z',
+                    'z-a' => 'Z–A',
+                    'size-desc' =>
+                      sheetContext.l10n.libraryFilterSortSizeLargest,
+                    'size-asc' =>
+                      sheetContext.l10n.libraryFilterSortSizeSmallest,
+                    'release-newest' => sheetContext.l10n.searchSortDateNewest,
+                    'release-oldest' => sheetContext.l10n.searchSortDateOldest,
+                    _ => throw StateError('Unsupported order'),
+                  }),
                   trailing: selected == mode ? const Icon(Icons.check) : null,
                   onTap: () => Navigator.pop(sheetContext, mode),
                 ),
@@ -37,6 +59,10 @@ IconButton appLibrarySortButton(BuildContext context, WidgetRef ref) {
 
 /// Compare the displayed title with a stable identity tie-breaker.
 int compareLibraryTracks(Track a, Track b, String mode) {
+  if (mode == 'release-newest' || mode == 'release-oldest') {
+    final date = (a.releaseDate ?? '').compareTo(b.releaseDate ?? '');
+    if (date != 0) return mode == 'release-newest' ? -date : date;
+  }
   final order = a.name.toLowerCase().compareTo(b.name.toLowerCase());
   if (order != 0) return mode == 'z-a' ? -order : order;
   return a.id.compareTo(b.id);

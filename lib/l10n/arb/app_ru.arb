@@ -1,4 +1,12 @@
 {
+  "libraryFilterSortSizeLargest": "Размер (сначала большие)",
+  "@libraryFilterSortSizeLargest": {
+    "description": "Library sort option - largest files first"
+  },
+  "libraryFilterSortSizeSmallest": "Размер (сначала маленькие)",
+  "@libraryFilterSortSizeSmallest": {
+    "description": "Library sort option - smallest files first"
+  },
   "@@locale": "ru",
   "libraryGenres": "Жанры",
   "appearancePlayerView": "Вид плеера",

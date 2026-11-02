@@ -1,4 +1,12 @@
 {
+  "libraryFilterSortSizeLargest": "الحجم (الأكبر أولاً)",
+  "@libraryFilterSortSizeLargest": {
+    "description": "Library sort option - largest files first"
+  },
+  "libraryFilterSortSizeSmallest": "الحجم (الأصغر أولاً)",
+  "@libraryFilterSortSizeSmallest": {
+    "description": "Library sort option - smallest files first"
+  },
   "librarySortTitle": "ترتيب",
   "@@locale": "ar",
   "libraryGenres": "الأنواع الموسيقية",

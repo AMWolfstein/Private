@@ -286,7 +286,7 @@ class _LocalAlbumScreenState extends ConsumerState<LocalAlbumScreen>
           slivers: [
             AppSliverHeader.page(
               title: widget.albumName,
-              actions: [appLibrarySortButton(context, ref)],
+              actions: [appLibrarySortButton(context, ref, releaseDate: true)],
             ),
             SliverFillRemaining(
               hasScrollBody: false,

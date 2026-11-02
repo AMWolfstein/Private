@@ -1,4 +1,12 @@
 {
+  "libraryFilterSortSizeLargest": "Ukuran (Terbesar dahulu)",
+  "@libraryFilterSortSizeLargest": {
+    "description": "Library sort option - largest files first"
+  },
+  "libraryFilterSortSizeSmallest": "Ukuran (Terkecil dahulu)",
+  "@libraryFilterSortSizeSmallest": {
+    "description": "Library sort option - smallest files first"
+  },
   "@@locale": "id",
   "libraryGenres": "Genre",
   "appearancePlayerView": "Tampilan pemutar",

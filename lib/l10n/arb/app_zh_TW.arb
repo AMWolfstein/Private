@@ -1,4 +1,12 @@
 {
+  "libraryFilterSortSizeLargest": "大小（由大到小）",
+  "@libraryFilterSortSizeLargest": {
+    "description": "Library sort option - largest files first"
+  },
+  "libraryFilterSortSizeSmallest": "大小（由小到大）",
+  "@libraryFilterSortSizeSmallest": {
+    "description": "Library sort option - smallest files first"
+  },
   "@@locale": "zh_TW",
   "libraryGenres": "曲風",
   "appearancePlayerView": "播放器檢視",

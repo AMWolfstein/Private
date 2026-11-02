@@ -1,4 +1,12 @@
 {
+  "libraryFilterSortSizeLargest": "आकार (सबसे बड़ा पहले)",
+  "@libraryFilterSortSizeLargest": {
+    "description": "Library sort option - largest files first"
+  },
+  "libraryFilterSortSizeSmallest": "आकार (सबसे छोटा पहले)",
+  "@libraryFilterSortSizeSmallest": {
+    "description": "Library sort option - smallest files first"
+  },
   "@@locale": "hi",
   "libraryGenres": "शैलियाँ",
   "appearancePlayerView": "प्लेयर दृश्य",

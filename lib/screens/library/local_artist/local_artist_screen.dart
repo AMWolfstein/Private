@@ -131,7 +131,14 @@ class _LocalArtistScreenState extends ConsumerState<LocalArtistScreen> {
                     placeholderSize: 64,
                   ),
                   showTitle: _showTitle,
-                  toolbarActions: [appLibrarySortButton(context, ref)],
+                  toolbarActions: [
+                    appLibrarySortButton(
+                      context,
+                      ref,
+                      fileSize: true,
+                      releaseDate: true,
+                    ),
+                  ],
                   actions: [
                     HeaderCircleButton(
                       icon: favorite

@@ -120,7 +120,13 @@ class _LocalGenresScreenState extends ConsumerState<LocalGenresScreen> {
         slivers: [
           AppSliverHeader.page(
             title: widget.name ?? context.l10n.libraryGenres,
-            actions: [appLibrarySortButton(context, ref)],
+            actions: [
+              appLibrarySortButton(
+                context,
+                ref,
+                releaseDate: widget.genre != null,
+              ),
+            ],
           ),
           SliverList.builder(
             itemCount: entries.length,

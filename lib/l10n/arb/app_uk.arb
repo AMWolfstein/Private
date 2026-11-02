@@ -1,4 +1,12 @@
 {
+  "libraryFilterSortSizeLargest": "Розмір (спочатку найбільші)",
+  "@libraryFilterSortSizeLargest": {
+    "description": "Library sort option - largest files first"
+  },
+  "libraryFilterSortSizeSmallest": "Розмір (спочатку найменші)",
+  "@libraryFilterSortSizeSmallest": {
+    "description": "Library sort option - smallest files first"
+  },
   "@@locale": "uk",
   "libraryGenres": "Жанри",
   "appearancePlayerView": "Вигляд плеєра",
