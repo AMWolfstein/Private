@@ -21,7 +21,7 @@ the Popular cap.
 
 V2 Home uses the Apple Music editorial-card/shelf composition with local data. Keep featured
 releases ordered by release tags, bounded shelf queries, local artwork and local detail routes.
-Home has no Recent access-history section. Latest Releases uses valid release-date tags
+Home places separate Albums and Singles shelves next to each other, Singles directly below Albums. Filter each bounded query before its limit; Singles require explicit total_tracks = 1 and total_discs <= 1. Partial albums, unknown totals and EPs remain Albums. Home has no Recent access-history section. Latest Releases uses valid release-date tags
 from local songs, normalized chronologically without scan/add-date fallback; keep Home's
 Recently Added shelf unchanged. Do not replace the feed with only access history.
 
@@ -29,7 +29,7 @@ Default typography uses Inter with bundled Noto Sans Arabic as its glyph fallbac
 
 Insights is the listening-statistics feature in its own tab. Listening recording stays automatic; do not restore its removed enable/disable setting.
 
-Detailed logging is always on and has no toggle; Logs filters by level with a Full option that shows every entry. There is no separate App settings page.
+Detailed logging is always on and has no toggle; Logs filters are ALL, DEBUG, INFO, WARN and ERROR. Do not restore the removed Full option. There is no separate App settings page.
 Lyrics settings do not contain Embed lyrics or its output-mode submenu/preferences.
 Local lyrics reading and per-file metadata/lyrics editing remain supported. Appearance has
 no decorative Library preview card. Settings and Library subpages reuse the album header's
