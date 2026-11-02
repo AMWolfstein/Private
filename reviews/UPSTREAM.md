@@ -105,6 +105,24 @@ checked; no native production source changed. Details, comparison, attribution
 and verification limits: `docs/PLAYER_CONTROLS_AND_EQUALIZER.md`.
 No APK or device audio measurement.
 
+## Whole-library song analysis controls (2026-11-02)
+
+U-622 — ADAPT Mornye v5.3.0 `song_analysis.dart`, `song_analysis_store.dart`
+and `song_feature_analyzer.dart` at `afee4332a257f1b6aeb288229eddf04ac0777b3c`.
+Source checkpoint: `44219a8c`.
+
+The owner requested a dedicated **Local Library > Song analysis** page immediately
+after **Tag separators**, with descriptions for both rows. The page retains the
+existing sound opt-in, adds the charging policy, confirmed clear and progress;
+the Playback duplicate is removed. A runtime-owned cancellable scheduler follows
+the current song on battery and sweeps the local library under the selected power
+policy. Shared persistent SQLite records replace the 512-entry refill cache and
+feed existing MFCC/tempo/key ranking. No online, local-library mode switch or
+Material/desktop flow imported. Native power probing works in attached/headless
+channels. See `docs/SONG_ANALYSIS.md` for timing, ownership, tests and limitations.
+This completes the scheduler/charging UI deliberately absent in U-610, without
+rewriting that historical scope or its verification results.
+
 ## Port order (batches; test once per batch)
 
 Done: batch 1 (U-001, U-101, U-102, U-103; pushed `3f8bbe7`) and batch 1b:

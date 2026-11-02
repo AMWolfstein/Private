@@ -1,5 +1,10 @@
 # Local/offline v5.3.0 follow-up
 
+**2026-11-02 follow-up:** the initial refill-only scheduler, 512-entry cache and
+omission of charging controls described below are superseded by the persistent
+whole-library scheduler and dedicated Local Library page in `docs/SONG_ANALYSIS.md`.
+The original source checkpoints and measurements below remain historical.
+
 Reference upstream tag: `afee4332a257f1b6aeb288229eddf04ac0777b3c`.
 This follows the earlier local playback and Android Auto batches on the current
 Flutter/audioplayers engine. It does not depend on the planned Kotlin/Media3
