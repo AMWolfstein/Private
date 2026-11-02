@@ -6,7 +6,8 @@ before continuing any migration work.**
 
 The app targets Android and local files only: no iOS code paths and no on/off switch for the local library (it is always on). Sistrum is its sole production theme; keep
 light/dark modes and local storage, playback, lyrics, backup and USB support. Do not
-reintroduce providers, downloads, extension credentials or remote artwork loading.
+reintroduce providers, downloads, extension credentials or remote artwork loading. The one
+online feature is the user-started lyrics lookup below; it never runs in the background.
 
 V3 detail designs are restored over local data. Artist navigation must open
 `local_artist_screen.dart`, not a generic filtered album browser. Keep Play centered,
@@ -31,7 +32,13 @@ Insights is the listening-statistics feature in its own tab. Listening recording
 
 Detailed logging is always on and has no toggle; Logs filters are ALL, DEBUG, INFO, WARN and ERROR. Do not restore the removed Full option. There is no separate App settings page.
 Lyrics settings do not contain Embed lyrics or its output-mode submenu/preferences.
-Local lyrics reading and per-file metadata/lyrics editing remain supported. Appearance has
+Local lyrics reading and per-file metadata/lyrics editing remain supported.
+Fetch lyrics (the Now Playing action and Lyrics > Songs without synced lyrics) searches the
+built-in online sources in `lib/services/lyrics/` in stages: word-synced, then line-synced,
+then plain text only after the user confirms. It writes the result into the song's own file
+through the Edit Metadata persistence path, keeps every other tag, and asks before replacing
+existing lyrics. Timing is classified from the lyrics text, never from the source name. Sources
+are queried at most once per action. Extensions are never consulted for lyrics. Appearance has
 no decorative Library preview card. Settings and Library subpages reuse the album header's
 circular back button in Sistrum.
 
@@ -133,7 +140,8 @@ lyric line takes its direction from its first strong letter.
 The updater is restored: `UpdateChecker` reads GitHub releases from `AppInfo.githubRepo`, Settings > Updates (above About) holds Check now and the
 Check-for-updates and preview-release switches, and `UpdateDialog` downloads the APK (HTTPS, resumable, SHA-256
 checked) and hands it to the system installer. The release manifest therefore allows INTERNET (and
-REQUEST_INSTALL_PACKAGES with a FileProvider); no other feature may use the network.
+REQUEST_INSTALL_PACKAGES with a FileProvider); no other feature may use the network except the user-started lyrics lookup described under
+Lyrics settings.
 
 Song taps start local playback; do not restore the separate TrackMetadataScreen/details
 route. Song ellipsis menus expose the former local track actions: Play/Share, Play next,

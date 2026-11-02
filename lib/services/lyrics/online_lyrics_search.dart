@@ -32,12 +32,16 @@ class OnlineLyricsQuery {
     required this.artist,
     this.album,
     this.durationSeconds,
+    this.isrc,
   });
 
   final String title;
   final String artist;
   final String? album;
   final double? durationSeconds;
+
+  /// Recording code when the file carries one; sources use it for exact hits.
+  final String? isrc;
 }
 
 class OnlineLyricsCandidate {
@@ -93,6 +97,10 @@ class OnlineLyricsSearch {
 
   final List<OnlineLyricsProvider> providers;
 
+  /// One answer per source for this search object. Create one search per
+  /// Fetch action: the synced and plain steps then share their requests.
+  final _asked = <String, OnlineLyricsCandidate?>{};
+
   /// Stages in order: word-synced, then line-synced. Plain text is a separate
   /// step that only runs after the user agrees, so it is not included here.
   Future<OnlineLyricsResult> findSynced(
@@ -117,8 +125,6 @@ class OnlineLyricsSearch {
     bool Function()? isCancelled,
   }) async {
     final failed = <String>[];
-    // Each provider's answer is fetched once and reused by later stages.
-    final asked = <String, OnlineLyricsCandidate?>{};
 
     for (final stage in stages) {
       for (final provider in providers) {
@@ -133,15 +139,15 @@ class OnlineLyricsSearch {
         // satisfy it, so it is not asked for this stage.
         if (!provider.bestTiming.satisfies(stage)) continue;
 
-        if (!asked.containsKey(provider.id)) {
+        if (!_asked.containsKey(provider.id)) {
           try {
-            asked[provider.id] = await provider.find(query);
+            _asked[provider.id] = await provider.find(query);
           } catch (_) {
             failed.add(provider.id);
-            asked[provider.id] = null;
+            _asked[provider.id] = null;
           }
         }
-        final result = asked[provider.id];
+        final result = _asked[provider.id];
         if (result != null && result.timing.satisfies(stage)) {
           return OnlineLyricsResult._(
             OnlineLyricsOutcome.found,

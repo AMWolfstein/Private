@@ -5,6 +5,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/providers/settings/settings_provider.dart';
 import 'package:sistrum/utils/layout/nav_bar_inset.dart';
+import 'package:sistrum/screens/settings/playback/missing_lyrics_page.dart';
+import 'package:sistrum/widgets/animation/animation_utils.dart';
 import 'package:sistrum/widgets/settings/settings_group.dart';
 import 'package:sistrum/widgets/settings/settings_search_highlight.dart';
 import 'package:sistrum/widgets/settings/settings_item_rows.dart';
@@ -48,6 +50,14 @@ class LyricsSettingsPage extends ConsumerWidget {
                     onChanged: (value) => ref
                         .read(settingsProvider.notifier)
                         .setKeepScreenOnLyrics(value),
+                  ),
+                  SettingsItem(
+                    icon: Icons.subtitles_outlined,
+                    title: context.l10n.lyricsMissingRowTitle,
+                    subtitle: context.l10n.lyricsMissingRowSubtitle,
+                    onTap: () => Navigator.of(context).push(
+                      slidePageRoute<void>(page: const MissingLyricsPage()),
+                    ),
                     showDivider: false,
                   ),
                 ],

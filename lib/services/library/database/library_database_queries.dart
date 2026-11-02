@@ -179,6 +179,17 @@ extension LibraryDatabaseQueries on LibraryDatabase {
     return LibraryRowMapper.decode(rows.first);
   }
 
+  /// Every visible song row in title order, for the lyrics pages. Rows are
+  /// decoded with the same mapper as [getById].
+  Future<List<Map<String, dynamic>>> listVisibleSongs() async {
+    final db = await database;
+    final rows = await db.query(
+      LibraryDatabase.visibleLibraryView,
+      orderBy: 'track_name COLLATE NOCASE, id',
+    );
+    return [for (final row in rows) LibraryRowMapper.decode(row)];
+  }
+
   Future<Map<String, dynamic>?> getByIsrc(String isrc) async {
     final db = await database;
     final rows = await db.query(

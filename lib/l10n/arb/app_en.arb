@@ -3526,5 +3526,114 @@
         "type": "int"
       }
     }
+  },
+  "lyricsFetchMenu": "Fetch lyrics",
+  "@lyricsFetchMenu": {
+    "description": "Song menu action that finds lyrics online and writes them into the file"
+  },
+  "lyricsFetchReplaceTitle": "Replace existing lyrics?",
+  "@lyricsFetchReplaceTitle": {
+    "description": "Dialog title when the file already has lyrics"
+  },
+  "lyricsFetchReplaceBody": "This file already has lyrics. Replace them with lyrics found online?",
+  "@lyricsFetchReplaceBody": {
+    "description": "Dialog body when the file already has lyrics"
+  },
+  "lyricsFetchPlainTitle": "No synced lyrics found",
+  "@lyricsFetchPlainTitle": {
+    "description": "Dialog title when no word-synced or line-synced lyrics exist"
+  },
+  "lyricsFetchPlainBody": "Search for plain lyrics without timing?",
+  "@lyricsFetchPlainBody": {
+    "description": "Dialog body offering plain-text lyrics"
+  },
+  "lyricsFetchSearching": "Searching for lyrics…",
+  "@lyricsFetchSearching": {
+    "description": "Snackbar while the online search runs"
+  },
+  "lyricsFetchCancel": "Cancel",
+  "@lyricsFetchCancel": {
+    "description": "Cancels a running lyrics search"
+  },
+  "lyricsFetchOk": "OK",
+  "@lyricsFetchOk": {
+    "description": "Confirms a lyrics prompt"
+  },
+  "lyricsFetchSavedSynced": "Synced lyrics saved to the file",
+  "@lyricsFetchSavedSynced": {
+    "description": "Result when timed lyrics were written"
+  },
+  "lyricsFetchSavedPlain": "Plain lyrics saved to the file",
+  "@lyricsFetchSavedPlain": {
+    "description": "Result when untimed lyrics were written"
+  },
+  "lyricsFetchFailed": "The lyrics lookup failed",
+  "@lyricsFetchFailed": {
+    "description": "Shown when the lyrics lookup itself failed unexpectedly"
+  },
+  "lyricsFetchKept": "Existing lyrics kept",
+  "@lyricsFetchKept": {
+    "description": "Result when the user declined to replace lyrics"
+  },
+  "lyricsFetchDeclinedPlain": "No synced lyrics found",
+  "@lyricsFetchDeclinedPlain": {
+    "description": "Result when the user declined plain lyrics"
+  },
+  "lyricsFetchNotFound": "No lyrics found online for this song",
+  "@lyricsFetchNotFound": {
+    "description": "Result when no source had lyrics"
+  },
+  "lyricsFetchWriteFailed": "Could not write lyrics to the file",
+  "@lyricsFetchWriteFailed": {
+    "description": "Result when the file write failed"
+  },
+  "lyricsFetchUnreachable": "Some sources could not be reached: {sources}",
+  "@lyricsFetchUnreachable": {
+    "description": "Shown after a lookup when sources failed",
+    "placeholders": {
+      "sources": {
+        "type": "String"
+      }
+    }
+  },
+  "lyricsMissingTitle": "Songs without synced lyrics",
+  "@lyricsMissingTitle": {
+    "description": "Lyrics settings page title"
+  },
+  "lyricsMissingDescription": "Songs whose files have no word-synced or line-synced lyrics. Fetch lyrics searches online sources and writes the result into the file.",
+  "@lyricsMissingDescription": {
+    "description": "Lyrics settings page description"
+  },
+  "lyricsMissingEmpty": "Every song has synced lyrics.",
+  "@lyricsMissingEmpty": {
+    "description": "Shown when the list is empty"
+  },
+  "lyricsMissingChecking": "Checking {checked} of {total} files",
+  "@lyricsMissingChecking": {
+    "description": "Progress while reading lyrics timing from files",
+    "placeholders": {
+      "checked": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "lyricsMissingStatusNone": "No lyrics",
+  "@lyricsMissingStatusNone": {
+    "description": "Status of a song without lyrics"
+  },
+  "lyricsMissingStatusPlain": "Plain text, no timing",
+  "@lyricsMissingStatusPlain": {
+    "description": "Status of a song with untimed lyrics"
+  },
+  "lyricsMissingRowTitle": "Songs without synced lyrics",
+  "@lyricsMissingRowTitle": {
+    "description": "Lyrics settings row title"
+  },
+  "lyricsMissingRowSubtitle": "Find timed lyrics for songs that lack them",
+  "@lyricsMissingRowSubtitle": {
+    "description": "Lyrics settings row subtitle"
   }
 }

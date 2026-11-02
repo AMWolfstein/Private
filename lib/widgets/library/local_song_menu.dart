@@ -19,7 +19,7 @@ import 'package:sistrum/providers/library/library_tag_credits_provider.dart';
 import 'package:sistrum/widgets/library/track_metadata_edit_sheet.dart';
 import 'package:sistrum/providers/library/library_database_provider.dart';
 import 'package:sistrum/utils/files/file_access.dart';
-import 'package:sistrum/utils/text/string_utils.dart';
+import 'package:sistrum/services/library/metadata/local_song_edit_values.dart';
 import 'package:sistrum/widgets/audio_analysis/audio_analysis_widget.dart';
 import 'package:sistrum/widgets/primitives/app_context_menu.dart';
 import 'package:sistrum/widgets/primitives/app_sliver_header.dart';
@@ -248,29 +248,7 @@ Future<bool> editLocalSongMetadata(
   } catch (_) {
     /* Use stored tags if reading fails. */
   }
-  String val(String key, Object? fallback) =>
-      tags[key]?.toString() ?? fallback?.toString() ?? '';
-  final values = <String, String>{
-    'title': val('title', item.trackName),
-    'artist': val('artist', item.artistName),
-    'album': val('album', item.albumName),
-    'album_artist': val('album_artist', item.albumArtist),
-    'date': val('date', item.releaseDate),
-    'track_number': val('track_number', item.trackNumber),
-    'total_tracks': val('total_tracks', item.totalTracks),
-    'disc_number': val('disc_number', item.discNumber),
-    'total_discs': val('total_discs', item.totalDiscs),
-    'genre': val('genre', item.genre),
-    'isrc': val('isrc', item.isrc),
-    'composer': val('composer', item.composer),
-    'label': val('label', item.label),
-    'copyright': val('copyright', item.copyright),
-    'explicit': (parseExplicitFlag(tags['explicit']) ?? item.explicit)
-        ? '1'
-        : '0',
-    for (final key in ['comment', 'album_type', 'upc', 'lyrics'])
-      key: val(key, ''),
-  };
+  final values = localSongEditValues(item, tags);
   if (!context.mounted) return false;
   final saved = await showModalBottomSheet<bool>(
     context: context,

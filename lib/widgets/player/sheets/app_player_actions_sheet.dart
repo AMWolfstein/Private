@@ -124,6 +124,12 @@ class AppPlayerActionsSheet extends ConsumerWidget {
               context.l10n.lyricsShareTitle,
               CupertinoIcons.quote_bubble,
             ),
+            _action(
+              context,
+              'fetchLyrics',
+              context.l10n.lyricsFetchMenu,
+              CupertinoIcons.arrow_down_doc,
+            ),
           ],
           [
             _action(
