@@ -1,3 +1,5 @@
+import 'package:sistrum/providers/library/library_sort_provider.dart';
+import 'package:sistrum/widgets/library/app_library_sort.dart';
 import 'package:sistrum/widgets/cover/cached_cover_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -14,16 +16,39 @@ class FavoriteArtistsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final artists = ref.watch(
+    final savedArtists = ref.watch(
       libraryCollectionsProvider.select((state) => state.favoriteArtists),
     );
+    final sort = ref.watch(librarySortProvider);
+    final artists = savedArtists.toList();
+    if (const ['a-z', 'z-a', 'latest', 'oldest'].contains(sort)) {
+      artists.sort((a, b) {
+        final order = switch (sort) {
+          'latest' => b.addedAt.compareTo(a.addedAt),
+          'oldest' => a.addedAt.compareTo(b.addedAt),
+          'z-a' => b.name.toLowerCase().compareTo(a.name.toLowerCase()),
+          _ => a.name.toLowerCase().compareTo(b.name.toLowerCase()),
+        };
+        return order != 0 ? order : a.key.compareTo(b.key);
+      });
+    }
     final colorScheme = Theme.of(context).colorScheme;
     final bottomInset = context.navBarBottomInset;
 
     return Scaffold(
       body: CustomScrollView(
         slivers: [
-          AppSliverHeader.page(title: context.l10n.collectionFavoriteArtists),
+          AppSliverHeader.page(
+            title: context.l10n.collectionFavoriteArtists,
+            actions: [
+              appLibrarySortButton(
+                context,
+                ref,
+                fallback: 'original',
+                options: const ['original', 'a-z', 'z-a', 'latest', 'oldest'],
+              ),
+            ],
+          ),
           if (artists.isEmpty)
             SliverFillRemaining(
               hasScrollBody: false,

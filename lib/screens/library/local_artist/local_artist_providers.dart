@@ -1,3 +1,4 @@
+import 'package:sistrum/providers/library/library_sort_provider.dart';
 import 'dart:math';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -20,6 +21,10 @@ const _artistPageSize = 40;
 /// Bounded local reads shared by the artist page and its complete playback queue.
 final localArtistTrackLoaderProvider =
     Provider<Future<LibraryBrowseDbPage> Function(ArtistTrackRequest)>((ref) {
+      final requested = ref.watch(librarySortProvider);
+      final sort = const ['a-z', 'z-a', 'latest', 'oldest'].contains(requested)
+          ? requested!
+          : 'a-z';
       final credits = ref.watch(tagCreditScopeProvider);
       return (request) => ref
           .read(libraryDatabaseProvider)
@@ -31,7 +36,7 @@ final localArtistTrackLoaderProvider =
               limit: _artistPageSize,
               offset: request.offset,
               cursor: request.cursor,
-              sortMode: 'a-z',
+              sortMode: sort,
               includeSingleTrackAlbums: true,
             ),
           );

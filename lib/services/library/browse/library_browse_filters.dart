@@ -1,4 +1,3 @@
-import 'package:sistrum/services/library/browse/album_completeness.dart';
 import 'package:sistrum/services/library/database/library_database_models.dart';
 import 'package:sistrum/utils/scan/library_format_filters.dart';
 
@@ -31,43 +30,11 @@ String metadataReleaseDateSql(String column) {
       "THEN $candidate END, '')";
 }
 
-/// Album inventory for completeness assessment over scanned local tracks.
-/// Retained rows on disconnected sources still make the assessment unknown.
-String localAlbumInventorySql() {
-  return '''
-    SELECT l.album_key, LOWER(TRIM(l.track_name)) AS title,
-      l.track_number, l.total_tracks, l.disc_number, l.total_discs,
-      CASE WHEN source.available = 0 THEN 1 ELSE 0 END AS unavailable
-    FROM library l LEFT JOIN library_sources source ON source.id = l.source_id
-    WHERE COALESCE(source.enabled, 1) = 1
-  ''';
-}
-
 String escapeLikePattern(String value) {
   return value
       .replaceAll('\\', r'\\')
       .replaceAll('%', r'\%')
       .replaceAll('_', r'\_');
-}
-
-void appendAlbumCompletenessFilter(
-  List<String> where,
-  LibraryBrowseDbQuery request, {
-  required String albumKey,
-  required bool hasJoin,
-}) {
-  if (!isAlbumCompletenessFilter(request.metadata)) return;
-  final status = request.metadata == incompleteAlbumFilter
-      ? 'incomplete'
-      : 'unknown';
-  if (hasJoin) {
-    where.add("ac.album_completeness = '$status'");
-    return;
-  }
-  final assessment = albumCompletenessSql(localAlbumInventorySql());
-  where.add(
-    "$albumKey IN (SELECT album_key FROM ($assessment) WHERE album_completeness = '$status')",
-  );
 }
 
 void appendQueueCommonFilters(

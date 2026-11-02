@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/providers/library/library_database_provider.dart';
 import 'package:sistrum/providers/library/library_tag_credits_provider.dart';
 import 'package:sistrum/providers/library/local_library_provider.dart';
-import 'package:sistrum/services/library/browse/album_completeness.dart';
 import 'package:sistrum/services/library/database/library_database.dart';
 import 'package:sistrum/services/library/browse/library_tag_credits.dart';
 
@@ -17,7 +16,6 @@ typedef LibraryBrowseRequest = ({
   String search,
   String sort,
   int limit,
-  String? completeness,
 });
 
 class LibraryBrowseEntry {
@@ -28,7 +26,6 @@ class LibraryBrowseEntry {
   final String? cover;
   final String samplePath;
   final int trackCount;
-  final AlbumCompleteness? completeness;
   final int? totalTracks;
   final int? totalDiscs;
   final String? releaseDate;
@@ -45,7 +42,6 @@ class LibraryBrowseEntry {
     this.cover,
     required this.samplePath,
     required this.trackCount,
-    this.completeness,
     this.totalTracks,
     this.totalDiscs,
     this.releaseDate,
@@ -67,7 +63,6 @@ class LibraryBrowseEntry {
           : row['cover_url'] as String?,
       samplePath: row['sample_file_path'] as String? ?? '',
       trackCount: (row['track_count'] as num?)?.toInt() ?? 0,
-      completeness: AlbumCompleteness.fromRow(row),
       totalTracks: (row['album_total_tracks'] as num?)?.toInt(),
       totalDiscs: (row['album_total_discs'] as num?)?.toInt(),
       releaseDate:
@@ -129,7 +124,6 @@ LibraryBrowseDbQuery libraryBrowseQuery(
   credits: credits,
   searchQuery: request.browse.search,
   sortMode: request.browse.sort,
-  metadata: request.browse.completeness,
 );
 
 /// One bounded read; callers retain earlier pages instead of querying a prefix.

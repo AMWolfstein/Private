@@ -123,6 +123,26 @@ extension _LibraryCollectionTracksScreenStatePart2
           ? _buildPlayAllCenterButton(entries)
           : null,
       appBarActions: [
+        appLibrarySortButton(
+          context,
+          ref,
+          fallback: 'original',
+          options: const [
+            'original',
+            'a-z',
+            'z-a',
+            'latest',
+            'oldest',
+            'artist-asc',
+            'artist-desc',
+            'album-asc',
+            'album-desc',
+            'release-newest',
+            'release-oldest',
+            'genre-asc',
+            'genre-desc',
+          ],
+        ),
         if (!isSelectionMode && entries.length > 1)
           IconButton(
             icon: Icon(_reordering ? Icons.check : Icons.swap_vert),

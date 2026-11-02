@@ -13,7 +13,6 @@ import 'package:sistrum/screens/library/collections/favorite_artists_screen.dart
 import 'package:sistrum/screens/library/collections/library_collection_tracks_screen.dart';
 import 'package:sistrum/screens/library/local_artist/local_artist_providers.dart';
 import 'package:sistrum/screens/library/browse/local_genres_screen.dart';
-import 'package:sistrum/services/library/browse/album_completeness.dart';
 import 'package:sistrum/services/library/database/library_database_models.dart';
 import 'package:sistrum/core/theme/app_theme.dart';
 
@@ -42,84 +41,46 @@ LibraryBrowseEntry _album(int index) => LibraryBrowseEntry(
 );
 
 void main() {
-  testWidgets(
-    'Sistrum albums filter incomplete and unknown tags without losing search',
-    (tester) async {
-      tester.view.physicalSize = const Size(390, 844);
-      tester.view.devicePixelRatio = 1;
-      addTearDown(tester.view.reset);
-      final requests = <LibraryBrowseRequest>[];
-      await tester.pumpWidget(
-        ProviderScope(
-          overrides: [
-            settingsProvider.overrideWith(_Settings.new),
-            localLibraryProvider.overrideWith(_Local.new),
-            libraryCollectionsProvider.overrideWith(_Collections.new),
-            libraryBrowsePageLoaderProvider.overrideWithValue((page) async {
-              final request = page.browse;
-              requests.add(request);
-              final filter = request.completeness;
-              return LibraryBrowsePage([
-                LibraryBrowseEntry.fromRow({
-                  'queue_source': 'downloaded',
-                  'album_key': 'album',
-                  'album_name': filter == unknownAlbumCompletenessFilter
-                      ? 'Unknown'
-                      : 'Album',
-                  'artist_name': 'Artist',
-                  'track_count': 8,
-                  if (filter != null) ...{
-                    'album_completeness': filter == incompleteAlbumFilter
-                        ? 'incomplete'
-                        : 'unknown',
-                    'album_present_tracks': 8,
-                    'album_expected_tracks': filter == incompleteAlbumFilter
-                        ? 12
-                        : null,
-                  },
-                }, isArtist: false),
-              ]);
-            }),
-          ],
-          child: MaterialApp(
-            theme: AppTheme.build(Brightness.dark),
-            localizationsDelegates: AppLocalizations.localizationsDelegates,
-            supportedLocales: AppLocalizations.supportedLocales,
-            home: Scaffold(
-              body: AppLibraryScreen(
-                page: AppLibraryPage.albums,
-                onOpenSection: (_) {},
-              ),
+  testWidgets('Library retains shared Sort and removes completeness controls', (
+    tester,
+  ) async {
+    final requests = <LibraryBrowseRequest>[];
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          settingsProvider.overrideWith(_Settings.new),
+          localLibraryProvider.overrideWith(_Local.new),
+          libraryCollectionsProvider.overrideWith(_Collections.new),
+          libraryBrowsePageLoaderProvider.overrideWithValue((page) async {
+            requests.add(page.browse);
+            return LibraryBrowsePage([_album(0), _album(1)]);
+          }),
+        ],
+        child: MaterialApp(
+          theme: AppTheme.build(Brightness.dark),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: Scaffold(
+            body: AppLibraryScreen(
+              page: AppLibraryPage.albums,
+              onOpenSection: (_) {},
             ),
           ),
         ),
-      );
-      await tester.pumpAndSettle();
-      await tester.tap(find.byTooltip('Filters'));
-      await tester.pumpAndSettle();
-      await tester.tap(find.text('Incomplete albums'));
-      await tester.pumpAndSettle();
-      expect(requests.last.completeness, incompleteAlbumFilter);
-      expect(find.text('8/12'), findsOneWidget);
-      expect(find.byTooltip('8/12 tracks · 4 missing'), findsOneWidget);
-      expect(requests.last.search, isEmpty);
-      expect(requests.last.completeness, incompleteAlbumFilter);
-      await tester.tap(find.byTooltip('Filters'));
-      await tester.pumpAndSettle();
-      await tester.tap(find.text('Album completeness unknown'));
-      await tester.pumpAndSettle();
-      expect(requests.last.completeness, unknownAlbumCompletenessFilter);
-      expect(find.text('?'), findsOneWidget);
-      await tester.tap(find.byTooltip('Filters'));
-      await tester.pumpAndSettle();
-      await tester.tap(find.text('All'));
-      await tester.pumpAndSettle();
-      expect(requests.last.completeness, isNull);
-      expect(find.text('?'), findsNothing);
-      expect(find.text('8/12'), findsNothing);
-      expect(tester.takeException(), isNull);
-    },
-  );
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(find.byTooltip('Filters'), findsNothing);
+    expect(find.byTooltip('Sort'), findsOneWidget);
+    await tester.tap(find.byTooltip('Sort'));
+    await tester.pumpAndSettle();
+    expect(find.text('Incomplete albums'), findsNothing);
+    expect(find.text('Album completeness unknown'), findsNothing);
+    await tester.tap(find.text('Title (Z-A)'));
+    await tester.pumpAndSettle();
+    expect(requests.last.sort, 'z-a');
+    expect(tester.takeException(), isNull);
+  });
 
   for (final brightness in Brightness.values) {
     testWidgets(

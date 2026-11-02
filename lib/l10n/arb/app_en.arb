@@ -1,4 +1,6 @@
 {
+  "librarySortTitle": "Sort",
+  "librarySortOriginal": "Original order",
   "libraryGenres": "Genres",
   "@libraryGenres": {
     "description": "Library category for songs grouped by genre tags"
@@ -1129,65 +1131,13 @@
   "@libraryStorageAccessMessage": {
     "description": "Dialog message for storage permission"
   },
-  "libraryFilterAll": "All",
-  "@libraryFilterAll": {
-    "description": "Filter chip - show all library items"
-  },
-  "libraryFilterTitle": "Filters",
-  "@libraryFilterTitle": {
-    "description": "Filter bottom sheet title"
-  },
   "libraryFilterReset": "Reset",
   "@libraryFilterReset": {
     "description": "Reset all filters button"
   },
-  "libraryFilterApply": "Apply",
-  "@libraryFilterApply": {
-    "description": "Apply filters button"
-  },
-  "libraryFilterQuality": "Quality",
-  "@libraryFilterQuality": {
-    "description": "Filter section - audio quality"
-  },
-  "libraryFilterQualityHiRes": "Hi-Res (24bit)",
-  "@libraryFilterQualityHiRes": {
-    "description": "Filter option - high resolution audio"
-  },
-  "libraryFilterQualityCD": "CD (16bit)",
-  "@libraryFilterQualityCD": {
-    "description": "Filter option - CD quality audio"
-  },
-  "libraryFilterQualityLossy": "Lossy",
-  "@libraryFilterQualityLossy": {
-    "description": "Filter option - lossy compressed audio"
-  },
   "libraryFilterFormat": "Format",
   "@libraryFilterFormat": {
     "description": "Filter section - file format"
-  },
-  "libraryFilterMetadata": "Metadata",
-  "@libraryFilterMetadata": {
-    "description": "Filter section - metadata completeness"
-  },
-  "libraryFilterMetadataComplete": "Complete metadata",
-  "@libraryFilterMetadataComplete": {
-    "description": "Filter option - items with complete metadata"
-  },
-  "libraryFilterMetadataMissingAny": "Missing any metadata",
-  "@libraryFilterMetadataMissingAny": {
-    "description": "Filter option - items missing any tracked metadata field"
-  },
-  "libraryFilterMetadataMissingYear": "Missing year",
-  "@libraryFilterMetadataMissingYear": {
-    "description": "Filter option - items missing release year/date"
-  },
-  "libraryFilterMetadataMissingGenre": "Missing genre",
-  "@libraryFilterMetadataMissingGenre": {
-    "description": "Filter option - items missing genre"
-  },
-  "libraryFilterMetadataMissingAlbumArtist": "Missing album artist",
-  "@libraryFilterMetadataMissingAlbumArtist": {
-    "description": "Filter option - items missing album artist"
   },
   "libraryFilterSort": "Sort",
   "@libraryFilterSort": {
@@ -2257,30 +2207,6 @@
   "@editMetadataAdvanced": {
     "description": "Expandable section label for advanced metadata fields"
   },
-  "libraryFilterMetadataMissingTrackNumber": "Missing track number",
-  "@libraryFilterMetadataMissingTrackNumber": {
-    "description": "Filter option - items missing track number"
-  },
-  "libraryFilterMetadataMissingDiscNumber": "Missing disc number",
-  "@libraryFilterMetadataMissingDiscNumber": {
-    "description": "Filter option - items missing disc number"
-  },
-  "libraryFilterMetadataMissingArtist": "Missing artist",
-  "@libraryFilterMetadataMissingArtist": {
-    "description": "Filter option - items missing artist"
-  },
-  "libraryFilterMetadataIncorrectIsrcFormat": "Incorrect ISRC format",
-  "@libraryFilterMetadataIncorrectIsrcFormat": {
-    "description": "Filter option - items with an invalid ISRC format"
-  },
-  "libraryFilterMetadataMissingIsrc": "Missing ISRC",
-  "@libraryFilterMetadataMissingIsrc": {
-    "description": "Filter option - items without any ISRC tag"
-  },
-  "libraryFilterMetadataMissingLabel": "Missing label",
-  "@libraryFilterMetadataMissingLabel": {
-    "description": "Filter option - items missing record label"
-  },
   "collectionDeletePlaylistsMessage": "Delete {count} {count, plural, =1{playlist} other{playlists}}?",
   "@collectionDeletePlaylistsMessage": {
     "description": "Confirmation message for deleting selected playlists",
@@ -2617,41 +2543,6 @@
     "placeholders": {
       "query": {
         "type": "String"
-      }
-    }
-  },
-  "libraryFilterMetadataMissingLyrics": "Missing lyrics",
-  "@libraryFilterMetadataMissingLyrics": {
-    "description": "Filter option for tracks without embedded or sidecar lyrics"
-  },
-  "libraryFilterMetadataMissingReplayGain": "Missing ReplayGain",
-  "@libraryFilterMetadataMissingReplayGain": {
-    "description": "Filter option for scanned tracks without ReplayGain gain tags"
-  },
-  "libraryFilterMetadataHasReplayGain": "Has ReplayGain",
-  "@libraryFilterMetadataHasReplayGain": {
-    "description": "Filter option for tracks with indexed ReplayGain track or album gain tags"
-  },
-  "libraryFilterIncompleteAlbums": "Incomplete albums",
-  "@libraryFilterIncompleteAlbums": {
-    "description": "Library filter for albums with confirmed missing track positions"
-  },
-  "libraryAlbumCompletenessUnknown": "Album completeness unknown",
-  "@libraryAlbumCompletenessUnknown": {
-    "description": "Library filter and status for missing, conflicting or ambiguous album track counts"
-  },
-  "libraryAlbumMissingTracks": "{present}/{expected} tracks · {missing} missing",
-  "@libraryAlbumMissingTracks": {
-    "description": "Album completeness badge tooltip",
-    "placeholders": {
-      "present": {
-        "type": "int"
-      },
-      "expected": {
-        "type": "int"
-      },
-      "missing": {
-        "type": "int"
       }
     }
   },

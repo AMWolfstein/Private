@@ -805,65 +805,13 @@
   "@libraryStorageAccessMessage": {
     "description": "Dialog message for storage permission"
   },
-  "libraryFilterAll": "Tudo",
-  "@libraryFilterAll": {
-    "description": "Filter chip - show all library items"
-  },
-  "libraryFilterTitle": "Filtros",
-  "@libraryFilterTitle": {
-    "description": "Filter bottom sheet title"
-  },
   "libraryFilterReset": "Repor",
   "@libraryFilterReset": {
     "description": "Reset all filters button"
   },
-  "libraryFilterApply": "Aplicar",
-  "@libraryFilterApply": {
-    "description": "Apply filters button"
-  },
-  "libraryFilterQuality": "Qualidade",
-  "@libraryFilterQuality": {
-    "description": "Filter section - audio quality"
-  },
-  "libraryFilterQualityHiRes": "Hi-Res (24 bits)",
-  "@libraryFilterQualityHiRes": {
-    "description": "Filter option - high resolution audio"
-  },
-  "libraryFilterQualityCD": "CD (16 bits)",
-  "@libraryFilterQualityCD": {
-    "description": "Filter option - CD quality audio"
-  },
-  "libraryFilterQualityLossy": "Com perdas",
-  "@libraryFilterQualityLossy": {
-    "description": "Filter option - lossy compressed audio"
-  },
   "libraryFilterFormat": "Formato",
   "@libraryFilterFormat": {
     "description": "Filter section - file format"
-  },
-  "libraryFilterMetadata": "Metadados",
-  "@libraryFilterMetadata": {
-    "description": "Filter section - metadata completeness"
-  },
-  "libraryFilterMetadataComplete": "Metadados completos",
-  "@libraryFilterMetadataComplete": {
-    "description": "Filter option - items with complete metadata"
-  },
-  "libraryFilterMetadataMissingAny": "Falta algum metadado",
-  "@libraryFilterMetadataMissingAny": {
-    "description": "Filter option - items missing any tracked metadata field"
-  },
-  "libraryFilterMetadataMissingYear": "Falta o ano",
-  "@libraryFilterMetadataMissingYear": {
-    "description": "Filter option - items missing release year/date"
-  },
-  "libraryFilterMetadataMissingGenre": "Falta o género",
-  "@libraryFilterMetadataMissingGenre": {
-    "description": "Filter option - items missing genre"
-  },
-  "libraryFilterMetadataMissingAlbumArtist": "Falta o artista do álbum",
-  "@libraryFilterMetadataMissingAlbumArtist": {
-    "description": "Filter option - items missing album artist"
   },
   "libraryFilterSort": "Ordenar",
   "@libraryFilterSort": {
@@ -1532,12 +1480,6 @@
   "editMetadataFieldUpc": "UPC / Código de barras",
   "editMetadataFieldUpcHint": "UPC, EAN ou GTIN numérico",
   "editMetadataAdvanced": "Avançado",
-  "libraryFilterMetadataMissingTrackNumber": "Número da faixa em falta",
-  "libraryFilterMetadataMissingDiscNumber": "Número do disco em falta",
-  "libraryFilterMetadataMissingArtist": "Artista em falta",
-  "libraryFilterMetadataIncorrectIsrcFormat": "Formato ISRC incorreto",
-  "libraryFilterMetadataMissingIsrc": "ISRC em falta",
-  "libraryFilterMetadataMissingLabel": "Editora em falta",
   "collectionDeletePlaylistsMessage": "Eliminar {count} {count, plural, =1{lista de reprodução} other{listas de reprodução}}?",
   "collectionPlaylistsDeleted": "{count} {count, plural, =1{lista de reprodução eliminada} other{listas de reprodução eliminadas}}",
   "collectionAddedTracksToPlaylist": "Adicionada(s) {count} {count, plural, =1{faixa} other{faixas}} a {playlistName}",
@@ -1603,12 +1545,6 @@
   "trackAddToQueue": "Adicionar à fila",
   "settingsSearchHint": "Pesquisar configurações",
   "settingsSearchNoResults": "Nenhuma configuração corresponde a \"{query}\"",
-  "libraryFilterMetadataMissingLyrics": "Letras em falta",
-  "libraryFilterMetadataMissingReplayGain": "ReplayGain em falta",
-  "libraryFilterMetadataHasReplayGain": "Tem ReplayGain",
-  "libraryFilterIncompleteAlbums": "Álbuns incompletos",
-  "libraryAlbumCompletenessUnknown": "Integridade do álbum desconhecida",
-  "libraryAlbumMissingTracks": "{present}/{expected} faixas · {missing} em falta",
   "appSearch": "Pesquisar",
   "appContinuePlaying": "Continuar a ouvir",
   "appFavorite": "Favorito",

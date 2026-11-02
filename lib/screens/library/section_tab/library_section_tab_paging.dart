@@ -5,6 +5,8 @@ extension _LibrarySectionTabPaging on _LibrarySectionTabState {
   /// shuffled, paging through the library with the cursor the list uses.
   Future<void> _playAllSongs({bool shuffle = false}) async {
     final clock = Stopwatch()..start();
+    final selectedOrder = ref.read(librarySortProvider);
+    final sort = _sortMode;
     final items = <LocalLibraryItem>[];
     LibraryBrowseDbCursor? cursor;
     try {
@@ -12,15 +14,9 @@ extension _LibrarySectionTabPaging on _LibrarySectionTabState {
         final page = await ref
             .read(libraryDatabaseProvider)
             .getBrowseTrackPage(
-              LibraryBrowseDbQuery(
-                limit: 500,
-                quality: _filterQuality,
-                format: _filterFormat,
-                metadata: _filterMetadata,
-                sortMode: _sortMode,
-                cursor: cursor,
-              ),
+              LibraryBrowseDbQuery(limit: 500, sortMode: sort, cursor: cursor),
             );
+        if (!mounted || ref.read(librarySortProvider) != selectedOrder) return;
         for (final row in page.rows) {
           if (row['source'] != 'local') continue;
           final item = LocalLibraryItem.fromEnvelope(row);
@@ -203,9 +199,6 @@ extension _LibrarySectionTabPaging on _LibrarySectionTabState {
   ) {
     return a.filterMode == b.filterMode &&
         a.limit == b.limit &&
-        a.filterQuality == b.filterQuality &&
-        a.filterFormat == b.filterFormat &&
-        a.filterMetadata == b.filterMetadata &&
         a.sortMode == b.sortMode;
   }
 

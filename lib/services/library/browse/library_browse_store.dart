@@ -1,5 +1,4 @@
 import 'package:sqflite/sqflite.dart';
-import 'package:sistrum/services/library/browse/album_completeness.dart';
 import 'package:sistrum/services/library/database/library_database_models.dart';
 import 'package:sistrum/services/library/database/library_schema.dart';
 import 'package:sistrum/services/library/browse/library_tag_credits.dart';
@@ -85,7 +84,7 @@ class LibraryBrowseStore {
     final rows = await _db.rawQuery('''
         SELECT
           COUNT(*) AS all_count,
-          COUNT(DISTINCT CASE WHEN ${isAlbumCompletenessFilter(request.metadata) ? '1' : 'grouped.album_total_tracks != 1'} THEN l.album_key END) AS album_count,
+          COUNT(DISTINCT CASE WHEN grouped.album_total_tracks != 1 THEN l.album_key END) AS album_count,
           COALESCE(SUM(CASE WHEN grouped.album_total_tracks = 1 THEN 1 ELSE 0 END), 0) AS single_count
         FROM ${LibrarySchema.visibleView} l
         JOIN (
@@ -181,6 +180,12 @@ class LibraryBrowseStore {
       request.limit,
       request.offset,
     ];
+    final order = switch (request.sortMode) {
+      'z-a' => 'artist_key DESC',
+      'latest' => 'sort_added DESC, artist_key',
+      'oldest' => 'sort_added, artist_key',
+      _ => 'artist_key',
+    };
     return _db.rawQuery('''
       SELECT g.artist_key, g.artist_name, NULL AS cover_url,
         (
@@ -203,15 +208,15 @@ class LibraryBrowseStore {
         g.track_count
       FROM (
         SELECT name_key AS artist_key, MIN(name) AS artist_name,
-          COUNT(DISTINCT item_id) AS track_count
-        FROM $table
+          COUNT(DISTINCT item_id) AS track_count, MAX(l.sort_added) AS sort_added
+        FROM $table JOIN ${LibrarySchema.visibleView} l ON l.id = item_id
         WHERE field IN ($fields) AND name_key != ''
           ${search.isEmpty ? '' : "AND name_key LIKE ? ESCAPE '\\'"}
         GROUP BY name_key
-        ORDER BY name_key
+        ORDER BY $order
         LIMIT ? OFFSET ?
       ) g
-      ORDER BY g.artist_key
+      ORDER BY $order
     ''', args);
   }
 
@@ -307,25 +312,11 @@ class LibraryBrowseStore {
         (releaseDatedOnly || request.sortMode == 'artist-releases-newest')
         ? metadataReleaseDateSql('l.release_date')
         : "COALESCE(l.release_date, '')";
-    final assessesCompleteness = isAlbumCompletenessFilter(request.metadata);
     final includeSingles =
-        request.includeSingleTrackAlbums ||
-        assessesCompleteness ||
-        request.releaseKind != null;
-    final completenessSql = assessesCompleteness
-        ? albumCompletenessSql(localAlbumInventorySql())
-        : null;
-    final completenessColumns = assessesCompleteness
-        ? 'ac.album_completeness, ac.album_present_tracks, ac.album_expected_tracks,'
-        : 'NULL AS album_completeness, NULL AS album_present_tracks, NULL AS album_expected_tracks,';
+        request.includeSingleTrackAlbums || request.releaseKind != null;
     final albumKey = unfiltered ? 'l.album_key' : 'c.album_key';
     final where = <String>[];
-    _appendBrowseLocalFilters(
-      where,
-      args,
-      request,
-      hasCompletenessJoin: assessesCompleteness,
-    );
+    _appendBrowseLocalFilters(where, args, request);
     final selectSql =
         '''
         SELECT
@@ -339,7 +330,6 @@ class LibraryBrowseStore {
           COUNT(*) AS track_count,
           MAX(CASE WHEN l.total_tracks > 0 THEN l.total_tracks END) AS album_total_tracks,
           MAX(CASE WHEN l.total_discs > 0 THEN l.total_discs END) AS album_total_discs,
-          $completenessColumns
           ${unfiltered ? 'MAX(COALESCE(l.sort_added, 0))' : 'c.latest_added'} AS sort_added,
           MIN(l.album_name_norm) AS sort_album,
           MIN(l.album_artist_norm) AS sort_artist,
@@ -358,7 +348,6 @@ class LibraryBrowseStore {
           GROUP BY album_key
           ${includeSingles ? '' : 'HAVING MAX(COALESCE(total_tracks, 0)) != 1'}
         ) c ON c.album_key = l.album_key'''}
-        ${assessesCompleteness ? 'JOIN ($completenessSql) ac ON ac.album_key = l.album_key' : ''}
         ${where.isEmpty ? '' : 'WHERE ${where.join(' AND ')}'}
         GROUP BY $albumKey
         ${unfiltered ? 'HAVING $albumKey IS NOT NULL ${includeSingles ? '' : 'AND MAX(COALESCE(l.total_tracks, 0)) != 1'}' : 'HAVING 1'}
@@ -378,15 +367,8 @@ class LibraryBrowseStore {
   void _appendBrowseLocalFilters(
     List<String> where,
     List<Object?> args,
-    LibraryBrowseDbQuery request, {
-    bool hasCompletenessJoin = false,
-  }) {
-    appendAlbumCompletenessFilter(
-      where,
-      request,
-      albumKey: 'l.album_key',
-      hasJoin: hasCompletenessJoin,
-    );
+    LibraryBrowseDbQuery request,
+  ) {
     if (request.albumArtist != null) {
       final key = sqlite.normalizeSearchText(request.albumArtist);
       const table = LibraryTagCreditsCache.tempTable;

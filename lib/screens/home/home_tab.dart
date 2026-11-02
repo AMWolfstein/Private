@@ -307,5 +307,4 @@ LibraryBrowseRequest localHomeBrowseRequest({
   sort: sort,
   limit: localHomeShelfLimit,
   releaseKind: releaseKind,
-  completeness: null,
 );

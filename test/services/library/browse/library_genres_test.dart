@@ -17,12 +17,14 @@ class _Genres {
     String? genre,
     int offset = 0,
     int limit = 40,
+    String sortMode = 'a-z',
   }) => _store.page(
     field: field,
     genre: genre,
     offset: offset,
     limit: limit,
     libraryVersion: 1,
+    sortMode: sortMode,
   );
 }
 
@@ -62,6 +64,26 @@ void main() {
     }
   });
   tearDown(() => db.close());
+  test('reverse genre and track order is applied before page limits', () async {
+    final store = _Genres(db);
+    expect(
+      (await store.page(sortMode: 'z-a', limit: 1)).single['genre_key'],
+      'trap',
+    );
+    expect(
+      (await store.page(genre: 'rock', sortMode: 'z-a', limit: 1)).single['id'],
+      'b',
+    );
+    expect(
+      (await store.page(
+        genre: 'rock',
+        sortMode: 'z-a',
+        limit: 1,
+        offset: 1,
+      )).single['id'],
+      'a',
+    );
+  });
   test(
     'genres trim and merge case, split multiple tags and count each song once',
     () async {

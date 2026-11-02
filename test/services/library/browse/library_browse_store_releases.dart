@@ -61,6 +61,25 @@ void _registerLibraryBrowseStoreReleases() {
   tearDown(() => db.close());
 
   test(
+    'artist ordering is applied before pagination with stable ties',
+    () async {
+      await _addLocal('alpha', 1, artist: 'Alpha');
+      await _addLocal('zulu', 1, artist: 'Zulu');
+      await db.rawUpdate(
+        "UPDATE library SET sort_added = 9999999999999 WHERE id='alpha'",
+      );
+      final reverse = await store.artistPage(
+        const LibraryBrowseDbQuery(sortMode: 'z-a', limit: 1),
+      );
+      expect(reverse.single['artist_name'], 'Zulu');
+      final latest = await store.artistPage(
+        const LibraryBrowseDbQuery(sortMode: 'latest', limit: 1),
+      );
+      expect(latest.single['artist_name'], 'Alpha');
+    },
+  );
+
+  test(
     'release shelves filter before limits and retain EPs partial and unknown albums',
     () async {
       await db.delete('library_path_keys');

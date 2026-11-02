@@ -25,17 +25,31 @@ class LibraryGenres {
     int offset = 0,
     int limit = 40,
     required int libraryVersion,
+    String sortMode = 'a-z',
   }) async {
     final size = limit.clamp(1, 100);
     await credits.ensure(db, libraryVersion: libraryVersion, rules: rules);
     const table = LibraryTagCreditsCache.tempTable;
+    final descending = sortMode == 'z-a';
+    final nameOrder = descending ? 'DESC' : 'ASC';
+    final trackOrder = switch (sortMode) {
+      'latest' => 'l.sort_added DESC, l.id',
+      'oldest' => 'l.sort_added, l.id',
+      'artist-asc' => 'l.artist_name_norm, l.track_name_norm, l.id',
+      'artist-desc' => 'l.artist_name_norm DESC, l.track_name_norm, l.id',
+      'album-asc' => 'l.album_name_norm, l.track_name_norm, l.id',
+      'album-desc' => 'l.album_name_norm DESC, l.track_name_norm, l.id',
+      'release-newest' => 'l.sort_release DESC, l.track_name_norm, l.id',
+      'release-oldest' => 'l.sort_release, l.track_name_norm, l.id',
+      _ => 'l.track_name_norm $nameOrder, l.artist_name_norm $nameOrder, l.id',
+    };
     if (genre == null) {
       return db.rawQuery(
         '''
         SELECT name_key AS genre_key, MIN(name) AS name,
           COUNT(DISTINCT item_id) AS track_count
         FROM $table WHERE field = ?
-        GROUP BY name_key ORDER BY name_key LIMIT ? OFFSET ?
+        GROUP BY name_key ORDER BY name_key $nameOrder LIMIT ? OFFSET ?
       ''',
         [field.dbName, size, offset],
       );
@@ -46,7 +60,7 @@ class LibraryGenres {
       WHERE l.id IN (
         SELECT item_id FROM $table WHERE field = ? AND name_key = ?
       )
-      ORDER BY l.track_name_norm, l.artist_name_norm, l.id LIMIT ? OFFSET ?
+      ORDER BY $trackOrder LIMIT ? OFFSET ?
     ''',
       [field.dbName, sqlite.normalizeSearchText(genre), size, offset],
     );

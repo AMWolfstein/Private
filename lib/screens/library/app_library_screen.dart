@@ -1,3 +1,5 @@
+import 'package:sistrum/providers/library/library_sort_provider.dart';
+import 'package:sistrum/widgets/library/app_library_sort.dart';
 import 'package:sistrum/core/models/library_collections.dart';
 import 'package:sistrum/core/models/local_library_item.dart';
 import 'package:sistrum/services/library/database/library_database.dart';
@@ -15,10 +17,8 @@ import 'package:sistrum/screens/library/local_album/local_album_screen.dart';
 import 'package:sistrum/screens/library/collections/library_collection_tracks_screen.dart';
 import 'package:sistrum/screens/library/collections/favorite_artists_screen.dart';
 import 'package:sistrum/screens/library/local_artist/local_artist_screen.dart';
-import 'package:sistrum/services/library/browse/album_completeness.dart';
 import 'package:sistrum/utils/layout/adaptive_layout.dart';
 import 'package:sistrum/utils/layout/nav_bar_inset.dart';
-import 'package:sistrum/widgets/primitives/app_bottom_sheet.dart';
 import 'package:sistrum/widgets/primitives/app_sliver_header.dart';
 import 'package:sistrum/providers/library/library_database_provider.dart';
 import 'package:sistrum/screens/library/shared/library_browse_artwork.dart';
@@ -45,15 +45,19 @@ class AppLibraryScreen extends ConsumerStatefulWidget {
 
 class _AppLibraryScreenState extends ConsumerState<AppLibraryScreen> {
   final _scroll = ScrollController();
-  String? _completeness;
-  late String _sort;
+  String get _sort {
+    final mode = ref.read(librarySortProvider) ?? 'a-z';
+    return _artists && !const ['a-z', 'z-a', 'latest', 'oldest'].contains(mode)
+        ? 'a-z'
+        : mode;
+  }
+
   List<LibraryBrowseEntry> _rows = const [];
   bool _loading = true;
 
   @override
   void initState() {
     super.initState();
-    _sort = 'a-z';
     _scroll.addListener(() {
       if (!_overview &&
           _scroll.position.extentAfter < 500 &&
@@ -75,10 +79,9 @@ class _AppLibraryScreenState extends ConsumerState<AppLibraryScreen> {
     super.dispose();
   }
 
-  void _rebuild(VoidCallback fn) => setState(fn);
-
   @override
   Widget build(BuildContext context) {
+    ref.watch(librarySortProvider);
     final colors = Theme.of(context).colorScheme;
     final listInset = wideListInset(context);
     final result = _overview
@@ -96,21 +99,13 @@ class _AppLibraryScreenState extends ConsumerState<AppLibraryScreen> {
             ? context.l10n.searchArtists
             : context.l10n.searchAlbums);
     final actions = <Widget>[
-      if (!_overview && !_artists) ...[
-        IconButton(
-          tooltip: context.l10n.searchSortTitle,
-          icon: const Icon(Icons.sort),
-          onPressed: _chooseSort,
-        ),
-        IconButton(
-          tooltip: context.l10n.libraryFilterTitle,
-          icon: Badge(
-            isLabelVisible: _completeness != null,
-            child: const Icon(Icons.filter_list),
-          ),
-          onPressed: _chooseCompleteness,
-        ),
-      ],
+      appLibrarySortButton(
+        context,
+        ref,
+        options: _artists
+            ? const ['original', 'a-z', 'z-a', 'latest', 'oldest']
+            : librarySongSortOptions,
+      ),
     ];
     final content = RefreshIndicator(
       onRefresh: _refresh,
@@ -321,14 +316,6 @@ class _AppLibraryScreenState extends ConsumerState<AppLibraryScreen> {
                                             entry: entry,
                                           ),
                                         ),
-                                        if (entry.completeness != null)
-                                          PositionedDirectional(
-                                            end: 8,
-                                            bottom: 8,
-                                            child: _buildCompletenessBadge(
-                                              entry.completeness!,
-                                            ),
-                                          ),
                                       ],
                                     ),
                                   ),

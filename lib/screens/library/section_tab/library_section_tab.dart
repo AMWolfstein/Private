@@ -1,3 +1,5 @@
+import 'package:sistrum/providers/library/library_sort_provider.dart';
+import 'package:sistrum/widgets/library/app_library_sort.dart';
 import 'package:sistrum/core/models/local_library_item.dart';
 import 'package:sistrum/widgets/library/library_fast_scroller.dart';
 import 'package:sistrum/widgets/library/library_section_list.dart';
@@ -8,12 +10,10 @@ import 'dart:math' show Random;
 import 'package:flutter/foundation.dart' show ValueListenable;
 import 'package:flutter/material.dart';
 import 'package:sistrum/widgets/primitives/app_alert_dialog.dart';
-import 'package:sistrum/widgets/primitives/app_choice_chip.dart';
 import 'package:sistrum/widgets/library/local_track_batch_actions.dart';
 import 'package:sistrum/core/navigation/shell_navigation.dart';
 import 'package:sistrum/widgets/status/error_card.dart';
 import 'package:sistrum/core/theme/app_tokens.dart';
-import 'package:sistrum/widgets/primitives/app_bottom_sheet.dart';
 import 'package:sistrum/widgets/primitives/app_sliver_header.dart';
 import 'package:sistrum/widgets/header/album_play_actions.dart'
     show AlbumPlayActions;
@@ -26,7 +26,6 @@ import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/utils/layout/adaptive_layout.dart';
 import 'package:sistrum/utils/layout/nav_bar_inset.dart';
 import 'package:sistrum/utils/files/file_access.dart';
-import 'package:sistrum/utils/scan/library_format_filters.dart';
 import 'package:sistrum/utils/playback/ordered_range_selection.dart';
 import 'package:sistrum/core/models/unified_library_item.dart';
 import 'package:sistrum/providers/library/library_collections_provider.dart';
@@ -37,7 +36,6 @@ import 'package:sistrum/providers/playback/music_player_provider.dart';
 import 'package:sistrum/services/playback/music_player/music_player_service.dart';
 import 'package:sistrum/services/library/database/library_database.dart';
 import 'package:sistrum/utils/logging/logger.dart';
-import 'package:sistrum/services/library/browse/album_completeness.dart';
 import 'package:sistrum/widgets/library/batch_track_actions.dart';
 import 'package:sistrum/widgets/library/local_song_row.dart';
 import 'package:sistrum/widgets/library/local_song_menu.dart';
@@ -54,7 +52,6 @@ import 'package:sistrum/widgets/selection/selection_bottom_bar.dart';
 import 'package:sistrum/providers/library/library_database_provider.dart';
 
 part 'library_section_tab_paging.dart';
-part 'library_section_tab_filters.dart';
 
 part 'library_section_tab_helpers.dart';
 part 'library_section_tab_selection.dart';
@@ -104,10 +101,7 @@ class _LibrarySectionTabState extends ConsumerState<LibrarySectionTab> {
       SelectionOverlayController();
   List<UserPlaylistCollection> _playlistSelectionOverlayItems = const [];
   double _playlistSelectionOverlayBottomPadding = 0;
-  String? _filterQuality;
-  String? _filterFormat;
-  String? _filterMetadata;
-  String _sortMode = 'latest';
+  String get _sortMode => ref.read(librarySortProvider) ?? 'latest';
   final ValueNotifier<double> _libraryGridExtentNotifier = ValueNotifier(
     _libraryGridDefaultExtent,
   );
@@ -148,6 +142,7 @@ class _LibrarySectionTabState extends ConsumerState<LibrarySectionTab> {
 
   @override
   Widget build(BuildContext context) {
+    ref.watch(librarySortProvider);
     if (widget.librarySection == null) {
       return AppLibraryScreen(
         onOpenSection: (section) => Navigator.of(context).push(
@@ -158,6 +153,10 @@ class _LibrarySectionTabState extends ConsumerState<LibrarySectionTab> {
         ),
       );
     }
+
+    ref.listen(librarySortProvider, (previous, next) {
+      if (previous != next) _resetLibraryPaging();
+    });
 
     ref.listen<int>(
       localLibraryProvider.select((state) => state.loadedIndexVersion),
@@ -194,11 +193,7 @@ class _LibrarySectionTabState extends ConsumerState<LibrarySectionTab> {
         widget.librarySection ??
         ref.watch<String>(settingsProvider.select((s) => s.libraryFilterMode));
     final colorScheme = Theme.of(context).colorScheme;
-    final countsRequest = _LibraryBrowseCountsRequest(
-      filterQuality: _filterQuality,
-      filterFormat: _filterFormat,
-      filterMetadata: _filterMetadata,
-    );
+    final countsRequest = _LibraryBrowseCountsRequest();
     final countsValue = ref.watch(_browseLibraryCountsProvider(countsRequest));
     final queueCounts = _resolveLibraryBrowseCounts(countsValue, countsRequest);
 
@@ -208,9 +203,6 @@ class _LibrarySectionTabState extends ConsumerState<LibrarySectionTab> {
         filterMode: filterMode,
         limit: _libraryPageSize,
         offset: offset,
-        filterQuality: _filterQuality,
-        filterFormat: _filterFormat,
-        filterMetadata: _filterMetadata,
         sortMode: _sortMode,
       );
       if (offset == 0) return baseRequest;
@@ -222,9 +214,6 @@ class _LibrarySectionTabState extends ConsumerState<LibrarySectionTab> {
         filterMode: baseRequest.filterMode,
         limit: baseRequest.limit,
         offset: baseRequest.offset,
-        filterQuality: baseRequest.filterQuality,
-        filterFormat: baseRequest.filterFormat,
-        filterMetadata: baseRequest.filterMetadata,
         sortMode: baseRequest.sortMode,
         cursor: previousPage?.nextCursor,
       );
@@ -326,6 +315,16 @@ class _LibrarySectionTabState extends ConsumerState<LibrarySectionTab> {
             child: NestedScrollView(
               headerSliverBuilder: (context, innerBoxIsScrolled) => [
                 AppSliverHeader.page(
+                  actions: [
+                    appLibrarySortButton(
+                      context,
+                      ref,
+                      fallback: 'latest',
+                      options: widget.librarySection == 'playlists'
+                          ? const ['original', 'a-z', 'z-a', 'latest', 'oldest']
+                          : librarySongSortOptions,
+                    ),
+                  ],
                   title: widget.librarySection == 'playlists'
                       ? context.l10n.searchPlaylists
                       : context.l10n.searchSongs,

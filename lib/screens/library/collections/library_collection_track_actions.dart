@@ -143,7 +143,7 @@ extension _LibraryCollectionTracksScreenStatePart1
   Widget _buildPage(BuildContext context, String? coverSource) {
     final colorScheme = Theme.of(context).colorScheme;
     ref.watch(localLibraryProvider.select((s) => s.loadedIndexVersion));
-    final List<CollectionTrackEntry> entries;
+    List<CollectionTrackEntry> entries;
 
     switch (widget.mode) {
       case LibraryCollectionMode.loved:
@@ -165,6 +165,20 @@ extension _LibraryCollectionTracksScreenStatePart1
         break;
     }
 
+    final sort = ref.watch(librarySortProvider);
+    if (sort != null &&
+        !const ['size-desc', 'size-asc'].contains(sort) &&
+        !_reordering) {
+      entries = entries.toList()
+        ..sort((a, b) {
+          final order = switch (sort) {
+            'latest' => b.addedAt.compareTo(a.addedAt),
+            'oldest' => a.addedAt.compareTo(b.addedAt),
+            _ => compareLibraryTracks(a.track, b.track, sort),
+          };
+          return order != 0 ? order : a.key.compareTo(b.key);
+        });
+    }
     _folderData.update(entries);
     pruneSelection(_folderData.keys);
 

@@ -5,7 +5,7 @@ import 'package:sistrum/services/library/database/library_schema.dart';
 
 /// Real schema17 local rows, album ties and an unavailable source. The history
 /// read fixture keeps the same named columns and covering album index as the
-/// app so the completeness join stays exercised; no network or production DB
+/// app so indexed browse queries stay exercised; no network or production DB
 /// is touched.
 Future<LibraryBrowseStore> createLibraryPagingFixture(
   Database db, {
@@ -99,5 +99,5 @@ Future<LibraryBrowsePage> readLibraryPagingFixture(
 
 List<String> libraryPagingIdentities(Iterable<LibraryBrowseEntry> entries) => [
   for (final entry in entries)
-    '${entry.source}:${entry.key}:${entry.trackCount}:${entry.completeness?.badge}',
+    '${entry.source}:${entry.key}:${entry.trackCount}',
 ];

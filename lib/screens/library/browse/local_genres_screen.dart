@@ -1,3 +1,5 @@
+import 'package:sistrum/providers/library/library_sort_provider.dart';
+import 'package:sistrum/widgets/library/app_library_sort.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/l10n/l10n.dart';
@@ -21,6 +23,7 @@ final genrePageLoaderProvider =
       final version = ref.watch(
         localLibraryProvider.select((state) => state.loadedIndexVersion),
       );
+      final sort = ref.watch(librarySortProvider) ?? 'a-z';
       final credits = ref.watch(libraryTagCreditsCacheProvider);
       final rules = ref.watch(tagCreditRulesProvider);
       return (request) async =>
@@ -33,6 +36,7 @@ final genrePageLoaderProvider =
             genre: request.genre,
             offset: request.offset,
             libraryVersion: version,
+            sortMode: sort,
           );
     });
 final genrePageProvider = FutureProvider.autoDispose
@@ -62,6 +66,7 @@ class _LocalGenresScreenState extends ConsumerState<LocalGenresScreen> {
   final _scroll = ScrollController();
   int _pages = 1;
   int? _revision;
+  String? _lastSort;
   bool _loading = true, _hasMore = true;
   @override
   void initState() {
@@ -84,7 +89,9 @@ class _LocalGenresScreenState extends ConsumerState<LocalGenresScreen> {
     final revision = ref.watch(
       localLibraryProvider.select((state) => state.loadedIndexVersion),
     );
-    if (_revision != revision) {
+    final sort = ref.watch(librarySortProvider);
+    if (_revision != revision || _lastSort != sort) {
+      _lastSort = sort;
       _revision = revision;
       _pages = 1;
     }
@@ -113,6 +120,27 @@ class _LocalGenresScreenState extends ConsumerState<LocalGenresScreen> {
         slivers: [
           AppSliverHeader.page(
             title: widget.name ?? context.l10n.libraryGenres,
+            actions: [
+              appLibrarySortButton(
+                context,
+                ref,
+                options: widget.genre == null
+                    ? const ['original', 'a-z', 'z-a']
+                    : const [
+                        'original',
+                        'a-z',
+                        'z-a',
+                        'latest',
+                        'oldest',
+                        'artist-asc',
+                        'artist-desc',
+                        'album-asc',
+                        'album-desc',
+                        'release-newest',
+                        'release-oldest',
+                      ],
+              ),
+            ],
           ),
           SliverList.builder(
             itemCount: entries.length,

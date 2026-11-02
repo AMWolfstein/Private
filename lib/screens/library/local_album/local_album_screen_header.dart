@@ -28,6 +28,20 @@ extension _LocalAlbumHeader on _LocalAlbumScreenState {
 
     return AlbumDetailHeader(
       title: widget.albumName,
+      appBarActions: [
+        appLibrarySortButton(
+          context,
+          ref,
+          fallback: 'original',
+          options: const [
+            'original',
+            'a-z',
+            'z-a',
+            'artist-asc',
+            'artist-desc',
+          ],
+        ),
+      ],
       appBarTitle: isSelectionMode
           ? context.l10n.selectionSelected(selectedIds.length)
           : null,

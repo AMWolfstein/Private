@@ -1,3 +1,5 @@
+import 'package:sistrum/providers/library/library_sort_provider.dart';
+import 'package:sistrum/widgets/library/app_library_sort.dart';
 import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
@@ -67,6 +69,7 @@ class _LocalArtistScreenState extends ConsumerState<LocalArtistScreen> {
 
   @override
   Widget build(BuildContext context) {
+    ref.watch(librarySortProvider);
     final albumsAsync = ref.watch(libraryBrowseProvider(_albumsRequest));
     final albums = albumsAsync.asData?.value;
     final appears = ref
@@ -128,6 +131,7 @@ class _LocalArtistScreenState extends ConsumerState<LocalArtistScreen> {
                     placeholderSize: 64,
                   ),
                   showTitle: _showTitle,
+                  toolbarActions: [appLibrarySortButton(context, ref)],
                   actions: [
                     HeaderCircleButton(
                       icon: favorite

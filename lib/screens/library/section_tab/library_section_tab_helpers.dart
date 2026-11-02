@@ -8,7 +8,6 @@ class _GroupedLocalAlbum {
   final String sampleFilePath;
   final List<LocalLibraryItem> tracks;
   final int? trackCount;
-  final AlbumCompleteness? completeness;
 
   _GroupedLocalAlbum({
     required this.albumKey,
@@ -18,7 +17,6 @@ class _GroupedLocalAlbum {
     required this.sampleFilePath,
     required this.tracks,
     this.trackCount,
-    this.completeness,
   });
 
   String get key => albumKey;
@@ -53,9 +51,6 @@ class _LibraryBrowsePageRequest {
   final String filterMode;
   final int limit;
   final int offset;
-  final String? filterQuality;
-  final String? filterFormat;
-  final String? filterMetadata;
   final String sortMode;
   final LibraryBrowseDbCursor? cursor;
 
@@ -63,9 +58,6 @@ class _LibraryBrowsePageRequest {
     required this.filterMode,
     required this.limit,
     required this.offset,
-    required this.filterQuality,
-    required this.filterFormat,
-    required this.filterMetadata,
     required this.sortMode,
     this.cursor,
   });
@@ -74,9 +66,6 @@ class _LibraryBrowsePageRequest {
     limit: limit,
     offset: offset,
     filterMode: filterMode,
-    quality: filterQuality,
-    format: filterFormat,
-    metadata: filterMetadata,
     sortMode: sortMode,
     cursor: cursor,
   );
@@ -88,52 +77,22 @@ class _LibraryBrowsePageRequest {
           filterMode == other.filterMode &&
           limit == other.limit &&
           offset == other.offset &&
-          filterQuality == other.filterQuality &&
-          filterFormat == other.filterFormat &&
-          filterMetadata == other.filterMetadata &&
           sortMode == other.sortMode &&
           cursor == other.cursor;
 
   @override
-  int get hashCode => Object.hash(
-    filterMode,
-    limit,
-    offset,
-    filterQuality,
-    filterFormat,
-    filterMetadata,
-    sortMode,
-    cursor,
-  );
+  int get hashCode => Object.hash(filterMode, limit, offset, sortMode, cursor);
 }
 
 class _LibraryBrowseCountsRequest {
-  final String? filterQuality;
-  final String? filterFormat;
-  final String? filterMetadata;
+  const _LibraryBrowseCountsRequest();
 
-  const _LibraryBrowseCountsRequest({
-    required this.filterQuality,
-    required this.filterFormat,
-    required this.filterMetadata,
-  });
-
-  LibraryBrowseDbQuery toDbQuery() => LibraryBrowseDbQuery(
-    quality: filterQuality,
-    format: filterFormat,
-    metadata: filterMetadata,
-  );
+  LibraryBrowseDbQuery toDbQuery() => LibraryBrowseDbQuery();
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is _LibraryBrowseCountsRequest &&
-          filterQuality == other.filterQuality &&
-          filterFormat == other.filterFormat &&
-          filterMetadata == other.filterMetadata;
-
+  bool operator ==(Object other) => other is _LibraryBrowseCountsRequest;
   @override
-  int get hashCode => Object.hash(filterQuality, filterFormat, filterMetadata);
+  int get hashCode => 0;
 }
 
 class _LibraryBrowsePageData {
@@ -241,7 +200,6 @@ final _browseLibraryPageProvider = FutureProvider.autoDispose
               sampleFilePath: row['sample_file_path'] as String? ?? '',
               tracks: const [],
               trackCount: (row['track_count'] as num?)?.toInt() ?? 0,
-              completeness: AlbumCompleteness.fromRow(row),
             ),
           );
         }

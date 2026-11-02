@@ -14,7 +14,6 @@ extension _LibrarySectionTabAlbumGrid on _LibrarySectionTabState {
         albumName: album.albumName,
         artistName: album.artistName,
         trackCount: album.displayTrackCount,
-        completeness: album.completeness,
         colorScheme: colorScheme,
         coverWidget: coverPath != null
             ? Image.file(
@@ -57,19 +56,7 @@ extension _LibrarySectionTabAlbumGrid on _LibrarySectionTabState {
     required IconData badgeIcon,
     required VoidCallback onTap,
     String? coverUrl,
-    AlbumCompleteness? completeness,
   }) {
-    final completenessLabel = completeness == null
-        ? null
-        : completeness.status == 'unknown'
-        ? context.l10n.libraryAlbumCompletenessUnknown
-        : completeness.expected == null
-        ? context.l10n.libraryFilterIncompleteAlbums
-        : context.l10n.libraryAlbumMissingTracks(
-            completeness.present,
-            completeness.expected!,
-            completeness.expected! - completeness.present,
-          );
     return Semantics(
       button: true,
       label: [
@@ -78,7 +65,6 @@ extension _LibrarySectionTabAlbumGrid on _LibrarySectionTabState {
           artistName,
           trackCount,
         ),
-        ?completenessLabel,
       ].join('. '),
       child: GestureDetector(
         onTap: onTap,
@@ -96,9 +82,7 @@ extension _LibrarySectionTabAlbumGrid on _LibrarySectionTabState {
                     end: 8,
                     bottom: 8,
                     child: Tooltip(
-                      message:
-                          completenessLabel ??
-                          context.l10n.tracksCount(trackCount),
+                      message: context.l10n.tracksCount(trackCount),
                       child: Container(
                         padding: const EdgeInsets.symmetric(
                           horizontal: 8,
@@ -114,7 +98,7 @@ extension _LibrarySectionTabAlbumGrid on _LibrarySectionTabState {
                             Icon(badgeIcon, size: 12, color: badgeTextColor),
                             const SizedBox(width: 4),
                             Text(
-                              completeness?.badge ?? '$trackCount',
+                              '$trackCount',
                               style: TextStyle(
                                 color: badgeTextColor,
                                 fontSize: 12,

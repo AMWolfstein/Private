@@ -7,7 +7,6 @@ import 'package:sistrum/core/models/settings.dart';
 import 'package:sistrum/providers/library/library_browse_provider.dart';
 import 'package:sistrum/providers/library/local_library_provider.dart';
 import 'package:sistrum/providers/settings/settings_provider.dart';
-import 'package:sistrum/services/library/browse/album_completeness.dart';
 import 'package:sistrum/services/library/browse/library_browse_store.dart';
 
 import '../../support/library_paging_fixture.dart';
@@ -46,7 +45,6 @@ void main() {
           artist: null,
           credit: null,
           releaseKind: null,
-          completeness: null,
         ),
         (
           artists: false,
@@ -56,7 +54,6 @@ void main() {
           artist: null,
           credit: null,
           releaseKind: null,
-          completeness: null,
         ),
         (
           artists: true,
@@ -66,7 +63,6 @@ void main() {
           artist: null,
           credit: null,
           releaseKind: null,
-          completeness: null,
         ),
         (
           artists: false,
@@ -76,7 +72,6 @@ void main() {
           artist: null,
           credit: null,
           releaseKind: null,
-          completeness: null,
         ),
         (
           artists: false,
@@ -86,7 +81,6 @@ void main() {
           artist: 'Artist 0001',
           credit: null,
           releaseKind: null,
-          completeness: null,
         ),
         (
           artists: false,
@@ -96,7 +90,6 @@ void main() {
           artist: null,
           credit: null,
           releaseKind: null,
-          completeness: incompleteAlbumFilter,
         ),
         (
           artists: false,
@@ -106,7 +99,6 @@ void main() {
           artist: null,
           credit: null,
           releaseKind: null,
-          completeness: unknownAlbumCompletenessFilter,
         ),
       ]) {
         final request = (
@@ -117,7 +109,6 @@ void main() {
           artist: scenario.artist,
           credit: null,
           releaseKind: null,
-          completeness: scenario.completeness,
           limit: 40,
         );
         final reads = <LibraryBrowsePageRequest>[];
@@ -153,7 +144,6 @@ void main() {
               artist: request.artist,
               credit: null,
               releaseKind: null,
-              completeness: request.completeness,
               limit: 2000,
             ),
             offset: 0,
@@ -177,8 +167,7 @@ void main() {
           );
           if (!request.artists &&
               request.search.isEmpty &&
-              request.artist == null &&
-              request.completeness == null) {
+              request.artist == null) {
             expect(actual, hasLength(1000));
             expect(reads.skip(1).every((page) => page.cursor != null), true);
           }

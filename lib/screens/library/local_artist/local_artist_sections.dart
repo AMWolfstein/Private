@@ -7,10 +7,17 @@ extension _LocalArtistScreenStatePart1 on _LocalArtistScreenState {
     artist: widget.artistName,
     credit: LibraryArtistCredit.albumArtist,
     search: '',
-    sort: 'artist-releases-newest',
+    sort:
+        const [
+          'a-z',
+          'z-a',
+          'latest',
+          'oldest',
+        ].contains(ref.read(librarySortProvider))
+        ? ref.read(librarySortProvider)!
+        : 'artist-releases-newest',
     limit: 40,
     releaseKind: null,
-    completeness: null,
   );
 
   /// Releases where the artist is only a track artist, shown below Singles.
@@ -20,10 +27,17 @@ extension _LocalArtistScreenStatePart1 on _LocalArtistScreenState {
     artist: widget.artistName,
     credit: LibraryArtistCredit.appearsOn,
     search: '',
-    sort: 'artist-releases-newest',
+    sort:
+        const [
+          'a-z',
+          'z-a',
+          'latest',
+          'oldest',
+        ].contains(ref.read(librarySortProvider))
+        ? ref.read(librarySortProvider)!
+        : 'artist-releases-newest',
     limit: 40,
     releaseKind: null,
-    completeness: null,
   );
   Future<void> _play({bool shuffle = false, LocalLibraryItem? start}) async {
     if (_startingPlayback) return;

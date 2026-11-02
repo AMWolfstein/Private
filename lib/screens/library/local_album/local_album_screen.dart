@@ -1,3 +1,5 @@
+import 'package:sistrum/providers/library/library_sort_provider.dart';
+import 'package:sistrum/widgets/library/app_library_sort.dart';
 import 'package:sistrum/core/models/local_library_item.dart';
 import 'package:sistrum/services/library/database/library_database.dart';
 import 'package:sistrum/utils/layout/release_date_display.dart';
@@ -150,6 +152,19 @@ class _LocalAlbumScreenState extends ConsumerState<LocalAlbumScreen>
       discNumber: (track) => track.discNumber,
       trackNumber: (track) => track.trackNumber,
       trackName: (track) => track.trackName,
+      compareTracks:
+          !const [
+            'a-z',
+            'z-a',
+            'artist-asc',
+            'artist-desc',
+          ].contains(ref.read(librarySortProvider))
+          ? null
+          : (a, b) => compareLibraryTracks(
+              UnifiedLibraryItem.fromLocalLibrary(a).toTrack(),
+              UnifiedLibraryItem.fromLocalLibrary(b).toTrack(),
+              ref.read(librarySortProvider)!,
+            ),
     );
     _commonQualityCache = _computeCommonQuality(_sortedTracksCache);
   }
@@ -236,6 +251,11 @@ class _LocalAlbumScreenState extends ConsumerState<LocalAlbumScreen>
 
   @override
   Widget build(BuildContext context) {
+    ref.listen(librarySortProvider, (previous, next) {
+      if (previous != next) _rebuildTrackCaches();
+    });
+    ref.watch(librarySortProvider);
+
     final albumCover = widget.coverPath?.trim();
     final artworkTrack =
         _sortedTracksCache
@@ -272,7 +292,17 @@ class _LocalAlbumScreenState extends ConsumerState<LocalAlbumScreen>
       return Scaffold(
         body: CustomScrollView(
           slivers: [
-            AppSliverHeader.page(title: widget.albumName),
+            AppSliverHeader.page(
+              title: widget.albumName,
+              actions: [
+                appLibrarySortButton(
+                  context,
+                  ref,
+                  fallback: 'original',
+                  options: const ['original', 'a-z', 'z-a'],
+                ),
+              ],
+            ),
             SliverFillRemaining(
               hasScrollBody: false,
               child: Center(child: Text(context.l10n.noTracksFoundForAlbum)),
@@ -340,11 +370,13 @@ class AlbumTrackOrder<T> {
     required int? Function(T) discNumber,
     required int? Function(T) trackNumber,
     required String Function(T) trackName,
+    int Function(T, T)? compareTracks,
   }) {
     final tracks = items.toList();
     tracks.sort((a, b) {
       final disc = (discNumber(a) ?? 1).compareTo(discNumber(b) ?? 1);
       if (disc != 0) return disc;
+      if (compareTracks != null) return compareTracks(a, b);
       final number = (trackNumber(a) ?? 999).compareTo(trackNumber(b) ?? 999);
       return number != 0 ? number : trackName(a).compareTo(trackName(b));
     });

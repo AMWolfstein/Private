@@ -27,7 +27,6 @@ const _request = (
   sort: 'a-z',
   limit: 40,
   releaseKind: null,
-  completeness: null,
 );
 
 class _Settings extends SettingsNotifier {
@@ -59,7 +58,6 @@ class _PrefixBrowse extends LibraryBrowseNotifier {
         sort: request.sort,
         limit: _limit,
         releaseKind: null,
-        completeness: request.completeness,
       ),
       offset: 0,
       cursor: null,
@@ -294,7 +292,6 @@ void main() {
           sort: 'a-z',
           limit: 1000,
           releaseKind: null,
-          completeness: null,
         ),
         offset: 0,
         cursor: null,

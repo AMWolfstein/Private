@@ -136,12 +136,14 @@ class AppArtistHeader extends StatelessWidget {
     required this.name,
     required this.artwork,
     required this.actions,
+    this.toolbarActions = const [],
     required this.showTitle,
   });
 
   final String name;
   final Widget artwork;
   final List<Widget> actions;
+  final List<Widget> toolbarActions;
   final bool showTitle;
 
   // A SliverMainAxisGroup clamps negative overlap, preventing this header from
@@ -249,7 +251,7 @@ class AppArtistHeader extends StatelessWidget {
       ),
     ),
     actionsPadding: EdgeInsetsDirectional.only(end: kAppHeaderEdgeGap),
-    actions: const [AppHeaderActions()],
+    actions: [AppHeaderActions(actions: toolbarActions)],
     flexibleSpace: flexibleSpace,
   );
 

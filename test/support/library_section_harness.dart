@@ -123,9 +123,6 @@ void installLibrarySongsDatabase({
           'cover_path',
           'sample_file_path',
           'track_count',
-          'album_completeness',
-          'album_present_tracks',
-          'album_expected_tracks',
         ],
         'rows': [
           for (final album in albums)
@@ -137,9 +134,6 @@ void installLibrarySongsDatabase({
               null,
               '',
               album.tracks,
-              null,
-              null,
-              null,
             ],
         ],
       };

@@ -42,7 +42,6 @@ const _request = (
   sort: 'a-z',
   limit: 40,
   releaseKind: null,
-  completeness: null,
 );
 
 void main() {
@@ -250,7 +249,6 @@ void main() {
       sort: 'a-z',
       limit: 40,
       releaseKind: null,
-      completeness: null,
     );
     final provider = libraryBrowseProvider(artists);
     container.listen(provider, (_, _) {});
@@ -268,7 +266,6 @@ void main() {
       sort: 'latest',
       limit: 40,
       releaseKind: null,
-      completeness: 'album-incomplete',
     );
     final searched = libraryBrowseProvider(search);
     container.listen(searched, (_, _) {});

@@ -34,22 +34,6 @@ extension _LibrarySectionTabItemWidgets on _LibrarySectionTabState {
     );
   }
 
-  Widget _buildFilterButton(BuildContext context) {
-    return GestureDetector(
-      onLongPress: _activeFilterCount > 0 ? _resetFilters : null,
-      child: TextButton.icon(
-        onPressed: () => _showFilterSheet(context),
-        icon: Badge(
-          isLabelVisible: _activeFilterCount > 0,
-          label: Text('$_activeFilterCount'),
-          child: const Icon(Icons.filter_list, size: 18),
-        ),
-        label: Text(context.l10n.libraryFilterTitle),
-        style: TextButton.styleFrom(visualDensity: VisualDensity.compact),
-      ),
-    );
-  }
-
   Widget _buildUnifiedLibraryItem(
     BuildContext context,
     UnifiedLibraryItem item,

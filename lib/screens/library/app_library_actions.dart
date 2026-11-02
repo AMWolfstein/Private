@@ -17,7 +17,6 @@ extension _AppLibraryScreenStatePart1 on _AppLibraryScreenState {
     sort: _sort,
     limit: 40,
     releaseKind: null,
-    completeness: _completeness,
   );
   Future<void> _refresh() async {
     if (_overview) return;
@@ -71,102 +70,6 @@ extension _AppLibraryScreenStatePart1 on _AppLibraryScreenState {
           artistName: entry.artist,
           coverPath: entry.cover,
           loadTracks: loadTracks,
-        ),
-      ),
-    );
-  }
-
-  Future<void> _chooseSort() async {
-    final selected = await showAppBottomSheet<String>(
-      context: context,
-      builder: (context) => Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          for (final option in [
-            ('a-z', context.l10n.searchSortTitleAZ),
-            ('latest', context.l10n.libraryRecentlyAdded),
-            if (!_artists) ...[
-              ('size-desc', context.l10n.libraryFilterSortSizeLargest),
-              ('size-asc', context.l10n.libraryFilterSortSizeSmallest),
-            ],
-          ])
-            ListTile(
-              title: Text(option.$2),
-              trailing: _sort == option.$1 ? const Icon(Icons.check) : null,
-              onTap: () => Navigator.pop(context, option.$1),
-            ),
-        ],
-      ),
-    );
-    if (!mounted || selected == null || selected == _sort) return;
-    _rebuild(() {
-      _sort = selected;
-      _rows = const [];
-    });
-    _scroll.jumpTo(0);
-  }
-
-  Future<void> _chooseCompleteness() async {
-    final selected = await showAppBottomSheet<String>(
-      context: context,
-      builder: (context) => Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          for (final option in [
-            ('', context.l10n.libraryFilterAll),
-            (incompleteAlbumFilter, context.l10n.libraryFilterIncompleteAlbums),
-            (
-              unknownAlbumCompletenessFilter,
-              context.l10n.libraryAlbumCompletenessUnknown,
-            ),
-          ])
-            ListTile(
-              title: Text(option.$2),
-              trailing: (_completeness ?? '') == option.$1
-                  ? const Icon(Icons.check)
-                  : null,
-              onTap: () => Navigator.pop(context, option.$1),
-            ),
-        ],
-      ),
-    );
-    if (!mounted || selected == null || selected == (_completeness ?? '')) {
-      return;
-    }
-    _rebuild(() {
-      _completeness = selected.isEmpty ? null : selected;
-      _rows = const [];
-    });
-    _scroll.jumpTo(0);
-  }
-
-  Widget _buildCompletenessBadge(AlbumCompleteness completeness) {
-    final colors = Theme.of(context).colorScheme;
-    final expected = completeness.expected;
-    final label = completeness.status == 'unknown'
-        ? context.l10n.libraryAlbumCompletenessUnknown
-        : expected == null
-        ? context.l10n.libraryFilterIncompleteAlbums
-        : context.l10n.libraryAlbumMissingTracks(
-            completeness.present,
-            expected,
-            expected - completeness.present,
-          );
-    return Tooltip(
-      message: label,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-        decoration: BoxDecoration(
-          color: colors.surfaceContainerHigh,
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Text(
-          completeness.badge,
-          style: TextStyle(
-            color: colors.onSurface,
-            fontSize: 12,
-            fontWeight: FontWeight.bold,
-          ),
         ),
       ),
     );

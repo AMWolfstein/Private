@@ -44,7 +44,6 @@ extension _LibrarySectionTabFilterWidgets on _LibrarySectionTabState {
 
     final showFilteringIndicator = filterData.showFilteringIndicator;
     final filteredGroupedLocalAlbums = filterData.filteredGroupedLocalAlbums;
-    final unifiedItems = filterData.unifiedItems;
     final allFilteredUnifiedItems = filterData.filteredUnifiedItems;
     final filteredUnifiedItems = allFilteredUnifiedItems;
     final totalTrackCount = filterData.totalTrackCount;
@@ -104,7 +103,6 @@ extension _LibrarySectionTabFilterWidgets on _LibrarySectionTabState {
               context,
               context.l10n.queueTrackCount(totalTrackCount),
               [
-                if (!_isSelectionMode) _buildFilterButton(context),
                 if (!_isSelectionMode && filteredUnifiedItems.isNotEmpty)
                   TextButton.icon(
                     onPressed: () => _showCreatePlaylistDialog(context),
@@ -123,52 +121,7 @@ extension _LibrarySectionTabFilterWidgets on _LibrarySectionTabState {
             child: _countHeaderRow(
               context,
               context.l10n.queueAlbumCount(totalAlbumCount),
-              [_buildFilterButton(context)],
-            ),
-          ),
-
-        if (filteredGroupedLocalAlbums.isEmpty &&
-            filterMode == 'albums' &&
-            (_activeFilterCount > 0 ||
-                ref.read(localLibraryProvider).totalCount > 0))
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-              child: Row(
-                children: [const Spacer(), _buildFilterButton(context)],
-              ),
-            ),
-          ),
-
-        if (filterMode == 'all' &&
-            totalTrackCount == 0 &&
-            !showFilteringIndicator &&
-            (_activeFilterCount > 0 || unifiedItems.isNotEmpty))
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-              child: Row(
-                children: [
-                  const Spacer(),
-                  if (!_isSelectionMode) _buildFilterButton(context),
-                ],
-              ),
-            ),
-          ),
-
-        if (filterMode == 'singles' &&
-            totalTrackCount == 0 &&
-            !showFilteringIndicator &&
-            (_activeFilterCount > 0 || unifiedItems.isNotEmpty))
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-              child: Row(
-                children: [
-                  const Spacer(),
-                  if (!_isSelectionMode) _buildFilterButton(context),
-                ],
-              ),
+              const [],
             ),
           ),
 
@@ -286,7 +239,6 @@ extension _LibrarySectionTabFilterWidgets on _LibrarySectionTabState {
               context,
               context.l10n.queueTrackCount(totalTrackCount),
               [
-                if (!_isSelectionMode) _buildFilterButton(context),
                 if (!_isSelectionMode && filteredUnifiedItems.isNotEmpty)
                   TextButton.icon(
                     onPressed: () => _showCreatePlaylistDialog(context),
