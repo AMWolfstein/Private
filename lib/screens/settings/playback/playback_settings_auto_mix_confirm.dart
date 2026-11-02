@@ -44,7 +44,40 @@ class _PlaybackSettingsPageState extends ConsumerState<PlaybackSettingsPage> {
           ),
         ) ??
         false;
-    if (confirmed) await resetAutoplayLearning();
+    if (!confirmed || !mounted) return;
+    try {
+      await resetAutoplayLearning(
+        runtime: ref.read(musicPlayerRuntimeProvider),
+      );
+    } catch (_) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(context.l10n.autoplayResetLearningFailed)),
+        );
+      }
+    }
+  }
+
+  String _learningSummary(AutoplayRankEvaluation? evaluation) {
+    if (evaluation == null || evaluation.tested == 0) {
+      return context.l10n.autoplayLearningProgress(
+        evaluation?.outcomes ?? 0,
+        autoplayRankerMinimum,
+      );
+    }
+    final starting = evaluation.starting, learned = evaluation.learned;
+    if (starting == null || learned == null) {
+      return context.l10n.autoplayLearningWaiting;
+    }
+    return evaluation.learnedWins
+        ? context.l10n.autoplayLearningTuned(
+            (learned * 100).round(),
+            (starting * 100).round(),
+          )
+        : context.l10n.autoplayLearningStandard(
+            (learned * 100).round(),
+            (starting * 100).round(),
+          );
   }
 
   @override
@@ -106,6 +139,20 @@ class _PlaybackSettingsPageState extends ConsumerState<PlaybackSettingsPage> {
                 if (settings.musicHaptics)
                   const MusicHapticsSettings(enabled: true),
                 SettingsSwitchItem(
+                  icon: Icons.linear_scale,
+                  title: context.l10n.gaplessPlayback,
+                  subtitle: context.l10n.gaplessPlaybackDescription,
+                  value: settings.gaplessPlayback && !settings.autoMix,
+                  enabled:
+                      !settings.autoMix &&
+                      !settings.usbBitPerfect &&
+                      !settings.usbDirect &&
+                      !settings.dapExclusive,
+                  onChanged: (value) => ref
+                      .read(settingsProvider.notifier)
+                      .setGaplessPlayback(value),
+                ),
+                SettingsSwitchItem(
                   icon: Icons.compare_arrows,
                   title: 'AutoMix',
                   subtitle: context.l10n.autoMixDescription,
@@ -153,11 +200,18 @@ class _PlaybackSettingsPageState extends ConsumerState<PlaybackSettingsPage> {
                   showDivider: settings.autoplayPersonalization,
                 ),
                 if (settings.autoplayPersonalization)
-                  SettingsItem(
-                    icon: Icons.restart_alt,
-                    title: context.l10n.autoplayResetLearning,
-                    onTap: _confirmResetLearning,
-                    showDivider: false,
+                  ValueListenableBuilder<AutoplayRankEvaluation?>(
+                    valueListenable: ref
+                        .watch(musicPlayerRuntimeProvider)
+                        .ranker
+                        .evaluation,
+                    builder: (context, evaluation, _) => SettingsItem(
+                      icon: Icons.restart_alt,
+                      title: context.l10n.autoplayResetLearning,
+                      subtitle: _learningSummary(evaluation),
+                      onTap: _confirmResetLearning,
+                      showDivider: false,
+                    ),
                   ),
               ],
             ),

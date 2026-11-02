@@ -122,6 +122,7 @@ extension _MusicPlayerHandlerLifecycle on MusicPlayerHandler {
     _disposed = true;
     _runtime.personalization.finish();
     await _runtime.personalization.flush();
+    await _runtime.ranker.flush();
     if (identical(_runtime.handler, this)) {
       _runtime.dependencies.autoMixStatus?.value = AutoMixStatus.idle;
     }

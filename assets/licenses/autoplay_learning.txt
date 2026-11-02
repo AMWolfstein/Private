@@ -1,3 +1,5 @@
+Additional adaptation: autoplay_ranker.dart and its tests from Mornye commit 05b0ec3b (Copyright 2026 zarzet and contributors), LGPL-3.0-only.
+
 Additional adapted Mornye v5.3.0 sources (2026-11-02): song_analysis.dart, song_analysis_store.dart, song_feature_analyzer.dart and their tests. Copyright 2026 zarzet and contributors. LGPL-3.0-only under the full terms below.
 
 Additional adapted Mornye v5.3.0 UI sources: equalizer_screen.dart, equalizer_widgets.dart and equalizer_curve.dart (Copyright 2026 zarzet and contributors), LGPL-3.0-only under the complete terms below.

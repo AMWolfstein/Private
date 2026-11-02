@@ -183,6 +183,7 @@ class MusicPlayerHandler extends PlaybackHandler {
       _HandlerAutoplayQueue(this),
       autoplayLibraryLoader ?? (seed) => loadAutoplayLibrary(seed, _runtime),
       soundMatching: () => _settings.autoplaySoundMatching,
+      ranker: () => _settings.autoplayPersonalization ? _runtime.ranker : null,
     );
     try {
       _init();
@@ -444,6 +445,7 @@ final musicPlayerRuntime = MusicPlayerRuntime(
 Future<void> resetAutoplayLearning({MusicPlayerRuntime? runtime}) async {
   final target = runtime ?? musicPlayerRuntime;
   await target.personalization.reset();
+  await target.ranker.reset();
   final handler = _concreteHandler(target);
   if (handler == null || handler.isDisposed) return;
   handler._configurePersonalization();

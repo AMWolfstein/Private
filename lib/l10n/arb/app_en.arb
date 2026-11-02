@@ -3586,5 +3586,51 @@
   "songAnalysisClearConfirm": "Clear",
   "songAnalysisPageDescription": "Analyze your local music for sound-based Autoplay. Manage charging and analysis data.",
   "tagSeparatorsDescription": "Choose how artist and genre tags split into names, and keep selected names together.",
-  "songAnalysisClearFailed": "Could not clear song analysis. Try again."
+  "songAnalysisClearFailed": "Could not clear song analysis. Try again.",
+  "gaplessPlayback": "Gapless playback",
+  "gaplessPlaybackDescription": "Start the next song the moment one ends, without silence between them. AutoMix replaces it while on.",
+  "autoplayResetLearningDescription": "Clear what Autoplay learned from your listening and skips. Your music and listening history are kept.",
+  "autoplayLearningProgress": "Ranking tunes to you after {minimum} Autoplay songs ({count} so far)",
+  "@autoplayLearningProgress": {
+    "description": "How many Autoplay songs the listener has kept or skipped before ranking may learn from them",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "format": "decimalPattern"
+      },
+      "minimum": {
+        "type": "int",
+        "format": "decimalPattern"
+      }
+    }
+  },
+  "autoplayLearningWaiting": "Standard ranking until you both keep and skip recent Autoplay songs",
+  "@autoplayLearningWaiting": {
+    "description": "Ranking cannot be checked yet because the latest Autoplay songs were all kept or all skipped"
+  },
+  "autoplayLearningTuned": "Tuned to you: {learned}% accurate on your latest songs (standard {starting}%)",
+  "@autoplayLearningTuned": {
+    "description": "Autoplay uses learned ranking, which orders the latest kept and skipped songs better than the standard ranking",
+    "placeholders": {
+      "learned": {
+        "type": "int"
+      },
+      "starting": {
+        "type": "int"
+      }
+    }
+  },
+  "autoplayLearningStandard": "Standard ranking: tuning was not more accurate on your latest songs ({learned}% vs {starting}%)",
+  "@autoplayLearningStandard": {
+    "description": "Autoplay keeps the standard ranking because the learned one did not order the latest songs better",
+    "placeholders": {
+      "learned": {
+        "type": "int"
+      },
+      "starting": {
+        "type": "int"
+      }
+    }
+  },
+  "autoplayResetLearningFailed": "Could not reset recommendation learning. Please try again."
 }

@@ -66,6 +66,8 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   setUp(() => SharedPreferences.setMockInitialValues({}));
 
+  late void Function(AppSettings) configure;
+
   Future<(MusicPlayerHandler, List<GaplessDeck>)> setup({
     AppSettings settings = const AppSettings(pauseOnMute: false),
   }) async {
@@ -78,6 +80,7 @@ void main() {
         return deck;
       },
     );
+    configure = runtime.configure;
     final handler = await runtime.initialize() as MusicPlayerHandler;
     await handler.setQueueAndPlay(tracks);
     return (handler, decks);
@@ -111,7 +114,14 @@ void main() {
     },
   );
 
-  for (final action in ['seek', 'pause', 'repeat', 'remove', 'dispose']) {
+  for (final action in [
+    'seek',
+    'pause',
+    'repeat',
+    'remove',
+    'disable',
+    'dispose',
+  ]) {
     test(
       '$action unlinks the native next player and releases its deck',
       () async {
@@ -130,6 +140,10 @@ void main() {
             await handler.setRepeatMode(AudioServiceRepeatMode.one);
           case 'remove':
             handler.removeQueuedItem(handler.queue.value[1]);
+          case 'disable':
+            configure(
+              const AppSettings(pauseOnMute: false, gaplessPlayback: false),
+            );
           case 'dispose':
             await handler.dispose();
         }
@@ -160,6 +174,7 @@ void main() {
   );
 
   for (final settings in [
+    const AppSettings(gaplessPlayback: false),
     const AppSettings(usbBitPerfect: true),
     const AppSettings(usbDirect: true),
     const AppSettings(dapExclusive: true),

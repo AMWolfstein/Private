@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:sistrum/services/playback/autoplay/autoplay_ranker.dart';
 import 'package:sistrum/services/playback/autoplay/song_analysis.dart';
 import 'package:sistrum/services/playback/notification/media_session_filter.dart';
 import 'package:sistrum/services/playback/browser/background_favorites.dart';
@@ -53,6 +54,7 @@ class PlaybackDependencies {
     this.bindPlayerWidget,
     this.autoMixStatus,
     this.createPersonalization = AutoplayPersonalization.new,
+    this.createRanker = AutoplayRanker.new,
     AppStateDatabase? sessionDatabase,
     LibraryCollectionsDatabase? collectionsDatabase,
     this.mediaLibraryCatalog,
@@ -78,6 +80,7 @@ class PlaybackDependencies {
   final Future<PlaybackHandler> Function(PlaybackHandler Function())
   initializeHandler;
   final AutoplayPersonalization Function() createPersonalization;
+  final AutoplayRanker Function() createRanker;
   final AppStateDatabase? _sessionDatabase;
   final LibraryCollectionsDatabase? _collectionsDatabase;
   final MediaLibraryCatalog? mediaLibraryCatalog;
@@ -138,8 +141,18 @@ class MusicPlayerRuntime {
 
   final PlaybackDependencies dependencies;
   AutoplayPersonalization? _personalization;
-  AutoplayPersonalization get personalization =>
-      _personalization ??= dependencies.createPersonalization();
+  StreamSubscription<AutoplayFeedback>? _rankFeedback;
+  AutoplayRanker? _ranker;
+  AutoplayRanker get ranker => _ranker ??= dependencies.createRanker();
+  AutoplayPersonalization get personalization {
+    if (_personalization case final learning?) return learning;
+    final learning = _personalization = dependencies.createPersonalization();
+    _rankFeedback = learning.feedback.listen((feedback) {
+      if (_settings.autoplayPersonalization) ranker.record(feedback);
+    });
+    return learning;
+  }
+
   AppSettings _settings;
   PlaybackHandler? _handler;
   void Function()? _unsubscribeSourceDeletion;
@@ -387,6 +400,8 @@ class MusicPlayerRuntime {
     }
     await _songAnalysis?.dispose();
     await _personalization?.dispose();
+    await _rankFeedback?.cancel();
+    await _ranker?.dispose();
     await _handlers.close();
     await _mutedPlaybackEvents.close();
     await _backgroundCollectionChanges.close();

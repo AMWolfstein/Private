@@ -278,6 +278,18 @@ class SettingsSearchCatalog {
           keywords: const ['earphone', 'headphone', 'bluetooth', 'connect'],
         ),
         SettingsSearchEntry(
+          icon: Icons.linear_scale,
+          title: l10n.gaplessPlayback,
+          subtitle: l10n.gaplessPlaybackDescription,
+          keywords: const ['gapless', 'silence', 'transition', 'continuous'],
+        ),
+        SettingsSearchEntry(
+          icon: Icons.restart_alt,
+          title: l10n.autoplayResetLearning,
+          subtitle: l10n.autoplayResetLearningDescription,
+          keywords: const ['reset', 'recommendation', 'learning', 'autoplay'],
+        ),
+        SettingsSearchEntry(
           icon: Icons.compare_arrows,
           title: 'AutoMix',
           subtitle: l10n.autoMixDescription,

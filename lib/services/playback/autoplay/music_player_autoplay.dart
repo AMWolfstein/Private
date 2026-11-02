@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:math';
+import 'package:sistrum/services/playback/autoplay/autoplay_ranker.dart';
 import 'package:sistrum/services/playback/autoplay/autoplay_sound_profile.dart';
 import 'package:sistrum/services/playback/autoplay/autoplay_sound_signal.dart';
 import 'package:sistrum/services/playback/autoplay/autoplay_sound_store.dart';
@@ -90,6 +91,8 @@ Future<List<PlayableMedia>> loadAutoplayLibrary(
 /// Rank once per refill, so the visible queue is the actual playback order.
 /// Related songs score higher, while recent plays and repeated artists lose
 /// priority. Optional local learning adjusts this prior without audio analysis.
+typedef AutoplayPick = ({PlayableMedia media, Map<String, double> parts});
+
 List<PlayableMedia> selectAutoplayTracks({
   required PlayableMedia seed,
   required List<PlayableMedia> candidates,
@@ -100,7 +103,40 @@ List<PlayableMedia> selectAutoplayTracks({
   int limit = 6,
   double Function(PlayableMedia)? preferenceAdjustment,
   SoundAutoplaySignal? sound,
+  Map<String, double> weights = const {},
+}) => [
+  for (final pick in rankAutoplayTracks(
+    seed: seed,
+    candidates: candidates,
+    upcoming: upcoming,
+    recent: recent,
+    dismissedSources: dismissedSources,
+    random: random,
+    limit: limit,
+    preferenceAdjustment: preferenceAdjustment,
+    sound: sound,
+    weights: weights,
+  ))
+    pick.media,
+];
+
+List<AutoplayPick> rankAutoplayTracks({
+  required PlayableMedia seed,
+  required List<PlayableMedia> candidates,
+  required List<PlayableMedia> upcoming,
+  required List<PlayableMedia> recent,
+  required Set<String> dismissedSources,
+  required Random random,
+  int limit = 6,
+  double Function(PlayableMedia)? preferenceAdjustment,
+  SoundAutoplaySignal? sound,
+  Map<String, double> weights = const {},
 }) {
+  double weighted(Map<String, double> parts) => parts.entries.fold(
+    0.0,
+    (sum, p) => sum + (weights[p.key] ?? 1) * p.value,
+  );
+
   sound?.prepare([...recent, seed], candidates);
   String normalized(String? value) => normalizeLookupText(value);
   String songKey(PlayableMedia item) =>
@@ -120,7 +156,7 @@ List<PlayableMedia> selectAutoplayTracks({
     recentSources[recent[i].source] = i;
     recentSongs[songKey(recent[i])] = i;
   }
-  final scored = <(PlayableMedia, double, String)>[];
+  final scored = <(PlayableMedia, double, String, Map<String, double>)>[];
   for (final item in candidates) {
     final key = songKey(item);
     if (item.source.trim().isEmpty ||
@@ -133,43 +169,60 @@ List<PlayableMedia> selectAutoplayTracks({
     sources.add(item.source);
     songs.add(key);
     final artist = normalized(item.artist);
-    var score = random.nextDouble() * 2;
+    final jitter = random.nextDouble() * 2;
+    final parts = <String, double>{};
     if (seedArtist.isNotEmpty && seedArtist == artist) {
-      score += 5;
+      parts['artist'] = 5;
     }
     if (seedAlbum.isNotEmpty && seedAlbum == normalized(item.album)) {
-      score += 3;
+      parts['album'] = 3;
     }
     if (seedGenre.isNotEmpty && seedGenre == normalized(item.genre)) {
-      score += 4;
+      parts['genre'] = 4;
     }
-    if (preferenceAdjustment != null) score += preferenceAdjustment(item);
-    if (sound != null) score += (sound.score(item) - 2.5).clamp(-2.5, 2.5);
+    if (preferenceAdjustment != null) {
+      parts['preference'] = preferenceAdjustment(item);
+    }
+    if (sound != null) {
+      parts['signal:sound'] = (sound.score(item) - 2.5).clamp(-2.5, 2.5);
+    }
     // Match the latest source OR normalized song occurrence without walking
     // the entire listening history again for every candidate.
     final played = max(
       recentSources[item.source] ?? -1,
       recentSongs[key] ?? -1,
     );
-    if (played >= 0) score -= 20 + played.toDouble();
-    scored.add((item, score, artist));
+    if (played >= 0) parts['recent'] = -(20 + played.toDouble());
+    scored.add((item, jitter, artist, parts));
   }
-  final selected = <PlayableMedia>[];
+  final selected = <AutoplayPick>[];
   while (selected.length < limit && scored.isNotEmpty) {
     final previous = selected.isNotEmpty
-        ? selected.last
+        ? selected.last.media
         : upcoming.isNotEmpty
         ? upcoming.last
         : seed;
-    double rank((PlayableMedia, double, String) entry) =>
-        entry.$2 + (sound?.follow(previous, entry.$1) ?? 0).clamp(-3.0, .5);
+    Map<String, double> partsOf(
+      (PlayableMedia, double, String, Map<String, double>) entry,
+    ) => {
+      ...entry.$4,
+      if (sound != null)
+        'follow:sound': sound.follow(previous, entry.$1).clamp(-3.0, .5),
+    };
+    double rank((PlayableMedia, double, String, Map<String, double>) entry) =>
+        entry.$2 + weighted(partsOf(entry));
     scored.sort((a, b) => rank(b).compareTo(rank(a)));
     final next = scored.removeAt(0);
-    selected.add(next.$1);
+    selected.add((media: next.$1, parts: partsOf(next)));
     for (var i = 0; i < scored.length; i++) {
-      final (item, score, artist) = scored[i];
+      final (item, jitter, artist, parts) = scored[i];
       if (artist == next.$3) {
-        scored[i] = (item, score - 4, artist);
+        scored[i] = (
+          item,
+          jitter,
+          artist,
+          {...parts, 'artistFatigue': (parts['artistFatigue'] ?? 0) - 4},
+        );
       }
     }
   }
@@ -197,10 +250,16 @@ abstract interface class AutoplayQueueView {
 }
 
 class MusicAutoplay {
-  MusicAutoplay(this.view, this.loadLibrary, {bool Function()? soundMatching})
-    : _soundMatching = soundMatching ?? (() => false);
+  MusicAutoplay(
+    this.view,
+    this.loadLibrary, {
+    bool Function()? soundMatching,
+    AutoplayRanker? Function()? ranker,
+  }) : _soundMatching = soundMatching ?? (() => false),
+       _ranker = ranker ?? (() => null);
 
   final bool Function() _soundMatching;
+  final AutoplayRanker? Function() _ranker;
   final _soundStore = AutoplaySoundStore();
 
   Future<Map<String, AutoplaySoundProfile>> _loadSounds(
@@ -306,8 +365,10 @@ class MusicAutoplay {
       if (generation != _generation || view.isDisposed || !enabled) return;
       final sound = _soundSignal(profiles);
       final model = view.preferenceModel;
+      final ranker = _ranker();
+      final weights = ranker?.weights ?? const <String, double>{};
       final random = view.random;
-      List<PlayableMedia> ordinaryRanking() => selectAutoplayTracks(
+      List<AutoplayPick> ordinaryRanking() => rankAutoplayTracks(
         seed: current,
         candidates: candidates,
         upcoming: upcoming,
@@ -316,8 +377,9 @@ class MusicAutoplay {
         random: random,
         limit: 6 - upcoming.length,
         sound: sound,
+        weights: weights,
       );
-      List<PlayableMedia> selected;
+      List<AutoplayPick> selected;
       if (model == null) {
         selected = ordinaryRanking();
       } else {
@@ -333,6 +395,7 @@ class MusicAutoplay {
             DateTime.now(),
             6 - upcoming.length,
             profiles,
+            weights,
           ), debugLabel: 'autoplay-ranking');
         } catch (error) {
           _log.w(
@@ -352,9 +415,12 @@ class MusicAutoplay {
         return;
       }
       if (selected.isEmpty) return;
+      for (final pick in selected) {
+        ranker?.remember(pick.media.source, pick.parts);
+      }
       view.appendAutoplayTracks([
-        for (final item in selected)
-          PlayableMedia.fromJson({...item.toJson(), 'autoplay': true})!,
+        for (final pick in selected)
+          PlayableMedia.fromJson({...pick.media.toJson(), 'autoplay': true})!,
       ]);
     } catch (error) {
       _log.w('Could not prepare Library Autoplay: $error');
@@ -373,10 +439,11 @@ typedef _AutoplayRankingInput = (
   DateTime,
   int,
   Map<String, AutoplaySoundProfile>,
+  Map<String, double>,
 );
 
 /// Pass metadata and a frozen 64 KiB model only, never the player/runtime.
-List<PlayableMedia> _rankPersonalizedAutoplay(_AutoplayRankingInput input) {
+List<AutoplayPick> _rankPersonalizedAutoplay(_AutoplayRankingInput input) {
   final (
     seed,
     candidates,
@@ -388,11 +455,12 @@ List<PlayableMedia> _rankPersonalizedAutoplay(_AutoplayRankingInput input) {
     at,
     limit,
     profiles,
+    weights,
   ) = input;
   final sound = _soundSignal(profiles);
   final learningSeed = autoplayLearningTrack(seed);
   final exploration = model.explore(Random(randomSeed ^ 0x51a7));
-  return selectAutoplayTracks(
+  return rankAutoplayTracks(
     seed: seed,
     candidates: candidates,
     upcoming: upcoming,
@@ -401,6 +469,7 @@ List<PlayableMedia> _rankPersonalizedAutoplay(_AutoplayRankingInput input) {
     random: Random(randomSeed),
     limit: limit,
     sound: sound,
+    weights: weights,
     preferenceAdjustment: (track) =>
         model.rankAdjustment(
           autoplayLearningTrack(track),

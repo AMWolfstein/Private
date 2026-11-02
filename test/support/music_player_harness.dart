@@ -16,6 +16,7 @@ import 'package:sistrum/services/playback/music_player/music_player_service.dart
 import 'package:sistrum/services/playback/music_player/music_player_session_restore.dart';
 import 'package:sistrum/services/library/scan/source_deletion_events.dart';
 import 'package:sistrum/services/playback/music_player/music_player_runtime.dart';
+import 'package:sistrum/services/playback/autoplay/autoplay_ranker.dart';
 import 'package:sistrum/services/library/database/library_database.dart';
 
 /// Fake playback collaborators shared by the music player tests. They are
@@ -245,6 +246,7 @@ MusicPlayerRuntime musicPlayerRuntimeFor({
   SourceDeletionEvents? sourceDeletionEvents,
   ListeningRecorder? recorder,
   AutoplayPersonalization Function()? createPersonalization,
+  AutoplayRanker Function()? createRanker,
   FakeAudioSession? session,
   FakeSessionStore? sessionStore,
   PlaybackRestore? restoreSession,
@@ -264,6 +266,7 @@ MusicPlayerRuntime musicPlayerRuntimeFor({
       mediaLibraryCatalog: mediaLibraryCatalog,
       bindPlayerWidget: bindPlayerWidget,
       autoMixStatus: autoMixStatus,
+      createRanker: createRanker ?? AutoplayRanker.new,
       createPersonalization:
           createPersonalization ?? AutoplayPersonalization.new,
       createDeck:

@@ -271,6 +271,12 @@ void _registerMusicPlayerRuntimeRestore() {
         load: () async => model.encode(),
         save: (_) async {},
       );
+      sqfliteFfiInit();
+      final rankDb = await AutoplayRanker.openWithFactory(
+        databaseFactoryFfi,
+        inMemoryDatabasePath,
+      );
+      addTearDown(rankDb.close);
       final runtime = _runtime(
         settings: const AppSettings(
           pauseOnMute: false,
@@ -278,6 +284,7 @@ void _registerMusicPlayerRuntimeRestore() {
           autoplayPersonalization: true,
         ),
         createPersonalization: () => learning,
+        createRanker: () => AutoplayRanker(open: () async => rankDb),
       );
       final handler = MusicPlayerHandler(
         runtime: runtime,

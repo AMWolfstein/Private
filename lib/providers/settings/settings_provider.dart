@@ -110,6 +110,11 @@ class SettingsNotifier extends Notifier<AppSettings> {
     });
   }
 
+  void setGaplessPlayback(bool enabled) {
+    state = state.copyWith(gaplessPlayback: enabled);
+    _saveSettings();
+  }
+
   void setAutoMix(bool enabled) {
     state = state.copyWith(autoMix: enabled);
     _saveSettings();

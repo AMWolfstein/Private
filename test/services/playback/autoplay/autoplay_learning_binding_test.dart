@@ -1,3 +1,6 @@
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
+import 'package:sistrum/services/playback/autoplay/autoplay_ranker.dart';
+import 'package:sistrum/services/playback/music_player/music_player_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/core/models/settings.dart';
@@ -18,6 +21,67 @@ class LearningSettings extends SettingsNotifier {
 }
 
 void main() {
+  test(
+    'runtime routes remembered-pick feedback and reset clears both learners',
+    () async {
+      sqfliteFfiInit();
+      final db = await AutoplayRanker.openWithFactory(
+        databaseFactoryFfi,
+        inMemoryDatabasePath,
+      );
+      addTearDown(db.close);
+      final ranker = AutoplayRanker(open: () async => db);
+      final runtime = musicPlayerRuntimeFor(
+        createRanker: () => ranker,
+        createPersonalization: () =>
+            AutoplayPersonalization(load: () async => null, save: (_) async {}),
+      );
+      final learning = runtime.personalization;
+      learning.setEnabled(true);
+      await learning.ensureLoaded();
+      ranker.remember('/picked.flac', {'genre': 4});
+      const picked = AutoplayLearningTrack(
+        source: '/picked.flac',
+        title: 'Picked',
+        artist: 'Artist',
+      );
+      learning.endorse(picked, AutoplayFeedbackKind.loved);
+      await Future<void>.delayed(Duration.zero);
+      expect(await ranker.readOutcomes(), hasLength(1));
+      expect(learning.observations, 1);
+      learning.endorse(
+        const AutoplayLearningTrack(
+          source: '/manual.flac',
+          title: 'Manual',
+          artist: 'Artist',
+        ),
+        AutoplayFeedbackKind.loved,
+      );
+      await Future<void>.delayed(Duration.zero);
+      expect(await ranker.readOutcomes(), hasLength(1));
+      runtime.configure(
+        runtime.settings.copyWith(autoplayPersonalization: false),
+      );
+      learning.setEnabled(false);
+      ranker.remember('/off.flac', {'genre': 4});
+      learning.endorse(
+        const AutoplayLearningTrack(
+          source: '/off.flac',
+          title: 'Off',
+          artist: 'Artist',
+        ),
+        AutoplayFeedbackKind.loved,
+      );
+      await Future<void>.delayed(Duration.zero);
+      expect(await ranker.readOutcomes(), hasLength(1));
+      await resetAutoplayLearning(runtime: runtime);
+      expect(learning.observations, 0);
+      expect(await ranker.readOutcomes(), isEmpty);
+      expect(ranker.evaluation.value?.outcomes, 0);
+      expect(runtime.handler, isNull);
+    },
+  );
+
   test(
     'explicit feedback is scoped, respects opt-out and never starts a player',
     () async {

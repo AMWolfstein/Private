@@ -16,7 +16,8 @@ extension _MusicPlayerHandlerDelegates1 on MusicPlayerHandler {
             settings.playbackNormalizationMode) {
       reapplyNormalization();
     }
-    if (previous.autoMix != settings.autoMix ||
+    if (previous.gaplessPlayback != settings.gaplessPlayback ||
+        previous.autoMix != settings.autoMix ||
         previous.autoMixOptions != settings.autoMixOptions ||
         previous.usbBitPerfect != settings.usbBitPerfect ||
         previous.usbDirect != settings.usbDirect ||
@@ -371,6 +372,7 @@ extension _MusicPlayerHandlerDelegates1 on MusicPlayerHandler {
   Future<void> _stopImpl() async {
     _runtime.personalization.finish();
     unawaited(_runtime.personalization.flush());
+    unawaited(_runtime.ranker.flush());
     _playbackAutomation.cancelPendingActions();
     _autoplay.reset();
     cancelSleepTimer();

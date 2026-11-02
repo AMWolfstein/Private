@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
+import 'package:sistrum/services/playback/autoplay/autoplay_ranker.dart';
 
 import 'package:audio_service/audio_service.dart';
 import 'package:audio_session/audio_session.dart';
@@ -239,6 +241,7 @@ MusicPlayerRuntime _runtime({
   SourceDeletionEvents? sourceDeletionEvents,
   ListeningRecorder? recorder,
   AutoplayPersonalization Function()? createPersonalization,
+  AutoplayRanker Function()? createRanker,
   _Session? session,
 }) {
   final audioSession = session ?? _Session();
@@ -249,6 +252,7 @@ MusicPlayerRuntime _runtime({
       createHandler: createMusicPlayerHandler,
       restoreSession: restorePlaybackSession,
       libraryDatabase: LibraryDatabase.instance,
+      createRanker: createRanker ?? AutoplayRanker.new,
       createPersonalization:
           createPersonalization ?? AutoplayPersonalization.new,
       createDeck:

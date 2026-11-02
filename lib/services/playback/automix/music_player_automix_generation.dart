@@ -2,7 +2,8 @@ part of 'music_player_automix.dart';
 
 extension _MusicAutoMixPart3 on MusicAutoMix {
   bool get _canMix =>
-      (host.settings.autoMix || host.player.supportsGapless) &&
+      (host.settings.autoMix ||
+          (host.settings.gaplessPlayback && host.player.supportsGapless)) &&
       !host.settings.dapExclusive &&
       !host.settings.usbDirect &&
       !host.settings.usbBitPerfect &&

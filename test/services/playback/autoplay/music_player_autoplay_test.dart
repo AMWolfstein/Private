@@ -28,6 +28,30 @@ class _NoNoise implements Random {
 }
 
 void main() {
+  test(
+    'learned weights change real picks and preserve pre-weight score parts',
+    () {
+      final seed = track('seed', artist: 'Seed', genre: 'Rock');
+      final sameArtist = track('artist', artist: 'Seed', genre: 'Other');
+      final sameGenre = track('genre', artist: 'Other', genre: 'Rock');
+      List<AutoplayPick> rank(Map<String, double> weights) =>
+          rankAutoplayTracks(
+            seed: seed,
+            candidates: [sameArtist, sameGenre],
+            upcoming: [],
+            recent: [],
+            dismissedSources: {},
+            random: _NoNoise(),
+            limit: 1,
+            weights: weights,
+          );
+      expect(rank({}).single.media.id, 'artist');
+      final learned = rank({'artist': 0, 'genre': 3}).single;
+      expect(learned.media.id, 'genre');
+      expect(learned.parts, {'genre': 4});
+    },
+  );
+
   test('Autoplay prefers related unplayed Library tracks and deduplicates', () {
     final seed = track('seed', genre: 'Rock');
     final related = track('related', genre: 'Rock');
