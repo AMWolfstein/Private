@@ -617,14 +617,6 @@
   "libraryExternalStorage": "Armazenamento externo",
   "libraryRemoveFolder": "Remover pasta da biblioteca",
   "libraryRemoveFolderMessage": "Remover esta pasta e as suas faixas indexadas do Sistrum? Os ficheiros de áudio do armazenamento não serão eliminados.",
-  "libraryFilterSortSizeLargest": "Tamanho (maior primeiro)",
-  "@libraryFilterSortSizeLargest": {
-    "description": "Library sort option - largest files first"
-  },
-  "libraryFilterSortSizeSmallest": "Tamanho (menor primeiro)",
-  "@libraryFilterSortSizeSmallest": {
-    "description": "Library sort option - smallest files first"
-  },
   "libraryUnreadableFiles": "{count, plural, =1{Não foi possível ler 1 arquivo} other{Não foi possível ler {count} arquivos}}",
   "@libraryUnreadableFiles": {
     "description": "Count of files the last scan of a library folder skipped because it could not read them",
@@ -812,34 +804,6 @@
   "libraryFilterFormat": "Formato",
   "@libraryFilterFormat": {
     "description": "Filter section - file format"
-  },
-  "libraryFilterSort": "Ordenar",
-  "@libraryFilterSort": {
-    "description": "Filter section - sort order"
-  },
-  "libraryFilterSortLatest": "Mais recentes",
-  "@libraryFilterSortLatest": {
-    "description": "Sort option - newest first"
-  },
-  "libraryFilterSortOldest": "Mais antigas",
-  "@libraryFilterSortOldest": {
-    "description": "Sort option - oldest first"
-  },
-  "libraryFilterSortAlbumAsc": "Álbum (A-Z)",
-  "@libraryFilterSortAlbumAsc": {
-    "description": "Sort option - album ascending"
-  },
-  "libraryFilterSortAlbumDesc": "Álbum (Z-A)",
-  "@libraryFilterSortAlbumDesc": {
-    "description": "Sort option - album descending"
-  },
-  "libraryFilterSortGenreAsc": "Género (A-Z)",
-  "@libraryFilterSortGenreAsc": {
-    "description": "Sort option - genre ascending"
-  },
-  "libraryFilterSortGenreDesc": "Género (Z-A)",
-  "@libraryFilterSortGenreDesc": {
-    "description": "Sort option - genre descending"
   },
   "timeJustNow": "Agora mesmo",
   "@timeJustNow": {

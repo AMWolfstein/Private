@@ -796,14 +796,6 @@
   "@libraryRemoveFolderMessage": {
     "description": "Confirmation shown before removing a library source"
   },
-  "libraryFilterSortSizeLargest": "Taille (plus grand d'abord)",
-  "@libraryFilterSortSizeLargest": {
-    "description": "Library sort option - largest files first"
-  },
-  "libraryFilterSortSizeSmallest": "Taille (plus petit d'abord)",
-  "@libraryFilterSortSizeSmallest": {
-    "description": "Library sort option - smallest files first"
-  },
   "libraryUnreadableFiles": "{count, plural, =1{1 fichier n'a pas pu être lu} other{{count} fichiers n'ont pas pu être lus}}",
   "@libraryUnreadableFiles": {
     "description": "Count of files the last scan of a library folder skipped because it could not read them",
@@ -994,34 +986,6 @@
   "libraryFilterFormat": "Format",
   "@libraryFilterFormat": {
     "description": "Filter section - file format"
-  },
-  "libraryFilterSort": "Trier",
-  "@libraryFilterSort": {
-    "description": "Filter section - sort order"
-  },
-  "libraryFilterSortLatest": "Le plus récent",
-  "@libraryFilterSortLatest": {
-    "description": "Sort option - newest first"
-  },
-  "libraryFilterSortOldest": "Le plus ancien",
-  "@libraryFilterSortOldest": {
-    "description": "Sort option - oldest first"
-  },
-  "libraryFilterSortAlbumAsc": "Album (A-Z)",
-  "@libraryFilterSortAlbumAsc": {
-    "description": "Sort option - album ascending"
-  },
-  "libraryFilterSortAlbumDesc": "Album (Z-A)",
-  "@libraryFilterSortAlbumDesc": {
-    "description": "Sort option - album descending"
-  },
-  "libraryFilterSortGenreAsc": "Genre (A-Z)",
-  "@libraryFilterSortGenreAsc": {
-    "description": "Sort option - genre ascending"
-  },
-  "libraryFilterSortGenreDesc": "Genre (Z-A)",
-  "@libraryFilterSortGenreDesc": {
-    "description": "Sort option - genre descending"
   },
   "timeJustNow": "Il y a quelques instants",
   "@timeJustNow": {

@@ -1,6 +1,5 @@
 {
   "librarySortTitle": "ترتيب",
-  "librarySortOriginal": "الترتيب الأصلي",
   "@@locale": "ar",
   "libraryGenres": "الأنواع الموسيقية",
   "appearancePlayerView": "عرض المشغّل",
@@ -798,14 +797,6 @@
   "@libraryRemoveFolderMessage": {
     "description": "Confirmation shown before removing a library source"
   },
-  "libraryFilterSortSizeLargest": "الحجم (الأكبر أولاً)",
-  "@libraryFilterSortSizeLargest": {
-    "description": "Library sort option - largest files first"
-  },
-  "libraryFilterSortSizeSmallest": "الحجم (الأصغر أولاً)",
-  "@libraryFilterSortSizeSmallest": {
-    "description": "Library sort option - smallest files first"
-  },
   "libraryUnreadableFiles": "{count, plural, =1{تعذّرت قراءة ملف واحد} few{تعذّرت قراءة {count} ملفات} many{تعذّرت قراءة {count} ملفًا} other{تعذّرت قراءة {count} ملف}}",
   "@libraryUnreadableFiles": {
     "description": "Count of files the last scan of a library folder skipped because it could not read them",
@@ -996,34 +987,6 @@
   "libraryFilterFormat": "التنسيق",
   "@libraryFilterFormat": {
     "description": "Filter section - file format"
-  },
-  "libraryFilterSort": "ترتيب",
-  "@libraryFilterSort": {
-    "description": "Filter section - sort order"
-  },
-  "libraryFilterSortLatest": "الأحدث",
-  "@libraryFilterSortLatest": {
-    "description": "Sort option - newest first"
-  },
-  "libraryFilterSortOldest": "الأقدم",
-  "@libraryFilterSortOldest": {
-    "description": "Sort option - oldest first"
-  },
-  "libraryFilterSortAlbumAsc": "الألبوم (A-Z)",
-  "@libraryFilterSortAlbumAsc": {
-    "description": "Sort option - album ascending"
-  },
-  "libraryFilterSortAlbumDesc": "الألبوم (Z-A)",
-  "@libraryFilterSortAlbumDesc": {
-    "description": "Sort option - album descending"
-  },
-  "libraryFilterSortGenreAsc": "النوع (A-Z)",
-  "@libraryFilterSortGenreAsc": {
-    "description": "Sort option - genre ascending"
-  },
-  "libraryFilterSortGenreDesc": "النوع (Z-A)",
-  "@libraryFilterSortGenreDesc": {
-    "description": "Sort option - genre descending"
   },
   "timeJustNow": "الآن",
   "@timeJustNow": {

@@ -796,14 +796,6 @@
   "@libraryRemoveFolderMessage": {
     "description": "Confirmation shown before removing a library source"
   },
-  "libraryFilterSortSizeLargest": "आकार (सबसे बड़ा पहले)",
-  "@libraryFilterSortSizeLargest": {
-    "description": "Library sort option - largest files first"
-  },
-  "libraryFilterSortSizeSmallest": "आकार (सबसे छोटा पहले)",
-  "@libraryFilterSortSizeSmallest": {
-    "description": "Library sort option - smallest files first"
-  },
   "libraryUnreadableFiles": "{count, plural, =1{1 फ़ाइल नहीं पढ़ी जा सकी} other{{count} फ़ाइलें नहीं पढ़ी जा सकीं}}",
   "@libraryUnreadableFiles": {
     "description": "Count of files the last scan of a library folder skipped because it could not read them",
@@ -994,34 +986,6 @@
   "libraryFilterFormat": "फ़ॉर्मेट",
   "@libraryFilterFormat": {
     "description": "Filter section - file format"
-  },
-  "libraryFilterSort": "क्रमबद्ध करें",
-  "@libraryFilterSort": {
-    "description": "Filter section - sort order"
-  },
-  "libraryFilterSortLatest": "नवीनतम",
-  "@libraryFilterSortLatest": {
-    "description": "Sort option - newest first"
-  },
-  "libraryFilterSortOldest": "सबसे पुराना",
-  "@libraryFilterSortOldest": {
-    "description": "Sort option - oldest first"
-  },
-  "libraryFilterSortAlbumAsc": "एल्बम (A-Z)",
-  "@libraryFilterSortAlbumAsc": {
-    "description": "Sort option - album ascending"
-  },
-  "libraryFilterSortAlbumDesc": "एल्बम (Z-A)",
-  "@libraryFilterSortAlbumDesc": {
-    "description": "Sort option - album descending"
-  },
-  "libraryFilterSortGenreAsc": "शैली (A-Z)",
-  "@libraryFilterSortGenreAsc": {
-    "description": "Sort option - genre ascending"
-  },
-  "libraryFilterSortGenreDesc": "शैली (Z-A)",
-  "@libraryFilterSortGenreDesc": {
-    "description": "Sort option - genre descending"
   },
   "timeJustNow": "अभी-अभी",
   "@timeJustNow": {

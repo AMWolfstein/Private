@@ -23,6 +23,12 @@ void main() {
           ),
         ),
       );
+      expect(
+        tester.getCenter(find.text('B')).dx,
+        greaterThan(
+          tester.view.physicalSize.width / tester.view.devicePixelRatio / 2,
+        ),
+      );
       await tester.tap(find.text('B'));
       await tester.pump();
       expect(selected, ['B']);

@@ -21,10 +21,7 @@ const _artistPageSize = 40;
 /// Bounded local reads shared by the artist page and its complete playback queue.
 final localArtistTrackLoaderProvider =
     Provider<Future<LibraryBrowseDbPage> Function(ArtistTrackRequest)>((ref) {
-      final requested = ref.watch(librarySortProvider);
-      final sort = const ['a-z', 'z-a', 'latest', 'oldest'].contains(requested)
-          ? requested!
-          : 'a-z';
+      final sort = ref.watch(librarySortProvider);
       final credits = ref.watch(tagCreditScopeProvider);
       return (request) => ref
           .read(libraryDatabaseProvider)

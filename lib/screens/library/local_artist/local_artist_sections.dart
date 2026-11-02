@@ -7,15 +7,7 @@ extension _LocalArtistScreenStatePart1 on _LocalArtistScreenState {
     artist: widget.artistName,
     credit: LibraryArtistCredit.albumArtist,
     search: '',
-    sort:
-        const [
-          'a-z',
-          'z-a',
-          'latest',
-          'oldest',
-        ].contains(ref.read(librarySortProvider))
-        ? ref.read(librarySortProvider)!
-        : 'artist-releases-newest',
+    sort: ref.read(librarySortProvider),
     limit: 40,
     releaseKind: null,
   );
@@ -27,15 +19,7 @@ extension _LocalArtistScreenStatePart1 on _LocalArtistScreenState {
     artist: widget.artistName,
     credit: LibraryArtistCredit.appearsOn,
     search: '',
-    sort:
-        const [
-          'a-z',
-          'z-a',
-          'latest',
-          'oldest',
-        ].contains(ref.read(librarySortProvider))
-        ? ref.read(librarySortProvider)!
-        : 'artist-releases-newest',
+    sort: ref.read(librarySortProvider),
     limit: 40,
     releaseKind: null,
   );

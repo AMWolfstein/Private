@@ -56,12 +56,9 @@ class _AppLibraryAlphabetIndexState extends State<AppLibraryAlphabetIndex> {
     final colors = Theme.of(context).colorScheme;
     return Stack(
       children: [
-        Padding(
-          padding: const EdgeInsetsDirectional.only(end: 30),
-          child: widget.child,
-        ),
-        PositionedDirectional(
-          end: 0,
+        Padding(padding: const EdgeInsets.only(right: 30), child: widget.child),
+        Positioned(
+          right: 0,
           top: widget.topPadding,
           bottom: widget.bottomPadding,
           width: 30,
@@ -131,8 +128,8 @@ class _AppLibraryAlphabetIndexState extends State<AppLibraryAlphabetIndex> {
           ),
         ),
         if (_selected != null)
-          PositionedDirectional(
-            end: 42,
+          Positioned(
+            right: 42,
             top: null,
             bottom: widget.bottomPadding + 24,
             child: IgnorePointer(

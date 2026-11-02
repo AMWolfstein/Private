@@ -21,17 +21,12 @@ class FavoriteArtistsScreen extends ConsumerWidget {
     );
     final sort = ref.watch(librarySortProvider);
     final artists = savedArtists.toList();
-    if (const ['a-z', 'z-a', 'latest', 'oldest'].contains(sort)) {
-      artists.sort((a, b) {
-        final order = switch (sort) {
-          'latest' => b.addedAt.compareTo(a.addedAt),
-          'oldest' => a.addedAt.compareTo(b.addedAt),
-          'z-a' => b.name.toLowerCase().compareTo(a.name.toLowerCase()),
-          _ => a.name.toLowerCase().compareTo(b.name.toLowerCase()),
-        };
-        return order != 0 ? order : a.key.compareTo(b.key);
-      });
-    }
+    artists.sort((a, b) {
+      final order = a.name.toLowerCase().compareTo(b.name.toLowerCase());
+      return order != 0
+          ? (sort == 'z-a' ? -order : order)
+          : a.key.compareTo(b.key);
+    });
     final colorScheme = Theme.of(context).colorScheme;
     final bottomInset = context.navBarBottomInset;
 
@@ -40,14 +35,7 @@ class FavoriteArtistsScreen extends ConsumerWidget {
         slivers: [
           AppSliverHeader.page(
             title: context.l10n.collectionFavoriteArtists,
-            actions: [
-              appLibrarySortButton(
-                context,
-                ref,
-                fallback: 'original',
-                options: const ['original', 'a-z', 'z-a', 'latest', 'oldest'],
-              ),
-            ],
+            actions: [appLibrarySortButton(context, ref)],
           ),
           if (artists.isEmpty)
             SliverFillRemaining(

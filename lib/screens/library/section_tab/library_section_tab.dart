@@ -106,7 +106,7 @@ class _LibrarySectionTabState extends ConsumerState<LibrarySectionTab> {
   final _alphabetScroll = AppLibrarySectionController();
   int _alphabetGeneration = 0;
   bool _alphabetNavigating = false;
-  String get _sortMode => ref.read(librarySortProvider) ?? 'latest';
+  String get _sortMode => ref.read(librarySortProvider);
   final ValueNotifier<double> _libraryGridExtentNotifier = ValueNotifier(
     _libraryGridDefaultExtent,
   );
@@ -322,16 +322,7 @@ class _LibrarySectionTabState extends ConsumerState<LibrarySectionTab> {
             child: NestedScrollView(
               headerSliverBuilder: (context, innerBoxIsScrolled) => [
                 AppSliverHeader.page(
-                  actions: [
-                    appLibrarySortButton(
-                      context,
-                      ref,
-                      fallback: 'latest',
-                      options: widget.librarySection == 'playlists'
-                          ? const ['original', 'a-z', 'z-a', 'latest', 'oldest']
-                          : librarySongSortOptions,
-                    ),
-                  ],
+                  actions: [appLibrarySortButton(context, ref)],
                   title: widget.librarySection == 'playlists'
                       ? context.l10n.searchPlaylists
                       : context.l10n.searchSongs,

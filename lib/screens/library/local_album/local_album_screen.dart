@@ -152,19 +152,11 @@ class _LocalAlbumScreenState extends ConsumerState<LocalAlbumScreen>
       discNumber: (track) => track.discNumber,
       trackNumber: (track) => track.trackNumber,
       trackName: (track) => track.trackName,
-      compareTracks:
-          !const [
-            'a-z',
-            'z-a',
-            'artist-asc',
-            'artist-desc',
-          ].contains(ref.read(librarySortProvider))
-          ? null
-          : (a, b) => compareLibraryTracks(
-              UnifiedLibraryItem.fromLocalLibrary(a).toTrack(),
-              UnifiedLibraryItem.fromLocalLibrary(b).toTrack(),
-              ref.read(librarySortProvider)!,
-            ),
+      compareTracks: (a, b) => compareLibraryTracks(
+        UnifiedLibraryItem.fromLocalLibrary(a).toTrack(),
+        UnifiedLibraryItem.fromLocalLibrary(b).toTrack(),
+        ref.read(librarySortProvider),
+      ),
     );
     _commonQualityCache = _computeCommonQuality(_sortedTracksCache);
   }
@@ -294,14 +286,7 @@ class _LocalAlbumScreenState extends ConsumerState<LocalAlbumScreen>
           slivers: [
             AppSliverHeader.page(
               title: widget.albumName,
-              actions: [
-                appLibrarySortButton(
-                  context,
-                  ref,
-                  fallback: 'original',
-                  options: const ['original', 'a-z', 'z-a'],
-                ),
-              ],
+              actions: [appLibrarySortButton(context, ref)],
             ),
             SliverFillRemaining(
               hasScrollBody: false,

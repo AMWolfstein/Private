@@ -62,9 +62,27 @@ void main() {
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: Scaffold(
-            body: AppLibraryScreen(
-              page: AppLibraryPage.albums,
-              onOpenSection: (_) {},
+            body: Stack(
+              children: [
+                Navigator(
+                  onGenerateRoute: (_) => MaterialPageRoute<void>(
+                    builder: (_) => Scaffold(
+                      body: AppLibraryScreen(
+                        page: AppLibraryPage.albums,
+                        onOpenSection: (_) {},
+                      ),
+                    ),
+                  ),
+                ),
+                const Align(
+                  alignment: Alignment.bottomCenter,
+                  child: SizedBox(
+                    height: 100,
+                    width: double.infinity,
+                    child: ColoredBox(color: Colors.red),
+                  ),
+                ),
+              ],
             ),
           ),
         ),
@@ -77,7 +95,7 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('Incomplete albums'), findsNothing);
     expect(find.text('Album completeness unknown'), findsNothing);
-    await tester.tap(find.text('Title (Z-A)'));
+    await tester.tap(find.text('Z–A'));
     await tester.pumpAndSettle();
     expect(requests.last.sort, 'z-a');
     expect(tester.takeException(), isNull);
@@ -127,6 +145,8 @@ void main() {
       );
       await tester.pumpAndSettle();
       expect(requests, hasLength(1));
+      expect(find.text('A'), findsOneWidget);
+      expect(find.text('Z'), findsOneWidget);
       await tester.tap(find.text('Z'));
       await tester.pumpAndSettle();
       expect(requests.map((r) => r.offset), [0, 40, 80]);

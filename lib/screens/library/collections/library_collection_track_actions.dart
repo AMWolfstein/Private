@@ -166,16 +166,10 @@ extension _LibraryCollectionTracksScreenStatePart1
     }
 
     final sort = ref.watch(librarySortProvider);
-    if (sort != null &&
-        !const ['size-desc', 'size-asc'].contains(sort) &&
-        !_reordering) {
+    if (!_reordering) {
       entries = entries.toList()
         ..sort((a, b) {
-          final order = switch (sort) {
-            'latest' => b.addedAt.compareTo(a.addedAt),
-            'oldest' => a.addedAt.compareTo(b.addedAt),
-            _ => compareLibraryTracks(a.track, b.track, sort),
-          };
+          final order = compareLibraryTracks(a.track, b.track, sort);
           return order != 0 ? order : a.key.compareTo(b.key);
         });
     }

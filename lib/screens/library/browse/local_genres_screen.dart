@@ -23,7 +23,7 @@ final genrePageLoaderProvider =
       final version = ref.watch(
         localLibraryProvider.select((state) => state.loadedIndexVersion),
       );
-      final sort = ref.watch(librarySortProvider) ?? 'a-z';
+      final sort = ref.watch(librarySortProvider);
       final credits = ref.watch(libraryTagCreditsCacheProvider);
       final rules = ref.watch(tagCreditRulesProvider);
       return (request) async =>
@@ -120,27 +120,7 @@ class _LocalGenresScreenState extends ConsumerState<LocalGenresScreen> {
         slivers: [
           AppSliverHeader.page(
             title: widget.name ?? context.l10n.libraryGenres,
-            actions: [
-              appLibrarySortButton(
-                context,
-                ref,
-                options: widget.genre == null
-                    ? const ['original', 'a-z', 'z-a']
-                    : const [
-                        'original',
-                        'a-z',
-                        'z-a',
-                        'latest',
-                        'oldest',
-                        'artist-asc',
-                        'artist-desc',
-                        'album-asc',
-                        'album-desc',
-                        'release-newest',
-                        'release-oldest',
-                      ],
-              ),
-            ],
+            actions: [appLibrarySortButton(context, ref)],
           ),
           SliverList.builder(
             itemCount: entries.length,

@@ -28,20 +28,7 @@ extension _LocalAlbumHeader on _LocalAlbumScreenState {
 
     return AlbumDetailHeader(
       title: widget.albumName,
-      appBarActions: [
-        appLibrarySortButton(
-          context,
-          ref,
-          fallback: 'original',
-          options: const [
-            'original',
-            'a-z',
-            'z-a',
-            'artist-asc',
-            'artist-desc',
-          ],
-        ),
-      ],
+      appBarActions: [appLibrarySortButton(context, ref)],
       appBarTitle: isSelectionMode
           ? context.l10n.selectionSelected(selectedIds.length)
           : null,
@@ -134,16 +121,23 @@ extension _LocalAlbumHeader on _LocalAlbumScreenState {
   }
 
   Widget _buildLocalHeaderMeta(BuildContext context) {
-    final tracks = _sortedTracksCache;
+    // Album metadata belongs to the source tags, independently of display order.
+    final tracks = _loadedTracks ?? widget.tracks;
+    final genre = tracks
+        .map((t) => t.genre?.trim())
+        .whereType<String>()
+        .where((v) => v.isNotEmpty)
+        .firstOrNull;
+    final year = tracks
+        .map((t) => releaseTagYear(t.releaseDate))
+        .whereType<String>()
+        .firstOrNull;
     final quality = _commonQualityCache;
 
     return HeaderMetaRow(
       items: [
-        if (tracks.firstOrNull?.genre?.trim() case final genre?
-            when genre.isNotEmpty)
-          HeaderMetaItem(genre),
-        if (releaseTagYear(tracks.firstOrNull?.releaseDate) case final year?)
-          HeaderMetaItem(year),
+        if (genre != null) HeaderMetaItem(genre),
+        if (year != null) HeaderMetaItem(year),
         if (quality != null && quality.isNotEmpty)
           HeaderMetaItem(quality, icon: Icons.graphic_eq),
       ],

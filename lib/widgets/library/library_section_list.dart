@@ -20,8 +20,10 @@ class SectionedLibrarySliverList<T> extends StatefulWidget {
     required this.labelOf,
     required this.rowBuilder,
     this.controller,
+    this.revealPadding = 0,
   });
   final AppLibrarySectionController? controller;
+  final double revealPadding;
   final List<T> items;
   final Object groupingKey;
   final String? Function(T) labelOf;
@@ -87,7 +89,9 @@ class _SectionedLibrarySliverListState<T>
         last = child;
         if (sliver.indexOf(child) == target) {
           final viewport = RenderAbstractViewport.of(child);
-          final offset = viewport.getOffsetToReveal(child, 0).offset;
+          final offset =
+              viewport.getOffsetToReveal(child, 0).offset -
+              widget.revealPadding;
           position.jumpTo(
             offset.clamp(position.minScrollExtent, position.maxScrollExtent),
           );

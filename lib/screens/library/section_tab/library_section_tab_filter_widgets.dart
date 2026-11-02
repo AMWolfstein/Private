@@ -204,9 +204,10 @@ extension _LibrarySectionTabFilterWidgets on _LibrarySectionTabState {
             padding: EdgeInsets.symmetric(horizontal: wideListInset(context)),
             sliver: SectionedLibrarySliverList<UnifiedLibraryItem>(
               controller: _alphabetScroll,
+              revealPadding: MediaQuery.paddingOf(context).top + kToolbarHeight,
               items: filteredUnifiedItems,
               groupingKey: (_sortMode, sectionLocale),
-              labelOf: sectionLabel,
+              labelOf: (_) => null,
               rowBuilder: (context, index) {
                 final trackIndex = index;
                 if (trackIndex < filteredUnifiedItems.length) {

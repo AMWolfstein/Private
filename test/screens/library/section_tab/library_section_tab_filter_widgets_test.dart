@@ -18,6 +18,8 @@ void main() {
       tester.element(find.byType(LibrarySectionTab)),
     );
     expect(find.text('Filters'), findsNothing);
+    expect(find.text('A'), findsOneWidget);
+    expect(find.text('B'), findsOneWidget);
     expect(find.textContaining('2026'), findsNothing);
     await tester.tap(find.byTooltip(l10n.librarySortTitle));
     await tester.pumpAndSettle();
@@ -31,9 +33,12 @@ void main() {
     ]) {
       expect(find.text(label), findsNothing);
     }
-    expect(find.text(l10n.libraryFilterSortSizeLargest), findsOneWidget);
-    expect(find.text(l10n.searchSortTitleAZ), findsOneWidget);
-    await tester.tap(find.text(l10n.searchSortTitleAZ));
+    expect(find.text('Original order'), findsNothing);
+    expect(find.text('Latest'), findsNothing);
+    expect(find.text('Size (Largest first)'), findsNothing);
+    expect(find.byType(ListTile), findsNWidgets(2));
+    expect(find.text('A–Z'), findsOneWidget);
+    await tester.tap(find.text('A–Z'));
     await tester.pumpAndSettle();
     expect(find.byType(BottomSheet), findsNothing);
     expect(find.text(l10n.queueTrackCount(2)), findsOneWidget);

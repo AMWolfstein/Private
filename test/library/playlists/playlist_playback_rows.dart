@@ -159,7 +159,11 @@ void _registerPlaylistPlaybackRows() {
           await tester.ensureVisible(find.text('First'));
           await tester.longPress(find.text('First'));
           await tester.pumpAndSettle();
-          await tester.ensureVisible(find.text('Unavailable'));
+          await Scrollable.ensureVisible(
+            tester.element(find.text('Unavailable')),
+            alignment: 0.15,
+          );
+          await tester.pumpAndSettle();
           await tester.tap(find.text('Unavailable'));
           await tester.pumpAndSettle();
           await tester.tap(find.byIcon(Icons.remove_circle_outline));
@@ -268,10 +272,10 @@ void _registerPlaylistPlaybackRows() {
 
       expect(fakePlayer.queue.map((item) => item.title), [
         'First',
-        'Selected',
         'Last',
+        'Selected',
       ]);
-      expect(fakePlayer.index, 1);
+      expect(fakePlayer.index, 2);
       final actions = find.byType(AlbumPlayActions);
       await tester.ensureVisible(actions);
       await tester.pumpAndSettle();

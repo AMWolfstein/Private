@@ -50,13 +50,7 @@ class _AppLibraryScreenState extends ConsumerState<AppLibraryScreen> {
   final _scroll = ScrollController();
   final _alphabetScroll = AppLibrarySectionController();
   int _alphabetGeneration = 0;
-  String get _sort {
-    final mode = ref.read(librarySortProvider) ?? 'a-z';
-    return _artists && !const ['a-z', 'z-a', 'latest', 'oldest'].contains(mode)
-        ? 'a-z'
-        : mode;
-  }
-
+  String get _sort => ref.read(librarySortProvider);
   List<LibraryBrowseEntry> _rows = const [];
   bool _loading = true;
 
@@ -119,15 +113,7 @@ class _AppLibraryScreenState extends ConsumerState<AppLibraryScreen> {
             : _artists
             ? context.l10n.searchArtists
             : context.l10n.searchAlbums);
-    final actions = <Widget>[
-      appLibrarySortButton(
-        context,
-        ref,
-        options: _artists
-            ? const ['original', 'a-z', 'z-a', 'latest', 'oldest']
-            : librarySongSortOptions,
-      ),
-    ];
+    final actions = <Widget>[appLibrarySortButton(context, ref)];
     final content = RefreshIndicator(
       onRefresh: _refresh,
       child: CustomScrollView(
@@ -248,14 +234,14 @@ class _AppLibraryScreenState extends ConsumerState<AppLibraryScreen> {
               if (_artists)
                 SectionedLibrarySliverList<LibraryBrowseEntry>(
                   controller: _alphabetScroll,
+                  revealPadding:
+                      MediaQuery.paddingOf(context).top + kToolbarHeight,
                   items: _rows,
                   groupingKey: (
                     _sort,
                     Localizations.localeOf(context).toLanguageTag(),
                   ),
-                  labelOf: (entry) => const ['a-z', 'z-a'].contains(_sort)
-                      ? librarySectionInitial(entry.artist)
-                      : null,
+                  labelOf: (_) => null,
                   rowBuilder: (context, index) {
                     final entry = _rows[index];
                     return Column(
