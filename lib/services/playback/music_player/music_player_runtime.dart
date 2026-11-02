@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:sistrum/services/playback/autoplay/autoplay_taste.dart';
 import 'package:sistrum/services/playback/autoplay/autoplay_ranker.dart';
 import 'package:sistrum/services/playback/autoplay/song_analysis.dart';
+import 'package:sistrum/services/playback/audio/replaygain_auto_writer.dart';
 import 'package:sistrum/services/playback/notification/media_session_filter.dart';
 import 'package:sistrum/services/playback/browser/background_favorites.dart';
 import 'package:sistrum/services/playback/browser/media_library_browser.dart';
@@ -191,6 +192,13 @@ class MusicPlayerRuntime {
   );
   Future<void> Function()? exclusiveAudioHook;
 
+  ReplayGainAutoWriter? _replayGainWriter;
+  ReplayGainAutoWriter get replayGainWriter => _replayGainWriter ??=
+      (ReplayGainAutoWriter(
+        library: dependencies.libraryDatabase,
+        isAndroid: dependencies.isAndroid,
+      )..configure(_settings));
+
   SongAnalysis? _songAnalysis;
   SongAnalysis get songAnalysis => _songAnalysis ??=
       (SongAnalysis(
@@ -222,6 +230,7 @@ class MusicPlayerRuntime {
     _settings = settings;
     _handler?.applySettings(previous);
     _songAnalysis?.configure(settings);
+    _replayGainWriter?.configure(settings);
   }
 
   void updateStrings({
@@ -356,6 +365,7 @@ class MusicPlayerRuntime {
       if (dependencies.isAndroid) {
         dependencies.bindPlayerWidget?.call(handler);
         songAnalysis;
+        replayGainWriter;
       }
       return handler;
     } catch (error, stack) {
@@ -407,6 +417,7 @@ class MusicPlayerRuntime {
       // Initialization may have failed because its pending handler was closed.
     }
     await _songAnalysis?.dispose();
+    await _replayGainWriter?.dispose();
     await _personalization?.dispose();
     await _rankFeedback?.cancel();
     await _ranker?.dispose();

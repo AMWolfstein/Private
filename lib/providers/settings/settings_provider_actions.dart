@@ -382,4 +382,14 @@ extension SettingsActions on SettingsNotifier {
     _current = _current.copyWith(songAnalysisOnlyWhileCharging: value);
     _saveSettings();
   }
+
+  void setReplayGainAutoWrite(bool value) {
+    _current = _current.copyWith(replayGainAutoWrite: value);
+    _saveSettings();
+  }
+
+  void setReplayGainOnlyWhileCharging(bool value) {
+    _current = _current.copyWith(replayGainOnlyWhileCharging: value);
+    _saveSettings();
+  }
 }

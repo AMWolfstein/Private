@@ -73,8 +73,6 @@ void main() {
           l10n.trackPlayNext,
           l10n.trackAddToQueue,
           l10n.trackRemoveFromDevice,
-          l10n.trackReplayGain,
-          l10n.trackRemoveReplayGain,
           l10n.homeGoToAlbum,
           l10n.appGoToArtist,
         ]) {

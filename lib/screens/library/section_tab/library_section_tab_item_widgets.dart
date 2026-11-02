@@ -28,8 +28,6 @@ extension _LibrarySectionTabItemWidgets on _LibrarySectionTabState {
         }
       },
       bottomPadding: bottomPadding,
-      onReplayGain: ({required remove}) =>
-          _runBatchReplayGain(unifiedItems, remove: remove),
       onDelete: () => _deleteSelected(unifiedItems),
     );
   }

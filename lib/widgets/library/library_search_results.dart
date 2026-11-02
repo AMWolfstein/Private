@@ -10,7 +10,6 @@ import 'package:sistrum/providers/playback/music_player_provider.dart';
 import 'package:sistrum/providers/playback/playback_provider.dart';
 import 'package:sistrum/core/navigation/app_screens.dart';
 import 'package:sistrum/services/library/database/library_database.dart';
-import 'package:sistrum/widgets/library/batch_track_actions.dart';
 import 'package:sistrum/services/library/browse/library_search.dart';
 import 'package:sistrum/widgets/library/local_track_batch_actions.dart';
 import 'package:sistrum/widgets/primitives/app_choice_chip.dart';
@@ -49,7 +48,6 @@ class _LibrarySearchResultsState extends ConsumerState<LibrarySearchResults> {
   final SelectionOverlayController _selectionOverlay =
       SelectionOverlayController();
   // Hidden while a sheet or dialog opened from the bar is on screen.
-  bool _suppressSelectionBar = false;
   List<LibrarySearchHit> _visibleSongs = const [];
   // Bumped when the results or selection they were built from change, so a
   // slow lookup cannot insert rows the user is no longer looking at.
@@ -68,7 +66,6 @@ class _LibrarySearchResultsState extends ConsumerState<LibrarySearchResults> {
       _selectionGeneration++;
       // A selection belongs to the results it was made in.
       _selected.clear();
-      _suppressSelectionBar = false;
       _selectionOverlay.hide();
     }
   }
@@ -141,7 +138,6 @@ class _LibrarySearchResultsState extends ConsumerState<LibrarySearchResults> {
     _selectionGeneration++;
     setState(() {
       _selected.clear();
-      _suppressSelectionBar = false;
     });
     _selectionOverlay.hide();
   }
@@ -151,21 +147,9 @@ class _LibrarySearchResultsState extends ConsumerState<LibrarySearchResults> {
     ref.invalidate(librarySearchProvider);
   }
 
-  void _hideSelectionBar() {
-    _suppressSelectionBar = true;
-    _selectionOverlay.hide();
-  }
-
-  Future<void> _restoreSelectionBar({Duration delay = Duration.zero}) async {
-    // Wait out the sheet/dialog exit so the bar does not cover it.
-    if (delay > Duration.zero) await Future<void>.delayed(delay);
-    _suppressSelectionBar = false;
-    if (mounted) setState(() {});
-  }
-
   void _syncSelectionBar() {
     if (!mounted) return;
-    if (!_selecting || _suppressSelectionBar) {
+    if (!_selecting) {
       _selectionOverlay.hide();
       return;
     }
@@ -187,17 +171,6 @@ class _LibrarySearchResultsState extends ConsumerState<LibrarySearchResults> {
       onClose: _exitSelection,
       onToggleSelectAll: allSelected ? _exitSelection : _selectAllVisible,
       bottomPadding: MediaQuery.paddingOf(context).bottom,
-      onReplayGain: ({required remove}) => runBatchReplayGain(
-        context,
-        items,
-        database: ref.read(libraryDatabaseProvider),
-        remove: remove,
-        onExitSelectionMode: _exitSelection,
-        onConfirmOpen: _hideSelectionBar,
-        onConfirmClosed: (confirmed) => _restoreSelectionBar(
-          delay: confirmed ? Duration.zero : const Duration(milliseconds: 220),
-        ),
-      ),
       onDelete: () => deleteLibraryTracks(
         context,
         ref,

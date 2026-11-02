@@ -1,23 +1,6 @@
 part of 'local_song_menu_actions_test.dart';
 
 void _registerLocalSongMenuNavigation() {
-  testWidgets('ReplayGain cancel reports no change', (tester) async {
-    await _mount(tester);
-    final l10n = AppLocalizations.of(tester.element(find.byType(LocalSongRow)));
-    for (final label in [l10n.trackReplayGain, l10n.trackRemoveReplayGain]) {
-      await _openMenu(tester);
-      await tester.ensureVisible(find.text(label));
-      await tester.pumpAndSettle();
-      await tester.tap(find.text(label));
-      await _pumpUntil(tester, find.text(l10n.dialogCancel));
-      await tester.pumpAndSettle();
-      await tester.tap(find.text(l10n.dialogCancel));
-      await _runAction(tester, pendingAction!);
-      await tester.pumpAndSettle();
-      expect(await pendingAction!, isFalse);
-    }
-  });
-
   testWidgets('album and artist actions navigate from the song menu', (
     tester,
   ) async {

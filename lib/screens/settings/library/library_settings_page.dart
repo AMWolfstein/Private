@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:sistrum/screens/settings/library/replay_gain_settings_page.dart';
 import 'package:sistrum/screens/settings/library/song_analysis_settings_page.dart';
 import 'package:flutter/material.dart';
 import 'package:sistrum/widgets/primitives/app_alert_dialog.dart';
@@ -223,6 +224,18 @@ class _LibrarySettingsPageState extends ConsumerState<LibrarySettingsPage> {
                     slidePageRoute<void>(
                       page: const AppSettingsTheme(
                         child: SongAnalysisSettingsPage(),
+                      ),
+                    ),
+                  ),
+                ),
+                SettingsItem(
+                  icon: Icons.volume_up_outlined,
+                  title: context.l10n.replayGain,
+                  subtitle: context.l10n.replayGainPageDescription,
+                  onTap: () => Navigator.of(context).push(
+                    slidePageRoute<void>(
+                      page: const AppSettingsTheme(
+                        child: ReplayGainSettingsPage(),
                       ),
                     ),
                   ),
