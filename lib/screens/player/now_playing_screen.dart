@@ -46,7 +46,7 @@ import 'package:sistrum/widgets/primitives/app_context_menu.dart';
 import 'package:sistrum/utils/files/file_access.dart';
 import 'package:sistrum/widgets/library/local_song_file_actions.dart';
 import 'package:sistrum/widgets/library/local_song_menu.dart';
-import 'package:sistrum/widgets/lyrics/fetch_lyrics_action.dart';
+import 'package:sistrum/widgets/lyrics/find_lyrics_sheet.dart';
 
 export 'package:sistrum/core/navigation/now_playing_route.dart';
 

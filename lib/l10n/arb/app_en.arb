@@ -3527,10 +3527,6 @@
       }
     }
   },
-  "lyricsFetchMenu": "Fetch lyrics",
-  "@lyricsFetchMenu": {
-    "description": "Song menu action that finds lyrics online and writes them into the file"
-  },
   "lyricsFetchReplaceTitle": "Replace existing lyrics?",
   "@lyricsFetchReplaceTitle": {
     "description": "Dialog title when the file already has lyrics"
@@ -3538,18 +3534,6 @@
   "lyricsFetchReplaceBody": "This file already has lyrics. Replace them with lyrics found online?",
   "@lyricsFetchReplaceBody": {
     "description": "Dialog body when the file already has lyrics"
-  },
-  "lyricsFetchPlainTitle": "No synced lyrics found",
-  "@lyricsFetchPlainTitle": {
-    "description": "Dialog title when no word-synced or line-synced lyrics exist"
-  },
-  "lyricsFetchPlainBody": "Search for plain lyrics without timing?",
-  "@lyricsFetchPlainBody": {
-    "description": "Dialog body offering plain-text lyrics"
-  },
-  "lyricsFetchSearching": "Searching for lyrics…",
-  "@lyricsFetchSearching": {
-    "description": "Snackbar while the online search runs"
   },
   "lyricsFetchCancel": "Cancel",
   "@lyricsFetchCancel": {
@@ -3559,42 +3543,115 @@
   "@lyricsFetchOk": {
     "description": "Confirms a lyrics prompt"
   },
-  "lyricsFetchSavedSynced": "Synced lyrics saved to the file",
-  "@lyricsFetchSavedSynced": {
-    "description": "Result when timed lyrics were written"
+  "lyricsFindMenu": "Find lyrics",
+  "@lyricsFindMenu": {
+    "description": "Menu item and per-song button that open the Find lyrics screen"
   },
-  "lyricsFetchSavedPlain": "Plain lyrics saved to the file",
-  "@lyricsFetchSavedPlain": {
-    "description": "Result when untimed lyrics were written"
+  "lyricsFindTitle": "Find lyrics",
+  "@lyricsFindTitle": {
+    "description": "Title of the Find lyrics sheet"
   },
-  "lyricsFetchFailed": "The lyrics lookup failed",
-  "@lyricsFetchFailed": {
-    "description": "Shown when the lyrics lookup itself failed unexpectedly"
+  "lyricsFindTitleLabel": "Title",
+  "@lyricsFindTitleLabel": {
+    "description": "Find lyrics: song title field"
   },
-  "lyricsFetchKept": "Existing lyrics kept",
-  "@lyricsFetchKept": {
-    "description": "Result when the user declined to replace lyrics"
+  "lyricsFindArtistLabel": "Artist",
+  "@lyricsFindArtistLabel": {
+    "description": "Find lyrics: artist field"
   },
-  "lyricsFetchDeclinedPlain": "No synced lyrics found",
-  "@lyricsFetchDeclinedPlain": {
-    "description": "Result when the user declined plain lyrics"
+  "lyricsFindAlbumLabel": "Album",
+  "@lyricsFindAlbumLabel": {
+    "description": "Find lyrics: album field"
   },
-  "lyricsFetchNotFound": "No lyrics found online for this song",
-  "@lyricsFetchNotFound": {
-    "description": "Result when no source had lyrics"
+  "lyricsFindDurationLabel": "Duration",
+  "@lyricsFindDurationLabel": {
+    "description": "Find lyrics: duration field"
   },
-  "lyricsFetchWriteFailed": "Could not write lyrics to the file",
-  "@lyricsFetchWriteFailed": {
-    "description": "Result when the file write failed"
+  "lyricsFindDurationHint": "m:ss",
+  "@lyricsFindDurationHint": {
+    "description": "Find lyrics: example for the duration field"
   },
-  "lyricsFetchUnreachable": "Some sources could not be reached: {sources}",
-  "@lyricsFetchUnreachable": {
-    "description": "Shown after a lookup when sources failed",
+  "lyricsFindSearch": "Search",
+  "@lyricsFindSearch": {
+    "description": "Find lyrics: search button"
+  },
+  "lyricsFindSearching": "Searching the lyrics sources…",
+  "@lyricsFindSearching": {
+    "description": "Find lyrics: shown while sources are queried"
+  },
+  "lyricsFindIdle": "Search the built-in lyrics sources for this song.",
+  "@lyricsFindIdle": {
+    "description": "Find lyrics: hint before the first search"
+  },
+  "lyricsFindNeedTitle": "Enter a title to search.",
+  "@lyricsFindNeedTitle": {
+    "description": "Find lyrics: shown when the title is empty"
+  },
+  "lyricsFindSearchFailed": "The search could not finish. Try again.",
+  "@lyricsFindSearchFailed": {
+    "description": "Find lyrics: shown when the search itself fails"
+  },
+  "lyricsFindNoResults": "No lyrics were found for this song.",
+  "@lyricsFindNoResults": {
+    "description": "Find lyrics: no source had a match"
+  },
+  "lyricsFindGroupWord": "Word-synced",
+  "@lyricsFindGroupWord": {
+    "description": "Find lyrics: result group with word timing"
+  },
+  "lyricsFindGroupLine": "Line-synced",
+  "@lyricsFindGroupLine": {
+    "description": "Find lyrics: result group with line timing"
+  },
+  "lyricsFindGroupPlain": "Plain text",
+  "@lyricsFindGroupPlain": {
+    "description": "Find lyrics: result group without timing"
+  },
+  "lyricsFindFailedSources": "Could not reach: {sources}",
+  "@lyricsFindFailedSources": {
+    "description": "Find lyrics: sources that failed during the search",
     "placeholders": {
       "sources": {
         "type": "String"
       }
     }
+  },
+  "lyricsFindEmbed": "Embed in file",
+  "@lyricsFindEmbed": {
+    "description": "Find lyrics: writes the lyrics into the song file"
+  },
+  "lyricsFindDownload": "Download .lrc",
+  "@lyricsFindDownload": {
+    "description": "Find lyrics: writes a .lrc file beside the song"
+  },
+  "lyricsFindEmbedFailed": "The lyrics could not be written to the file.",
+  "@lyricsFindEmbedFailed": {
+    "description": "Find lyrics: embedding failed"
+  },
+  "lyricsFindSavedLrc": "Saved {name} next to the song.",
+  "@lyricsFindSavedLrc": {
+    "description": "Find lyrics: .lrc file written",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "lyricsFindLrcUnsupported": "This song is in a folder picked with the system picker, so its .lrc file cannot be saved beside it.",
+  "@lyricsFindLrcUnsupported": {
+    "description": "Find lyrics: .lrc needs a plain file path"
+  },
+  "lyricsFindLrcFailed": "The .lrc file could not be written.",
+  "@lyricsFindLrcFailed": {
+    "description": "Find lyrics: .lrc write failed"
+  },
+  "lyricsFindReplaceLrcTitle": "Replace the .lrc file?",
+  "@lyricsFindReplaceLrcTitle": {
+    "description": "Find lyrics: confirm replacing an existing .lrc file"
+  },
+  "lyricsFindReplaceLrcBody": "A .lrc file already sits next to this song. Replacing it cannot be undone.",
+  "@lyricsFindReplaceLrcBody": {
+    "description": "Find lyrics: body of the .lrc replacement confirmation"
   },
   "lyricsMissingTitle": "Songs without synced lyrics",
   "@lyricsMissingTitle": {

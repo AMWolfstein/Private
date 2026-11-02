@@ -35,8 +35,15 @@ class LyricsHttpGet {
 }
 
 /// A candidate with a body that could not be converted is "no lyrics", not a
-/// failed source. Network and status errors still propagate.
-OnlineLyricsCandidate? _candidate(String provider, String Function() convert) {
+/// failed source. Network and status errors still propagate. [title], [artist]
+/// and [duration] describe the song the source matched, when it reports them.
+OnlineLyricsCandidate? _candidate(
+  String provider,
+  String Function() convert, {
+  String? title,
+  String? artist,
+  double? duration,
+}) {
   final String text;
   try {
     text = convert();
@@ -48,6 +55,9 @@ OnlineLyricsCandidate? _candidate(String provider, String Function() convert) {
     provider: provider,
     timing: LyricsTiming.detect(text),
     text: text,
+    title: title,
+    artist: artist,
+    durationSeconds: duration,
   );
 }
 
@@ -62,8 +72,8 @@ Iterable<Map<String, dynamic>> _maps(Object? value) =>
 const _paxBase = 'https://lyrics.paxsenix.org';
 
 // ---------------------------------------------------------------------------
-// Word-capable sources. Each may return word timing; the search accepts a
-// line result from them in the synced step only after word sources failed.
+// Word-capable sources. Each may return word timing, or only lines or plain
+// text when the match has no word timing; the result is classified from its text.
 // ---------------------------------------------------------------------------
 
 /// Spotify through the Paxsenix proxy, searched by title and artist.
@@ -73,8 +83,6 @@ class SpotifyLyricsProvider implements OnlineLyricsProvider {
 
   @override
   String get id => 'spotify';
-  @override
-  LyricsTiming get bestTiming => LyricsTiming.wordSynced;
 
   @override
   Future<OnlineLyricsCandidate?> find(OnlineLyricsQuery query) async {
@@ -102,7 +110,13 @@ class SpotifyLyricsProvider implements OnlineLyricsProvider {
       ).replace(queryParameters: {'id': trackId}),
     );
     if (body == null) return null;
-    return _candidate(id, () => parseProxyPayload(utf8.decode(body.bodyBytes)));
+    return _candidate(
+      id,
+      () => parseProxyPayload(utf8.decode(body.bodyBytes)),
+      title: song['name']?.toString(),
+      artist: song['artistName']?.toString(),
+      duration: parseClockSeconds(song['duration']?.toString()),
+    );
   }
 }
 
@@ -114,8 +128,6 @@ class DeezerLyricsProvider implements OnlineLyricsProvider {
 
   @override
   String get id => 'deezer';
-  @override
-  LyricsTiming get bestTiming => LyricsTiming.wordSynced;
 
   @override
   Future<OnlineLyricsCandidate?> find(OnlineLyricsQuery query) async {
@@ -132,7 +144,13 @@ class DeezerLyricsProvider implements OnlineLyricsProvider {
       ).replace(queryParameters: {'id': '$deezerId'}),
     );
     if (body == null) return null;
-    return _candidate(id, () => parseProxyPayload(utf8.decode(body.bodyBytes)));
+    return _candidate(
+      id,
+      () => parseProxyPayload(utf8.decode(body.bodyBytes)),
+      title: track?['title']?.toString(),
+      artist: _asMap(track?['artist'])?['name']?.toString(),
+      duration: (track?['duration'] as num?)?.toDouble(),
+    );
   }
 }
 
@@ -144,8 +162,6 @@ class YouTubeLyricsProvider implements OnlineLyricsProvider {
 
   @override
   String get id => 'youtube';
-  @override
-  LyricsTiming get bestTiming => LyricsTiming.wordSynced;
 
   @override
   Future<OnlineLyricsCandidate?> find(OnlineLyricsQuery query) async {
@@ -177,7 +193,13 @@ class YouTubeLyricsProvider implements OnlineLyricsProvider {
       ).replace(queryParameters: {'id': videoId}),
     );
     if (body == null) return null;
-    return _candidate(id, () => parseProxyPayload(utf8.decode(body.bodyBytes)));
+    return _candidate(
+      id,
+      () => parseProxyPayload(utf8.decode(body.bodyBytes)),
+      title: video['title']?.toString(),
+      artist: video['author']?.toString(),
+      duration: parseClockSeconds(video['duration']?.toString()),
+    );
   }
 }
 
@@ -188,8 +210,6 @@ class MusixmatchLyricsProvider implements OnlineLyricsProvider {
 
   @override
   String get id => 'musixmatch';
-  @override
-  LyricsTiming get bestTiming => LyricsTiming.wordSynced;
 
   @override
   Future<OnlineLyricsCandidate?> find(OnlineLyricsQuery query) async {
@@ -206,7 +226,13 @@ class MusixmatchLyricsProvider implements OnlineLyricsProvider {
       Uri.parse('$_paxBase/musixmatch/lyrics').replace(queryParameters: params),
     );
     if (body == null) return null;
-    return _candidate(id, () => parseProxyPayload(utf8.decode(body.bodyBytes)));
+    return _candidate(
+      id,
+      () => parseProxyPayload(utf8.decode(body.bodyBytes)),
+      title: query.title,
+      artist: query.artist,
+      duration: query.durationSeconds,
+    );
   }
 }
 
@@ -222,8 +248,6 @@ class LyricsPlusProvider implements OnlineLyricsProvider {
 
   @override
   String get id => 'lyricsplus';
-  @override
-  LyricsTiming get bestTiming => LyricsTiming.wordSynced;
 
   @override
   Future<OnlineLyricsCandidate?> find(OnlineLyricsQuery query) async {
@@ -257,13 +281,19 @@ class LyricsPlusProvider implements OnlineLyricsProvider {
       }
       return null;
     }
-    return _candidate(id, () {
-      final json = jsonDecode(utf8.decode(response.bodyBytes));
-      if (json is! Map<String, dynamic>) {
-        throw const LyricsFormatException('not an object');
-      }
-      return formatKpoe(json);
-    });
+    return _candidate(
+      id,
+      () {
+        final json = jsonDecode(utf8.decode(response.bodyBytes));
+        if (json is! Map<String, dynamic>) {
+          throw const LyricsFormatException('not an object');
+        }
+        return formatKpoe(json);
+      },
+      title: query.title,
+      artist: query.artist,
+      duration: query.durationSeconds,
+    );
   }
 }
 
@@ -274,8 +304,6 @@ class BetterLyricsProvider implements OnlineLyricsProvider {
 
   @override
   String get id => 'betterlyrics';
-  @override
-  LyricsTiming get bestTiming => LyricsTiming.wordSynced;
 
   @override
   Future<OnlineLyricsCandidate?> find(OnlineLyricsQuery query) async {
@@ -295,7 +323,13 @@ class BetterLyricsProvider implements OnlineLyricsProvider {
     );
     final ttml = json?['ttml']?.toString() ?? '';
     if (ttml.trim().isEmpty) return null;
-    return _candidate(id, () => formatTtml(ttml));
+    return _candidate(
+      id,
+      () => formatTtml(ttml),
+      title: query.title,
+      artist: query.artist,
+      duration: query.durationSeconds,
+    );
   }
 }
 
@@ -306,8 +340,6 @@ class LrcRedLyricsProvider implements OnlineLyricsProvider {
 
   @override
   String get id => 'lrcred';
-  @override
-  LyricsTiming get bestTiming => LyricsTiming.wordSynced;
 
   @override
   Future<OnlineLyricsCandidate?> find(OnlineLyricsQuery query) async {
@@ -334,7 +366,13 @@ class LrcRedLyricsProvider implements OnlineLyricsProvider {
     if (!_isIsrc(isrc)) return null;
     final body = await _get.call(Uri.parse('https://lrc.red/s/$isrc.ttml'));
     if (body == null) return null;
-    return _candidate(id, () => formatTtml(utf8.decode(body.bodyBytes)));
+    return _candidate(
+      id,
+      () => formatTtml(utf8.decode(body.bodyBytes)),
+      title: hit['title']?.toString(),
+      artist: hit['artist']?.toString(),
+      duration: (hit['duration'] as num?)?.toDouble(),
+    );
   }
 
   static bool _isIsrc(String value) =>
@@ -356,13 +394,12 @@ class AppleLyricsProvider implements OnlineLyricsProvider {
 
   @override
   String get id => zarz ? 'zarz' : 'apple_music';
-  @override
-  LyricsTiming get bestTiming => LyricsTiming.wordSynced;
 
   @override
   Future<OnlineLyricsCandidate?> find(OnlineLyricsQuery query) async {
-    final songId = await _songId(query);
-    if (songId == null) return null;
+    final match = await _songId(query);
+    if (match == null) return null;
+    final songId = match.id;
     final uri = zarz
         ? Uri.parse(
             'https://api.zarz.moe/apple-music/lyrics',
@@ -372,10 +409,17 @@ class AppleLyricsProvider implements OnlineLyricsProvider {
           ).replace(queryParameters: {'id': songId});
     final body = await _get.call(uri);
     if (body == null) return null;
-    return _candidate(id, () => parseProxyPayload(utf8.decode(body.bodyBytes)));
+    return _candidate(
+      id,
+      () => parseProxyPayload(utf8.decode(body.bodyBytes)),
+      title: match.title,
+      artist: match.artist,
+      duration: match.duration,
+    );
   }
 
-  Future<String?> _songId(OnlineLyricsQuery query) async {
+  Future<({String id, String? title, String? artist, double? duration})?>
+  _songId(OnlineLyricsQuery query) async {
     final page = await _get.call(Uri.parse('https://beta.music.apple.com'));
     if (page == null) return null;
     final script = _indexScript.firstMatch(utf8.decode(page.bodyBytes));
@@ -427,7 +471,14 @@ class AppleLyricsProvider implements OnlineLyricsProvider {
         foundDuration:
             ((attributes['durationInMillis'] as num?)?.toDouble() ?? 0) / 1000,
       )) {
-        return songId;
+        return (
+          id: songId,
+          title: attributes['name']?.toString(),
+          artist: attributes['artistName']?.toString(),
+          duration:
+              ((attributes['durationInMillis'] as num?)?.toDouble() ?? 0) /
+              1000,
+        );
       }
     }
     return null;
@@ -445,8 +496,6 @@ class NeteaseLyricsProvider implements OnlineLyricsProvider {
 
   @override
   String get id => 'netease';
-  @override
-  LyricsTiming get bestTiming => LyricsTiming.lineSynced;
 
   @override
   Future<OnlineLyricsCandidate?> find(OnlineLyricsQuery query) async {
@@ -481,10 +530,17 @@ class NeteaseLyricsProvider implements OnlineLyricsProvider {
       ),
     );
     final lrc = _asMap(lyrics?['lrc'])?['lyric']?.toString() ?? '';
-    return _candidate(id, () {
-      if (lrc.trim().isEmpty) throw const LyricsFormatException('empty');
-      return lrc.trim();
-    });
+    return _candidate(
+      id,
+      () {
+        if (lrc.trim().isEmpty) throw const LyricsFormatException('empty');
+        return lrc.trim();
+      },
+      title: song['name']?.toString(),
+      artist: _maps(
+        song['artists'],
+      ).map((artist) => artist['name']?.toString() ?? '').join(' '),
+    );
   }
 }
 
@@ -498,8 +554,6 @@ class QqMusicLyricsProvider implements OnlineLyricsProvider {
 
   @override
   String get id => 'qqmusic';
-  @override
-  LyricsTiming get bestTiming => LyricsTiming.lineSynced;
 
   @override
   Future<OnlineLyricsCandidate?> find(OnlineLyricsQuery query) async {
@@ -577,7 +631,12 @@ class QqMusicLyricsProvider implements OnlineLyricsProvider {
     );
     final raw = response?['lyric']?.toString() ?? '';
     if (response?['retcode'] != 0 && response?['code'] != 0) return null;
-    return _candidate(id, () => decodeBase64Lyrics(raw));
+    return _candidate(
+      id,
+      () => decodeBase64Lyrics(raw),
+      title: song['name']?.toString(),
+      artist: (song['singer']?.toString() ?? '').replaceAll('/', ', '),
+    );
   }
 }
 
@@ -589,8 +648,6 @@ class KugouLyricsProvider implements OnlineLyricsProvider {
 
   @override
   String get id => 'kugou';
-  @override
-  LyricsTiming get bestTiming => LyricsTiming.lineSynced;
 
   @override
   Future<OnlineLyricsCandidate?> find(OnlineLyricsQuery query) async {
@@ -642,12 +699,18 @@ class KugouLyricsProvider implements OnlineLyricsProvider {
     if (download == null) return null;
     final content = download['content']?.toString() ?? '';
     if (content.isEmpty) return null;
-    return _candidate(id, () => decodeBase64Lyrics(content));
+    return _candidate(
+      id,
+      () => decodeBase64Lyrics(content),
+      title: song['song']?.toString(),
+      artist: song['singer']?.toString(),
+      duration: ((song['duration'] as num?)?.toDouble() ?? 0) / 1000,
+    );
   }
 }
 
 // ---------------------------------------------------------------------------
-// Plain-text sources, used only after the user agrees to plain lyrics.
+// Plain-text sources. Their results are shown in the plain-text group.
 // ---------------------------------------------------------------------------
 
 /// Genius: the song page's lyric containers, read as plain text.
@@ -662,8 +725,6 @@ class GeniusLyricsProvider implements OnlineLyricsProvider {
 
   @override
   String get id => 'genius';
-  @override
-  LyricsTiming get bestTiming => LyricsTiming.plain;
 
   @override
   Future<OnlineLyricsCandidate?> find(OnlineLyricsQuery query) async {
@@ -704,20 +765,22 @@ class GeniusLyricsProvider implements OnlineLyricsProvider {
       () => extractGeniusLyrics(
         utf8.decode(page.bodyBytes, allowMalformed: true),
       ),
+      title: hit['title']?.toString(),
+      artist:
+          hit['primary_artist_names']?.toString() ??
+          hit['artist_names']?.toString(),
     );
   }
 }
 
-/// Every built-in source, in the order the search asks them. Stage order is
-/// decided by the search itself, from each source's [bestTiming].
+/// Every built-in source. The search asks all of them once, at the same time.
 List<OnlineLyricsProvider> onlineLyricsProviders(http.Client client) {
   final get = LyricsHttpGet(
     client,
     headers: const {'User-Agent': 'Sistrum lyrics'},
   );
   return [
-    // Word-timed sources first. Sources that may return only lines are
-    // listed here too: their line result waits for the word step to finish.
+    // Word-timed sources first; the results are grouped by timing anyway.
     AppleLyricsProvider(get, zarz: false),
     AppleLyricsProvider(get, zarz: true),
     MusixmatchLyricsProvider(get),

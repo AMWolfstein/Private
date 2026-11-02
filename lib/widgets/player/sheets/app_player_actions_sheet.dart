@@ -127,8 +127,8 @@ class AppPlayerActionsSheet extends ConsumerWidget {
             _action(
               context,
               'fetchLyrics',
-              context.l10n.lyricsFetchMenu,
-              CupertinoIcons.arrow_down_doc,
+              context.l10n.lyricsFindMenu,
+              CupertinoIcons.search,
             ),
           ],
           [

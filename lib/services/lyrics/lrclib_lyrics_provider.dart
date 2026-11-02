@@ -21,9 +21,6 @@ class LrcLibLyricsProvider implements OnlineLyricsProvider {
   String get id => 'lrclib';
 
   @override
-  LyricsTiming get bestTiming => LyricsTiming.lineSynced;
-
-  @override
   Future<OnlineLyricsCandidate?> find(OnlineLyricsQuery query) async {
     final uri = Uri.parse(_base).replace(
       queryParameters: {
@@ -52,6 +49,9 @@ class LrcLibLyricsProvider implements OnlineLyricsProvider {
       provider: id,
       timing: LyricsTiming.detect(text),
       text: text,
+      title: json['trackName']?.toString(),
+      artist: json['artistName']?.toString(),
+      durationSeconds: (json['duration'] as num?)?.toDouble(),
     );
   }
 

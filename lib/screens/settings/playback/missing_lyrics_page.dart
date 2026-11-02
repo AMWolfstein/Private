@@ -7,11 +7,10 @@ import 'package:sistrum/services/native/media_file_bridge.dart';
 import 'package:sistrum/services/lyrics/lyrics_matching.dart'
     show normalizeTitle;
 import 'package:sistrum/services/library/database/library_database.dart';
-import 'package:sistrum/services/lyrics/lyrics_fetch_controller.dart';
 import 'package:sistrum/services/lyrics/lyrics_timing_store.dart';
 import 'package:sistrum/services/lyrics/online_lyrics_search.dart';
 import 'package:sistrum/utils/layout/nav_bar_inset.dart';
-import 'package:sistrum/widgets/lyrics/fetch_lyrics_action.dart';
+import 'package:sistrum/widgets/lyrics/find_lyrics_sheet.dart';
 import 'package:sistrum/widgets/primitives/app_sliver_header.dart';
 import 'package:sistrum/utils/logging/logger.dart';
 
@@ -135,19 +134,22 @@ class _MissingLyricsPageState extends ConsumerState<MissingLyricsPage> {
     );
   }
 
-  Future<void> _fetch(_SongRow row) async {
-    final report = await runFetchLyricsAction(context, ref, row.item);
-    if (!mounted || report == null) return;
-    final timing = report.timing;
-    if (report.outcome == LyricsFetchOutcome.saved &&
-        (timing == LyricsTiming.wordSynced ||
-            timing == LyricsTiming.lineSynced)) {
-      setState(() => _rows.remove(row));
-    } else if (report.outcome == LyricsFetchOutcome.saved) {
-      setState(() {
-        _rows[_rows.indexOf(row)] = _SongRow(row.item, timing);
-      });
-    }
+  /// Opens Find lyrics for the song. A result written into the file updates
+  /// the row: synced lyrics take it off the list, plain text keeps it listed.
+  Future<void> _find(_SongRow row) async {
+    final written = await showFindLyricsSheet(context, row.item);
+    if (!mounted || written == null) return;
+    final timing = written.timing;
+    final index = _rows.indexOf(row);
+    if (index < 0) return;
+    setState(() {
+      if (timing == LyricsTiming.wordSynced ||
+          timing == LyricsTiming.lineSynced) {
+        _rows.removeAt(index);
+      } else {
+        _rows[index] = _SongRow(row.item, timing);
+      }
+    });
   }
 
   @override
@@ -211,8 +213,8 @@ class _MissingLyricsPageState extends ConsumerState<MissingLyricsPage> {
                   overflow: TextOverflow.ellipsis,
                 ),
                 trailing: TextButton(
-                  onPressed: () => _fetch(row),
-                  child: Text(l10n.lyricsFetchMenu),
+                  onPressed: () => _find(row),
+                  child: Text(l10n.lyricsFindMenu),
                 ),
               );
             },

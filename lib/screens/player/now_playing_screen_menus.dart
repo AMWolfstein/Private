@@ -3,7 +3,7 @@ part of 'now_playing_screen.dart';
 extension _NowPlayingMenus on _NowPlayingScreenState {
   /// Fetch lyrics for the playing song. The song is resolved from the library
   /// row, because the playback item carries only its id and display fields.
-  Future<void> _fetchLyricsForCurrent(MediaItem mediaItem) async {
+  Future<void> _findLyricsForCurrent(MediaItem mediaItem) async {
     final messenger = ScaffoldMessenger.of(context);
     final item = await ref.read(
       localSongLookupProvider((
@@ -26,7 +26,7 @@ extension _NowPlayingMenus on _NowPlayingScreenState {
       );
       return;
     }
-    await runFetchLyricsAction(context, ref, item);
+    await showFindLyricsSheet(context, item);
   }
 
   Future<void> _showLyricsOptions(
@@ -219,7 +219,7 @@ extension _NowPlayingMenus on _NowPlayingScreenState {
         await _shareLyrics();
         break;
       case 'fetchLyrics':
-        await _fetchLyricsForCurrent(mediaItem);
+        await _findLyricsForCurrent(mediaItem);
         break;
       case 'details':
         unawaited(
