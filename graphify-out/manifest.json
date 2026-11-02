@@ -66,9 +66,9 @@
     "semantic_hash": ""
   },
   "lib/screens/settings/settings_search_catalog.dart": {
-    "mtime": 1793572700.9752955,
-    "seen": 1793588529.6866574,
-    "ast_hash": "885fe43ff4011f6d3fd5495361d20241",
+    "mtime": 1793606106.499599,
+    "seen": 1793607350.4148598,
+    "ast_hash": "a4b24c91f22ff3e1b363f4b472ed92d5",
     "semantic_hash": ""
   },
   "lib/screens/settings/settings_tab.dart": {
@@ -1656,9 +1656,9 @@
     "semantic_hash": "bfee1356e4c394e0644e2bbc91d17bec"
   },
   "LOCAL_OFFLINE_MIGRATION_PLAN.md": {
-    "mtime": 1793571215.850091,
-    "seen": 1793588529.7294586,
-    "ast_hash": "b42b8aa95d3f53a7d2ff82ac92725bb8",
+    "mtime": 1793588553.0662646,
+    "seen": 1793607350.4542086,
+    "ast_hash": "563d75ee31c8d2aecae62ed5e4d0018b",
     "semantic_hash": ""
   },
   "third_party/audio_service/CHANGELOG.md": {
@@ -1932,9 +1932,9 @@
     "semantic_hash": ""
   },
   "reviews/UPSTREAM.md": {
-    "mtime": 1793588506.502229,
-    "seen": 1793588529.7306805,
-    "ast_hash": "71cfeb926376bf3e6485801e5c293835",
+    "mtime": 1793607338.0462103,
+    "seen": 1793607350.4554,
+    "ast_hash": "d7298c5ab42e9a49bc22efe56c4f8df7",
     "semantic_hash": ""
   },
   "reviews/PORT_PLAN.md": {
@@ -6636,9 +6636,9 @@
     "semantic_hash": ""
   },
   "lib/screens/settings/playback/playback_settings_page.dart": {
-    "mtime": 1793436727.2783408,
-    "seen": 1793551931.3424196,
-    "ast_hash": "e545d26006891461936082a9b2e8ed9f",
+    "mtime": 1793606296.2345865,
+    "seen": 1793607350.4148362,
+    "ast_hash": "0a0b66e6dfac2f3f1ef1bc38c94c52e1",
     "semantic_hash": ""
   },
   "lib/services/library/browse/album_completeness.dart": {
@@ -7044,9 +7044,9 @@
     "semantic_hash": ""
   },
   "lib/services/playback/autoplay/music_player_autoplay.dart": {
-    "mtime": 1793587103.9205713,
-    "seen": 1793588529.6897643,
-    "ast_hash": "ab76d6d4b71e71860e69c3a944cff790",
+    "mtime": 1793606377.2950268,
+    "seen": 1793607350.4179833,
+    "ast_hash": "1d6ac66102f732bacc34476ff93ec6e0",
     "semantic_hash": ""
   },
   "lib/services/playback/autoplay/playback_automation.dart": {
@@ -7110,9 +7110,9 @@
     "semantic_hash": ""
   },
   "lib/services/playback/music_player/music_player_lifecycle.dart": {
-    "mtime": 1793568990.761025,
-    "seen": 1793569780.0168238,
-    "ast_hash": "d2c106d275c3f0c6805c6b070ca5d8f1",
+    "mtime": 1793606296.2341487,
+    "seen": 1793607350.4184759,
+    "ast_hash": "5de85fee5a53cef6310dc4e6610b1e12",
     "semantic_hash": ""
   },
   "lib/services/playback/music_player/music_player_media.dart": {
@@ -7122,9 +7122,9 @@
     "semantic_hash": ""
   },
   "lib/services/playback/music_player/music_player_playback.dart": {
-    "mtime": 1793553152.1042814,
-    "seen": 1793567767.8171873,
-    "ast_hash": "dc433070bb9e20131fb42e34a4e3b244",
+    "mtime": 1793606296.2343776,
+    "seen": 1793607350.4185016,
+    "ast_hash": "07e2c153a10c0569aa41e0484b37d0fe",
     "semantic_hash": ""
   },
   "lib/services/playback/music_player/music_player_queue.dart": {
@@ -7134,15 +7134,15 @@
     "semantic_hash": ""
   },
   "lib/services/playback/music_player/music_player_runtime.dart": {
-    "mtime": 1793572584.896064,
-    "seen": 1793588529.6902745,
-    "ast_hash": "94d020fbbd8961d97da44d6cde15a943",
+    "mtime": 1793606297.4382005,
+    "seen": 1793607350.418526,
+    "ast_hash": "464555b8a990ac3e6555dbfd42df614f",
     "semantic_hash": ""
   },
   "lib/services/playback/music_player/music_player_service.dart": {
-    "mtime": 1793553153.4563146,
-    "seen": 1793567767.8172128,
-    "ast_hash": "1432284a1855666947ba14364349d1bc",
+    "mtime": 1793606296.2338831,
+    "seen": 1793607350.418527,
+    "ast_hash": "6d84d728ff771fa48db013de6af57841",
     "semantic_hash": ""
   },
   "lib/services/playback/music_player/music_player_session.dart": {
@@ -7584,9 +7584,9 @@
     "semantic_hash": ""
   },
   "test/support/music_player_harness.dart": {
-    "mtime": 1793553979.2709892,
-    "seen": 1793567767.8436792,
-    "ast_hash": "9db1ae22b0a85c289db6177024749e7b",
+    "mtime": 1793606483.1167023,
+    "seen": 1793607350.4451244,
+    "ast_hash": "341182da40fb1469ab379ecbb9f4f004",
     "semantic_hash": ""
   },
   "reviews/BRIDGE_AUDIT.md": {
@@ -7650,15 +7650,15 @@
     "semantic_hash": ""
   },
   "lib/core/models/settings.dart": {
-    "mtime": 1793572492.724733,
-    "seen": 1793588529.68386,
-    "ast_hash": "11c88f7cd6abe978d95191c0d8e32c01",
+    "mtime": 1793606106.4955568,
+    "seen": 1793607350.412047,
+    "ast_hash": "3aca8974cc6cd2ae757c477a23e342dd",
     "semantic_hash": ""
   },
   "lib/core/models/settings.g.dart": {
-    "mtime": 1793572491.3527427,
-    "seen": 1793588529.6838617,
-    "ast_hash": "b2d45c71e20ec7feb912cbc03afa802a",
+    "mtime": 1793606129.3233938,
+    "seen": 1793607350.4120498,
+    "ast_hash": "ae97444ff661b48e202171b898707f4a",
     "semantic_hash": ""
   },
   "lib/core/models/tag_credit_settings.dart": {
@@ -9168,9 +9168,9 @@
     "semantic_hash": ""
   },
   "test/services/playback/autoplay/music_player_autoplay_test.dart": {
-    "mtime": 1793436727.3259597,
-    "seen": 1793551931.3437624,
-    "ast_hash": "c26e8f7719ce9197e76689c06de15533",
+    "mtime": 1793606436.5930936,
+    "seen": 1793607350.4441013,
+    "ast_hash": "576b74433fcb84a10c5db75907413b61",
     "semantic_hash": ""
   },
   "test/services/playback/autoplay/playback_automation_test.dart": {
@@ -9240,9 +9240,9 @@
     "semantic_hash": ""
   },
   "test/services/playback/music_player/music_player_runtime_test.dart": {
-    "mtime": 1793551208.3177404,
-    "seen": 1793551931.3437808,
-    "ast_hash": "ed7fad08c3046613229cf399e78127da",
+    "mtime": 1793606806.5080671,
+    "seen": 1793607350.4446619,
+    "ast_hash": "c16fc3ace218ec278666b1324ce4a3f6",
     "semantic_hash": ""
   },
   "test/services/playback/music_player/music_player_session_test.dart": {
@@ -10254,9 +10254,9 @@
     "semantic_hash": ""
   },
   "lib/providers/settings/settings_provider.dart": {
-    "mtime": 1793436727.2755601,
-    "seen": 1793551931.3423328,
-    "ast_hash": "b85ca53ece18a1b8bf7bbfd7baf5a270",
+    "mtime": 1793606106.4980106,
+    "seen": 1793607350.413095,
+    "ast_hash": "561e9bb26f326159165ca69f34c90740",
     "semantic_hash": ""
   },
   "lib/providers/settings/settings_provider_actions.dart": {
@@ -10470,9 +10470,9 @@
     "semantic_hash": ""
   },
   "lib/screens/settings/playback/playback_settings_auto_mix_confirm.dart": {
-    "mtime": 1793572424.3200722,
-    "seen": 1793588529.6865869,
-    "ast_hash": "012017febfa6a81794ae368565ef5f79",
+    "mtime": 1793606377.294776,
+    "seen": 1793607350.4148104,
+    "ast_hash": "a1349bd63baa521839deef885b27c090",
     "semantic_hash": ""
   },
   "lib/screens/settings/playback/playback_settings_auto_mix_effects.dart": {
@@ -10524,9 +10524,9 @@
     "semantic_hash": ""
   },
   "lib/services/playback/automix/music_player_automix_generation.dart": {
-    "mtime": 1793550790.263092,
-    "seen": 1793551931.3425682,
-    "ast_hash": "55e943dcd62c9839e807e9cb7f927ce7",
+    "mtime": 1793606106.4983552,
+    "seen": 1793607350.4177356,
+    "ast_hash": "cec70bd258feeeb95719df67c26ebffe",
     "semantic_hash": ""
   },
   "lib/services/playback/automix/music_player_automix_lifecycle.dart": {
@@ -10578,9 +10578,9 @@
     "semantic_hash": ""
   },
   "lib/services/playback/music_player/music_player_service_session_handlers.dart": {
-    "mtime": 1793553152.1043882,
-    "seen": 1793567767.8172622,
-    "ast_hash": "11cdb6ce86a11521a90cab51ebf52cf5",
+    "mtime": 1793606296.23428,
+    "seen": 1793607350.4186058,
+    "ast_hash": "2c2c53275b8991dde0747aa1e273ac5e",
     "semantic_hash": ""
   },
   "lib/utils/lyrics/lyrics_parser_isolate.dart": {
@@ -10968,9 +10968,9 @@
     "semantic_hash": ""
   },
   "test/services/playback/music_player/music_player_runtime_restore.dart": {
-    "mtime": 1793436727.3266613,
-    "seen": 1793551931.3437798,
-    "ast_hash": "5e3b843b6b095ca0759df71700281bce",
+    "mtime": 1793606806.790369,
+    "seen": 1793607350.4446604,
+    "ast_hash": "341ab8feae091972c0319d49009c40d7",
     "semantic_hash": ""
   },
   "test/services/playback/stats/listening_rewind_aggregates.dart": {
@@ -11490,15 +11490,15 @@
     "semantic_hash": ""
   },
   "test/services/playback/automix/music_player_gapless_test.dart": {
-    "mtime": 1793551484.5430474,
-    "seen": 1793551931.3437574,
-    "ast_hash": "567a20f20d37a946802423376d79cefe",
+    "mtime": 1793606358.7616813,
+    "seen": 1793607350.443978,
+    "ast_hash": "6dfbf5e23c16bb4ed909d72c5c21bc6f",
     "semantic_hash": ""
   },
   "test/services/playback/autoplay/autoplay_learning_binding_test.dart": {
-    "mtime": 1793551819.0295637,
-    "seen": 1793551931.343758,
-    "ast_hash": "bf7da68ac54e91882fff55c23cdafa7a",
+    "mtime": 1793606483.1767504,
+    "seen": 1793607350.4439795,
+    "ast_hash": "85407badbdc339f026a1e192edd49549",
     "semantic_hash": ""
   },
   "test/services/playback/autoplay/autoplay_personalization_upstream_test.dart": {
@@ -11742,9 +11742,9 @@
     "semantic_hash": ""
   },
   "assets/licenses/autoplay_learning.txt": {
-    "mtime": 1793587573.828645,
-    "seen": 1793588529.7296026,
-    "ast_hash": "a925cac6d3c02cd3248a044e7a8bddb3",
+    "mtime": 1793606296.2445917,
+    "seen": 1793607350.4543493,
+    "ast_hash": "a529bd8e19dc0a22802c4c8862e97263",
     "semantic_hash": ""
   },
   "android/app/src/androidTest/java/com/ryanheise/audioservice/MediaArtworkOwnershipTest.java": {
@@ -12366,9 +12366,33 @@
     "semantic_hash": ""
   },
   "docs/SONG_ANALYSIS.md": {
-    "mtime": 1793588506.5017543,
-    "seen": 1793588529.7298644,
-    "ast_hash": "68c4183b097cde2bfbbc3136119d3cea",
+    "mtime": 1793588553.0653863,
+    "seen": 1793607350.4545972,
+    "ast_hash": "5f79d586878f1d833bcc4a0c2ba9c020",
+    "semantic_hash": ""
+  },
+  "lib/services/playback/autoplay/autoplay_ranker.dart": {
+    "mtime": 1793606436.5810935,
+    "seen": 1793607350.4179058,
+    "ast_hash": "a437a1adf2a380dce71fde120b5dd85a",
+    "semantic_hash": ""
+  },
+  "test/screens/settings/playback/playback_learning_settings_test.dart": {
+    "mtime": 1793606358.7696815,
+    "seen": 1793607350.4422438,
+    "ast_hash": "6c2854b889a7e2bad939721d9bd3e29e",
+    "semantic_hash": ""
+  },
+  "test/services/playback/autoplay/autoplay_ranker_test.dart": {
+    "mtime": 1793606483.1165297,
+    "seen": 1793607350.4440289,
+    "ast_hash": "294ec6eec3c6f5b194562758a399214d",
+    "semantic_hash": ""
+  },
+  "docs/PLAYBACK_COMPARISON.md": {
+    "mtime": 1793607338.045639,
+    "seen": 1793607350.454577,
+    "ast_hash": "ae3bf394ccc5136b5a8858026a8299dc",
     "semantic_hash": ""
   }
 }
