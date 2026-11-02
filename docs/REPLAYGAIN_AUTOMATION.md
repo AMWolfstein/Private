@@ -40,6 +40,8 @@ Source `3450abd0`. `flutter analyze --no-pub`: **No issues found**. Full Flutter
 
 Coverage includes combined native edit/publication counts, existing-tag adoption, stamp changes, mixed SAF/filesystem albums, partial permission failures and temp cleanup, playback starting during measurement/before publication, cancellation/off-on/index refresh/disposal, failed writes, failed state persistence without double counting, unknown identities, empty libraries, waiting/disabled UI and all outcome counts. Earlier broad runs were stopped for final corrections and the owner's removal request; the reported final full run completed successfully. Integrity arithmetic regressions remain in a dedicated test file.
 
-Graph `3450abd0`, built from `3450abd0`: **29,428 unique nodes / 56,089 links / zero dangling endpoints**. The removed service method has no node. Existing native-vendor extraction limitations remain.
+Graph `a0112844`, built from `3450abd0`: **29,428 unique nodes / 56,089 links / zero dangling endpoints**. The removed service method has no node. Existing native-vendor extraction limitations remain.
 
 Native channels and audio measurement are faked in host SAF/coordinator tests; these are not physical-device SAF-provider or format-wide codec acceptance results. No native-source changes, instrumentation/device run or device performance benchmark. The owner additionally requested a pushed source branch and a development-key-signed ARM64 release APK on a separate artifact branch; build identity, SHA-256 and signing certificate are recorded with that uploaded artifact.
+
+Commit-order exception: the first graph validator encountered nullable source-file metadata and stopped before staging the graph. The already-pushed documentation checkpoint preceded the graph commit; this follow-up corrects its reference without rewriting remote history. The graph passed validation after handling the optional metadata.
