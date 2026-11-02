@@ -1,4 +1,6 @@
-# Bundled Arabic font
+# Bundled Arabic font (historical)
+
+**Superseded by the owner on 2026-11-02:** the bundled Inter/Noto files and font preferences have been removed. Arabic and Latin now use system fonts and platform fallback. See [Fixed Appearance defaults](APPEARANCE_DEFAULTS.md). The remainder records the earlier implementation and its verification, not current behavior.
 
 Requested 2026-11-02: use Noto Sans Arabic for Arabic while retaining Inter for
 Latin text in the default Sistrum theme.

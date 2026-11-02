@@ -25,7 +25,7 @@ Latest Releases uses portrait full-bleed editorial cards with release date/title
 from local songs, normalized chronologically without scan/add-date fallback; keep Home's
 Recently Added shelf unchanged. Do not replace the feed with only access history.
 
-Default typography uses Inter with bundled Noto Sans Arabic as its glyph fallback; preserve explicit system/custom primary-font preferences.
+Typography always uses system fonts and platform glyph fallback, including Arabic. The global accent is fixed red (light #CC2E33, dark #FF453A). Appearance has no color picker, system/custom-font controls or bundled text fonts. Hero transitions are always enabled, with reduced-motion and rotation/lifecycle safeguards; do not restore their toggle or the alternate opening slide. Retired font/accent preferences and the old Hero preference are ignored on import. Keep icon fonts and system monospace for diagnostic text.
 
 Insights is the listening-statistics feature in its own tab. Listening recording stays automatic; do not restore its removed enable/disable setting.
 
