@@ -1,3 +1,6 @@
+import 'package:sistrum/providers/library/local_library_provider.dart';
+import 'package:sistrum/providers/library/library_alphabet_provider.dart';
+import 'package:sistrum/widgets/library/app_library_alphabet_index.dart';
 import 'package:sistrum/providers/library/library_sort_provider.dart';
 import 'package:sistrum/widgets/library/app_library_sort.dart';
 import 'package:sistrum/core/models/library_collections.dart';
@@ -45,6 +48,8 @@ class AppLibraryScreen extends ConsumerStatefulWidget {
 
 class _AppLibraryScreenState extends ConsumerState<AppLibraryScreen> {
   final _scroll = ScrollController();
+  final _alphabetScroll = AppLibrarySectionController();
+  int _alphabetGeneration = 0;
   String get _sort {
     final mode = ref.read(librarySortProvider) ?? 'a-z';
     return _artists && !const ['a-z', 'z-a', 'latest', 'oldest'].contains(mode)
@@ -75,6 +80,8 @@ class _AppLibraryScreenState extends ConsumerState<AppLibraryScreen> {
 
   @override
   void dispose() {
+    _alphabetGeneration++;
+    _alphabetScroll.cancel();
     _scroll.dispose();
     super.dispose();
   }
@@ -82,6 +89,20 @@ class _AppLibraryScreenState extends ConsumerState<AppLibraryScreen> {
   @override
   Widget build(BuildContext context) {
     ref.watch(librarySortProvider);
+    void cancelAlphabetJump() {
+      _alphabetGeneration++;
+      _alphabetScroll.cancel();
+    }
+
+    ref.listen(librarySortProvider, (previous, next) {
+      if (previous != next) cancelAlphabetJump();
+    });
+    ref.listen(localLibraryProvider.select((s) => s.loadedIndexVersion), (
+      previous,
+      next,
+    ) {
+      if (previous != next) cancelAlphabetJump();
+    });
     final colors = Theme.of(context).colorScheme;
     final listInset = wideListInset(context);
     final result = _overview
@@ -226,12 +247,15 @@ class _AppLibraryScreenState extends ConsumerState<AppLibraryScreen> {
             if (_rows.isNotEmpty)
               if (_artists)
                 SectionedLibrarySliverList<LibraryBrowseEntry>(
+                  controller: _alphabetScroll,
                   items: _rows,
                   groupingKey: (
                     _sort,
                     Localizations.localeOf(context).toLanguageTag(),
                   ),
-                  labelOf: (entry) => librarySectionInitial(entry.artist),
+                  labelOf: (entry) => const ['a-z', 'z-a'].contains(_sort)
+                      ? librarySectionInitial(entry.artist)
+                      : null,
                   rowBuilder: (context, index) {
                     final entry = _rows[index];
                     return Column(
@@ -372,6 +396,28 @@ class _AppLibraryScreenState extends ConsumerState<AppLibraryScreen> {
       ),
     );
     if (_overview) return content;
+    if (_artists && const ['a-z', 'z-a'].contains(_sort)) {
+      final alphabet =
+          ref
+              .watch(
+                libraryAlphabetProvider((
+                  artists: true,
+                  albumArtists: _albumArtists,
+                  descending: _sort == 'z-a',
+                )),
+              )
+              .asData
+              ?.value ??
+          const <LibraryAlphabetEntry>[];
+      return AppLibraryAlphabetIndex(
+        labels: alphabet.map((e) => e.label).toList(),
+        onSelected: (label) =>
+            _jumpToLetter(alphabet.firstWhere((e) => e.label == label)),
+        topPadding: MediaQuery.paddingOf(context).top + kToolbarHeight,
+        bottomPadding: context.navBarBottomInset,
+        child: content,
+      );
+    }
     return LibraryFastScroller(
       topPadding: MediaQuery.paddingOf(context).top + kToolbarHeight,
       bottomPadding: context.navBarBottomInset,

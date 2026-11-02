@@ -49,17 +49,10 @@ extension _LibrarySectionTabFilterWidgets on _LibrarySectionTabState {
     final totalTrackCount = filterData.totalTrackCount;
     final totalAlbumCount = filterData.totalAlbumCount;
     final sectionLocale = Localizations.localeOf(context).toLanguageTag();
-    String? sectionLabel(UnifiedLibraryItem item) => switch (_sortMode) {
-      'a-z' || 'z-a' => librarySectionInitial(item.trackName),
-      'artist' ||
-      'artist-asc' ||
-      'artist-desc' => librarySectionInitial(item.artistName),
-      'album' ||
-      'album-asc' ||
-      'album-desc' => librarySectionInitial(item.albumName),
-      'latest' || 'oldest' => librarySectionMonth(item.addedAt, sectionLocale),
-      _ => null,
-    };
+    String? sectionLabel(UnifiedLibraryItem item) =>
+        const ['a-z', 'z-a'].contains(_sortMode)
+        ? librarySectionInitial(item.trackName)
+        : null;
 
     // Indexes into collectionState.playlists for the 'playlists' view.
     final playlistIndexes = <int>[];
@@ -210,6 +203,7 @@ extension _LibrarySectionTabFilterWidgets on _LibrarySectionTabState {
           SliverPadding(
             padding: EdgeInsets.symmetric(horizontal: wideListInset(context)),
             sliver: SectionedLibrarySliverList<UnifiedLibraryItem>(
+              controller: _alphabetScroll,
               items: filteredUnifiedItems,
               groupingKey: (_sortMode, sectionLocale),
               labelOf: sectionLabel,
@@ -318,6 +312,27 @@ extension _LibrarySectionTabFilterWidgets on _LibrarySectionTabState {
       child: content,
     );
 
+    if (filterMode == 'all' && const ['a-z', 'z-a'].contains(_sortMode)) {
+      final alphabet =
+          ref
+              .watch(
+                libraryAlphabetProvider((
+                  artists: false,
+                  albumArtists: false,
+                  descending: _sortMode == 'z-a',
+                )),
+              )
+              .asData
+              ?.value ??
+          const <LibraryAlphabetEntry>[];
+      return AppLibraryAlphabetIndex(
+        labels: alphabet.map((e) => e.label).toList(),
+        onSelected: (label) =>
+            _jumpToSongLetter(alphabet.firstWhere((e) => e.label == label)),
+        bottomPadding: context.navBarBottomInset,
+        child: scrollAwareContent,
+      );
+    }
     {
       return LibraryFastScroller(
         bottomPadding: context.navBarBottomInset,

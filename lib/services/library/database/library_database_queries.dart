@@ -153,6 +153,11 @@ extension LibraryDatabaseQueries on LibraryDatabase {
     LibraryBrowseDbQuery request,
   ) async => (await _queueStore()).artistPage(request);
 
+  Future<List<Map<String, dynamic>>> getBrowseAlphabetRows(
+    LibraryBrowseDbQuery request, {
+    bool artists = false,
+  }) async => (await _queueStore()).alphabetRows(request, artists: artists);
+
   Future<List<Map<String, dynamic>>> getBrowseLocalAlbumRows(
     String albumName,
     String artistName,

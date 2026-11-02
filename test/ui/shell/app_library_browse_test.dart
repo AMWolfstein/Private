@@ -1,3 +1,4 @@
+import 'package:sistrum/providers/library/library_alphabet_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -81,6 +82,59 @@ void main() {
     expect(requests.last.sort, 'z-a');
     expect(tester.takeException(), isNull);
   });
+
+  for (final page in [AppLibraryPage.artists, AppLibraryPage.albumArtists]) {
+    testWidgets('letter rail reaches an off-page artist in $page', (
+      tester,
+    ) async {
+      final requests = <LibraryBrowsePageRequest>[];
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            settingsProvider.overrideWith(_Settings.new),
+            localLibraryProvider.overrideWith(_Local.new),
+            libraryCollectionsProvider.overrideWith(_Collections.new),
+            libraryAlphabetProvider.overrideWith((ref, request) async {
+              expect(request.artists, isTrue);
+              expect(request.albumArtists, page == AppLibraryPage.albumArtists);
+              return const [(label: 'A', offset: 0), (label: 'Z', offset: 80)];
+            }),
+            libraryBrowsePageLoaderProvider.overrideWithValue((request) async {
+              requests.add(request);
+              final end = (request.offset + request.browse.limit).clamp(0, 81);
+              return LibraryBrowsePage([
+                for (var i = request.offset; i < end; i++)
+                  LibraryBrowseEntry(
+                    source: 'local',
+                    key: '$i',
+                    name: i == 80 ? 'Zulu 80' : 'Artist $i',
+                    artist: i == 80 ? 'Zulu 80' : 'Artist $i',
+                    samplePath: '',
+                    trackCount: 1,
+                  ),
+              ]);
+            }),
+          ],
+          child: MaterialApp(
+            theme: AppTheme.build(Brightness.light),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: Scaffold(
+              body: AppLibraryScreen(page: page, onOpenSection: (_) {}),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(requests, hasLength(1));
+      await tester.tap(find.text('Z'));
+      await tester.pumpAndSettle();
+      expect(requests.map((r) => r.offset), [0, 40, 80]);
+      expect(find.text('Zulu 80').hitTestable(), findsOneWidget);
+      await tester.pump(const Duration(seconds: 1));
+      expect(tester.takeException(), isNull);
+    });
+  }
 
   for (final brightness in Brightness.values) {
     testWidgets(

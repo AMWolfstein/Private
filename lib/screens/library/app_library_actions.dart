@@ -74,4 +74,31 @@ extension _AppLibraryScreenStatePart1 on _AppLibraryScreenState {
       ),
     );
   }
+
+  Future<void> _jumpToLetter(LibraryAlphabetEntry entry) async {
+    final generation = ++_alphabetGeneration;
+    _alphabetScroll.cancel();
+    final request = _request;
+    final version = ref.read(localLibraryProvider).loadedIndexVersion;
+    final provider = libraryBrowseProvider(request);
+    bool current() =>
+        mounted &&
+        generation == _alphabetGeneration &&
+        _request == request &&
+        ref.read(localLibraryProvider).loadedIndexVersion == version;
+    while (current()) {
+      final state = ref.read(provider).asData?.value;
+      if (state == null) return;
+      if (state.entries.length > entry.offset) break;
+      if (state.loadMoreError != null || !state.hasMore) return;
+      if (state.isLoadingMore) {
+        await Future<void>.delayed(const Duration(milliseconds: 16));
+      } else {
+        await ref.read(provider.notifier).loadMore();
+      }
+    }
+    if (!current()) return;
+    await WidgetsBinding.instance.endOfFrame;
+    if (current()) await _alphabetScroll.reveal(entry.offset);
+  }
 }

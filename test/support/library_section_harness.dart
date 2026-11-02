@@ -68,6 +68,7 @@ typedef LibraryTestAlbum = ({String name, String artist, int tracks});
 void installLibrarySongsDatabase({
   required List<String> songs,
   List<LibraryTestAlbum> albums = const [],
+  bool paginate = false,
 }) {
   SharedPreferences.setMockInitialValues({});
   final previousFactory = databaseFactoryOrNull;
@@ -99,6 +100,24 @@ void installLibrarySongsDatabase({
         'columns': ['user_version'],
         'rows': [
           [versions[args['id']]],
+        ],
+      };
+    }
+    if (sql.contains('AS initial') && sql.contains('item_count')) {
+      final groups = <String, List<String>>{};
+      for (final song in songs) {
+        final initial = song.trim().isEmpty
+            ? ''
+            : song.trim().substring(0, 1).toLowerCase();
+        groups.putIfAbsent(initial, () => []).add(song);
+      }
+      final keys = groups.keys.toList()..sort();
+      final order = sql.contains('DESC') ? keys.reversed : keys;
+      return {
+        'columns': ['initial', 'name', 'item_count'],
+        'rows': [
+          for (final key in order)
+            [key, groups[key]!.first, groups[key]!.length],
         ],
       };
     }
@@ -142,6 +161,23 @@ void installLibrarySongsDatabase({
         sql.contains('AS queue_source') &&
         sql.contains('track_name') &&
         sql.contains('LIMIT ?')) {
+      final arguments = (args['arguments'] as List?) ?? const [];
+      var start = 0;
+      var end = songs.length;
+      if (paginate && arguments.isNotEmpty) {
+        if (sql.contains('OFFSET ?')) {
+          start = arguments.last as int;
+          end = start + (arguments[arguments.length - 2] as int);
+        } else {
+          final cursor = arguments
+              .whereType<String>()
+              .where((v) => v.startsWith('song-'))
+              .lastOrNull;
+          start = cursor == null ? 0 : int.parse(cursor.substring(5)) + 1;
+          end = start + (arguments.last as int);
+        }
+        end = end.clamp(0, songs.length);
+      }
       return {
         'columns': [
           'id',
@@ -154,7 +190,7 @@ void installLibrarySongsDatabase({
           'sort_added',
         ],
         'rows': [
-          for (var i = 0; i < songs.length; i++)
+          for (var i = start; i < end; i++)
             [
               'song-$i',
               'local',

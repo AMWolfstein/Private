@@ -44,10 +44,16 @@ extension _LibrarySectionTabPaging on _LibrarySectionTabState {
       _libraryPageOffsetByFilter[filterMode] ?? 0;
 
   void _resetLibraryOffsets() {
+    _alphabetGeneration++;
+    _alphabetNavigating = false;
+    _alphabetScroll.cancel();
     _libraryPageOffsetByFilter.clear();
   }
 
   void _resetLibraryPaging() {
+    _alphabetGeneration++;
+    _alphabetNavigating = false;
+    _alphabetScroll.cancel();
     _resetLibraryOffsets();
     _browseLibraryPageDataCache.clear();
     _isSelectionMode = false;
@@ -237,7 +243,10 @@ extension _LibrarySectionTabPaging on _LibrarySectionTabState {
     required bool hasMoreLibrary,
     required bool isPageLoading,
   }) {
-    if (isPageLoading || !hasMoreLibrary || notification.depth != 0) {
+    if (_alphabetNavigating ||
+        isPageLoading ||
+        !hasMoreLibrary ||
+        notification.depth != 0) {
       return false;
     }
 
@@ -254,5 +263,73 @@ extension _LibrarySectionTabPaging on _LibrarySectionTabState {
       hasMoreLibrary: hasMoreLibrary,
     );
     return false;
+  }
+
+  Future<void> _jumpToSongLetter(LibraryAlphabetEntry entry) async {
+    final generation = ++_alphabetGeneration;
+    _alphabetScroll.cancel();
+    _alphabetNavigating = true;
+    final sort = _sortMode;
+    final version = ref.read(localLibraryProvider).loadedIndexVersion;
+    bool current() =>
+        mounted &&
+        generation == _alphabetGeneration &&
+        _sortMode == sort &&
+        ref.read(localLibraryProvider).loadedIndexVersion == version;
+    try {
+      final targetPage =
+          entry.offset ~/ _LibrarySectionTabState._libraryPageSize;
+      for (var page = 0; page <= targetPage && current(); page++) {
+        final request = _LibraryBrowsePageRequest(
+          filterMode: 'all',
+          limit: _LibrarySectionTabState._libraryPageSize,
+          offset: page * _LibrarySectionTabState._libraryPageSize,
+          sortMode: sort,
+        );
+        if (_cachedLibraryBrowsePageAt(request, request.offset) != null) {
+          continue;
+        }
+        final provider = _browseLibraryPageProvider(request);
+        final subscription = ref.listenManual(provider, (_, _) {});
+        try {
+          final data = await ref.read(provider.future);
+          if (!current()) return;
+          _resolveLibraryBrowsePageData(AsyncData(data), request);
+        } finally {
+          subscription.close();
+        }
+      }
+      if (!current()) return;
+      _setState(
+        () => _libraryPageOffsetByFilter['all'] =
+            targetPage * _LibrarySectionTabState._libraryPageSize,
+      );
+      await WidgetsBinding.instance.endOfFrame;
+      if (current()) {
+        var loadedBefore = 0;
+        for (var page = 0; page < targetPage; page++) {
+          final request = _LibraryBrowsePageRequest(
+            filterMode: 'all',
+            limit: _LibrarySectionTabState._libraryPageSize,
+            offset: page * _LibrarySectionTabState._libraryPageSize,
+            sortMode: sort,
+          );
+          loadedBefore +=
+              _cachedLibraryBrowsePageAt(
+                request,
+                request.offset,
+              )?.items.length ??
+              0;
+        }
+        await _alphabetScroll.reveal(
+          loadedBefore +
+              entry.offset % _LibrarySectionTabState._libraryPageSize,
+        );
+      }
+    } catch (error) {
+      if (mounted && current()) showCannotOpenFileSnackBar(context, error);
+    } finally {
+      if (current()) _alphabetNavigating = false;
+    }
   }
 }
