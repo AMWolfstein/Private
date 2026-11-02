@@ -21,7 +21,7 @@ the Popular cap.
 
 V2 Home uses the Apple Music editorial-card/shelf composition with local data. Keep featured
 releases ordered by release tags, bounded shelf queries, local artwork and local detail routes.
-Home places separate Albums and Singles shelves next to each other, Singles directly below Albums. Filter each bounded query before its limit; Singles require explicit total_tracks = 1 and total_discs <= 1. Partial albums, unknown totals and EPs remain Albums. Home has no Recent access-history section. Latest Releases uses valid release-date tags
+Latest Releases uses portrait full-bleed editorial cards with release date/title/artist over a bottom gradient; keep local detail routes and release-tag ordering. Home places separate Albums and Singles shelves next to each other, Singles directly below Albums. Filter each bounded query before its limit; Singles require explicit total_tracks = 1 and total_discs <= 1. Partial albums, unknown totals and EPs remain Albums. Home has no Recent access-history section. Latest Releases uses valid release-date tags
 from local songs, normalized chronologically without scan/add-date fallback; keep Home's
 Recently Added shelf unchanged. Do not replace the feed with only access history.
 

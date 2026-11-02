@@ -11,3 +11,9 @@ Settings > Logs no longer offers Full or switches into a separate live-logcat vi
 Regression tests cover real SQLite classification before limits, partial albums, EPs, unknown totals, multidisc releases, both Home brightness modes, independent shelf requests/order and the Logs level picker. The focused suite passed 25 tests. Full-suite and analysis results are recorded in the migration progress tracker.
 
 No APK was built and no device UI or performance measurement was performed for this change.
+
+## Latest Releases presentation
+
+Latest Releases uses portrait editorial cards (3:4 at the default text size), with full-bleed local artwork, rounded corners and a bottom gradient behind the release date, title and artist. Cards occupy approximately 64% of the available viewport width, capped at 360 logical pixels; larger text can increase their height to preserve the captions. The horizontal shelf retains chronological release-tag ordering, bounded local queries and existing album navigation. Other Home shelves keep their existing card layouts.
+
+Host-rendered light/dark previews use a repository artwork fixture and sample metadata. They illustrate the actual Flutter layout, not a phone capture or the owner's music library. No device rendering or APK build is claimed.
