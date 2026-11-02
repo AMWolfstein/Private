@@ -1990,7 +1990,6 @@
   "setupChooseMusicFolder": "Escolher pasta de música",
   "setupLibraryFolderDescription": "Escolha a pasta que contém a sua música. O Sistrum lê-a através de acesso limitado a essa pasta, por isso não é necessária permissão para todos os ficheiros.",
   "searchAlbumArtists": "Artistas do álbum",
-  "logFilterFull": "Completo",
   "tutorialGuideTitle": "Começar",
   "tutorialGuideDesc": "Dicas rápidas para encontrar, reproduzir e organizar a sua música local.",
   "backupUnsupportedVersion": "Esta cópia de segurança foi criada com outra versão do Sistrum",

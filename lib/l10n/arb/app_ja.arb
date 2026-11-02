@@ -2719,7 +2719,6 @@
   "setupChooseMusicFolder": "音楽フォルダを選択",
   "setupLibraryFolderDescription": "音楽が入っているフォルダを選択してください。Sistrum は限定されたフォルダへのアクセスで読み取るため、すべてのファイルへの許可は不要です。",
   "searchAlbumArtists": "アルバムアーティスト",
-  "logFilterFull": "すべて",
   "tutorialGuideTitle": "はじめに",
   "tutorialGuideDesc": "ローカルの音楽を探す、再生する、整理するためのヒント。",
   "backupUnsupportedVersion": "このバックアップは別バージョンの Sistrum で作成されました",

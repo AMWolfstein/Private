@@ -2721,7 +2721,6 @@
   "setupChooseMusicFolder": "Вибрати теку з музикою",
   "setupLibraryFolderDescription": "Оберіть теку, в якій зберігається ваша музика. Sistrum читає її через обмежений доступ до теки, тож дозвіл на всі файли не потрібен.",
   "searchAlbumArtists": "Виконавці альбому",
-  "logFilterFull": "Повний",
   "tutorialGuideTitle": "Початок роботи",
   "tutorialGuideDesc": "Короткі поради, як знаходити, відтворювати й упорядковувати локальну музику.",
   "backupUnsupportedVersion": "Цю резервну копію створено в іншій версії Sistrum",

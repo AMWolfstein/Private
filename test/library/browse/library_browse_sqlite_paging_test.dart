@@ -45,6 +45,7 @@ void main() {
           search: '',
           artist: null,
           credit: null,
+          releaseKind: null,
           completeness: null,
         ),
         (
@@ -54,6 +55,7 @@ void main() {
           search: '',
           artist: null,
           credit: null,
+          releaseKind: null,
           completeness: null,
         ),
         (
@@ -63,6 +65,7 @@ void main() {
           search: '',
           artist: null,
           credit: null,
+          releaseKind: null,
           completeness: null,
         ),
         (
@@ -72,6 +75,7 @@ void main() {
           search: 'Album 00',
           artist: null,
           credit: null,
+          releaseKind: null,
           completeness: null,
         ),
         (
@@ -81,6 +85,7 @@ void main() {
           search: '',
           artist: 'Artist 0001',
           credit: null,
+          releaseKind: null,
           completeness: null,
         ),
         (
@@ -90,6 +95,7 @@ void main() {
           search: '',
           artist: null,
           credit: null,
+          releaseKind: null,
           completeness: incompleteAlbumFilter,
         ),
         (
@@ -99,6 +105,7 @@ void main() {
           search: 'Album',
           artist: null,
           credit: null,
+          releaseKind: null,
           completeness: unknownAlbumCompletenessFilter,
         ),
       ]) {
@@ -109,6 +116,7 @@ void main() {
           search: scenario.search,
           artist: scenario.artist,
           credit: null,
+          releaseKind: null,
           completeness: scenario.completeness,
           limit: 40,
         );
@@ -144,6 +152,7 @@ void main() {
               search: request.search,
               artist: request.artist,
               credit: null,
+              releaseKind: null,
               completeness: request.completeness,
               limit: 2000,
             ),

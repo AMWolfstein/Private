@@ -296,6 +296,7 @@ final localHomeTracksProvider = FutureProvider<List<LocalLibraryItem>>((
 LibraryBrowseRequest localHomeBrowseRequest({
   bool artists = false,
   String sort = 'latest',
+  LibraryReleaseKind? releaseKind,
 }) => (
   artists: artists,
   albumArtists: false,
@@ -304,5 +305,6 @@ LibraryBrowseRequest localHomeBrowseRequest({
   search: '',
   sort: sort,
   limit: localHomeShelfLimit,
+  releaseKind: releaseKind,
   completeness: null,
 );

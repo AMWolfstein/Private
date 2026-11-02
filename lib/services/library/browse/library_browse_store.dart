@@ -309,7 +309,9 @@ class LibraryBrowseStore {
         : "COALESCE(l.release_date, '')";
     final assessesCompleteness = isAlbumCompletenessFilter(request.metadata);
     final includeSingles =
-        request.includeSingleTrackAlbums || assessesCompleteness;
+        request.includeSingleTrackAlbums ||
+        assessesCompleteness ||
+        request.releaseKind != null;
     final completenessSql = assessesCompleteness
         ? albumCompletenessSql(localAlbumInventorySql())
         : null;
@@ -361,6 +363,8 @@ class LibraryBrowseStore {
         GROUP BY $albumKey
         ${unfiltered ? 'HAVING $albumKey IS NOT NULL ${includeSingles ? '' : 'AND MAX(COALESCE(l.total_tracks, 0)) != 1'}' : 'HAVING 1'}
         ${releaseDatedOnly ? "AND MAX($releaseOrder) != ''" : ''}
+        ${request.releaseKind == LibraryReleaseKind.singles ? 'AND MAX(COALESCE(l.total_tracks, 0)) = 1 AND MAX(COALESCE(l.total_discs, 1)) <= 1' : ''}
+        ${request.releaseKind == LibraryReleaseKind.albums ? 'AND NOT (MAX(COALESCE(l.total_tracks, 0)) = 1 AND MAX(COALESCE(l.total_discs, 1)) <= 1)' : ''}
         ''';
     return _boundedQueuePart(
       selectSql,

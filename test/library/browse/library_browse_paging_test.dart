@@ -41,6 +41,7 @@ const _request = (
   search: '',
   sort: 'a-z',
   limit: 40,
+  releaseKind: null,
   completeness: null,
 );
 
@@ -248,6 +249,7 @@ void main() {
       search: 'Artist',
       sort: 'a-z',
       limit: 40,
+      releaseKind: null,
       completeness: null,
     );
     final provider = libraryBrowseProvider(artists);
@@ -265,6 +267,7 @@ void main() {
       search: 'New query',
       sort: 'latest',
       limit: 40,
+      releaseKind: null,
       completeness: 'album-incomplete',
     );
     final searched = libraryBrowseProvider(search);

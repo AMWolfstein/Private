@@ -2718,7 +2718,6 @@
   "setupChooseMusicFolder": "संगीत फ़ोल्डर चुनें",
   "setupLibraryFolderDescription": "वह फ़ोल्डर चुनें जिसमें आपका संगीत है। Sistrum उसे सीमित फ़ोल्डर पहुँच से पढ़ता है, इसलिए सभी फ़ाइलों की अनुमति ज़रूरी नहीं है।",
   "searchAlbumArtists": "एल्बम कलाकार",
-  "logFilterFull": "पूरा",
   "tutorialGuideTitle": "शुरू करें",
   "tutorialGuideDesc": "अपना स्थानीय संगीत खोजने, चलाने और व्यवस्थित करने के त्वरित सुझाव।",
   "backupUnsupportedVersion": "यह बैकअप Sistrum के किसी दूसरे संस्करण से बनाया गया था",

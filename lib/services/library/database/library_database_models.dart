@@ -129,7 +129,10 @@ enum LibraryArtistCredit {
   appearsOn,
 }
 
+enum LibraryReleaseKind { albums, singles }
+
 class LibraryBrowseDbQuery {
+  final LibraryReleaseKind? releaseKind;
   final bool includeSingleTrackAlbums;
   final String? albumArtist;
   final int limit;
@@ -155,6 +158,7 @@ class LibraryBrowseDbQuery {
   final bool albumArtistsOnly;
 
   const LibraryBrowseDbQuery({
+    this.releaseKind,
     this.albumArtistsOnly = false,
     this.artistCredit,
     this.credits,

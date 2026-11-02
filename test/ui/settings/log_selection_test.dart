@@ -85,6 +85,28 @@ void main() {
     expect(stored.length, lessThan(4100));
   });
 
+  testWidgets('level picker has standard filters without Full', (tester) async {
+    await tester.pumpWidget(
+      ProviderScope(
+        child: MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: const LogPage(),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('ALL'));
+    await tester.pumpAndSettle();
+    expect(find.text('Full'), findsNothing);
+    for (final level in ['DEBUG', 'INFO', 'WARN', 'ERROR']) {
+      expect(find.text(level), findsWidgets);
+    }
+    await tester.tap(find.text('ERROR').last);
+    await tester.pumpAndSettle();
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('long press selects multiple log rows for copying', (
     tester,
   ) async {

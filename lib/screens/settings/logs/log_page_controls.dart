@@ -4,8 +4,7 @@ extension _LogPageStatePart1 on _LogPageState {
   void _onLogUpdate() {
     if (mounted) {
       if (_selectionMode) {
-        final currentEntries =
-            (_fullSelected ? _logcatEntries : LogBuffer().entries).toSet();
+        final currentEntries = LogBuffer().entries.toSet();
         _selectedEntries.removeWhere(
           (entry) => !currentEntries.contains(entry),
         );
@@ -56,75 +55,13 @@ extension _LogPageStatePart1 on _LogPageState {
     }
   }
 
-  bool get _levelFiltered =>
-      _selectedLevel != 'ALL' && _selectedLevel != 'FULL';
-  bool get _fullSelected => _selectedLevel == 'FULL';
-  String _levelLabel(BuildContext context, String level) =>
-      level == 'FULL' ? context.l10n.logFilterFull : level;
-  void _selectLevel(String level) {
-    final switchingSource = (level == 'FULL') != _fullSelected;
-    _rebuild(() {
-      _selectedLevel = level;
-      if (level != 'FULL') {
-        // Drop an in-flight logcat read so its result cannot land later.
-        _logcatRequest++;
-        _logcatLoading = false;
-      }
-      if (switchingSource) {
-        _selectionMode = false;
-        _selectedEntries.clear();
-        _selectionAnchor = null;
-      }
-    });
-    if (level == 'FULL') _loadAppLogcat();
-  }
+  bool get _levelFiltered => _selectedLevel != 'ALL';
+  void _selectLevel(String level) => _rebuild(() => _selectedLevel = level);
 
-  Future<void> _loadAppLogcat() async {
-    final request = ++_logcatRequest;
-    _rebuild(() => _logcatLoading = true);
-    final result = await _LogPageState._nativeLogSource.readAppLogcat();
-    if (!mounted || request != _logcatRequest) return;
-    var entries = <LogEntry>[];
-    switch (result) {
-      case NativeLogcatText(:final text):
-        entries = parseAppLogcat(text, now: DateTime.now());
-      case NativeLogcatUnavailable(:final reason):
-        if (kDebugMode) debugPrint('Could not read app logcat: $reason');
-    }
-    _rebuild(() {
-      _logcatEntries = entries;
-      _logcatLoading = false;
-      // Loaded rows are new objects, so an old selection cannot match them.
-      _selectionMode = false;
-      _selectedEntries.clear();
-      _selectionAnchor = null;
-    });
-    if (_autoScroll && _scrollController.hasClients) {
-      final generation = ++_autoScrollGeneration;
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        _scrollToLatestLog(generation);
-      });
-    }
-  }
-
-  List<LogEntry> get _filteredLogs {
-    if (_fullSelected) {
-      final query = _searchQuery.toLowerCase();
-      if (query.isEmpty) return _logcatEntries;
-      return _logcatEntries
-          .where(
-            (entry) =>
-                entry.message.toLowerCase().contains(query) ||
-                entry.tag.toLowerCase().contains(query) ||
-                (entry.error?.toLowerCase().contains(query) ?? false),
-          )
-          .toList();
-    }
-    return LogBuffer().filter(
-      level: _levelFiltered ? _selectedLevel : null,
-      search: _searchQuery.isEmpty ? null : _searchQuery,
-    );
-  }
+  List<LogEntry> get _filteredLogs => LogBuffer().filter(
+    level: _levelFiltered ? _selectedLevel : null,
+    search: _searchQuery.isEmpty ? null : _searchQuery,
+  );
 
   void _copyLogs() async {
     final logs = await LogBuffer().exportWithDeviceInfo();
@@ -282,7 +219,7 @@ extension _LogPageStatePart1 on _LogPageState {
           children: [
             for (final level in _levels)
               SettingsItem(
-                title: _levelLabel(context, level),
+                title: level,
                 trailing: level == _selectedLevel
                     ? Icon(Icons.check, color: colorScheme.primary)
                     : null,

@@ -2720,7 +2720,6 @@
   "setupChooseMusicFolder": "Müzik klasörünü seç",
   "setupLibraryFolderDescription": "Müziğinizi içeren klasörü seçin. Sistrum bu klasöre sınırlı erişimle okur, bu yüzden tüm dosyalar için izin gerekmez.",
   "searchAlbumArtists": "Albüm sanatçıları",
-  "logFilterFull": "Tümü",
   "tutorialGuideTitle": "Başlarken",
   "tutorialGuideDesc": "Yerel müziğinizi bulmak, çalmak ve düzenlemek için hızlı ipuçları.",
   "backupUnsupportedVersion": "Bu yedek, Sistrum'un farklı bir sürümüyle oluşturuldu",

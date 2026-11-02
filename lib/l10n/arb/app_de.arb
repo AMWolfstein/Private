@@ -2719,7 +2719,6 @@
   "setupChooseMusicFolder": "Musikordner auswählen",
   "setupLibraryFolderDescription": "Wähle den Ordner mit deiner Musik. Sistrum liest ihn über einen eingeschränkten Ordnerzugriff, daher ist keine Berechtigung für alle Dateien nötig.",
   "searchAlbumArtists": "Album-Künstler",
-  "logFilterFull": "Vollständig",
   "tutorialGuideTitle": "Erste Schritte",
   "tutorialGuideDesc": "Kurze Tipps zum Finden, Abspielen und Organisieren deiner lokalen Musik.",
   "backupUnsupportedVersion": "Diese Sicherung wurde mit einer anderen Version von Sistrum erstellt",

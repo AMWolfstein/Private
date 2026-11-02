@@ -2720,7 +2720,6 @@
   "setupChooseMusicFolder": "Выбрать папку с музыкой",
   "setupLibraryFolderDescription": "Выберите папку с вашей музыкой. Sistrum читает её через ограниченный доступ к папке, поэтому разрешение на все файлы не требуется.",
   "searchAlbumArtists": "Исполнители альбома",
-  "logFilterFull": "Полный",
   "tutorialGuideTitle": "Начало работы",
   "tutorialGuideDesc": "Краткие советы по поиску, воспроизведению и упорядочиванию локальной музыки.",
   "backupUnsupportedVersion": "Эта резервная копия создана в другой версии Sistrum",

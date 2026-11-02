@@ -26,6 +26,7 @@ const _request = (
   search: '',
   sort: 'a-z',
   limit: 40,
+  releaseKind: null,
   completeness: null,
 );
 
@@ -57,6 +58,7 @@ class _PrefixBrowse extends LibraryBrowseNotifier {
         search: request.search,
         sort: request.sort,
         limit: _limit,
+        releaseKind: null,
         completeness: request.completeness,
       ),
       offset: 0,
@@ -291,6 +293,7 @@ void main() {
           search: '',
           sort: 'a-z',
           limit: 1000,
+          releaseKind: null,
           completeness: null,
         ),
         offset: 0,

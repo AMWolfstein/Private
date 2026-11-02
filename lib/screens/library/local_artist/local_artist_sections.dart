@@ -9,6 +9,7 @@ extension _LocalArtistScreenStatePart1 on _LocalArtistScreenState {
     search: '',
     sort: 'artist-releases-newest',
     limit: 40,
+    releaseKind: null,
     completeness: null,
   );
 
@@ -21,6 +22,7 @@ extension _LocalArtistScreenStatePart1 on _LocalArtistScreenState {
     search: '',
     sort: 'artist-releases-newest',
     limit: 40,
+    releaseKind: null,
     completeness: null,
   );
   Future<void> _play({bool shuffle = false, LocalLibraryItem? start}) async {

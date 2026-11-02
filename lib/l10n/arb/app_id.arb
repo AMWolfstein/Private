@@ -2753,7 +2753,6 @@
   "setupChooseMusicFolder": "Pilih Folder Musik",
   "setupLibraryFolderDescription": "Pilih folder yang berisi musik Anda. Sistrum membacanya melalui akses folder terbatas, jadi izin untuk semua file tidak diperlukan.",
   "searchAlbumArtists": "Artis Album",
-  "logFilterFull": "Lengkap",
   "tutorialGuideTitle": "Memulai",
   "tutorialGuideDesc": "Tips singkat untuk mencari, memutar, dan mengatur musik lokal Anda.",
   "backupUnsupportedVersion": "Cadangan ini dibuat dengan versi Sistrum yang berbeda",

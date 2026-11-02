@@ -698,10 +698,6 @@
   "@logFilterLevel": {
     "description": "Filter by log level"
   },
-  "logFilterFull": "Full",
-  "@logFilterFull": {
-    "description": "Log level filter option that shows every log entry"
-  },
   "logFilterSection": "Filter",
   "@logFilterSection": {
     "description": "Filter section title"

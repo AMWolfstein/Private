@@ -16,6 +16,7 @@ extension _AppLibraryScreenStatePart1 on _AppLibraryScreenState {
     search: '',
     sort: _sort,
     limit: 40,
+    releaseKind: null,
     completeness: _completeness,
   );
   Future<void> _refresh() async {

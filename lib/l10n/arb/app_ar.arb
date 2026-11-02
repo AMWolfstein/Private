@@ -2724,7 +2724,6 @@
   "setupChooseMusicFolder": "اختيار مجلد الموسيقى",
   "setupLibraryFolderDescription": "اختر المجلد الذي يحتوي على موسيقاك. يقرأ Sistrum منه عبر إذن وصول محدد للمجلد، لذا لا يلزم إذن الوصول إلى كل الملفات.",
   "searchAlbumArtists": "فنانو الألبومات",
-  "logFilterFull": "كامل",
   "tutorialGuideTitle": "البداية",
   "tutorialGuideDesc": "نصائح سريعة للبحث عن موسيقاك المحلية وتشغيلها وتنظيمها.",
   "backupUnsupportedVersion": "أُنشئت هذه النسخة الاحتياطية بإصدار مختلف من Sistrum",

@@ -2714,7 +2714,6 @@
   "setupChooseMusicFolder": "Escolher pasta de música",
   "setupLibraryFolderDescription": "Escolha a pasta que contém sua música. O Sistrum lê por meio de acesso limitado a essa pasta, então não é preciso permissão para todos os arquivos.",
   "searchAlbumArtists": "Artistas do álbum",
-  "logFilterFull": "Completo",
   "tutorialGuideTitle": "Primeiros passos",
   "tutorialGuideDesc": "Dicas rápidas para encontrar, reproduzir e organizar sua música local.",
   "backupUnsupportedVersion": "Este backup foi criado com outra versão do Sistrum",

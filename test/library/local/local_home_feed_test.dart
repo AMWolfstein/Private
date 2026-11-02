@@ -57,7 +57,14 @@ LibraryBrowsePage _browse(LibraryBrowsePageRequest request) =>
       LibraryBrowseEntry(
         source: 'local',
         key: 'album',
-        name: request.browse.artists ? 'Local artist' : 'Local album',
+        name: request.browse.artists
+            ? 'Local artist'
+            : request.browse.releaseKind == LibraryReleaseKind.singles
+            ? 'Local single'
+            : 'Local album',
+        totalTracks: request.browse.releaseKind == LibraryReleaseKind.singles
+            ? 1
+            : 4,
         artist: 'Local artist',
         samplePath: '',
         trackCount: 4,
@@ -225,6 +232,21 @@ void main() {
           containsAll(['release-date-newest', 'latest', 'a-z']),
         );
         expect(requests.every((r) => r.browse.limit == 12), isTrue);
+        expect(
+          requests.map((r) => r.browse.releaseKind),
+          containsAll([LibraryReleaseKind.albums, LibraryReleaseKind.singles]),
+        );
+        await tester.scrollUntilVisible(
+          find.text('Singles').hitTestable(),
+          200,
+          scrollable: find.byType(Scrollable).first,
+        );
+        expect(
+          tester.getTopLeft(find.text('Albums')).dy,
+          lessThan(tester.getTopLeft(find.text('Singles')).dy),
+        );
+        expect(find.text('Local single'), findsOneWidget);
+
         await tester.scrollUntilVisible(
           find.text('My mix'),
           400,

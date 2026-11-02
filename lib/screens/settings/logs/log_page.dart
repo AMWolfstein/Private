@@ -1,5 +1,4 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
 import 'package:sistrum/widgets/diagnostics/app_crash_diagnostic.dart';
 import 'package:sistrum/widgets/primitives/app_alert_dialog.dart';
@@ -16,7 +15,6 @@ import 'package:sistrum/widgets/primitives/app_search_field.dart';
 import 'package:sistrum/utils/playback/ordered_range_selection.dart';
 import 'package:sistrum/utils/layout/adaptive_layout.dart';
 import 'package:sistrum/screens/settings/logs/log_entry_tile.dart';
-import 'package:sistrum/services/platform/native_log_source.dart';
 
 part 'log_page_controls.dart';
 
@@ -37,22 +35,7 @@ class _LogPageState extends ConsumerState<LogPage> {
   bool _selectionMode = false;
   final Set<LogEntry> _selectedEntries = <LogEntry>{};
   LogEntry? _selectionAnchor;
-  static const _nativeLogSource = NativeLogSource();
-  List<LogEntry> _logcatEntries = const <LogEntry>[];
-  bool _logcatLoading = false;
-  int _logcatRequest = 0;
-
-  // FULL shows this app's own logcat output (read when FULL is selected),
-  // with no level restriction. ALL and the level filters apply to the
-  // in-memory LogBuffer as before.
-  final List<String> _levels = [
-    'FULL',
-    'ALL',
-    'DEBUG',
-    'INFO',
-    'WARN',
-    'ERROR',
-  ];
+  final List<String> _levels = ['ALL', 'DEBUG', 'INFO', 'WARN', 'ERROR'];
 
   @override
   void initState() {
@@ -234,7 +217,7 @@ class _LogPageState extends ConsumerState<LogPage> {
                             padding: const EdgeInsets.symmetric(horizontal: 14),
                           ),
                           label: Text(
-                            _levelLabel(context, _selectedLevel),
+                            _selectedLevel,
                             style: TextStyle(
                               color: _levelFiltered
                                   ? _getLevelColor(_selectedLevel, colorScheme)
@@ -284,14 +267,7 @@ class _LogPageState extends ConsumerState<LogPage> {
               child: _LogSummaryCard(logs: LogBuffer().entries),
             ),
 
-            _fullSelected && _logcatLoading
-                ? const SliverToBoxAdapter(
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(vertical: 48),
-                      child: Center(child: CircularProgressIndicator()),
-                    ),
-                  )
-                : logs.isEmpty
+            logs.isEmpty
                 ? SliverToBoxAdapter(
                     child: SettingsGroup(
                       children: [

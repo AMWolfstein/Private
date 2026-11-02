@@ -9,6 +9,7 @@ import 'package:sistrum/services/library/database/library_database.dart';
 import 'package:sistrum/services/library/browse/library_tag_credits.dart';
 
 typedef LibraryBrowseRequest = ({
+  LibraryReleaseKind? releaseKind,
   bool artists,
   bool albumArtists,
   String? artist,
@@ -117,6 +118,7 @@ LibraryBrowseDbQuery libraryBrowseQuery(
   LibraryBrowsePageRequest request, {
   TagCreditScope? credits,
 }) => LibraryBrowseDbQuery(
+  releaseKind: request.browse.releaseKind,
   limit: request.browse.limit,
   offset: request.offset,
   cursor: request.cursor,

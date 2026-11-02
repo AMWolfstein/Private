@@ -7,7 +7,12 @@ extension _LocalHomeFeedUI on _HomeTabState {
     final newest = libraryBrowseProvider(
       localHomeBrowseRequest(sort: 'release-date-newest'),
     );
-    final albums = libraryBrowseProvider(localHomeBrowseRequest());
+    final albums = libraryBrowseProvider(
+      localHomeBrowseRequest(releaseKind: LibraryReleaseKind.albums),
+    );
+    final singles = libraryBrowseProvider(
+      localHomeBrowseRequest(releaseKind: LibraryReleaseKind.singles),
+    );
     final artists = libraryBrowseProvider(
       localHomeBrowseRequest(artists: true, sort: 'a-z'),
     );
@@ -31,6 +36,7 @@ extension _LocalHomeFeedUI on _HomeTabState {
         ref.watch(libraryCollectionsProvider.select((s) => s.isLoaded)) &&
         [
           albumData,
+          ref.watch(singles),
           artistData,
           newestData,
         ].every((p) => p.hasValue && !p.hasError && p.value!.entries.isEmpty) &&
@@ -125,6 +131,21 @@ extension _LocalHomeFeedUI on _HomeTabState {
               error: (_, _) => _feedRetry(() => ref.invalidate(albums)),
             ),
       ),
+      SliverToBoxAdapter(
+        child: ref
+            .watch(singles)
+            .when(
+              skipLoadingOnReload: true,
+              data: (page) => _feedShelf(
+                context.l10n.libraryKindSingles,
+                page.entries
+                    .map((entry) => _feedRelease(entry, colors))
+                    .toList(),
+              ),
+              loading: _feedSkeleton,
+              error: (_, _) => _feedRetry(() => ref.invalidate(singles)),
+            ),
+      ),
       if (playlists.isNotEmpty)
         SliverToBoxAdapter(
           child: _feedShelf(
@@ -187,7 +208,8 @@ extension _LocalHomeFeedUI on _HomeTabState {
   Future<void> _refreshHome() async {
     final requests = [
       localHomeBrowseRequest(sort: 'release-date-newest'),
-      localHomeBrowseRequest(),
+      localHomeBrowseRequest(releaseKind: LibraryReleaseKind.albums),
+      localHomeBrowseRequest(releaseKind: LibraryReleaseKind.singles),
       localHomeBrowseRequest(artists: true, sort: 'a-z'),
     ];
     for (final request in requests) {

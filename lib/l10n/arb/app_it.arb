@@ -2718,7 +2718,6 @@
   "setupChooseMusicFolder": "Scegli cartella musicale",
   "setupLibraryFolderDescription": "Scegli la cartella che contiene la tua musica. Sistrum la legge con un accesso limitato alla cartella, quindi non serve l'autorizzazione per tutti i file.",
   "searchAlbumArtists": "Artisti dell'album",
-  "logFilterFull": "Completo",
   "tutorialGuideTitle": "Per iniziare",
   "tutorialGuideDesc": "Consigli rapidi per trovare, riprodurre e organizzare la tua musica locale.",
   "backupUnsupportedVersion": "Questo backup è stato creato con una versione diversa di Sistrum",

@@ -2719,7 +2719,6 @@
   "setupChooseMusicFolder": "Choisir le dossier musical",
   "setupLibraryFolderDescription": "Choisissez le dossier qui contient votre musique. Sistrum le lit via un accès limité à ce dossier, donc aucune autorisation pour tous les fichiers n'est nécessaire.",
   "searchAlbumArtists": "Artistes de l'album",
-  "logFilterFull": "Complet",
   "tutorialGuideTitle": "Premiers pas",
   "tutorialGuideDesc": "Des conseils rapides pour trouver, lire et organiser votre musique locale.",
   "backupUnsupportedVersion": "Cette sauvegarde a été créée avec une autre version de Sistrum",

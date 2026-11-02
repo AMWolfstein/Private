@@ -2718,7 +2718,6 @@
   "setupChooseMusicFolder": "選擇音樂資料夾",
   "setupLibraryFolderDescription": "選擇存放音樂的資料夾。Sistrum 透過受限的資料夾存取來讀取，因此不需要所有檔案的權限。",
   "searchAlbumArtists": "專輯藝人",
-  "logFilterFull": "全部",
   "tutorialGuideTitle": "開始使用",
   "tutorialGuideDesc": "快速尋找、播放和整理本機音樂的小技巧。",
   "backupUnsupportedVersion": "此備份由不同版本的 Sistrum 建立",

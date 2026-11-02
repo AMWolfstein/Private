@@ -61,6 +61,51 @@ void _registerLibraryBrowseStoreReleases() {
   tearDown(() => db.close());
 
   test(
+    'release shelves filter before limits and retain EPs partial and unknown albums',
+    () async {
+      await db.delete('library_path_keys');
+      await db.delete('library');
+      for (var i = 0; i < 20; i++) {
+        await _addLocal('single$i', 1, album: 'A single $i', totalTracks: 1);
+      }
+      await _addLocal('partial', 1, album: 'ZZPartial', totalTracks: 8);
+      await _addLocal('ep', 1, album: 'ZZEP', totalTracks: 5);
+      await _addLocal('unknown', 1, album: 'ZZUnknown', totalTracks: null);
+      await _addLocal('multi', 1, album: 'ZZMulti', totalTracks: 1);
+      await db.rawUpdate("UPDATE library SET total_discs=2 WHERE id='multi'");
+      final albums = await store.albumPage(
+        const LibraryBrowseDbQuery(
+          releaseKind: LibraryReleaseKind.albums,
+          sortMode: 'a-z',
+          limit: 50,
+        ),
+      );
+      expect(albums.rows.map((r) => r['album_name']).toSet(), {
+        'ZZPartial',
+        'ZZEP',
+        'ZZUnknown',
+        'ZZMulti',
+      });
+      final singles = await store.albumPage(
+        const LibraryBrowseDbQuery(
+          releaseKind: LibraryReleaseKind.singles,
+          sortMode: 'a-z',
+          limit: 50,
+        ),
+      );
+      expect(singles.rows, hasLength(20));
+      final bounded = await store.albumPage(
+        const LibraryBrowseDbQuery(
+          releaseKind: LibraryReleaseKind.albums,
+          sortMode: 'a-z',
+          limit: 1,
+        ),
+      );
+      expect(bounded.rows.single['album_name'], 'ZZEP');
+    },
+  );
+
+  test(
     'album navigation resolves the normalized key with Unicode names',
     () async {
       await _addLocal('unicode-2', 2, album: 'Été', artist: 'Björk');
