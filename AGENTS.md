@@ -91,10 +91,7 @@ colour from it; never add HSL or second copies of the colour maths.
 Audio format conversion is removed entirely: do not restore single-track or batch Convert
 menus, format/bitrate/quality sheets, encoding services or converted-file publication.
 Keep local tag/cover/lyrics editing and CUE splitting as separate operations. ReplayGain is written
-automatically in the background by `ReplayGainAutoWriter`, which sweeps local Library songs without
-ReplayGain tags, when its own "Write ReplayGain automatically" setting is on (Library > ReplayGain,
-with "Only while charging").
-It has no manual Apply/Remove actions in menus or selection bars.
+automatically in the background by `ReplayGainAutoWriter`, when its own "Write ReplayGain automatically" setting is on (Library > ReplayGain, with "Only while charging"). Filesystem and SAF songs share the verified path; unavailable identities/permissions fail visibly. Measure missing or known-changed Track tags and complete albums before publishing all pending Track/Album values together in one update per file. An absent saved stamp alone never means a changed file: preserve existing tags on first observation. Keep generation/restart guards, recheck playback/identity immediately before writing, and never mark a failed/deferred album complete. Show phase and written/unchanged/failed/deferred counts; no spinner while disabled. It has no manual Apply/Remove actions in menus or selection bars, no internal ReplayGain removal service, and its write API rejects empty values. Disabling automation preserves existing tags.
 Artwork probing and FFmpeg processing for those retained features remain supported.
 
 Tag separators live under Local Library settings as a list of rows: Artists (artist,
