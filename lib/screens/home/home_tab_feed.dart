@@ -339,12 +339,23 @@ extension _LocalHomeFeedUI on _HomeTabState {
   double _feedCardWidth(bool featured) {
     final width = MediaQuery.sizeOf(context).width;
     if (featured) {
-      return (width - 48 - 2 * wideListInset(context)).clamp(160.0, 560.0);
+      return ((width - 2 * wideListInset(context)) * .64).clamp(160.0, 360.0);
     }
     final textScale = MediaQuery.textScalerOf(context).scale(16) / 16;
     return 145 *
         (width / 400).clamp(.82, 1.32) *
         (1 + (textScale - 1).clamp(0, 2) * .14);
+  }
+
+  double _featuredCardHeight(double width) {
+    final scale = MediaQuery.textScalerOf(context);
+    return math.max(
+      width / .75,
+      scale.scale(13) * 1.5 +
+          scale.scale(18) * 1.3 * 2 +
+          scale.scale(14) * 1.4 * 2 +
+          64,
+    );
   }
 
   Widget _feedShelf(String title, List<Widget> cards, {bool featured = false}) {
@@ -370,11 +381,7 @@ extension _LocalHomeFeedUI on _HomeTabState {
         ),
         SizedBox(
           height: featured
-              ? width / 1.5 +
-                    scale.scale(14) * 1.5 +
-                    scale.scale(22) * 1.5 +
-                    scale.scale(16) * 1.5 +
-                    20
+              ? _featuredCardHeight(width)
               : width + scale.scale(16) * 1.7 + scale.scale(14) * 1.7 + 20,
           child: ListView.separated(
             scrollDirection: Axis.horizontal,
@@ -410,7 +417,7 @@ extension _LocalHomeFeedUI on _HomeTabState {
       filePath: samplePath,
       coverPath: cover,
       width: width,
-      height: featured ? width / 1.5 : width,
+      height: featured ? _featuredCardHeight(width) : width,
       borderRadius: BorderRadius.circular(round ? width / 2 : 10),
       fallbackIcon: icon,
       fallbackIconSize: width * 0.3,
@@ -459,21 +466,78 @@ extension _LocalHomeFeedUI on _HomeTabState {
                 : CrossAxisAlignment.start,
             children: [
               if (featured) ...[
-                Text(
-                  heading ?? '',
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontSize: 12,
-                    height: 1.5,
-                    fontWeight: FontWeight.w600,
-                    color: colors.primary,
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: SizedBox(
+                    height: _featuredCardHeight(width),
+                    child: Stack(
+                      fit: StackFit.expand,
+                      children: [
+                        artwork,
+                        const DecoratedBox(
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              stops: [0, .4, 1],
+                              colors: [
+                                Colors.transparent,
+                                Color(0x10000000),
+                                Color(0xE6000000),
+                              ],
+                            ),
+                          ),
+                        ),
+                        PositionedDirectional(
+                          start: 16,
+                          end: 16,
+                          bottom: 18,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              if (heading?.isNotEmpty ?? false)
+                                Text(
+                                  heading!,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(
+                                    fontSize: 13,
+                                    height: 1.5,
+                                    color: Color(0xE6FFFFFF),
+                                  ),
+                                ),
+                              Text(
+                                name,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(
+                                  fontSize: 18,
+                                  height: 1.3,
+                                  fontWeight: FontWeight.w700,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              if (subtitle.isNotEmpty) ...[
+                                const SizedBox(height: 4),
+                                Text(
+                                  subtitle,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    height: 1.4,
+                                    color: Color(0xE6FFFFFF),
+                                  ),
+                                ),
+                              ],
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-                title,
-                if (subtitle.isNotEmpty) artist,
-                const SizedBox(height: 8),
-                artwork,
               ] else ...[
                 artwork,
                 const SizedBox(height: 8),

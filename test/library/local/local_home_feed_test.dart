@@ -224,6 +224,18 @@ void main() {
         await tester.pumpAndSettle();
         expect(find.text('Latest Releases in Your Library'), findsOneWidget);
         expect(find.text('Oct 18, 2026'), findsOneWidget);
+        final featured = find.byKey(const ValueKey('home-release-album-true'));
+        final cardSize = tester.getSize(featured);
+        expect(cardSize.height, greaterThan(cardSize.width));
+        final cardRect = tester.getRect(featured);
+        final dateRect = tester.getRect(find.text('Oct 18, 2026'));
+        expect(cardRect.contains(dateRect.center), isTrue);
+        final artistRect = tester.getRect(
+          find.descendant(of: featured, matching: find.text('Local artist')),
+        );
+        expect(cardRect.contains(artistRect.center), isTrue);
+        expect(cardRect.bottom - artistRect.bottom, inInclusiveRange(16, 24));
+
         expect(find.text('Recently Added'), findsOneWidget);
         expect(find.text('Recent'), findsNothing);
         expect(find.text('No recent items yet'), findsNothing);
