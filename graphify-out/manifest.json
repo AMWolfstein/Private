@@ -42,9 +42,9 @@
     "semantic_hash": ""
   },
   "lib/main.dart": {
-    "mtime": 1793569286.3490446,
-    "seen": 1793569780.0112605,
-    "ast_hash": "d375698982cb42eb54be95ebff678309",
+    "mtime": 1793609083.4816508,
+    "seen": 1793609518.8083985,
+    "ast_hash": "154f7db3db47f229cabe5ed8751269dc",
     "semantic_hash": ""
   },
   "lib/providers/runtime_profile_provider.dart": {
@@ -1146,9 +1146,9 @@
     "semantic_hash": "a7e4dc401d6563fb09eaade8e0421cbf"
   },
   "AGENTS.md": {
-    "mtime": 1793436727.1243353,
-    "seen": 1793551931.344159,
-    "ast_hash": "bcb2320bb819feed3941ae5245478ca2",
+    "mtime": 1793607702.5589712,
+    "seen": 1793609518.8526726,
+    "ast_hash": "d8ffcc0e415f1898a38b8fb7747664cc",
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
@@ -1248,9 +1248,9 @@
     "semantic_hash": "90db79a34fee3b50a9bb42c1505db11a"
   },
   "pubspec.yaml": {
-    "mtime": 1793572467.1980515,
-    "seen": 1793588529.6957238,
-    "ast_hash": "465688cf06ba141679e6d0bb5c7965bf",
+    "mtime": 1793609083.3425875,
+    "seen": 1793609518.8209226,
+    "ast_hash": "45aed95f1aa955208f6ef4570ee67d62",
     "semantic_hash": ""
   },
   "rust_backend/crates/core/src/native_palette/README.md": {
@@ -1656,9 +1656,9 @@
     "semantic_hash": "bfee1356e4c394e0644e2bbc91d17bec"
   },
   "LOCAL_OFFLINE_MIGRATION_PLAN.md": {
-    "mtime": 1793588553.0662646,
-    "seen": 1793607350.4542086,
-    "ast_hash": "563d75ee31c8d2aecae62ed5e4d0018b",
+    "mtime": 1793607976.0587788,
+    "seen": 1793609518.8527415,
+    "ast_hash": "04bb64353ecd292cfaef420607e946cf",
     "semantic_hash": ""
   },
   "third_party/audio_service/CHANGELOG.md": {
@@ -7734,9 +7734,9 @@
     "semantic_hash": ""
   },
   "lib/core/theme/app_theme.dart": {
-    "mtime": 1793436727.262374,
-    "seen": 1793551931.3422859,
-    "ast_hash": "879a4ca921d7a5a0db9cc0866e6a2f9e",
+    "mtime": 1793609083.3429928,
+    "seen": 1793609518.8083317,
+    "ast_hash": "c1c25ab9eaaad56c0248e2e2dbb8f7b5",
     "semantic_hash": ""
   },
   "lib/core/theme/app_tokens.dart": {
@@ -12390,9 +12390,21 @@
     "semantic_hash": ""
   },
   "docs/PLAYBACK_COMPARISON.md": {
-    "mtime": 1793607338.045639,
-    "seen": 1793607350.454577,
-    "ast_hash": "ae3bf394ccc5136b5a8858026a8299dc",
+    "mtime": 1793607976.057013,
+    "seen": 1793609518.8531435,
+    "ast_hash": "3515b625568d2da612dc3b0cb3ac1567",
+    "semantic_hash": ""
+  },
+  "assets/fonts/NotoSansArabic-LICENSE.txt": {
+    "mtime": 1793609083.3358927,
+    "seen": 1793609518.852864,
+    "ast_hash": "f319a2b8bcf8e25835957d7835f177b0",
+    "semantic_hash": ""
+  },
+  "docs/ARABIC_FONT.md": {
+    "mtime": 1793609215.796702,
+    "seen": 1793609518.8530862,
+    "ast_hash": "ce1b826ba279cb2624a614ab7893d24d",
     "semantic_hash": ""
   }
 }
