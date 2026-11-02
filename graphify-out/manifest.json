@@ -1146,9 +1146,9 @@
     "semantic_hash": "a7e4dc401d6563fb09eaade8e0421cbf"
   },
   "AGENTS.md": {
-    "mtime": 1793645509.4776475,
-    "seen": 1793647976.366714,
-    "ast_hash": "c17659331bae40e2c419230b3ff2acd0",
+    "mtime": 1793648005.278591,
+    "seen": 1793648792.6757762,
+    "ast_hash": "62b99a51fdbda6347bc27f1d89479188",
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
@@ -1650,9 +1650,9 @@
     "semantic_hash": "bfee1356e4c394e0644e2bbc91d17bec"
   },
   "LOCAL_OFFLINE_MIGRATION_PLAN.md": {
-    "mtime": 1793645509.4797065,
-    "seen": 1793647976.3667808,
-    "ast_hash": "4914346d772b851df59e2acc23bd9310",
+    "mtime": 1793648039.8328435,
+    "seen": 1793648792.6758451,
+    "ast_hash": "e67009bb5e59b7877fc8c00223865b0a",
     "semantic_hash": ""
   },
   "third_party/audio_service/CHANGELOG.md": {
@@ -12528,9 +12528,9 @@
     "semantic_hash": ""
   },
   "lib/widgets/settings/app_replay_gain_progress_view.dart": {
-    "mtime": 1793646932.3067951,
-    "seen": 1793647976.3330011,
-    "ast_hash": "07632d80e1b686d15bb1c5df911f1646",
+    "mtime": 1793648701.005261,
+    "seen": 1793648792.6415937,
+    "ast_hash": "9a5bd44107ffe051fc8d828c42ac96de",
     "semantic_hash": ""
   },
   "test/playback/media/replaygain_combined_saf_test.dart": {
@@ -12546,15 +12546,21 @@
     "semantic_hash": ""
   },
   "test/widgets/settings/replay_gain_progress_view_test.dart": {
-    "mtime": 1793646932.307283,
-    "seen": 1793647976.3604002,
-    "ast_hash": "7992edd3352cbbd7b016adcabd43674f",
+    "mtime": 1793648701.009261,
+    "seen": 1793648792.669561,
+    "ast_hash": "3e4990110e284fea6c4e712bf9a7d99f",
     "semantic_hash": ""
   },
   "docs/APPEARANCE_DEFAULTS.md": {
     "mtime": 1793645509.4783509,
     "seen": 1793647976.3671145,
     "ast_hash": "455d1cda30d4c0acddeaf82dc1c7efe9",
+    "semantic_hash": ""
+  },
+  "docs/REPLAYGAIN_AUTOMATION.md": {
+    "mtime": 1793648039.8322933,
+    "seen": 1793648792.6764262,
+    "ast_hash": "490e793f86c2b93738f7a26d8b8337af",
     "semantic_hash": ""
   }
 }
