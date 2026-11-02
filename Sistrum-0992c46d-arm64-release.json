@@ -1,0 +1,18 @@
+{
+  "commit": "0992c46d002f0bef2345df8a843f6c9577c1144f",
+  "branch": "desloppify/code-health",
+  "artifact_branch": "apk-dev-arm64-0992c46d",
+  "build": "release",
+  "abis": [
+    "arm64-v8a"
+  ],
+  "signing": "Android development key",
+  "certificate_sha256": "4a5b0b9b27955f159bcf0c8c5bf17e0df5867d1c234307e44eebd17436236d76",
+  "matches_previous_development_certificate": true,
+  "bytes": 56774944,
+  "sha256": "ab74ac3def18632a00939f501263e39cf891e5b68051b0622454599d6dfbd572",
+  "device_tested": false,
+  "built_at_utc": "2026-11-02T19:49:02.245867+00:00",
+  "flutter_analyze": "No issues found",
+  "flutter_test": "8 UI widget tests passed; previous full baseline: 2468 passed / 3 skipped / 0 failed"
+}
