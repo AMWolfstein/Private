@@ -121,6 +121,8 @@ with Playlists in its own category. Genres uses bounded local tag queries agains
 library, with exact tag matching and no online catalog. Songs contains only tracks (including
 playlist members), with no collection rows or individual playlists mixed into the list.
 
+Library headers keep a shared Sort control beside the Settings/profile icon on overview and detail routes. Its session order applies where supported; Original order restores each page's default. Albums retain disc groups and artist Popular retains play-count ranking. Collection view sorting never rewrites saved playlist order. Album completeness (assessment, badges and filters) and the Songs Quality/Format/Metadata filter sheet are removed: do not restore them. Home's explicit release-tag Singles classification remains.
+
 Library pages have no search field (search lives in the bottom Search tab). Songs headers show Play/Shuffle, the
 player favorite is a heart, Insights (listening statistics) is the tab after Home and records listening always on, with no Record listening toggle, Edit Metadata has no cover resizer, and each
 lyric line takes its direction from its first strong letter.
