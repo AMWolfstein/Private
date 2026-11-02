@@ -81,6 +81,12 @@ class AppSettings {
   /// Slow Ken Burns drift on album cover headers.
   final bool animatedAlbumArtwork;
 
+  /// Find artist photos on Deezer in the background. Off by default.
+  final bool artistImagesAutoDownload;
+
+  /// `wifi`, `mobile` or `both`: networks automatic artist image downloads may use.
+  final String artistImagesNetwork;
+
   /// Show the sung lyric line above the player's seek bar.
   final bool lyricsAboveSeekBar;
 
@@ -157,6 +163,8 @@ class AppSettings {
 
     this.libraryFilterMode = 'all',
     this.animatedAlbumArtwork = true,
+    this.artistImagesAutoDownload = false,
+    this.artistImagesNetwork = 'wifi',
     this.lyricsAboveSeekBar = false,
     this.checkForUpdates = true,
     this.updateChannel = 'stable',
@@ -209,6 +217,8 @@ class AppSettings {
 
     String? libraryFilterMode,
     bool? animatedAlbumArtwork,
+    bool? artistImagesAutoDownload,
+    String? artistImagesNetwork,
     bool? lyricsAboveSeekBar,
     bool? checkForUpdates,
     String? updateChannel,
@@ -269,6 +279,9 @@ class AppSettings {
 
       libraryFilterMode: libraryFilterMode ?? this.libraryFilterMode,
       animatedAlbumArtwork: animatedAlbumArtwork ?? this.animatedAlbumArtwork,
+      artistImagesAutoDownload:
+          artistImagesAutoDownload ?? this.artistImagesAutoDownload,
+      artistImagesNetwork: artistImagesNetwork ?? this.artistImagesNetwork,
       lyricsAboveSeekBar: lyricsAboveSeekBar ?? this.lyricsAboveSeekBar,
       checkForUpdates: checkForUpdates ?? this.checkForUpdates,
       updateChannel: updateChannel ?? this.updateChannel,

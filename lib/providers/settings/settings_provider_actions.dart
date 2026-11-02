@@ -190,6 +190,17 @@ extension SettingsActions on SettingsNotifier {
     _saveSettings();
   }
 
+  void setArtistImagesAutoDownload(bool enabled) {
+    _current = _current.copyWith(artistImagesAutoDownload: enabled);
+    _saveSettings();
+  }
+
+  /// [network] is `wifi`, `mobile` or `both`.
+  void setArtistImagesNetwork(String network) {
+    _current = _current.copyWith(artistImagesNetwork: network);
+    _saveSettings();
+  }
+
   void setLyricsAboveSeekBar(bool enabled) {
     _current = _current.copyWith(lyricsAboveSeekBar: enabled);
     _saveSettings();

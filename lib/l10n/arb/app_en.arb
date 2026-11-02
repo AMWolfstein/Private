@@ -3692,5 +3692,37 @@
   "lyricsMissingRowSubtitle": "Find timed lyrics for songs that lack them",
   "@lyricsMissingRowSubtitle": {
     "description": "Lyrics settings row subtitle"
+  },
+  "artistImagesEntryTitle": "Download artist images",
+  "@artistImagesEntryTitle": {
+    "description": "Appearance: row that opens artist image settings"
+  },
+  "artistImagesEntrySubtitle": "Find artist photos on Deezer",
+  "@artistImagesEntrySubtitle": {
+    "description": "Appearance: subtitle of the artist images row"
+  },
+  "artistImagesSettingsTitle": "Download artist images",
+  "@artistImagesSettingsTitle": {
+    "description": "Title of the artist images settings page"
+  },
+  "artistImagesAutoTitle": "Download automatically",
+  "@artistImagesAutoTitle": {
+    "description": "Artist images: switch for background downloads"
+  },
+  "artistImagesAutoSubtitle": "Looks up artist photos in the background. Only an exact name match is used.",
+  "@artistImagesAutoSubtitle": {
+    "description": "Artist images: explains the background lookup"
+  },
+  "artistImagesNetworkWifi": "Wi-Fi only",
+  "@artistImagesNetworkWifi": {
+    "description": "Artist images: allowed network option"
+  },
+  "artistImagesNetworkMobile": "Mobile data only",
+  "@artistImagesNetworkMobile": {
+    "description": "Artist images: allowed network option"
+  },
+  "artistImagesNetworkBoth": "Wi-Fi and mobile data",
+  "@artistImagesNetworkBoth": {
+    "description": "Artist images: allowed network option"
   }
 }

@@ -621,6 +621,7 @@ class MainActivity: FlutterFragmentActivity() {
                             result.success(null)
                         }
                         "isCharging" -> result.success(ChargingState.read(applicationContext))
+                        "getNetworkKind" -> result.success(withContext(Dispatchers.IO) { NetworkKind.read(applicationContext) })
                         "getAndroidSdkVersion" -> result.success(android.os.Build.VERSION.SDK_INT)
 
                         "setScreenAwake" -> {

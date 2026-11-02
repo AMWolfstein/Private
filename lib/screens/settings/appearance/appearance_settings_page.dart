@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/l10n/l10n.dart';
+import 'package:sistrum/screens/settings/appearance/artist_images_settings_page.dart';
 import 'package:sistrum/providers/settings/settings_provider.dart';
 import 'package:sistrum/providers/settings/theme_provider.dart';
 import 'package:sistrum/core/models/app_glass.dart';
 import 'package:sistrum/utils/layout/nav_bar_inset.dart';
+import 'package:sistrum/widgets/animation/animation_utils.dart';
 import 'package:sistrum/widgets/settings/settings_group.dart';
 import 'package:sistrum/widgets/settings/settings_search_highlight.dart';
 import 'package:sistrum/widgets/settings/settings_item_rows.dart';
@@ -97,6 +99,16 @@ class AppearanceSettingsPage extends ConsumerWidget {
                     onChanged: (value) => ref
                         .read(settingsProvider.notifier)
                         .setAnimatedAlbumArtwork(value),
+                  ),
+                  SettingsItem(
+                    icon: Icons.person_search_outlined,
+                    title: context.l10n.artistImagesEntryTitle,
+                    subtitle: context.l10n.artistImagesEntrySubtitle,
+                    onTap: () => Navigator.of(context).push(
+                      slidePageRoute<void>(
+                        page: const ArtistImagesSettingsPage(),
+                      ),
+                    ),
                   ),
                   SettingsSwitchItem(
                     icon: Icons.lyrics_outlined,
