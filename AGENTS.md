@@ -90,7 +90,11 @@ colour from it; never add HSL or second copies of the colour maths.
 
 Audio format conversion is removed entirely: do not restore single-track or batch Convert
 menus, format/bitrate/quality sheets, encoding services or converted-file publication.
-Keep local tag/cover/lyrics editing, ReplayGain and CUE splitting as separate operations.
+Keep local tag/cover/lyrics editing and CUE splitting as separate operations. ReplayGain is written
+automatically in the background by `ReplayGainAutoWriter`, which sweeps local Library songs without
+ReplayGain tags, when its own "Write ReplayGain automatically" setting is on (Library > ReplayGain,
+with "Only while charging").
+It has no manual Apply/Remove actions in menus or selection bars.
 Artwork probing and FFmpeg processing for those retained features remain supported.
 
 Tag separators live under Local Library settings as a list of rows: Artists (artist,
@@ -136,7 +140,7 @@ REQUEST_INSTALL_PACKAGES with a FileProvider); no other feature may use the netw
 
 Song taps start local playback; do not restore the separate TrackMetadataScreen/details
 route. Song ellipsis menus expose the former local track actions: Play/Share, Play next,
-Add to queue, Go to album/artist, Copy file path, Edit Metadata, ReplayGain apply/remove,
+Add to queue, Go to album/artist, Copy file path, Edit Metadata,
 Audio Quality Analysis and confirmed deletion. CUE tracks have Split into Tracks; deleting
 one virtual row must preserve the backing CUE/audio. Do not restore Wishlist, conversion or
 online-only actions. Capture the tapped ellipsis button's root-overlay bounds before any

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/widgets/primitives/app_action_button.dart';
-import 'package:sistrum/widgets/selection/selection_action_button.dart';
 import 'package:sistrum/widgets/selection/selection_bottom_bar.dart';
 
 /// Shared Library toolbar for playlist/queue actions and audio file operations.
@@ -13,7 +12,6 @@ class LibraryTrackSelectionBar extends StatelessWidget {
     required this.onClose,
     required this.onToggleSelectAll,
     required this.bottomPadding,
-    required this.onReplayGain,
     required this.onDelete,
     this.playbackActions,
   });
@@ -23,7 +21,6 @@ class LibraryTrackSelectionBar extends StatelessWidget {
   final VoidCallback onClose;
   final VoidCallback onToggleSelectAll;
   final double bottomPadding;
-  final void Function({required bool remove}) onReplayGain;
   final VoidCallback onDelete;
   final Widget? playbackActions;
 
@@ -44,37 +41,6 @@ class LibraryTrackSelectionBar extends StatelessWidget {
             padding: const EdgeInsets.only(bottom: 8),
             child: Text(context.l10n.trackEditMetadata),
           ),
-        LayoutBuilder(
-          builder: (context, constraints) {
-            const spacing = 8.0;
-            final columns = (constraints.maxWidth / 320).floor().clamp(2, 4);
-            final itemWidth =
-                (constraints.maxWidth - spacing * (columns - 1)) / columns;
-            final actions = <Widget>[
-              for (final remove in [false, true])
-                SelectionActionButton(
-                  icon: remove ? Icons.remove_circle_outline : Icons.graphic_eq,
-                  label: remove
-                      ? context.l10n.selectionRemoveReplayGainCount(
-                          selectedCount,
-                        )
-                      : context.l10n.selectionReplayGainCount(selectedCount),
-                  onPressed: hasSelection
-                      ? () => onReplayGain(remove: remove)
-                      : null,
-                  colorScheme: colorScheme,
-                ),
-            ];
-            return Wrap(
-              spacing: spacing,
-              runSpacing: spacing,
-              children: [
-                for (final action in actions)
-                  SizedBox(width: itemWidth, child: action),
-              ],
-            );
-          },
-        ),
         const SizedBox(height: 8),
         SizedBox(
           width: double.infinity,

@@ -6,8 +6,6 @@ import 'package:sistrum/widgets/primitives/app_snack_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:sistrum/providers/playback/playback_provider.dart';
 import 'package:sistrum/providers/playback/music_player_provider.dart';
-import 'package:sistrum/core/models/unified_library_item.dart';
-import 'package:sistrum/widgets/library/batch_track_actions.dart';
 import 'package:sistrum/core/navigation/detail_navigation.dart';
 import 'package:sistrum/widgets/library/local_song_file_actions.dart';
 import 'package:sistrum/services/library/metadata/metadata_index_reconciler.dart';
@@ -125,12 +123,6 @@ Future<bool> showLocalSongMenu(
             if (!cue) ...[
               option('copy', Icons.copy_outlined, l10n.trackCopyFilePath),
               option('edit', Icons.edit_outlined, l10n.trackEditMetadata),
-              option('gain', Icons.graphic_eq, l10n.trackReplayGain),
-              option(
-                'removeGain',
-                Icons.remove_circle_outline,
-                l10n.trackRemoveReplayGain,
-              ),
               option(
                 'analysis',
                 Icons.analytics_outlined,
@@ -188,15 +180,6 @@ Future<bool> showLocalSongMenu(
         await splitLocalCue(context, item);
       case 'edit':
         return await editLocalSongMetadata(context, ref, item);
-      case 'gain':
-      case 'removeGain':
-        return await runBatchReplayGain(
-          context,
-          [UnifiedLibraryItem.fromLocalLibrary(item)],
-          database: ref.read(libraryDatabaseProvider),
-          onExitSelectionMode: () {},
-          remove: action == 'removeGain',
-        );
       default:
         if (isCueVirtualPath(item.filePath)) {
           ScaffoldMessenger.of(context).showSnackBar(

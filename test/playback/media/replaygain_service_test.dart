@@ -5,7 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/services/ffmpeg/ffmpeg_models.dart';
 import 'package:sistrum/services/playback/audio/replaygain_write_result.dart';
-import 'package:sistrum/widgets/library/batch_track_actions.dart';
+import 'package:sistrum/services/playback/audio/replaygain_service.dart';
 
 Matcher written() => isA<ReplayGainWriteResult>().having(
   (result) => result.isWritten,
@@ -20,6 +20,8 @@ Matcher rejected() => isA<ReplayGainWriteResult>().having(
 );
 
 void main() {
+  setUpAll(() => ReplayGainService.integrityChecks = false);
+
   TestWidgetsFlutterBinding.ensureInitialized();
   const channel = MethodChannel('com.amwolfstein.sistrum/backend');
   final messenger =

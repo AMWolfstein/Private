@@ -39,6 +39,74 @@ abstract final class FFmpegReplayGain {
     return parseScan(result, onUnsupportedDecoder: onUnsupportedDecoder);
   }
 
+  /// Measures one album as a single programme: the files are decoded in
+  /// order and measured together, so album gain follows the whole album's
+  /// loudness rather than an average of its tracks. The peak is left to the
+  /// caller, which takes the largest track peak.
+  static Future<ReplayGainResult?> scanAlbum(
+    List<String> filePaths, {
+    void Function()? onUnsupportedDecoder,
+  }) async {
+    if (filePaths.isEmpty) return null;
+    final inputs = <String>[];
+    final chain = <String>[];
+    for (var i = 0; i < filePaths.length; i++) {
+      inputs.addAll(['-i', filePaths[i]]);
+      // One sample format and rate, so the concat filter accepts every track.
+      chain.add(
+        '[$i:a:0]aformat=sample_fmts=fltp:sample_rates=48000:'
+        'channel_layouts=stereo[a$i]',
+      );
+    }
+    final joined = [for (var i = 0; i < filePaths.length; i++) '[a$i]'].join();
+    final filter =
+        '${chain.join(';')};'
+        '${joined}concat=n=${filePaths.length}:v=0:a=1,'
+        'ebur128=framelog=quiet';
+    final result = await FFmpegExecution.arguments([
+      '-hide_banner',
+      '-nostats',
+      '-loglevel',
+      'info',
+      ...inputs,
+      '-filter_complex',
+      filter,
+      '-vn',
+      '-sn',
+      '-dn',
+      '-f',
+      'null',
+      '-',
+    ]);
+    return parseScan(result, onUnsupportedDecoder: onUnsupportedDecoder);
+  }
+
+  /// Hash of the decoded audio packets of [filePath], with tags and artwork
+  /// left out. Equal hashes before and after a tag write mean the audio is
+  /// unchanged. Null when FFmpeg cannot read the stream.
+  static Future<String?> audioHash(String filePath) async {
+    final result = await FFmpegExecution.arguments([
+      '-hide_banner',
+      '-nostats',
+      '-loglevel',
+      'error',
+      '-i',
+      filePath,
+      '-map',
+      '0:a:0',
+      '-c',
+      'copy',
+      '-f',
+      'hash',
+      '-hash',
+      'sha256',
+      '-',
+    ]);
+    if (!result.success) return null;
+    final match = RegExp(r'SHA256=([0-9a-fA-F]{64})').firstMatch(result.output);
+    return match?.group(1)?.toLowerCase();
+  }
+
   static ReplayGainResult? parseScan(
     FFmpegResult result, {
     void Function()? onUnsupportedDecoder,

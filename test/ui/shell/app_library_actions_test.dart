@@ -8,16 +8,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/core/models/local_library_item.dart';
-import 'package:sistrum/core/models/unified_library_item.dart';
 import 'package:sistrum/widgets/library/local_song_menu.dart';
-import 'package:sistrum/widgets/library/batch_track_actions.dart';
 import 'package:sistrum/core/theme/app_theme.dart';
 import 'package:sistrum/widgets/primitives/app_action_button.dart';
-import 'package:sistrum/widgets/primitives/app_alert_dialog.dart';
-import 'package:sistrum/widgets/selection/selection_action_button.dart';
-import 'package:sistrum/widgets/selection/selection_bottom_bar.dart';
-import 'package:sistrum/screens/library/local_album/local_album_screen.dart';
-import 'package:sistrum/services/library/database/library_database.dart';
 
 Widget _app(
   Widget child, {
@@ -68,97 +61,7 @@ void main() {
     SharedPreferences.setMockInitialValues({});
   });
 
-  testWidgets('Sistrum selection actions remain accessible on narrow screens', (
-    tester,
-  ) async {
-    await tester.binding.setSurfaceSize(const Size(320, 780));
-    addTearDown(() => tester.binding.setSurfaceSize(null));
-    var selectedAll = false;
-    var closed = false;
-    var deleted = false;
-    var gainApplied = false;
-    await tester.pumpWidget(
-      _app(
-        Builder(
-          builder: (context) => Align(
-            alignment: Alignment.bottomCenter,
-            child: SelectionBottomBar(
-              selectedCount: 1,
-              allSelected: false,
-              onClose: () => closed = true,
-              onToggleSelectAll: () => selectedAll = true,
-              bottomPadding: 0,
-              children: [
-                SelectionActionButton(
-                  icon: Icons.graphic_eq,
-                  label: 'ReplayGain 1 track',
-                  onPressed: () => gainApplied = true,
-                  colorScheme: Theme.of(context).colorScheme,
-                ),
-                const SizedBox(height: 8),
-                DestructiveSelectionButton(
-                  count: 1,
-                  colorScheme: Theme.of(context).colorScheme,
-                  onPressed: () => deleted = true,
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-    await tester.pumpAndSettle();
-    await _tapVisible(tester, find.text('Select All'));
-    await _tapVisible(tester, find.text('ReplayGain 1 track'));
-    await _tapVisible(tester, find.byIcon(CupertinoIcons.trash));
-    await _tapVisible(tester, find.byIcon(CupertinoIcons.xmark));
-    expect(
-      (selectedAll, gainApplied, deleted, closed),
-      (true, true, true, true),
-    );
-    expect(tester.takeException(), isNull);
-  });
 
-  testWidgets(
-    'Sistrum ReplayGain cancellation restores selection without analysis',
-    (tester) async {
-      bool? confirmed;
-      var exitedSelection = false;
-      await tester.pumpWidget(
-        _app(
-          Builder(
-            builder: (context) => CupertinoButton(
-              onPressed: () => runBatchReplayGain(
-                context,
-                [
-                  UnifiedLibraryItem(
-                    LocalLibraryItem(
-                      id: 'track',
-                      trackName: 'Track',
-                      artistName: 'Artist',
-                      albumName: 'Album',
-                      filePath: '/missing/track.flac',
-                      scannedAt: DateTime(2026),
-                    ),
-                  ),
-                ],
-                database: LibraryDatabase.instance,
-                onExitSelectionMode: () => exitedSelection = true,
-                onConfirmClosed: (value) async => confirmed = value,
-              ),
-              child: const Text('Open'),
-            ),
-          ),
-        ),
-      );
-      await _tapVisible(tester, find.text('Open'));
-      expect(find.byType(AppAlertDialog), findsOneWidget);
-      await _tapVisible(tester, find.text('Cancel'));
-      expect(confirmed, isFalse);
-      expect(exitedSelection, isFalse);
-      expect(tester.takeException(), isNull);
-    },
-  );
 
   testWidgets('Sistrum metadata editor keeps edited text and Save available', (
     tester,

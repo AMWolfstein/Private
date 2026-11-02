@@ -3447,6 +3447,19 @@
   "songAnalysisClearFailed": "Could not clear song analysis. Try again.",
   "gaplessPlayback": "Gapless playback",
   "gaplessPlaybackDescription": "Start the next song the moment one ends, without silence between them. AutoMix replaces it while on.",
+  "replayGain": "ReplayGain",
+  "replayGainPageDescription": "Write loudness tags to your Library songs automatically, so their volume stays even.",
+  "replayGainAutoWrite": "Write ReplayGain automatically",
+  "replayGainAutoWriteDescription": "Measure loudness and write ReplayGain tags to Library songs that have none.",
+  "replayGainOnlyWhileCharging": "Only while charging",
+  "replayGainOnlyWhileChargingDescription": "Write tags only while this phone charges.",
+  "replayGainProgress": "{checked} of {total} songs checked",
+  "@replayGainProgress": {
+    "placeholders": {
+      "checked": {"type": "int"},
+      "total": {"type": "int"}
+    }
+  },
   "autoplayResetLearningDescription": "Clear what Autoplay learned from your listening and skips. Your music and listening history are kept.",
   "autoplayLearningProgress": "Ranking tunes to you after {minimum} Autoplay songs ({count} so far)",
   "@autoplayLearningProgress": {

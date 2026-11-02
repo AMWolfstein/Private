@@ -1,14 +1,10 @@
 import 'dart:io';
 
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:sistrum/l10n/l10n.dart';
-import 'package:sistrum/core/models/unified_library_item.dart';
-import 'package:sistrum/providers/library/local_library_provider.dart';
+import 'package:flutter/foundation.dart' show visibleForTesting;
 import 'package:sistrum/services/ffmpeg/ffmpeg_metadata.dart';
+import 'package:sistrum/services/ffmpeg/ffmpeg_support.dart';
 import 'package:sistrum/services/ffmpeg/ffmpeg_models.dart';
 import 'package:sistrum/services/ffmpeg/ffmpeg_replaygain.dart';
-import 'package:sistrum/services/library/database/library_database.dart';
 import 'package:sistrum/services/library/metadata/metadata_edit_result.dart';
 import 'package:sistrum/services/native/media_file_bridge.dart';
 import 'package:sistrum/services/playback/music_player/music_player_service.dart';
@@ -16,152 +12,6 @@ import 'package:sistrum/services/playback/audio/replaygain_write_result.dart';
 import 'package:sistrum/utils/files/best_effort_delete.dart';
 import 'package:sistrum/utils/files/file_access.dart';
 import 'package:sistrum/utils/logging/logger.dart';
-import 'package:sistrum/widgets/primitives/app_alert_dialog.dart';
-import 'package:sistrum/widgets/selection/batch_progress_dialog.dart';
-
-final _batchActionsLog = AppLogger('BatchActions');
-
-/// Adds or removes ReplayGain tags for [selectedItems].
-///
-/// [onConfirmOpen] / [onConfirmClosed] let the caller hide and restore any
-/// selection UI around the confirmation dialog; [onConfirmClosed] receives
-/// whether the user confirmed.
-///
-/// Returns whether at least one file changed, so callers can skip refreshes
-/// after a cancelled or failed batch.
-Future<bool> runBatchReplayGain(
-  BuildContext sourceContext,
-  List<UnifiedLibraryItem> selectedItems, {
-  required LibraryDatabase database,
-  required VoidCallback onExitSelectionMode,
-  bool remove = false,
-  VoidCallback? onConfirmOpen,
-  Future<void> Function(bool confirmed)? onConfirmClosed,
-}) async {
-  final items = selectedItems
-      .where((item) => !isCueVirtualPath(item.filePath))
-      .toList(growable: false);
-  if (items.isEmpty) return false;
-
-  final container = ProviderScope.containerOf(sourceContext, listen: false);
-  // The selection overlay can disappear when opening the confirmation dialog.
-  final context = Navigator.of(sourceContext, rootNavigator: true).context;
-
-  onConfirmOpen?.call();
-
-  final confirmed = await showAppDialog<bool>(
-    context: context,
-    builder: (ctx) => AppAlertDialog(
-      title: Text(
-        remove
-            ? ctx.l10n.trackRemoveReplayGain
-            : ctx.l10n.replayGainBatchConfirmTitle,
-      ),
-      content: Text(
-        remove
-            ? ctx.l10n.replayGainRemoveConfirmMessage(items.length)
-            : ctx.l10n.replayGainBatchConfirmMessage(items.length),
-      ),
-      actions: [
-        AppDialogAction(
-          onPressed: () => Navigator.pop(ctx, false),
-          child: Text(ctx.l10n.dialogCancel),
-        ),
-        AppDialogAction(
-          filled: true,
-          isDefault: true,
-          onPressed: () => Navigator.pop(ctx, true),
-          child: Text(
-            remove
-                ? ctx.l10n.trackRemoveReplayGain
-                : ctx.l10n.replayGainBatchConfirmTitle,
-          ),
-        ),
-      ],
-    ),
-  );
-
-  await onConfirmClosed?.call(confirmed == true);
-
-  if (confirmed != true || !context.mounted) return false;
-
-  var cancelled = false;
-  int successCount = 0;
-  var unsupportedDecoder = false;
-  final total = items.length;
-
-  late final VoidCallback dismissProgress;
-  dismissProgress = BatchProgressDialog.show(
-    context: context,
-    title: remove
-        ? context.l10n.replayGainRemoving
-        : context.l10n.replayGainBatchAnalyzing,
-    total: total,
-    icon: Icons.graphic_eq,
-    onCancel: () {
-      cancelled = true;
-      dismissProgress();
-    },
-  );
-
-  for (int i = 0; i < total; i++) {
-    if (!context.mounted || cancelled) break;
-    final item = items[i];
-    BatchProgressDialog.update(current: i + 1, detail: item.trackName);
-    try {
-      final result = remove
-          ? await ReplayGainService.removeFromFile(item.filePath)
-          : await ReplayGainService.applyToFile(
-              item.filePath,
-              onUnsupportedDecoder: () => unsupportedDecoder = true,
-            );
-      if (result.isWritten) {
-        successCount++;
-        try {
-          await database.updateAudioMetadata(
-            item.localItem.id,
-            hasReplayGain: !remove,
-          );
-        } catch (e) {
-          _batchActionsLog.w('Could not refresh ReplayGain availability: $e');
-        }
-      } else {
-        _batchActionsLog.w('ReplayGain did not change ${item.filePath}');
-      }
-    } catch (error, stackTrace) {
-      _batchActionsLog.e(
-        'ReplayGain failed for ${item.filePath}',
-        error,
-        stackTrace,
-      );
-    }
-  }
-
-  onExitSelectionMode();
-
-  if (successCount > 0 && context.mounted) {
-    await container.read(localLibraryProvider.notifier).reloadFromStorage();
-  }
-
-  if (!context.mounted) return successCount > 0;
-  if (!cancelled) {
-    dismissProgress();
-  }
-  ScaffoldMessenger.of(context).clearSnackBars();
-  ScaffoldMessenger.of(context).showSnackBar(
-    SnackBar(
-      content: Text(
-        [
-          remove
-              ? context.l10n.replayGainRemoveBatchSuccess(successCount, total)
-              : context.l10n.replayGainBatchSuccess(successCount, total),
-          if (unsupportedDecoder) context.l10n.replayGainUnsupportedDecoder,
-        ].join('\n'),
-      ),
-    ),
-  );
-  return successCount > 0;
-}
 
 /// ReplayGain scanning and tag removal for existing audio files.
 ///
@@ -353,6 +203,17 @@ class ReplayGainService {
     (value?.toString() ?? '').replaceFirst(RegExp(r'\s*dB\s*$'), '').trim(),
   );
 
+  /// Runs [update] on [filePath] only when the audio can be proven unchanged.
+  ///
+  /// Local files: a backup copy is taken first, the audio hash and size are
+  /// compared afterwards, and the backup is copied back on any mismatch or
+  /// failed write. SAF documents already work on a temp copy, which is
+  /// written back only after the same checks pass.
+  /// Whether writes are guarded by the audio hash and size check. Tests that
+  /// drive the SAF channel with fake files turn it off; production keeps it on.
+  @visibleForTesting
+  static bool integrityChecks = true;
+
   static Future<ReplayGainWriteResult> _updateFile(
     String filePath,
     Future<ReplayGainWriteResult> Function(String) update,
@@ -366,6 +227,8 @@ class ReplayGainService {
     final isSaf = isContentUri(filePath);
     var workingPath = filePath;
     String? safTempPath;
+    String? backupPath;
+    var keepBackup = false;
 
     try {
       if (isSaf) {
@@ -383,8 +246,42 @@ class ReplayGainService {
         workingPath = safTempPath;
       }
 
+      // The backup and hashes exist only when the guard is on. The original
+      // is then restored from the backup on any rejected or failed write.
+      String? beforeHash;
+      var sizeBefore = 0;
+      if (integrityChecks) {
+        final dot = workingPath.lastIndexOf('.');
+        final extension = dot < 0 ? '' : workingPath.substring(dot);
+        backupPath = await FFmpegOutput.tempPath(extension);
+        await File(workingPath).copy(backupPath);
+        beforeHash = await FFmpegReplayGain.audioHash(backupPath);
+        sizeBefore = await File(backupPath).length();
+      }
+
       final updated = await update(workingPath);
-      if (!updated.isWritten) return updated;
+      if (!updated.isWritten) {
+        if (backupPath != null) {
+          keepBackup = !await _restore(backupPath, workingPath);
+        }
+        return updated;
+      }
+
+      if (backupPath != null) {
+        final failure = ReplayGainIntegrity.check(
+          beforeHash: beforeHash,
+          afterHash: await FFmpegReplayGain.audioHash(workingPath),
+          sizeBefore: sizeBefore,
+          sizeAfter: await File(workingPath).length(),
+        );
+        if (failure != null) {
+          _log.e(
+            'ReplayGain write rejected ($failure) for $filePath; restoring',
+          );
+          keepBackup = !await _restore(backupPath, workingPath);
+          return ReplayGainWriteResult.failed(failure);
+        }
+      }
 
       if (isSaf) {
         final written = await MediaFileBridge.writeTempToSafDetailed(
@@ -416,6 +313,21 @@ class ReplayGainService {
       if (safTempPath != null) {
         await deleteBestEffort(File(safTempPath));
       }
+      if (backupPath != null && !keepBackup) {
+        await deleteBestEffort(File(backupPath));
+      }
+    }
+  }
+
+  /// Copies [backup] over [target]. False when the copy itself failed, in
+  /// which case the backup is kept on disk for recovery.
+  static Future<bool> _restore(String backup, String target) async {
+    try {
+      await File(backup).copy(target);
+      return true;
+    } catch (e) {
+      _log.e('Could not restore $target from $backup: $e');
+      return false;
     }
   }
 }

@@ -38,7 +38,6 @@ import 'package:sistrum/providers/playback/music_player_provider.dart';
 import 'package:sistrum/services/playback/music_player/music_player_service.dart';
 import 'package:sistrum/services/library/database/library_database.dart';
 import 'package:sistrum/utils/logging/logger.dart';
-import 'package:sistrum/widgets/library/batch_track_actions.dart';
 import 'package:sistrum/widgets/library/local_song_row.dart';
 import 'package:sistrum/widgets/library/local_song_menu.dart';
 import 'package:sistrum/widgets/cover/cached_cover_image.dart';
@@ -62,7 +61,6 @@ part 'library_section_tab_collection_items.dart';
 part 'library_section_tab_filter_widgets.dart';
 part 'library_section_tab_album_grid.dart';
 part 'library_section_tab_empty_state.dart';
-part 'library_section_tab_batch_actions.dart';
 part 'library_section_tab_item_widgets.dart';
 
 final _librarySectionLog = AppLogger('LibrarySectionTab');
@@ -95,7 +93,7 @@ class _LibrarySectionTabState extends ConsumerState<LibrarySectionTab> {
 
   /// Keeps the selection overlays hidden while a modal launched from the
   /// selection toolbar is open, so they don't reappear over its animation.
-  bool _suppressSelectionOverlay = false;
+  final bool _suppressSelectionOverlay = false;
 
   bool _isPlaylistSelectionMode = false;
   final Set<String> _selectedPlaylistIds = {};

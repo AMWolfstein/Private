@@ -71,7 +71,7 @@ class SongAnalysis {
        _analyzer = analyzer ?? SongFeatureAnalyzer(),
        _librarySongs =
            librarySongs ??
-           (() => _libraryOf(library ?? LibraryDatabase.instance)),
+           (() => libraryOf(library ?? LibraryDatabase.instance)),
        _stamp = stamp ?? _stampOf,
        _isCharging = isCharging ?? NativeDevice.isCharging,
        _autoMix = autoMix ?? autoMixStatus,
@@ -138,7 +138,7 @@ class SongAnalysis {
     return SongAnalysisSweep.never;
   }
 
-  static Future<List<SongAnalysisLibrarySong>> _libraryOf(
+  static Future<List<SongAnalysisLibrarySong>> libraryOf(
     LibraryDatabase library,
   ) async {
     final songs = <SongAnalysisLibrarySong>[];
