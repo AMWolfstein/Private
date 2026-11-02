@@ -220,7 +220,8 @@ class ReplayGainAutoWriter {
   /// One full pass. Returns true when some files were skipped because they
   /// were playing, so another pass is needed later.
   Future<bool> _pass(int generation) async {
-    final songs = (await _librarySongs())
+    final library = await _librarySongs();
+    final songs = library
         .where((song) => song.local && !_failed.contains(song.path))
         .toList();
     if (!_active(generation)) return false;
@@ -268,15 +269,23 @@ class ReplayGainAutoWriter {
     }
 
     // Album gain: one measurement per album whose set of files changed.
-    final albums = <String, List<String>>{};
-    for (final song in songs) {
+    // Every member of an album is grouped, including songs that are not
+    // local. An album with any such member is skipped, since its gain could
+    // not be measured over the whole album.
+    final albums = <String, List<ReplayGainLibrarySong>>{};
+    for (final song in library) {
       final key = ReplayGainLibrary.albumKeyOf(song);
-      if (key == null || !song.path.startsWith('/')) continue;
-      albums.putIfAbsent(key, () => []).add(song.path);
+      if (key == null) continue;
+      albums.putIfAbsent(key, () => []).add(song);
     }
     for (final entry in albums.entries) {
       if (!await _mayWrite(generation)) return false;
-      final paths = entry.value..sort();
+      final members = entry.value;
+      if (members.any((song) => !song.local)) {
+        _log.i('Album gain skipped: ${entry.key} has files outside local paths');
+        continue;
+      }
+      final paths = members.map((song) => song.path).toList()..sort();
       if (paths.any(deferred.contains) || paths.any(_failed.contains)) {
         continue;
       }

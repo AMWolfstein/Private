@@ -272,6 +272,31 @@ void main() {
       await writer.dispose();
     });
 
+    test('an album with a non-local file gets no album gain at all', () async {
+      final fake = _Fake([
+        _song('/music/a.flac'),
+        (
+          path: 'content://tree/doc/b',
+          album: 'Album',
+          albumArtist: 'Artist',
+          artist: 'Artist',
+          local: false,
+        ),
+      ])
+        ..stamps['/music/a.flac'] = (size: 1, modified: 1)
+        ..peaks['/music/a.flac'] = 0.5;
+      fake.writer.configure(_settings());
+      await _until(() => fake.trackWrites.isNotEmpty);
+      for (var i = 0; i < 100; i++) {
+        await Future<void>.delayed(Duration.zero);
+      }
+
+      expect(fake.trackWrites, ['/music/a.flac']);
+      expect(fake.albumScans, isEmpty);
+      expect(fake.albumWrites, isEmpty);
+      await fake.writer.dispose();
+    });
+
     test('turning the option off clears progress', () async {
       final fake = _Fake([_song('/music/a.flac')])
         ..stamps['/music/a.flac'] = (size: 1, modified: 1);
