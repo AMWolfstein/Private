@@ -1,28 +1,19 @@
 part of 'local_artist_screen.dart';
 
 extension _LocalArtistScreenStatePart1 on _LocalArtistScreenState {
-  LibraryBrowseRequest get _albumsRequest => (
-    artists: false,
-    albumArtists: false,
-    artist: widget.artistName,
-    credit: LibraryArtistCredit.albumArtist,
-    search: '',
-    sort: ref.read(librarySortProvider),
-    limit: 40,
-    releaseKind: null,
+  LibraryBrowseRequest get _albumsRequest => artistReleaseBrowseRequest(
+    widget.artistName,
+    kind: LibraryReleaseKind.albums,
+  );
+  LibraryBrowseRequest get _singlesRequest => artistReleaseBrowseRequest(
+    widget.artistName,
+    kind: LibraryReleaseKind.singles,
+  );
+  LibraryBrowseRequest get _appearsRequest => artistReleaseBrowseRequest(
+    widget.artistName,
+    credit: LibraryArtistCredit.appearsOn,
   );
 
-  /// Releases where the artist is only a track artist, shown below Singles.
-  LibraryBrowseRequest get _appearsRequest => (
-    artists: false,
-    albumArtists: false,
-    artist: widget.artistName,
-    credit: LibraryArtistCredit.appearsOn,
-    search: '',
-    sort: ref.read(librarySortProvider),
-    limit: 40,
-    releaseKind: null,
-  );
   Future<void> _play({bool shuffle = false, LocalLibraryItem? start}) async {
     if (_startingPlayback) return;
     _rebuild(() => _startingPlayback = true);
@@ -92,7 +83,7 @@ extension _LocalArtistScreenStatePart1 on _LocalArtistScreenState {
       ),
     ),
   );
-  Widget _featuredAlbum(BuildContext context, LibraryBrowseEntry album) =>
+  Widget _featuredRelease(BuildContext context, LibraryBrowseEntry album) =>
       Padding(
         padding: const EdgeInsets.fromLTRB(20, 28, 20, 0),
         child: Material(

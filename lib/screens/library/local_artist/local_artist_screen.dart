@@ -72,10 +72,14 @@ class _LocalArtistScreenState extends ConsumerState<LocalArtistScreen> {
     ref.watch(librarySortProvider);
     final albumsAsync = ref.watch(libraryBrowseProvider(_albumsRequest));
     final albums = albumsAsync.asData?.value;
-    final appears = ref
-        .watch(libraryBrowseProvider(_appearsRequest))
-        .asData
-        ?.value;
+    final singlesAsync = ref.watch(libraryBrowseProvider(_singlesRequest));
+    final singles = singlesAsync.asData?.value;
+    final featuredAsync = ref.watch(
+      localArtistFeaturedReleaseProvider(widget.artistName),
+    );
+    final featured = featuredAsync.asData?.value;
+    final appearsAsync = ref.watch(libraryBrowseProvider(_appearsRequest));
+    final appears = appearsAsync.asData?.value;
     final tracksAsync = ref.watch(
       localArtistPopularProvider(widget.artistName),
     );
@@ -94,15 +98,9 @@ class _LocalArtistScreenState extends ConsumerState<LocalArtistScreen> {
                 ) ==
                 true);
     final isPlaying = inArtist && ref.watch(playbackPlayingProvider);
-    final newestCover = ref
-        .watch(localArtistCoverProvider(widget.artistName))
-        .asData
-        ?.value;
-    final cover =
-        newestCover ??
-        widget.coverPath ??
-        albums?.entries.firstOrNull?.cover ??
-        tracks?.items.firstOrNull?.coverPath;
+    final cover = featured != null
+        ? featured.cover
+        : widget.coverPath ?? tracks?.items.firstOrNull?.coverPath;
     final artistId = LibraryDatabase.normalizeLookupText(widget.artistName);
     final favorites = ref.watch(
       libraryCollectionsProvider.select((state) => state.favoriteArtists),
@@ -217,27 +215,45 @@ class _LocalArtistScreenState extends ConsumerState<LocalArtistScreen> {
                     ),
                   ],
                 ).buildSlivers(context),
-                if (albumsAsync.isLoading || tracksAsync.isLoading)
+                if (albumsAsync.isLoading ||
+                    singlesAsync.isLoading ||
+                    appearsAsync.isLoading ||
+                    featuredAsync.isLoading ||
+                    tracksAsync.isLoading)
                   const SliverToBoxAdapter(
                     child: TrackListSkeleton(itemCount: 5),
                   ),
-                if (albumsAsync.hasError || tracksAsync.hasError)
+                if (albumsAsync.hasError ||
+                    singlesAsync.hasError ||
+                    appearsAsync.hasError ||
+                    featuredAsync.hasError ||
+                    tracksAsync.hasError)
                   SliverToBoxAdapter(
                     child: ErrorCard(
-                      error: (albumsAsync.error ?? tracksAsync.error)
-                          .toString(),
+                      error:
+                          (albumsAsync.error ??
+                                  singlesAsync.error ??
+                                  appearsAsync.error ??
+                                  featuredAsync.error ??
+                                  tracksAsync.error)
+                              .toString(),
                       colorScheme: colors,
                       onRetry: () {
                         ref.invalidate(libraryBrowseProvider(_albumsRequest));
+                        ref.invalidate(libraryBrowseProvider(_singlesRequest));
+                        ref.invalidate(libraryBrowseProvider(_appearsRequest));
+                        ref.invalidate(
+                          localArtistFeaturedReleaseProvider(widget.artistName),
+                        );
                         ref.invalidate(
                           localArtistPopularProvider(widget.artistName),
                         );
                       },
                     ),
                   ),
-                if (albums?.entries.isNotEmpty == true) ...[
+                if (featured != null) ...[
                   SliverToBoxAdapter(
-                    child: _featuredAlbum(context, albums!.entries.first),
+                    child: _featuredRelease(context, featured),
                   ),
                 ],
                 if (tracks?.items.isNotEmpty == true)
@@ -361,52 +377,54 @@ class _LocalArtistScreenState extends ConsumerState<LocalArtistScreen> {
                       },
                     ),
                   ),
-                if (albums != null) ...[
-                  if (albums.entries.any((release) => !release.isSingleRelease))
-                    SliverToBoxAdapter(
-                      child: _albumSection(
-                        context,
-                        _albumsRequest,
-                        context.l10n.searchAlbums,
-                        albums.entries
-                            .where((release) => !release.isSingleRelease)
-                            .toList(),
-                      ),
+                if (albums != null && albums.entries.isNotEmpty)
+                  SliverToBoxAdapter(
+                    child: _albumSection(
+                      context,
+                      _albumsRequest,
+                      context.l10n.searchAlbums,
+                      albums.entries,
                     ),
-                  if (albums.entries.any((release) => release.isSingleRelease))
-                    SliverToBoxAdapter(
-                      child: _albumSection(
-                        context,
-                        _albumsRequest,
-                        context.l10n.libraryKindSingles,
-                        albums.entries
-                            .where((release) => release.isSingleRelease)
-                            .toList(),
-                      ),
+                  ),
+                if (singles != null && singles.entries.isNotEmpty)
+                  SliverToBoxAdapter(
+                    child: _albumSection(
+                      context,
+                      _singlesRequest,
+                      context.l10n.libraryKindSingles,
+                      singles.entries,
                     ),
-                  if (appears != null && appears.entries.isNotEmpty)
-                    SliverToBoxAdapter(
-                      child: _albumSection(
-                        context,
-                        _appearsRequest,
-                        context.l10n.artistAppearsOn,
-                        appears.entries,
-                      ),
+                  ),
+                if (appears != null && appears.entries.isNotEmpty)
+                  SliverToBoxAdapter(
+                    child: _albumSection(
+                      context,
+                      _appearsRequest,
+                      context.l10n.artistAppearsOn,
+                      appears.entries,
                     ),
-                  if (albums.loadMoreError != null)
+                  ),
+                for (final request in [
+                  _albumsRequest,
+                  _singlesRequest,
+                  _appearsRequest,
+                ])
+                  if (ref
+                          .watch(libraryBrowseProvider(request))
+                          .asData
+                          ?.value
+                          .loadMoreError !=
+                      null)
                     SliverToBoxAdapter(
                       child: Center(
                         child: TextButton(
                           onPressed: () => ref
-                              .read(
-                                libraryBrowseProvider(_albumsRequest).notifier,
-                              )
+                              .read(libraryBrowseProvider(request).notifier)
                               .loadMore(),
                           child: Text(context.l10n.dialogRetry),
                         ),
                       ),
                     ),
-                ],
                 SliverToBoxAdapter(
                   child: SizedBox(height: context.navBarBottomInset + 24),
                 ),

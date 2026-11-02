@@ -1,3 +1,4 @@
+import 'package:sistrum/providers/library/library_browse_provider.dart';
 import 'package:sistrum/providers/library/library_sort_provider.dart';
 import 'dart:math';
 
@@ -52,27 +53,39 @@ class LocalArtistTracks {
   final Object? error;
 }
 
-/// The artist's picture: the artwork of the most recently added song that has
-/// one. Null when none of the artist's songs has artwork.
-final localArtistCoverProvider = FutureProvider.autoDispose
-    .family<String?, String>((ref, artist) async {
+/// Artist discography always follows release tags, independent of Library Sort.
+LibraryBrowseRequest artistReleaseBrowseRequest(
+  String artist, {
+  LibraryArtistCredit credit = LibraryArtistCredit.albumArtist,
+  LibraryReleaseKind? kind,
+  int limit = 40,
+}) => (
+  artists: false,
+  albumArtists: false,
+  artist: artist,
+  credit: credit,
+  search: '',
+  sort: 'artist-releases-newest',
+  limit: limit,
+  releaseKind: kind,
+);
+
+/// Prefer the newest album; only artists without albums feature a Single.
+final localArtistFeaturedReleaseProvider = FutureProvider.autoDispose
+    .family<LibraryBrowseEntry?, String>((ref, artist) async {
       ref.watch(localLibraryProvider.select((s) => s.loadedIndexVersion));
-      final credits = ref.watch(tagCreditScopeProvider);
-      final page = await ref
-          .read(libraryDatabaseProvider)
-          .getBrowseTrackPage(
-            LibraryBrowseDbQuery(
-              albumArtist: artist,
-              artistCredit: LibraryArtistCredit.anyCredit,
-              credits: credits,
-              limit: _artistPageSize,
-              sortMode: 'added',
-              includeSingleTrackAlbums: true,
-            ),
-          );
-      for (final row in page.rows) {
-        final cover = _decodeArtistTrack(row).coverPath;
-        if (cover != null && cover.isNotEmpty) return cover;
+      final load = ref.watch(libraryBrowsePageLoaderProvider);
+      for (final kind in [
+        LibraryReleaseKind.albums,
+        LibraryReleaseKind.singles,
+      ]) {
+        final page = await load((
+          browse: artistReleaseBrowseRequest(artist, kind: kind, limit: 1),
+          offset: 0,
+          cursor: null,
+        ));
+        if (!ref.mounted) return null;
+        if (page.entries.isNotEmpty) return page.entries.first;
       }
       return null;
     });
