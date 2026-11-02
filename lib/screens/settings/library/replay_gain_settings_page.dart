@@ -3,7 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/providers/playback/music_player_provider.dart';
 import 'package:sistrum/providers/settings/settings_provider.dart';
-import 'package:sistrum/services/playback/autoplay/song_analysis.dart';
+import 'package:sistrum/services/playback/audio/replaygain_progress.dart';
+import 'package:sistrum/widgets/settings/app_replay_gain_progress_view.dart';
 import 'package:sistrum/widgets/primitives/app_sliver_header.dart';
 import 'package:sistrum/widgets/settings/settings_group.dart';
 import 'package:sistrum/widgets/settings/settings_item_rows.dart';
@@ -40,27 +41,10 @@ class ReplayGainSettingsPage extends ConsumerWidget {
                       .read(settingsProvider.notifier)
                       .setReplayGainOnlyWhileCharging(v),
                 ),
-                ValueListenableBuilder<SongAnalysisProgress?>(
+                ValueListenableBuilder<ReplayGainProgress?>(
                   valueListenable: writer.progress,
-                  builder: (context, progress, _) {
-                    final label = progress == null
-                        ? null
-                        : context.l10n.replayGainProgress(
-                            progress.analyzed,
-                            progress.total,
-                          );
-                    return Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
-                      child: LinearProgressIndicator(
-                        value: progress == null
-                            ? null
-                            : progress.total == 0
-                            ? 0
-                            : progress.analyzed / progress.total,
-                        semanticsLabel: label ?? context.l10n.replayGain,
-                      ),
-                    );
-                  },
+                  builder: (context, progress, _) =>
+                      AppReplayGainProgressView(progress: progress),
                 ),
               ],
             ),

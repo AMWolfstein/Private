@@ -124,31 +124,11 @@
     "description": "Dark theme"
   },
   "trackRemoveReplayGain": "ReplayGain を削除",
-  "replayGainRemoving": "ReplayGain を削除しています...",
-  "replayGainRemoveConfirmMessage": "{count} 曲からトラックとアルバムの ReplayGain タグを削除しますか？オーディオ、アートワーク、その他のメタデータは保持されます。",
-  "@replayGainRemoveConfirmMessage": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
   "selectionRemoveReplayGainCount": "RG を削除（{count}）",
   "@selectionRemoveReplayGainCount": {
     "description": "Compact selection action label. RG abbreviates ReplayGain; keep this short for a two-column toolbar.",
     "placeholders": {
       "count": {
-        "type": "int"
-      }
-    }
-  },
-  "replayGainRemoveBatchSuccess": "{total} 曲中 {success} 曲から ReplayGain を削除しました",
-  "@replayGainRemoveBatchSuccess": {
-    "placeholders": {
-      "success": {
-        "type": "int"
-      },
-      "total": {
         "type": "int"
       }
     }

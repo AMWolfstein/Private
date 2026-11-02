@@ -121,10 +121,7 @@
     "description": "Dark theme"
   },
   "trackRemoveReplayGain": "Remover ReplayGain",
-  "replayGainRemoving": "A remover ReplayGain...",
-  "replayGainRemoveConfirmMessage": "Remover as tags ReplayGain de faixa e de álbum de {count} faixa(s)? O áudio, as capas e os outros metadados serão preservados.",
   "selectionRemoveReplayGainCount": "Remover RG ({count})",
-  "replayGainRemoveBatchSuccess": "ReplayGain removido de {success} de {total} faixas",
   "selectionReplayGainCount": "ReplayGain ({count})",
   "replayGainBatchConfirmTitle": "Adicionar ReplayGain",
   "replayGainBatchConfirmMessage": "Analisar a sonoridade e gravar as tags ReplayGain em {count} faixa(s)?",

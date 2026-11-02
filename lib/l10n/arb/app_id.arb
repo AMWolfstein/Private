@@ -124,31 +124,11 @@
     "description": "Dark theme"
   },
   "trackRemoveReplayGain": "Hapus ReplayGain",
-  "replayGainRemoving": "Menghapus ReplayGain...",
-  "replayGainRemoveConfirmMessage": "Hapus tag ReplayGain dari {count} lagu? Audio, cover, dan metadata lain akan tetap disimpan.",
-  "@replayGainRemoveConfirmMessage": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
   "selectionRemoveReplayGainCount": "Hapus RG ({count})",
   "@selectionRemoveReplayGainCount": {
     "description": "Compact selection action label. RG abbreviates ReplayGain; keep this short for a two-column toolbar.",
     "placeholders": {
       "count": {
-        "type": "int"
-      }
-    }
-  },
-  "replayGainRemoveBatchSuccess": "ReplayGain dihapus pada {success} dari {total} lagu",
-  "@replayGainRemoveBatchSuccess": {
-    "placeholders": {
-      "success": {
-        "type": "int"
-      },
-      "total": {
         "type": "int"
       }
     }

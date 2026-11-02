@@ -121,10 +121,7 @@
     "description": "Dark theme"
   },
   "trackRemoveReplayGain": "移除 ReplayGain",
-  "replayGainRemoving": "正在移除 ReplayGain…",
-  "replayGainRemoveConfirmMessage": "要从 {count} 首曲目中移除曲目和专辑的 ReplayGain 标签吗？音频、封面和其他元数据将被保留。",
   "selectionRemoveReplayGainCount": "移除 RG（{count}）",
-  "replayGainRemoveBatchSuccess": "已从 {total} 首曲目中的 {success} 首移除 ReplayGain",
   "selectionReplayGainCount": "ReplayGain（{count}）",
   "@selectionReplayGainCount": {
     "description": "Batch selection action button label for ReplayGain",

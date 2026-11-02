@@ -4,19 +4,17 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:sistrum/core/models/local_library_item.dart';
 import 'package:sistrum/core/models/settings.dart';
-import 'package:sistrum/services/ffmpeg/ffmpeg_replaygain.dart';
+import 'package:sistrum/services/ffmpeg/ffmpeg_models.dart';
+import 'package:sistrum/services/playback/audio/replaygain_progress.dart';
 import 'package:sistrum/services/library/database/library_database.dart';
-import 'package:sistrum/services/native/media_file_bridge.dart';
 import 'package:sistrum/services/native/native_device.dart';
 import 'package:sistrum/services/playback/audio/replaygain_service.dart';
 import 'package:sistrum/services/playback/audio/replaygain_state.dart';
 import 'package:sistrum/services/playback/audio/replaygain_write_result.dart';
 import 'package:sistrum/services/playback/autoplay/song_analysis_store.dart'
     show SongFileStamp;
-import 'package:sistrum/services/playback/autoplay/song_analysis.dart'
-    show SongAnalysisProgress;
 import 'package:sistrum/utils/logging/logger.dart';
-import 'package:sistrum/utils/files/file_access.dart' show isCueVirtualPath;
+import 'package:sistrum/utils/files/file_access.dart';
 
 final _log = AppLogger('ReplayGainAutoWriter');
 
@@ -52,7 +50,8 @@ abstract final class ReplayGainLibrary {
           album: _text(row['albumName']),
           albumArtist: _text(row['albumArtist']),
           artist: _text(row['artistName']),
-          local: !path.startsWith('content://'),
+          local:
+              path.isNotEmpty && (isContentUri(path) || !path.contains('://')),
         ));
       }
       if (page.rows.length < 500) break;
@@ -90,29 +89,22 @@ abstract final class ReplayGainLibrary {
   }
 }
 
-/// Writes ReplayGain tags to Library songs in the background.
-///
-/// Track gain is written for each local song that has none, or whose file
-/// changed since its tags were written. Album gain is written for each album
-/// whose set of files changed, measured over the whole album at once. Each
-/// write goes through [ReplayGainService], which keeps the audio unchanged or
-/// restores the original. Only runs while the Replay Gain setting is on, and
-/// waits for charging when "Only while charging" is on.
+/// Measures tracks and whole albums before writing all needed tags once per
+/// file. SAF documents use the same verified writer as ordinary local files.
 class ReplayGainAutoWriter {
   ReplayGainAutoWriter({
     LibraryDatabase? library,
     Future<List<ReplayGainLibrarySong>> Function()? librarySongs,
-    Future<SongFileStamp?> Function(String path)? stamp,
-    Future<bool> Function(String path)? hasTrackTags,
-    Future<ReplayGainWriteResult> Function(String path)? writeTrack,
-    Future<String?> Function(List<String> paths)? scanAlbumGain,
-    Future<double?> Function(String path)? trackPeak,
+    Future<SongFileStamp?> Function(String)? stamp,
+    Future<Map<String, dynamic>> Function(String)? readTags,
+    Future<ReplayGainResult?> Function(String)? scanTrack,
+    Future<ReplayGainResult?> Function(List<String>)? scanAlbum,
     Future<ReplayGainWriteResult> Function(
-      String path,
-      String gain,
-      String peak,
+      String,
+      Map<String, String>,
+      Future<bool> Function(),
     )?
-    writeAlbum,
+    writeTags,
     ReplayGainState? state,
     Future<bool> Function()? isCharging,
     Future<String?> Function()? nowPlayingPath,
@@ -120,74 +112,97 @@ class ReplayGainAutoWriter {
     bool? isAndroid,
   }) : _librarySongs =
            librarySongs ??
-           (() => ReplayGainLibrary.songsOf(
-             library ?? LibraryDatabase.instance,
-           )),
+           (() =>
+               ReplayGainLibrary.songsOf(library ?? LibraryDatabase.instance)),
        _stamp = stamp ?? _stampOf,
-       _hasTrackTags = hasTrackTags ?? _hasTrackTagsOf,
-       _writeTrack = writeTrack ?? ReplayGainService.applyToFile,
-       _scanAlbumGain = scanAlbumGain ?? _scanAlbumGainOf,
-       _trackPeak = trackPeak ?? _trackPeakOf,
-       _writeAlbum = writeAlbum ?? _writeAlbumOf,
+       _readTags = readTags ?? ReplayGainService.readTags,
+       _scanTrack = scanTrack ?? ReplayGainService.measureTrack,
+       _scanAlbum = scanAlbum ?? ReplayGainService.measureAlbum,
+       _writeTags =
+           writeTags ??
+           ((path, fields, guard) =>
+               ReplayGainService.writeTags(path, fields, mayWrite: guard)),
        _state = state ?? ReplayGainStateDb(),
        _isCharging = isCharging ?? NativeDevice.isCharging,
        _nowPlayingPath = nowPlayingPath ?? (() async => null),
-       _wait = wait ?? ((delay) => Future<void>.delayed(delay)),
+       _wait = wait,
        _android = isAndroid ?? Platform.isAndroid;
 
   final Future<List<ReplayGainLibrarySong>> Function() _librarySongs;
   final Future<SongFileStamp?> Function(String) _stamp;
-  final Future<bool> Function(String) _hasTrackTags;
-  final Future<ReplayGainWriteResult> Function(String) _writeTrack;
-  final Future<String?> Function(List<String>) _scanAlbumGain;
-  final Future<double?> Function(String) _trackPeak;
-  final Future<ReplayGainWriteResult> Function(String, String, String)
-  _writeAlbum;
+  final Future<Map<String, dynamic>> Function(String) _readTags;
+  final Future<ReplayGainResult?> Function(String) _scanTrack;
+  final Future<ReplayGainResult?> Function(List<String>) _scanAlbum;
+  final Future<ReplayGainWriteResult> Function(
+    String,
+    Map<String, String>,
+    Future<bool> Function(),
+  )
+  _writeTags;
   final ReplayGainState _state;
   final Future<bool> Function() _isCharging;
   final Future<String?> Function() _nowPlayingPath;
-  final Future<void> Function(Duration) _wait;
+  final Future<void> Function(Duration)? _wait;
   final bool _android;
-
-  static const _chargingRecheck = Duration(minutes: 5);
-  static const _deferredRecheck = Duration(minutes: 1);
-
-  /// Local songs checked so far out of all local songs.
-  final ValueNotifier<SongAnalysisProgress?> progress = ValueNotifier(null);
+  final progress = ValueNotifier<ReplayGainProgress?>(null);
 
   AppSettings? _settings;
-  bool _running = false;
-  bool _disposed = false;
+  bool _running = false, _disposed = false, _rerun = false;
   int _generation = 0;
-  // Files a track write failed on this session, so they are not retried in a
-  // loop. Albums containing them are skipped too.
+  Completer<void>? _wake;
   final _failed = <String>{};
-
   bool get _enabled => _settings?.replayGainAutoWrite ?? false;
-
-  void configure(AppSettings settings) {
-    _settings = settings;
-    if (_enabled) {
-      refresh();
-    } else {
-      _generation++;
-      progress.value = null;
-    }
-  }
-
-  /// Starts a sweep when the setting is on and no sweep is running. Called
-  /// again when the Library changes, so new songs and albums are picked up.
-  void refresh() {
-    if (_disposed || !_enabled || _running) return;
-    unawaited(_run(++_generation));
-  }
-
   bool _active(int generation) =>
       !_disposed && _enabled && generation == _generation;
 
-  Future<bool> _mayWrite(int generation) async {
-    while (true) {
-      if (!_active(generation)) return false;
+  void configure(AppSettings settings) {
+    if (_disposed) return;
+    final wasEnabled = _enabled;
+    final wasChargingOnly = _settings?.replayGainOnlyWhileCharging;
+    _settings = settings;
+    if (!_enabled) {
+      _generation++;
+      _rerun = false;
+      _wake?.complete();
+      _wake = null;
+      progress.value = null;
+    } else if (!wasEnabled) {
+      _failed.clear();
+      refresh();
+    } else if (wasChargingOnly != settings.replayGainOnlyWhileCharging) {
+      _wake?.complete();
+      _wake = null;
+    }
+  }
+
+  /// Index changes during a pass queue a new pass rather than being lost.
+  void refresh() {
+    if (_disposed || !_enabled) return;
+    if (_running) {
+      _rerun = true;
+      return;
+    }
+    _rerun = false;
+    unawaited(_run(++_generation));
+  }
+
+  Future<void> _sleep(Duration delay) async {
+    final wake = Completer<void>();
+    _wake = wake;
+    Timer? timer;
+    final timed = Completer<void>();
+    final waiting = _wait?.call(delay) ?? (timed.future);
+    if (_wait == null) timer = Timer(delay, () => timed.complete());
+    try {
+      await Future.any([waiting, wake.future]);
+    } finally {
+      timer?.cancel();
+      if (identical(_wake, wake)) _wake = null;
+    }
+  }
+
+  Future<bool> _mayWork(int generation, _ReplayGainPass pass) async {
+    while (_active(generation)) {
       if (!(_settings?.replayGainOnlyWhileCharging ?? true) || !_android) {
         return true;
       }
@@ -195,182 +210,286 @@ class ReplayGainAutoWriter {
       try {
         charging = await _isCharging();
       } catch (_) {
-        charging = false;
+        /* A failed probe never grants permission. */
       }
+      if (!_active(generation)) return false;
       if (charging) return true;
-      await _wait(_chargingRecheck);
+      _publish(pass, ReplayGainPhase.waitingForCharging);
+      await _sleep(const Duration(minutes: 5));
     }
+    return false;
+  }
+
+  void _publish(_ReplayGainPass pass, ReplayGainPhase phase) {
+    if (!_active(pass.generation)) return;
+    progress.value = ReplayGainProgress(
+      phase: phase,
+      checked: pass.checked,
+      total: pass.paths.length,
+      written: pass.written.length,
+      unchanged: pass.unchanged.length,
+      failed: pass.failed.length,
+      deferred: pass.deferred.length,
+      completedUnits: pass.units,
+      totalUnits: pass.totalUnits,
+    );
   }
 
   Future<void> _run(int generation) async {
     _running = true;
     try {
-      while (true) {
+      while (_active(generation)) {
         final again = await _pass(generation);
         if (!again || !_active(generation)) break;
-        await _wait(_deferredRecheck);
+        await _sleep(const Duration(minutes: 1));
       }
     } catch (error) {
       _log.w('ReplayGain sweep stopped: $error');
+      if (_active(generation)) {
+        progress.value =
+            (progress.value ??
+                    const ReplayGainProgress(phase: ReplayGainPhase.preparing))
+                .withPhase(ReplayGainPhase.failed);
+      }
     } finally {
       _running = false;
+      if (_rerun && !_disposed && _enabled) refresh();
     }
   }
 
-  /// One full pass. Returns true when some files were skipped because they
-  /// were playing, so another pass is needed later.
   Future<bool> _pass(int generation) async {
+    progress.value = const ReplayGainProgress(phase: ReplayGainPhase.preparing);
     final library = await _librarySongs();
-    final songs = library
-        .where((song) => song.local && !_failed.contains(song.path))
-        .toList();
     if (!_active(generation)) return false;
-
-    final deferred = <String>{};
-    final stamps = <String, SongFileStamp>{};
-    if (_active(generation)) {
-      progress.value = SongAnalysisProgress(analyzed: 0, total: songs.length);
-    }
-
-    // Track gain first, so album gain is measured from tagged files.
-    var checked = 0;
-    for (final song in songs) {
-      if (!await _mayWrite(generation)) return false;
-      final current = await _stamp(song.path);
-      if (current != null) stamps[song.path] = current;
-      final saved = await _state.trackStamp(song.path);
-      final changed = current != null && saved != current;
-      if (changed || !await _hasTrackTags(song.path)) {
-        if (await _nowPlayingPath() == song.path) {
-          deferred.add(song.path);
-        } else {
-          final result = await _writeTrack(song.path);
-          if (result.isWritten) {
-            final written = await _stamp(song.path);
-            if (written != null) {
-              await _state.saveTrackStamp(song.path, written);
-              stamps[song.path] = written;
-            }
-          } else {
-            _failed.add(song.path);
-            _log.w('ReplayGain track tags not written for ${song.path}');
-          }
-        }
-      } else if (current != null && saved == null) {
-        await _state.saveTrackStamp(song.path, current);
-      }
-      checked++;
-      if (_active(generation)) {
-        progress.value = SongAnalysisProgress(
-          analyzed: checked,
-          total: songs.length,
-        );
-      }
-    }
-
-    // Album gain: one measurement per album whose set of files changed.
-    // Every member of an album is grouped, including songs that are not
-    // local. An album with any such member is skipped, since its gain could
-    // not be measured over the whole album.
+    final songs = {
+      for (final song in library)
+        if (song.local && song.path.isNotEmpty && !isCueVirtualPath(song.path))
+          song.path: song,
+    };
     final albums = <String, List<ReplayGainLibrarySong>>{};
     for (final song in library) {
       final key = ReplayGainLibrary.albumKeyOf(song);
-      if (key == null) continue;
-      albums.putIfAbsent(key, () => []).add(song);
+      if (key != null) albums.putIfAbsent(key, () => []).add(song);
     }
+    final pass = _ReplayGainPass(
+      generation,
+      songs.keys.toList(),
+      songs.length * 2 + albums.length,
+    );
+    final albumFields = <String, Map<String, String>>{};
+    final albumCandidates = <String, List<String>>{};
+
+    for (final path in pass.paths) {
+      if (!await _mayWork(generation, pass)) return false;
+      _publish(pass, ReplayGainPhase.tracks);
+      try {
+        if (_failed.contains(path)) {
+          pass.failed.add(path);
+          continue;
+        }
+        if (await _nowPlayingPath() == path) {
+          pass.deferred.add(path);
+          continue;
+        }
+        final current = await _stamp(path);
+        if (current == null) throw StateError('File identity unavailable');
+        pass.stamps[path] = current;
+        final saved = await _state.trackStamp(path);
+        final tags = await _readTags(path);
+        if (tags['error'] != null) {
+          throw StateError('Cannot read ReplayGain tags');
+        }
+        final albumPeak = double.tryParse(
+          tags['replaygain_album_peak']?.toString() ?? '',
+        );
+        if (_gain(tags['replaygain_album_gain']) != null &&
+            (tags['audio_codec'] == 'opus' ||
+                (albumPeak != null && albumPeak.isFinite && albumPeak >= 0))) {
+          pass.existingAlbumTags.add(path);
+        }
+        final hasGain = _gain(tags['replaygain_track_gain']) != null;
+        // No saved stamp means first observation, not evidence of a change.
+        final changed = saved != null && saved != current;
+        if (!hasGain || changed) {
+          if (!await _mayWork(generation, pass)) return false;
+          final measured = await _scanTrack(path);
+          if (measured == null) throw StateError('Track measurement failed');
+          pass.fields[path] = {
+            'replaygain_track_gain': measured.trackGain,
+            'replaygain_track_peak': measured.trackPeak,
+          };
+        }
+      } catch (error) {
+        pass.failed.add(path);
+        _failed.add(path);
+        _log.w('ReplayGain track check failed for $path: $error');
+      } finally {
+        pass.checked++;
+        pass.units++;
+        _publish(pass, ReplayGainPhase.tracks);
+      }
+    }
+
     for (final entry in albums.entries) {
-      if (!await _mayWrite(generation)) return false;
-      final members = entry.value;
-      if (members.any((song) => !song.local)) {
-        _log.i('Album gain skipped: ${entry.key} has files outside local paths');
-        continue;
-      }
-      final paths = members.map((song) => song.path).toList()..sort();
-      if (paths.any(deferred.contains) || paths.any(_failed.contains)) {
-        continue;
-      }
-      if (paths.any((path) => !stamps.containsKey(path))) continue;
-      final before = ReplayGainLibrary.fingerprintOf(paths, stamps);
-      if (before == null) continue;
-      if (await _state.albumFingerprint(entry.key) == before) continue;
-
-      final gain = await _scanAlbumGain(paths);
-      if (gain == null) {
-        _log.w('ReplayGain album measurement failed for ${entry.key}');
-        continue;
-      }
-      var peak = 0.0;
-      var peaksKnown = true;
-      for (final path in paths) {
-        final value = await _trackPeak(path);
-        if (value == null) {
-          peaksKnown = false;
-          break;
+      if (!await _mayWork(generation, pass)) return false;
+      _publish(pass, ReplayGainPhase.albums);
+      final paths = entry.value.map((s) => s.path).toSet().toList()..sort();
+      try {
+        // Do not measure a partial album after a permission failure, missing
+        // file, virtual CUE member, or an unsupported remote member.
+        if (entry.value.any((s) => !s.local || isCueVirtualPath(s.path)) ||
+            paths.any(
+              (p) =>
+                  !pass.stamps.containsKey(p) ||
+                  pass.failed.contains(p) ||
+                  pass.deferred.contains(p),
+            )) {
+          continue;
         }
-        if (value > peak) peak = value;
-      }
-      if (!peaksKnown) continue;
-
-      var ok = true;
-      for (final path in paths) {
-        if (!await _mayWrite(generation)) return false;
-        final result = await _writeAlbum(path, gain, peak.toStringAsFixed(6));
-        if (!result.isWritten) {
-          ok = false;
-          break;
+        final before = ReplayGainLibrary.fingerprintOf(paths, pass.stamps);
+        final savedAlbum = await _state.albumFingerprint(entry.key);
+        if (before == savedAlbum) continue;
+        if (savedAlbum == null &&
+            !paths.any(pass.fields.containsKey) &&
+            paths.every(pass.existingAlbumTags.contains)) {
+          await _state.saveAlbumFingerprint(entry.key, before!);
+          continue;
         }
-      }
-      if (!ok) continue;
-
-      // The album writes changed each file, so record their new stamps and
-      // the fingerprint those stamps produce.
-      final after = <String, SongFileStamp>{};
-      for (final path in paths) {
-        final written = await _stamp(path);
-        if (written != null) {
-          after[path] = written;
-          await _state.saveTrackStamp(path, written);
+        final measured = await _scanAlbum(paths);
+        if (measured == null) throw StateError('Album measurement failed');
+        final fields = {
+          'replaygain_album_gain': measured.trackGain,
+          'replaygain_album_peak': measured.trackPeak,
+        };
+        albumFields[entry.key] = fields;
+        albumCandidates[entry.key] = paths;
+        for (final path in paths) {
+          pass.fields.putIfAbsent(path, () => {}).addAll(fields);
         }
-      }
-      final fingerprint = ReplayGainLibrary.fingerprintOf(paths, after);
-      if (fingerprint != null) {
-        await _state.saveAlbumFingerprint(entry.key, fingerprint);
+      } catch (error) {
+        pass.failed.addAll(paths);
+        _failed.addAll(paths);
+        _log.w('ReplayGain album check failed for ${entry.key}: $error');
+      } finally {
+        pass.units++;
+        _publish(pass, ReplayGainPhase.albums);
       }
     }
-    return deferred.isNotEmpty;
+
+    for (final path in pass.paths) {
+      if (!await _mayWork(generation, pass)) return false;
+      _publish(pass, ReplayGainPhase.writing);
+      try {
+        if (pass.failed.contains(path) || pass.deferred.contains(path)) {
+          continue;
+        }
+        final fields = pass.fields[path];
+        if (fields == null || fields.isEmpty) {
+          pass.unchanged.add(path);
+        } else {
+          // Rechecked after measurements and inside the service immediately
+          // before editing / publishing a SAF copy, not only in the Track loop.
+          Future<bool> guard() async =>
+              _active(generation) &&
+              await _mayWork(generation, pass) &&
+              await _nowPlayingPath() != path &&
+              await _stamp(path) == pass.stamps[path] &&
+              _active(generation);
+          if (!await guard()) {
+            pass.deferred.add(path);
+            continue;
+          }
+          final result = await _writeTags(path, fields, guard);
+          if (result.failure == ReplayGainWriteFailure.deferred) {
+            pass.deferred.add(path);
+            continue;
+          }
+          if (!result.isWritten) {
+            throw StateError('Tag publication failed: ${result.failure}');
+          }
+          pass.written.add(path);
+        }
+        final after = await _stamp(path);
+        if (after != null) {
+          pass.after[path] = after;
+          // Do not stamp a successful partial album as fully processed below.
+          await _state.saveTrackStamp(path, after);
+        }
+      } catch (error) {
+        pass.failed.add(path);
+        _failed.add(path);
+        pass.written.remove(path);
+        pass.unchanged.remove(path);
+        _log.w('ReplayGain publication failed for $path: $error');
+      } finally {
+        pass.units++;
+        _publish(pass, ReplayGainPhase.writing);
+      }
+    }
+    if (!_active(generation)) return false;
+    for (final key in albumFields.keys) {
+      final paths = albumCandidates[key]!;
+      if (paths.any(
+        (p) =>
+            !pass.written.contains(p) ||
+            pass.failed.contains(p) ||
+            pass.deferred.contains(p),
+      )) {
+        continue;
+      }
+      final fingerprint = ReplayGainLibrary.fingerprintOf(paths, pass.after);
+      if (fingerprint != null) {
+        await _state.saveAlbumFingerprint(key, fingerprint);
+      }
+    }
+    _publish(
+      pass,
+      pass.deferred.isEmpty
+          ? ReplayGainPhase.completed
+          : ReplayGainPhase.waitingForPlayback,
+    );
+    return pass.deferred.isNotEmpty;
   }
 
-  Future<void> dispose() async {
-    _disposed = true;
-    _generation++;
-    progress.dispose();
+  static double? _gain(Object? value) {
+    final parsed = double.tryParse(
+      (value?.toString() ?? '').replaceFirst(RegExp(r'\s*dB\s*$'), '').trim(),
+    );
+    return parsed != null && parsed.isFinite ? parsed : null;
   }
 
   static Future<SongFileStamp?> _stampOf(String path) async {
-    final stat = await FileStat.stat(path);
-    if (stat.type == FileSystemEntityType.notFound) return null;
-    return (size: stat.size, modified: stat.modified.millisecondsSinceEpoch);
+    final stat = await fileStat(path);
+    if (stat == null ||
+        stat.size == null ||
+        stat.modified == null ||
+        stat.size! < 0 ||
+        stat.modified!.millisecondsSinceEpoch <= 0) {
+      return null;
+    }
+    return (size: stat.size!, modified: stat.modified!.millisecondsSinceEpoch);
   }
 
-  static Future<bool> _hasTrackTagsOf(String path) async {
-    final metadata = await MediaFileBridge.readFileMetadata(path);
-    return (metadata['replaygain_track_gain']?.toString() ?? '').trim()
-        .isNotEmpty;
+  Future<void> dispose() async {
+    if (_disposed) return;
+    _disposed = true;
+    _generation++;
+    _wake?.complete();
+    _wake = null;
+    progress.dispose();
   }
+}
 
-  static Future<String?> _scanAlbumGainOf(List<String> paths) async =>
-      (await FFmpegReplayGain.scanAlbum(paths))?.trackGain;
-
-  static Future<double?> _trackPeakOf(String path) async {
-    final metadata = await MediaFileBridge.readFileMetadata(path);
-    return double.tryParse(
-      metadata['replaygain_track_peak']?.toString() ?? '',
-    );
-  }
-
-  static Future<ReplayGainWriteResult> _writeAlbumOf(
-    String path,
-    String gain,
-    String peak,
-  ) => ReplayGainService.writeAlbumTags(path, gain, peak);
+class _ReplayGainPass {
+  _ReplayGainPass(this.generation, this.paths, this.totalUnits);
+  final int generation, totalUnits;
+  final List<String> paths;
+  int checked = 0, units = 0;
+  final written = <String>{},
+      unchanged = <String>{},
+      failed = <String>{},
+      deferred = <String>{};
+  final stamps = <String, SongFileStamp>{}, after = <String, SongFileStamp>{};
+  final fields = <String, Map<String, String>>{};
+  final existingAlbumTags = <String>{};
 }

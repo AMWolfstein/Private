@@ -125,31 +125,11 @@
     "description": "Dark theme"
   },
   "trackRemoveReplayGain": "إزالة ReplayGain",
-  "replayGainRemoving": "جارٍ إزالة ReplayGain...",
-  "replayGainRemoveConfirmMessage": "إزالة وسوم ReplayGain للمقطع والألبوم من {count} مقطع؟ سيُحفظ الصوت والأغلفة والبيانات الوصفية الأخرى.",
-  "@replayGainRemoveConfirmMessage": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
   "selectionRemoveReplayGainCount": "إزالة RG ({count})",
   "@selectionRemoveReplayGainCount": {
     "description": "Compact selection action label. RG abbreviates ReplayGain; keep this short for a two-column toolbar.",
     "placeholders": {
       "count": {
-        "type": "int"
-      }
-    }
-  },
-  "replayGainRemoveBatchSuccess": "أُزيل ReplayGain من {success} من أصل {total} مقطع",
-  "@replayGainRemoveBatchSuccess": {
-    "placeholders": {
-      "success": {
-        "type": "int"
-      },
-      "total": {
         "type": "int"
       }
     }
@@ -2603,5 +2583,16 @@
   "updateDownloadNetworkFailed": "تعذّر تنزيل التحديث. تحقق من اتصالك وحاول مرة أخرى.",
   "updateInstallFailed": "تعذّر فتح مثبّت التحديث.",
   "updateCheckFailed": "تعذّر التحقق من التحديثات",
-  "retry": "إعادة المحاولة"
+  "retry": "إعادة المحاولة",
+  "replayGainAutoWriteDescription": "قياس مستوى صوت الأغاني والألبومات عند غياب البيانات أو تغيّر الملفات منذ آخر فحص، وكتابتها معًا دون إعادة ترميز الصوت. يشمل المجلدات المضافة عبر منتقي النظام. فعّل تسوية مستوى الصوت في إعدادات التشغيل للاستفادة منها.",
+  "replayGainPreparing": "جارٍ تجهيز المكتبة…",
+  "replayGainMeasuringTracks": "جارٍ قياس مستوى صوت الأغاني…",
+  "replayGainMeasuringAlbums": "جارٍ قياس مستوى صوت الألبومات…",
+  "replayGainWritingTags": "جارٍ كتابة بيانات مستوى الصوت والتحقق منها…",
+  "replayGainWaitingForCharging": "في انتظار توصيل الشاحن",
+  "replayGainWaitingForPlayback": "في انتظار الملفات الجاري تشغيلها أو التي تغيّرت؛ ستتم إعادة المحاولة",
+  "replayGainFinished": "اكتمل فحص ReplayGain",
+  "replayGainFinishedWithErrors": "اكتمل فحص ReplayGain مع وجود أخطاء",
+  "replayGainStoppedWithError": "توقف ReplayGain بسبب خطأ. أوقفه وشغّله لإعادة المحاولة.",
+  "replayGainOutcomeCounts": "تمت كتابة {written} · دون تغيير {unchanged} · فشل {failed} · مؤجّل {deferred}"
 }

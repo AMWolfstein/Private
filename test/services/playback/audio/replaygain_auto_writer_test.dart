@@ -1,309 +1,531 @@
+import 'dart:async';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/core/models/settings.dart';
+import 'package:sistrum/services/ffmpeg/ffmpeg_models.dart';
 import 'package:sistrum/services/playback/audio/replaygain_auto_writer.dart';
+import 'package:sistrum/services/playback/audio/replaygain_progress.dart';
 import 'package:sistrum/services/playback/audio/replaygain_state.dart';
 import 'package:sistrum/services/playback/audio/replaygain_write_result.dart';
 import 'package:sistrum/services/playback/autoplay/song_analysis_store.dart';
 
-AppSettings _settings({bool onlyWhileCharging = false}) =>
-    const AppSettings().copyWith(
-      replayGainAutoWrite: true,
-      replayGainOnlyWhileCharging: onlyWhileCharging,
-    );
-
-Future<void> _until(bool Function() done) async {
-  for (var i = 0; i < 400 && !done(); i++) {
-    await Future<void>.delayed(Duration.zero);
-  }
-}
-
-ReplayGainLibrarySong _song(String path, {String? album = 'Album'}) => (
+AppSettings _settings({bool charging = false}) => const AppSettings().copyWith(
+  replayGainAutoWrite: true,
+  replayGainOnlyWhileCharging: charging,
+);
+ReplayGainLibrarySong _song(
+  String path, {
+  String? album = 'Album',
+  bool local = true,
+}) => (
   path: path,
   album: album,
   albumArtist: 'Artist',
   artist: 'Artist',
-  local: true,
+  local: local,
 );
+const _measurement = ReplayGainResult(
+  trackGain: '-7.00 dB',
+  trackPeak: '0.800000',
+  integratedLufs: -11,
+  truePeakLinear: 0.8,
+);
+Future<void> _until(bool Function() done) async {
+  for (var i = 0; i < 1000 && !done(); i++) {
+    await Future<void>.delayed(Duration.zero);
+  }
+  expect(done(), isTrue, reason: 'ReplayGain operation did not settle');
+}
 
-/// A fake device: files with stamps, tags and peaks, and recorded writes.
+class _FailingState extends MemoryReplayGainState {
+  @override
+  Future<void> saveTrackStamp(String path, SongFileStamp stamp) async =>
+      throw StateError('state write failed');
+}
+
 class _Fake {
-  _Fake(this.songs);
-
+  _Fake(this.songs) {
+    for (final song in songs) {
+      stamps[song.path] = (size: 10, modified: 10);
+    }
+  }
   final List<ReplayGainLibrarySong> songs;
   final stamps = <String, SongFileStamp>{};
-  final trackTagged = <String>{};
-  final peaks = <String, double>{};
-  final trackWrites = <String>[];
-  final albumWrites = <String>[];
+  final metadata = <String, Map<String, dynamic>>{};
+  final trackScans = <String>[];
   final albumScans = <List<String>>[];
+  final writes = <String, List<Map<String, String>>>{};
+  final phases = <ReplayGainProgress>[];
+  MemoryReplayGainState state = MemoryReplayGainState();
+  final failedReads = <String>{}, failedWrites = <String>{};
   String? playing;
-
-  late final writer = ReplayGainAutoWriter(
-    librarySongs: () async => songs,
-    stamp: (path) async => stamps[path],
-    hasTrackTags: (path) async => trackTagged.contains(path),
-    writeTrack: (path) async {
-      trackWrites.add(path);
-      trackTagged.add(path);
-      stamps[path] = (
-        size: (stamps[path]?.size ?? 0) + 1,
-        modified: (stamps[path]?.modified ?? 0) + 1,
-      );
-      return const ReplayGainWriteResult.written();
-    },
-    scanAlbumGain: (paths) async {
-      albumScans.add(paths);
-      return '-7.00 dB';
-    },
-    trackPeak: (path) async => peaks[path],
-    writeAlbum: (path, gain, peak) async {
-      albumWrites.add('$path $gain $peak');
-      stamps[path] = (
-        size: stamps[path]!.size + 1,
-        modified: stamps[path]!.modified + 1,
-      );
-      return const ReplayGainWriteResult.written();
-    },
-    state: MemoryReplayGainState(),
-    isCharging: () async => true,
-    nowPlayingPath: () async => playing,
-    // Waiting is when the playing song stops, so a later pass writes it.
-    wait: (_) async => playing = null,
-    isAndroid: false,
-  );
+  bool charging = true;
+  int libraryReads = 0;
+  Future<void> Function()? duringAlbum, beforeWrite;
+  Future<void> Function(Duration)? wait;
+  late final ReplayGainAutoWriter writer =
+      ReplayGainAutoWriter(
+          librarySongs: () async {
+            libraryReads++;
+            return List.of(songs);
+          },
+          stamp: (path) async => stamps[path],
+          readTags: (path) async {
+            if (failedReads.contains(path)) {
+              throw StateError('permission denied');
+            }
+            return metadata[path] ?? {};
+          },
+          scanTrack: (path) async {
+            trackScans.add(path);
+            return _measurement;
+          },
+          scanAlbum: (paths) async {
+            albumScans.add(List.of(paths));
+            await duringAlbum?.call();
+            return _measurement;
+          },
+          writeTags: (path, fields, guard) async {
+            await beforeWrite?.call();
+            if (!await guard()) {
+              return const ReplayGainWriteResult.failed(
+                ReplayGainWriteFailure.deferred,
+              );
+            }
+            if (failedWrites.contains(path)) {
+              return const ReplayGainWriteResult.failed(
+                ReplayGainWriteFailure.storageFailed,
+              );
+            }
+            writes.putIfAbsent(path, () => []).add(Map.of(fields));
+            metadata.putIfAbsent(path, () => {}).addAll(fields);
+            final stamp = stamps[path]!;
+            stamps[path] = (size: stamp.size + 1, modified: stamp.modified + 1);
+            return const ReplayGainWriteResult.written();
+          },
+          state: state,
+          isCharging: () async => charging,
+          nowPlayingPath: () async => playing,
+          wait: (delay) async {
+            if (wait != null) {
+              await wait!(delay);
+            } else {
+              await Completer<void>().future;
+            }
+          },
+          isAndroid: true,
+        )
+        ..progress.addListener(() {
+          final next = writer.progress.value;
+          if (next != null) phases.add(next);
+        });
+  Future<void> finish() =>
+      _until(() => writer.progress.value?.phase == ReplayGainPhase.completed);
 }
 
 void main() {
-  group('ReplayGainLibrary', () {
-    test('groups songs by album and album artist, ignoring case', () {
-      expect(
-        ReplayGainLibrary.albumKeyOf(_song('/a.flac')),
-        ReplayGainLibrary.albumKeyOf(
-          (
-            path: '/b.flac',
-            album: 'ALBUM',
-            albumArtist: 'artist',
-            artist: 'Other',
-            local: true,
-          ),
-        ),
-      );
-      expect(ReplayGainLibrary.albumKeyOf(_song('/c.flac', album: null)), null);
-    });
-
-    test('a fingerprint changes when a file or the membership changes', () {
-      final stamps = {
-        '/a.flac': (size: 10, modified: 1),
-        '/b.flac': (size: 20, modified: 2),
-      };
-      final both = ReplayGainLibrary.fingerprintOf(['/a.flac', '/b.flac'], stamps);
-      expect(both, isNotNull);
-      expect(ReplayGainLibrary.fingerprintOf(['/a.flac'], stamps), isNot(both));
-      stamps['/b.flac'] = (size: 20, modified: 3);
-      expect(
-        ReplayGainLibrary.fingerprintOf(['/a.flac', '/b.flac'], stamps),
-        isNot(both),
-      );
-      expect(ReplayGainLibrary.fingerprintOf(['/missing.flac'], stamps), null);
-    });
+  test('library grouping and fingerprints retain whole-album identity', () {
+    expect(
+      ReplayGainLibrary.albumKeyOf(_song('/a')),
+      ReplayGainLibrary.albumKeyOf((
+        path: '/b',
+        album: 'ALBUM',
+        albumArtist: 'ARTIST',
+        artist: 'x',
+        local: true,
+      )),
+    );
+    expect(ReplayGainLibrary.albumKeyOf(_song('/a', album: null)), isNull);
+    final stamps = {'/a': (size: 1, modified: 1), '/b': (size: 2, modified: 2)};
+    final both = ReplayGainLibrary.fingerprintOf(['/a', '/b'], stamps);
+    expect(ReplayGainLibrary.fingerprintOf(['/a'], stamps), isNot(both));
+    expect(ReplayGainLibrary.fingerprintOf(['/missing'], stamps), isNull);
   });
 
-  group('ReplayGainIntegrity', () {
-    test('keeps a write whose audio hash and size agree', () {
+  test(
+    'track and album tags publish together once; progress finishes after publication',
+    () async {
+      final fake = _Fake([_song('/a.flac'), _song('/b.flac')]);
+      addTearDown(fake.writer.dispose);
+      fake.writer.configure(_settings());
+      await fake.finish();
+      expect(fake.trackScans, ['/a.flac', '/b.flac']);
+      expect(fake.albumScans.single, ['/a.flac', '/b.flac']);
+      for (final writes in fake.writes.values) {
+        expect(writes, hasLength(1));
+        expect(
+          writes.single.keys,
+          containsAll([
+            'replaygain_track_gain',
+            'replaygain_track_peak',
+            'replaygain_album_gain',
+            'replaygain_album_peak',
+          ]),
+        );
+      }
       expect(
-        ReplayGainIntegrity.check(
-          beforeHash: 'aa',
-          afterHash: 'aa',
-          sizeBefore: 1000,
-          sizeAfter: 1200,
+        fake.phases
+            .where((p) => p.phase != ReplayGainPhase.completed)
+            .every((p) => (p.fraction ?? 0) < 1),
+        isTrue,
+      );
+      final done = fake.writer.progress.value!;
+      expect(done.written, 2);
+      expect(done.failed, 0);
+      expect(done.fraction, 1);
+    },
+  );
+
+  test(
+    'first observation preserves complete existing tags without measurements or writes',
+    () async {
+      final fake = _Fake([_song('/a.flac')]);
+      fake.metadata['/a.flac'] = {
+        'replaygain_track_gain': '-3 dB',
+        'replaygain_track_peak': '0.5',
+        'replaygain_album_gain': '-4 dB',
+        'replaygain_album_peak': '0.6',
+      };
+      addTearDown(fake.writer.dispose);
+      fake.writer.configure(_settings());
+      await fake.finish();
+      expect(fake.trackScans, isEmpty);
+      expect(fake.albumScans, isEmpty);
+      expect(fake.writes, isEmpty);
+      expect(fake.writer.progress.value!.unchanged, 1);
+      expect(await fake.state.trackStamp('/a.flac'), fake.stamps['/a.flac']);
+    },
+  );
+
+  test(
+    'existing track tags are retained while missing album tags are added once',
+    () async {
+      final fake = _Fake([_song('/a.flac')]);
+      fake.metadata['/a.flac'] = {'replaygain_track_gain': '-3 dB'};
+      addTearDown(fake.writer.dispose);
+      fake.writer.configure(_settings());
+      await fake.finish();
+      expect(fake.trackScans, isEmpty);
+      expect(
+        fake.writes['/a.flac']!.single.keys,
+        everyElement(startsWith('replaygain_album_')),
+      );
+    },
+  );
+
+  test(
+    'unchanged files skip subsequent scans and adding a member remeasures the album',
+    () async {
+      final fake = _Fake([_song('/a.flac')]);
+      addTearDown(fake.writer.dispose);
+      fake.writer.configure(_settings());
+      await fake.finish();
+      final reads = fake.libraryReads;
+      fake.writer.refresh();
+      await _until(() => fake.libraryReads > reads);
+      await fake.finish();
+      expect(fake.trackScans, hasLength(1));
+      expect(fake.albumScans, hasLength(1));
+      fake.songs.add(_song('/b.flac'));
+      fake.stamps['/b.flac'] = (size: 10, modified: 10);
+      fake.writer.refresh();
+      await _until(() => fake.albumScans.length == 2);
+      await fake.finish();
+      expect(fake.albumScans.last, ['/a.flac', '/b.flac']);
+      expect(fake.trackScans, ['/a.flac', '/b.flac']);
+    },
+  );
+
+  test(
+    'a known changed file gets new track and album values in one write',
+    () async {
+      final fake = _Fake([_song('/a.flac')]);
+      addTearDown(fake.writer.dispose);
+      fake.writer.configure(_settings());
+      await fake.finish();
+      fake.stamps['/a.flac'] = (size: 30, modified: 30);
+      fake.writer.refresh();
+      await _until(() => fake.trackScans.length == 2);
+      await fake.finish();
+      expect(fake.writes['/a.flac'], hasLength(2));
+    },
+  );
+
+  test(
+    'mixed filesystem and SAF members are measured as one complete album',
+    () async {
+      final fake = _Fake([_song('/a.flac'), _song('content://music/b')]);
+      addTearDown(fake.writer.dispose);
+      fake.writer.configure(_settings());
+      await fake.finish();
+      expect(fake.albumScans.single, ['/a.flac', 'content://music/b']);
+      expect(fake.writes.keys, containsAll(['/a.flac', 'content://music/b']));
+    },
+  );
+
+  test(
+    'permission errors do not produce partial album gain and other tracks continue',
+    () async {
+      final fake = _Fake([_song('/a.flac'), _song('content://music/b')]);
+      fake.failedReads.add('content://music/b');
+      addTearDown(fake.writer.dispose);
+      fake.writer.configure(_settings());
+      await fake.finish();
+      expect(fake.albumScans, isEmpty);
+      expect(
+        fake.writes['/a.flac']!.single,
+        isNot(contains('replaygain_album_gain')),
+      );
+      expect(fake.writer.progress.value!.failed, 1);
+      expect(fake.writer.progress.value!.written, 1);
+    },
+  );
+
+  test('unsupported members prevent partial album measurement', () async {
+    final fake = _Fake([
+      _song('/a.flac'),
+      _song('https://unsupported/song', local: false),
+    ]);
+    addTearDown(fake.writer.dispose);
+    fake.writer.configure(_settings());
+    await fake.finish();
+    expect(fake.albumScans, isEmpty);
+  });
+
+  test(
+    'a song starting playback during album measurement is deferred before write',
+    () async {
+      final fake = _Fake([_song('/a.flac')]);
+      fake.duringAlbum = () async {
+        fake.playing = '/a.flac';
+      };
+      addTearDown(fake.writer.dispose);
+      fake.writer.configure(_settings());
+      await _until(
+        () =>
+            fake.writer.progress.value?.phase ==
+            ReplayGainPhase.waitingForPlayback,
+      );
+      expect(fake.writes, isEmpty);
+      expect(fake.writer.progress.value!.deferred, 1);
+      expect(
+        await fake.state.albumFingerprint(
+          ReplayGainLibrary.albumKeyOf(fake.songs.single)!,
         ),
         isNull,
       );
-    });
+    },
+  );
 
-    test('restores when the audio hash differs or is unknown', () {
+  test(
+    'service guard catches playback starting after the outer write check',
+    () async {
+      final fake = _Fake([_song('/a.flac')]);
+      fake.beforeWrite = () async {
+        fake.playing = '/a.flac';
+      };
+      addTearDown(fake.writer.dispose);
+      fake.writer.configure(_settings());
+      await _until(
+        () =>
+            fake.writer.progress.value?.phase ==
+            ReplayGainPhase.waitingForPlayback,
+      );
+      expect(fake.writes, isEmpty);
+    },
+  );
+
+  test(
+    'a file changed during measurement is deferred instead of receiving stale values',
+    () async {
+      final fake = _Fake([_song('/a.flac')]);
+      fake.duringAlbum = () async {
+        fake.stamps['/a.flac'] = (size: 40, modified: 40);
+      };
+      addTearDown(fake.writer.dispose);
+      fake.writer.configure(_settings());
+      await _until(
+        () =>
+            fake.writer.progress.value?.phase ==
+            ReplayGainPhase.waitingForPlayback,
+      );
+      expect(fake.writes, isEmpty);
+    },
+  );
+
+  test(
+    'failure counts are distinct and a failed album publication is not stamped complete',
+    () async {
+      final fake = _Fake([_song('/a.flac'), _song('/b.flac')]);
+      fake.failedWrites.add('/b.flac');
+      addTearDown(fake.writer.dispose);
+      fake.writer.configure(_settings());
+      await fake.finish();
+      expect(fake.writer.progress.value!.written, 1);
+      expect(fake.writer.progress.value!.failed, 1);
       expect(
-        ReplayGainIntegrity.check(
-          beforeHash: 'aa',
-          afterHash: 'bb',
-          sizeBefore: 1000,
-          sizeAfter: 1000,
+        await fake.state.albumFingerprint(
+          ReplayGainLibrary.albumKeyOf(fake.songs.first)!,
         ),
-        ReplayGainWriteFailure.audioChanged,
+        isNull,
       );
-      expect(
-        ReplayGainIntegrity.check(
-          beforeHash: null,
-          afterHash: 'aa',
-          sizeBefore: 1000,
-          sizeAfter: 1000,
-        ),
-        ReplayGainWriteFailure.verificationFailed,
-      );
-    });
+    },
+  );
 
-    test('restores when the size moves by more than tags explain', () {
-      expect(
-        ReplayGainIntegrity.check(
-          beforeHash: 'aa',
-          afterHash: 'aa',
-          sizeBefore: 100 * 1024 * 1024,
-          sizeAfter: 90 * 1024 * 1024,
-        ),
-        ReplayGainWriteFailure.audioChanged,
-      );
-    });
-  });
-
-  group('ReplayGainAutoWriter', () {
-    test('writes track gain for untagged songs and album gain for the album',
-        () async {
-      final fake = _Fake([_song('/music/a.flac'), _song('/music/b.flac')])
-        ..stamps['/music/a.flac'] = (size: 1, modified: 1)
-        ..stamps['/music/b.flac'] = (size: 1, modified: 1)
-        ..peaks['/music/a.flac'] = 0.5
-        ..peaks['/music/b.flac'] = 0.8;
+  test(
+    'rapid off/on while a scan is pending queues a fresh generation',
+    () async {
+      final fake = _Fake([_song('/a.flac')]);
+      final entered = Completer<void>(), release = Completer<void>();
+      fake.duringAlbum = () async {
+        if (!entered.isCompleted) {
+          entered.complete();
+          await release.future;
+        }
+      };
+      addTearDown(fake.writer.dispose);
       fake.writer.configure(_settings());
-      await _until(() => fake.albumWrites.length == 2);
-
-      expect(fake.trackWrites, ['/music/a.flac', '/music/b.flac']);
-      expect(fake.albumScans, [
-        ['/music/a.flac', '/music/b.flac'],
-      ]);
-      expect(fake.albumWrites, [
-        '/music/a.flac -7.00 dB 0.800000',
-        '/music/b.flac -7.00 dB 0.800000',
-      ]);
-      await fake.writer.dispose();
-    });
-
-    test('an unchanged album is not measured again', () async {
-      final fake = _Fake([_song('/music/a.flac'), _song('/music/b.flac')])
-        ..stamps['/music/a.flac'] = (size: 1, modified: 1)
-        ..stamps['/music/b.flac'] = (size: 1, modified: 1)
-        ..peaks['/music/a.flac'] = 0.5
-        ..peaks['/music/b.flac'] = 0.5;
-      fake.writer.configure(_settings());
-      await _until(() => fake.albumWrites.length == 2);
-      fake.writer.refresh();
-      for (var i = 0; i < 100; i++) {
-        await Future<void>.delayed(Duration.zero);
-      }
-
-      expect(fake.albumScans.length, 1);
-      await fake.writer.dispose();
-    });
-
-    test('adding a song measures the album again over all its files', () async {
-      final songs = [_song('/music/a.flac'), _song('/music/b.flac')];
-      final fake = _Fake(songs)
-        ..stamps['/music/a.flac'] = (size: 1, modified: 1)
-        ..stamps['/music/b.flac'] = (size: 1, modified: 1)
-        ..stamps['/music/c.flac'] = (size: 1, modified: 1)
-        ..peaks['/music/a.flac'] = 0.5
-        ..peaks['/music/b.flac'] = 0.5
-        ..peaks['/music/c.flac'] = 0.5;
-      fake.writer.configure(_settings());
-      await _until(() => fake.albumWrites.length == 2);
-
-      songs.add(_song('/music/c.flac'));
-      fake.writer.refresh();
-      await _until(() => fake.albumScans.length == 2);
-
-      expect(fake.albumScans.last, [
-        '/music/a.flac',
-        '/music/b.flac',
-        '/music/c.flac',
-      ]);
-      await fake.writer.dispose();
-    });
-
-    test('a changed file gets its track gain again', () async {
-      final fake = _Fake([_song('/music/a.flac')])
-        ..stamps['/music/a.flac'] = (size: 1, modified: 1)
-        ..peaks['/music/a.flac'] = 0.5;
-      fake.writer.configure(_settings());
-      await _until(() => fake.albumWrites.length == 1);
-      fake.trackWrites.clear();
-
-      fake.stamps['/music/a.flac'] = (size: 5, modified: 9);
-      fake.writer.refresh();
-      await _until(() => fake.trackWrites.isNotEmpty);
-
-      expect(fake.trackWrites, ['/music/a.flac']);
-      await fake.writer.dispose();
-    });
-
-    test('a playing song is skipped and written on a later pass', () async {
-      final fake = _Fake([_song('/music/a.flac'), _song('/music/b.flac')])
-        ..stamps['/music/a.flac'] = (size: 1, modified: 1)
-        ..stamps['/music/b.flac'] = (size: 1, modified: 1)
-        ..peaks['/music/a.flac'] = 0.5
-        ..peaks['/music/b.flac'] = 0.5
-        ..playing = '/music/a.flac';
-      fake.writer.configure(_settings());
-      await _until(() => fake.albumWrites.length == 2);
-      expect(fake.trackWrites, ['/music/b.flac', '/music/a.flac']);
-      await fake.writer.dispose();
-    });
-
-    test('a failed track write is not retried in the same session', () async {
-      var attempts = 0;
-      final writer = ReplayGainAutoWriter(
-        librarySongs: () async => [_song('/music/a.flac')],
-        stamp: (_) async => (size: 1, modified: 1),
-        hasTrackTags: (_) async => false,
-        writeTrack: (_) async {
-          attempts++;
-          return const ReplayGainWriteResult.failed(
-            ReplayGainWriteFailure.writeFailed,
-          );
-        },
-        state: MemoryReplayGainState(),
-        isCharging: () async => true,
-        wait: (_) async {},
-        isAndroid: false,
-      );
-      writer.configure(_settings());
-      await _until(() => writer.progress.value?.analyzed == 1);
-      writer.refresh();
-      await Future<void>.delayed(Duration.zero);
-      expect(attempts, 1);
-      await writer.dispose();
-    });
-
-    test('an album with a non-local file gets no album gain at all', () async {
-      final fake = _Fake([
-        _song('/music/a.flac'),
-        (
-          path: 'content://tree/doc/b',
-          album: 'Album',
-          albumArtist: 'Artist',
-          artist: 'Artist',
-          local: false,
-        ),
-      ])
-        ..stamps['/music/a.flac'] = (size: 1, modified: 1)
-        ..peaks['/music/a.flac'] = 0.5;
-      fake.writer.configure(_settings());
-      await _until(() => fake.trackWrites.isNotEmpty);
-      for (var i = 0; i < 100; i++) {
-        await Future<void>.delayed(Duration.zero);
-      }
-
-      expect(fake.trackWrites, ['/music/a.flac']);
-      expect(fake.albumScans, isEmpty);
-      expect(fake.albumWrites, isEmpty);
-      await fake.writer.dispose();
-    });
-
-    test('turning the option off clears progress', () async {
-      final fake = _Fake([_song('/music/a.flac')])
-        ..stamps['/music/a.flac'] = (size: 1, modified: 1);
-      fake.writer.configure(_settings());
+      await entered.future;
       fake.writer.configure(const AppSettings());
       expect(fake.writer.progress.value, isNull);
-      await fake.writer.dispose();
-    });
+      fake.writer.configure(_settings());
+      release.complete();
+      await fake.finish();
+      expect(fake.libraryReads, 2);
+      expect(fake.writes['/a.flac'], hasLength(1));
+    },
+  );
+
+  test(
+    'charging wait wakes immediately when disabled and re-enabled without the restriction',
+    () async {
+      final fake = _Fake([_song('/a.flac')]);
+      fake.charging = false;
+      addTearDown(fake.writer.dispose);
+      fake.writer.configure(_settings(charging: true));
+      await _until(
+        () =>
+            fake.writer.progress.value?.phase ==
+            ReplayGainPhase.waitingForCharging,
+      );
+      expect(fake.trackScans, isEmpty);
+      fake.writer.configure(const AppSettings());
+      fake.writer.configure(_settings());
+      await fake.finish();
+      expect(fake.writes['/a.flac'], hasLength(1));
+    },
+  );
+
+  test('index refresh during a scan is not lost', () async {
+    final fake = _Fake([_song('/a.flac')]);
+    var queued = false;
+    fake.duringAlbum = () async {
+      if (!queued) {
+        queued = true;
+        fake.writer.refresh();
+      }
+    };
+    addTearDown(fake.writer.dispose);
+    fake.writer.configure(_settings());
+    await _until(() => fake.libraryReads == 2);
+    await fake.finish();
+    expect(fake.writes['/a.flac'], hasLength(1));
   });
+
+  test(
+    'disposal during a pending scan prevents writes and stale notifications',
+    () async {
+      final fake = _Fake([_song('/a.flac')]);
+      final entered = Completer<void>(), release = Completer<void>();
+      fake.duringAlbum = () async {
+        entered.complete();
+        await release.future;
+      };
+      fake.writer.configure(_settings());
+      await entered.future;
+      await fake.writer.dispose();
+      release.complete();
+      for (var i = 0; i < 20; i++) {
+        await Future<void>.delayed(Duration.zero);
+      }
+      expect(fake.writes, isEmpty);
+    },
+  );
+  test(
+    'missing file identity is reported without publishing unverified measurements',
+    () async {
+      final fake = _Fake([_song('content://music/unknown')]);
+      fake.stamps.clear();
+      addTearDown(fake.writer.dispose);
+      fake.writer.configure(_settings());
+      await fake.finish();
+      expect(fake.trackScans, isEmpty);
+      expect(fake.writes, isEmpty);
+      expect(fake.writer.progress.value!.failed, 1);
+    },
+  );
+
+  test('a playing file is retried only after playback releases it', () async {
+    final fake = _Fake([_song('/a.flac')]);
+    fake.playing = '/a.flac';
+    fake.wait = (_) async {
+      fake.playing = null;
+    };
+    addTearDown(fake.writer.dispose);
+    fake.writer.configure(_settings());
+    await fake.finish();
+    expect(fake.writes['/a.flac'], hasLength(1));
+    expect(
+      fake.phases.any((p) => p.phase == ReplayGainPhase.waitingForPlayback),
+      isTrue,
+    );
+  });
+
+  test(
+    'an empty library finishes without an endless preparation indicator',
+    () async {
+      final fake = _Fake([]);
+      addTearDown(fake.writer.dispose);
+      fake.writer.configure(_settings());
+      await fake.finish();
+      expect(fake.writer.progress.value!.total, 0);
+      expect(fake.writer.progress.value!.fraction, 1);
+    },
+  );
+
+  test(
+    'explicit off/on retries failed files without losing the failure counts',
+    () async {
+      final fake = _Fake([_song('/a.flac')]);
+      fake.failedWrites.add('/a.flac');
+      addTearDown(fake.writer.dispose);
+      fake.writer.configure(_settings());
+      await fake.finish();
+      expect(fake.writer.progress.value!.failed, 1);
+      fake.failedWrites.clear();
+      fake.writer.configure(const AppSettings());
+      fake.writer.configure(_settings());
+      await fake.finish();
+      expect(fake.writer.progress.value!.failed, 0);
+      expect(fake.writer.progress.value!.written, 1);
+    },
+  );
+  test(
+    'state persistence failure does not double count a file as written and failed',
+    () async {
+      final fake = _Fake([_song('/a.flac')]);
+      fake.state = _FailingState();
+      addTearDown(fake.writer.dispose);
+      fake.writer.configure(_settings());
+      await fake.finish();
+      final result = fake.writer.progress.value!;
+      expect(result.failed, 1);
+      expect(result.written, 0);
+      expect(result.unchanged, 0);
+      expect(
+        result.failed + result.written + result.unchanged + result.deferred,
+        result.total,
+      );
+    },
+  );
 }

@@ -124,31 +124,11 @@
     "description": "Dark theme"
   },
   "trackRemoveReplayGain": "Eliminar ReplayGain",
-  "replayGainRemoving": "Eliminando ReplayGain...",
-  "replayGainRemoveConfirmMessage": "¿Deseas eliminar las etiquetas ReplayGain de las {count} pistas? Se conservarán el audio, las imágenes y otros metadatos.",
-  "@replayGainRemoveConfirmMessage": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
   "selectionRemoveReplayGainCount": "Eliminar RG ({count})",
   "@selectionRemoveReplayGainCount": {
     "description": "Compact selection action label. RG abbreviates ReplayGain; keep this short for a two-column toolbar.",
     "placeholders": {
       "count": {
-        "type": "int"
-      }
-    }
-  },
-  "replayGainRemoveBatchSuccess": "Se ha eliminado ReplayGain de {success} de {total} pistas",
-  "@replayGainRemoveBatchSuccess": {
-    "placeholders": {
-      "success": {
-        "type": "int"
-      },
-      "total": {
         "type": "int"
       }
     }

@@ -124,31 +124,11 @@
     "description": "Dark theme"
   },
   "trackRemoveReplayGain": "리플레이게인 제거",
-  "replayGainRemoving": "리플레이게인 제거 중...",
-  "replayGainRemoveConfirmMessage": "{count} 개의 트랙에서 트랙 및 앨범 리플레이게인 태그를 제거하시겠습니까? 오디오, 앨범 아트 및 기타 메타데이터는 보존됩니다",
-  "@replayGainRemoveConfirmMessage": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
   "selectionRemoveReplayGainCount": "RG 제거 ({count})",
   "@selectionRemoveReplayGainCount": {
     "description": "Compact selection action label. RG abbreviates ReplayGain; keep this short for a two-column toolbar.",
     "placeholders": {
       "count": {
-        "type": "int"
-      }
-    }
-  },
-  "replayGainRemoveBatchSuccess": "{total} 개 중 {success} 개의 트랙에서 리플레이게인이 제거됨",
-  "@replayGainRemoveBatchSuccess": {
-    "placeholders": {
-      "success": {
-        "type": "int"
-      },
-      "total": {
         "type": "int"
       }
     }

@@ -124,31 +124,11 @@
     "description": "Dark theme"
   },
   "trackRemoveReplayGain": "ReplayGain हटाएँ",
-  "replayGainRemoving": "ReplayGain हटाया जा रहा है...",
-  "replayGainRemoveConfirmMessage": "{count} ट्रैक से ट्रैक और एल्बम के ReplayGain टैग हटाएँ? ऑडियो, आर्टवर्क और अन्य मेटाडेटा सुरक्षित रहेंगे।",
-  "@replayGainRemoveConfirmMessage": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
   "selectionRemoveReplayGainCount": "RG हटाएँ ({count})",
   "@selectionRemoveReplayGainCount": {
     "description": "Compact selection action label. RG abbreviates ReplayGain; keep this short for a two-column toolbar.",
     "placeholders": {
       "count": {
-        "type": "int"
-      }
-    }
-  },
-  "replayGainRemoveBatchSuccess": "{total} ट्रैक में से {success} से ReplayGain हटाया गया",
-  "@replayGainRemoveBatchSuccess": {
-    "placeholders": {
-      "success": {
-        "type": "int"
-      },
-      "total": {
         "type": "int"
       }
     }

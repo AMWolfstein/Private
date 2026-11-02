@@ -124,31 +124,11 @@
     "description": "Dark theme"
   },
   "trackRemoveReplayGain": "移除 ReplayGain",
-  "replayGainRemoving": "正在移除 ReplayGain…",
-  "replayGainRemoveConfirmMessage": "要從 {count} 首曲目移除曲目與專輯的 ReplayGain 標籤嗎？音訊、封面與其他中繼資料會保留。",
-  "@replayGainRemoveConfirmMessage": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
   "selectionRemoveReplayGainCount": "移除 RG（{count}）",
   "@selectionRemoveReplayGainCount": {
     "description": "Compact selection action label. RG abbreviates ReplayGain; keep this short for a two-column toolbar.",
     "placeholders": {
       "count": {
-        "type": "int"
-      }
-    }
-  },
-  "replayGainRemoveBatchSuccess": "已從 {total} 首曲目中的 {success} 首移除 ReplayGain",
-  "@replayGainRemoveBatchSuccess": {
-    "placeholders": {
-      "success": {
-        "type": "int"
-      },
-      "total": {
         "type": "int"
       }
     }

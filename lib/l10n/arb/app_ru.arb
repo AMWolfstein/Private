@@ -124,31 +124,11 @@
     "description": "Dark theme"
   },
   "trackRemoveReplayGain": "Удалить ReplayGain",
-  "replayGainRemoving": "Удаление ReplayGain...",
-  "replayGainRemoveConfirmMessage": "Удалить теги ReplayGain трека и альбома для {count, plural, one {{count} трека} other {{count} треков}}? Аудио, обложки и другие метаданные будут сохранены.",
-  "@replayGainRemoveConfirmMessage": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
   "selectionRemoveReplayGainCount": "Удалить RG ({count})",
   "@selectionRemoveReplayGainCount": {
     "description": "Compact selection action label. RG abbreviates ReplayGain; keep this short for a two-column toolbar.",
     "placeholders": {
       "count": {
-        "type": "int"
-      }
-    }
-  },
-  "replayGainRemoveBatchSuccess": "ReplayGain удален из {success} из {total, plural, one {{total} трека} few {{total} треков} many {{total} треков} other {{total} треков}}",
-  "@replayGainRemoveBatchSuccess": {
-    "placeholders": {
-      "success": {
-        "type": "int"
-      },
-      "total": {
         "type": "int"
       }
     }

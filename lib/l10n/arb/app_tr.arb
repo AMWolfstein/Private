@@ -124,31 +124,11 @@
     "description": "Dark theme"
   },
   "trackRemoveReplayGain": "ReplayGain'i kaldır",
-  "replayGainRemoving": "ReplayGain kaldırılıyor...",
-  "replayGainRemoveConfirmMessage": "{count} parçadan parça ve albüm ReplayGain etiketleri kaldırılsın mı? Ses, kapak resmi ve diğer meta veriler korunur.",
-  "@replayGainRemoveConfirmMessage": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
   "selectionRemoveReplayGainCount": "RG'yi kaldır ({count})",
   "@selectionRemoveReplayGainCount": {
     "description": "Compact selection action label. RG abbreviates ReplayGain; keep this short for a two-column toolbar.",
     "placeholders": {
       "count": {
-        "type": "int"
-      }
-    }
-  },
-  "replayGainRemoveBatchSuccess": "{total} parçanın {success} tanesinden ReplayGain kaldırıldı",
-  "@replayGainRemoveBatchSuccess": {
-    "placeholders": {
-      "success": {
-        "type": "int"
-      },
-      "total": {
         "type": "int"
       }
     }

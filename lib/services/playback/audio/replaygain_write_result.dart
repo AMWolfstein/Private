@@ -1,5 +1,8 @@
 /// Why a ReplayGain tag change did not reach the file.
 enum ReplayGainWriteFailure {
+  /// Work was cancelled or the song began playing before publication.
+  deferred,
+
   /// The file's container has no native or stream-copy writer for its tags.
   unsupportedFormat,
 

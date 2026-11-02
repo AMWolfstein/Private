@@ -41,8 +41,8 @@ abstract final class FFmpegReplayGain {
 
   /// Measures one album as a single programme: the files are decoded in
   /// order and measured together, so album gain follows the whole album's
-  /// loudness rather than an average of its tracks. The peak is left to the
-  /// caller, which takes the largest track peak.
+  /// loudness rather than an average of its tracks. The same programme scan
+  /// also measures true peak for the album tags.
   static Future<ReplayGainResult?> scanAlbum(
     List<String> filePaths, {
     void Function()? onUnsupportedDecoder,
@@ -62,7 +62,7 @@ abstract final class FFmpegReplayGain {
     final filter =
         '${chain.join(';')};'
         '${joined}concat=n=${filePaths.length}:v=0:a=1,'
-        'ebur128=framelog=quiet';
+        'ebur128=peak=true:framelog=quiet';
     final result = await FFmpegExecution.arguments([
       '-hide_banner',
       '-nostats',
@@ -217,12 +217,25 @@ abstract final class FFmpegReplayGain {
         '${filePath.split('.').last} ReplayGain requires the native tag writer',
       );
     }
+    await writeTags(filePath, {
+      'REPLAYGAIN_${scope.toUpperCase()}_GAIN': gain,
+      'REPLAYGAIN_${scope.toUpperCase()}_PEAK': peak,
+    });
+  }
+
+  /// Writes all requested tags in a single stream-copy operation.
+  static Future<void> writeTags(
+    String filePath,
+    Map<String, String> fields,
+  ) async {
+    if (requiresNativeWriter(filePath)) {
+      throw FFmpegMetadataFailure('ReplayGain requires the native tag writer');
+    }
     final ext = filePath.contains('.')
         ? '.${filePath.split('.').last.toLowerCase()}'
         : '.tmp';
     final tempOutput = await FFmpegOutput.tempPath(ext);
-    final tag = scope.toUpperCase();
-    _log.d('Writing ${scope.toLowerCase()} ReplayGain tags via FFmpeg');
+    _log.d('Writing ReplayGain tags via FFmpeg');
     final result = await FFmpegExecution.arguments([
       '-v',
       'error',
@@ -235,28 +248,26 @@ abstract final class FFmpegReplayGain {
       'copy',
       '-map_metadata',
       '0',
-      '-metadata',
-      'REPLAYGAIN_${tag}_GAIN=$gain',
-      '-metadata',
-      'REPLAYGAIN_${tag}_PEAK=$peak',
+      for (final entry in fields.entries) ...[
+        '-metadata',
+        '${entry.key}=${entry.value}',
+      ],
       tempOutput,
       '-y',
     ]);
     if (!result.success) {
       _log.e(
-        '$scope ReplayGain write failed (code ${result.returnCode}): ${result.output}',
+        'ReplayGain write failed (code ${result.returnCode}): ${result.output}',
       );
     } else if (await FFmpegOutput.promote(
       tempOutput,
       filePath,
-      onError: (e) => _log.w(
-        'Failed to replace file with ${scope.toLowerCase()} ReplayGain: $e',
-      ),
+      onError: (e) => _log.w('Failed to replace file with ReplayGain: $e'),
     )) {
-      _log.d('$scope ReplayGain tags written successfully');
+      _log.d('ReplayGain tags written successfully');
       return;
     }
     await FFmpegOutput.cleanup(tempOutput);
-    throw FFmpegMetadataFailure('$scope ReplayGain tags were not written');
+    throw FFmpegMetadataFailure('ReplayGain tags were not written');
   }
 }

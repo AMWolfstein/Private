@@ -188,31 +188,11 @@
     "description": "Dark theme"
   },
   "trackRemoveReplayGain": "Remove ReplayGain",
-  "replayGainRemoving": "Removing ReplayGain...",
-  "replayGainRemoveConfirmMessage": "Remove track and album ReplayGain tags from {count} track(s)? Audio, artwork, and other metadata will be preserved.",
-  "@replayGainRemoveConfirmMessage": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
   "selectionRemoveReplayGainCount": "Remove RG ({count})",
   "@selectionRemoveReplayGainCount": {
     "description": "Compact selection action label. RG abbreviates ReplayGain; keep this short for a two-column toolbar.",
     "placeholders": {
       "count": {
-        "type": "int"
-      }
-    }
-  },
-  "replayGainRemoveBatchSuccess": "ReplayGain removed from {success} of {total} tracks",
-  "@replayGainRemoveBatchSuccess": {
-    "placeholders": {
-      "success": {
-        "type": "int"
-      },
-      "total": {
         "type": "int"
       }
     }
@@ -3429,7 +3409,7 @@
   "replayGain": "ReplayGain",
   "replayGainPageDescription": "Write loudness tags to your Library songs automatically, so their volume stays even.",
   "replayGainAutoWrite": "Write ReplayGain automatically",
-  "replayGainAutoWriteDescription": "Measure loudness and write ReplayGain tags to Library songs that have none.",
+  "replayGainAutoWriteDescription": "Measure track and album loudness for missing tags or files changed since the last check. Write both together without re-encoding audio. Includes folders added through the system picker. Enable Volume normalization in Playback to use these tags.",
   "replayGainOnlyWhileCharging": "Only while charging",
   "replayGainOnlyWhileChargingDescription": "Write tags only while this phone charges.",
   "replayGainProgress": "{checked} of {total} songs checked",
@@ -3488,5 +3468,31 @@
   "@appAnrTitle": {
     "description": "Title for an Android ANR report, distinct from a crash."
   },
-  "appCrashCopy": "Copy report for developer"
+  "appCrashCopy": "Copy report for developer",
+  "replayGainPreparing": "Preparing library…",
+  "replayGainMeasuringTracks": "Measuring track loudness…",
+  "replayGainMeasuringAlbums": "Measuring album loudness…",
+  "replayGainWritingTags": "Writing and verifying loudness tags…",
+  "replayGainWaitingForCharging": "Waiting for charging",
+  "replayGainWaitingForPlayback": "Waiting for playing or changed files; another pass will retry",
+  "replayGainFinished": "ReplayGain check finished",
+  "replayGainFinishedWithErrors": "ReplayGain check finished with errors",
+  "replayGainStoppedWithError": "ReplayGain stopped after an error. Turn it off and on to retry.",
+  "replayGainOutcomeCounts": "{written} written · {unchanged} unchanged · {failed} failed · {deferred} deferred",
+  "@replayGainOutcomeCounts": {
+    "placeholders": {
+      "written": {
+        "type": "int"
+      },
+      "unchanged": {
+        "type": "int"
+      },
+      "failed": {
+        "type": "int"
+      },
+      "deferred": {
+        "type": "int"
+      }
+    }
+  }
 }
