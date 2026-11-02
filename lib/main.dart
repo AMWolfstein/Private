@@ -72,6 +72,12 @@ void main() {
         yield LicenseEntryWithLineBreaks(const [
           'Inter',
         ], await rootBundle.loadString('assets/fonts/Inter-LICENSE.txt'));
+        yield LicenseEntryWithLineBreaks(
+          const ['Noto Sans Arabic'],
+          await rootBundle.loadString(
+            'assets/fonts/NotoSansArabic-LICENSE.txt',
+          ),
+        );
         yield LicenseEntryWithLineBreaks(const [
           'Material Color Utilities (native palette)',
           'Dart SDK (native Random compatibility)',

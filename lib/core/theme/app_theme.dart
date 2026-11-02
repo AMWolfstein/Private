@@ -218,6 +218,7 @@ class AppTheme extends ThemeExtension<AppTheme> {
       color: foreground,
       fontFamily:
           fontFamily ?? (useSystemFont ? type.textStyle.fontFamily : 'Inter'),
+      fontFamilyFallback: const ['Noto Sans Arabic'],
     );
     final display = type.navLargeTitleTextStyle.copyWith(
       inherit: true,
@@ -225,6 +226,7 @@ class AppTheme extends ThemeExtension<AppTheme> {
       fontFamily:
           fontFamily ??
           (useSystemFont ? type.navLargeTitleTextStyle.fontFamily : 'Inter'),
+      fontFamilyFallback: const ['Noto Sans Arabic'],
     );
     // Supply complete styles: replacing a Material role with a bare TextStyle
     // loses its system family and retains Material tracking in other roles.
@@ -272,6 +274,8 @@ class AppTheme extends ThemeExtension<AppTheme> {
       colorScheme: scheme,
       scaffoldBackgroundColor: surface,
       fontFamily: text.fontFamily,
+      // Explicit styles, dialogs and shared controls also inherit Arabic support.
+      fontFamilyFallback: const ['Noto Sans Arabic'],
       splashFactory: NoSplash.splashFactory,
       extensions: <ThemeExtension<dynamic>>[
         AppTheme(
