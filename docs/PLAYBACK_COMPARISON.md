@@ -1,4 +1,4 @@
-# Playback settings and recommendation learning comparison
+# Playback and Insights: improvements to existing features
 
 Reviewed 2026-11-02 against a freshly fetched upstream main at
 `7db0fc76f6cfeaef903327ebc73e13d9bdc3d936`. This is a source comparison,
@@ -83,6 +83,24 @@ personalization, pause at zero volume, headphone connection behavior and native
 output controls have corresponding local implementations. This does not claim
 that every backend implementation is byte-for-byte equivalent.
 
+## Further improvements to existing Insights
+
+Added to the same pending improvement list on 2026-11-02 at the owner's
+request. Insights is the existing listening-statistics feature in its own tab;
+its name and location stay unchanged. These are source-reviewed recommendations,
+not implemented fixes or newly executed test results.
+
+| ID | Improvement | Confirmed local gap and adaptation scope |
+|---|---|---|
+| I-1 | Preserve recorded covers and recover the window's last usable cover. | Local `lib/services/playback/stats/listening_statistics.dart:315` overwrites artwork even when the new value is null; the summary at `:367` takes only the latest day's artwork. Upstream `lib/services/listening_statistics.dart` uses `COALESCE` on writes and joins the most recent covered day on reads. Adapt this to local references, including the Rewind first song and most-replayed song in `lib/services/playback/stats/listening_rewind.dart:347` and `:427`. Test same-day and cross-day missing covers plus both Rewind fallbacks. |
+| I-2 | Reject temporary or process-bound statistics cover references. | Local `lib/utils/text/string_utils.dart:32` normalizes references but does not apply upstream's durable-reference policy. Upstream `lib/services/cover_store.dart:483` and `ListeningTrack.fromRow` reject temporary files and loopback URLs. Adapt a local-only durable-reference policy for stored statistics and their readers; do not restore remote artwork loading. Test historical stale references, valid durable local covers and graceful fallback. |
+| I-3 | Split collaborative artist credits consistently in Rewind extras. | The general summary already uses local tag-credit rules, but `readListeningYearDetails` at `lib/services/playback/stats/listening_rewind.dart:317` aggregates raw artist tags for monthly leaders and loyal artists; discovery queries at `:402` also group raw tags. Upstream splits each contributor and merges their history before choosing winners or identifying first discovery. Adapt with Sistrum's existing Tag separators and Keep together rules, including case/deduplication and distinct-day counting; do not copy upstream's fixed separator policy. Test solo/collaborative history, monthly leaders, loyal-artist ties and discovery dates. |
+
+The owner explicitly excludes a recording enable/disable switch: it was removed
+intentionally and must not be restored. Insights continues recording through the
+existing automatic path. These improvements do not add a recording preference or
+move Insights back into Playback settings.
+
 ## Other existing Playback features checked
 
 | Existing feature | Improvement assessment |
@@ -96,8 +114,8 @@ that every backend implementation is byte-for-byte equivalent.
 | Pause at zero volume / headphones | Corresponding switches exist in both Playback pages. No additional control found in the compared upstream section (`lib/screens/settings/playback_settings_page.dart:335`). |
 | USB / exclusive output | Compared the Android section at upstream `lib/screens/settings/playback_settings_page.dart:472` with local `lib/screens/settings/playback/playback_settings_auto_mix_confirm.dart:255`: native-output switches, DSD transport, hardware-volume controls and status text are present. No additional setting found; this is not a new hardware compatibility measurement. |
 
-Only the improvements to existing Autoplay/personalization listed above are
-recommended from this comparison. Page organization, other platforms and removed
+The pending list now includes the existing Autoplay/personalization improvements
+and Insights items I-1–I-3 above. Page organization, other platforms and removed
 features are outside the owner's requested improvement list.
 
 ## Verification

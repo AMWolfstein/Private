@@ -25,6 +25,8 @@ Home has no Recent access-history section. Latest Releases uses valid release-da
 from local songs, normalized chronologically without scan/add-date fallback; keep Home's
 Recently Added shelf unchanged. Do not replace the feed with only access history.
 
+Insights is the listening-statistics feature in its own tab. Listening recording stays automatic; do not restore its removed enable/disable setting.
+
 Detailed logging is always on and has no toggle; Logs filters by level with a Full option that shows every entry. There is no separate App settings page.
 Lyrics settings do not contain Embed lyrics or its output-mode submenu/preferences.
 Local lyrics reading and per-file metadata/lyrics editing remain supported. Appearance has
