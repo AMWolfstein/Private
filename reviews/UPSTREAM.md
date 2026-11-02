@@ -123,6 +123,22 @@ channels. See `docs/SONG_ANALYSIS.md` for timing, ownership, tests and limitatio
 This completes the scheduler/charging UI deliberately absent in U-610, without
 rewriting that historical scope or its verification results.
 
+## Playback controls and evaluated recommendation learning (2026-11-02)
+
+Reference: freshly fetched upstream main `7db0fc76f6cfeaef903327ebc73e13d9bdc3d936`;
+ranker introduced in `05b0ec3b`. Source: `e8e7668c`.
+
+| ID | Upstream reference | Current-engine adaptation |
+|---|---|---|
+| U-623 | `lib/services/autoplay_ranker.dart`, Playback `_learningSummary` | Adapt bounded SQLite outcome log, worker logistic score-component weight fitting, 40-outcome cold start, held-out AUC evaluation and standard-ranking fallback. Wire actual picks and opted-in runtime feedback; expose live progress/waiting/learned-vs-standard summary under Reset. Reset clears preference model and new ranker state, rejects late training and reports/retries storage-clear failures. Existing local ranking/scoring APIs retained. Upstream tests/attribution adapted. |
+| U-624 | Playback Gapless switch | Expose persisted Gapless setting before AutoMix; disable/mask while AutoMix is on, preserve stored choice, and gate existing native handoff. Default true preserves previous implicit behavior. Direct/bit-perfect/exclusive exclusions retained; disabling cancels prepared native links. No native-engine changes. |
+
+Comparison of the entire Playback page, associated controls and Autoplay wiring is
+in `docs/PLAYBACK_COMPARISON.md`. Deferred, not implemented: distributed candidate
+sampling, session genre/diversity ranking and co-listening taste embeddings.
+The owner clarified that the comparison concerns improvements to existing
+features only; removed/unrelated features and page organization are excluded.
+
 ## Port order (batches; test once per batch)
 
 Done: batch 1 (U-001, U-101, U-102, U-103; pushed `3f8bbe7`) and batch 1b:
