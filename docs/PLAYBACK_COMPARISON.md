@@ -101,6 +101,25 @@ intentionally and must not be restored. Insights continues recording through the
 existing automatic path. These improvements do not add a recording preference or
 move Insights back into Playback settings.
 
+## Further improvements to existing Library scan and Logs
+
+Added to the pending list on 2026-11-02 at the owner's request, following a
+source comparison against the same upstream snapshot. These are recommendations
+for existing local features, not implemented changes or device-verified failures.
+
+| ID | Improvement | Evidence and adaptation requirements |
+|---|---|---|
+| S-1 | Preserve cover identities across forced rescans. | Upstream `0b53ec64` regenerates thumbnails under stable names and invalidates decoded images after indexing. Local `lib/services/native/library_scan_bridge.dart:119` creates a fresh `full_scan_*` directory, so copied references can keep naming earlier generations. Adapt stable references or safe reference reconciliation while preserving the current guarantee that failed/cancelled scans cannot destroy covers used by the published library. Test success, failure, cancellation and fresh decoded artwork. Do not blindly replace the current transactional safety with in-place overwrites. |
+| S-2 | Protect covers still referenced outside the library during pruning. | Upstream `4bb348f8` includes playlists, favorites, saved/dismissed sessions and statistics in the reference set. Local `lib/services/library/covers/library_cover_snapshot.dart:9` projects only `library.cover_path`, used by `lib/providers/library/local_library_provider_scan_results.dart:205`. Extend the detached projection with references from existing local stores, retaining writer/race guards and skipping destructive pruning if reference reads fail. Exclude removed download/network stores. Test a cover retained solely by each existing store and deletion only after all references disappear. |
+| L-1 | Persist and expose the latest confirmed crash or ANR in Logs after restart. | Upstream `lib/screens/settings/log_screen.dart:368` exposes `AppCrashBanner(diagnostic: true)`, backed by `app_crash_provider.dart` and Android `AppCrashReporter.kt`. Local `lib/main.dart:108` logs runtime errors, but there is no corresponding persisted crash-report flow. Adapt bounded local report storage, confirmed Android exit classification, a readable/copyable Logs entry and supported-version fallback. Do not classify ordinary app closure or a handled Flutter exception alone as a crash. |
+| L-2 | Attach useful runtime context and available native traces to crash reports. | Upstream `lib/services/app_crash_service.dart` records redacted runtime errors, stack traces and the latest 40 log entries; Android `AppCrashReporter.kt` and `NativeCrashTrace.kt` read available crash/ANR traces and native tombstone details. Build on L-1 with bounded reads, local redaction and reporting-failure isolation. Preserve always-on logging and existing Full logcat, filtering, selection and sharing. Never claim an unavailable Android trace or unresolved native symbol as recovered. |
+
+Suggested implementation order: S-2 first to protect copied references, then
+S-1 with failure/cancellation coverage; L-1 followed by its L-2 diagnostic context.
+Existing pause/resume, scan failure reports and log viewer controls are already
+present and are not new backlog items. No recording/logging disable switch,
+remote reporting service or removed feature is proposed.
+
 ## Other existing Playback features checked
 
 | Existing feature | Improvement assessment |
@@ -115,7 +134,7 @@ move Insights back into Playback settings.
 | USB / exclusive output | Compared the Android section at upstream `lib/screens/settings/playback_settings_page.dart:472` with local `lib/screens/settings/playback/playback_settings_auto_mix_confirm.dart:255`: native-output switches, DSD transport, hardware-volume controls and status text are present. No additional setting found; this is not a new hardware compatibility measurement. |
 
 The pending list now includes the existing Autoplay/personalization improvements
-and Insights items I-1–I-3 above. Page organization, other platforms and removed
+Insights items I-1–I-3, Library scan items S-1–S-2 and Logs items L-1–L-2 above. Page organization, other platforms and removed
 features are outside the owner's requested improvement list.
 
 ## Verification
