@@ -1,0 +1,14 @@
+{
+  "commit": "fbca487158d1768d42340df84ca9059620518fcc",
+  "branch": "desloppify/code-health",
+  "build": "release",
+  "abis": [
+    "arm64-v8a"
+  ],
+  "signing": "Android development key",
+  "certificate_sha256": "4a5b0b9b27955f159bcf0c8c5bf17e0df5867d1c234307e44eebd17436236d76",
+  "matches_previous_development_certificate": true,
+  "bytes": 57761046,
+  "sha256": "e49e004b638ab809ea036b0076db6030e128862bb52452c79399e9aa95265469",
+  "device_tested": false
+}
