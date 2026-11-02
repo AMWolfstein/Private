@@ -1,6 +1,6 @@
 # Library alphabet index
 
-Songs, Artists and Album Artists now show a persistent letter rail with A–Z as the default and Z–A as the only other ordering option. Tapping or dragging a letter goes to its first matching row. The rail follows the order of the list, includes Arabic and Latin initials and the `#` bucket for nonletters, and stays on the physical right edge in both LTR and RTL layouts. It shows only initials present in that category.
+Songs, Artists and Album Artists now show a persistent letter rail in A–Z/Z–A order, with A–Z as the default. Size or release-date ordering hides the rail until alphabetical ordering is selected again. Tapping or dragging a letter goes to its first matching row. The rail follows the order of the list, includes Arabic and Latin initials and the `#` bucket for nonletters, and stays on the physical right edge in both LTR and RTL layouts. It shows only initials present in that category.
 
 Songs, Artists and Album Artists have continuous rows without inline letter headings. Songs also has no month/date headings. The letter rail is the only alphabetical index shown. Other Library categories keep their existing navigation.
 
@@ -14,6 +14,6 @@ Large jumps can require several page reads; this is on-demand navigation rather 
 
 ## Verification
 
-Tests cover Arabic/Latin rail taps and drag gestures in LTR/RTL; lazy navigation forwards and backwards through 1,500 variable-height rows; off-page Artists and Album Artists; Songs navigation past the initial 300 rows to row 600; removal of Songs date headings; and SQLite index counts, order, unavailable sources and credit scopes. The full Flutter suite passed **2,445 tests**, with **3 skipped** and no failures (5m51s); analysis reported no issues. Graph `8f74a2d0` contains 29,363 unique nodes and 56,023 links with no dangling endpoints; existing extraction limitations remain.
+Tests cover Arabic/Latin rail taps and drag gestures in LTR/RTL; lazy navigation forwards and backwards through 1,500 variable-height rows; off-page Artists and Album Artists; Songs navigation past the initial 300 rows to row 600; removal of Songs date headings; and SQLite index counts, order, unavailable sources and credit scopes. The full Flutter suite passed **2,445 tests**, with **3 skipped** and no failures (5m45s); analysis reported no issues. Graph `e97b6ac6` contains 29,366 unique nodes and 56,025 links with no dangling endpoints; existing extraction limitations remain.
 
 A focused Songs test exposed a stale list-state detach clearing the replacement controller binding. Ownership checks corrected it, and the navigation test was rerun successfully. No native code, APK build or device execution is involved.
