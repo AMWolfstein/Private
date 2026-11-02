@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart' show visibleForTesting;
 import 'package:sistrum/services/ffmpeg/ffmpeg_metadata.dart';
+import 'package:sistrum/services/ffmpeg/ffmpeg_support.dart';
 import 'package:sistrum/services/ffmpeg/ffmpeg_models.dart';
 import 'package:sistrum/services/ffmpeg/ffmpeg_replaygain.dart';
 import 'package:sistrum/services/library/metadata/metadata_edit_result.dart';
@@ -202,6 +203,17 @@ class ReplayGainService {
     (value?.toString() ?? '').replaceFirst(RegExp(r'\s*dB\s*$'), '').trim(),
   );
 
+  /// Runs [update] on [filePath] only when the audio can be proven unchanged.
+  ///
+  /// Local files: a backup copy is taken first, the audio hash and size are
+  /// compared afterwards, and the backup is copied back on any mismatch or
+  /// failed write. SAF documents already work on a temp copy, which is
+  /// written back only after the same checks pass.
+  /// Whether writes are guarded by the audio hash and size check. Tests that
+  /// drive the SAF channel with fake files turn it off; production keeps it on.
+  @visibleForTesting
+  static bool integrityChecks = true;
+
   static Future<ReplayGainWriteResult> _updateFile(
     String filePath,
     Future<ReplayGainWriteResult> Function(String) update,
@@ -215,6 +227,8 @@ class ReplayGainService {
     final isSaf = isContentUri(filePath);
     var workingPath = filePath;
     String? safTempPath;
+    String? backupPath;
+    var keepBackup = false;
 
     try {
       if (isSaf) {
@@ -232,8 +246,42 @@ class ReplayGainService {
         workingPath = safTempPath;
       }
 
+      // The backup and hashes exist only when the guard is on. The original
+      // is then restored from the backup on any rejected or failed write.
+      String? beforeHash;
+      var sizeBefore = 0;
+      if (integrityChecks) {
+        final dot = workingPath.lastIndexOf('.');
+        final extension = dot < 0 ? '' : workingPath.substring(dot);
+        backupPath = await FFmpegOutput.tempPath(extension);
+        await File(workingPath).copy(backupPath);
+        beforeHash = await FFmpegReplayGain.audioHash(backupPath);
+        sizeBefore = await File(backupPath).length();
+      }
+
       final updated = await update(workingPath);
-      if (!updated.isWritten) return updated;
+      if (!updated.isWritten) {
+        if (backupPath != null) {
+          keepBackup = !await _restore(backupPath, workingPath);
+        }
+        return updated;
+      }
+
+      if (backupPath != null) {
+        final failure = ReplayGainIntegrity.check(
+          beforeHash: beforeHash,
+          afterHash: await FFmpegReplayGain.audioHash(workingPath),
+          sizeBefore: sizeBefore,
+          sizeAfter: await File(workingPath).length(),
+        );
+        if (failure != null) {
+          _log.e(
+            'ReplayGain write rejected ($failure) for $filePath; restoring',
+          );
+          keepBackup = !await _restore(backupPath, workingPath);
+          return ReplayGainWriteResult.failed(failure);
+        }
+      }
 
       if (isSaf) {
         final written = await MediaFileBridge.writeTempToSafDetailed(
@@ -265,6 +313,21 @@ class ReplayGainService {
       if (safTempPath != null) {
         await deleteBestEffort(File(safTempPath));
       }
+      if (backupPath != null && !keepBackup) {
+        await deleteBestEffort(File(backupPath));
+      }
+    }
+  }
+
+  /// Copies [backup] over [target]. False when the copy itself failed, in
+  /// which case the backup is kept on disk for recovery.
+  static Future<bool> _restore(String backup, String target) async {
+    try {
+      await File(backup).copy(target);
+      return true;
+    } catch (e) {
+      _log.e('Could not restore $target from $backup: $e');
+      return false;
     }
   }
 }

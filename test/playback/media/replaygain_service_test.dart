@@ -20,6 +20,8 @@ Matcher rejected() => isA<ReplayGainWriteResult>().having(
 );
 
 void main() {
+  setUpAll(() => ReplayGainService.integrityChecks = false);
+
   TestWidgetsFlutterBinding.ensureInitialized();
   const channel = MethodChannel('com.amwolfstein.sistrum/backend');
   final messenger =

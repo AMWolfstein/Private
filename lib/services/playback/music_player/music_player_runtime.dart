@@ -197,7 +197,12 @@ class MusicPlayerRuntime {
       (ReplayGainAutoWriter(
         library: dependencies.libraryDatabase,
         isAndroid: dependencies.isAndroid,
+        nowPlayingPath: () async => nowPlayingSource,
       )..configure(_settings));
+
+  /// File path of the song playing now, or null when nothing is loaded.
+  String? get nowPlayingSource =>
+      _handler?.mediaItem.value?.extras?['source']?.toString();
 
   SongAnalysis? _songAnalysis;
   SongAnalysis get songAnalysis => _songAnalysis ??=
