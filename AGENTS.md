@@ -46,6 +46,7 @@ settings imports: do not restore player-mode choices, external-player shortcuts 
 external fallback on initialization failure. Keep USB/output-device controls and DSP settings.
 Playback errors keep the selected song for retry; same-ID duration/artwork updates must reach open players.
 Scanned artwork that is absent or stale falls back to the bounded local embedded-cover cache.
+Full scans extract covers into fresh generations and publish stable filenames only after successful indexing. Cover pruning preserves references from local collections, playback sessions and Insights, holding store writer barriers and passing only a detached private reference projection to native maintenance.
 Exact PCM output decodes FLAC through the integer native source; never trust vendor raw
 FLAC decoding to preserve source precision or label padded output as source bit depth.
 Switch and slider thumbs (AppSwitch, AppSlider, horizontal AppLevelSlider) turn into

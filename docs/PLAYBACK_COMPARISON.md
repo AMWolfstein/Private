@@ -4,7 +4,12 @@ Reviewed 2026-11-02 against a freshly fetched upstream main at
 `7db0fc76f6cfeaef903327ebc73e13d9bdc3d936`. This is a source comparison,
 not a device sound-quality or perceptual recommendation benchmark. Upstream
 paths below are relative to that snapshot; Sistrum paths refer to this checkout.
-No additional comparison recommendations were automatically implemented.
+The owner subsequently authorized implementation of the complete reviewed scope.
+All Autoplay, Insights, Library scan and Logs items below are now **implemented**
+in source `0a2e9dc2`, together with the reviewed Mornye theme improvements.
+See `docs/EXISTING_FEATURE_IMPROVEMENTS.md` for the completed matrix and verification.
+The comparison tables preserve the pre-implementation findings at `ff71d57e`;
+their "Sistrum now" column describes that historical review checkpoint.
 
 ## Implemented in this batch
 
@@ -64,7 +69,7 @@ Implementation: `lib/screens/settings/playback/playback_settings_auto_mix_confir
 `lib/services/playback/music_player/music_player_service_session_handlers.dart:19`.
 Upstream UI: `lib/screens/settings/playback_settings_page.dart:224`.
 
-## Further improvements to existing Autoplay and personalization
+## Reviewed Autoplay and personalization improvements — implemented
 
 Scope: improvements to features Sistrum already has, as clarified by the owner.
 These are confirmed implementation differences; no measured improvement in this
@@ -83,12 +88,12 @@ personalization, pause at zero volume, headphone connection behavior and native
 output controls have corresponding local implementations. This does not claim
 that every backend implementation is byte-for-byte equivalent.
 
-## Further improvements to existing Insights
+## Reviewed Insights improvements — implemented
 
 Added to the same pending improvement list on 2026-11-02 at the owner's
 request. Insights is the existing listening-statistics feature in its own tab;
-its name and location stay unchanged. These are source-reviewed recommendations,
-not implemented fixes or newly executed test results.
+its name and location stay unchanged. These source-reviewed items were subsequently implemented in `0a2e9dc2`;
+the original findings and adaptation requirements are retained below.
 
 | ID | Improvement | Confirmed local gap and adaptation scope |
 |---|---|---|
@@ -101,11 +106,11 @@ intentionally and must not be restored. Insights continues recording through the
 existing automatic path. These improvements do not add a recording preference or
 move Insights back into Playback settings.
 
-## Further improvements to existing Library scan and Logs
+## Reviewed Library scan and Logs improvements — implemented
 
 Added to the pending list on 2026-11-02 at the owner's request, following a
-source comparison against the same upstream snapshot. These are recommendations
-for existing local features, not implemented changes or device-verified failures.
+source comparison against the same upstream snapshot. These items were subsequently implemented in `0a2e9dc2`. The table retains
+the source-review evidence and requirements; no device-verified failures are claimed.
 
 | ID | Improvement | Evidence and adaptation requirements |
 |---|---|---|
@@ -114,7 +119,7 @@ for existing local features, not implemented changes or device-verified failures
 | L-1 | Persist and expose the latest confirmed crash or ANR in Logs after restart. | Upstream `lib/screens/settings/log_screen.dart:368` exposes `AppCrashBanner(diagnostic: true)`, backed by `app_crash_provider.dart` and Android `AppCrashReporter.kt`. Local `lib/main.dart:108` logs runtime errors, but there is no corresponding persisted crash-report flow. Adapt bounded local report storage, confirmed Android exit classification, a readable/copyable Logs entry and supported-version fallback. Do not classify ordinary app closure or a handled Flutter exception alone as a crash. |
 | L-2 | Attach useful runtime context and available native traces to crash reports. | Upstream `lib/services/app_crash_service.dart` records redacted runtime errors, stack traces and the latest 40 log entries; Android `AppCrashReporter.kt` and `NativeCrashTrace.kt` read available crash/ANR traces and native tombstone details. Build on L-1 with bounded reads, local redaction and reporting-failure isolation. Preserve always-on logging and existing Full logcat, filtering, selection and sharing. Never claim an unavailable Android trace or unresolved native symbol as recovered. |
 
-Suggested implementation order: S-2 first to protect copied references, then
+Historical suggested implementation order: S-2 first to protect copied references, then
 S-1 with failure/cancellation coverage; L-1 followed by its L-2 diagnostic context.
 Existing pause/resume, scan failure reports and log viewer controls are already
 present and are not new backlog items. No recording/logging disable switch,
@@ -133,7 +138,7 @@ remote reporting service or removed feature is proposed.
 | Pause at zero volume / headphones | Corresponding switches exist in both Playback pages. No additional control found in the compared upstream section (`lib/screens/settings/playback_settings_page.dart:335`). |
 | USB / exclusive output | Compared the Android section at upstream `lib/screens/settings/playback_settings_page.dart:472` with local `lib/screens/settings/playback/playback_settings_auto_mix_confirm.dart:255`: native-output switches, DSD transport, hardware-volume controls and status text are present. No additional setting found; this is not a new hardware compatibility measurement. |
 
-The pending list now includes the existing Autoplay/personalization improvements
+The completed implementation covers the existing Autoplay/personalization improvements
 Insights items I-1–I-3, Library scan items S-1–S-2 and Logs items L-1–L-2 above. Page organization, other platforms and removed
 features are outside the owner's requested improvement list.
 

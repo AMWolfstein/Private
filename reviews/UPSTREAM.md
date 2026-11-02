@@ -134,10 +134,30 @@ ranker introduced in `05b0ec3b`. Source: `e8e7668c`.
 | U-624 | Playback Gapless switch | Expose persisted Gapless setting before AutoMix; disable/mask while AutoMix is on, preserve stored choice, and gate existing native handoff. Default true preserves previous implicit behavior. Direct/bit-perfect/exclusive exclusions retained; disabling cancels prepared native links. No native-engine changes. |
 
 Comparison of the entire Playback page, associated controls and Autoplay wiring is
-in `docs/PLAYBACK_COMPARISON.md`. Deferred, not implemented: distributed candidate
-sampling, session genre/diversity ranking and co-listening taste embeddings.
+in `docs/PLAYBACK_COMPARISON.md`. At that checkpoint deferred: distributed candidate sampling, session
+genre/diversity ranking and co-listening taste embeddings; subsequently completed
+in U-625 / `0a2e9dc2`.
 The owner clarified that the comparison concerns improvements to existing
 features only; removed/unrelated features and page organization are excluded.
+
+## Existing-feature improvement completion (2026-11-02)
+
+Owner-authorized complete implementation of the reviewed Autoplay, Insights,
+Library scan, Logs and Mornye-theme backlog. Source: `0a2e9dc2`. Upstream main
+reference: `7db0fc76f6cfeaef903327ebc73e13d9bdc3d936`.
+
+| ID | Upstream reference | Current-engine adaptation |
+|---|---|---|
+| U-625 | `music_player_autoplay.dart`, `autoplay_signal.dart`, `autoplay_taste.dart` | Distributed local candidate pages; session genre/artist/album diversity; bounded worker co-listening vectors with opted-in runtime ownership, signal integration and complete learning reset. Keep local queue-view/generation boundaries and unknown-song neutrality. |
+| U-626 | `listening_statistics.dart`, `listening_rewind.dart`, durable cover helpers | Preserve/fallback durable covers; participant-aware monthly/loyal/discovery statistics, adapted to local custom Tag separators/Keep together with canonical case identities. No statistics recording switch. |
+| U-627 | `0b53ec64`, `4bb348f8` | Adapt cover-identity protection through post-index atomic stable-name publication while retaining staged extraction, failure/cancellation safety and committed-index refresh. Extend detached prune projection to existing local stores with ordered writer barriers and bounded long-JSON reads. No live DB access from Rust, removed stores or in-place pre-index cover replacement. |
+| U-628 | `AppCrashReporter.kt`, `NativeCrashTrace.kt`, report service/model/UI | Bounded local confirmed-crash/ANR recovery and native traces; redacted runtime context; normal/headless platform handlers; saved Logs diagnostic/copy/details; guarded startup. Adapted pure/JVM/UI tests and full attribution. No remote reporting. |
+| U-629 | Shared Settings/TrackCard/theme cache implementations | Responsive group/header insets, inherited supporting-text colour, cached base-theme chrome variants. Preserve Noto Arabic fallback, font choices and current glass/header design; Material-only row/typography effects excluded. |
+
+Full Flutter **2,440 passed / 3 skipped / zero failures**; analysis clean; Android
+app JVM **105 passed / 1 skipped / zero failures**. Device behavior and measured
+recommendation/performance improvement are not claimed. Complete scope, limits,
+provenance and graph checkpoint: `docs/EXISTING_FEATURE_IMPROVEMENTS.md`.
 
 ## Port order (batches; test once per batch)
 
