@@ -33,12 +33,15 @@ Insights is the listening-statistics feature in its own tab. Listening recording
 Detailed logging is always on and has no toggle; Logs filters are ALL, DEBUG, INFO, WARN and ERROR. Do not restore the removed Full option. There is no separate App settings page.
 Lyrics settings do not contain Embed lyrics or its output-mode submenu/preferences.
 Local lyrics reading and per-file metadata/lyrics editing remain supported.
-Fetch lyrics (the Now Playing action and Lyrics > Songs without synced lyrics) searches the
-built-in online sources in `lib/services/lyrics/` in stages: word-synced, then line-synced,
-then plain text only after the user confirms. It writes the result into the song's own file
-through the Edit Metadata persistence path, keeps every other tag, and asks before replacing
-existing lyrics. Timing is classified from the lyrics text, never from the source name. Sources
-are queried at most once per action. Extensions are never consulted for lyrics. Appearance has
+Find lyrics (the Now Playing action and the per-song button in Lyrics > Songs without synced
+lyrics) opens one sheet pre-filled with the song's title, artist, album and duration; the fields can
+be edited before a normal search. The search asks every built-in source in `lib/services/lyrics/`
+once, at the same time, and groups the matches by their own timing (word-synced, line-synced,
+plain text). Tapping a match previews it with two actions: Embed in file writes the lyrics through
+the Edit Metadata persistence path (every other tag is kept; existing lyrics are replaced only after
+the user confirms), and Download .lrc writes a `.lrc` file beside the audio file (replacing one only
+after confirmation; folder-picker songs cannot get one). Timing is classified from the lyrics text,
+never from the source name. Extensions are never consulted for lyrics. Appearance has
 no decorative Library preview card. Settings and Library subpages reuse the album header's
 circular back button in Sistrum.
 
