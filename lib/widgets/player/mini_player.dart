@@ -5,7 +5,6 @@ import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/providers/playback/music_player_provider.dart';
-import 'package:sistrum/providers/settings/settings_provider.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/core/theme/app_tokens.dart';
 import 'package:sistrum/core/theme/app_theme.dart';
@@ -48,24 +47,18 @@ class _MiniPlayerState extends ConsumerState<MiniPlayer> {
   double _dragUp = 0;
 
   void _openNowPlaying() {
-    // The surface and artwork flight back to the mini player is a hero
-    // animation too: with Hero animations off, the route slides down instead.
-    final heroAnimations = ref.read(
-      settingsProvider.select((s) => s.heroAnimationsEnabled),
-    );
+    // Capture current geometry; the route revalidates it before dismissal.
     Navigator.of(context, rootNavigator: true).push(
       NowPlayingRoute(
         child: appScreensOf(context).nowPlaying(),
-        openOrigin: heroAnimations ? _bounds(_surfaceKey) : null,
-        miniPlayerGeometry: !heroAnimations
-            ? null
-            : () {
-                if (!mounted) return null;
-                final surface = _bounds(_surfaceKey);
-                final artwork = _bounds(_artworkKey);
-                if (surface == null || artwork == null) return null;
-                return (surface: surface, artwork: artwork);
-              },
+        openOrigin: _bounds(_surfaceKey),
+        miniPlayerGeometry: () {
+          if (!mounted) return null;
+          final surface = _bounds(_surfaceKey);
+          final artwork = _bounds(_artworkKey);
+          if (surface == null || artwork == null) return null;
+          return (surface: surface, artwork: artwork);
+        },
       ),
     );
   }

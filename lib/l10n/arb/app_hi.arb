@@ -42,13 +42,6 @@
   "@nowPlayingVolume": {
     "description": "System volume control label in the Sistrum player"
   },
-  "appearanceAccentRed": "लाल (डिफ़ॉल्ट)",
-  "appearanceAccentOrange": "नारंगी",
-  "appearanceAccentGreen": "हरा",
-  "appearanceAccentTeal": "टील",
-  "appearanceAccentBlue": "नीला",
-  "appearanceAccentPurple": "बैंगनी",
-  "appearanceAccentPink": "गुलाबी",
   "appearanceGlassClarity": "ग्लास की स्पष्टता",
   "appearanceGlassOutlines": "ग्लास की रूपरेखा",
   "appearanceGlassOutlinesSubtitle": "Sistrum ग्लास के चारों ओर हल्की किनारी दिखाएँ। इसे बंद करने पर ग्लास स्वयं नहीं बदलता।",
@@ -72,8 +65,6 @@
   "appearanceGlassClarityContrast": "आपके सिस्टम में बढ़ा हुआ कंट्रास्ट माँगा गया है, इसलिए ग्लास अपारदर्शी रहता है। फिर भी ग्लास चाहिए तो लाइट या फ़ुल चुनें; टेक्स्ट का कंट्रास्ट बना रहेगा।",
   "appearanceGlassAutoMeasured": "इस डिवाइस पर मापा गया: स्वचालित {quality} उपयोग करता है।",
   "appearanceGlassClarityAutoFrosted": "स्वचालित ने इस डिवाइस को मापा और फ़्रॉस्टेड उपयोग करता है। स्पष्टता सेट करने के लिए लाइट या फ़ुल चुनें।",
-  "appearanceUseSystemFont": "सिस्टम फ़ॉन्ट का उपयोग करें",
-  "appearanceUseSystemFontSubtitle": "ऐप के टेक्स्ट के लिए आपके डिवाइस का डिफ़ॉल्ट फ़ॉन्ट उपयोग करें।",
   "appName": "Sistrum",
   "@appName": {
     "description": "App name - DO NOT TRANSLATE"
@@ -684,14 +675,6 @@
         "type": "int"
       }
     }
-  },
-  "appearanceHeroAnimations": "हीरो एनिमेशन",
-  "@appearanceHeroAnimations": {
-    "description": "Toggle for shared-element (Hero) transitions"
-  },
-  "appearanceHeroAnimationsSubtitle": "स्क्रीन के बीच कवर उड़ाएँ, जैसे प्लेयर खोलते समय",
-  "@appearanceHeroAnimationsSubtitle": {
-    "description": "Subtitle for the Hero animations toggle"
   },
   "collectionDeleteSelected": "चुने हुए हटाएँ",
   "@collectionDeleteSelected": {
@@ -2274,10 +2257,6 @@
   "playbackPauseOnMuteDescription": "मीडिया वॉल्यूम शून्य होने पर रोकें और बढ़ने पर फिर चलाएँ। मैन्युअल रूप से रोका गया प्लेबैक रुका रहेगा। केवल स्टैंडर्ड ऑडियो आउटपुट।",
   "playbackOnHeadphonesConnected": "हेडफ़ोन जुड़ने पर चलाएँ",
   "playbackOnHeadphonesConnectedDescription": "वायर्ड या ब्लूटूथ हेडफ़ोन जुड़ने पर मौजूदा गाना फिर से शुरू करें। हेडफ़ोन हटने पर प्लेबैक रुकेगा। केवल बिल्ट-इन प्लेयर।",
-  "appearanceCustomFont": "कस्टम फ़ॉन्ट",
-  "appearanceCustomFontSubtitle": "TTF या OTF फ़ाइल आयात करें (10 MB तक)। थीम और सिस्टम फ़ॉन्ट को बदल देता है।",
-  "appearanceCustomFontInvalid": "यह फ़ॉन्ट लोड नहीं हो सका। 10 MB तक की वैध TTF या OTF फ़ाइल चुनें।",
-  "appearanceCustomFontReset": "थीम फ़ॉन्ट उपयोग करें",
   "lyricsTextSize": "गीत टेक्स्ट आकार",
   "lyricsTextPreview": "अपने पसंदीदा गाने की हर पंक्ति के साथ चलें",
   "setupLocalPlayback": "अपना स्थानीय संगीत ऑफ़लाइन चलाएँ",

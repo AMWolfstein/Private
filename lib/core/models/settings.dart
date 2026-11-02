@@ -78,8 +78,6 @@ class AppSettings {
 
   final String libraryFilterMode;
 
-  final bool heroAnimationsEnabled;
-
   /// Slow Ken Burns drift on album cover headers.
   final bool animatedAlbumArtwork;
 
@@ -158,7 +156,6 @@ class AppSettings {
     this.isFirstLaunch = true,
 
     this.libraryFilterMode = 'all',
-    this.heroAnimationsEnabled = true,
     this.animatedAlbumArtwork = true,
     this.lyricsAboveSeekBar = false,
     this.checkForUpdates = true,
@@ -211,7 +208,6 @@ class AppSettings {
     bool? isFirstLaunch,
 
     String? libraryFilterMode,
-    bool? heroAnimationsEnabled,
     bool? animatedAlbumArtwork,
     bool? lyricsAboveSeekBar,
     bool? checkForUpdates,
@@ -272,8 +268,6 @@ class AppSettings {
       isFirstLaunch: isFirstLaunch ?? this.isFirstLaunch,
 
       libraryFilterMode: libraryFilterMode ?? this.libraryFilterMode,
-      heroAnimationsEnabled:
-          heroAnimationsEnabled ?? this.heroAnimationsEnabled,
       animatedAlbumArtwork: animatedAlbumArtwork ?? this.animatedAlbumArtwork,
       lyricsAboveSeekBar: lyricsAboveSeekBar ?? this.lyricsAboveSeekBar,
       checkForUpdates: checkForUpdates ?? this.checkForUpdates,

@@ -7,7 +7,6 @@ import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/core/models/app_glass.dart';
 import 'package:sistrum/services/glass/app_glass_auto_probe.dart';
 import 'package:sistrum/core/models/theme_settings.dart';
-import 'package:sistrum/core/theme/app_theme.dart';
 import 'package:sistrum/widgets/glass/chrome/app_chrome_controls.dart';
 import 'package:sistrum/widgets/settings/settings_search_highlight.dart';
 import 'package:sistrum/widgets/settings/settings_chips_and_cards.dart';
@@ -80,69 +79,6 @@ class GlassQualitySelector extends ConsumerWidget {
               ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class AppAccentPicker extends StatelessWidget {
-  const AppAccentPicker({
-    super.key,
-    required this.selected,
-    required this.onChanged,
-  });
-
-  final AppAccent selected;
-  final ValueChanged<AppAccent> onChanged;
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = context.l10n;
-    final labels = {
-      AppAccent.red: l10n.appearanceAccentRed,
-      AppAccent.orange: l10n.appearanceAccentOrange,
-      AppAccent.green: l10n.appearanceAccentGreen,
-      AppAccent.teal: l10n.appearanceAccentTeal,
-      AppAccent.blue: l10n.appearanceAccentBlue,
-      AppAccent.purple: l10n.appearanceAccentPurple,
-      AppAccent.pink: l10n.appearanceAccentPink,
-    };
-    return Padding(
-      padding: const EdgeInsets.all(16),
-      child: Wrap(
-        spacing: 8,
-        runSpacing: 8,
-        children: [
-          for (final accent in AppAccent.values)
-            Builder(
-              builder: (context) {
-                final color = AppTheme.accentColor(
-                  accent,
-                  Theme.of(context).brightness,
-                );
-                final foreground =
-                    ThemeData.estimateBrightnessForColor(color) ==
-                        Brightness.dark
-                    ? Colors.white
-                    : Colors.black;
-                return Semantics(
-                  selected: selected == accent,
-                  child: IconButton(
-                    tooltip: labels[accent],
-                    onPressed: () => onChanged(accent),
-                    style: IconButton.styleFrom(
-                      backgroundColor: color,
-                      foregroundColor: foreground,
-                      minimumSize: const Size.square(48),
-                    ),
-                    icon: selected == accent
-                        ? const Icon(Icons.check)
-                        : const SizedBox.square(dimension: 24),
-                  ),
-                );
-              },
-            ),
-        ],
       ),
     );
   }

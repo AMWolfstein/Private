@@ -14,13 +14,11 @@ void main() {
     'theme settings round-trip through json and bootstrap preferences',
     () async {
       final values = <String, Object>{
-        kAppAccentKey: 'green',
+        'sistrum_accent': 'green',
         kAppGlassOutlinesKey: false,
       };
       final restored = ThemeSettings.fromJson(values);
-      expect(restored.appAccent, AppAccent.green);
       expect(restored.appGlassOutlines, isFalse);
-      expect(restored.toJson()[kAppAccentKey], 'green');
       expect(restored.toJson()[kAppGlassOutlinesKey], isFalse);
 
       SharedPreferences.setMockInitialValues(values);
@@ -35,8 +33,7 @@ void main() {
       );
       addTearDown(container.dispose);
       await container.read(themeProvider.notifier).setLyricsTextScale(1.1);
-      expect(container.read(themeProvider).appAccent, restored.appAccent);
-      expect(prefs.getString(kAppAccentKey), 'green');
+      expect(prefs.containsKey('sistrum_accent'), isFalse);
       expect(prefs.getBool(kAppGlassOutlinesKey), isFalse);
     },
   );
@@ -50,8 +47,8 @@ void main() {
         'seed_color': 0xff123456,
         'use_dynamic_color': false,
         'use_amoled': true,
-        kUseSystemFontKey: true,
-        kAppAccentKey: 'blue',
+        'use_system_font': true,
+        'sistrum_accent': 'blue',
         kPlayerViewKey: 'immersive',
         kLyricsTextScaleKey: 0.9,
       });
@@ -68,23 +65,23 @@ void main() {
       final notifier = container.read(themeProvider.notifier);
       // An explicit edit equal to the bootstrap default still owns this field.
       final savingMode = notifier.setThemeMode(ThemeMode.system);
-      final savingAccent = notifier.setAppAccent(AppAccent.red);
+      final savingOutlines = notifier.setAppGlassOutlines(false);
       await notifier.setLyricsTextScale(1.2, persist: false);
       var saved = false;
-      unawaited(savingAccent.then((_) => saved = true));
+      unawaited(savingOutlines.then((_) => saved = true));
       await Future<void>.delayed(Duration.zero);
       expect(saved, isFalse);
       expect(container.read(themeProvider).lyricsTextScale, 1.2);
       expect(prefs.getString(kThemeModeKey), 'dark');
 
       releaseLoad.complete(prefs);
-      await Future.wait([savingMode, savingAccent]);
+      await Future.wait([savingMode, savingOutlines]);
       final state = container.read(themeProvider);
       expect(state.themeMode, ThemeMode.system);
-      expect(state.appAccent, AppAccent.red);
+      expect(state.appGlassOutlines, isFalse);
       expect(state.lyricsTextScale, 1.2);
       expect(state.playerView, PlayerView.immersive);
-      expect(state.useSystemFont, isTrue);
+      expect(prefs.containsKey('use_system_font'), isFalse);
       expect(loadBootstrapThemeSettings(prefs), state);
     },
   );
@@ -92,7 +89,7 @@ void main() {
   test('early preview remains immediate without writing preferences', () async {
     SharedPreferences.setMockInitialValues({
       kLyricsTextScaleKey: 0.9,
-      kAppAccentKey: 'blue',
+      kPlayerViewKey: 'immersive',
     });
     final prefs = await SharedPreferences.getInstance();
     final releaseLoad = Completer<SharedPreferences>();
@@ -106,7 +103,7 @@ void main() {
     );
     addTearDown(container.dispose);
     container.listen(themeProvider, (_, next) {
-      if (next.appAccent == AppAccent.blue) loaded.complete();
+      if (next.playerView == PlayerView.immersive) loaded.complete();
     });
     await container
         .read(themeProvider.notifier)
@@ -132,17 +129,17 @@ void main() {
       addTearDown(container.dispose);
       final saving = container
           .read(themeProvider.notifier)
-          .setUseSystemFont(true);
+          .setAppGlassOutlines(false);
       releaseLoad.completeError(StateError('theme_load_failed'));
       await saving;
-      expect(container.read(themeProvider).useSystemFont, isTrue);
+      expect(container.read(themeProvider).appGlassOutlines, isFalse);
     },
   );
 
   test(
     'disposed theme does not read state or save after delayed loading',
     () async {
-      SharedPreferences.setMockInitialValues({kUseSystemFontKey: false});
+      SharedPreferences.setMockInitialValues({kAppGlassOutlinesKey: true});
       final prefs = await SharedPreferences.getInstance();
       final releaseLoad = Completer<SharedPreferences>();
       final container = ProviderContainer(
@@ -154,11 +151,11 @@ void main() {
       );
       final saving = container
           .read(themeProvider.notifier)
-          .setUseSystemFont(true);
+          .setAppGlassOutlines(false);
       container.dispose();
       releaseLoad.complete(prefs);
       await saving;
-      expect(prefs.getBool(kUseSystemFontKey), isFalse);
+      expect(prefs.getBool(kAppGlassOutlinesKey), isTrue);
     },
   );
 }

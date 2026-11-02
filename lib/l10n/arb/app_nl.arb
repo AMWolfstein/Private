@@ -42,13 +42,6 @@
   "@nowPlayingVolume": {
     "description": "System volume control label in the Sistrum player"
   },
-  "appearanceAccentRed": "Rood (standaard)",
-  "appearanceAccentOrange": "Oranje",
-  "appearanceAccentGreen": "Groen",
-  "appearanceAccentTeal": "Blauwgroen",
-  "appearanceAccentBlue": "Blauw",
-  "appearanceAccentPurple": "Paars",
-  "appearanceAccentPink": "Roze",
   "appearanceGlassClarity": "Glasdoorzichtigheid",
   "appearanceGlassOutlines": "Glasranden",
   "appearanceGlassOutlinesSubtitle": "Toon een lichte rand rond Sistrum-glas. Uitschakelen laat het glas zelf ongewijzigd.",
@@ -72,8 +65,6 @@
   "appearanceGlassClarityContrast": "Je systeem vraagt om hoger contrast, dus glas blijft ondoorzichtig. Kies Lite of Volledig om toch glas te gebruiken; tekstcontrast blijft behouden.",
   "appearanceGlassAutoMeasured": "Gemeten op dit toestel: Auto gebruikt {quality}.",
   "appearanceGlassClarityAutoFrosted": "Auto heeft dit toestel gemeten en gebruikt Mat. Kies Lite of Volledig om de helderheid in te stellen.",
-  "appearanceUseSystemFont": "Systeemlettertype gebruiken",
-  "appearanceUseSystemFontSubtitle": "Gebruik het standaardlettertype van je apparaat voor app-tekst.",
   "appName": "Sistrum",
   "@appName": {
     "description": "App name - DO NOT TRANSLATE"
@@ -684,14 +675,6 @@
         "type": "int"
       }
     }
-  },
-  "appearanceHeroAnimations": "Heldenanimaties",
-  "@appearanceHeroAnimations": {
-    "description": "Toggle for shared-element (Hero) transitions"
-  },
-  "appearanceHeroAnimationsSubtitle": "Hoezen tussen schermen laten vliegen, bijvoorbeeld bij het openen van de speler",
-  "@appearanceHeroAnimationsSubtitle": {
-    "description": "Subtitle for the Hero animations toggle"
   },
   "collectionDeleteSelected": "Geselecteerde verwijderen",
   "@collectionDeleteSelected": {
@@ -2274,10 +2257,6 @@
   "playbackPauseOnMuteDescription": "Pauzeer bij mediavolume nul en hervat zodra het omhoog gaat. Handmatige pauzes blijven gepauzeerd. Alleen standaard audio-uitvoer.",
   "playbackOnHeadphonesConnected": "Afspelen bij aansluiten koptelefoon",
   "playbackOnHeadphonesConnectedDescription": "Hervat het huidige nummer wanneer bekabelde of Bluetooth-koptelefoon wordt aangesloten. Loskoppelen pauzeert het afspelen. Alleen ingebouwde speler.",
-  "appearanceCustomFont": "Aangepast lettertype",
-  "appearanceCustomFontSubtitle": "Importeer een TTF- of OTF-bestand (tot 10 MB). Vervangt het thema- en systeemlettertype.",
-  "appearanceCustomFontInvalid": "Kon dit lettertype niet laden. Kies een geldig TTF- of OTF-bestand tot 10 MB.",
-  "appearanceCustomFontReset": "Themalettertype gebruiken",
   "lyricsTextSize": "Tekstgrootte songtekst",
   "lyricsTextPreview": "Volg elke regel van je favoriete nummer",
   "setupLocalPlayback": "Speel je lokale muziek offline af",

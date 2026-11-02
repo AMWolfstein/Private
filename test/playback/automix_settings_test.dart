@@ -5,7 +5,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/core/models/automix_options.dart';
 import 'package:sistrum/core/models/settings.dart';
-import 'package:sistrum/core/models/theme_settings.dart';
 import 'package:sistrum/providers/settings/settings_provider.dart';
 import 'package:sistrum/screens/settings/playback/playback_settings_page.dart';
 import 'package:sistrum/core/theme/app_theme.dart';
@@ -83,7 +82,7 @@ void main() {
             container: container,
             child: MaterialApp(
               theme: sistrum
-                  ? AppTheme.build(Brightness.dark, accent: AppAccent.blue)
+                  ? AppTheme.build(Brightness.dark)
                   : MaterialTestTheme.light(seedColor: Colors.blue),
               localizationsDelegates: AppLocalizations.localizationsDelegates,
               supportedLocales: AppLocalizations.supportedLocales,

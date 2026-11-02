@@ -71,17 +71,8 @@ void main() {
           await rootBundle.loadString('assets/licenses/autoplay_learning.txt'),
         );
         yield LicenseEntryWithLineBreaks(const [
-          'Inter',
-        ], await rootBundle.loadString('assets/fonts/Inter-LICENSE.txt'));
-        yield LicenseEntryWithLineBreaks(const [
           'Local crash diagnostics',
         ], await rootBundle.loadString('assets/licenses/diagnostics.txt'));
-        yield LicenseEntryWithLineBreaks(
-          const ['Noto Sans Arabic'],
-          await rootBundle.loadString(
-            'assets/fonts/NotoSansArabic-LICENSE.txt',
-          ),
-        );
         yield LicenseEntryWithLineBreaks(const [
           'Material Color Utilities (native palette)',
           'Dart SDK (native Random compatibility)',

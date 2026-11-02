@@ -39,13 +39,6 @@
   "usbBitPerfectFallback": "Este dispositivo o formato de audio no admite salida bit-perfect. Se usa la reproducción normal.",
   "usbBitPerfectRouteChanged": "La ruta de audio USB cambió. La reproducción está en pausa; elige una pista para reconectar.",
   "nowPlayingVolume": "Volumen",
-  "appearanceAccentRed": "Rojo (predeterminado)",
-  "appearanceAccentOrange": "Naranja",
-  "appearanceAccentGreen": "Verde",
-  "appearanceAccentTeal": "Verde azulado",
-  "appearanceAccentBlue": "Azul",
-  "appearanceAccentPurple": "Morado",
-  "appearanceAccentPink": "Rosa",
   "appearanceGlassClarity": "Claridad del cristal",
   "appearanceGlassOutlines": "Contornos de cristal",
   "appearanceGlassOutlinesSubtitle": "Muestra un borde suave alrededor del cristal de Sistrum. Desactivarlo no cambia el cristal en sí.",
@@ -69,8 +62,6 @@
   "appearanceGlassClarityContrast": "Tu sistema pide más contraste, así que el cristal sigue opaco. Elige Lite o Completa para usarlo igualmente; el contraste del texto se mantiene.",
   "appearanceGlassAutoMeasured": "Medido en este dispositivo: Auto usa {quality}.",
   "appearanceGlassClarityAutoFrosted": "Auto midió este dispositivo y usa Esmerilado. Elige Lite o Completa para ajustar la claridad.",
-  "appearanceUseSystemFont": "Usar la fuente del sistema",
-  "appearanceUseSystemFontSubtitle": "Usa la tipografía predeterminada de tu dispositivo para el texto de la app.",
   "appName": "Sistrum",
   "@appName": {
     "description": "App name - DO NOT TRANSLATE"
@@ -547,8 +538,6 @@
       }
     }
   },
-  "appearanceHeroAnimations": "Animaciones de transición",
-  "appearanceHeroAnimationsSubtitle": "Hace volar las portadas entre pantallas, por ejemplo al abrir el reproductor",
   "collectionDeleteSelected": "Eliminar seleccionados",
   "@collectionDeleteSelected": {
     "description": "Button - delete selected tracks"
@@ -1583,10 +1572,6 @@
   "playbackPauseOnMuteDescription": "Pausa con el volumen multimedia en cero y reanuda al subirlo. Las pausas manuales se mantienen. Solo con salida de audio estándar.",
   "playbackOnHeadphonesConnected": "Reproducir al conectar auriculares",
   "playbackOnHeadphonesConnectedDescription": "Reanuda la canción actual al conectar auriculares con cable o Bluetooth. Al desconectarlos se pausa la reproducción. Solo reproductor integrado.",
-  "appearanceCustomFont": "Fuente personalizada",
-  "appearanceCustomFontSubtitle": "Importa un archivo TTF u OTF (hasta 10 MB). Sustituye la fuente del tema y la del sistema.",
-  "appearanceCustomFontInvalid": "No se pudo cargar esta fuente. Elige un archivo TTF u OTF válido de hasta 10 MB.",
-  "appearanceCustomFontReset": "Usar la fuente del tema",
   "lyricsTextSize": "Tamaño del texto de las letras",
   "lyricsTextPreview": "Sigue cada línea de tu canción favorita",
   "setupLocalPlayback": "Reproduce tu música local sin conexión",

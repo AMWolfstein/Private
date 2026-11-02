@@ -57,7 +57,7 @@ void _registerAppearanceSettingsDefaults() {
     const immersive = ThemeSettings(playerView: PlayerView.immersive);
     expect(ThemeSettings.fromJson(immersive.toJson()), immersive);
     expect(
-      immersive.copyWith(useSystemFont: true).playerView,
+      immersive.copyWith(lyricsTextScale: 1.2).playerView,
       PlayerView.immersive,
     );
     expect(immersive, isNot(const ThemeSettings()));
@@ -68,7 +68,7 @@ void _registerAppearanceSettingsDefaults() {
       expect(ThemeSettings.fromJson({}).appGlassOutlines, isTrue);
       const settings = ThemeSettings(appGlassOutlines: false);
       expect(ThemeSettings.fromJson(settings.toJson()), settings);
-      expect(settings.copyWith(useSystemFont: true).appGlassOutlines, isFalse);
+      expect(settings.copyWith(lyricsTextScale: 1.2).appGlassOutlines, isFalse);
       expect(settings, isNot(const ThemeSettings()));
     },
   );
@@ -94,30 +94,5 @@ void _registerAppearanceSettingsDefaults() {
     expect(appGlassQualityFromString('lite'), AppGlassQuality.lite);
     expect(appGlassQualityFromString('fancy'), AppGlassQuality.auto);
     expect(AppSettings().toJson().containsKey('forceBackdropBlur'), isFalse);
-  });
-  test('custom accents keep text readable in both appearances', () {
-    double contrast(Color first, Color second) {
-      final a = first.computeLuminance();
-      final b = second.computeLuminance();
-      return a > b ? (a + 0.05) / (b + 0.05) : (b + 0.05) / (a + 0.05);
-    }
-
-    for (final brightness in Brightness.values) {
-      for (final accent in AppAccent.values.where(
-        (accent) => accent != AppAccent.red,
-      )) {
-        final scheme = AppTheme.build(brightness, accent: accent).colorScheme;
-        expect(
-          contrast(scheme.primary, scheme.surface),
-          greaterThanOrEqualTo(4.5),
-          reason: '$accent on $brightness',
-        );
-        expect(
-          contrast(scheme.onPrimary, scheme.primary),
-          greaterThanOrEqualTo(4.5),
-          reason: 'Button text for $accent on $brightness',
-        );
-      }
-    }
   });
 }

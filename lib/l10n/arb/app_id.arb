@@ -42,13 +42,6 @@
   "@nowPlayingVolume": {
     "description": "System volume control label in the Sistrum player"
   },
-  "appearanceAccentRed": "Merah (default)",
-  "appearanceAccentOrange": "Oranye",
-  "appearanceAccentGreen": "Hijau",
-  "appearanceAccentTeal": "Hijau kebiruan",
-  "appearanceAccentBlue": "Biru",
-  "appearanceAccentPurple": "Ungu",
-  "appearanceAccentPink": "Merah muda",
   "appearanceGlassClarity": "Kebeningan kaca",
   "appearanceGlassOutlines": "Garis tepi kaca",
   "appearanceGlassOutlinesSubtitle": "Tampilkan garis dekoratif di tepi kaca Sistrum. Mematikannya tetap mempertahankan blur dan pembiasan.",
@@ -72,8 +65,6 @@
   "appearanceGlassClarityContrast": "Sistem Anda meminta kontras tinggi, sehingga kaca tetap buram. Pilih Lite atau Full untuk tetap memakai kaca; kontras teks tetap terjaga.",
   "appearanceGlassAutoMeasured": "Diukur di perangkat ini: Otomatis memakai {quality}.",
   "appearanceGlassClarityAutoFrosted": "Otomatis mengukur perangkat ini dan memakai Buram. Pilih Lite atau Full untuk mengatur kejernihan.",
-  "appearanceUseSystemFont": "Gunakan font sistem",
-  "appearanceUseSystemFontSubtitle": "Menggunakan font default perangkat untuk aplikasi.",
   "appName": "Sistrum",
   "@appName": {
     "description": "App name - DO NOT TRANSLATE"
@@ -691,14 +682,6 @@
         "type": "int"
       }
     }
-  },
-  "appearanceHeroAnimations": "Transisi halus",
-  "@appearanceHeroAnimations": {
-    "description": "Toggle for shared-element (Hero) transitions"
-  },
-  "appearanceHeroAnimationsSubtitle": "Transisikan cover art antar layar, cont. membuka pemutar",
-  "@appearanceHeroAnimationsSubtitle": {
-    "description": "Subtitle for the Hero animations toggle"
   },
   "collectionDeleteSelected": "Hapus yang Dipilih",
   "@collectionDeleteSelected": {
@@ -2286,10 +2269,6 @@
   "playbackPauseOnMuteDescription": "Jeda saat volume media nol dan lanjutkan saat dinaikkan. Jeda manual tetap dihormati. Hanya untuk keluaran audio standar.",
   "playbackOnHeadphonesConnected": "Putar saat earphone terhubung",
   "playbackOnHeadphonesConnectedDescription": "Lanjutkan lagu saat earphone kabel atau Bluetooth terhubung. Pemutaran dijeda saat dilepas. Hanya untuk pemutar bawaan.",
-  "appearanceCustomFont": "Font kustom",
-  "appearanceCustomFontSubtitle": "Impor file TTF atau OTF (maksimal 10 MB). Menggantikan font tema dan sistem.",
-  "appearanceCustomFontInvalid": "Font tidak dapat dimuat. Pilih file TTF atau OTF yang valid, maksimal 10 MB.",
-  "appearanceCustomFontReset": "Gunakan font tema",
   "lyricsTextSize": "Ukuran teks lirik",
   "lyricsTextPreview": "Ikuti setiap baris lagu favoritmu",
   "setupLocalPlayback": "Putar musik lokal Anda secara offline",

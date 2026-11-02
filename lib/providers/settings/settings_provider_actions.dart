@@ -185,11 +185,6 @@ extension SettingsActions on SettingsNotifier {
     }
   }
 
-  void setHeroAnimationsEnabled(bool enabled) {
-    _current = _current.copyWith(heroAnimationsEnabled: enabled);
-    _saveSettings();
-  }
-
   void setAnimatedAlbumArtwork(bool enabled) {
     _current = _current.copyWith(animatedAlbumArtwork: enabled);
     _saveSettings();

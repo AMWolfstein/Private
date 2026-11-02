@@ -280,11 +280,7 @@ void main() {
 
   group('ThemeSettings', () {
     test('serializes, deserializes, copies, and compares values', () {
-      const settings = ThemeSettings(
-        themeMode: ThemeMode.dark,
-        appAccent: AppAccent.blue,
-        useSystemFont: true,
-      );
+      const settings = ThemeSettings(themeMode: ThemeMode.dark);
 
       final decoded = ThemeSettings.fromJson(settings.toJson());
       final copied = decoded.copyWith(themeMode: ThemeMode.light);
@@ -292,16 +288,6 @@ void main() {
       expect(decoded, settings);
       expect(decoded.hashCode, settings.hashCode);
       expect(copied.themeMode, ThemeMode.light);
-      expect(decoded.appAccent, AppAccent.blue);
-      expect(copied.appAccent, AppAccent.blue);
-      expect(decoded.useSystemFont, isTrue);
-      expect(copied.useSystemFont, isTrue);
-      expect(ThemeSettings.fromJson({}).useSystemFont, isFalse);
-      expect(ThemeSettings.fromJson({}).appAccent, AppAccent.red);
-      expect(
-        ThemeSettings.fromJson({kAppAccentKey: 'unknown'}).appAccent,
-        AppAccent.red,
-      );
       expect(
         ThemeSettings.fromJson({'theme_mode': 'invalid'}).themeMode,
         ThemeMode.system,

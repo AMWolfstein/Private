@@ -43,13 +43,6 @@
   "@nowPlayingVolume": {
     "description": "System volume control label in the Sistrum player"
   },
-  "appearanceAccentRed": "أحمر (افتراضي)",
-  "appearanceAccentOrange": "برتقالي",
-  "appearanceAccentGreen": "أخضر",
-  "appearanceAccentTeal": "أزرق مخضر",
-  "appearanceAccentBlue": "أزرق",
-  "appearanceAccentPurple": "بنفسجي",
-  "appearanceAccentPink": "وردي",
   "appearanceGlassClarity": "وضوح الزجاج",
   "appearanceGlassOutlines": "حدود الزجاج",
   "appearanceGlassOutlinesSubtitle": "إظهار حافة مضيئة حول زجاج Sistrum. إيقافها لا يغيّر الزجاج نفسه.",
@@ -73,8 +66,6 @@
   "appearanceGlassClarityContrast": "يطلب نظامك تباينًا أعلى، لذا يبقى الزجاج معتمًا. اختر خفيف أو كامل لاستخدام الزجاج على أي حال؛ يبقى تباين النص محفوظًا.",
   "appearanceGlassAutoMeasured": "بعد القياس على هذا الجهاز، يستخدم الوضع التلقائي {quality}.",
   "appearanceGlassClarityAutoFrosted": "قاس الوضع التلقائي هذا الجهاز ويستخدم مُثلَّج. اختر خفيف أو كامل لضبط الصفاء.",
-  "appearanceUseSystemFont": "استخدام خط النظام",
-  "appearanceUseSystemFontSubtitle": "استخدم الخط الافتراضي لجهازك لنصوص التطبيق.",
   "appName": "Sistrum",
   "@appName": {
     "description": "App name - DO NOT TRANSLATE"
@@ -685,14 +676,6 @@
         "type": "int"
       }
     }
-  },
-  "appearanceHeroAnimations": "الرسوم المتحركة ",
-  "@appearanceHeroAnimations": {
-    "description": "Toggle for shared-element (Hero) transitions"
-  },
-  "appearanceHeroAnimationsSubtitle": "أغطية الطيران بين الشاشات، على سبيل المثال عند فتح اللاعب",
-  "@appearanceHeroAnimationsSubtitle": {
-    "description": "Subtitle for the Hero animations toggle"
   },
   "collectionDeleteSelected": "حذف المحدد",
   "@collectionDeleteSelected": {
@@ -2276,10 +2259,6 @@
   "playbackPauseOnMuteDescription": "إيقاف مؤقت عند صفر مستوى الوسائط، والاستئناف عند رفعه. الإيقاف اليدوي يبقى متوقفًا. مخرج الصوت القياسي فقط.",
   "playbackOnHeadphonesConnected": "التشغيل عند توصيل سماعات الرأس",
   "playbackOnHeadphonesConnectedDescription": "استئناف الأغنية الحالية عند توصيل سماعات سلكية أو بلوتوث. فصل السماعات يوقف التشغيل مؤقتًا. المشغّل المدمج فقط.",
-  "appearanceCustomFont": "خط مخصص",
-  "appearanceCustomFontSubtitle": "استورد ملف TTF أو OTF (حتى 10 ميغابايت). يتجاوز خط السمة وخط النظام.",
-  "appearanceCustomFontInvalid": "تعذّر تحميل هذا الخط. اختر ملف TTF أو OTF صالحًا حتى 10 ميغابايت.",
-  "appearanceCustomFontReset": "استخدام خط السمة",
   "lyricsTextSize": "حجم نص الكلمات",
   "lyricsTextPreview": "تابع كل سطر من أغنيتك المفضلة",
   "setupLocalPlayback": "شغّل موسيقاك المحلية بدون اتصال",

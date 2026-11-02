@@ -3,13 +3,48 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/screens/shell/main_shell_tabs.dart';
 
 void main() {
+  testWidgets(
+    'tab heroes fly by default and release their controller on disposal',
+    (tester) async {
+      final key = GlobalKey<NavigatorState>();
+      var flights = 0;
+      Widget artwork() => Hero(
+        tag: 'local-artwork',
+        flightShuttleBuilder: (context, animation, direction, from, to) {
+          flights++;
+          return const SizedBox.square(dimension: 40);
+        },
+        child: const SizedBox.square(dimension: 40),
+      );
+      await tester.pumpWidget(
+        MaterialApp(
+          home: TabNavigator(
+            navigatorKey: key,
+            child: Scaffold(body: artwork()),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      final controller = key.currentState!.widget.observers
+          .whereType<HeroController>()
+          .single;
+      expect(controller.navigator, key.currentState);
+      key.currentState!.push(
+        MaterialPageRoute<void>(builder: (_) => Scaffold(body: artwork())),
+      );
+      await tester.pumpAndSettle();
+      expect(flights, greaterThan(0));
+      await tester.pumpWidget(const SizedBox());
+      expect(controller.navigator, isNull);
+      expect(tester.takeException(), isNull);
+    },
+  );
   testWidgets('a tab navigator shows its first page', (tester) async {
     final key = GlobalKey<NavigatorState>();
     await tester.pumpWidget(
       MaterialApp(
         home: TabNavigator(
           navigatorKey: key,
-          heroAnimationsEnabled: true,
           child: const Scaffold(body: Text('Tab root')),
         ),
       ),
@@ -26,7 +61,6 @@ void main() {
       MaterialApp(
         home: TabNavigator(
           navigatorKey: key,
-          heroAnimationsEnabled: false,
           child: const Scaffold(body: Text('Tab root')),
         ),
       ),

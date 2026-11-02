@@ -42,13 +42,6 @@
   "@nowPlayingVolume": {
     "description": "System volume control label in the Sistrum player"
   },
-  "appearanceAccentRed": "빨간색 (기본값)",
-  "appearanceAccentOrange": "주황색",
-  "appearanceAccentGreen": "초록색",
-  "appearanceAccentTeal": "청록색",
-  "appearanceAccentBlue": "파란색",
-  "appearanceAccentPurple": "보라색",
-  "appearanceAccentPink": "분홍색",
   "appearanceGlassClarity": "글래스 투명도",
   "appearanceGlassOutlines": "글래스 테두리",
   "appearanceGlassOutlinesSubtitle": "Sistrum 글래스 주변에 밝은 테두리를 표시합니다. 끄면 글래스 자체는 그대로 유지됩니다.",
@@ -72,8 +65,6 @@
   "appearanceGlassClarityContrast": "시스템에서 대비 강화를 요청해 글래스가 불투명하게 유지됩니다. 그래도 글래스를 쓰려면 라이트 또는 풀을 선택하세요. 텍스트 대비는 유지됩니다.",
   "appearanceGlassAutoMeasured": "이 기기에서 측정했습니다. 자동은 {quality}을(를) 사용합니다.",
   "appearanceGlassClarityAutoFrosted": "자동이 이 기기를 측정해 프로스트를 사용합니다. 선명도를 설정하려면 라이트 또는 풀을 선택하세요.",
-  "appearanceUseSystemFont": "시스템 글꼴 사용",
-  "appearanceUseSystemFontSubtitle": "앱 텍스트에 기기 기본 글꼴을 사용합니다",
   "appName": "Sistrum",
   "@appName": {
     "description": "App name - DO NOT TRANSLATE"
@@ -684,14 +675,6 @@
         "type": "int"
       }
     }
-  },
-  "appearanceHeroAnimations": "히어로 애니메이션",
-  "@appearanceHeroAnimations": {
-    "description": "Toggle for shared-element (Hero) transitions"
-  },
-  "appearanceHeroAnimationsSubtitle": "화면 간 이동 시 앨범 커버가 날아가는 애니메이션을 표시합니다 (예시: 플레이어를 실행할 경우)",
-  "@appearanceHeroAnimationsSubtitle": {
-    "description": "Subtitle for the Hero animations toggle"
   },
   "collectionDeleteSelected": "선택 항목 삭제",
   "@collectionDeleteSelected": {
@@ -2277,10 +2260,6 @@
   "playbackPauseOnMuteDescription": "미디어 볼륨이 0이면 일시정지하고, 볼륨을 올리면 재생을 이어갑니다. 직접 일시정지한 경우에는 계속 멈춰 있습니다. 표준 오디오 출력에서만 동작합니다.",
   "playbackOnHeadphonesConnected": "헤드폰 연결 시 재생",
   "playbackOnHeadphonesConnectedDescription": "유선 또는 블루투스 헤드폰이 연결되면 현재 곡을 이어서 재생합니다. 연결이 끊기면 일시정지합니다. 내장 플레이어에서만 동작합니다.",
-  "appearanceCustomFont": "사용자 지정 글꼴",
-  "appearanceCustomFontSubtitle": "TTF 또는 OTF 파일(최대 10MB)을 가져옵니다. 테마와 시스템 글꼴보다 우선합니다.",
-  "appearanceCustomFontInvalid": "이 글꼴을 불러올 수 없습니다. 10MB 이하의 올바른 TTF 또는 OTF 파일을 선택하세요.",
-  "appearanceCustomFontReset": "테마 글꼴 사용",
   "lyricsTextSize": "가사 글자 크기",
   "lyricsTextPreview": "좋아하는 노래의 모든 가사를 따라가세요",
   "setupLocalPlayback": "로컬 음악을 오프라인으로 재생하세요",

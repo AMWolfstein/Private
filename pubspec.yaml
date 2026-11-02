@@ -116,8 +116,6 @@ flutter:
 
   assets:
     - assets/images/
-    - assets/fonts/Inter-LICENSE.txt
-    - assets/fonts/NotoSansArabic-LICENSE.txt
     - assets/licenses/usb.txt
     - assets/licenses/oboe.txt
     - assets/licenses/wavpack.txt
@@ -129,11 +127,3 @@ flutter:
     - assets/licenses/native_palette.txt
     - assets/licenses/native_data_jobs.txt
     - assets/licenses/diagnostics.txt
-
-  fonts:
-    - family: Inter
-      fonts:
-        - asset: assets/fonts/InterVariable.ttf
-    - family: Noto Sans Arabic
-      fonts:
-        - asset: assets/fonts/NotoSansArabicVariable.ttf

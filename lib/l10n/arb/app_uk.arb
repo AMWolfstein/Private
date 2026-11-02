@@ -42,13 +42,6 @@
   "@nowPlayingVolume": {
     "description": "System volume control label in the Sistrum player"
   },
-  "appearanceAccentRed": "Червоний (за замовчуванням)",
-  "appearanceAccentOrange": "Помаранчевий",
-  "appearanceAccentGreen": "Зелений",
-  "appearanceAccentTeal": "Бірюзовий",
-  "appearanceAccentBlue": "Блакитний",
-  "appearanceAccentPurple": "Фіолетовий",
-  "appearanceAccentPink": "Рожевий",
   "appearanceGlassClarity": "Прозорість скла",
   "appearanceGlassOutlines": "Контури скла",
   "appearanceGlassOutlinesSubtitle": "Показувати світлу рамку навколо скла Sistrum. Вимкнення не змінює сам ефект скла.",
@@ -72,8 +65,6 @@
   "appearanceGlassClarityContrast": "Системі потрібен підвищений контраст, тому скло лишається непрозорим. Оберіть Lite або Повну, щоб усе одно використовувати скло; контраст тексту збережено.",
   "appearanceGlassAutoMeasured": "Виміряно на цьому пристрої: «Авто» використовує {quality}.",
   "appearanceGlassClarityAutoFrosted": "«Авто» виміряло цей пристрій і використовує матове скло. Оберіть Lite або Повну, щоб налаштувати прозорість.",
-  "appearanceUseSystemFont": "Використовувати системний шрифт",
-  "appearanceUseSystemFontSubtitle": "Використовуйте стандартний шрифт вашого пристрою для тексту в додатку.",
   "appName": "Sistrum",
   "@appName": {
     "description": "App name - DO NOT TRANSLATE"
@@ -684,14 +675,6 @@
         "type": "int"
       }
     }
-  },
-  "appearanceHeroAnimations": "Анімації головного елемента",
-  "@appearanceHeroAnimations": {
-    "description": "Toggle for shared-element (Hero) transitions"
-  },
-  "appearanceHeroAnimationsSubtitle": "Анімація переходу між екранами, наприклад, під час відкриття плеєра",
-  "@appearanceHeroAnimationsSubtitle": {
-    "description": "Subtitle for the Hero animations toggle"
   },
   "collectionDeleteSelected": "Видалити вибране",
   "@collectionDeleteSelected": {
@@ -2277,10 +2260,6 @@
   "playbackPauseOnMuteDescription": "Призупиняти за нульової гучності медіа й продовжувати, коли її збільшено. Ручні паузи лишаються. Лише стандартний аудіовихід.",
   "playbackOnHeadphonesConnected": "Відтворювати при підключенні навушників",
   "playbackOnHeadphonesConnectedDescription": "Продовжувати поточну пісню, коли підключаються дротові або Bluetooth-навушники. Відключення ставить на паузу. Лише вбудований плеєр.",
-  "appearanceCustomFont": "Власний шрифт",
-  "appearanceCustomFontSubtitle": "Імпортуйте файл TTF або OTF (до 10 МБ). Замінює шрифт теми та системний шрифт.",
-  "appearanceCustomFontInvalid": "Не вдалося завантажити цей шрифт. Оберіть дійсний файл TTF або OTF до 10 МБ.",
-  "appearanceCustomFontReset": "Використовувати шрифт теми",
   "lyricsTextSize": "Розмір тексту пісень",
   "lyricsTextPreview": "Слідкуйте за кожним рядком улюбленої пісні",
   "setupLocalPlayback": "Слухайте свою локальну музику офлайн",

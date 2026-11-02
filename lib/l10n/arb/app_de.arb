@@ -42,13 +42,6 @@
   "@nowPlayingVolume": {
     "description": "System volume control label in the Sistrum player"
   },
-  "appearanceAccentRed": "Rot (Standard)",
-  "appearanceAccentOrange": "Orange",
-  "appearanceAccentGreen": "Grün",
-  "appearanceAccentTeal": "Türkis",
-  "appearanceAccentBlue": "Blau",
-  "appearanceAccentPurple": "Lila",
-  "appearanceAccentPink": "Pink",
   "appearanceGlassClarity": "Glastransparenz",
   "appearanceGlassOutlines": "Glas-Konturen",
   "appearanceGlassOutlinesSubtitle": "Zeigt einen hellen Rand um das Sistrum-Glas. Ausschalten lässt das Glas selbst unverändert.",
@@ -72,8 +65,6 @@
   "appearanceGlassClarityContrast": "Dein System fordert erhöhten Kontrast an, daher bleibt das Glas undurchsichtig. Wähle Lite oder Voll, um Glas trotzdem zu verwenden; der Textkontrast bleibt erhalten.",
   "appearanceGlassAutoMeasured": "Auf diesem Gerät gemessen: Auto verwendet {quality}.",
   "appearanceGlassClarityAutoFrosted": "Auto hat dieses Gerät gemessen und verwendet Matt. Wähle Lite oder Voll, um die Klarheit festzulegen.",
-  "appearanceUseSystemFont": "Systemschrift verwenden",
-  "appearanceUseSystemFontSubtitle": "Die Standardschrift deines Geräts für App-Texte verwenden.",
   "appName": "Sistrum",
   "@appName": {
     "description": "App name - DO NOT TRANSLATE"
@@ -684,14 +675,6 @@
         "type": "int"
       }
     }
-  },
-  "appearanceHeroAnimations": "Heldenanimationen",
-  "@appearanceHeroAnimations": {
-    "description": "Toggle for shared-element (Hero) transitions"
-  },
-  "appearanceHeroAnimationsSubtitle": "Cover zwischen Bildschirmen übergleiten lassen, z. B. beim Öffnen des Players",
-  "@appearanceHeroAnimationsSubtitle": {
-    "description": "Subtitle for the Hero animations toggle"
   },
   "collectionDeleteSelected": "Ausgewählte löschen",
   "@collectionDeleteSelected": {
@@ -2275,10 +2258,6 @@
   "playbackPauseOnMuteDescription": "Pausiert bei Medienlautstärke null und setzt fort, wenn sie erhöht wird. Manuelle Pausen bleiben pausiert. Nur Standard-Audioausgabe.",
   "playbackOnHeadphonesConnected": "Bei Kopfhöreranschluss abspielen",
   "playbackOnHeadphonesConnectedDescription": "Setzt den aktuellen Song fort, wenn kabelgebundene oder Bluetooth-Kopfhörer verbunden werden. Trennen pausiert die Wiedergabe. Nur integrierter Player.",
-  "appearanceCustomFont": "Benutzerdefinierte Schrift",
-  "appearanceCustomFontSubtitle": "Importiere eine TTF- oder OTF-Datei (bis 10 MB). Überschreibt das Design und die Systemschrift.",
-  "appearanceCustomFontInvalid": "Diese Schrift konnte nicht geladen werden. Wähle eine gültige TTF- oder OTF-Datei bis 10 MB.",
-  "appearanceCustomFontReset": "Design-Schrift verwenden",
   "lyricsTextSize": "Liedtext-Größe",
   "lyricsTextPreview": "Folge jeder Zeile deines Lieblingssongs",
   "setupLocalPlayback": "Spiele deine lokale Musik offline ab",

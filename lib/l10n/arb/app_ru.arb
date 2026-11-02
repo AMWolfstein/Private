@@ -42,13 +42,6 @@
   "@nowPlayingVolume": {
     "description": "System volume control label in the Sistrum player"
   },
-  "appearanceAccentRed": "Красный (по умолчанию)",
-  "appearanceAccentOrange": "Оранжевый",
-  "appearanceAccentGreen": "Зелёный",
-  "appearanceAccentTeal": "Морской",
-  "appearanceAccentBlue": "Синий",
-  "appearanceAccentPurple": "Фиолетовый",
-  "appearanceAccentPink": "Розовый",
   "appearanceGlassClarity": "Прозрачность стекла",
   "appearanceGlassOutlines": "Контуры стекла",
   "appearanceGlassOutlinesSubtitle": "Показывать светлую кромку вокруг стекла Sistrum. Выключение не меняет само стекло.",
@@ -72,8 +65,6 @@
   "appearanceGlassClarityContrast": "В системе включён повышенный контраст, поэтому стекло остаётся непрозрачным. Выберите «Лёгкое» или «Полное», чтобы всё равно использовать стекло; контраст текста сохраняется.",
   "appearanceGlassAutoMeasured": "Измерено на этом устройстве: «Авто» использует {quality}.",
   "appearanceGlassClarityAutoFrosted": "«Авто» измерило это устройство и использует «Матовое». Выберите «Лёгкое» или «Полное», чтобы задать прозрачность.",
-  "appearanceUseSystemFont": "Использовать системный шрифт",
-  "appearanceUseSystemFontSubtitle": "Использовать системный шрифт вашего устройства для текста приложения.",
   "appName": "Sistrum",
   "@appName": {
     "description": "App name - DO NOT TRANSLATE"
@@ -684,14 +675,6 @@
         "type": "int"
       }
     }
-  },
-  "appearanceHeroAnimations": "Hero-анимации",
-  "@appearanceHeroAnimations": {
-    "description": "Toggle for shared-element (Hero) transitions"
-  },
-  "appearanceHeroAnimationsSubtitle": "Переходы между экранами, например, при открытии плеера",
-  "@appearanceHeroAnimationsSubtitle": {
-    "description": "Subtitle for the Hero animations toggle"
   },
   "collectionDeleteSelected": "Удалить выбранные",
   "@collectionDeleteSelected": {
@@ -2276,10 +2259,6 @@
   "playbackPauseOnMuteDescription": "Пауза при нулевой громкости медиа и возобновление при увеличении. Ручная пауза остаётся. Только стандартный аудиовыход.",
   "playbackOnHeadphonesConnected": "Играть при подключении наушников",
   "playbackOnHeadphonesConnectedDescription": "Возобновлять текущую песню при подключении проводных или Bluetooth-наушников. Отключение ставит на паузу. Только встроенный плеер.",
-  "appearanceCustomFont": "Свой шрифт",
-  "appearanceCustomFontSubtitle": "Импортируйте файл TTF или OTF (до 10 МБ). Заменяет шрифт темы и системы.",
-  "appearanceCustomFontInvalid": "Не удалось загрузить этот шрифт. Выберите корректный файл TTF или OTF до 10 МБ.",
-  "appearanceCustomFontReset": "Использовать шрифт темы",
   "lyricsTextSize": "Размер текста песни",
   "lyricsTextPreview": "Следите за каждой строкой любимой песни",
   "setupLocalPlayback": "Слушайте локальную музыку офлайн",

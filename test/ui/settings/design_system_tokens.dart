@@ -37,10 +37,16 @@ void _registerDesignSystemTokens() {
         theme.textTheme.labelLarge,
         theme.textTheme.labelSmall,
       ]) {
-        expect(role?.fontFamily, 'Inter');
+        expect(
+          role?.fontFamily,
+          const CupertinoThemeData().textTheme.textStyle.fontFamily,
+        );
         expect(role?.letterSpacing, lessThan(0));
       }
-      expect(theme.textTheme.headlineLarge?.fontFamily, 'Inter');
+      expect(
+        theme.textTheme.headlineLarge?.fontFamily,
+        const CupertinoThemeData().textTheme.navLargeTitleTextStyle.fontFamily,
+      );
     });
 
     testWidgets('context.tokens falls back to the standard scale', (

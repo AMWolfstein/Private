@@ -42,13 +42,6 @@
   "@nowPlayingVolume": {
     "description": "System volume control label in the Sistrum player"
   },
-  "appearanceAccentRed": "Vermelho (padrão)",
-  "appearanceAccentOrange": "Laranja",
-  "appearanceAccentGreen": "Verde",
-  "appearanceAccentTeal": "Verde-azulado",
-  "appearanceAccentBlue": "Azul",
-  "appearanceAccentPurple": "Roxo",
-  "appearanceAccentPink": "Rosa",
   "appearanceGlassClarity": "Clareza do vidro",
   "appearanceGlassOutlines": "Contornos de vidro",
   "appearanceGlassOutlinesSubtitle": "Mostra uma borda clara ao redor do vidro Sistrum. Desativar não altera o próprio vidro.",
@@ -72,8 +65,6 @@
   "appearanceGlassClarityContrast": "O sistema solicita mais contraste, então o vidro permanece opaco. Escolha Leve ou Completo para usar o vidro mesmo assim; o contraste do texto é preservado.",
   "appearanceGlassAutoMeasured": "Medido neste aparelho: Automático usa {quality}.",
   "appearanceGlassClarityAutoFrosted": "O modo Automático mediu este aparelho e usa Fosco. Escolha Leve ou Completo para definir a transparência.",
-  "appearanceUseSystemFont": "Usar fonte do sistema",
-  "appearanceUseSystemFontSubtitle": "Usa a fonte padrão do seu dispositivo nos textos do app.",
   "appName": "Sistrum",
   "@appName": {
     "description": "App name - DO NOT TRANSLATE"
@@ -684,14 +675,6 @@
         "type": "int"
       }
     }
-  },
-  "appearanceHeroAnimations": "Animações de destaque",
-  "@appearanceHeroAnimations": {
-    "description": "Toggle for shared-element (Hero) transitions"
-  },
-  "appearanceHeroAnimationsSubtitle": "Transição das capas entre telas, por exemplo ao abrir o player",
-  "@appearanceHeroAnimationsSubtitle": {
-    "description": "Subtitle for the Hero animations toggle"
   },
   "collectionDeleteSelected": "Apagar Selecionados",
   "@collectionDeleteSelected": {
@@ -2274,10 +2257,6 @@
   "playbackPauseOnMuteDescription": "Pausa com volume de mídia em zero e retoma ao aumentar. Pausas manuais continuam pausadas. Somente saída de áudio padrão.",
   "playbackOnHeadphonesConnected": "Tocar ao conectar fones",
   "playbackOnHeadphonesConnectedDescription": "Retoma a música atual quando fones com fio ou Bluetooth são conectados. Desconectar pausa a reprodução. Somente player integrado.",
-  "appearanceCustomFont": "Fonte personalizada",
-  "appearanceCustomFontSubtitle": "Importe um arquivo TTF ou OTF (até 10 MB). Substitui o tema e a fonte do sistema.",
-  "appearanceCustomFontInvalid": "Não foi possível carregar esta fonte. Escolha um arquivo TTF ou OTF válido de até 10 MB.",
-  "appearanceCustomFontReset": "Usar fonte do tema",
   "lyricsTextSize": "Tamanho do texto das letras",
   "lyricsTextPreview": "Acompanhe cada linha da sua música favorita",
   "setupLocalPlayback": "Reproduza sua música local offline",

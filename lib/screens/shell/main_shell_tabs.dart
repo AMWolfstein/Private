@@ -6,13 +6,11 @@ import 'package:sistrum/screens/library/section_tab/library_section_tab.dart';
 class TabNavigator extends StatefulWidget {
   final GlobalKey<NavigatorState> navigatorKey;
   final Widget child;
-  final bool heroAnimationsEnabled;
 
   const TabNavigator({
     super.key,
     required this.navigatorKey,
     required this.child,
-    required this.heroAnimationsEnabled,
   });
 
   @override
@@ -39,10 +37,7 @@ class _TabNavigatorState extends State<TabNavigator> {
   Widget build(BuildContext context) {
     return Navigator(
       key: widget.navigatorKey,
-      observers: [
-        _chromeObserver,
-        if (widget.heroAnimationsEnabled) _heroController,
-      ],
+      observers: [_chromeObserver, _heroController],
       onGenerateInitialRoutes: (_, _) => [
         MaterialPageRoute<void>(builder: (_) => widget.child),
       ],

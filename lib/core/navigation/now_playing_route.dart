@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:sistrum/services/platform/app_orientation.dart';
-import 'package:sistrum/core/theme/app_theme.dart';
 
 /// Hero tag shared by the mini player artwork and the full player artwork so
 /// the cover visually expands when the player opens.
 const kNowPlayingArtworkHeroTag = 'now-playing-artwork';
 
-/// Slide-up route for the full player. Supports live drag-to-dismiss: the
+/// Surface/artwork morph route for the full player. Supports live drag-to-dismiss: the
 /// page follows the finger (via [startDrag]/[updateDrag]/[endDrag]) and
 /// settles open or pops based on release position and velocity.
 class NowPlayingRoute extends PageRoute<void> {
@@ -285,21 +284,17 @@ class NowPlayingRoute extends PageRoute<void> {
         ],
       );
     }
-    final reversing = animation.status == AnimationStatus.reverse;
-    // Sistrum's full-bleed artwork travels with its panel. Material keeps the
-    // independent cover flight back to the mini-player on button/back pop.
-    final inPlacePop =
-        reversing && !_interactiveTransition && !context.isAppTheme;
-    final slide = _interactiveTransition
-        ? animation
-        : animation.drive(CurveTween(curve: Easing.emphasizedDecelerate));
-    final position = inPlacePop
-        ? const AlwaysStoppedAnimation(Offset.zero)
-        : slide.drive(Tween(begin: const Offset(0, 1), end: Offset.zero));
-    final opacity = inPlacePop ? animation : kAlwaysCompleteAnimation;
+    // Geometry can be absent on direct entry or become stale after rotation.
+    // There is no alternate opening animation; only a live dismissal follows
+    // the finger. Reduced motion also bypasses the surface/artwork morph.
+    if (MediaQuery.disableAnimationsOf(context) || !_interactiveTransition) {
+      return child;
+    }
     return SlideTransition(
-      position: position,
-      child: FadeTransition(opacity: opacity, child: child),
+      position: animation.drive(
+        Tween(begin: const Offset(0, 1), end: Offset.zero),
+      ),
+      child: child,
     );
   }
 }

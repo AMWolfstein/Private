@@ -42,13 +42,6 @@
   "@nowPlayingVolume": {
     "description": "System volume control label in the Sistrum player"
   },
-  "appearanceAccentRed": "Rosso (predefinito)",
-  "appearanceAccentOrange": "Arancione",
-  "appearanceAccentGreen": "Verde",
-  "appearanceAccentTeal": "Verde acqua",
-  "appearanceAccentBlue": "Blu",
-  "appearanceAccentPurple": "Viola",
-  "appearanceAccentPink": "Rosa",
   "appearanceGlassClarity": "Trasparenza del vetro",
   "appearanceGlassOutlines": "Contorni vetro",
   "appearanceGlassOutlinesSubtitle": "Mostra un bordo chiaro attorno al vetro Sistrum. Disattivandolo, il vetro resta invariato.",
@@ -72,8 +65,6 @@
   "appearanceGlassClarityContrast": "Il sistema richiede un contrasto maggiore, quindi il vetro resta opaco. Scegli Leggera o Completa per usarlo comunque; il contrasto del testo viene mantenuto.",
   "appearanceGlassAutoMeasured": "Misurato su questo dispositivo: Auto usa {quality}.",
   "appearanceGlassClarityAutoFrosted": "Auto ha misurato questo dispositivo e usa Smerigliato. Scegli Leggera o Completa per impostare la trasparenza.",
-  "appearanceUseSystemFont": "Usa il carattere di sistema",
-  "appearanceUseSystemFontSubtitle": "Usa il carattere predefinito del dispositivo per i testi dell'app.",
   "appName": "Sistrum",
   "@appName": {
     "description": "App name - DO NOT TRANSLATE"
@@ -684,14 +675,6 @@
         "type": "int"
       }
     }
-  },
-  "appearanceHeroAnimations": "Animazioni hero",
-  "@appearanceHeroAnimations": {
-    "description": "Toggle for shared-element (Hero) transitions"
-  },
-  "appearanceHeroAnimationsSubtitle": "Fai volare le copertine tra le schermate, ad esempio all'apertura del player",
-  "@appearanceHeroAnimationsSubtitle": {
-    "description": "Subtitle for the Hero animations toggle"
   },
   "collectionDeleteSelected": "Elimina selezionato",
   "@collectionDeleteSelected": {
@@ -2274,10 +2257,6 @@
   "playbackPauseOnMuteDescription": "Mette in pausa con volume multimediale a zero e riprende quando lo alzi. Le pause manuali restano attive. Solo uscita audio standard.",
   "playbackOnHeadphonesConnected": "Riproduci quando colleghi le cuffie",
   "playbackOnHeadphonesConnectedDescription": "Riprende il brano corrente quando si collegano cuffie cablate o Bluetooth. Scollegandole la riproduzione si mette in pausa. Solo player integrato.",
-  "appearanceCustomFont": "Carattere personalizzato",
-  "appearanceCustomFontSubtitle": "Importa un file TTF o OTF (fino a 10 MB). Sostituisce il carattere del tema e del sistema.",
-  "appearanceCustomFontInvalid": "Impossibile caricare questo carattere. Scegli un file TTF o OTF valido fino a 10 MB.",
-  "appearanceCustomFontReset": "Usa il carattere del tema",
   "lyricsTextSize": "Dimensione testo dei testi",
   "lyricsTextPreview": "Segui ogni riga della tua canzone preferita",
   "setupLocalPlayback": "Riproduci la tua musica locale offline",

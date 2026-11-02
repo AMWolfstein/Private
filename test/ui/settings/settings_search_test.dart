@@ -43,14 +43,13 @@ void main() {
   testWidgets('new controls are searchable and have a highlight target', (
     tester,
   ) async {
-    for (final query in ['glass clarity', 'custom font', 'text size']) {
+    for (final query in ['glass clarity', 'text size']) {
       await pumpSettings(tester);
       final l10n = AppLocalizations.of(
         tester.element(find.byType(SettingsTab)),
       );
       final label = switch (query) {
         'glass clarity' => l10n.appearanceGlassClarity,
-        'custom font' => l10n.appearanceCustomFont,
         _ => l10n.lyricsTextSize,
       };
       await tester.enterText(find.byType(TextField), query);

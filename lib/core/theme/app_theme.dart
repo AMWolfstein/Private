@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:sistrum/core/models/theme_settings.dart';
 import 'package:sistrum/core/theme/app_tokens.dart';
 
 /// Flutter counterpart of Sistrum's iPhone visual system. Reference values come
@@ -9,17 +8,9 @@ import 'package:sistrum/core/theme/app_tokens.dart';
 /// in the Sistrum project; keep this palette independent of wallpaper colors.
 @immutable
 class AppTheme extends ThemeExtension<AppTheme> {
-  const AppTheme({
-    this.chromeSurface,
-    this.accent = AppAccent.red,
-    this.useSystemFont = false,
-    this.fontFamily,
-  });
+  const AppTheme({this.chromeSurface});
 
   final Color? chromeSurface;
-  final AppAccent accent;
-  final bool useSystemFont;
-  final String? fontFamily;
 
   /// A single translucent fill for controls inside an existing glass surface.
   static Color controlFill(BuildContext context, {bool enabled = true}) {
@@ -57,24 +48,8 @@ class AppTheme extends ThemeExtension<AppTheme> {
   static const lightAccent = Color.fromRGBO(204, 46, 51, 1);
   static const darkAccent = Color.fromRGBO(255, 69, 58, 1);
 
-  static Color accentColor(AppAccent accent, Brightness brightness) {
-    final dark = brightness == Brightness.dark;
-    final color = switch (accent) {
-      AppAccent.red => const CupertinoDynamicColor.withBrightness(
-        color: lightAccent,
-        darkColor: darkAccent,
-      ),
-      AppAccent.orange => CupertinoColors.systemOrange,
-      AppAccent.green => CupertinoColors.systemGreen,
-      AppAccent.teal => CupertinoColors.systemTeal,
-      AppAccent.blue => CupertinoColors.systemBlue,
-      AppAccent.purple => CupertinoColors.systemPurple,
-      AppAccent.pink => CupertinoColors.systemPink,
-    };
-    // Accents also label links and small controls on white surfaces.
-    if (!dark && accent == AppAccent.green) return const Color(0xff24863d);
-    return dark ? color.darkColor : color.highContrastColor;
-  }
+  static Color accentColor(Brightness brightness) =>
+      brightness == Brightness.dark ? darkAccent : lightAccent;
 
   static final tokens = AppTokens.standard.copyWith(
     radiusBadge: 5,
@@ -109,47 +84,18 @@ class AppTheme extends ThemeExtension<AppTheme> {
   // many artists cannot grow the cache indefinitely. Platform is part of the
   // key because it controls fonts and route transitions.
   static final _themeCache =
-      <
-        (TargetPlatform, Brightness, Color?, AppAccent, bool, String?),
-        ThemeData
-      >{};
+      <(TargetPlatform, Brightness, Color?), ThemeData>{};
 
-  static ThemeData build(
-    Brightness brightness, {
-    Color? chromeSurface,
-    AppAccent accent = AppAccent.red,
-    bool useSystemFont = false,
-    String? fontFamily,
-  }) {
-    final key = (
-      defaultTargetPlatform,
-      brightness,
-      chromeSurface,
-      accent,
-      useSystemFont,
-      fontFamily,
-    );
+  static ThemeData build(Brightness brightness, {Color? chromeSurface}) {
+    final key = (defaultTargetPlatform, brightness, chromeSurface);
     final cached = _themeCache.remove(key);
     if (cached != null) {
       _themeCache[key] = cached;
       return cached;
     }
     final theme = chromeSurface == null
-        ? _build(
-            brightness,
-            selectedAccent: accent,
-            useSystemFont: useSystemFont,
-            fontFamily: fontFamily,
-          )
-        : _withChromeSurface(
-            build(
-              brightness,
-              accent: accent,
-              useSystemFont: useSystemFont,
-              fontFamily: fontFamily,
-            ),
-            chromeSurface,
-          );
+        ? _build(brightness)
+        : _withChromeSurface(build(brightness), chromeSurface);
     if (_themeCache.length >= 16) {
       _themeCache.remove(_themeCache.keys.first);
     }
@@ -184,25 +130,12 @@ class AppTheme extends ThemeExtension<AppTheme> {
     Color? chromeSurface,
   }) {
     final theme = Theme.of(context);
-    final preferences = theme.extension<AppTheme>();
-    return build(
-      brightness ?? theme.brightness,
-      chromeSurface: chromeSurface,
-      accent: preferences?.accent ?? AppAccent.red,
-      useSystemFont: preferences?.useSystemFont ?? false,
-      fontFamily: preferences?.fontFamily,
-    );
+    return build(brightness ?? theme.brightness, chromeSurface: chromeSurface);
   }
 
-  static ThemeData _build(
-    Brightness brightness, {
-    Color? chromeSurface,
-    required AppAccent selectedAccent,
-    required bool useSystemFont,
-    String? fontFamily,
-  }) {
+  static ThemeData _build(Brightness brightness, {Color? chromeSurface}) {
     final dark = brightness == Brightness.dark;
-    final accent = accentColor(selectedAccent, brightness);
+    final accent = accentColor(brightness);
     final foreground = dark ? Colors.white : Colors.black;
     final surface = dark ? Colors.black : Colors.white;
     final grouped = dark ? const Color(0xff1c1c1e) : const Color(0xfff2f2f7);
@@ -240,22 +173,12 @@ class AppTheme extends ThemeExtension<AppTheme> {
               : const Color(0xffc6c6c8),
           surfaceTint: Colors.transparent,
         );
-    // Inter is the default font unless the user opts into the system font.
+    // Platform typography supplies the primary family and system glyph fallback.
     final type = CupertinoThemeData(brightness: brightness).textTheme;
-    final text = type.textStyle.copyWith(
-      inherit: true,
-      color: foreground,
-      fontFamily:
-          fontFamily ?? (useSystemFont ? type.textStyle.fontFamily : 'Inter'),
-      fontFamilyFallback: const ['Noto Sans Arabic'],
-    );
+    final text = type.textStyle.copyWith(inherit: true, color: foreground);
     final display = type.navLargeTitleTextStyle.copyWith(
       inherit: true,
       color: foreground,
-      fontFamily:
-          fontFamily ??
-          (useSystemFont ? type.navLargeTitleTextStyle.fontFamily : 'Inter'),
-      fontFamilyFallback: const ['Noto Sans Arabic'],
     );
     // Supply complete styles: replacing a Material role with a bare TextStyle
     // loses its system family and retains Material tracking in other roles.
@@ -303,16 +226,9 @@ class AppTheme extends ThemeExtension<AppTheme> {
       colorScheme: scheme,
       scaffoldBackgroundColor: surface,
       fontFamily: text.fontFamily,
-      // Explicit styles, dialogs and shared controls also inherit Arabic support.
-      fontFamilyFallback: const ['Noto Sans Arabic'],
       splashFactory: NoSplash.splashFactory,
       extensions: <ThemeExtension<dynamic>>[
-        AppTheme(
-          chromeSurface: chromeSurface,
-          accent: selectedAccent,
-          useSystemFont: useSystemFont,
-          fontFamily: fontFamily,
-        ),
+        AppTheme(chromeSurface: chromeSurface),
         tokens,
       ],
     );
@@ -402,26 +318,12 @@ class AppTheme extends ThemeExtension<AppTheme> {
   }
 
   @override
-  AppTheme copyWith({
-    Color? chromeSurface,
-    AppAccent? accent,
-    bool? useSystemFont,
-    String? fontFamily,
-  }) => AppTheme(
-    chromeSurface: chromeSurface ?? this.chromeSurface,
-    accent: accent ?? this.accent,
-    useSystemFont: useSystemFont ?? this.useSystemFont,
-    fontFamily: fontFamily ?? this.fontFamily,
-  );
+  AppTheme copyWith({Color? chromeSurface}) =>
+      AppTheme(chromeSurface: chromeSurface ?? this.chromeSurface);
 
   @override
   AppTheme lerp(covariant AppTheme? other, double t) => AppTheme(
     chromeSurface: Color.lerp(chromeSurface, other?.chromeSurface, t),
-    accent: t < 0.5 ? accent : other?.accent ?? accent,
-    fontFamily: t < 0.5 ? fontFamily : other?.fontFamily,
-    useSystemFont: t < 0.5
-        ? useSystemFont
-        : other?.useSystemFont ?? useSystemFont,
   );
 }
 

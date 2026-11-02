@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 
 const String kThemeModeKey = 'theme_mode';
-const String kAppAccentKey = 'sistrum_accent';
-const String kUseSystemFontKey = 'use_system_font';
-const String kCustomFontIdKey = 'custom_font_id';
-const String kCustomFontNameKey = 'custom_font_name';
 const String kPlayerViewKey = 'player_view';
 const String kLyricsTimingOffsetKey = 'lyrics_timing_offset_ms';
 
@@ -28,21 +24,10 @@ PlayerView playerViewFromString(String? value) => PlayerView.values.firstWhere(
   orElse: () => PlayerView.normal,
 );
 
-enum AppAccent { red, orange, green, teal, blue, purple, pink }
-
-AppAccent appAccentFromString(String? value) => AppAccent.values.firstWhere(
-  (accent) => accent.name == value,
-  orElse: () => AppAccent.red,
-);
-
 class ThemeSettings {
   final ThemeMode themeMode;
   final PlayerView playerView;
 
-  final AppAccent appAccent;
-  final bool useSystemFont;
-  final String customFontId;
-  final String customFontName;
   final double lyricsTextScale;
   final double lyricsBlur;
   final int lyricsTimingOffsetMs;
@@ -52,10 +37,6 @@ class ThemeSettings {
     this.themeMode = ThemeMode.system,
     this.playerView = PlayerView.normal,
 
-    this.appAccent = AppAccent.red,
-    this.useSystemFont = false,
-    this.customFontId = '',
-    this.customFontName = '',
     this.lyricsTextScale = 1,
     this.lyricsBlur = 1,
     this.lyricsTimingOffsetMs = 0,
@@ -66,10 +47,6 @@ class ThemeSettings {
     ThemeMode? themeMode,
     PlayerView? playerView,
 
-    AppAccent? appAccent,
-    bool? useSystemFont,
-    String? customFontId,
-    String? customFontName,
     double? lyricsTextScale,
     double? lyricsBlur,
     int? lyricsTimingOffsetMs,
@@ -79,10 +56,6 @@ class ThemeSettings {
       themeMode: themeMode ?? this.themeMode,
       playerView: playerView ?? this.playerView,
 
-      appAccent: appAccent ?? this.appAccent,
-      useSystemFont: useSystemFont ?? this.useSystemFont,
-      customFontId: customFontId ?? this.customFontId,
-      customFontName: customFontName ?? this.customFontName,
       lyricsTextScale: normalizeLyricsTextScale(
         lyricsTextScale ?? this.lyricsTextScale,
       ),
@@ -97,10 +70,6 @@ class ThemeSettings {
   Map<String, dynamic> toJson() => {
     kThemeModeKey: themeMode.name,
     kPlayerViewKey: playerView.name,
-    kAppAccentKey: appAccent.name,
-    kUseSystemFontKey: useSystemFont,
-    kCustomFontIdKey: customFontId,
-    kCustomFontNameKey: customFontName,
     kLyricsTextScaleKey: lyricsTextScale,
     kLyricsBlurKey: normalizeLyricsBlur(lyricsBlur),
     kLyricsTimingOffsetKey: normalizeLyricsTimingOffset(lyricsTimingOffsetMs),
@@ -112,10 +81,6 @@ class ThemeSettings {
       themeMode: themeModeFromString(json[kThemeModeKey] as String?),
       playerView: playerViewFromString(json[kPlayerViewKey]?.toString()),
 
-      appAccent: appAccentFromString(json[kAppAccentKey] as String?),
-      useSystemFont: json[kUseSystemFontKey] as bool? ?? false,
-      customFontId: json[kCustomFontIdKey] as String? ?? '',
-      customFontName: json[kCustomFontNameKey] as String? ?? '',
       lyricsTextScale: normalizeLyricsTextScale(
         json[kLyricsTextScaleKey] as num?,
       ),
@@ -135,10 +100,6 @@ class ThemeSettings {
     return other is ThemeSettings &&
         other.themeMode == themeMode &&
         other.playerView == playerView &&
-        other.appAccent == appAccent &&
-        other.useSystemFont == useSystemFont &&
-        other.customFontId == customFontId &&
-        other.customFontName == customFontName &&
         other.lyricsTextScale == lyricsTextScale &&
         other.lyricsBlur == lyricsBlur &&
         other.lyricsTimingOffsetMs == lyricsTimingOffsetMs &&
@@ -149,10 +110,6 @@ class ThemeSettings {
   int get hashCode =>
       themeMode.hashCode ^
       playerView.hashCode ^
-      appAccent.hashCode ^
-      useSystemFont.hashCode ^
-      customFontId.hashCode ^
-      customFontName.hashCode ^
       lyricsTextScale.hashCode ^
       lyricsBlur.hashCode ^
       lyricsTimingOffsetMs.hashCode ^

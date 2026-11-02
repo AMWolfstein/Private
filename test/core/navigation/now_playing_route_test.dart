@@ -12,7 +12,8 @@ import 'package:sistrum/core/theme/app_theme.dart';
 const _sheet = Key('player-sheet');
 
 class _TestPlayerRoute extends NowPlayingRoute {
-  _TestPlayerRoute({super.miniPlayerGeometry}) : super(child: const SizedBox());
+  _TestPlayerRoute({super.miniPlayerGeometry, super.openOrigin})
+    : super(child: const SizedBox());
 
   @override
   Widget buildPage(
@@ -23,6 +24,54 @@ class _TestPlayerRoute extends NowPlayingRoute {
 }
 
 void main() {
+  for (final reducedMotion in [false, true]) {
+    testWidgets(
+      'player uses only the morph and respects reduced motion ($reducedMotion)',
+      (tester) async {
+        final navigator = GlobalKey<NavigatorState>();
+        await tester.pumpWidget(
+          MaterialApp(
+            navigatorKey: navigator,
+            builder: (context, child) => MediaQuery(
+              data: MediaQuery.of(
+                context,
+              ).copyWith(disableAnimations: reducedMotion),
+              child: child!,
+            ),
+            home: const SizedBox(),
+          ),
+        );
+        navigator.currentState!.push(
+          _TestPlayerRoute(
+            openOrigin: const Rect.fromLTWH(20, 500, 700, 52),
+            miniPlayerGeometry: () => (
+              surface: const Rect.fromLTWH(20, 500, 700, 52),
+              artwork: const Rect.fromLTWH(28, 504, 44, 44),
+            ),
+          ),
+        );
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 100));
+        final morph = find.byKey(const ValueKey('player-minimize-surface'));
+        expect(morph, reducedMotion ? findsNothing : findsOneWidget);
+        expect(
+          find.ancestor(
+            of: find.byKey(_sheet),
+            matching: find.byType(SlideTransition),
+          ),
+          findsNothing,
+        );
+        await tester.pumpAndSettle();
+        navigator.currentState!.pop();
+        await tester.pump();
+        expect(morph, reducedMotion ? findsNothing : findsOneWidget);
+        await tester.pumpAndSettle();
+        expect(find.byKey(_sheet), findsNothing);
+        expect(tester.takeException(), isNull);
+      },
+    );
+  }
+
   testWidgets('rotation on close discards stale mini-player bounds', (
     tester,
   ) async {
@@ -75,7 +124,7 @@ void main() {
     navigator.currentState!.push(route);
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 100));
-    // Translucent while it slides in.
+    // The route stays translucent until its opening transition settles.
     expect(find.byKey(below), findsOneWidget);
     await tester.pumpAndSettle();
     expect(find.byKey(below), findsNothing);

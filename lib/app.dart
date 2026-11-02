@@ -23,7 +23,6 @@ import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/widgets/glass/thumb/app_glass_warmup.dart';
 import 'package:sistrum/widgets/glass/artwork/app_artwork_glass.dart';
 import 'package:sistrum/providers/settings/theme_provider.dart';
-import 'package:sistrum/providers/settings/custom_font_provider.dart';
 import 'package:sistrum/core/theme/app_theme.dart';
 
 String initialLocationForAppState({
@@ -173,9 +172,6 @@ class SistrumApp extends ConsumerWidget {
     ref.watch(equalizerProvider);
     final router = ref.watch(_routerProvider);
     final localeString = ref.watch(settingsProvider.select((s) => s.locale));
-    final heroAnimationsEnabled = ref.watch(
-      settingsProvider.select((s) => s.heroAnimationsEnabled),
-    );
     final scrollBehavior = disableOverscrollEffects
         ? const MaterialScrollBehavior().copyWith(overscroll: false)
         : const _FluidScrollBehavior();
@@ -222,18 +218,10 @@ class SistrumApp extends ConsumerWidget {
             );
             return MediaQuery(
               data: mediaQuery.copyWith(displayFeatures: const []),
-              // HeroMode only affects heroes below a *route* subtree. At this
-              // level it sits above the router's Navigator, so the controller
-              // never encounters it while collecting heroes. Removing the
-              // inherited controller disables flights on the root Navigator.
               child: AppGlassPreparation(
                 child: AppGlassAutoProbeHost(
                   child: AppPerformanceHudHost(
-                    child: AdaptiveUiScaler(
-                      child: heroAnimationsEnabled
-                          ? appContent
-                          : HeroControllerScope.none(child: appContent),
-                    ),
+                    child: AdaptiveUiScaler(child: appContent),
                   ),
                 ),
               ),
@@ -302,26 +290,11 @@ class AppThemeWrapper extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     // Select only what ThemeData needs; glass preferences have their own
     // providers so the clarity slider does not rebuild MaterialApp.
-    final accent = ref.watch(themeProvider.select((s) => s.appAccent));
-    final useSystemFont = ref.watch(
-      themeProvider.select((s) => s.useSystemFont),
-    );
     final themeMode = ref.watch(themeProvider.select((s) => s.themeMode));
-    final fontFamily = ref.watch(customFontFamilyProvider).asData?.value;
 
     return builder(
-      AppTheme.build(
-        Brightness.light,
-        accent: accent,
-        useSystemFont: useSystemFont,
-        fontFamily: fontFamily,
-      ),
-      AppTheme.build(
-        Brightness.dark,
-        accent: accent,
-        useSystemFont: useSystemFont,
-        fontFamily: fontFamily,
-      ),
+      AppTheme.build(Brightness.light),
+      AppTheme.build(Brightness.dark),
       themeMode,
     );
   }

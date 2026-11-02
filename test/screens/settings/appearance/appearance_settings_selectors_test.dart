@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sistrum/l10n/app_localizations.dart';
-import 'package:sistrum/core/models/theme_settings.dart';
 import 'package:sistrum/providers/settings/settings_provider.dart';
 import 'package:sistrum/screens/settings/appearance/appearance_settings_selectors.dart';
 import 'package:sistrum/core/theme/app_theme.dart';
@@ -69,16 +68,5 @@ void main() {
     );
     expect(find.text(_l10n(tester).appearanceLanguage), findsOneWidget);
     expect(find.text('English'), findsOneWidget);
-  });
-
-  testWidgets('the accent picker shows an option for each accent', (
-    tester,
-  ) async {
-    await _pump(
-      tester,
-      AppAccentPicker(selected: AppAccent.values.first, onChanged: (_) {}),
-    );
-    expect(tester.takeException(), isNull);
-    expect(find.byType(AppAccentPicker), findsOneWidget);
   });
 }

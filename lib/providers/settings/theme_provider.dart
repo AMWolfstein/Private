@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sistrum/core/models/theme_settings.dart';
+import 'package:sistrum/services/platform/retired_appearance_cleanup.dart';
 
 final initialThemeSettingsProvider = Provider<ThemeSettings>(
   (ref) => const ThemeSettings(),
@@ -11,10 +12,6 @@ ThemeSettings loadBootstrapThemeSettings(SharedPreferences prefs) {
   return ThemeSettings(
     themeMode: themeModeFromString(prefs.getString(kThemeModeKey)),
     playerView: playerViewFromString(prefs.getString(kPlayerViewKey)),
-    appAccent: appAccentFromString(prefs.getString(kAppAccentKey)),
-    useSystemFont: prefs.getBool(kUseSystemFontKey) ?? false,
-    customFontId: prefs.getString(kCustomFontIdKey) ?? '',
-    customFontName: prefs.getString(kCustomFontNameKey) ?? '',
     lyricsTextScale: normalizeLyricsTextScale(
       prefs.getDouble(kLyricsTextScaleKey),
     ),
@@ -54,6 +51,10 @@ class ThemeNotifier extends Notifier<ThemeSettings> {
     try {
       final prefs = await _prefs;
       var loaded = loadBootstrapThemeSettings(prefs);
+      if (prefs.containsKey('custom_font_id')) {
+        await deleteRetiredFontCacheBestEffort();
+      }
+      await _removeRetiredAppearancePreferences(prefs);
       for (final edit in _loadingEdits) {
         loaded = edit(loaded);
       }
@@ -79,10 +80,6 @@ class ThemeNotifier extends Notifier<ThemeSettings> {
       final snapshot = state;
       await prefs.setString(kThemeModeKey, snapshot.themeMode.name);
       await prefs.setString(kPlayerViewKey, snapshot.playerView.name);
-      await prefs.setString(kAppAccentKey, snapshot.appAccent.name);
-      await prefs.setBool(kUseSystemFontKey, snapshot.useSystemFont);
-      await prefs.setString(kCustomFontIdKey, snapshot.customFontId);
-      await prefs.setString(kCustomFontNameKey, snapshot.customFontName);
       await prefs.setDouble(kLyricsTextScaleKey, snapshot.lyricsTextScale);
       await prefs.setDouble(kLyricsBlurKey, snapshot.lyricsBlur);
       await prefs.setInt(kLyricsTimingOffsetKey, snapshot.lyricsTimingOffsetMs);
@@ -99,23 +96,6 @@ class ThemeNotifier extends Notifier<ThemeSettings> {
 
   Future<void> setThemeMode(ThemeMode mode) async {
     _editState((current) => current.copyWith(themeMode: mode));
-    await _saveToStorage();
-  }
-
-  Future<void> setAppAccent(AppAccent accent) async {
-    _editState((current) => current.copyWith(appAccent: accent));
-    await _saveToStorage();
-  }
-
-  Future<void> setUseSystemFont(bool value) async {
-    _editState((current) => current.copyWith(useSystemFont: value));
-    await _saveToStorage();
-  }
-
-  Future<void> setCustomFont(String id, String name) async {
-    _editState(
-      (current) => current.copyWith(customFontId: id, customFontName: name),
-    );
     await _saveToStorage();
   }
 
@@ -137,5 +117,19 @@ class ThemeNotifier extends Notifier<ThemeSettings> {
   Future<void> setAppGlassOutlines(bool value) async {
     _editState((current) => current.copyWith(appGlassOutlines: value));
     await _saveToStorage();
+  }
+}
+
+/// Retired values are ignored at bootstrap and stripped on the next load/save.
+Future<void> _removeRetiredAppearancePreferences(
+  SharedPreferences prefs,
+) async {
+  for (final key in const [
+    'sistrum_accent',
+    'use_system_font',
+    'custom_font_id',
+    'custom_font_name',
+  ]) {
+    await prefs.remove(key);
   }
 }

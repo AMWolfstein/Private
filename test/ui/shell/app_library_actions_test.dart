@@ -49,9 +49,6 @@ void _mockMetadataFile(WidgetTester tester) {
 
 void main() {
   setUpAll(() async {
-    await (FontLoader(
-      'Inter',
-    )..addFont(rootBundle.load('assets/fonts/InterVariable.ttf'))).load();
     await (FontLoader('packages/cupertino_icons/CupertinoIcons')..addFont(
           rootBundle.load('packages/cupertino_icons/assets/CupertinoIcons.ttf'),
         ))
@@ -60,8 +57,6 @@ void main() {
   setUp(() {
     SharedPreferences.setMockInitialValues({});
   });
-
-
 
   testWidgets('Sistrum metadata editor keeps edited text and Save available', (
     tester,

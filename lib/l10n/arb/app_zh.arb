@@ -39,13 +39,6 @@
   "usbBitPerfectFallback": "此设备或音频格式不支持比特精确输出。正在使用普通播放。",
   "usbBitPerfectRouteChanged": "USB 音频路由已更改。播放已暂停；请选择一首曲目以重新连接。",
   "nowPlayingVolume": "音量",
-  "appearanceAccentRed": "红色（默认）",
-  "appearanceAccentOrange": "橙色",
-  "appearanceAccentGreen": "绿色",
-  "appearanceAccentTeal": "青色",
-  "appearanceAccentBlue": "蓝色",
-  "appearanceAccentPurple": "紫色",
-  "appearanceAccentPink": "粉色",
   "appearanceGlassClarity": "玻璃清晰度",
   "appearanceGlassOutlines": "玻璃描边",
   "appearanceGlassOutlinesSubtitle": "在 Sistrum 玻璃周围显示浅色边框。关闭后，玻璃本身保持不变。",
@@ -69,8 +62,6 @@
   "appearanceGlassClarityContrast": "系统已请求增强对比度，因此玻璃保持不透明。如仍要使用玻璃，请选择“轻量”或“完整”；文字对比度会保持不变。",
   "appearanceGlassAutoMeasured": "已在此设备上测量：“自动”使用{quality}。",
   "appearanceGlassClarityAutoFrosted": "“自动”已测量此设备并使用“磨砂”。请选择“轻量”或“完整”以设置清晰度。",
-  "appearanceUseSystemFont": "使用系统字体",
-  "appearanceUseSystemFontSubtitle": "应用文字使用设备的默认字体。",
   "appName": "Sistrum",
   "@appName": {
     "description": "App name - DO NOT TRANSLATE"
@@ -642,14 +633,6 @@
         "type": "int"
       }
     }
-  },
-  "appearanceHeroAnimations": "主视觉动画",
-  "@appearanceHeroAnimations": {
-    "description": "Toggle for shared-element (Hero) transitions"
-  },
-  "appearanceHeroAnimationsSubtitle": "在页面之间飞出封面，例如打开播放器时",
-  "@appearanceHeroAnimationsSubtitle": {
-    "description": "Subtitle for the Hero animations toggle"
   },
   "collectionDeleteSelected": "删除所选",
   "@collectionDeleteSelected": {
@@ -2159,10 +2142,6 @@
   "playbackPauseOnMuteDescription": "媒体音量为零时暂停，音量调高后恢复。手动暂停将保持暂停。仅适用于标准音频输出。",
   "playbackOnHeadphonesConnected": "耳机连接时播放",
   "playbackOnHeadphonesConnectedDescription": "有线或蓝牙耳机连接时，继续播放当前歌曲。断开连接时暂停播放。仅适用于内置播放器。",
-  "appearanceCustomFont": "自定义字体",
-  "appearanceCustomFontSubtitle": "导入 TTF 或 OTF 文件（最大 10 MB）。将覆盖主题和系统字体。",
-  "appearanceCustomFontInvalid": "无法加载此字体。请选择不超过 10 MB 的有效 TTF 或 OTF 文件。",
-  "appearanceCustomFontReset": "使用主题字体",
   "lyricsTextSize": "歌词文字大小",
   "lyricsTextPreview": "逐行跟随你喜爱的歌曲",
   "setupLocalPlayback": "离线播放你的本地音乐",

@@ -273,56 +273,30 @@ void _registerAppearanceSettingsPersistence() {
       expect(tester.takeException(), isNull);
     });
 
-    testWidgets('Sistrum accent updates live and survives restart ($mode)', (
+    testWidgets('fixed red ignores retired accent preferences ($mode)', (
       tester,
     ) async {
       SharedPreferences.setMockInitialValues({
-        'theme_style': 'sistrum',
         kThemeModeKey: mode.name,
-        'seed_color': 0xff123456,
+        'sistrum_accent': 'blue',
       });
       final prefs = await SharedPreferences.getInstance();
       await _openSettings(tester, prefs);
       final page = find.byType(AppearanceSettingsPage);
-      final initial = Theme.of(tester.element(page));
-      expect(
-        initial.colorScheme.primary,
-        AppTheme.accentColor(AppAccent.red, initial.brightness),
-      );
-
-      final blue = find.byTooltip('Blue');
-      await tester.ensureVisible(blue);
-      await tester.tap(blue);
-      await tester.pumpAndSettle();
       final theme = Theme.of(tester.element(page));
-      expect(
-        theme.colorScheme.primary,
-        AppTheme.accentColor(AppAccent.blue, theme.brightness),
-      );
-      expect(prefs.getString(kAppAccentKey), 'blue');
-      expect(prefs.getInt('seed_color'), 0xff123456);
+      expect(theme.colorScheme.primary, AppTheme.accentColor(theme.brightness));
+      expect(find.byTooltip('Blue'), findsNothing);
+      expect(prefs.containsKey('sistrum_accent'), isFalse);
       final overlay = AppTheme.fromContext(
         tester.element(page),
         brightness: Brightness.dark,
       );
-      expect(overlay.extension<AppTheme>()!.accent, AppAccent.blue);
-      expect(
-        overlay.colorScheme.primary,
-        AppTheme.accentColor(AppAccent.blue, Brightness.dark),
-      );
-
+      expect(overlay.colorScheme.primary, AppTheme.darkAccent);
       await tester.pumpWidget(const SizedBox());
       await _openSettings(tester, prefs);
       expect(
         Theme.of(tester.element(page)).colorScheme.primary,
         theme.colorScheme.primary,
-      );
-      await tester.ensureVisible(find.byTooltip('Red (default)'));
-      await tester.tap(find.byTooltip('Red (default)'));
-      await tester.pumpAndSettle();
-      expect(
-        Theme.of(tester.element(page)).colorScheme.primary,
-        initial.colorScheme.primary,
       );
       expect(tester.takeException(), isNull);
     });

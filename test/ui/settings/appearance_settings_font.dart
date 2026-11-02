@@ -1,68 +1,65 @@
 part of 'appearance_settings_test.dart';
 
 void _registerAppearanceSettingsFont() {
-  for (final style in ['sistrum']) {
-    testWidgets(
-      'system font persists and restores the default ($style)',
-      (tester) async {
-        SharedPreferences.setMockInitialValues({
-          'theme_style': style,
-          kAppAccentKey: 'blue',
-          'use_dynamic_color': false,
-        });
-        final prefs = await SharedPreferences.getInstance();
-        await _openSettings(tester, prefs);
-        final page = find.byType(AppearanceSettingsPage);
-        final original = Theme.of(
-          tester.element(page),
-        ).textTheme.bodyLarge!.fontFamily;
-        final setting = find.text('Use system font');
-        await tester.scrollUntilVisible(
-          setting,
-          200,
-          scrollable: find.byType(Scrollable).first,
-        );
-        await tester.pumpAndSettle();
-        await tester.tap(setting);
-        await tester.pumpAndSettle();
-        final theme = Theme.of(tester.element(page));
-        final systemFamily = theme.textTheme.bodyLarge!.fontFamily;
-        expect(systemFamily, isNot('Inter'));
-        expect(prefs.getBool(kUseSystemFontKey), isTrue);
-        if (style == 'sistrum') {
-          final overlay = AppTheme.fromContext(
-            tester.element(page),
-            brightness: Brightness.dark,
-          );
-          expect(overlay.extension<AppTheme>()!.useSystemFont, isTrue);
-          expect(overlay.extension<AppTheme>()!.accent, AppAccent.blue);
-          expect(overlay.textTheme.bodyLarge!.fontFamily, systemFamily);
-        }
-        await tester.pumpWidget(const SizedBox());
-        await _openSettings(tester, prefs);
-        expect(
-          Theme.of(tester.element(page)).textTheme.bodyLarge!.fontFamily,
-          systemFamily,
-        );
-        await tester.scrollUntilVisible(
-          setting,
-          200,
-          scrollable: find.byType(Scrollable).first,
-        );
-        await tester.pumpAndSettle();
-        await tester.tap(setting);
-        await tester.pumpAndSettle();
-        expect(prefs.getBool(kUseSystemFontKey), isFalse);
-        expect(
-          Theme.of(tester.element(page)).textTheme.bodyLarge!.fontFamily,
-          original,
-        );
-        expect(tester.takeException(), isNull);
-      },
-      variant: const TargetPlatformVariant({
-        TargetPlatform.android,
-        TargetPlatform.iOS,
-      }),
+  testWidgets('system typography is fixed and retired controls stay absent', (
+    tester,
+  ) async {
+    SharedPreferences.setMockInitialValues({
+      'sistrum_accent': 'purple',
+      'use_system_font': false,
+      'custom_font_id': 'missing-font',
+      'custom_font_name': 'Imported.ttf',
+      'app_settings': jsonEncode({'heroAnimationsEnabled': false}),
+    });
+    final prefs = await SharedPreferences.getInstance();
+    await _openSettings(tester, prefs);
+    final page = find.byType(AppearanceSettingsPage);
+    final theme = Theme.of(tester.element(page));
+    expect(
+      theme.textTheme.bodyLarge!.fontFamily,
+      const CupertinoThemeData().textTheme.textStyle.fontFamily,
     );
-  }
+    expect(
+      theme.textTheme.bodyLarge!.fontFamilyFallback,
+      isNot(contains('Noto Sans Arabic')),
+    );
+    final overlay = AppTheme.fromContext(
+      tester.element(page),
+      brightness: Brightness.dark,
+    );
+    expect(
+      overlay.textTheme.bodyLarge!.fontFamily,
+      theme.textTheme.bodyLarge!.fontFamily,
+    );
+    for (final label in [
+      'Use system font',
+      'Custom font',
+      'Hero animations',
+      'Color',
+    ]) {
+      expect(find.text(label, skipOffstage: false), findsNothing);
+    }
+    final catalog = SettingsSearchCatalog(
+      AppLocalizations.of(tester.element(page)),
+    );
+    for (final label in [
+      'Use system font',
+      'Custom font',
+      'Hero animations',
+      'Color',
+    ]) {
+      expect(catalog.appearance.any((entry) => entry.title == label), isFalse);
+    }
+    expect(
+      AppSettings.fromJson({'heroAnimationsEnabled': false}).toJson(),
+      isNot(contains('heroAnimationsEnabled')),
+    );
+    await tester.pumpWidget(const SizedBox());
+    await _openSettings(tester, prefs);
+    expect(
+      Theme.of(tester.element(page)).textTheme.bodyLarge!.fontFamily,
+      theme.textTheme.bodyLarge!.fontFamily,
+    );
+    expect(tester.takeException(), isNull);
+  }, variant: const TargetPlatformVariant({TargetPlatform.android}));
 }

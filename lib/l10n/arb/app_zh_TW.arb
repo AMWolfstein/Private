@@ -42,13 +42,6 @@
   "@nowPlayingVolume": {
     "description": "System volume control label in the Sistrum player"
   },
-  "appearanceAccentRed": "紅色（預設）",
-  "appearanceAccentOrange": "橙色",
-  "appearanceAccentGreen": "綠色",
-  "appearanceAccentTeal": "藍綠色",
-  "appearanceAccentBlue": "藍色",
-  "appearanceAccentPurple": "紫色",
-  "appearanceAccentPink": "粉紅色",
   "appearanceGlassClarity": "玻璃清晰度",
   "appearanceGlassOutlines": "玻璃邊框",
   "appearanceGlassOutlinesSubtitle": "在 Sistrum 玻璃周圍顯示淡色邊框。關閉後玻璃本身不變。",
@@ -72,8 +65,6 @@
   "appearanceGlassClarityContrast": "系統要求較高對比，因此玻璃維持不透明。若仍要使用玻璃，請選擇「精簡」或「完整」；文字對比會保留。",
   "appearanceGlassAutoMeasured": "已在此裝置上測量：「自動」使用{quality}。",
   "appearanceGlassClarityAutoFrosted": "「自動」已測量此裝置並使用霧面。請選擇「精簡」或「完整」以設定透明度。",
-  "appearanceUseSystemFont": "使用系統字型",
-  "appearanceUseSystemFontSubtitle": "應用程式文字使用裝置預設的字型。",
   "appName": "Sistrum",
   "@appName": {
     "description": "App name - DO NOT TRANSLATE"
@@ -684,14 +675,6 @@
         "type": "int"
       }
     }
-  },
-  "appearanceHeroAnimations": "主視覺動畫",
-  "@appearanceHeroAnimations": {
-    "description": "Toggle for shared-element (Hero) transitions"
-  },
-  "appearanceHeroAnimationsSubtitle": "在畫面之間飛移封面，例如開啟播放器時",
-  "@appearanceHeroAnimationsSubtitle": {
-    "description": "Subtitle for the Hero animations toggle"
   },
   "collectionDeleteSelected": "刪除所選項目",
   "@collectionDeleteSelected": {
@@ -2274,10 +2257,6 @@
   "playbackPauseOnMuteDescription": "媒體音量為零時暫停，調高後繼續。手動暫停會保持暫停。僅適用於標準音訊輸出。",
   "playbackOnHeadphonesConnected": "耳機連接時播放",
   "playbackOnHeadphonesConnectedDescription": "有線或藍牙耳機連接時，繼續播放目前的歌曲。斷開連接會暫停播放。僅適用於內建播放器。",
-  "appearanceCustomFont": "自訂字型",
-  "appearanceCustomFontSubtitle": "匯入 TTF 或 OTF 檔案（最大 10 MB）。會覆蓋主題與系統字型。",
-  "appearanceCustomFontInvalid": "無法載入此字型。請選擇 10 MB 以下的有效 TTF 或 OTF 檔案。",
-  "appearanceCustomFontReset": "使用主題字型",
   "lyricsTextSize": "歌詞文字大小",
   "lyricsTextPreview": "跟著你最愛的歌曲，逐句聆聽",
   "setupLocalPlayback": "離線播放你的本機音樂",

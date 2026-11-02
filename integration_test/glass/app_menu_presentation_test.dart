@@ -3,12 +3,10 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter/services.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
-import 'package:sistrum/services/platform/custom_font_service.dart';
 import 'package:sistrum/core/theme/app_theme.dart';
 import 'package:sistrum/widgets/primitives/app_context_menu.dart';
 import 'package:sistrum/app.dart';
@@ -18,7 +16,7 @@ import '../performance/performance_probe.dart';
 void main() {
   final binding = PerformanceTestBinding.ensureInitialized();
   for (final brightness in Brightness.values) {
-    testWidgets('anchored squircle glass with imported font ($brightness)', (
+    testWidgets('anchored squircle glass with system font ($brightness)', (
       tester,
     ) async {
       final probe = PerformanceProbe(
@@ -28,17 +26,6 @@ void main() {
       );
       final capture = GlobalKey();
       final button = GlobalKey();
-      final temporary = await (await getTemporaryDirectory()).createTemp(
-        'font-ui-test-',
-      );
-      addTearDown(() => temporary.delete(recursive: true));
-      final fonts = CustomFontService(directory: () async => temporary);
-      final bytes = await rootBundle.load('assets/fonts/InterVariable.ttf');
-      final id = await fonts.import(
-        bytes.buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes),
-      );
-      final family = await fonts.restore(id);
-      expect(family, isNotNull);
       await tester.pumpWidget(
         ProviderScope(
           overrides: [
@@ -47,7 +34,7 @@ void main() {
             appGlassClarityLevelProvider.overrideWithValue(5),
           ],
           child: MaterialApp(
-            theme: AppTheme.build(brightness, fontFamily: family),
+            theme: AppTheme.build(brightness),
             builder: (_, child) => RepaintBoundary(
               key: capture,
               child: AppGlassPreparation(child: child!),
@@ -159,7 +146,10 @@ void main() {
       });
       await open();
       final menuContext = tester.element(find.byType(AppContextMenu));
-      expect(Theme.of(menuContext).textTheme.bodyLarge?.fontFamily, family);
+      expect(
+        Theme.of(menuContext).textTheme.bodyLarge?.fontFamily,
+        AppTheme.build(brightness).textTheme.bodyLarge?.fontFamily,
+      );
       await tester.runAsync(() async {
         final boundary = tester.renderObject<RenderRepaintBoundary>(
           find.byKey(capture),

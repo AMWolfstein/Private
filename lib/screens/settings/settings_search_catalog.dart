@@ -66,11 +66,6 @@ class SettingsSearchCatalog {
         ),
 
         SettingsSearchEntry(
-          icon: Icons.color_lens_outlined,
-          title: l10n.sectionColor,
-          keywords: const ['palette', 'seed color', 'accent'],
-        ),
-        SettingsSearchEntry(
           icon: Icons.contrast,
           title: l10n.sectionTheme,
           subtitle:
@@ -79,30 +74,6 @@ class SettingsSearchCatalog {
           keywords: const ['light mode', 'dark mode'],
         ),
 
-        SettingsSearchEntry(
-          icon: Icons.font_download_outlined,
-          title: l10n.appearanceUseSystemFont,
-          subtitle: l10n.appearanceUseSystemFontSubtitle,
-          keywords: const [
-            'font',
-            'typeface',
-            'typography',
-            'system font',
-            'huruf',
-          ],
-        ),
-        SettingsSearchEntry(
-          icon: Icons.animation,
-          title: l10n.appearanceHeroAnimations,
-          subtitle: l10n.appearanceHeroAnimationsSubtitle,
-          keywords: const ['transition', 'motion'],
-        ),
-        SettingsSearchEntry(
-          icon: Icons.text_fields,
-          title: l10n.appearanceCustomFont,
-          subtitle: l10n.appearanceCustomFontSubtitle,
-          keywords: const ['import font', 'ttf', 'otf', 'typeface'],
-        ),
         SettingsSearchEntry(
           icon: Icons.blur_on,
           title: l10n.appearanceGlassQuality,

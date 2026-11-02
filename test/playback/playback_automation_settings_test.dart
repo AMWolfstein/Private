@@ -6,7 +6,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/core/models/settings.dart';
-import 'package:sistrum/core/models/theme_settings.dart';
 import 'package:sistrum/providers/settings/settings_provider.dart';
 import 'package:sistrum/screens/settings/playback/playback_settings_page.dart';
 import 'package:sistrum/screens/settings/settings_search_catalog.dart';
@@ -36,7 +35,7 @@ void main() {
           container: container,
           child: MaterialApp(
             theme: sistrum
-                ? AppTheme.build(Brightness.dark, accent: AppAccent.blue)
+                ? AppTheme.build(Brightness.dark)
                 : MaterialTestTheme.light(),
             locale: const Locale('en'),
             localizationsDelegates: AppLocalizations.localizationsDelegates,

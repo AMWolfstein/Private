@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sistrum/core/models/theme_settings.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/providers/settings/settings_provider.dart';
 import 'package:sistrum/providers/settings/theme_provider.dart';
@@ -90,7 +89,7 @@ void main() {
     );
 
     // The counter does observe real theme changes.
-    await notifier.setAppAccent(AppAccent.blue);
+    await notifier.setThemeMode(ThemeMode.dark);
     await tester.pumpAndSettle();
     expect(_themeBuilds, greaterThan(themeBuilds));
     expect(tester.takeException(), isNull);

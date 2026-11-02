@@ -9,7 +9,6 @@ import 'package:sistrum/widgets/settings/settings_group.dart';
 import 'package:sistrum/widgets/settings/settings_search_highlight.dart';
 import 'package:sistrum/widgets/settings/settings_item_rows.dart';
 import 'package:sistrum/widgets/primitives/app_sliver_header.dart';
-import 'package:sistrum/widgets/settings/custom_font_setting.dart';
 import 'package:sistrum/screens/settings/appearance/appearance_glass_clarity_slider.dart';
 import 'package:sistrum/screens/settings/appearance/appearance_settings_selectors.dart';
 
@@ -22,10 +21,8 @@ class AppearanceSettingsPage extends ConsumerWidget {
     final themeSettings = ref.watch(
       themeProvider.select(
         (s) => (
-          appAccent: s.appAccent,
           appGlassOutlines: s.appGlassOutlines,
           themeMode: s.themeMode,
-          useSystemFont: s.useSystemFont,
           playerView: s.playerView,
         ),
       ),
@@ -41,15 +38,13 @@ class AppearanceSettingsPage extends ConsumerWidget {
 
             ...[
               SliverToBoxAdapter(
-                child: SettingsSectionHeader(title: context.l10n.sectionColor),
+                child: SettingsSectionHeader(
+                  title: context.l10n.appearanceGlassQuality,
+                ),
               ),
               SliverToBoxAdapter(
                 child: SettingsGroup(
                   children: [
-                    AppAccentPicker(
-                      selected: themeSettings.appAccent,
-                      onChanged: ref.read(themeProvider.notifier).setAppAccent,
-                    ),
                     GlassQualitySelector(
                       current: appGlassQualityFromString(settings.glassQuality),
                       onChanged: ref
@@ -95,24 +90,6 @@ class AppearanceSettingsPage extends ConsumerWidget {
               child: SettingsGroup(
                 children: [
                   SettingsSwitchItem(
-                    icon: Icons.font_download_outlined,
-                    title: context.l10n.appearanceUseSystemFont,
-                    subtitle: context.l10n.appearanceUseSystemFontSubtitle,
-                    value: themeSettings.useSystemFont,
-                    onChanged: ref
-                        .read(themeProvider.notifier)
-                        .setUseSystemFont,
-                  ),
-                  SettingsSwitchItem(
-                    icon: Icons.animation,
-                    title: context.l10n.appearanceHeroAnimations,
-                    subtitle: context.l10n.appearanceHeroAnimationsSubtitle,
-                    value: settings.heroAnimationsEnabled,
-                    onChanged: (value) => ref
-                        .read(settingsProvider.notifier)
-                        .setHeroAnimationsEnabled(value),
-                  ),
-                  SettingsSwitchItem(
                     icon: Icons.slow_motion_video_outlined,
                     title: context.l10n.motionArtwork,
                     subtitle: context.l10n.motionArtworkSubtitle,
@@ -129,10 +106,6 @@ class AppearanceSettingsPage extends ConsumerWidget {
                     onChanged: (value) => ref
                         .read(settingsProvider.notifier)
                         .setLyricsAboveSeekBar(value),
-                  ),
-                  SettingsSearchTarget(
-                    label: context.l10n.appearanceCustomFont,
-                    child: const CustomFontSetting(),
                   ),
                 ],
               ),

@@ -30,7 +30,6 @@ class MaterialTestTheme {
   static ThemeData light({
     ColorScheme? dynamicScheme,
     Color? seedColor,
-    bool useSystemFont = false,
     String? fontFamily,
   }) {
     final scheme =
@@ -62,7 +61,7 @@ class MaterialTestTheme {
       chipTheme: _chipTheme(scheme),
       dividerTheme: _dividerTheme(scheme),
       extensions: const <ThemeExtension<dynamic>>[AppTokens.standard],
-      fontFamily: fontFamily ?? (useSystemFont ? null : 'Inter'),
+      fontFamily: fontFamily,
     );
   }
 
@@ -70,7 +69,6 @@ class MaterialTestTheme {
     ColorScheme? dynamicScheme,
     Color? seedColor,
     bool isAmoled = false,
-    bool useSystemFont = false,
     String? fontFamily,
   }) {
     final scheme =
@@ -103,7 +101,7 @@ class MaterialTestTheme {
       chipTheme: _chipTheme(scheme),
       dividerTheme: _dividerTheme(scheme),
       extensions: const <ThemeExtension<dynamic>>[AppTokens.standard],
-      fontFamily: fontFamily ?? (useSystemFont ? null : 'Inter'),
+      fontFamily: fontFamily,
     );
   }
 

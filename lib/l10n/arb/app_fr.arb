@@ -42,13 +42,6 @@
   "@nowPlayingVolume": {
     "description": "System volume control label in the Sistrum player"
   },
-  "appearanceAccentRed": "Rouge (par défaut)",
-  "appearanceAccentOrange": "Orange",
-  "appearanceAccentGreen": "Vert",
-  "appearanceAccentTeal": "Bleu sarcelle",
-  "appearanceAccentBlue": "Bleu",
-  "appearanceAccentPurple": "Violet",
-  "appearanceAccentPink": "Rose",
   "appearanceGlassClarity": "Transparence du verre",
   "appearanceGlassOutlines": "Contours en verre",
   "appearanceGlassOutlinesSubtitle": "Affiche un léger liseré autour du verre Sistrum. La désactivation laisse le verre lui-même inchangé.",
@@ -72,8 +65,6 @@
   "appearanceGlassClarityContrast": "Votre système demande un contraste accru, donc le verre reste opaque. Choisissez Léger ou Complet pour utiliser quand même le verre ; le contraste du texte est préservé.",
   "appearanceGlassAutoMeasured": "Mesuré sur cet appareil : Auto utilise {quality}.",
   "appearanceGlassClarityAutoFrosted": "Auto a mesuré cet appareil et utilise Givré. Choisissez Léger ou Complet pour régler la clarté.",
-  "appearanceUseSystemFont": "Utiliser la police système",
-  "appearanceUseSystemFontSubtitle": "Utilisez la police par défaut de votre appareil pour le texte de l'application.",
   "appName": "Sistrum",
   "@appName": {
     "description": "App name - DO NOT TRANSLATE"
@@ -684,14 +675,6 @@
         "type": "int"
       }
     }
-  },
-  "appearanceHeroAnimations": "Animations des héros",
-  "@appearanceHeroAnimations": {
-    "description": "Toggle for shared-element (Hero) transitions"
-  },
-  "appearanceHeroAnimationsSubtitle": "Des fenêtres contextuelles apparaissent entre les écrans, par exemple lors de l'ouverture du lecteur",
-  "@appearanceHeroAnimationsSubtitle": {
-    "description": "Subtitle for the Hero animations toggle"
   },
   "collectionDeleteSelected": "Supprimer la sélection",
   "@collectionDeleteSelected": {
@@ -2275,10 +2258,6 @@
   "playbackPauseOnMuteDescription": "Met en pause lorsque le volume média est à zéro et reprend lorsqu'il est remonté. Les pauses manuelles restent en pause. Sortie audio standard uniquement.",
   "playbackOnHeadphonesConnected": "Lire à la connexion des écouteurs",
   "playbackOnHeadphonesConnectedDescription": "Reprend le titre en cours lorsque des écouteurs filaires ou Bluetooth sont connectés. La déconnexion met la lecture en pause. Lecteur intégré uniquement.",
-  "appearanceCustomFont": "Police personnalisée",
-  "appearanceCustomFontSubtitle": "Importez un fichier TTF ou OTF (jusqu'à 10 Mo). Remplace la police du thème et du système.",
-  "appearanceCustomFontInvalid": "Impossible de charger cette police. Choisissez un fichier TTF ou OTF valide, de 10 Mo maximum.",
-  "appearanceCustomFontReset": "Utiliser la police du thème",
   "lyricsTextSize": "Taille du texte des paroles",
   "lyricsTextPreview": "Suivez chaque ligne de votre chanson préférée",
   "setupLocalPlayback": "Écoutez votre musique locale hors ligne",

@@ -136,9 +136,6 @@ class _MainShellState extends ConsumerState<MainShell>
     ref.listen(settingsProvider, (_, settings) {
       ref.read(musicPlayerRuntimeProvider).configure(settings);
     });
-    final heroAnimationsEnabled = ref.watch(
-      settingsProvider.select((s) => s.heroAnimationsEnabled),
-    );
     ShellNavigationService.syncState(
       currentTabIndex: _currentIndex,
       showSearchTab: context.isAppTheme,
@@ -148,7 +145,6 @@ class _MainShellState extends ConsumerState<MainShell>
       TabNavigator(
         key: const ValueKey('tab-home'),
         navigatorKey: _homeTabNavigatorKey,
-        heroAnimationsEnabled: heroAnimationsEnabled,
         child: Builder(
           builder: (context) => HomeTab(
             scrollController: _homeFeedScrollController,
@@ -159,20 +155,17 @@ class _MainShellState extends ConsumerState<MainShell>
       TabNavigator(
         key: const ValueKey('tab-stats'),
         navigatorKey: _statsTabNavigatorKey,
-        heroAnimationsEnabled: heroAnimationsEnabled,
         child: const ListeningStatisticsScreen(asTab: true),
       ),
       TabNavigator(
         key: const ValueKey('tab-library'),
         navigatorKey: _libraryTabNavigatorKey,
-        heroAnimationsEnabled: heroAnimationsEnabled,
         child: const LibraryTabRoot(),
       ),
       ...[],
       TabNavigator(
         key: const ValueKey('tab-search'),
         navigatorKey: _searchTabNavigatorKey,
-        heroAnimationsEnabled: heroAnimationsEnabled,
         child: const HomeTab(mode: HomeTabMode.search),
       ),
     ];

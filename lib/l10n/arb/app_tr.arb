@@ -42,13 +42,6 @@
   "@nowPlayingVolume": {
     "description": "System volume control label in the Sistrum player"
   },
-  "appearanceAccentRed": "Kırmızı (varsayılan)",
-  "appearanceAccentOrange": "Turuncu",
-  "appearanceAccentGreen": "Yeşil",
-  "appearanceAccentTeal": "Turkuaz",
-  "appearanceAccentBlue": "Mavi",
-  "appearanceAccentPurple": "Mor",
-  "appearanceAccentPink": "Pembe",
   "appearanceGlassClarity": "Cam netliği",
   "appearanceGlassOutlines": "Cam çerçeveleri",
   "appearanceGlassOutlinesSubtitle": "Sistrum camının etrafında hafif bir kenar göster. Kapatmak camın kendisini değiştirmez.",
@@ -72,8 +65,6 @@
   "appearanceGlassClarityContrast": "Sistem artırılmış kontrast istiyor, bu yüzden cam opak kalır. Yine de cam kullanmak için Hafif veya Tam seçin; metin kontrastı korunur.",
   "appearanceGlassAutoMeasured": "Bu cihazda ölçüldü: Otomatik {quality} kullanır.",
   "appearanceGlassClarityAutoFrosted": "Otomatik bu cihazı ölçtü ve Buzlu kullanıyor. Netliği ayarlamak için Hafif veya Tam seçin.",
-  "appearanceUseSystemFont": "Sistem yazı tipini kullan",
-  "appearanceUseSystemFontSubtitle": "Uygulama metinleri için cihazınızın varsayılan yazı tipini kullanın.",
   "appName": "Sistrum",
   "@appName": {
     "description": "App name - DO NOT TRANSLATE"
@@ -684,14 +675,6 @@
         "type": "int"
       }
     }
-  },
-  "appearanceHeroAnimations": "Hero animasyonları",
-  "@appearanceHeroAnimations": {
-    "description": "Toggle for shared-element (Hero) transitions"
-  },
-  "appearanceHeroAnimationsSubtitle": "Kapaklar ekranlar arasında uçar; örneğin oynatıcı açılırken",
-  "@appearanceHeroAnimationsSubtitle": {
-    "description": "Subtitle for the Hero animations toggle"
   },
   "collectionDeleteSelected": "Seçilenleri Sil",
   "@collectionDeleteSelected": {
@@ -2276,10 +2259,6 @@
   "playbackPauseOnMuteDescription": "Medya sesi sıfırken duraklat, ses açılınca devam et. Elle duraklatılanlar duraklı kalır. Yalnızca standart ses çıkışı.",
   "playbackOnHeadphonesConnected": "Kulaklık bağlanınca çal",
   "playbackOnHeadphonesConnectedDescription": "Kablolu veya Bluetooth kulaklık bağlandığında geçerli şarkıyı sürdür. Bağlantı kesilince oynatma duraklar. Yalnızca yerleşik oynatıcı.",
-  "appearanceCustomFont": "Özel yazı tipi",
-  "appearanceCustomFontSubtitle": "En fazla 10 MB'lık bir TTF veya OTF dosyası içe aktarın. Temayı ve sistem yazı tipini geçersiz kılar.",
-  "appearanceCustomFontInvalid": "Bu yazı tipi yüklenemedi. 10 MB'a kadar geçerli bir TTF veya OTF dosyası seçin.",
-  "appearanceCustomFontReset": "Tema yazı tipini kullan",
   "lyricsTextSize": "Şarkı sözü metin boyutu",
   "lyricsTextPreview": "Sevdiğiniz şarkının her satırını takip edin",
   "setupLocalPlayback": "Yerel müziğinizi çevrimdışı çalın",
