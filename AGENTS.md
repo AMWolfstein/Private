@@ -109,7 +109,7 @@ separate Album Artists list, placed directly below Artists in the overview. Albu
 uses album-artist credits, and Appears On sits directly below Singles for releases where the
 artist is credited on a track but owns no track of the release. Go to Artist and Go to Composer
 in the song menu open one name directly, or a picker when a credit splits into several names.
-Artist pictures use the artwork of the artist's most recently added song that has one.
+Artist detail Albums, Singles and Appears On always use release-tag chronology newest first, independently of global Library Sort. Albums and Singles use separate bounded queries. Featured is the newest owned non-Single release, or the newest owned Single when no album exists, selected independently of shelf paging; its cover is the artist portrait in the detail page, directories and Favorite Artists. Loaded-index changes refresh it automatically. A missing cover on that album stays a placeholder; only artists with neither an owned album nor an owned Single retain their existing fallback picture.
 
 Appearance exposes Player view with Normal view (the default inset artwork) and Immersive
 view (the existing full-bleed portrait artwork). Persist the choice across restarts; lyrics,
