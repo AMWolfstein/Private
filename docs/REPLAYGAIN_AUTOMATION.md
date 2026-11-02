@@ -45,3 +45,7 @@ Graph `a0112844`, built from `3450abd0`: **29,428 unique nodes / 56,089 links / 
 Native channels and audio measurement are faked in host SAF/coordinator tests; these are not physical-device SAF-provider or format-wide codec acceptance results. No native-source changes, instrumentation/device run or device performance benchmark. The owner additionally requested a pushed source branch and a development-key-signed ARM64 release APK on a separate artifact branch; build identity, SHA-256 and signing certificate are recorded with that uploaded artifact.
 
 Commit-order exception: the first graph validator encountered nullable source-file metadata and stopped before staging the graph. The already-pushed documentation checkpoint preceded the graph commit; this follow-up corrects its reference without rewriting remote history. The graph passed validation after handling the optional metadata.
+
+## Settings presentation correction
+
+The owner's APK screenshot prompted a compact title/description and a standard SettingsItem status/count layout. Outcome labels wrap individually in muted supporting text. The inset progress bar matches Song analysis and remains visible with a determinate value while waiting for charging/playback or after an error. Only initial preparation can be indeterminate; disabled automation stays empty. Eight widget tests passed, including 320 px width at 2x text scale in English and Arabic; analysis clean. The measurement/write pipeline did not change, and the prior full-suite result above predates this UI-only patch.
