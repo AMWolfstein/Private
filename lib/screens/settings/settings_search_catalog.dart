@@ -155,7 +155,7 @@ class SettingsSearchCatalog {
         SettingsSearchEntry(
           icon: Icons.format_list_bulleted,
           title: l10n.metadataSeparators,
-          subtitle: l10n.metadataSeparatorsDescription,
+          subtitle: l10n.tagSeparatorsDescription,
           keywords: const [
             'separator',
             'delimiter',
@@ -168,6 +168,33 @@ class SettingsSearchCatalog {
             'chip',
             'feat',
           ],
+        ),
+        SettingsSearchEntry(
+          icon: Icons.graphic_eq,
+          title: l10n.songAnalysis,
+          subtitle: l10n.songAnalysisPageDescription,
+          keywords: const [
+            'song analysis',
+            'match sound',
+            'acoustic',
+            'autoplay',
+            'MFCC',
+            'tempo',
+            'key',
+          ],
+        ),
+        SettingsSearchEntry(
+          icon: Icons.battery_charging_full,
+          title: l10n.songAnalysisOnlyWhileCharging,
+          subtitle: l10n.songAnalysisOnlyWhileChargingDescription,
+          targetLabel: l10n.songAnalysis,
+          keywords: const ['charging', 'battery', 'song analysis'],
+        ),
+        SettingsSearchEntry(
+          icon: Icons.delete_outline,
+          title: l10n.songAnalysisClear,
+          targetLabel: l10n.songAnalysis,
+          keywords: const ['clear analysis', 'reset analysis'],
         ),
         SettingsSearchEntry(
           icon: Icons.group_work_outlined,
@@ -201,12 +228,6 @@ class SettingsSearchCatalog {
         ),
       ],
       playback = [
-        SettingsSearchEntry(
-          icon: Icons.graphic_eq,
-          title: l10n.autoplaySoundMatching,
-          subtitle: l10n.autoplaySoundMatchingDescription,
-          keywords: const ['sound', 'acoustic', 'timbre', 'local analysis'],
-        ),
         SettingsSearchEntry(
           icon: Icons.playlist_play_rounded,
           title: l10n.autoplayFromLibrary,

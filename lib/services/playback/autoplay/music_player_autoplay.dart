@@ -4,8 +4,6 @@ import 'dart:math';
 import 'package:sistrum/services/playback/autoplay/autoplay_sound_profile.dart';
 import 'package:sistrum/services/playback/autoplay/autoplay_sound_signal.dart';
 import 'package:sistrum/services/playback/autoplay/autoplay_sound_store.dart';
-import 'package:sistrum/services/playback/automix/automix_analyzer.dart';
-import 'package:sistrum/services/native/media_file_bridge.dart';
 
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter/foundation.dart' show compute;
@@ -204,95 +202,21 @@ class MusicAutoplay {
 
   final bool Function() _soundMatching;
   final _soundStore = AutoplaySoundStore();
-  final _soundAnalyzer = AutoMixAnalyzer();
-  Future<void>? _soundPending;
 
   Future<Map<String, AutoplaySoundProfile>> _loadSounds(
     Iterable<PlayableMedia> media,
     int generation,
   ) async {
-    final sources = media.map((m) => m.source).toSet().toList();
-    final profiles = <String, AutoplaySoundProfile>{};
-    var cursor = 0;
-    Future<void> worker() async {
-      while (cursor < sources.length &&
-          generation == _generation &&
-          _soundMatching() &&
-          !view.isDisposed) {
-        final source = sources[cursor++];
-        final profile = await _soundStore.load(source);
-        if (profile != null) profiles[source] = profile;
-      }
+    if (!_soundMatching() || view.isDisposed || generation != _generation) {
+      return {};
     }
-
-    await Future.wait(List.generate(4, (_) => worker()));
-    return profiles;
+    final result = await _soundStore.loadAll(media.map((m) => m.source));
+    return _soundMatching() && !view.isDisposed && generation == _generation
+        ? result
+        : {};
   }
 
-  void _scheduleSoundAnalysis(List<PlayableMedia> media, int generation) {
-    if (_soundPending != null || !_soundMatching()) return;
-    final operation = () async {
-      // The queue is already filled; decoding never delays its publication.
-      for (final item in media.take(9)) {
-        if (generation != _generation ||
-            view.isDisposed ||
-            !_soundMatching() ||
-            !enabled) {
-          return;
-        }
-        if (await _soundStore.load(item.source) != null) continue;
-        final stamp = await _soundStore.stamp(item.source);
-        if (stamp == null) continue;
-        ContentUriPlaybackLease? lease;
-        try {
-          var path = item.source;
-          if (item.isContentUri) {
-            lease = await MediaFileBridge.openContentUriPlaybackLease(
-              item.source,
-            );
-            if (lease == null) continue;
-            path = lease.path;
-          }
-          if (generation != _generation ||
-              view.isDisposed ||
-              !_soundMatching()) {
-            return;
-          }
-          final profile = await _soundAnalyzer.analyzeSound(
-            path,
-            duration: item.duration,
-          );
-          if (profile != null &&
-              generation == _generation &&
-              _soundMatching() &&
-              !view.isDisposed) {
-            await _soundStore.save(item.source, profile, stamp);
-          }
-        } catch (error) {
-          _log.w('Optional sound analysis unavailable: $error');
-        } finally {
-          if (lease != null) {
-            await MediaFileBridge.closeContentUriPlaybackLease(lease.token);
-          }
-        }
-      }
-    }();
-    _soundPending = operation;
-    unawaited(
-      operation
-          .catchError((Object error) {
-            _log.w('Optional sound analysis stopped: $error');
-          })
-          .whenComplete(() {
-            if (identical(_soundPending, operation)) _soundPending = null;
-          }),
-    );
-  }
-
-  void dispose() {
-    reset();
-    _soundAnalyzer.dispose();
-  }
+  void dispose() => reset();
 
   final AutoplayQueueView view;
   final AutoplayLibraryLoader loadLibrary;
@@ -313,7 +237,6 @@ class MusicAutoplay {
 
   void reset() {
     _generation++;
-    _soundAnalyzer.cancel();
     _pending = null;
     _attempt = null;
     _dismissed.clear();
@@ -433,13 +356,6 @@ class MusicAutoplay {
         for (final item in selected)
           PlayableMedia.fromJson({...item.toJson(), 'autoplay': true})!,
       ]);
-      final explorationPool = List<PlayableMedia>.of(candidates)
-        ..shuffle(random);
-      _scheduleSoundAnalysis([
-        current,
-        ...selected.take(4),
-        ...explorationPool.take(4),
-      ], generation);
     } catch (error) {
       _log.w('Could not prepare Library Autoplay: $error');
     }

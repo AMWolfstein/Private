@@ -5,6 +5,9 @@ import 'package:sistrum/services/native/native_channel.dart';
 final class NativeDevice {
   NativeDevice._();
 
+  static Future<bool> isCharging() async =>
+      await nativeBackendChannel.invokeMethod<bool>('isCharging') ?? false;
+
   static Future<int?> androidSdkVersion() async {
     if (defaultTargetPlatform != TargetPlatform.android) return null;
     try {

@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:sistrum/screens/settings/library/song_analysis_settings_page.dart';
 import 'package:flutter/material.dart';
 import 'package:sistrum/widgets/primitives/app_alert_dialog.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -205,10 +206,23 @@ class _LibrarySettingsPageState extends ConsumerState<LibrarySettingsPage> {
                 SettingsItem(
                   icon: Icons.format_list_bulleted,
                   title: context.l10n.metadataSeparators,
+                  subtitle: context.l10n.tagSeparatorsDescription,
                   onTap: () => Navigator.of(context).push(
                     slidePageRoute<void>(
                       page: const AppSettingsTheme(
                         child: MetadataSeparatorSettingsPage(),
+                      ),
+                    ),
+                  ),
+                ),
+                SettingsItem(
+                  icon: Icons.graphic_eq,
+                  title: context.l10n.songAnalysis,
+                  subtitle: context.l10n.songAnalysisPageDescription,
+                  onTap: () => Navigator.of(context).push(
+                    slidePageRoute<void>(
+                      page: const AppSettingsTheme(
+                        child: SongAnalysisSettingsPage(),
                       ),
                     ),
                   ),

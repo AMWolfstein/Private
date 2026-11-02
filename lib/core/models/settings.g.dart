@@ -56,6 +56,8 @@ AppSettings _$AppSettingsFromJson(Map<String, dynamic> json) => AppSettings(
   autoplay: json['autoplay'] as bool? ?? false,
   autoplayPersonalization: json['autoplayPersonalization'] as bool? ?? true,
   autoplaySoundMatching: json['autoplaySoundMatching'] as bool? ?? false,
+  songAnalysisOnlyWhileCharging:
+      json['songAnalysisOnlyWhileCharging'] as bool? ?? true,
   isFirstLaunch: json['isFirstLaunch'] as bool? ?? true,
   libraryFilterMode: json['libraryFilterMode'] as String? ?? 'all',
   heroAnimationsEnabled: json['heroAnimationsEnabled'] as bool? ?? true,
@@ -108,6 +110,7 @@ Map<String, dynamic> _$AppSettingsToJson(AppSettings instance) =>
       'autoplay': instance.autoplay,
       'autoplayPersonalization': instance.autoplayPersonalization,
       'autoplaySoundMatching': instance.autoplaySoundMatching,
+      'songAnalysisOnlyWhileCharging': instance.songAnalysisOnlyWhileCharging,
       'isFirstLaunch': instance.isFirstLaunch,
       'libraryFilterMode': instance.libraryFilterMode,
       'heroAnimationsEnabled': instance.heroAnimationsEnabled,

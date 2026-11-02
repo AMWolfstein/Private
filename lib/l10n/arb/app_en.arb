@@ -3558,5 +3558,33 @@
   "equalizerCurve": "EQ curve (estimated)",
   "equalizerCurveDescription": "The curve shows band gains; the exact response depends on the output engine.",
   "equalizerImportInvalid": "Choose a valid Mornye equalizer preset (JSON, up to 64 KB).",
-  "equalizerSaved": "Preset saved"
+  "equalizerSaved": "Preset saved",
+  "songAnalysis": "Song analysis",
+  "@songAnalysis": {
+    "description": "Switch that analyzes how each Library song sounds, on the device, for Autoplay"
+  },
+  "songAnalysisDescription": "Learn how each Library song sounds, privately on this device, so Autoplay picks songs that sound like what you play and flow into each other.",
+  "songAnalysisOnlyWhileCharging": "Only while charging",
+  "songAnalysisOnlyWhileChargingDescription": "Analyze the Library only while this phone charges. The song playing is analyzed either way.",
+  "songAnalysisProgress": "{analyzed} of {total} songs analyzed",
+  "@songAnalysisProgress": {
+    "description": "How many Library songs song analysis has described so far",
+    "placeholders": {
+      "analyzed": {
+        "type": "int",
+        "format": "decimalPattern"
+      },
+      "total": {
+        "type": "int",
+        "format": "decimalPattern"
+      }
+    }
+  },
+  "songAnalysisClear": "Clear song analysis",
+  "songAnalysisClearConfirmTitle": "Clear song analysis?",
+  "songAnalysisClearConfirmMessage": "Autoplay forgets how your songs sound. While song analysis is on, your Library is analyzed again.",
+  "songAnalysisClearConfirm": "Clear",
+  "songAnalysisPageDescription": "Analyze your local music for sound-based Autoplay. Manage charging and analysis data.",
+  "tagSeparatorsDescription": "Choose how artist and genre tags split into names, and keep selected names together.",
+  "songAnalysisClearFailed": "Could not clear song analysis. Try again."
 }

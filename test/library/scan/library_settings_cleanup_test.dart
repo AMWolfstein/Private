@@ -127,7 +127,8 @@ void main() {
       // (UX-245). The root-navigator sheet still inherits 2x below.
       pageTextScale: 1,
     );
-    await tester.scrollUntilVisible(find.text('Auto Scan'), -200);
+    await tester.scrollUntilVisible(find.text('Auto Scan').hitTestable(), -100);
+    await tester.pumpAndSettle();
     await tester.tap(find.text('Auto Scan'));
     await tester.pumpAndSettle();
     final sheet = find.byType(BottomSheet);

@@ -62,6 +62,7 @@ internal class SharedPlaybackPlugin : FlutterPlugin {
                 try {
                     val response: Any? = withContext(Dispatchers.IO) {
                         when (call.method) {
+                            "isCharging" -> ChargingState.read(context)
                             "ensureInstallMarker" -> InstallationMarker.ensure(context)
                             "safOpenPlaybackLease" -> PlaybackFileLeases.open(context, call.argument<String>("uri") ?: "", leaseOwner)
                             "safClosePlaybackLease" -> { PlaybackFileLeases.close(call.argument<String>("token") ?: ""); null }

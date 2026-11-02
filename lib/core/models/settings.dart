@@ -70,6 +70,7 @@ class AppSettings {
   final bool autoplay;
   final bool autoplayPersonalization;
   final bool autoplaySoundMatching;
+  final bool songAnalysisOnlyWhileCharging;
   final bool isFirstLaunch;
 
   final String libraryFilterMode;
@@ -147,6 +148,7 @@ class AppSettings {
     this.autoplay = false,
     this.autoplayPersonalization = true,
     this.autoplaySoundMatching = false,
+    this.songAnalysisOnlyWhileCharging = true,
     this.isFirstLaunch = true,
 
     this.libraryFilterMode = 'all',
@@ -196,6 +198,7 @@ class AppSettings {
     bool? autoplay,
     bool? autoplayPersonalization,
     bool? autoplaySoundMatching,
+    bool? songAnalysisOnlyWhileCharging,
     bool? isFirstLaunch,
 
     String? libraryFilterMode,
@@ -249,6 +252,8 @@ class AppSettings {
       autoplay: autoplay ?? this.autoplay,
       autoplaySoundMatching:
           autoplaySoundMatching ?? this.autoplaySoundMatching,
+      songAnalysisOnlyWhileCharging:
+          songAnalysisOnlyWhileCharging ?? this.songAnalysisOnlyWhileCharging,
       autoplayPersonalization:
           autoplayPersonalization ?? this.autoplayPersonalization,
       isFirstLaunch: isFirstLaunch ?? this.isFirstLaunch,

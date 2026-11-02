@@ -1,31 +1,13 @@
-import 'dart:convert';
 import 'dart:io';
-import 'package:path_provider/path_provider.dart';
 import 'package:sistrum/services/native/media_file_bridge.dart';
 import 'package:sistrum/services/playback/autoplay/autoplay_sound_profile.dart';
+import 'package:sistrum/services/playback/autoplay/song_analysis_store.dart';
 
-/// Small, disposable local cache. Audio edits and changed SAF documents
-/// invalidate summaries; deleted or unsupported files simply have no signal.
+/// Autoplay and the Library sweep share the same versioned SQLite records.
 class AutoplaySoundStore {
-  Future<Directory>? _directoryFuture;
-
-  Future<Directory> _directory() => _directoryFuture ??= _createDirectory();
-
-  Future<Directory> _createDirectory() async {
-    final support = await getApplicationSupportDirectory();
-    return Directory(
-      '${support.path}/autoplay_sound_v2',
-    ).create(recursive: true);
-  }
-
-  String _key(String source) {
-    var hash = 0xcbf29ce484222325;
-    for (final byte in utf8.encode(source)) {
-      hash = ((hash ^ byte) * 0x100000001b3) & 0x7fffffffffffffff;
-    }
-    return hash.toRadixString(16);
-  }
-
+  AutoplaySoundStore({SongAnalysisStore? store})
+    : _store = store ?? SongAnalysisStore();
+  final SongAnalysisStore _store;
   Future<(int, int)> _stamp(String source) async {
     if (source.startsWith('content://')) {
       final stat = await MediaFileBridge.safStat(source);
@@ -41,22 +23,44 @@ class AutoplaySoundStore {
     return (stat.size, stat.modified.millisecondsSinceEpoch);
   }
 
-  Future<AutoplaySoundProfile?> load(String source) async {
+  Future<AutoplaySoundProfile?> load(String source) async =>
+      (await loadAll([source]))[source];
+
+  /// Query in SQLite chunks, then validate identities with bounded I/O.
+  Future<Map<String, AutoplaySoundProfile>> loadAll(
+    Iterable<String> sources,
+  ) async {
     try {
-      final file = File('${(await _directory()).path}/${_key(source)}.json');
-      if (!await file.exists() || await file.length() > 4096) return null;
-      final data = jsonDecode(await file.readAsString());
-      final stamp = await _stamp(source);
-      if (data is! Map ||
-          data['version'] != 2 ||
-          data['source'] != source ||
-          data['size'] != stamp.$1 ||
-          data['modified'] != stamp.$2) {
-        return null;
+      final paths = sources.toSet().toList();
+      final records = await _store.records(paths);
+      final features = await _store.features(paths);
+      final result = <String, AutoplaySoundProfile>{};
+      var cursor = 0;
+      Future<void> worker() async {
+        while (cursor < paths.length) {
+          final source = paths[cursor++];
+          final record = records[source];
+          final vector = features[source];
+          if (record == null ||
+              record.failed ||
+              record.version != _store.version ||
+              vector == null) {
+            continue;
+          }
+          final stamp = await this.stamp(source);
+          if (stamp == null ||
+              record.stamp != (size: stamp.$1, modified: stamp.$2)) {
+            continue;
+          }
+          final profile = AutoplaySoundProfile.decode(vector);
+          if (profile != null) result[source] = profile;
+        }
       }
-      return AutoplaySoundProfile.decode(data['values']);
+
+      await Future.wait(List.generate(4, (_) => worker()));
+      return result;
     } catch (_) {
-      return null;
+      return {};
     }
   }
 
@@ -65,44 +69,11 @@ class AutoplaySoundStore {
     AutoplaySoundProfile profile,
     (int, int) originalStamp,
   ) async {
-    try {
-      if (await _stamp(source) != originalStamp) return;
-      final directory = await _directory();
-      final file = File('${directory.path}/${_key(source)}.json');
-      final temp = File(
-        '${file.path}.${DateTime.now().microsecondsSinceEpoch}.tmp',
-      );
-      try {
-        await temp.writeAsString(
-          jsonEncode({
-            'version': 2,
-            'source': source,
-            'size': originalStamp.$1,
-            'modified': originalStamp.$2,
-            'values': profile.values,
-          }),
-        );
-        await temp.rename(file.path);
-      } finally {
-        if (await temp.exists()) await temp.delete();
-      }
-      final files = await directory
-          .list()
-          .where((e) => e is File && e.path.endsWith('.json'))
-          .cast<File>()
-          .toList();
-      if (files.length <= 512) return;
-      final ages = <(File, DateTime)>[];
-      for (final entry in files) {
-        ages.add((entry, (await entry.stat()).modified));
-      }
-      ages.sort((a, b) => a.$2.compareTo(b.$2));
-      for (final entry in ages.take(files.length - 512)) {
-        await entry.$1.delete();
-      }
-    } catch (_) {
-      /* Optional analysis must never break playback. */
-    }
+    if (await stamp(source) != originalStamp) return;
+    await _store.save(source, (
+      size: originalStamp.$1,
+      modified: originalStamp.$2,
+    ), profile.vector);
   }
 
   Future<(int, int)?> stamp(String source) async {

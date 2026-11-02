@@ -377,4 +377,9 @@ extension SettingsActions on SettingsNotifier {
     _current = _current.copyWith(playerShowVolume: visible);
     _saveSettings();
   }
+
+  void setSongAnalysisOnlyWhileCharging(bool value) {
+    _current = _current.copyWith(songAnalysisOnlyWhileCharging: value);
+    _saveSettings();
+  }
 }
