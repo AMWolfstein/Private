@@ -1,5 +1,8 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:flutter/painting.dart' show PaintingBinding;
+import 'package:sistrum/services/storage/library_cover_references.dart';
+import 'package:sistrum/services/library/covers/publish_scanned_covers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';

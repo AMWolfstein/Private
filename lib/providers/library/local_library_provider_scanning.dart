@@ -229,6 +229,36 @@ extension _LocalLibraryScanning on LocalLibraryNotifier {
           scanCurrentFile: null,
         );
 
+        // Optional cache publication: a failure keeps the valid staged paths.
+        try {
+          final support = await getApplicationSupportDirectory();
+          await stabilizePublishedLibraryCovers(
+            await _db.database,
+            activeSourceId,
+            Directory('${support.path}/library_covers'),
+            canPublish: () => _ref.mounted && !_scanCancelRequested,
+          );
+        } catch (error) {
+          _log.w(
+            'Stable cover publication unavailable; keeping staged covers: $error',
+          );
+        }
+        if (!_ref.mounted) return;
+        if (_scanCancelRequested) {
+          await _refreshSummaryFromStorage();
+          if (!_ref.mounted) return;
+          _current = _current.copyWith(
+            isScanning: false,
+            scanIsFinalizing: false,
+            scanWasCancelled: true,
+          );
+          await _scanNotifications.showCancelled();
+          return;
+        }
+        // Only the successful indexed generation can replace decoded artwork.
+        PaintingBinding.instance.imageCache
+          ..clear()
+          ..clearLiveImages();
         if (!await _finishScanSuccess(activeSourceId)) return;
         await _pruneLibraryCoverCache();
 

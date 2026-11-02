@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
+import 'package:sistrum/widgets/diagnostics/app_crash_diagnostic.dart';
 import 'package:sistrum/widgets/primitives/app_alert_dialog.dart';
 import 'package:sistrum/widgets/primitives/app_bottom_sheet.dart';
 import 'package:flutter/services.dart';
@@ -184,6 +185,7 @@ class _LogPageState extends ConsumerState<LogPage> {
                     ],
             ),
 
+            const SliverToBoxAdapter(child: AppCrashDiagnostic()),
             SliverToBoxAdapter(
               child: SettingsSectionHeader(
                 title: context.l10n.logFilterSection,

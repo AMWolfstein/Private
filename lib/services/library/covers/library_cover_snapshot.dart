@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:sistrum/services/library/database/sqlite_long_text.dart';
 
 import 'package:sqflite/sqflite.dart';
 import 'package:sistrum/services/library/database/library_schema.dart';
@@ -8,6 +9,115 @@ var _snapshotSequence = 0;
 const _coverReferences =
     "SELECT DISTINCT cover_path FROM library WHERE cover_path IS NOT NULL AND cover_path != ''";
 
+/// A text column in another app database that can name Library cover files:
+/// playlists, favorites, sessions, statistics and history copy cover paths
+/// from Library rows.
+typedef LibraryCoverReferenceColumn = ({
+  DatabaseExecutor database,
+  String table,
+  String column,
+});
+
+/// Hold each copied-reference store's writer barrier until maintenance ends.
+/// Stable path ordering avoids competing maintenance runs acquiring in reverse.
+/// A caller-owned transaction is already protected and is used as supplied.
+Future<T> withCoverReferenceBarriers<T>(
+  Iterable<LibraryCoverReferenceColumn> columns,
+  Future<T> Function(List<LibraryCoverReferenceColumn>) action, {
+  Database? libraryDatabase,
+}) async {
+  final original = columns.toList(growable: false);
+  final databases = <Database>{
+    for (final column in original)
+      if (column.database is Database &&
+          !identical(column.database, libraryDatabase))
+        column.database as Database,
+  }.toList()..sort((a, b) => a.path.compareTo(b.path));
+  final held = <DatabaseExecutor, DatabaseExecutor>{};
+  Future<T> lock(int index) {
+    if (index == databases.length) {
+      return action([
+        for (final c in original)
+          (
+            database: held[c.database] ?? c.database,
+            table: c.table,
+            column: c.column,
+          ),
+      ]);
+    }
+    final database = databases[index];
+    return database.transaction((txn) async {
+      held[database] = txn;
+      try {
+        return await lock(index + 1);
+      } finally {
+        held.remove(database);
+      }
+    }, exclusive: true);
+  }
+
+  return lock(0);
+}
+
+final _storedCoverName = RegExp(r'''library_covers/([^"'\s\\?#]+)''');
+
+/// The Library cover file names a stored text column value names.
+List<String> _storedCoverNames(String stored) {
+  final value = stored.replaceAll(r'\/', '/');
+  final names = <String>[];
+  for (final match in _storedCoverName.allMatches(value)) {
+    var name = match.group(1)!;
+    try {
+      name = Uri.decodeComponent(name);
+    } catch (_) {
+      // A literal percent sign names the file as stored.
+    }
+    names.add(name);
+  }
+  return names;
+}
+
+/// Files under [directory] that [columns] name, as paths in [directory]: a
+/// stored `file://` URI or a path from an older app container still matches.
+/// A failed read throws, so incomplete references never permit a deletion.
+Future<Set<String>> readStoredLibraryCoverPaths(
+  Directory directory,
+  Iterable<LibraryCoverReferenceColumn> columns,
+) async {
+  final paths = <String>{};
+  for (final (:database, :table, :column) in columns) {
+    var after = 0;
+    while (true) {
+      final page = await database.rawQuery(
+        'SELECT rowid AS stored_rowid, '
+        '${selectShortText(column, 'stored_value')} FROM $table '
+        "WHERE rowid > ? AND instr($column, 'library_covers') > 0 "
+        'ORDER BY rowid LIMIT 256',
+        [after],
+      );
+      for (final row in page) {
+        final value = row['stored_value'] as String?;
+        final names = value != null
+            ? _storedCoverNames(value)
+            : (await readLongTextRow(
+                    database,
+                    table: table,
+                    rowid: row['stored_rowid'] as int,
+                    textColumn: column,
+                    decode: _storedCoverNames,
+                  ))?.$2 ??
+                  const <String>[];
+        for (final name in names) {
+          paths.add('${directory.path}/$name');
+        }
+      }
+      if (page.length < 256) break;
+      after = page.last['stored_rowid'] as int;
+    }
+  }
+  return paths;
+}
+
 /// Copies only the cover-reference projection using the live connection's
 /// SQLite engine. Rust receives a private, detached file, never the live DB.
 /// The source writer barrier remains held throughout destructive maintenance.
@@ -16,6 +126,7 @@ Future<int> withLibraryCoverSnapshot(
   Future<int> Function(String privatePath) prune, {
   bool Function()? canPrune,
   Directory? temporaryDirectory,
+  Set<String> storedReferences = const {},
 }) async {
   if (canPrune != null && !canPrune()) return 0;
   final directory = await (temporaryDirectory ?? Directory.systemTemp)
@@ -43,6 +154,17 @@ Future<int> withLibraryCoverSnapshot(
       await txn.execute(
         'INSERT INTO $alias.library SELECT cover_path FROM temp.$references',
       );
+      final stored = storedReferences.toList(growable: false);
+      for (var start = 0; start < stored.length; start += 256) {
+        final chunk = stored.sublist(
+          start,
+          (start + 256).clamp(0, stored.length),
+        );
+        await txn.execute(
+          'INSERT INTO $alias.library (cover_path) VALUES ${List.filled(chunk.length, '(?)').join(', ')}',
+          chunk,
+        );
+      }
       await txn.execute(
         'PRAGMA $alias.user_version = ${LibrarySchema.version}',
       );

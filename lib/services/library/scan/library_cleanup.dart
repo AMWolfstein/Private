@@ -55,6 +55,7 @@ Future<void> deleteLibraryItemsByIds(Database db, Iterable<String> ids) async {
 Future<int> pruneUnreferencedLibraryCovers(
   Directory directory,
   Set<String> referencedPaths, {
+  Iterable<LibraryCoverReferenceColumn> referenceColumns = const [],
   Database? libraryDatabase,
   String? requestId,
   Duration minimumAge = Duration.zero,
@@ -66,28 +67,33 @@ Future<int> pruneUnreferencedLibraryCovers(
     throw ArgumentError.value(minimumAge, 'minimumAge');
   }
   if (canPrune != null && !canPrune()) return 0;
-  if (libraryDatabase != null) {
-    return withLibraryCoverSnapshot(
-      libraryDatabase,
-      (privatePath) => _pruneUnreferencedLibraryCovers(
-        directory,
-        const {},
-        privateSnapshotPath: privatePath,
-        requestId: requestId,
-        minimumAge: minimumAge,
-        nativeJobRunner: nativeJobRunner,
-      ),
-      canPrune: canPrune,
-      temporaryDirectory: temporaryDirectory,
+  return withCoverReferenceBarriers(referenceColumns, (lockedColumns) async {
+    final stored = await readStoredLibraryCoverPaths(directory, lockedColumns);
+    if (canPrune != null && !canPrune()) return 0;
+    if (libraryDatabase != null) {
+      return withLibraryCoverSnapshot(
+        libraryDatabase,
+        (privatePath) => _pruneUnreferencedLibraryCovers(
+          directory,
+          const {},
+          privateSnapshotPath: privatePath,
+          requestId: requestId,
+          minimumAge: minimumAge,
+          nativeJobRunner: nativeJobRunner,
+        ),
+        canPrune: canPrune,
+        temporaryDirectory: temporaryDirectory,
+        storedReferences: {...referencedPaths, ...stored},
+      );
+    }
+    return _pruneUnreferencedLibraryCovers(
+      directory,
+      {...referencedPaths, ...stored},
+      requestId: requestId,
+      minimumAge: minimumAge,
+      nativeJobRunner: nativeJobRunner,
     );
-  }
-  return _pruneUnreferencedLibraryCovers(
-    directory,
-    referencedPaths,
-    requestId: requestId,
-    minimumAge: minimumAge,
-    nativeJobRunner: nativeJobRunner,
-  );
+  }, libraryDatabase: libraryDatabase);
 }
 
 Future<int> _pruneUnreferencedLibraryCovers(

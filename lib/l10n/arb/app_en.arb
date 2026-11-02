@@ -3632,5 +3632,11 @@
       }
     }
   },
-  "autoplayResetLearningFailed": "Could not reset recommendation learning. Please try again."
+  "autoplayResetLearningFailed": "Could not reset recommendation learning. Please try again.",
+  "appCrashTitle": "The app previously crashed",
+  "appAnrTitle": "The app previously stopped responding",
+  "@appAnrTitle": {
+    "description": "Title for an Android ANR report, distinct from a crash."
+  },
+  "appCrashCopy": "Copy report for developer"
 }

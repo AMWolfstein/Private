@@ -373,6 +373,7 @@ extension _MusicPlayerHandlerDelegates1 on MusicPlayerHandler {
     _runtime.personalization.finish();
     unawaited(_runtime.personalization.flush());
     unawaited(_runtime.ranker.flush());
+    unawaited(_runtime.taste.flush());
     _playbackAutomation.cancelPendingActions();
     _autoplay.reset();
     cancelSleepTimer();

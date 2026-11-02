@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:sistrum/utils/layout/adaptive_layout.dart';
 
@@ -8,6 +9,12 @@ Color settingsGroupColor(BuildContext context) {
   final colorScheme = Theme.of(context).colorScheme;
   return colorScheme.surfaceContainer;
 }
+
+double settingsHorizontalInset(BuildContext context, double maxWidth) =>
+    16 +
+    (maxWidth.isFinite
+        ? math.min(wideInsetForWidth(maxWidth), wideListInset(context))
+        : 0);
 
 class SettingsGroup extends StatelessWidget {
   final List<Widget> children;
@@ -43,11 +50,7 @@ class SettingsGroup extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, constraints) => Container(
         margin: EdgeInsets.symmetric(
-          horizontal:
-              16 +
-              (constraints.hasBoundedWidth
-                  ? wideInsetForWidth(constraints.maxWidth)
-                  : 0),
+          horizontal: settingsHorizontalInset(context, constraints.maxWidth),
           vertical: 4,
         ),
         decoration: decoration,

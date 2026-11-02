@@ -1,3 +1,4 @@
+import 'package:sistrum/services/playback/autoplay/autoplay_taste.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:sistrum/services/playback/autoplay/autoplay_ranker.dart';
 import 'package:sistrum/services/playback/music_player/music_player_service.dart';
@@ -31,8 +32,14 @@ void main() {
       );
       addTearDown(db.close);
       final ranker = AutoplayRanker(open: () async => db);
+      final tasteDb = await AutoplayTaste.openWithFactory(
+        databaseFactoryFfi,
+        inMemoryDatabasePath,
+      );
+      addTearDown(tasteDb.close);
       final runtime = musicPlayerRuntimeFor(
         createRanker: () => ranker,
+        createTaste: () => AutoplayTaste(open: () async => tasteDb),
         createPersonalization: () =>
             AutoplayPersonalization(load: () async => null, save: (_) async {}),
       );

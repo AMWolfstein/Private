@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter/material.dart';
+import 'package:sistrum/widgets/settings/settings_group.dart'
+    show settingsHorizontalInset;
 import 'package:sistrum/core/theme/app_icons.dart';
 import 'package:sistrum/core/theme/app_theme.dart';
 import 'package:sistrum/core/theme/app_tokens.dart';
@@ -253,15 +255,21 @@ class SettingsSectionHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final content = Padding(
-      padding: const EdgeInsets.fromLTRB(32, 24, 32, 8),
-      child: Text(
-        title,
-        style: (Theme.of(context).textTheme.bodyLarge)?.copyWith(
-          color: Theme.of(context).colorScheme.onSurfaceVariant,
-          fontWeight: FontWeight.w600,
-        ),
-      ),
+    final content = LayoutBuilder(
+      builder: (context, constraints) {
+        final inset =
+            settingsHorizontalInset(context, constraints.maxWidth) + 16;
+        return Padding(
+          padding: EdgeInsets.fromLTRB(inset, 24, inset, 8),
+          child: Text(
+            title,
+            style: (Theme.of(context).textTheme.bodyLarge)?.copyWith(
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        );
+      },
     );
     return SettingsSearchTarget(label: title, child: content);
   }

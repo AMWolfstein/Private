@@ -321,6 +321,7 @@ extension _MusicPlayerHandlerPlayback on MusicPlayerHandler {
     );
     unawaited(_runtime.personalization.flush());
     unawaited(_runtime.ranker.flush());
+    unawaited(_runtime.taste.flush());
     final generation = ++_playRequestGeneration;
     _switchingGeneration = 0;
     _userPaused = true;

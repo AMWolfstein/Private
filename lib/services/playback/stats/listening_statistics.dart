@@ -1,10 +1,10 @@
 import 'dart:async';
+import 'package:sistrum/services/library/covers/durable_cover_reference.dart';
 
 import 'package:sistrum/services/library/browse/library_tag_credits.dart';
 import 'package:sistrum/services/library/database/sqlite_helpers.dart'
     as sqlite;
 import 'package:sistrum/utils/logging/logger.dart';
-import 'package:sistrum/utils/text/string_utils.dart';
 import 'package:sqflite/sqflite.dart';
 
 final _log = AppLogger('ListeningStatistics');
@@ -14,6 +14,19 @@ String listeningDay(DateTime date) =>
     '${date.month.toString().padLeft(2, '0')}-'
     '${date.day.toString().padLeft(2, '0')}';
 
+/// Canonical participant labels across rows; each credit counts once per row.
+Iterable<String> listeningArtistNames(
+  String tag,
+  TagCreditRules rules,
+  Map<String, String> labels,
+) sync* {
+  final seen = <String>{};
+  for (final name in splitTagCredits(tag, TagCreditField.artist, rules)) {
+    final key = sqlite.normalizeSearchText(name);
+    if (seen.add(key)) yield labels.putIfAbsent(key, () => name);
+  }
+}
+
 class ListeningTrack {
   const ListeningTrack({
     required this.key,
@@ -22,6 +35,19 @@ class ListeningTrack {
     required this.album,
     this.artwork,
   });
+
+  factory ListeningTrack.fromRow(
+    Map<String, Object?> row, {
+    String? fallbackArtwork,
+  }) => ListeningTrack(
+    key: row['track_key'] as String,
+    title: row['title'] as String,
+    artist: row['artist'] as String,
+    album: row['album'] as String,
+    artwork:
+        durableCoverReference(row['artwork'] as String?) ??
+        durableCoverReference(fallbackArtwork),
+  );
 
   final String key;
   final String title;
@@ -60,14 +86,17 @@ class ListeningSummary {
 
   Map<String, String> get artistArtwork {
     final artwork = <String, String>{};
+    final labels = {
+      for (final name in artists.keys) sqlite.normalizeSearchText(name): name,
+    };
     final listeningTime = <String, int>{};
     for (final total in tracks) {
-      final cover = normalizeCoverReference(total.track.artwork);
+      final cover = durableCoverReference(total.track.artwork);
       if (cover == null) continue;
-      for (final artist in splitTagCredits(
+      for (final artist in listeningArtistNames(
         total.track.artist,
-        TagCreditField.artist,
         rules,
+        labels,
       )) {
         if (listeningTime.containsKey(artist) &&
             total.milliseconds <= listeningTime[artist]!) {
@@ -80,7 +109,11 @@ class ListeningSummary {
     return artwork;
   }
 
-  factory ListeningSummary.fromRows(List<Map<String, Object?>> rows) {
+  factory ListeningSummary.fromRows(
+    List<Map<String, Object?>> rows, {
+    TagCreditRules rules = const TagCreditRules(),
+  }) {
+    final labels = <String, String>{};
     final tracks = <String, ListeningTotal>{};
     final artists = <String, int>{};
     final days = <String, int>{};
@@ -100,12 +133,14 @@ class ListeningSummary {
           title: row['title'] as String,
           artist: artist,
           album: row['album'] as String,
-          artwork: row['artwork'] as String?,
+          artwork: durableCoverReference(row['artwork'] as String?),
         ),
         (tracks[key]?.milliseconds ?? 0) + time,
         (tracks[key]?.plays ?? 0) + count,
       );
-      artists[artist] = (artists[artist] ?? 0) + time;
+      for (final name in listeningArtistNames(artist, rules, labels)) {
+        artists[name] = (artists[name] ?? 0) + time;
+      }
       days[day] = (days[day] ?? 0) + time;
     }
     final ranked = tracks.values.toList()
@@ -116,6 +151,7 @@ class ListeningSummary {
       tracks: ranked,
       artists: artists,
       days: days,
+      rules: rules,
     );
   }
 }
@@ -289,48 +325,8 @@ class ListeningStatisticsStore {
     ),
   );
 
-  Future<void> add(List<ListeningDelta> deltas) async {
-    final db = await _open();
-    await db.transaction((transaction) async {
-      final batch = transaction.batch();
-      for (final delta in deltas) {
-        batch.rawInsert(
-          '''
-          INSERT OR IGNORE INTO listening
-            (day, track_key, title, artist, album, artwork, milliseconds, plays)
-          VALUES (?, ?, ?, ?, ?, ?, 0, 0)
-        ''',
-          [
-            delta.day,
-            delta.track.key,
-            delta.track.title,
-            delta.track.artist,
-            delta.track.album,
-            delta.track.artwork,
-          ],
-        );
-        // Avoid UPSERT syntax unavailable in older Android SQLite versions.
-        batch.rawUpdate(
-          '''
-          UPDATE listening SET title = ?, artist = ?, album = ?, artwork = ?,
-            milliseconds = milliseconds + ?, plays = plays + ?
-          WHERE day = ? AND track_key = ?
-        ''',
-          [
-            delta.track.title,
-            delta.track.artist,
-            delta.track.album,
-            delta.track.artwork,
-            delta.milliseconds,
-            delta.plays,
-            delta.day,
-            delta.track.key,
-          ],
-        );
-      }
-      await batch.commit(noResult: true);
-    });
-  }
+  Future<void> add(List<ListeningDelta> deltas) async =>
+      writeListeningDeltas(await _open(), deltas);
 
   Future<ListeningSummary> load(
     DateTime start,
@@ -366,28 +362,32 @@ Future<ListeningSummary> readListeningSummary(
   final arguments = [listeningDay(start), listeningDay(end)];
   final rows = await db.rawQuery('''
     SELECT totals.track_key, details.title, details.artist, details.album,
-      details.artwork, totals.milliseconds, totals.plays
+      COALESCE(details.artwork, covered.artwork) AS artwork, totals.milliseconds, totals.plays
     FROM (
       SELECT track_key, SUM(milliseconds) AS milliseconds, SUM(plays) AS plays,
-        MAX(day) AS last_day
+        MAX(day) AS last_day,
+        MAX(CASE WHEN artwork IS NOT NULL THEN day END) AS cover_day
       FROM listening WHERE day >= ? AND day < ? GROUP BY track_key
     ) AS totals
     JOIN listening AS details ON details.track_key = totals.track_key
       AND details.day = totals.last_day
+    LEFT JOIN listening AS covered ON covered.track_key = totals.track_key
+      AND covered.day = totals.cover_day
     ORDER BY totals.milliseconds DESC
   ''', arguments);
   final artistRows = await db.rawQuery('''
     SELECT artist, SUM(milliseconds) AS milliseconds
-    FROM listening WHERE day >= ? AND day < ? GROUP BY artist
+    FROM listening WHERE day >= ? AND day < ? GROUP BY artist ORDER BY artist COLLATE NOCASE, artist
   ''', arguments);
   // A track tagged with several artists adds its time to each of them.
   final artists = <String, int>{};
+  final labels = <String, String>{};
   for (final row in artistRows) {
     final time = row['milliseconds'] as int;
-    for (final name in splitTagCredits(
+    for (final name in listeningArtistNames(
       row['artist'] as String,
-      TagCreditField.artist,
       rules,
+      labels,
     )) {
       artists[name] = (artists[name] ?? 0) + time;
     }
@@ -404,7 +404,7 @@ Future<ListeningSummary> readListeningSummary(
           title: row['title'] as String,
           artist: row['artist'] as String,
           album: row['album'] as String,
-          artwork: row['artwork'] as String?,
+          artwork: durableCoverReference(row['artwork'] as String?),
         ),
         row['milliseconds'] as int,
         row['plays'] as int,
@@ -446,4 +446,51 @@ Future<Map<String, int>> readListeningPlayCounts(
     for (final row in rows)
       row['track_key'] as String: (row['plays'] as num).toInt(),
   };
+}
+
+/// Adds daily totals atomically, preserving a durable cover when none arrives.
+Future<void> writeListeningDeltas(
+  Database db,
+  List<ListeningDelta> deltas,
+) async {
+  await db.transaction((transaction) async {
+    final batch = transaction.batch();
+    for (final delta in deltas) {
+      final artwork = durableCoverReference(delta.track.artwork);
+      batch.rawInsert(
+        '''
+          INSERT OR IGNORE INTO listening
+            (day, track_key, title, artist, album, artwork, milliseconds, plays)
+          VALUES (?, ?, ?, ?, ?, ?, 0, 0)
+        ''',
+        [
+          delta.day,
+          delta.track.key,
+          delta.track.title,
+          delta.track.artist,
+          delta.track.album,
+          artwork,
+        ],
+      );
+      // Avoid UPSERT syntax unavailable in older Android SQLite versions.
+      batch.rawUpdate(
+        '''
+          UPDATE listening SET title = ?, artist = ?, album = ?, artwork = COALESCE(?, artwork),
+            milliseconds = milliseconds + ?, plays = plays + ?
+          WHERE day = ? AND track_key = ?
+        ''',
+        [
+          delta.track.title,
+          delta.track.artist,
+          delta.track.album,
+          artwork,
+          delta.milliseconds,
+          delta.plays,
+          delta.day,
+          delta.track.key,
+        ],
+      );
+    }
+    await batch.commit(noResult: true);
+  });
 }

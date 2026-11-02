@@ -29,10 +29,49 @@ class _NoNoise implements Random {
 
 void main() {
   test(
+    'session genres outweigh a single seed and artists stay spaced when alternatives fit',
+    () {
+      final seed = track('seed', artist: 'Seed', genre: 'Rock');
+      final jazz = track('jazz', artist: 'J', genre: 'Jazz');
+      final rock = track('rock', artist: 'R', genre: 'Rock');
+      final contextPick = selectAutoplayTracks(
+        seed: seed,
+        candidates: [rock, jazz],
+        upcoming: [],
+        recent: [
+          for (var i = 0; i < 10; i++)
+            track('heard$i', artist: 'Other$i', genre: 'Jazz'),
+        ],
+        dismissedSources: {},
+        random: _NoNoise(),
+        limit: 1,
+      );
+      expect(contextPick.single.id, 'jazz');
+      final varied = selectAutoplayTracks(
+        seed: seed,
+        candidates: [
+          track('a1', artist: 'A'),
+          track('a2', artist: 'A'),
+          track('a3', artist: 'A'),
+          for (final artist in ['B', 'C', 'D']) track(artist, artist: artist),
+        ],
+        upcoming: [],
+        recent: [],
+        dismissedSources: {},
+        random: _NoNoise(),
+        preferenceAdjustment: (t) => t.artist == 'A' ? 100 : 0,
+        limit: 5,
+      );
+      expect(varied.take(4).map((t) => t.artist).toSet(), hasLength(4));
+      expect(varied.map((t) => t.source).toSet(), hasLength(5));
+    },
+  );
+
+  test(
     'learned weights change real picks and preserve pre-weight score parts',
     () {
       final seed = track('seed', artist: 'Seed', genre: 'Rock');
-      final sameArtist = track('artist', artist: 'Seed', genre: 'Other');
+      final sameArtist = track('artist', artist: 'A', genre: 'Other');
       final sameGenre = track('genre', artist: 'Other', genre: 'Rock');
       List<AutoplayPick> rank(Map<String, double> weights) =>
           rankAutoplayTracks(
@@ -44,15 +83,16 @@ void main() {
             random: _NoNoise(),
             limit: 1,
             weights: weights,
+            preferenceAdjustment: (item) => item.id == 'artist' ? 1 : 0,
           );
-      expect(rank({}).single.media.id, 'artist');
-      final learned = rank({'artist': 0, 'genre': 3}).single;
-      expect(learned.media.id, 'genre');
-      expect(learned.parts, {'genre': 4});
+      expect(rank({}).single.media.id, 'genre');
+      final learned = rank({'preference': 3, 'genre': 0}).single;
+      expect(learned.media.id, 'artist');
+      expect(learned.parts['preference'], 1);
     },
   );
 
-  test('Autoplay prefers related unplayed Library tracks and deduplicates', () {
+  test('Autoplay balances artists before repeats and deduplicates', () {
     final seed = track('seed', genre: 'Rock');
     final related = track('related', genre: 'Rock');
     final recent = track('recent', genre: 'Rock');
@@ -74,7 +114,7 @@ void main() {
       dismissedSources: {'/dismissed.flac'},
       random: Random(1),
     );
-    expect(selected.map((item) => item.id), ['related', 'unrelated', 'recent']);
+    expect(selected.map((item) => item.id), ['unrelated', 'related', 'recent']);
   });
 
   test('a small Library never recommends the current song to itself', () {
@@ -122,7 +162,7 @@ void main() {
       album: ' Album ${id % 35} ',
       genre: ' Genre ${id % 8} ',
     );
-    final selected = selectAutoplayTracks(
+    List<PlayableMedia> pick() => selectAutoplayTracks(
       seed: song(1000),
       candidates: List.generate(384, song),
       upcoming: [song(16), song(17)],
@@ -130,14 +170,16 @@ void main() {
       dismissedSources: {'/music/18.flac'},
       random: Random(1),
     );
-    expect(selected.map((item) => item.id), [
-      '160',
-      '40',
-      '96',
-      '80',
-      '90',
-      '20',
-    ]);
+    final selected = pick();
+    expect(selected.map((t) => t.id), pick().map((t) => t.id));
+    expect(selected, hasLength(6));
+    expect(selected.map((t) => t.source).toSet(), hasLength(6));
+    expect(selected.every((t) => int.parse(t.id) < 192), isTrue);
+    expect(
+      selected.map((t) => t.id),
+      isNot(anyElement(isIn(['16', '17', '18', '1000']))),
+    );
+    expect(selected.take(4).map((t) => t.artist).toSet(), hasLength(4));
   });
 
   test('Autoplay preference and recommendation provenance survive restore', () {

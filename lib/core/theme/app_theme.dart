@@ -134,18 +134,47 @@ class AppTheme extends ThemeExtension<AppTheme> {
       _themeCache[key] = cached;
       return cached;
     }
-    final theme = _build(
-      brightness,
-      chromeSurface: chromeSurface,
-      selectedAccent: accent,
-      useSystemFont: useSystemFont,
-      fontFamily: fontFamily,
-    );
+    final theme = chromeSurface == null
+        ? _build(
+            brightness,
+            selectedAccent: accent,
+            useSystemFont: useSystemFont,
+            fontFamily: fontFamily,
+          )
+        : _withChromeSurface(
+            build(
+              brightness,
+              accent: accent,
+              useSystemFont: useSystemFont,
+              fontFamily: fontFamily,
+            ),
+            chromeSurface,
+          );
     if (_themeCache.length >= 16) {
       _themeCache.remove(_themeCache.keys.first);
     }
     _themeCache[key] = theme;
     return theme;
+  }
+
+  static ThemeData _withChromeSurface(ThemeData theme, Color chromeSurface) {
+    final scheme = theme.colorScheme.copyWith(
+      surfaceContainerHigh: Color.lerp(chromeSurface, Colors.black, 0.16),
+    );
+    return theme.copyWith(
+      colorScheme: scheme,
+      buttonTheme: theme.buttonTheme.copyWith(colorScheme: scheme),
+      snackBarTheme: theme.snackBarTheme.copyWith(
+        backgroundColor: scheme.surfaceContainerHigh,
+      ),
+      extensions: [
+        for (final extension in theme.extensions.values)
+          if (extension is AppTheme)
+            extension.copyWith(chromeSurface: chromeSurface)
+          else
+            extension,
+      ],
+    );
   }
 
   /// Rebuild local surfaces without losing the user's Sistrum preferences.

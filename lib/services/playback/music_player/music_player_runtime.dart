@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:sistrum/services/playback/autoplay/autoplay_taste.dart';
 import 'package:sistrum/services/playback/autoplay/autoplay_ranker.dart';
 import 'package:sistrum/services/playback/autoplay/song_analysis.dart';
 import 'package:sistrum/services/playback/notification/media_session_filter.dart';
@@ -55,6 +56,7 @@ class PlaybackDependencies {
     this.autoMixStatus,
     this.createPersonalization = AutoplayPersonalization.new,
     this.createRanker = AutoplayRanker.new,
+    this.createTaste = AutoplayTaste.new,
     AppStateDatabase? sessionDatabase,
     LibraryCollectionsDatabase? collectionsDatabase,
     this.mediaLibraryCatalog,
@@ -81,6 +83,7 @@ class PlaybackDependencies {
   initializeHandler;
   final AutoplayPersonalization Function() createPersonalization;
   final AutoplayRanker Function() createRanker;
+  final AutoplayTaste Function() createTaste;
   final AppStateDatabase? _sessionDatabase;
   final LibraryCollectionsDatabase? _collectionsDatabase;
   final MediaLibraryCatalog? mediaLibraryCatalog;
@@ -142,13 +145,18 @@ class MusicPlayerRuntime {
   final PlaybackDependencies dependencies;
   AutoplayPersonalization? _personalization;
   StreamSubscription<AutoplayFeedback>? _rankFeedback;
+  AutoplayTaste? _taste;
+  AutoplayTaste get taste => _taste ??= dependencies.createTaste();
   AutoplayRanker? _ranker;
   AutoplayRanker get ranker => _ranker ??= dependencies.createRanker();
   AutoplayPersonalization get personalization {
     if (_personalization case final learning?) return learning;
     final learning = _personalization = dependencies.createPersonalization();
     _rankFeedback = learning.feedback.listen((feedback) {
-      if (_settings.autoplayPersonalization) ranker.record(feedback);
+      if (_settings.autoplayPersonalization) {
+        ranker.record(feedback);
+        taste.record(feedback);
+      }
     });
     return learning;
   }
@@ -402,6 +410,7 @@ class MusicPlayerRuntime {
     await _personalization?.dispose();
     await _rankFeedback?.cancel();
     await _ranker?.dispose();
+    await _taste?.dispose();
     await _handlers.close();
     await _mutedPlaybackEvents.close();
     await _backgroundCollectionChanges.close();

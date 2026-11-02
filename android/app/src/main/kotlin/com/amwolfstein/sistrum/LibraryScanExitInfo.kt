@@ -22,6 +22,20 @@ internal object LibraryScanExitInfo {
         else -> "App process stopped (Android reason $reason)"
     }
 
+    fun importanceLabel(importance: Int): String = when (importance) {
+        ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND -> "Foreground activity"
+        ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND_SERVICE -> "Foreground service"
+        ActivityManager.RunningAppProcessInfo.IMPORTANCE_VISIBLE -> "Visible"
+        ActivityManager.RunningAppProcessInfo.IMPORTANCE_PERCEPTIBLE -> "Perceptible"
+        ActivityManager.RunningAppProcessInfo.IMPORTANCE_SERVICE -> "Background service"
+        ActivityManager.RunningAppProcessInfo.IMPORTANCE_TOP_SLEEPING -> "Top activity while device sleeps"
+        ActivityManager.RunningAppProcessInfo.IMPORTANCE_CANT_SAVE_STATE -> "Cannot save state"
+        ActivityManager.RunningAppProcessInfo.IMPORTANCE_CACHED -> "Cached background process"
+        ActivityManager.RunningAppProcessInfo.IMPORTANCE_GONE -> "Process gone"
+        else -> "Unknown ($importance)"
+    }
+
+
     fun read(context: Context, startedAfter: Long): Map<String, Any>? {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R || startedAfter <= 0L) return null
         val manager = context.getSystemService(ActivityManager::class.java)

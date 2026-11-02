@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:sistrum/services/playback/autoplay/autoplay_taste.dart';
 import 'package:sistrum/services/playback/browser/media_library_catalog.dart';
 
 import 'package:audio_session/audio_session.dart';
@@ -247,6 +248,7 @@ MusicPlayerRuntime musicPlayerRuntimeFor({
   ListeningRecorder? recorder,
   AutoplayPersonalization Function()? createPersonalization,
   AutoplayRanker Function()? createRanker,
+  AutoplayTaste Function()? createTaste,
   FakeAudioSession? session,
   FakeSessionStore? sessionStore,
   PlaybackRestore? restoreSession,
@@ -267,6 +269,7 @@ MusicPlayerRuntime musicPlayerRuntimeFor({
       bindPlayerWidget: bindPlayerWidget,
       autoMixStatus: autoMixStatus,
       createRanker: createRanker ?? AutoplayRanker.new,
+      createTaste: createTaste ?? AutoplayTaste.new,
       createPersonalization:
           createPersonalization ?? AutoplayPersonalization.new,
       createDeck:

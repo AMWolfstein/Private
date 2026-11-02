@@ -70,6 +70,8 @@ class MainActivity: FlutterFragmentActivity() {
         "getBackendImplementations",
         "ensureInstallMarker",
         "getAppLogcat",
+        "getLatestAppCrash",
+        "recordAppRuntimeError",
 
         "readFileMetadata",
         "editFileMetadata",
@@ -611,6 +613,13 @@ class MainActivity: FlutterFragmentActivity() {
                         return@launch
                     }
                     when (call.method) {
+                        "getLatestAppCrash" -> result.success(withContext(Dispatchers.IO) { AppCrashReporter.pendingReport(noticeOnly = false) })
+                        "recordAppRuntimeError" -> {
+                            withContext(Dispatchers.IO) {
+                                AppCrashReporter.recordRuntimeError(call.argument<String>("error") ?: "", call.argument<String>("stack") ?: "", call.argument<String>("logs") ?: "")
+                            }
+                            result.success(null)
+                        }
                         "isCharging" -> result.success(ChargingState.read(applicationContext))
                         "getAndroidSdkVersion" -> result.success(android.os.Build.VERSION.SDK_INT)
 

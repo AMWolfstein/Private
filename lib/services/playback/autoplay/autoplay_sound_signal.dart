@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: LGPL-3.0-only
 // Copyright 2026 zarzet and contributors; adapted from Mornye v5.3.0.
 import 'dart:math';
+import 'package:sistrum/services/playback/autoplay/autoplay_signal.dart';
 import 'dart:typed_data';
 
 import 'package:sistrum/core/models/playable_media.dart';
@@ -11,12 +12,13 @@ import 'package:sistrum/services/playback/autoplay/song_features.dart';
 /// prefers a song whose tempo, energy and key follow the one before it.
 /// Features are standardized over the songs at hand, so the comparison
 /// adapts to each Library, and timbre weighs most.
-class SoundAutoplaySignal {
+class SoundAutoplaySignal extends AutoplaySignal {
   SoundAutoplaySignal(this.features);
 
   /// Analyzed features by song source.
   final Map<String, Float32List> features;
 
+  @override
   String get name => 'sound';
 
   /// The most a song gains for sounding like the session.
@@ -90,6 +92,7 @@ class SoundAutoplaySignal {
   bool _hasTempo(Float32List v) =>
       v[SongFeatures.tempo] > 0 && v[SongFeatures.tempoConfidence] >= 0.3;
 
+  @override
   void prepare(List<PlayableMedia> session, List<PlayableMedia> candidates) {
     _points.clear();
     _fits.clear();
@@ -175,6 +178,7 @@ class SoundAutoplaySignal {
     return exp(-distance / 2);
   }
 
+  @override
   double score(PlayableMedia candidate) {
     final fit = _fits[candidate.source];
     return fit == null ? _unknownScore : maxScore * fit;
@@ -229,6 +233,7 @@ class SoundAutoplaySignal {
     return distance == 0 || (sameMode && (distance == 1 || distance == 11));
   }
 
+  @override
   double follow(PlayableMedia previous, PlayableMedia candidate) {
     if (!_points.containsKey(previous.source)) return 0;
     if (_followed != previous.source) {

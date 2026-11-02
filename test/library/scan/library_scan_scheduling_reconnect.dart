@@ -237,4 +237,40 @@ void _registerLibraryScanSchedulingReconnect() {
     expect(state.scanWasCancelled, isTrue);
     expect(state.isScanning, isFalse);
   });
+  test(
+    'cancel during post-index cover publication finishes with the committed index',
+    () async {
+      final entered = Completer<void>(), release = Completer<void>();
+      var indexed = false;
+      _database.fullReplacement = () async {
+        indexed = true;
+        _database.countOverride = 7;
+        return (inserted: 7);
+      };
+      messenger.setMockMethodCallHandler(paths, (call) async {
+        if (indexed && call.method == 'getApplicationSupportDirectory') {
+          if (!entered.isCompleted) entered.complete();
+          await release.future;
+        }
+        return directory.path;
+      });
+      messenger.setMockMethodCallHandler(backend, (call) async {
+        if (call.method == 'scanLibraryFolderToNDJSONFile') {
+          final path = (call.arguments as Map)['output_path'] as String;
+          await File(path).writeAsString('');
+          return {'path': path, 'count': 0, 'error_count': 0};
+        }
+        return null;
+      });
+      final active = library.startSourceScan('active', forceFullScan: true);
+      await entered.future.timeout(const Duration(seconds: 5));
+      await library.cancelScan();
+      release.complete();
+      await active;
+      final state = container.read(localLibraryProvider);
+      expect(state.isScanning, isFalse);
+      expect(state.scanWasCancelled, isTrue);
+      expect(state.totalCount, 7);
+    },
+  );
 }

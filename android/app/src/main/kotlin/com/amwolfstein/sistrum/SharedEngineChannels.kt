@@ -62,6 +62,15 @@ internal class SharedPlaybackPlugin : FlutterPlugin {
                 try {
                     val response: Any? = withContext(Dispatchers.IO) {
                         when (call.method) {
+                            "getLatestAppCrash" -> AppCrashReporter.pendingReport(noticeOnly = false)
+                            "recordAppRuntimeError" -> {
+                                AppCrashReporter.recordRuntimeError(
+                                    call.argument<String>("error") ?: "",
+                                    call.argument<String>("stack") ?: "",
+                                    call.argument<String>("logs") ?: ""
+                                )
+                                null
+                            }
                             "isCharging" -> ChargingState.read(context)
                             "ensureInstallMarker" -> InstallationMarker.ensure(context)
                             "safOpenPlaybackLease" -> PlaybackFileLeases.open(context, call.argument<String>("uri") ?: "", leaseOwner)

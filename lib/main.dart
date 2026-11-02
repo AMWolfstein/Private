@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:sistrum/services/platform/app_crash_service.dart';
 import 'package:sistrum/services/playback/audio/playback_equalizer.dart';
 import 'package:sistrum/services/playback/browser/background_playback.dart';
 import 'dart:convert';
@@ -72,6 +73,9 @@ void main() {
         yield LicenseEntryWithLineBreaks(const [
           'Inter',
         ], await rootBundle.loadString('assets/fonts/Inter-LICENSE.txt'));
+        yield LicenseEntryWithLineBreaks(const [
+          'Local crash diagnostics',
+        ], await rootBundle.loadString('assets/licenses/diagnostics.txt'));
         yield LicenseEntryWithLineBreaks(
           const ['Noto Sans Arabic'],
           await rootBundle.loadString(
@@ -113,6 +117,9 @@ void main() {
 
       final previousOnError = FlutterError.onError;
       FlutterError.onError = (details) {
+        unawaited(
+          AppCrashService.recordRuntimeError(details.exception, details.stack),
+        );
         previousOnError?.call(details);
         _log.e(
           'Uncaught Flutter error: ${details.exceptionAsString()}',
@@ -121,6 +128,7 @@ void main() {
         );
       };
       WidgetsBinding.instance.platformDispatcher.onError = (error, stack) {
+        unawaited(AppCrashService.recordRuntimeError(error, stack));
         _log.e('Uncaught platform error: $error', error, stack);
         return true;
       };
@@ -197,7 +205,8 @@ void main() {
       }
     },
     (error, stack) {
-      _log.e('Uncaught zone error: $error');
+      unawaited(AppCrashService.recordRuntimeError(error, stack));
+      _log.e('Uncaught zone error: $error', error, stack);
     },
   );
 }

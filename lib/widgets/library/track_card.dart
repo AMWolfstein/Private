@@ -128,7 +128,10 @@ class TrackCard extends StatelessWidget {
                     ),
                     SizedBox(width: tokens.gapMd),
                   ],
-                  leading,
+                  DefaultTextStyle.merge(
+                    style: TextStyle(color: colorScheme.onSurfaceVariant),
+                    child: leading,
+                  ),
                   SizedBox(width: tokens.gapMd),
                   Expanded(
                     child: Column(
@@ -155,7 +158,12 @@ class TrackCard extends StatelessWidget {
                         ),
                         if (subtitle != null) ...[
                           const SizedBox(height: 2),
-                          subtitle!,
+                          DefaultTextStyle.merge(
+                            style: TextStyle(
+                              color: colorScheme.onSurfaceVariant,
+                            ),
+                            child: subtitle!,
+                          ),
                         ],
                       ],
                     ),

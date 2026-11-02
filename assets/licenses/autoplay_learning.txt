@@ -1,3 +1,5 @@
+Additional adaptations: autoplay_signal.dart, autoplay_taste.dart, session-aware ranking and tests from Mornye main 7db0fc76, Copyright 2026 zarzet and contributors, LGPL-3.0-only.
+
 Additional adaptation: autoplay_ranker.dart and its tests from Mornye commit 05b0ec3b (Copyright 2026 zarzet and contributors), LGPL-3.0-only.
 
 Additional adapted Mornye v5.3.0 sources (2026-11-02): song_analysis.dart, song_analysis_store.dart, song_feature_analyzer.dart and their tests. Copyright 2026 zarzet and contributors. LGPL-3.0-only under the full terms below.

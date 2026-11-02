@@ -277,6 +277,11 @@ void _registerMusicPlayerRuntimeRestore() {
         inMemoryDatabasePath,
       );
       addTearDown(rankDb.close);
+      final tasteDb = await AutoplayTaste.openWithFactory(
+        databaseFactoryFfi,
+        inMemoryDatabasePath,
+      );
+      addTearDown(tasteDb.close);
       final runtime = _runtime(
         settings: const AppSettings(
           pauseOnMute: false,
@@ -285,6 +290,7 @@ void _registerMusicPlayerRuntimeRestore() {
         ),
         createPersonalization: () => learning,
         createRanker: () => AutoplayRanker(open: () async => rankDb),
+        createTaste: () => AutoplayTaste(open: () async => tasteDb),
       );
       final handler = MusicPlayerHandler(
         runtime: runtime,

@@ -206,6 +206,7 @@ extension _LocalLibraryScanResults on LocalLibraryNotifier {
         libraryCoverDir,
         const {},
         libraryDatabase: libraryDatabase,
+        referenceColumns: await appLibraryCoverReferenceColumns(),
         requestId: _nativeLibraryRequestId,
         canPrune: () => _ref.mounted && !_scanCancelRequested,
         // Avoid removing covers being written by a background producer before
