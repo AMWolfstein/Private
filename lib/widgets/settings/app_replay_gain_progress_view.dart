@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sistrum/l10n/l10n.dart';
+import 'package:sistrum/widgets/settings/settings_item_rows.dart';
 import 'package:sistrum/services/playback/audio/replaygain_progress.dart';
 
 class AppReplayGainProgressView extends StatelessWidget {
@@ -24,35 +25,55 @@ class AppReplayGainProgressView extends StatelessWidget {
             : l10n.replayGainFinished,
       ReplayGainPhase.failed => l10n.replayGainStoppedWithError,
     };
-    final waiting =
-        current.phase == ReplayGainPhase.waitingForCharging ||
-        current.phase == ReplayGainPhase.waitingForPlayback ||
-        current.phase == ReplayGainPhase.failed;
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(label, style: Theme.of(context).textTheme.bodyMedium),
-          const SizedBox(height: 8),
-          Text(l10n.replayGainProgress(current.checked, current.total)),
-          Text(
-            l10n.replayGainOutcomeCounts(
-              current.written,
-              current.unchanged,
-              current.failed,
-              current.deferred,
-            ),
+    final supportingStyle = Theme.of(context).textTheme.bodySmall?.copyWith(
+      color: Theme.of(context).colorScheme.onSurfaceVariant,
+    );
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        SettingsItem(
+          title: label,
+          subtitle: l10n.replayGainProgress(current.checked, current.total),
+          showDivider: false,
+        ),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Wrap(
+                spacing: 12,
+                runSpacing: 4,
+                children: [
+                  Text(
+                    l10n.replayGainWrittenCount(current.written),
+                    style: supportingStyle,
+                  ),
+                  Text(
+                    l10n.replayGainUnchangedCount(current.unchanged),
+                    style: supportingStyle,
+                  ),
+                  Text(
+                    l10n.replayGainFailedCount(current.failed),
+                    style: supportingStyle,
+                  ),
+                  Text(
+                    l10n.replayGainDeferredCount(current.deferred),
+                    style: supportingStyle,
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              LinearProgressIndicator(
+                value: current.phase == ReplayGainPhase.preparing
+                    ? current.fraction
+                    : current.fraction ?? 0,
+                semanticsLabel: label,
+              ),
+            ],
           ),
-          if (!waiting) ...[
-            const SizedBox(height: 8),
-            LinearProgressIndicator(
-              value: current.fraction,
-              semanticsLabel: label,
-            ),
-          ],
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

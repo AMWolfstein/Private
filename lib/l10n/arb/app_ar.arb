@@ -2584,7 +2584,7 @@
   "updateInstallFailed": "تعذّر فتح مثبّت التحديث.",
   "updateCheckFailed": "تعذّر التحقق من التحديثات",
   "retry": "إعادة المحاولة",
-  "replayGainAutoWriteDescription": "قياس مستوى صوت الأغاني والألبومات عند غياب البيانات أو تغيّر الملفات منذ آخر فحص، وكتابتها معًا دون إعادة ترميز الصوت. يشمل المجلدات المضافة عبر منتقي النظام. فعّل تسوية مستوى الصوت في إعدادات التشغيل للاستفادة منها.",
+  "replayGainAutoWriteDescription": "كتابة بيانات مستوى صوت الأغاني والألبومات عند الحاجة.",
   "replayGainPreparing": "جارٍ تجهيز المكتبة…",
   "replayGainMeasuringTracks": "جارٍ قياس مستوى صوت الأغاني…",
   "replayGainMeasuringAlbums": "جارٍ قياس مستوى صوت الألبومات…",
@@ -2594,5 +2594,10 @@
   "replayGainFinished": "اكتمل فحص ReplayGain",
   "replayGainFinishedWithErrors": "اكتمل فحص ReplayGain مع وجود أخطاء",
   "replayGainStoppedWithError": "توقف ReplayGain بسبب خطأ. أوقفه وشغّله لإعادة المحاولة.",
-  "replayGainOutcomeCounts": "تمت كتابة {written} · دون تغيير {unchanged} · فشل {failed} · مؤجّل {deferred}"
+  "replayGainOutcomeCounts": "تمت كتابة {written} · دون تغيير {unchanged} · فشل {failed} · مؤجّل {deferred}",
+  "replayGainAutoWrite": "ReplayGain تلقائي",
+  "replayGainWrittenCount": "تمت كتابة {count}",
+  "replayGainUnchangedCount": "دون تغيير {count}",
+  "replayGainFailedCount": "فشل {count}",
+  "replayGainDeferredCount": "مؤجّل {count}"
 }

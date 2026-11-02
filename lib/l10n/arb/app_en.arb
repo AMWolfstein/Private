@@ -3408,8 +3408,8 @@
   "gaplessPlaybackDescription": "Start the next song the moment one ends, without silence between them. AutoMix replaces it while on.",
   "replayGain": "ReplayGain",
   "replayGainPageDescription": "Write loudness tags to your Library songs automatically, so their volume stays even.",
-  "replayGainAutoWrite": "Write ReplayGain automatically",
-  "replayGainAutoWriteDescription": "Measure track and album loudness for missing tags or files changed since the last check. Write both together without re-encoding audio. Includes folders added through the system picker. Enable Volume normalization in Playback to use these tags.",
+  "replayGainAutoWrite": "Automatic ReplayGain",
+  "replayGainAutoWriteDescription": "Write track and album loudness tags for songs that need them.",
   "replayGainOnlyWhileCharging": "Only while charging",
   "replayGainOnlyWhileChargingDescription": "Write tags only while this phone charges.",
   "replayGainProgress": "{checked} of {total} songs checked",
@@ -3491,6 +3491,38 @@
         "type": "int"
       },
       "deferred": {
+        "type": "int"
+      }
+    }
+  },
+  "replayGainWrittenCount": "{count} written",
+  "replayGainUnchangedCount": "{count} unchanged",
+  "replayGainFailedCount": "{count} failed",
+  "replayGainDeferredCount": "{count} deferred",
+  "@replayGainWrittenCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@replayGainUnchangedCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@replayGainFailedCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@replayGainDeferredCount": {
+    "placeholders": {
+      "count": {
         "type": "int"
       }
     }
