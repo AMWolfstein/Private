@@ -5,9 +5,7 @@ This repo is being converted to a local/offline Android-only music player.
 before continuing any migration work.**
 
 The app targets Android and local files only: no iOS code paths and no on/off switch for the local library (it is always on). Sistrum is its sole production theme; keep
-light/dark modes and local storage, playback, lyrics, backup and USB support. Do not
-reintroduce providers, downloads, extension credentials or remote artwork loading. The one
-online feature is the user-started lyrics lookup below; it never runs in the background.
+light/dark modes and local storage, playback, lyrics, backup and USB support. Do not reintroduce providers, downloads, extension credentials or remote artwork loading, except the owner-approved artist photo lookup below. The online features are the user-started lyrics lookup and the artist photo lookup below; neither runs in the background except the artist photo lookup while its setting is on.
 
 V3 detail designs are restored over local data. Artist navigation must open
 `local_artist_screen.dart`, not a generic filtered album browser. Keep Play centered,
@@ -144,7 +142,7 @@ The updater is restored: `UpdateChecker` reads GitHub releases from `AppInfo.git
 Check-for-updates and preview-release switches, and `UpdateDialog` downloads the APK (HTTPS, resumable, SHA-256
 checked) and hands it to the system installer. The release manifest therefore allows INTERNET (and
 REQUEST_INSTALL_PACKAGES with a FileProvider); no other feature may use the network except the user-started lyrics lookup described under
-Lyrics settings.
+Lyrics settings and the artist photo lookup under Appearance > Download artist images.
 
 Song taps start local playback; do not restore the separate TrackMetadataScreen/details
 route. Song ellipsis menus expose the former local track actions: Play/Share, Play next,
