@@ -29,6 +29,7 @@ class AppGlass extends ConsumerWidget {
     this.highlightIntensity = 1,
     this.glassProgress = 1,
     this.samplesBackdrop = true,
+    this.dropShadow = true,
   });
 
   // One shared filter: never rebuilt per frame.
@@ -55,6 +56,10 @@ class AppGlass extends ConsumerWidget {
 
   /// Plain-page surfaces keep their tint without filtering a uniform backdrop.
   final bool samplesBackdrop;
+
+  /// The soft contact shadow under the surface. Buttons turn it off; the rim
+  /// stays on every glass surface.
+  final bool dropShadow;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -132,7 +137,7 @@ class AppGlass extends ConsumerWidget {
       // Child controls paint on this surface; never re-blur their parent.
       child: _GlassBackdropScope(child: child),
     );
-    final shadows = single
+    final shadows = single && dropShadow
         ? [
             BoxShadow(
               color: Colors.black.withValues(alpha: dark ? 0.14 : 0.08),

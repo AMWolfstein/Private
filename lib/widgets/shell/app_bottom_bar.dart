@@ -155,6 +155,7 @@ class _AppBottomBarState extends ConsumerState<AppBottomBar>
       scale: _collapse,
       child: RepaintBoundary(
         child: AppGlass(
+          dropShadow: false,
           blurEnabled: blurEnabled,
           strongTint: true,
           tintOpacity: AppTheme.navigationOpacity(context),
