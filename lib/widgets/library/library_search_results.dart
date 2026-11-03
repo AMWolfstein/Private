@@ -16,6 +16,7 @@ import 'package:sistrum/services/library/database/library_database.dart';
 import 'package:sistrum/services/artist_images/artist_image_store.dart';
 import 'package:sistrum/services/library/browse/library_search.dart';
 import 'package:sistrum/widgets/library/local_track_batch_actions.dart';
+import 'package:sistrum/widgets/library/local_library_artwork_builder.dart';
 import 'package:sistrum/widgets/primitives/app_choice_chip.dart';
 import 'package:sistrum/widgets/cover/cached_cover_image.dart';
 import 'package:sistrum/widgets/library/library_track_selection_bar.dart';
@@ -281,6 +282,15 @@ class _LibrarySearchResultsState extends ConsumerState<LibrarySearchResults> {
                 image: FileImage(artistPhotos[artistImageKey(hit.title)]!),
                 fit: BoxFit.cover,
               ),
+            // Without a photo an artist shows the artwork of one of its
+            // tracks, as the Artists directory does, not a generic person.
+            LibrarySearchKind.artists => LocalLibraryArtworkBuilder(
+              coverPath: null,
+              filePath: hit.samplePath.isEmpty ? null : hit.samplePath,
+              builder: (context, cover) => cover == null
+                  ? fallback(context)
+                  : LocalCoverImage(url: cover, placeholder: fallback),
+            ),
             _ =>
               hit.cover?.isNotEmpty == true
                   ? LocalCoverImage(url: hit.cover!, placeholder: fallback)
