@@ -6,6 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
 import 'package:sistrum/services/animated_artwork/animated_artwork_auto_pass.dart';
+import 'package:sistrum/services/animated_artwork/animated_artwork_remux.dart';
 import 'package:sistrum/services/animated_artwork/animated_artwork_store.dart';
 import 'package:sistrum/services/animated_artwork/apple_artwork_client.dart';
 import 'package:sistrum/services/artist_images/artist_image_network.dart';
@@ -105,6 +106,21 @@ class _Remote {
 }
 
 void main() {
+  // The remux is FFmpeg, which runs only in the app. Tests copy the file and
+  // accept it as decodable; the real command is covered on device.
+  final productionRemux = animatedVideoRemux;
+  final productionDecodes = animatedVideoDecodes;
+  setUpAll(() {
+    animatedVideoRemux = (input, output) async {
+      File(input).copySync(output);
+      return true;
+    };
+    animatedVideoDecodes = (_) async => true;
+  });
+  tearDownAll(() {
+    animatedVideoRemux = productionRemux;
+    animatedVideoDecodes = productionDecodes;
+  });
   late Directory dir;
   late AnimatedArtworkStore store;
   late AnimatedArtworkState state;

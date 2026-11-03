@@ -1,5 +1,6 @@
 import 'package:http/http.dart' as http;
 import 'package:sistrum/services/animated_artwork/animated_artwork_download.dart';
+import 'package:sistrum/services/animated_artwork/animated_artwork_remux.dart';
 import 'package:sistrum/services/animated_artwork/animated_artwork_store.dart';
 import 'package:sistrum/services/animated_artwork/apple_artwork_client.dart';
 import 'package:sistrum/services/animated_artwork/apple_artwork_parse.dart';
@@ -199,11 +200,13 @@ Future<AnimatedArtworkAutoResult> runAnimatedArtworkAutoPass({
     final staged = await store.newStagingFile();
     final DownloadedAnimatedVideo video;
     try {
-      video = await downloadAppleMotionVideo(
-        client: downloadClient,
-        playlist: Uri.parse(found.video!.url),
-        output: staged,
-        isCancelled: () => !stillCurrent(),
+      video = await preparePlayableVideo(
+        await downloadAppleMotionVideo(
+          client: downloadClient,
+          playlist: Uri.parse(found.video!.url),
+          output: staged,
+          isCancelled: () => !stillCurrent(),
+        ),
       );
     } on AnimatedVideoDownloadException catch (error) {
       switch (error.failure) {

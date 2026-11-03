@@ -1,5 +1,6 @@
 import 'package:http/http.dart' as http;
 import 'package:sistrum/services/animated_artwork/animated_artwork_download.dart';
+import 'package:sistrum/services/animated_artwork/animated_artwork_remux.dart';
 import 'package:sistrum/services/animated_artwork/animated_artwork_store.dart';
 import 'package:sistrum/services/animated_artwork/apple_artwork_client.dart';
 import 'package:sistrum/services/animated_artwork/apple_artwork_parse.dart';
@@ -55,11 +56,13 @@ Future<AnimatedArtworkSaveOutcome> saveCatalogVideo({
   final staged = await store.newStagingFile();
   final DownloadedAnimatedVideo downloaded;
   try {
-    downloaded = await downloadAppleMotionVideo(
-      client: client,
-      playlist: Uri.parse(video.url),
-      output: staged,
-      isCancelled: isCancelled,
+    downloaded = await preparePlayableVideo(
+      await downloadAppleMotionVideo(
+        client: client,
+        playlist: Uri.parse(video.url),
+        output: staged,
+        isCancelled: isCancelled,
+      ),
     );
   } on Object {
     if (await staged.exists()) await staged.delete();
@@ -87,10 +90,12 @@ Future<AnimatedArtworkSaveOutcome> saveImportedVideo({
   final staged = await store.newStagingFile();
   final DownloadedAnimatedVideo imported;
   try {
-    imported = await importAnimatedVideoStream(
-      source: source,
-      output: staged,
-      declaredLength: declaredLength,
+    imported = await preparePlayableVideo(
+      await importAnimatedVideoStream(
+        source: source,
+        output: staged,
+        declaredLength: declaredLength,
+      ),
     );
   } on Object {
     if (await staged.exists()) await staged.delete();
