@@ -2632,6 +2632,5 @@
   "animatedArtworkDownloadFailed": "تعذّر تنزيل الفيديو.",
   "animatedArtworkImportFailed": "هذا الملف ليس فيديو MP4 أو MOV صالحاً.",
   "animatedArtworkTooLarge": "هذا الفيديو كبير جداً.",
-  "animatedArtworkResetDone": "تمت إعادة ضبط الغلاف المتحرك. يظهر الغلاف الثابت.",
-  "animatedArtworkNotice": "تأتي الأغلفة المتحركة من كتالوج Apple Music عبر واجهة غير رسمية، وقد تتوقف دون إشعار."
+  "animatedArtworkResetDone": "تمت إعادة ضبط الغلاف المتحرك. يظهر الغلاف الثابت."
 }

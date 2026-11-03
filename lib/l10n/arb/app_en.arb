@@ -3946,9 +3946,5 @@
   "animatedArtworkResetDone": "Video artwork was reset. The static cover is shown.",
   "@animatedArtworkResetDone": {
     "description": "Animated artwork: reset confirmation"
-  },
-  "animatedArtworkNotice": "Video artwork comes from Apple Music's catalog through an unofficial interface. It can stop working without notice.",
-  "@animatedArtworkNotice": {
-    "description": "Find animated artwork: source disclaimer"
   }
 }

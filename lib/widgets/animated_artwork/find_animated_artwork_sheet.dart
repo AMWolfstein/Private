@@ -492,11 +492,6 @@ class _FindAnimatedArtworkSheetState
           const SizedBox(height: 12),
           Text(_message!, style: theme.textTheme.bodyMedium),
         ],
-        const SizedBox(height: 16),
-        Text(
-          l10n.animatedArtworkNotice,
-          style: theme.textTheme.bodySmall,
-        ),
       ],
     );
   }
