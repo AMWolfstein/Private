@@ -8,7 +8,7 @@ import 'package:sistrum/providers/artist_images/artist_image_providers.dart';
 import 'package:sistrum/services/artist_images/artist_image_download.dart';
 import 'package:sistrum/services/artist_images/artist_image_store.dart';
 import 'package:sistrum/services/artist_images/deezer_artist_search.dart';
-import 'package:sistrum/widgets/player/artwork/app_player_ground.dart';
+import 'package:sistrum/widgets/cover/cached_cover_image.dart';
 import 'package:sistrum/widgets/primitives/app_bottom_sheet.dart';
 import 'package:sistrum/widgets/primitives/app_context_menu.dart';
 import 'package:sistrum/providers/animated_artwork/animated_artwork_providers.dart';
@@ -256,14 +256,20 @@ class _FindArtistImageSheetState extends ConsumerState<FindArtistImageSheet> {
           for (final artist in results)
             ListTile(
               contentPadding: EdgeInsets.zero,
-              leading: CircleAvatar(
-                backgroundImage: artist.pictureUrl == null
-                    ? null
-                    : appCoverProvider(artist.pictureUrl),
-                child: artist.pictureUrl == null
-                    ? const Icon(Icons.person_outline)
-                    : null,
-              ),
+              leading: artist.pictureUrl == null
+                  ? const CircleAvatar(child: Icon(Icons.person_outline))
+                  : ClipOval(
+                      child: SizedBox.square(
+                        dimension: 40,
+                        child: CachedCoverImage(
+                          imageUrl: artist.pictureUrl!,
+                          width: 40,
+                          height: 40,
+                          memCacheWidth: 80,
+                          memCacheHeight: 80,
+                        ),
+                      ),
+                    ),
               title: Text(
                 artist.name,
                 maxLines: 1,
@@ -311,8 +317,8 @@ class _FindArtistImageSheetState extends ConsumerState<FindArtistImageSheet> {
           aspectRatio: 1,
           child: ClipRRect(
             borderRadius: BorderRadius.circular(12),
-            child: Image(
-              image: appCoverProvider(artist.pictureUrl)!,
+            child: CachedCoverImage(
+              imageUrl: artist.pictureUrl!,
               fit: BoxFit.cover,
             ),
           ),
