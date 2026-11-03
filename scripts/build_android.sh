@@ -62,24 +62,19 @@ BUILD_GIT_COMMIT="$(git rev-parse --short=8 HEAD)"
   --release \
   --obfuscate \
   --split-debug-info "$PROJECT_DIR/build/symbols/android" \
-  --split-per-abi \
   --target-platform "$TARGET_PLATFORM_LIST" \
   --dart-define="GIT_COMMIT=$BUILD_GIT_COMMIT" \
   ${FLUTTER_ARGS[@]+"${FLUTTER_ARGS[@]}"}
 
-for target in "${ANDROID_ABIS[@]}" universal; do
-  apk="app-$target-release.apk"
-  abis="$target"
-  if [[ "$target" == "universal" ]]; then
-    apk=app-release.apk
-    abis="$ANDROID_ABIS_RAW"
-  fi
-  if [[ ! -f "$OUTPUT_DIR/$apk" ]]; then
-    echo "Error: expected APK was not created: $OUTPUT_DIR/$apk" >&2
-    exit 1
-  fi
-  python3 scripts/check_backend_apk.py "$OUTPUT_DIR/$apk" \
-    --backend rust --abis "$abis"
-done
+# One universal APK holding the selected ABIs. Per-ABI splits cannot be used:
+# android/app/build.gradle.kts sets ndk abiFilters, and Gradle rejects them
+# alongside split ABI filters.
+apk="$OUTPUT_DIR/app-release.apk"
+if [[ ! -f "$apk" ]]; then
+  echo "Error: expected APK was not created: $apk" >&2
+  exit 1
+fi
+python3 scripts/check_backend_apk.py "$apk" \
+  --backend rust --abis "$ANDROID_ABIS_RAW"
 
 echo "Built Android release APKs in $OUTPUT_DIR"

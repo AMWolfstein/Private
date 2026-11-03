@@ -25,8 +25,6 @@ else:
     assert args[:2] == ['build', 'apk']
     output = Path('build/app/outputs/flutter-apk')
     output.mkdir(parents=True, exist_ok=True)
-    for abi in os.environ['SISTRUM_RUST_ANDROID_ABIS'].split(','):
-        (output / ('app-' + abi + '-release.apk')).write_bytes(b'fixture split')
     (output / 'app-release.apk').write_bytes(b'fixture universal')
 """
 
@@ -75,7 +73,7 @@ class AndroidBuildScriptTest(unittest.TestCase):
     def calls(self):
         return [json.loads(line) for line in self.log.read_text().splitlines()]
 
-    def test_default_audits_two_splits_and_universal(self):
+    def test_default_builds_one_universal_apk_for_both_abis(self):
         result = self.run_build("--verbose")
         self.assertEqual(result.returncode, 0, result.stderr)
         calls = self.calls()
@@ -85,11 +83,15 @@ class AndroidBuildScriptTest(unittest.TestCase):
         self.assertLess(calls.index(preparation), calls.index(build))
         self.assertIn("android-arm64,android-arm", build["args"])
         self.assertIn("--verbose", build["args"])
+        self.assertNotIn("--split-per-abi", build["args"])
         audits = [call["args"] for call in calls if call["tool"] == "audit"]
-        self.assertEqual([Path(args[0]).name for args in audits], [
-            "app-arm64-v8a-release.apk", "app-armeabi-v7a-release.apk", "app-release.apk",
-        ])
-        self.assertEqual(audits[-1][audits[-1].index("--abis") + 1], "arm64-v8a,armeabi-v7a")
+        self.assertEqual([Path(args[0]).name for args in audits], ["app-release.apk"])
+        self.assertEqual(audits[0][audits[0].index("--abis") + 1], "arm64-v8a,armeabi-v7a")
+
+    def test_split_per_abi_flag_is_refused(self):
+        result = self.run_build("--split-per-abi")
+        self.assertNotEqual(result.returncode, 0)
+        self.assertFalse(self.log.exists())
 
     def test_single_abi_audits_and_preserves_previous_artifacts(self):
         self.env["SISTRUM_RUST_ANDROID_ABIS"] = "arm64-v8a"
@@ -103,8 +105,8 @@ class AndroidBuildScriptTest(unittest.TestCase):
         build = next(call for call in calls if call["args"][:2] == ["build", "apk"])
         self.assertIn("android-arm64", build["args"])
         audits = [call["args"] for call in calls if call["tool"] == "audit"]
-        self.assertEqual(len(audits), 2)
-        self.assertTrue(all(args[args.index("--abis") + 1] == "arm64-v8a" for args in audits))
+        self.assertEqual(len(audits), 1)
+        self.assertEqual(audits[0][audits[0].index("--abis") + 1], "arm64-v8a")
         self.assertEqual(previous.read_bytes(), b"previous build")
 
     def test_fvm_fallback_uses_pinned_version(self):
