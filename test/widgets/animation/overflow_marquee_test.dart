@@ -2,7 +2,6 @@ import 'package:audio_service/audio_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sistrum/core/models/app_glass.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/providers/playback/music_player_provider.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
@@ -296,7 +295,6 @@ void main() {
                   (ref) => const Stream.empty(),
                 ),
                 lowEndDeviceProvider.overrideWithValue(true),
-                appGlassQualityProvider.overrideWithValue(AppGlassQuality.auto),
               ],
               child: MaterialApp(
                 theme: sistrum ? AppTheme.build(Brightness.light) : ThemeData(),

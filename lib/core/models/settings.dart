@@ -14,9 +14,6 @@ double playbackNormalizationPreampFromJson(Object? value) =>
 String playbackNormalizationModeFromJson(Object? value) =>
     value == 'album' ? 'album' : 'track';
 
-/// The fixed glass clarity level (Balanced) every Tinted Lite surface uses.
-const int kDefaultGlassClarityLevel = 3;
-
 String appLocaleFromJson(Object? value) => value is String ? value : 'system';
 
 double musicHapticsLevelFromJson(Object? value) =>
@@ -105,9 +102,6 @@ class AppSettings {
   /// Floating frame-timing overlay (a developer option).
   final bool performanceHudEnabled;
 
-  /// Developer A/B switch: no backdrop sampling for the bottom bar's palette.
-  final bool barSamplerDisabled;
-
   /// Developer A/B switch: the header backing band keeps its tint but drops
   /// its backdrop blur.
   final bool headerBandBlurDisabled;
@@ -168,7 +162,6 @@ class AppSettings {
     this.updateChannel = 'stable',
     this.developerOptionsUnlocked = false,
     this.performanceHudEnabled = false,
-    this.barSamplerDisabled = false,
     this.headerBandBlurDisabled = false,
     this.locale = 'system',
     this.keepScreenOnLyrics = true,
@@ -222,7 +215,6 @@ class AppSettings {
     String? updateChannel,
     bool? developerOptionsUnlocked,
     bool? performanceHudEnabled,
-    bool? barSamplerDisabled,
     bool? headerBandBlurDisabled,
     String? locale,
     bool? keepScreenOnLyrics,
@@ -288,7 +280,6 @@ class AppSettings {
           developerOptionsUnlocked ?? this.developerOptionsUnlocked,
       performanceHudEnabled:
           performanceHudEnabled ?? this.performanceHudEnabled,
-      barSamplerDisabled: barSamplerDisabled ?? this.barSamplerDisabled,
       headerBandBlurDisabled:
           headerBandBlurDisabled ?? this.headerBandBlurDisabled,
       locale: locale ?? this.locale,

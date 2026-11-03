@@ -153,7 +153,6 @@ void main() {
   ) async {
     for (final host in [
       _host(settings: const AppSettings(animatedAlbumArtwork: false)),
-      _host(settings: const AppSettings(glassQuality: 'off')),
       _host(settings: const AppSettings(), lowEnd: true),
       _host(settings: const AppSettings(), reduceMotion: true),
     ]) {

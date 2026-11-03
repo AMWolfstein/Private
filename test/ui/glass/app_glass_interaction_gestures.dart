@@ -251,7 +251,7 @@ void _registerAppGlassInteractionGestures() {
       await gesture.up();
       await tester.pumpAndSettle();
       expect(changes, [true]);
-      expect(find.bySubtype<BackdropFilter>(), findsNothing);
+      expect(glassBlurs(), 0);
       expect(find.byType(ImageFiltered), findsNothing);
       expect(tester.takeException(), isNull);
     });

@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sistrum/core/models/app_glass.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/core/theme/app_theme.dart';
@@ -26,8 +25,8 @@ void main() {
       ProviderScope(
         overrides: [
           lowEndDeviceProvider.overrideWithValue(true),
-          appGlassQualityProvider.overrideWithValue(
-            blur ? AppGlassQuality.full : AppGlassQuality.auto,
+          appGlassLevelProvider.overrideWithValue(
+            blur ? AppGlassLevel.tinted : AppGlassLevel.flat,
           ),
         ],
         child: MaterialApp(

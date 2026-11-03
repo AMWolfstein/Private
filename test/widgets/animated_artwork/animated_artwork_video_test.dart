@@ -27,6 +27,7 @@ class _FakeVideoPlatform extends VideoPlayerPlatform {
     }
     _events.clear();
   }
+
   int _next = 1;
   bool? mixWithOthers;
 
@@ -112,7 +113,9 @@ Widget _host({
   Key? key,
 }) {
   return ProviderScope(
-    overrides: [appGlassLevelProvider.overrideWith((ref) => AppGlassLevel.liquid)],
+    overrides: [
+      appGlassLevelProvider.overrideWith((ref) => AppGlassLevel.tinted),
+    ],
     child: MediaQuery(
       data: MediaQueryData(disableAnimations: reduceMotion),
       child: MaterialApp(
@@ -121,7 +124,9 @@ Widget _host({
             key: key,
             file: file,
             active: active,
-            fallback: const Center(child: Text('static cover', key: Key('still'))),
+            fallback: const Center(
+              child: Text('static cover', key: Key('still')),
+            ),
           ),
         ),
       ),
@@ -164,7 +169,10 @@ void main() {
     await tester.pump(const Duration(milliseconds: 50));
 
     expect(platform.mixWithOthers, isTrue);
-    expect(platform.log, containsAll(['mix:true', 'looping:true', 'volume:0.0']));
+    expect(
+      platform.log,
+      containsAll(['mix:true', 'looping:true', 'volume:0.0']),
+    );
   });
 
   testWidgets('a playing video starts when motion is allowed', (tester) async {
@@ -199,7 +207,9 @@ void main() {
 
     await tester.pumpWidget(const SizedBox.shrink());
     // Releasing awaits the stream cancel before the platform call.
-    await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 20)));
+    await tester.runAsync(
+      () => Future<void>.delayed(const Duration(milliseconds: 20)),
+    );
     await tester.pump();
 
     expect(platform.log, contains('dispose'));
@@ -211,7 +221,9 @@ void main() {
     await tester.pumpWidget(_host(file: file));
     await tester.pump(const Duration(milliseconds: 50));
 
-    final opacity = tester.widget<AnimatedOpacity>(find.byType(AnimatedOpacity));
+    final opacity = tester.widget<AnimatedOpacity>(
+      find.byType(AnimatedOpacity),
+    );
     expect(opacity.opacity, 0);
   });
 }

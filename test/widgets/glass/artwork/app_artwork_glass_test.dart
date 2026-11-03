@@ -1,41 +1,22 @@
-import 'dart:io';
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:liquid_glass_easy/liquid_glass_easy.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/core/theme/app_theme.dart';
-import 'package:sistrum/widgets/glass/artwork/app_artwork_glass.dart';
-import 'package:sistrum/widgets/glass/artwork/app_artwork_glass_render.dart';
 import 'package:sistrum/widgets/glass/artwork/app_artwork_ground.dart';
-import 'package:sistrum/widgets/glass/artwork/app_artwork_page_ground.dart';
-import 'package:sistrum/widgets/glass/chrome/app_backdrop_groups.dart';
-import 'package:sistrum/widgets/glass/chrome/app_chrome.dart';
-import 'package:sistrum/widgets/glass/thumb/app_glass_surface.dart';
-import 'package:sistrum/widgets/glass/chrome/app_floating_header.dart';
 import 'package:sistrum/widgets/player/artwork/app_player_ground.dart';
 import 'package:sistrum/widgets/primitives/app_context_menu.dart';
 
-part 'app_artwork_glass_shaders.dart';
 part 'app_artwork_glass_grounds.dart';
-
-final _cover = File('test/fixtures/covers/qamar.png').absolute.path;
-final _otherCover = File('test/fixtures/covers/saturated.png').absolute.path;
 
 Widget _app({
   required Widget child,
-  AppGlassLevel level = AppGlassLevel.liquid,
-  int clarity = 3,
-  bool shaders = true,
+  AppGlassLevel level = AppGlassLevel.tinted,
   bool highContrast = false,
 }) => ProviderScope(
-  overrides: [
-    appGlassLevelProvider.overrideWithValue(level),
-    appGlassClarityLevelProvider.overrideWithValue(clarity),
-    appShaderFiltersSupportedProvider.overrideWithValue(shaders),
-  ],
+  overrides: [appGlassLevelProvider.overrideWithValue(level)],
   child: MaterialApp(
     theme: AppTheme.build(Brightness.dark),
     builder: (context, child) => MediaQuery(
@@ -122,6 +103,5 @@ extension<T> on T {
 }
 
 void main() {
-  _registerAppArtworkGlassShaders();
   _registerAppArtworkGlassGrounds();
 }

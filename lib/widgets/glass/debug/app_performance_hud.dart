@@ -10,8 +10,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/providers/settings/settings_provider.dart';
 import 'package:sistrum/widgets/glass/artwork/app_artwork_ground.dart';
-import 'package:sistrum/widgets/glass/chrome/app_backdrop_groups.dart';
-import 'package:sistrum/widgets/glass/chrome/app_floating_header.dart';
+import 'package:sistrum/widgets/glass/debug/app_backdrop_reads.dart';
 
 /// Build and raster statistics over a window of frames.
 @immutable
@@ -189,19 +188,13 @@ class _AppPerformanceHudState extends ConsumerState<AppPerformanceHud> {
       // The layer tree is protected API; this debug HUD only reads the
       // composited backdrop counter and never mutates the layer.
       // ignore: invalid_use_of_protected_member
-      reads += appCountBackdropReads(view.layer).total;
+      reads += appCountBackdropReads(view.layer);
     }
     return reads;
   }
 
   String _glass(BuildContext context) {
     final level = ref.read(appGlassLevelProvider);
-    final clarity = ref.read(appGlassClarityLevelProvider);
-    final sampler = ref.read(appBarSamplerDisabledProvider)
-        ? 'off'
-        : appLiquidChromeEnabled(context, ref)
-        ? 'on'
-        : 'n/a';
     final band = ref.read(appHeaderBandBlurDisabledProvider) ? 'off' : 'on';
     // How long the player's artwork ground took: decode + compose + blur.
     final ground = AppGroundBuilder.lastPlayer.value;
@@ -209,8 +202,8 @@ class _AppPerformanceHudState extends ConsumerState<AppPerformanceHud> {
         ? 'n/a'
         : '${ground.total.inMilliseconds}ms'
               '(decode ${ground.decode.inMilliseconds})';
-    return 'level=${level.name} clarity=$clarity '
-        'reads=${_reads()} sampler=$sampler bandblur=$band '
+    return 'level=${level.name} '
+        'reads=${_reads()} bandblur=$band '
         'ground=$groundText';
   }
 
@@ -236,10 +229,8 @@ class _AppPerformanceHudState extends ConsumerState<AppPerformanceHud> {
 
   @override
   Widget build(BuildContext context) {
-    // Rebuild when the glass settings change, so the line stays current.
+    // Rebuild when the glass level changes, so the line stays current.
     ref.watch(appGlassLevelProvider);
-    ref.watch(appGlassClarityLevelProvider);
-    final samplerOff = ref.watch(appBarSamplerDisabledProvider);
     final bandBlurOff = ref.watch(appHeaderBandBlurDisabledProvider);
     final refreshRate = View.of(context).display.refreshRate;
     final stats = AppFrameStats.from(
@@ -357,15 +348,6 @@ class _AppPerformanceHudState extends ConsumerState<AppPerformanceHud> {
                   ),
                   Wrap(
                     children: [
-                      TextButton(
-                        key: const ValueKey('sistrum-performance-hud-sampler'),
-                        onPressed: () =>
-                            settings.setBarSamplerDisabled(!samplerOff),
-                        style: buttonStyle,
-                        child: Text(
-                          samplerOff ? 'Sampler: off' : 'Sampler: on',
-                        ),
-                      ),
                       TextButton(
                         key: const ValueKey('sistrum-performance-hud-band'),
                         onPressed: () =>

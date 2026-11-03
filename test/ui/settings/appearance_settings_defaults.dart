@@ -1,8 +1,5 @@
 part of 'appearance_settings_test.dart';
 
-Map<String, dynamic> _savedGlass(SharedPreferences prefs) =>
-    jsonDecode(prefs.getString('app_settings')!) as Map<String, dynamic>;
-
 Future<void> _openSettings(
   WidgetTester tester,
   SharedPreferences prefs, {
@@ -62,37 +59,15 @@ void _registerAppearanceSettingsDefaults() {
     );
     expect(immersive, isNot(const ThemeSettings()));
   });
-  test(
-    'old themes retain outlines and new themes serialize the preference',
-    () {
-      expect(ThemeSettings.fromJson({}).appGlassOutlines, isTrue);
-      const settings = ThemeSettings(appGlassOutlines: false);
-      expect(ThemeSettings.fromJson(settings.toJson()), settings);
-      expect(settings.copyWith(lyricsTextScale: 1.2).appGlassOutlines, isFalse);
-      expect(settings, isNot(const ThemeSettings()));
-    },
-  );
-  test('glass settings restore safely from old and invalid settings', () {
-    expect(AppSettings.fromJson({}).glassClarityLevel, 3);
-    expect(AppSettings.fromJson({}).glassQuality, 'auto');
-    for (final (saved, expected) in [
-      (1, 1),
-      (5, 5),
-      (0, 1),
-      (9, 5),
-      (2.6, 3),
-      (double.nan, 3),
-      ('4', 3),
-    ]) {
-      final settings = AppSettings.fromJson({'glassClarityLevel': saved});
-      expect(settings.glassClarityLevel, expected, reason: '$saved');
-      expect(
-        AppSettings.fromJson(settings.toJson()).glassClarityLevel,
-        expected,
-      );
-    }
-    expect(appGlassQualityFromString('lite'), AppGlassQuality.lite);
-    expect(appGlassQualityFromString('fancy'), AppGlassQuality.auto);
-    expect(AppSettings().toJson().containsKey('forceBackdropBlur'), isFalse);
+  test('retired glass settings are ignored on import', () {
+    expect(AppSettings().toJson().containsKey('glassQuality'), isFalse);
+    expect(AppSettings().toJson().containsKey('barSamplerDisabled'), isFalse);
+    expect(
+      AppSettings.fromJson({
+        'glassQuality': 'off',
+        'glassClarityLevel': 5,
+      }).toJson(),
+      isNot(contains('glassQuality')),
+    );
   });
 }

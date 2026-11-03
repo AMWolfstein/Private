@@ -71,7 +71,7 @@ class _AppSelectionForegroundState extends State<AppSelectionForeground> {
       shaderCallback: (bounds) {
         // Use the same rounded, expanding bounds as the glass, including the
         // inverse scale of each icon. A one-tab rectangular mask cuts through
-        // the foreground before it reaches the held lens's curved edge.
+        // the foreground before it reaches the held glass's curved edge.
         final shader = _shader;
         if (shader != null) {
           shader

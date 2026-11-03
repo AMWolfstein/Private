@@ -260,20 +260,19 @@ void _registerAppBottomBarTransitions() {
   }
 
   for (final brightness in Brightness.values) {
-    for (final level in [1, 4, 5]) {
+    {
       for (final backdrop in [
         Colors.white,
         Colors.black,
         if (brightness == Brightness.dark) albumBlue,
       ]) {
         testWidgets(
-          'floating glass stays legible in $brightness over $backdrop (level: $level)',
+          'floating glass stays legible in $brightness over $backdrop ',
           (tester) async {
             await _pumpShell(
               tester,
               blur: true,
               brightness: brightness,
-              glassLevel: level,
               backdrop: backdrop,
               chromeSurface: backdrop == albumBlue ? albumBlue : null,
             );

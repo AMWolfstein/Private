@@ -5,10 +5,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/core/models/settings.dart';
-import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/providers/settings/settings_provider.dart';
 import 'package:sistrum/screens/settings/about_page.dart';
-import 'package:sistrum/services/glass/app_glass_auto_probe.dart';
 import 'package:sistrum/core/theme/app_theme.dart';
 import 'package:sistrum/widgets/glass/debug/app_performance_hud.dart';
 
@@ -40,8 +38,8 @@ void main() {
     );
     expect(at60.jankPercent, 0);
     expect(
-      stats.summary(glass: 'quality=full(liquid) level=3'),
-      'sistrum-hud quality=full(liquid) level=3 hz=120 frames=100 '
+      stats.summary(glass: 'level=tinted reads=2 bandblur=on'),
+      'sistrum-hud level=tinted reads=2 bandblur=on hz=120 frames=100 '
       'build=5.0/9.0/9.9 raster=2.0/2.0/2.0 jank=17.0%',
     );
     expect(
@@ -120,10 +118,7 @@ void main() {
     await tester.pump();
     expect(hud, findsOneWidget);
     expect(AppPerformanceHud.debugRegisteredCallbacks, 1);
-    expect(
-      find.textContaining('quality=auto(liquid, measuring) level=3 reads='),
-      findsOneWidget,
-    );
+    expect(find.textContaining('level=tinted reads='), findsOneWidget);
     expect(find.text('Reset'), findsOneWidget);
     expect(find.text('Copy'), findsOneWidget);
 
@@ -162,8 +157,8 @@ void main() {
       copied,
       matches(
         RegExp(
-          r'^sistrum-hud quality=auto\(liquid, measuring\) level=3 reads=\d+ '
-          r'sampler=n/a bandblur=on ground=n/a hz=',
+          r'^sistrum-hud level=tinted reads=\d+ '
+          r'bandblur=on ground=n/a hz=',
         ),
       ),
     );
@@ -287,63 +282,13 @@ void main() {
     tester,
   ) async {
     final (container, _) = await pumpOverPage(tester);
-    expect(find.textContaining('sampler=n/a bandblur=on'), findsOneWidget);
-    await tester.tap(
-      find.byKey(const ValueKey('sistrum-performance-hud-sampler')),
-    );
+    expect(find.textContaining('bandblur=on'), findsOneWidget);
     await tester.tap(
       find.byKey(const ValueKey('sistrum-performance-hud-band')),
     );
     await tester.pump();
-    expect(container.read(settingsProvider).barSamplerDisabled, true);
     expect(container.read(settingsProvider).headerBandBlurDisabled, true);
-    expect(find.textContaining('sampler=off bandblur=off'), findsOneWidget);
-    expect(find.text('Sampler: off'), findsOneWidget);
+    expect(find.textContaining('bandblur=off'), findsOneWidget);
     expect(find.text('Band blur: off'), findsOneWidget);
-  });
-
-  testWidgets('developer options carry the A/B switches and re-measuring', (
-    tester,
-  ) async {
-    final container = await pumpHost(tester, unlocked: true);
-    container
-        .read(appGlassAutoResultProvider.notifier)
-        .record(
-          const AppGlassAutoResult(
-            build: 'b',
-            step: AppGlassAutoStep.lite,
-            done: true,
-          ),
-        );
-    await tester.pump();
-    final sampler = find.byKey(const ValueKey('developer-bar-sampler'));
-    final band = find.byKey(const ValueKey('developer-header-band-blur'));
-    await tester.scrollUntilVisible(
-      find.byKey(const ValueKey('developer-remeasure-glass')),
-      200,
-    );
-    await tester.ensureVisible(sampler);
-    await tester.pumpAndSettle();
-    await tester.tap(sampler);
-    await tester.pumpAndSettle();
-    await tester.ensureVisible(band);
-    await tester.pumpAndSettle();
-    await tester.tap(band);
-    await tester.pump();
-    final settings = container.read(settingsProvider);
-    expect(settings.barSamplerDisabled, true);
-    expect(settings.headerBandBlurDisabled, true);
-    expect(container.read(appBarSamplerDisabledProvider), true);
-
-    await tester.tap(find.byKey(const ValueKey('developer-remeasure-glass')));
-    await tester.pump();
-    expect(container.read(appGlassAutoResultProvider), isNull);
-
-    // Hiding the options restores both effects.
-    container
-        .read(settingsProvider.notifier)
-        .setDeveloperOptionsUnlocked(false);
-    expect(container.read(settingsProvider).barSamplerDisabled, false);
-    expect(container.read(settingsProvider).headerBandBlurDisabled, false);
   });
 }

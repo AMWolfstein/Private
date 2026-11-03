@@ -2,11 +2,8 @@ import 'dart:async';
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:liquid_glass_easy/liquid_glass_easy.dart';
-import 'package:sistrum/providers/runtime_profile_provider.dart';
-import 'package:sistrum/widgets/glass/thumb/app_liquid_backdrop.dart';
+import 'package:sistrum/core/theme/app_glass_levels.dart';
 import 'package:sistrum/widgets/glass/selection/app_selection_foreground.dart';
 import 'package:sistrum/widgets/glass/selection/app_selection_shared.dart';
 
@@ -16,11 +13,10 @@ Future<ui.FragmentProgram>? _selectionMaskProgram;
 ui.FragmentProgram? _loadedSelectionMaskProgram;
 const _heldWidthGrowth = 0.28;
 const _heldHeightGrowth = 0.24;
-// The package nav bar's tab-scale squash/stretch (deformation capped at 12%).
-const _dragMotion = LiquidGlassLensMotionSpec(maxDeformation: 0.12);
 
-/// Selection with a transient lens over the fixed-size foreground while held.
-/// It refracts both the bar's backdrop and its icons, rendered only once.
+/// Selection with a Tinted Lite glass pill over the fixed-size foreground
+/// while held. It frosts the bar's backdrop behind the icons, rendered only
+/// while a press is in progress.
 class AppSelectionPill extends ConsumerStatefulWidget {
   const AppSelectionPill({
     super.key,
@@ -29,7 +25,7 @@ class AppSelectionPill extends ConsumerStatefulWidget {
     required this.onChanged,
     required this.itemBuilder,
     this.padding = const EdgeInsets.all(4),
-    this.liquidInteraction = false,
+    this.glassInteraction = false,
     this.contrastBlocked,
     this.selectionColor,
     this.maskItemForeground = true,
@@ -42,7 +38,9 @@ class AppSelectionPill extends ConsumerStatefulWidget {
   final Widget Function(BuildContext context, int index, bool selected)
   itemBuilder;
   final EdgeInsets padding;
-  final bool liquidInteraction;
+
+  /// Whether a press shows the held glass pill (touch-only, never at rest).
+  final bool glassInteraction;
 
   /// The parent's glass contrast policy, including an explicit user override.
   /// Standalone controls respect the system contrast request by default.
@@ -55,7 +53,7 @@ class AppSelectionPill extends ConsumerStatefulWidget {
   final bool maskItemForeground;
 
   /// Lets the bar animate its glass behind the fixed-size foreground using the
-  /// same press/release animation as the selection lens.
+  /// same press/release animation as the held pill.
   final Widget Function(BuildContext context, double progress, Widget child)?
   interactionBuilder;
 
@@ -78,12 +76,6 @@ class _AppSelectionPillState extends ConsumerState<AppSelectionPill>
   Widget? _items;
   int? _itemsSelected;
 
-  /// Squash/stretch of the held pill while it is dragged between tabs.
-  final _motion = LiquidGlassLensMotion(spec: _dragMotion);
-  Ticker? _motionTicker;
-  Duration? _motionLast;
-  double _laneWidth = 0;
-
   @override
   void initState() {
     super.initState();
@@ -101,7 +93,6 @@ class _AppSelectionPillState extends ConsumerState<AppSelectionPill>
 
   @override
   void dispose() {
-    _motionTicker?.dispose();
     _pressAnimation.dispose();
     _pressController.dispose();
     super.dispose();
@@ -136,15 +127,11 @@ class _AppSelectionPillState extends ConsumerState<AppSelectionPill>
     if (count == 0) return const SizedBox.shrink();
     final selected = _dragIndex ?? _pressedIndex ?? widget.selectedIndex;
     final scheme = Theme.of(context).colorScheme;
-    final outlines = ref.watch(appGlassOutlinesProvider);
-    final lensEnabled =
-        widget.liquidInteraction &&
-        ref.watch(appShaderFiltersSupportedProvider) &&
+    final glassEnabled =
+        widget.glassInteraction &&
         !MediaQuery.disableAnimationsOf(context) &&
         !(widget.contrastBlocked ?? MediaQuery.highContrastOf(context));
-    final pressProgress = lensEnabled ? _pressAnimation.value : 0.0;
-    // Only the held glass deforms; the resting pill keeps its shape.
-    final deviation = lensEnabled ? _motion.deviation * pressProgress : 0.0;
+    final pressProgress = glassEnabled ? _pressAnimation.value : 0.0;
     final restingOpacity = 1 - pressProgress;
     final content = Listener(
       // An accepted drag can end with a PointerCancelEvent. Do not navigate
@@ -153,7 +140,7 @@ class _AppSelectionPillState extends ConsumerState<AppSelectionPill>
         if (_activePointer != null) return;
         _activePointer = event.pointer;
         _dragCancelled = false;
-        if (!lensEnabled || _pressed) return;
+        if (!glassEnabled || _pressed) return;
         final box = context.findRenderObject()! as RenderBox;
         final width = box.size.width - widget.padding.horizontal;
         if (width <= 0) return;
@@ -172,7 +159,6 @@ class _AppSelectionPillState extends ConsumerState<AppSelectionPill>
       onPointerUp: (event) {
         if (event.pointer != _activePointer) return;
         _activePointer = null;
-        _stopMotion();
         _pressController.reverse();
         setState(() {
           _pressed = false;
@@ -183,7 +169,6 @@ class _AppSelectionPillState extends ConsumerState<AppSelectionPill>
       onPointerCancel: (event) {
         if (event.pointer != _activePointer) return;
         _activePointer = null;
-        _stopMotion();
         _pressController.reverse();
         setState(() {
           _dragCancelled = true;
@@ -237,16 +222,12 @@ class _AppSelectionPillState extends ConsumerState<AppSelectionPill>
                         child: FractionallySizedBox(
                           widthFactor: 1 / count,
                           heightFactor: 1,
-                          // Share the lens outline while fading into it. A
-                          // fixed resting pill leaves a second capsule inside
-                          // the held glass, especially during release.
+                          // Share the held glass outline while fading into it.
+                          // A fixed resting pill leaves a second capsule
+                          // inside the held glass, especially during release.
                           child: Transform.scale(
-                            scaleX:
-                                (1 + _heldWidthGrowth * pressProgress) *
-                                (1 + deviation),
-                            scaleY:
-                                (1 + _heldHeightGrowth * pressProgress) *
-                                (1 - deviation),
+                            scaleX: 1 + _heldWidthGrowth * pressProgress,
+                            scaleY: 1 + _heldHeightGrowth * pressProgress,
                             child: DecoratedBox(
                               decoration: BoxDecoration(
                                 color: scheme.onSurface.withValues(
@@ -261,14 +242,12 @@ class _AppSelectionPillState extends ConsumerState<AppSelectionPill>
                                 borderRadius: BorderRadius.circular(
                                   kAppSelectionPillRadius,
                                 ),
-                                border: outlines
-                                    ? Border.all(
-                                        color: scheme.onSurface.withValues(
-                                          alpha: 0.05 * restingOpacity,
-                                        ),
-                                        width: 0.5,
-                                      )
-                                    : null,
+                                border: Border.all(
+                                  color: scheme.onSurface.withValues(
+                                    alpha: 0.05 * restingOpacity,
+                                  ),
+                                  width: 0.5,
+                                ),
                                 boxShadow: [
                                   BoxShadow(
                                     color: Colors.black.withValues(
@@ -294,16 +273,13 @@ class _AppSelectionPillState extends ConsumerState<AppSelectionPill>
                   pressProgress,
                   _buildItems(selected),
                 ),
-                // The lens must sample the foreground as well as the page.
-                // Below the icons it would look like a rim on a flat backdrop.
-                if (lensEnabled && selected >= 0 && selected < count)
-                  _interactionLens(
-                    selected,
-                    count,
-                    pressProgress,
-                    outlines,
-                    deviation,
-                  ),
+                // The held glass samples the foreground as well as the page,
+                // so the icons read through it.
+                if (glassEnabled &&
+                    pressProgress > 0 &&
+                    selected >= 0 &&
+                    selected < count)
+                  _heldGlass(selected, count, pressProgress),
               ],
             ),
           ),

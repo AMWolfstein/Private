@@ -4,91 +4,31 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:sistrum/widgets/glass/artwork/app_artwork_ground.dart';
 
-/// The render side of [AppArtworkGlassSurface].
+/// The render side of [AppArtworkGlassSurface]: the pre-blurred artwork
+/// ground under the surface fill. It reads no backdrop.
 class AppArtworkGlassRender extends SingleChildRenderObjectWidget {
   const AppArtworkGlassRender({
     super.key,
     required this.controller,
-    required this.program,
     required this.opaque,
     required this.fill,
-    required this.radius,
-    required this.squircle,
-    required this.band,
-    required this.bend,
-    required this.dispersion,
     required this.scroll,
     super.child,
   });
 
   final AppGroundController controller;
-
-  /// Null draws the ground without refraction.
-  final ui.FragmentProgram? program;
   final bool opaque;
   final Color fill;
-  final double radius;
-  final bool squircle;
-  final double band;
-  final double bend;
-  final double dispersion;
 
   /// Pages repaint while scrolling: the ground moves under fixed controls.
   final Listenable? scroll;
-
-  /// Sets the shader's uniforms; the order matches the .frag file.
-  static void configure(
-    ui.FragmentShader shader, {
-    required Size size,
-    required Rect panel,
-    required Rect ground,
-    required ui.Image image,
-    required ui.Image next,
-    required double mix,
-    required double radius,
-    required bool squircle,
-    required double band,
-    required double bend,
-    required double dispersion,
-    required Color edge,
-  }) {
-    var index = 0;
-    void put(double value) => shader.setFloat(index++, value);
-    put(size.width);
-    put(size.height);
-    for (final rect in [panel, ground]) {
-      put(rect.left);
-      put(rect.top);
-      put(rect.width);
-      put(rect.height);
-    }
-    put(radius);
-    put(squircle ? 1 : 0);
-    put(band);
-    put(bend);
-    put(dispersion);
-    put(edge.r * edge.a);
-    put(edge.g * edge.a);
-    put(edge.b * edge.a);
-    put(edge.a);
-    put(mix);
-    shader
-      ..setImageSampler(0, image)
-      ..setImageSampler(1, next);
-  }
 
   @override
   RenderAppArtworkGlass createRenderObject(BuildContext context) =>
       RenderAppArtworkGlass(
         controller: controller,
-        program: program,
         opaque: opaque,
         fill: fill,
-        radius: radius,
-        squircle: squircle,
-        band: band,
-        bend: bend,
-        dispersion: dispersion,
         scroll: scroll,
       );
 
@@ -96,14 +36,8 @@ class AppArtworkGlassRender extends SingleChildRenderObjectWidget {
   void updateRenderObject(BuildContext context, RenderObject renderObject) {
     (renderObject as RenderAppArtworkGlass)
       ..controller = controller
-      ..program = program
       ..opaque = opaque
       ..fill = fill
-      ..radius = radius
-      ..squircle = squircle
-      ..band = band
-      ..bend = bend
-      ..dispersion = dispersion
       ..scroll = scroll;
   }
 }
@@ -111,17 +45,10 @@ class AppArtworkGlassRender extends SingleChildRenderObjectWidget {
 class RenderAppArtworkGlass extends RenderProxyBox {
   RenderAppArtworkGlass({
     required AppGroundController controller,
-    required ui.FragmentProgram? program,
     required bool opaque,
     required Color fill,
-    required this.radius,
-    required this.squircle,
-    required this.band,
-    required this.bend,
-    required this.dispersion,
     Listenable? scroll,
   }) : _controller = controller,
-       _program = program,
        _opaque = opaque,
        _fill = fill,
        _scroll = scroll;
@@ -133,19 +60,6 @@ class RenderAppArtworkGlass extends RenderProxyBox {
     if (attached) _controller.removeListener(markNeedsPaint);
     _controller = value;
     if (attached) _controller.addListener(markNeedsPaint);
-    markNeedsPaint();
-  }
-
-  ui.FragmentProgram? _program;
-  ui.FragmentShader? _shader;
-
-  /// Whether the shader draws this surface (for tests and diagnostics).
-  bool get refracts => _program != null && !_opaque;
-  set program(ui.FragmentProgram? value) {
-    if (identical(value, _program)) return;
-    _program = value;
-    _shader?.dispose();
-    _shader = null;
     markNeedsPaint();
   }
 
@@ -163,12 +77,6 @@ class RenderAppArtworkGlass extends RenderProxyBox {
     _fill = value;
     markNeedsPaint();
   }
-
-  double radius;
-  bool squircle;
-  double band;
-  double bend;
-  double dispersion;
 
   Listenable? _scroll;
   set scroll(Listenable? value) {
@@ -190,12 +98,6 @@ class RenderAppArtworkGlass extends RenderProxyBox {
     _controller.removeListener(markNeedsPaint);
     _scroll?.removeListener(markNeedsPaint);
     super.detach();
-  }
-
-  @override
-  void dispose() {
-    _shader?.dispose();
-    super.dispose();
   }
 
   @override
@@ -224,35 +126,10 @@ class RenderAppArtworkGlass extends RenderProxyBox {
         getTransformTo(null),
         Offset.zero & size,
       );
-      final program = _program;
-      if (program != null) {
-        final shader = _shader ??= program.fragmentShader();
-        configure(
-          shader,
-          panel: panel,
-          ground: groundRect,
-          from: from,
-          to: to,
-          edge: edge,
-        );
-        canvas
-          ..save()
-          ..translate(offset.dx, offset.dy)
-          ..drawRect(Offset.zero & size, Paint()..shader = shader)
-          ..restore();
-      } else {
-        canvas.drawRect(local, Paint()..color = edge);
-        _drawPlain(canvas, offset, panel, groundRect, from.image, 1);
-        if (!identical(from, to)) {
-          _drawPlain(
-            canvas,
-            offset,
-            panel,
-            groundRect,
-            to.image,
-            controller.mix,
-          );
-        }
+      canvas.drawRect(local, Paint()..color = edge);
+      _drawPlain(canvas, offset, panel, groundRect, from.image, 1);
+      if (!identical(from, to)) {
+        _drawPlain(canvas, offset, panel, groundRect, to.image, controller.mix);
       }
     }
     if (controller.fade > 0) {
@@ -265,30 +142,6 @@ class RenderAppArtworkGlass extends RenderProxyBox {
       );
     }
   }
-
-  /// Sets the shader for this paint.
-  void configure(
-    ui.FragmentShader shader, {
-    required Rect panel,
-    required Rect ground,
-    required AppGround from,
-    required AppGround to,
-    required Color edge,
-  }) => AppArtworkGlassRender.configure(
-    shader,
-    size: size,
-    panel: panel,
-    ground: ground,
-    image: from.image,
-    next: to.image,
-    mix: identical(from, to) ? 0 : _controller.mix,
-    radius: radius,
-    squircle: squircle,
-    band: band,
-    bend: bend,
-    dispersion: dispersion,
-    edge: edge,
-  );
 
   void _drawPlain(
     Canvas canvas,

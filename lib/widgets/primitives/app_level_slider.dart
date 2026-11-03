@@ -2,8 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:liquid_glass_easy/liquid_glass_easy.dart';
-import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/widgets/glass/thumb/app_glass_thumb.dart';
 
 /// An iOS-style slider: a thin rounded track and a white shadowed knob.
@@ -13,7 +11,7 @@ import 'package:sistrum/widgets/glass/thumb/app_glass_thumb.dart';
 /// [min] at the bottom. A vertical slider only claims vertical drags, so a
 /// row of them still scrolls sideways.
 ///
-/// A horizontal slider's knob turns into liquid glass while touched when the
+/// A horizontal slider's knob turns into glass while touched when the
 /// glass gate allows it; dense vertical faders keep the painted knob.
 class AppLevelSlider extends ConsumerStatefulWidget {
   const AppLevelSlider({
@@ -53,7 +51,6 @@ class AppLevelSlider extends ConsumerStatefulWidget {
 
 class _AppLevelSliderState extends ConsumerState<AppLevelSlider> {
   static const _activeKnobSize = Size(58, 38.33);
-  static const _shadow = LiquidGlassShadow(inset: 3);
 
   /// Whether the current touch shows glass, decided at touch-down.
   bool? _touchGlass;
@@ -93,7 +90,6 @@ class _AppLevelSliderState extends ConsumerState<AppLevelSlider> {
     final glassAllowed =
         enabled && !vertical && appGlassThumbsEnabled(context, ref);
     final glass = _touchGlass ?? glassAllowed;
-    final outlines = glass && ref.watch(appGlassOutlinesProvider);
     void release() {
       if (_touchGlass != null) setState(() => _touchGlass = null);
     }
@@ -173,8 +169,7 @@ class _AppLevelSliderState extends ConsumerState<AppLevelSlider> {
                     held: _touchGlass == true,
                     restSize: Size.square(r * 2),
                     activeSize: _activeKnobSize,
-                    style: appGlassThumbStyle(outlines: outlines),
-                    shadow: _shadow,
+                    shadow: true,
                   ),
                 ),
               ],

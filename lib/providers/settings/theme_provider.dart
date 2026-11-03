@@ -23,7 +23,6 @@ ThemeSettings loadBootstrapThemeSettings(SharedPreferences prefs) {
           ? prefs.get(kLyricsBlurKey) as num
           : null,
     ),
-    appGlassOutlines: prefs.getBool(kAppGlassOutlinesKey) ?? true,
   );
 }
 
@@ -83,7 +82,6 @@ class ThemeNotifier extends Notifier<ThemeSettings> {
       await prefs.setDouble(kLyricsTextScaleKey, snapshot.lyricsTextScale);
       await prefs.setDouble(kLyricsBlurKey, snapshot.lyricsBlur);
       await prefs.setInt(kLyricsTimingOffsetKey, snapshot.lyricsTimingOffsetMs);
-      await prefs.setBool(kAppGlassOutlinesKey, snapshot.appGlassOutlines);
     } catch (e) {
       debugPrint('Error saving theme settings: $e');
     }
@@ -113,11 +111,6 @@ class ThemeNotifier extends Notifier<ThemeSettings> {
     _editState((current) => current.copyWith(lyricsTimingOffsetMs: value));
     if (persist) await _saveToStorage();
   }
-
-  Future<void> setAppGlassOutlines(bool value) async {
-    _editState((current) => current.copyWith(appGlassOutlines: value));
-    await _saveToStorage();
-  }
 }
 
 /// Retired values are ignored at bootstrap and stripped on the next load/save.
@@ -129,6 +122,7 @@ Future<void> _removeRetiredAppearancePreferences(
     'use_system_font',
     'custom_font_id',
     'custom_font_name',
+    'sistrum_glass_outlines',
   ]) {
     await prefs.remove(key);
   }

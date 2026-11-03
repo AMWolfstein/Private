@@ -12,6 +12,8 @@ import 'package:sistrum/widgets/glass/chrome/app_chrome_controls.dart';
 import 'package:sistrum/widgets/glass/selection/app_selection_pill.dart';
 import 'package:sistrum/widgets/glass/selection/app_selection_foreground.dart';
 
+import '../../support/glass_controls.dart';
+
 part 'app_glass_interaction_gestures.dart';
 
 void _maskCullingTests() {

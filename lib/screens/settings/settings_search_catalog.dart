@@ -53,19 +53,6 @@ class SettingsSearchCatalog {
   SettingsSearchCatalog(AppLocalizations l10n, {bool androidAudio = false})
     : appearance = [
         SettingsSearchEntry(
-          icon: Icons.rounded_corner,
-          title: l10n.appearanceGlassOutlines,
-          subtitle: l10n.appearanceGlassOutlinesSubtitle,
-          keywords: const [
-            'sistrum',
-            'liquid glass',
-            'border',
-            'rim',
-            'outline',
-          ],
-        ),
-
-        SettingsSearchEntry(
           icon: Icons.contrast,
           title: l10n.sectionTheme,
           subtitle:
@@ -74,23 +61,6 @@ class SettingsSearchCatalog {
           keywords: const ['light mode', 'dark mode'],
         ),
 
-        SettingsSearchEntry(
-          icon: Icons.blur_on,
-          title: l10n.appearanceGlassQuality,
-          subtitle: l10n.appearanceGlassQualitySubtitle,
-          keywords: const [
-            'backdrop blur',
-            'performance',
-            'liquid glass',
-            'lite',
-          ],
-        ),
-        SettingsSearchEntry(
-          icon: Icons.opacity,
-          title: l10n.appearanceGlassClarity,
-          subtitle: l10n.appearanceGlassClaritySubtitle,
-          keywords: const ['frosted', 'soft', 'balanced', 'clear', 'crystal'],
-        ),
         SettingsSearchEntry(
           icon: Icons.movie_outlined,
           title: l10n.videoArtworkEntryTitle,

@@ -15,7 +15,6 @@ void _registerNowPlayingLyricsScrolling() {
           theme: AppTheme.build(Brightness.dark),
           size: Size(393, height),
           playback: PlaybackState(updatePosition: const Duration(seconds: 30)),
-          glassLevel: 2,
         );
         mediaItems.add(_item('many'));
         await _settlePlayer(tester);
@@ -23,10 +22,10 @@ void _registerNowPlayingLyricsScrolling() {
         await _settlePlayer(tester);
         final list = find.byType(ListView);
         final bounds = tester.getRect(list);
-        void setClarity(int level) => unawaited(
-          ProviderScope.containerOf(tester.element(list))
-              .read(settingsProvider.notifier)
-              .setGlassClarityLevel(level, persist: false),
+        void setAppearance(double blur) => unawaited(
+          ProviderScope.containerOf(
+            tester.element(list),
+          ).read(themeProvider.notifier).setLyricsBlur(blur, persist: false),
         );
         final scrollable = find.descendant(
           of: list,
@@ -57,7 +56,7 @@ void _registerNowPlayingLyricsScrolling() {
         expect(transport.hitTestable(), findsNothing);
         // An appearance update must not reset playback following while the
         // user owns the scroll position.
-        setClarity(3);
+        setAppearance(0.8);
         await tester.pump();
         await tester.pump();
         expect(state.position.pixels, closeTo(hiddenOffset, 0.01));
@@ -93,7 +92,7 @@ void _registerNowPlayingLyricsScrolling() {
         await touch.up();
         await _settlePlayer(tester);
         final releasedOffset = state.position.pixels;
-        setClarity(2);
+        setAppearance(0.6);
         await tester.pump();
         await _settlePlayer(tester);
         expect(state.position.pixels, closeTo(releasedOffset, 0.01));

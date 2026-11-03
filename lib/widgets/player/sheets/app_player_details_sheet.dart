@@ -27,7 +27,7 @@ class AppPlayerDetailsSheet extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final item = mediaItem;
-    return AppGlass.navigation(
+    return AppGlass(
       blurEnabled: ref.watch(appBlurEnabledProvider),
       child: SafeArea(
         top: false,

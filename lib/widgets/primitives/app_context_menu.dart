@@ -5,7 +5,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/core/theme/app_glass_levels.dart';
 import 'package:sistrum/core/theme/app_theme.dart';
 import 'package:sistrum/widgets/glass/artwork/app_artwork_ground.dart';
@@ -206,7 +205,6 @@ class _MenuSurface extends ConsumerWidget {
     final dark = theme.brightness == Brightness.dark;
     return AppGlassPanel.overlay(
       radius: 28,
-      smoothCorners: true,
       highlightBorder: true,
       highlightIntensity: 0.4,
       tintColor: theme.extension<AppTheme>()?.chromeSurface != null
@@ -214,9 +212,7 @@ class _MenuSurface extends ConsumerWidget {
           : dark
           ? const Color(0xff414141)
           : Colors.white,
-      tintOpacity: dark
-          ? appGlassClarity(ref.watch(appGlassClarityLevelProvider)).menuOpacity
-          : 0.80,
+      tintOpacity: dark ? kAppGlassStyle.menuOpacity : 0.80,
       child: child,
     );
   }

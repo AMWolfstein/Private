@@ -46,7 +46,7 @@ void main() {
       }
     });
 
-    testWidgets('has no lens at rest and glass only while dragged', (
+    testWidgets('has no glass at rest and glass only while dragged', (
       tester,
     ) async {
       var value = 0.5;
@@ -63,7 +63,6 @@ void main() {
           onChangeEnd: (_) => events.add('end'),
         ),
       );
-      expect(glassLenses(), 0);
       final gesture = await tester.startGesture(
         tester.getCenter(find.byKey(key)),
       );
@@ -78,7 +77,6 @@ void main() {
       await tester.pumpAndSettle();
       expect(events, ['start', 'end']);
       expect(glassPills(), 0);
-      expect(glassLenses(), 0);
       expect(tester.takeException(), isNull);
     });
 
@@ -158,7 +156,6 @@ void main() {
         ),
       );
       expect(find.byType(AppGlassThumb), findsOneWidget);
-      expect(glassLenses(), 0);
       final gesture = await tester.startGesture(
         tester.getCenter(find.byType(AppLevelSlider)),
       );

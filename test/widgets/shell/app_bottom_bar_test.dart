@@ -5,8 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:liquid_glass_easy/liquid_glass_easy.dart';
-import 'package:sistrum/core/models/app_glass.dart';
 import 'package:sistrum/widgets/glass/selection/app_selection_pill.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/providers/playback/music_player_provider.dart';
@@ -15,10 +13,8 @@ import 'package:sistrum/screens/settings/settings_tab.dart';
 import 'package:sistrum/core/theme/app_theme.dart';
 import 'package:sistrum/utils/layout/nav_bar_inset.dart';
 import 'package:sistrum/widgets/header/album_detail_header.dart';
-import 'package:sistrum/widgets/primitives/app_sliver_header.dart';
 import 'package:sistrum/widgets/collection/collection_scaffold.dart';
 import 'package:sistrum/widgets/player/mini_player.dart';
-import 'package:sistrum/widgets/glass/chrome/app_backdrop_groups.dart';
 import 'package:sistrum/widgets/header/app_artist_header.dart';
 import 'package:sistrum/widgets/shell/app_bottom_bar.dart';
 import 'package:sistrum/widgets/glass/chrome/app_chrome_controls.dart';
@@ -28,7 +24,7 @@ part 'app_bottom_bar_transitions.dart';
 part 'app_bottom_bar_folding.dart';
 
 void main() {
-  _registerAppBottomBarSharedRead();
+  _registerAppBottomBarBlur();
   _registerAppBottomBarTransitions();
   _registerAppBottomBarFolding();
 }

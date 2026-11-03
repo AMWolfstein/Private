@@ -165,7 +165,7 @@ class _SyncedLyricsViewState extends ConsumerState<SyncedLyricsView>
   void didChangeDependencies() {
     super.didChangeDependencies();
     // Appearance can rebuild when transport controls fade (for example with
-    // custom glass clarity). Keep the existing playback subscription and the
+    // custom glass). Keep the existing playback subscription and the
     // user's scroll ownership; only new lyrics/page activation should reset it.
     _tickerEnabled = TickerMode.valuesOf(context).enabled;
     if ((_positionSubscription != null) != _visible) {

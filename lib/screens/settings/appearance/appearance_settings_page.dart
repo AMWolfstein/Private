@@ -17,14 +17,9 @@ class AppearanceSettingsPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // Glass clarity changes on every slider tick; keep it out of this page.
     final themeSettings = ref.watch(
       themeProvider.select(
-        (s) => (
-          appGlassOutlines: s.appGlassOutlines,
-          themeMode: s.themeMode,
-          playerView: s.playerView,
-        ),
+        (s) => (themeMode: s.themeMode, playerView: s.playerView),
       ),
     );
     final settings = ref.watch(settingsProvider);

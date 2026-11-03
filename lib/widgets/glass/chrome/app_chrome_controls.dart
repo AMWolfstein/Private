@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
-import 'package:sistrum/core/theme/app_glass_levels.dart';
 import 'package:sistrum/core/theme/app_theme.dart';
 import 'package:sistrum/widgets/animation/animation_indicators.dart';
 import 'package:sistrum/widgets/glass/thumb/app_glass_surface.dart';
@@ -34,19 +33,15 @@ class AppSegmentedControl extends ConsumerWidget {
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: SizedBox(
         height: height,
-        child: AppGlass.navigation(
+        child: AppGlass(
           blurEnabled: ref.watch(appBlurEnabledProvider),
           radius: height / 2,
           // Sits on the plain settings page: tint, no backdrop at rest.
           samplesBackdrop: false,
           child: AppSelectionPill(
             contrastBlocked: contrastBlocked,
-            // Touch-only glass: a held lens also under lite, never Level 1.
-            liquidInteraction:
-                ref.watch(appBlurEnabledProvider) &&
-                !appGlassClarity(
-                  ref.watch(appGlassClarityLevelProvider),
-                ).plainBlur,
+            // Touch-only glass: the held pill appears only while pressed.
+            glassInteraction: ref.watch(appBlurEnabledProvider),
             labels: labels,
             selectedIndex: selectedIndex,
             onChanged: onChanged,
@@ -109,8 +104,9 @@ class AppTabBar extends ConsumerWidget {
   /// Fade only the foreground so the backdrop can keep sampling the page.
   final Animation<double> contentOpacity;
 
-  /// The floating layout also supplies the coordinates for collapsing icons.
-  static bool usesLiquidGlass(
+  /// Whether the bar floats as glass (its taller layout) rather than sitting
+  /// flat on the page.
+  static bool isFloating(
     BuildContext context, {
     required bool blurEnabled,
     required bool contrastBlocked,
@@ -125,8 +121,7 @@ class AppTabBar extends ConsumerWidget {
     final contrastBlocked = ref.watch(
       appGlassContrastBlockedProvider(MediaQuery.highContrastOf(context)),
     );
-    final clarity = appGlassClarity(ref.watch(appGlassClarityLevelProvider));
-    final floating = usesLiquidGlass(
+    final floating = isFloating(
       context,
       blurEnabled: blurEnabled,
       contrastBlocked: contrastBlocked,
@@ -137,7 +132,7 @@ class AppTabBar extends ConsumerWidget {
         contrastBlocked: contrastBlocked,
         selectionColor: scheme.primary,
         maskItemForeground: false,
-        liquidInteraction: floating && !clarity.plainBlur,
+        glassInteraction: floating,
         labels: [for (final destination in destinations) destination.label],
         selectedIndex: selectedIndex,
         onChanged: onSelected,
@@ -154,16 +149,15 @@ class AppTabBar extends ConsumerWidget {
               child: Transform.scale(
                 scaleX: 1 + 0.025 * progress,
                 scaleY: 1 + 0.06 * progress,
-                child: AppGlass.navigation(
+                child: AppGlass(
                   blurEnabled: blurEnabled,
                   strongTint: true,
                   tintOpacity: AppTheme.navigationOpacity(context),
-                  refractionDepth: 0.45 + 0.15 * progress,
                   child: const SizedBox.expand(),
                 ),
               ),
             ),
-            // The selection lens can swell beyond the capsule's clip.
+            // The held pill can swell beyond the capsule's clip.
             FadeTransition(opacity: contentOpacity, child: child),
           ],
         ),

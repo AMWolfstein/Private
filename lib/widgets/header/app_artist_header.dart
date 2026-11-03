@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/core/navigation/shell_navigation.dart';
 import 'package:sistrum/providers/library/cover_palette_provider.dart';
-import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/services/library/covers/cover_palette.dart';
 import 'package:sistrum/core/theme/app_glass_levels.dart';
 import 'package:sistrum/core/theme/app_theme.dart';
@@ -109,9 +108,7 @@ class _AppArtistSurfaceState extends State<AppArtistSurface> {
                           builder: (context, ref, child) => AppPageGround(
                             source: widget.imageSource,
                             surface: surface,
-                            sigma: appGlassClarity(
-                              ref.watch(appGlassClarityLevelProvider),
-                            ).blurSigma,
+                            sigma: kAppGlassStyle.blurSigma,
                             enabled: appGroundNeeded(context, ref),
                             cover: appCoverProvider(widget.imageSource),
                             child: child!,

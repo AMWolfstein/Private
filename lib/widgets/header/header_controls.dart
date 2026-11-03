@@ -105,14 +105,13 @@ class HeaderCircleButton extends ConsumerWidget {
       );
       return Center(
         widthFactor: 1,
-        child: AppGlass.navigation(
+        child: AppGlass(
           radius: (buttonSize ?? kAppHeaderControlSize) / 2,
           tintColor: scheme.brightness == Brightness.dark
               ? Colors.black
               : Colors.white,
           tintOpacity: scheme.brightness == Brightness.dark ? 0.45 : 0.55,
           blurEnabled: blurEnabled,
-          allowLens: appLiquidChromeEnabled(context, ref),
           child: button,
         ),
       );

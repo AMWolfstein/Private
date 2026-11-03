@@ -42,7 +42,6 @@ class _AboutPageState extends ConsumerState<AboutPage> {
         (s) => (
           unlocked: s.developerOptionsUnlocked,
           hud: s.performanceHudEnabled,
-          sampler: !s.barSamplerDisabled,
           bandBlur: !s.headerBandBlurDisabled,
         ),
       ),
@@ -105,17 +104,7 @@ class _AboutPageState extends ConsumerState<AboutPage> {
                           .read(settingsProvider.notifier)
                           .setPerformanceHudEnabled,
                     ),
-                    // A/B switches for measuring glass costs on their own.
-                    SettingsSwitchItem(
-                      key: const ValueKey('developer-bar-sampler'),
-                      icon: Icons.contrast,
-                      title: context.l10n.aboutBarSampler,
-                      subtitle: context.l10n.aboutBarSamplerSubtitle,
-                      value: developer.sampler,
-                      onChanged: (on) => ref
-                          .read(settingsProvider.notifier)
-                          .setBarSamplerDisabled(!on),
-                    ),
+                    // A/B switch for measuring glass costs on its own.
                     SettingsSwitchItem(
                       key: const ValueKey('developer-header-band-blur'),
                       icon: Icons.blur_on,

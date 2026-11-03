@@ -80,6 +80,6 @@ class AppActionButton extends StatelessWidget {
     // These buttons sit inside glass sheets/groups; avoid another blur pass.
     return prominent || tonal || !glass
         ? action
-        : AppGlass.navigation(radius: 28, blurEnabled: false, child: action);
+        : AppGlass(radius: 28, blurEnabled: false, child: action);
   }
 }

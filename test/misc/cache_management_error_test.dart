@@ -99,7 +99,6 @@ void main() {
           overrides: [
             settingsProvider.overrideWith(_Settings.new),
             lowEndDeviceProvider.overrideWithValue(true),
-            appLiquidGlassProvider.overrideWithValue(false),
           ],
           child: MaterialApp(
             theme: AppTheme.build(Brightness.light),

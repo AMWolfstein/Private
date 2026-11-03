@@ -8,7 +8,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sistrum/core/constants/language_choices.dart';
 import 'package:sistrum/l10n/l10n.dart';
-import 'package:sistrum/core/models/app_glass.dart';
 import 'package:sistrum/core/models/settings.dart';
 import 'package:sistrum/core/models/theme_settings.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';

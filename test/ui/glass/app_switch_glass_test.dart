@@ -23,7 +23,7 @@ void main() {
       ),
     );
 
-    testWidgets('has no lens at rest and glass only while touched', (
+    testWidgets('has no glass at rest and glass only while touched', (
       tester,
     ) async {
       var value = false;
@@ -34,7 +34,6 @@ void main() {
             switchFor(setState, () => value, (v) => value = v, changes),
       );
       expect(find.byType(AppGlassThumb), findsOneWidget);
-      expect(glassLenses(), 0);
       expect(glassPills(), 0);
 
       final gesture = await tester.startGesture(
@@ -42,20 +41,17 @@ void main() {
       );
       await tester.pump(const Duration(milliseconds: 50));
       expect(glassPills(), 1);
-      expect(glassLenses(), 1);
 
       await gesture.up();
       await tester.pumpAndSettle();
       expect(changes, [true]);
       expect(glassPills(), 0);
-      expect(glassLenses(), 0);
       expect(tester.takeException(), isNull);
     });
 
-    for (final (name, level, clarity, touchGlass) in [
-      ('lite keeps the touch-only lens', AppGlassLevel.lite, 3, true),
-      ('Level 1 on full glass has none', AppGlassLevel.liquid, 1, false),
-      ('Level 1 on lite glass has none', AppGlassLevel.lite, 1, false),
+    for (final (name, level, touchGlass) in [
+      ('Tinted Lite shows touch-only glass', AppGlassLevel.tinted, true),
+      ('flat level has none', AppGlassLevel.flat, false),
     ]) {
       testWidgets(name, (tester) async {
         var value = false;
@@ -65,9 +61,7 @@ void main() {
           (setState) =>
               switchFor(setState, () => value, (v) => value = v, changes),
           level: level,
-          clarityLevel: clarity,
         );
-        expect(glassLenses(), 0);
         final gesture = await tester.startGesture(
           tester.getCenter(find.byType(AppSwitch)),
         );
@@ -76,15 +70,13 @@ void main() {
         await gesture.up();
         await tester.pumpAndSettle();
         expect(changes, [true]);
-        expect(glassLenses(), 0);
       });
     }
 
-    for (final (name, glass, liquid, reduceMotion, highContrast) in [
-      ('no shader filters', false, true, false, false),
-      ('glass off', true, false, false, false),
-      ('reduced motion', true, true, true, false),
-      ('high contrast', true, true, false, true),
+    for (final (name, glass, reduceMotion, highContrast) in [
+      ('glass off', false, false, false),
+      ('reduced motion', true, true, false),
+      ('high contrast', true, false, true),
     ]) {
       testWidgets('falls back to the painted switch: $name', (tester) async {
         var value = false;
@@ -94,7 +86,6 @@ void main() {
           (setState) =>
               switchFor(setState, () => value, (v) => value = v, changes),
           glass: glass,
-          liquid: liquid,
           reduceMotion: reduceMotion,
           highContrast: highContrast,
         );
@@ -107,7 +98,6 @@ void main() {
         await gesture.up();
         await tester.pumpAndSettle();
         expect(changes, [true]);
-        expect(glassLenses(), 0);
       });
     }
 

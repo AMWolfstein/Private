@@ -13,13 +13,8 @@ import 'package:sistrum/core/theme/app_theme.dart';
 import 'package:sistrum/widgets/primitives/app_context_menu.dart';
 
 class _Settings extends SettingsNotifier {
-  _Settings(this._forceBlur);
-
-  final bool _forceBlur;
-
   @override
-  AppSettings build() =>
-      AppSettings(glassQuality: _forceBlur ? 'full' : 'auto');
+  AppSettings build() => const AppSettings();
 }
 
 void main() {
@@ -35,11 +30,9 @@ void main() {
     bool reduceMotion = false,
     bool preferAbove = false,
     bool highContrast = false,
-    bool forceBlur = false,
     bool lowEnd = false,
     Color? backgroundColor,
     GlobalKey? capture,
-    int glassLevel = 4,
     bool dense = false,
     Color? chromeSurface,
   }) async {
@@ -49,9 +42,8 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
-          settingsProvider.overrideWith(() => _Settings(forceBlur)),
+          settingsProvider.overrideWith(_Settings.new),
           lowEndDeviceProvider.overrideWithValue(lowEnd),
-          appGlassClarityLevelProvider.overrideWithValue(glassLevel),
         ],
         child: MaterialApp(
           theme: AppTheme.build(brightness, chromeSurface: chromeSurface),
@@ -173,7 +165,6 @@ void main() {
                 tester,
                 anchor: const Rect.fromLTWH(330, 144, 44, 44),
                 brightness: brightness,
-                glassLevel: level,
                 backgroundColor: background,
                 capture: capture,
                 onResult: (_) {},
@@ -310,7 +301,6 @@ void main() {
         tester,
         anchor: const Rect.fromLTWH(330, 144, 44, 44),
         brightness: Brightness.dark,
-        glassLevel: 5,
         backgroundColor: Colors.white,
         chromeSurface: cover,
         capture: capture,
@@ -367,17 +357,16 @@ void main() {
     });
   }
 
-  testWidgets('glass override reaches context menu overlays', (tester) async {
+  testWidgets('high contrast keeps context menus opaque', (tester) async {
     await openMenu(
       tester,
       anchor: const Rect.fromLTWH(330, 144, 44, 44),
       brightness: Brightness.dark,
       highContrast: true,
-      forceBlur: true,
       onResult: (_) {},
     );
     final menu = find.byType(AppContextMenu);
-    expect(find.bySubtype<BackdropFilter>(), findsWidgets);
+    expect(find.bySubtype<BackdropFilter>(), findsNothing);
     expect(MediaQuery.highContrastOf(tester.element(menu)), isTrue);
     await tester.tap(find.text('Share'));
     await tester.pumpAndSettle();

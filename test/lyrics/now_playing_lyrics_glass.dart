@@ -14,7 +14,6 @@ void _registerNowPlayingLyricsGlass() {
     await _pumpNowPlaying(
       tester,
       theme: AppTheme.build(Brightness.dark),
-      glassLevel: 2,
       size: const Size(393, 852),
       playbackEvents: playback.stream,
     );

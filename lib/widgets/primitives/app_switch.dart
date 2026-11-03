@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart' show CupertinoColors;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/widgets/glass/thumb/app_glass_thumb.dart';
 
 /// One switch style for settings, extension controls and editing sheets.
@@ -73,8 +72,8 @@ class _AppSwitchState extends ConsumerState<_AppSwitch> {
         ? const Color(0xff39393d)
         : const Color(0xff8e8e93);
 
-    // Glass follows the shared thumb gate, upstream Sistrum 9247b99a's
-    // enabled/motion/contrast/liquid checks, and needs an enabled control.
+    // Glass follows the shared thumb gate (enabled, motion, contrast) and
+    // needs an enabled control.
     final glassAllowed = enabled && appGlassThumbsEnabled(context, ref);
     final glass = _touchGlass ?? glassAllowed;
     final position = _dragPosition ?? (value ? 1.0 : 0.0);
@@ -135,10 +134,6 @@ class _AppSwitchState extends ConsumerState<_AppSwitch> {
                         held: _touchGlass == true,
                         restSize: _thumb,
                         activeSize: const Size(58, 38.33),
-                        style: appGlassThumbStyle(
-                          outlines: ref.watch(appGlassOutlinesProvider),
-                          dispersion: 1,
-                        ),
                       );
                     },
                   ),

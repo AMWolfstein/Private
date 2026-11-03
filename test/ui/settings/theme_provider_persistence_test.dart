@@ -15,11 +15,10 @@ void main() {
     () async {
       final values = <String, Object>{
         'sistrum_accent': 'green',
-        kAppGlassOutlinesKey: false,
+        'sistrum_glass_outlines': false,
       };
       final restored = ThemeSettings.fromJson(values);
-      expect(restored.appGlassOutlines, isFalse);
-      expect(restored.toJson()[kAppGlassOutlinesKey], isFalse);
+      expect(restored.toJson().containsKey('sistrum_glass_outlines'), isFalse);
 
       SharedPreferences.setMockInitialValues(values);
       final prefs = await SharedPreferences.getInstance();
@@ -34,7 +33,7 @@ void main() {
       addTearDown(container.dispose);
       await container.read(themeProvider.notifier).setLyricsTextScale(1.1);
       expect(prefs.containsKey('sistrum_accent'), isFalse);
-      expect(prefs.getBool(kAppGlassOutlinesKey), isFalse);
+      expect(prefs.containsKey('sistrum_glass_outlines'), isFalse);
     },
   );
 
@@ -65,20 +64,20 @@ void main() {
       final notifier = container.read(themeProvider.notifier);
       // An explicit edit equal to the bootstrap default still owns this field.
       final savingMode = notifier.setThemeMode(ThemeMode.system);
-      final savingOutlines = notifier.setAppGlassOutlines(false);
+      final savingBlur = notifier.setLyricsBlur(0.5);
       await notifier.setLyricsTextScale(1.2, persist: false);
       var saved = false;
-      unawaited(savingOutlines.then((_) => saved = true));
+      unawaited(savingBlur.then((_) => saved = true));
       await Future<void>.delayed(Duration.zero);
       expect(saved, isFalse);
       expect(container.read(themeProvider).lyricsTextScale, 1.2);
       expect(prefs.getString(kThemeModeKey), 'dark');
 
       releaseLoad.complete(prefs);
-      await Future.wait([savingMode, savingOutlines]);
+      await Future.wait([savingMode, savingBlur]);
       final state = container.read(themeProvider);
       expect(state.themeMode, ThemeMode.system);
-      expect(state.appGlassOutlines, isFalse);
+      expect(state.lyricsBlur, 0.5);
       expect(state.lyricsTextScale, 1.2);
       expect(state.playerView, PlayerView.immersive);
       expect(prefs.containsKey('use_system_font'), isFalse);
@@ -127,19 +126,17 @@ void main() {
         ],
       );
       addTearDown(container.dispose);
-      final saving = container
-          .read(themeProvider.notifier)
-          .setAppGlassOutlines(false);
+      final saving = container.read(themeProvider.notifier).setLyricsBlur(0.5);
       releaseLoad.completeError(StateError('theme_load_failed'));
       await saving;
-      expect(container.read(themeProvider).appGlassOutlines, isFalse);
+      expect(container.read(themeProvider).lyricsBlur, 0.5);
     },
   );
 
   test(
     'disposed theme does not read state or save after delayed loading',
     () async {
-      SharedPreferences.setMockInitialValues({kAppGlassOutlinesKey: true});
+      SharedPreferences.setMockInitialValues({kLyricsBlurKey: 0.9});
       final prefs = await SharedPreferences.getInstance();
       final releaseLoad = Completer<SharedPreferences>();
       final container = ProviderContainer(
@@ -149,13 +146,11 @@ void main() {
           ),
         ],
       );
-      final saving = container
-          .read(themeProvider.notifier)
-          .setAppGlassOutlines(false);
+      final saving = container.read(themeProvider.notifier).setLyricsBlur(0.5);
       container.dispose();
       releaseLoad.complete(prefs);
       await saving;
-      expect(prefs.getBool(kAppGlassOutlinesKey), isTrue);
+      expect(prefs.getDouble(kLyricsBlurKey), 0.9);
     },
   );
 }

@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:liquid_glass_easy/liquid_glass_easy.dart';
-import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/widgets/glass/thumb/app_glass_thumb.dart';
 
-/// A Material [Slider] whose thumb turns into liquid glass while touched.
+/// A Material [Slider] whose thumb turns into glass while touched.
 ///
 /// When the glass gate is closed it is exactly a [Slider] with the given
 /// arguments. When open, the thumb is a white pill drawn over the slider (no
-/// lens at rest) that becomes a [LiquidGlassMotionPill] between
-/// [onChangeStart] and [onChangeEnd]. Keyboard, semantics, divisions, the
+/// glass at rest) that becomes an [AppGlassThumb] between [onChangeStart] and
+/// [onChangeEnd]. Keyboard, semantics, divisions, the
 /// value label and RTL stay the [Slider]'s own.
 ///
 /// [key] is given to the inner [Slider], so finders and callers that address
@@ -43,7 +41,6 @@ class AppSlider extends ConsumerStatefulWidget {
 
   static const restThumbSize = Size(37, 24);
   static const _activeThumbSize = Size(58, 38.33);
-  static const _shadow = LiquidGlassShadow(inset: 3);
 
   // Explicit so the drawn thumb can share the slider's track geometry.
   static const _overlayShape = RoundSliderOverlayShape();
@@ -120,7 +117,6 @@ class _AppSliderState extends ConsumerState<AppSlider>
     );
     if (!glass) return slider;
 
-    final outlines = ref.watch(appGlassOutlinesProvider);
     return Stack(
       clipBehavior: Clip.none,
       children: [
@@ -165,8 +161,7 @@ class _AppSliderState extends ConsumerState<AppSlider>
                     held: _touchGlass == true,
                     restSize: AppSlider.restThumbSize,
                     activeSize: AppSlider._activeThumbSize,
-                    style: appGlassThumbStyle(outlines: outlines),
-                    shadow: AppSlider._shadow,
+                    shadow: true,
                   );
                 },
               );

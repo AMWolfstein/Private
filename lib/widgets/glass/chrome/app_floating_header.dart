@@ -1,13 +1,13 @@
+import 'dart:ui' show ImageFilter;
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:liquid_glass_easy/liquid_glass_easy.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/services/library/covers/cover_palette.dart';
 import 'package:sistrum/core/theme/app_glass_levels.dart';
 import 'package:sistrum/core/theme/app_theme.dart';
 import 'package:sistrum/widgets/glass/artwork/app_artwork_ground.dart';
-import 'package:sistrum/widgets/glass/chrome/app_backdrop_groups.dart';
 import 'package:sistrum/widgets/glass/thumb/app_glass_surface.dart';
 import 'package:sistrum/widgets/header/profile_avatar.dart';
 
@@ -23,19 +23,12 @@ const double kAppHeaderIconSize = 22;
 
 /// How a pinned header floats over its page.
 enum AppHeaderMaterial {
-  /// Glass off (or Auto under high contrast): the old opaque toolbar.
+  /// Flat level, low-end device or high contrast: the opaque toolbar.
   opaque,
 
-  /// Transparent toolbar; blurred lite controls (lite glass, Level 1,
-  /// reduced motion or no shader filters).
-  frosted,
-
-  /// Transparent toolbar; liquid-glass lens controls.
-  glass,
+  /// Transparent toolbar; Tinted Lite glass controls.
+  tinted,
 }
-
-/// Lens chrome is removed: every header and bar surface is Tinted Lite.
-bool appLiquidChromeEnabled(BuildContext context, WidgetRef ref) => false;
 
 AppHeaderMaterial appHeaderMaterial(BuildContext context, WidgetRef ref) {
   final translucent =
@@ -43,10 +36,7 @@ AppHeaderMaterial appHeaderMaterial(BuildContext context, WidgetRef ref) {
       !ref.watch(
         appGlassContrastBlockedProvider(MediaQuery.highContrastOf(context)),
       );
-  if (!translucent) return AppHeaderMaterial.opaque;
-  return appLiquidChromeEnabled(context, ref)
-      ? AppHeaderMaterial.glass
-      : AppHeaderMaterial.frosted;
+  return translucent ? AppHeaderMaterial.tinted : AppHeaderMaterial.opaque;
 }
 
 /// Status-bar icons for a header whose backdrop has [brightness]. Set
@@ -95,7 +85,7 @@ class AppHeaderBacking extends ConsumerWidget {
         false;
     final sigma = ref.watch(appHeaderBandBlurDisabledProvider)
         ? 0.0
-        : appGlassClarity(ref.watch(appGlassClarityLevelProvider)).blurSigma;
+        : kAppGlassStyle.blurSigma;
     final base = color ?? Theme.of(context).scaffoldBackgroundColor;
     return TweenAnimationBuilder<double>(
       tween: Tween(end: shown ? 1 : 0),
@@ -105,31 +95,44 @@ class AppHeaderBacking extends ConsumerWidget {
       builder: (context, amount, _) {
         if (amount == 0) return const SizedBox.shrink();
         // Hold the tint across the toolbar and feather only its last third.
-        // Opacity would isolate the blur from the page, so fade by value.
-        final edge = LiquidGlassScrollEdge(
-          key: const ValueKey('sistrum-header-backing'),
-          edge: LiquidGlassEdge.top,
-          color: base.withValues(alpha: 0.72 * amount),
-          blur: sigma * amount,
-          curve: const Interval(0.68, 1, curve: Curves.easeIn),
-          blurCurve: const Interval(0.68, 1, curve: Curves.easeIn),
+        // The blur fades with it, so the band never shows a hard edge.
+        final band = DecoratedBox(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              stops: const [0, 0.68, 1],
+              colors: [
+                base.withValues(alpha: 0.72 * amount),
+                base.withValues(alpha: 0.72 * amount),
+                base.withValues(alpha: 0),
+              ],
+            ),
+          ),
+          child: const SizedBox.expand(),
         );
-        // The header controls float over the band and must see it, so the
-        // band reads on its own, outside the chrome batch.
-        return LiquidGlassBatch.exclude(
-          child: sigma == 0
-              ? edge
-              : AppBackdropReadMarker(backdropId: null, child: edge),
+        final backing = sigma == 0
+            ? band
+            : ClipRect(
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(
+                    sigmaX: sigma * amount,
+                    sigmaY: sigma * amount,
+                  ),
+                  child: band,
+                ),
+              );
+        return KeyedSubtree(
+          key: const ValueKey('sistrum-header-backing'),
+          child: backing,
         );
       },
     );
   }
 }
 
-/// Toolbar controls (the leading circle, the actions) share the shell's
-/// chrome read with the bottom bar. Glass inside page content must not join:
-/// it paints before the content below it, which the batch could then no
-/// longer see.
+/// Toolbar controls (the leading circle, the actions). On album and artist
+/// pages they draw from the header artwork's ground.
 class AppHeaderControls extends StatelessWidget {
   const AppHeaderControls({super.key, required this.child});
 
@@ -139,11 +142,9 @@ class AppHeaderControls extends StatelessWidget {
   Widget build(BuildContext context) {
     // On album and artist pages the controls draw from the header artwork.
     final page = AppArtworkGroundScope.pageOf(context);
-    return AppChromeMember(
-      child: page == null
-          ? child
-          : AppArtworkGroundScope(controller: page, child: child),
-    );
+    return page == null
+        ? child
+        : AppArtworkGroundScope(controller: page, child: child);
   }
 }
 
@@ -279,8 +280,8 @@ class _HeaderIconTheme extends StatelessWidget {
   );
 }
 
-/// The header controls' shared glass: HeaderCircleButton's tint, a capsule
-/// radius, and the frosted blur instead of a lens when liquid is not allowed.
+/// The header controls' shared glass: HeaderCircleButton's tint and a
+/// capsule radius, drawn as Tinted Lite.
 class _HeaderGlass extends ConsumerWidget {
   const _HeaderGlass({required this.child});
 
@@ -290,12 +291,11 @@ class _HeaderGlass extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final scheme = HeaderPalette.of(context);
     final dark = scheme.brightness == Brightness.dark;
-    return AppGlass.navigation(
+    return AppGlass(
       radius: kAppHeaderControlSize / 2,
       tintColor: dark ? Colors.black : Colors.white,
       tintOpacity: dark ? 0.45 : 0.55,
       blurEnabled: ref.watch(appBlurEnabledProvider),
-      allowLens: appLiquidChromeEnabled(context, ref),
       child: child,
     );
   }

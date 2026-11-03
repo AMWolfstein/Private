@@ -235,7 +235,6 @@ extension SettingsActions on SettingsNotifier {
       // Hiding the options also removes the overlay and A/B switches they
       // control.
       performanceHudEnabled: unlocked && _current.performanceHudEnabled,
-      barSamplerDisabled: unlocked && _current.barSamplerDisabled,
       headerBandBlurDisabled: unlocked && _current.headerBandBlurDisabled,
     );
     _saveSettings();
@@ -243,11 +242,6 @@ extension SettingsActions on SettingsNotifier {
 
   void setPerformanceHudEnabled(bool enabled) {
     _current = _current.copyWith(performanceHudEnabled: enabled);
-    _saveSettings();
-  }
-
-  void setBarSamplerDisabled(bool disabled) {
-    _current = _current.copyWith(barSamplerDisabled: disabled);
     _saveSettings();
   }
 

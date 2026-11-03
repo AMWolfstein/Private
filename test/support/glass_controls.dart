@@ -1,25 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:liquid_glass_easy/liquid_glass_easy.dart';
-import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/core/theme/app_theme.dart';
+import 'package:sistrum/providers/runtime_profile_provider.dart';
+import 'package:sistrum/widgets/glass/thumb/app_glass_thumb.dart';
 
-/// Glass lenses and capture views currently mounted.
-int glassLenses() =>
-    find.byType(LiquidGlassLens).evaluate().length +
-    find.byType(LiquidGlassView).evaluate().length;
+/// Whether [element] is painted: no ancestor [AnimatedOpacity] sits at zero.
+bool _painted(Element element) {
+  final fade = element.findAncestorWidgetOfExactType<AnimatedOpacity>();
+  return fade == null || fade.opacity > 0;
+}
 
-/// Liquid-glass thumbs currently mounted.
-int glassPills() => find.byType(LiquidGlassMotionPill).evaluate().length;
+/// Backdrop blurs currently painted: each one is a glass surface's read.
+int glassBlurs() =>
+    find.byType(BackdropFilter).evaluate().where(_painted).length;
+
+/// Held thumb glass currently painted (a touched switch or slider).
+int glassPills() =>
+    find.byKey(kAppGlassThumbKey).evaluate().where(_painted).length;
 
 Future<void> pumpGlassControl(
   WidgetTester tester,
   Widget Function(StateSetter setState) builder, {
   bool glass = true,
-  bool liquid = true,
   AppGlassLevel? level,
-  int? clarityLevel,
   bool reduceMotion = false,
   bool highContrast = false,
   TextDirection direction = TextDirection.ltr,
@@ -28,12 +32,9 @@ Future<void> pumpGlassControl(
     ProviderScope(
       key: UniqueKey(),
       overrides: [
-        if (glass) appShaderFiltersSupportedProvider.overrideWithValue(true),
         appGlassLevelProvider.overrideWithValue(
-          level ?? (liquid ? AppGlassLevel.liquid : AppGlassLevel.flat),
+          level ?? (glass ? AppGlassLevel.tinted : AppGlassLevel.flat),
         ),
-        if (clarityLevel != null)
-          appGlassClarityLevelProvider.overrideWithValue(clarityLevel),
       ],
       child: MaterialApp(
         theme: AppTheme.build(Brightness.light),

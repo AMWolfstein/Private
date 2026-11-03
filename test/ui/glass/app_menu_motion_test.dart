@@ -6,7 +6,6 @@ import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/core/theme/app_theme.dart';
 import 'package:sistrum/widgets/glass/chrome/app_chrome.dart';
 import 'package:sistrum/widgets/primitives/app_context_menu.dart';
-import 'package:sistrum/widgets/glass/selection/app_squircle_border.dart';
 
 void main() {
   setUp(() => SharedPreferences.setMockInitialValues({}));
@@ -22,9 +21,7 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
-          appGlassLevelProvider.overrideWithValue(AppGlassLevel.lite),
-          appBlurEnabledProvider.overrideWithValue(true),
-          appGlassClarityLevelProvider.overrideWithValue(5),
+          appGlassLevelProvider.overrideWithValue(AppGlassLevel.tinted),
         ],
         child: MaterialApp(
           theme: AppTheme.build(Brightness.dark),
@@ -120,14 +117,7 @@ void main() {
       expect(resting.right, lessThanOrEqualTo(374));
       expect(resting.top, greaterThanOrEqualTo(40));
       expect(resting.bottom, lessThanOrEqualTo(804));
-      expect(panel(tester).smoothCorners, isTrue);
       expect(panel(tester).radius, 28);
-      // The outside clip follows the same squircle as the lens and rim.
-      final shapes = tester
-          .widgetList<DecoratedBox>(find.byType(DecoratedBox))
-          .map((w) => w.decoration)
-          .whereType<ShapeDecoration>();
-      expect(shapes.any((d) => d.shape is AppSquircleBorder), isTrue);
       await tester.tap(find.text('Play'));
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 160));

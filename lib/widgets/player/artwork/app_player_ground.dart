@@ -124,9 +124,7 @@ class _AppPlayerGroundState extends ConsumerState<AppPlayerGround>
     final ratio = widget.artworkAspectRatio;
     final fadeStart = widget.fadeStart;
     final inset = !immersive && showArtwork ? _insetRect() : null;
-    final sigma = appGlassClarity(
-      ref.read(appGlassClarityLevelProvider),
-    ).blurSigma;
+    final sigma = kAppGlassStyle.blurSigma;
     final key = (
       source,
       immersive,
@@ -219,8 +217,6 @@ class _AppPlayerGroundState extends ConsumerState<AppPlayerGround>
   @override
   Widget build(BuildContext context) {
     final needed = appGroundNeeded(context, ref);
-    // Read here so a level or quality change rebuilds the ground.
-    ref.watch(appGlassClarityLevelProvider);
     MediaQuery.sizeOf(context);
     if (needed) {
       _schedule();

@@ -15,7 +15,6 @@ double normalizeLyricsBlur(num? value) =>
 
 double normalizeLyricsTextScale(num? value) =>
     value != null && value.isFinite ? value.toDouble().clamp(0.8, 1.4) : 1.0;
-const String kAppGlassOutlinesKey = 'sistrum_glass_outlines';
 
 enum PlayerView { normal, immersive }
 
@@ -31,7 +30,6 @@ class ThemeSettings {
   final double lyricsTextScale;
   final double lyricsBlur;
   final int lyricsTimingOffsetMs;
-  final bool appGlassOutlines;
 
   const ThemeSettings({
     this.themeMode = ThemeMode.system,
@@ -40,7 +38,6 @@ class ThemeSettings {
     this.lyricsTextScale = 1,
     this.lyricsBlur = 1,
     this.lyricsTimingOffsetMs = 0,
-    this.appGlassOutlines = true,
   });
 
   ThemeSettings copyWith({
@@ -50,7 +47,6 @@ class ThemeSettings {
     double? lyricsTextScale,
     double? lyricsBlur,
     int? lyricsTimingOffsetMs,
-    bool? appGlassOutlines,
   }) {
     return ThemeSettings(
       themeMode: themeMode ?? this.themeMode,
@@ -63,7 +59,6 @@ class ThemeSettings {
       lyricsTimingOffsetMs: normalizeLyricsTimingOffset(
         lyricsTimingOffsetMs ?? this.lyricsTimingOffsetMs,
       ),
-      appGlassOutlines: appGlassOutlines ?? this.appGlassOutlines,
     );
   }
 
@@ -73,7 +68,6 @@ class ThemeSettings {
     kLyricsTextScaleKey: lyricsTextScale,
     kLyricsBlurKey: normalizeLyricsBlur(lyricsBlur),
     kLyricsTimingOffsetKey: normalizeLyricsTimingOffset(lyricsTimingOffsetMs),
-    kAppGlassOutlinesKey: appGlassOutlines,
   };
 
   factory ThemeSettings.fromJson(Map<String, dynamic> json) {
@@ -90,7 +84,6 @@ class ThemeSettings {
       lyricsTimingOffsetMs: normalizeLyricsTimingOffset(
         json[kLyricsTimingOffsetKey] as num?,
       ),
-      appGlassOutlines: json[kAppGlassOutlinesKey] as bool? ?? true,
     );
   }
 
@@ -102,8 +95,7 @@ class ThemeSettings {
         other.playerView == playerView &&
         other.lyricsTextScale == lyricsTextScale &&
         other.lyricsBlur == lyricsBlur &&
-        other.lyricsTimingOffsetMs == lyricsTimingOffsetMs &&
-        other.appGlassOutlines == appGlassOutlines;
+        other.lyricsTimingOffsetMs == lyricsTimingOffsetMs;
   }
 
   @override
@@ -112,8 +104,7 @@ class ThemeSettings {
       playerView.hashCode ^
       lyricsTextScale.hashCode ^
       lyricsBlur.hashCode ^
-      lyricsTimingOffsetMs.hashCode ^
-      appGlassOutlines.hashCode;
+      lyricsTimingOffsetMs.hashCode;
 }
 
 ThemeMode themeModeFromString(String? value) {

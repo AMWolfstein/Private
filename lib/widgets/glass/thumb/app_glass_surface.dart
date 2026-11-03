@@ -2,40 +2,20 @@ import 'dart:ui' show ImageFilter;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:liquid_glass_easy/liquid_glass_easy.dart';
-import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/core/theme/app_glass_levels.dart';
 import 'package:sistrum/core/theme/app_theme.dart';
-import 'package:sistrum/widgets/glass/artwork/app_artwork_glass.dart';
+import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/widgets/glass/artwork/app_artwork_ground.dart';
-import 'package:sistrum/widgets/glass/chrome/app_backdrop_groups.dart';
-import 'package:sistrum/widgets/glass/thumb/app_liquid_backdrop.dart';
-import 'package:sistrum/widgets/glass/selection/app_squircle_border.dart';
+import 'package:sistrum/widgets/glass/artwork/app_artwork_glass.dart';
 
-/// Bounded glass: Impeller lenses refract a blurred backdrop, while frosted
-/// surfaces are blur passes. Either joins the enclosing batch (the shell's
-/// chrome batch only for AppChromeMember chrome), so its read is shared. Foreground content stays above glass.
+/// Tinted Lite glass: a backdrop blur, a surface tint and a rim.
+///
+/// A surface inside another glass surface draws its fill only, so nested
+/// glass never blurs twice. Over known artwork (the player, album and artist
+/// headers) it draws the artwork's pre-blurred ground instead of reading the
+/// backdrop. Foreground content stays above the glass.
 class AppGlass extends ConsumerWidget {
   const AppGlass({
-    super.key,
-    required this.child,
-    required this.blurEnabled,
-    this.radius = 32,
-    this.strongTint = false,
-    this.tintOpacity,
-    this.tintColor,
-    this.highlightBorder = false,
-    this.refractionDepth = 0.30,
-    this.smoothCorners = false,
-    this.highlightIntensity = 1,
-    this.glassProgress = 1,
-  }) : firstInGroup = true,
-       lastInGroup = true,
-       samplesBackdrop = true,
-       allowLens = true,
-       clarityLevel = null;
-
-  const AppGlass.navigation({
     super.key,
     required this.child,
     required this.blurEnabled,
@@ -45,21 +25,17 @@ class AppGlass extends ConsumerWidget {
     this.strongTint = false,
     this.tintOpacity,
     this.tintColor,
-    this.samplesBackdrop = true,
     this.highlightBorder = false,
-    this.refractionDepth = 0.30,
-    this.smoothCorners = false,
     this.highlightIntensity = 1,
     this.glassProgress = 1,
-    this.clarityLevel,
-    this.allowLens = true,
+    this.samplesBackdrop = true,
   });
 
-  // One shared filter per clarity level; never rebuilt per frame.
-  static final _blurs = [
-    for (final level in kAppGlassLevels)
-      ImageFilter.blur(sigmaX: level.blurSigma, sigmaY: level.blurSigma),
-  ];
+  // One shared filter: never rebuilt per frame.
+  static final _blur = ImageFilter.blur(
+    sigmaX: kAppGlassStyle.blurSigma,
+    sigmaY: kAppGlassStyle.blurSigma,
+  );
 
   final Widget child;
   final bool blurEnabled;
@@ -70,10 +46,8 @@ class AppGlass extends ConsumerWidget {
   final double? tintOpacity;
   final Color? tintColor;
 
-  /// Paint the edge above the fill so tinted popovers retain a visible rim.
+  /// Paint the rim above the fill so tinted popovers keep a visible edge.
   final bool highlightBorder;
-  final double refractionDepth;
-  final bool smoothCorners;
   final double highlightIntensity;
 
   /// Reveal glass through its tint, without isolating the backdrop in opacity.
@@ -82,30 +56,19 @@ class AppGlass extends ConsumerWidget {
   /// Plain-page surfaces keep their tint without filtering a uniform backdrop.
   final bool samplesBackdrop;
 
-  /// Overrides the saved clarity level for this surface only.
-  final int? clarityLevel;
-
-  /// False keeps a liquid-level surface on lite glass, e.g. header chrome
-  /// while animations are disabled.
-  final bool allowLens;
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final scheme = Theme.of(context).colorScheme;
-    final clarity = appGlassClarity(
-      clarityLevel ?? ref.watch(appGlassClarityLevelProvider),
-    );
-    final level = ref.watch(appGlassLevelProvider);
+    final style = kAppGlassStyle;
     final reveal = glassProgress.clamp(0.0, 1.0);
     final translucent =
         reveal > 0 &&
         blurEnabled &&
-        level != AppGlassLevel.flat &&
+        ref.watch(appGlassLevelProvider) != AppGlassLevel.flat &&
         !ref.watch(
           appGlassContrastBlockedProvider(MediaQuery.highContrastOf(context)),
         );
     final dark = scheme.brightness == Brightness.dark;
-    final outlines = ref.watch(appGlassOutlinesProvider);
     final shape = BorderRadius.vertical(
       top: firstInGroup ? Radius.circular(radius) : Radius.zero,
       bottom: lastInGroup ? Radius.circular(radius) : Radius.zero,
@@ -115,7 +78,7 @@ class AppGlass extends ConsumerWidget {
         tintColor ?? (dark ? scheme.surfaceContainerHigh : Colors.white);
     var opacity = tintOpacity ?? (strongTint ? 0.80 : 0.60);
     if (tintColor == null && artworkTint != null) {
-      // The artwork color is already known; retain its hue with a richer tint
+      // The artwork colour is already known; keep its hue with a richer tint
       // instead of a saturation filter over changing page content.
       final hsl = HSLColor.fromColor(scheme.surfaceContainerHigh);
       final coverTint = hsl
@@ -127,20 +90,8 @@ class AppGlass extends ConsumerWidget {
       opacity = opacity.clamp(0.60, 1.0);
     }
     // Light glass needs a white veil over saturated or dark artwork.
-    // Keep this in the existing fill so whitening adds no backdrop pass.
-    // Chrome whose palette follows its sampled backdrop needs no such floor:
-    // over dark content it turns dark instead.
-    final clearChrome =
-        !dark &&
-        tintColor == null &&
-        artworkTint == null &&
-        AppAdaptiveChromeScope.isActive(context);
     var baseTint = tintSource.withValues(
-      alpha: dark
-          ? opacity * 0.82
-          : clearChrome
-          ? opacity * clarity.barFill
-          : (opacity * 0.88).clamp(0.50, 1.0),
+      alpha: dark ? opacity * 0.82 : (opacity * 0.88).clamp(0.50, 1.0),
     );
     if (dark) {
       // Bound bright artwork with paint instead of filtering backdrop luma.
@@ -149,10 +100,10 @@ class AppGlass extends ConsumerWidget {
         Colors.black.withValues(alpha: 0.35),
       );
     }
-    // The level's veil of surface colour; Crystal shows the page through.
+    // The style's veil of surface colour over the tint.
     final tint = translucent
         ? Color.alphaBlend(
-            scheme.surfaceContainerHigh.withValues(alpha: clarity.tint),
+            scheme.surfaceContainerHigh.withValues(alpha: style.tint),
             baseTint,
           )
         : scheme.surfaceContainerHigh;
@@ -161,32 +112,27 @@ class AppGlass extends ConsumerWidget {
         null;
     final sampleBackdrop = translucent && samplesBackdrop && !insideGlass;
     final single = firstInGroup && lastInGroup;
-    // Over known artwork (the player, album and artist headers) glass draws
-    // from that artwork's ground and reads no backdrop.
+    // Over known artwork glass draws from that artwork's ground and reads no
+    // backdrop.
     final ground = sampleBackdrop && single
         ? AppArtworkGroundScope.maybeOf(context)
         : null;
-    // Every other single surface is a blur plus LiquidGlassLite's painted rim.
-    final liteRim = ground == null && sampleBackdrop && single && outlines;
     final clearFill = (dark ? const Color(0xff999999) : Colors.white)
         .withValues(alpha: dark ? 0.17 : 0.46);
     final fill = Color.lerp(
       scheme.surfaceContainerHigh,
       // Plain-page surfaces match sampled ones; nested ones keep the tint.
       translucent && !strongTint && !insideGlass
-          ? Color.lerp(tint, clearFill, clarity.clearFill)
+          ? Color.lerp(tint, clearFill, style.clearFill)!
           : tint,
       reveal,
-    );
-    final squircle = smoothCorners && firstInGroup && lastInGroup;
+    )!;
     final surface = DecoratedBox(
-      decoration: squircle
-          ? ShapeDecoration(color: fill, shape: AppSquircleBorder(radius))
-          : BoxDecoration(color: fill, borderRadius: shape),
+      decoration: BoxDecoration(color: fill, borderRadius: shape),
       // Child controls paint on this surface; never re-blur their parent.
       child: _GlassBackdropScope(child: child),
     );
-    final shadows = firstInGroup && lastInGroup
+    final shadows = single
         ? [
             BoxShadow(
               color: Colors.black.withValues(alpha: dark ? 0.14 : 0.08),
@@ -196,99 +142,32 @@ class AppGlass extends ConsumerWidget {
             ),
           ]
         : null;
-    final backdrop = ground != null
+    final body = ground != null
         ? AppArtworkGlassSurface(
             controller: ground,
-            lens: false,
-            fill: fill!,
+            fill: fill,
             opaqueFill: scheme.surfaceContainerHigh,
-            radius: radius,
-            squircle: squircle,
-            refractionDepth: refractionDepth,
-            refractionWidth: 20,
-            dispersion: clarity.dispersion,
             child: _GlassBackdropScope(child: child),
           )
         : sampleBackdrop
-        ? AppBackdropBlur(
-            filter: _blurs[clarity.level - 1],
-            // Shares the enclosing batch's read, as a lens would.
-            backdropId: appBlurBackdropId(
-              context,
-              impeller: ref.watch(appShaderFiltersSupportedProvider),
-            ),
-            child: liteRim
-                ? LiquidGlassLite(
-                    shape: appGlassShape(
-                      radius: radius,
-                      smoothCorners: squircle,
-                    ),
-                    specular: appGlassSpecular(
-                      outlines: true,
-                      dark: dark,
-                      intensity: highlightIntensity * reveal,
-                    ),
-                    glow: appGlassGlow(
-                      outlines: true,
-                      intensity: highlightIntensity * reveal,
-                    ),
-                    // The grouped filter above is the frost; the lite only
-                    // paints its rim and reads nothing.
-                    blur: 0,
-                    child: surface,
-                  )
-                : surface,
-          )
+        ? BackdropFilter(filter: _blur, child: surface)
         : surface;
     return DecoratedBox(
-      decoration: squircle
-          ? ShapeDecoration(shape: AppSquircleBorder(radius), shadows: shadows)
-          : BoxDecoration(borderRadius: shape, boxShadow: shadows),
+      decoration: BoxDecoration(borderRadius: shape, boxShadow: shadows),
       child: CustomPaint(
-        // The optical lens already draws its own rim. Avoid a second dark
-        // contact stroke on top, particularly visible against light pages.
-        foregroundPainter:
-            outlines && (!liteRim || highlightBorder)
-            ? _AppGlassRim(
-                shape: shape,
-                firstInGroup: firstInGroup,
-                lastInGroup: lastInGroup,
-                illuminated:
-                    translucent && (!liteRim || highlightBorder),
-                emphasized: highlightBorder,
-                dark: dark,
-                smoothCorners: squircle,
-                highlightIntensity: highlightIntensity * reveal,
-              )
-            : null,
-        child: squircle
-            ? ClipPath.shape(shape: AppSquircleBorder(radius), child: backdrop)
-            : ClipRRect(borderRadius: shape, child: backdrop),
+        foregroundPainter: _AppGlassRim(
+          shape: shape,
+          firstInGroup: firstInGroup,
+          lastInGroup: lastInGroup,
+          illuminated: translucent,
+          emphasized: highlightBorder,
+          dark: dark,
+          highlightIntensity: highlightIntensity * reveal,
+        ),
+        child: ClipRRect(borderRadius: shape, child: body),
       ),
     );
   }
-}
-
-/// Marks chrome whose light/dark palette follows a sampled backdrop, so its
-/// light glass can drop the readability floor and look clear at rest.
-class AppAdaptiveChromeScope extends InheritedWidget {
-  const AppAdaptiveChromeScope({
-    super.key,
-    required this.active,
-    required super.child,
-  });
-
-  final bool active;
-
-  static bool isActive(BuildContext context) =>
-      context
-          .dependOnInheritedWidgetOfExactType<AppAdaptiveChromeScope>()
-          ?.active ??
-      false;
-
-  @override
-  bool updateShouldNotify(AppAdaptiveChromeScope oldWidget) =>
-      active != oldWidget.active;
 }
 
 class _GlassBackdropScope extends InheritedWidget {
@@ -298,7 +177,7 @@ class _GlassBackdropScope extends InheritedWidget {
   bool updateShouldNotify(_GlassBackdropScope oldWidget) => false;
 }
 
-/// Subtle edge definition without another offscreen layer or backdrop read.
+/// The rim: a hairline edge, plus a light band on translucent glass.
 class _AppGlassRim extends CustomPainter {
   const _AppGlassRim({
     required this.shape,
@@ -307,7 +186,6 @@ class _AppGlassRim extends CustomPainter {
     required this.illuminated,
     required this.emphasized,
     required this.dark,
-    required this.smoothCorners,
     required this.highlightIntensity,
   });
 
@@ -317,7 +195,6 @@ class _AppGlassRim extends CustomPainter {
   final bool illuminated;
   final bool emphasized;
   final bool dark;
-  final bool smoothCorners;
   final double highlightIntensity;
 
   @override
@@ -334,18 +211,8 @@ class _AppGlassRim extends CustomPainter {
     );
     canvas.save();
     canvas.clipRect(bounds);
-    void stroke(double inset, Paint paint) {
-      if (smoothCorners) {
-        canvas.drawPath(
-          AppSquircleBorder(
-            (shape.topLeft.x - inset).clamp(0, double.infinity),
-          ).getOuterPath(bounds.deflate(inset)),
-          paint,
-        );
-      } else {
+    void stroke(double inset, Paint paint) =>
         canvas.drawRRect(outline.deflate(inset), paint);
-      }
-    }
 
     stroke(
       0.25,
@@ -395,7 +262,6 @@ class _AppGlassRim extends CustomPainter {
       lastInGroup != oldDelegate.lastInGroup ||
       illuminated != oldDelegate.illuminated ||
       emphasized != oldDelegate.emphasized ||
-      smoothCorners != oldDelegate.smoothCorners ||
       highlightIntensity != oldDelegate.highlightIntensity ||
       dark != oldDelegate.dark;
 }

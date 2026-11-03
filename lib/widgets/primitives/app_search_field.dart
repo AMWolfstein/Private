@@ -106,7 +106,7 @@ class AppSearchField extends StatelessWidget {
     );
 
     return Consumer(
-      builder: (context, ref, child) => AppGlass.navigation(
+      builder: (context, ref, child) => AppGlass(
         radius: 28,
         blurEnabled: ref.watch(appBlurEnabledProvider),
         samplesBackdrop: samplesBackdrop,

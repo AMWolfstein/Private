@@ -257,7 +257,7 @@ class _MiniPlayerState extends ConsumerState<MiniPlayer> {
     );
     return Padding(
       padding: EdgeInsets.only(bottom: widget.bottomPadding),
-      child: AppGlass.navigation(
+      child: AppGlass(
         strongTint: true,
         tintOpacity: AppTheme.chromeOpacity(context),
         blurEnabled: ref.watch(appBlurEnabledProvider),

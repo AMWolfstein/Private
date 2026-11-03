@@ -7,7 +7,6 @@ import 'package:sistrum/providers/playback/music_player_provider.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/core/theme/app_theme.dart';
 import 'package:sistrum/widgets/player/mini_player.dart';
-import 'package:sistrum/widgets/glass/chrome/app_backdrop_groups.dart';
 import 'package:sistrum/widgets/glass/thumb/app_glass_surface.dart';
 import 'package:sistrum/widgets/glass/chrome/app_chrome_controls.dart';
 
@@ -141,7 +140,7 @@ class _AppBottomBarState extends ConsumerState<AppBottomBar>
       currentMediaItemProvider.select((item) => item.value != null),
     );
     // Animated glass tabs already reserve 8px above their visible capsule.
-    final glassTabs = AppTabBar.usesLiquidGlass(
+    final glassTabs = AppTabBar.isFloating(
       context,
       blurEnabled: blurEnabled,
       contrastBlocked: ref.watch(
@@ -155,7 +154,7 @@ class _AppBottomBarState extends ConsumerState<AppBottomBar>
     Widget sideSurface() => ScaleTransition(
       scale: _collapse,
       child: RepaintBoundary(
-        child: AppGlass.navigation(
+        child: AppGlass(
           blurEnabled: blurEnabled,
           strongTint: true,
           tintOpacity: AppTheme.navigationOpacity(context),
@@ -252,11 +251,7 @@ class _AppBottomBarState extends ConsumerState<AppBottomBar>
                             offstage: amount == 0,
                             // Folding, the button crosses the tab capsule:
                             // it reads on its own until it comes to rest.
-                            child: AppChromeMember(
-                              followRoute: false,
-                              join: amount == 1,
-                              child: surface,
-                            ),
+                            child: surface,
                           ),
                         ),
                         Material(
@@ -299,61 +294,56 @@ class _AppBottomBarState extends ConsumerState<AppBottomBar>
             return Stack(
               clipBehavior: Clip.none,
               children: [
-                // The player and tab surfaces share the shell's chrome
-                // read with the header controls.
-                AppChromeMember(
-                  followRoute: false,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      if (hasPlayer || amount > 0)
-                        Align(
-                          alignment: Alignment.bottomCenter,
-                          // With no track, introducing the row at full height would
-                          // make the bar jump taller on the first animation frame.
-                          heightFactor: hasPlayer ? 1 : amount,
-                          child: Padding(
-                            padding: EdgeInsets.only(
-                              bottom: hasPlayer
-                                  ? tabGap + (8 - tabGap) * amount
-                                  : 8,
-                            ),
-                            child: Row(
-                              children: [
-                                SizedBox(
-                                  width: 60 * amount,
-                                  height: hasPlayer ? 48 + 4 * amount : 52,
-                                ),
-                                Expanded(child: player),
-                                SizedBox(
-                                  width: 60 * amount,
-                                  height: hasPlayer ? 48 + 4 * amount : 52,
-                                ),
-                              ],
-                            ),
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (hasPlayer || amount > 0)
+                      Align(
+                        alignment: Alignment.bottomCenter,
+                        // With no track, introducing the row at full height would
+                        // make the bar jump taller on the first animation frame.
+                        heightFactor: hasPlayer ? 1 : amount,
+                        child: Padding(
+                          padding: EdgeInsets.only(
+                            bottom: hasPlayer
+                                ? tabGap + (8 - tabGap) * amount
+                                : 8,
+                          ),
+                          child: Row(
+                            children: [
+                              SizedBox(
+                                width: 60 * amount,
+                                height: hasPlayer ? 48 + 4 * amount : 52,
+                              ),
+                              Expanded(child: player),
+                              SizedBox(
+                                width: 60 * amount,
+                                height: hasPlayer ? 48 + 4 * amount : 52,
+                              ),
+                            ],
                           ),
                         ),
-                      Offstage(
-                        // Retain tab state, but drop its backdrop layers only
-                        // after the last visible frame of the fold.
-                        offstage: amount == 1,
-                        child: ClipRect(
-                          clipBehavior: amount == 0 ? Clip.none : Clip.hardEdge,
-                          child: Align(
-                            alignment: Alignment.bottomCenter,
-                            heightFactor: 1 - amount,
-                            child: IgnorePointer(
-                              ignoring: amount > 0.5,
-                              child: ExcludeSemantics(
-                                excluding: amount > 0.5,
-                                child: amount == 0 ? fullTabs : foldingTabs,
-                              ),
+                      ),
+                    Offstage(
+                      // Retain tab state, but drop its backdrop layers only
+                      // after the last visible frame of the fold.
+                      offstage: amount == 1,
+                      child: ClipRect(
+                        clipBehavior: amount == 0 ? Clip.none : Clip.hardEdge,
+                        child: Align(
+                          alignment: Alignment.bottomCenter,
+                          heightFactor: 1 - amount,
+                          child: IgnorePointer(
+                            ignoring: amount > 0.5,
+                            child: ExcludeSemantics(
+                              excluding: amount > 0.5,
+                              child: amount == 0 ? fullTabs : foldingTabs,
                             ),
                           ),
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
                 movingIcon(leading: true, surface: leadingSurface),
                 movingIcon(leading: false, surface: searchSurface),
