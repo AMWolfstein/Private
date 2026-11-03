@@ -183,7 +183,7 @@ class AppleArtworkClient {
       kind: AppleArtworkKind.artist,
       id: id,
       name: name.trim(),
-      previewUrl: appleStaticPreview(attributes),
+      previewUrl: appleStaticPreview(attributes, size: 1000),
     );
   }
 

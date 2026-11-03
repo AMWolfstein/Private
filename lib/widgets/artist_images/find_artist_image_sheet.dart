@@ -4,13 +4,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'package:sistrum/core/theme/app_icons.dart';
 import 'package:sistrum/l10n/l10n.dart';
+import 'package:sistrum/providers/animated_artwork/animated_artwork_providers.dart';
 import 'package:sistrum/providers/artist_images/artist_image_providers.dart';
+import 'package:sistrum/services/animated_artwork/apple_artwork_client.dart';
+import 'package:sistrum/services/animated_artwork/apple_artwork_parse.dart';
+import 'package:sistrum/services/artist_images/artist_photo_sources.dart';
 import 'package:sistrum/services/artist_images/artist_image_download.dart';
 import 'package:sistrum/services/artist_images/artist_image_store.dart';
 import 'package:sistrum/services/artist_images/deezer_artist_search.dart';
 import 'package:sistrum/widgets/primitives/app_bottom_sheet.dart';
 import 'package:sistrum/widgets/primitives/app_context_menu.dart';
-import 'package:sistrum/providers/animated_artwork/animated_artwork_providers.dart';
 import 'package:sistrum/widgets/animated_artwork/find_animated_artwork_sheet.dart';
 
 /// Opens the artist's three-dot menu. Find artist image opens the search
@@ -128,8 +131,8 @@ class FindArtistImageSheet extends ConsumerStatefulWidget {
 
 class _FindArtistImageSheetState extends ConsumerState<FindArtistImageSheet> {
   late final _query = TextEditingController(text: widget.artistName);
-  List<DeezerArtist>? _results;
-  DeezerArtist? _preview;
+  List<ArtistPhotoCandidate>? _results;
+  ArtistPhotoCandidate? _preview;
   bool _searching = false;
   bool _busy = false;
   String? _message;
@@ -158,12 +161,20 @@ class _FindArtistImageSheetState extends ConsumerState<FindArtistImageSheet> {
     final request = ++_request;
     final client = http.Client();
     _client = client;
+    final apple = ref.read(appleArtworkClientProvider);
     try {
-      final results = await DeezerArtistSearch(client).search(text);
-      if (mounted && request == _request) setState(() => _results = results);
-    } on DeezerUnavailable {
+      // Both sources at once. One failing still shows the other's artists.
+      final sources = await Future.wait([
+        _deezerOrNull(client, text),
+        _appleOrNull(apple, text),
+      ]);
       if (mounted && request == _request) {
-        setState(() => _message = l10n.artistImageSearchFailed);
+        setState(() {
+          _results = [for (final found in sources) ...?found];
+          if (sources.every((found) => found == null)) {
+            _message = l10n.artistImageSearchFailed;
+          }
+        });
       }
     } finally {
       client.close();
@@ -171,7 +182,29 @@ class _FindArtistImageSheetState extends ConsumerState<FindArtistImageSheet> {
     }
   }
 
-  Future<void> _use(DeezerArtist artist) async {
+  Future<List<ArtistPhotoCandidate>?> _deezerOrNull(
+    http.Client client,
+    String text,
+  ) async {
+    try {
+      return await deezerPhotoCandidates(client, text);
+    } on DeezerUnavailable {
+      return null;
+    }
+  }
+
+  Future<List<ArtistPhotoCandidate>?> _appleOrNull(
+    AppleArtworkClient api,
+    String text,
+  ) async {
+    try {
+      return await applePhotoCandidates(api, text);
+    } on AppleArtworkUnavailable {
+      return null;
+    }
+  }
+
+  Future<void> _use(ArtistPhotoCandidate artist) async {
     final l10n = context.l10n;
     final url = artist.pictureUrl;
     if (url == null) return;
@@ -190,7 +223,7 @@ class _FindArtistImageSheetState extends ConsumerState<FindArtistImageSheet> {
       if (!mounted || request != _request) return;
       final result = await store.savePhoto(
         key: artistImageKey(widget.artistName),
-        artist: artist,
+        deezerId: artist.deezerId,
         bytes: bytes,
         status: ArtistImageStatus.manual,
         mayCommit: () async => mounted && request == _request,
@@ -264,7 +297,9 @@ class _FindArtistImageSheetState extends ConsumerState<FindArtistImageSheet> {
               subtitle: Text(
                 artist.pictureUrl == null
                     ? l10n.artistImageNoPhoto
-                    : l10n.artistImageCounts(artist.fans, artist.albums),
+                    : artist.source == ArtistPhotoSource.apple
+                    ? 'Apple Music'
+                    : l10n.artistImageCounts(artist.fans ?? 0, artist.albums ?? 0),
               ),
               onTap: artist.pictureUrl == null
                   ? null
@@ -274,7 +309,7 @@ class _FindArtistImageSheetState extends ConsumerState<FindArtistImageSheet> {
     );
   }
 
-  Widget _buildPreview(DeezerArtist artist) {
+  Widget _buildPreview(ArtistPhotoCandidate artist) {
     final l10n = context.l10n;
     final theme = Theme.of(context);
     return ListView(

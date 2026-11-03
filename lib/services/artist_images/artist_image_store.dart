@@ -201,7 +201,7 @@ class ArtistImageStore {
 
   Future<ArtistImageSaveOutcome> savePhoto({
     required String key,
-    required DeezerArtist artist,
+    int? deezerId,
     required Uint8List bytes,
     required ArtistImageStatus status,
     ArtistImageWriteTicket? ticket,
@@ -241,7 +241,7 @@ class ArtistImageStore {
           ArtistImageRecord(
             artistKey: key,
             status: status,
-            deezerId: artist.id,
+            deezerId: deezerId,
             fileName: name,
           ),
         );

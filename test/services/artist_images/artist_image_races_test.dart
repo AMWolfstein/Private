@@ -115,7 +115,7 @@ void main() {
       await entered.future;
       await store.savePhoto(
         key: 'artist',
-        artist: manual,
+        deezerId: manual.id,
         bytes: bytes,
         status: ArtistImageStatus.manual,
       );
@@ -133,13 +133,13 @@ void main() {
     () async {
       await store.savePhoto(
         key: 'arabic name',
-        artist: artist,
+        deezerId: artist.id,
         bytes: bytes,
         status: ArtistImageStatus.manual,
       );
       await store.savePhoto(
         key: 'latin name',
-        artist: artist,
+        deezerId: artist.id,
         bytes: bytes,
         status: ArtistImageStatus.manual,
       );
@@ -154,7 +154,7 @@ void main() {
     store = ArtistImageStore(state: failing, directory: () async => directory);
     await store.savePhoto(
       key: 'artist',
-      artist: artist,
+      deezerId: artist.id,
       bytes: bytes,
       status: ArtistImageStatus.manual,
     );
@@ -162,7 +162,7 @@ void main() {
     await expectLater(
       store.savePhoto(
         key: 'artist',
-        artist: manual,
+        deezerId: manual.id,
         bytes: bytes,
         status: ArtistImageStatus.manual,
       ),

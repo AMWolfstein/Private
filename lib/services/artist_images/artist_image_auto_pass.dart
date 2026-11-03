@@ -4,7 +4,10 @@ import 'dart:typed_data';
 import 'package:http/http.dart' as http;
 import 'package:sistrum/services/artist_images/artist_image_download.dart';
 import 'package:sistrum/services/artist_images/artist_image_network.dart';
+import 'package:sistrum/services/animated_artwork/apple_artwork_client.dart';
+import 'package:sistrum/services/animated_artwork/apple_artwork_parse.dart';
 import 'package:sistrum/services/artist_images/artist_image_store.dart';
+import 'package:sistrum/services/artist_images/artist_photo_sources.dart';
 import 'package:sistrum/services/artist_images/deezer_artist_search.dart';
 import 'package:sistrum/services/library/database/sqlite_helpers.dart'
     show normalizeSearchText;
@@ -19,13 +22,14 @@ bool isSkippedArtistName(String name) {
 /// name key, compared as UTF-8 bytes (the SQLite BINARY order it uses).
 /// Equal keys fall back to the raw name so the order is stable.
 List<String> sortArtistNamesLikeArtistsList(Iterable<String> names) {
-  final keyed = [
-    for (final name in names)
-      (key: utf8.encode(normalizeSearchText(name)), name: name),
-  ]..sort((a, b) {
-      final byKey = _compareBytes(a.key, b.key);
-      return byKey != 0 ? byKey : a.name.compareTo(b.name);
-    });
+  final keyed =
+      [
+        for (final name in names)
+          (key: utf8.encode(normalizeSearchText(name)), name: name),
+      ]..sort((a, b) {
+        final byKey = _compareBytes(a.key, b.key);
+        return byKey != 0 ? byKey : a.name.compareTo(b.name);
+      });
   return [for (final entry in keyed) entry.name];
 }
 
@@ -72,6 +76,7 @@ Future<ArtistImageAutoResult> runArtistImageAutoPass({
   required List<String> names,
   required ArtistImageStore store,
   required http.Client client,
+  AppleArtworkClient? apple,
   required ArtistImageNetwork policy,
   required Future<ArtistNetworkKind> Function() readNetwork,
   required bool Function() stillEnabled,
@@ -136,10 +141,29 @@ Future<ArtistImageAutoResult> runArtistImageAutoPass({
       final ticket = store.ticketFor(key);
       if (!await allowed()) return stop(stopReason!);
 
-      final List<DeezerArtist> artists;
-      try {
-        artists = await DeezerArtistSearch(client).search(name);
-      } on DeezerUnavailable {
+      // Apple first when it is configured; Deezer when Apple fails or has no
+      // usable portrait for the name. A Deezer failure stops the pass. An Apple
+      // failure without a match leaves the name unrecorded for a later pass.
+      ArtistPhotoCandidate? match;
+      var appleFailed = false;
+      var deezerFailed = false;
+      if (apple != null) {
+        try {
+          match = _exactPhoto(name, await applePhotoCandidates(apple, name));
+        } on AppleArtworkUnavailable {
+          appleFailed = true;
+        }
+      }
+      if (match == null) {
+        try {
+          match = _exactPhoto(name, await deezerPhotoCandidates(client, name));
+        } on DeezerUnavailable {
+          deezerFailed = true;
+        }
+      }
+
+      if (!await allowed()) return stop(stopReason!);
+      if (match == null && deezerFailed) {
         return stop(
           !stillEnabled()
               ? ArtistImageAutoStop.disabled
@@ -147,17 +171,8 @@ Future<ArtistImageAutoResult> runArtistImageAutoPass({
         );
       }
 
-      if (!await allowed()) return stop(stopReason!);
-      DeezerArtist? match;
-      for (final artist in artists) {
-        if (isExactArtistMatch(name, artist.name) &&
-            artist.pictureUrl != null) {
-          match = artist;
-          break;
-        }
-      }
-
       if (match == null) {
+        if (appleFailed) continue;
         final result = await store.recordWithoutPhoto(
           key,
           ArtistImageStatus.notFound,
@@ -182,7 +197,7 @@ Future<ArtistImageAutoResult> runArtistImageAutoPass({
         }
         final result = await store.savePhoto(
           key: key,
-          artist: match,
+          deezerId: match.deezerId,
           bytes: bytes,
           status: ArtistImageStatus.auto,
           ticket: ticket,
@@ -206,4 +221,18 @@ Future<ArtistImageAutoResult> runArtistImageAutoPass({
   } finally {
     flush();
   }
+}
+
+/// The first candidate with a portrait whose name matches [name] exactly.
+ArtistPhotoCandidate? _exactPhoto(
+  String name,
+  List<ArtistPhotoCandidate> found,
+) {
+  for (final candidate in found) {
+    if (candidate.pictureUrl != null &&
+        isExactArtistMatch(name, candidate.name)) {
+      return candidate;
+    }
+  }
+  return null;
 }

@@ -60,7 +60,7 @@ void main() {
       final store = _store(dir);
       await store.savePhoto(
         key: artistImageKey('Sample Artist'),
-        artist: _artist(),
+        deezerId: _artist().id,
         bytes: _bytes,
         status: ArtistImageStatus.auto,
       );
@@ -80,13 +80,13 @@ void main() {
     final key = artistImageKey('Sample Artist');
     await store.savePhoto(
       key: key,
-      artist: _artist(id: 1),
+      deezerId: _artist(id: 1).id,
       bytes: _bytes,
       status: ArtistImageStatus.auto,
     );
     await store.savePhoto(
       key: key,
-      artist: _artist(id: 2),
+      deezerId: _artist(id: 2).id,
       bytes: _bytes,
       status: ArtistImageStatus.manual,
     );
@@ -106,7 +106,7 @@ void main() {
       final key = artistImageKey('Sample Artist');
       await store.savePhoto(
         key: key,
-        artist: _artist(),
+        deezerId: _artist().id,
         bytes: _bytes,
         status: ArtistImageStatus.manual,
       );
@@ -125,7 +125,7 @@ void main() {
     final store = _store(dir);
     await store.savePhoto(
       key: 'a',
-      artist: _artist(),
+      deezerId: _artist().id,
       bytes: _bytes,
       status: ArtistImageStatus.auto,
     );

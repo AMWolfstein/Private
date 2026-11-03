@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:sistrum/core/models/local_library_item.dart';
+import 'package:sistrum/providers/animated_artwork/animated_artwork_providers.dart';
 import 'package:sistrum/providers/library/library_tag_credits_provider.dart';
 import 'package:sistrum/services/library/browse/library_tag_credits.dart';
 import 'package:sistrum/providers/library/library_database_provider.dart';
@@ -99,6 +100,7 @@ final artistImageAutoDownloadProvider = Provider<void>((ref) {
         names: names,
         store: ref.read(artistImageStoreProvider),
         client: client,
+        apple: ref.read(appleArtworkClientProvider),
         policy: ArtistImageNetwork.fromStored(network),
         readNetwork: readArtistNetworkKind,
         stillEnabled: () => active,
@@ -148,6 +150,7 @@ final artistPageImageLookupProvider = Provider.autoDispose
             names: [artistName],
             store: ref.read(artistImageStoreProvider),
             client: client,
+            apple: ref.read(appleArtworkClientProvider),
             policy: ArtistImageNetwork.fromStored(
               ref.read(settingsProvider.select((s) => s.artistImagesNetwork)),
             ),

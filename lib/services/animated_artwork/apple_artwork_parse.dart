@@ -153,9 +153,9 @@ String _artworkUrl(Map<String, dynamic>? artwork, int size) {
 }
 
 /// The best still for a catalog entry, sized for a list row.
-String? appleStaticPreview(Map<String, dynamic>? attributes) {
+String? appleStaticPreview(Map<String, dynamic>? attributes, {int size = 600}) {
   final artwork = _asMap(attributes?['artwork']);
-  final url = _artworkUrl(artwork, 600);
+  final url = _artworkUrl(artwork, size);
   return url.isEmpty ? null : url;
 }
 
@@ -230,7 +230,11 @@ List<AppleArtworkCandidate> parseAppleSearchResults(Object? json) {
           trackCount: attributes?['trackCount'] is int
               ? attributes!['trackCount'] as int
               : null,
-          previewUrl: appleStaticPreview(attributes),
+          // Artist photos are shown larger, like Deezer's 1000 px pictures.
+          previewUrl: appleStaticPreview(
+            attributes,
+            size: entry.kind == AppleArtworkKind.artist ? 1000 : 600,
+          ),
         ),
       );
     }
