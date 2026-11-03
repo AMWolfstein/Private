@@ -106,9 +106,7 @@ void main() {
           find.byType(AlbumPlayActions),
         );
         final loved = actions.leadingAction! as HeaderCircleButton;
-        final playlist = actions.trailingAction! as HeaderCircleButton;
-        expect(loved.tonal, isTrue);
-        expect(playlist.tonal, isTrue);
+        expect(actions.trailingAction, isA<HeaderCircleButton>());
         expect(loved.iconColor, AppTheme.build(brightness).colorScheme.error);
         final l10n = tester.element(find.byType(LocalCollectionActions)).l10n;
         await tester.tap(find.byTooltip(l10n.trackOptionRemoveFromLoved));

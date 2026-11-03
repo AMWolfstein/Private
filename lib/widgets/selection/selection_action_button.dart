@@ -30,7 +30,6 @@ class SelectionActionButton extends StatelessWidget {
           constraints: const BoxConstraints(minHeight: 48),
           child: AppActionButton(
             outlined: true,
-            tonal: true,
             onPressed: onPressed,
             icon: Icon(icon),
             label: Text(label, maxLines: 2, overflow: TextOverflow.ellipsis),

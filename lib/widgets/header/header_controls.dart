@@ -46,7 +46,6 @@ class HeaderCircleButton extends ConsumerWidget {
     required this.tooltip,
     required this.onPressed,
     this.iconColor,
-    this.tonal = false,
     this.buttonSize,
     this.iconSize = 22,
   });
@@ -58,9 +57,6 @@ class HeaderCircleButton extends ConsumerWidget {
   /// Overrides the palette foreground, e.g. to mark an active "loved" state.
   final Color? iconColor;
 
-  /// Uses the same translucent fill as the local album's Play/Shuffle pills.
-  final bool tonal;
-
   final double? buttonSize;
   final double iconSize;
 
@@ -68,31 +64,6 @@ class HeaderCircleButton extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final scheme = HeaderPalette.of(context);
     {
-      if (tonal) {
-        return Tooltip(
-          message: tooltip,
-          child: SizedBox.square(
-            dimension: buttonSize ?? kAppHeaderControlSize,
-            child: CupertinoButton(
-              padding: EdgeInsets.zero,
-              borderRadius: BorderRadius.circular(
-                (buttonSize ?? kAppHeaderControlSize) / 2,
-              ),
-              color: scheme.onSurface.withValues(
-                alpha: scheme.brightness == Brightness.dark ? 0.10 : 0.06,
-              ),
-              onPressed: onPressed,
-              child: Icon(
-                appIconFor(icon),
-                size: iconSize,
-                color: onPressed == null
-                    ? scheme.onSurfaceVariant
-                    : iconColor ?? scheme.primary,
-              ),
-            ),
-          ),
-        );
-      }
       final blurEnabled = ref.watch(appBlurEnabledProvider);
       final button = IconButton(
         onPressed: onPressed,

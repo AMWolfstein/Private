@@ -114,7 +114,6 @@ class _ProfileSettingsPageState extends ConsumerState<ProfileSettingsPage> {
                         icon: const Icon(Icons.photo_library_outlined),
                         label: Text(context.l10n.profileChangePhoto),
                         outlined: true,
-                        tonal: true,
                       ),
                     ),
                     if (hasPhoto)

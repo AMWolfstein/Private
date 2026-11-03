@@ -198,7 +198,6 @@ class _LocalArtistScreenState extends ConsumerState<LocalArtistScreen> {
                       buttonSize: 50,
                       iconSize: 24,
                       iconColor: colors.primary,
-                      tonal: true,
                       tooltip: favorite
                           ? context.l10n.artistOptionRemoveFromFavorites
                           : context.l10n.appFavorite,
@@ -259,7 +258,6 @@ class _LocalArtistScreenState extends ConsumerState<LocalArtistScreen> {
                       buttonSize: 50,
                       iconSize: 24,
                       iconColor: colors.primary,
-                      tonal: true,
                       tooltip: context.l10n.actionShuffle,
                       onPressed:
                           tracks?.items.isNotEmpty == true && !_startingPlayback

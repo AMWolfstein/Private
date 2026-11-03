@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sistrum/core/theme/app_icons.dart';
-import 'package:sistrum/core/theme/app_theme.dart';
 import 'package:sistrum/widgets/glass/thumb/app_glass_surface.dart';
 
 /// Shared sheet actions follow the selected design on every platform.
@@ -14,7 +13,6 @@ class AppActionButton extends StatelessWidget {
     this.style,
     this.outlined = false,
     this.glass = true,
-    this.tonal = false,
     this.isDestructive = false,
     this.fontSize = 17,
   });
@@ -25,7 +23,6 @@ class AppActionButton extends StatelessWidget {
   final ButtonStyle? style;
   final bool outlined;
   final bool glass;
-  final bool tonal;
   final bool isDestructive;
   final double fontSize;
 
@@ -43,15 +40,9 @@ class AppActionButton extends StatelessWidget {
       // Keeps short actions a 48dp tap target.
       minimumSize: const Size(48, 48),
       borderRadius: BorderRadius.circular(28),
-      color: prominent
-          ? scheme.primary
-          : tonal
-          ? AppTheme.controlFill(context)
-          : Colors.transparent,
-      disabledColor: !prominent && !tonal && !glass
+      color: prominent ? scheme.primary : Colors.transparent,
+      disabledColor: !prominent && !glass
           ? Colors.transparent
-          : tonal && !prominent
-          ? AppTheme.controlFill(context, enabled: false)
           : scheme.surfaceContainerHighest,
       onPressed: onPressed,
       child: DefaultTextStyle(
@@ -77,9 +68,9 @@ class AppActionButton extends StatelessWidget {
         ),
       ),
     );
-    // These buttons sit inside glass sheets/groups; avoid another blur pass.
-    return prominent || tonal || !glass
+    // Outlined buttons are Tinted Lite glass like every other floating control.
+    return prominent || !glass
         ? action
-        : AppGlass(radius: 28, blurEnabled: false, child: action);
+        : AppGlass(radius: 28, blurEnabled: true, child: action);
   }
 }

@@ -51,7 +51,6 @@ class _LocalCollectionActionsState
       leadingAction: HeaderCircleButton(
         icon: loved ? CupertinoIcons.heart_fill : CupertinoIcons.heart,
         buttonSize: 48,
-        tonal: true,
         iconColor: loved ? Theme.of(context).colorScheme.error : null,
         tooltip: loved
             ? context.l10n.trackOptionRemoveFromLoved
@@ -79,7 +78,6 @@ class _LocalCollectionActionsState
       trailingAction: HeaderCircleButton(
         icon: CupertinoIcons.text_badge_plus,
         buttonSize: 48,
-        tonal: true,
         tooltip: context.l10n.collectionAddToPlaylist,
         onPressed: widget.tracks.isEmpty
             ? null
