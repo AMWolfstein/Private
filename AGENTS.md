@@ -150,7 +150,7 @@ keys and backups stay compatible.
 
 Album-style collection headers (albums, playlists and Loved) use one centered
 row ordered left to right: Loved, Play/Pause, Shuffle, Add to playlist. Reuse the filled
-Play and translucent Shuffle pills with compact sizing and at least 48px touch targets;
+Play and Tinted Lite glass Shuffle pills with compact sizing and at least 48px touch targets;
 keep the outer icons in the same row, including RTL. Do not move Shuffle into the toolbar.
 The artist header retains its separate centered-Play design.
 
