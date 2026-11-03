@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:http/http.dart' as http;
@@ -5,11 +6,35 @@ import 'package:sistrum/services/artist_images/artist_image_download.dart';
 import 'package:sistrum/services/artist_images/artist_image_network.dart';
 import 'package:sistrum/services/artist_images/artist_image_store.dart';
 import 'package:sistrum/services/artist_images/deezer_artist_search.dart';
+import 'package:sistrum/services/library/database/sqlite_helpers.dart'
+    show normalizeSearchText;
 
 /// Names that never get a photo.
 bool isSkippedArtistName(String name) {
   final key = artistImageKey(name);
   return key.isEmpty || key == 'various artists' || key == 'unknown artist';
+}
+
+/// Orders names exactly like the Artists list: by the library's normalized
+/// name key, compared as UTF-8 bytes (the SQLite BINARY order it uses).
+/// Equal keys fall back to the raw name so the order is stable.
+List<String> sortArtistNamesLikeArtistsList(Iterable<String> names) {
+  final keyed = [
+    for (final name in names)
+      (key: utf8.encode(normalizeSearchText(name)), name: name),
+  ]..sort((a, b) {
+      final byKey = _compareBytes(a.key, b.key);
+      return byKey != 0 ? byKey : a.name.compareTo(b.name);
+    });
+  return [for (final entry in keyed) entry.name];
+}
+
+int _compareBytes(List<int> a, List<int> b) {
+  final length = a.length < b.length ? a.length : b.length;
+  for (var i = 0; i < length; i++) {
+    if (a[i] != b[i]) return a[i] - b[i];
+  }
+  return a.length - b.length;
 }
 
 /// Why a pass ended and what it changed.

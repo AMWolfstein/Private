@@ -107,6 +107,9 @@ class _LocalArtistScreenState extends ConsumerState<LocalArtistScreen> {
     final cover = featured != null
         ? featured.cover
         : widget.coverPath ?? tracks?.items.firstOrNull?.coverPath;
+    // Looks the artist up on Deezer once per open while automatic lookup is on;
+    // a found photo bumps the revision and this page rebuilds with it.
+    ref.watch(artistPageImageLookupProvider(widget.artistName));
     final artistPhoto = ref
         .watch(artistImageFileProvider(widget.artistName))
         .asData

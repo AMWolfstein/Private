@@ -83,18 +83,17 @@ final artistImageAutoDownloadProvider = Provider<void>((ref) {
     activeClient = client;
     try {
       final songs = await ref.read(libraryDatabaseProvider).listVisibleSongs();
-      final names =
-          songs
-              .expand(
-                (Map<String, dynamic> row) => splitTagCredits(
-                  LocalLibraryItem.fromJson(row).artistName,
-                  TagCreditField.artist,
-                  rules,
-                ),
-              )
-              .toSet()
-              .toList()
-            ..sort();
+      final names = sortArtistNamesLikeArtistsList(
+        songs
+            .expand(
+              (Map<String, dynamic> row) => splitTagCredits(
+                LocalLibraryItem.fromJson(row).artistName,
+                TagCreditField.artist,
+                rules,
+              ),
+            )
+            .toSet(),
+      );
       if (!active) return;
       await runArtistImageAutoPass(
         names: names,
@@ -123,6 +122,56 @@ final artistImageAutoDownloadProvider = Provider<void>((ref) {
   );
   ref.onDispose(timer.cancel);
 });
+
+/// Looks up one artist's photo when its page opens, while the automatic lookup
+/// setting is on and the network allows it. The artist page watches this, so
+/// it runs once per open and stops when the page closes.
+final artistPageImageLookupProvider = Provider.autoDispose
+    .family<void, String>((ref, artistName) {
+      var active = true;
+      http.Client? activeClient;
+      ref.onDispose(() {
+        active = false;
+        activeClient?.close();
+      });
+      if (!ref.read(
+        settingsProvider.select((s) => s.artistImagesAutoDownload),
+      )) {
+        return;
+      }
+
+      Future<void> lookup() async {
+        final client = http.Client();
+        activeClient = client;
+        try {
+          await runArtistImageAutoPass(
+            names: [artistName],
+            store: ref.read(artistImageStoreProvider),
+            client: client,
+            policy: ArtistImageNetwork.fromStored(
+              ref.read(settingsProvider.select((s) => s.artistImagesNetwork)),
+            ),
+            readNetwork: readArtistNetworkKind,
+            stillEnabled: () =>
+                active &&
+                ref.read(
+                  settingsProvider.select((s) => s.artistImagesAutoDownload),
+                ),
+            pause: Duration.zero,
+            onChanged: () {
+              if (active) ref.read(artistImageRevisionProvider.notifier).bump();
+            },
+          );
+        } catch (error) {
+          _log.w('Artist page photo lookup stopped: $error');
+        } finally {
+          client.close();
+          if (identical(activeClient, client)) activeClient = null;
+        }
+      }
+
+      unawaited(lookup());
+    });
 
 /// Bytes used by the artist photo folder, for the Cache settings page.
 final artistImageBytesProvider = FutureProvider.autoDispose<int>((ref) {
