@@ -280,7 +280,7 @@ class _FindAnimatedArtworkSheetState
           setState(() => _message = l10n.animatedArtworkSaveFailed);
       }
     } on AnimatedVideoDownloadException catch (error) {
-      AppLogger('AnimatedArtwork').w('Video save failed: ${error.failure}');
+      AppLogger('AnimatedArtwork').w('Video save failed: $error');
       if (!_alive) return;
       setState(() {
         _message = switch (error.failure) {
