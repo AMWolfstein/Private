@@ -20,11 +20,17 @@ class AppArtistSurface extends StatefulWidget {
     required this.child,
 
     this.neutralActions = false,
+    this.liveBackdrop = false,
   });
 
   final String? imageSource;
 
   final Widget child;
+
+  /// A playing video covers the photo, so the header controls must blur what
+  /// is actually painted behind them: they read the live backdrop instead of
+  /// the photo's pre-blurred ground.
+  final bool liveBackdrop;
 
   /// Album and playlist actions use white controls over the artwork tint.
   final bool neutralActions;
@@ -98,11 +104,12 @@ class _AppArtistSurfaceState extends State<AppArtistSurface> {
                   // Surfaces shown without Riverpod (previews) have no glass
                   // settings, and so no ground.
                   child:
-                      context
-                              .findAncestorWidgetOfExactType<
-                                UncontrolledProviderScope
-                              >() ==
-                          null
+                      widget.liveBackdrop ||
+                          context
+                                  .findAncestorWidgetOfExactType<
+                                    UncontrolledProviderScope
+                                  >() ==
+                              null
                       ? widget.child
                       : Consumer(
                           builder: (context, ref, child) => AppPageGround(

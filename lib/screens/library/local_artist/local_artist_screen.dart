@@ -137,6 +137,7 @@ class _LocalArtistScreenState extends ConsumerState<LocalArtistScreen> {
     final favorite = favoriteEntry != null;
     return AppArtistSurface(
       imageSource: artistPhoto?.path ?? cover,
+      liveBackdrop: artistVideo != null,
       child: Builder(
         builder: (context) {
           final colors = Theme.of(context).colorScheme;
