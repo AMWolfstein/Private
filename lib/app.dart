@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:sistrum/core/constants/app_info.dart';
 import 'package:sistrum/screens/shell/main_shell.dart';
 import 'package:sistrum/screens/setup/setup_screen.dart';
+import 'package:sistrum/providers/artist_images/artist_image_providers.dart';
 import 'package:sistrum/providers/settings/settings_provider.dart';
 import 'package:sistrum/core/navigation/app_navigation.dart';
 import 'package:sistrum/services/platform/app_orientation.dart';
@@ -170,6 +171,7 @@ class SistrumApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     ref.watch(equalizerProvider);
+    ref.watch(artistImageAutoDownloadProvider);
     final router = ref.watch(_routerProvider);
     final localeString = ref.watch(settingsProvider.select((s) => s.locale));
     final scrollBehavior = disableOverscrollEffects

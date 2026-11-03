@@ -1,0 +1,271 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:http/http.dart' as http;
+import 'package:sistrum/core/theme/app_icons.dart';
+import 'package:sistrum/l10n/l10n.dart';
+import 'package:sistrum/providers/artist_images/artist_image_providers.dart';
+import 'package:sistrum/services/artist_images/artist_image_download.dart';
+import 'package:sistrum/services/artist_images/artist_image_store.dart';
+import 'package:sistrum/services/artist_images/deezer_artist_search.dart';
+import 'package:sistrum/widgets/player/artwork/app_player_ground.dart';
+import 'package:sistrum/widgets/primitives/app_bottom_sheet.dart';
+import 'package:sistrum/widgets/primitives/app_context_menu.dart';
+
+/// Opens the artist's three-dot menu. Find artist image opens the search
+/// sheet; Reset image puts the album cover back.
+Future<void> showArtistImageMenu(
+  BuildContext context,
+  WidgetRef ref,
+  String artistName, {
+  required bool hasPhoto,
+  Rect? anchor,
+}) async {
+  final l10n = context.l10n;
+  final action = await showAppContextMenu<String>(
+    context: context,
+    anchor: anchor,
+    fitToAnchorSpace: true,
+    builder: (menuContext) => AppContextMenu(
+      groups: [
+        [
+          AppMenuAction(
+            icon: appIconFor(Icons.person_search_outlined),
+            label: l10n.artistOptionFindImage,
+            onPressed: () => Navigator.of(menuContext).pop('find'),
+          ),
+          if (hasPhoto)
+            AppMenuAction(
+              icon: appIconFor(Icons.restart_alt),
+              label: l10n.artistOptionResetImage,
+              onPressed: () => Navigator.of(menuContext).pop('reset'),
+            ),
+        ],
+      ],
+    ),
+  );
+  if (!context.mounted) return;
+  if (action == 'find') {
+    final saved = await showFindArtistImageSheet(context, artistName);
+    if (saved == true) ref.invalidate(artistImageFileProvider(artistName));
+  } else if (action == 'reset') {
+    await ref
+        .read(artistImageStoreProvider)
+        .recordWithoutPhoto(
+          artistImageKey(artistName),
+          ArtistImageStatus.reset,
+        );
+    ref.read(artistImageRevisionProvider.notifier).bump();
+  }
+}
+
+/// Search Deezer for an artist's photo and use the one the user picks.
+/// Returns true when a photo was saved.
+Future<bool?> showFindArtistImageSheet(
+  BuildContext context,
+  String artistName,
+) {
+  return showAppScrollableBottomSheet<bool>(
+    context: context,
+    title: context.l10n.artistImageFindTitle,
+    builder: (context, scrollController) => FindArtistImageSheet(
+      artistName: artistName,
+      scrollController: scrollController,
+    ),
+  );
+}
+
+class FindArtistImageSheet extends ConsumerStatefulWidget {
+  const FindArtistImageSheet({
+    super.key,
+    required this.artistName,
+    required this.scrollController,
+  });
+
+  final String artistName;
+  final ScrollController scrollController;
+
+  @override
+  ConsumerState<FindArtistImageSheet> createState() =>
+      _FindArtistImageSheetState();
+}
+
+class _FindArtistImageSheetState extends ConsumerState<FindArtistImageSheet> {
+  late final _query = TextEditingController(text: widget.artistName);
+  List<DeezerArtist>? _results;
+  DeezerArtist? _preview;
+  bool _searching = false;
+  bool _busy = false;
+  String? _message;
+
+  @override
+  void dispose() {
+    _query.dispose();
+    super.dispose();
+  }
+
+  Future<void> _search() async {
+    final l10n = context.l10n;
+    final text = _query.text.trim();
+    if (text.isEmpty) return;
+    setState(() {
+      _searching = true;
+      _message = null;
+      _preview = null;
+    });
+    final client = http.Client();
+    try {
+      final results = await DeezerArtistSearch(client).search(text);
+      if (mounted) setState(() => _results = results);
+    } on DeezerUnavailable {
+      if (mounted) setState(() => _message = l10n.artistImageSearchFailed);
+    } finally {
+      client.close();
+      if (mounted) setState(() => _searching = false);
+    }
+  }
+
+  Future<void> _use(DeezerArtist artist) async {
+    final l10n = context.l10n;
+    final url = artist.pictureUrl;
+    if (url == null) return;
+    setState(() {
+      _busy = true;
+      _message = null;
+    });
+    final client = http.Client();
+    try {
+      final bytes = await downloadArtistImage(client, url);
+      await ref
+          .read(artistImageStoreProvider)
+          .savePhoto(
+            key: artistImageKey(widget.artistName),
+            artist: artist,
+            bytes: bytes,
+            status: ArtistImageStatus.manual,
+          );
+      ref.read(artistImageRevisionProvider.notifier).bump();
+      if (mounted) Navigator.of(context).pop(true);
+    } on ArtistImageDownloadFailed {
+      if (mounted) {
+        setState(() {
+          _busy = false;
+          _message = l10n.artistImageDownloadFailed;
+        });
+      }
+    } finally {
+      client.close();
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final preview = _preview;
+    return preview == null ? _buildSearch() : _buildPreview(preview);
+  }
+
+  Widget _buildSearch() {
+    final l10n = context.l10n;
+    final theme = Theme.of(context);
+    final results = _results;
+    return ListView(
+      controller: widget.scrollController,
+      padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
+      children: [
+        TextField(
+          controller: _query,
+          textInputAction: TextInputAction.search,
+          onSubmitted: (_) => _search(),
+          decoration: InputDecoration(labelText: l10n.artistImageFindTitle),
+        ),
+        const SizedBox(height: 12),
+        FilledButton(
+          onPressed: _searching ? null : _search,
+          child: Text(l10n.artistImageSearch),
+        ),
+        if (_message != null) ...[
+          const SizedBox(height: 12),
+          Text(_message!, style: theme.textTheme.bodyMedium),
+        ],
+        const SizedBox(height: 12),
+        if (_searching)
+          const LinearProgressIndicator()
+        else if (results != null && results.isEmpty)
+          Text(l10n.artistImageNoResults)
+        else if (results != null)
+          for (final artist in results)
+            ListTile(
+              contentPadding: EdgeInsets.zero,
+              leading: CircleAvatar(
+                backgroundImage: artist.pictureUrl == null
+                    ? null
+                    : appCoverProvider(artist.pictureUrl),
+                child: artist.pictureUrl == null
+                    ? const Icon(Icons.person_outline)
+                    : null,
+              ),
+              title: Text(
+                artist.name,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+              subtitle: Text(
+                artist.pictureUrl == null
+                    ? l10n.artistImageNoPhoto
+                    : l10n.artistImageCounts(artist.fans, artist.albums),
+              ),
+              onTap: artist.pictureUrl == null
+                  ? null
+                  : () => setState(() => _preview = artist),
+            ),
+      ],
+    );
+  }
+
+  Widget _buildPreview(DeezerArtist artist) {
+    final l10n = context.l10n;
+    final theme = Theme.of(context);
+    return ListView(
+      controller: widget.scrollController,
+      padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
+      children: [
+        Row(
+          children: [
+            IconButton(
+              tooltip: MaterialLocalizations.of(context).backButtonTooltip,
+              icon: const BackButtonIcon(),
+              onPressed: _busy ? null : () => setState(() => _preview = null),
+            ),
+            Expanded(
+              child: Text(
+                artist.name,
+                style: theme.textTheme.titleMedium,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 8),
+        AspectRatio(
+          aspectRatio: 1,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(12),
+            child: Image(
+              image: appCoverProvider(artist.pictureUrl)!,
+              fit: BoxFit.cover,
+            ),
+          ),
+        ),
+        const SizedBox(height: 16),
+        FilledButton(
+          onPressed: _busy ? null : () => _use(artist),
+          child: Text(l10n.artistImageUse),
+        ),
+        if (_message != null) ...[
+          const SizedBox(height: 12),
+          Text(_message!, style: theme.textTheme.bodyMedium),
+        ],
+      ],
+    );
+  }
+}

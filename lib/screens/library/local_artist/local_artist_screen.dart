@@ -21,6 +21,8 @@ import 'package:sistrum/utils/layout/release_date_display.dart';
 import 'package:sistrum/widgets/animation/animation_skeletons.dart';
 import 'package:sistrum/widgets/cover/cached_cover_image.dart';
 import 'package:sistrum/widgets/header/app_artist_header.dart';
+import 'package:sistrum/providers/artist_images/artist_image_providers.dart';
+import 'package:sistrum/widgets/artist_images/find_artist_image_sheet.dart';
 import 'package:sistrum/widgets/header/header_controls.dart';
 import 'package:sistrum/widgets/library/local_song_menu.dart';
 import 'package:sistrum/widgets/library/local_song_row.dart';
@@ -101,6 +103,10 @@ class _LocalArtistScreenState extends ConsumerState<LocalArtistScreen> {
     final cover = featured != null
         ? featured.cover
         : widget.coverPath ?? tracks?.items.firstOrNull?.coverPath;
+    final artistPhoto = ref
+        .watch(artistImageFileProvider(widget.artistName))
+        .asData
+        ?.value;
     final artistId = LibraryDatabase.normalizeLookupText(widget.artistName);
     final favorites = ref.watch(
       libraryCollectionsProvider.select((state) => state.favoriteArtists),
@@ -113,7 +119,7 @@ class _LocalArtistScreenState extends ConsumerState<LocalArtistScreen> {
         .firstOrNull;
     final favorite = favoriteEntry != null;
     return AppArtistSurface(
-      imageSource: cover,
+      imageSource: artistPhoto?.path ?? cover,
       child: Builder(
         builder: (context) {
           final colors = Theme.of(context).colorScheme;
@@ -171,6 +177,25 @@ class _LocalArtistScreenState extends ConsumerState<LocalArtistScreen> {
                           }
                         }
                       },
+                    ),
+                    Builder(
+                      builder: (buttonContext) => HeaderCircleButton(
+                        icon: Icons.more_horiz,
+                        tooltip: MaterialLocalizations.of(
+                          context,
+                        ).moreButtonTooltip,
+                        buttonSize: 50,
+                        iconSize: 24,
+                        iconColor: colors.primary,
+                        tonal: true,
+                        onPressed: () => showArtistImageMenu(
+                          context,
+                          ref,
+                          widget.artistName,
+                          hasPhoto: artistPhoto != null,
+                          anchor: appMenuAnchor(buttonContext),
+                        ),
+                      ),
                     ),
                     CupertinoButton(
                       key: const ValueKey('artist-play'),

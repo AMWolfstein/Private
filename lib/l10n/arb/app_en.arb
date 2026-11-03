@@ -3724,5 +3724,74 @@
   "artistImagesNetworkBoth": "Wi-Fi and mobile data",
   "@artistImagesNetworkBoth": {
     "description": "Artist images: allowed network option"
+  },
+  "artistOptionFindImage": "Find artist image",
+  "@artistOptionFindImage": {
+    "description": "Artist menu: opens the search for an artist photo"
+  },
+  "artistOptionResetImage": "Reset image",
+  "@artistOptionResetImage": {
+    "description": "Artist menu: removes the chosen photo and shows the album cover"
+  },
+  "artistImageFindTitle": "Find artist image",
+  "@artistImageFindTitle": {
+    "description": "Title of the find artist image sheet"
+  },
+  "artistImageSearch": "Search",
+  "@artistImageSearch": {
+    "description": "Find artist image: search button"
+  },
+  "artistImageUse": "Use this image",
+  "@artistImageUse": {
+    "description": "Find artist image: saves the previewed photo"
+  },
+  "artistImageNoResults": "No artists were found on Deezer.",
+  "@artistImageNoResults": {
+    "description": "Find artist image: empty search result"
+  },
+  "artistImageSearchFailed": "Deezer could not be reached. Try again.",
+  "@artistImageSearchFailed": {
+    "description": "Find artist image: the search could not finish"
+  },
+  "artistImageDownloadFailed": "The photo could not be downloaded.",
+  "@artistImageDownloadFailed": {
+    "description": "Find artist image: the photo download failed"
+  },
+  "artistImageNoPhoto": "No photo",
+  "@artistImageNoPhoto": {
+    "description": "Find artist image: a result without a portrait"
+  },
+  "artistImageCounts": "{fans} fans · {albums} albums",
+  "@artistImageCounts": {
+    "description": "Find artist image: popularity line for a result",
+    "placeholders": {
+      "fans": {
+        "type": "int"
+      },
+      "albums": {
+        "type": "int"
+      }
+    }
+  },
+  "cacheArtistImages": "Artist images",
+  "@cacheArtistImages": {
+    "description": "Cache settings: artist photo row title"
+  },
+  "cacheArtistImagesDesc": "Photos found on Deezer for artists",
+  "@cacheArtistImagesDesc": {
+    "description": "Cache settings: artist photo row description"
+  },
+  "cacheArtistImagesSize": "Using {size}",
+  "@cacheArtistImagesSize": {
+    "description": "Cache settings: bytes used by artist photos",
+    "placeholders": {
+      "size": {
+        "type": "String"
+      }
+    }
+  },
+  "artistImageAutoTitle": "Download automatically",
+  "@artistImageAutoTitle": {
+    "description": "Artist images: switch for background downloads"
   }
 }

@@ -1,4 +1,5 @@
 import 'package:sistrum/screens/library/local_artist/local_artist_providers.dart';
+import 'package:sistrum/providers/artist_images/artist_image_providers.dart';
 import 'package:sistrum/providers/library/library_sort_provider.dart';
 import 'package:sistrum/widgets/library/app_library_sort.dart';
 import 'package:sistrum/widgets/cover/cached_cover_image.dart';
@@ -142,7 +143,9 @@ class _ArtistThumbnail extends ConsumerWidget {
         .watch(localArtistFeaturedReleaseProvider(artist.name))
         .asData
         ?.value;
-    final imageUrl = featured != null ? featured.cover : artist.imageUrl;
+    final photo = ref.watch(artistImageFileProvider(artist.name)).asData?.value;
+    final imageUrl =
+        photo?.path ?? (featured != null ? featured.cover : artist.imageUrl);
     return ClipOval(
       child: imageUrl != null && imageUrl.isNotEmpty
           ? CachedCoverImage(

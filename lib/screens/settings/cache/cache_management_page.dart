@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:sistrum/widgets/primitives/app_alert_dialog.dart';
 import 'package:sistrum/widgets/primitives/app_action_button.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sistrum/providers/artist_images/artist_image_providers.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:sistrum/l10n/l10n.dart';
@@ -44,6 +45,7 @@ class _CacheManagementPageState extends ConsumerState<CacheManagementPage> {
 
   @override
   Widget build(BuildContext context) {
+    final artistImageBytes = ref.watch(artistImageBytesProvider);
     final colorScheme = Theme.of(context).colorScheme;
 
     final overview = _overview;
@@ -193,6 +195,25 @@ class _CacheManagementPageState extends ConsumerState<CacheManagementPage> {
                         ),
                       ),
                     ),
+                  SettingsItem(
+                    icon: Icons.person_search_outlined,
+                    title: context.l10n.cacheArtistImages,
+                    subtitle: _buildSubtitle(
+                      context.l10n.cacheArtistImagesDesc,
+                      context.l10n.cacheArtistImagesSize(
+                        formatBytes(artistImageBytes.asData?.value ?? 0),
+                      ),
+                    ),
+                    trailing: _buildClearTrailing(
+                      'clear_artist_images',
+                      context.l10n.cacheArtistImages,
+                      () => _confirmAndRunAction(
+                        actionKey: 'clear_artist_images',
+                        targetLabel: context.l10n.cacheArtistImages,
+                        action: () => clearArtistImages(ref),
+                      ),
+                    ),
+                  ),
                   SettingsItem(
                     icon: Icons.library_music_outlined,
                     title: context.l10n.cacheLibraryCover,
