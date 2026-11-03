@@ -32,7 +32,9 @@ class AppleArtworkClient {
   String? _token;
   int _tokenExpiresAtMs = 0;
 
-  static const _maxPageBytes = 2 * 1024 * 1024;
+  // The browse page is only read to find its scripts, and Apple's page was
+  // 2.4 MiB on 2026-11-03, so the cap sits well above that and stays bounded.
+  static const _maxPageBytes = 8 * 1024 * 1024;
   static const _maxBundleBytes = 12 * 1024 * 1024;
   static const _maxBundles = 3;
   static const _userAgent =

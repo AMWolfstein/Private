@@ -80,6 +80,34 @@ void main() {
     expect(apple.tokensUsed, ['aaa.bbb.ccc', 'aaa.bbb.ccc']);
   });
 
+  test('a browse page larger than 2 MiB still reaches its token', () async {
+    // Apple's browse page is about 2.4 MiB and only lists its scripts; the
+    // token sits in the script, so the page must not be refused for size.
+    final apple = _FakeApple(
+      token: 'big.pag.e',
+      pageHtml:
+          '${' ' * (3 * 1024 * 1024)}<script src="/assets/index.js"></script>',
+      bundle: 'devToken=big.pag.e',
+    );
+    final api = AppleArtworkClient(client: apple.build());
+
+    final results = await api.search('x');
+    expect(results.single.id, '42');
+    expect(apple.tokensUsed, ['big.pag.e']);
+  });
+
+  test('a browse page beyond the 8 MiB bound is still refused', () async {
+    final apple = _FakeApple(
+      token: 'a.b.c',
+      pageHtml: ' ' * (9 * 1024 * 1024),
+    );
+    final api = AppleArtworkClient(client: apple.build());
+    await expectLater(
+      api.search('x'),
+      throwsA(isA<AppleArtworkUnavailable>()),
+    );
+  });
+
   test('a token past its expiry is fetched again', () async {
     var now = DateTime.utc(2030, 1, 1);
     final apple = _FakeApple(token: _jwt(now.millisecondsSinceEpoch ~/ 1000 + 600));
