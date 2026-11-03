@@ -68,4 +68,71 @@ void main() {
     expect(playback.played, ['1']);
     expect(tester.takeException(), isNull);
   });
+
+  testWidgets(
+    'tracks follow track numbers, with no Sort and a circled More button',
+    (tester) async {
+      SharedPreferences.setMockInitialValues({});
+      tester.view.physicalSize = const Size(430, 1600);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.reset);
+      // A–Z by title would be Alpha, Bravo, Charlie; track numbers win.
+      final tracks = [
+        for (final (number, name) in [
+          (3, 'Alpha'),
+          (1, 'Bravo'),
+          (2, 'Charlie'),
+        ])
+          LocalLibraryItem(
+            id: '$number',
+            trackName: name,
+            artistName: 'Artist',
+            albumName: 'Album',
+            filePath: '/missing/song-$number.flac',
+            trackNumber: number,
+            scannedAt: DateTime(2026),
+          ),
+      ];
+      await tester.pumpWidget(
+        ProviderScope(
+          child: MaterialApp(
+            theme: AppTheme.build(Brightness.light),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: LocalAlbumScreen(
+              albumName: 'Album',
+              artistName: 'Artist',
+              tracks: tracks,
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      final tops = [
+        for (final name in ['Bravo', 'Charlie', 'Alpha'])
+          tester.getTopLeft(find.text(name).first).dy,
+      ];
+      expect(tops[0], lessThan(tops[1]));
+      expect(tops[1], lessThan(tops[2]));
+
+      final l10n = AppLocalizations.of(
+        tester.element(find.byType(LocalAlbumScreen)),
+      );
+      expect(find.byTooltip(l10n.librarySortTitle), findsNothing);
+      // The header groups direct IconButtons into its glass capsule (the
+      // circle); a wrapped button would be drawn outside it.
+      final capsule = find.byWidgetPredicate(
+        (widget) => widget.runtimeType.toString() == '_HeaderCapsule',
+      );
+      expect(
+        find.descendant(
+          of: capsule,
+          matching: find.widgetWithIcon(IconButton, Icons.more_horiz),
+        ),
+        findsOneWidget,
+      );
+      expect(tester.takeException(), isNull);
+    },
+  );
 }

@@ -45,12 +45,15 @@ extension _LocalAlbumHeader on _LocalAlbumScreenState {
     return AlbumDetailHeader(
       title: widget.albumName,
       appBarActions: [
-        appLibrarySortButton(context, ref, releaseDate: true),
-        Builder(
-          builder: (buttonContext) => IconButton(
-            icon: const Icon(Icons.more_horiz),
-            tooltip: MaterialLocalizations.of(context).moreButtonTooltip,
-            onPressed: () => showAnimatedArtworkMenu(
+        // A direct IconButton so the header puts it in its glass circle.
+        IconButton(
+          key: _albumMenuKey,
+          icon: const Icon(Icons.more_horiz),
+          tooltip: MaterialLocalizations.of(context).moreButtonTooltip,
+          onPressed: () {
+            final buttonContext = _albumMenuKey.currentContext;
+            if (buttonContext == null) return;
+            showAnimatedArtworkMenu(
               context,
               ref,
               target: albumRef,
@@ -59,8 +62,8 @@ extension _LocalAlbumHeader on _LocalAlbumScreenState {
               trackCount: _sortedTracksCache.firstOrNull?.totalTracks,
               hasVideo: videoFile != null,
               anchor: appMenuAnchor(buttonContext),
-            ),
-          ),
+            );
+          },
         ),
       ],
       appBarTitle: isSelectionMode
