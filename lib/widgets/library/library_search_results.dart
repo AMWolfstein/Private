@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:sistrum/core/models/library_collections.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -5,11 +7,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/core/models/local_library_item.dart';
 import 'package:sistrum/core/models/unified_library_item.dart';
+import 'package:sistrum/providers/artist_images/artist_image_providers.dart';
 import 'package:sistrum/providers/library/library_search_provider.dart';
 import 'package:sistrum/providers/playback/music_player_provider.dart';
 import 'package:sistrum/providers/playback/playback_provider.dart';
 import 'package:sistrum/core/navigation/app_screens.dart';
 import 'package:sistrum/services/library/database/library_database.dart';
+import 'package:sistrum/services/artist_images/artist_image_store.dart';
 import 'package:sistrum/services/library/browse/library_search.dart';
 import 'package:sistrum/widgets/library/local_track_batch_actions.dart';
 import 'package:sistrum/widgets/primitives/app_choice_chip.dart';
@@ -243,7 +247,7 @@ class _LibrarySearchResultsState extends ConsumerState<LibrarySearchResults> {
     }
   }
 
-  Widget _row(LibrarySearchHit hit) {
+  Widget _row(LibrarySearchHit hit, Map<String, File> artistPhotos) {
     final icon = switch (hit.kind) {
       LibrarySearchKind.songs => Icons.music_note_outlined,
       LibrarySearchKind.albums => Icons.album_outlined,
@@ -270,9 +274,18 @@ class _LibrarySearchResultsState extends ConsumerState<LibrarySearchResults> {
         ),
         child: SizedBox.square(
           dimension: 52,
-          child: hit.cover?.isNotEmpty == true
-              ? LocalCoverImage(url: hit.cover!, placeholder: fallback)
-              : fallback(context),
+          child: switch (hit.kind) {
+            LibrarySearchKind.artists
+                when artistPhotos[artistImageKey(hit.title)] != null =>
+              Image(
+                image: FileImage(artistPhotos[artistImageKey(hit.title)]!),
+                fit: BoxFit.cover,
+              ),
+            _ =>
+              hit.cover?.isNotEmpty == true
+                  ? LocalCoverImage(url: hit.cover!, placeholder: fallback)
+                  : fallback(context),
+          },
         ),
       ),
       title: hit.title,
@@ -322,6 +335,10 @@ class _LibrarySearchResultsState extends ConsumerState<LibrarySearchResults> {
       ),
     ];
     var hasResults = false;
+    // Chosen artist photos, shown on artist rows as in the Artists list.
+    final artistPhotos =
+        ref.watch(artistImagePhotosProvider).asData?.value ??
+        const <String, File>{};
     var loading = false;
     var failed = false;
     final visibleSongs = <LibrarySearchHit>[];
@@ -362,7 +379,8 @@ class _LibrarySearchResultsState extends ConsumerState<LibrarySearchResults> {
           slivers.add(
             SliverList.builder(
               itemCount: hits.length.clamp(0, pageSize),
-              itemBuilder: (context, index) => _row(hits[index]),
+              itemBuilder: (context, index) =>
+                  _row(hits[index], artistPhotos),
             ),
           );
           if (_kind != null && page == _pages - 1 && hits.length > pageSize) {
