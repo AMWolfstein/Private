@@ -1146,9 +1146,9 @@
     "semantic_hash": "a7e4dc401d6563fb09eaade8e0421cbf"
   },
   "AGENTS.md": {
-    "mtime": 1793746864.1280642,
-    "seen": 1793747354.9429784,
-    "ast_hash": "dbb2ef3353af1e213562871c2952c5a1",
+    "mtime": 1793748196.6248128,
+    "seen": 1793748234.509265,
+    "ast_hash": "573876d140ba092323eee64fdaa083cc",
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
@@ -4056,9 +4056,9 @@
     "semantic_hash": ""
   },
   "lib/widgets/header/app_artist_header.dart": {
-    "mtime": 1793744127.7111945,
-    "seen": 1793746432.7769718,
-    "ast_hash": "e83e50a0589ec29f04f0ef65b16d8328",
+    "mtime": 1793748154.1264503,
+    "seen": 1793748234.4699662,
+    "ast_hash": "413c139fd4662f0087a42c0eb5bb68c7",
     "semantic_hash": ""
   },
   "lib/widgets/primitives/app_context_menu.dart": {
@@ -6414,9 +6414,9 @@
     "semantic_hash": ""
   },
   "lib/screens/library/local_artist/local_artist_screen.dart": {
-    "mtime": 1793746717.8542192,
-    "seen": 1793747354.8967786,
-    "ast_hash": "c6c00ae6d67b1c8c6e4a6d9f30bb8e9b",
+    "mtime": 1793748154.1271787,
+    "seen": 1793748234.4617348,
+    "ast_hash": "0d14c37d0303fb38b21e54ea88b36e9e",
     "semantic_hash": ""
   },
   "lib/screens/library/section_tab/library_section_tab.dart": {
