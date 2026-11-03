@@ -5,7 +5,7 @@ This repo is being converted to a local/offline Android-only music player.
 before continuing any migration work.**
 
 The app targets Android and local files only: no iOS code paths and no on/off switch for the local library (it is always on). Sistrum is its sole production theme; keep
-light/dark modes and local storage, playback, lyrics, backup and USB support. Do not reintroduce providers, downloads, extension credentials or remote artwork loading, except the owner-approved artist photo lookup below. The online features are the user-started lyrics lookup and the artist photo lookup below; neither runs in the background except the artist photo lookup while its setting is on.
+light/dark modes and local storage, playback, lyrics, backup and USB support. Do not reintroduce providers, downloads, extension credentials or remote artwork loading, except the owner-approved artist photo lookup and Apple Music video artwork lookup below. The online features are the user-started lyrics lookup, the artist photo lookup and the video artwork lookup below; only the artist photo lookup and the video artwork lookup run in the background, each only while its own setting is on.
 
 V3 detail designs are restored over local data. Artist navigation must open
 `local_artist_screen.dart`, not a generic filtered album browser. Keep Play centered,
@@ -61,7 +61,7 @@ Switch and slider thumbs (AppSwitch, AppSlider, horizontal AppLevelSlider) turn 
 liquid glass only while touched and only when the glass thumb gate allows it; no lens or
 capture at rest, and the plain controls are the fallback. Seek, volume and vertical EQ
 faders keep their painted controls.
-Sistrum album headers and the immersive player's cover drift slowly (Ken Burns, `AlbumKenBurns`); Appearance > Animated artwork turns it off. Albums and the player's cover (both Normal and Immersive views) only: playlists, Loved and artist headers stay still. The player's drift pauses while lyrics show. It pauses for reduced motion, glass off or low-end devices, covered routes and a page scrolled past the cover.
+Sistrum album headers and the immersive player's cover drift slowly (Ken Burns, `AlbumKenBurns`); Appearance > Animated artwork turns it off. A saved video cover (see Video artwork below) replaces that drift on the same cover; the static fallback keeps it. Albums and the player's cover (both Normal and Immersive views) only: playlists, Loved and artist headers stay still. The player's drift pauses while lyrics show. It pauses for reduced motion, glass off or low-end devices, covered routes and a page scrolled past the cover.
 Pinned headers float: transparent toolbars with a glass back circle, IconButton and menu actions in
 one glass capsule and a backing band only once content scrolls under (opaque on flat level or high
 contrast). Header controls (not the player's) are 48dp, 4dp from the edge, with 22dp icons; the
@@ -142,7 +142,7 @@ The updater is restored: `UpdateChecker` reads GitHub releases from `AppInfo.git
 Check-for-updates and preview-release switches, and `UpdateDialog` downloads the APK (HTTPS, resumable, SHA-256
 checked) and hands it to the system installer. The release manifest therefore allows INTERNET (and
 REQUEST_INSTALL_PACKAGES with a FileProvider); no other feature may use the network except the user-started lyrics lookup described under
-Lyrics settings and the artist photo lookup under Appearance > Download artist images.
+Lyrics settings, the artist photo lookup under Appearance > Download artist images, and the Apple Music video artwork lookup under Appearance > Download video artwork.
 
 Song taps start local playback; do not restore the separate TrackMetadataScreen/details
 route. Song ellipsis menus expose the former local track actions: Play/Share, Play next,
@@ -215,6 +215,16 @@ reports drift). Codex: act as one named reviewer from `.claude/agents/<name>.md`
 `scripts/review_scope.sh` picks scope, reviewers and graph freshness without a model.
 Reviewers never edit code; fixes are separate 1–3 finding batches that follow the commit
 conventions below. Review checkpoints commit only `reviews/` (`docs(review): <unit>`).
+
+## Video artwork
+
+Album and artist covers can show a saved, looping, silent Apple Music video (`lib/services/animated_artwork/`, `lib/widgets/animated_artwork/`). This is the only Apple Music use the app allows, and it is an owner-approved exception to the offline rule above. The catalog interface is unofficial (the web player's developer token), so every response is checked and a failure is reported as unavailable, never as "no video".
+
+- Acquisition and display are separate. The Download video artwork switch (with Wi-Fi, mobile, or both, default Wi-Fi) controls only new background lookups. Turning it off never deletes, hides or stops a saved video. Display follows Appearance > Animated artwork.
+- Ownership follows the artist-photo rules: a manual choice always wins and supersedes in-flight automatic work; an automatic result fills only an entity with no record or with a legitimate miss (retried after 14 days); Reset removes the video and blocks automatic replacement until a new manual choice; Clear removes every video and supersedes anything in flight.
+- Album identity is title plus album artist (the same key everywhere, including Now Playing). A match needs an identical normalized title and album artist, and a compatible track count and UPC when both are known. Editions never match the standard release. Local tags are never overwritten.
+- Downloads are single-file fMP4 HLS only, fetched whole into owned storage, bounded in bytes, frame size and time, validated as MP4, and published only after the database write succeeds. Segmented playlists are unsupported, not concatenated.
+- Playback is muted, mixed with other audio (no audio focus), looping, and shows the static cover until the first frame. It pauses when covered, inactive, backgrounded or under reduced motion, and never changes music playback.
 
 ## Upstream ports
 
