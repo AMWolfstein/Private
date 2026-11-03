@@ -6,6 +6,7 @@ import 'package:sistrum/utils/layout/adaptive_layout.dart';
 import 'package:sistrum/utils/layout/app_bar_layout.dart';
 import 'package:sistrum/widgets/glass/chrome/app_floating_header.dart';
 import 'package:sistrum/widgets/header/header_controls.dart';
+import 'package:sistrum/core/theme/app_theme.dart';
 
 /// The collapsing header used by every top-level tab and every settings-style
 /// sub-page.
@@ -90,6 +91,9 @@ class AppSliverHeader extends ConsumerWidget {
                         leading ??
                         HeaderCircleButton(
                           icon: CupertinoIcons.back,
+                          iconColor: AppTheme.accentColor(
+                        Theme.of(context).brightness,
+                      ),
                           tooltip: MaterialLocalizations.of(
                             context,
                           ).backButtonTooltip,

@@ -12,6 +12,7 @@ import 'package:sistrum/core/theme/app_tokens.dart';
 import 'package:sistrum/widgets/glass/artwork/app_artwork_page_ground.dart';
 import 'package:sistrum/widgets/glass/chrome/app_floating_header.dart';
 import 'package:sistrum/widgets/header/header_controls.dart';
+import 'package:sistrum/core/theme/app_theme.dart';
 
 part 'album_detail_header_title.dart';
 part 'album_detail_header_slivers.dart';

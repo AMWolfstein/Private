@@ -67,6 +67,9 @@ extension AlbumDetailHeaderPart2 on AlbumDetailHeader {
                     leading ??
                     HeaderCircleButton(
                       icon: CupertinoIcons.back,
+                      iconColor: AppTheme.accentColor(
+                        Theme.of(context).brightness,
+                      ),
                       tooltip: MaterialLocalizations.of(
                         context,
                       ).backButtonTooltip,

@@ -238,7 +238,9 @@ extension _AlbumDetailHeaderPart3 on AlbumDetailHeader {
               backgroundColor: headerScheme.surfaceContainerHigh.withValues(
                 alpha: 0.75,
               ),
-              foregroundColor: headerScheme.onSurfaceVariant,
+              foregroundColor: AppTheme.accentColor(
+                Theme.of(context).brightness,
+              ),
             ),
             onPressed: () => Navigator.pop(context),
           ),

@@ -236,6 +236,7 @@ class AppArtistHeader extends StatelessWidget {
     leading: AppHeaderControls(
       child: HeaderCircleButton(
         icon: CupertinoIcons.back,
+        iconColor: AppTheme.accentColor(Theme.of(context).brightness),
         tooltip: MaterialLocalizations.of(context).backButtonTooltip,
         onPressed: () => Navigator.pop(context),
       ),
