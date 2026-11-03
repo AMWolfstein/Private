@@ -200,6 +200,7 @@ class AppHeaderActions extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     if (appHeaderMaterial(context, ref) == AppHeaderMaterial.opaque) {
       return _HeaderIconTheme(
+        foregroundColor: AppTheme.accentColor(Theme.of(context).brightness),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -244,7 +245,6 @@ class _HeaderCapsule extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final scheme = HeaderPalette.of(context);
     return Center(
       widthFactor: 1,
       child: _HeaderGlass(
@@ -253,7 +253,9 @@ class _HeaderCapsule extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 2),
             child: _HeaderIconTheme(
-              foregroundColor: scheme.onSurface,
+              foregroundColor: AppTheme.accentColor(
+                Theme.of(context).brightness,
+              ),
               child: Row(mainAxisSize: MainAxisSize.min, children: children),
             ),
           ),

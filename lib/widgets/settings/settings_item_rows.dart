@@ -106,7 +106,7 @@ class SettingsItem extends StatelessWidget {
                     Icon(
                       CupertinoIcons.forward,
                       size: context.tokens.rowChevronSize,
-                      color: colorScheme.onSurfaceVariant,
+                      color: colorScheme.primary,
                     ),
                   ],
                 ],
