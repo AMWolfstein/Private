@@ -79,7 +79,7 @@ pill and its statistics never take touches.
 Glass over known artwork (the player's menus and sheets; album and artist header controls, which
 opt in through `AppHeaderControls`) reads nothing: it draws a pre-blurred ground image
 (`AppPlayerGround`/`AppPageGround`, 384 px wide, at most 6 MB in total, released with their
-screen) through `AppArtworkGlassRender`; never a BackdropFilter there. The exception is an artist page whose saved video cover is playing: the video covers the photo, so its header controls read the live backdrop (`AppArtistSurface.liveBackdrop`) instead of the photo's ground. Album, playlist and artist
+screen) through `AppArtworkGlassRender`; never a BackdropFilter there. The exception is an artist or album page whose saved video cover is playing: the video covers the photo, so its header controls read the live backdrop (`AppArtistSurface.liveBackdrop`) instead of the photo's ground. Album, playlist and artist
 headers soften while scrolling by fading that ground over the artwork (`AppGroundVeil`), never a
 live blur. An overlay picks its material once at open (opaque if its ground is not ready). No menu
 has a staged glass reveal: page menus keep one material from the first frame too.
