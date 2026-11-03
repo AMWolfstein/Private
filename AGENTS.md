@@ -142,7 +142,7 @@ The updater is restored: `UpdateChecker` reads GitHub releases from `AppInfo.git
 Check-for-updates and preview-release switches, and `UpdateDialog` downloads the APK (HTTPS, resumable, SHA-256
 checked) and hands it to the system installer. The release manifest therefore allows INTERNET (and
 REQUEST_INSTALL_PACKAGES with a FileProvider); no other feature may use the network except the user-started lyrics lookup described under
-Lyrics settings, the artist photo lookup under Appearance > Download artist images, and the Apple Music video artwork lookup under Appearance > Download video artwork.
+Lyrics settings, the artist photo lookup under Appearance > Download artist images (Apple Music first, Deezer as fallback), and the Apple Music video artwork lookup under Appearance > Download video artwork.
 
 Song taps start local playback; do not restore the separate TrackMetadataScreen/details
 route. Song ellipsis menus expose the former local track actions: Play/Share, Play next,
@@ -218,7 +218,7 @@ conventions below. Review checkpoints commit only `reviews/` (`docs(review): <un
 
 ## Video artwork
 
-Album and artist covers can show a saved, looping, silent Apple Music video (`lib/services/animated_artwork/`, `lib/widgets/animated_artwork/`). This is the only Apple Music use the app allows, and it is an owner-approved exception to the offline rule above. The catalog interface is unofficial (the web player's developer token), so every response is checked and a failure is reported as unavailable, never as "no video".
+Album and artist covers can show a saved, looping, silent Apple Music video (`lib/services/animated_artwork/`, `lib/widgets/animated_artwork/`). The Apple Music catalog is used for two owner-approved things only: saved video artwork and artist photos (see Artist photos below). Nothing else from Apple Music is allowed, and both are owner-approved exceptions to the offline rule above. The catalog interface is unofficial (the web player's developer token), so every response is checked and a failure is reported as unavailable, never as "no video".
 
 - Acquisition and display are separate. The Download video artwork switch (with Wi-Fi, mobile, or both, default Wi-Fi) controls only new background lookups. Turning it off never deletes, hides or stops a saved video. Display follows Appearance > Animated artwork.
 - Ownership follows the artist-photo rules: a manual choice always wins and supersedes in-flight automatic work; an automatic result fills only an entity with no record or with a legitimate miss (retried after 14 days); Reset removes the video and blocks automatic replacement until a new manual choice; Clear removes every video and supersedes anything in flight.
@@ -303,3 +303,5 @@ library module that imports what it needs. A part file never adds its own import
 Failed or empty native metadata reads must stop lyrics embedding. Stage and flush sidecars before publication; separate successful file writes from timing-cache errors. Reload only the still-current song after embedding, using canonical SAF metadata. Lyrics search keeps one parallel request per source, partial results, bounded deadlines and disposal cancellation.
 
 Turning automatic artist downloads off preserves cached photos and display. Automatic publication never replaces an existing manual or Reset record. Clear invalidates in-flight work; store mutations preserve prior files until database publication succeeds. Automatic names use Library Tag separators and Keep together. Publish progress in bounded batches and recheck network policy and ownership after asynchronous boundaries.
+
+Artist photos (owner-approved 2026-11-03): the automatic lookup tries Apple Music's artist artwork first, at 1000 px, and falls back to Deezer when Apple fails or has no portrait for the exact name. A Deezer failure stops the pass; an Apple failure without a match leaves the name unrecorded for a later pass, so a not-found is recorded only when Apple answered. The manual Find artist image sheet searches both sources and labels Apple results. Deezer-only records keep the Deezer id; Apple records store none.
