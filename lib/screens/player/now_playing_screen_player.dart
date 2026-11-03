@@ -42,15 +42,32 @@ extension _NowPlayingPlayer on _NowPlayingScreenState {
         ? (screen.width / (screen.height * .56)).clamp(.5, 1.0)
         : null;
 
+    // The album's saved video, for this track's album only. It shows while
+    // Animated artwork is on; lyrics pause it, as they pause the drift.
+    final videoEnabled = ref.watch(
+      settingsProvider.select((s) => s.animatedAlbumArtwork),
+    );
+    final videoFile = videoEnabled
+        ? ref.watch(animatedVideoForTrackProvider(mediaItem.id)).value
+        : null;
+
+    Widget staticArtwork() => PlayerArtwork(
+      artUri: mediaItem.artUri?.toString(),
+      colorScheme: colorScheme,
+      cacheWidth: PlayerArtwork.transitionCacheWidth(context),
+    );
+
     Widget artwork() => Align(
       alignment: Alignment.topCenter,
       child: AspectRatio(
         aspectRatio: 1,
-        child: PlayerArtwork(
-          artUri: mediaItem.artUri?.toString(),
-          colorScheme: colorScheme,
-          cacheWidth: PlayerArtwork.transitionCacheWidth(context),
-        ),
+        child: videoFile == null
+            ? staticArtwork()
+            : AnimatedArtworkVideo(
+                file: videoFile,
+                active: _currentPage == 0,
+                fallback: staticArtwork(),
+              ),
       ),
     );
 
@@ -136,10 +153,13 @@ extension _NowPlayingPlayer on _NowPlayingScreenState {
                   seekPreview: _seekPreview,
                   colorScheme: colorScheme,
                   page: _currentPage,
-                  motionArtwork: AlbumKenBurns(
-                    active: _currentPage == 0,
-                    child: artwork(),
-                  ),
+                  // A playing video is the motion, so the drift is left off.
+                  motionArtwork: videoFile != null
+                      ? artwork()
+                      : AlbumKenBurns(
+                          active: _currentPage == 0,
+                          child: artwork(),
+                        ),
                   insetArtwork: !immersive,
                   artworkAspectRatio: artworkRatio,
                   artworkTopInset: MediaQuery.paddingOf(context).top + 48,

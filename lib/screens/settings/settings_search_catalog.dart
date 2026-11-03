@@ -92,6 +92,12 @@ class SettingsSearchCatalog {
           keywords: const ['frosted', 'soft', 'balanced', 'clear', 'crystal'],
         ),
         SettingsSearchEntry(
+          icon: Icons.movie_outlined,
+          title: l10n.videoArtworkEntryTitle,
+          subtitle: l10n.videoArtworkEntrySubtitle,
+          keywords: const ['animated artwork', 'video cover', 'looping'],
+        ),
+        SettingsSearchEntry(
           icon: Icons.language,
           title: l10n.appearanceLanguage,
           keywords: const ['locale', 'translation'],
@@ -353,6 +359,12 @@ class SettingsSearchCatalog {
           title: l10n.cacheLibraryCover,
           subtitle: l10n.cacheLibraryCoverDesc,
           keywords: const ['local artwork cache'],
+        ),
+        SettingsSearchEntry(
+          icon: Icons.movie_outlined,
+          title: l10n.cacheVideoArtwork,
+          subtitle: l10n.cacheVideoArtworkDesc,
+          keywords: const ['animated artwork', 'video cover'],
         ),
         SettingsSearchEntry(
           icon: Icons.graphic_eq_outlined,

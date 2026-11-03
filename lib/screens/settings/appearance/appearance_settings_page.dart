@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/screens/settings/appearance/artist_images_settings_page.dart';
+import 'package:sistrum/screens/settings/appearance/video_artwork_settings_page.dart';
 import 'package:sistrum/providers/settings/settings_provider.dart';
 import 'package:sistrum/providers/settings/theme_provider.dart';
 import 'package:sistrum/core/models/app_glass.dart';
@@ -107,6 +108,16 @@ class AppearanceSettingsPage extends ConsumerWidget {
                     onTap: () => Navigator.of(context).push(
                       slidePageRoute<void>(
                         page: const ArtistImagesSettingsPage(),
+                      ),
+                    ),
+                  ),
+                  SettingsItem(
+                    icon: Icons.movie_outlined,
+                    title: context.l10n.videoArtworkEntryTitle,
+                    subtitle: context.l10n.videoArtworkEntrySubtitle,
+                    onTap: () => Navigator.of(context).push(
+                      slidePageRoute<void>(
+                        page: const VideoArtworkSettingsPage(),
                       ),
                     ),
                   ),

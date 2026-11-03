@@ -27,6 +27,9 @@ import 'package:sistrum/widgets/header/header_controls.dart';
 import 'package:sistrum/widgets/library/local_song_menu.dart';
 import 'package:sistrum/widgets/library/local_song_row.dart';
 import 'package:sistrum/widgets/primitives/app_context_menu.dart';
+import 'package:sistrum/providers/animated_artwork/animated_artwork_providers.dart';
+import 'package:sistrum/providers/settings/settings_provider.dart';
+import 'package:sistrum/widgets/animated_artwork/animated_artwork_video.dart';
 import 'package:sistrum/widgets/primitives/app_snack_bar.dart';
 import 'package:sistrum/widgets/status/audio_quality_badges.dart';
 import 'package:sistrum/widgets/status/error_card.dart';
@@ -108,6 +111,14 @@ class _LocalArtistScreenState extends ConsumerState<LocalArtistScreen> {
         .watch(artistImageFileProvider(widget.artistName))
         .asData
         ?.value;
+    final motion = ref.watch(
+      settingsProvider.select((s) => s.animatedAlbumArtwork),
+    );
+    final artistVideo = motion
+        ? ref
+              .watch(animatedArtworkFileProvider(animatedArtistRef(widget.artistName)))
+              .value
+        : null;
     final artistId = LibraryDatabase.normalizeLookupText(widget.artistName);
     final favorites = ref.watch(
       libraryCollectionsProvider.select((state) => state.favoriteArtists),
@@ -130,11 +141,22 @@ class _LocalArtistScreenState extends ConsumerState<LocalArtistScreen> {
               slivers: [
                 ...AppArtistHeader(
                   name: widget.artistName,
-                  artwork: _artwork(
-                    cover,
-                    placeholderIcon: CupertinoIcons.person,
-                    placeholderSize: 64,
-                  ),
+                  // Video, then the chosen photo, then the cover, as the header
+                  // falls back. The video is shown only while Animated artwork is on.
+                  artwork: artistVideo != null
+                      ? AnimatedArtworkVideo(
+                          file: artistVideo,
+                          fallback: _artwork(
+                            cover,
+                            placeholderIcon: CupertinoIcons.person,
+                            placeholderSize: 64,
+                          ),
+                        )
+                      : _artwork(
+                          cover,
+                          placeholderIcon: CupertinoIcons.person,
+                          placeholderSize: 64,
+                        ),
                   showTitle: _showTitle,
                   toolbarActions: [
                     appLibrarySortButton(
@@ -157,6 +179,7 @@ class _LocalArtistScreenState extends ConsumerState<LocalArtistScreen> {
                           ref,
                           widget.artistName,
                           hasPhoto: artistPhoto != null,
+                          hasVideo: artistVideo != null,
                           anchor: appMenuAnchor(buttonContext),
                         );
                       },

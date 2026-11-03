@@ -1,0 +1,15 @@
+Animated video artwork (Apple Music motion covers)
+Adapted for Sistrum from Mornye and Mornye-Extension (https://github.com/mornyeapp/Mornye, https://github.com/mornyeapp/Mornye-Extension).
+Copyright 2026 zarzet and contributors. LGPL-3.0-only.
+
+The single-file HLS rules (playlist variant choice, byte-range fragments of one
+MP4, and the complete-download check) follow Mornye's motion artwork download
+code. The Apple Music catalog lookup (developer token strategies, tall/motion
+key priority, retry and expiry handling) follows Mornye-Extension's Apple Music
+source. The Dart code in lib/services/animated_artwork/ is rewritten for
+Sistrum's architecture and is not an extension or plugin host.
+
+This feature uses an unofficial Apple Music web interface. It is not an
+official or stable API, and Apple may change or block it at any time.
+
+The complete LGPL-3.0 terms are in lgpl-3.0.txt in this folder.

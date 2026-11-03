@@ -32,6 +32,7 @@ dependencies:
 
   # In-app updates from GitHub releases
   http: ^1.6.0
+  video_player: ^2.11.1
   url_launcher: ^6.3.3
   open_filex: ^5.0.0
 
@@ -87,6 +88,8 @@ dev_dependencies:
     sdk: flutter
   flutter_test:
     sdk: flutter
+  # Test fakes for the video player platform (see test/widgets/animated_artwork).
+  video_player_platform_interface: ^6.9.0
   # Integration fixtures build raw ZIPs to exercise the native backup parser.
   archive: ^4.5.0
   analyzer: ^14.5.0
@@ -123,6 +126,7 @@ flutter:
     - assets/licenses/ffmpeg.txt
     - assets/licenses/lgpl-3.0.txt
     - assets/licenses/autoplay_learning.txt
+    - assets/licenses/animated_artwork.txt
     - assets/licenses/android_auto.txt
     - assets/licenses/native_palette.txt
     - assets/licenses/native_data_jobs.txt

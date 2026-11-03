@@ -2528,7 +2528,7 @@
   "profilePhotoError": "Choose a valid image smaller than 20 MB.",
   "profileSaveError": "Could not save your profile. Please try again.",
   "motionArtwork": "Animated artwork",
-  "motionArtworkSubtitle": "Slowly drift album covers and the player cover",
+  "motionArtworkSubtitle": "Slowly drift album covers and the player cover, and play saved video covers",
   "lyricsAboveSeekBar": "Lyrics above seek bar",
   "@lyricsAboveSeekBar": {
     "description": "Appearance switch that shows the current sung lyric line above the player's seek bar"
@@ -3794,5 +3794,161 @@
   "@artistImageAutoTitle": {
     "description": "Artist images: switch for background downloads"
   },
-  "artistImageSaveFailed": "The photo change could not be saved. Your previous image was kept."
+  "artistImageSaveFailed": "The photo change could not be saved. Your previous image was kept.",
+  "videoArtworkEntryTitle": "Download video artwork",
+  "@videoArtworkEntryTitle": {
+    "description": "Appearance: row that opens video artwork settings"
+  },
+  "videoArtworkEntrySubtitle": "Looping Apple Music covers for albums and artists",
+  "@videoArtworkEntrySubtitle": {
+    "description": "Appearance: subtitle of the video artwork row"
+  },
+  "videoArtworkSettingsTitle": "Video artwork",
+  "@videoArtworkSettingsTitle": {
+    "description": "Video artwork settings page title"
+  },
+  "videoArtworkAutoTitle": "Download in background",
+  "@videoArtworkAutoTitle": {
+    "description": "Video artwork: switch for background lookups"
+  },
+  "videoArtworkAutoSubtitle": "Looks up albums and artists while this is on. Turning it off keeps every saved video.",
+  "@videoArtworkAutoSubtitle": {
+    "description": "Video artwork: switch description"
+  },
+  "videoArtworkNetworkWifi": "Wi-Fi only",
+  "@videoArtworkNetworkWifi": {
+    "description": "Video artwork: allowed network option"
+  },
+  "videoArtworkNetworkMobile": "Mobile data only",
+  "@videoArtworkNetworkMobile": {
+    "description": "Video artwork: allowed network option"
+  },
+  "videoArtworkNetworkBoth": "Wi-Fi and mobile data",
+  "@videoArtworkNetworkBoth": {
+    "description": "Video artwork: allowed network option"
+  },
+  "videoArtworkProgress": "{completed} of {total} checked",
+  "@videoArtworkProgress": {
+    "description": "Video artwork: background pass progress",
+    "placeholders": {
+      "completed": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "videoArtworkCounts": "{saved} saved, {notFound} not found, {failed} failed",
+  "@videoArtworkCounts": {
+    "description": "Video artwork: background pass outcome counts",
+    "placeholders": {
+      "saved": {
+        "type": "int"
+      },
+      "notFound": {
+        "type": "int"
+      },
+      "failed": {
+        "type": "int"
+      }
+    }
+  },
+  "videoArtworkIdle": "No background lookup has run yet",
+  "@videoArtworkIdle": {
+    "description": "Video artwork: before the first pass"
+  },
+  "cacheVideoArtwork": "Video artwork",
+  "@cacheVideoArtwork": {
+    "description": "Cache settings: video artwork row title"
+  },
+  "cacheVideoArtworkDesc": "Looping covers saved from Apple Music. Clearing removes them; automatic downloads can fetch them again.",
+  "@cacheVideoArtworkDesc": {
+    "description": "Cache settings: video artwork row description"
+  },
+  "cacheVideoArtworkSize": "Using {size}",
+  "@cacheVideoArtworkSize": {
+    "description": "Cache settings: bytes used by video artwork",
+    "placeholders": {
+      "size": {
+        "type": "String"
+      }
+    }
+  },
+  "animatedArtworkMenuFind": "Find animated artwork",
+  "@animatedArtworkMenuFind": {
+    "description": "Album and artist menu: opens the search sheet"
+  },
+  "animatedArtworkMenuReset": "Reset animated artwork",
+  "@animatedArtworkMenuReset": {
+    "description": "Album and artist menu: removes the saved video"
+  },
+  "animatedArtworkSheetTitle": "Find animated artwork",
+  "@animatedArtworkSheetTitle": {
+    "description": "Find animated artwork sheet title"
+  },
+  "animatedArtworkFieldTitle": "Album",
+  "@animatedArtworkFieldTitle": {
+    "description": "Find animated artwork: album title field"
+  },
+  "animatedArtworkFieldArtist": "Artist",
+  "@animatedArtworkFieldArtist": {
+    "description": "Find animated artwork: artist field"
+  },
+  "animatedArtworkLinkHint": "Search by name, or paste an Apple Music album or artist link.",
+  "@animatedArtworkLinkHint": {
+    "description": "Find animated artwork: hint under the search field"
+  },
+  "animatedArtworkSearch": "Search",
+  "@animatedArtworkSearch": {
+    "description": "Find animated artwork: search button"
+  },
+  "animatedArtworkPickFile": "Choose a video file",
+  "@animatedArtworkPickFile": {
+    "description": "Find animated artwork: pick a video from the device"
+  },
+  "animatedArtworkNoResults": "No matches found on Apple Music",
+  "@animatedArtworkNoResults": {
+    "description": "Find animated artwork: empty results"
+  },
+  "animatedArtworkNoVideo": "This match has no animated artwork",
+  "@animatedArtworkNoVideo": {
+    "description": "Find animated artwork: match without a video"
+  },
+  "animatedArtworkSearchFailed": "Apple Music could not be reached. Try again later.",
+  "@animatedArtworkSearchFailed": {
+    "description": "Find animated artwork: catalog outage"
+  },
+  "animatedArtworkUse": "Use this artwork",
+  "@animatedArtworkUse": {
+    "description": "Find animated artwork: save the previewed video"
+  },
+  "animatedArtworkSaveFailed": "The video could not be saved. Your previous artwork was kept.",
+  "@animatedArtworkSaveFailed": {
+    "description": "Find animated artwork: generic save failure"
+  },
+  "animatedArtworkSuperseded": "Another choice was made first, so this video was not saved.",
+  "@animatedArtworkSuperseded": {
+    "description": "Find animated artwork: a newer choice won"
+  },
+  "animatedArtworkDownloadFailed": "The video could not be downloaded.",
+  "@animatedArtworkDownloadFailed": {
+    "description": "Find animated artwork: download failure"
+  },
+  "animatedArtworkImportFailed": "That file is not a usable MP4 or MOV video.",
+  "@animatedArtworkImportFailed": {
+    "description": "Find animated artwork: invalid picked file"
+  },
+  "animatedArtworkTooLarge": "That video is too large to use.",
+  "@animatedArtworkTooLarge": {
+    "description": "Find animated artwork: size limit"
+  },
+  "animatedArtworkResetDone": "Video artwork was reset. The static cover is shown.",
+  "@animatedArtworkResetDone": {
+    "description": "Animated artwork: reset confirmation"
+  },
+  "animatedArtworkNotice": "Video artwork comes from Apple Music's catalog through an unofficial interface. It can stop working without notice.",
+  "@animatedArtworkNotice": {
+    "description": "Find animated artwork: source disclaimer"
+  }
 }

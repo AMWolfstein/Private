@@ -201,6 +201,17 @@ extension SettingsActions on SettingsNotifier {
     _saveSettings();
   }
 
+  void setVideoArtworkAutoDownload(bool enabled) {
+    _current = _current.copyWith(videoArtworkAutoDownload: enabled);
+    _saveSettings();
+  }
+
+  /// [network] is `wifi`, `mobile` or `both`.
+  void setVideoArtworkNetwork(String network) {
+    _current = _current.copyWith(videoArtworkNetwork: network);
+    _saveSettings();
+  }
+
   void setLyricsAboveSeekBar(bool enabled) {
     _current = _current.copyWith(lyricsAboveSeekBar: enabled);
     _saveSettings();

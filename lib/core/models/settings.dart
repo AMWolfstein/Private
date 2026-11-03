@@ -87,6 +87,13 @@ class AppSettings {
   /// `wifi`, `mobile` or `both`: networks automatic artist image downloads may use.
   final String artistImagesNetwork;
 
+  /// Downloads Apple Music video artwork for albums and artists in the background.
+  /// Turning it off keeps every saved video.
+  final bool videoArtworkAutoDownload;
+
+  /// `wifi`, `mobile` or `both`; unknown values mean Wi-Fi only.
+  final String videoArtworkNetwork;
+
   /// Show the sung lyric line above the player's seek bar.
   final bool lyricsAboveSeekBar;
 
@@ -165,6 +172,8 @@ class AppSettings {
     this.animatedAlbumArtwork = true,
     this.artistImagesAutoDownload = false,
     this.artistImagesNetwork = 'wifi',
+    this.videoArtworkAutoDownload = false,
+    this.videoArtworkNetwork = 'wifi',
     this.lyricsAboveSeekBar = false,
     this.checkForUpdates = true,
     this.updateChannel = 'stable',
@@ -219,6 +228,8 @@ class AppSettings {
     bool? animatedAlbumArtwork,
     bool? artistImagesAutoDownload,
     String? artistImagesNetwork,
+    bool? videoArtworkAutoDownload,
+    String? videoArtworkNetwork,
     bool? lyricsAboveSeekBar,
     bool? checkForUpdates,
     String? updateChannel,
@@ -282,6 +293,9 @@ class AppSettings {
       artistImagesAutoDownload:
           artistImagesAutoDownload ?? this.artistImagesAutoDownload,
       artistImagesNetwork: artistImagesNetwork ?? this.artistImagesNetwork,
+      videoArtworkAutoDownload:
+          videoArtworkAutoDownload ?? this.videoArtworkAutoDownload,
+      videoArtworkNetwork: videoArtworkNetwork ?? this.videoArtworkNetwork,
       lyricsAboveSeekBar: lyricsAboveSeekBar ?? this.lyricsAboveSeekBar,
       checkForUpdates: checkForUpdates ?? this.checkForUpdates,
       updateChannel: updateChannel ?? this.updateChannel,

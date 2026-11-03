@@ -47,6 +47,8 @@ import 'package:sistrum/utils/files/file_access.dart';
 import 'package:sistrum/widgets/library/local_song_file_actions.dart';
 import 'package:sistrum/widgets/library/local_song_menu.dart';
 import 'package:sistrum/widgets/lyrics/find_lyrics_sheet.dart';
+import 'package:sistrum/providers/animated_artwork/animated_artwork_providers.dart';
+import 'package:sistrum/widgets/animated_artwork/animated_artwork_video.dart';
 
 export 'package:sistrum/core/navigation/now_playing_route.dart';
 

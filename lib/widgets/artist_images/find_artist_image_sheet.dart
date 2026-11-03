@@ -11,6 +11,8 @@ import 'package:sistrum/services/artist_images/deezer_artist_search.dart';
 import 'package:sistrum/widgets/player/artwork/app_player_ground.dart';
 import 'package:sistrum/widgets/primitives/app_bottom_sheet.dart';
 import 'package:sistrum/widgets/primitives/app_context_menu.dart';
+import 'package:sistrum/providers/animated_artwork/animated_artwork_providers.dart';
+import 'package:sistrum/widgets/animated_artwork/find_animated_artwork_sheet.dart';
 
 /// Opens the artist's three-dot menu. Find artist image opens the search
 /// sheet; Reset image puts the album cover back.
@@ -19,6 +21,7 @@ Future<void> showArtistImageMenu(
   WidgetRef ref,
   String artistName, {
   required bool hasPhoto,
+  bool hasVideo = false,
   Rect? anchor,
 }) async {
   final l10n = context.l10n;
@@ -41,10 +44,35 @@ Future<void> showArtistImageMenu(
               onPressed: () => Navigator.of(menuContext).pop('reset'),
             ),
         ],
+        [
+          AppMenuAction(
+            icon: appIconFor(Icons.movie_outlined),
+            label: l10n.animatedArtworkMenuFind,
+            onPressed: () => Navigator.of(menuContext).pop('video_find'),
+          ),
+          if (hasVideo)
+            AppMenuAction(
+              icon: appIconFor(Icons.restart_alt),
+              label: l10n.animatedArtworkMenuReset,
+              onPressed: () => Navigator.of(menuContext).pop('video_reset'),
+            ),
+        ],
       ],
     ),
   );
   if (!context.mounted) return;
+  if (action == 'video_find' || action == 'video_reset') {
+    if (!context.mounted) return;
+    await runAnimatedArtworkAction(
+      context,
+      ref,
+      action: action == 'video_find' ? 'find' : 'reset',
+      target: animatedArtistRef(artistName),
+      title: artistName,
+      artistName: null,
+    );
+    return;
+  }
   if (action == 'find') {
     final saved = await showFindArtistImageSheet(context, artistName);
     if (saved == true) ref.invalidate(artistImageFileProvider(artistName));

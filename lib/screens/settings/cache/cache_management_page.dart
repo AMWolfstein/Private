@@ -15,6 +15,7 @@ import 'package:sistrum/screens/settings/cache/cache_directory_tools.dart';
 import 'package:sistrum/utils/layout/nav_bar_inset.dart';
 import 'package:sistrum/utils/text/string_utils.dart';
 import 'package:sistrum/widgets/settings/settings_group.dart';
+import 'package:sistrum/providers/animated_artwork/animated_artwork_providers.dart';
 import 'package:sistrum/widgets/settings/settings_item_rows.dart';
 import 'package:sistrum/widgets/primitives/app_sliver_header.dart';
 import 'package:sistrum/widgets/status/error_card.dart';
@@ -46,6 +47,7 @@ class _CacheManagementPageState extends ConsumerState<CacheManagementPage> {
   @override
   Widget build(BuildContext context) {
     final artistImageBytes = ref.watch(artistImageBytesProvider);
+    final videoArtworkBytes = ref.watch(animatedArtworkBytesProvider);
     final colorScheme = Theme.of(context).colorScheme;
 
     final overview = _overview;
@@ -211,6 +213,25 @@ class _CacheManagementPageState extends ConsumerState<CacheManagementPage> {
                         actionKey: 'clear_artist_images',
                         targetLabel: context.l10n.cacheArtistImages,
                         action: () => clearArtistImages(ref),
+                      ),
+                    ),
+                  ),
+                  SettingsItem(
+                    icon: Icons.movie_outlined,
+                    title: context.l10n.cacheVideoArtwork,
+                    subtitle: _buildSubtitle(
+                      context.l10n.cacheVideoArtworkDesc,
+                      context.l10n.cacheVideoArtworkSize(
+                        formatBytes(videoArtworkBytes.asData?.value ?? 0),
+                      ),
+                    ),
+                    trailing: _buildClearTrailing(
+                      'clear_video_artwork',
+                      context.l10n.cacheVideoArtwork,
+                      () => _confirmAndRunAction(
+                        actionKey: 'clear_video_artwork',
+                        targetLabel: context.l10n.cacheVideoArtwork,
+                        action: () => clearAnimatedArtwork(ref),
                       ),
                     ),
                   ),

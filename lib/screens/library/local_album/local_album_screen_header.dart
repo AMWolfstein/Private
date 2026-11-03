@@ -8,7 +8,16 @@ extension _LocalAlbumHeader on _LocalAlbumScreenState {
   ) {
     final expandedHeight = calculateExpandedHeight(context);
     final cacheWidth = coverCacheWidthForViewport(context);
-    final Widget background = coverPath != null
+    final albumRef = animatedAlbumRef(widget.albumName, widget.artistName);
+    // The saved video shows only while Animated artwork is on. Turning it off
+    // keeps the file; the static cover is shown instead.
+    final motion = ref.watch(
+      settingsProvider.select((s) => s.animatedAlbumArtwork),
+    );
+    final videoFile = motion
+        ? ref.watch(animatedArtworkFileProvider(albumRef)).value
+        : null;
+    final Widget staticBackground = coverPath != null
         ? Image.file(
             File(coverPath),
             fit: BoxFit.cover,
@@ -26,9 +35,34 @@ extension _LocalAlbumHeader on _LocalAlbumScreenState {
             ),
           );
 
+    // Ken Burns drifts the static cover only; a playing video moves itself.
+    final Widget background = videoFile != null
+        ? AnimatedArtworkVideo(file: videoFile, fallback: staticBackground)
+        : context.isAppTheme && coverPath != null
+        ? AlbumKenBurns(child: staticBackground)
+        : staticBackground;
+
     return AlbumDetailHeader(
       title: widget.albumName,
-      appBarActions: [appLibrarySortButton(context, ref, releaseDate: true)],
+      appBarActions: [
+        appLibrarySortButton(context, ref, releaseDate: true),
+        Builder(
+          builder: (buttonContext) => IconButton(
+            icon: const Icon(Icons.more_horiz),
+            tooltip: MaterialLocalizations.of(context).moreButtonTooltip,
+            onPressed: () => showAnimatedArtworkMenu(
+              context,
+              ref,
+              target: albumRef,
+              title: widget.albumName,
+              artistName: widget.artistName,
+              trackCount: _sortedTracksCache.firstOrNull?.totalTracks,
+              hasVideo: videoFile != null,
+              anchor: appMenuAnchor(buttonContext),
+            ),
+          ),
+        ),
+      ],
       appBarTitle: isSelectionMode
           ? context.l10n.selectionSelected(selectedIds.length)
           : null,
@@ -43,9 +77,7 @@ extension _LocalAlbumHeader on _LocalAlbumScreenState {
       squareArtwork: true,
       expandedHeight: expandedHeight,
       showTitleInAppBar: showTitleInAppBar,
-      background: context.isAppTheme && coverPath != null
-          ? AlbumKenBurns(child: background)
-          : background,
+      background: background,
       paletteSource: coverPath,
       blurAndScrimBackground: coverPath != null,
       coverBuilder: (context, coverSize) => coverPath != null
