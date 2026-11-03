@@ -1,4 +1,7 @@
+import 'dart:io';
+import 'package:sistrum/providers/artist_images/artist_image_providers.dart';
 import 'package:sistrum/providers/library/local_library_provider.dart';
+import 'package:sistrum/services/artist_images/artist_image_store.dart';
 import 'package:sistrum/providers/library/library_alphabet_provider.dart';
 import 'package:sistrum/widgets/library/app_library_alphabet_index.dart';
 import 'package:sistrum/providers/library/library_sort_provider.dart';
@@ -86,6 +89,9 @@ class _AppLibraryScreenState extends ConsumerState<AppLibraryScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final artistPhotos =
+        ref.watch(artistImagePhotosProvider).asData?.value ??
+        const <String, File>{};
     ref.watch(librarySortProvider);
     void cancelAlphabetJump() {
       _alphabetGeneration++;
@@ -265,7 +271,18 @@ class _AppLibraryScreenState extends ConsumerState<AppLibraryScreen> {
                           leading: ClipOval(
                             child: SizedBox.square(
                               dimension: 56,
-                              child: LibraryBrowseArtwork(entry: entry),
+                              child:
+                                  artistPhotos[artistImageKey(entry.artist)] !=
+                                      null
+                                  ? Image(
+                                      image: FileImage(
+                                        artistPhotos[artistImageKey(
+                                          entry.artist,
+                                        )]!,
+                                      ),
+                                      fit: BoxFit.cover,
+                                    )
+                                  : LibraryBrowseArtwork(entry: entry),
                             ),
                           ),
                           title: Text(entry.artist),

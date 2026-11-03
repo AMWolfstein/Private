@@ -122,3 +122,19 @@ Future<void> clearArtistImages(WidgetRef ref) async {
   await ref.read(artistImageStoreProvider).clearAll();
   ref.read(artistImageRevisionProvider.notifier).bump();
 }
+
+/// Every artist photo file, keyed by artist key, read once for the Artists
+/// list instead of once per row.
+final artistImagePhotosProvider = FutureProvider.autoDispose<Map<String, File>>(
+  (ref) async {
+    ref.watch(artistImageRevisionProvider);
+    final store = ref.watch(artistImageStoreProvider);
+    final records = await store.readAll();
+    final files = <String, File>{};
+    for (final entry in records.entries) {
+      final file = await store.fileFor(entry.value);
+      if (file != null) files[entry.key] = file;
+    }
+    return files;
+  },
+);
