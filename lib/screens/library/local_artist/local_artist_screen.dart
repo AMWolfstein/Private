@@ -111,6 +111,8 @@ class _LocalArtistScreenState extends ConsumerState<LocalArtistScreen> {
         .watch(artistImageFileProvider(widget.artistName))
         .asData
         ?.value;
+    // The chosen photo replaces the album cover in the header, as in the list.
+    final heroCover = artistPhoto?.path ?? cover;
     final motion = ref.watch(
       settingsProvider.select((s) => s.animatedAlbumArtwork),
     );
@@ -147,13 +149,13 @@ class _LocalArtistScreenState extends ConsumerState<LocalArtistScreen> {
                       ? AnimatedArtworkVideo(
                           file: artistVideo,
                           fallback: _artwork(
-                            cover,
+                            heroCover,
                             placeholderIcon: CupertinoIcons.person,
                             placeholderSize: 64,
                           ),
                         )
                       : _artwork(
-                          cover,
+                          heroCover,
                           placeholderIcon: CupertinoIcons.person,
                           placeholderSize: 64,
                         ),
