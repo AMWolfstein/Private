@@ -1,4 +1,5 @@
 import 'package:sqflite/sqflite.dart';
+import 'package:sistrum/services/library/browse/library_artist_cover_sql.dart';
 import 'package:sistrum/services/library/database/library_schema.dart';
 import 'package:sistrum/services/library/browse/library_tag_credits.dart';
 import 'package:sistrum/services/library/database/sqlite_helpers.dart'
@@ -199,15 +200,23 @@ class LibrarySearchStore {
   }) async {
     final args = <Object?>[];
     final predicate = search.predicate('c.name_key', args);
+    final cover = artistCoverAndSampleSql(
+      keyColumn: 'g.name_key',
+      fields: "'album_artist', 'artist'",
+    );
     final select =
         '''
-      SELECT '' AS source, c.name_key AS id, MIN(c.name) AS title,
-        MIN(c.name) AS artist, NULL AS cover, MIN(l.file_path) AS sample_path,
-        COUNT(DISTINCT c.item_id) AS track_count, MIN(c.name) AS title_key
-      FROM ${LibraryTagCreditsCache.tempTable} c
-      JOIN ${LibrarySchema.visibleView} l ON l.id = c.item_id
-      WHERE c.field IN ('album_artist', 'artist') AND $predicate
-      GROUP BY c.name_key''';
+      SELECT '' AS source, g.name_key AS id, g.title AS title,
+        g.title AS artist, ${cover.cover} AS cover, ${cover.sample} AS sample_path,
+        g.track_count AS track_count, g.title AS title_key
+      FROM (
+        SELECT c.name_key, MIN(c.name) AS title,
+          COUNT(DISTINCT c.item_id) AS track_count
+        FROM ${LibraryTagCreditsCache.tempTable} c
+        JOIN ${LibrarySchema.visibleView} l ON l.id = c.item_id
+        WHERE c.field IN ('album_artist', 'artist') AND $predicate
+        GROUP BY c.name_key
+      ) g''';
     final rank = search.orderBy('title_key', args);
     final result = await db.rawQuery(
       '''

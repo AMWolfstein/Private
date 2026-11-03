@@ -29,7 +29,8 @@ album_name TEXT, album_artist TEXT, album_key TEXT, sort_track TEXT,
 sort_album TEXT, sort_album_artist TEXT, track_name_norm TEXT,
 album_name_norm TEXT, album_artist_norm TEXT, search_text TEXT,
 cover_url TEXT, cover_path TEXT, file_path TEXT, enabled INTEGER,
-search_track TEXT, search_album TEXT, search_artist TEXT"""
+search_track TEXT, search_album TEXT, search_artist TEXT,
+total_tracks INTEGER, total_discs INTEGER, release_date TEXT, sort_added INTEGER"""
 db.execute('CREATE TABLE library (' + columns + ')')
 db.execute('CREATE VIEW library_visible AS SELECT * FROM library WHERE enabled = 1')
 db.execute('CREATE TABLE library_path_keys (item_id TEXT, path_key TEXT)')

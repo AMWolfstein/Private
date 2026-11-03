@@ -282,10 +282,10 @@ class _LibrarySearchResultsState extends ConsumerState<LibrarySearchResults> {
                 image: FileImage(artistPhotos[artistImageKey(hit.title)]!),
                 fit: BoxFit.cover,
               ),
-            // Without a photo an artist shows the artwork of one of its
-            // tracks, as the Artists directory does, not a generic person.
+            // Without a photo an artist shows the same picture as its
+            // Artists directory row: its cover, else its sample track's art.
             LibrarySearchKind.artists => LocalLibraryArtworkBuilder(
-              coverPath: null,
+              coverPath: hit.cover?.isNotEmpty == true ? hit.cover : null,
               filePath: hit.samplePath.isEmpty ? null : hit.samplePath,
               builder: (context, cover) => cover == null
                   ? fallback(context)

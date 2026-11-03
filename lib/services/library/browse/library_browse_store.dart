@@ -2,6 +2,7 @@ import 'package:sqflite/sqflite.dart';
 import 'package:sistrum/services/library/database/library_database_models.dart';
 import 'package:sistrum/services/library/database/library_schema.dart';
 import 'package:sistrum/services/library/browse/library_tag_credits.dart';
+import 'package:sistrum/services/library/browse/library_artist_cover_sql.dart';
 import 'package:sistrum/services/library/browse/library_browse_filters.dart';
 import 'package:sistrum/services/library/browse/library_browse_order.dart';
 import 'package:sistrum/services/library/browse/library_browse_rows.dart';
@@ -186,48 +187,14 @@ class LibraryBrowseStore {
       'oldest' => 'sort_added, artist_key',
       _ => 'artist_key',
     };
-    String featuredProjection(String projection, {bool single = false}) =>
-        '''(
-      SELECT $projection FROM $table owned
-      JOIN ${LibrarySchema.visibleView} newest ON newest.id = owned.item_id
-      WHERE owned.field = 'album_artist' AND owned.name_key = g.artist_key
-      GROUP BY newest.album_key
-      HAVING ${single ? '' : 'NOT'} (MAX(COALESCE(newest.total_tracks, 0)) = 1 AND MAX(COALESCE(newest.total_discs, 1)) <= 1)
-      ORDER BY MAX(${metadataReleaseDateSql('newest.release_date')}) DESC,
-        MAX(COALESCE(newest.sort_added, 0)) DESC, newest.album_key
-      LIMIT 1
-    )''';
-    final featuredCover = featuredProjection(
-      "COALESCE(MAX(NULLIF(newest.cover_path, '')), '')",
-    );
-    final featuredPath = featuredProjection('MAX(newest.file_path)');
-    final singleCover = featuredProjection(
-      "COALESCE(MAX(NULLIF(newest.cover_path, '')), '')",
-      single: true,
-    );
-    final singlePath = featuredProjection(
-      'MAX(newest.file_path)',
-      single: true,
+    final cover = artistCoverAndSampleSql(
+      keyColumn: 'g.artist_key',
+      fields: fields,
     );
     return _db.rawQuery('''
       SELECT g.artist_key, g.artist_name, NULL AS cover_url,
-        COALESCE($featuredCover, $singleCover, (
-          SELECT NULLIF(newest.cover_path, '')
-          FROM $table c
-          JOIN ${LibrarySchema.visibleView} newest ON newest.id = c.item_id
-          WHERE c.field IN ($fields)
-            AND c.name_key = g.artist_key
-            AND NULLIF(newest.cover_path, '') IS NOT NULL
-          ORDER BY newest.sort_added DESC LIMIT 1
-        )) AS cover_path,
-        COALESCE($featuredPath, $singlePath, (
-          SELECT newest.file_path
-          FROM $table c
-          JOIN ${LibrarySchema.visibleView} newest ON newest.id = c.item_id
-          WHERE c.field IN ($fields)
-            AND c.name_key = g.artist_key
-          ORDER BY newest.sort_added DESC LIMIT 1
-        )) AS sample_file_path,
+        ${cover.cover} AS cover_path,
+        ${cover.sample} AS sample_file_path,
         g.track_count
       FROM (
         SELECT name_key AS artist_key, MIN(name) AS artist_name,

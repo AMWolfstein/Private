@@ -241,6 +241,18 @@ class _LocalAlbumScreenState extends ConsumerState<LocalAlbumScreen>
   @override
   Widget build(BuildContext context) {
     final albumCover = widget.coverPath?.trim();
+    // Same rule as the header: a saved video shows only while Animated
+    // artwork is on, and then it covers the photo the header would blur.
+    final albumVideoShown =
+        ref.watch(settingsProvider.select((s) => s.animatedAlbumArtwork)) &&
+        ref
+                .watch(
+                  animatedArtworkFileProvider(
+                    animatedAlbumRef(widget.albumName, widget.artistName),
+                  ),
+                )
+                .value !=
+            null;
     final artworkTrack =
         _sortedTracksCache
             .where(
@@ -258,6 +270,7 @@ class _LocalAlbumScreenState extends ConsumerState<LocalAlbumScreen>
       builder: (context, coverPath) => AppArtistSurface(
         imageSource: coverPath,
         neutralActions: true,
+        liveBackdrop: albumVideoShown,
         child: Builder(builder: (context) => _buildPage(context, coverPath)),
       ),
     );
