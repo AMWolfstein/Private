@@ -8,7 +8,6 @@ import 'package:sistrum/providers/artist_images/artist_image_providers.dart';
 import 'package:sistrum/services/artist_images/artist_image_download.dart';
 import 'package:sistrum/services/artist_images/artist_image_store.dart';
 import 'package:sistrum/services/artist_images/deezer_artist_search.dart';
-import 'package:sistrum/widgets/cover/cached_cover_image.dart';
 import 'package:sistrum/widgets/primitives/app_bottom_sheet.dart';
 import 'package:sistrum/widgets/primitives/app_context_menu.dart';
 import 'package:sistrum/providers/animated_artwork/animated_artwork_providers.dart';
@@ -256,20 +255,7 @@ class _FindArtistImageSheetState extends ConsumerState<FindArtistImageSheet> {
           for (final artist in results)
             ListTile(
               contentPadding: EdgeInsets.zero,
-              leading: artist.pictureUrl == null
-                  ? const CircleAvatar(child: Icon(Icons.person_outline))
-                  : ClipOval(
-                      child: SizedBox.square(
-                        dimension: 40,
-                        child: CachedCoverImage(
-                          imageUrl: artist.pictureUrl!,
-                          width: 40,
-                          height: 40,
-                          memCacheWidth: 80,
-                          memCacheHeight: 80,
-                        ),
-                      ),
-                    ),
+              leading: ArtistPhotoAvatar(url: artist.pictureUrl),
               title: Text(
                 artist.name,
                 maxLines: 1,
@@ -317,10 +303,7 @@ class _FindArtistImageSheetState extends ConsumerState<FindArtistImageSheet> {
           aspectRatio: 1,
           child: ClipRRect(
             borderRadius: BorderRadius.circular(12),
-            child: CachedCoverImage(
-              imageUrl: artist.pictureUrl!,
-              fit: BoxFit.cover,
-            ),
+            child: _RemotePhoto(url: artist.pictureUrl!),
           ),
         ),
         const SizedBox(height: 16),
@@ -336,3 +319,52 @@ class _FindArtistImageSheetState extends ConsumerState<FindArtistImageSheet> {
     );
   }
 }
+
+/// A search result's photo: the Deezer picture, or a placeholder when there is
+/// none or it cannot be loaded. Remote loading is the owner-approved artist
+/// photo lookup, started by the user in this sheet.
+class ArtistPhotoAvatar extends StatelessWidget {
+  const ArtistPhotoAvatar({super.key, required this.url, this.size = 40});
+
+  final String? url;
+  final double size;
+
+  @override
+  Widget build(BuildContext context) {
+    final placeholder = CircleAvatar(
+      radius: size / 2,
+      child: const Icon(Icons.person_outline),
+    );
+    final source = url;
+    if (source == null) return placeholder;
+    return ClipOval(
+      child: SizedBox.square(
+        dimension: size,
+        child: _RemotePhoto(url: source, fallback: placeholder),
+      ),
+    );
+  }
+}
+
+class _RemotePhoto extends StatelessWidget {
+  const _RemotePhoto({required this.url, this.fallback});
+
+  final String url;
+  final Widget? fallback;
+
+  @override
+  Widget build(BuildContext context) {
+    return Image.network(
+      url,
+      fit: BoxFit.cover,
+      gaplessPlayback: true,
+      loadingBuilder: (context, child, progress) => progress == null
+          ? child
+          : const Center(child: CircularProgressIndicator(strokeWidth: 2)),
+      errorBuilder: (context, error, stack) =>
+          fallback ??
+          const Center(child: Icon(Icons.person_outline)),
+    );
+  }
+}
+
