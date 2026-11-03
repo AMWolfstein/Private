@@ -342,9 +342,7 @@ class _ArtistCollapsingArtwork extends ConsumerWidget {
     // The photo softens by dissolving into the page's pre-blurred ground,
     // never by re-blurring it on every scroll frame.
     final soften = Curves.easeOut.transform(collapse);
-    final softenEnabled =
-        !MediaQuery.disableAnimationsOf(context) &&
-        ref.watch(appLiquidGlassProvider);
+    final softenEnabled = !MediaQuery.disableAnimationsOf(context);
 
     // The header controls' ground: this artwork under the same gradient,
     // fading to the surface as the header collapses.

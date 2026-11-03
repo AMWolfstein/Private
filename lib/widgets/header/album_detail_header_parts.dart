@@ -10,8 +10,7 @@ class _AlbumScrollVeil extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    if (MediaQuery.disableAnimationsOf(context) ||
-        !ref.watch(appLiquidGlassProvider)) {
+    if (MediaQuery.disableAnimationsOf(context)) {
       return const SizedBox.shrink();
     }
     // Read here, not by the header: an inset change rebuilds only the veil.

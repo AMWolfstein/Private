@@ -113,8 +113,7 @@ class _MiniPlayerState extends ConsumerState<MiniPlayer> {
     // skip keeping a paused video decoder for the full player's motion cover,
     // and stop the title marquee after a few passes: every marquee frame
     // re-filters the blurred chrome around it.
-    final fullEffects = ref.watch(appLiquidGlassProvider);
-    final marqueeCycles = fullEffects ? null : 2;
+    const marqueeCycles = 2;
 
     final player = Dismissible(
       key: ValueKey('mini-player-${mediaItem.id}'),

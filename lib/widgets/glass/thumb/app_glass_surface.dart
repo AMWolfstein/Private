@@ -161,22 +161,13 @@ class AppGlass extends ConsumerWidget {
         null;
     final sampleBackdrop = translucent && samplesBackdrop && !insideGlass;
     final single = firstInGroup && lastInGroup;
-    // Level 1 is always a plain blur; lenses need full glass and Impeller.
-    final lensAllowed =
-        !clarity.plainBlur &&
-        allowLens &&
-        level == AppGlassLevel.liquid &&
-        ref.watch(appShaderFiltersSupportedProvider);
     // Over known artwork (the player, album and artist headers) glass draws
     // from that artwork's ground and reads no backdrop.
     final ground = sampleBackdrop && single
         ? AppArtworkGroundScope.maybeOf(context)
         : null;
-    final useLens = ground == null && sampleBackdrop && single && lensAllowed;
-    // Every other single surface is a blur plus LiquidGlassLite's painted
-    // rim (Level 1, lite glass, or full glass without a lens).
-    final liteRim =
-        ground == null && sampleBackdrop && !useLens && single && outlines;
+    // Every other single surface is a blur plus LiquidGlassLite's painted rim.
+    final liteRim = ground == null && sampleBackdrop && single && outlines;
     final clearFill = (dark ? const Color(0xff999999) : Colors.white)
         .withValues(alpha: dark ? 0.17 : 0.46);
     final fill = Color.lerp(
@@ -205,12 +196,10 @@ class AppGlass extends ConsumerWidget {
             ),
           ]
         : null;
-    // Page glass under the shell's chrome batch keeps a read of its own.
-    final ownRead = appOutsideChromeBatch(context);
     final backdrop = ground != null
         ? AppArtworkGlassSurface(
             controller: ground,
-            lens: lensAllowed,
+            lens: false,
             fill: fill!,
             opaqueFill: scheme.surfaceContainerHigh,
             radius: radius,
@@ -219,19 +208,6 @@ class AppGlass extends ConsumerWidget {
             refractionWidth: 20,
             dispersion: clarity.dispersion,
             child: _GlassBackdropScope(child: child),
-          )
-        : useLens
-        ? _maybeExclude(
-            ownRead,
-            AppLiquidBackdrop(
-              borderRadius: shape,
-              dispersion: clarity.dispersion,
-              blurSigma: clarity.blurSigma,
-              refractionDepth: refractionDepth * reveal,
-              smoothCorners: squircle,
-              highlightIntensity: highlightIntensity * reveal,
-              child: surface,
-            ),
           )
         : sampleBackdrop
         ? AppBackdropBlur(
@@ -272,13 +248,13 @@ class AppGlass extends ConsumerWidget {
         // The optical lens already draws its own rim. Avoid a second dark
         // contact stroke on top, particularly visible against light pages.
         foregroundPainter:
-            outlines && ((!useLens && !liteRim) || highlightBorder)
+            outlines && (!liteRim || highlightBorder)
             ? _AppGlassRim(
                 shape: shape,
                 firstInGroup: firstInGroup,
                 lastInGroup: lastInGroup,
                 illuminated:
-                    translucent && ((!useLens && !liteRim) || highlightBorder),
+                    translucent && (!liteRim || highlightBorder),
                 emphasized: highlightBorder,
                 dark: dark,
                 smoothCorners: squircle,
@@ -292,9 +268,6 @@ class AppGlass extends ConsumerWidget {
     );
   }
 }
-
-Widget _maybeExclude(bool exclude, Widget child) =>
-    exclude ? LiquidGlassBatch.exclude(child: child) : child;
 
 /// Marks chrome whose light/dark palette follows a sampled backdrop, so its
 /// light glass can drop the readability floor and look clear at rest.

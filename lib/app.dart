@@ -15,7 +15,6 @@ import 'package:sistrum/l10n/app_localizations.dart';
 import 'package:sistrum/l10n/supported_locales.dart';
 import 'package:sistrum/utils/layout/adaptive_layout.dart';
 import 'package:sistrum/widgets/glass/chrome/app_backdrop_groups.dart';
-import 'package:sistrum/widgets/glass/thumb/app_glass_auto_probe_host.dart';
 import 'package:sistrum/widgets/glass/debug/app_performance_hud.dart';
 import 'package:sistrum/widgets/primitives/app_snack_bar.dart';
 import 'package:sistrum/widgets/player/controls/playback_feedback.dart';
@@ -223,10 +222,8 @@ class SistrumApp extends ConsumerWidget {
             return MediaQuery(
               data: mediaQuery.copyWith(displayFeatures: const []),
               child: AppGlassPreparation(
-                child: AppGlassAutoProbeHost(
-                  child: AppPerformanceHudHost(
-                    child: AdaptiveUiScaler(child: appContent),
-                  ),
+                child: AppPerformanceHudHost(
+                  child: AdaptiveUiScaler(child: appContent),
                 ),
               ),
             );

@@ -96,7 +96,6 @@ class AppTabBar extends ConsumerWidget {
     required this.selectedIndex,
     required this.onSelected,
     required this.blurEnabled,
-    this.liquidGlass = true,
     this.hiddenIconIndices = const {},
     this.contentOpacity = const AlwaysStoppedAnimation(1),
   });
@@ -105,7 +104,6 @@ class AppTabBar extends ConsumerWidget {
   final int selectedIndex;
   final ValueChanged<int> onSelected;
   final bool blurEnabled;
-  final bool liquidGlass;
   final Set<int> hiddenIconIndices;
 
   /// Fade only the foreground so the backdrop can keep sampling the page.
@@ -115,11 +113,9 @@ class AppTabBar extends ConsumerWidget {
   static bool usesLiquidGlass(
     BuildContext context, {
     required bool blurEnabled,
-    required bool liquidGlass,
     required bool contrastBlocked,
   }) =>
       blurEnabled &&
-      liquidGlass &&
       !MediaQuery.disableAnimationsOf(context) &&
       !contrastBlocked;
 
@@ -133,7 +129,6 @@ class AppTabBar extends ConsumerWidget {
     final floating = usesLiquidGlass(
       context,
       blurEnabled: blurEnabled,
-      liquidGlass: liquidGlass,
       contrastBlocked: contrastBlocked,
     );
     return Padding(

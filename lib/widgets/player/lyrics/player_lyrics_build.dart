@@ -13,11 +13,7 @@ extension _SyncedLyricsViewStatePart3 on _SyncedLyricsViewState {
     final blurStrength = ref.watch(
       themeProvider.select((theme) => theme.lyricsBlur),
     );
-    final blurLyrics =
-        blurStrength > 0 &&
-        !highContrast &&
-        // Every defocused line is filtered again on each playback frame.
-        ref.watch(appLiquidGlassProvider);
+    final blurLyrics = blurStrength > 0 && !highContrast;
     final motion = MediaQuery.disableAnimationsOf(context)
         ? Duration.zero
         : const Duration(milliseconds: 420);

@@ -189,12 +189,7 @@ extension _AppSelectionPillStatePart1 on _AppSelectionPillState {
                 child: AppLiquidBackdrop(
                   borderRadius: BorderRadius.circular(kAppSelectionPillRadius),
                   // Colour split is a full-glass effect; a lite pill has none.
-                  dispersion:
-                      ref.watch(appGlassLevelProvider) == AppGlassLevel.liquid
-                      ? appGlassClarity(
-                          ref.watch(appGlassClarityLevelProvider),
-                        ).dispersion
-                      : 0,
+                  dispersion: 0,
                   interaction: true,
                   progress: progress,
                   blurSigma: 0,

@@ -140,12 +140,10 @@ class _AppBottomBarState extends ConsumerState<AppBottomBar>
     final hasPlayer = ref.watch(
       currentMediaItemProvider.select((item) => item.value != null),
     );
-    final liquidGlass = ref.watch(appLiquidGlassProvider);
     // Animated glass tabs already reserve 8px above their visible capsule.
     final glassTabs = AppTabBar.usesLiquidGlass(
       context,
       blurEnabled: blurEnabled,
-      liquidGlass: liquidGlass,
       contrastBlocked: ref.watch(
         appGlassContrastBlockedProvider(MediaQuery.highContrastOf(context)),
       ),
@@ -185,7 +183,6 @@ class _AppBottomBarState extends ConsumerState<AppBottomBar>
           onSelected: (index) =>
               index == destinations.length - 1 ? onSearch() : onSelected(index),
           blurEnabled: blurEnabled,
-          liquidGlass: liquidGlass,
           contentOpacity: _tabOpacity,
           hiddenIconIndices: hideMovingIcons
               ? {leadingIndex, destinations.length - 1}

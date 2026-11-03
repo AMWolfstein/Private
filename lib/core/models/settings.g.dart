@@ -76,10 +76,6 @@ AppSettings _$AppSettingsFromJson(Map<String, dynamic> json) => AppSettings(
   performanceHudEnabled: json['performanceHudEnabled'] as bool? ?? false,
   barSamplerDisabled: json['barSamplerDisabled'] as bool? ?? false,
   headerBandBlurDisabled: json['headerBandBlurDisabled'] as bool? ?? false,
-  glassQuality: json['glassQuality'] as String? ?? 'auto',
-  glassClarityLevel: json['glassClarityLevel'] == null
-      ? kDefaultGlassClarityLevel
-      : glassClarityLevelFromJson(json['glassClarityLevel']),
   locale: json['locale'] == null ? 'system' : appLocaleFromJson(json['locale']),
   keepScreenOnLyrics: json['keepScreenOnLyrics'] as bool? ?? true,
   localLibraryShowDuplicates:
@@ -135,8 +131,6 @@ Map<String, dynamic> _$AppSettingsToJson(AppSettings instance) =>
       'performanceHudEnabled': instance.performanceHudEnabled,
       'barSamplerDisabled': instance.barSamplerDisabled,
       'headerBandBlurDisabled': instance.headerBandBlurDisabled,
-      'glassQuality': instance.glassQuality,
-      'glassClarityLevel': instance.glassClarityLevel,
       'locale': instance.locale,
       'keepScreenOnLyrics': instance.keepScreenOnLyrics,
       'localLibraryShowDuplicates': instance.localLibraryShowDuplicates,

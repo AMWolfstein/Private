@@ -1,88 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:sistrum/widgets/primitives/app_bottom_sheet.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/core/constants/language_choices.dart';
-import 'package:sistrum/providers/runtime_profile_provider.dart';
-import 'package:sistrum/core/models/app_glass.dart';
-import 'package:sistrum/services/glass/app_glass_auto_probe.dart';
 import 'package:sistrum/core/models/theme_settings.dart';
 import 'package:sistrum/widgets/glass/chrome/app_chrome_controls.dart';
 import 'package:sistrum/widgets/settings/settings_search_highlight.dart';
 import 'package:sistrum/widgets/settings/settings_chips_and_cards.dart';
 
 /// Auto / Lite / Full / Off, in the same control as System / Light / Dark.
-class GlassQualitySelector extends ConsumerWidget {
-  const GlassQualitySelector({
-    super.key,
-    required this.current,
-    required this.onChanged,
-  });
-
-  final AppGlassQuality current;
-  final ValueChanged<AppGlassQuality> onChanged;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final l10n = context.l10n;
-    final theme = Theme.of(context);
-    final measured =
-        ref.watch(
-          appGlassAutoStatusProvider(MediaQuery.highContrastOf(context)),
-        ) ==
-        AppGlassAutoStatus.measured;
-    final measuredQuality = switch (ref.watch(appGlassAutoStepProvider)) {
-      AppGlassAutoStep.full =>
-        ref.watch(appGlassLevelProvider) == AppGlassLevel.liquid
-            ? l10n.appearanceGlassQualityFull
-            : l10n.appearanceGlassQualityLite,
-      AppGlassAutoStep.lite => l10n.appearanceGlassQualityLite,
-      AppGlassAutoStep.liteFrosted =>
-        '${l10n.appearanceGlassQualityLite} · '
-            '${l10n.appearanceGlassLevelFrosted}',
-    };
-    final labels = {
-      AppGlassQuality.auto: l10n.appearanceGlassQualityAuto,
-      AppGlassQuality.lite: l10n.appearanceGlassQualityLite,
-      AppGlassQuality.full: l10n.appearanceGlassQualityFull,
-      AppGlassQuality.off: l10n.appearanceGlassQualityOff,
-    };
-    return SettingsSearchTarget(
-      label: l10n.appearanceGlassQuality,
-      child: Padding(
-        key: const ValueKey('sistrum-glass-quality'),
-        padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              l10n.appearanceGlassQuality,
-              style: theme.textTheme.titleMedium,
-            ),
-            const SizedBox(height: 4),
-            Text(
-              l10n.appearanceGlassQualitySubtitle,
-              style: theme.textTheme.bodySmall,
-            ),
-            AppSegmentedControl(
-              labels: labels.values.toList(),
-              selectedIndex: labels.keys.toList().indexOf(current),
-              onChanged: (index) => onChanged(labels.keys.elementAt(index)),
-            ),
-            if (measured)
-              Text(
-                l10n.appearanceGlassAutoMeasured(measuredQuality),
-                key: const ValueKey('sistrum-glass-auto-measured'),
-                style: theme.textTheme.bodySmall?.copyWith(
-                  color: theme.colorScheme.onSurfaceVariant,
-                ),
-              ),
-          ],
-        ),
-      ),
-    );
-  }
-}
 
 class ThemeModeSelector extends StatelessWidget {
   final ThemeMode currentMode;

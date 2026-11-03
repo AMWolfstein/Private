@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/core/constants/app_info.dart';
 import 'package:sistrum/l10n/l10n.dart';
-import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/providers/settings/settings_provider.dart';
 import 'package:sistrum/core/theme/app_icons.dart';
 import 'package:sistrum/utils/layout/adaptive_layout.dart';
@@ -126,15 +125,6 @@ class _AboutPageState extends ConsumerState<AboutPage> {
                       onChanged: (on) => ref
                           .read(settingsProvider.notifier)
                           .setHeaderBandBlurDisabled(!on),
-                    ),
-                    _AboutSettingsItem(
-                      key: const ValueKey('developer-remeasure-glass'),
-                      icon: Icons.refresh,
-                      title: context.l10n.aboutRemeasureGlass,
-                      subtitle: context.l10n.aboutRemeasureGlassSubtitle,
-                      onTap: ref
-                          .read(appGlassAutoResultProvider.notifier)
-                          .clear,
                     ),
                     _AboutSettingsItem(
                       icon: Icons.visibility_off_outlined,

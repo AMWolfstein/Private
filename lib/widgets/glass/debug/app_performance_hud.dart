@@ -7,7 +7,6 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:sistrum/core/models/app_glass.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/providers/settings/settings_provider.dart';
 import 'package:sistrum/widgets/glass/artwork/app_artwork_ground.dart';
@@ -196,12 +195,8 @@ class _AppPerformanceHudState extends ConsumerState<AppPerformanceHud> {
   }
 
   String _glass(BuildContext context) {
-    final quality = ref.read(appGlassQualityProvider);
     final level = ref.read(appGlassLevelProvider);
     final clarity = ref.read(appGlassClarityLevelProvider);
-    final renderer = quality == AppGlassQuality.auto
-        ? '${level.name}, ${ref.read(appGlassAutoStatusProvider(MediaQuery.highContrastOf(context))).name}'
-        : level.name;
     final sampler = ref.read(appBarSamplerDisabledProvider)
         ? 'off'
         : appLiquidChromeEnabled(context, ref)
@@ -214,7 +209,7 @@ class _AppPerformanceHudState extends ConsumerState<AppPerformanceHud> {
         ? 'n/a'
         : '${ground.total.inMilliseconds}ms'
               '(decode ${ground.decode.inMilliseconds})';
-    return 'quality=${quality.name}($renderer) level=$clarity '
+    return 'level=${level.name} clarity=$clarity '
         'reads=${_reads()} sampler=$sampler bandblur=$band '
         'ground=$groundText';
   }
@@ -242,10 +237,8 @@ class _AppPerformanceHudState extends ConsumerState<AppPerformanceHud> {
   @override
   Widget build(BuildContext context) {
     // Rebuild when the glass settings change, so the line stays current.
-    ref.watch(appGlassQualityProvider);
     ref.watch(appGlassLevelProvider);
     ref.watch(appGlassClarityLevelProvider);
-    ref.watch(appGlassAutoResultProvider);
     final samplerOff = ref.watch(appBarSamplerDisabledProvider);
     final bandBlurOff = ref.watch(appHeaderBandBlurDisabledProvider);
     final refreshRate = View.of(context).display.refreshRate;

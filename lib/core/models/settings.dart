@@ -14,12 +14,8 @@ double playbackNormalizationPreampFromJson(Object? value) =>
 String playbackNormalizationModeFromJson(Object? value) =>
     value == 'album' ? 'album' : 'track';
 
-/// Default Sistrum glass clarity level (Balanced).
+/// The fixed glass clarity level (Balanced) every Tinted Lite surface uses.
 const int kDefaultGlassClarityLevel = 3;
-
-int glassClarityLevelFromJson(Object? value) => value is num && value.isFinite
-    ? value.round().clamp(1, 5)
-    : kDefaultGlassClarityLevel;
 
 String appLocaleFromJson(Object? value) => value is String ? value : 'system';
 
@@ -116,13 +112,6 @@ class AppSettings {
   /// its backdrop blur.
   final bool headerBandBlurDisabled;
 
-  /// Sistrum glass renderer: `auto` (the device decides), `lite`, `full` or
-  /// `off`. See [AppGlassQuality].
-  final String glassQuality;
-
-  /// Sistrum glass clarity level, 1 (Frosted) to 5 (Crystal).
-  @JsonKey(fromJson: glassClarityLevelFromJson)
-  final int glassClarityLevel;
   @JsonKey(fromJson: appLocaleFromJson)
   final String locale;
   final bool keepScreenOnLyrics;
@@ -181,8 +170,6 @@ class AppSettings {
     this.performanceHudEnabled = false,
     this.barSamplerDisabled = false,
     this.headerBandBlurDisabled = false,
-    this.glassQuality = 'auto',
-    this.glassClarityLevel = kDefaultGlassClarityLevel,
     this.locale = 'system',
     this.keepScreenOnLyrics = true,
     this.localLibraryShowDuplicates = true,
@@ -237,8 +224,6 @@ class AppSettings {
     bool? performanceHudEnabled,
     bool? barSamplerDisabled,
     bool? headerBandBlurDisabled,
-    String? glassQuality,
-    int? glassClarityLevel,
     String? locale,
     bool? keepScreenOnLyrics,
     bool? localLibraryShowDuplicates,
@@ -306,8 +291,6 @@ class AppSettings {
       barSamplerDisabled: barSamplerDisabled ?? this.barSamplerDisabled,
       headerBandBlurDisabled:
           headerBandBlurDisabled ?? this.headerBandBlurDisabled,
-      glassQuality: glassQuality ?? this.glassQuality,
-      glassClarityLevel: glassClarityLevel ?? this.glassClarityLevel,
       locale: locale ?? this.locale,
       keepScreenOnLyrics: keepScreenOnLyrics ?? this.keepScreenOnLyrics,
       localLibraryShowDuplicates:

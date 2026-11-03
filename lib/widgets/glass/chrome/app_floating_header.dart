@@ -34,17 +34,8 @@ enum AppHeaderMaterial {
   glass,
 }
 
-/// Liquid header and bar chrome (lenses, the bar's adaptive sampler) needs
-/// the shader renderer, full glass above Level 1, motion and no contrast
-/// request.
-bool appLiquidChromeEnabled(BuildContext context, WidgetRef ref) =>
-    ref.watch(appShaderFiltersSupportedProvider) &&
-    ref.watch(appLiquidGlassProvider) &&
-    !appGlassClarity(ref.watch(appGlassClarityLevelProvider)).plainBlur &&
-    !MediaQuery.disableAnimationsOf(context) &&
-    !ref.watch(
-      appGlassContrastBlockedProvider(MediaQuery.highContrastOf(context)),
-    );
+/// Lens chrome is removed: every header and bar surface is Tinted Lite.
+bool appLiquidChromeEnabled(BuildContext context, WidgetRef ref) => false;
 
 AppHeaderMaterial appHeaderMaterial(BuildContext context, WidgetRef ref) {
   final translucent =
