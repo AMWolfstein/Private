@@ -37,7 +37,7 @@ val sideBySideBuild = providers.environmentVariable("SISTRUM_SIDE_BY_SIDE")
 
 val rustBackendDir = rootProject.file("../rust_backend")
 val rustAndroidAbis = providers.environmentVariable("SISTRUM_RUST_ANDROID_ABIS")
-    .orElse("arm64-v8a,armeabi-v7a")
+    .orElse("arm64-v8a")
     .get()
     .split(",")
 val supportedRustAndroidAbis = setOf("arm64-v8a", "armeabi-v7a")
@@ -158,16 +158,6 @@ android {
             ndk {
                 debugSymbolLevel = "FULL"
             }
-        }
-    }
-
-    // Split APKs by ABI for smaller individual downloads
-    splits {
-        abi {
-            isEnable = true
-            reset()
-            include(*rustAndroidAbis.toTypedArray())
-            isUniversalApk = true // Also generate universal APK
         }
     }
 }
