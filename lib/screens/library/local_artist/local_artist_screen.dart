@@ -48,6 +48,7 @@ class LocalArtistScreen extends ConsumerStatefulWidget {
 
 class _LocalArtistScreenState extends ConsumerState<LocalArtistScreen> {
   final _scroll = ScrollController();
+  final _imageMenuKey = GlobalKey(debugLabel: 'artist-image-menu');
   bool _showTitle = false;
   bool _startingPlayback = false;
   Set<String> _queueIdentities = {};
@@ -142,6 +143,24 @@ class _LocalArtistScreenState extends ConsumerState<LocalArtistScreen> {
                       fileSize: true,
                       releaseDate: true,
                     ),
+                    IconButton(
+                      key: _imageMenuKey,
+                      icon: const Icon(Icons.more_horiz),
+                      tooltip: MaterialLocalizations.of(
+                        context,
+                      ).moreButtonTooltip,
+                      onPressed: () {
+                        final buttonContext = _imageMenuKey.currentContext;
+                        if (buttonContext == null) return;
+                        showArtistImageMenu(
+                          context,
+                          ref,
+                          widget.artistName,
+                          hasPhoto: artistPhoto != null,
+                          anchor: appMenuAnchor(buttonContext),
+                        );
+                      },
+                    ),
                   ],
                   actions: [
                     HeaderCircleButton(
@@ -177,25 +196,6 @@ class _LocalArtistScreenState extends ConsumerState<LocalArtistScreen> {
                           }
                         }
                       },
-                    ),
-                    Builder(
-                      builder: (buttonContext) => HeaderCircleButton(
-                        icon: Icons.more_horiz,
-                        tooltip: MaterialLocalizations.of(
-                          context,
-                        ).moreButtonTooltip,
-                        buttonSize: 50,
-                        iconSize: 24,
-                        iconColor: colors.primary,
-                        tonal: true,
-                        onPressed: () => showArtistImageMenu(
-                          context,
-                          ref,
-                          widget.artistName,
-                          hasPhoto: artistPhoto != null,
-                          anchor: appMenuAnchor(buttonContext),
-                        ),
-                      ),
                     ),
                     CupertinoButton(
                       key: const ValueKey('artist-play'),

@@ -25,6 +25,7 @@ import 'package:sistrum/core/theme/app_theme.dart';
 import 'package:sistrum/widgets/collection/collection_scaffold.dart';
 import 'package:sistrum/widgets/header/album_detail_header.dart';
 import 'package:sistrum/widgets/header/app_artist_header.dart';
+import 'package:sistrum/widgets/glass/chrome/app_floating_header.dart';
 
 class _Settings extends SettingsNotifier {
   @override
@@ -184,6 +185,16 @@ void main() {
           tester.getCenter(find.byKey(const ValueKey('artist-play'))).dx,
           closeTo(215, 1),
         );
+        final imageMenu = find.descendant(
+          of: find.byType(AppHeaderActions),
+          matching: find.byIcon(Icons.more_horiz),
+        );
+        expect(imageMenu, findsOneWidget);
+        await tester.tap(imageMenu);
+        await tester.pumpAndSettle();
+        expect(find.text('Find artist image'), findsOneWidget);
+        Navigator.of(tester.element(find.text('Find artist image'))).pop();
+        await tester.pumpAndSettle();
         await tester.tap(find.byKey(const ValueKey('artist-play')));
         await tester.pumpAndSettle();
         expect(playback.queues.single.length, 41);
