@@ -26,7 +26,12 @@ extension _NowPlayingMenus on _NowPlayingScreenState {
       );
       return;
     }
-    await showFindLyricsSheet(context, item);
+    final saved = await showFindLyricsSheet(context, item);
+    if (!mounted || saved == null) return;
+    await _trackMetadata.reloadAfterEdit(
+      ref.read(currentMediaItemProvider).value,
+      savedSource: item.filePath,
+    );
   }
 
   Future<void> _showLyricsOptions(

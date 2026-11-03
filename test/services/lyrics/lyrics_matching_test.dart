@@ -59,4 +59,17 @@ void main() {
       isFalse,
     );
   });
+  test('shared first names never identify the same artist', () {
+    expect(artistsMatch('محمد رمضان', 'محمد حماقي'), isFalse);
+    expect(artistsMatch('John Lennon', 'John Legend'), isFalse);
+    expect(
+      artistsMatch('John Lennon', 'John Lennon feat. Paul McCartney'),
+      isTrue,
+    );
+    expect(
+      artistsMatch('Paul McCartney', 'John Lennon feat. Paul McCartney'),
+      isTrue,
+    );
+    expect(artistsMatch('AC/DC', 'ac dc'), isTrue);
+  });
 }

@@ -1146,9 +1146,9 @@
     "semantic_hash": "a7e4dc401d6563fb09eaade8e0421cbf"
   },
   "AGENTS.md": {
-    "mtime": 1793662170.0935247,
-    "seen": 1793692924.1194184,
-    "ast_hash": "d51019f0be6e97dac38ee40faac012b1",
+    "mtime": 1793697682.8275282,
+    "seen": 1793697717.1235852,
+    "ast_hash": "f35edf92365193a18a7bc50447bd87d9",
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
@@ -1650,9 +1650,9 @@
     "semantic_hash": "bfee1356e4c394e0644e2bbc91d17bec"
   },
   "LOCAL_OFFLINE_MIGRATION_PLAN.md": {
-    "mtime": 1793691983.4728389,
-    "seen": 1793692924.1194246,
-    "ast_hash": "985aa1452705105edbafbf26142d91ec",
+    "mtime": 1793697682.8270826,
+    "seen": 1793697717.1236508,
+    "ast_hash": "10f8f0968d3379c1407008538af11a01",
     "semantic_hash": ""
   },
   "third_party/audio_service/CHANGELOG.md": {
@@ -8568,9 +8568,9 @@
     "semantic_hash": ""
   },
   "test/providers/player_metadata_controller_test.dart": {
-    "mtime": 1793436727.3151484,
-    "seen": 1793692924.1188257,
-    "ast_hash": "b2cf149577f6935f8f14f69105cb04d5",
+    "mtime": 1793696801.2412174,
+    "seen": 1793697717.110594,
+    "ast_hash": "ff25b5f8ad4ac34f6f8797980e6ea053",
     "semantic_hash": ""
   },
   "test/screens/equalizer_screen_test.dart": {
@@ -10152,9 +10152,9 @@
     "semantic_hash": ""
   },
   "lib/providers/playback/player_metadata_controller.dart": {
-    "mtime": 1793436727.274828,
-    "seen": 1793692924.1171036,
-    "ast_hash": "debc0d28f0cf7b53d9cb4ec3c57c93c8",
+    "mtime": 1793697017.9835815,
+    "seen": 1793697717.080104,
+    "ast_hash": "c29454ef12cb88e227f06bf2d3ba5d9e",
     "semantic_hash": ""
   },
   "lib/providers/settings/equalizer_provider.dart": {
@@ -10230,9 +10230,9 @@
     "semantic_hash": ""
   },
   "lib/screens/player/now_playing_screen_menus.dart": {
-    "mtime": 1793662170.333523,
-    "seen": 1793692924.1171868,
-    "ast_hash": "92f6b084df67384e8cae97f872e24937",
+    "mtime": 1793696423.3493295,
+    "seen": 1793697717.0813184,
+    "ast_hash": "e8bf304864576ce88dfb238a58859a74",
     "semantic_hash": ""
   },
   "lib/screens/player/now_playing_screen_player.dart": {
@@ -12576,9 +12576,9 @@
     "semantic_hash": ""
   },
   "lib/services/lyrics/embedded_lyrics_writer.dart": {
-    "mtime": 1793662170.3345206,
-    "seen": 1793692924.117356,
-    "ast_hash": "2377b659ab8b1bdba7620c8cffd65c4c",
+    "mtime": 1793697017.9835815,
+    "seen": 1793697717.0844634,
+    "ast_hash": "2a9346b754186be586e0464921d636d8",
     "semantic_hash": ""
   },
   "lib/services/lyrics/lrclib_lyrics_provider.dart": {
@@ -12594,9 +12594,9 @@
     "semantic_hash": ""
   },
   "lib/services/lyrics/lyrics_matching.dart": {
-    "mtime": 1793662170.3349497,
-    "seen": 1793692924.117362,
-    "ast_hash": "5b1a7ca48557e1dd21c279f1d727df55",
+    "mtime": 1793696571.294947,
+    "seen": 1793697717.0845108,
+    "ast_hash": "698fe25ab6757da37789a6d055794d68",
     "semantic_hash": ""
   },
   "lib/services/lyrics/lyrics_timing_store.dart": {
@@ -12606,21 +12606,21 @@
     "semantic_hash": ""
   },
   "lib/services/lyrics/online_lyrics_providers.dart": {
-    "mtime": 1793662170.3349497,
-    "seen": 1793692924.1173654,
-    "ast_hash": "4fabad22ce5ddeea90bca4cf6b74d067",
+    "mtime": 1793696571.3269465,
+    "seen": 1793697717.0845346,
+    "ast_hash": "c69e3a02772c71ff76067522163822b5",
     "semantic_hash": ""
   },
   "lib/services/lyrics/online_lyrics_search.dart": {
-    "mtime": 1793662170.3349497,
-    "seen": 1793692924.1173666,
-    "ast_hash": "a99cf26f337881833de3598835b0f7e1",
+    "mtime": 1793696423.4600983,
+    "seen": 1793697717.0845366,
+    "ast_hash": "4418d54399841e63b1541e5e274dd17d",
     "semantic_hash": ""
   },
   "test/services/lyrics/embedded_lyrics_writer_test.dart": {
-    "mtime": 1793662170.3360412,
-    "seen": 1793692924.1189275,
-    "ast_hash": "58d04036c22ee3fe82d7f1ae83120af8",
+    "mtime": 1793696801.2212174,
+    "seen": 1793697717.1128135,
+    "ast_hash": "e877ad2a0b72050438ed8100c2737b36",
     "semantic_hash": ""
   },
   "test/services/lyrics/lrclib_lyrics_provider_test.dart": {
@@ -12636,45 +12636,45 @@
     "semantic_hash": ""
   },
   "test/services/lyrics/lyrics_matching_test.dart": {
-    "mtime": 1793662170.3361838,
-    "seen": 1793692924.1189322,
-    "ast_hash": "144b3cb67904e3ca86fca21ec23e518c",
+    "mtime": 1793696801.2252176,
+    "seen": 1793697717.1128612,
+    "ast_hash": "ed317d46f2a475de502e1e6bc659669e",
     "semantic_hash": ""
   },
   "test/services/lyrics/online_lyrics_search_test.dart": {
-    "mtime": 1793662170.3361838,
-    "seen": 1793692924.118935,
-    "ast_hash": "787a8887ae1b75a3616ae89e23135528",
+    "mtime": 1793697017.9915814,
+    "seen": 1793697717.112864,
+    "ast_hash": "0d97063c214adec05de67675159d4744",
     "semantic_hash": ""
   },
   "lib/services/lyrics/lrc_sidecar_store.dart": {
-    "mtime": 1793662170.3349497,
-    "seen": 1793692924.1173577,
-    "ast_hash": "7d5135a3dfb6e9d25cacd14271feba30",
+    "mtime": 1793697017.9835815,
+    "seen": 1793697717.0844648,
+    "ast_hash": "e8861e2d269b9d108ecde52043cac1e3",
     "semantic_hash": ""
   },
   "lib/services/lyrics/lyrics_save_actions.dart": {
-    "mtime": 1793662170.3349497,
-    "seen": 1793692924.117363,
-    "ast_hash": "5cb7c13117cc6bb0903da9625f4a0288",
+    "mtime": 1793696423.4440982,
+    "seen": 1793697717.084512,
+    "ast_hash": "afdc65e2464424b11e758b7e5a59cef9",
     "semantic_hash": ""
   },
   "lib/widgets/lyrics/find_lyrics_sheet.dart": {
-    "mtime": 1793662170.3349497,
-    "seen": 1793692924.117882,
-    "ast_hash": "252ef09bbf56e8eda1c4a80f579b6676",
+    "mtime": 1793697017.9915814,
+    "seen": 1793697717.0892367,
+    "ast_hash": "7ed197192fd9b075fb77b454a669170b",
     "semantic_hash": ""
   },
   "test/services/lyrics/lrc_sidecar_store_test.dart": {
-    "mtime": 1793662170.3361838,
-    "seen": 1793692924.118929,
-    "ast_hash": "1ff4f4bce04fc9e7a38f2632e91cc36f",
+    "mtime": 1793696801.2212174,
+    "seen": 1793697717.1128151,
+    "ast_hash": "6f0d376f5a18c6d8ffc5d51b8a1df7af",
     "semantic_hash": ""
   },
   "test/services/lyrics/lyrics_save_actions_test.dart": {
-    "mtime": 1793662170.3361838,
-    "seen": 1793692924.1189334,
-    "ast_hash": "d70b26f66bf60fe848eb6eb9e4ddeaa0",
+    "mtime": 1793696801.2332175,
+    "seen": 1793697717.1128623,
+    "ast_hash": "8c4f098adc9db07a57b0d660d12f2a81",
     "semantic_hash": ""
   },
   "android/app/src/main/kotlin/com/amwolfstein/sistrum/NetworkKind.kt": {
@@ -12696,9 +12696,9 @@
     "semantic_hash": ""
   },
   "lib/services/artist_images/deezer_artist_search.dart": {
-    "mtime": 1793662170.3345206,
-    "seen": 1793692924.1172554,
-    "ast_hash": "7e3e95b953aa06a41350721d67fdc3dc",
+    "mtime": 1793696493.2520115,
+    "seen": 1793697717.0825567,
+    "ast_hash": "6ee289a4c1d9af22884b2c416c00a097",
     "semantic_hash": ""
   },
   "test/services/artist_images/artist_image_network_test.dart": {
@@ -12714,15 +12714,15 @@
     "semantic_hash": ""
   },
   "lib/providers/artist_images/artist_image_providers.dart": {
-    "mtime": 1793691161.4133675,
-    "seen": 1793692924.1170661,
-    "ast_hash": "3bd14e8db47fe00db2db1c6d0649e63f",
+    "mtime": 1793696493.3195543,
+    "seen": 1793697717.0795722,
+    "ast_hash": "715816b4c5bf4e19273e2f3c8a378875",
     "semantic_hash": ""
   },
   "lib/services/artist_images/artist_image_auto_pass.dart": {
-    "mtime": 1793691161.4173675,
-    "seen": 1793692924.1172495,
-    "ast_hash": "d328ba303e70d3b2e5351095fe3a4983",
+    "mtime": 1793697017.9835815,
+    "seen": 1793697717.0825055,
+    "ast_hash": "3ef5469be17e5ff9d94d913608530c93",
     "semantic_hash": ""
   },
   "lib/services/artist_images/artist_image_download.dart": {
@@ -12732,27 +12732,39 @@
     "semantic_hash": ""
   },
   "lib/services/artist_images/artist_image_store.dart": {
-    "mtime": 1793691161.4173675,
-    "seen": 1793692924.1172538,
-    "ast_hash": "8ec7bcb7c6236ba60b40d6b29b5832da",
+    "mtime": 1793697017.9835815,
+    "seen": 1793697717.0825546,
+    "ast_hash": "a8f2c32f268c416751771f6e89fd023a",
     "semantic_hash": ""
   },
   "lib/widgets/artist_images/find_artist_image_sheet.dart": {
-    "mtime": 1793691161.4173675,
-    "seen": 1793692924.1177907,
-    "ast_hash": "2caf90635ea1006dd475e2f222eae642",
+    "mtime": 1793697017.9915814,
+    "seen": 1793697717.0876544,
+    "ast_hash": "d09448fbc3c610f545315905e6368e8f",
     "semantic_hash": ""
   },
   "test/services/artist_images/artist_image_store_test.dart": {
-    "mtime": 1793691161.4173675,
-    "seen": 1793692924.1188715,
-    "ast_hash": "37ab3dcb69ccf22324b5741446644cb7",
+    "mtime": 1793696571.201378,
+    "seen": 1793697717.1116931,
+    "ast_hash": "cca648abf7d7e1df6c208e9edebbfd93",
     "semantic_hash": ""
   },
   "docs/LYRICS_REVIEW_BACKLOG.md": {
-    "mtime": 1793691201.73337,
-    "seen": 1793692924.1194568,
-    "ast_hash": "baa2191ae5486ebb99d0ed3668ec5516",
+    "mtime": 1793697682.8253005,
+    "seen": 1793697717.1241434,
+    "ast_hash": "e774fc736816854f1d1bec6c2f048d9d",
+    "semantic_hash": ""
+  },
+  "test/services/artist_images/artist_image_races_test.dart": {
+    "mtime": 1793696706.9859195,
+    "seen": 1793697717.1116908,
+    "ast_hash": "4ac67a8a3db5ed49335c0c4c71778585",
+    "semantic_hash": ""
+  },
+  "docs/LYRICS_ARTIST_IMAGES_FIXES.md": {
+    "mtime": 1793697682.8255427,
+    "seen": 1793697717.1241415,
+    "ast_hash": "5922e9e6f2ee5db6bb0f2cb6ce717f3c",
     "semantic_hash": ""
   }
 }

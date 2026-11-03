@@ -49,7 +49,7 @@ void main() {
 
   test('a failed edit is reported with its failure kind', () async {
     final store = MetadataEmbeddedLyricsStore(
-      readTags: (_) async => {},
+      readTags: (_) async => {'audio_codec': 'flac'},
       persistence: (covers) => MetadataPersistenceService(
         covers: covers,
         edit: (path, metadata) async =>
@@ -66,7 +66,7 @@ void main() {
 
   test('a failed index refresh does not undo a saved file', () async {
     final store = MetadataEmbeddedLyricsStore(
-      readTags: (_) async => {},
+      readTags: (_) async => {'audio_codec': 'flac'},
       persistence: (covers) => MetadataPersistenceService(
         covers: covers,
         edit: (path, metadata) async =>
@@ -79,5 +79,37 @@ void main() {
     final result = await store.write(_song(), '[00:01.00]Hi');
 
     expect(result.saved, isTrue);
+  });
+  test(
+    'a native error map cannot bypass existing-lyrics confirmation',
+    () async {
+      final store = MetadataEmbeddedLyricsStore(
+        readTags: (_) async => {'error': 'read refused'},
+      );
+      await expectLater(
+        store.existingLyrics(_song()),
+        throwsA(isA<LyricsMetadataReadFailure>()),
+      );
+    },
+  );
+  test('failed or empty metadata is never sent to the tag writer', () async {
+    var edits = 0;
+    for (final tags in [
+      <String, dynamic>{'error': 'read refused'},
+      <String, dynamic>{},
+    ]) {
+      final store = MetadataEmbeddedLyricsStore(
+        readTags: (_) async => tags,
+        persistence: (covers) => MetadataPersistenceService(
+          covers: covers,
+          edit: (path, values) async {
+            edits++;
+            return MetadataEditResult.decode({'method': 'native'});
+          },
+        ),
+      );
+      expect((await store.write(_song(), '[00:01]New')).saved, isFalse);
+    }
+    expect(edits, 0);
   });
 }

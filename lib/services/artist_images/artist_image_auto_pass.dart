@@ -51,60 +51,134 @@ Future<ArtistImageAutoResult> runArtistImageAutoPass({
   required Future<ArtistNetworkKind> Function() readNetwork,
   required bool Function() stillEnabled,
   Duration pause = const Duration(seconds: 1),
+  void Function()? onChanged,
+  int batchSize = 5,
 }) async {
+  final generation = store.generation;
   final records = await store.readAll();
+  var pendingChanges = 0;
+  void flush() {
+    if (pendingChanges > 0) {
+      pendingChanges = 0;
+      onChanged?.call();
+    }
+  }
+
+  void changed() {
+    pendingChanges++;
+    if (pendingChanges >= batchSize) flush();
+  }
+
   final seen = <String>{};
   var saved = 0;
   var notFound = 0;
 
-  ArtistImageAutoResult stop(ArtistImageAutoStop reason) =>
-      ArtistImageAutoResult(saved: saved, notFound: notFound, stopped: reason);
-
-  for (final name in names) {
-    if (!stillEnabled()) return stop(ArtistImageAutoStop.disabled);
-    if (isSkippedArtistName(name)) continue;
-    final key = artistImageKey(name);
-    if (!seen.add(key) || records.containsKey(key)) continue;
-
-    if (!policy.allows(await readNetwork())) {
-      return stop(ArtistImageAutoStop.networkNotAllowed);
-    }
-
-    final List<DeezerArtist> artists;
-    try {
-      artists = await DeezerArtistSearch(client).search(name);
-    } on DeezerUnavailable {
-      return stop(ArtistImageAutoStop.outage);
-    }
-
-    DeezerArtist? match;
-    for (final artist in artists) {
-      if (isExactArtistMatch(name, artist.name) && artist.pictureUrl != null) {
-        match = artist;
-        break;
-      }
-    }
-
-    if (match == null) {
-      await store.recordWithoutPhoto(key, ArtistImageStatus.notFound);
-      notFound++;
-    } else {
-      final Uint8List bytes;
-      try {
-        bytes = await downloadArtistImage(client, match.pictureUrl!);
-      } on ArtistImageDownloadFailed {
-        return stop(ArtistImageAutoStop.outage);
-      }
-      await store.savePhoto(
-        key: key,
-        artist: match,
-        bytes: bytes,
-        status: ArtistImageStatus.auto,
-      );
-      saved++;
-    }
-
-    if (pause > Duration.zero) await Future<void>.delayed(pause);
+  ArtistImageAutoResult stop(ArtistImageAutoStop reason) {
+    flush();
+    return ArtistImageAutoResult(
+      saved: saved,
+      notFound: notFound,
+      stopped: reason,
+    );
   }
-  return ArtistImageAutoResult(saved: saved, notFound: notFound, stopped: null);
+
+  ArtistImageAutoStop? stopReason;
+  Future<bool> allowed() async {
+    if (!stillEnabled() || generation != store.generation) {
+      stopReason = ArtistImageAutoStop.disabled;
+      return false;
+    }
+    if (!policy.allows(await readNetwork())) {
+      stopReason = ArtistImageAutoStop.networkNotAllowed;
+      return false;
+    }
+    if (!stillEnabled() || generation != store.generation) {
+      stopReason = ArtistImageAutoStop.disabled;
+      return false;
+    }
+    return true;
+  }
+
+  try {
+    for (final name in names) {
+      if (!stillEnabled() || generation != store.generation) {
+        return stop(ArtistImageAutoStop.disabled);
+      }
+      if (isSkippedArtistName(name)) continue;
+      final key = artistImageKey(name);
+      if (!seen.add(key) || records.containsKey(key)) continue;
+
+      final ticket = store.ticketFor(key);
+      if (!await allowed()) return stop(stopReason!);
+
+      final List<DeezerArtist> artists;
+      try {
+        artists = await DeezerArtistSearch(client).search(name);
+      } on DeezerUnavailable {
+        return stop(
+          !stillEnabled()
+              ? ArtistImageAutoStop.disabled
+              : ArtistImageAutoStop.outage,
+        );
+      }
+
+      if (!await allowed()) return stop(stopReason!);
+      DeezerArtist? match;
+      for (final artist in artists) {
+        if (isExactArtistMatch(name, artist.name) &&
+            artist.pictureUrl != null) {
+          match = artist;
+          break;
+        }
+      }
+
+      if (match == null) {
+        final result = await store.recordWithoutPhoto(
+          key,
+          ArtistImageStatus.notFound,
+          ticket: ticket,
+          mayCommit: allowed,
+        );
+        if (result == ArtistImageSaveOutcome.saved) {
+          notFound++;
+          changed();
+        }
+        if (stopReason != null) return stop(stopReason!);
+      } else {
+        final Uint8List bytes;
+        try {
+          bytes = await downloadArtistImage(client, match.pictureUrl!);
+        } on ArtistImageDownloadFailed {
+          return stop(
+            !stillEnabled()
+                ? ArtistImageAutoStop.disabled
+                : ArtistImageAutoStop.outage,
+          );
+        }
+        final result = await store.savePhoto(
+          key: key,
+          artist: match,
+          bytes: bytes,
+          status: ArtistImageStatus.auto,
+          ticket: ticket,
+          mayCommit: allowed,
+        );
+        if (result == ArtistImageSaveOutcome.saved) {
+          saved++;
+          changed();
+        }
+        if (stopReason != null) return stop(stopReason!);
+      }
+
+      if (pause > Duration.zero) await Future<void>.delayed(pause);
+    }
+    flush();
+    return ArtistImageAutoResult(
+      saved: saved,
+      notFound: notFound,
+      stopped: null,
+    );
+  } finally {
+    flush();
+  }
 }

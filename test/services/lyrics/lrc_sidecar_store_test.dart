@@ -53,4 +53,60 @@ void main() {
     );
     expect(result.outcome, LrcSidecarOutcome.failed);
   });
+  test(
+    'failed replacement preserves the old sidecar and cleans staging',
+    () async {
+      final dir = await Directory.systemTemp.createTemp('lrc-publish-failed-');
+      addTearDown(() => dir.delete(recursive: true));
+      final old = await File(
+        '${dir.path}/song.lrc',
+      ).writeAsString('old lyrics');
+      final store = LrcSidecarStore(
+        publish: (staged, target) async {
+          expect(await staged.readAsString(), 'new lyrics');
+          throw const FileSystemException('publication refused');
+        },
+      );
+      final result = await store.write(
+        '${dir.path}/song.flac',
+        'new lyrics',
+        replace: true,
+      );
+      expect(result.outcome, LrcSidecarOutcome.failed);
+      expect(await old.readAsString(), 'old lyrics');
+      expect(await dir.list().length, 1);
+    },
+  );
+  test(
+    'simultaneous no-replace writers cannot silently replace each other',
+    () async {
+      final dir = await Directory.systemTemp.createTemp('lrc-claim-');
+      addTearDown(() => dir.delete(recursive: true));
+      final results = await Future.wait([
+        const LrcSidecarStore().write(
+          '${dir.path}/song.flac',
+          'one',
+          replace: false,
+        ),
+        const LrcSidecarStore().write(
+          '${dir.path}/song.flac',
+          'two',
+          replace: false,
+        ),
+      ]);
+      expect(
+        results.where((r) => r.outcome == LrcSidecarOutcome.saved),
+        hasLength(1),
+      );
+      expect(
+        results.where((r) => r.outcome == LrcSidecarOutcome.exists),
+        hasLength(1),
+      );
+      expect(
+        await File('${dir.path}/song.lrc').readAsString(),
+        isIn(['one', 'two']),
+      );
+      expect(await dir.list().length, 1);
+    },
+  );
 }

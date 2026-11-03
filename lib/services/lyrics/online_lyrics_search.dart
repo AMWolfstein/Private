@@ -89,37 +89,66 @@ class OnlineLyricsSearchResult {
       candidates.where((candidate) => candidate.timing == timing).toList();
 }
 
-/// Asks every source once for a query and collects their matches.
+/// Cancels result delivery. The owner also closes its shared HTTP client.
+class LyricsSearchCancellation {
+  final _cancelled = Completer<void>();
+  bool get isCancelled => _cancelled.isCompleted;
+  Future<void> get whenCancelled => _cancelled.future;
+  void cancel() {
+    if (!isCancelled) _cancelled.complete();
+  }
+}
+
+/// Asks every source once, in parallel, and exposes stable partial snapshots.
 class OnlineLyricsSearch {
   OnlineLyricsSearch(this.providers);
-
   final List<OnlineLyricsProvider> providers;
 
-  /// All sources are asked at the same time. A failing source is listed as
-  /// failed and the others still answer.
-  Future<OnlineLyricsSearchResult> searchAll(OnlineLyricsQuery query) async {
-    final answers = await Future.wait(
-      providers.map((provider) async {
-        try {
-          return (candidate: await provider.find(query), failed: false);
-        } catch (_) {
-          return (candidate: null, failed: true);
-        }
-      }),
+  Future<OnlineLyricsSearchResult> searchAll(
+    OnlineLyricsQuery query, {
+    void Function(OnlineLyricsSearchResult)? onProgress,
+    LyricsSearchCancellation? cancellation,
+    Duration timeout = const Duration(seconds: 45),
+  }) async {
+    final candidates = <int, OnlineLyricsCandidate>{};
+    final failed = <int>{};
+    OnlineLyricsSearchResult snapshot() => OnlineLyricsSearchResult(
+      candidates: List.unmodifiable([
+        for (var i = 0; i < providers.length; i++)
+          if (candidates.containsKey(i)) candidates[i]!,
+      ]),
+      failedProviders: List.unmodifiable([
+        for (var i = 0; i < providers.length; i++)
+          if (failed.contains(i)) providers[i].id,
+      ]),
     );
-    final candidates = <OnlineLyricsCandidate>[];
-    final failed = <String>[];
-    for (var i = 0; i < providers.length; i++) {
-      final answer = answers[i];
-      if (answer.failed) {
-        failed.add(providers[i].id);
-      } else if (answer.candidate != null) {
-        candidates.add(answer.candidate!);
-      }
-    }
-    return OnlineLyricsSearchResult(
-      candidates: candidates,
-      failedProviders: failed,
-    );
+    await Future.wait([
+      for (var i = 0; i < providers.length; i++)
+        () async {
+          final deadline = Completer<OnlineLyricsCandidate?>();
+          final timer = Timer(
+            timeout,
+            () => deadline.completeError(
+              TimeoutException('Lyrics source deadline'),
+            ),
+          );
+          try {
+            final result = await Future.any<OnlineLyricsCandidate?>([
+              Future.sync(() => providers[i].find(query)),
+              deadline.future,
+              if (cancellation != null)
+                cancellation.whenCancelled.then((_) => null),
+            ]);
+            if (cancellation?.isCancelled == true) return;
+            if (result != null) candidates[i] = result;
+          } catch (_) {
+            if (cancellation?.isCancelled != true) failed.add(i);
+          } finally {
+            timer.cancel();
+          }
+          if (cancellation?.isCancelled != true) onProgress?.call(snapshot());
+        }(),
+    ]);
+    return snapshot();
   }
 }

@@ -1,3 +1,4 @@
+import 'package:sistrum/utils/logging/logger.dart';
 import 'package:sistrum/core/models/local_library_item.dart';
 import 'package:sistrum/services/lyrics/embedded_lyrics_writer.dart';
 import 'package:sistrum/services/lyrics/lrc_sidecar_store.dart';
@@ -38,19 +39,32 @@ class LyricsSaveActions {
     OnlineLyricsCandidate candidate, {
     required Future<bool> Function() confirmReplace,
   }) async {
-    final existing = await embedded.existingLyrics(item);
-    if (existing.trim().isNotEmpty && !await confirmReplace()) {
-      return LyricsSaveOutcome.keptExisting;
+    try {
+      final existing = await embedded.existingLyrics(item);
+      if (existing.trim().isNotEmpty && !await confirmReplace()) {
+        return LyricsSaveOutcome.keptExisting;
+      }
+      final written = await embedded.write(item, candidate.text);
+      if (!written.saved) return LyricsSaveOutcome.failed;
+    } catch (error) {
+      AppLogger('LyricsSave').w('Lyrics file save failed: $error');
+      return LyricsSaveOutcome.failed;
     }
-    final written = await embedded.write(item, candidate.text);
-    if (!written.saved) return LyricsSaveOutcome.failed;
-    await timings.put(
-      item.id,
-      LyricsTimingRecord(
-        fingerprint: lyricsFingerprint(item.filePath, item.fileModTime),
-        timing: candidate.timing,
-      ),
-    );
+    // The file has been saved. A cache failure must not turn this into a
+    // failed file operation or cause the user to write the audio file twice.
+    try {
+      await timings.put(
+        item.id,
+        LyricsTimingRecord(
+          fingerprint: lyricsFingerprint(item.filePath, item.fileModTime),
+          timing: LyricsTiming.detect(candidate.text),
+        ),
+      );
+    } catch (error) {
+      AppLogger(
+        'LyricsSave',
+      ).w('Lyrics saved; timing cache update failed: $error');
+    }
     return LyricsSaveOutcome.saved;
   }
 

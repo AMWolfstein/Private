@@ -9,9 +9,6 @@ final _bracketed = RegExp(r'[\(\[][^\)\]]*[\)\]]');
 final _nonWord = RegExp(r'[^\p{L}\p{N}]+', unicode: true);
 final _versionSuffix = RegExp(r'\s[-–]\s.*$');
 
-/// Words that join credits and carry no name of their own.
-const _joiners = {'feat', 'ft', 'featuring', 'with', 'and', 'x', 'vs'};
-
 /// Lowercase title with brackets, a trailing " - version" suffix, punctuation
 /// and spacing removed. "Yesterday - Remastered" becomes "yesterday".
 String normalizeTitle(String value) => value
@@ -21,23 +18,42 @@ String normalizeTitle(String value) => value
     .replaceAll(_nonWord, ' ')
     .trim();
 
-/// The name words of an artist credit. Featured names stay in the set, so
-/// "Artist feat. Guest" contains both "artist" and "guest".
-Set<String> artistWords(String value) {
-  final cleaned = value.toLowerCase().replaceAll(_nonWord, ' ').trim();
-  return cleaned
-      .split(' ')
-      .where((word) => word.isNotEmpty && !_joiners.contains(word))
-      .toSet();
-}
+/// Tokens used only to recognize a full artist credit in a video title.
+Set<String> artistWords(String value) => value
+    .toLowerCase()
+    .replaceAll(_nonWord, ' ')
+    .trim()
+    .split(' ')
+    .where(
+      (word) =>
+          word.isNotEmpty &&
+          !const {
+            'feat',
+            'ft',
+            'featuring',
+            'with',
+            'and',
+            'x',
+            'vs',
+          }.contains(word),
+    )
+    .toSet();
 
-/// True when the two artist credits share a name. "Artist feat. Guest"
-/// matches both "Artist" and "Guest", but not "Other".
+/// Compares full normalized names, including explicitly separated featured
+/// credits. Sharing a first name is never enough to identify an artist.
 bool artistsMatch(String wanted, String found) {
-  final a = artistWords(wanted);
-  final b = artistWords(found);
+  String normalized(String value) =>
+      value.toLowerCase().replaceAll(_nonWord, ' ').trim();
+  final a = normalized(wanted), b = normalized(found);
   if (a.isEmpty || b.isEmpty) return false;
-  return a.intersection(b).isNotEmpty;
+  if (a == b) return true;
+  final separator = RegExp(
+    r'\s+(?:feat\.?|ft\.?|featuring|with|and|vs\.?|x)\s+|[;,]|\s+&\s+',
+    caseSensitive: false,
+  );
+  Set<String> credits(String value) =>
+      value.split(separator).map(normalized).where((s) => s.isNotEmpty).toSet();
+  return credits(wanted).intersection(credits(found)).isNotEmpty;
 }
 
 bool durationsMatch(double? wanted, double? found) {

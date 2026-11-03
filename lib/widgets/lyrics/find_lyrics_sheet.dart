@@ -81,9 +81,15 @@ class _FindLyricsSheetState extends ConsumerState<FindLyricsSheet> {
   bool _busy = false;
   OnlineLyricsCandidate? _preview;
   String? _message;
+  http.Client? _client;
+  LyricsSearchCancellation? _searchCancellation;
+  int _searchGeneration = 0;
 
   @override
   void dispose() {
+    _searchGeneration++;
+    _searchCancellation?.cancel();
+    _client?.close();
     _title.dispose();
     _artist.dispose();
     _album.dispose();
@@ -116,20 +122,39 @@ class _FindLyricsSheetState extends ConsumerState<FindLyricsSheet> {
       _searching = true;
       _message = null;
       _preview = null;
+      _results = null;
     });
+    _searchCancellation?.cancel();
+    _client?.close();
+    final generation = ++_searchGeneration;
+    final cancellation = LyricsSearchCancellation();
+    _searchCancellation = cancellation;
     final client = http.Client();
+    _client = client;
     try {
-      final result = await OnlineLyricsSearch(
-        onlineLyricsProviders(client),
-      ).searchAll(query);
-      if (!mounted) return;
+      final result = await OnlineLyricsSearch(onlineLyricsProviders(client))
+          .searchAll(
+            query,
+            cancellation: cancellation,
+            onProgress: (partial) {
+              if (mounted && generation == _searchGeneration) {
+                setState(() => _results = partial);
+              }
+            },
+          );
+      if (!mounted || generation != _searchGeneration) return;
       setState(() => _results = result);
     } catch (error) {
       _log.w('Find lyrics search failed: $error');
-      if (mounted) setState(() => _message = l10n.lyricsFindSearchFailed);
+      if (mounted && generation == _searchGeneration) {
+        setState(() => _message = l10n.lyricsFindSearchFailed);
+      }
     } finally {
       client.close();
-      if (mounted) setState(() => _searching = false);
+      if (identical(_client, client)) _client = null;
+      if (mounted && generation == _searchGeneration) {
+        setState(() => _searching = false);
+      }
     }
   }
 
@@ -145,24 +170,31 @@ class _FindLyricsSheetState extends ConsumerState<FindLyricsSheet> {
       _busy = true;
       _message = null;
     });
-    final outcome = await _actions().embed(
-      widget.item,
-      candidate,
-      confirmReplace: () =>
-          _confirm(l10n.lyricsFetchReplaceTitle, l10n.lyricsFetchReplaceBody),
-    );
-    if (!mounted) return;
-    if (outcome == LyricsSaveOutcome.saved) {
-      Navigator.of(context).pop(candidate);
-      return;
+    try {
+      final outcome = await _actions().embed(
+        widget.item,
+        candidate,
+        confirmReplace: () =>
+            _confirm(l10n.lyricsFetchReplaceTitle, l10n.lyricsFetchReplaceBody),
+      );
+      if (!mounted) return;
+      if (outcome == LyricsSaveOutcome.saved) {
+        Navigator.of(context).pop(candidate);
+        return;
+      }
+      setState(() {
+        _busy = false;
+        _message = switch (outcome) {
+          LyricsSaveOutcome.failed => l10n.lyricsFindEmbedFailed,
+          _ => null,
+        };
+      });
+    } catch (error) {
+      _log.w('Embed lyrics failed: $error');
+      if (mounted) setState(() => _message = l10n.lyricsFindEmbedFailed);
+    } finally {
+      if (mounted) setState(() => _busy = false);
     }
-    setState(() {
-      _busy = false;
-      _message = switch (outcome) {
-        LyricsSaveOutcome.failed => l10n.lyricsFindEmbedFailed,
-        _ => null,
-      };
-    });
   }
 
   Future<void> _download(OnlineLyricsCandidate candidate) async {
@@ -171,41 +203,52 @@ class _FindLyricsSheetState extends ConsumerState<FindLyricsSheet> {
       _busy = true;
       _message = null;
     });
-    final outcome = await _actions().downloadLrc(
-      widget.item,
-      candidate,
-      confirmReplace: () => _confirm(
-        l10n.lyricsFindReplaceLrcTitle,
-        l10n.lyricsFindReplaceLrcBody,
-      ),
-    );
-    if (!mounted) return;
-    final name = lrcSidecarPath(
-      widget.item.filePath,
-    ).split(RegExp(r'[/\\]')).last;
-    setState(() {
-      _busy = false;
-      _message = switch (outcome) {
-        LyricsSaveOutcome.saved => l10n.lyricsFindSavedLrc(name),
-        LyricsSaveOutcome.unsupported => l10n.lyricsFindLrcUnsupported,
-        LyricsSaveOutcome.failed => l10n.lyricsFindLrcFailed,
-        _ => null,
-      };
-    });
+    try {
+      final outcome = await _actions().downloadLrc(
+        widget.item,
+        candidate,
+        confirmReplace: () => _confirm(
+          l10n.lyricsFindReplaceLrcTitle,
+          l10n.lyricsFindReplaceLrcBody,
+        ),
+      );
+      if (!mounted) return;
+      final name = lrcSidecarPath(
+        widget.item.filePath,
+      ).split(RegExp(r'[/\\]')).last;
+      setState(() {
+        _busy = false;
+        _message = switch (outcome) {
+          LyricsSaveOutcome.saved => l10n.lyricsFindSavedLrc(name),
+          LyricsSaveOutcome.unsupported => l10n.lyricsFindLrcUnsupported,
+          LyricsSaveOutcome.failed => l10n.lyricsFindLrcFailed,
+          _ => null,
+        };
+      });
+    } catch (error) {
+      _log.w('Download lyrics failed: $error');
+      if (mounted) setState(() => _message = l10n.lyricsFindLrcFailed);
+    } finally {
+      if (mounted) setState(() => _busy = false);
+    }
   }
 
   Future<void> _refreshLibrary(LocalLibraryItem item) async {
+    final database = ref.read(libraryDatabaseProvider);
+    final credits = ref.read(libraryTagCreditsCacheProvider);
+    final library = ref.read(localLibraryProvider.notifier);
     final index = await MetadataIndexReconciler(
-      upsert: ref.read(libraryDatabaseProvider).upsert,
+      upsert: database.upsert,
     ).reconcile(item);
-    ref.read(libraryTagCreditsCacheProvider).invalidate();
-    await ref.read(localLibraryProvider.notifier).reloadFromStorage();
+    credits.invalidate();
+    if (mounted) await library.reloadFromStorage();
     if (!index.indexed) {
       throw StateError('index not refreshed after saving lyrics');
     }
   }
 
   Future<bool> _confirm(String title, String body) async {
+    if (!mounted) return false;
     final l10n = context.l10n;
     final answer = await showDialog<bool>(
       context: context,
@@ -283,14 +326,15 @@ class _FindLyricsSheetState extends ConsumerState<FindLyricsSheet> {
           const LinearProgressIndicator(),
           const SizedBox(height: 8),
           Text(l10n.lyricsFindSearching, style: theme.textTheme.bodySmall),
-        ] else if (results == null)
+        ],
+        if (results == null && !_searching)
           Text(
             l10n.lyricsFindIdle,
             style: theme.textTheme.bodyMedium?.copyWith(
               color: theme.colorScheme.onSurfaceVariant,
             ),
           )
-        else
+        else if (results != null)
           ..._resultRows(results),
       ],
     );
@@ -342,7 +386,7 @@ class _FindLyricsSheetState extends ConsumerState<FindLyricsSheet> {
         );
       }
     }
-    if (results.candidates.isEmpty) {
+    if (results.candidates.isEmpty && !_searching) {
       widgets.add(Text(l10n.lyricsFindNoResults));
     }
     if (results.failedProviders.isNotEmpty) {

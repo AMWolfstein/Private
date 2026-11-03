@@ -2599,5 +2599,6 @@
   "replayGainWrittenCount": "تمت كتابة {count}",
   "replayGainUnchangedCount": "دون تغيير {count}",
   "replayGainFailedCount": "فشل {count}",
-  "replayGainDeferredCount": "مؤجّل {count}"
+  "replayGainDeferredCount": "مؤجّل {count}",
+  "artistImageSaveFailed": "تعذّر حفظ تغيير الصورة. تم الاحتفاظ بالصورة السابقة."
 }

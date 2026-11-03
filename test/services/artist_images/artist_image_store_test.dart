@@ -96,7 +96,7 @@ void main() {
         .whereType<File>()
         .map((f) => f.uri.pathSegments.last)
         .toList();
-    expect(files, ['artist_2.jpg']);
+    expect(files, [(await store.readAll())[key]!.fileName]);
   });
 
   test(

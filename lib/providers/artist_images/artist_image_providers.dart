@@ -6,6 +6,8 @@ import 'package:http/http.dart' as http;
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:sistrum/core/models/local_library_item.dart';
+import 'package:sistrum/providers/library/library_tag_credits_provider.dart';
+import 'package:sistrum/services/library/browse/library_tag_credits.dart';
 import 'package:sistrum/providers/library/library_database_provider.dart';
 import 'package:sistrum/providers/settings/settings_provider.dart';
 import 'package:sistrum/services/library/database/library_database.dart';
@@ -63,42 +65,53 @@ final artistImageAutoDownloadProvider = Provider<void>((ref) {
   final network = ref.watch(
     settingsProvider.select((s) => s.artistImagesNetwork),
   );
+  final rules = ref.watch(tagCreditRulesProvider);
   if (!enabled) return;
 
   var active = true;
   var running = false;
-  ref.onDispose(() => active = false);
+  http.Client? activeClient;
+  ref.onDispose(() {
+    active = false;
+    activeClient?.close();
+  });
 
   Future<void> pass() async {
     if (running || !active) return;
     running = true;
     final client = http.Client();
+    activeClient = client;
     try {
       final songs = await ref.read(libraryDatabaseProvider).listVisibleSongs();
       final names =
           songs
-              .map(
-                (Map<String, dynamic> row) =>
-                    LocalLibraryItem.fromJson(row).artistName,
+              .expand(
+                (Map<String, dynamic> row) => splitTagCredits(
+                  LocalLibraryItem.fromJson(row).artistName,
+                  TagCreditField.artist,
+                  rules,
+                ),
               )
               .toSet()
               .toList()
             ..sort();
-      final result = await runArtistImageAutoPass(
+      if (!active) return;
+      await runArtistImageAutoPass(
         names: names,
         store: ref.read(artistImageStoreProvider),
         client: client,
         policy: ArtistImageNetwork.fromStored(network),
         readNetwork: readArtistNetworkKind,
         stillEnabled: () => active,
+        onChanged: () {
+          if (active) ref.read(artistImageRevisionProvider.notifier).bump();
+        },
       );
-      if (active && result.changedSomething) {
-        ref.read(artistImageRevisionProvider.notifier).bump();
-      }
     } catch (error) {
       _log.w('Background artist image lookup stopped: $error');
     } finally {
       client.close();
+      if (identical(activeClient, client)) activeClient = null;
       running = false;
     }
   }

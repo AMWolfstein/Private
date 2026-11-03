@@ -1,3 +1,4 @@
+import 'package:sistrum/utils/logging/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
@@ -48,13 +49,22 @@ Future<void> showArtistImageMenu(
     final saved = await showFindArtistImageSheet(context, artistName);
     if (saved == true) ref.invalidate(artistImageFileProvider(artistName));
   } else if (action == 'reset') {
-    await ref
-        .read(artistImageStoreProvider)
-        .recordWithoutPhoto(
-          artistImageKey(artistName),
-          ArtistImageStatus.reset,
+    final store = ref.read(artistImageStoreProvider);
+    final revision = ref.read(artistImageRevisionProvider.notifier);
+    try {
+      await store.recordWithoutPhoto(
+        artistImageKey(artistName),
+        ArtistImageStatus.reset,
+      );
+      revision.bump();
+    } catch (error) {
+      AppLogger('ArtistImages').w('Photo reset failed: $error');
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(context.l10n.artistImageSaveFailed)),
         );
-    ref.read(artistImageRevisionProvider.notifier).bump();
+      }
+    }
   }
 }
 
@@ -96,14 +106,19 @@ class _FindArtistImageSheetState extends ConsumerState<FindArtistImageSheet> {
   bool _searching = false;
   bool _busy = false;
   String? _message;
+  http.Client? _client;
+  int _request = 0;
 
   @override
   void dispose() {
+    _request++;
+    _client?.close();
     _query.dispose();
     super.dispose();
   }
 
   Future<void> _search() async {
+    if (_busy) return;
     final l10n = context.l10n;
     final text = _query.text.trim();
     if (text.isEmpty) return;
@@ -112,15 +127,20 @@ class _FindArtistImageSheetState extends ConsumerState<FindArtistImageSheet> {
       _message = null;
       _preview = null;
     });
+    _client?.close();
+    final request = ++_request;
     final client = http.Client();
+    _client = client;
     try {
       final results = await DeezerArtistSearch(client).search(text);
-      if (mounted) setState(() => _results = results);
+      if (mounted && request == _request) setState(() => _results = results);
     } on DeezerUnavailable {
-      if (mounted) setState(() => _message = l10n.artistImageSearchFailed);
+      if (mounted && request == _request) {
+        setState(() => _message = l10n.artistImageSearchFailed);
+      }
     } finally {
       client.close();
-      if (mounted) setState(() => _searching = false);
+      if (mounted && request == _request) setState(() => _searching = false);
     }
   }
 
@@ -132,28 +152,41 @@ class _FindArtistImageSheetState extends ConsumerState<FindArtistImageSheet> {
       _busy = true;
       _message = null;
     });
+    if (_busy && _client != null) _client?.close();
+    final request = ++_request;
+    final store = ref.read(artistImageStoreProvider);
+    final revision = ref.read(artistImageRevisionProvider.notifier);
     final client = http.Client();
+    _client = client;
     try {
       final bytes = await downloadArtistImage(client, url);
-      await ref
-          .read(artistImageStoreProvider)
-          .savePhoto(
-            key: artistImageKey(widget.artistName),
-            artist: artist,
-            bytes: bytes,
-            status: ArtistImageStatus.manual,
-          );
-      ref.read(artistImageRevisionProvider.notifier).bump();
-      if (mounted) Navigator.of(context).pop(true);
-    } on ArtistImageDownloadFailed {
+      if (!mounted || request != _request) return;
+      final result = await store.savePhoto(
+        key: artistImageKey(widget.artistName),
+        artist: artist,
+        bytes: bytes,
+        status: ArtistImageStatus.manual,
+        mayCommit: () async => mounted && request == _request,
+      );
+      if (!mounted || request != _request) return;
+      if (result == ArtistImageSaveOutcome.saved) {
+        revision.bump();
+        Navigator.of(context).pop(true);
+      }
+    } catch (error) {
+      AppLogger('ArtistImages').w('Artist photo save failed: $error');
       if (mounted) {
         setState(() {
           _busy = false;
-          _message = l10n.artistImageDownloadFailed;
+          _message = error is ArtistImageDownloadFailed
+              ? l10n.artistImageDownloadFailed
+              : l10n.artistImageSaveFailed;
         });
       }
     } finally {
       client.close();
+      if (identical(_client, client)) _client = null;
+      if (mounted && request == _request) setState(() => _busy = false);
     }
   }
 

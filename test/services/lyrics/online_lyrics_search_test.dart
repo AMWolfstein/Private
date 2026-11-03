@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/services/lyrics/online_lyrics_search.dart';
 
@@ -16,6 +17,16 @@ class _FakeProvider implements OnlineLyricsProvider {
     if (error != null) throw error!;
     return result;
   }
+}
+
+class _PendingProvider implements OnlineLyricsProvider {
+  _PendingProvider(this.id);
+  @override
+  final String id;
+  final pending = Completer<OnlineLyricsCandidate?>();
+  @override
+  Future<OnlineLyricsCandidate?> find(OnlineLyricsQuery query) =>
+      pending.future;
 }
 
 OnlineLyricsCandidate _word(String provider) => OnlineLyricsCandidate(
@@ -113,4 +124,49 @@ void main() {
     expect(candidate.artist, 'Artist');
     expect(candidate.durationSeconds, 200);
   });
+  test(
+    'fast results are exposed before a stalled source and cancellation rejects late replies',
+    () async {
+      final stalled = _PendingProvider('stalled');
+      final token = LyricsSearchCancellation();
+      final fastArrived = Completer<void>();
+      var updates = 0;
+      final pending =
+          OnlineLyricsSearch([
+            stalled,
+            _FakeProvider('fast', result: _line('fast')),
+          ]).searchAll(
+            _query,
+            cancellation: token,
+            onProgress: (snapshot) {
+              updates++;
+              if (snapshot.candidates.isNotEmpty && !fastArrived.isCompleted) {
+                fastArrived.complete();
+              }
+            },
+          );
+      await fastArrived.future;
+      expect(stalled.pending.isCompleted, isFalse);
+      token.cancel();
+      final result = await pending;
+      expect(result.candidates.single.provider, 'fast');
+      final delivered = updates;
+      stalled.pending.complete(_line('stalled'));
+      await Future<void>.delayed(Duration.zero);
+      expect(updates, delivered);
+    },
+  );
+  test(
+    'a stalled source reaches its deadline without holding other results',
+    () async {
+      final stalled = _PendingProvider('stalled');
+      final result = await OnlineLyricsSearch([
+        stalled,
+        _FakeProvider('fast', result: _line('fast')),
+      ]).searchAll(_query, timeout: const Duration(milliseconds: 20));
+      expect(result.failedProviders, ['stalled']);
+      expect(result.candidates.single.provider, 'fast');
+      stalled.pending.complete(null);
+    },
+  );
 }

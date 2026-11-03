@@ -287,3 +287,9 @@ library module that imports what it needs. A part file never adds its own import
   Do not add a bare `bool` or a map whose failure is a key to check.
 - Best-effort cleanup uses `deleteBestEffort` or a logged catch, and says so in its name or comment.
 - A wrapper that only forwards a typed result's `success` is removed; callers use the typed result.
+
+## Lyrics and artist-image ownership
+
+Failed or empty native metadata reads must stop lyrics embedding. Stage and flush sidecars before publication; separate successful file writes from timing-cache errors. Reload only the still-current song after embedding, using canonical SAF metadata. Lyrics search keeps one parallel request per source, partial results, bounded deadlines and disposal cancellation.
+
+Turning automatic artist downloads off preserves cached photos and display. Automatic publication never replaces an existing manual or Reset record. Clear invalidates in-flight work; store mutations preserve prior files until database publication succeeds. Automatic names use Library Tag separators and Keep together. Publish progress in bounded batches and recheck network policy and ownership after asynchronous boundaries.

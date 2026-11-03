@@ -41,6 +41,46 @@ class PlayerMetadataController extends ChangeNotifier {
   ParsedLyrics get lyrics => _lyrics;
   bool get loading => _loading;
 
+  /// Re-read the canonical saved file, rather than a possibly stale SAF
+  /// playback copy. Never apply this result to a different queue item.
+  Future<void> reloadAfterEdit(
+    MediaItem? item, {
+    required String savedSource,
+  }) async {
+    if (_disposed ||
+        item == null ||
+        item.extras?['source']?.toString() != savedSource) {
+      return;
+    }
+    final key = (
+      item.id,
+      savedSource,
+      item.extras?['resolvedSource']?.toString().trim(),
+    );
+    if (_requestKey != key) return;
+    final generation = ++_generation;
+    _probePending = true;
+    _loading = true;
+    notifyListeners();
+    try {
+      final tags = await _readMetadata(savedSource);
+      if (_disposed || generation != _generation) return;
+      _loadedPath = _metadataPath(savedSource, key.$3);
+      final pending = _replaceMetadata(
+        mergePlaybackFileMetadata(_fallback, tags),
+      );
+      if (pending != null) await pending;
+    } catch (error) {
+      if (!_disposed && generation == _generation) {
+        _loading = false;
+        notifyListeners();
+        _log.w('Saved lyrics metadata refresh failed: $error');
+      }
+    } finally {
+      if (!_disposed && generation == _generation) _probePending = false;
+    }
+  }
+
   Future<void> load(
     MediaItem? item, {
     bool inspectUnresolvedContentUri = false,

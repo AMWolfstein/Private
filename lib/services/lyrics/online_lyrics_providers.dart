@@ -174,9 +174,9 @@ class YouTubeLyricsProvider implements OnlineLyricsProvider {
     final video = _maps(search).firstWhere((video) {
       final title = normalizeTitle(video['title']?.toString() ?? '');
       final author = video['author']?.toString() ?? '';
-      final titleHasArtist = artistWords(
-        query.artist,
-      ).every((word) => title.contains(word));
+      final words = artistWords(query.artist);
+      final titleHasArtist =
+          words.isNotEmpty && words.every((word) => title.contains(word));
       return wantedTitle.isNotEmpty &&
           title.contains(wantedTitle) &&
           (artistsMatch(query.artist, author) || titleHasArtist) &&

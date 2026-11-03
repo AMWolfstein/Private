@@ -34,6 +34,18 @@ class _Embedded implements EmbeddedLyricsStore {
   }
 }
 
+class _FailedRead extends _Embedded {
+  @override
+  Future<String> existingLyrics(LocalLibraryItem item) async =>
+      throw StateError('read failed');
+}
+
+class _FailedTiming extends MemoryLyricsTimingState {
+  @override
+  Future<void> put(String songId, LyricsTimingRecord record) async =>
+      throw StateError('database unavailable');
+}
+
 LocalLibraryItem _song({String path = '/music/song.flac'}) => LocalLibraryItem(
   id: 'song-1',
   sourceId: 'legacy',
@@ -183,6 +195,30 @@ void main() {
         confirmReplace: _no,
       );
       expect(outcome, LyricsSaveOutcome.unsupported);
+    },
+  );
+  test('a failed existing-lyrics read cannot lead to a write', () async {
+    final embedded = _FailedRead();
+    expect(
+      await _actions(
+        embedded: embedded,
+      ).embed(_song(), _line, confirmReplace: _yes),
+      LyricsSaveOutcome.failed,
+    );
+    expect(embedded.written, isNull);
+  });
+  test(
+    'timing cache failure does not undo or misreport a completed file write',
+    () async {
+      final embedded = _Embedded();
+      expect(
+        await _actions(
+          embedded: embedded,
+          timings: _FailedTiming(),
+        ).embed(_song(), _line, confirmReplace: _yes),
+        LyricsSaveOutcome.saved,
+      );
+      expect(embedded.written, _line.text);
     },
   );
 }

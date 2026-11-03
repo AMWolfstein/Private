@@ -3793,5 +3793,6 @@
   "artistImageAutoTitle": "Download automatically",
   "@artistImageAutoTitle": {
     "description": "Artist images: switch for background downloads"
-  }
+  },
+  "artistImageSaveFailed": "The photo change could not be saved. Your previous image was kept."
 }

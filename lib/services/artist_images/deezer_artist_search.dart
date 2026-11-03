@@ -79,7 +79,7 @@ List<DeezerArtist> parseDeezerArtists(String body) {
     throw DeezerUnavailable('API error: ${json['error']}');
   }
   final data = json['data'];
-  if (data is! List) return const [];
+  if (data is! List) throw const DeezerUnavailable('missing artist data list');
 
   final artists = <DeezerArtist>[];
   for (final entry in data.whereType<Map<String, dynamic>>()) {

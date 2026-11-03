@@ -7,6 +7,10 @@ import 'package:sistrum/utils/logging/logger.dart';
 
 final _log = AppLogger('EmbeddedLyrics');
 
+class LyricsMetadataReadFailure implements Exception {
+  const LyricsMetadataReadFailure();
+}
+
 /// Result of writing lyrics into a song's own file. Backup and restore inside
 /// the persistence service protect the file; lyrics are never stored anywhere
 /// else.
@@ -50,9 +54,17 @@ class MetadataEmbeddedLyricsStore implements EmbeddedLyricsStore {
   /// the song's lyrics state updates at once.
   final Future<void> Function(LocalLibraryItem item)? refreshIndex;
 
+  Future<Map<String, dynamic>> _readChecked(String path) async {
+    final tags = await readTags(path);
+    if (tags.isEmpty || tags['error'] != null) {
+      throw const LyricsMetadataReadFailure();
+    }
+    return tags;
+  }
+
   @override
   Future<String> existingLyrics(LocalLibraryItem item) async {
-    final tags = await readTags(item.filePath);
+    final tags = await _readChecked(item.filePath);
     return tags['lyrics']?.toString() ?? '';
   }
 
@@ -63,7 +75,7 @@ class MetadataEmbeddedLyricsStore implements EmbeddedLyricsStore {
   ) async {
     final covers = MetadataCoverResources();
     try {
-      final tags = await readTags(item.filePath);
+      final tags = await _readChecked(item.filePath);
       final values = localSongEditValues(item, tags)..['lyrics'] = lyrics;
       final result = await _persistence(
         covers,

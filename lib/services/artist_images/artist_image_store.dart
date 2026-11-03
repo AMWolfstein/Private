@@ -1,3 +1,7 @@
+import 'dart:async';
+import 'dart:convert';
+import 'package:crypto/crypto.dart';
+import 'package:sistrum/utils/logging/logger.dart';
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -149,70 +153,159 @@ class ArtistImageDb implements ArtistImageState {
   }
 }
 
-/// Keeps artist photos in one folder inside the app's own storage and the
-/// state of each artist in [state].
+enum ArtistImageSaveOutcome { saved, superseded }
+
+/// A ticket belongs to one artist revision and one cache generation.
+class ArtistImageWriteTicket {
+  const ArtistImageWriteTicket(this.generation, this.revision);
+  final int generation, revision;
+}
+
+/// Serializes file/database publication, reset and Clear. Only successfully
+/// recorded generations become visible; old files survive failed publication.
 class ArtistImageStore {
   ArtistImageStore({required this.state, required this.directory});
-
   final ArtistImageState state;
   final Future<Directory> Function() directory;
+  Future<void> _tail = Future.value();
+  int _generation = 0;
+  final _revisions = <String, int>{};
+  int get generation => _generation;
+  ArtistImageWriteTicket ticketFor(String key) =>
+      ArtistImageWriteTicket(_generation, _revisions[key] ?? 0);
+  bool _current(String key, ArtistImageWriteTicket ticket) =>
+      ticket.generation == _generation &&
+      ticket.revision == (_revisions[key] ?? 0);
 
-  Future<Map<String, ArtistImageRecord>> readAll() => state.readAll();
-
-  /// The photo file for [record], or null when it has none or the file is
-  /// missing.
-  Future<File?> fileFor(ArtistImageRecord record) async {
-    final name = record.fileName;
-    if (!record.hasPhoto || name == null) return null;
-    final file = File(p.join((await directory()).path, name));
-    return file.existsSync() ? file : null;
+  Future<T> _mutate<T>(Future<T> Function() action) {
+    final done = Completer<T>();
+    _tail = _tail.then((_) async {
+      try {
+        done.complete(await action());
+      } catch (error, stack) {
+        done.completeError(error, stack);
+      }
+    });
+    return done.future;
   }
 
-  /// Writes a photo completely before it is recorded, so a half-written file
-  /// never becomes an artist's photo. The previous photo, if any, is removed.
-  Future<void> savePhoto({
+  Future<Map<String, ArtistImageRecord>> readAll() => state.readAll();
+  Future<File?> fileFor(ArtistImageRecord record) async {
+    final name = record.fileName;
+    if (!record.hasPhoto || name == null || p.basename(name) != name) {
+      return null;
+    }
+    final file = File(p.join((await directory()).path, name));
+    return await file.exists() ? file : null;
+  }
+
+  Future<ArtistImageSaveOutcome> savePhoto({
     required String key,
     required DeezerArtist artist,
     required Uint8List bytes,
     required ArtistImageStatus status,
-  }) async {
-    final dir = await directory();
-    await dir.create(recursive: true);
-    final name = 'artist_${artist.id}.jpg';
-    final target = File(p.join(dir.path, name));
-    final temp = File('${target.path}.part');
-    await temp.writeAsBytes(bytes, flush: true);
-    await temp.rename(target.path);
-
-    final previous = (await state.readAll())[key];
-    if (previous?.fileName != null && previous!.fileName != name) {
-      await _deleteBestEffort(p.join(dir.path, previous.fileName!));
+    ArtistImageWriteTicket? ticket,
+    Future<bool> Function()? mayCommit,
+  }) {
+    if (status != ArtistImageStatus.auto) {
+      _revisions[key] = (_revisions[key] ?? 0) + 1;
     }
-    await state.put(
-      ArtistImageRecord(
-        artistKey: key,
-        status: status,
-        deezerId: artist.id,
-        fileName: name,
-      ),
-    );
+    final expected = ticket ?? ticketFor(key);
+    return _mutate(() async {
+      Future<bool> allowed() async {
+        if (!_current(key, expected)) return false;
+        if (mayCommit != null && !await mayCommit()) return false;
+        if (!_current(key, expected)) return false;
+        return status != ArtistImageStatus.auto ||
+            !(await state.readAll()).containsKey(key);
+      }
+
+      if (!await allowed()) return ArtistImageSaveOutcome.superseded;
+      final dir = await directory();
+      await dir.create(recursive: true);
+      final staging = await dir.createTemp('.write-');
+      File? published;
+      var recorded = false;
+      try {
+        final name =
+            'artist_${sha256.convert(utf8.encode(key)).toString().substring(0, 24)}_${p.basename(staging.path)}.jpg';
+        final staged = await File(
+          p.join(staging.path, 'photo'),
+        ).writeAsBytes(bytes, flush: true);
+        if (!await allowed()) return ArtistImageSaveOutcome.superseded;
+        final previous = (await state.readAll())[key];
+        if (!await allowed()) return ArtistImageSaveOutcome.superseded;
+        published = await staged.rename(p.join(dir.path, name));
+        if (!await allowed()) return ArtistImageSaveOutcome.superseded;
+        await state.put(
+          ArtistImageRecord(
+            artistKey: key,
+            status: status,
+            deezerId: artist.id,
+            fileName: name,
+          ),
+        );
+        recorded = true;
+        if (previous?.fileName != null) {
+          await _pruneUnreferenced(dir, previous!.fileName!);
+        }
+        return ArtistImageSaveOutcome.saved;
+      } finally {
+        if (!recorded && published != null) {
+          await _deleteBestEffort(published.path);
+        }
+        try {
+          await staging.delete(recursive: true);
+        } on FileSystemException catch (error) {
+          AppLogger('ArtistImages').w('Photo staging cleanup failed: $error');
+        }
+      }
+    });
   }
 
-  /// Records an artist without a photo (not found, or reset by the user) and
-  /// removes any photo it had.
-  Future<void> recordWithoutPhoto(String key, ArtistImageStatus status) async {
-    final previous = (await state.readAll())[key];
-    final name = previous?.fileName;
-    if (name != null) {
-      await _deleteBestEffort(p.join((await directory()).path, name));
+  Future<ArtistImageSaveOutcome> recordWithoutPhoto(
+    String key,
+    ArtistImageStatus status, {
+    ArtistImageWriteTicket? ticket,
+    Future<bool> Function()? mayCommit,
+  }) {
+    if (status != ArtistImageStatus.notFound) {
+      _revisions[key] = (_revisions[key] ?? 0) + 1;
     }
-    await state.put(ArtistImageRecord(artistKey: key, status: status));
+    final expected = ticket ?? ticketFor(key);
+    return _mutate(() async {
+      if (!_current(key, expected) ||
+          (mayCommit != null && !await mayCommit()) ||
+          !_current(key, expected)) {
+        return ArtistImageSaveOutcome.superseded;
+      }
+      final records = await state.readAll();
+      if (status == ArtistImageStatus.notFound && records.containsKey(key)) {
+        return ArtistImageSaveOutcome.superseded;
+      }
+      if (!_current(key, expected)) return ArtistImageSaveOutcome.superseded;
+      final previous = records[key];
+      await state.put(ArtistImageRecord(artistKey: key, status: status));
+      if (previous?.fileName != null) {
+        await _pruneUnreferenced(await directory(), previous!.fileName!);
+      }
+      return ArtistImageSaveOutcome.saved;
+    });
   }
 
-  /// Bytes used by the photo folder.
+  Future<void> _pruneUnreferenced(Directory dir, String name) async {
+    if (p.basename(name) != name) return;
+    try {
+      if ((await state.readAll()).values.any((r) => r.fileName == name)) return;
+      await _deleteBestEffort(p.join(dir.path, name));
+    } catch (error) {
+      AppLogger('ArtistImages').w('Unused photo pruning failed: $error');
+    }
+  }
+
   Future<int> sizeBytes() async {
     final dir = await directory();
-    if (!dir.existsSync()) return 0;
+    if (!await dir.exists()) return 0;
     var total = 0;
     await for (final entity in dir.list()) {
       if (entity is File) total += await entity.length();
@@ -220,25 +313,27 @@ class ArtistImageStore {
     return total;
   }
 
-  /// Removes every photo and every record, so automatic lookups run again.
-  Future<void> clearAll() async {
-    final dir = await directory();
-    if (dir.existsSync()) {
-      try {
-        await dir.delete(recursive: true);
-      } on FileSystemException {
-        // Best-effort: remaining files are harmless, and their records are
-        // cleared below.
+  Future<void> clearAll() {
+    _generation++;
+    return _mutate(() async {
+      // If the database cannot be cleared, leave every old photo intact.
+      await state.clear();
+      final dir = await directory();
+      if (await dir.exists()) {
+        try {
+          await dir.delete(recursive: true);
+        } on FileSystemException catch (error) {
+          AppLogger('ArtistImages').w('Photo cache cleanup failed: $error');
+        }
       }
-    }
-    await state.clear();
+    });
   }
 
   static Future<void> _deleteBestEffort(String path) async {
     try {
       await File(path).delete();
-    } on FileSystemException {
-      // The old photo is unused once its record is replaced.
+    } on FileSystemException catch (error) {
+      AppLogger('ArtistImages').w('Unused photo cleanup failed: $error');
     }
   }
 }

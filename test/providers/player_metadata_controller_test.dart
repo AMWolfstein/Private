@@ -320,4 +320,85 @@ void main() {
       expect(controller.lyrics.lines.single.text, 'Current');
     },
   );
+  test(
+    'successful edit reloads the same song instead of returning cached lyrics',
+    () async {
+      var raw = '[00:01]Old';
+      var reads = 0;
+      final controller = PlayerMetadataController(
+        readMetadata: (_) async {
+          reads++;
+          return {'lyrics': raw};
+        },
+        parseLyrics: (raw) async => LyricsParser.parse(raw),
+      );
+      addTearDown(controller.dispose);
+      await controller.load(_item('a'));
+      raw = '[00:01]New';
+      await controller.reloadAfterEdit(
+        _item('a'),
+        savedSource: '/music/a.flac',
+      );
+      expect(reads, 2);
+      expect(controller.lyrics.lines.single.text, 'New');
+    },
+  );
+  test(
+    'edited SAF lyrics are read from the canonical document, not its playback copy',
+    () async {
+      final paths = <String>[];
+      final controller = PlayerMetadataController(
+        readMetadata: (path) async {
+          paths.add(path);
+          return {
+            'lyrics': path.startsWith('content://')
+                ? '[00:01]New'
+                : '[00:01]Old',
+          };
+        },
+        parseLyrics: (raw) async => LyricsParser.parse(raw),
+      );
+      addTearDown(controller.dispose);
+      final item = _item(
+        'a',
+        source: 'content://music/a',
+        resolved: '/tmp/stale.flac',
+      );
+      await controller.load(item);
+      await controller.reloadAfterEdit(item, savedSource: 'content://music/a');
+      expect(paths, ['/tmp/stale.flac', 'content://music/a']);
+      expect(controller.lyrics.lines.single.text, 'New');
+    },
+  );
+  test(
+    'a late saved-file refresh cannot replace another playing song',
+    () async {
+      final pending = Completer<Map<String, dynamic>>();
+      var edited = false;
+      final controller = PlayerMetadataController(
+        readMetadata: (path) async {
+          if (edited && path.endsWith('a.flac')) return pending.future;
+          return {'lyrics': '[00:01]$path'};
+        },
+        parseLyrics: (raw) async => LyricsParser.parse(raw),
+      );
+      addTearDown(controller.dispose);
+      await controller.load(_item('a'));
+      edited = true;
+      final refresh = controller.reloadAfterEdit(
+        _item('a'),
+        savedSource: '/music/a.flac',
+      );
+      await controller.load(_item('b'));
+      pending.complete({'lyrics': '[00:01]Late a'});
+      await refresh;
+      expect(controller.source, '/music/b.flac');
+      expect(controller.lyrics.lines.single.text, contains('b.flac'));
+      await controller.reloadAfterEdit(
+        _item('b'),
+        savedSource: '/music/a.flac',
+      );
+      expect(controller.source, '/music/b.flac');
+    },
+  );
 }
