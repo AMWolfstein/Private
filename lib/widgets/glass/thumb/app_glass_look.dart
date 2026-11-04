@@ -9,22 +9,22 @@ import 'package:sistrum/core/theme/app_glass_levels.dart';
 /// four modes, the same host capture and the same shaders; only parameters
 /// differ.
 enum AppGlassLook {
-  /// Sistrum's own glass: the default.
+  /// Sistrum's own glass.
   sistrum,
 
   /// Inspired by BitChord's liquid glass (`ui/components/LiquidGlass.kt`):
   /// a deeper lens at the rim, a lighter blur, BitChord's 0.4 surface tint,
   /// a saturation lift under frosted glass, a light hairline edge and a
-  /// chromatic fringe at the rim.
+  /// chromatic fringe at the rim. The default (owner, 2026-11-04).
   bitchord,
 }
 
-/// Developer-only for now: switched from the performance HUD and never
-/// persisted, because Appearance has no glass controls (AGENTS.md). Every
-/// launch starts at [AppGlassLook.sistrum].
+/// Every launch starts at [AppGlassLook.bitchord]. The performance HUD can
+/// switch to Sistrum's look for comparison; that switch is never persisted,
+/// because Appearance has no glass controls (AGENTS.md).
 class AppGlassLookNotifier extends Notifier<AppGlassLook> {
   @override
-  AppGlassLook build() => AppGlassLook.sistrum;
+  AppGlassLook build() => AppGlassLook.bitchord;
 
   void toggle() => state = state == AppGlassLook.sistrum
       ? AppGlassLook.bitchord

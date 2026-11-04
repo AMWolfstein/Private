@@ -45,14 +45,14 @@ Future<ProviderContainer> _pump(WidgetTester tester) async {
 }
 
 void main() {
-  test('Sistrum is the default look and the HUD toggles it', () {
+  test('BitChord is the default look and the HUD toggles it', () {
     final container = ProviderContainer();
     addTearDown(container.dispose);
-    expect(container.read(appGlassLookProvider), AppGlassLook.sistrum);
-    container.read(appGlassLookProvider.notifier).toggle();
     expect(container.read(appGlassLookProvider), AppGlassLook.bitchord);
     container.read(appGlassLookProvider.notifier).toggle();
     expect(container.read(appGlassLookProvider), AppGlassLook.sistrum);
+    container.read(appGlassLookProvider.notifier).toggle();
+    expect(container.read(appGlassLookProvider), AppGlassLook.bitchord);
   });
 
   test('Sistrum keeps sigma 6; BitChord takes its own blur and lens', () {
@@ -94,9 +94,14 @@ void main() {
     // ignore: invalid_use_of_protected_member
     Layer? layer() => tester.binding.renderViews.first.layer;
     final before = appCountBackdrops(layer());
+    // The default is BitChord's.
     expect(
       tester.widget<GlassSurface>(find.byType(GlassSurface)).finish!.optics,
-      const GlassOptics(),
+      appLiquidGlassFinish(AppGlassLook.bitchord).optics,
+    );
+    expect(
+      tester.widget<BackdropFilter>(find.byType(BackdropFilter)).filter,
+      same(appFrostFilter(AppGlassLook.bitchord)),
     );
 
     container.read(appGlassLookProvider.notifier).toggle();
@@ -105,11 +110,11 @@ void main() {
     expect(find.byType(GlassSurface), findsOneWidget);
     expect(
       tester.widget<GlassSurface>(find.byType(GlassSurface)).finish!.optics,
-      appLiquidGlassFinish(AppGlassLook.bitchord).optics,
+      const GlassOptics(),
     );
     expect(
       tester.widget<BackdropFilter>(find.byType(BackdropFilter)).filter,
-      same(appFrostFilter(AppGlassLook.bitchord)),
+      same(appFrostFilter(AppGlassLook.sistrum)),
     );
     // No extra surface, read or copy for the second identity.
     expect(appCountBackdrops(layer()), before);
