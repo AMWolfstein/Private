@@ -8,6 +8,7 @@ import 'package:sistrum/services/library/covers/cover_palette.dart';
 import 'package:sistrum/core/theme/app_glass_levels.dart';
 import 'package:sistrum/core/theme/app_theme.dart';
 import 'package:sistrum/widgets/glass/artwork/app_artwork_ground.dart';
+import 'package:sistrum/widgets/glass/debug/app_artist_glass_isolation.dart';
 import 'package:sistrum/widgets/glass/thumb/app_glass_surface.dart';
 import 'package:sistrum/widgets/header/profile_avatar.dart';
 
@@ -97,7 +98,11 @@ class AppHeaderBacking extends ConsumerWidget {
     // ground veil, so the band needs no live read of the page.
     final onGround =
         groundVeil && AppArtworkGroundScope.pageOf(context) != null;
-    final sigma = onGround || ref.watch(appHeaderBandBlurDisabledProvider)
+    // The Artist diagnostic (developer only) draws this band as Tint alone.
+    final sigma =
+        onGround ||
+            ref.watch(appHeaderBandBlurDisabledProvider) ||
+            AppArtistGlassIsolationScope.disabledOf(context)
         ? 0.0
         : kAppGlassStyle.blurSigma;
     final base = color ?? Theme.of(context).scaffoldBackgroundColor;

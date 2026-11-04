@@ -7,9 +7,12 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:g1455/glass_diagnostics.dart'
+    show GlassProxyHandle, GlassProxyScope;
 import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/providers/settings/settings_provider.dart';
 import 'package:sistrum/widgets/glass/artwork/app_artwork_ground.dart';
+import 'package:sistrum/widgets/glass/debug/app_artist_glass_isolation.dart';
 import 'package:sistrum/widgets/glass/debug/app_backdrop_reads.dart';
 
 /// Build and raster statistics over a window of frames.
@@ -142,11 +145,21 @@ class _AppPerformanceHudState extends ConsumerState<AppPerformanceHud> {
   int _unshown = 0;
   Timer? _refresh;
 
+  /// Frames after a mode or video change that are dropped: the transition
+  /// and warm-up are not measured.
+  static const _warmupFrames = 30;
+  int _skip = 0;
+
+  /// The host's capture count when the current window started.
+  int _captureBase = 0;
+
   @override
   void initState() {
     super.initState();
     SchedulerBinding.instance.addTimingsCallback(_onTimings);
     AppPerformanceHud.debugRegisteredCallbacks++;
+    appDiagnosticWindowEpoch.addListener(_onWindowChanged);
+    appArtistVideoPlaying.addListener(_onWindowChanged);
     // Refresh at most twice a second, so the HUD barely measures itself.
     _refresh = Timer.periodic(const Duration(milliseconds: 500), (_) {
       // The HUD's own repaint is one frame; wait for real activity.
@@ -157,12 +170,18 @@ class _AppPerformanceHudState extends ConsumerState<AppPerformanceHud> {
   @override
   void dispose() {
     _refresh?.cancel();
+    appDiagnosticWindowEpoch.removeListener(_onWindowChanged);
+    appArtistVideoPlaying.removeListener(_onWindowChanged);
     SchedulerBinding.instance.removeTimingsCallback(_onTimings);
     AppPerformanceHud.debugRegisteredCallbacks--;
     super.dispose();
   }
 
   void _onTimings(List<FrameTiming> timings) {
+    if (_skip > 0) {
+      _skip = math.max(0, _skip - timings.length);
+      return;
+    }
     for (final timing in timings) {
       _build.add(timing.buildDuration.inMicroseconds / 1000);
       _raster.add(timing.rasterDuration.inMicroseconds / 1000);
@@ -175,11 +194,30 @@ class _AppPerformanceHudState extends ConsumerState<AppPerformanceHud> {
     _unshown += timings.length;
   }
 
-  void _reset() => setState(() {
-    _build.clear();
-    _raster.clear();
-    _unshown = 0;
-  });
+  void _onWindowChanged() {
+    if (mounted) _restartWindow();
+  }
+
+  /// Starts a new measurement window: old frames go, the warm-up is skipped
+  /// and captures are counted from here.
+  void _restartWindow() {
+    final handle = context
+        .getInheritedWidgetOfExactType<GlassProxyScope>()
+        ?.handle;
+    setState(() {
+      _build.clear();
+      _raster.clear();
+      _unshown = 0;
+      _skip = _warmupFrames;
+      _captureBase = handle?.snapshots ?? 0;
+    });
+  }
+
+  void _reset() => _restartWindow();
+
+  void _toggleArtistGlass() {
+    ref.read(appArtistGlassIsolationProvider.notifier).toggle();
+  }
 
   /// Backdrop reads in the last composited frame, over every view.
   int _reads() {
@@ -191,6 +229,35 @@ class _AppPerformanceHudState extends ConsumerState<AppPerformanceHud> {
       reads += appCountBackdropReads(view.layer);
     }
     return reads;
+  }
+
+  /// The developer diagnostic's state for the HUD: two lines.
+  String _artistLine(GlassProxyHandle? handle) {
+    final captures = (handle?.snapshots ?? 0) - _captureBase;
+    final host = handle == null
+        ? 'no host'
+        : captures > 0
+        ? 'active'
+        : 'idle';
+    final warm = _skip > 0 ? ' warm-up $_skip' : '';
+    return '${_artistState()}$warm\n'
+        'liquid capture: $host, $captures in window';
+  }
+
+  /// The same state on one line, for the Copy summary.
+  String _artistCopy(GlassProxyHandle? handle) {
+    final captures = (handle?.snapshots ?? 0) - _captureBase;
+    return '${_artistState()} captures=$captures';
+  }
+
+  String _artistState() {
+    final video = appArtistVideoPlaying.value ? 'ON' : 'OFF';
+    final glass =
+        ref.read(appArtistGlassIsolationProvider) ==
+            AppArtistGlassIsolation.glassDisabled
+        ? 'DISABLED'
+        : 'NORMAL';
+    return 'video=$video glass=$glass';
   }
 
   String _glass(BuildContext context) {
@@ -239,6 +306,8 @@ class _AppPerformanceHudState extends ConsumerState<AppPerformanceHud> {
       refreshRate: refreshRate > 0 ? refreshRate : 60,
     );
     final glass = _glass(context);
+    final handle = GlassProxyScope.maybeOf(context);
+    final artist = _artistLine(handle);
     final settings = ref.read(settingsProvider.notifier);
     const style = TextStyle(
       color: Colors.white,
@@ -336,6 +405,7 @@ class _AppPerformanceHudState extends ConsumerState<AppPerformanceHud> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(glass),
+                        Text(artist),
                         Text(
                           '${stats.frames} frames @ '
                           '${stats.refreshRate.round()} Hz',
@@ -358,13 +428,30 @@ class _AppPerformanceHudState extends ConsumerState<AppPerformanceHud> {
                         ),
                       ),
                       TextButton(
+                        key: const ValueKey(
+                          'sistrum-performance-hud-artist-glass',
+                        ),
+                        onPressed: _toggleArtistGlass,
+                        style: buttonStyle,
+                        child: Text(
+                          ref.watch(appArtistGlassIsolationProvider) ==
+                                  AppArtistGlassIsolation.glassDisabled
+                              ? 'Artist glass: off'
+                              : 'Artist glass: on',
+                        ),
+                      ),
+                      TextButton(
                         onPressed: _reset,
                         style: buttonStyle,
                         child: const Text('Reset'),
                       ),
                       TextButton(
                         onPressed: () => Clipboard.setData(
-                          ClipboardData(text: stats.summary(glass: glass)),
+                          ClipboardData(
+                            text:
+                                '${stats.summary(glass: glass)} '
+                                '${_artistCopy(handle)}',
+                          ),
                         ),
                         style: buttonStyle,
                         child: const Text('Copy'),

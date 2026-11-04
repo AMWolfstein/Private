@@ -8,6 +8,7 @@ import 'package:sistrum/core/theme/app_theme.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/widgets/glass/artwork/app_artwork_ground.dart';
 import 'package:sistrum/widgets/glass/artwork/app_artwork_glass.dart';
+import 'package:sistrum/widgets/glass/debug/app_artist_glass_isolation.dart';
 
 /// The rendering mode of one glass surface (Glass Engine V2).
 ///
@@ -177,15 +178,19 @@ class AppGlass extends ConsumerWidget {
             ),
           ]
         : null;
+    // The Artist diagnostic (developer only) turns its glass into Tint.
+    final effectiveMode = AppArtistGlassIsolationScope.disabledOf(context)
+        ? AppGlassMode.tint
+        : mode;
     // The one place a surface's mode becomes a rendering. A known artwork
     // ground wins for GROUND, AUTO and LIQUID: it is the artwork itself, read
     // without a live backdrop. TINT, or a surface that reads nothing, draws
     // its fill; LIQUID refracts the host's capture; everything else blurs.
     final useGround =
         ground != null &&
-        (mode == AppGlassMode.auto ||
-            mode == AppGlassMode.ground ||
-            mode == AppGlassMode.liquid);
+        (effectiveMode == AppGlassMode.auto ||
+            effectiveMode == AppGlassMode.ground ||
+            effectiveMode == AppGlassMode.liquid);
     final body = useGround
         ? AppArtworkGlassSurface(
             controller: ground,
@@ -193,9 +198,9 @@ class AppGlass extends ConsumerWidget {
             opaqueFill: scheme.surfaceContainerHigh,
             child: _GlassBackdropScope(child: child),
           )
-        : !sampleBackdrop || mode == AppGlassMode.tint
+        : !sampleBackdrop || effectiveMode == AppGlassMode.tint
         ? surface
-        : mode == AppGlassMode.liquid
+        : effectiveMode == AppGlassMode.liquid
         ? GlassSurface(
             borderRadius: shape,
             finish: kAppLiquidGlassFinish,

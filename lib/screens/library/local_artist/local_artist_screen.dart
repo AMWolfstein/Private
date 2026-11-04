@@ -32,6 +32,7 @@ import 'package:sistrum/widgets/animated_artwork/animated_artwork_video.dart';
 import 'package:sistrum/widgets/primitives/app_snack_bar.dart';
 import 'package:sistrum/widgets/status/audio_quality_badges.dart';
 import 'package:sistrum/widgets/status/error_card.dart';
+import 'package:sistrum/widgets/glass/debug/app_artist_glass_isolation.dart';
 
 part 'local_artist_sections.dart';
 
@@ -138,349 +139,365 @@ class _LocalArtistScreenState extends ConsumerState<LocalArtistScreen> {
         )
         .firstOrNull;
     final favorite = favoriteEntry != null;
-    return AppArtistSurface(
-      imageSource: artistPhoto?.path ?? cover,
-      liveBackdrop: artistVideo != null,
-      child: Builder(
-        builder: (context) {
-          final colors = Theme.of(context).colorScheme;
-          return Scaffold(
-            body: CustomScrollView(
-              controller: _scroll,
-              slivers: [
-                ...AppArtistHeader(
-                  name: widget.artistName,
-                  // Video, then the chosen photo, then the cover, as the header
-                  // falls back. The video is shown only while Animated artwork is on.
-                  artwork: artistVideo != null
-                      ? AnimatedArtworkVideo(
-                          file: artistVideo,
-                          fallback: _artwork(
+    return AppArtistGlassIsolationHost(
+      videoPlaying: artistVideo != null,
+      child: AppArtistSurface(
+        imageSource: artistPhoto?.path ?? cover,
+        liveBackdrop: artistVideo != null,
+        child: Builder(
+          builder: (context) {
+            final colors = Theme.of(context).colorScheme;
+            return Scaffold(
+              body: CustomScrollView(
+                controller: _scroll,
+                slivers: [
+                  ...AppArtistHeader(
+                    name: widget.artistName,
+                    // Video, then the chosen photo, then the cover, as the header
+                    // falls back. The video is shown only while Animated artwork is on.
+                    artwork: artistVideo != null
+                        ? AnimatedArtworkVideo(
+                            file: artistVideo,
+                            fallback: _artwork(
+                              heroCover,
+                              placeholderIcon: CupertinoIcons.person,
+                              placeholderSize: 64,
+                            ),
+                          )
+                        : _artwork(
                             heroCover,
                             placeholderIcon: CupertinoIcons.person,
                             placeholderSize: 64,
                           ),
-                        )
-                      : _artwork(
-                          heroCover,
-                          placeholderIcon: CupertinoIcons.person,
-                          placeholderSize: 64,
-                        ),
-                  showTitle: _showTitle,
-                  toolbarActions: [
-                    IconButton(
-                      key: _imageMenuKey,
-                      icon: const Icon(Icons.more_horiz),
-                      tooltip: MaterialLocalizations.of(
-                        context,
-                      ).moreButtonTooltip,
-                      onPressed: () {
-                        final buttonContext = _imageMenuKey.currentContext;
-                        if (buttonContext == null) return;
-                        showArtistImageMenu(
+                    showTitle: _showTitle,
+                    toolbarActions: [
+                      IconButton(
+                        key: _imageMenuKey,
+                        icon: const Icon(Icons.more_horiz),
+                        tooltip: MaterialLocalizations.of(
                           context,
-                          ref,
-                          widget.artistName,
-                          hasPhoto: artistPhoto != null,
-                          hasVideo: artistVideo != null,
-                          anchor: appMenuAnchor(buttonContext),
-                        );
-                      },
-                    ),
-                  ],
-                  actions: [
-                    HeaderCircleButton(
-                      icon: favorite
-                          ? CupertinoIcons.star_fill
-                          : CupertinoIcons.star,
-                      buttonSize: 50,
-                      iconSize: 24,
-                      iconColor: colors.primary,
-                      tooltip: favorite
-                          ? context.l10n.artistOptionRemoveFromFavorites
-                          : context.l10n.appFavorite,
-                      onPressed: () async {
-                        try {
-                          if (favoriteEntry != null) {
-                            await ref
-                                .read(libraryCollectionsProvider.notifier)
-                                .removeFavoriteArtist(favoriteEntry.key);
-                          } else {
-                            await ref
-                                .read(libraryCollectionsProvider.notifier)
-                                .toggleFavoriteArtist(
-                                  artistId: artistId,
-                                  providerId: 'local',
-                                  name: widget.artistName,
-                                  imageUrl: cover,
-                                );
+                        ).moreButtonTooltip,
+                        onPressed: () {
+                          final buttonContext = _imageMenuKey.currentContext;
+                          if (buttonContext == null) return;
+                          showArtistImageMenu(
+                            context,
+                            ref,
+                            widget.artistName,
+                            hasPhoto: artistPhoto != null,
+                            hasVideo: artistVideo != null,
+                            anchor: appMenuAnchor(buttonContext),
+                          );
+                        },
+                      ),
+                    ],
+                    actions: [
+                      HeaderCircleButton(
+                        icon: favorite
+                            ? CupertinoIcons.star_fill
+                            : CupertinoIcons.star,
+                        buttonSize: 50,
+                        iconSize: 24,
+                        iconColor: colors.primary,
+                        tooltip: favorite
+                            ? context.l10n.artistOptionRemoveFromFavorites
+                            : context.l10n.appFavorite,
+                        onPressed: () async {
+                          try {
+                            if (favoriteEntry != null) {
+                              await ref
+                                  .read(libraryCollectionsProvider.notifier)
+                                  .removeFavoriteArtist(favoriteEntry.key);
+                            } else {
+                              await ref
+                                  .read(libraryCollectionsProvider.notifier)
+                                  .toggleFavoriteArtist(
+                                    artistId: artistId,
+                                    providerId: 'local',
+                                    name: widget.artistName,
+                                    imageUrl: cover,
+                                  );
+                            }
+                          } catch (error) {
+                            if (context.mounted) {
+                              showCannotOpenFileSnackBar(context, error);
+                            }
                           }
-                        } catch (error) {
-                          if (context.mounted) {
-                            showCannotOpenFileSnackBar(context, error);
-                          }
-                        }
-                      },
+                        },
+                      ),
+                      CupertinoButton(
+                        key: const ValueKey('artist-play'),
+                        padding: EdgeInsets.zero,
+                        color: colors.primary,
+                        borderRadius: BorderRadius.circular(37),
+                        onPressed:
+                            tracks?.items.isNotEmpty == true &&
+                                !_startingPlayback
+                            ? inArtist
+                                  ? () => ref
+                                        .read(musicPlayerControllerProvider)
+                                        .togglePlayPause(isPlaying)
+                                  : () => _play()
+                            : null,
+                        child: SizedBox.square(
+                          dimension: 74,
+                          child: _startingPlayback
+                              ? const Center(
+                                  child: CupertinoActivityIndicator(),
+                                )
+                              : Icon(
+                                  isPlaying
+                                      ? CupertinoIcons.pause_fill
+                                      : CupertinoIcons.play_fill,
+                                  semanticLabel: isPlaying
+                                      ? context.l10n.actionPause
+                                      : context.l10n.tooltipPlay,
+                                  size: 34,
+                                  color: colors.onPrimary,
+                                ),
+                        ),
+                      ),
+                      HeaderCircleButton(
+                        icon: CupertinoIcons.shuffle,
+                        buttonSize: 50,
+                        iconSize: 24,
+                        iconColor: colors.primary,
+                        tooltip: context.l10n.actionShuffle,
+                        onPressed:
+                            tracks?.items.isNotEmpty == true &&
+                                !_startingPlayback
+                            ? () => _play(shuffle: true)
+                            : null,
+                      ),
+                    ],
+                  ).buildSlivers(context),
+                  if (albumsAsync.isLoading ||
+                      singlesAsync.isLoading ||
+                      appearsAsync.isLoading ||
+                      featuredAsync.isLoading ||
+                      tracksAsync.isLoading)
+                    const SliverToBoxAdapter(
+                      child: TrackListSkeleton(itemCount: 5),
                     ),
-                    CupertinoButton(
-                      key: const ValueKey('artist-play'),
-                      padding: EdgeInsets.zero,
-                      color: colors.primary,
-                      borderRadius: BorderRadius.circular(37),
-                      onPressed:
-                          tracks?.items.isNotEmpty == true && !_startingPlayback
-                          ? inArtist
-                                ? () => ref
-                                      .read(musicPlayerControllerProvider)
-                                      .togglePlayPause(isPlaying)
-                                : () => _play()
-                          : null,
-                      child: SizedBox.square(
-                        dimension: 74,
-                        child: _startingPlayback
-                            ? const Center(child: CupertinoActivityIndicator())
-                            : Icon(
-                                isPlaying
-                                    ? CupertinoIcons.pause_fill
-                                    : CupertinoIcons.play_fill,
-                                semanticLabel: isPlaying
-                                    ? context.l10n.actionPause
-                                    : context.l10n.tooltipPlay,
-                                size: 34,
-                                color: colors.onPrimary,
-                              ),
+                  if (albumsAsync.hasError ||
+                      singlesAsync.hasError ||
+                      appearsAsync.hasError ||
+                      featuredAsync.hasError ||
+                      tracksAsync.hasError)
+                    SliverToBoxAdapter(
+                      child: ErrorCard(
+                        error:
+                            (albumsAsync.error ??
+                                    singlesAsync.error ??
+                                    appearsAsync.error ??
+                                    featuredAsync.error ??
+                                    tracksAsync.error)
+                                .toString(),
+                        colorScheme: colors,
+                        onRetry: () {
+                          ref.invalidate(libraryBrowseProvider(_albumsRequest));
+                          ref.invalidate(
+                            libraryBrowseProvider(_singlesRequest),
+                          );
+                          ref.invalidate(
+                            libraryBrowseProvider(_appearsRequest),
+                          );
+                          ref.invalidate(
+                            localArtistFeaturedReleaseProvider(
+                              widget.artistName,
+                            ),
+                          );
+                          ref.invalidate(
+                            localArtistPopularProvider(widget.artistName),
+                          );
+                        },
                       ),
                     ),
-                    HeaderCircleButton(
-                      icon: CupertinoIcons.shuffle,
-                      buttonSize: 50,
-                      iconSize: 24,
-                      iconColor: colors.primary,
-                      tooltip: context.l10n.actionShuffle,
-                      onPressed:
-                          tracks?.items.isNotEmpty == true && !_startingPlayback
-                          ? () => _play(shuffle: true)
-                          : null,
+                  if (featured != null) ...[
+                    SliverToBoxAdapter(
+                      child: _featuredRelease(context, featured),
                     ),
                   ],
-                ).buildSlivers(context),
-                if (albumsAsync.isLoading ||
-                    singlesAsync.isLoading ||
-                    appearsAsync.isLoading ||
-                    featuredAsync.isLoading ||
-                    tracksAsync.isLoading)
-                  const SliverToBoxAdapter(
-                    child: TrackListSkeleton(itemCount: 5),
-                  ),
-                if (albumsAsync.hasError ||
-                    singlesAsync.hasError ||
-                    appearsAsync.hasError ||
-                    featuredAsync.hasError ||
-                    tracksAsync.hasError)
-                  SliverToBoxAdapter(
-                    child: ErrorCard(
-                      error:
-                          (albumsAsync.error ??
-                                  singlesAsync.error ??
-                                  appearsAsync.error ??
-                                  featuredAsync.error ??
-                                  tracksAsync.error)
-                              .toString(),
-                      colorScheme: colors,
-                      onRetry: () {
-                        ref.invalidate(libraryBrowseProvider(_albumsRequest));
-                        ref.invalidate(libraryBrowseProvider(_singlesRequest));
-                        ref.invalidate(libraryBrowseProvider(_appearsRequest));
-                        ref.invalidate(
-                          localArtistFeaturedReleaseProvider(widget.artistName),
-                        );
-                        ref.invalidate(
-                          localArtistPopularProvider(widget.artistName),
-                        );
-                      },
-                    ),
-                  ),
-                if (featured != null) ...[
-                  SliverToBoxAdapter(
-                    child: _featuredRelease(context, featured),
-                  ),
-                ],
-                if (tracks?.items.isNotEmpty == true)
-                  SliverToBoxAdapter(
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 28, 20, 12),
-                      child: Text(
-                        context.l10n.artistPopular,
-                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.bold,
+                  if (tracks?.items.isNotEmpty == true)
+                    SliverToBoxAdapter(
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(20, 28, 20, 12),
+                        child: Text(
+                          context.l10n.artistPopular,
+                          style: Theme.of(context).textTheme.titleLarge
+                              ?.copyWith(fontWeight: FontWeight.bold),
                         ),
                       ),
                     ),
-                  ),
-                if (tracks != null && tracks.items.isEmpty)
-                  SliverToBoxAdapter(
-                    child: Padding(
-                      padding: const EdgeInsets.all(24),
-                      child: Text(context.l10n.libraryEmpty),
+                  if (tracks != null && tracks.items.isEmpty)
+                    SliverToBoxAdapter(
+                      child: Padding(
+                        padding: const EdgeInsets.all(24),
+                        child: Text(context.l10n.libraryEmpty),
+                      ),
                     ),
-                  ),
-                if (tracks != null && tracks.items.isNotEmpty)
-                  SliverToBoxAdapter(
-                    child: ArtistSongPages(
-                      itemCount: tracks.items.length,
-                      itemBuilder: (context, index) {
-                        final track = tracks.items[index];
-                        final current =
-                            media != null &&
-                            (media.id == track.id ||
-                                media.id == track.filePath ||
-                                source == track.filePath);
-                        void play() => current
-                            ? ref
-                                  .read(musicPlayerControllerProvider)
-                                  .togglePlayPause(isPlaying)
-                            : _play(start: track);
-                        return Stack(
-                          children: [
-                            InkWell(
-                              onTap: play,
-                              child: Padding(
-                                padding: const EdgeInsets.fromLTRB(
-                                  20,
-                                  8,
-                                  10,
-                                  8,
-                                ),
-                                child: Row(
-                                  children: [
-                                    ClipRRect(
-                                      borderRadius: BorderRadius.circular(4),
-                                      child: _artwork(
-                                        track.coverPath,
-                                        size: 48,
-                                        placeholderIcon:
-                                            CupertinoIcons.music_note,
-                                      ),
-                                    ),
-                                    const SizedBox(width: 12),
-                                    Expanded(
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          ExplicitTrackTitle(
-                                            title: track.trackName,
-                                            explicit: track.explicit,
-                                            style: const TextStyle(
-                                              fontSize: 17,
-                                            ),
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
-                                          Text(
-                                            track.albumName,
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: TextStyle(
-                                              fontSize: 15,
-                                              color: colors.onSurfaceVariant,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    LocalSongPlayButton(
-                                      isPlaying: current && isPlaying,
-                                      onPressed: play,
-                                    ),
-                                    Builder(
-                                      builder: (buttonContext) => IconButton(
-                                        tooltip: MaterialLocalizations.of(
-                                          context,
-                                        ).moreButtonTooltip,
-                                        icon: const Icon(Icons.more_horiz),
-                                        onPressed: () => showLocalSongMenu(
-                                          context,
-                                          ref,
-                                          track,
-                                          anchor: appMenuAnchor(buttonContext),
+                  if (tracks != null && tracks.items.isNotEmpty)
+                    SliverToBoxAdapter(
+                      child: ArtistSongPages(
+                        itemCount: tracks.items.length,
+                        itemBuilder: (context, index) {
+                          final track = tracks.items[index];
+                          final current =
+                              media != null &&
+                              (media.id == track.id ||
+                                  media.id == track.filePath ||
+                                  source == track.filePath);
+                          void play() => current
+                              ? ref
+                                    .read(musicPlayerControllerProvider)
+                                    .togglePlayPause(isPlaying)
+                              : _play(start: track);
+                          return Stack(
+                            children: [
+                              InkWell(
+                                onTap: play,
+                                child: Padding(
+                                  padding: const EdgeInsets.fromLTRB(
+                                    20,
+                                    8,
+                                    10,
+                                    8,
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      ClipRRect(
+                                        borderRadius: BorderRadius.circular(4),
+                                        child: _artwork(
+                                          track.coverPath,
+                                          size: 48,
+                                          placeholderIcon:
+                                              CupertinoIcons.music_note,
                                         ),
                                       ),
-                                    ),
-                                  ],
+                                      const SizedBox(width: 12),
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            ExplicitTrackTitle(
+                                              title: track.trackName,
+                                              explicit: track.explicit,
+                                              style: const TextStyle(
+                                                fontSize: 17,
+                                              ),
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                            Text(
+                                              track.albumName,
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: TextStyle(
+                                                fontSize: 15,
+                                                color: colors.onSurfaceVariant,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      LocalSongPlayButton(
+                                        isPlaying: current && isPlaying,
+                                        onPressed: play,
+                                      ),
+                                      Builder(
+                                        builder: (buttonContext) => IconButton(
+                                          tooltip: MaterialLocalizations.of(
+                                            context,
+                                          ).moreButtonTooltip,
+                                          icon: const Icon(Icons.more_horiz),
+                                          onPressed: () => showLocalSongMenu(
+                                            context,
+                                            ref,
+                                            track,
+                                            anchor: appMenuAnchor(
+                                              buttonContext,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
-                            ),
-                            Positioned(
-                              left: 80,
-                              right: 20,
-                              bottom: 0,
-                              child: Divider(
-                                height: 1,
-                                thickness: .5,
-                                color: colors.onSurface.withValues(alpha: .12),
+                              Positioned(
+                                left: 80,
+                                right: 20,
+                                bottom: 0,
+                                child: Divider(
+                                  height: 1,
+                                  thickness: .5,
+                                  color: colors.onSurface.withValues(
+                                    alpha: .12,
+                                  ),
+                                ),
                               ),
-                            ),
-                          ],
-                        );
-                      },
-                    ),
-                  ),
-                if (albums != null && albums.entries.isNotEmpty)
-                  SliverToBoxAdapter(
-                    child: _albumSection(
-                      context,
-                      _albumsRequest,
-                      context.l10n.searchAlbums,
-                      albums.entries,
-                    ),
-                  ),
-                if (singles != null && singles.entries.isNotEmpty)
-                  SliverToBoxAdapter(
-                    child: _albumSection(
-                      context,
-                      _singlesRequest,
-                      context.l10n.libraryKindSingles,
-                      singles.entries,
-                    ),
-                  ),
-                if (appears != null && appears.entries.isNotEmpty)
-                  SliverToBoxAdapter(
-                    child: _albumSection(
-                      context,
-                      _appearsRequest,
-                      context.l10n.artistAppearsOn,
-                      appears.entries,
-                    ),
-                  ),
-                for (final request in [
-                  _albumsRequest,
-                  _singlesRequest,
-                  _appearsRequest,
-                ])
-                  if (ref
-                          .watch(libraryBrowseProvider(request))
-                          .asData
-                          ?.value
-                          .loadMoreError !=
-                      null)
-                    SliverToBoxAdapter(
-                      child: Center(
-                        child: TextButton(
-                          onPressed: () => ref
-                              .read(libraryBrowseProvider(request).notifier)
-                              .loadMore(),
-                          child: Text(context.l10n.dialogRetry),
-                        ),
+                            ],
+                          );
+                        },
                       ),
                     ),
-                SliverToBoxAdapter(
-                  child: SizedBox(height: context.navBarBottomInset + 24),
-                ),
-              ],
-            ),
-          );
-        },
+                  if (albums != null && albums.entries.isNotEmpty)
+                    SliverToBoxAdapter(
+                      child: _albumSection(
+                        context,
+                        _albumsRequest,
+                        context.l10n.searchAlbums,
+                        albums.entries,
+                      ),
+                    ),
+                  if (singles != null && singles.entries.isNotEmpty)
+                    SliverToBoxAdapter(
+                      child: _albumSection(
+                        context,
+                        _singlesRequest,
+                        context.l10n.libraryKindSingles,
+                        singles.entries,
+                      ),
+                    ),
+                  if (appears != null && appears.entries.isNotEmpty)
+                    SliverToBoxAdapter(
+                      child: _albumSection(
+                        context,
+                        _appearsRequest,
+                        context.l10n.artistAppearsOn,
+                        appears.entries,
+                      ),
+                    ),
+                  for (final request in [
+                    _albumsRequest,
+                    _singlesRequest,
+                    _appearsRequest,
+                  ])
+                    if (ref
+                            .watch(libraryBrowseProvider(request))
+                            .asData
+                            ?.value
+                            .loadMoreError !=
+                        null)
+                      SliverToBoxAdapter(
+                        child: Center(
+                          child: TextButton(
+                            onPressed: () => ref
+                                .read(libraryBrowseProvider(request).notifier)
+                                .loadMore(),
+                            child: Text(context.l10n.dialogRetry),
+                          ),
+                        ),
+                      ),
+                  SliverToBoxAdapter(
+                    child: SizedBox(height: context.navBarBottomInset + 24),
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
       ),
     );
   }
