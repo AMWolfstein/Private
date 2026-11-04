@@ -22,6 +22,8 @@ popover placement so it follows the tapped ellipsis. Keep the metadata page remo
 
 ## Progress
 
+**Bottom sheets draw a still screen ground (2026-11-04):** device measurements showed any large sheet costing about 12 ms raster P50 (P95 about 26 ms, 24–36% jank) whenever something on screen moved, with or without a video: the Find animated artwork preview (a video in the sheet) and Find lyrics (only a progress bar moving) measured alike. Impeller re-runs a sheet's `BackdropFilter` over its whole area on every frame. At the owner's request every bottom sheet now captures the screen once as it opens (`AppScreenCapture` around the app content, `AppScreenGround`), blurs it with the look's frosted filter plus the barrier colour into a 384 px ground, and draws that image through the existing GROUND path; the image is freed when the sheet closes. Menus opened from a sheet do not take that ground. Visible difference: anything that moves behind a sheet stops moving under its glass. Not yet measured on a device.
+
 **BitChord look is the default (2026-11-04):** at the owner's request every launch starts in the BitChord look. The developer HUD can still switch to Sistrum's look for comparison, and that switch is not persisted.
 
 **BitChord look, owner override (2026-11-04):** for the BitChord look only, the owner allowed the blur below sigma 6. FROSTED, LIQUID and the header band use BitChord's sigma 5. Translucent surfaces take BitChord's 0.4 surface tint. The rim paints a chromatic fringe (warm outside, cool inside, strongest at the corners) as an approximation of BitChord's dispersion, which g1455's shader lacks. The Sistrum look is unchanged.

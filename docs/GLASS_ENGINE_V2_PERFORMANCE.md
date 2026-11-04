@@ -223,3 +223,36 @@ radius growing from zero. The duration, the tint fade and the settled look are u
   is why their counts add up to more than 300. The HUD labels them "since Reset" and Copy adds
   `band window=since-reset`.
 - Both skip the 30 warm-up frames.
+
+## Bottom sheets: a still screen ground (2026-11-04)
+
+Device, HUD Copy lines (raster avg/P90/P99 for the last 300 frames; band lines since Reset):
+
+| Screen | What moved | raster avg/P90/P99 | jank |
+|---|---|---|---|
+| Find animated artwork, artist video on | not recorded | 15.7/22.9/26.6 | 35.7% |
+| Find animated artwork, artist video off | not recorded | 15.6/26.4/38.1 | 35.7% |
+| Find animated artwork, preview playing, untouched | the preview video | 14.9/25.9/46.0 | 27.0% |
+| Find lyrics from Now Playing, no video | the search progress bar | 13.8/20.4/33.9 | 32.3% |
+
+`reads=1 copies=1` in each: the sheet's own FROSTED read. The page's video was off, and a sheet
+with no video at all measured the same, so the cost is the sheet's blur, re-run over its whole
+area (most of the screen) on every frame anything moves. Host recapture also ran every frame, but
+an earlier run with Artist glass disabled and the video recapturing every frame measured about
+4 ms, so it is not the main cost. No GPU trace was taken.
+
+**Change (owner decision):** a bottom sheet captures the app's content once as it opens
+(`AppScreenCapture`, a `RepaintBoundary` under the HUD, `toImageSync` at 384 px wide), blurs it
+with the look's frosted filter (`appFrostImageFilter`: sigma and, for BitChord, the saturation
+lift, scaled to the image) and lays the barrier colour over it. The sheet's glass draws that image
+through the existing GROUND renderer (`AppArtworkGlassSurface`), aligned to the screen. The cost is
+one small capture and blur at open; nothing is re-blurred per frame. The image is freed when the
+sheet's route completes.
+
+- Applies to `showAppModalBottomSheet` (and `showAppBottomSheet`, `showAppScrollableBottomSheet`)
+  and the playlist picker. The player's details sheet keeps the player's artwork ground.
+- Menus and dialogs are unchanged. A menu opened from a sheet does not take the sheet's ground.
+- Flat glass, high contrast and low-end devices capture nothing (their glass reads no backdrop).
+- If the capture fails, the sheet keeps its FROSTED read.
+- Visible difference: anything moving behind a sheet (a video, a progress bar) stops moving under
+  its glass, which is under the barrier and a 0.78 tint.
