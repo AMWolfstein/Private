@@ -85,7 +85,21 @@ class AppHeaderBacking extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final material = appHeaderMaterial(context, ref);
+    // Over a live video, tells the header controls whether this band fully
+    // covers them with its blur (see AppLiveVideoBand).
+    final bandCovers = AppLiveVideoBand.notifierOf(context);
+    void report(bool covers) {
+      if (bandCovers == null || bandCovers.value == covers) return;
+      // After the frame: the controls are not rebuilt in the middle of one.
+      // A band gone by then (its page closed) has nothing to report, and its
+      // notifier may be gone with it.
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (context.mounted) bandCovers.value = covers;
+      });
+    }
+
     if (material == AppHeaderMaterial.opaque) {
+      report(false);
       return const SizedBox.shrink();
     }
     final shown =
@@ -112,6 +126,7 @@ class AppHeaderBacking extends ConsumerWidget {
           ? Duration.zero
           : _duration,
       builder: (context, amount, _) {
+        report(sigma > 0 && amount >= 1 && AppLiveVideoBackdrop.of(context));
         if (amount == 0) return const SizedBox.shrink();
         // Hold the tint across the toolbar and feather only its last third.
         // The blur fades with it, so the band never shows a hard edge.

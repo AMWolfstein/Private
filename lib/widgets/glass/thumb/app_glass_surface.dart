@@ -183,10 +183,19 @@ class AppGlass extends ConsumerWidget {
     // (see [AppLiveVideoBackdrop]).
     final liveVideoFallback =
         mode == AppGlassMode.liquid && AppLiveVideoBackdrop.of(context);
+    // Header controls over a live video sit inside the header band once it
+    // is fully shown, and the band already blurs the same video under them:
+    // they are then nested glass and draw their fill only, so the page is
+    // copied once for the band instead of once more for the controls.
+    final insideLiveBand =
+        liveVideoFallback &&
+        BackdropGroup.of(context) != null &&
+        AppLiveVideoBand.coversOf(context);
     // The Artist diagnostic (developer only) turns its glass into Tint.
     final effectiveMode =
         AppArtistGlassIsolationScope.disabledOf(context) ||
-            !AppLyricsDiagnosticScope.of(context).glass
+            !AppLyricsDiagnosticScope.of(context).glass ||
+            insideLiveBand
         ? AppGlassMode.tint
         : liveVideoFallback
         ? AppGlassMode.frosted
@@ -375,4 +384,26 @@ class AppLiveVideoBackdrop extends InheritedWidget {
   @override
   bool updateShouldNotify(AppLiveVideoBackdrop oldWidget) =>
       oldWidget.live != live || oldWidget.backdropKey != backdropKey;
+}
+
+/// Whether the header band over a live video is fully shown with its blur:
+/// written by `AppHeaderBacking` after each frame, read by the header
+/// controls' glass (see [AppGlass]). False everywhere else.
+class AppLiveVideoBand extends InheritedNotifier<ValueNotifier<bool>> {
+  const AppLiveVideoBand({
+    super.key,
+    required ValueNotifier<bool> covers,
+    required super.child,
+  }) : super(notifier: covers);
+
+  static bool coversOf(BuildContext context) =>
+      context
+          .dependOnInheritedWidgetOfExactType<AppLiveVideoBand>()
+          ?.notifier
+          ?.value ??
+      false;
+
+  /// The notifier itself, for the band that writes it; no dependency.
+  static ValueNotifier<bool>? notifierOf(BuildContext context) =>
+      context.getInheritedWidgetOfExactType<AppLiveVideoBand>()?.notifier;
 }

@@ -5,7 +5,7 @@ import 'package:g1455/g1455.dart' show GlassHost, GlassSurface;
 import 'package:sistrum/core/theme/app_theme.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/widgets/glass/chrome/app_floating_header.dart'
-    show AppHeaderControls;
+    show AppHeaderBacking, AppHeaderControls;
 import 'package:sistrum/widgets/glass/debug/app_backdrop_reads.dart';
 import 'package:sistrum/widgets/glass/thumb/app_glass_surface.dart';
 
@@ -132,5 +132,88 @@ void main() {
     await _pumpHeader(tester, liveVideo: false);
     expect(find.byType(BackdropFilter), findsNothing);
     expect(find.byType(BackdropGroup), findsNothing);
+  });
+
+  group('header band over a live video', () {
+    Future<ValueNotifier<bool>> pumpBand(
+      WidgetTester tester, {
+      required bool bandShown,
+      ValueNotifier<bool>? covers,
+    }) async {
+      final notifier = covers ?? ValueNotifier<bool>(false);
+      if (covers == null) addTearDown(notifier.dispose);
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            appGlassLevelProvider.overrideWithValue(AppGlassLevel.tinted),
+          ],
+          child: MaterialApp(
+            theme: AppTheme.build(Brightness.dark),
+            home: AppLiveVideoBackdrop(
+              live: true,
+              backdropKey: _sharedKey,
+              child: AppLiveVideoBand(
+                covers: notifier,
+                child: Scaffold(
+                  body: SizedBox(
+                    height: 100,
+                    child: Stack(
+                      children: [
+                        Positioned.fill(
+                          child: AppHeaderBacking(visible: bandShown),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            AppHeaderControls(child: _control()),
+                            AppHeaderControls(
+                              child: Row(children: [_control(), _control()]),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      return notifier;
+    }
+
+    testWidgets('a fully shown band holds the controls: one copy in all', (
+      tester,
+    ) async {
+      final covers = await pumpBand(tester, bandShown: true);
+      expect(covers.value, isTrue);
+      // ignore: invalid_use_of_protected_member
+      final layer = tester.binding.renderViews.first.layer;
+      // Only the band reads the video; the controls draw their fill on it.
+      expect(appCountBackdrops(layer), (reads: 1, copies: 1));
+      expect(tester.takeException(), isNull);
+    });
+
+    testWidgets('a hidden band leaves the controls their shared read', (
+      tester,
+    ) async {
+      final covers = await pumpBand(tester, bandShown: false);
+      expect(covers.value, isFalse);
+      // ignore: invalid_use_of_protected_member
+      final layer = tester.binding.renderViews.first.layer;
+      expect(appCountBackdrops(layer), (reads: 3, copies: 1));
+    });
+
+    testWidgets('the controls read again as soon as the band starts to go', (
+      tester,
+    ) async {
+      final covers = await pumpBand(tester, bandShown: true);
+      expect(covers.value, isTrue);
+      await pumpBand(tester, bandShown: false, covers: covers);
+      expect(covers.value, isFalse);
+      expect(find.byType(BackdropFilter), findsNWidgets(3));
+    });
   });
 }

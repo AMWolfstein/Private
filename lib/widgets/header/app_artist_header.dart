@@ -11,7 +11,7 @@ import 'package:sistrum/widgets/glass/chrome/app_floating_header.dart';
 import 'package:sistrum/widgets/header/header_controls.dart';
 import 'package:sistrum/widgets/player/artwork/app_player_ground.dart';
 import 'package:sistrum/widgets/glass/thumb/app_glass_surface.dart'
-    show AppLiveVideoBackdrop;
+    show AppLiveVideoBackdrop, AppLiveVideoBand;
 
 /// Share the same artwork-derived dark surface while loading and after the
 /// artist metadata arrives, including when the app itself uses light mode.
@@ -45,9 +45,13 @@ class _AppArtistSurfaceState extends State<AppArtistSurface> {
   // One stable key for the header controls' shared read over a live video.
   final _liveBackdropKey = BackdropKey();
 
+  // Whether the header band fully covers the controls with its live blur.
+  final _bandCovers = ValueNotifier<bool>(false);
+
   @override
   void dispose() {
     ShellNavigationService.clearChromeBrightness(this);
+    _bandCovers.dispose();
     super.dispose();
   }
 
@@ -106,30 +110,33 @@ class _AppArtistSurfaceState extends State<AppArtistSurface> {
                 child: AppLiveVideoBackdrop(
                   live: widget.liveBackdrop,
                   backdropKey: _liveBackdropKey,
-                  child: HeaderPalette(
-                    scheme: scheme,
-                    // The header controls draw from the page's artwork.
-                    // Surfaces shown without Riverpod (previews) have no glass
-                    // settings, and so no ground.
-                    child:
-                        widget.liveBackdrop ||
-                            context
-                                    .findAncestorWidgetOfExactType<
-                                      UncontrolledProviderScope
-                                    >() ==
-                                null
-                        ? widget.child
-                        : Consumer(
-                            builder: (context, ref, child) => AppPageGround(
-                              source: widget.imageSource,
-                              surface: surface,
-                              sigma: kAppGlassStyle.blurSigma,
-                              enabled: appGroundNeeded(context, ref),
-                              cover: appCoverProvider(widget.imageSource),
-                              child: child!,
+                  child: AppLiveVideoBand(
+                    covers: _bandCovers,
+                    child: HeaderPalette(
+                      scheme: scheme,
+                      // The header controls draw from the page's artwork.
+                      // Surfaces shown without Riverpod (previews) have no glass
+                      // settings, and so no ground.
+                      child:
+                          widget.liveBackdrop ||
+                              context
+                                      .findAncestorWidgetOfExactType<
+                                        UncontrolledProviderScope
+                                      >() ==
+                                  null
+                          ? widget.child
+                          : Consumer(
+                              builder: (context, ref, child) => AppPageGround(
+                                source: widget.imageSource,
+                                surface: surface,
+                                sigma: kAppGlassStyle.blurSigma,
+                                enabled: appGroundNeeded(context, ref),
+                                cover: appCoverProvider(widget.imageSource),
+                                child: child!,
+                              ),
+                              child: widget.child,
                             ),
-                            child: widget.child,
-                          ),
+                    ),
                   ),
                 ),
               );
