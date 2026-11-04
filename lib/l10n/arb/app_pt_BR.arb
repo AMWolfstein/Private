@@ -608,10 +608,6 @@
   "@trackAlbum": {
     "description": "Metadata label - album name"
   },
-  "trackCopiedToClipboard": "Copiado para a área de transferência",
-  "@trackCopiedToClipboard": {
-    "description": "Snackbar - content copied"
-  },
   "snackbarDeleteTracksFailed": "Não foi possível excluir {count} {count, plural, =1{faixa} other{faixas}}. Verifique o acesso ao armazenamento e tente novamente.",
   "dateDaysAgo": "{count} dias atrás",
   "@dateDaysAgo": {
@@ -2275,10 +2271,6 @@
   "snackbarPlayingNext": "A reproduzir a seguir",
   "@snackbarPlayingNext": {
     "description": "Snackbar when a track is inserted as the next queue item"
-  },
-  "trackCopyFilePath": "Copiar caminho do arquivo",
-  "@trackCopyFilePath": {
-    "description": "Action - copy file path"
   },
   "trackDeleteConfirmMessage": "Isto elimina permanentemente o arquivo de áudio local e remove-o dsua biblioteca.",
   "trackDeleteConfirmTitle": "Remover do dispositivo?",

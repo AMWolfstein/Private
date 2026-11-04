@@ -204,31 +204,11 @@ void _registerLocalSongMenuPopover() {
     expect(_player.queued, ['song']);
   });
 
-  testWidgets('copy path and cancel/confirm file deletion', (tester) async {
-    String? copied;
-    tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
-      SystemChannels.platform,
-      (call) async {
-        if (call.method == 'Clipboard.setData') {
-          copied = (call.arguments as Map)['text'] as String;
-        }
-        return null;
-      },
-    );
-    addTearDown(
-      () => tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
-        SystemChannels.platform,
-        null,
-      ),
-    );
+  testWidgets('cancel/confirm file deletion', (tester) async {
     await _mount(tester);
-    await _openMenu(tester);
-    await tester.tap(find.text('Copy file path'));
-    await _runAction(tester, pendingAction!);
-    await tester.pumpAndSettle();
-    expect(copied, song.filePath);
     for (final confirm in [false, true]) {
       await _openMenu(tester);
+      expect(find.text('Copy file path'), findsNothing);
       await tester.ensureVisible(find.text('Remove from device'));
       await tester.pumpAndSettle();
       await tester.tap(find.text('Remove from device'));
@@ -291,7 +271,6 @@ void _registerLocalSongMenuPopover() {
       expect(find.text(l10n.trackReplayGain), findsNothing);
       expect(find.text(l10n.audioAnalysisTitle), findsNothing);
       expect(find.text(l10n.trackEditMetadata), findsNothing);
-      expect(find.text(l10n.trackCopyFilePath), findsNothing);
       await tester.ensureVisible(find.text(l10n.cueSplitTitle));
       await tester.pumpAndSettle();
       await tester.tap(find.text(l10n.cueSplitTitle));

@@ -608,10 +608,6 @@
   "@trackAlbum": {
     "description": "Metadata label - album name"
   },
-  "trackCopiedToClipboard": "Panoya kopyalandı",
-  "@trackCopiedToClipboard": {
-    "description": "Snackbar - content copied"
-  },
   "snackbarDeleteTracksFailed": "{count} {count, plural, =1{parça} other{parça}} silinemedi. Depolama erişimini kontrol edip yeniden deneyin.",
   "dateDaysAgo": "{count} gün önce",
   "@dateDaysAgo": {
@@ -2277,10 +2273,6 @@
   "snackbarPlayingNext": "Sırada çalınacak",
   "@snackbarPlayingNext": {
     "description": "Snackbar when a track is inserted as the next queue item"
-  },
-  "trackCopyFilePath": "Dosya yolunu kopyala",
-  "@trackCopyFilePath": {
-    "description": "Action - copy file path"
   },
   "trackDeleteConfirmMessage": "Bu işlem yerel ses dosyasını kalıcı olarak siler ve kitaplığınızdan kaldırır.",
   "trackDeleteConfirmTitle": "Cihazdan kaldırılsın mı?",

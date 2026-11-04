@@ -132,6 +132,16 @@ extension _NowPlayingMenus on _NowPlayingScreenState {
     }
   }
 
+  /// The same confirmed deletion as a Songs row; the player's media id is the
+  /// local library id.
+  Future<void> _removePlayerSongFromDevice(MediaItem mediaItem) async {
+    final item = await ref
+        .read(localLibraryProvider.notifier)
+        .getById(mediaItem.id);
+    if (!mounted || item == null) return;
+    await deleteLocalSong(context, item);
+  }
+
   Future<void> _goToCurrentArtist(MediaItem mediaItem) async {
     await navigateToArtistCredits(
       context,
@@ -219,6 +229,9 @@ extension _NowPlayingMenus on _NowPlayingScreenState {
         break;
       case 'album':
         await _goToCurrentAlbum(mediaItem: mediaItem);
+        break;
+      case 'delete':
+        await _removePlayerSongFromDevice(mediaItem);
         break;
       case 'shareLyrics':
         await _shareLyrics();

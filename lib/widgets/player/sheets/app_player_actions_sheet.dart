@@ -7,6 +7,7 @@ import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/providers/library/library_collections_provider.dart';
 import 'package:sistrum/providers/playback/music_player_provider.dart';
 import 'package:sistrum/services/library/covers/cover_palette.dart';
+import 'package:sistrum/core/theme/app_icons.dart';
 import 'package:sistrum/core/theme/app_theme.dart';
 import 'package:sistrum/widgets/primitives/app_context_menu.dart';
 import 'package:sistrum/providers/library/cover_palette_provider.dart';
@@ -154,6 +155,15 @@ class AppPlayerActionsSheet extends ConsumerWidget {
               subtitle: sleepTimerSubtitle,
             ),
           ],
+          [
+            _action(
+              context,
+              'delete',
+              context.l10n.trackRemoveFromDevice,
+              appIconFor(Icons.delete_outline),
+              destructive: true,
+            ),
+          ],
         ],
       ),
     );
@@ -166,11 +176,13 @@ class AppPlayerActionsSheet extends ConsumerWidget {
     IconData icon, {
     String? subtitle,
     bool selected = false,
+    bool destructive = false,
   }) => AppMenuAction(
     icon: icon,
     label: label,
     subtitle: subtitle,
     selected: selected,
+    destructive: destructive,
     onPressed: () => Navigator.of(context).pop(value),
   );
 }

@@ -87,37 +87,41 @@ class ProfileAvatar extends StatelessWidget {
 /// The header profile photo that opens Settings. Sits at the trailing end of
 /// every pinned header, [gap] after the actions before it, and hides itself
 /// on Settings and the pages Settings opens (and outside the shell).
+/// The profile photo in a header's trailing group. It hides itself inside
+/// Settings, so the group can count it only when [isShown] is true.
 class HeaderProfileButton extends StatelessWidget {
-  const HeaderProfileButton({super.key, this.gap = 0});
+  const HeaderProfileButton({super.key, this.size = HomeProfileButton.defaultSize});
 
-  final double gap;
+  final double size;
+
+  /// Whether the profile photo is shown in a header while [settingsOpen].
+  static bool isShown(BuildContext context, {required bool settingsOpen}) =>
+      ShellNavigationService.hasTabSelectionHandler &&
+      !(settingsOpen &&
+          !ShellNavigationService.isTabNavigator(Navigator.maybeOf(context)));
 
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder<bool>(
       valueListenable: ShellNavigationService.settingsOpen,
       builder: (context, settingsOpen, _) {
-        final hidden =
-            !ShellNavigationService.hasTabSelectionHandler ||
-            (settingsOpen &&
-                !ShellNavigationService.isTabNavigator(
-                  Navigator.maybeOf(context),
-                ));
-        if (hidden) return const SizedBox.shrink();
-        return Padding(
-          padding: EdgeInsetsDirectional.only(start: gap),
-          child: const HomeProfileButton(),
-        );
+        if (!isShown(context, settingsOpen: settingsOpen)) {
+          return const SizedBox.shrink();
+        }
+        return HomeProfileButton(size: size);
       },
     );
   }
 }
 
-/// The profile photo, 48dp, with a thin rim.
+/// The profile photo (48dp by default), with a thin rim.
 class HomeProfileButton extends ConsumerWidget {
-  const HomeProfileButton({super.key});
+  const HomeProfileButton({super.key, this.size = defaultSize});
 
-  static const double _size = 48;
+  /// The diameter in a header's own row; smaller inside the header capsule.
+  static const double defaultSize = 48;
+
+  final double size;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -127,9 +131,9 @@ class HomeProfileButton extends ConsumerWidget {
       tooltip: context.l10n.settingsTitle,
       style: IconButton.styleFrom(
         padding: EdgeInsets.zero,
-        minimumSize: const Size.square(_size),
-        fixedSize: const Size.square(_size),
-        iconSize: _size,
+        minimumSize: Size.square(size),
+        fixedSize: Size.square(size),
+        iconSize: size,
       ),
       onPressed: () => ShellNavigationService.requestTab(ShellTab.settings),
       icon: CustomPaint(
@@ -137,7 +141,7 @@ class HomeProfileButton extends ConsumerWidget {
         child: ProfileAvatar(
           name: profile?.name ?? '',
           photoPath: profile?.photoPath,
-          size: _size,
+          size: size,
         ),
       ),
     );

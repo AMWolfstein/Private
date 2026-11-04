@@ -608,10 +608,6 @@
   "@trackAlbum": {
     "description": "Metadata label - album name"
   },
-  "trackCopiedToClipboard": "Tersalin ke clipboard",
-  "@trackCopiedToClipboard": {
-    "description": "Snackbar - content copied"
-  },
   "snackbarDeleteTracksFailed": "Gagal menghapus {count} lagu. Periksa izin akses penyimpanan dan coba lagi.",
   "@snackbarDeleteTracksFailed": {
     "placeholders": {
@@ -2287,10 +2283,6 @@
   "snackbarPlayingNext": "Memutar lagu berikutnya",
   "@snackbarPlayingNext": {
     "description": "Snackbar when a track is inserted as the next queue item"
-  },
-  "trackCopyFilePath": "Salin lokasi file",
-  "@trackCopyFilePath": {
-    "description": "Action - copy file path"
   },
   "trackDeleteConfirmMessage": "Ini menghapus file audio lokal secara permanen dan menghapusnya dari pustaka Anda.",
   "trackDeleteConfirmTitle": "Hapus dari perangkat?",

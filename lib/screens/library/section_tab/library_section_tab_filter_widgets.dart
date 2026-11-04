@@ -95,17 +95,7 @@ extension _LibrarySectionTabFilterWidgets on _LibrarySectionTabState {
             child: _countHeaderRow(
               context,
               context.l10n.queueTrackCount(totalTrackCount),
-              [
-                if (!_isSelectionMode && filteredUnifiedItems.isNotEmpty)
-                  TextButton.icon(
-                    onPressed: () => _showCreatePlaylistDialog(context),
-                    icon: const Icon(Icons.add, size: 20),
-                    label: Text(context.l10n.collectionCreatePlaylist),
-                    style: TextButton.styleFrom(
-                      visualDensity: VisualDensity.compact,
-                    ),
-                  ),
-              ],
+              const [],
             ),
           ),
 

@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
@@ -190,18 +189,6 @@ String cueSplitResultMessage(
         : l10n.cueSplitSuccess(exported),
     if (!insideLibrary) l10n.cueSplitSavedOutsideLibrary,
   ].join('\n');
-}
-
-Future<void> copyLocalSongPath(
-  BuildContext context,
-  LocalLibraryItem item,
-) async {
-  await Clipboard.setData(ClipboardData(text: item.filePath));
-  if (context.mounted) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(context.l10n.trackCopiedToClipboard)),
-    );
-  }
 }
 
 Future<void> shareLocalSong(BuildContext context, LocalLibraryItem item) async {

@@ -608,10 +608,6 @@
   "@trackAlbum": {
     "description": "Metadata label - album name"
   },
-  "trackCopiedToClipboard": "Скопійовано в буфер обміну",
-  "@trackCopiedToClipboard": {
-    "description": "Snackbar - content copied"
-  },
   "snackbarDeleteTracksFailed": "Не вдалося видалити {count, plural, =1{1 трек} other{треків: {count}}}. Перевірте доступ до сховища та спробуйте ще раз.",
   "dateDaysAgo": "{count} Днів тому",
   "@dateDaysAgo": {
@@ -2278,10 +2274,6 @@
   "snackbarPlayingNext": "Відтворити далі",
   "@snackbarPlayingNext": {
     "description": "Snackbar when a track is inserted as the next queue item"
-  },
-  "trackCopyFilePath": "Копіювати шлях до файлу",
-  "@trackCopyFilePath": {
-    "description": "Action - copy file path"
   },
   "trackDeleteConfirmMessage": "Це назавжди видалить локальний аудіофайл і прибере його з медіатеки.",
   "trackDeleteConfirmTitle": "Видалити з пристрою?",

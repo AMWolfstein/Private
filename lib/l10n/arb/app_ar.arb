@@ -609,10 +609,6 @@
   "@trackAlbum": {
     "description": "Metadata label - album name"
   },
-  "trackCopiedToClipboard": "تم النسخ إلى الحافظة",
-  "@trackCopiedToClipboard": {
-    "description": "Snackbar - content copied"
-  },
   "snackbarDeleteTracksFailed": "تعذّر حذف {count} {count, plural, =1{مقطع} other{مقاطع}}. تحقق من إذن الوصول إلى التخزين وحاول مرة أخرى.",
   "dateDaysAgo": "قبل {count} أيام",
   "@dateDaysAgo": {
@@ -2277,10 +2273,6 @@
   "snackbarPlayingNext": "سيُشغَّل التالي",
   "@snackbarPlayingNext": {
     "description": "Snackbar when a track is inserted as the next queue item"
-  },
-  "trackCopyFilePath": "نسخ مسار الملف",
-  "@trackCopyFilePath": {
-    "description": "Action - copy file path"
   },
   "trackDeleteConfirmMessage": "يحذف هذا نهائيًا ملف الصوت المحلي ويزيله من مكتبتك.",
   "trackDeleteConfirmTitle": "حذف من الجهاز؟",

@@ -55,7 +55,7 @@ class HeaderCircleButton extends StatelessWidget {
   /// Overrides the palette foreground, e.g. to mark an active "loved" state.
   final Color? iconColor;
 
-  /// Uses the same translucent fill as the local album's Play/Shuffle pills.
+  /// Uses the same solid fill as the other header controls.
   final bool tonal;
 
   final double? buttonSize;
@@ -75,9 +75,7 @@ class HeaderCircleButton extends StatelessWidget {
               borderRadius: BorderRadius.circular(
                 (buttonSize ?? kAppHeaderControlSize) / 2,
               ),
-              color: scheme.onSurface.withValues(
-                alpha: scheme.brightness == Brightness.dark ? 0.10 : 0.06,
-              ),
+              color: appHeaderControlFill(context),
               onPressed: onPressed,
               child: Icon(
                 appIconFor(icon),
@@ -151,11 +149,7 @@ class AppHeaderButton extends StatelessWidget {
         ),
         minimumSize: const Size(48, 48),
         borderRadius: BorderRadius.circular(28),
-        color: prominent
-            ? scheme.primary
-            : scheme.onSurface.withValues(
-                alpha: scheme.brightness == Brightness.dark ? 0.10 : 0.06,
-              ),
+        color: prominent ? scheme.primary : appHeaderControlFill(context),
         onPressed: onPressed,
         child: iconOnly
             ? Tooltip(

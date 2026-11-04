@@ -61,7 +61,7 @@ Sistrum has no blur, glass, lens, shader or backdrop sampling anywhere: the liqu
 
 Any new blur or glass design must follow the reference copies in `docs/reference/liquid_glass_widgets/` (`SKILL.md` for the rules and `ARCHITECTURE.md` for the design). Read both before designing or implementing it, and do not add the `liquid_glass_widgets` package as a dependency.
 Sistrum album headers and the immersive player's cover drift slowly (Ken Burns, `AlbumKenBurns`); Appearance > Animated artwork turns it off. A saved video cover (see Video artwork below) replaces that drift on the same cover; the static fallback keeps it. Albums and the player's cover (both Normal and Immersive views) only: playlists, Loved and artist headers stay still. The player's drift pauses while lyrics show. It pauses for reduced motion, low-end devices, covered routes and a page scrolled past the cover.
-Pinned headers float: transparent toolbars with a plain round back button, IconButton and menu actions, and a solid backing band that fades in only once content scrolls under (its colour is the page background). Header controls (not the player's) are 48dp, 4dp from the edge, with 22dp icons; the profile photo (opens Settings, rim outline) ends every header 8dp after the controls and is hidden on Settings and its subpages. Headers mirror in RTL.
+Pinned headers float: transparent toolbars with a plain round back button, and a solid backing band that fades in only once content scrolls under (its colour is the page background). Header controls (not the player's) are 48dp, 4dp from the edge, with 22dp icons. The trailing buttons (IconButton and menu actions plus the profile photo, which opens Settings and has a rim outline) share one solid capsule when there is more than one; a lone button is a solid circle. The profile photo is hidden on Settings and its subpages, so it is not counted there. Every header button has a solid fill, never a translucent one. Headers mirror in RTL.
 Cover colours come from one analysis per cover version (`CoverPalette` -> `appCoverColors`:
 bottom/top edge, dominant, harmonized accent; HCT, chroma never above the cover's, AA on-colours;
 stored in the library DB's derived `cover_analysis` table). Screens and grounds take every cover
@@ -103,7 +103,7 @@ playlist members), with no collection rows or individual playlists mixed into th
 
 Songs, Artists and Album Artists show a persistent Arabic/Latin alphabet rail on the physical right edge. These lists have no inline letter or month/date section headings. Its initial/count projection covers the whole visible category, not just loaded pages, and navigation loads bounded pages on demand. Keep generation/lifecycle guards and current-owner controller attachment. Row revelation reserves space below the pinned toolbar.
 
-Library headers keep a shared Sort control beside the Settings/profile icon on overview and detail routes, except album pages: they have no Sort control and always list tracks by disc, then track number (1 to the last), ignoring the shared order; their More button sits in the header's round control. A–Z and Z–A are shared by every Library route, with A–Z as the default. Song/release lists additionally support file size (largest/smallest) when the SQLite file-size inventory is available, and release date (newest/oldest) when the items have release tags. Nonapplicable shared orders fall back to A–Z. Open its sheet on the root navigator so shell chrome cannot obscure its choices. Do not restore Original order, added-date or per-field Library sort options. Albums retain disc groups and artist Popular retains play-count ranking. Collection view sorting never rewrites saved playlist order. Album completeness (assessment, badges and filters) and the Songs Quality/Format/Metadata filter sheet are removed: do not restore them. Home's explicit release-tag Singles classification remains.
+Library headers keep a shared Sort control beside the Settings/profile icon on overview and detail routes, except album and artist pages: they have no Sort control and always list tracks by disc, then track number (1 to the last), ignoring the shared order; their More button sits in the header's round control. A–Z and Z–A are shared by every Library route, with A–Z as the default. Song/release lists additionally support file size (largest/smallest) when the SQLite file-size inventory is available, and release date (newest/oldest) when the items have release tags. Nonapplicable shared orders fall back to A–Z. Open its sheet on the root navigator so shell chrome cannot obscure its choices. Do not restore Original order, added-date or per-field Library sort options. Albums retain disc groups and artist Popular retains play-count ranking. Collection view sorting never rewrites saved playlist order. Album completeness (assessment, badges and filters) and the Songs Quality/Format/Metadata filter sheet are removed: do not restore them. Home's explicit release-tag Singles classification remains.
 
 Library pages have no search field (search lives in the bottom Search tab). Songs headers show Play/Shuffle, the
 player favorite is a heart, Insights (listening statistics) is the tab after Home and records listening always on, with no Record listening toggle, Edit Metadata has no cover resizer, and each
@@ -117,8 +117,8 @@ Lyrics settings, the artist photo lookup under Appearance > Download artist imag
 
 Song taps start local playback; do not restore the separate TrackMetadataScreen/details
 route. Song ellipsis menus expose the former local track actions: Play/Share, Play next,
-Add to queue, Go to album/artist, Copy file path, Edit Metadata,
-Audio Quality Analysis and confirmed deletion. CUE tracks have Split into Tracks; deleting
+Add to queue, Go to album/artist, Edit Metadata,
+Audio Quality Analysis and confirmed deletion; the Now Playing More menu offers the same Remove from device. Copy file path is removed everywhere and must not return. CUE tracks have Split into Tracks; deleting
 one virtual row must preserve the backing CUE/audio. Do not restore Wishlist, conversion or
 online-only actions. Capture the tapped ellipsis button's root-overlay bounds before any
 async lookup; long popovers scroll within space above/below that control. Songs, playlists
@@ -129,7 +129,7 @@ keys and backups stay compatible.
 
 Album-style collection headers (albums, playlists and Loved) use one centered
 row ordered left to right: Loved, Play/Pause, Shuffle, Add to playlist. Reuse the filled
-Play and translucent Shuffle pills with compact sizing and at least 48px touch targets;
+Play and solid Shuffle pills with compact sizing and at least 48px touch targets;
 keep the outer icons in the same row, including RTL. Do not move Shuffle into the toolbar.
 The artist header retains its separate centered-Play design.
 

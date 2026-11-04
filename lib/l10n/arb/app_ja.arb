@@ -608,10 +608,6 @@
   "@trackAlbum": {
     "description": "Metadata label - album name"
   },
-  "trackCopiedToClipboard": "クリップボードにコピーしました",
-  "@trackCopiedToClipboard": {
-    "description": "Snackbar - content copied"
-  },
   "snackbarDeleteTracksFailed": "{count, plural, =1{1 曲を削除できませんでした} other{{count} 曲を削除できませんでした}}。ストレージへのアクセスを確認して、もう一度お試しください。",
   "dateDaysAgo": "{count} 日前",
   "@dateDaysAgo": {
@@ -2276,10 +2272,6 @@
   "snackbarPlayingNext": "次に再生します",
   "@snackbarPlayingNext": {
     "description": "Snackbar when a track is inserted as the next queue item"
-  },
-  "trackCopyFilePath": "ファイルパスをコピー",
-  "@trackCopyFilePath": {
-    "description": "Action - copy file path"
   },
   "trackDeleteConfirmMessage": "ローカルのオーディオファイルを完全に削除し、ライブラリからも削除します。",
   "trackDeleteConfirmTitle": "デバイスから削除しますか？",

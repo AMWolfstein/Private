@@ -121,7 +121,6 @@ Future<bool> showLocalSongMenu(
           ],
           [
             if (!cue) ...[
-              option('copy', Icons.copy_outlined, l10n.trackCopyFilePath),
               option('edit', Icons.edit_outlined, l10n.trackEditMetadata),
               option(
                 'analysis',
@@ -146,8 +145,6 @@ Future<bool> showLocalSongMenu(
   if (!context.mounted || action == null) return false;
   try {
     switch (action) {
-      case 'copy':
-        await copyLocalSongPath(context, item);
       case 'artist':
         await navigateToArtistCredits(
           context,

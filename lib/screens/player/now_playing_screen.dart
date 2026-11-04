@@ -10,6 +10,7 @@ import 'package:flutter/services.dart' show SystemUiOverlayStyle;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:sistrum/providers/library/library_database_provider.dart';
+import 'package:sistrum/providers/library/local_library_provider.dart';
 import 'package:sistrum/providers/library/library_tag_credits_provider.dart';
 import 'package:sistrum/providers/playback/player_metadata_controller.dart';
 import 'package:sistrum/l10n/l10n.dart';

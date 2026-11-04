@@ -69,7 +69,6 @@ void main() {
         );
         for (final label in [
           l10n.trackMetadataShare,
-          l10n.trackCopyFilePath,
           l10n.trackPlayNext,
           l10n.trackAddToQueue,
           l10n.trackRemoveFromDevice,

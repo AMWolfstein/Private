@@ -608,10 +608,6 @@
   "@trackAlbum": {
     "description": "Metadata label - album name"
   },
-  "trackCopiedToClipboard": "클립보드에 복사됨",
-  "@trackCopiedToClipboard": {
-    "description": "Snackbar - content copied"
-  },
   "snackbarDeleteTracksFailed": "{count, plural, =1{트랙 1개를} other{트랙 {count}개를}} 삭제할 수 없습니다. 저장소 접근을 확인하고 다시 시도하세요.",
   "dateDaysAgo": "{count} 일 전",
   "@dateDaysAgo": {
@@ -2278,10 +2274,6 @@
   "snackbarPlayingNext": "다음 곡 재생",
   "@snackbarPlayingNext": {
     "description": "Snackbar when a track is inserted as the next queue item"
-  },
-  "trackCopyFilePath": "파일 경로 복사",
-  "@trackCopyFilePath": {
-    "description": "Action - copy file path"
   },
   "trackDeleteConfirmMessage": "로컬 오디오 파일을 영구히 삭제하고 라이브러리에서도 제거합니다.",
   "trackDeleteConfirmTitle": "기기에서 제거하시겠습니까?",

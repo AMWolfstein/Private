@@ -608,10 +608,6 @@
   "@trackAlbum": {
     "description": "Metadata label - album name"
   },
-  "trackCopiedToClipboard": "क्लिपबोर्ड पर कॉपी किया गया",
-  "@trackCopiedToClipboard": {
-    "description": "Snackbar - content copied"
-  },
   "snackbarDeleteTracksFailed": "{count} {count, plural, =1{ट्रैक} other{ट्रैक}} हटाए नहीं जा सके। स्टोरेज एक्सेस जाँचें और फिर कोशिश करें।",
   "dateDaysAgo": "{count} दिन पहले",
   "@dateDaysAgo": {
@@ -2275,10 +2271,6 @@
   "snackbarPlayingNext": "अगला चल रहा है",
   "@snackbarPlayingNext": {
     "description": "Snackbar when a track is inserted as the next queue item"
-  },
-  "trackCopyFilePath": "फ़ाइल पथ कॉपी करें",
-  "@trackCopyFilePath": {
-    "description": "Action - copy file path"
   },
   "trackDeleteConfirmMessage": "इससे स्थानीय ऑडियो फ़ाइल स्थायी रूप से हट जाती है और आपकी लाइब्रेरी से भी हट जाती है।",
   "trackDeleteConfirmTitle": "डिवाइस से हटाएँ?",

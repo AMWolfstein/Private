@@ -396,7 +396,7 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('Songs header wraps each action at 360dp and 2x text', (
+  testWidgets('Songs header count stays on screen at 360dp and 2x text', (
     tester,
   ) async {
     tester.view.physicalSize = const Size(360, 800);
@@ -428,16 +428,13 @@ void main() {
     final l10n = AppLocalizations.of(
       tester.element(find.byType(LibrarySectionTab)),
     );
-    // TextButton.icon builds a TextButton subtype, so match by subtype.
-    final create = find.ancestor(
-      of: find.text(l10n.collectionCreatePlaylist),
-      matching: find.bySubtype<TextButton>(),
-    );
-    expect(create, findsOneWidget);
-    final rect = tester.getRect(create);
+    // The Songs count row no longer offers Create playlist.
+    expect(find.text(l10n.collectionCreatePlaylist), findsNothing);
+    final count = find.text(l10n.queueTrackCount(1));
+    expect(count, findsOneWidget);
+    final rect = tester.getRect(count);
     expect(rect.left, greaterThanOrEqualTo(0));
     expect(rect.right, lessThanOrEqualTo(360));
-    expect(rect.height, greaterThanOrEqualTo(48));
     expect(tester.takeException(), isNull);
   });
 }

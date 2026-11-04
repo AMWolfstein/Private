@@ -608,10 +608,6 @@
   "@trackAlbum": {
     "description": "Metadata label - album name"
   },
-  "trackCopiedToClipboard": "已複製到剪貼簿",
-  "@trackCopiedToClipboard": {
-    "description": "Snackbar - content copied"
-  },
   "snackbarDeleteTracksFailed": "無法刪除 {count, plural, =1{1 首歌曲} other{{count} 首歌曲}}。請檢查儲存空間存取權後再試一次。",
   "dateDaysAgo": "{count} 天前",
   "@dateDaysAgo": {
@@ -2275,10 +2271,6 @@
   "snackbarPlayingNext": "接著播放",
   "@snackbarPlayingNext": {
     "description": "Snackbar when a track is inserted as the next queue item"
-  },
-  "trackCopyFilePath": "複製檔案路徑",
-  "@trackCopyFilePath": {
-    "description": "Action - copy file path"
   },
   "trackDeleteConfirmMessage": "這會永久刪除本機音訊檔案，並將其從你的音樂庫中移除。",
   "trackDeleteConfirmTitle": "要從裝置移除嗎？",

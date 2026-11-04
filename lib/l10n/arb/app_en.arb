@@ -663,10 +663,6 @@
   "@trackAlbum": {
     "description": "Metadata label - album name"
   },
-  "trackCopiedToClipboard": "Copied to clipboard",
-  "@trackCopiedToClipboard": {
-    "description": "Snackbar - content copied"
-  },
   "snackbarDeleteTracksFailed": "Could not delete {count} {count, plural, =1{track} other{tracks}}. Check storage access and try again.",
   "@snackbarDeleteTracksFailed": {
     "placeholders": {
@@ -2610,10 +2606,6 @@
   "snackbarPlayingNext": "Playing next",
   "@snackbarPlayingNext": {
     "description": "Snackbar when a track is inserted as the next queue item"
-  },
-  "trackCopyFilePath": "Copy file path",
-  "@trackCopyFilePath": {
-    "description": "Action - copy file path"
   },
   "trackDeleteConfirmMessage": "This permanently deletes the local audio file and removes it from your library.",
   "@trackDeleteConfirmMessage": {

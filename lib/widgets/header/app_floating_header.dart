@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:sistrum/core/navigation/shell_navigation.dart';
 import 'package:sistrum/core/theme/app_theme.dart';
 import 'package:sistrum/services/library/covers/cover_palette.dart';
 import 'package:sistrum/widgets/header/profile_avatar.dart';
@@ -131,8 +132,8 @@ class _HeaderCapsule extends StatelessWidget {
   );
 }
 
-/// Trailing header actions followed by the profile photo at the trailing
-/// end.
+/// The header's trailing group. Its buttons (actions plus the profile photo)
+/// share one capsule when there is more than one; a lone button is a circle.
 class AppHeaderActions extends StatelessWidget {
   const AppHeaderActions({
     super.key,
@@ -142,20 +143,42 @@ class AppHeaderActions extends StatelessWidget {
 
   final List<Widget> actions;
 
-  /// Appends [HeaderProfileButton], which hides itself inside Settings.
+  /// Adds [HeaderProfileButton] as the last button; it hides itself inside
+  /// Settings, and the group counts it only while it is shown.
   final bool showProfile;
 
   @override
   Widget build(BuildContext context) {
-    return _HeaderIconTheme(
-      foregroundColor: AppTheme.accentColor(Theme.of(context).brightness),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          if (actions.isNotEmpty) _HeaderCapsule(children: actions),
-          if (showProfile) HeaderProfileButton(gap: actions.isEmpty ? 0 : 8),
-        ],
-      ),
+    return ValueListenableBuilder<bool>(
+      valueListenable: ShellNavigationService.settingsOpen,
+      builder: (context, settingsOpen, _) {
+        final profile =
+            showProfile &&
+            HeaderProfileButton.isShown(context, settingsOpen: settingsOpen);
+        final count = actions.length + (profile ? 1 : 0);
+        final Widget group;
+        if (count == 0) {
+          group = const SizedBox.shrink();
+        } else if (count == 1) {
+          group = actions.isNotEmpty
+              ? AppHeaderCircle(child: actions.single)
+              : const HomeProfileButton();
+        } else {
+          group = _HeaderCapsule(
+            children: [
+              ...actions,
+              if (profile)
+                const HeaderProfileButton(
+                  size: kAppHeaderControlSize - 8,
+                ),
+            ],
+          );
+        }
+        return _HeaderIconTheme(
+          foregroundColor: AppTheme.accentColor(Theme.of(context).brightness),
+          child: group,
+        );
+      },
     );
   }
 }

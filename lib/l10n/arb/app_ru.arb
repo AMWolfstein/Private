@@ -608,10 +608,6 @@
   "@trackAlbum": {
     "description": "Metadata label - album name"
   },
-  "trackCopiedToClipboard": "Скопировано в буфер обмена",
-  "@trackCopiedToClipboard": {
-    "description": "Snackbar - content copied"
-  },
   "snackbarDeleteTracksFailed": "Не удалось удалить {count} {count, plural, =1{трек} other{треков}}. Проверьте доступ к хранилищу и попробуйте снова.",
   "dateDaysAgo": "{count} дней назад",
   "@dateDaysAgo": {
@@ -2277,10 +2273,6 @@
   "snackbarPlayingNext": "Следующий",
   "@snackbarPlayingNext": {
     "description": "Snackbar when a track is inserted as the next queue item"
-  },
-  "trackCopyFilePath": "Скопировать путь к файлу",
-  "@trackCopyFilePath": {
-    "description": "Action - copy file path"
   },
   "trackDeleteConfirmMessage": "Это навсегда удалит локальный аудиофайл и уберёт его из медиатеки.",
   "trackDeleteConfirmTitle": "Удалить с устройства?",

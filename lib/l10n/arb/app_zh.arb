@@ -583,10 +583,6 @@
   "@trackAlbum": {
     "description": "Metadata label - album name"
   },
-  "trackCopiedToClipboard": "已复制到剪贴板",
-  "@trackCopiedToClipboard": {
-    "description": "Snackbar - content copied"
-  },
   "snackbarDeleteTracksFailed": "无法删除 {count} {count, plural, =1{首曲目} other{首曲目}}。请检查存储访问权限后重试。",
   "dateDaysAgo": "{count} 天前",
   "@dateDaysAgo": {
@@ -2177,10 +2173,6 @@
   "snackbarPlayingNext": "即将播放",
   "@snackbarPlayingNext": {
     "description": "Snackbar when a track is inserted as the next queue item"
-  },
-  "trackCopyFilePath": "复制文件路径",
-  "@trackCopyFilePath": {
-    "description": "Action - copy file path"
   },
   "trackDeleteConfirmMessage": "这将永久删除本地音频文件，并将其从你的音乐库中移除。",
   "trackDeleteConfirmTitle": "从设备中移除？",

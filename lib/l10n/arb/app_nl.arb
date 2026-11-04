@@ -608,10 +608,6 @@
   "@trackAlbum": {
     "description": "Metadata label - album name"
   },
-  "trackCopiedToClipboard": "Gekopieerd naar klembord",
-  "@trackCopiedToClipboard": {
-    "description": "Snackbar - content copied"
-  },
   "snackbarDeleteTracksFailed": "Kon {count} {count, plural, =1{nummer} other{nummers}} niet verwijderen. Controleer de opslagtoegang en probeer het opnieuw.",
   "dateDaysAgo": "{count} dagen geleden",
   "@dateDaysAgo": {
@@ -2275,10 +2271,6 @@
   "snackbarPlayingNext": "Wordt hierna afgespeeld",
   "@snackbarPlayingNext": {
     "description": "Snackbar when a track is inserted as the next queue item"
-  },
-  "trackCopyFilePath": "Bestandspad kopiëren",
-  "@trackCopyFilePath": {
-    "description": "Action - copy file path"
   },
   "trackDeleteConfirmMessage": "Dit verwijdert het lokale audiobestand definitief en haalt het uit je bibliotheek.",
   "trackDeleteConfirmTitle": "Van apparaat verwijderen?",
