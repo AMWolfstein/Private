@@ -1146,9 +1146,9 @@
     "semantic_hash": "a7e4dc401d6563fb09eaade8e0421cbf"
   },
   "AGENTS.md": {
-    "mtime": 1793779457.199171,
-    "seen": 1793780113.8312206,
-    "ast_hash": "5d47b1b929d5c87fb2ee0fa78bdfb335",
+    "mtime": 1793786950.2628863,
+    "seen": 1793787044.5874896,
+    "ast_hash": "ef705ae9b4387c149a6a48728b399007",
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
@@ -1650,9 +1650,9 @@
     "semantic_hash": "bfee1356e4c394e0644e2bbc91d17bec"
   },
   "LOCAL_OFFLINE_MIGRATION_PLAN.md": {
-    "mtime": 1793780718.7881038,
-    "seen": 1793781463.7941434,
-    "ast_hash": "bbb4024e236f843a54833ec0c53a992d",
+    "mtime": 1793786955.9309776,
+    "seen": 1793787044.587589,
+    "ast_hash": "53aa1829c98509013ae60f4e8f8da7f4",
     "semantic_hash": ""
   },
   "third_party/audio_service/CHANGELOG.md": {
@@ -4056,9 +4056,9 @@
     "semantic_hash": ""
   },
   "lib/widgets/header/app_artist_header.dart": {
-    "mtime": 1793780924.8854423,
-    "seen": 1793781463.759852,
-    "ast_hash": "1f095f91bae198aa993de1736eb31ba9",
+    "mtime": 1793786829.9368005,
+    "seen": 1793787044.5528924,
+    "ast_hash": "6e9fc93db21861acad4690e0c46ae387",
     "semantic_hash": ""
   },
   "lib/widgets/primitives/app_context_menu.dart": {
@@ -7416,15 +7416,15 @@
     "semantic_hash": ""
   },
   "lib/widgets/glass/chrome/app_floating_header.dart": {
-    "mtime": 1793759551.4087954,
-    "seen": 1793760504.8060205,
-    "ast_hash": "fe7d994503d82607b121e847e51e21f0",
+    "mtime": 1793786829.9374864,
+    "seen": 1793787044.5524755,
+    "ast_hash": "e32c0cb6c5c0993ac4984dab3a293af6",
     "semantic_hash": ""
   },
   "lib/widgets/glass/debug/app_performance_hud.dart": {
-    "mtime": 1793780165.5653973,
-    "seen": 1793780701.8754385,
-    "ast_hash": "a8d66716fee3f3b2c1be96e3bbaa2c89",
+    "mtime": 1793786841.8441567,
+    "seen": 1793787044.5525417,
+    "ast_hash": "76f436ff5a0d076a72511f0962494564",
     "semantic_hash": ""
   },
   "lib/widgets/glass/selection/app_selection_foreground.dart": {
@@ -7446,9 +7446,9 @@
     "semantic_hash": ""
   },
   "lib/widgets/glass/thumb/app_glass_surface.dart": {
-    "mtime": 1793780919.4171796,
-    "seen": 1793781463.759598,
-    "ast_hash": "506b6e5515d5afa0315e150fafecf89f",
+    "mtime": 1793786829.9361095,
+    "seen": 1793787044.5526311,
+    "ast_hash": "4e5f6d1153b93f36ea59ae83145dc2c4",
     "semantic_hash": ""
   },
   "lib/widgets/glass/thumb/app_glass_thumb.dart": {
@@ -9528,9 +9528,9 @@
     "semantic_hash": ""
   },
   "test/widgets/glass/debug/app_performance_hud_test.dart": {
-    "mtime": 1793744645.0030575,
-    "seen": 1793746432.7783556,
-    "ast_hash": "29bc4385ede914c7bc6364e936396e33",
+    "mtime": 1793786848.50112,
+    "seen": 1793787044.5805054,
+    "ast_hash": "6764b91b781f378c5d9c324dd95f1b0d",
     "semantic_hash": ""
   },
   "test/widgets/glass/selection/app_selection_shared_test.dart": {
@@ -12750,9 +12750,9 @@
     "semantic_hash": ""
   },
   "lib/widgets/glass/debug/app_backdrop_reads.dart": {
-    "mtime": 1793743902.7734003,
-    "seen": 1793746432.7769487,
-    "ast_hash": "62a0bc29a7ee165db6c2f92863e0f695",
+    "mtime": 1793786841.8287017,
+    "seen": 1793787044.5525157,
+    "ast_hash": "e71c5660fd1bd998f1cdec098e60c14d",
     "semantic_hash": ""
   },
   "test/services/artist_images/artist_image_auto_pass_order_test.dart": {
@@ -12828,9 +12828,9 @@
     "semantic_hash": ""
   },
   "test/ui/glass/app_live_video_glass_test.dart": {
-    "mtime": 1793780954.897444,
-    "seen": 1793781463.7857265,
-    "ast_hash": "bb0181f24cad91072b5cb50e25eaaf1c",
+    "mtime": 1793786866.2789721,
+    "seen": 1793787044.5790625,
+    "ast_hash": "0e8db06f001a523a7d5ec9298a6dacf0",
     "semantic_hash": ""
   }
 }
