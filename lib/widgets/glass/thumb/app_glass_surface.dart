@@ -184,6 +184,8 @@ class AppGlass extends ConsumerWidget {
         AppArtistGlassIsolationScope.disabledOf(context) ||
             !AppLyricsDiagnosticScope.of(context).glass
         ? AppGlassMode.tint
+        : AppLiveVideoBackdrop.of(context) && mode == AppGlassMode.liquid
+        ? AppGlassMode.frosted
         : mode;
     // The one place a surface's mode becomes a rendering. A known artwork
     // ground wins for GROUND, AUTO and LIQUID: it is the artwork itself, read
@@ -323,4 +325,27 @@ class _AppGlassRim extends CustomPainter {
       emphasized != oldDelegate.emphasized ||
       highlightIntensity != oldDelegate.highlightIntensity ||
       dark != oldDelegate.dark;
+}
+
+/// Marks a subtree whose backdrop is a playing video. A texture is not
+/// readable by a LIQUID capture (it leaves a hole), so glass there must read
+/// the live backdrop with FROSTED instead.
+class AppLiveVideoBackdrop extends InheritedWidget {
+  const AppLiveVideoBackdrop({
+    super.key,
+    required this.live,
+    required super.child,
+  });
+
+  final bool live;
+
+  static bool of(BuildContext context) =>
+      context
+          .dependOnInheritedWidgetOfExactType<AppLiveVideoBackdrop>()
+          ?.live ??
+      false;
+
+  @override
+  bool updateShouldNotify(AppLiveVideoBackdrop oldWidget) =>
+      oldWidget.live != live;
 }
