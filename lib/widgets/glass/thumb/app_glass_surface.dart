@@ -149,9 +149,11 @@ class AppGlass extends ConsumerWidget {
     final look = ref.watch(appGlassLookProvider);
     final clearFill = (dark ? const Color(0xff999999) : Colors.white)
         .withValues(alpha: dark ? 0.17 : 0.46);
-    // BitChord's look takes its one surface tint over every translucent
-    // surface that samples; nested glass keeps its own tint either way.
-    final lookFill = translucent && !insideGlass
+    // BitChord's look takes its 0.4 surface tint over light glass (controls,
+    // chips, header buttons). Slabs that hold text and navigation (menus,
+    // sheets, the bottom bar: strongTint) keep their own opaque fill, as
+    // BitChord's own menus keep a 0.80 slab; nested glass keeps its tint.
+    final lookFill = translucent && !strongTint && !insideGlass
         ? appGlassLookFill(look, dark: dark)
         : null;
     final fill = Color.lerp(
