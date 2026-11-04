@@ -282,6 +282,9 @@ class _AppPerformanceHudState extends ConsumerState<AppPerformanceHud> {
     final rows = diagnostics.stats(refreshRate: _refreshRate);
     if (rows.isEmpty) return '';
     return [
+      // A different window from the line above: these keep every frame
+      // since the last Reset (or mode change), not the last 300.
+      'band phases since Reset:',
       for (final (bucket, stats) in rows)
         'band ${appBandBucketLabel(bucket)} ${stats.format()}',
       if (diagnostics.unmatched > 0)
@@ -294,6 +297,7 @@ class _AppPerformanceHudState extends ConsumerState<AppPerformanceHud> {
     final rows = diagnostics.stats(refreshRate: _refreshRate);
     if (rows.isEmpty) return '';
     return [
+      ' | band window=since-reset',
       for (final (bucket, stats) in rows)
         ' | band ${appBandBucketLabel(bucket)} ${stats.format()}',
       ' | unmatched=${diagnostics.unmatched}',

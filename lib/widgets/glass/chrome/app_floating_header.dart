@@ -1,4 +1,4 @@
-import 'dart:ui' show ImageFilter;
+import 'dart:ui' show ColorFilter, ImageFilter;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -158,10 +158,7 @@ class AppHeaderBacking extends ConsumerWidget {
             ? band
             : ClipRect(
                 child: BackdropFilter(
-                  filter: ImageFilter.blur(
-                    sigmaX: sigma * amount,
-                    sigmaY: sigma * amount,
-                  ),
+                  filter: appHeaderBandFilter(sigma, amount),
                   child: band,
                 ),
               );
@@ -173,6 +170,43 @@ class AppHeaderBacking extends ConsumerWidget {
     );
   }
 }
+
+/// The header band's backdrop filter at fade [amount] (0 to 1).
+///
+/// The blur keeps its full [sigma] for the whole fade, and the fade is the
+/// blurred backdrop's alpha: the engine draws the filtered backdrop into the
+/// band's layer and lays that layer over the page, so an alpha below 1 shows
+/// the sharp page through it, a crossfade from sharp to blurred over the
+/// same 180 ms.
+///
+/// It is not the blur radius growing from 0, because Impeller picks the
+/// blur's resolution from its sigma
+/// (`GaussianBlurFilterContents::CalculateScale`): at most 4 px it blurs at
+/// full resolution, then at a half, and a settled sigma 6 at a quarter. A
+/// radius animated from 0 spent the first two thirds of every fade at full or
+/// half resolution. Over a playing video that is read every frame, and the
+/// device's phase split measured those frames at raster p50 13.9 ms against
+/// 3.1 ms once settled.
+ImageFilter appHeaderBandFilter(double sigma, double amount) {
+  final blur = _bandBlurs[sigma] ??= ImageFilter.blur(
+    sigmaX: sigma,
+    sigmaY: sigma,
+  );
+  if (amount >= 1) return blur;
+  final alpha = amount.clamp(0.0, 1.0);
+  return ImageFilter.compose(
+    outer: ColorFilter.matrix(<double>[
+      1, 0, 0, 0, 0, //
+      0, 1, 0, 0, 0, //
+      0, 0, 1, 0, 0, //
+      0, 0, 0, alpha, 0, //
+    ]),
+    inner: blur,
+  );
+}
+
+/// One settled blur per sigma: a held band reuses the same filter object.
+final _bandBlurs = <double, ImageFilter>{};
 
 /// Toolbar controls (the leading circle, the actions). On album and artist
 /// pages they draw from the header artwork's ground.
