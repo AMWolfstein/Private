@@ -1,5 +1,3 @@
-import 'dart:ui' show ImageFilter;
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:g1455/g1455.dart' show GlassFinish, GlassSurface;
@@ -10,6 +8,7 @@ import 'package:sistrum/widgets/glass/artwork/app_artwork_ground.dart';
 import 'package:sistrum/widgets/glass/artwork/app_artwork_glass.dart';
 import 'package:sistrum/widgets/glass/debug/app_artist_glass_isolation.dart';
 import 'package:sistrum/widgets/glass/debug/app_lyrics_diagnostics.dart';
+import 'package:sistrum/widgets/glass/thumb/app_glass_look.dart';
 
 /// The rendering mode of one glass surface (Glass Engine V2).
 ///
@@ -21,12 +20,11 @@ import 'package:sistrum/widgets/glass/debug/app_lyrics_diagnostics.dart';
 /// and [frosted] are what they name, and [tint] never samples.
 enum AppGlassMode { auto, ground, frosted, liquid, tint }
 
-/// The finish of every LIQUID surface: the refraction is the Tinted Lite blur
-/// and the surface fill above it sets the colour, as it did over the blur.
-final GlassFinish kAppLiquidGlassFinish = GlassFinish(
-  name: 'clear',
-  blurSigmaLogical: kAppGlassStyle.blurSigma,
-  tint: const Color(0x00000000),
+/// Sistrum's finish for LIQUID surfaces: the refraction is the Tinted Lite
+/// blur and the surface fill above it sets the colour, as it did over the
+/// blur. Surfaces read the current look's with [appLiquidGlassFinish].
+final GlassFinish kAppLiquidGlassFinish = appLiquidGlassFinish(
+  AppGlassLook.sistrum,
 );
 
 /// Glass Engine V2 surface: GROUND, FROSTED, LIQUID or TINT.
@@ -59,12 +57,6 @@ class AppGlass extends ConsumerWidget {
     this.dropShadow = true,
     this.mode = AppGlassMode.auto,
   });
-
-  // One shared filter: never rebuilt per frame.
-  static final _blur = ImageFilter.blur(
-    sigmaX: kAppGlassStyle.blurSigma,
-    sigmaY: kAppGlassStyle.blurSigma,
-  );
 
   final Widget child;
   final bool blurEnabled;
@@ -106,6 +98,7 @@ class AppGlass extends ConsumerWidget {
           appGlassContrastBlockedProvider(MediaQuery.highContrastOf(context)),
         );
     final dark = scheme.brightness == Brightness.dark;
+    final look = ref.watch(appGlassLookProvider);
     final shape = BorderRadius.vertical(
       top: firstInGroup ? Radius.circular(radius) : Radius.zero,
       bottom: lastInGroup ? Radius.circular(radius) : Radius.zero,
@@ -221,12 +214,12 @@ class AppGlass extends ConsumerWidget {
         : effectiveMode == AppGlassMode.liquid
         ? GlassSurface(
             borderRadius: shape,
-            finish: kAppLiquidGlassFinish,
+            finish: appLiquidGlassFinish(look),
             labelled: false,
             child: surface,
           )
         : BackdropFilter(
-            filter: _blur,
+            filter: appFrostFilter(look),
             // Header controls over a live video share one backdrop read: the
             // engine copies and blurs the page once for all of them, not once
             // per control (see [AppHeaderControls]).
@@ -245,6 +238,7 @@ class AppGlass extends ConsumerWidget {
           illuminated: translucent,
           emphasized: highlightBorder,
           dark: dark,
+          contactEdge: appGlassContactEdge(look, dark: dark),
           highlightIntensity: highlightIntensity * reveal,
         ),
         child: ClipRRect(borderRadius: shape, child: body),
@@ -269,6 +263,7 @@ class _AppGlassRim extends CustomPainter {
     required this.illuminated,
     required this.emphasized,
     required this.dark,
+    required this.contactEdge,
     required this.highlightIntensity,
   });
 
@@ -278,6 +273,7 @@ class _AppGlassRim extends CustomPainter {
   final bool illuminated;
   final bool emphasized;
   final bool dark;
+  final Color contactEdge;
   final double highlightIntensity;
 
   @override
@@ -303,7 +299,7 @@ class _AppGlassRim extends CustomPainter {
         ..style = PaintingStyle.stroke
         ..strokeWidth = 0.5
         // A thin contact edge must not paint a shadow under the whole glass.
-        ..color = Colors.black.withValues(alpha: dark ? 0.5 : 0.16),
+        ..color = contactEdge,
     );
     if (illuminated) {
       stroke(
@@ -346,7 +342,8 @@ class _AppGlassRim extends CustomPainter {
       illuminated != oldDelegate.illuminated ||
       emphasized != oldDelegate.emphasized ||
       highlightIntensity != oldDelegate.highlightIntensity ||
-      dark != oldDelegate.dark;
+      dark != oldDelegate.dark ||
+      contactEdge != oldDelegate.contactEdge;
 }
 
 /// Marks a subtree whose backdrop is a playing video. A texture is not

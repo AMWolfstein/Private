@@ -141,7 +141,7 @@ extension _AppSelectionPillStatePart1 on _AppSelectionPillState {
                 child: GlassSurface(
                   presence: progress,
                   borderRadius: BorderRadius.circular(kAppSelectionPillRadius),
-                  finish: kAppLiquidGlassFinish,
+                  finish: appLiquidGlassFinish(ref.watch(appGlassLookProvider)),
                   labelled: false,
                   child: DecoratedBox(
                     decoration: BoxDecoration(

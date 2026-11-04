@@ -6,8 +6,7 @@ import 'package:flutter/physics.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:g1455/g1455.dart'
     show GlassDropMotion, GlassDropStretchDriver, GlassSurface;
-import 'package:sistrum/widgets/glass/thumb/app_glass_surface.dart'
-    show kAppLiquidGlassFinish;
+import 'package:sistrum/widgets/glass/thumb/app_glass_look.dart';
 import 'package:sistrum/widgets/glass/selection/app_selection_foreground.dart';
 import 'package:sistrum/widgets/glass/selection/app_selection_shared.dart';
 

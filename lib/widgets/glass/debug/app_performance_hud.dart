@@ -15,6 +15,7 @@ import 'package:sistrum/widgets/glass/artwork/app_artwork_ground.dart';
 import 'package:sistrum/widgets/glass/debug/app_artist_glass_isolation.dart';
 import 'package:sistrum/widgets/glass/debug/app_lyrics_diagnostics.dart';
 import 'package:sistrum/widgets/glass/debug/app_backdrop_reads.dart';
+import 'package:sistrum/widgets/glass/thumb/app_glass_look.dart';
 
 /// Build and raster statistics over a window of frames.
 @immutable
@@ -486,6 +487,18 @@ class _AppPerformanceHudState extends ConsumerState<AppPerformanceHud> {
                                   AppArtistVideoBand.still
                               ? 'Video band: still'
                               : 'Video band: live',
+                        ),
+                      ),
+                      TextButton(
+                        key: const ValueKey('sistrum-performance-hud-look'),
+                        onPressed: () =>
+                            ref.read(appGlassLookProvider.notifier).toggle(),
+                        style: buttonStyle,
+                        child: Text(
+                          ref.watch(appGlassLookProvider) ==
+                                  AppGlassLook.bitchord
+                              ? 'Look: BitChord'
+                              : 'Look: Sistrum',
                         ),
                       ),
                       TextButton(

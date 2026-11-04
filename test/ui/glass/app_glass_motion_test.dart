@@ -16,19 +16,21 @@ Future<void> _thumb(
   bool placing = false,
   bool reduceMotion = false,
 }) => tester.pumpWidget(
-  MaterialApp(
-    home: MediaQuery(
-      data: MediaQueryData(disableAnimations: reduceMotion),
-      child: Center(
-        child: SizedBox(
-          width: 400,
-          height: 48,
-          child: AppGlassThumb(
-            center: Offset(x, 24),
-            held: held,
-            placing: placing,
-            restSize: _rest,
-            activeSize: _active,
+  ProviderScope(
+    child: MaterialApp(
+      home: MediaQuery(
+        data: MediaQueryData(disableAnimations: reduceMotion),
+        child: Center(
+          child: SizedBox(
+            width: 400,
+            height: 48,
+            child: AppGlassThumb(
+              center: Offset(x, 24),
+              held: held,
+              placing: placing,
+              restSize: _rest,
+              activeSize: _active,
+            ),
           ),
         ),
       ),

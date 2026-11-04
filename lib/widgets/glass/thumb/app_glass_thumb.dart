@@ -7,8 +7,7 @@ import 'package:g1455/g1455.dart'
         GlassDropStretchDriver,
         GlassSurface,
         GlassTravel;
-import 'package:sistrum/widgets/glass/thumb/app_glass_surface.dart'
-    show kAppLiquidGlassFinish;
+import 'package:sistrum/widgets/glass/thumb/app_glass_look.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
 
 /// Marks the held glass of every [AppGlassThumb], for tests and diagnostics.
@@ -236,7 +235,7 @@ class _AppGlassThumbState extends State<AppGlassThumb>
 /// The held thumb: refracts what lies under it (LIQUID), a light veil and a
 /// rim. It arrives by its optics ([GlassSurface.materialize]), not by fading,
 /// and is absent from the tree while the thumb rests.
-class _HeldGlassPill extends StatelessWidget {
+class _HeldGlassPill extends ConsumerWidget {
   const _HeldGlassPill({
     super.key,
     required this.color,
@@ -249,13 +248,13 @@ class _HeldGlassPill extends StatelessWidget {
   final double lift;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final amount = lift.clamp(0.0, 1.0);
     return ClipRRect(
       borderRadius: radius,
       child: GlassSurface(
         borderRadius: radius,
-        finish: kAppLiquidGlassFinish,
+        finish: appLiquidGlassFinish(ref.watch(appGlassLookProvider)),
         materialize: amount,
         labelled: false,
         child: DecoratedBox(
