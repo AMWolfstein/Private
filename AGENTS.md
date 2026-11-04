@@ -73,8 +73,9 @@ renderer): GROUND (a pre-blurred artwork ground, read without sampling the live 
 (a backdrop blur, `kAppGlassStyle`, sigma 6 and never lower, clipped to the glass bounds, with a
 surface tint and a rim), LIQUID (genuine refraction of the captured backdrop through the
 `g1455` package, see below) and TINT (a translucent fill with no sampling, for large or
-frequently updated surfaces). LIQUID is the default for the small chrome controls and
-surfaces that sit over live content; it must be used by at least one user-visible surface. There
+frequently updated surfaces). LIQUID is opt-in with `AppGlass(liquid: true)` and is used by the
+small chrome: header back circle and capsule, profile avatar, bottom bar, mini player, search
+field, action buttons and switch/slider thumbs. Sheets and menus stay FROSTED. There
 are no user-facing glass quality, clarity, lens, shader or Auto measurement settings and no
 Appearance glass controls; do not restore them. The mode is chosen by the engine from the
 context (ground available, surface size, scrolling or video behind it, device capability and

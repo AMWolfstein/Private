@@ -22,7 +22,7 @@ popover placement so it follows the tapped ellipsis. Keep the metadata page remo
 
 ## Progress
 
-**Glass Engine V2 rules and g1455 pin (2026-11-04):** AGENTS.md now defines four glass modes (GROUND, FROSTED, LIQUID, TINT) inside `AppGlass`/`AppGlassPanel`, with LIQUID provided by the MIT `g1455` package 0.4.0 (`GlassHost` above the navigator, `GlassBackdrop` for static grounds). `pubspec.yaml` pins `g1455: 0.4.0`; no screen uses it yet, so the rendering cutover and legacy removal are still to do.
+**Glass Engine V2 rules and g1455 pin (2026-11-04):** AGENTS.md now defines four glass modes (GROUND, FROSTED, LIQUID, TINT) inside `AppGlass`/`AppGlassPanel`, with LIQUID provided by the MIT `g1455` package 0.4.0 (`GlassHost` above the navigator, `GlassBackdrop` for static grounds). `pubspec.yaml` pins `g1455: 0.4.0`. `GlassHost` wraps the app above the navigator; `AppGlass(liquid: true)` refracts through `GlassSurface` for the header controls, profile avatar, bottom bar, mini player, search field, action buttons and switch/slider thumbs, and sheets and menus stay FROSTED. Not yet done: the GROUND/TINT audit of every consumer, removal of superseded paths, the device profile benchmark and the Android build (no SDK in this container).
 
 **Collection header band without a live blur (2026-11-04):** Loved and playlist headers use the same artwork-ground band as the artist and album headers (`softenOverArtwork`), so their toolbar band keeps its tint without a live `BackdropFilter` over artwork. Video-on pages and pages without a ground keep the live blur.
 
