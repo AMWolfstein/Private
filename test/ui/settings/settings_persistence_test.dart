@@ -148,4 +148,24 @@ void main() {
       expect(container.read(settingsProvider).locale, 'fr');
     },
   );
+
+  test('queued settings saves coalesce into one final write', () async {
+    final preferences = _Preferences();
+    final container = ProviderContainer(
+      overrides: [settingsProvider.overrideWith(() => _Settings(preferences))],
+    );
+    addTearDown(container.dispose);
+    final notifier = container.read(settingsProvider.notifier);
+    notifier.setLocale('de');
+    await preferences.whenStarted(0);
+    notifier.setLocale('fr');
+    notifier.setLocale('ja');
+    preferences.release(0).complete(true);
+    await preferences.whenStarted(1);
+    expect(preferences.writes.length, 2);
+    expect(preferences.writes.last['locale'], 'ja');
+    preferences.release(1).complete(true);
+    await Future<void>.delayed(Duration.zero);
+    expect(preferences.writes.length, 2);
+  });
 }

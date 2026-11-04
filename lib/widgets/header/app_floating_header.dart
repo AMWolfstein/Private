@@ -100,8 +100,8 @@ class AppHeaderCircle extends StatelessWidget {
   );
 }
 
-/// The solid fill of a header control: the tint that Mornye's glass circles
-/// and capsules carry over a page, flattened to one opaque colour.
+/// The solid fill of a header control: a black or white tint over the surface,
+/// as one opaque colour.
 Color appHeaderControlFill(BuildContext context) {
   final scheme = Theme.of(context).colorScheme;
   return scheme.brightness == Brightness.dark

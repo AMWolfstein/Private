@@ -28,8 +28,7 @@ class AppActionButton extends StatelessWidget {
   final bool isDestructive;
   final double fontSize;
 
-  /// Outlined buttons sit on a solid surface (the flattened glass of sheets
-  /// and groups); false leaves them bare on the page.
+  /// Outlined buttons sit on a solid raised surface; false leaves them bare.
   final bool filled;
 
   @override
