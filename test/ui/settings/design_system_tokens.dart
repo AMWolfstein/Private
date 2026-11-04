@@ -221,14 +221,29 @@ void _registerDesignSystemTokens() {
           ),
         ),
       );
-      expect(
-        tester.widget<AnimatedAlign>(find.byType(AnimatedAlign)).duration,
-        Duration.zero,
-      );
+      // The pill's alignment, which moves on a spring with motion on.
+      double pillAlignment() =>
+          (tester
+                      .widget<Align>(
+                        find
+                            .ancestor(
+                              of: find.byType(FractionallySizedBox).first,
+                              matching: find.byType(Align),
+                            )
+                            .first,
+                      )
+                      .alignment
+                  as AlignmentDirectional)
+              .start;
+      expect(pillAlignment(), -1);
       expect(find.text('Dark'), findsOneWidget);
       await tester.tap(find.text('Dark'));
       await tester.pump();
       expect(selected, 2);
+      // Reduced motion: the pill is at the new item on the next frame, with
+      // no spring running.
+      expect(pillAlignment(), 1);
+      expect(tester.hasRunningAnimations, isFalse);
       expect(
         tester.getCenter(find.text('System')).dx <
             tester.getCenter(find.text('Dark')).dx,
