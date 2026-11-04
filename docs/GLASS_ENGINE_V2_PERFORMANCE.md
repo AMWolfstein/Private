@@ -256,3 +256,23 @@ sheet's route completes.
 - If the capture fails, the sheet keeps its FROSTED read.
 - Visible difference: anything moving behind a sheet (a video, a progress bar) stops moving under
   its glass, which is under the barrier and a 0.78 tint.
+
+## Lyric line blur (2026-11-04)
+
+Now Playing lyrics, device (band phase line, raster P50/P95/P99, since Reset):
+
+| Lyrics blur | raster P50/P95/P99 | jank |
+|---|---|---|
+| on (default strength) | 5.7/21.8/30.9 | 13.9% |
+| Off | 4.0/8.2/10.4 | 0% |
+
+Settled lines cost little; the spikes come from line changes. Each change ramped the sigma of the
+new and the previous current line between 0 and 2.4 dp, and Impeller blurs at full resolution up
+to about 4 physical px (`CalculateScale`), the same cause as the header band fade.
+
+**Change:** `AppLyricLineFocus` (`lib/widgets/lyrics/app_lyric_line_focus.dart`). Between
+blurred states the sigma still animates (every level is at least the nearest line's 2.4 dp × the
+blur strength). Into or out of focus the line crossfades a sharp copy with a copy blurred at a
+constant sigma. The copy exists only during the 420 ms change and is hidden from semantics and hit
+testing; the line keeps its element and state. Below 100% strength the nearest lines' blur can
+itself be under 4 px; that is the setting's choice and is unchanged.
