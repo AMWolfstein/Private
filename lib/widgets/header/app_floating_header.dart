@@ -13,7 +13,7 @@ const double kAppHeaderControlSize = 48;
 const double kAppHeaderEdgeGap = 4;
 
 /// Glyph size of every header icon.
-const double kAppHeaderIconSize = 22;
+const double kAppHeaderIconSize = 18.7;
 
 /// Status-bar icons for a header whose backdrop has [brightness]. Set
 /// explicitly: a transparent AppBar would otherwise be estimated as dark.

@@ -45,7 +45,7 @@ class HeaderCircleButton extends StatelessWidget {
     this.iconColor,
     this.tonal = false,
     this.buttonSize,
-    this.iconSize = 22,
+    this.iconSize = 18.7,
   });
 
   final IconData icon;
