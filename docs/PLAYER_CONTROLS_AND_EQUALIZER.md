@@ -3,24 +3,6 @@
 Implemented on the current local/offline Android player, 2026-11-01.
 Upstream reference: Mornye v5.3.0 (`afee4332a257f1b6aeb288229eddf04ac0777b3c`).
 
-## Lyrics blur strength
-
-Settings > Lyrics > Lyrics blur strength adjusts surrounding lyric defocus from
-Off to 150%, in 10% steps. The existing appearance is 100%; the current line and
-its active vocal group remain sharp. The control includes a static preview,
-accessible slider label and Reset action. Changes preview in state while dragging
-and persist on release, using the existing theme-preference write queue.
-
-Live lyrics retain the existing high-contrast and device/effects gates: the new
-preference scales permitted defocus rather than enabling expensive filtering on
-unsupported settings. Off animates to zero and disables filtering once settled.
-Reduced motion retains the existing immediate transition. Settings search links
-to the control. Invalid/nonfinite saved values normalize to the default; values
-outside the range clamp. Like lyric text size/timing, this is a theme preference
-and is not newly added to the settings-only backup format.
-
-Adapted feature: upstream `457d074b`.
-
 ## Show or hide the volume slider
 
 Now Playing's ellipsis menu offers Hide volume slider / Show volume slider.
@@ -74,8 +56,7 @@ Source checkpoint `e555a7f8`. Full `flutter test --reporter expanded`: **2,386 p
 Graph checkpoint `4fcac150`: **28,759 unique nodes / 55,026 valid links**, no dangling endpoints; existing vendor extraction warnings remain.
 
 Targeted widget tests cover portrait/landscape Normal/Immersive visibility,
-restart persistence without volume writes, blur preview/save/reset and rendered
-inactive-line sigma at Off/50%/150%, active-line clarity, narrow large-text EQ
+restart persistence without volume writes, narrow large-text EQ
 layout, band-count/gain edits, individual reset and compressor edits. Preset
 parser, persistence, upstream format and playback bypass/error tests are retained.
 Host previews with the app font were inspected in light and dark modes.

@@ -57,40 +57,9 @@ Scanned artwork that is absent or stale falls back to the bounded local embedded
 Full scans extract covers into fresh generations and publish stable filenames only after successful indexing. Cover pruning preserves references from local collections, playback sessions and Insights, holding store writer barriers and passing only a detached private reference projection to native maintenance.
 Exact PCM output decodes FLAC through the integer native source; never trust vendor raw
 FLAC decoding to preserve source precision or label padded output as source bit depth.
-Switch and slider thumbs (AppSwitch, AppSlider, horizontal AppLevelSlider) turn into
-liquid glass only while touched and only when the glass thumb gate allows it; no lens or
-capture at rest, and the plain controls are the fallback. Seek, volume and vertical EQ
-faders keep their painted controls.
-Sistrum album headers and the immersive player's cover drift slowly (Ken Burns, `AlbumKenBurns`); Appearance > Animated artwork turns it off. A saved video cover (see Video artwork below) replaces that drift on the same cover; the static fallback keeps it. Albums and the player's cover (both Normal and Immersive views) only: playlists, Loved and artist headers stay still. The player's drift pauses while lyrics show. It pauses for reduced motion, glass off or low-end devices, covered routes and a page scrolled past the cover.
-Pinned headers float: transparent toolbars with a glass back circle, IconButton and menu actions in
-one glass capsule and a backing band only once content scrolls under (opaque on flat level or high
-contrast). Header controls (not the player's) are 48dp, 4dp from the edge, with 22dp icons; the
-profile photo (opens Settings, rim outline, no glass) ends every header 8dp after the capsule and
-is hidden on Settings and its subpages. Headers mirror in RTL. Only the bottom bar samples its backdrop, through one shell LiquidGlassView held at
-rest; headers judge known backdrops (page, artwork top) and never sample themselves.
-Glass is configured by `glassQuality` (auto / lite / full / off; Auto follows the device class
-and alone honours high contrast) and `glassClarityLevel` 1-5 in app settings. Every clarity
-number lives in `kAppGlassLevels`; never store a percentage or add clarity formulas. Level 1
-is a plain blur, never a lens; off has no lenses, blur or sampling; lite has no shader except
-touch-only thumbs and segment pills. Do not restore "Always use blur effects". The performance
-HUD is a hidden developer option (seven taps on About's version) and is absent when off; it starts
-top-left, drags, minimizes to a pill and its statistics never take touches. Blur never drops below
-sigma 6 (lighter tint makes Clear and Crystal). Auto measures p90 raster time per build (above 14 ms:
-full -> lite -> Level 1 lite), saved outside the settings backup; explicit qualities are never measured.
-In the shell, persistent chrome shares one backdrop read: one public `LiquidGlassBatch`
-(`AppChromeBatch`) above pages and bar (a second one above the root navigator serves Settings
-and other root routes), joined only through `AppChromeMember` (header leading
-circle and actions, tab capsule, mini player, bar side buttons at rest). Blurs push its key through
-our own layer, on Impeller only; never import `liquid_glass_easy/src` or allocate ids. The band,
-page content, sheets, glass inside Opacity, folding side buttons and moving or covered routes read
-on their own. Glass over known artwork (the player's menus and sheets; album and artist header
-controls, which opt in through `AppHeaderControls`) reads nothing: it draws a pre-blurred
-ground image (`AppPlayerGround`/`AppPageGround`, 384 px wide, at most 6 MB in total, released
-with their screen) through our `app_artwork_glass.frag`; never a BackdropFilter, lens or view
-there. Album, playlist and artist headers soften while scrolling by fading that ground over the
-artwork (`AppGroundVeil`), never a live blur. Lite and Level 1 draw the ground without the shader; an overlay picks its material once at
-open (opaque if its ground is not ready). No menu has a staged glass reveal: page menus keep one
-material from the first frame too.
+Sistrum has no blur, glass, lens, shader or backdrop sampling anywhere: the liquid-glass package, the glass shaders, the glass levels and the performance HUD were removed. Surfaces are opaque theme colours, switch and slider thumbs are painted controls, and every overlay, menu, sheet and bar uses `AppSurface` or a plain Material widget. Do not reintroduce blur, glass or sampled backdrops.
+Sistrum album headers and the immersive player's cover drift slowly (Ken Burns, `AlbumKenBurns`); Appearance > Animated artwork turns it off. A saved video cover (see Video artwork below) replaces that drift on the same cover; the static fallback keeps it. Albums and the player's cover (both Normal and Immersive views) only: playlists, Loved and artist headers stay still. The player's drift pauses while lyrics show. It pauses for reduced motion, low-end devices, covered routes and a page scrolled past the cover.
+Pinned headers float: transparent toolbars with a plain round back button, IconButton and menu actions, and a solid backing band that fades in only once content scrolls under (its colour is the page background). Header controls (not the player's) are 48dp, 4dp from the edge, with 22dp icons; the profile photo (opens Settings, rim outline) ends every header 8dp after the controls and is hidden on Settings and its subpages. Headers mirror in RTL.
 Cover colours come from one analysis per cover version (`CoverPalette` -> `appCoverColors`:
 bottom/top edge, dominant, harmonized accent; HCT, chroma never above the cover's, AA on-colours;
 stored in the library DB's derived `cover_analysis` table). Screens and grounds take every cover
@@ -132,7 +101,7 @@ playlist members), with no collection rows or individual playlists mixed into th
 
 Songs, Artists and Album Artists show a persistent Arabic/Latin alphabet rail on the physical right edge. These lists have no inline letter or month/date section headings. Its initial/count projection covers the whole visible category, not just loaded pages, and navigation loads bounded pages on demand. Keep generation/lifecycle guards and current-owner controller attachment. Row revelation reserves space below the pinned toolbar.
 
-Library headers keep a shared Sort control beside the Settings/profile icon on overview and detail routes, except album pages: they have no Sort control and always list tracks by disc, then track number (1 to the last), ignoring the shared order; their More button sits in the header's glass circle. A–Z and Z–A are shared by every Library route, with A–Z as the default. Song/release lists additionally support file size (largest/smallest) when the SQLite file-size inventory is available, and release date (newest/oldest) when the items have release tags. Nonapplicable shared orders fall back to A–Z. Open its sheet on the root navigator so shell chrome cannot obscure its choices. Do not restore Original order, added-date or per-field Library sort options. Albums retain disc groups and artist Popular retains play-count ranking. Collection view sorting never rewrites saved playlist order. Album completeness (assessment, badges and filters) and the Songs Quality/Format/Metadata filter sheet are removed: do not restore them. Home's explicit release-tag Singles classification remains.
+Library headers keep a shared Sort control beside the Settings/profile icon on overview and detail routes, except album pages: they have no Sort control and always list tracks by disc, then track number (1 to the last), ignoring the shared order; their More button sits in the header's round control. A–Z and Z–A are shared by every Library route, with A–Z as the default. Song/release lists additionally support file size (largest/smallest) when the SQLite file-size inventory is available, and release date (newest/oldest) when the items have release tags. Nonapplicable shared orders fall back to A–Z. Open its sheet on the root navigator so shell chrome cannot obscure its choices. Do not restore Original order, added-date or per-field Library sort options. Albums retain disc groups and artist Popular retains play-count ranking. Collection view sorting never rewrites saved playlist order. Album completeness (assessment, badges and filters) and the Songs Quality/Format/Metadata filter sheet are removed: do not restore them. Home's explicit release-tag Singles classification remains.
 
 Library pages have no search field (search lives in the bottom Search tab). Songs headers show Play/Shuffle, the
 player favorite is a heart, Insights (listening statistics) is the tab after Home and records listening always on, with no Record listening toggle, Edit Metadata has no cover resizer, and each
@@ -247,7 +216,7 @@ For later upstream ports, do not import unrelated upstream branding.
 ## Shared widget names
 
 Every UI identifier uses the `app_` file prefix and the `App` class prefix (`kApp` for
-constants), including the theme (`app_theme.dart`, `AppTheme`), glass, chrome, slider,
+constants), including the theme (`app_theme.dart`, `AppTheme`), chrome, slider,
 context-menu and player widgets. No UI name uses `sistrum_` or `Sistrum`. The app name
 `SistrumApp`, the `sistrum` package name and persisted or external identifiers (preference
 keys, backup and export file prefixes, channel names) keep their original values.

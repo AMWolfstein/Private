@@ -101,8 +101,7 @@ member set does not match. Local tags are never overwritten with catalog metadat
 - The static cover stays visible until the first frame. The video fades in over 240 ms
   and never shows a black start frame.
 - It plays only while the app is resumed, the route is not covered by another route
-  (`secondaryAnimation`), the ticker is enabled, reduced motion is off, and the glass
-  policy is not flat. Otherwise it is paused. Lyrics pause it in Now Playing, as they
+  (`secondaryAnimation`), the ticker is enabled, and reduced motion is off. Otherwise it is paused. Lyrics pause it in Now Playing, as they
   pause the drift.
 - Initialization or decode errors leave the static cover in place. A load for a new file
   disposes the previous player at once; a late initialization for a superseded file

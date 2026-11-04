@@ -7,7 +7,7 @@ Owner-approved simplification, 2026-11-02.
 - The global accent is fixed in `AppTheme`: light `#CC2E33`, dark `#FF453A`, the previous red choice. The color picker, accent enum, mutators and search entry are removed. Artwork-derived palettes remain independent.
 - All app typography follows the former system-font path. Flutter's platform typography and system glyph fallback render Latin, Arabic and mixed text. No bundled Inter/Noto font, font download, imported-font loader or custom-font picker remains. System monospace is retained for diagnostic text; icon fonts remain icon fonts. Existing text metrics, accessibility text scaling and light/dark roles are preserved.
 - Hero controllers are always attached to the root and tab navigators. The mini player always supplies current geometry for the player's surface/artwork morph. The alternate preference-controlled slide is removed. Direct entries without geometry render in place; interactive dragging still follows the finger. Existing orientation/lifecycle guards remain, and reduced motion bypasses the morph.
-- Appearance retains glass controls, light/dark/system mode, language, animated artwork, lyrics position and player view. Removed controls and their translations/search targets are deleted.
+- Appearance retains light/dark/system mode, language, animated artwork, lyrics position and player view. Removed controls and their translations/search targets are deleted.
 
 ## Persistence and cleanup
 
