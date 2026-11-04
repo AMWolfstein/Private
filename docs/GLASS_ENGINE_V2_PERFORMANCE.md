@@ -65,13 +65,19 @@ of 0.5 × 48 dp height and amount, tint 0.4, `Highlight.Default`, and a 0.5 dp w
 is translated as follows:
 
 - LIQUID lens: g1455 `GlassOptics(thickness: 24, strength: -50)` (default 21 / −58.2).
-- FROSTED: the saturation 1.5 matrix composed onto the same blur. One read; a colour matrix over
-  the blurred pixels.
-- Rim: a white 10% hairline instead of the dark contact edge.
-- Not taken:
-  - the blur radius: Sistrum keeps sigma 6, never lower;
-  - the 0.4 tint: Sistrum's fills hold its contrast;
-  - chromatic aberration: g1455 has no parameter for it.
+- Blur: sigma 5 for FROSTED, LIQUID and the header band. BitChord's 8 dp is a `RenderEffect`
+  radius, which is sigma 0.57735 × 8 + 0.5 = 5.1. This look is allowed below Sistrum's sigma 6 by
+  an owner override (2026-11-04).
+- Tint: BitChord's surface tint, 0.4 of `#121212` (dark) or `#FAFAFA` (light), replaces the fill
+  of every translucent surface that samples. Nested glass keeps its own fill.
+- FROSTED: the saturation 1.5 matrix is composed onto the same blur. It stays one read, with a
+  colour matrix over the blurred pixels.
+- Rim: a white 10% hairline replaces the dark contact edge.
+- Chromatic aberration: BitChord's lens samples red and blue at different refraction offsets,
+  weighted by `x * y` so the effect is strongest at the corners. g1455's shader has no dispersion,
+  so the rim paints an approximation: a warm stroke just inside the edge and a cool one a step
+  further in, additive, faded toward the middle by a radial mask. It is strokes only, with no read
+  and no new shader. It does not bend the image apart the way BitChord's does.
 
 The look is a developer HUD switch and is never persisted, because Appearance has no glass
 controls (`AGENTS.md`).
