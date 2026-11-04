@@ -1650,9 +1650,9 @@
     "semantic_hash": "bfee1356e4c394e0644e2bbc91d17bec"
   },
   "LOCAL_OFFLINE_MIGRATION_PLAN.md": {
-    "mtime": 1793765514.227184,
-    "seen": 1793765560.6073287,
-    "ast_hash": "44b1023c4d1aa4bf512e900f51d36517",
+    "mtime": 1793780718.7881038,
+    "seen": 1793781463.7941434,
+    "ast_hash": "bbb4024e236f843a54833ec0c53a992d",
     "semantic_hash": ""
   },
   "third_party/audio_service/CHANGELOG.md": {
@@ -4056,9 +4056,9 @@
     "semantic_hash": ""
   },
   "lib/widgets/header/app_artist_header.dart": {
-    "mtime": 1793751598.101093,
-    "seen": 1793753501.1593795,
-    "ast_hash": "6b58aae93fe8ec1440661318dc354e19",
+    "mtime": 1793780924.8854423,
+    "seen": 1793781463.759852,
+    "ast_hash": "1f095f91bae198aa993de1736eb31ba9",
     "semantic_hash": ""
   },
   "lib/widgets/primitives/app_context_menu.dart": {
@@ -7446,9 +7446,9 @@
     "semantic_hash": ""
   },
   "lib/widgets/glass/thumb/app_glass_surface.dart": {
-    "mtime": 1793764620.4011967,
-    "seen": 1793765560.5722191,
-    "ast_hash": "1fbcff275c5d478795d80ff8d9066352",
+    "mtime": 1793780919.4171796,
+    "seen": 1793781463.759598,
+    "ast_hash": "506b6e5515d5afa0315e150fafecf89f",
     "semantic_hash": ""
   },
   "lib/widgets/glass/thumb/app_glass_thumb.dart": {
@@ -12825,6 +12825,12 @@
     "mtime": 1793780184.3693984,
     "seen": 1793780701.909789,
     "ast_hash": "e49b779cdc8d89c5ed479f59f0e47cd1",
+    "semantic_hash": ""
+  },
+  "test/ui/glass/app_live_video_glass_test.dart": {
+    "mtime": 1793780954.897444,
+    "seen": 1793781463.7857265,
+    "ast_hash": "bb0181f24cad91072b5cb50e25eaaf1c",
     "semantic_hash": ""
   }
 }
