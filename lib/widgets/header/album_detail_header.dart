@@ -48,7 +48,12 @@ class AlbumDetailHeader extends StatelessWidget {
     this.backgroundColor,
     this.immersive = false,
     this.squareArtwork = true,
+    this.softenOverArtwork = false,
   });
+
+  /// The album page: its toolbar band reads the artwork ground, not a live
+  /// blur, while the cover is shown (see [AppHeaderBacking.groundVeil]).
+  final bool softenOverArtwork;
 
   final String title;
   final double expandedHeight;

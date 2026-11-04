@@ -77,6 +77,7 @@ extension _LocalAlbumHeader on _LocalAlbumScreenState {
             )
           : null,
       immersive: context.isAppTheme,
+      softenOverArtwork: true,
       squareArtwork: true,
       expandedHeight: expandedHeight,
       showTitleInAppBar: showTitleInAppBar,

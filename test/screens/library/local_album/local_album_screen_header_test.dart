@@ -134,4 +134,54 @@ void main() {
       expect(tester.takeException(), isNull);
     },
   );
+
+  testWidgets(
+    'scrolled under the cover, the toolbar band reads the ground, not a live blur',
+    (tester) async {
+      SharedPreferences.setMockInitialValues({});
+      tester.view.physicalSize = const Size(430, 800);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.reset);
+      final tracks = [
+        for (final number in [for (var n = 1; n <= 20; n++) n])
+          LocalLibraryItem(
+            id: '$number',
+            trackName: 'Song $number',
+            artistName: 'Artist',
+            albumName: 'Album',
+            filePath: '/missing/song-$number.flac',
+            trackNumber: number,
+            scannedAt: DateTime(2026),
+          ),
+      ];
+      await tester.pumpWidget(
+        ProviderScope(
+          child: MaterialApp(
+            theme: AppTheme.build(Brightness.dark),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: LocalAlbumScreen(
+              albumName: 'Album',
+              artistName: 'Artist',
+              tracks: tracks,
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      await tester.drag(
+        find.byType(CustomScrollView).first,
+        const Offset(0, -700),
+      );
+      await tester.pumpAndSettle();
+
+      final band = find.byKey(const ValueKey('sistrum-header-backing'));
+      expect(band, findsOneWidget);
+      expect(
+        find.descendant(of: band, matching: find.byType(BackdropFilter)),
+        findsNothing,
+      );
+      expect(tester.takeException(), isNull);
+    },
+  );
 }

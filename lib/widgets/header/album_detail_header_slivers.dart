@@ -41,7 +41,10 @@ extension AlbumDetailHeaderPart2 on AlbumDetailHeader {
               ),
               flexibleSpace: opaque
                   ? null
-                  : AppHeaderBacking(visible: immersive ? titleVisible : null),
+                  : AppHeaderBacking(
+                      visible: immersive ? titleVisible : null,
+                      groundVeil: immersive && softenOverArtwork,
+                    ),
               title: AnimatedOpacity(
                 opacity: titleVisible ? 1 : 0,
                 duration: const Duration(milliseconds: 180),

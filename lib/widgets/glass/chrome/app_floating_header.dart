@@ -62,9 +62,19 @@ Brightness? appArtworkBrightness(double? lightness) => lightness == null
 ///
 /// [visible] defaults to the enclosing sliver app bar's scrolled-under state.
 class AppHeaderBacking extends ConsumerWidget {
-  const AppHeaderBacking({super.key, this.visible, this.color});
+  const AppHeaderBacking({
+    super.key,
+    this.visible,
+    this.color,
+    this.groundVeil = false,
+  });
 
   final bool? visible;
+
+  /// The header sits over the page's artwork ground, which already softens the
+  /// artwork beneath it. The band then draws no live blur; its tint alone holds
+  /// the toolbar. Without an artwork ground it keeps the live blur.
+  final bool groundVeil;
 
   /// Defaults to the page's scaffold background.
   final Color? color;
@@ -83,7 +93,11 @@ class AppHeaderBacking extends ConsumerWidget {
             .dependOnInheritedWidgetOfExactType<FlexibleSpaceBarSettings>()
             ?.isScrolledUnder ??
         false;
-    final sigma = ref.watch(appHeaderBandBlurDisabledProvider)
+    // Over an artwork ground the artwork beneath is already softened by the
+    // ground veil, so the band needs no live read of the page.
+    final onGround =
+        groundVeil && AppArtworkGroundScope.pageOf(context) != null;
+    final sigma = onGround || ref.watch(appHeaderBandBlurDisabledProvider)
         ? 0.0
         : kAppGlassStyle.blurSigma;
     final base = color ?? Theme.of(context).scaffoldBackgroundColor;

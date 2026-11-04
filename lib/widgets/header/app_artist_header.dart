@@ -207,7 +207,7 @@ class AppArtistHeader extends StatelessWidget {
                         fit: StackFit.expand,
                         children: [
                           flexibleSpace!,
-                          AppHeaderBacking(color: surface),
+                          AppHeaderBacking(color: surface, groundVeil: true),
                         ],
                       ),
               );
