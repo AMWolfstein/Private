@@ -87,8 +87,8 @@ class AppHeaderBacking extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final material = appHeaderMaterial(context, ref);
-    // Over a live video, tells the header controls whether this band fully
-    // covers them with its blur (see AppLiveVideoBand).
+    // Over a live video, tells the header controls whether this band's blur
+    // is showing under them, fading or settled (see AppLiveVideoBand).
     final bandCovers = AppLiveVideoBand.notifierOf(context);
     void report(bool covers) {
       if (bandCovers == null || bandCovers.value == covers) return;
@@ -133,7 +133,10 @@ class AppHeaderBacking extends ConsumerWidget {
           : _duration,
       builder: (context, amount, _) {
         final overVideo = AppLiveVideoBackdrop.of(context);
-        report(sigma > 0 && amount >= 1 && overVideo);
+        // The controls stop their own read for as long as any band blur
+        // shows, its fades included: otherwise every fade frame copied the
+        // page twice, once for the band and once for the controls.
+        report(sigma > 0 && amount > 0 && overVideo);
         // Developer HUD only: files frame timings under the band's phase.
         if (overVideo) AppBandPhaseDiagnostics.instance.noteBand(amount);
         if (amount == 0) return const SizedBox.shrink();

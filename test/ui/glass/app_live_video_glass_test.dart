@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter/rendering.dart' show Layer;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:g1455/g1455.dart' show GlassHost, GlassSurface;
 import 'package:sistrum/core/theme/app_theme.dart';
@@ -167,6 +168,7 @@ void main() {
       WidgetTester tester, {
       required bool bandShown,
       ValueNotifier<bool>? covers,
+      bool settle = true,
     }) async {
       final notifier = covers ?? ValueNotifier<bool>(false);
       if (covers == null) addTearDown(notifier.dispose);
@@ -208,7 +210,7 @@ void main() {
           ),
         ),
       );
-      await tester.pumpAndSettle();
+      if (settle) await tester.pumpAndSettle();
       return notifier;
     }
 
@@ -234,7 +236,7 @@ void main() {
       expect(appCountBackdrops(layer), (reads: 3, copies: 1));
     });
 
-    testWidgets('the controls read again as soon as the band starts to go', (
+    testWidgets('the controls read again once the band is gone', (
       tester,
     ) async {
       final covers = await pumpBand(tester, bandShown: true);
@@ -242,6 +244,39 @@ void main() {
       await pumpBand(tester, bandShown: false, covers: covers);
       expect(covers.value, isFalse);
       expect(find.byType(BackdropFilter), findsNWidgets(3));
+    });
+
+    testWidgets('a fading band copies the page once, not twice', (
+      tester,
+    ) async {
+      final covers = await pumpBand(tester, bandShown: false);
+      // ignore: invalid_use_of_protected_member
+      Layer? layer() => tester.binding.renderViews.first.layer;
+      Future<void> expectOneCopyWhileFading() async {
+        // The band's first visible frame; the controls hear about it after
+        // that frame, so they overlap it for that one frame only.
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 16));
+        for (var ms = 32; ms < 170; ms += 16) {
+          await tester.pump(const Duration(milliseconds: 16));
+          expect(appCountBackdrops(layer()).copies, 1, reason: 'at $ms ms');
+        }
+      }
+
+      // Fading in: the band and the controls never read together.
+      await pumpBand(tester, bandShown: true, covers: covers, settle: false);
+      await expectOneCopyWhileFading();
+      expect(covers.value, isTrue);
+      await tester.pumpAndSettle();
+
+      // Fading out: the controls wait for the band to be gone.
+      await pumpBand(tester, bandShown: false, covers: covers, settle: false);
+      await expectOneCopyWhileFading();
+      expect(covers.value, isTrue);
+      await tester.pumpAndSettle();
+      expect(covers.value, isFalse);
+      expect(find.byType(BackdropFilter), findsNWidgets(3));
+      expect(tester.takeException(), isNull);
     });
   });
 

@@ -185,10 +185,11 @@ class AppGlass extends ConsumerWidget {
     // (see [AppLiveVideoBackdrop]).
     final liveVideoFallback =
         mode == AppGlassMode.liquid && AppLiveVideoBackdrop.of(context);
-    // Header controls over a live video sit inside the header band once it
-    // is fully shown, and the band already blurs the same video under them:
-    // they are then nested glass and draw their fill only, so the page is
-    // copied once for the band instead of once more for the controls.
+    // Header controls over a live video sit inside the header band while its
+    // blur shows (fading or settled), and the band already blurs the same
+    // video under them: they are then nested glass and draw their fill only,
+    // so the page is copied once for the band instead of once more for the
+    // controls.
     final insideLiveBand =
         liveVideoFallback &&
         BackdropGroup.of(context) != null &&
@@ -448,7 +449,7 @@ class AppLiveVideoBackdrop extends InheritedWidget {
       oldWidget.live != live || oldWidget.backdropKey != backdropKey;
 }
 
-/// Whether the header band over a live video is fully shown with its blur:
+/// Whether the header band's blur over a live video shows (fading or settled):
 /// written by `AppHeaderBacking` after each frame, read by the header
 /// controls' glass (see [AppGlass]). False everywhere else.
 class AppLiveVideoBand extends InheritedNotifier<ValueNotifier<bool>> {
