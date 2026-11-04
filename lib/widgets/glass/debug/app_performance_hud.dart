@@ -252,17 +252,17 @@ class _AppPerformanceHudState extends ConsumerState<AppPerformanceHud> {
     final host = handle == null
         ? 'no host'
         : captures > 0
-        ? 'active'
+        ? 'rasterizing'
         : 'idle';
     final warm = _skip > 0 ? ' warm-up $_skip' : '';
     return '${_artistState()}$warm\n'
-        'liquid capture: $host, $captures in window';
+        'host snapshots: $host, $captures in window';
   }
 
   /// The same state on one line, for the Copy summary.
   String _artistCopy(GlassProxyHandle? handle) {
     final captures = (handle?.snapshots ?? 0) - _captureBase;
-    return '${_artistState()} captures=$captures';
+    return '${_artistState()} host snapshots=$captures';
   }
 
   String _artistState() {
@@ -467,6 +467,21 @@ class _AppPerformanceHudState extends ConsumerState<AppPerformanceHud> {
                                   AppArtistGlassIsolation.glassDisabled
                               ? 'Artist glass: off'
                               : 'Artist glass: on',
+                        ),
+                      ),
+                      TextButton(
+                        key: const ValueKey(
+                          'sistrum-performance-hud-video-band',
+                        ),
+                        onPressed: () => ref
+                            .read(appArtistVideoBandProvider.notifier)
+                            .toggle(),
+                        style: buttonStyle,
+                        child: Text(
+                          ref.watch(appArtistVideoBandProvider) ==
+                                  AppArtistVideoBand.still
+                              ? 'Video band: still'
+                              : 'Video band: live',
                         ),
                       ),
                       TextButton(

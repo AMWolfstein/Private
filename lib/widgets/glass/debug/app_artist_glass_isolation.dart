@@ -123,3 +123,30 @@ class _AppArtistGlassIsolationHostState
     );
   }
 }
+
+/// How the Artist header band and its controls read a playing video.
+enum AppArtistVideoBand {
+  /// The band blurs the live video each frame (the default).
+  live,
+
+  /// The band uses the still cover as its ground: no live read of the video.
+  still,
+}
+
+class AppArtistVideoBandNotifier extends Notifier<AppArtistVideoBand> {
+  @override
+  AppArtistVideoBand build() => AppArtistVideoBand.live;
+
+  void toggle() {
+    state = state == AppArtistVideoBand.live
+        ? AppArtistVideoBand.still
+        : AppArtistVideoBand.live;
+    appDiagnosticWindowEpoch.value++;
+  }
+}
+
+/// Developer-only for now: switched from the performance HUD, never persisted.
+final appArtistVideoBandProvider =
+    NotifierProvider<AppArtistVideoBandNotifier, AppArtistVideoBand>(
+      AppArtistVideoBandNotifier.new,
+    );

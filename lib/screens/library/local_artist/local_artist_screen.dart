@@ -143,7 +143,10 @@ class _LocalArtistScreenState extends ConsumerState<LocalArtistScreen> {
       videoPlaying: artistVideo != null,
       child: AppArtistSurface(
         imageSource: artistPhoto?.path ?? cover,
-        liveBackdrop: artistVideo != null,
+        // The still band reads the cover ground instead of the live video.
+        liveBackdrop:
+            artistVideo != null &&
+            ref.watch(appArtistVideoBandProvider) == AppArtistVideoBand.live,
         child: Builder(
           builder: (context) {
             final colors = Theme.of(context).colorScheme;
