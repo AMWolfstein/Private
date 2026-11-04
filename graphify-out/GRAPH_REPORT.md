@@ -1,17 +1,17 @@
 # Graph Report - Private  (2026-11-04)
 
 ## Corpus Check
-- 2027 files · ~1,727,066 words
+- 2027 files · ~1,727,079 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 137 file(s) not represented in the graph (top: .xml 40, .arb 20, (none) 19)
 
 ## Summary
-- 30227 nodes · 57221 edges · 1025 communities (721 shown, 304 thin omitted)
+- 30228 nodes · 57221 edges · 1043 communities (725 shown, 318 thin omitted)
 - Extraction: 95% EXTRACTED · 5% INFERRED · 0% AMBIGUOUS · INFERRED: 2923 edges (avg confidence: 0.83)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `dea2ab91`
+- Built from commit: `b3637c7b`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -19,19 +19,19 @@
 - Errno
 - app_artwork_ground.dart
 - audio_analysis_spectral_cutoff.dart
-- dart:async
+- app.dart
 - .update
 - Errno
 - sunos_usb.c
-- detail_navigation.dart
+- net/types.rs
 - main.dart
 - borrowed_fd
 - lyrics_converters.dart
 - src/net/sockopt.rs
 - home_tab.dart
 - AddressFamily
-- std/mod.rs
-- music_player_harness.dart
+- maybeuninit
+- music_player_runtime_test.dart
 - _
 - local_album_screen.dart
 - fsopen.rs
@@ -45,10 +45,10 @@
 - online_lyrics_providers.dart
 - app_floating_header.dart
 - android.os.Bundle
-- SocketAddrArg
+- SocketAddrAny
 - ret
 - music_player_service.dart
-- lazy_tab_view_test.dart
+- lyrics_share_screen.dart
 - backup_service.dart
 - autoplay_ranker.dart
 - net/types.rs
@@ -60,12 +60,12 @@
 - library_database_models.dart
 - ffmpeg_kit_factory.dart
 - work.py
-- dart:async
+- package:flutter/material.dart
 - automix_analysis.dart
 - library_collections.dart
-- Widget
+- animated_artwork_providers.dart
 - libusb1-sys-0.7.0/src/lib.rs
-- music_player_runtime_test.dart
+- listening_rewind_screen_story.dart
 - Signal
 - local_song_menu_actions_test.dart
 - .into_c_str
@@ -78,15 +78,15 @@
 - stream_information.dart
 - local_library_provider.dart
 - library_section_tab.dart
-- local_artist_screen.dart
+- cached_cover_decode_test.dart
 - dependencies
 - T
-- music_haptics.dart
+- audio_info_sheet.dart
 - AudioServicePlugin
 - app_artwork_page_ground.dart
 - settings.dart
-- app_alert_dialog.dart
-- libc/net/read_sockaddr.rs
+- metadata_separator_settings_test.dart
+- automix_options.dart
 - _
 - music_player_autoplay.dart
 - song_analysis.dart
@@ -100,27 +100,27 @@
 - CoverContentProvider.kt
 - library_settings_page.dart
 - embedded_cover_resolver.dart
-- physical_file_index_lookup_test.dart
+- sqlite_process_database.dart
 - audio_info_facts.dart
 - autoplay_taste.dart
 - library_browse_provider.dart
 - darwin_usb.c
-- package:sistrum/core/models/library_collections.dart
+- MusicPlayerHandler
 - files.rs
 - logger.dart
-- package:sistrum/services/playback/music_player/music_player_service.dart
+- animated_artwork_video.dart
 - app_selection_panel_drag.dart
 - native_library/tests.rs
 - libusb_class_code
 - linux_usbfs.c
-- package:flutter/cupertino.dart
+- package:flutter_riverpod/flutter_riverpod.dart
 - parse_lrc
 - audio_analysis_widget.dart
 - KernelSigSet
 - PlayerWidgetProvider.kt
-- package:sqflite/sqflite.dart
+- listening_rewind_screen_stats.dart
 - Timespec
-- app_context_menu.dart
+- native_audio.cpp
 - Independent current-branch audit
 - core.c
 - settings_provider_actions.dart
@@ -128,7 +128,7 @@
 - setup_screen.dart
 - procctl.rs
 - library_collections_database.dart
-- .from
+- app_selection_foreground.dart
 - .configureFlutterEngine
 - json
 - super
@@ -142,41 +142,41 @@
 - album_detail_header.dart
 - OwnedFd
 - overflow_marquee.dart
-- dart:typed_data
+- artist_image_store.dart
 - artist_image_auto_pass.dart
 - animated_artwork_manual.dart
 - audio_route_info.dart
 - cover_palette.dart
 - Random
 - music_playback_deck.dart
-- library_browse_store_test.dart
+- SpecialCodeIndex
 - player_lyrics_extent_geometry.dart
 - online_lyrics_search.dart
 - collection_track_batch.dart
 - native_palette.rs
 - Handler
-- music_player_provider.dart
+- system_volume_service.dart
 - linux_raw/param/init.rs
 - ffmpeg_models.dart
 - 3. Reference
 - dart:typed_data
-- bool get
+- now_playing_route.dart
 - AudioService
 - autoplay_sound_signal.dart
 - MediaAction
 - write.rs
-- app_glass_surface.dart
+- cached_cover_image.dart
 - src/io_uring/mod.rs
 - .free
 - local_library_item.dart
 - lyrics_parser.dart
 - Session
-- animation_indicators.dart
+- music_player_service_session_handlers.dart
 - local_artist_providers.dart
 - USBDevice
 - player_lyrics_word_timing.dart
 - windows_common.c
-- ValueChanged
+- app_level_slider.dart
 - local_guide_pages.dart
 - update_checker.dart
 - audioplayers_android/pubspec.yaml
@@ -199,17 +199,17 @@
 - SharedEngineChannels.kt
 - Review protocol
 - autoplay_personalization.dart
-- FFmpegKitFlutterPlugin.java
+- map
 - libusb.h
 - BorrowedSocket
-- dart:convert
+- dart:io
 - Changelog
 - linux_raw/termios/syscalls.rs
 - MainActivitySafScan.kt
 - app_tokens.dart
 - AudioplayersPlugin
 - animated_artwork_store.dart
-- fd.rs
+- settings_search_catalog.dart
 - library_settings_scan_widgets.dart
 - IoringRegisterOp
 - optimization_tags.rs
@@ -222,13 +222,13 @@
 - equalizer_provider.dart
 - tags/id3.rs
 - collections.rs
-- org.junit.Test
+- playback_automation.dart
 - unix.rs
 - sqlite_helpers.dart
 - Vendored audio_service Plugin
 - re
 - player_metadata_controller.dart
-- List
+- log_page.dart
 - steps
 - AudioMetadata
 - audio_analysis_spectrogram_test.dart
@@ -240,32 +240,32 @@
 - xattr.rs
 - steps
 - library_database.dart
-- app_bottom_sheet.dart
+- playback_metadata.dart
 - library_collections_rows.dart
 - _
 - Upstream port execution checkpoints
 - haiku_pollfs.cpp
 - cover/library.rs
 - libc_auxv.rs
-- libc/mm/syscalls.rs
+- linux_raw/mm/syscalls.rs
 - audio_analysis_controller.dart
 - c_int
 - settingsProvider
 - audio_analysis_controller_test.dart
 - flac_pcm_source_test.cpp
 - animated_artwork_auto_pass.dart
-- resource_index.py
+- ResourceTests
 - library_section_tab_helpers.dart
 - library_scan_scheduling_test.dart
 - io.c
 - 3. Changes
 - SafDocumentLookupTest.kt
 - Audio engine migration: Media3/ExoPlayer, no FFmpeg
-- playlist_playback_test.dart
+- player_widget_service_test.dart
 - update_dialog.dart
 - app_slider.dart
 - lyrics_matching.dart
-- equalizer_screen.dart
+- StatelessWidget
 - library_tag_credits.dart
 - apple_artwork_parse.dart
 - libusbi.h
@@ -284,9 +284,9 @@
 - vdso_wrappers.rs
 - library_collections_worker.dart
 - package:flutter/foundation.dart
-- app_theme.dart
-- app_player_ground.dart
-- USBDeviceHandle
+- theme_provider.dart
+- lyrics_timing_store.dart
+- ResolvedCueAudioTest.kt
 - player_track_swipe.dart
 - Advice
 - Advice
@@ -294,7 +294,7 @@
 - audioplayers_android/CHANGELOG.md
 - libusb_interface_descriptor
 - statx.rs
-- package:flutter_test/flutter_test.dart
+- library_search_results.dart
 - session.dart
 - A1
 - runtime_448b8ad740e2a26f.rs
@@ -302,12 +302,12 @@
 - settings_provider.dart
 - native_audio_features.rs
 - path_keys.rs
-- android_statx_smoke.rs
+- &CStr
 - io_uring_ptr
 - ReviewScopeTest
-- Handler
+- BackgroundWorkService
 - libusb_context
-- UsbDirectPlayback
+- library_tagless_audio.rs
 - dev_dependencies
 - BitPerfectPcmTest
 - mmap.rs
@@ -317,32 +317,32 @@
 - Review
 - find_dead_code.py
 - SocketAddrUnix
-- animated_artwork_auto_pass_test.dart
+- setup_screen_flow.dart
 - library_loading_test.dart
 - FlacPcmSource
 - libusb_device
 - src/event/epoll.rs
-- windows_common.h
+- MusicHapticsPlugin.kt
 - material_test_theme.dart
-- Duration
+- deezer_artist_search.dart
 - native_library.rs
 - package:sqflite/sqflite.dart
-- StatelessWidget
+- listening_rewind_screen.dart
 - AudioContextAndroid
-- app_switch.dart
+- @immutable
 - pubspec.yaml
 - user_facing_error.dart
 - stdio.rs
 - arg.rs
 - now_playing_screen.dart
 - ffprobe_kit.dart
-- library_browse_filters.dart
+- lrclib_lyrics_provider_test.dart
 - music_player_automix_test.dart
 - c_int
 - flutter
-- dart:io
+- package:flutter_test/flutter_test.dart
 - app_volume_control.dart
-- selection_bottom_bar.dart
+- List
 - local_song_file_actions.dart
 - core/src/tags.rs
 - VirtualMemoryMapAddress
@@ -355,19 +355,19 @@
 - ToSigned
 - apple_artwork_client.dart
 - .write
-- FFmpegKitFlutterMethodResultHandler
-- profile_avatar.dart
+- FFmpegKitFlutterPlugin.java
+- app_artist_header.dart
 - GateTests
 - libusb_transfer
 - app_artwork_contrast.dart
 - native_log_source.dart
-- _SyncedLyricsViewState
+- Timer?
 - Port plan for Codex
 - string_utils.dart
 - emscripten_webusb.cpp
 - Calibration
 - library_scan_progress.dart
-- listening_rewind_test.dart
+- prepare_flutter_sdk.dart
 - synced_lyrics_scroll.dart
 - media_session_filter.dart
 - Opcode
@@ -390,7 +390,7 @@
 - package:sistrum/utils/logging/logger.dart
 - library_cleanup.dart
 - Resource
-- package:sistrum/services/library/database/library_database_models.dart
+- album_detail_header_parts.dart
 - Output
 - setns.rs
 - pinned_section_sliver_list.dart
@@ -403,15 +403,15 @@
 - AudioServicePlugin
 - PlayerWrapper
 - libusb_ssplus_sublink_attribute
-- embedded_cover_resolver_test.dart
+- app_orientation.dart
 - player_lyrics_sweep_painting.dart
 - src/net/netdevice.rs
-- playback_seek_slider.dart
-- ffi.rs
+- online_lyrics_search_test.dart
+- c
 - core/src/cancellation.rs
 - Operation
 - playable_media.dart
-- map.md
+- release_date_display.dart
 - Resource
 - lyric_scroll_motion.dart
 - libusb_config_descriptor
@@ -425,14 +425,14 @@
 - Findings
 - pipe.rs
 - String?
-- SeekFrom
+- listening_rewind_screen_slide.dart
 - LogBuffer
 - embedded_cover_resolver_persistence.dart
 - mount_unmount.rs
 - deleted_library_files.dart
 - ExclusiveOutput
 - progress_stream_poller.dart
-- FileType
+- artist_photo_sources.dart
 - library_section_tab_selection.dart
 - unix/tests.rs
 - EvidenceTests
@@ -440,20 +440,20 @@
 - threads_posix.h
 - Split tag credits (artist, album artist, composer, genre)
 - Findings
-- USBTransfer
+- kernel_sigset.rs
 - native_playlists.rs
 - libusb_endpoint_descriptor
-- library_browse_order.dart
+- libusb_device
 - Whole-project audit plan and path ledger
 - Findings
 - ffmpeg_kit.dart
 - LibraryCoverPointer.kt
-- IoctlOutput
-- backend/cover.rs
+- MaybeUninit
+- SeekFrom
 - batch_progress_dialog.dart
 - MembarrierCommand
 - CancellationError
-- library_cover_snapshot.dart
+- library_browse_store_test.dart
 - libusb_control_setup
 - RemoteSafPlaybackTest
 - Dart UI dead-code review (D2)
@@ -466,7 +466,7 @@
 - Findings
 - SyscallNumber
 - RequestLease
-- map.md
+- static const
 - usbi_device_descriptor
 - Future
 - audio_service 0.18.19 vendored package
@@ -475,9 +475,9 @@
 - file_access.dart
 - libc/c.rs
 - libusb_device_descriptor
-- sqlite_process_database.dart
+- scroll_edge_fade.dart
 - app_info.dart
-- mips32r6.rs
+- automix_phase_lock.dart
 - cell
 - native_collections.rs
 - Desloppify review: what is not done yet, and why
@@ -495,15 +495,15 @@
 - fixtures.json QuantizerCelebi fixtures (128 colors, Score seeds)
 - Dependency declarations and tooling reachability (R2)
 - dead-code-2026-10-23/README.md
-- artist_image_store.dart
+- track_detail_actions.dart
 - unified_library_item.dart
 - library_section_list.dart
 - Ipv4Addr
 - MediaPlayerWrapper
 - Build/dependency audit — first bounded pass
-- package:sistrum/utils/text/string_utils.dart
+- library_collections_schema.dart
 - Repo
-- package:flutter/foundation.dart
+- performance_probe.dart
 - player_lyric_layout_models.dart
 - Native backup and collection contracts
 - Settings UX
@@ -516,10 +516,10 @@
 - optimization-2026-10-23/README.md
 - Native metadata/parser allocation and I/O (N2)
 - Collection hydration and backup memory (D2)
-- library_schema.dart
+- repairSafScanOutput
 - sistrum Package
 - CString
-- app_crash_report.dart
+- playback_seek_preview.dart
 - linux_raw/net/netdevice.rs
 - audio_service
 - ValueStream
@@ -536,7 +536,7 @@
 - Resolved
 - Localization and asset dead-code review (R1)
 - package:ffmpeg_kit_flutter_platform_interface/ffmpeg_kit_flutter_platform_interface.dart
-- animated_artwork_video.dart
+- animated_artwork_video_test.dart
 - Test-support entrypoints and orphan helpers (R3)
 - io/fcntl.rs
 - usbi_transfer
@@ -557,17 +557,17 @@
 - Metadata editing,CUE and logging (D3)
 - Optimization scope and measurement reconciliation
 - library_collections_models.dart
-- riscv64.rs
+- app_selection_shared.dart
 - UrlSource
 - CpuSet
 - library_section_tab_navigation.dart
-- log_redaction.dart
+- Object?
 - app_performance_hud.dart
 - check_types.rs
 - Android Auto on the current playback engine
 - Open
 - Repository dead-code inventory reconciliation (R4)
-- theme_provider.dart
+- theme_settings.dart
 - C++/JNI and Java registration supplement (N4)
 - lyrics_save_actions_test.dart
 - sistrum_audio Native Library
@@ -592,7 +592,7 @@
 - Native jobs,backup/cache and inventory triage (N3)
 - Player composition and remaining shared rendering hot paths (U4)
 - Runtime budgets,shader assets and build/tooling triage (R1)
-- duplicate_quality_policy.dart
+- mips64.rs
 - RawFd
 - archive/tests.rs
 - AndroidBuildScriptTest
@@ -604,13 +604,13 @@
 - not_implemented.rs
 - libusb_device_string_type
 - libusb_ss_endpoint_companion_descriptor
-- dart:convert
-- playback_notification.dart
+- package:sistrum/core/models/track.dart
+- x86_64.rs
 - libusb_capability
-- init_auxv_impl
+- Wait
 - StrictIntegrationTests
 - linux_raw/fs/types.rs
-- lyrics_parser_support.dart
+- WakeOp
 - Download Pipeline
 - music_player_automix.dart
 - Test audit — metadata preservation chunk
@@ -623,14 +623,14 @@
 - rustix-1.1.6/README.md
 - PlayerWidgetLayout
 - Security Policy
-- player_widget_service.dart
+- detail_page_route.dart
 - dead-code-2026-10-23/STATE.md
 - optimization-2026-10-23/STATE.md
 - static const int
 - Pid
 - rustix-1.1.6/build.rs
 - artist_image_network.dart
-- PollFd<'fd>
+- bool get
 - Rejected
 - libc/thread/cpu_set.rs
 - libusb_superspeedplus_sublink_attribute_exponent
@@ -638,7 +638,7 @@
 - Graphify Knowledge Graph
 - Validation Checks
 - check_backend_apk.py
-- String get
+- lrclib_lyrics_provider.dart
 - io_uring_enter_arg
 - Code map implementation record
 - FileType
@@ -647,10 +647,10 @@
 - Fix
 - Plan {{ID}}: {{TITLE}}
 - linux_raw/fs/makedev.rs
-- audio_analysis_spectral_cutoff_test.dart
+- AncillaryIter<'_, T>
 - Sistrum Waveform App Logo
 - linux_raw/fs/mod.rs
-- .errorCode
+- SendAncillaryBuffer<'buf, 'slice, 'fd>
 - package:sistrum/services/native/native_channel.dart
 - opencode.json
 - media_library_browser.dart
@@ -660,11 +660,11 @@
 - libusb_usb_2_0_extension_descriptor
 - libusb_supported_speed
 - Locale
-- audio_route_read_test.dart
-- update_dialog_install.dart
+- RealCodeGraphRegressions
+- PlayerWidgetCommandPolicyTest
 - build
 - Spec {{ID}}: {{TITLE}}
-- AtomicPtr
+- _SetupScreenState
 - libusb_bos_type
 - Review state
 - build_android.sh
@@ -672,18 +672,18 @@
 - check_android_statx.sh
 - check_rust_backend.sh
 - PollFd<'fd>
-- native_device.dart
+- playback_equalizer.dart
 - _AndroidVolumeDirectionMessageExtension
-- kill.rs
-- playbackPlayingProvider
+- Sistrum workflow
+- listening_rewind_screen_banners.dart
 - media_session_filter_test.dart
 - _data
 - Direct Lyrics Sources
 - Playback Session Restore
-- Cow<'a, CStr>
+- music_player_source.dart
 - timerfd.rs
-- haiku_usb.h
-- lyrics_parser_isolate.dart
+- image_cache_utils_test.dart
+- aligned_lyric_pronunciation_test.dart
 - library_collection_tracks_screen.dart
 - libusb_iso_usage_type
 - libusb_transfer_status
@@ -700,7 +700,7 @@
 - sistrum-bindgen
 - bitcast.rs
 - library_collections_provider.dart
-- EndianMode
+- UsbOutputFormat
 - check_depth
 - windows/mod.rs
 - library_browse_rows.dart
@@ -715,7 +715,7 @@
 - _saving
 - libusb_platform_descriptor
 - replaygain_service.dart
-- library_scan_progress_behaviour_test.dart
+- SpecialCodes
 - NativeMediaWorkspace
 - audio_analysis_worker.dart
 - Ship
@@ -725,7 +725,7 @@
 - safDocumentStatResult
 - Library sorting and filter removal
 - Work
-- native_background_work.dart
+- InheritedWidget
 - libusb_request_recipient
 - fs/fcntl.rs
 - libusb_iso_sync_type
@@ -804,10 +804,10 @@
 - redact.rs
 - .decode
 - socket_error
-- OsString
+- KernelSigaction
 - AudioHandler
-- WrappedPlayer
-- &PathBuf
+- WrappedPlayer.kt
+- playback_normalization.dart
 - workflow.py
 - get_txtime
 - String
@@ -824,7 +824,7 @@
 - Verification log
 - app_player_header_layout.dart
 - PTracer
-- XdpDesc
+- XdpOptions
 - cache_management_page.dart
 - _EmbeddedCoverExtraction
 - ScopeTests
@@ -832,7 +832,7 @@
 - libusb_interface_association_descriptor_array
 - libusb_pollfd
 - Starter validation
-- autoplay_taste_test.dart
+- activity_attachment.dart
 - GuardTests
 - CodeGraph engine migration
 - new workflow/AGENTS.md
@@ -851,8 +851,8 @@
 - 4. Phased plan (one commit per phase)
 - Errno
 - linux_raw/thread/cpu_set.rs
-- &str
-- PlaybackStateCopyWith
+- NetworkKind.kt
+- local_library_provider_sources.dart
 - Architecture contract
 - Review method, without scores
 - Linux environment setup and CI
@@ -866,7 +866,7 @@
 - libusb_superspeedplus_sublink_attribute_sublink_type
 - _registerLibraryCollectionsMutationDisposal
 - sistrum-spec/SKILL.md
-- library_settings_source_item.dart
+- IncompleteArrayField
 - Fixed Appearance defaults
 - sistrum-workflow/AGENTS.md
 - guides/contracts/data-compatibility.md
@@ -881,23 +881,42 @@
 - FsConfigCmd
 - Test
 - AudioOutputActivity.kt
+- TimerfdClockId
 - settings_provider_helpers.dart
-- linux_raw/net/write_sockaddr.rs
+- How
+- AllowedMsgBufType
 - -handleMethodCallresult
+- SingleChildRenderObjectWidget
 - AudioProcessingState
-- image_cache_utils.dart
+- library_tag_credits_provider.dart
+- libc/fs/makedev.rs
+- Component<'a>
 - BorrowedFd
 - Lyrics and artist-image review resolutions
 - execute
 - dependency_overrides
-- src/fs/inotify.rs
+- Cow<'a, str>
+- &Path
 - Local Library song analysis
 - library_section_tab_filter_widgets.dart
+- execveat
 - FsConfigCmd
+- Formatter
+- automix_phase_lock_test.dart
+- Fork
 - Local / Offline / Android-only Migration Plan
+- .size_hint
 - doctor
 - log.dart
+- setup_step_layout_test.dart
+- package:sistrum/services/library/scan/library_folder_selection.dart
 - Lyrics and Deezer artist-image corrections
+- playback_policies_test.dart
+- lyric_scroll_motion_test.dart
+- AncillaryIter<'data, T>
+- _completeSetup
+- _ContrastLayer
+- XdpDesc
 - Animated video artwork: implementation report
 - Local/offline v5.3.0 follow-up
 - raw_dir.rs
@@ -914,7 +933,6 @@
 - IoringRestrictionOp
 - Home release shelves and Logs filters
 - DsdDecoder
-- _
 - MediaItemCopyWith
 - local/src/logging.rs
 - libusb_interface_association_descriptor
@@ -935,37 +953,37 @@
 10. `OwnedFd` - 182 edges
 
 ## Surprising Connections (you probably didn't know these)
-- `Phase 6 — Download engine removal + player re-point  (largest Dart phase; depends on D1) — DONE (`f3ab83e`, `dfd7f43`)` --references--> `BackgroundWorkService`  [INFERRED]
-  LOCAL_OFFLINE_MIGRATION_PLAN.md → android/app/src/main/kotlin/com/amwolfstein/sistrum/BackgroundWorkService.kt
 - `3.5 Hi-res, bit-perfect, USB and DSD` --references--> `WavPackDsdSource`  [INFERRED]
   docs/AUDIO_ENGINE_MIGRATION.md → android/app/src/main/kotlin/com/amwolfstein/sistrum/DsdSource.kt
 - `7. Suggested order` --references--> `HiResPlayback`  [INFERRED]
   docs/AUDIO_ENGINE_MIGRATION.md → android/app/src/main/kotlin/com/amwolfstein/sistrum/HiResPlayback.kt
+- `Phase 6 — Download engine removal + player re-point  (largest Dart phase; depends on D1) — DONE (`f3ab83e`, `dfd7f43`)` --references--> `BackgroundWorkService`  [INFERRED]
+  LOCAL_OFFLINE_MIGRATION_PLAN.md → android/app/src/main/kotlin/com/amwolfstein/sistrum/BackgroundWorkService.kt
+- `UniFFI, FFI, JNI and plugins` --references--> `UsbDirectPlayback`  [INFERRED]
+  reviews/BRIDGE_AUDIT.md → android/app/src/main/kotlin/com/amwolfstein/sistrum/UsbDirectPlayback.kt
 - `10.5 Order (one part per batch, behind `CoreBackend`)` --references--> `CoreBackend`  [INFERRED]
   docs/AUDIO_ENGINE_MIGRATION.md → android/app/src/main/kotlin/com/amwolfstein/sistrum/CoreBackend.kt
-- `Task 2: bridges and static state (commits 52a5c86, e659392)` --references--> `NativeDataJobs`  [INFERRED]
-  reviews/desloppify-remaining-work.md → android/app/src/rust/kotlin/com/amwolfstein/sistrum/NativeDataJobs.kt
 
 ## Import Cycles
 - 1-file cycle: `rust_backend/vendor/rustix-1.1.6/src/io_uring/mod.rs -> rust_backend/vendor/rustix-1.1.6/src/io_uring/mod.rs`
 - 1-file cycle: `rust_backend/vendor/rustix-1.1.6/src/timespec.rs -> rust_backend/vendor/rustix-1.1.6/src/timespec.rs`
+- 1-file cycle: `rust_backend/vendor/rustix-1.1.6/src/net/types.rs -> rust_backend/vendor/rustix-1.1.6/src/net/types.rs`
 - 1-file cycle: `rust_backend/vendor/rustix-1.1.6/src/backend/linux_raw/conv.rs -> rust_backend/vendor/rustix-1.1.6/src/backend/linux_raw/conv.rs`
 - 1-file cycle: `rust_backend/vendor/rustix-1.1.6/src/pty.rs -> rust_backend/vendor/rustix-1.1.6/src/pty.rs`
-- 1-file cycle: `rust_backend/vendor/rustix-1.1.6/src/net/types.rs -> rust_backend/vendor/rustix-1.1.6/src/net/types.rs`
 - 1-file cycle: `rust_backend/vendor/rustix-1.1.6/src/net/netdevice.rs -> rust_backend/vendor/rustix-1.1.6/src/net/netdevice.rs`
-- 1-file cycle: `rust_backend/vendor/rustix-1.1.6/src/fs/statx.rs -> rust_backend/vendor/rustix-1.1.6/src/fs/statx.rs`
 - 1-file cycle: `rust_backend/vendor/rustix-1.1.6/src/thread/prctl.rs -> rust_backend/vendor/rustix-1.1.6/src/thread/prctl.rs`
+- 1-file cycle: `rust_backend/vendor/rustix-1.1.6/src/fs/statx.rs -> rust_backend/vendor/rustix-1.1.6/src/fs/statx.rs`
 - 1-file cycle: `rust_backend/vendor/rustix-1.1.6/src/path/arg.rs -> rust_backend/vendor/rustix-1.1.6/src/path/arg.rs`
 - 1-file cycle: `rust_backend/vendor/rustix-1.1.6/src/backend/libc/c.rs -> rust_backend/vendor/rustix-1.1.6/src/backend/libc/c.rs`
 - 2-file cycle: `rust_backend/crates/local/src/backend/library.rs -> rust_backend/crates/local/src/backend/library/scan.rs -> rust_backend/crates/local/src/backend/library.rs`
 - 2-file cycle: `rust_backend/crates/core/src/tags.rs -> rust_backend/crates/core/src/tags/write.rs -> rust_backend/crates/core/src/tags.rs`
+- 2-file cycle: `rust_backend/crates/core/src/tags.rs -> rust_backend/crates/core/src/tags/id3.rs -> rust_backend/crates/core/src/tags.rs`
 - 2-file cycle: `rust_backend/crates/core/src/tags.rs -> rust_backend/crates/core/src/tags/containers.rs -> rust_backend/crates/core/src/tags.rs`
 - 2-file cycle: `rust_backend/crates/core/src/tags.rs -> rust_backend/crates/core/src/tags/file.rs -> rust_backend/crates/core/src/tags.rs`
-- 2-file cycle: `rust_backend/crates/core/src/tags.rs -> rust_backend/crates/core/src/tags/id3.rs -> rust_backend/crates/core/src/tags.rs`
 - 2-file cycle: `rust_backend/crates/core/src/tags.rs -> rust_backend/crates/core/src/tags/library.rs -> rust_backend/crates/core/src/tags.rs`
 - 2-file cycle: `rust_backend/crates/core/src/media/audio.rs -> rust_backend/crates/core/src/media/mod.rs -> rust_backend/crates/core/src/media/audio.rs`
-- 2-file cycle: `rust_backend/vendor/rustix-1.1.6/src/net/addr.rs -> rust_backend/vendor/rustix-1.1.6/src/net/socket_addr_any.rs -> rust_backend/vendor/rustix-1.1.6/src/net/addr.rs`
 - 2-file cycle: `rust_backend/vendor/rustix-1.1.6/src/net/socket_addr_any.rs -> rust_backend/vendor/rustix-1.1.6/src/net/types.rs -> rust_backend/vendor/rustix-1.1.6/src/net/socket_addr_any.rs`
+- 2-file cycle: `rust_backend/vendor/rustix-1.1.6/src/net/addr.rs -> rust_backend/vendor/rustix-1.1.6/src/net/socket_addr_any.rs -> rust_backend/vendor/rustix-1.1.6/src/net/addr.rs`
 - 2-file cycle: `rust_backend/vendor/rustix-1.1.6/src/kernel_sigset.rs -> rust_backend/vendor/rustix-1.1.6/src/runtime_448b8ad740e2a26f.rs -> rust_backend/vendor/rustix-1.1.6/src/kernel_sigset.rs`
 
 ## Hyperedges (group relationships)
@@ -985,27 +1003,27 @@
 - **Monochrome Themed Icon Density Set** — android_app_src_main_res_drawable_hdpi_ic_launcher_monochrome_icon, android_app_src_main_res_drawable_mdpi_ic_launcher_monochrome_icon, android_app_src_main_res_drawable_xhdpi_ic_launcher_monochrome_icon, android_app_src_main_res_drawable_xxhdpi_ic_launcher_monochrome_icon, android_app_src_main_res_drawable_xxxhdpi_ic_launcher_monochrome_icon [INFERRED 0.95]
 - **xxhdpi Media Notification Control Set** — third_party_audio_service_android_src_main_res_drawable_xxhdpi_audio_service_fast_forward_image, third_party_audio_service_android_src_main_res_drawable_xxhdpi_audio_service_fast_rewind_image, third_party_audio_service_android_src_main_res_drawable_xxhdpi_audio_service_pause_image, third_party_audio_service_android_src_main_res_drawable_xxhdpi_audio_service_play_arrow_image, third_party_audio_service_android_src_main_res_drawable_xxhdpi_audio_service_skip_next_image, third_party_audio_service_android_src_main_res_drawable_xxhdpi_audio_service_skip_previous_image, third_party_audio_service_android_src_main_res_drawable_xxhdpi_audio_service_stop_image, third_party_audio_service_android_src_main_res_drawable_xxhdpi_media_notification_control_set [INFERRED 0.95]
 
-## Communities (1025 total, 304 thin omitted)
+## Communities (1043 total, 318 thin omitted)
 
 ### Community 0 - "Errno"
 Cohesion: 0.01
 Nodes (154): Errno, .ACCESS, .ADDRINUSE, .ADDRNOTAVAIL, .ADV, .AFNOSUPPORT, .AGAIN, .ALREADY (+146 more)
 
 ### Community 1 - "app_artwork_ground.dart"
-Cohesion: 0.02
-Nodes (76): AudioAnalysisController, LogBuffer, begin, ChangeNotifier, dispose, _disposed, end, reset (+68 more)
+Cohesion: 0.04
+Nodes (54): admit, AppGroundBudget, AppGroundBuilder, AppGroundPainter, build, bytes, compose, controller (+46 more)
 
 ### Community 2 - "audio_analysis_spectral_cutoff.dart"
 Cohesion: 0.04
 Nodes (53): activeMargin, activeThreshold, basebandLevel, broadbandProfile, candidateStarts, central, centralEnd, centralStart (+45 more)
 
-### Community 3 - "dart:async"
-Cohesion: 0.02
-Nodes (90): build, child, _controller, createState, didChangeDependencies, disableOverscrollEffects, dispose, _fallbackLocale (+82 more)
+### Community 3 - "app.dart"
+Cohesion: 0.03
+Nodes (56): build, child, _controller, createState, didChangeDependencies, disableOverscrollEffects, dispose, _fallbackLocale (+48 more)
 
 ### Community 4 - ".update"
-Cohesion: 0.06
-Nodes (13): DisabledFallbackTests, MockedAdapterBridgeTests, MockedAdapterContextTests, MockedAdapterDeclarationTests, MockedAdapterFreshnessTests, MockedAdapterGapTests, MockedAdapterGateTests, MockedAdapterGraphTests (+5 more)
+Cohesion: 0.05
+Nodes (15): DisabledFallbackTests, install(), MockedAdapterBridgeTests, MockedAdapterContextTests, MockedAdapterDeclarationTests, MockedAdapterFreshnessTests, MockedAdapterGapTests, MockedAdapterGateTests (+7 more)
 
 ### Community 5 - "Errno"
 Cohesion: 0.01
@@ -1013,19 +1031,19 @@ Nodes (135): Errno, .ACCESS, .ADDRINUSE, .ADDRNOTAVAIL, .ADV, .AFNOSUPPORT, .AGA
 
 ### Community 6 - "sunos_usb.c"
 Cohesion: 0.07
-Nodes (33): _errno_to_libusb(), solaris_submit_ctrl_on_default(), sunos_append_to_string_list(), sunos_async_callback(), sunos_attach_kernel_driver(), sunos_build_argv_list(), sunos_cancel_transfer(), sunos_check_device_and_status_open() (+25 more)
+Nodes (35): _errno_to_libusb(), solaris_submit_ctrl_on_default(), sunos_append_to_string_list(), sunos_async_callback(), sunos_attach_kernel_driver(), sunos_build_argv_list(), sunos_cancel_transfer(), sunos_check_device_and_status_open() (+27 more)
 
-### Community 7 - "detail_navigation.dart"
-Cohesion: 0.02
-Nodes (80): activeTabNavigator, albumArtist, artistName, build, _chooseCredit, ClickableArtistName, context, coverUrl (+72 more)
+### Community 7 - "net/types.rs"
+Cohesion: 0.03
+Nodes (77): AARP, AH, ALL, ARCNET, ATMFATE, BEETPH, CANFD, CANXL (+69 more)
 
 ### Community 8 - "main.dart"
-Cohesion: 0.05
-Nodes (62): _, _androidInstallationPreparation, appReady, _autoScanTriggeredOnLaunch, build, cachedTier, _configureImageCache, defaults (+54 more)
+Cohesion: 0.04
+Nodes (72): _, _androidInstallationPreparation, appReady, _autoScanTriggeredOnLaunch, build, cachedTier, _configureImageCache, defaults (+64 more)
 
 ### Community 9 - "borrowed_fd"
 Cohesion: 0.02
-Nodes (188): borrowed_fd(), c_str(), no_fd(), nonnegative_ret(), owned_fd(), ret(), ret_discarded_fd(), ret_infallible() (+180 more)
+Nodes (192): borrowed_fd(), c_str(), no_fd(), nonnegative_ret(), ret(), ret_c_int(), ret_discarded_fd(), ret_infallible() (+184 more)
 
 ### Community 10 - "lyrics_converters.dart"
 Cohesion: 0.04
@@ -1036,24 +1054,28 @@ Cohesion: 0.04
 Nodes (98): ip_freebind(), ip_mtu(), ip_mtu_discover(), ip_multicast_loop(), ip_multicast_ttl(), ip_original_dst(), ip_recvtos(), ip_tos() (+90 more)
 
 ### Community 12 - "home_tab.dart"
-Cohesion: 0.02
-Nodes (93): borderRadius, _buildLocalFeed, colorScheme, _fallback, fallbackIcon, fallbackIconSize, _featuredCardHeight, _feedCard (+85 more)
+Cohesion: 0.04
+Nodes (54): borderRadius, _buildLocalFeed, colorScheme, _fallback, fallbackIcon, fallbackIconSize, _featuredCardHeight, _feedCard (+46 more)
 
 ### Community 13 - "AddressFamily"
 Cohesion: 0.02
 Nodes (94): socket_domain(), AddressFamily, .ALG, .APPLETALK, .ARP, .ASH, .ATM, .ATMPVC (+86 more)
 
-### Community 15 - "music_player_harness.dart"
-Cohesion: 0.03
-Nodes (70): ListeningRecorder, GaplessDeck, _Recorder, _Session, activations, audioSession, becomingNoisyEventStream, cancellationBarrier (+62 more)
+### Community 14 - "maybeuninit"
+Cohesion: 0.18
+Nodes (3): ptsname(), unlockpt(), wsa_startup()
+
+### Community 15 - "music_player_runtime_test.dart"
+Cohesion: 0.01
+Nodes (175): _registerMusicPlayerRuntimeFailures, _registerMusicPlayerRuntimeLearning, _registerMusicPlayerRuntimeProviders, _registerMusicPlayerRuntimeRestore, MusicPlaybackDeck, ListeningRecorder, calls, effectGate (+167 more)
 
 ### Community 16 - "_"
 Cohesion: 0.01
-Nodes (213): _, action, addQueueItem, album, androidAdjustRemoteVolume, androidBrowsableRootExtras, androidCompactActionIndices, AndroidContentStyle (+205 more)
+Nodes (214): _, action, addQueueItem, album, androidAdjustRemoteVolume, androidBrowsableRootExtras, androidCompactActionIndices, AndroidContentStyle (+206 more)
 
 ### Community 17 - "local_album_screen.dart"
 Cohesion: 0.04
-Nodes (52): _buildSelectionBottomBar, _buildTrackItem, _buildTrackList, _LocalAlbumHeader, _LocalAlbumSelection, _LocalAlbumTrackList, _selectedUnifiedItems, _albumMenuKey (+44 more)
+Nodes (51): _buildSelectionBottomBar, _buildTrackItem, _buildTrackList, _LocalAlbumSelection, _LocalAlbumTrackList, _selectedUnifiedItems, _albumMenuKey, albumName (+43 more)
 
 ### Community 18 - "fsopen.rs"
 Cohesion: 0.13
@@ -1064,7 +1086,7 @@ Cohesion: 0.03
 Nodes (72): activeDays, activeDayShare, album, artist, artistDays, artwork, at, canonicalNames (+64 more)
 
 ### Community 20 - "vdso.rs"
-Cohesion: 0.24
+Cohesion: 0.26
 Nodes (6): elf_hash(), ElfHashEntry, gnu_hash(), init_from_sysinfo_ehdr(), test_vdso(), Vdso
 
 ### Community 21 - "audio_analysis_parsing.dart"
@@ -1073,63 +1095,63 @@ Nodes (21): 0, _ac4CodecTokenPattern, audioCodecHasStoredBitDepth, codecLabel, c
 
 ### Community 23 - "usbi_get_device_priv"
 Cohesion: 0.03
-Nodes (147): usbi_get_device_by_session_id(), usbi_get_device_priv(), usbi_localize_device_descriptor(), get_transfer_priv_overlapped(), get_usbdk_transfer_priv(), get_winusb_device_handle_priv(), get_winusb_transfer_priv(), htab_hash() (+139 more)
+Nodes (147): usbi_get_device_priv(), usbi_arm_timer(), usbi_clear_event(), usbi_create_event(), usbi_create_timer(), usbi_destroy_event(), usbi_destroy_timer(), usbi_disarm_timer() (+139 more)
 
 ### Community 24 - "process/prctl.rs"
 Cohesion: 0.02
-Nodes (149): c_int, CLOCK_BOOTTIME, CLOCK_BOOTTIME_ALARM, CLOCK_MONOTONIC, CLOCK_MONOTONIC_COARSE, CLOCK_MONOTONIC_RAW, CLOCK_PROCESS_CPUTIME_ID, CLOCK_REALTIME (+141 more)
+Nodes (156): c_int, CLOCK_BOOTTIME, CLOCK_BOOTTIME_ALARM, CLOCK_MONOTONIC, CLOCK_MONOTONIC_COARSE, CLOCK_MONOTONIC_RAW, CLOCK_PROCESS_CPUTIME_ID, CLOCK_REALTIME (+148 more)
 
 ### Community 25 - "ffmpeg_kit_config.dart"
 Cohesion: 0.03
 Nodes (62): _activeLogLevel, argumentsToString, asyncFFmpegExecute, asyncFFprobeExecute, asyncGetMediaInformationExecute, clearSessions, closeFFmpegPipe, disableLogs (+54 more)
 
 ### Community 26 - "online_lyrics_providers.dart"
-Cohesion: 0.04
-Nodes (56): AppleLyricsProvider, _ask, _asMap, BetterLyricsProvider, call, _candidate, _client, DeezerLyricsProvider (+48 more)
+Cohesion: 0.07
+Nodes (38): AppleLyricsProvider, _ask, _asMap, BetterLyricsProvider, call, _candidate, _client, DeezerLyricsProvider (+30 more)
 
 ### Community 27 - "app_floating_header.dart"
 Cohesion: 0.03
-Nodes (53): lowEnd, _openSettings, pumpAndSettle, pumpWidget, _registerAppearanceSettingsDefaults, _registerAppearanceSettingsFont, _registerAppearanceSettingsPersistence, _registerDesignSystemHeaders (+45 more)
+Nodes (58): lowEnd, _openSettings, pumpAndSettle, pumpWidget, _registerAppearanceSettingsDefaults, _registerAppearanceSettingsFont, _registerAppearanceSettingsPersistence, _registerDesignSystemHeaders (+50 more)
 
 ### Community 28 - "android.os.Bundle"
 Cohesion: 0.04
-Nodes (9): SEC-303 [P3] [confidence: low] [RESOLVED], VolumeProviderCompat, MediaSessionCallback, ServiceListener, Result, MediaButton, media, next (+1 more)
+Nodes (8): SEC-303 [P3] [confidence: low] [RESOLVED], VolumeProviderCompat, MediaSessionCallback, ServiceListener, MediaButton, media, next, previous
 
-### Community 29 - "SocketAddrArg"
-Cohesion: 0.07
-Nodes (22): initialize_family_to_unspec(), read_sa_family(), read_sockaddr_netlink(), read_sockaddr_unix(), read_sockaddr_v4(), read_sockaddr_v6(), read_sockaddr_xdp(), sockaddr_header (+14 more)
+### Community 29 - "SocketAddrAny"
+Cohesion: 0.03
+Nodes (66): in6_addr_new(), in6_addr_s6_addr(), in_addr_new(), in_addr_s_addr(), sockaddr_in6, sockaddr_in6_new(), sockaddr_in6_sin6_scope_id(), initialize_family_to_unspec() (+58 more)
 
 ### Community 30 - "ret"
 Cohesion: 0.02
-Nodes (137): ret(), ret_c_int(), ret_void_star(), epoll_del(), select(), access(), accessat(), accessat_noflags() (+129 more)
+Nodes (133): ret(), ret_usize(), slice(), access(), accessat(), accessat_noflags(), chmod(), chmodat() (+125 more)
 
 ### Community 31 - "music_player_service.dart"
-Cohesion: 0.01
-Nodes (216): _activateAudioSession, _announceTrack, _appendAutoplayTracks, _applyQueueOrder, _applySettingsImpl, autoplaySetting, _cancelSleepTimerImpl, _claimHardwareMediaButtons (+208 more)
+Cohesion: 0.02
+Nodes (162): _activateAudioSession, _appendAutoplayTracks, _applyQueueOrder, autoplaySetting, _claimHardwareMediaButtons, _commitAutoMixTransition, commitTransition, _configureAudioSession (+154 more)
 
-### Community 32 - "lazy_tab_view_test.dart"
-Cohesion: 0.13
-Nodes (13): _animation, build, createState, dispose, focusNode, initialized, initState, main (+5 more)
+### Community 32 - "lyrics_share_screen.dart"
+Cohesion: 0.03
+Nodes (53): artist, artUri, background, build, coverColors, fontSizeFor, lines, LyricsCardBackground (+45 more)
 
 ### Community 33 - "backup_service.dart"
 Cohesion: 0.03
-Nodes (69): _dartWrite, main, root, build, restoreFromBackup, save, UserProfileNotifier, userProfileStoreProvider (+61 more)
+Nodes (61): build, restoreFromBackup, save, UserProfileNotifier, userProfileStoreProvider, BackupBundle, BackupParseFailure, BackupService (+53 more)
 
 ### Community 34 - "autoplay_ranker.dart"
-Cohesion: 0.03
-Nodes (76): a, at, autoplayRankAuc, autoplayRankerLogLimit, autoplayRankerMinimum, AutoplayRankerResetException, AutoplayRankEvaluation, AutoplayRankOutcome (+68 more)
+Cohesion: 0.02
+Nodes (111): libraryPreferenceEventsProvider, enabled, learning, unsubscribe, LibraryPreferenceEvents, a, at, autoplayRankAuc (+103 more)
 
 ### Community 35 - "net/types.rs"
 Cohesion: 0.02
-Nodes (158): AARP, AF_IUCV, AH, ALL, AOE, ARCNET, ARP, ATALK (+150 more)
+Nodes (81): AF_IUCV, AOE, ARP, ATALK, ATMMPOA, AUDIT, AX25, BATMAN (+73 more)
 
 ### Community 36 - "audio_analysis_runner.dart"
 Cohesion: 0.05
 Nodes (36): AudioAnalysisRunResult, bitrate, bitsPerSample, channelLayout, channels, channelStats, clippingSamples, codec (+28 more)
 
 ### Community 37 - "package:sistrum/l10n/l10n.dart"
-Cohesion: 0.02
-Nodes (121): AnimatedArtworkRevision, ArtistImageRevision, MusicPlayerController, backgroundCollectionSyncProvider, subscription, PlaybackController, art, cover (+113 more)
+Cohesion: 0.01
+Nodes (149): container, _registerPlaylistPlaybackEmpty, _registerPlaylistPlaybackRows, MusicPlayerController, PlaybackController, AlbumTrackTile, artist, build (+141 more)
 
 ### Community 38 - "IoringOp"
 Cohesion: 0.03
@@ -1140,8 +1162,8 @@ Cohesion: 0.05
 Nodes (41): package, pluginClass, dependencies, audio_service_platform_interface, audio_service_web, audio_session, clock, flutter (+33 more)
 
 ### Community 40 - "linux_raw/param/auxv.rs"
-Cohesion: 0.11
-Nodes (20): clock_ticks_per_second(), CLOCK_TICKS_PER_SECOND, ENTRY, entry(), exe_phdrs(), HWCAP, HWCAP2, init_auxv() (+12 more)
+Cohesion: 0.06
+Nodes (36): c_char, AuxFile, AuxPointer, check_elf_base(), clock_ticks_per_second(), CLOCK_TICKS_PER_SECOND, ENTRY, entry() (+28 more)
 
 ### Community 41 - "library_database_models.dart"
 Cohesion: 0.03
@@ -1153,11 +1175,11 @@ Nodes (41): FFmpegKitFactory, _ffmpegSessionCompleteCallback, ffmpegSessionCompl
 
 ### Community 43 - "work.py"
 Cohesion: 0.07
-Nodes (56): What comes from where, advance(), assurance_problems(), require(), strings(), text(), walk(), changed_paths() (+48 more)
+Nodes (52): What comes from where, advance(), assurance_problems(), require(), strings(), text(), walk(), changed_paths() (+44 more)
 
-### Community 44 - "dart:async"
+### Community 44 - "package:flutter/material.dart"
 Cohesion: 0.01
-Nodes (118): _AppPlayerLayoutPart1, _trackHeader, _registerPlayerLyricsRepaintCrossfades, _registerPlayerLyricsRepaintPainters, binding, build, _Collections, main (+110 more)
+Nodes (150): _AppPlayerLayoutPart1, _trackHeader, binding, build, _lyrics, main, _Settings, main (+142 more)
 
 ### Community 45 - "automix_analysis.dart"
 Cohesion: 0.04
@@ -1167,29 +1189,29 @@ Nodes (53): analyzeAutoMixPcm, assisted, AutoMixBeatGrid, autoMixEnvelope, AutoM
 Cohesion: 0.03
 Nodes (62): addedAt, addedCount, _allPlaylistTrackKeys, alreadyInPlaylistCount, artistCollectionKey, artistId, _buildPlaylistTrackKeys, collectionArtistId (+54 more)
 
-### Community 47 - "Widget"
-Cohesion: 0.02
-Nodes (113): PlaylistPickerSummary, adaptiveUiScaleForSize, AdaptiveUiScaler, build, child, defaultWideContentMaxWidth, navigationRailBreakpoint, _scaledInsets (+105 more)
+### Community 47 - "animated_artwork_providers.dart"
+Cohesion: 0.05
+Nodes (40): active, albums, animatedAlbumRef, animatedAlbumRefForItem, animatedArtistRef, _animatedArtworkFolder, AnimatedArtworkLocks, animatedArtworkLocksProvider (+32 more)
 
 ### Community 48 - "libusb1-sys-0.7.0/src/lib.rs"
 Cohesion: 0.08
 Nodes (38): libusb_bos_descriptor, libusb_bos_dev_capability_descriptor, libusb_close(), libusb_container_id_descriptor, libusb_control_setup, libusb_control_transfer_get_setup(), libusb_error_name(), libusb_fill_control_setup() (+30 more)
 
-### Community 49 - "music_player_runtime_test.dart"
-Cohesion: 0.03
-Nodes (69): _registerMusicPlayerRuntimeFailures, _registerMusicPlayerRuntimeLearning, _registerMusicPlayerRuntimeProviders, _registerMusicPlayerRuntimeRestore, MusicPlaybackDeck, activations, _adjustment, audioSession (+61 more)
+### Community 49 - "listening_rewind_screen_story.dart"
+Cohesion: 0.06
+Nodes (32): _autoAdvance, _captureKey, _CloseButton, count, _go, _index, _onProgressStatus, _progress (+24 more)
 
 ### Community 50 - "Signal"
 Cohesion: 0.05
 Nodes (36): Signal, .ABORT, .ALARM, .BUS, .CHILD, .CONT, .EMT, .FPE (+28 more)
 
 ### Community 51 - "local_song_menu_actions_test.dart"
-Cohesion: 0.03
-Nodes (85): condition, description, direction, directory, done, error, height, _library (+77 more)
+Cohesion: 0.02
+Nodes (96): condition, description, direction, directory, done, error, height, _library (+88 more)
 
 ### Community 52 - ".into_c_str"
 Cohesion: 0.07
-Nodes (8): Component<'a>, Components<'a>, Cow<'a, OsStr>, DecInt, Iter<'a>, &OsString, &Path, PathBuf
+Nodes (8): Components<'a>, Cow<'a, OsStr>, DecInt, Iter<'a>, &OsString, OsString, PathBuf, &PathBuf
 
 ### Community 53 - "thread/prctl.rs"
 Cohesion: 0.02
@@ -1201,19 +1223,19 @@ Nodes (84): LIBUSB_CAP_HAS_CAPABILITY, LIBUSB_CAP_HAS_HID_ACCESS, LIBUSB_CAP_HAS
 
 ### Community 55 - "player_lyrics.dart"
 Cohesion: 0.02
-Nodes (98): _displayPosition, estimate, _estimatedFinalWordEnd, _focusFor, _focusInset, _measureAppLines, _nextBoundary, null (+90 more)
+Nodes (116): _buildImpl, _buildLyrics, _didChangeAppLifecycleStateImpl, _displayPosition, estimate, _estimatedFinalWordEnd, _focusFor, _focusInset (+108 more)
 
 ### Community 56 - "FocusManager"
 Cohesion: 0.17
 Nodes (3): FocusManager, LegacyFocusManager, ModernFocusManager
 
 ### Community 57 - "read_audio_tags"
-Cohesion: 0.05
-Nodes (51): main(), syn(), atom(), CheckedReader, CheckedReader<'_, R>, extract_cover(), read_library_metadata(), library_scan_preserves_replaygain_values_written_to_flac() (+43 more)
+Cohesion: 0.07
+Nodes (48): has_usable_content(), atom(), bytes(), CheckedReader, CheckedReader<'_, R>, exact(), extract_cover(), apply_tags() (+40 more)
 
 ### Community 58 - "find_artist_image_sheet.dart"
-Cohesion: 0.04
-Nodes (51): appleArtworkClientProvider, active, activeClient, artistImageRevisionProvider, _artistImagesFolder, artistImageStoreProvider, build, bump (+43 more)
+Cohesion: 0.06
+Nodes (36): appleArtworkClientProvider, artistImageRevisionProvider, artistImageStoreProvider, clearArtistImages, pass, action, _appleOrNull, artistName (+28 more)
 
 ### Community 59 - "stream_information.dart"
 Cohesion: 0.05
@@ -1221,15 +1243,15 @@ Nodes (42): _allProperties, getAllProperties, getAverageFrameRate, getBitrate, g
 
 ### Community 60 - "local_library_provider.dart"
 Cohesion: 0.03
-Nodes (96): copyWith, _displayNameForPath, _drainReconnectScans, _endPauseForFinalization, _ensureLoadedFromDatabase, _finishScanSuccess, _handleLibraryScanProgress, isLoading (+88 more)
+Nodes (91): copyWith, _displayNameForPath, _drainReconnectScans, _endPauseForFinalization, _ensureLoadedFromDatabase, _finishScanSuccess, _handleLibraryScanProgress, isLoading (+83 more)
 
 ### Community 61 - "library_section_tab.dart"
 Cohesion: 0.04
 Nodes (51): _alphabetGeneration, _alphabetNavigating, _alphabetScroll, _AnimatedLibrarySliverGrid, _AnimatedLibrarySliverGridState, _beginExtent, _browseLibraryCountsCache, _browseLibraryPageDataCache (+43 more)
 
-### Community 62 - "local_artist_screen.dart"
-Cohesion: 0.02
-Nodes (115): _albumArtists, _AppLibraryScreenStatePart1, _artists, _jumpToLetter, _openAlbum, _openPage, _overview, _refresh (+107 more)
+### Community 62 - "cached_cover_decode_test.dart"
+Cohesion: 0.18
+Nodes (10): bytes, _decodedImageSize, image, listener, main, picture, recorder, result (+2 more)
 
 ### Community 63 - "dependencies"
 Cohesion: 0.07
@@ -1239,33 +1261,33 @@ Nodes (30): dependencies, audio_service_platform_interface, audio_session, audio
 Cohesion: 0.09
 Nodes (17): &'a mut [MaybeUninit<T>], &'a mut [MaybeUninit<T>; N], &'a mut Vec<MaybeUninit<T>>, Buffer, &mut [MaybeUninit<T>], &mut [MaybeUninit<T>; N], &mut [T], &mut [T; N] (+9 more)
 
-### Community 65 - "music_haptics.dart"
-Cohesion: 0.02
-Nodes (78): analyze, _analyzed, analyzeHapticPcm, _analyzer, _cache, cancel, _channel, configure (+70 more)
+### Community 65 - "audio_info_sheet.dart"
+Cohesion: 0.07
+Nodes (23): _AudioInfoSheet, _AudioInfoSheetState, build, _controller, _copy, createState, didChangeAppLifecycleState, dispose (+15 more)
 
 ### Community 66 - "AudioServicePlugin"
-Cohesion: 0.05
-Nodes (8): SistrumApplication, AudioServicePlugin, ClientInterface, FlutterEngineConfigurator, QueueArtResolver, Local Android Auto extension (2026-11-01), Local audio_service 0.18.19 patch, Queue publication coalescing (2026-11-01)
+Cohesion: 0.04
+Nodes (7): SistrumApplication, AudioServiceActivity, AudioServiceFragmentActivity, AudioServicePlugin, ClientInterface, FlutterEngineConfigurator, QueueArtResolver
 
 ### Community 67 - "app_artwork_page_ground.dart"
-Cohesion: 0.03
-Nodes (63): attach, controller, createRenderObject, detach, _drawPlain, fill, opaque, paint (+55 more)
+Cohesion: 0.04
+Nodes (47): RenderAppArtworkGlass, alignment, _anchor, AppPageGround, _AppPageGroundState, attach, build, _built (+39 more)
 
 ### Community 68 - "settings.dart"
 Cohesion: 0.03
 Nodes (57): animatedAlbumArtwork, appLocaleFromJson, artistImagesAutoDownload, artistImagesNetwork, autoMix, autoMixDuration, autoMixEcho, autoMixEffect (+49 more)
 
-### Community 69 - "app_alert_dialog.dart"
-Cohesion: 0.03
-Nodes (65): blurEnabled, build, child, firstInGroup, glassProgress, highlightBorder, highlightIntensity, lastInGroup (+57 more)
+### Community 69 - "metadata_separator_settings_test.dart"
+Cohesion: 0.06
+Nodes (24): main, alignment, build, _center, _chip, element, ensureVisible, last (+16 more)
 
-### Community 70 - "libc/net/read_sockaddr.rs"
-Cohesion: 0.12
-Nodes (19): in6_addr_new(), in6_addr_s6_addr(), in_addr_new(), in_addr_s_addr(), sockaddr_in6, sockaddr_in6_new(), sockaddr_in6_sin6_scope_id(), initialize_family_to_unspec() (+11 more)
+### Community 70 - "automix_options.dart"
+Cohesion: 0.07
+Nodes (26): autoMixDurationFromJson, AutoMixEffect, AutoMixOptions, autoMixPitchFromJson, autoMixSpeedFromJson, durationSeconds, echo, effect (+18 more)
 
 ### Community 71 - "_"
-Cohesion: 0.02
-Nodes (87): AppGlassStyle, barFill, blurSigma, clearFill, kAppGlassStyle, menuOpacity, tint, AppTheme (+79 more)
+Cohesion: 0.03
+Nodes (71): _, accent, accentChroma, accentHue, accentTone, add, analyzeCover, appCoverColors (+63 more)
 
 ### Community 72 - "music_player_autoplay.dart"
 Cohesion: 0.02
@@ -1273,31 +1295,31 @@ Nodes (78): appendAutoplayTracks, artistDistance, artistPlays, at, _autoplayArti
 
 ### Community 73 - "song_analysis.dart"
 Cohesion: 0.02
-Nodes (93): AutoplaySoundStore, load, loadAll, save, _store, _analyzable, _analyze, _analyzer (+85 more)
+Nodes (103): _analyzable, _analyze, _analyzer, _android, _autoMix, _busy, _busyRecheck, _charging (+95 more)
 
 ### Community 74 - "src/termios/types.rs"
-Cohesion: 0.03
-Nodes (55): B0, B1000000, B110, B115200, B1152000, B1200, B134, B150 (+47 more)
+Cohesion: 0.05
+Nodes (31): B0, B1000000, B110, B115200, B1152000, B1200, B134, B150 (+23 more)
 
 ### Community 75 - "library_fast_scroller.dart"
 Cohesion: 0.04
-Nodes (49): _attachPosition, bottomPadding, _Bubble, build, center, child, createState, didChangeDependencies (+41 more)
+Nodes (51): _attachPosition, bottomPadding, _Bubble, _BubbleLayout, build, center, child, createState (+43 more)
 
 ### Community 76 - "readSafMetadataWithFallback"
-Cohesion: 0.12
-Nodes (7): readSafMetadataWithFallback(), UnreadableTagsException, probeSafTreeReadAccess(), SafMetadataReadPolicyTest, SafTreeReadAccessPolicyTest, PERF-502 [P2] [confidence: medium] [RESOLVED], Reply
+Cohesion: 0.16
+Nodes (6): readSafMetadataWithFallback(), UnreadableTagsException, probeSafTreeReadAccess(), SafMetadataReadPolicyTest, SafTreeReadAccessPolicyTest, PERF-502 [P2] [confidence: medium] [RESOLVED]
 
 ### Community 77 - "music_player_runtime.dart"
-Cohesion: 0.03
-Nodes (61): AutoplayTaste, attach, autoMixStatus, _backgroundCollectionChanges, _backgroundCollectionRevision, _backgroundFavorites, browser, _collectionsDatabase (+53 more)
+Cohesion: 0.01
+Nodes (129): appLanguageChoices, supportedLanguageChoices, AppSettings, Track, CurrentMediaItemNotifier, backgroundCollectionSyncProvider, subscription, buildM3u8Content (+121 more)
 
 ### Community 78 - "app_selection_pill.dart"
-Cohesion: 0.03
-Nodes (66): _AppSelectionPillStatePart1, _buildItems, _foreground, _heldGlass, _item, _loadMaskProgram, _preview, AppSelectionForeground (+58 more)
+Cohesion: 0.06
+Nodes (40): _AppSelectionPillStatePart1, _buildItems, _foreground, _heldGlass, _item, _loadMaskProgram, _preview, _activePointer (+32 more)
 
 ### Community 79 - "RustCoreBackend"
 Cohesion: 0.06
-Nodes (8): InstallationMarker, NativeDataJobs, runNativeDataJobPlatform(), createCoreBackend(), dispatchBackendApplication(), RustCoreBackend, AutoCloseable, NativeDataJobsTest
+Nodes (8): loadExistingFilesFromSnapshot(), NativeDataJobs, runNativeDataJobPlatform(), createCoreBackend(), dispatchBackendApplication(), RustCoreBackend, AutoCloseable, NativeDataJobsTest
 
 ### Community 80 - "media_file_bridge.dart"
 Cohesion: 0.06
@@ -1308,20 +1330,20 @@ Cohesion: 0.09
 Nodes (4): CoverContentProvider, CoverProviderFiles, Folder, CoverProviderFilesTest
 
 ### Community 82 - "library_settings_page.dart"
-Cohesion: 0.01
-Nodes (157): _cancelScan, _cleanupMissingFiles, _clearLibrary, _getAutoScanLabel, _initDeviceInfo, _LibrarySettingsPageStatePart1, _pauseScan, _pickLibraryFolder (+149 more)
+Cohesion: 0.03
+Nodes (86): _cancelScan, _cleanupMissingFiles, _clearLibrary, _getAutoScanLabel, _initDeviceInfo, _LibrarySettingsPageStatePart1, _pauseScan, _pickLibraryFolder (+78 more)
 
 ### Community 83 - "embedded_cover_resolver.dart"
 Cohesion: 0.03
 Nodes (51): _activeExtractions, _backgroundExtractionQueue, _cache, _cacheGeneration, callbacks, cancelled, cleanFilePath, cleanPath (+43 more)
 
-### Community 84 - "physical_file_index_lookup_test.dart"
-Cohesion: 0.03
-Nodes (57): BrowserPlaylist, CollectionBrowserPage, CollectionBrowserReader, database, playlists, _track, tracks, execute (+49 more)
+### Community 84 - "sqlite_process_database.dart"
+Cohesion: 0.02
+Nodes (75): delete, insert, main, noSuchMethod, operations, path, _RecordingBatch, album (+67 more)
 
 ### Community 85 - "audio_info_facts.dart"
-Cohesion: 0.03
-Nodes (68): AudioInfoFacts, AudioInfoSection, bitDepth, _bitPerfect, bitrateKbps, _bluetoothFormatUnreported, buffer, channels (+60 more)
+Cohesion: 0.04
+Nodes (45): AudioInfoFacts, AudioInfoSection, bitDepth, _bitPerfect, bitrateKbps, _bluetoothFormatUnreported, buffer, channels (+37 more)
 
 ### Community 86 - "autoplay_taste.dart"
 Cohesion: 0.02
@@ -1333,27 +1355,27 @@ Nodes (34): _PrefixBrowse, artist, build, cover, _cursor, entries, fromRow, from
 
 ### Community 88 - "darwin_usb.c"
 Cohesion: 0.06
-Nodes (75): cancel_control_transfer(), check_alt_setting_and_clear_halt(), darwin_abort_transfers(), darwin_alloc_streams(), darwin_async_io_callback(), darwin_attach_kernel_driver(), darwin_cache_device_descriptor(), darwin_cancel_transfer() (+67 more)
+Nodes (73): cancel_control_transfer(), check_alt_setting_and_clear_halt(), darwin_abort_transfers(), darwin_alloc_streams(), darwin_async_io_callback(), darwin_attach_kernel_driver(), darwin_cache_device_descriptor(), darwin_cancel_transfer() (+65 more)
 
-### Community 89 - "package:sistrum/core/models/library_collections.dart"
-Cohesion: 0.04
-Nodes (37): album, AppScreens, appScreensOf, appScreensProvider, artist, collectionTracks, composerSongs, nowPlaying (+29 more)
+### Community 89 - "MusicPlayerHandler"
+Cohesion: 0.07
+Nodes (27): _announceTrack, _currentPositionForPersist, _ensureDurationKnown, _handlePositionChanged, _markSessionQueueChanged, _MusicPlayerHandlerDelegates1, _MusicPlayerHandlerDelegates2, _MusicPlayerHandlerEvents (+19 more)
 
 ### Community 90 - "files.rs"
 Cohesion: 0.07
 Nodes (20): Backend, directory_grant_release_and_shutdown_block_future_local_operations(), local_tag_edits_preserve_audio_and_cancel_without_publishing(), Operation, wav(), clean(), exclusive_publication_preserves_racing_output_and_cleans_cancelled_stage(), FilePath (+12 more)
 
 ### Community 91 - "logger.dart"
-Cohesion: 0.03
-Nodes (48): build, entry, levelColor, LogEntryTile, onLongPress, onTap, selected, selectionMode (+40 more)
+Cohesion: 0.05
+Nodes (32): add, addAll, _addToBuffer, _append, BufferedOutput, clear, d, e (+24 more)
 
-### Community 92 - "package:sistrum/services/playback/music_player/music_player_service.dart"
-Cohesion: 0.04
-Nodes (38): buildShuffledQueueOrder, mapProcessingState, normalizedPlaybackResumePosition, position, rest, main, media, dispose (+30 more)
+### Community 92 - "animated_artwork_video.dart"
+Cohesion: 0.07
+Nodes (26): active, _controller, _covered, createState, didChangeAppLifecycleState, didChangeDependencies, didUpdateWidget, dispose (+18 more)
 
 ### Community 93 - "app_selection_panel_drag.dart"
-Cohesion: 0.07
-Nodes (28): _actionHeight, _actionsKey, _animateToRest, applyUserOffset, AppSelectionPanelDrag, bottomPadding, build, _cancelDrag (+20 more)
+Cohesion: 0.03
+Nodes (67): AppPlaybackButton, _AppPlaybackButtonState, build, color, createState, dispose, icon, iconSize (+59 more)
 
 ### Community 94 - "native_library/tests.rs"
 Cohesion: 0.19
@@ -1364,12 +1386,12 @@ Cohesion: 0.07
 Nodes (27): libusb_class_code, LIBUSB_CLASS_APPLICATION, LIBUSB_CLASS_AUDIO, LIBUSB_CLASS_AUDIO_VIDEO, LIBUSB_CLASS_BILLBOARD, LIBUSB_CLASS_BULK_DISPLAY_PROTOCOL, LIBUSB_CLASS_COMM, LIBUSB_CLASS_CONTENT_SECURITY (+19 more)
 
 ### Community 96 - "linux_usbfs.c"
-Cohesion: 0.06
-Nodes (67): usbi_alloc_device(), usbi_get_device_handle_priv(), usbi_get_transfer_priv(), usbi_reallocf(), haiku_cancel_transfer(), claim_interface(), detach_kernel_driver_and_claim(), dev_has_config0() (+59 more)
+Cohesion: 0.05
+Nodes (74): usbi_handle_disconnect(), usbi_handle_transfer_cancellation(), usbi_handle_transfer_completion(), usbi_get_device_handle_priv(), usbi_get_transfer_priv(), darwin_handle_transfer_completion(), haiku_cancel_transfer(), haiku_handle_transfer_completion() (+66 more)
 
-### Community 97 - "package:flutter/cupertino.dart"
+### Community 97 - "package:flutter_riverpod/flutter_riverpod.dart"
 Cohesion: 0.01
-Nodes (170): palette, _registerAppDetailHeadersAlbum, _registerAppDetailHeadersArtist, _registerAppGlassInteractionGestures, _registerAppArtworkGlassGrounds, albumBlue, blur, brightness (+162 more)
+Nodes (250): _registerPlayerLyricsRepaintCrossfades, _registerPlayerLyricsRepaintPainters, _registerAppGlassInteractionGestures, _registerAppArtworkGlassGrounds, albumBlue, blur, brightness, capture (+242 more)
 
 ### Community 98 - "parse_lrc"
 Cohesion: 0.13
@@ -1377,35 +1399,35 @@ Nodes (27): align(), clock(), decode_supplement(), duration(), expanded_cost(), 
 
 ### Community 99 - "audio_analysis_widget.dart"
 Cohesion: 0.04
-Nodes (88): audioSpectrogramExportBaseName, b, bar, barEnd, barLeft, barStart, bottomGutter, canvas (+80 more)
+Nodes (86): audioSpectrogramExportBaseName, b, bar, barEnd, barLeft, barStart, bottomGutter, canvas (+78 more)
 
 ### Community 100 - "KernelSigSet"
-Cohesion: 0.11
-Nodes (13): kernel_sigsuspend(), KernelSigSet, libc_sigs(), sigs(), test_clear(), test_libc_layout_compatibility(), test_ops_plain(), kernel_sigpending() (+5 more)
+Cohesion: 0.15
+Nodes (6): kernel_sigsuspend(), KernelSigSet, kernel_sigpending(), kernel_sigsuspend(), kernel_sigtimedwait(), kernel_sigwaitinfo()
 
 ### Community 101 - "PlayerWidgetProvider.kt"
-Cohesion: 0.05
-Nodes (8): PlayerWidgetTest, PlayerWidgetCommandPolicy, PlayerWidgetConfigurationActivity, PlayerWidgetBridge, Result, PlayerWidgetProvider, PlayerWidgetCommandPolicyTest, SEC-101 [P3] [confidence: medium] [RESOLVED]
+Cohesion: 0.06
+Nodes (5): PlayerWidgetTest, PlayerWidgetConfigurationActivity, PlayerWidgetBridge, Result, PlayerWidgetProvider
 
-### Community 102 - "package:sqflite/sqflite.dart"
-Cohesion: 0.02
-Nodes (69): channel, main, main, binding, build, completed, container, db (+61 more)
+### Community 102 - "listening_rewind_screen_stats.dart"
+Cohesion: 0.08
+Nodes (23): artist, _Artwork, detail, _Fact, highlight, label, milliseconds, _MonthArtists (+15 more)
 
 ### Community 103 - "Timespec"
 Cohesion: 0.02
-Nodes (124): timerfd_create(), timerfd_gettime(), timerfd_settime(), capget(), capset(), clock_nanosleep_absolute(), clock_nanosleep_absolute_old(), clock_nanosleep_relative() (+116 more)
+Nodes (121): timerfd_create(), timerfd_gettime(), timerfd_settime(), poll(), select(), capget(), capset(), clock_nanosleep_absolute() (+113 more)
 
-### Community 104 - "app_context_menu.dart"
-Cohesion: 0.05
-Nodes (36): _BubbleLayout, _action, anchor, AppContextMenu, AppMenuAction, appMenuAnchor, box, build (+28 more)
+### Community 104 - "native_audio.cpp"
+Cohesion: 0.13
+Nodes (4): Handles, mutex, next, values
 
 ### Community 105 - "Independent current-branch audit"
 Cohesion: 0.22
 Nodes (8): BUILD-01 planned scope, CONTRACT-01 planned scope, DATA-01 planned scope, DATA-02 planned scope, Independent current-branch audit, Planned audit order, SCAN-01 planned scope, UI-01 planned scope
 
 ### Community 106 - "core.c"
-Cohesion: 0.05
-Nodes (74): discovered_devs_alloc(), discovered_devs_append(), discovered_devs_free(), do_close(), find_alt_endpoint(), get_env_debug_level(), libusb_alloc_streams(), libusb_attach_kernel_driver() (+66 more)
+Cohesion: 0.04
+Nodes (96): discovered_devs_alloc(), discovered_devs_append(), discovered_devs_free(), do_close(), find_alt_endpoint(), get_env_debug_level(), libusb_alloc_streams(), libusb_attach_kernel_driver() (+88 more)
 
 ### Community 107 - "settings_provider_actions.dart"
 Cohesion: 0.05
@@ -1416,28 +1438,28 @@ Cohesion: 0.05
 Nodes (36): _argumentsArray, cancel, _command, createFFmpegSession, createFFmpegSessionFromMap, createFFprobeSession, createFFprobeSessionFromMap, createMediaInformationSession (+28 more)
 
 ### Community 109 - "setup_screen.dart"
-Cohesion: 0.05
-Nodes (50): _buildLanguageList, _buildLanguageStep, _buildNotificationStep, _buildStorageStep, _buildWelcomeStep, _checkInitialPermissions, _completeSetup, _continueFrom (+42 more)
+Cohesion: 0.08
+Nodes (23): _androidSdkVersion, build, createState, _currentStep, didChangeAppLifecycleState, dispose, _fivePageGuideCount, _initialization (+15 more)
 
 ### Community 110 - "procctl.rs"
 Cohesion: 0.05
-Nodes (56): procctl(), configure_virtual_memory_map(), PrctlMmMap, DumpableBehavior, Dumpable, NotDumpable, NotDumpableExecPreserved, get_reaper_pids() (+48 more)
+Nodes (54): procctl(), DumpableBehavior, Dumpable, NotDumpable, NotDumpableExecPreserved, get_reaper_pids(), get_reaper_status(), IdType (+46 more)
 
 ### Community 111 - "library_collections_database.dart"
 Cohesion: 0.02
-Nodes (95): _deleteEntry, _deleteTrackKeys, exportBackupSnapshot, LibraryCollectionsDatabasePart1, _LibraryCollectionsDatabasePart2, LibraryCollectionsDatabasePart3, _LibraryCollectionsDatabaseStatics1, loadPlaylistPickerSummaries (+87 more)
+Nodes (94): _deleteEntry, _deleteTrackKeys, exportBackupSnapshot, LibraryCollectionsDatabasePart1, _LibraryCollectionsDatabasePart2, LibraryCollectionsDatabasePart3, _LibraryCollectionsDatabaseStatics1, loadPlaylistPickerSummaries (+86 more)
 
-### Community 112 - ".from"
-Cohesion: 0.06
-Nodes (4): ArgReg<'a, Num>, Cpuid, membarrier(), membarrier_cpu()
+### Community 112 - "app_selection_foreground.dart"
+Cohesion: 0.09
+Nodes (17): AppSelectionForeground, _AppSelectionForegroundState, build, child, createRenderObject, createState, dispose, paint (+9 more)
 
 ### Community 113 - ".configureFlutterEngine"
 Cohesion: 0.04
-Nodes (34): ImpellerAwareFlutterFragment, MainActivity, OnBackPressedCallback, StreamHandler, BroadcastReceiver, SafScanProgress, SpillJsonWriter, buildUriDisplayName() (+26 more)
+Nodes (35): InstallationMarker, ImpellerAwareFlutterFragment, MainActivity, OnBackPressedCallback, StreamHandler, BroadcastReceiver, SafScanProgress, SpillJsonWriter (+27 more)
 
 ### Community 114 - "json"
-Cohesion: 0.06
-Nodes (29): fingerprint(), load_config(), local_path(), main(), run_checks(), validate(), main(), command() (+21 more)
+Cohesion: 0.05
+Nodes (38): fingerprint(), load_config(), local_path(), main(), run_checks(), validate(), main(), command() (+30 more)
 
 ### Community 115 - "super"
 Cohesion: 0.05
@@ -1445,7 +1467,7 @@ Nodes (11): check_dirent_layout(), Dir, dir_iterator_handles_io_errors(), DirEnt
 
 ### Community 116 - "shell_navigation.dart"
 Cohesion: 0.04
-Nodes (44): activeTabNavigator, _activeTabNavigatorKey, chromeBrightness, _chromeScopes, chromeSurface, _chromeUpdateScheduled, clearChromeBrightness, _currentTabIndex (+36 more)
+Nodes (47): _, AppNavigationService, rootNavigatorKey, activeTabNavigator, _activeTabNavigatorKey, chromeBrightness, _chromeScopes, chromeSurface (+39 more)
 
 ### Community 117 - "listening_statistics.dart"
 Cohesion: 0.04
@@ -1472,48 +1494,48 @@ Cohesion: 0.07
 Nodes (26): AbstractSession, create, FFmpegSession, getAllStatistics, getCompleteCallback, getLastReceivedStatistics, getStatistics, getStatisticsCallback (+18 more)
 
 ### Community 123 - "album_detail_header.dart"
-Cohesion: 0.06
-Nodes (42): _AlbumDetailHeaderPart1, AlbumDetailHeaderPart2, _AlbumDetailHeaderPart3, _AlbumOverlayToolbar, _AlbumScrollVeil, _AlbumStretchArtwork, artworkBottom, _ArtworkBrightness (+34 more)
+Cohesion: 0.09
+Nodes (25): _AlbumDetailHeaderPart1, AlbumDetailHeaderPart2, _AlbumDetailHeaderPart3, _buildAppBar, _buildAppDetails, buildSlivers, _titleFontSize, actions (+17 more)
 
 ### Community 124 - "OwnedFd"
-Cohesion: 0.03
-Nodes (69): port_create(), accept(), accept_with(), acceptfrom(), acceptfrom_with(), socket(), socket_with(), socketpair() (+61 more)
+Cohesion: 0.02
+Nodes (76): owned_fd(), ret_owned_fd(), epoll_create(), kqueue(), port_create(), inotify_init1(), memfd_create(), open() (+68 more)
 
 ### Community 125 - "overflow_marquee.dart"
-Cohesion: 0.05
-Nodes (38): _appActive, build, _canScroll, child, _contentKey, createState, _cycles, didChangeAppLifecycleState (+30 more)
+Cohesion: 0.07
+Nodes (29): _appActive, build, _canScroll, child, _contentKey, createState, _cycles, didChangeAppLifecycleState (+21 more)
 
-### Community 126 - "dart:typed_data"
-Cohesion: 0.03
-Nodes (59): AnimatedVideoDownloadException, ArtistImageStore, MemoryArtistImageState, DeezerUnavailable, UpdateCheckException, main, body, bytes (+51 more)
+### Community 126 - "artist_image_store.dart"
+Cohesion: 0.01
+Nodes (135): AnimatedVideoDownloadException, ArtistImageDownloadFailed, bytes, downloadArtistImage, reason, response, timeout, toString (+127 more)
 
 ### Community 127 - "artist_image_auto_pass.dart"
 Cohesion: 0.07
 Nodes (26): allowed, ArtistImageAutoResult, ArtistImageAutoStop, batchSize, changed, changedSomething, _compareBytes, _exactPhoto (+18 more)
 
 ### Community 128 - "animated_artwork_manual.dart"
-Cohesion: 0.07
-Nodes (23): DownloadedAnimatedVideo, chooseAppleVideo, downloaded, imported, link, publishVideo, resetAnimatedVideo, resolveAppleArtworkLink (+15 more)
+Cohesion: 0.09
+Nodes (17): DownloadedAnimatedVideo, chooseAppleVideo, downloaded, imported, link, publishVideo, resetAnimatedVideo, resolveAppleArtworkLink (+9 more)
 
 ### Community 129 - "audio_route_info.dart"
 Cohesion: 0.04
-Nodes (47): AudioRouteDevice, AudioRouteInfo, AudioRouteStream, bitDepths, bitPerfectCapable, bitrate, bluetoothFormatUnreported, _channel (+39 more)
+Nodes (54): AudioRouteDevice, AudioRouteFound, AudioRouteInfo, AudioRouteNotAvailable, AudioRouteRead, AudioRouteReadFailed, AudioRouteStream, bitDepths (+46 more)
 
 ### Community 130 - "cover_palette.dart"
-Cohesion: 0.03
-Nodes (65): paletteOf, CoverAnalysisStore, _database, _ensureTable, LibraryCoverAnalysisStore, _log, maxRows, read (+57 more)
+Cohesion: 0.02
+Nodes (93): paletteOf, CoverAnalysisStore, _database, _ensureTable, LibraryCoverAnalysisStore, _log, maxRows, read (+85 more)
 
 ### Community 131 - "Random"
 Cohesion: 0.50
 Nodes (3): _CountingRandom, _NoNoise, _NoNoise
 
 ### Community 132 - "music_playback_deck.dart"
-Cohesion: 0.02
-Nodes (81): channel, _events, nextTicket, _stream, _tickets, UsbPcmBridge, available, bitDepth (+73 more)
+Cohesion: 0.03
+Nodes (73): available, bitDepth, cancelPreparation, _completions, currentDb, device, _direct, _directState (+65 more)
 
-### Community 133 - "library_browse_store_test.dart"
-Cohesion: 0.13
-Nodes (21): _addLocal, album, artist, explicit, file, insert, _registerLibraryBrowseStoreCounts, _registerLibraryBrowseStoreReleases (+13 more)
+### Community 133 - "SpecialCodeIndex"
+Cohesion: 0.09
+Nodes (22): SpecialCodeIndex, .VDISCARD, .VDSUSP, .VEOF, .VEOL, .VEOL2, .VERASE, .VERASE2 (+14 more)
 
 ### Community 134 - "player_lyrics_extent_geometry.dart"
 Cohesion: 0.05
@@ -1524,8 +1546,8 @@ Cohesion: 0.07
 Nodes (27): album, artist, cancel, _cancelled, candidates, detect, durationSeconds, failedProviders (+19 more)
 
 ### Community 136 - "collection_track_batch.dart"
-Cohesion: 0.03
-Nodes (51): collectionRestoreCommands, entries, output, trackCommand, writeCollectionRestoreCommands, _attachmentSequence, detached, directory (+43 more)
+Cohesion: 0.02
+Nodes (92): credits, db, LibraryGenres, page, rules, artist, cover, db (+84 more)
 
 ### Community 137 - "native_palette.rs"
 Cohesion: 0.16
@@ -1533,15 +1555,15 @@ Nodes (17): color(), COLORS, Cube, DartRandom, distance(), index(), lab(), MAX_P
 
 ### Community 138 - "Handler"
 Cohesion: 0.05
-Nodes (7): UsbBitPerfectPluginTest, AudioRouteInfo, Unavailable, UsbBitPerfectPlugin, UsbPcmPlayback, UsbPcmSource, KT-002 [P3] [confidence: low] [RESOLVED]
+Nodes (6): UsbBitPerfectPluginTest, AudioRouteInfo, Unavailable, UsbBitPerfectPlugin, UsbPcmPlayback, UsbPcmSource
 
-### Community 139 - "music_player_provider.dart"
-Cohesion: 0.05
-Nodes (34): addToQueue, addToQueueLocal, build, cancelSleepTimer, CurrentMediaItemNotifier, enbrowseLibraryItems, ensureInitialized, _handler (+26 more)
+### Community 139 - "system_volume_service.dart"
+Cohesion: 0.10
+Nodes (14): changes, instance, _latest, _listeners, _publish, _source, _subscription, SystemVolumeService (+6 more)
 
 ### Community 140 - "linux_raw/param/init.rs"
-Cohesion: 0.07
-Nodes (13): CLOCK_TICKS_PER_SECOND, ENTRY, exe_phdrs(), HWCAP, HWCAP2, init(), init_from_auxp(), init_from_envp() (+5 more)
+Cohesion: 0.06
+Nodes (17): CLOCK_TICKS_PER_SECOND, ENTRY, exe_phdrs(), HWCAP, HWCAP2, init(), init_from_auxp(), init_from_envp() (+9 more)
 
 ### Community 141 - "ffmpeg_models.dart"
 Cohesion: 0.10
@@ -1553,19 +1575,19 @@ Nodes (27): 1. Your Job, 2. The Workflow, 3. Reference, 4. Fix Tool Issues Upstr
 
 ### Community 143 - "dart:typed_data"
 Cohesion: 0.02
-Nodes (92): _registerNativeDataJobsLyrics, root, block, comments, data, descriptor, _drums, _flac (+84 more)
+Nodes (96): _registerNativeDataJobsLyrics, root, block, comments, data, descriptor, _drums, _flac (+88 more)
 
-### Community 144 - "bool get"
-Cohesion: 0.03
-Nodes (56): autoMixDurationFromJson, AutoMixEffect, AutoMixOptions, autoMixPitchFromJson, autoMixSpeedFromJson, durationSeconds, echo, effect (+48 more)
+### Community 144 - "now_playing_route.dart"
+Cohesion: 0.07
+Nodes (27): barrierColor, barrierLabel, build, buildPage, buildTransitions, cancelDrag, child, _coveredOverlaySize (+19 more)
 
 ### Community 145 - "AudioService"
-Cohesion: 0.05
-Nodes (11): MORN-005 [P3] [confidence: high] [RESOLVED], AudioProcessingState, buffering, completed, error, idle, loading, ready (+3 more)
+Cohesion: 0.04
+Nodes (12): MORN-005 [P3] [confidence: high] [RESOLVED], AudioProcessingState, buffering, completed, error, idle, loading, ready (+4 more)
 
 ### Community 146 - "autoplay_sound_signal.dart"
-Cohesion: 0.07
-Nodes (27): _candidates, _compatibleKeys, _dimensions, _energy, features, _fits, follow, _followed (+19 more)
+Cohesion: 0.05
+Nodes (34): AutoplaySignal, follow, name, prepare, score, _candidates, _compatibleKeys, _dimensions (+26 more)
 
 ### Community 147 - "MediaAction"
 Cohesion: 0.08
@@ -1575,13 +1597,13 @@ Nodes (26): MediaAction, AFastForward, APause, APlay, APlayFromMediaId, APlayFro
 Cohesion: 0.07
 Nodes (62): OggPage, format_metadata_tag_value(), valid_separator(), edit(), Item, parse_items(), changed_flac_tags_match_full_rewrite_and_preserve_audio(), clears_replay_gain() (+54 more)
 
-### Community 149 - "app_glass_surface.dart"
-Cohesion: 0.02
-Nodes (80): AutoMixPhaseLock, baseRate, _errors, _misses, _nextSample, observe, period, _pulseEnd (+72 more)
+### Community 149 - "cached_cover_image.dart"
+Cohesion: 0.07
+Nodes (24): alignment, borderRadius, build, _buildImage, _buildLocalImage, CachedCoverImage, _cacheExtentForLogicalSize, _defaultMaxCacheExtent (+16 more)
 
 ### Community 150 - "src/io_uring/mod.rs"
 Cohesion: 0.04
-Nodes (29): IncompleteArrayField, UnionField, addr_len_struct, buf_ring_bufs_struct, buf_ring_tail_struct, io_cqring_offsets, io_sqring_offsets, io_uring_buf (+21 more)
+Nodes (24): UnionField, buf_ring_bufs_struct, buf_ring_tail_struct, io_cqring_offsets, io_sqring_offsets, io_uring_buf, io_uring_buf_ring, io_uring_clone_buffers (+16 more)
 
 ### Community 151 - ".free"
 Cohesion: 0.09
@@ -1592,24 +1614,24 @@ Cohesion: 0.06
 Nodes (34): albumArtist, albumKey, albumName, artistName, bitDepth, bitrate, composer, copyright (+26 more)
 
 ### Community 153 - "lyrics_parser.dart"
-Cohesion: 0.08
-Nodes (33): add, background, _expandedCost, _LyricsParserWords, _nearestOccurrence, null, _parseClock, _parseRomanizationWords (+25 more)
+Cohesion: 0.06
+Nodes (47): add, background, _encodeLyricsInBackground, _expandedCost, _hasUsableTiming, _hydrateParsedLyricsInBackground, lines, _looksLikeTtml (+39 more)
 
 ### Community 154 - "Session"
-Cohesion: 0.12
-Nodes (8): check(), completed(), completion_uses_a_separate_stable_flag_after_slot_moves(), Session, Shared, Slot, State, VolumeRequest
+Cohesion: 0.15
+Nodes (6): check(), completed(), completion_uses_a_separate_stable_flag_after_slot_moves(), Session, Shared, Slot
 
-### Community 155 - "animation_indicators.dart"
-Cohesion: 0.04
-Nodes (51): AnimatedBadge, _AnimatedBadgeState, AnimatedSelectionCheckbox, build, child, colorScheme, _controller, count (+43 more)
+### Community 155 - "music_player_service_session_handlers.dart"
+Cohesion: 0.10
+Nodes (20): _applySettingsImpl, _cancelSleepTimerImpl, _clickImpl, _enqueueAllImpl, _enqueueImpl, _moveQueueItemImpl, _pauseImpl, _persistCurrentSessionImpl (+12 more)
 
 ### Community 156 - "local_artist_providers.dart"
 Cohesion: 0.07
 Nodes (31): artist, _artistPageSize, _ArtistPopularTieBreaks, artistReleaseBrowseRequest, _artistTrackPages, ArtistTrackRequest, build, _cursor (+23 more)
 
 ### Community 157 - "USBDevice"
-Cohesion: 0.07
-Nodes (33): _errno_to_libusb(), USBDevice::ActiveConfiguration(), USBDevice::ActiveConfigurationIndex(), USBDevice::CheckInterfacesFree(), USBDevice::ClaimInterface(), USBDevice::ConfigurationDescriptor(), USBDevice::CountConfigurations(), USBDevice::Descriptor() (+25 more)
+Cohesion: 0.03
+Nodes (71): usbi_signal_transfer_completion(), _errno_to_libusb(), USBDevice::ActiveConfiguration(), USBDevice::ActiveConfigurationIndex(), USBDevice::CheckInterfacesFree(), USBDevice::ClaimInterface(), USBDevice::ConfigurationDescriptor(), USBDevice::CountConfigurations() (+63 more)
 
 ### Community 158 - "player_lyrics_word_timing.dart"
 Cohesion: 0.05
@@ -1617,30 +1639,30 @@ Nodes (41): _advancing, _anchorAt, _anchorElapsed, _anchorPosition, _animationCl
 
 ### Community 159 - "windows_common.c"
 Cohesion: 0.06
-Nodes (39): usbi_get_context_priv(), op_set_option(), get_windows_version(), htab_create(), htab_destroy(), is_x64(), windows_cancel_transfer(), windows_claim_interface() (+31 more)
+Nodes (40): usbi_get_context_priv(), op_set_option(), get_windows_version(), htab_create(), htab_destroy(), htab_hash(), is_x64(), windows_cancel_transfer() (+32 more)
 
-### Community 160 - "ValueChanged"
+### Community 160 - "app_level_slider.dart"
 Cohesion: 0.02
-Nodes (88): LyricsShareLine, BackgroundPicker, build, count, first, last, line, LineChoice (+80 more)
+Nodes (88): _EqualizerCurve, _TimedLyricSweepPainter, count, files, fromJson, fromProgress, LibraryScanFailure, LibraryScanFailures (+80 more)
 
 ### Community 161 - "local_guide_pages.dart"
-Cohesion: 0.08
-Nodes (24): _AnimatedReadyCard, build, _buildFeatureList, buildLocalGuidePages, child, colorScheme, content, _controller (+16 more)
+Cohesion: 0.03
+Nodes (56): _AnimatedReadyCard, build, _buildFeatureList, buildLocalGuidePages, child, colorScheme, content, _controller (+48 more)
 
 ### Community 162 - "update_checker.dart"
 Cohesion: 0.05
-Nodes (42): _ApkAsset, apkDownloadUrl, apkSha256, _ApkVariant, _apkVariantFromName, _cachedAtKey, _cachedBodyKey, _cachedEtagKey (+34 more)
+Nodes (41): _ApkAsset, apkDownloadUrl, apkSha256, _ApkVariant, _apkVariantFromName, _cachedAtKey, _cachedBodyKey, _cachedEtagKey (+33 more)
 
 ### Community 163 - "audioplayers_android/pubspec.yaml"
 Cohesion: 0.08
 Nodes (24): package, pluginClass, dependencies, audioplayers_platform_interface, flutter, description, dev_dependencies, flame_lint (+16 more)
 
 ### Community 164 - "HiResPlayback"
-Cohesion: 0.05
-Nodes (8): HiResPlaybackTest, DsdSource, WavPackDsdSource, HiResPlayback, NativeAudio, nativePlaybackCall(), MissingNative, NativePlaybackFailureTest
+Cohesion: 0.04
+Nodes (11): HiResPlaybackTest, DsdSource, WavPackDsdSource, HiResPlayback, NativeAudio, nativePlaybackCall(), Permission, UsbDirectPlayback (+3 more)
 
 ### Community 165 - "String?"
-Cohesion: 0.05
+Cohesion: 0.04
 Nodes (37): usbi_get_real_time(), em_libusb_wait(), usbi_alloc_event_data(), usbi_arm_timer(), usbi_clear_event(), usbi_create_event(), usbi_create_timer(), usbi_destroy_event() (+29 more)
 
 ### Community 166 - "track.dart"
@@ -1648,8 +1670,8 @@ Cohesion: 0.07
 Nodes (26): albumArtist, albumId, albumName, artistId, artistName, comment, composer, copyright (+18 more)
 
 ### Community 167 - "app_glass_surface.dart"
-Cohesion: 0.07
-Nodes (30): HeaderPalette, AppArtworkGroundScope, _GlassBackdropScope, _SwipeScope, LyricsCoveredBottom, build, child, claim (+22 more)
+Cohesion: 0.09
+Nodes (24): build, child, claim, _claimed, _controller, createState, didChangeDependencies, didUpdateWidget (+16 more)
 
 ### Community 168 - "at.rs"
 Cohesion: 0.13
@@ -1664,8 +1686,8 @@ Cohesion: 0.07
 Nodes (26): 1. Your Job, 2. The Workflow, 3. Reference, 4. Fix Tool Issues Upstream, Agent directives, Codex Overlay, Commit tracking, Desloppify (+18 more)
 
 ### Community 171 - ".mapOf"
-Cohesion: 0.10
-Nodes (5): AudioHandlerInterface, MethodChannel.Result, MethodChannel.Result, MethodChannel.Result, MethodInvocation
+Cohesion: 0.09
+Nodes (6): AudioHandlerInterface, Result, MethodChannel.Result, MethodChannel.Result, MethodChannel.Result, MethodInvocation
 
 ### Community 172 - "library_scan_formats.rs"
 Cohesion: 0.20
@@ -1676,20 +1698,20 @@ Cohesion: 0.06
 Nodes (34): artists, container, deleteFavoriteArtistEntry, deleteLovedEntry, deleteLovedTracks, deletePlaylists, deletePlaylistTracks, events (+26 more)
 
 ### Community 174 - "apple_artwork_client_test.dart"
-Cohesion: 0.06
-Nodes (31): AppleArtworkUnavailable, albums, applePhotoCandidates, ArtistPhotoCandidate, ArtistPhotoSource, artists, deezerId, deezerPhotoCandidates (+23 more)
+Cohesion: 0.10
+Nodes (19): AppleArtworkUnavailable, build, bundle, catalogCalls, _FakeApple, _jwt, main, pageHtml (+11 more)
 
 ### Community 175 - "3. Reference"
 Cohesion: 0.07
 Nodes (26): 1. Your Job, 2. The Workflow, 3. Reference, 4. Fix Tool Issues Upstream, Agent directives, Commit tracking, Desloppify, File an issue (fallback) (+18 more)
 
 ### Community 176 - "EventFilter"
-Cohesion: 0.08
-Nodes (16): Event, EventFilter, Empty, Proc, Read, Signal, Timer, Unknown (+8 more)
+Cohesion: 0.09
+Nodes (14): Event, EventFilter, Empty, Proc, Read, Signal, Timer, Unknown (+6 more)
 
 ### Community 177 - "equalizer_settings.dart"
-Cohesion: 0.06
-Nodes (29): balance, bandCounts, builtIn, _centers, compressor, copyWith, effectiveGains, EqualizerPreset (+21 more)
+Cohesion: 0.08
+Nodes (21): balance, bandCounts, builtIn, _centers, compressor, copyWith, effectiveGains, EqualizerPreset (+13 more)
 
 ### Community 178 - "audio_service/CHANGELOG.md"
 Cohesion: 0.03
@@ -1700,8 +1722,8 @@ Cohesion: 0.08
 Nodes (25): artistDelimiters, _cleanList, copyWith, customArtistDelimiters, customGenreDelimiters, fromJson, genreDelimiters, _hasControlCharacter (+17 more)
 
 ### Community 180 - "SharedEngineChannels.kt"
-Cohesion: 0.07
-Nodes (7): LocalCarCoversTest, MusicHapticsPlugin, Lease, PlaybackFileLeases, SharedEngineChannels, SharedPlaybackPlugin, AudioServicePlugin
+Cohesion: 0.08
+Nodes (7): LocalCarCoversTest, ForegroundServiceStartPolicy, Lease, PlaybackFileLeases, SharedEngineChannels, SharedPlaybackPlugin, ForegroundServiceStartPolicyTest
 
 ### Community 181 - "Review protocol"
 Cohesion: 0.13
@@ -1711,53 +1733,53 @@ Nodes (14): Checkpoint, Execution and safety, Finding format, Fix batches, Modes
 Cohesion: 0.03
 Nodes (72): arms, _artistArm, at, AutoplayExploration, AutoplayFeedback, AutoplayFeedbackKind, AutoplayLearningTrack, AutoplayPersonalization (+64 more)
 
-### Community 183 - "FFmpegKitFlutterPlugin.java"
-Cohesion: 0.04
-Nodes (5): DATA-302 [P2] [confidence: high] [RESOLVED], AudioServiceActivity, AudioServiceConfig, AudioServiceFragmentActivity, MediaButtonReceiver
+### Community 183 - "map"
+Cohesion: 0.10
+Nodes (4): DATA-302 [P2] [confidence: high] [RESOLVED], AudioServiceConfig, PinnedMetadataCache, PinnedMetadataCacheTest
 
 ### Community 184 - "libusb.h"
 Cohesion: 0.05
 Nodes (39): libusb_transfer_set_stream_id(), libusb_context, libusb_cpu_to_le16(), libusb_device, libusb_device_handle, libusb_endpoint_direction, LIBUSB_ENDPOINT_IN, LIBUSB_ENDPOINT_OUT (+31 more)
 
 ### Community 185 - "BorrowedSocket"
-Cohesion: 0.11
-Nodes (10): MAX_IOV, AsRawSocket, FromRawSocket, IntoRawSocket, RawSocket, AsSocket, BorrowedSocket, &mut T (+2 more)
+Cohesion: 0.06
+Nodes (27): MAX_IOV, MAX_IOV, fallocate(), fchmod(), fchown(), fdatasync(), flock(), fstat() (+19 more)
 
-### Community 186 - "dart:convert"
+### Community 186 - "dart:io"
 Cohesion: 0.02
-Nodes (96): main, apply, checkOnly, main, patch, _patchedVersion, pin, prepareFlutterSdk (+88 more)
+Nodes (98): _dartWrite, main, root, binding, _database, _date, db, _digest (+90 more)
 
 ### Community 187 - "Changelog"
 Cohesion: 0.03
 Nodes (63): 0.0.1, 0.0.2, 0.16.0, 0.16.1, 0.16.2, 0.17.0, 0.17.1, 0.17.2 (+55 more)
 
 ### Community 188 - "linux_raw/termios/syscalls.rs"
-Cohesion: 0.03
-Nodes (71): SocketAddrStorage, cfmakeraw(), isatty(), set_input_speed(), set_output_speed(), set_speed(), tcdrain(), tcflow() (+63 more)
+Cohesion: 0.04
+Nodes (62): ret_pid_t(), SocketAddrStorage, cfmakeraw(), isatty(), set_input_speed(), set_output_speed(), set_speed(), tcgetattr() (+54 more)
 
 ### Community 189 - "MainActivitySafScan.kt"
-Cohesion: 0.05
-Nodes (55): buildLibraryCoverCacheKey(), buildStableLibraryId(), extractCueAudioFileName(), getSafChildFileLookup(), listSafChildrenOrThrow(), loadExistingFilesFromSnapshot(), loadSafScanCheckpoint(), pruneSafScanResume() (+47 more)
+Cohesion: 0.06
+Nodes (49): buildLibraryCoverCacheKey(), buildStableLibraryId(), extractCueAudioFileName(), getSafChildFileLookup(), listSafChildrenOrThrow(), loadSafScanCheckpoint(), pruneSafScanResume(), querySafChildrenOrThrow() (+41 more)
 
 ### Community 190 - "app_tokens.dart"
 Cohesion: 0.04
 Nodes (45): badgeFontSize, badgePadding, borderRadiusBadge, borderRadiusCard, borderRadiusCover, borderRadiusThumb, copyWith, coverList (+37 more)
 
 ### Community 191 - "AudioplayersPlugin"
-Cohesion: 0.12
-Nodes (6): audioContext(), AudioplayersPlugin, enumArgument(), EventHandler, FlutterHandler, toConstantCase()
+Cohesion: 0.07
+Nodes (7): audioContext(), AudioplayersPlugin, enumArgument(), EventHandler, FlutterHandler, toConstantCase(), WrappedPlayer
 
 ### Community 192 - "animated_artwork_store.dart"
-Cohesion: 0.03
-Nodes (70): animatedAlbumKey, animatedArtistKey, AnimatedArtworkDb, animatedArtworkId, AnimatedArtworkRecord, AnimatedArtworkSaveOutcome, AnimatedArtworkState, AnimatedArtworkStatus (+62 more)
+Cohesion: 0.02
+Nodes (92): AnimatedVideoDecodeCheck, animatedVideoDecodes, AnimatedVideoRemux, _ffmpegDecodes, _ffmpegRemux, input, preparePlayableVideo, remuxed (+84 more)
 
-### Community 193 - "fd.rs"
-Cohesion: 0.12
-Nodes (17): MAX_IOV, fallocate(), fchmod(), fchown(), fdatasync(), flock(), fstat(), fstatfs() (+9 more)
+### Community 193 - "settings_search_catalog.dart"
+Cohesion: 0.10
+Nodes (20): about, appearance, backup, cache, icon, isEmpty, keywords, library (+12 more)
 
 ### Community 194 - "library_settings_scan_widgets.dart"
-Cohesion: 0.03
-Nodes (62): AutoScanOption, build, currentFile, _formatLastScanned, icon, isFinalizing, isPaused, isScanning (+54 more)
+Cohesion: 0.02
+Nodes (76): _registerListeningRewindAggregates, _registerListeningRewindSlides, AutoScanOption, build, currentFile, _formatLastScanned, icon, isFinalizing (+68 more)
 
 ### Community 195 - "IoringRegisterOp"
 Cohesion: 0.06
@@ -1765,31 +1787,31 @@ Nodes (34): IoringRegisterOp, RegisterBuffers, RegisterBuffers2, RegisterBuffers
 
 ### Community 196 - "optimization_tags.rs"
 Cohesion: 0.17
-Nodes (19): assert_dense_metadata(), atom(), CountingReader, data_atom(), dense_m4a(), dense_mp4_reuses_buffered_reads_across_metadata_seeks(), dense_mp4_supports_a_descriptor_position_and_rejects_malformed_eof_and_cancel(), flac_block() (+11 more)
+Nodes (18): assert_dense_metadata(), atom(), CountingReader, data_atom(), dense_m4a(), dense_mp4_reuses_buffered_reads_across_metadata_seeks(), dense_mp4_supports_a_descriptor_position_and_rejects_malformed_eof_and_cancel(), flac_block() (+10 more)
 
 ### Community 197 - "package:flutter_riverpod/flutter_riverpod.dart"
 Cohesion: 0.01
-Nodes (319): LocalLibraryState, _Collections, binding, boundary, build, canvas, _cover, image (+311 more)
+Nodes (321): LocalLibraryState, _Collections, binding, boundary, build, canvas, _cover, image (+313 more)
 
 ### Community 198 - "Future"
-Cohesion: 0.05
-Nodes (34): clear, _database, _enqueue, persist, _persistedRevision, PlaybackSessionWriter, queueChanged, queueRestored (+26 more)
+Cohesion: 0.03
+Nodes (59): _active, _AnalysisBundle, AudioAnalysisCache, _filename, files, modified, _sweep, trim (+51 more)
 
 ### Community 199 - "@Deprecated"
 Cohesion: 0.04
 Nodes (47): addQueueItemAt, addQueueItems, androidForceEnableMediaButtons, AudioServiceBackground, AudioServiceWidget, BackgroundAudioTask, notifyChildrenChanged, onAddQueueItem (+39 more)
 
 ### Community 200 - "write/mp4.rs"
-Cohesion: 0.19
-Nodes (24): atom(), build(), Check, children(), edit(), edit_freeform(), ensure_ilst(), find() (+16 more)
+Cohesion: 0.25
+Nodes (23): atom(), build(), Check, children(), edit(), edit_freeform(), ensure_ilst(), find() (+15 more)
 
 ### Community 201 - "scan.rs"
-Cohesion: 0.06
-Nodes (45): CueSheet, Backend, CUE, cue_audio_outside_granted_roots_falls_back_to_the_sheet_stem(), cue_json_checks_cancellation_while_mapping_tracks(), cue_library_mapping_checks_cancellation_per_track(), cue_library_rows(), cue_sheet_json() (+37 more)
+Cohesion: 0.05
+Nodes (59): CueSheet, library_extension(), a_pointer_payload_can_never_escape_the_cache(), a_warm_key_reuses_the_cover_without_reading_the_artwork(), Backend, cache_identity_hashes_the_published_thumbnail_not_the_original(), Check, colliding_legacy_keys_and_concurrent_publication_keep_the_right_cover() (+51 more)
 
 ### Community 202 - "src/thread/futex.rs"
-Cohesion: 0.07
-Nodes (34): cmp_requeue(), cmp_requeue_pi(), fd(), lock_pi(), lock_pi2(), requeue(), trylock_pi(), unlock_pi() (+26 more)
+Cohesion: 0.13
+Nodes (21): cmp_requeue(), cmp_requeue_pi(), fd(), lock_pi(), lock_pi2(), requeue(), trylock_pi(), unlock_pi() (+13 more)
 
 ### Community 203 - "equalizer_provider.dart"
 Cohesion: 0.08
@@ -1803,33 +1825,33 @@ Nodes (43): apply(), cover(), decode(), embedded(), frame_boundary(), frames(), 
 Cohesion: 0.14
 Nodes (10): import(), stage_batch(), Table, TABLES, cancellation_at_every_precommit_checkpoint_preserves_live_collections(), dart_codec_duplicates_dates_artwork_and_cascades_survive_native_restore(), empty_restore_clears_categories_and_wrong_schema_is_rejected(), Fixture (+2 more)
 
-### Community 206 - "org.junit.Test"
+### Community 206 - "playback_automation.dart"
 Cohesion: 0.10
-Nodes (7): MediaArtworkOwnershipTest, MediaControlMetadataTest, BrowserClientPolicy, ControllerTrust, PinnedMetadataCache, BrowserClientPolicyTest, PinnedMetadataCacheTest
+Nodes (20): _allowMutedPlayback, _applyVolume, blocksPlayback, cancelPendingActions, configure, devicesChanged, dispose, _disposed (+12 more)
 
 ### Community 207 - "unix.rs"
 Cohesion: 0.15
 Nodes (23): CacheRoot, Check, collect(), cutoff(), Entry, is_content_id(), is_cover_file(), is_cover_pointer() (+15 more)
 
 ### Community 208 - "sqlite_helpers.dart"
-Cohesion: 0.03
-Nodes (56): chunkSize, contains, createPathKeyTable, createTrigramFtsIndex, dbPath, execute, findPhysicalFileRowIds, foreignKeys (+48 more)
+Cohesion: 0.05
+Nodes (36): chunkSize, contains, createPathKeyTable, createTrigramFtsIndex, dbPath, execute, findPhysicalFileRowIds, foreignKeys (+28 more)
 
 ### Community 209 - "Vendored audio_service Plugin"
 Cohesion: 0.06
 Nodes (46): audio_service_fast_forward.png hdpi fast-forward glyph, audio_service_fast_rewind.png hdpi fast-rewind glyph, audio_service_pause.png hdpi pause glyph, audio_service_play_arrow.png hdpi play glyph, Vendored audio_service Plugin, audio_service_skip_next.png hdpi skip-next glyph, audio_service_skip_previous.png hdpi skip-previous glyph, audio_service_stop.png hdpi stop glyph (+38 more)
 
 ### Community 210 - "re"
-Cohesion: 0.08
-Nodes (33): DATA-305 [P3] [confidence: medium] [RESOLVED], API changes, Changes from 0.38.x to 1.x, Silent behavior changes, baseline(), changed(), flags(), git() (+25 more)
+Cohesion: 0.09
+Nodes (28): DATA-305 [P3] [confidence: medium] [RESOLVED], API changes, Changes from 0.38.x to 1.x, Silent behavior changes, baseline(), changed(), flags(), git() (+20 more)
 
 ### Community 211 - "player_metadata_controller.dart"
-Cohesion: 0.03
-Nodes (64): detailsSnapshot, dispose, _disposed, _fallback, filePath, _generation, load, _loadedPath (+56 more)
+Cohesion: 0.08
+Nodes (23): detailsSnapshot, dispose, _disposed, _fallback, filePath, _generation, load, _loadedPath (+15 more)
 
-### Community 212 - "List"
-Cohesion: 0.02
-Nodes (94): _canAutoScroll, _clearLogs, _copyLogs, _copySelectedLogs, _enterSelectionMode, _exitSelectionMode, _filteredLogs, _getLevelColor (+86 more)
+### Community 212 - "log_page.dart"
+Cohesion: 0.04
+Nodes (55): _canAutoScroll, _clearLogs, _copyLogs, _copySelectedLogs, _enterSelectionMode, _exitSelectionMode, _filteredLogs, _getLevelColor (+47 more)
 
 ### Community 213 - "steps"
 Cohesion: 0.07
@@ -1837,7 +1859,7 @@ Nodes (30): container, runs-on, steps, timeout-minutes, jobs, fedora, python, py
 
 ### Community 214 - "AudioMetadata"
 Cohesion: 0.10
-Nodes (48): lowercase(), uppercase(), AudioMetadata, bytes(), ape_key(), apply(), flac(), invalid_separate_totals_do_not_erase_number_pair_totals() (+40 more)
+Nodes (46): lowercase(), uppercase(), AudioMetadata, ape_key(), apply(), flac(), invalid_separate_totals_do_not_erase_number_pair_totals(), joined() (+38 more)
 
 ### Community 215 - "audio_analysis_spectrogram_test.dart"
 Cohesion: 0.09
@@ -1872,20 +1894,20 @@ Cohesion: 0.07
 Nodes (30): container, runs-on, steps, timeout-minutes, jobs, fedora, python, python (+22 more)
 
 ### Community 223 - "library_database.dart"
-Cohesion: 0.03
-Nodes (76): cleanupMissingFiles, close, delete, deleteByPath, deleteByPaths, findByTrackAndArtist, findExisting, findIsrcDuplicateGroups (+68 more)
-
-### Community 224 - "app_bottom_sheet.dart"
 Cohesion: 0.05
-Nodes (39): AppBottomSheet, AppScrollableSheet, _AppScrollableSheetState, AppSheetHandle, _availableHeight, build, builder, child (+31 more)
+Nodes (53): cleanupMissingFiles, close, delete, deleteByPath, deleteByPaths, findByTrackAndArtist, findExisting, findIsrcDuplicateGroups (+45 more)
+
+### Community 224 - "playback_metadata.dart"
+Cohesion: 0.10
+Nodes (19): bitDepth, bitrate, delays, explicit, extras, fallbackFormat, format, lastError (+11 more)
 
 ### Community 225 - "library_collections_rows.dart"
-Cohesion: 0.04
-Nodes (45): LibraryCollectionsState, accumulator, cleanupCollectionRows, decodeLibraryCollectionsSnapshot, exportCollectionsBackupSnapshot, finish, hydrateLibraryCollectionsSnapshot, hydratePlaylistTracks (+37 more)
+Cohesion: 0.07
+Nodes (27): add, artistJson, artists, backupTracks, CollectionHydrationAccumulator, _decodePlaylistRows, decodePlaylistTracks, _decodeTrackRows (+19 more)
 
 ### Community 226 - "_"
-Cohesion: 0.03
-Nodes (70): activeSize, appGlassThumbsEnabled, _blur, build, center, color, _curve, _duration (+62 more)
+Cohesion: 0.02
+Nodes (85): activeTabNavigator, albumArtist, artistName, build, _chooseCredit, ClickableArtistName, context, coverUrl (+77 more)
 
 ### Community 227 - "Upstream port execution checkpoints"
 Cohesion: 0.17
@@ -1903,9 +1925,9 @@ Nodes (23): dimensions(), a_poisoned_thumbnail_cache_does_not_disable_later_cove
 Cohesion: 0.11
 Nodes (27): MS_NOSYMFOLLOW, c_ulong, AT_ENTRY, AT_EXECFN, AT_HWCAP, AT_HWCAP2, AT_MINSIGSTKSZ, AT_PHDR (+19 more)
 
-### Community 231 - "libc/mm/syscalls.rs"
-Cohesion: 0.15
-Nodes (14): madvise(), mlock(), mlock_with(), mlockall(), mmap(), mmap_anonymous(), mprotect(), mremap() (+6 more)
+### Community 231 - "linux_raw/mm/syscalls.rs"
+Cohesion: 0.07
+Nodes (30): madvise(), mlock(), mlock_with(), mlockall(), mmap(), mmap_anonymous(), mprotect(), mremap() (+22 more)
 
 ### Community 232 - "audio_analysis_controller.dart"
 Cohesion: 0.06
@@ -1917,7 +1939,7 @@ Nodes (37): LIBUSB_ERROR_ACCESS, LIBUSB_ERROR_BUSY, LIBUSB_ERROR_INTERRUPTED, LI
 
 ### Community 234 - "settingsProvider"
 Cohesion: 0.01
-Nodes (254): _AutoMixSettingsState, _confirmAudioVolume, _confirmResetLearning, _duration, _learningSummary, _pitch, _PlaybackSettingsPageState, _showEffectPicker (+246 more)
+Nodes (203): _AutoMixSettingsState, _confirmAudioVolume, _confirmResetLearning, _duration, _learningSummary, _pitch, _PlaybackSettingsPageState, _showEffectPicker (+195 more)
 
 ### Community 235 - "audio_analysis_controller_test.dart"
 Cohesion: 0.06
@@ -1931,10 +1953,6 @@ Nodes (10): check(), compare(), Fixture, frames, input, path, main(), preservesP
 Cohesion: 0.04
 Nodes (50): album, albumArtist, allowed, _alreadyDecided, AnimatedArtworkAutoResult, AnimatedArtworkAutoStop, AnimatedArtworkTarget, artist (+42 more)
 
-### Community 238 - "resource_index.py"
-Cohesion: 0.08
-Nodes (15): capabilities(), fact(), index(), link(), masked(), parse_resource(), pointer(), resolve_path() (+7 more)
-
 ### Community 239 - "library_section_tab_helpers.dart"
 Cohesion: 0.05
 Nodes (39): albumKey, albumName, artistName, combine, coverPath, cursor, displayTrackCount, _FilterContentData (+31 more)
@@ -1944,44 +1962,44 @@ Cohesion: 0.07
 Nodes (39): available, backend, calls, completeOnCancel, container, directory, library, messenger (+31 more)
 
 ### Community 241 - "io.c"
-Cohesion: 0.07
-Nodes (59): add_to_flying_list(), arm_timer_for_next_timeout(), calculate_timeout(), cleanup_removed_event_sources(), get_next_timeout(), handle_events(), handle_timeout(), handle_timeouts() (+51 more)
+Cohesion: 0.08
+Nodes (50): add_to_flying_list(), arm_timer_for_next_timeout(), calculate_timeout(), get_next_timeout(), handle_events(), handle_timeout(), handle_timeouts(), handle_timeouts_locked() (+42 more)
 
 ### Community 242 - "3. Changes"
 Cohesion: 0.08
 Nodes (25): 1. Summary, 2. Decisions, 3. Changes, 4. How the work is done (from AGENTS.md), 5. New workflow for the next repository, 6. Not verified yet, 7. Where the details are, Audio engine plan (decided, not started) (+17 more)
 
 ### Community 243 - "SafDocumentLookupTest.kt"
-Cohesion: 0.13
+Cohesion: 0.12
 Nodes (6): SafDocumentLookupTest, findSafCueAudioSibling(), findSafChild(), findSafChildren(), querySafChildren(), SafFileOps
 
 ### Community 244 - "Audio engine migration: Media3/ExoPlayer, no FFmpeg"
 Cohesion: 0.08
 Nodes (24): 10.1 Why, 10.2 What moves (Rust at `05cbce5`: about 22,400 lines, 189 `#[test]`s), 10.3 Direct USB: the one blocker, 10.4 What must stay byte-compatible, 10.5 Order (one part per batch, behind `CoreBackend`), 10.6 Exact FLAC after this project, 10.7 End state, 10.8 Other option considered: WaxFlow and WaxLabel in Go (+16 more)
 
-### Community 245 - "playlist_playback_test.dart"
-Cohesion: 0.04
-Nodes (44): container, _registerPlaylistPlaybackEmpty, _registerPlaylistPlaybackRows, _playback, _player, available, build, clearLoved (+36 more)
+### Community 245 - "player_widget_service_test.dart"
+Cohesion: 0.07
+Nodes (26): PlaybackHandler, PlayerWidgetService, actions, channel, command, images, installedWidgets, item (+18 more)
 
 ### Community 246 - "update_dialog.dart"
-Cohesion: 0.06
-Nodes (40): _boldPattern, _codePattern, _cutoffPattern, _downloadAndInstall, _failureMessage, _formatChangelog, _isDownloading, _listPattern (+32 more)
+Cohesion: 0.05
+Nodes (48): _boldPattern, _codePattern, colorScheme, _cutoffPattern, _downloadAndInstall, _failureMessage, _formatChangelog, _hashApkInBackground (+40 more)
 
 ### Community 247 - "app_slider.dart"
 Cohesion: 0.07
-Nodes (24): _activeThumbSize, build, createState, debugPaintedThumbCenter, didUpdateWidget, dispose, divisions, _fraction (+16 more)
+Nodes (26): _activeThumbSize, AppSlider, _AppSliderState, build, createState, debugPaintedThumbCenter, didUpdateWidget, dispose (+18 more)
 
 ### Community 248 - "lyrics_matching.dart"
 Cohesion: 0.10
 Nodes (19): a, artistsMatch, artistWords, _bracketed, credits, durationsMatch, foundDuration, maxDurationDifferenceSeconds (+11 more)
 
-### Community 249 - "equalizer_screen.dart"
-Cohesion: 0.03
-Nodes (84): _ActionRow, _AppEqualizerIcon, _BandEditor, _BandFader, color, _controller, _countPicker, _DetailValue (+76 more)
+### Community 249 - "StatelessWidget"
+Cohesion: 0.01
+Nodes (372): _ActionRow, _AppEqualizerIcon, _BandEditor, _BandFader, color, _controller, _countPicker, _DetailValue (+364 more)
 
 ### Community 250 - "library_tag_credits.dart"
-Cohesion: 0.04
-Nodes (46): tagCreditScopeProvider, alternatives, artistDelimiters, cache, dbName, _delimiterPattern, delimitersFor, ensure (+38 more)
+Cohesion: 0.05
+Nodes (42): alternatives, artistDelimiters, cache, dbName, _delimiterPattern, delimitersFor, ensure, _escape (+34 more)
 
 ### Community 251 - "apple_artwork_parse.dart"
 Cohesion: 0.04
@@ -1989,7 +2007,7 @@ Nodes (46): AppleAlbumMatch, AppleArtworkKind, AppleArtworkLink, appleMatchKey, 
 
 ### Community 252 - "libusbi.h"
 Cohesion: 0.02
-Nodes (103): libusb_device, attached, bus_number, ctx, device_address, device_descriptor, device_strings_utf8, list (+95 more)
+Nodes (90): libusb_log_level, libusb_transfer_status, list_head, next, prev, timespec, usbi_bos_desc_buf, align (+82 more)
 
 ### Community 253 - "libusb_error"
 Cohesion: 0.13
@@ -2000,12 +2018,12 @@ Cohesion: 0.11
 Nodes (34): API_SUFFIX, AU_TAG, BACKGROUND, BY_TAG, cancellation_stops_before_result_publication(), crafted_lrc_expansion_stays_bounded(), deeply_nested_vocals_preserve_timing_and_document_order(), depth_guard_ignores_opaque_markup_and_quoted_tag_boundaries() (+26 more)
 
 ### Community 255 - "powerpc.rs"
-Cohesion: 0.05
-Nodes (34): syscall0_readonly(), syscall1(), syscall1_noreturn(), syscall1_readonly(), syscall2(), syscall2_readonly(), syscall3(), syscall3_readonly() (+26 more)
+Cohesion: 0.07
+Nodes (22): ArgReg<'a, Num>, FromAsm, nr(), Opaque, RetNumber, RetReg<Num>, Sealed, SocketArg (+14 more)
 
 ### Community 256 - "find_animated_artwork_sheet.dart"
-Cohesion: 0.03
-Nodes (84): active, albums, animatedAlbumRef, animatedAlbumRefForItem, animatedArtistRef, _animatedArtworkFolder, AnimatedArtworkLocks, animatedArtworkLocksProvider (+76 more)
+Cohesion: 0.05
+Nodes (41): AppleArtworkCandidate, action, _alive, _api, _artist, artistName, build, _buildPreview (+33 more)
 
 ### Community 257 - "media_information.dart"
 Cohesion: 0.06
@@ -2013,7 +2031,7 @@ Nodes (29): _allProperties, getAllProperties, getBitrate, getChapters, getDurati
 
 ### Community 258 - "io"
 Cohesion: 0.03
-Nodes (40): eventfd(), copy_file_range(), fadvise(), fcntl_fullfsync(), fcntl_global_nocache(), fcntl_nocache(), fcntl_rdadvise(), getpath() (+32 more)
+Nodes (36): eventfd(), copy_file_range(), fadvise(), fcntl_fullfsync(), fcntl_global_nocache(), fcntl_nocache(), fcntl_rdadvise(), getpath() (+28 more)
 
 ### Community 259 - "libusb_standard_request"
 Cohesion: 0.14
@@ -2025,11 +2043,11 @@ Nodes (12): _bitrateFromStoredQuality, bitrateLabel, buildLibraryAudioQualityLab
 
 ### Community 261 - "Uid"
 Cohesion: 0.05
-Nodes (48): setpriority_user(), setgid_thread(), setgroups_thread(), setresgid_thread(), setresuid_thread(), setuid_thread(), getegid(), geteuid() (+40 more)
+Nodes (46): setpriority_user(), setgid_thread(), setgroups_thread(), setresgid_thread(), setresuid_thread(), setuid_thread(), getegid(), geteuid() (+38 more)
 
 ### Community 262 - "track_metadata_edit_sheet.dart"
-Cohesion: 0.02
-Nodes (96): _buildCoverEditor, _buildCoverPreviewTile, _cleanupSelectedCoverTemp, _coverDetailLoads, _covers, _currentCoverPath, _currentCoverTempDir, _formatCoverBytes (+88 more)
+Cohesion: 0.01
+Nodes (168): _buildCoverEditor, _buildCoverPreviewTile, _cleanupSelectedCoverTemp, _coverDetailLoads, _covers, _currentCoverPath, _currentCoverTempDir, _formatCoverBytes (+160 more)
 
 ### Community 263 - "LookupTestDocumentsProvider.java"
 Cohesion: 0.09
@@ -2041,7 +2059,7 @@ Nodes (26): empty, end, hasWordTiming, id, index, isBackground, isEmpty, isGroup
 
 ### Community 265 - "vdso_wrappers.rs"
 Cohesion: 0.09
-Nodes (17): CLOCK_GETTIME, Function, GETCPU, getcpu_via_syscall(), GetcpuType, init(), init_getcpu(), init_syscall() (+9 more)
+Nodes (23): CLOCK_GETTIME, clock_gettime_dynamic(), _clock_gettime_via_syscall(), clock_gettime_via_syscall(), _clock_gettime_via_syscall_old(), ClockGettimeType, Function, GETCPU (+15 more)
 
 ### Community 266 - "library_collections_worker.dart"
 Cohesion: 0.07
@@ -2051,28 +2069,28 @@ Nodes (25): CollectionRows, accumulator, acknowledgement, add, batch, close, _co
 Cohesion: 0.05
 Nodes (33): beginBackgroundWork, beginLibraryScanWork, beginUpdateDownloadWork, cancelLibraryScanNotification, cancelUpdateNotification, _details, endBackgroundWork, _initialization (+25 more)
 
-### Community 268 - "app_theme.dart"
-Cohesion: 0.05
-Nodes (39): accentColor, AppSettingsTheme, build, child, chromeOpacity, chromeSurface, controlFill, copyWith (+31 more)
+### Community 268 - "theme_provider.dart"
+Cohesion: 0.12
+Nodes (19): ThemeSettings, build, _editState, initialThemeSettingsProvider, loadBootstrapThemeSettings, _loaded, _loadFromStorage, _loadFuture (+11 more)
 
-### Community 269 - "app_player_ground.dart"
-Cohesion: 0.04
-Nodes (40): coverPaletteProvider, appPlayerArtworkHeight, AppPlayerBackground, artUri, artwork, artworkAspectRatio, build, fadeStart (+32 more)
+### Community 269 - "lyrics_timing_store.dart"
+Cohesion: 0.11
+Nodes (19): _create, _database, _decode, _encode, fingerprint, isSynced, lyricsFingerprint, LyricsTimingDb (+11 more)
 
-### Community 270 - "USBDeviceHandle"
-Cohesion: 0.06
-Nodes (24): USBDeviceHandle::InitCheck(), USBDeviceHandle::SubmitTransfer(), USBDeviceHandle::TransfersThread(), haiku_claim_interface(), haiku_clear_halt(), haiku_close(), haiku_get_active_config_descriptor(), haiku_get_config_descriptor() (+16 more)
+### Community 270 - "ResolvedCueAudioTest.kt"
+Cohesion: 0.16
+Nodes (3): FFmpegCapabilitiesTest, LocalAudioFixtures, ResolvedCueAudioTest
 
 ### Community 271 - "player_track_swipe.dart"
-Cohesion: 0.03
-Nodes (52): fraction, phase, ReplayGainPhase, ReplayGainProgress, totalUnits, withPhase, build, child (+44 more)
+Cohesion: 0.07
+Nodes (27): build, child, createState, current, currentIndex, didUpdateWidget, dispose, _drag (+19 more)
 
 ### Community 272 - "Advice"
-Cohesion: 0.08
+Cohesion: 0.07
 Nodes (26): Advice, DontNeed, LinuxCold, LinuxDoDump, LinuxDoFork, LinuxDontDump, LinuxDontFork, LinuxDontNeed (+18 more)
 
 ### Community 273 - "Advice"
-Cohesion: 0.08
+Cohesion: 0.07
 Nodes (26): Advice, .DontNeed, LinuxCold, LinuxDoDump, LinuxDoFork, LinuxDontDump, LinuxDontFork, LinuxDontNeed (+18 more)
 
 ### Community 274 - "F"
@@ -2091,25 +2109,25 @@ Nodes (13): libusb_interface_descriptor, bAlternateSetting, bDescriptorType, bIn
 Cohesion: 0.12
 Nodes (8): Statx, statx(), statx_error(), statx_init(), STATX_STATE, StatxTimestamp, Padding, Padding<T>
 
-### Community 278 - "package:flutter_test/flutter_test.dart"
-Cohesion: 0.01
-Nodes (125): AppGlassThumb, confirmed, container, deleteLibraryTracks, l10n, messenger, result, TrackCard (+117 more)
+### Community 278 - "library_search_results.dart"
+Cohesion: 0.02
+Nodes (92): artistImagePhotosProvider, librarySearchProvider, librarySearchTrackProvider, playbackProvider, build, _buildSelectionBar, createState, didUpdateWidget (+84 more)
 
 ### Community 279 - "session.dart"
 Cohesion: 0.07
 Nodes (24): LogCallback, cancel, getAllLogs, getAllLogsAsString, getArguments, getCommand, getCreateTime, getDuration (+16 more)
 
 ### Community 280 - "A1"
-Cohesion: 0.15
-Nodes (57): syscall5(), syscall5_readonly(), syscall6(), syscall6_readonly(), syscall5_readonly(), syscall6(), syscall6_readonly(), syscall5() (+49 more)
+Cohesion: 0.14
+Nodes (58): syscall5(), syscall5_readonly(), syscall6(), syscall6_readonly(), syscall5(), syscall5_readonly(), syscall6(), syscall6_readonly() (+50 more)
 
 ### Community 281 - "runtime_448b8ad740e2a26f.rs"
-Cohesion: 0.07
-Nodes (20): kernel_sigaction(), arm_set_tls(), exe_phdrs(), execve(), execveat(), EXIT_FAILURE, EXIT_SUCCESS, kernel_brk() (+12 more)
+Cohesion: 0.10
+Nodes (13): arm_set_tls(), exe_phdrs(), EXIT_FAILURE, EXIT_SUCCESS, kernel_brk(), kernel_sigaction(), kernel_sigaltstack(), KERNEL_SIGRTMIN (+5 more)
 
 ### Community 282 - "ioctl"
-Cohesion: 0.07
-Nodes (20): ext4_ioc_resize_fs(), Ficlone, .IS_MUTATING, ioctl_blkpbszget(), ioctl_blksszget(), ioctl_ficlone(), ioctl_getflags(), ioctl_setflags() (+12 more)
+Cohesion: 0.10
+Nodes (16): ext4_ioc_resize_fs(), Ficlone, .IS_MUTATING, ioctl_blkpbszget(), ioctl_blksszget(), ioctl_ficlone(), ioctl_getflags(), ioctl_setflags() (+8 more)
 
 ### Community 283 - "settings_provider.dart"
 Cohesion: 0.05
@@ -2120,28 +2138,24 @@ Cohesion: 0.07
 Nodes (41): a_tone_and_noise_differ_in_brightness_and_flatness(), analyze_audio_features(), analyze_audio_features_files(), AUDIO_FEATURES_SAMPLE_RATE, AUDIO_FEATURES_VERSION, AudioFeatures, .LEN, BIN_HZ (+33 more)
 
 ### Community 285 - "path_keys.rs"
-Cohesion: 0.19
-Nodes (18): normalized(), ALIASES, android_aliases(), android_storage_aliases_share_keys_but_extensions_stay_distinct(), build(), case_sensitive_paths_and_virtual_cue_fragments_remain_distinct(), dart_lower(), dart_trim() (+10 more)
+Cohesion: 0.24
+Nodes (14): ALIASES, android_aliases(), android_storage_aliases_share_keys_but_extensions_stay_distinct(), build(), case_sensitive_paths_and_virtual_cue_fragments_remain_distinct(), dart_lower(), dart_uri(), decode() (+6 more)
 
-### Community 286 - "android_statx_smoke.rs"
-Cohesion: 0.38
-Nodes (6): forbid_raw_statx(), HIDE_STATX, main(), __real_dlsym(), run(), __wrap_dlsym()
+### Community 286 - "&CStr"
+Cohesion: 0.10
+Nodes (7): forbid_raw_statx(), HIDE_STATX, main(), __real_dlsym(), run(), __wrap_dlsym(), &CStr
 
 ### Community 287 - "io_uring_ptr"
-Cohesion: 0.08
-Nodes (12): addr_or_splice_off_in_union, io_uring_buf_reg, io_uring_files_update, io_uring_ptr, io_uring_reg_wait, io_uring_rsrc_register, io_uring_rsrc_update, io_uring_rsrc_update2 (+4 more)
-
-### Community 289 - "Handler"
-Cohesion: 0.05
-Nodes (8): BackgroundWorkService, Work, Handler, Looper, Listener, Log, FFmpegKitFlutterPluginLoadFailureTest, Android FFmpegKit startup patches
+Cohesion: 0.07
+Nodes (15): addr_or_splice_off_in_union, cmd_op_struct, io_uring_buf_reg, io_uring_files_update, io_uring_ptr, io_uring_reg_wait, io_uring_register(), io_uring_rsrc_register (+7 more)
 
 ### Community 290 - "libusb_context"
 Cohesion: 0.07
 Nodes (27): libusb_context, completed_transfers, device_close, event, event_data, event_data_cnt, event_data_lock, event_flags (+19 more)
 
-### Community 291 - "UsbDirectPlayback"
-Cohesion: 0.07
-Nodes (14): ChargingState, getSafFileModTimes(), Permission, UsbDirectPlayback, ChargingStateTest, 1. Inventory and dependency diagram, 2. Correctness and safety findings, 4. Benchmark methodology and results (+6 more)
+### Community 291 - "library_tagless_audio.rs"
+Cohesion: 0.21
+Nodes (11): atom(), flac(), invalid_audio_remains_rejected_and_exposes_the_parser_failure(), io_failure_and_cancellation_never_become_tagless_success(), m4a(), m4a_with_only_genre_keeps_its_tags_without_requiring_a_title(), mp3(), mp3_with_only_album_keeps_its_tags_without_requiring_title_or_artist() (+3 more)
 
 ### Community 292 - "dev_dependencies"
 Cohesion: 0.13
@@ -2156,8 +2170,8 @@ Cohesion: 0.10
 Nodes (25): BUFFER_SIZE, copy_checked(), cover_extension(), extract(), MAX_ALL_COVERS_BYTES, MAX_COVER_BYTES, MAX_PHOTO_BYTES, ordered_covers() (+17 more)
 
 ### Community 296 - "android.support.v4.media.MediaMetadataCompat"
-Cohesion: 0.13
-Nodes (3): MediaArtwork, RecentArtCache, RecentArtCacheTest
+Cohesion: 0.08
+Nodes (8): MediaArtworkOwnershipTest, MediaControlMetadataTest, MediaArtwork, RecentArtCache, RecentArtCacheTest, Local Android Auto extension (2026-11-01), Local audio_service 0.18.19 patch, Queue publication coalescing (2026-11-01)
 
 ### Community 298 - "Review"
 Cohesion: 0.20
@@ -2167,16 +2181,16 @@ Nodes (9): 1. Mechanical first, 2. Convergence, 3. Fresh-context review, 4. Reso
 Cohesion: 0.11
 Nodes (19): _allowlist(), Analysis, _channel_report(), Decl, _descendant(), find_dead(), _first(), _idents() (+11 more)
 
-### Community 301 - "animated_artwork_auto_pass_test.dart"
-Cohesion: 0.08
-Nodes (23): abbey, abbeyRoadRemote, albums, albumVideos, artists, build, bytes, dir (+15 more)
+### Community 301 - "setup_screen_flow.dart"
+Cohesion: 0.11
+Nodes (17): _buildWelcomeStep, _checkInitialPermissions, _continueFrom, _goToStep, _initDeviceInfo, _isStepCompleted, _nextPage, _onLanguageSelected (+9 more)
 
 ### Community 302 - "library_loading_test.dart"
 Cohesion: 0.07
 Nodes (35): backendChannel, body, calls, container, _database, messenger, music, probe (+27 more)
 
 ### Community 303 - "FlacPcmSource"
-Cohesion: 0.07
+Cohesion: 0.08
 Nodes (15): DeleteDecoder, FlacPcmSource, bits, block, channels, decoder, FlacPcmSource::DeleteDecoder::operator()(), end (+7 more)
 
 ### Community 305 - "libusb_device"
@@ -2187,33 +2201,29 @@ Nodes (18): libusb_config_descriptor, libusb_device, libusb_device_descriptor, l
 Cohesion: 0.14
 Nodes (8): add(), create(), delete(), Event, EventData, modify(), SixtyFourBitPointer, wait()
 
-### Community 307 - "windows_common.h"
-Cohesion: 0.07
-Nodes (12): usbi_arm_timer(), usbi_clear_event(), usbi_create_event(), usbi_create_timer(), usbi_destroy_event(), usbi_destroy_timer(), usbi_disarm_timer(), usbi_signal_event() (+4 more)
-
 ### Community 308 - "material_test_theme.dart"
 Cohesion: 0.07
 Nodes (23): _appBarTheme, _bottomSheetTheme, _cardTheme, _chipTheme, dark, defaultSeedColor, _dialogTheme, _dividerTheme (+15 more)
 
-### Community 309 - "Duration"
-Cohesion: 0.04
-Nodes (43): ArtistImageDownloadFailed, bytes, downloadArtistImage, reason, response, timeout, toString, type (+35 more)
+### Community 309 - "deezer_artist_search.dart"
+Cohesion: 0.09
+Nodes (21): a, albums, artists, _base, _client, data, DeezerArtist, DeezerArtistSearch (+13 more)
 
 ### Community 310 - "native_library.rs"
-Cohesion: 0.12
-Nodes (29): BATCH_SIZE, Check, COLUMNS, iso(), iso_utc(), parse(), Parsed, encode() (+21 more)
+Cohesion: 0.11
+Nodes (33): BATCH_SIZE, Check, COLUMNS, iso(), iso_utc(), parse(), Parsed, encode() (+25 more)
 
 ### Community 311 - "package:sqflite/sqflite.dart"
 Cohesion: 0.01
-Nodes (224): adapter, _cleaned, errors, file, _native, _registerLibraryNativeAdapterStaging, _registerLibraryNativeAdapterTimestamps, root (+216 more)
+Nodes (189): adapter, _cleaned, errors, file, _native, _registerLibraryNativeAdapterStaging, _registerLibraryNativeAdapterTimestamps, root (+181 more)
 
-### Community 312 - "StatelessWidget"
-Cohesion: 0.03
-Nodes (124): _ambient, artist, _Artwork, artworks, _autoAdvance, _Body, _captureKey, center (+116 more)
+### Community 312 - "listening_rewind_screen.dart"
+Cohesion: 0.09
+Nodes (36): _ambient, artworks, _Body, center, children, _Column, _CountUp, _Eyebrow (+28 more)
 
-### Community 314 - "app_switch.dart"
-Cohesion: 0.05
-Nodes (38): ArtistSongPages, _ArtistSongPagesState, build, createState, dispose, itemBuilder, itemCount, _page (+30 more)
+### Community 314 - "@immutable"
+Cohesion: 0.12
+Nodes (14): AppGlassStyle, barFill, blurSigma, clearFill, kAppGlassStyle, menuOpacity, tint, CoverAnalysis (+6 more)
 
 ### Community 315 - "pubspec.yaml"
 Cohesion: 0.29
@@ -2224,28 +2234,28 @@ Cohesion: 0.10
 Nodes (19): candidate, defaultUserFacingErrorMessage, fallback, genericCodes, _isMeaningful, lower, maxLength, message (+11 more)
 
 ### Community 317 - "stdio.rs"
-Cohesion: 0.18
-Nodes (12): dup2_stderr(), dup2_stdin(), dup2_stdout(), raw_stderr(), raw_stdin(), raw_stdout(), stderr(), stdin() (+4 more)
+Cohesion: 0.09
+Nodes (18): grantpt(), ioctl_tiocgptpeer(), ptsname(), Tiocgptpeer, .IS_MUTATING, unlockpt(), dup2_stderr(), dup2_stdin() (+10 more)
 
 ### Community 318 - "arg.rs"
 Cohesion: 0.06
 Nodes (16): BUF_LEN, DecInt, i16, i32, i64, I64_MAX_STR_LEN, i8, Integer (+8 more)
 
 ### Community 319 - "now_playing_screen.dart"
-Cohesion: 0.02
-Nodes (129): _buildAppBar, _buildPlayAllCenterButton, _LibraryCollectionTracksScreenStatePart2, _playAll, _removeCoverImage, _showCoverOptionsSheet, _showRenamePlaylistDialog, _buildAppBar (+121 more)
+Cohesion: 0.01
+Nodes (177): _buildAppBar, _buildPlayAllCenterButton, _LibraryCollectionTracksScreenStatePart2, _playAll, _removeCoverImage, _showCoverOptionsSheet, _showRenamePlaylistDialog, _buildAppBar (+169 more)
 
 ### Community 320 - "ffprobe_kit.dart"
 Cohesion: 0.10
 Nodes (16): execute, executeAsync, executeWithArguments, executeWithArgumentsAsync, FFprobeKit, getMediaInformation, getMediaInformationAsync, getMediaInformationFromCommand (+8 more)
 
-### Community 321 - "library_browse_filters.dart"
-Cohesion: 0.08
-Nodes (23): appendQueueCommonFilters, candidate, confirmedMissingLyricsSqlPredicate, escapeLikePattern, format, hasAlbumArtist, hasArtist, hasDiscNumber (+15 more)
+### Community 321 - "lrclib_lyrics_provider_test.dart"
+Cohesion: 0.12
+Nodes (10): LyricsFormatException, lastRequest, main, _provider, query, begin, class, main (+2 more)
 
 ### Community 322 - "music_player_automix_test.dart"
 Cohesion: 0.03
-Nodes (78): autoplayLoader, handler, hapticSongs, incoming, _native, _prepare, _registerMusicPlayerAutomixCrossfade, _registerMusicPlayerAutomixNotifications (+70 more)
+Nodes (81): autoplayLoader, handler, hapticSongs, incoming, _native, _prepare, _registerMusicPlayerAutomixCrossfade, _registerMusicPlayerAutomixNotifications (+73 more)
 
 ### Community 323 - "c_int"
 Cohesion: 0.16
@@ -2255,25 +2265,25 @@ Nodes (27): libusb_alloc_streams(), libusb_attach_kernel_driver(), libusb_bulk_t
 Cohesion: 0.40
 Nodes (5): flutter, assets, generate, shaders, uses-material-design
 
-### Community 325 - "dart:io"
-Cohesion: 0.03
-Nodes (57): CueSplitResult, failed, FFmpegCue, _formatSeconds, _log, paths, splitCueToTracks, buildCoverResizeArguments (+49 more)
+### Community 325 - "package:flutter_test/flutter_test.dart"
+Cohesion: 0.01
+Nodes (113): backendChannel, _createAudioFixture, directory, mediaScopeMethods, persistentCacheDirectory, _registerEmbeddedCoverResolverCache, _registerEmbeddedCoverResolverExtraction, source (+105 more)
 
 ### Community 326 - "app_volume_control.dart"
-Cohesion: 0.08
-Nodes (25): changes, instance, _latest, _listeners, _publish, _source, _subscription, SystemVolumeService (+17 more)
+Cohesion: 0.17
+Nodes (16): AppVolumeControl, _AppVolumeControlState, build, changed, createState, _dragging, events, _flushVolume (+8 more)
 
-### Community 327 - "selection_bottom_bar.dart"
-Cohesion: 0.05
-Nodes (39): allSelected, allSelectedLabel, bottomPadding, build, _builder, child, children, createState (+31 more)
+### Community 327 - "List"
+Cohesion: 0.01
+Nodes (132): appLocalizationsFor, filteredLocaleCodes, filteredSupportedLocales, lookupAppLocalizations, parts, requested, artistName, coverPath (+124 more)
 
 ### Community 328 - "local_song_file_actions.dart"
 Cohesion: 0.02
-Nodes (89): clearCacheDirectoryContents, directory, fileCount, scanCacheDirectory, totalSize, writeBackupMetadata, readDartPlaylistTracksForTesting, readDartSnapshotForTesting (+81 more)
+Nodes (91): writeBackupMetadata, readDartPlaylistTracksForTesting, readDartSnapshotForTesting, debugClearMemory, resetMemoryStateForTesting, runPersistentCacheMaintenanceForTesting, setPersistentCacheDirectoryForTesting, setValidationClockForTesting (+83 more)
 
 ### Community 329 - "core/src/tags.rs"
 Cohesion: 0.09
-Nodes (36): has_usable_content(), adts_quality(), ADTS_RATES, be32(), is_adts_frame(), le32(), mp3_quality(), ogg_quality() (+28 more)
+Nodes (27): adts_quality(), ADTS_RATES, be32(), is_adts_frame(), le32(), mp3_quality(), ogg_quality(), riff_quality() (+19 more)
 
 ### Community 330 - "VirtualMemoryMapAddress"
 Cohesion: 0.17
@@ -2288,8 +2298,8 @@ Cohesion: 0.08
 Nodes (25): _bitrate, getBitrate, getSessionId, getSize, getSpeed, getTime, getVideoFps, getVideoFrameNumber (+17 more)
 
 ### Community 334 - "playback_handler.dart"
-Cohesion: 0.07
-Nodes (28): applySettings, autoMixRate, BaseAudioHandler, cancelSleepTimer, direct, dispose, enqueue, enqueueAll (+20 more)
+Cohesion: 0.08
+Nodes (22): applySettings, autoMixRate, BaseAudioHandler, cancelSleepTimer, direct, dispose, enqueue, enqueueAll (+14 more)
 
 ### Community 335 - "flutter_launcher_icons"
 Cohesion: 0.25
@@ -2307,13 +2317,13 @@ Nodes (5): i32, i64, ToSigned, u32, u64
 Cohesion: 0.07
 Nodes (27): albumDetails, albumVideo, AppleArtworkClient, artistDetails, artistVideo, attempts, _attributes, _catalog (+19 more)
 
-### Community 340 - "FFmpegKitFlutterMethodResultHandler"
-Cohesion: 0.11
-Nodes (5): FFmpegKitFlutterMethodResultHandler, FFmpegSessionExecuteTask, FFprobeSessionExecuteTask, MediaInformationSessionExecuteTask, WriteToPipeTask
+### Community 340 - "FFmpegKitFlutterPlugin.java"
+Cohesion: 0.04
+Nodes (9): FFmpegKitFlutterMethodResultHandler, FFmpegSessionExecuteTask, FFprobeSessionExecuteTask, MediaInformationSessionExecuteTask, WriteToPipeTask, Handler, Looper, Listener (+1 more)
 
-### Community 341 - "profile_avatar.dart"
-Cohesion: 0.07
-Nodes (24): _buildAvatar, dark, gap, glassFallback, HeaderProfileButton, name, paint, photo (+16 more)
+### Community 341 - "app_artist_header.dart"
+Cohesion: 0.02
+Nodes (95): palette, _registerAppDetailHeadersAlbum, _registerAppDetailHeadersArtist, AppGroundVeil, AlbumPlayActions, build, isPlaying, leadingAction (+87 more)
 
 ### Community 343 - "libusb_transfer"
 Cohesion: 0.09
@@ -2321,15 +2331,15 @@ Nodes (22): libusb_transfer, actual_length, buffer, callback, dev_handle, endpoi
 
 ### Community 344 - "app_artwork_contrast.dart"
 Cohesion: 0.05
-Nodes (40): addToScene, AppArtworkContrast, _AppArtworkContrastState, artworkPixelLuminance, _background, _blueLuminance, build, capturing (+32 more)
+Nodes (39): addToScene, AppArtworkContrast, _AppArtworkContrastState, artworkPixelLuminance, _background, _blueLuminance, build, capturing (+31 more)
 
 ### Community 345 - "native_log_source.dart"
-Cohesion: 0.11
-Nodes (18): _channel, clear, entries, getSince, NativeLogcatResult, NativeLogcatText, NativeLogcatUnavailable, NativeLogSource (+10 more)
+Cohesion: 0.08
+Nodes (24): _channel, clear, entries, getSince, NativeLogcatResult, NativeLogcatText, NativeLogcatUnavailable, NativeLogSource (+16 more)
 
-### Community 346 - "_SyncedLyricsViewState"
-Cohesion: 0.10
-Nodes (17): _buildImpl, _buildLyrics, _didChangeAppLifecycleStateImpl, _linePadding, _maybeAutoScroll, _measureVisibleRows, _revealRow, _rowAtScrollOffset (+9 more)
+### Community 346 - "Timer?"
+Cohesion: 0.13
+Nodes (13): AppLibraryAlphabetIndex, _AppLibraryAlphabetIndexState, bottomPadding, build, child, _clear, createState, dispose (+5 more)
 
 ### Community 347 - "Port plan for Codex"
 Cohesion: 0.04
@@ -2341,7 +2351,7 @@ Nodes (20): buildDisplayAudioQuality, formatBytes, formatClock, formatMegabytes,
 
 ### Community 349 - "emscripten_webusb.cpp"
 Cohesion: 0.05
-Nodes (57): libusb_error_name(), libusb_control_transfer_get_setup(), discovered_devs, capacity, devices, len, usbi_configuration_descriptor, bConfigurationValue (+49 more)
+Nodes (50): libusb_control_transfer_get_setup(), usbi_configuration_descriptor, bConfigurationValue, bDescriptorType, bLength, bmAttributes, bMaxPower, bNumInterfaces (+42 more)
 
 ### Community 350 - "Calibration"
 Cohesion: 0.40
@@ -2349,11 +2359,11 @@ Nodes (4): Calibration, Demoted, Kept, Rejected
 
 ### Community 351 - "library_scan_progress.dart"
 Cohesion: 0.08
-Nodes (22): _bootstrapTimeout, currentFile, displayProgress, errorCount, LibraryScanProgressPolling, LibraryScanProgressSample, nextProgress, normalized (+14 more)
+Nodes (23): _bootstrapTimeout, currentFile, displayProgress, errorCount, LibraryScanProgressPolling, LibraryScanProgressSample, nextProgress, normalized (+15 more)
 
-### Community 352 - "listening_rewind_test.dart"
-Cohesion: 0.09
-Nodes (15): _registerListeningRewindAggregates, _registerListeningRewindSlides, add, db, main, main, main, _range (+7 more)
+### Community 352 - "prepare_flutter_sdk.dart"
+Cohesion: 0.12
+Nodes (14): apply, checkOnly, main, patch, _patchedVersion, pin, prepareFlutterSdk, result (+6 more)
 
 ### Community 353 - "synced_lyrics_scroll.dart"
 Cohesion: 0.07
@@ -2376,8 +2386,8 @@ Cohesion: 0.10
 Nodes (16): clearLocalLibraryLastScannedAt, localLibraryActiveScanSourceKey, localLibraryActiveScanStartedAtKey, localLibraryLastScannedAtKey, localLibraryRecoveredScanKey, localLibraryScanFailuresKey, null, raw (+8 more)
 
 ### Community 358 - "return"
-Cohesion: 0.10
-Nodes (15): cacheMaintenanceDeletedCount, deleted, NativeCacheJobRunner, run, runNativeCacheMaintenance, artwork, exists, resolveEmbeddedArtworkUri (+7 more)
+Cohesion: 0.06
+Nodes (28): cacheMaintenanceDeletedCount, deleted, NativeCacheJobRunner, run, runNativeCacheMaintenance, json, localMetadataAfterEdit, numbers (+20 more)
 
 ### Community 359 - "volume.rs"
 Cohesion: 0.19
@@ -2397,7 +2407,7 @@ Nodes (16): access(), chmod(), chown(), link(), lstat(), mkdir(), open(), _readl
 
 ### Community 363 - "replaygain_auto_writer.dart"
 Cohesion: 0.02
-Nodes (105): _active, albumKeyOf, _android, checked, configure, dispose, _enabled, existingAlbumTags (+97 more)
+Nodes (101): _active, albumKeyOf, _android, checked, configure, dispose, _enabled, existingAlbumTags (+93 more)
 
 ### Community 364 - "rules"
 Cohesion: 0.09
@@ -2411,37 +2421,41 @@ Nodes (16): Alternate, Device, Endpoint, formats(), fractional_rates_do_not_drif
 Cohesion: 0.05
 Nodes (40): AnimatedVideoFailure, avc, _avcVariant, bytes, checkRunning, complete, deadline, detail (+32 more)
 
+### Community 367 - "SafScanChildrenTest"
+Cohesion: 0.13
+Nodes (3): SafScanChildrenTest, ChargingState, ChargingStateTest
+
 ### Community 368 - "UsbDirectOutput"
-Cohesion: 0.21
+Cohesion: 0.22
 Nodes (3): UsbAudioError, Failed, UsbDirectOutput
 
 ### Community 370 - "now_playing_lyrics_transition_test.dart"
-Cohesion: 0.03
-Nodes (74): backendChannel, box, _completeLyrics, deadline, duration, frames, fromPoints, _item (+66 more)
+Cohesion: 0.02
+Nodes (82): backendChannel, box, _completeLyrics, deadline, duration, frames, fromPoints, _item (+74 more)
 
 ### Community 371 - "Online sources: one plan (artwork + lyrics + signed config)"
 Cohesion: 0.13
 Nodes (14): 0. Findings that change the brief, and decisions I need, 10. Expected storage, 11. Order of work, with commits, 12. Tests (no network, recorded fixtures), 1. Where each piece lives, and why, 2. Exactly which upstream files return, 3. Crate layout and bridge surface, 4. Triggers and deduplication (+6 more)
 
 ### Community 372 - "package:sistrum/utils/logging/logger.dart"
-Cohesion: 0.02
-Nodes (88): arguments, cleanup, FFmpegExecution, FFmpegOutput, FFmpegOutputPlan, finalize, finalPath, _log (+80 more)
+Cohesion: 0.01
+Nodes (142): AudioAnalysisCancelled, arguments, cleanup, FFmpegExecution, FFmpegOutput, FFmpegOutputPlan, finalize, finalPath (+134 more)
 
 ### Community 373 - "library_cleanup.dart"
-Cohesion: 0.08
-Nodes (21): cleanupMissingLibraryRows, cursor, deleted, deleteLibraryItemsByIds, deleteReplacedLibraryScanRows, errors, last, minimumAge (+13 more)
+Cohesion: 0.03
+Nodes (61): binding, bytes, _createPayloads, deleted, directory, file, _library, main (+53 more)
 
 ### Community 374 - "Resource"
 Cohesion: 0.11
 Nodes (18): RawId, Resource, As, Core, Cpu, Data, Fsize, Locks (+10 more)
 
-### Community 375 - "package:sistrum/services/library/database/library_database_models.dart"
-Cohesion: 0.09
-Nodes (17): addSource, LibraryRemovalSink, LibrarySourceSink, removeItems, removePhysicalFiles, startSourceScan, durationRanges, groups (+9 more)
+### Community 375 - "album_detail_header_parts.dart"
+Cohesion: 0.14
+Nodes (13): _AlbumScrollVeil, _AlbumStretchArtwork, artworkBottom, _ArtworkBrightness, _ArtworkBrightnessState, child, createRenderObject, createState (+5 more)
 
 ### Community 376 - "Output"
-Cohesion: 0.16
-Nodes (7): dop32_padding_and_channel_markers_match(), dop_markers_alternate_across_transfers_and_underruns(), finish_transfer(), format(), native_dsd_and_pcm_keep_original_data_and_use_different_silence(), UsbOutputFormat, Output
+Cohesion: 0.13
+Nodes (3): Output, State, VolumeRequest
 
 ### Community 377 - "setns.rs"
 Cohesion: 0.08
@@ -2475,9 +2489,9 @@ Nodes (23): AudioServicePlugin, -changePlaybackPosition, -changePlaybackRate, -c
 Cohesion: 0.29
 Nodes (7): libusb_ssplus_sublink_attribute, direction, exponent, mantissa, protocol, ssid, type
 
-### Community 388 - "embedded_cover_resolver_test.dart"
-Cohesion: 0.24
-Nodes (12): backendChannel, _createAudioFixture, directory, mediaScopeMethods, persistentCacheDirectory, _registerEmbeddedCoverResolverCache, _registerEmbeddedCoverResolverExtraction, source (+4 more)
+### Community 388 - "app_orientation.dart"
+Cohesion: 0.13
+Nodes (13): ShellChromeObserver, AppOrientationObserver, didPop, didPush, didRemove, didReplace, fullPlayerRouteName, _log (+5 more)
 
 ### Community 389 - "player_lyrics_sweep_painting.dart"
 Cohesion: 0.07
@@ -2487,13 +2501,13 @@ Nodes (28): _cachedAlignment, _cachedDirection, _cachedHighlightedColor, _cached
 Cohesion: 0.17
 Nodes (7): index_to_name(), index_to_name_inlined(), InlinedName, name_to_index(), test_index_to_name(), test_index_to_name_inlined(), test_name_to_index()
 
-### Community 391 - "playback_seek_slider.dart"
+### Community 391 - "online_lyrics_search_test.dart"
 Cohesion: 0.13
-Nodes (15): _adjust, build, _commit, createState, dispose, duration, _gestureGeneration, PlaybackSeekSlider (+7 more)
+Nodes (14): OnlineLyricsCandidate, asked, error, _FakeProvider, find, id, _line, main (+6 more)
 
-### Community 392 - "ffi.rs"
-Cohesion: 0.05
-Nodes (13): MountFlagsArg, tcflag_t, c_ushort, MountFlagsArg, RawUname, Sysinfo, tcflag_t, TimerfdClockId (+5 more)
+### Community 392 - "c"
+Cohesion: 0.03
+Nodes (25): PollFd, PollFd<'fd>, RawPollFlags, prctl(), getrandom(), RawUname, Sysinfo, tcflag_t (+17 more)
 
 ### Community 393 - "core/src/cancellation.rs"
 Cohesion: 0.13
@@ -2504,12 +2518,12 @@ Cohesion: 0.11
 Nodes (17): Operation, CmpRequeue, CmpRequeuePi, Fd, LockPi, LockPi2, Requeue, TrylockPi (+9 more)
 
 ### Community 395 - "playable_media.dart"
-Cohesion: 0.10
-Nodes (19): album, artist, artUri, autoplay, bitDepth, bitrate, duration, explicit (+11 more)
+Cohesion: 0.09
+Nodes (20): album, artist, artUri, autoplay, bitDepth, bitrate, duration, explicit (+12 more)
 
-### Community 396 - "map.md"
-Cohesion: 0.06
-Nodes (28): _active, _AnalysisBundle, AudioAnalysisCache, _filename, files, modified, _sweep, trim (+20 more)
+### Community 396 - "release_date_display.dart"
+Cohesion: 0.13
+Nodes (13): date, day, dayTag, formatReleaseTag, match, month, monthTag, precision (+5 more)
 
 ### Community 397 - "Resource"
 Cohesion: 0.11
@@ -2540,16 +2554,16 @@ Cohesion: 0.20
 Nodes (9): Findings, Flutter lifecycle and lyrics UX audit, Limitations / result, Scope, UI-001 [P2] [confidence: high] [VALIDATED — static], UI-002 [P2] [confidence: high] [VALIDATED — static], UX-001 [P2] [confidence: high] [VALIDATED — static], UX-002 [P2] [confidence: high] [VALIDATED — static] (+1 more)
 
 ### Community 404 - "local_library_artwork_builder.dart"
-Cohesion: 0.10
-Nodes (18): buildKeepBestAllDuplicatePlan, deleted, deleteReviewedDuplicateCopies, DuplicateCleanupPlan, entriesToDelete, groupCount, retainedEntries, build (+10 more)
+Cohesion: 0.18
+Nodes (11): build, _checkCover, coverPath, createState, didUpdateWidget, filePath, _generation, initState (+3 more)
 
 ### Community 405 - "libusb_transfer"
 Cohesion: 0.21
 Nodes (18): libusb_alloc_transfer(), libusb_cancel_transfer(), libusb_control_transfer_get_data(), libusb_fill_bulk_stream_transfer(), libusb_fill_bulk_transfer(), libusb_fill_control_transfer(), libusb_fill_interrupt_transfer(), libusb_fill_iso_transfer() (+10 more)
 
 ### Community 406 - "SoundPoolPlayer"
-Cohesion: 0.12
-Nodes (3): SoundPoolManager, SoundPoolPlayer, SoundPoolWrapper
+Cohesion: 0.10
+Nodes (4): SoundPoolManager, SoundPoolPlayer, SoundPoolWrapper, Source
 
 ### Community 407 - "Findings"
 Cohesion: 0.12
@@ -2560,12 +2574,12 @@ Cohesion: 0.19
 Nodes (8): fcntl_getpipe_size(), fcntl_setpipe_size(), pipe(), PIPE_BUF, pipe_with(), splice(), tee(), vmsplice()
 
 ### Community 409 - "String?"
-Cohesion: 0.04
-Nodes (50): _access_endpoint(), _cache_active_config_descriptor(), _errno_to_libusb(), netbsd_claim_interface(), netbsd_clear_halt(), netbsd_close(), netbsd_destroy_device(), netbsd_get_active_config_descriptor() (+42 more)
+Cohesion: 0.05
+Nodes (46): _access_endpoint(), _cache_active_config_descriptor(), _errno_to_libusb(), netbsd_clear_halt(), netbsd_close(), netbsd_destroy_device(), netbsd_get_active_config_descriptor(), netbsd_get_config_descriptor() (+38 more)
 
-### Community 410 - "SeekFrom"
-Cohesion: 0.17
-Nodes (10): Atom, probe(), Reader, Reader<'_, R>, SeekFrom, Current, Data, End (+2 more)
+### Community 410 - "listening_rewind_screen_slide.dart"
+Cohesion: 0.14
+Nodes (13): _content, of, palette, _RewindPalette, _RewindSlide, _slideArtwork, accent, background (+5 more)
 
 ### Community 411 - "LogBuffer"
 Cohesion: 0.17
@@ -2576,24 +2590,24 @@ Cohesion: 0.10
 Nodes (19): _cleanupCacheEntry, _cleanupCoverPath, _cleanupPersistentCoverPath, _cleanupTempCoverPath, _clearDirectoryContents, _deleteFileIfPresent, _deletePersistentVariantsForSource, _getPersistentCacheDirectory (+11 more)
 
 ### Community 413 - "mount_unmount.rs"
-Cohesion: 0.17
+Cohesion: 0.22
 Nodes (7): mount(), mount_bind(), mount_bind_recursive(), mount_change(), mount_move(), mount_remount(), unmount()
 
 ### Community 414 - "deleted_library_files.dart"
 Cohesion: 0.11
-Nodes (15): cueIds, deletedCount, deletedIds, DeletedLibraryTracks, deletedPaths, deleteLocalLibraryTracks, paths, removeDeletedLibraryFileEntries (+7 more)
+Nodes (14): cueIds, deletedCount, deletedIds, DeletedLibraryTracks, deletedPaths, deleteLocalLibraryTracks, paths, removeDeletedLibraryFileEntries (+6 more)
 
 ### Community 415 - "ExclusiveOutput"
-Cohesion: 0.07
-Nodes (20): ExclusiveOutput, bits, callbackFrames, floatOutput, frameBase, frameBytes, lastMusicEnd, musicFrames (+12 more)
+Cohesion: 0.09
+Nodes (16): ExclusiveOutput, bits, callbackFrames, floatOutput, frameBase, frameBytes, lastMusicEnd, musicFrames (+8 more)
 
 ### Community 416 - "progress_stream_poller.dart"
-Cohesion: 0.11
-Nodes (18): _attachStream, bootstrapTimeout, _bootstrapTimer, _errorCount, _errorLogThreshold, _generation, _hasReceivedStreamEvent, _inFlightGeneration (+10 more)
+Cohesion: 0.08
+Nodes (22): _attachStream, bootstrapTimeout, _bootstrapTimer, _errorCount, _errorLogThreshold, _generation, _hasReceivedStreamEvent, _inFlightGeneration (+14 more)
 
-### Community 417 - "FileType"
-Cohesion: 0.16
-Nodes (11): FileType, BlockDevice, CharacterDevice, Directory, Fifo, RegularFile, Socket, Symlink (+3 more)
+### Community 417 - "artist_photo_sources.dart"
+Cohesion: 0.14
+Nodes (12): albums, applePhotoCandidates, ArtistPhotoCandidate, ArtistPhotoSource, artists, deezerId, deezerPhotoCandidates, fans (+4 more)
 
 ### Community 418 - "library_section_tab_selection.dart"
 Cohesion: 0.12
@@ -2605,7 +2619,7 @@ Nodes (15): execute(), benchmark_5000_payloads(), cancellation_after_eviction_re
 
 ### Community 421 - "io_uring_sqe"
 Cohesion: 0.12
-Nodes (8): addr3_or_cmd_union, addr3_struct, buf_union, cmd_op_struct, io_uring_sqe, ioprio_union, len_union, off_or_addr2_union
+Nodes (8): addr3_or_cmd_union, addr3_struct, addr_len_struct, buf_union, io_uring_sqe, ioprio_union, len_union, splice_fd_in_or_file_index_or_addr_len_union
 
 ### Community 422 - "threads_posix.h"
 Cohesion: 0.17
@@ -2619,21 +2633,21 @@ Nodes (11): Ground rules, Owner decisions (final), Phase 1 - settings model and 
 Cohesion: 0.12
 Nodes (15): 10. Local-only browse SQL retains unnecessary multi-source assembly scaffolding, 11. Two SQL behavior fixtures depend on the formatting of production Dart source, 1. Audio analysis backend ownership remains split between widget State and the service package, 2. Metadata persistence and device probe storage are placed in widget directories, 3. SAF temp-copy failures lose their causes before reaching callers, 4. Backup parsing reports unsupported and corrupt native archives as unreadable, 5. The failed ReplayGain constructor permits a value that reports success, 6. AsyncData pages run the same cache update twice (+7 more)
 
-### Community 425 - "USBTransfer"
-Cohesion: 0.15
-Nodes (12): USBDeviceHandle::CancelTransfer(), USBDeviceHandle::TransfersWorker(), USBTransfer::Do(), USBTransfer::IsCancelled(), USBTransfer::SetCancelled(), USBTransfer::UsbiTransfer(), USBTransfer, fCancelled (+4 more)
+### Community 425 - "kernel_sigset.rs"
+Cohesion: 0.27
+Nodes (6): libc_sigs(), sigs(), test_clear(), test_libc_layout_compatibility(), test_ops_plain(), KERNEL_SIGRTMAX
 
 ### Community 426 - "native_playlists.rs"
-Cohesion: 0.18
-Nodes (7): artwork_block_has_exact_mime_header_and_preserves_large_payloads(), execute(), cancelled_export_keeps_existing_file_and_removes_unique_staging(), concurrent_exports_do_not_share_staging_files(), execute(), m3u_export_streams_exact_lines_to_file(), trim()
+Cohesion: 0.11
+Nodes (14): artwork_block_has_exact_mime_header_and_preserves_large_payloads(), execute(), cancelled_export_keeps_existing_file_and_removes_unique_staging(), concurrent_exports_do_not_share_staging_files(), execute(), m3u_export_streams_exact_lines_to_file(), trim(), find_libusb_pkg() (+6 more)
 
 ### Community 427 - "libusb_endpoint_descriptor"
 Cohesion: 0.18
 Nodes (11): libusb_endpoint_descriptor, bDescriptorType, bEndpointAddress, bInterval, bLength, bmAttributes, bRefresh, bSynchAddress (+3 more)
 
-### Community 428 - "library_browse_order.dart"
-Cohesion: 0.12
-Nodes (15): albumSizeColumns, clauses, coarseOperator, column, descending, first, queueAlbumOrderTerms, queueCursorFromRow (+7 more)
+### Community 428 - "libusb_device"
+Cohesion: 0.14
+Nodes (14): libusb_device, attached, bus_number, ctx, device_address, device_descriptor, device_strings_utf8, list (+6 more)
 
 ### Community 429 - "Whole-project audit plan and path ledger"
 Cohesion: 0.33
@@ -2651,13 +2665,13 @@ Nodes (9): cancel, execute, executeAsync, executeWithArguments, executeWithArgum
 Cohesion: 0.25
 Nodes (7): coverFileName(), coverPointerName(), coverPointerTargetName(), readCoverPointer(), sha256Hex(), writeCoverPointer(), CoverPointerTest
 
-### Community 433 - "IoctlOutput"
-Cohesion: 0.18
-Nodes (11): ioctl(), ioctl_readonly(), ioctl(), ioctl_readonly(), ioctl(), ioctl_readonly(), index_to_name(), name_to_index() (+3 more)
+### Community 433 - "MaybeUninit"
+Cohesion: 0.23
+Nodes (3): align_for_cmsghdr(), RecvAncillaryBuffer<'buf>, SendAncillaryBuffer<'buf, '_, '_>
 
-### Community 434 - "backend/cover.rs"
-Cohesion: 0.15
-Nodes (18): extract(), looks_like_lyrics(), MAX_SIDECAR_BYTES, sidecar(), a_pointer_payload_can_never_escape_the_cache(), a_warm_key_reuses_the_cover_without_reading_the_artwork(), Backend, cache_identity_hashes_the_published_thumbnail_not_the_original() (+10 more)
+### Community 434 - "SeekFrom"
+Cohesion: 0.07
+Nodes (19): main(), syn(), extract(), looks_like_lyrics(), MAX_SIDECAR_BYTES, sidecar(), edit(), atom() (+11 more)
 
 ### Community 435 - "batch_progress_dialog.dart"
 Cohesion: 0.09
@@ -2671,13 +2685,17 @@ Nodes (14): CPU_SETSIZE, MembarrierCommand, Global, GlobalExpedited, PrivateExpe
 Cohesion: 0.18
 Nodes (5): CancellationError, LeaseReleased, LocalRequestCancelled, RegistryClosed, CancellationRegistry
 
-### Community 438 - "library_cover_snapshot.dart"
-Cohesion: 0.07
-Nodes (24): after, alias, attached, _coverReferences, databases, directory, held, LibraryCoverReferenceColumn (+16 more)
+### Community 438 - "library_browse_store_test.dart"
+Cohesion: 0.01
+Nodes (173): _addLocal, album, artist, explicit, file, insert, _registerLibraryBrowseStoreCounts, _registerLibraryBrowseStoreReleases (+165 more)
 
 ### Community 439 - "libusb_control_setup"
 Cohesion: 0.33
 Nodes (6): libusb_control_setup, bmRequestType, bRequest, wIndex, wLength, wValue
+
+### Community 440 - "RemoteSafPlaybackTest"
+Cohesion: 0.10
+Nodes (14): RemoteSafPlaybackTest, ProxyFileDescriptorCallback, getSafFileModTimes(), safExistsBatch(), 1. Inventory and dependency diagram, 2. Correctness and safety findings, 3. Coverage and gaps, 4. Benchmark methodology and results (+6 more)
 
 ### Community 441 - "Dart UI dead-code review (D2)"
 Cohesion: 0.25
@@ -2712,20 +2730,20 @@ Cohesion: 0.14
 Nodes (30): syscall0_readonly(), syscall1(), syscall1_noreturn(), syscall1_readonly(), syscall2(), syscall2_readonly(), syscall3(), syscall3_readonly() (+22 more)
 
 ### Community 450 - "RequestLease"
-Cohesion: 0.09
+Cohesion: 0.10
 Nodes (19): RequestLease, descriptor_path(), descriptor_remains_open_and_audio_does_not_need_a_path_grant(), DescriptorLibraryMetadata, encoder_only_opus_scans_through_a_borrowed_descriptor(), extract_cover_from_descriptor(), large_opus_header_scans_from_descriptor_without_losing_quality(), original_artwork_is_copied_without_decoding_or_changing_the_source() (+11 more)
 
-### Community 451 - "map.md"
-Cohesion: 0.10
-Nodes (20): _allProperties, Chapter, getAllProperties, getEnd, getEndTime, getId, getNumberProperty, getProperty (+12 more)
+### Community 451 - "static const"
+Cohesion: 0.02
+Nodes (88): create, _createNormalizedIndexes, _createQueueIndexes, createSearchFts, _createSources, _legacySourceId, LibrarySchema, _log (+80 more)
 
 ### Community 452 - "usbi_device_descriptor"
 Cohesion: 0.13
 Nodes (15): usbi_device_descriptor, bcdDevice, bcdUSB, bDescriptorType, bDeviceClass, bDeviceProtocol, bDeviceSubClass, bLength (+7 more)
 
 ### Community 453 - "Future"
-Cohesion: 0.03
-Nodes (67): _allowMutedPlayback, _applyVolume, blocksPlayback, cancelPendingActions, configure, devicesChanged, dispose, _disposed (+59 more)
+Cohesion: 0.04
+Nodes (47): PlaybackAutomation, _active, AudioInterruptionPolicy, automation, AutomationInputs, begin, cancel, capacity (+39 more)
 
 ### Community 454 - "audio_service 0.18.19 vendored package"
 Cohesion: 0.25
@@ -2747,17 +2765,17 @@ Nodes (43): CIBAUD, ETH_P_CAN, ETH_P_CANXL, ETH_P_CFM, ETH_P_DSA_8021Q, ETH_P_DS
 Cohesion: 0.13
 Nodes (15): libusb_device_descriptor, bcdDevice, bcdUSB, bDescriptorType, bDeviceClass, bDeviceProtocol, bDeviceSubClass, bLength (+7 more)
 
-### Community 460 - "sqlite_process_database.dart"
-Cohesion: 0.06
-Nodes (28): delete, insert, main, noSuchMethod, operations, path, _RecordingBatch, _Batch (+20 more)
+### Community 460 - "scroll_edge_fade.dart"
+Cohesion: 0.17
+Nodes (9): axis, build, child, createState, _hasMore, _onMetrics, ScrollEdgeFade, _ScrollEdgeFadeState (+1 more)
 
 ### Community 461 - "app_info.dart"
 Cohesion: 0.17
 Nodes (9): AppInfo, appName, buildNumber, copyright, displayVersion, gitCommit, githubRepo, shortGitCommit (+1 more)
 
-### Community 462 - "mips32r6.rs"
-Cohesion: 0.18
-Nodes (10): syscall0_readonly(), syscall1(), syscall1_noreturn(), syscall1_readonly(), syscall2(), syscall2_readonly(), syscall3(), syscall3_readonly() (+2 more)
+### Community 462 - "automix_phase_lock.dart"
+Cohesion: 0.15
+Nodes (12): AutoMixPhaseLock, baseRate, _errors, _misses, _nextSample, observe, period, _pulseEnd (+4 more)
 
 ### Community 463 - "cell"
 Cohesion: 0.22
@@ -2772,8 +2790,8 @@ Cohesion: 0.05
 Nodes (37): Best-effort delete cleanup (commit 4df8207), Blocked by test environment, Code-health queue pass (commit 343d940), Cover, download, backup and screen-seam pass, Desloppify clusters: playback, collections and behaviour tests, Desloppify review: what is not done yet, and why, Fifth pass, Fixed in this pass (verified in code before changing) (+29 more)
 
 ### Community 466 - "lyric_direction.dart"
-Cohesion: 0.25
-Nodes (6): fallback, hasMatch, _isLetter, _isRightToLeft, _letter, lyricLineDirection
+Cohesion: 0.20
+Nodes (7): cachedCoverImageProvider, fallback, hasMatch, _isLetter, _isRightToLeft, _letter, lyricLineDirection
 
 ### Community 467 - "Direct USB audio Android host transport"
 Cohesion: 0.32
@@ -2823,17 +2841,17 @@ Nodes (6): DEAD-004 [P3] [confidence: high] [VALIDATED — static], DEAD-005 [P3
 Cohesion: 0.29
 Nodes (5): Findings, Rust dead-code entrypoint review (N2), Scope, Verification / limits, Repository-wide dead-code review
 
-### Community 485 - "artist_image_store.dart"
-Cohesion: 0.05
-Nodes (37): ArtistImageDb, artistImageKey, ArtistImageRecord, ArtistImageSaveOutcome, ArtistImageState, ArtistImageStatus, ArtistImageWriteTicket, artistKey (+29 more)
+### Community 485 - "track_detail_actions.dart"
+Cohesion: 0.15
+Nodes (12): buildTrackListFooter, countText, date, excludeEpochReleaseDate, formatReleaseDate, hasReleaseDate, lines, loveAllTracks (+4 more)
 
 ### Community 487 - "unified_library_item.dart"
 Cohesion: 0.13
 Nodes (13): addedAt, albumKey, albumName, artistName, collectionKey, filePath, fromLocalLibrary, id (+5 more)
 
 ### Community 488 - "library_section_list.dart"
-Cohesion: 0.06
-Nodes (34): date, day, dayTag, formatReleaseTag, match, month, monthTag, precision (+26 more)
+Cohesion: 0.08
+Nodes (23): AppLibrarySectionController, build, cancel, controller, _count, createState, didUpdateWidget, dispose (+15 more)
 
 ### Community 489 - "Ipv4Addr"
 Cohesion: 0.20
@@ -2843,17 +2861,17 @@ Nodes (9): ip_multicast_if(), set_ip_add_membership(), set_ip_add_membership_wit
 Cohesion: 0.29
 Nodes (6): Build/dependency audit — first bounded pass, Findings, Limitations, Result, Scope, Verification
 
-### Community 493 - "package:sistrum/utils/text/string_utils.dart"
-Cohesion: 0.11
-Nodes (15): json, localMetadataAfterEdit, numbers, text, localSongEditValues, val, audioFormatForPath, candidates (+7 more)
+### Community 493 - "library_collections_schema.dart"
+Cohesion: 0.17
+Nodes (11): createCollectionsSchema, _createFavoriteArtistsTable, db, dbFileName, dbVersion, execute, _log, tableFavoriteArtists (+3 more)
 
 ### Community 494 - "Repo"
 Cohesion: 0.18
 Nodes (4): CliTests, PythonCountTests, Repo, sh()
 
-### Community 495 - "package:flutter/foundation.dart"
-Cohesion: 0.03
-Nodes (65): _benchmarkInstance, binding, _budgetUs, ensureInitialized, finish, handleBeginFrame, handleDrawFrame, measure (+57 more)
+### Community 495 - "performance_probe.dart"
+Cohesion: 0.10
+Nodes (18): _benchmarkInstance, binding, _budgetUs, ensureInitialized, finish, handleBeginFrame, handleDrawFrame, measure (+10 more)
 
 ### Community 496 - "player_lyric_layout_models.dart"
 Cohesion: 0.15
@@ -2868,8 +2886,8 @@ Cohesion: 0.29
 Nodes (6): Findings, Scope, Settings UX, UX-005 [P2] [confidence: high] [VALIDATED — static], UX-006 [P2] [confidence: high] [VALIDATED — static], Verification / limits
 
 ### Community 499 - "libc/fs/types.rs"
-Cohesion: 0.07
-Nodes (26): ACL, Advice, DontNeed, NoReuse, Normal, Random, Sequential, WillNeed (+18 more)
+Cohesion: 0.05
+Nodes (37): ACL, Advice, DontNeed, NoReuse, Normal, Random, Sequential, WillNeed (+29 more)
 
 ### Community 504 - "AndroidPlaybackInfo"
 Cohesion: 0.67
@@ -2899,21 +2917,17 @@ Nodes (6): Findings, Native metadata/parser allocation and I/O (N2), PERF-004 [P
 Cohesion: 0.29
 Nodes (6): Collection hydration and backup memory (D2), Findings, PERF-006 [P2] [confidence: high] [NEEDS VERIFICATION], PERF-007 [P2] [confidence: medium] [NEEDS VERIFICATION], Scope, Verification / limits
 
-### Community 512 - "library_schema.dart"
-Cohesion: 0.15
-Nodes (12): create, _createNormalizedIndexes, _createQueueIndexes, createSearchFts, _createSources, _legacySourceId, LibrarySchema, _log (+4 more)
-
 ### Community 515 - "sistrum Package"
 Cohesion: 0.22
 Nodes (9): Resilient Backup Format, Audio Playback Stack, dart_smb2 SMB Client, FFmpeg Audio Conversion, flutter_riverpod State Management, go_router Navigation, Localization Stack, sistrum Package (+1 more)
 
-### Community 521 - "app_crash_report.dart"
-Cohesion: 0.17
-Nodes (9): AppCrashReport, description, _formatReport, id, isAnr, reason, report, timestamp (+1 more)
+### Community 521 - "playback_seek_preview.dart"
+Cohesion: 0.18
+Nodes (8): begin, dispose, _disposed, end, reset, _session, update, _value
 
 ### Community 525 - "&CStr"
-Cohesion: 0.07
-Nodes (4): &CStr, delete_module(), Uname, uname()
+Cohesion: 0.12
+Nodes (4): delete_module(), finit_module(), Uname, uname()
 
 ### Community 528 - "local_library_mixes.dart"
 Cohesion: 0.11
@@ -2951,9 +2965,9 @@ Nodes (5): DEAD-003 [P3] [confidence: high] [VALIDATED — static], Findings, Lo
 Cohesion: 0.14
 Nodes (11): ArchDetect, getArch, _platform, from, fromWithError, MediaInformationJsonParser, _platform, getExternalLibraries (+3 more)
 
-### Community 540 - "animated_artwork_video.dart"
-Cohesion: 0.03
-Nodes (55): _AttachmentObserver, active, AnimatedArtworkVideo, _AnimatedArtworkVideoState, _controller, _covered, createState, didChangeAppLifecycleState (+47 more)
+### Community 540 - "animated_artwork_video_test.dart"
+Cohesion: 0.06
+Nodes (26): active, buildView, closeAll, createWithOptions, dispose, _events, failCreate, _FakeVideoPlatform (+18 more)
 
 ### Community 541 - "Test-support entrypoints and orphan helpers (R3)"
 Cohesion: 0.33
@@ -2980,8 +2994,8 @@ Cohesion: 0.33
 Nodes (5): Artwork and non-engine presentation lifecycle, BUG-005 [P2] [confidence: high] [VALIDATED — static], Findings, Scope, Verification / limitations
 
 ### Community 547 - "ArgReg"
-Cohesion: 0.11
-Nodes (45): syscall0_readonly(), syscall1(), syscall1_noreturn(), syscall1_readonly(), syscall2(), syscall2_readonly(), syscall3(), syscall3_readonly() (+37 more)
+Cohesion: 0.09
+Nodes (55): syscall0_readonly(), syscall1(), syscall1_noreturn(), syscall1_readonly(), syscall2(), syscall2_readonly(), syscall3(), syscall3_readonly() (+47 more)
 
 ### Community 548 - "Collection and application-job lifecycle"
 Cohesion: 0.33
@@ -3023,29 +3037,29 @@ Nodes (5): Findings and status, Measurement queue, Optimization scope and measur
 Cohesion: 0.17
 Nodes (11): favoriteArtistRows, LibraryCollectionsSnapshot, LibraryPlaylistTracksSnapshot, lovedRows, NativeCollectionsJobRunner, nativeRowCount, nativeRowsDirectory, nativeRowsPath (+3 more)
 
-### Community 564 - "riscv64.rs"
+### Community 564 - "app_selection_shared.dart"
 Cohesion: 0.18
-Nodes (10): syscall0_readonly(), syscall1(), syscall1_noreturn(), syscall1_readonly(), syscall2(), syscall2_readonly(), syscall3(), syscall3_readonly() (+2 more)
+Nodes (9): alignment, color, count, kAppSelectionPillRadius, program, rowKey, scaleX, scaleY (+1 more)
 
 ### Community 565 - "UrlSource"
 Cohesion: 0.11
 Nodes (11): 3.1 Core playback, 3.2 Sound processing (the EQ and the chain), 3.3 Loudness normalization (ReplayGain at playback), 3.4 AutoMix (crossfade and beat-matched mixing), 3.5 Hi-res, bit-perfect, USB and DSD, 3.6 Formats (playback), 3. Every feature that depends on the audio engine and its replacement, UrlSource (+3 more)
 
 ### Community 566 - "CpuSet"
-Cohesion: 0.08
-Nodes (11): waitid(), capabilities(), CapabilityFlags, CapabilitySets, capget(), capset(), set_capabilities(), CpuSet (+3 more)
+Cohesion: 0.13
+Nodes (4): CpuSet, .MAX_CPU, sched_getaffinity(), sched_setaffinity()
 
 ### Community 567 - "library_section_tab_navigation.dart"
 Cohesion: 0.18
 Nodes (10): _buildPlaylistCover, _libraryPlaybackMediaId, _navigateToLocalAlbum, _navigateWithUnfocus, _onTrackDroppedOnPlaylist, _openPlaylistById, _playLibraryItem, _playlistIconFallback (+2 more)
 
-### Community 568 - "log_redaction.dart"
-Cohesion: 0.17
-Nodes (10): _authorizationBearerPattern, _bearerTokenPattern, _decryptionKeyFlagPattern, _genericSensitiveKeyValuePattern, maxLogMessageLength, redacted, _redactedValue, redactSensitiveText (+2 more)
+### Community 568 - "Object?"
+Cohesion: 0.18
+Nodes (9): check, error, failed, failure, isWritten, maxSizeDelta, ReplayGainIntegrity, ReplayGainWriteFailure (+1 more)
 
 ### Community 569 - "app_performance_hud.dart"
 Cohesion: 0.01
-Nodes (156): AppThemeWrapper, appBlurEnabledProvider, appGlassContrastBlockedProvider, appGlassLevelProvider, appHeaderBandBlurDisabledProvider, themeProvider, ParsedLyrics, build (+148 more)
+Nodes (175): coverPaletteProvider, appGlassLevelProvider, appHeaderBandBlurDisabledProvider, AudioAnalysisController, LogBuffer, ChangeNotifier, AnimatedArtworkVideo, _AnimatedArtworkVideoState (+167 more)
 
 ### Community 570 - "check_types.rs"
 Cohesion: 0.22
@@ -3063,17 +3077,17 @@ Nodes (14): BUG-105 [P3] [confidence: medium] [VALIDATED], Open, RUST-205 [P3] [
 Cohesion: 0.40
 Nodes (4): Findings, Repository dead-code inventory reconciliation (R4), Scope, Verification / limits
 
-### Community 574 - "theme_provider.dart"
-Cohesion: 0.05
-Nodes (39): copyWith, fromJson, hashCode, kLyricsBlurKey, kLyricsTextScaleKey, kLyricsTimingOffsetKey, kPlayerViewKey, kThemeModeKey (+31 more)
+### Community 574 - "theme_settings.dart"
+Cohesion: 0.10
+Nodes (19): copyWith, fromJson, hashCode, kLyricsBlurKey, kLyricsTextScaleKey, kLyricsTimingOffsetKey, kPlayerViewKey, kThemeModeKey (+11 more)
 
 ### Community 575 - "C++/JNI and Java registration supplement (N4)"
 Cohesion: 0.40
 Nodes (4): C++/JNI and Java registration supplement (N4), Findings, Scope, Verification / limits
 
 ### Community 576 - "lyrics_save_actions_test.dart"
-Cohesion: 0.04
-Nodes (44): EmbeddedLyricsStore, MetadataEmbeddedLyricsStore, downloadLrc, embed, embedded, LyricsSaveActions, LyricsSaveOutcome, sidecar (+36 more)
+Cohesion: 0.07
+Nodes (25): EmbeddedLyricsStore, MetadataEmbeddedLyricsStore, downloadLrc, embed, embedded, LyricsSaveActions, LyricsSaveOutcome, sidecar (+17 more)
 
 ### Community 577 - "sistrum_audio Native Library"
 Cohesion: 0.29
@@ -3124,8 +3138,8 @@ Cohesion: 0.50
 Nodes (4): Android Launcher Icon, Generic App Launcher Icon, Android Adaptive Foreground Icon, Flutter Launcher Icon Pipeline
 
 ### Community 601 - "log_entry.dart"
-Cohesion: 0.14
-Nodes (13): error, formatLogEntries, isFromGo, level, LogEntry, logExportPrivacyNotice, map, message (+5 more)
+Cohesion: 0.07
+Nodes (23): AppCrashReport, description, _formatReport, id, isAnr, reason, report, timestamp (+15 more)
 
 ### Community 603 - "sistrum-mobile"
 Cohesion: 0.60
@@ -3155,13 +3169,13 @@ Nodes (4): Findings, Player composition and remaining shared rendering hot paths
 Cohesion: 0.40
 Nodes (4): Findings, Runtime budgets,shader assets and build/tooling triage (R1), Scope, Verification / limits
 
-### Community 612 - "duplicate_quality_policy.dart"
-Cohesion: 0.20
-Nodes (9): aLossless, bLossless, compareDuplicateQuality, declared, DuplicateFidelity, fields, format, hasComparableDuplicateQuality (+1 more)
+### Community 612 - "mips64.rs"
+Cohesion: 0.18
+Nodes (10): syscall0_readonly(), syscall1(), syscall1_noreturn(), syscall1_readonly(), syscall2(), syscall2_readonly(), syscall3(), syscall3_readonly() (+2 more)
 
 ### Community 613 - "RawFd"
 Cohesion: 0.03
-Nodes (48): PollFd, RawPollFlags, port_getn_query(), poll(), select(), major(), makedev(), minor() (+40 more)
+Nodes (44): close(), try_close(), AsFd, AsRawFd, FromRawFd, IntoRawFd, T, try_close() (+36 more)
 
 ### Community 614 - "archive/tests.rs"
 Cohesion: 0.30
@@ -3195,33 +3209,29 @@ Nodes (5): libusb_device_string_type, LIBUSB_DEVICE_STRING_COUNT, LIBUSB_DEVICE_
 Cohesion: 0.33
 Nodes (6): libusb_ss_endpoint_companion_descriptor, bDescriptorType, bLength, bmAttributes, bMaxBurst, wBytesPerInterval
 
-### Community 624 - "dart:convert"
-Cohesion: 0.03
-Nodes (66): binding, _database, _databaseFixture, decodeLibraryCollectionsSnapshot, _digest, _legacyRead, main, publish (+58 more)
+### Community 624 - "package:sistrum/core/models/track.dart"
+Cohesion: 0.01
+Nodes (142): LibraryDatabaseQueries, binding, _database, _databaseFixture, decodeLibraryCollectionsSnapshot, _digest, _legacyRead, main (+134 more)
 
-### Community 625 - "playback_notification.dart"
-Cohesion: 0.14
-Nodes (13): controls, favoriteAction, favoriteLabel, loved, mediaId, PlaybackNotification, shuffleAction, shuffleOffLabel (+5 more)
+### Community 625 - "x86_64.rs"
+Cohesion: 0.18
+Nodes (10): syscall0_readonly(), syscall1(), syscall1_noreturn(), syscall1_readonly(), syscall2(), syscall2_readonly(), syscall3(), syscall3_readonly() (+2 more)
 
 ### Community 626 - "libusb_capability"
 Cohesion: 0.40
 Nodes (5): libusb_capability, LIBUSB_CAP_HAS_CAPABILITY, LIBUSB_CAP_HAS_HID_ACCESS, LIBUSB_CAP_HAS_HOTPLUG, LIBUSB_CAP_SUPPORTS_DETACH_KERNEL_DRIVER
 
-### Community 627 - "init_auxv_impl"
-Cohesion: 0.16
-Nodes (11): AuxFile, AuxPointer, check_elf_base(), init_auxv_impl(), init_from_aux_iter(), init_from_auxv_file(), maybe_init_auxv(), pr_get_auxv_dynamic() (+3 more)
-
 ### Community 629 - "linux_raw/fs/types.rs"
 Cohesion: 0.10
 Nodes (21): c_long, Advice, DontNeed, NoReuse, Normal, Random, Sequential, WillNeed (+13 more)
 
-### Community 630 - "lyrics_parser_support.dart"
-Cohesion: 0.22
-Nodes (8): _hasUsableTiming, _looksLikeTtml, _LyricsParserSupport, _parseLrcOrPlain, _sortLines, _toDuration, _vocalText, _withCredits
+### Community 630 - "WakeOp"
+Cohesion: 0.18
+Nodes (11): WakeOp, Add, AddShift, AndN, AndNShift, Or, OrShift, Set (+3 more)
 
 ### Community 632 - "music_player_automix.dart"
 Cohesion: 0.03
-Nodes (82): _abandonStart, _alignEffect, _beatSummary, cancel, _canMix, completeGapless, _current, dispose (+74 more)
+Nodes (80): _abandonStart, _alignEffect, _beatSummary, cancel, _canMix, completeGapless, _current, dispose (+72 more)
 
 ### Community 633 - "Test audit — metadata preservation chunk"
 Cohesion: 0.50
@@ -3255,25 +3265,29 @@ Nodes (6): PlayerWidgetLayout, COMPACT, STANDARD, WIDE, PlayerWidgetLayoutPolicy
 Cohesion: 0.33
 Nodes (5): How to Submit a Report, Preferences, Safe Harbor, Scope, Security Policy
 
-### Community 643 - "player_widget_service.dart"
-Cohesion: 0.03
-Nodes (53): instance, _listeners, _log, publish, SourceDeletionEvents, activeJobCount, cancel, cancelled (+45 more)
+### Community 643 - "detail_page_route.dart"
+Cohesion: 0.25
+Nodes (7): DetailPage, id, isOnTop, kind, mark, matches, _routes
 
 ### Community 646 - "static const int"
 Cohesion: 0.06
 Nodes (29): animate, build, child, index, _maxAnimatedItems, StaggeredListItem, avLogDebug, avLogError (+21 more)
 
 ### Community 647 - "Pid"
-Cohesion: 0.03
-Nodes (84): ret_c_int(), ret_discarded_char_ptr(), ret_pid_t(), getpid(), cvt_waitid_status(), fchdir(), fcntl_getlk(), getcwd() (+76 more)
+Cohesion: 0.02
+Nodes (132): ret_discarded_char_ptr(), getpid(), cvt_waitid_status(), getcwd(), getpgid(), getpgrp(), getppid(), getpriority_pgrp() (+124 more)
 
 ### Community 648 - "rustix-1.1.6/build.rs"
-Cohesion: 0.15
-Nodes (16): find_libusb_pkg(), get_macos_major_version(), link(), link_framework(), main(), make_source(), VERSION, ASM_PATH (+8 more)
+Cohesion: 0.31
+Nodes (9): ASM_PATH, can_compile(), has_feature(), has_lower_upper_exp_for_non_zero(), main(), probe_file(), use_feature(), use_feature_or_nothing() (+1 more)
 
 ### Community 649 - "artist_image_network.dart"
 Cohesion: 0.18
 Nodes (8): allows, ArtistImageNetwork, ArtistNetworkKind, both, fromStored, none, parse, readArtistNetworkKind
+
+### Community 650 - "bool get"
+Cohesion: 0.20
+Nodes (9): _, decode, error, isNativeMethod, MetadataEditOutcome, method, outcome, safUri (+1 more)
 
 ### Community 651 - "Rejected"
 Cohesion: 0.18
@@ -3288,20 +3302,20 @@ Cohesion: 0.40
 Nodes (5): libusb_superspeedplus_sublink_attribute_exponent, LIBUSB_SSPLUS_ATTR_EXP_BPS, LIBUSB_SSPLUS_ATTR_EXP_GBS, LIBUSB_SSPLUS_ATTR_EXP_KBS, LIBUSB_SSPLUS_ATTR_EXP_MBS
 
 ### Community 654 - "linux_raw/net/syscalls.rs"
-Cohesion: 0.02
-Nodes (99): ret_send_recv(), send_recv_len(), preadv(), pwritev(), readv(), writev(), close(), read() (+91 more)
+Cohesion: 0.03
+Nodes (79): ret_send_recv(), send_recv_len(), pwritev(), writev(), ioctl(), ioctl_readonly(), read(), write() (+71 more)
 
 ### Community 657 - "check_backend_apk.py"
-Cohesion: 0.12
+Cohesion: 0.13
 Nodes (12): artifact_sha256(), audit(), AuditError, check_abi_directories(), check_archive_integrity(), check_backend_markers(), check_elf(), main() (+4 more)
 
-### Community 658 - "String get"
-Cohesion: 0.22
-Nodes (7): AutoplaySignal, follow, name, prepare, score, SoundAutoplaySignal, AutoplayTasteSignal
+### Community 658 - "lrclib_lyrics_provider.dart"
+Cohesion: 0.20
+Nodes (8): _base, _client, _durationMatches, find, id, LrcLibLyricsProvider, _maxDurationDifference, timeout
 
 ### Community 659 - "io_uring_enter_arg"
-Cohesion: 0.28
-Nodes (6): io_uring_enter(), io_uring_enter_arg(), io_uring_enter_sigmask(), io_uring_getevents_arg, io_uring_register(), io_uring_register_with()
+Cohesion: 0.32
+Nodes (5): io_uring_enter(), io_uring_enter_arg(), io_uring_enter_sigmask(), io_uring_getevents_arg, io_uring_register_with()
 
 ### Community 660 - "Code map implementation record"
 Cohesion: 0.20
@@ -3331,17 +3345,17 @@ Nodes (9): Complexity tracking, Constitution check, Current system, Decisions, D
 Cohesion: 0.70
 Nodes (3): major(), makedev(), minor()
 
-### Community 667 - "audio_analysis_spectral_cutoff_test.dart"
-Cohesion: 0.22
-Nodes (7): bytes, _estimate, _height, main, _maxHz, _spectrogram, _width
-
 ### Community 668 - "Sistrum Waveform App Logo"
 Cohesion: 1.00
 Nodes (3): Sistrum Waveform App Logo, App Logo Asset (logo.png), Transparent Logo Asset (logo-transparent.png)
 
+### Community 671 - "SendAncillaryBuffer<'buf, 'slice, 'fd>"
+Cohesion: 0.22
+Nodes (3): AncillaryIter, SendAncillaryBuffer<'buf, 'slice, 'fd>, SendAncillaryBuffer<'_, 'slice, 'fd>
+
 ### Community 672 - "package:sistrum/services/native/native_channel.dart"
-Cohesion: 0.25
-Nodes (4): CueSheetBridge, _log, parseCueSheet, main
+Cohesion: 0.07
+Nodes (18): CueSheetBridge, _log, parseCueSheet, NativeBackgroundWork, start, stop, update, androidSdkVersion (+10 more)
 
 ### Community 673 - "opencode.json"
 Cohesion: 0.33
@@ -3349,19 +3363,19 @@ Nodes (5): default_agent, permission, task, plugins, $schema
 
 ### Community 674 - "media_library_browser.dart"
 Cohesion: 0.03
-Nodes (54): _album, _all, _art, _artist, BrowserQueue, catalog, children, _covers (+46 more)
+Nodes (58): _album, _all, _art, _artist, BrowserQueue, catalog, children, _covers (+50 more)
 
 ### Community 675 - "upstream-v5.2.0-final-report.md"
 Cohesion: 0.27
 Nodes (5): Upstream backport backlog, Implemented cleanup, Retained boundaries and remaining risks, Upstream v5.2.0 selective backport — final report, Verification
 
 ### Community 676 - "app_landscape_player.dart"
-Cohesion: 0.05
-Nodes (38): AppLibraryAlphabetIndex, _AppLibraryAlphabetIndexState, bottomPadding, build, child, _clear, createState, dispose (+30 more)
+Cohesion: 0.08
+Nodes (25): _actionsVisible, AppLandscapePlayer, _AppLandscapePlayerState, artwork, _audioOutputOpen, build, child, controls (+17 more)
 
 ### Community 677 - "audio_analysis_store.dart"
 Cohesion: 0.04
-Nodes (46): appSupport, audioAnalysisCacheBudget, audioAnalysisCacheKey, bitDepth, bitrate, bitsPerSample, _cacheDir, cacheVersion (+38 more)
+Nodes (45): appSupport, audioAnalysisCacheBudget, audioAnalysisCacheKey, bitDepth, bitrate, bitsPerSample, _cacheDir, cacheVersion (+37 more)
 
 ### Community 678 - "libusb_usb_2_0_extension_descriptor"
 Cohesion: 0.40
@@ -3375,21 +3389,17 @@ Nodes (5): libusb_supported_speed, LIBUSB_FULL_SPEED_OPERATION, LIBUSB_HIGH_SPEE
 Cohesion: 0.28
 Nodes (5): flutterRendererShellArgs(), getGpuRenderer(), hasKnownImpellerRasterCrash(), shouldDisableImpeller(), ImpellerCompatibilityTest
 
-### Community 681 - "audio_route_read_test.dart"
-Cohesion: 0.32
-Nodes (7): AudioRouteFound, AudioRouteNotAvailable, AudioRouteRead, AudioRouteReadFailed, channel, main, messenger
-
-### Community 682 - "update_dialog_install.dart"
-Cohesion: 0.25
-Nodes (7): colorScheme, _hashApkInBackground, isNew, label, version, _VersionChip, build
+### Community 682 - "PlayerWidgetCommandPolicyTest"
+Cohesion: 0.33
+Nodes (3): PlayerWidgetCommandPolicy, PlayerWidgetCommandPolicyTest, SEC-101 [P3] [confidence: medium] [RESOLVED]
 
 ### Community 684 - "Spec {{ID}}: {{TITLE}}"
 Cohesion: 0.20
 Nodes (9): Assumptions, Clarifications, Edge cases, Out of scope, Requirements, Spec {{ID}}: {{TITLE}}, Story 1: [FILL: title] (Priority: P1), Success criteria (+1 more)
 
-### Community 685 - "AtomicPtr"
-Cohesion: 0.14
-Nodes (9): c_char, EXECFN, PHDR, RANDOM, EXECFN, PHDR, RANDOM, sysinfo_ehdr() (+1 more)
+### Community 685 - "_SetupScreenState"
+Cohesion: 0.22
+Nodes (8): _buildLanguageList, _buildLanguageStep, _buildNotificationStep, _buildStorageStep, _SetupScreenStatePart1, _SetupScreenStatePart2, SetupScreen, _SetupScreenState
 
 ### Community 686 - "libusb_bos_type"
 Cohesion: 0.29
@@ -3399,33 +3409,41 @@ Nodes (7): libusb_bos_type, LIBUSB_BT_CONTAINER_ID, LIBUSB_BT_PLATFORM_DESCRIPTO
 Cohesion: 0.50
 Nodes (3): Handoff, Review state, Review workflow update (2026-10-21)
 
-### Community 693 - "native_device.dart"
-Cohesion: 0.25
-Nodes (7): androidSdkVersion, exitApp, getBackendImplementations, isCharging, NativeDevice, releaseMemory, setScreenAwake
+### Community 693 - "playback_equalizer.dart"
+Cohesion: 0.22
+Nodes (8): EqualizerSettings, decodePlaybackEqualizerSettings, _errors, kPlaybackEqualizerStorageKey, loadBootstrapEqualizer, playbackEqualizer, playbackEqualizerError, reportEqualizerError
 
-### Community 695 - "kill.rs"
-Cohesion: 0.36
-Nodes (5): kill_current_process_group(), kill_process(), kill_process_group(), test_kill_process(), test_kill_process_group()
+### Community 695 - "Sistrum workflow"
+Cohesion: 0.22
+Nodes (8): Code map and context, Copy into a new repository, Executable port and bridge gates, Limits, Optional agent integrations, Paths, Sistrum workflow, Tool
 
-### Community 696 - "playbackPlayingProvider"
-Cohesion: 0.12
-Nodes (23): _syncSubscriptions, _WordHighlightedLyricLineState, playbackLoadingProvider, playbackPlayingProvider, playbackPositionProvider, build, color, createState (+15 more)
+### Community 696 - "listening_rewind_screen_banners.dart"
+Cohesion: 0.29
+Nodes (7): ListeningRewindBanner, ListeningRewindEntry, margin, _MonthlyRewindBanner, _YearlyRewindBanner, build, listeningRewindSpotlightProvider
 
 ### Community 697 - "media_session_filter_test.dart"
 Cohesion: 0.06
 Nodes (27): androidForceEnableMediaButtons, _Callbacks, configure, _controls, failure, _item, main, noSuchMethod (+19 more)
 
+### Community 701 - "music_player_source.dart"
+Cohesion: 0.25
+Nodes (7): _MusicPlayerHandlerSource, _openPlaybackLease, _prepareOutput, _releaseLease, _cleanupPendingResolvedPaths, _normalizationVolumeFor, _resolveSource
+
 ### Community 702 - "timerfd.rs"
 Cohesion: 0.39
 Nodes (3): timerfd_create(), timerfd_gettime(), timerfd_settime()
 
-### Community 705 - "lyrics_parser_isolate.dart"
-Cohesion: 0.29
-Nodes (6): _encodeLyricsInBackground, _hydrateParsedLyricsInBackground, lines, _parseLyricsInBackground, word, words
+### Community 704 - "image_cache_utils_test.dart"
+Cohesion: 0.25
+Nodes (5): _cacheWidth, main, pumpWidget, result, widthMultiplier
+
+### Community 705 - "aligned_lyric_pronunciation_test.dart"
+Cohesion: 0.25
+Nodes (6): _layout, _line, main, _primaryStyle, _pronunciationStyle, _word
 
 ### Community 706 - "library_collection_tracks_screen.dart"
-Cohesion: 0.02
-Nodes (118): _addSelectedToPlaylist, _buildPage, _buildSelectionBottomBar, _coverBatchRequest, _exportAsM3u8, _firstRawCoverUrl, _LibraryCollectionTracksScreenStatePart1, _modeIcon (+110 more)
+Cohesion: 0.01
+Nodes (152): _albumArtists, _AppLibraryScreenStatePart1, _artists, _jumpToLetter, _openAlbum, _openPage, _overview, _refresh (+144 more)
 
 ### Community 707 - "libusb_iso_usage_type"
 Cohesion: 0.50
@@ -3445,11 +3463,11 @@ Nodes (6): dumpable_behavior(), DumpableBehavior, Dumpable, DumpableReadableOnly
 
 ### Community 723 - "library_collections_provider.dart"
 Cohesion: 0.03
-Nodes (77): addTrackToPlaylist, _ensureLoaded, exportCollectionsJson, exportPlaylistCoverFiles, _invalidatePlaylistPickerSummaries, _LibraryCollectionsHelpers, LibraryCollectionsMutations, _load (+69 more)
+Nodes (73): addTrackToPlaylist, _ensureLoaded, exportCollectionsJson, exportPlaylistCoverFiles, _invalidatePlaylistPickerSummaries, _LibraryCollectionsHelpers, LibraryCollectionsMutations, _load (+65 more)
 
-### Community 724 - "EndianMode"
-Cohesion: 0.29
-Nodes (6): endian_mode(), EndianMode, Big, Little, PowerPCLittle, set_endian_mode()
+### Community 724 - "UsbOutputFormat"
+Cohesion: 0.54
+Nodes (6): dop32_padding_and_channel_markers_match(), dop_markers_alternate_across_transfers_and_underruns(), finish_transfer(), format(), native_dsd_and_pcm_keep_original_data_and_use_different_silence(), UsbOutputFormat
 
 ### Community 725 - "check_depth"
 Cohesion: 0.70
@@ -3477,19 +3495,11 @@ Nodes (7): libusb_platform_descriptor, bDescriptorType, bDevCapabilityType, bLen
 
 ### Community 749 - "replaygain_service.dart"
 Cohesion: 0.02
-Nodes (81): FFmpegMetadataFailure, _cleanupIfIdle, copyPicked, _create, _deferredReleases, details, _directories, dispose (+73 more)
-
-### Community 762 - "library_scan_progress_behaviour_test.dart"
-Cohesion: 0.33
-Nodes (3): main, _messenger, _progressStream
-
-### Community 765 - "NativeMediaWorkspace"
-Cohesion: 0.14
-Nodes (6): copyToTemporaryMediaFile(), NativeMediaWorkspace, NativeMediaWorkspaceTest, NativeTemporaryMediaFileTest, ByteArrayInputStream, InputStream
+Nodes (118): clearCacheDirectoryContents, directory, fileCount, scanCacheDirectory, totalSize, FFmpegMetadataFailure, audioHash, FFmpegReplayGain (+110 more)
 
 ### Community 770 - "audio_analysis_worker.dart"
 Cohesion: 0.05
-Nodes (37): _activeId, AudioAnalysisCancelled, AudioAnalysisJobs, _cancel, dispose, _disposed, _generation, invalidate (+29 more)
+Nodes (35): _activeId, AudioAnalysisJobs, _cancel, dispose, _disposed, _generation, invalidate, run (+27 more)
 
 ### Community 773 - "Ship"
 Cohesion: 0.22
@@ -3507,10 +3517,6 @@ Nodes (13): cachedPath, _closed, ContentUriPlaybackCache, _discard, dispose, _en
 Cohesion: 0.33
 Nodes (6): libusb_log_level, LIBUSB_LOG_LEVEL_DEBUG, LIBUSB_LOG_LEVEL_ERROR, LIBUSB_LOG_LEVEL_INFO, LIBUSB_LOG_LEVEL_NONE, LIBUSB_LOG_LEVEL_WARNING
 
-### Community 802 - "safDocumentStatResult"
-Cohesion: 0.25
-Nodes (3): querySafDocumentStat(), safDocumentStatResult(), SafDocumentStatPolicyTest
-
 ### Community 803 - "Library sorting and filter removal"
 Cohesion: 0.40
 Nodes (4): Behavior, Library sorting and filter removal, Removed components, Verification
@@ -3519,9 +3525,9 @@ Nodes (4): Behavior, Library sorting and filter removal, Removed components, Ver
 Cohesion: 0.33
 Nodes (5): Choose the path, Report format, Start of every request, Throughout, Work
 
-### Community 805 - "native_background_work.dart"
-Cohesion: 0.40
-Nodes (4): NativeBackgroundWork, start, stop, update
+### Community 805 - "InheritedWidget"
+Cohesion: 0.29
+Nodes (6): HeaderPalette, AppArtworkGroundScope, _GlassBackdropScope, _SwipeScope, LyricsCoveredBottom, _SettingsSearchHighlightInherited
 
 ### Community 806 - "libusb_request_recipient"
 Cohesion: 0.40
@@ -3541,7 +3547,7 @@ Nodes (9): _buildSelectionBottomBar, _buildUnifiedLibraryItem, _LibraryPlaybackB
 
 ### Community 812 - "package:flutter/widgets.dart"
 Cohesion: 0.08
-Nodes (18): attached, didChangeAppLifecycleState, done, isActivityAttached, observer, waitForActivityAttachment, kNormalizedHeaderTopPadding, max (+10 more)
+Nodes (18): coverCacheWidthForViewport, dpr, logicalWidth, max, min, widthMultiplier, kNormalizedHeaderTopPadding, max (+10 more)
 
 ### Community 815 - "Findings"
 Cohesion: 0.20
@@ -3556,8 +3562,8 @@ Cohesion: 0.29
 Nodes (5): copyfile_state_alloc(), copyfile_state_free(), copyfile_state_get(), copyfile_state_get_copied(), fcopyfile()
 
 ### Community 820 - "Arg"
-Cohesion: 0.13
-Nodes (3): Arg, Cow<'a, str>, &Vec<u8>
+Cohesion: 0.10
+Nodes (4): Arg, Cow<'a, CStr>, &str, &Vec<u8>
 
 ### Community 829 - "RawProtocol"
 Cohesion: 0.40
@@ -3569,7 +3575,7 @@ Nodes (6): Accepted direction, Backend batches (original section 10; after E12),
 
 ### Community 879 - "workmap.py"
 Cohesion: 0.04
-Nodes (69): NormalizationTests, adapter_path(), attach_bridge_tests(), aux_inputs(), build(), channel_regex(), Context, context() (+61 more)
+Nodes (76): resolve_path(), NormalizationTests, atomic_write(), adapter_path(), attach_bridge_tests(), aux_inputs(), build(), channel_regex() (+68 more)
 
 ### Community 880 - "Implement"
 Cohesion: 0.25
@@ -3588,8 +3594,8 @@ Cohesion: 0.25
 Nodes (7): Consistency and delivery (spec-driven work), Decisions and findings, Handoff, Plan, Scope, Task <id>: <goal>, Verification
 
 ### Community 886 - "linux_raw/conv.rs"
-Cohesion: 0.02
-Nodes (136): c_uint, by_mut(), by_ref(), c_int(), c_uint(), dev_t(), hi(), lo() (+128 more)
+Cohesion: 0.03
+Nodes (77): c_uint, ArgReg<'a, Num>, by_mut(), by_ref(), c_int(), c_uint(), dev_t(), hi() (+69 more)
 
 ### Community 888 - "redact.rs"
 Cohesion: 0.43
@@ -3599,13 +3605,21 @@ Nodes (5): decoded_positions(), PATTERNS, redaction_preserves_unicode_and_invali
 Cohesion: 0.25
 Nodes (3): Fields, NativeCrashTrace, NativeCrashTraceTest
 
+### Community 891 - "KernelSigaction"
+Cohesion: 0.29
+Nodes (6): kernel_sigaction(), KERNEL_SIG_DFL, kernel_sig_ign(), KernelSigaction, KernelSighandler, KernelSigrestore
+
 ### Community 892 - "AudioHandler"
 Cohesion: 0.40
 Nodes (5): AudioHandler, BaseAudioHandler, CompositeAudioHandler, IsolatedAudioHandler, SwitchAudioHandler
 
-### Community 893 - "WrappedPlayer"
-Cohesion: 0.07
-Nodes (8): WrappedPlayer, PlayerMode, LOW_LATENCY, MEDIA_PLAYER, ReleaseMode, LOOP, RELEASE, STOP
+### Community 893 - "WrappedPlayer.kt"
+Cohesion: 0.14
+Nodes (7): PlayerMode, LOW_LATENCY, MEDIA_PLAYER, ReleaseMode, LOOP, RELEASE, STOP
+
+### Community 894 - "playback_normalization.dart"
+Cohesion: 0.29
+Nodes (6): _gain, _gainNumber, _generation, invalidate, PlaybackNormalizationCache, volumeFor
 
 ### Community 895 - "workflow.py"
 Cohesion: 0.14
@@ -3613,11 +3627,11 @@ Nodes (12): Commands (from the destination root), Contents, Sistrum workflow, Us
 
 ### Community 898 - "file"
 Cohesion: 0.03
-Nodes (13): FFmpegCapabilitiesTest, LibraryScanStressTest, LocalAudioFixtures, ResolvedCueAudioTest, 3. Coverage and gaps, _ReorderCollections, _FailingRemovalCollections, _RemovalCollections (+5 more)
+Nodes (17): LibraryScanStressTest, copyToTemporaryMediaFile(), ErrorJsonTest, NativeTemporaryMediaFileTest, ByteArrayInputStream, InputStream, KT-104 [P3] [confidence: high] [RESOLVED], BrowserClientPolicy (+9 more)
 
 ### Community 901 - "RetReg"
 Cohesion: 0.11
-Nodes (45): syscall0_readonly(), syscall1(), syscall1_noreturn(), syscall1_readonly(), syscall2(), syscall2_readonly(), syscall3(), syscall3_readonly() (+37 more)
+Nodes (46): syscall0_readonly(), syscall1(), syscall1_noreturn(), syscall1_readonly(), syscall2(), syscall2_readonly(), syscall3(), syscall3_readonly() (+38 more)
 
 ### Community 906 - "Architecture contract"
 Cohesion: 0.40
@@ -3640,8 +3654,8 @@ Cohesion: 0.40
 Nodes (5): PTracer, Any, None, ProcessID, set_ptracer()
 
 ### Community 912 - "cache_management_page.dart"
-Cohesion: 0.06
-Nodes (44): _buildClearTrailing, _buildOverview, _buildSubtitle, _CacheManagementPageStatePart1, _cleanupUnusedData, _clearAllCaches, _clearAppCache, _clearAudioAnalysisCache (+36 more)
+Cohesion: 0.07
+Nodes (41): _buildClearTrailing, _buildOverview, _buildSubtitle, _CacheManagementPageStatePart1, _cleanupUnusedData, _clearAllCaches, _clearAppCache, _clearAudioAnalysisCache (+33 more)
 
 ### Community 913 - "_EmbeddedCoverExtraction"
 Cohesion: 0.67
@@ -3659,9 +3673,9 @@ Nodes (3): libusb_interface_association_descriptor_array, iad, length
 Cohesion: 0.67
 Nodes (3): libusb_pollfd, events, fd
 
-### Community 919 - "autoplay_taste_test.dart"
-Cohesion: 0.05
-Nodes (33): enabled, learning, unsubscribe, build, enable, LearningSettings, main, _adjustment (+25 more)
+### Community 919 - "activity_attachment.dart"
+Cohesion: 0.29
+Nodes (6): attached, didChangeAppLifecycleState, done, isActivityAttached, observer, waitForActivityAttachment
 
 ### Community 921 - "CodeGraph engine migration"
 Cohesion: 0.33
@@ -3678,6 +3692,10 @@ Nodes (4): Errno, Result, retry_on_intr(), std::io::Error
 ### Community 937 - "linux_raw/thread/cpu_set.rs"
 Cohesion: 0.38
 Nodes (7): CPU_CLR(), CPU_COUNT(), CPU_COUNT_S(), CPU_EQUAL(), CPU_ISSET(), CPU_SET(), CPU_ZERO()
+
+### Community 939 - "local_library_provider_sources.dart"
+Cohesion: 0.33
+Nodes (5): LocalLibrarySourceActions, removeSource, scanAllSources, setSourceEnabled, refreshSourceAvailability
 
 ### Community 940 - "Architecture contract"
 Cohesion: 0.40
@@ -3723,9 +3741,9 @@ Nodes (3): Close, Entries, Log {{ID}}: {{TITLE}}
 Cohesion: 0.67
 Nodes (3): libusb_superspeedplus_sublink_attribute_sublink_type, LIBUSB_SSPLUS_ATTR_TYPE_ASYM, LIBUSB_SSPLUS_ATTR_TYPE_SYM
 
-### Community 953 - "library_settings_source_item.dart"
-Cohesion: 0.06
-Nodes (31): count, files, fromJson, fromProgress, LibraryScanFailure, LibraryScanFailures, message, path (+23 more)
+### Community 953 - "IncompleteArrayField"
+Cohesion: 0.33
+Nodes (4): IncompleteArrayField, io_uring_cqe, io_uring_probe, io_uring_probe_op
 
 ### Community 954 - "Fixed Appearance defaults"
 Cohesion: 0.20
@@ -3740,28 +3758,48 @@ Cohesion: 0.33
 Nodes (5): Equalizer comparison and UI port, Lyrics blur strength, Player controls and Mornye equalizer UI, Show or hide the volume slider, Verification
 
 ### Community 969 - "AncillaryDrain<'buf>"
-Cohesion: 0.06
-Nodes (14): AllowedMsgBufType, AncillaryDrain<'buf>, AncillaryIter, AncillaryIter<'data, T>, AncillaryIter<'_, T>, MaybeUninit<u8>, Messages<'a>, Messages<'buf> (+6 more)
+Cohesion: 0.25
+Nodes (4): AncillaryDrain<'buf>, RecvAncillaryMessage, ScmCredentials, ScmRights
 
 ### Community 972 - "FsConfigCmd"
 Cohesion: 0.20
 Nodes (10): FsConfigCmd, Create, CreateExclusive, Reconfigure, SetBinary, SetFd, SetFlag, SetPath (+2 more)
 
+### Community 975 - "TimerfdClockId"
+Cohesion: 0.33
+Nodes (6): TimerfdClockId, Boottime, BoottimeAlarm, Monotonic, Realtime, RealtimeAlarm
+
 ### Community 976 - "settings_provider_helpers.dart"
 Cohesion: 0.29
 Nodes (6): _drainSettingsSave, _loadSettings, _prefs, _saveSettings, _SettingsHelpers, _updateTagCredits
+
+### Community 977 - "How"
+Cohesion: 0.33
+Nodes (6): kernel_sigprocmask(), How, BLOCK, SETMASK, UNBLOCK, kernel_sigprocmask()
+
+### Community 978 - "AllowedMsgBufType"
+Cohesion: 0.33
+Nodes (4): AllowedMsgBufType, MaybeUninit<u8>, Messages<'buf>, u8
 
 ### Community 979 - "-handleMethodCallresult"
 Cohesion: 0.33
 Nodes (5): -activateCommandCenter, -handleMethodCallresult, -updateNowPlayingFieldvalue, -updateNowPlayingInfo, -updateNowPlayingInfoForce
 
+### Community 980 - "SingleChildRenderObjectWidget"
+Cohesion: 0.40
+Nodes (4): _AlbumOverlayToolbar, _ContrastBoundary, AppArtworkGlassRender, AppGroundAnchor
+
 ### Community 981 - "AudioProcessingState"
 Cohesion: 0.29
 Nodes (7): AudioProcessingState, ApsBuffering, ApsCompleted, ApsError, ApsIdle, ApsLoading, ApsReady
 
-### Community 983 - "image_cache_utils.dart"
-Cohesion: 0.29
-Nodes (6): coverCacheWidthForViewport, dpr, logicalWidth, max, min, widthMultiplier
+### Community 983 - "library_tag_credits_provider.dart"
+Cohesion: 0.40
+Nodes (4): tagCreditScopeProvider, LibraryTagCreditsCache, TagCreditRules, TagCreditScope
+
+### Community 984 - "libc/fs/makedev.rs"
+Cohesion: 0.70
+Nodes (3): major(), makedev(), minor()
 
 ### Community 986 - "BorrowedFd"
 Cohesion: 0.02
@@ -3779,10 +3817,6 @@ Nodes (9): execute(), features_job_validates_windows_and_reports_silence(), Loca
 Cohesion: 0.40
 Nodes (5): path, dependency_overrides, audioplayers_android, ffmpeg_kit_flutter_new_audio, path
 
-### Community 991 - "src/fs/inotify.rs"
-Cohesion: 0.13
-Nodes (7): add_watch(), Event, Event<'a>, init(), Reader, Reader<'buf, Fd>, remove_watch()
-
 ### Community 992 - "Local Library song analysis"
 Cohesion: 0.33
 Nodes (5): Execution and ownership, Local Library song analysis, Location and controls, Persistent records and progress, Verification
@@ -3792,16 +3826,20 @@ Cohesion: 0.40
 Nodes (4): _buildFilterContent, _countHeaderRow, _LibrarySectionTabFilterWidgets, _selectedItemsFromAll
 
 ### Community 995 - "FsConfigCmd"
-Cohesion: 0.20
-Nodes (10): FsConfigCmd, Create, CreateExclusive, Reconfigure, SetBinary, SetFd, SetFlag, SetPath (+2 more)
+Cohesion: 0.17
+Nodes (11): FsConfigCmd, Create, CreateExclusive, Reconfigure, SetBinary, SetFd, SetFlag, SetPath (+3 more)
+
+### Community 998 - "Fork"
+Cohesion: 0.50
+Nodes (4): kernel_fork(), Fork, ParentOf, kernel_fork()
 
 ### Community 999 - "Local / Offline / Android-only Migration Plan"
 Cohesion: 0.25
 Nodes (6): 1. Target architecture (what remains), 2. Original findings (dependency-grounded; pre-migration baseline), 3. Decisions (RESOLVED), 5. Risk resolution and remaining verification, Local / Offline / Android-only Migration Plan, Vision refinements (user, 2026-10-16)
 
 ### Community 1001 - "doctor"
-Cohesion: 0.06
-Nodes (24): Code map and context, Copy into a new repository, Executable port and bridge gates, Limits, Optional agent integrations, Paths, Sistrum workflow, Tool (+16 more)
+Cohesion: 0.10
+Nodes (19): EnvironmentTests, execute(), clean_environment(), config(), confined(), doctor(), engine(), parser_info() (+11 more)
 
 ### Community 1002 - "log.dart"
 Cohesion: 0.25
@@ -3847,10 +3885,6 @@ Nodes (3): Home release shelves and Logs filters, Latest Releases presentation, 
 Cohesion: 0.25
 Nodes (5): DsdDecoder, channels, context, rate, samples
 
-### Community 1066 - "_"
-Cohesion: 0.50
-Nodes (3): _, AppNavigationService, rootNavigatorKey
-
 ### Community 1474 - "local/src/logging.rs"
 Cohesion: 0.17
 Nodes (11): argument_redaction_precedes_level_inference_and_preserves_raw_byte_truncation(), CAPACITY, decode_go_utf8(), disabled_messages_skip_conversion_but_errors_and_closed_state_are_preserved(), LogBuffer, LogClosed, LogEntry, MAX_MESSAGE (+3 more)
@@ -3872,24 +3906,24 @@ Cohesion: 0.29
 Nodes (7): libusb_version, describe, major, micro, minor, nano, rc
 
 ## Knowledge Gaps
-- **11277 isolated node(s):** `routingSettings`, `initialLocation`, `supportedLocales`, `child`, `_controller` (+11272 more)
-  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 16293 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
-- **304 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **11277 isolated node(s):** `kAppGlassThumbKey`, `center`, `held`, `restSize`, `activeSize` (+11272 more)
+  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 16294 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
+- **318 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `_` connect `_` to `app_artwork_ground.dart`, `file`, `dart:async`, `player_widget_service.dart`, `music_playback_deck.dart`, `collection_track_batch.dart`, `library_collections_worker.dart`, `map.md`, `ValueStream`, `package:flutter_test/flutter_test.dart`, `String?`, `ValueChanged`, `package:sistrum/l10n/l10n.dart`, `work.py`, `PlaybackStateCopyWith`, `Widget`, `Duration`, `_AndroidVolumeDirectionMessageExtension`, `MediaItemCopyWith`, `media_session_filter_test.dart`, `library_collection_tracks_screen.dart`, `app_alert_dialog.dart`, `Future`, `app_volume_control.dart`, `@Deprecated`, `_MediaButtonMessageExtension`, `AudioService`, `_MediaItemMessageExtension`, `_RatingMessageExtension`, `app_info.dart`, `playback_handler.dart`, `sqlite_helpers.dart`, `audio_service_queue_platform_test.dart`, `player_metadata_controller.dart`, `List`, `logger.dart`, `package:flutter/cupertino.dart`, `media_session_filter.dart`, `package:flutter/foundation.dart`, `shell_navigation.dart`, `AndroidPlaybackInfo`, `AudioHandler`?**
-  _High betweenness centrality (0.079) - this node is a cross-community bridge._
-- **What connects `routingSettings`, `initialLocation`, `supportedLocales` to the rest of the system?**
+- **Why does `_` connect `_` to `playback_seek_preview.dart`, `library_collections_worker.dart`, `system_volume_service.dart`, `ValueStream`, `deleted_library_files.dart`, `progress_stream_poller.dart`, `package:sistrum/l10n/l10n.dart`, `String?`, `work.py`, `package:flutter/material.dart`, `SharedEngineChannels.kt`, `_AndroidVolumeDirectionMessageExtension`, `MediaItemCopyWith`, `Object?`, `media_session_filter_test.dart`, `dart:io`, `library_collection_tracks_screen.dart`, `static const`, `package:flutter_test/flutter_test.dart`, `Future`, `List`, `Future`, `local_song_file_actions.dart`, `@Deprecated`, `AudioService`, `_MediaButtonMessageExtension`, `music_player_runtime.dart`, `app_info.dart`, `_MediaItemMessageExtension`, `audio_service_queue_platform_test.dart`, `_RatingMessageExtension`, `package:flutter_riverpod/flutter_riverpod.dart`, `media_session_filter.dart`, `shell_navigation.dart`, `player_widget_service_test.dart`, `AndroidPlaybackInfo`, `StatelessWidget`, `AudioHandler`?**
+  _High betweenness centrality (0.076) - this node is a cross-community bridge._
+- **What connects `kAppGlassThumbKey`, `center`, `held` to the rest of the system?**
   _11277 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Errno` be split into smaller, more focused modules?**
   _Cohesion score 0.01282051282051282 - nodes in this community are weakly interconnected._
-- **Why does `BorrowedFd` connect `BorrowedFd` to `Uid`, `Pid`, `borrowed_fd`, `PollFd<'fd>`, `linux_raw/net/netdevice.rs`, `linux_raw/net/syscalls.rs`, `statx.rs`, `src/io_uring/mod.rs`, `process/prctl.rs`, `ioctl`, `SocketAddrArg`, `ret`, `net/types.rs`, `IoctlOutput`, `PollFd<'fd>`, `thread/prctl.rs`, `linux_raw/termios/syscalls.rs`, `Opcode`, `RawFd`, `libc/mm/syscalls.rs`, `Timespec`, `.from`, `super`, `linux_raw/conv.rs`, `setns.rs`, `OwnedFd`?**
-  _High betweenness centrality (0.026) - this node is a cross-community bridge._
+- **Why does `BorrowedFd` connect `BorrowedFd` to `Pid`, `c`, `borrowed_fd`, `linux_raw/net/netdevice.rs`, `net/types.rs`, `linux_raw/net/syscalls.rs`, `maybeuninit`, `statx.rs`, `src/io_uring/mod.rs`, `process/prctl.rs`, `ioctl`, `SocketAddrAny`, `ret`, `PollFd<'fd>`, `thread/prctl.rs`, `linux_raw/termios/syscalls.rs`, `Opcode`, `RawFd`, `linux_raw/mm/syscalls.rs`, `Timespec`, `super`, `linux_raw/conv.rs`, `setns.rs`, `OwnedFd`?**
+  _High betweenness centrality (0.031) - this node is a cross-community bridge._
 - **Should `app_artwork_ground.dart` be split into smaller, more focused modules?**
-  _Cohesion score 0.024684102262709375 - nodes in this community are weakly interconnected._
-- **Why does `ArgReg` connect `ArgReg` to `SyscallNumber`, `RetReg`, `vdso_wrappers.rs`, `mips32r6.rs`, `linux_raw/net/syscalls.rs`, `riscv64.rs`, `linux_raw/conv.rs`, `A1`, `BorrowedFd`, `powerpc.rs`?**
-  _High betweenness centrality (0.021) - this node is a cross-community bridge._
+  _Cohesion score 0.03571428571428571 - nodes in this community are weakly interconnected._
+- **Why does `ArgReg` connect `ArgReg` to `SyscallNumber`, `mips64.rs`, `RetReg`, `vdso_wrappers.rs`, `linux_raw/net/syscalls.rs`, `x86_64.rs`, `linux_raw/conv.rs`, `A1`, `BorrowedFd`, `ret`, `powerpc.rs`?**
+  _High betweenness centrality (0.023) - this node is a cross-community bridge._
 - **Should `audio_analysis_spectral_cutoff.dart` be split into smaller, more focused modules?**
   _Cohesion score 0.037037037037037035 - nodes in this community are weakly interconnected._
