@@ -66,6 +66,13 @@ class _AppSliderState extends ConsumerState<AppSlider>
   /// Whether the current interaction shows glass, decided at its start.
   bool? _touchGlass;
 
+  /// The next change of value is the touch placing the thumb, not a drag
+  /// moving it (g1455's slider): the drop arrives without stretching.
+  bool _placing = false;
+
+  /// Set for the one build that draws a placement.
+  bool _placedThisFrame = false;
+
   double _fraction(double value) => widget.max > widget.min
       ? ((value - widget.min) / (widget.max - widget.min)).clamp(0.0, 1.0)
       : 0.0;
@@ -75,6 +82,13 @@ class _AppSliderState extends ConsumerState<AppSlider>
     super.didUpdateWidget(oldWidget);
     final target = _fraction(widget.value);
     if (target == _position.value) return;
+    if (_placing) {
+      _placing = false;
+      _placedThisFrame = true;
+      WidgetsBinding.instance.addPostFrameCallback(
+        (_) => _placedThisFrame = false,
+      );
+    }
     if (widget.divisions != null) {
       _position.animateTo(
         target,
@@ -107,10 +121,12 @@ class _AppSliderState extends ConsumerState<AppSlider>
       semanticFormatterCallback: widget.semanticFormatterCallback,
       onChanged: widget.onChanged,
       onChangeStart: (value) {
+        _placing = true;
         setState(() => _touchGlass = glassAllowed);
         widget.onChangeStart?.call(value);
       },
       onChangeEnd: (value) {
+        _placing = false;
         setState(() => _touchGlass = null);
         widget.onChangeEnd?.call(value);
       },
@@ -162,6 +178,7 @@ class _AppSliderState extends ConsumerState<AppSlider>
                     restSize: AppSlider.restThumbSize,
                     activeSize: AppSlider._activeThumbSize,
                     shadow: true,
+                    placing: _placedThisFrame,
                   );
                 },
               );

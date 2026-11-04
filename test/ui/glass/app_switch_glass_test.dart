@@ -39,6 +39,8 @@ void main() {
       final gesture = await tester.startGesture(
         tester.getCenter(find.byType(AppSwitch)),
       );
+      // The lift starts on the next frame (g1455's 180 ms drop).
+      await tester.pump();
       await tester.pump(const Duration(milliseconds: 50));
       expect(glassPills(), 1);
 
@@ -65,6 +67,8 @@ void main() {
         final gesture = await tester.startGesture(
           tester.getCenter(find.byType(AppSwitch)),
         );
+        // The lift starts on the next frame (g1455's 180 ms drop).
+        await tester.pump();
         await tester.pump(const Duration(milliseconds: 50));
         expect(glassPills(), touchGlass ? 1 : 0);
         await gesture.up();
@@ -93,6 +97,8 @@ void main() {
         final gesture = await tester.startGesture(
           tester.getCenter(find.byType(AppSwitch)),
         );
+        // The lift starts on the next frame (g1455's 180 ms drop).
+        await tester.pump();
         await tester.pump(const Duration(milliseconds: 50));
         expect(glassPills(), 0);
         await gesture.up();

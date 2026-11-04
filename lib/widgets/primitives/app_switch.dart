@@ -65,9 +65,15 @@ class _AppSwitchState extends ConsumerState<_AppSwitch> {
     final scheme = Theme.of(context).colorScheme;
     final active = CupertinoColors.systemGreen.resolveFrom(context);
     final enabled = onChanged != null;
-    final duration = MediaQuery.disableAnimationsOf(context)
+    final reduced = MediaQuery.disableAnimationsOf(context);
+    // g1455's switch: the knob travels 220 ms on easeOutCubic and the track
+    // changes colour over 160 ms, only once the value commits.
+    final duration = reduced
         ? Duration.zero
-        : const Duration(milliseconds: 180);
+        : const Duration(milliseconds: 220);
+    final colourDuration = reduced
+        ? Duration.zero
+        : const Duration(milliseconds: 160);
     final inactive = scheme.brightness == Brightness.dark
         ? const Color(0xff39393d)
         : const Color(0xff8e8e93);
@@ -79,12 +85,12 @@ class _AppSwitchState extends ConsumerState<_AppSwitch> {
     final position = _dragPosition ?? (value ? 1.0 : 0.0);
     final thumbDuration = _dragPosition == null ? duration : Duration.zero;
     final track = AnimatedContainer(
-      duration: duration,
+      duration: colourDuration,
       width: _track.width,
       height: _track.height,
       padding: const EdgeInsets.all(_trackPadding),
       decoration: BoxDecoration(
-        color: position >= 0.5 ? active : inactive,
+        color: value ? active : inactive,
         borderRadius: BorderRadius.circular(14),
       ),
       child: glass

@@ -66,6 +66,8 @@ void main() {
       final gesture = await tester.startGesture(
         tester.getCenter(find.byKey(key)),
       );
+      // The lift starts on the next frame (g1455's 180 ms drop).
+      await tester.pump();
       await tester.pump(const Duration(milliseconds: 50));
       for (var i = 0; i < 5; i++) {
         await gesture.moveBy(const Offset(12, 0));
@@ -159,6 +161,8 @@ void main() {
       final gesture = await tester.startGesture(
         tester.getCenter(find.byType(AppLevelSlider)),
       );
+      // The lift starts on the next frame (g1455's 180 ms drop).
+      await tester.pump();
       await tester.pump(const Duration(milliseconds: 50));
       expect(glassPills(), 1);
       await gesture.moveBy(const Offset(40, 0));

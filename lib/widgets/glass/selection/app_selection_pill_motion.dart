@@ -37,6 +37,11 @@ extension _AppSelectionPillStatePart1 on _AppSelectionPillState {
           ? -position
           : position;
     });
+    // Under the finger the pill is placed, not sprung.
+    final count = widget.labels.length;
+    _slideTarget = null;
+    _at.stop();
+    _at.value = count == 1 ? 0 : (_dragAlignment! + 1) / 2 * (count - 1);
   }
 
   Widget _buildItems(int selected) {
@@ -93,93 +98,76 @@ extension _AppSelectionPillStatePart1 on _AppSelectionPillState {
     int selected,
     int count,
     double pressProgress,
+    double stretch,
     Widget child,
   ) {
     final color = widget.selectionColor;
     if (color == null) return child;
-    return TweenAnimationBuilder<double>(
-      tween: Tween(
-        end:
-            _dragAlignment ??
-            (count == 1 ? 0 : -1 + 2 * selected / (count - 1)),
-      ),
-      duration:
-          _dragAlignment != null || MediaQuery.disableAnimationsOf(context)
-          ? Duration.zero
-          : const Duration(milliseconds: 220),
-      curve: Curves.easeOutCubic,
-      builder: (context, alignment, child) => AppSelectionForegroundScope(
-        rowKey: _foregroundKey,
-        alignment: Directionality.of(context) == TextDirection.rtl
-            ? -alignment
-            : alignment,
-        count: count,
-        scaleX: 1 + _heldWidthGrowth * pressProgress,
-        scaleY: 1 + _heldHeightGrowth * pressProgress,
-        program: _maskProgram,
-        color: selected >= 0 && selected < count
-            ? color
-            : color.withValues(alpha: 0),
-        child: child!,
-      ),
+    final alignment = _alignmentOf(count);
+    return AppSelectionForegroundScope(
+      rowKey: _foregroundKey,
+      alignment: Directionality.of(context) == TextDirection.rtl
+          ? -alignment
+          : alignment,
+      count: count,
+      scaleX: (1 + _heldWidthGrowth * pressProgress) * (1 + stretch),
+      scaleY: (1 + _heldHeightGrowth * pressProgress) / (1 + stretch),
+      program: _maskProgram,
+      color: selected >= 0 && selected < count
+          ? color
+          : color.withValues(alpha: 0),
       child: child,
     );
   }
 
   /// The held pill: a blur, a light veil and a rim, sliding to the selected
   /// item. It exists only while a press is in progress.
-  Widget _heldGlass(
-    int selected,
-    int count,
-    double progress,
-  ) => Positioned.fill(
-    child: IgnorePointer(
-      child: AnimatedAlign(
-        duration: _dragAlignment != null
-            ? Duration.zero
-            : const Duration(milliseconds: 220),
-        curve: Curves.easeOutCubic,
-        alignment: AlignmentDirectional(
-          _dragAlignment ?? (count == 1 ? 0 : -1 + 2 * selected / (count - 1)),
-          0,
-        ),
-        child: FractionallySizedBox(
-          widthFactor: 1 / count,
-          heightFactor: 1,
-          child: Transform.scale(
-            scaleX: 1 + _heldWidthGrowth * progress,
-            scaleY: 1 + _heldHeightGrowth * progress,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(kAppSelectionPillRadius),
-              child: GlassSurface(
-                presence: progress,
+  Widget _heldGlass(int selected, int count, double lift, double stretch) {
+    // The spring rises past held for a moment: the size follows it, the
+    // optics and the veil stop at fully there.
+    final progress = lift.clamp(0.0, 1.0);
+    return Positioned.fill(
+      child: IgnorePointer(
+        child: Align(
+          alignment: AlignmentDirectional(_alignmentOf(count), 0),
+          child: FractionallySizedBox(
+            widthFactor: 1 / count,
+            heightFactor: 1,
+            child: Transform.scale(
+              scaleX: (1 + _heldWidthGrowth * lift) * (1 + stretch),
+              scaleY: (1 + _heldHeightGrowth * lift) / (1 + stretch),
+              child: ClipRRect(
                 borderRadius: BorderRadius.circular(kAppSelectionPillRadius),
-                finish: kAppLiquidGlassFinish,
-                labelled: false,
-                child: DecoratedBox(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(
-                      kAppSelectionPillRadius,
+                child: GlassSurface(
+                  presence: progress,
+                  borderRadius: BorderRadius.circular(kAppSelectionPillRadius),
+                  finish: kAppLiquidGlassFinish,
+                  labelled: false,
+                  child: DecoratedBox(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(
+                        kAppSelectionPillRadius,
+                      ),
+                      color: Colors.white.withValues(
+                        alpha:
+                            progress *
+                            (Theme.of(context).brightness == Brightness.light
+                                ? 0.24
+                                : 0.08),
+                      ),
+                      border: Border.all(
+                        color: Colors.white.withValues(alpha: 0.6 * progress),
+                        width: 0.75,
+                      ),
                     ),
-                    color: Colors.white.withValues(
-                      alpha:
-                          progress *
-                          (Theme.of(context).brightness == Brightness.light
-                              ? 0.24
-                              : 0.08),
-                    ),
-                    border: Border.all(
-                      color: Colors.white.withValues(alpha: 0.6 * progress),
-                      width: 0.75,
-                    ),
+                    child: const SizedBox.expand(),
                   ),
-                  child: const SizedBox.expand(),
                 ),
               ),
             ),
           ),
         ),
       ),
-    ),
-  );
+    );
+  }
 }
