@@ -4,11 +4,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/l10n/l10n.dart';
-import 'package:sistrum/widgets/player/controls/app_player_slider.dart';
 import 'package:sistrum/utils/logging/logger.dart';
 import 'package:volume_controller/volume_controller.dart';
 import 'package:sistrum/services/playback/core/music_playback_deck.dart';
 import 'package:sistrum/services/playback/audio/system_volume_service.dart';
+import 'package:g1455/g1455.dart' show GlassSlider;
 
 final usbVolumeProvider = StreamProvider.autoDispose<UsbVolumeState?>((ref) {
   final events = StreamController<UsbVolumeState?>();
@@ -132,10 +132,10 @@ class _AppVolumeControlState extends ConsumerState<AppVolumeControl> {
                   ignoring: volume == null,
                   child: Opacity(
                     opacity: volume == null ? 0.4 : 1,
-                    child: AppPlayerSlider(
+                    child: GlassSlider(
                       value: value,
                       activeColor: widget.foreground.withValues(alpha: 0.70),
-                      inactiveColor: widget.foreground.withValues(alpha: 0.12),
+                      trackColor: widget.foreground.withValues(alpha: 0.12),
                       onChangeStart: (_) => _dragging = true,
                       onChanged: _setVolume,
                       onChangeEnd: (value) {

@@ -196,7 +196,7 @@ void _registerNowPlayingLyricsScrolling() {
         await reveal();
         final slider = find.descendant(
           of: volume,
-          matching: find.byType(Slider),
+          matching: find.byType(GlassSlider),
         );
         final touch = await tester.startGesture(tester.getCenter(slider));
         await tester.pump(const Duration(seconds: 5));

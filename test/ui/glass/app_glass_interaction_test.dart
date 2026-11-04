@@ -2,17 +2,13 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/core/theme/app_theme.dart';
-import 'package:sistrum/widgets/primitives/app_switch.dart';
 import 'package:sistrum/widgets/glass/chrome/app_chrome.dart';
 import 'package:sistrum/widgets/glass/chrome/app_chrome_controls.dart';
 import 'package:sistrum/widgets/glass/selection/app_selection_pill.dart';
 import 'package:sistrum/widgets/glass/selection/app_selection_foreground.dart';
-
-import '../../support/glass_controls.dart';
 
 part 'app_glass_interaction_gestures.dart';
 
@@ -174,40 +170,4 @@ class _RenderOverflowForeground extends RenderBox {
     paintBounds.shift(offset),
     Paint()..color = Colors.white,
   );
-}
-
-Future<List<int>> _foregroundPixels(
-  WidgetTester tester,
-  GlobalKey capture,
-  Finder finder,
-  List<Color> colors,
-) async {
-  final boundary =
-      capture.currentContext!.findRenderObject()! as RenderRepaintBoundary;
-  final rect = tester
-      .getRect(finder)
-      .shift(-boundary.localToGlobal(Offset.zero));
-  return (await tester.runAsync(() async {
-    final image = await boundary.toImage();
-    try {
-      final bytes = (await image.toByteData())!;
-      final counts = List.filled(colors.length, 0);
-      for (var y = rect.top.ceil(); y < rect.bottom.floor(); y++) {
-        for (var x = rect.left.ceil(); x < rect.right.floor(); x++) {
-          final offset = (y * image.width + x) * 4;
-          for (var i = 0; i < colors.length; i++) {
-            final argb = colors[i].toARGB32();
-            if ((bytes.getUint8(offset) - ((argb >> 16) & 255)).abs() <= 2 &&
-                (bytes.getUint8(offset + 1) - ((argb >> 8) & 255)).abs() <= 2 &&
-                (bytes.getUint8(offset + 2) - (argb & 255)).abs() <= 2) {
-              counts[i]++;
-            }
-          }
-        }
-      }
-      return counts;
-    } finally {
-      image.dispose();
-    }
-  }))!;
 }

@@ -99,6 +99,42 @@ class _AppBottomBarState extends ConsumerState<AppBottomBar>
   );
   late final _tabOpacity = ReverseAnimation(_collapse);
 
+  // Where each tab's icon is drawn, read after layout, so a fold starts from
+  // the icon itself rather than from an estimate of it.
+  final _iconKeys = <int, GlobalKey>{};
+  bool _remeasureQueued = false;
+  bool _remeasured = false;
+
+  // At rest nothing rebuilds the fold, so a first build that ran before the
+  // tabs were laid out asks for one more build after the frame.
+  void _queueRemeasure() {
+    if (_remeasureQueued) return;
+    _remeasureQueued = true;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _remeasureQueued = false;
+      if (mounted) setState(() {});
+    });
+  }
+
+  /// The icon's centre x and its distance above the bar's bottom, in the
+  /// bar's own coordinates, or null while the icon is not laid out.
+  ({double x, double bottom})? _measureIcon(int index) {
+    final bar = context.findRenderObject();
+    final icon = _iconKeys[index]?.currentContext?.findRenderObject();
+    if (bar is! RenderBox ||
+        icon is! RenderBox ||
+        !bar.hasSize ||
+        !icon.hasSize ||
+        !icon.attached) {
+      return null;
+    }
+    final centre = icon.localToGlobal(
+      icon.size.center(Offset.zero),
+      ancestor: bar,
+    );
+    return (x: centre.dx, bottom: bar.size.height - centre.dy);
+  }
+
   void _updateCollapse() {
     final target = widget.collapsed ? 1.0 : 0.0;
     if (MediaQuery.disableAnimationsOf(context)) {
@@ -131,6 +167,9 @@ class _AppBottomBarState extends ConsumerState<AppBottomBar>
   Widget build(BuildContext context) {
     final collapsed = widget.collapsed;
     final destinations = widget.destinations;
+    for (var index = 0; index < destinations.length; index++) {
+      _iconKeys.putIfAbsent(index, GlobalKey.new);
+    }
     final selectedIndex = widget.selectedIndex;
     final onSelected = widget.onSelected;
     final onHome = widget.onHome;
@@ -188,6 +227,7 @@ class _AppBottomBarState extends ConsumerState<AppBottomBar>
           hiddenIconIndices: hideMovingIcons
               ? {leadingIndex, destinations.length - 1}
               : const {},
+          iconKeys: _iconKeys,
         ),
       ),
     );
@@ -216,7 +256,7 @@ class _AppBottomBarState extends ConsumerState<AppBottomBar>
             ? 8 + math.max(64, 37 + labelHeight) / 2 + (labelHeight + 2) / 2
             : math.max(64.0, 49 + labelHeight) - 23.5;
         final tabInset = glassTabs ? 6.0 : 5.0;
-        double fullIconStart(int index) =>
+        double estimatedIconStart(int index) =>
             tabInset +
             (constraints.maxWidth - tabInset * 2) /
                 destinations.length *
@@ -230,7 +270,16 @@ class _AppBottomBarState extends ConsumerState<AppBottomBar>
               required Widget surface,
             }) {
               final index = leading ? leadingIndex : destinations.length - 1;
-              final origin = fullIconStart(index);
+              final measured = _measureIcon(index);
+              // Once per rest: the flat bar keeps no icon keys, so this must
+              // not repeat.
+              if (measured == null && amount == 0 && !_remeasured) {
+                _remeasured = true;
+                _queueRemeasure();
+              }
+              if (amount > 0) _remeasured = false;
+              final origin = measured?.x ?? estimatedIconStart(index);
+              final restBottom = measured?.bottom ?? fullIconBottom;
               final offset =
                   ((leading ? origin : constraints.maxWidth - origin) - 26) *
                   (1 - amount);
@@ -238,7 +287,7 @@ class _AppBottomBarState extends ConsumerState<AppBottomBar>
               return PositionedDirectional(
                 start: leading ? offset : null,
                 end: leading ? null : offset,
-                bottom: fullIconBottom * (1 - amount) + 34 * amount - 26,
+                bottom: restBottom * (1 - amount) + 34 * amount - 26,
                 width: size,
                 height: size,
                 child: IgnorePointer(

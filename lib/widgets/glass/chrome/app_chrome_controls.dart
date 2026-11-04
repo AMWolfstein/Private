@@ -6,6 +6,7 @@ import 'package:sistrum/widgets/animation/animation_indicators.dart';
 import 'package:sistrum/widgets/glass/thumb/app_glass_surface.dart';
 import 'package:sistrum/widgets/glass/selection/app_selection_pill.dart';
 import 'package:sistrum/widgets/glass/selection/app_selection_foreground.dart';
+import 'package:g1455/g1455.dart' show GlassTabBar, GlassTabItem;
 
 class AppSegmentedControl extends ConsumerWidget {
   const AppSegmentedControl({
@@ -95,7 +96,12 @@ class AppTabBar extends ConsumerWidget {
     required this.blurEnabled,
     this.hiddenIconIndices = const {},
     this.contentOpacity = const AlwaysStoppedAnimation(1),
+    this.iconKeys,
   });
+
+  /// Keys placed on each glass tab's icon, so the bar that folds the tabs can
+  /// find where each icon is drawn. Null for none.
+  final Map<int, GlobalKey>? iconKeys;
 
   final List<NavigationDestination> destinations;
   final int selectedIndex;
@@ -128,6 +134,10 @@ class AppTabBar extends ConsumerWidget {
       blurEnabled: blurEnabled,
       contrastBlocked: contrastBlocked,
     );
+    // Floating glass is the g1455 tab bar: its own container, refraction and
+    // selected capsule. Flat pages keep the painted pill, the non-glass fallback.
+    // GlassTabBar needs two or more items; a lone destination stays flat.
+    if (floating && destinations.length >= 2) return _glassTabs(scheme);
     return Padding(
       padding: EdgeInsets.symmetric(vertical: floating ? 8 : 0),
       child: AppSelectionPill(
@@ -207,4 +217,54 @@ class AppTabBar extends ConsumerWidget {
       ),
     );
   }
+
+  Widget _glassTabs(ColorScheme scheme) => SizedBox(
+    // The bar's own height is 60, or 44 when its items sit side by side,
+    // so it is centred in the 80dp the floating tabs have always taken.
+    height: 80,
+    child: Center(
+      child: GlassTabBar(
+        items: [
+          for (var index = 0; index < destinations.length; index++)
+            GlassTabItem(
+              label: destinations[index].label,
+              iconBuilder: (context, look) => FadeTransition(
+                opacity: contentOpacity,
+                child: Opacity(
+                  opacity: hiddenIconIndices.contains(index) ? 0 : 1,
+                  child: KeyedSubtree(
+                    key: iconKeys?[index],
+                    child: IconTheme(
+                      // Sistrum's own contrast: the accent when selected, the theme's
+                      // foreground otherwise.
+                      data: IconThemeData(
+                        size: look.iconSize,
+                        color: look.highlighted
+                            ? scheme.primary
+                            : scheme.onSurface,
+                      ),
+                      child: destinations[index].icon,
+                    ),
+                  ),
+                ),
+              ),
+              labelBuilder: (context, look) => FadeTransition(
+                opacity: contentOpacity,
+                child: Text(
+                  destinations[index].label,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: look.labelStyle.copyWith(
+                    color: look.highlighted ? scheme.primary : scheme.onSurface,
+                  ),
+                ),
+              ),
+            ),
+        ],
+        selectedIndex: selectedIndex,
+        onSelected: onSelected,
+        activeColor: scheme.primary,
+      ),
+    ),
+  );
 }

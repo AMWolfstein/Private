@@ -120,7 +120,9 @@ void main() {
 
   testWidgets('switch keeps a 48dp hit box', (tester) async {
     await tester.pumpWidget(_host(AppSwitch(value: true, onChanged: (_) {})));
-    final size = tester.getSize(find.byType(InkWell));
+    // The switch lays out at 48dp, the height of the painted switch it
+    // replaced, so settings rows keep their height.
+    final size = tester.getSize(find.byType(AppSwitch));
     expect(size.height, greaterThanOrEqualTo(48));
     expect(size.width, greaterThanOrEqualTo(48));
   });

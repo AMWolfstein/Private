@@ -11,6 +11,7 @@ import 'package:sistrum/core/theme/app_theme.dart';
 import 'package:sistrum/widgets/primitives/app_bottom_sheet.dart';
 
 import '../support/material_test_theme.dart';
+import 'package:g1455/g1455.dart' show GlassSlider;
 
 void main() {
   testWidgets(
@@ -41,17 +42,19 @@ void main() {
           ),
         ),
       );
-      final slider = tester.widget<Slider>(find.byType(Slider).first);
-      slider.onChanged!(45);
+      final slider = tester.widget<GlassSlider>(find.byType(GlassSlider).first);
+      slider.onChanged!((45 - 3) / 57);
       await tester.pump();
       expect(container.read(settingsProvider).autoMixDuration, 5);
       expect(find.text('Mix duration: 45 s'), findsOneWidget);
-      slider.onChangeEnd!(45);
+      slider.onChangeEnd!((45 - 3) / 57);
       await tester.pump();
       expect(container.read(settingsProvider).autoMixDuration, 45);
       container.read(settingsProvider.notifier).setUsbBitPerfect(true);
       await tester.pump();
-      for (final slider in tester.widgetList<Slider>(find.byType(Slider))) {
+      for (final slider in tester.widgetList<GlassSlider>(
+        find.byType(GlassSlider),
+      )) {
         expect(slider.onChanged, isNull);
       }
       await tester.tap(find.text('Transition effect'));
@@ -123,7 +126,7 @@ void main() {
         );
         expect(find.byType(BottomSheet), findsNothing);
         expect(find.text('Custom'), findsOneWidget);
-        expect(find.byType(Slider), findsNWidgets(2));
+        expect(find.byType(GlassSlider), findsNWidgets(2));
         expect(tester.takeException(), isNull);
       },
     );

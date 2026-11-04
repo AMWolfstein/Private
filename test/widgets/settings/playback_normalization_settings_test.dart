@@ -7,6 +7,7 @@ import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/core/models/settings.dart';
 import 'package:sistrum/providers/settings/settings_provider.dart';
 import 'package:sistrum/widgets/settings/playback_normalization_settings.dart';
+import 'package:g1455/g1455.dart' show GlassSlider;
 
 void main() {
   Future<ProviderContainer> pump(
@@ -46,13 +47,13 @@ void main() {
     final container = await pump(tester);
     expect(find.text('Pre-amp: 0 dB (target -18 LUFS)'), findsOneWidget);
 
-    final slider = tester.widget<Slider>(find.byType(Slider));
-    slider.onChanged!(-7);
+    final slider = tester.widget<GlassSlider>(find.byType(GlassSlider));
+    slider.onChanged!(8 / 21);
     await tester.pump();
     expect(find.text('Pre-amp: -7 dB (target -25 LUFS)'), findsOneWidget);
     expect(container.read(settingsProvider).playbackNormalizationPreamp, 0);
 
-    slider.onChangeEnd!(-7);
+    slider.onChangeEnd!(8 / 21);
     await tester.pump();
     expect(container.read(settingsProvider).playbackNormalizationPreamp, -7);
 
@@ -63,6 +64,9 @@ void main() {
 
   testWidgets('bit-perfect output disables the controls', (tester) async {
     await pump(tester, enabled: false);
-    expect(tester.widget<Slider>(find.byType(Slider)).onChanged, isNull);
+    expect(
+      tester.widget<GlassSlider>(find.byType(GlassSlider)).onChanged,
+      isNull,
+    );
   });
 }

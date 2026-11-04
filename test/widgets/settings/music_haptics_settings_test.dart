@@ -7,6 +7,7 @@ import 'package:sistrum/providers/settings/settings_provider.dart';
 import 'package:sistrum/widgets/settings/music_haptics_settings.dart';
 
 import '../../support/library_section_harness.dart';
+import 'package:g1455/g1455.dart' show GlassSlider;
 
 void main() {
   setUp(() => SharedPreferences.setMockInitialValues({}));
@@ -32,7 +33,7 @@ void main() {
     await pump(tester, enabled: true);
     // The default sensitivity and strength are both 50%.
     expect(find.textContaining('50%'), findsNWidgets(2));
-    expect(find.byType(Slider).evaluate().length, 2);
+    expect(find.byType(GlassSlider).evaluate().length, 2);
     expect(tester.takeException(), isNull);
   });
 
@@ -40,7 +41,9 @@ void main() {
     tester,
   ) async {
     await pump(tester, enabled: false);
-    final sliders = tester.widgetList<Slider>(find.byType(Slider)).toList();
+    final sliders = tester
+        .widgetList<GlassSlider>(find.byType(GlassSlider))
+        .toList();
     expect(sliders, hasLength(2));
     expect(sliders.every((slider) => slider.onChanged == null), isTrue);
   });
