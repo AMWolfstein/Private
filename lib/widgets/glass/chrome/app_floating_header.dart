@@ -5,10 +5,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/services/library/covers/cover_palette.dart';
-import 'package:sistrum/core/theme/app_glass_levels.dart';
 import 'package:sistrum/core/theme/app_theme.dart';
 import 'package:sistrum/widgets/glass/artwork/app_artwork_ground.dart';
 import 'package:sistrum/widgets/glass/debug/app_artist_glass_isolation.dart';
+import 'package:sistrum/widgets/glass/thumb/app_glass_look.dart';
 import 'package:sistrum/widgets/glass/thumb/app_glass_surface.dart';
 import 'package:sistrum/widgets/header/profile_avatar.dart';
 
@@ -118,7 +118,7 @@ class AppHeaderBacking extends ConsumerWidget {
             ref.watch(appHeaderBandBlurDisabledProvider) ||
             AppArtistGlassIsolationScope.disabledOf(context)
         ? 0.0
-        : kAppGlassStyle.blurSigma;
+        : appGlassBlurSigma(ref.watch(appGlassLookProvider));
     final base = color ?? Theme.of(context).scaffoldBackgroundColor;
     return TweenAnimationBuilder<double>(
       tween: Tween(end: shown ? 1 : 0),

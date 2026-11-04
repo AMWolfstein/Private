@@ -98,7 +98,6 @@ class AppGlass extends ConsumerWidget {
           appGlassContrastBlockedProvider(MediaQuery.highContrastOf(context)),
         );
     final dark = scheme.brightness == Brightness.dark;
-    final look = ref.watch(appGlassLookProvider);
     final shape = BorderRadius.vertical(
       top: firstInGroup ? Radius.circular(radius) : Radius.zero,
       bottom: lastInGroup ? Radius.circular(radius) : Radius.zero,
@@ -147,14 +146,21 @@ class AppGlass extends ConsumerWidget {
     final ground = sampleBackdrop && single
         ? AppArtworkGroundScope.maybeOf(context)
         : null;
+    final look = ref.watch(appGlassLookProvider);
     final clearFill = (dark ? const Color(0xff999999) : Colors.white)
         .withValues(alpha: dark ? 0.17 : 0.46);
+    // BitChord's look takes its one surface tint over every translucent
+    // surface that samples; nested glass keeps its own tint either way.
+    final lookFill = translucent && !insideGlass
+        ? appGlassLookFill(look, dark: dark)
+        : null;
     final fill = Color.lerp(
       scheme.surfaceContainerHigh,
       // Plain-page surfaces match sampled ones; nested ones keep the tint.
-      translucent && !strongTint && !insideGlass
-          ? Color.lerp(tint, clearFill, style.clearFill)!
-          : tint,
+      lookFill ??
+          (translucent && !strongTint && !insideGlass
+              ? Color.lerp(tint, clearFill, style.clearFill)!
+              : tint),
       reveal,
     )!;
     final surface = DecoratedBox(
@@ -239,6 +245,7 @@ class AppGlass extends ConsumerWidget {
           emphasized: highlightBorder,
           dark: dark,
           contactEdge: appGlassContactEdge(look, dark: dark),
+          chromatic: translucent && appGlassChromaticRim(look),
           highlightIntensity: highlightIntensity * reveal,
         ),
         child: ClipRRect(borderRadius: shape, child: body),
@@ -264,6 +271,7 @@ class _AppGlassRim extends CustomPainter {
     required this.emphasized,
     required this.dark,
     required this.contactEdge,
+    this.chromatic = false,
     required this.highlightIntensity,
   });
 
@@ -274,6 +282,12 @@ class _AppGlassRim extends CustomPainter {
   final bool emphasized;
   final bool dark;
   final Color contactEdge;
+
+  /// Paints a red and blue fringe along the rim, strongest at the corners:
+  /// the look of a lens that disperses colour at its edge (BitChord's
+  /// `chromaticAberration`), drawn here because g1455's shader has none.
+  /// Strokes only: no backdrop read.
+  final bool chromatic;
   final double highlightIntensity;
 
   @override
@@ -331,7 +345,41 @@ class _AppGlassRim extends CustomPainter {
           ).createShader(bounds),
       );
     }
+    if (chromatic) _paintFringe(canvas, bounds, stroke);
     canvas.restore();
+  }
+
+  /// Warm just inside the edge, cool a step further in, both fading toward
+  /// the middle so the dispersion gathers where the lens bends most: at the
+  /// corners, as BitChord's `x * y` weighting does.
+  void _paintFringe(
+    Canvas canvas,
+    Rect bounds,
+    void Function(double inset, Paint paint) stroke,
+  ) {
+    final reach = bounds.longestSide / 2;
+    Shader corners(Color color) => RadialGradient(
+      radius: reach / bounds.shortestSide * 1.2,
+      colors: [color.withValues(alpha: 0), color.withValues(alpha: 0), color],
+      stops: const [0, 0.55, 1],
+    ).createShader(bounds);
+    final opacity = (dark ? 0.35 : 0.22) * highlightIntensity;
+    stroke(
+      1.1,
+      Paint()
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 0.9
+        ..blendMode = BlendMode.plus
+        ..shader = corners(Color.fromRGBO(255, 96, 64, opacity)),
+    );
+    stroke(
+      2.0,
+      Paint()
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 0.9
+        ..blendMode = BlendMode.plus
+        ..shader = corners(Color.fromRGBO(64, 140, 255, opacity)),
+    );
   }
 
   @override
@@ -343,7 +391,8 @@ class _AppGlassRim extends CustomPainter {
       emphasized != oldDelegate.emphasized ||
       highlightIntensity != oldDelegate.highlightIntensity ||
       dark != oldDelegate.dark ||
-      contactEdge != oldDelegate.contactEdge;
+      contactEdge != oldDelegate.contactEdge ||
+      chromatic != oldDelegate.chromatic;
 }
 
 /// Marks a subtree whose backdrop is a playing video. A texture is not

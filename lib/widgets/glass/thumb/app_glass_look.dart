@@ -13,8 +13,9 @@ enum AppGlassLook {
   sistrum,
 
   /// Inspired by BitChord's liquid glass (`ui/components/LiquidGlass.kt`):
-  /// a deeper, stronger lens at the rim, a saturation lift under frosted
-  /// glass, and a light hairline edge instead of a dark one.
+  /// a deeper lens at the rim, a lighter blur, BitChord's 0.4 surface tint,
+  /// a saturation lift under frosted glass, a light hairline edge and a
+  /// chromatic fringe at the rim.
   bitchord,
 }
 
@@ -42,8 +43,37 @@ final appGlassLookProvider =
 /// the behaviour, not a copy of its shader.
 const _bitChordOptics = GlassOptics(thickness: 24, strength: -50);
 
-/// The finish of every LIQUID surface for [look]. The blur stays Sistrum's
-/// (sigma 6, never lower); the fill above it sets the colour in both looks.
+/// BitChord's blur: `BLUR_RADIUS_DP = 8`, a radius in Android's
+/// `RenderEffect` terms, which is sigma 0.57735 r + 0.5 = 5.1 dp (sampled
+/// at a third of the resolution, which does not change its logical size).
+/// The owner allowed this below Sistrum's sigma 6 for this look only
+/// (2026-11-04).
+const kAppBitChordBlurSigma = 5.0;
+
+/// The blur sigma of FROSTED and LIQUID glass for [look].
+double appGlassBlurSigma(AppGlassLook look) => switch (look) {
+  AppGlassLook.sistrum => kAppGlassStyle.blurSigma,
+  AppGlassLook.bitchord => kAppBitChordBlurSigma,
+};
+
+/// BitChord's surface tint (`SURFACE_OPACITY = 0.4` of `#121212` dark or
+/// `#FAFAFA` light), or null for Sistrum, whose own fills apply.
+Color? appGlassLookFill(AppGlassLook look, {required bool dark}) =>
+    switch (look) {
+      AppGlassLook.sistrum => null,
+      AppGlassLook.bitchord =>
+        dark
+            ? const Color.fromRGBO(0x12, 0x12, 0x12, 0.4)
+            : const Color.fromRGBO(0xFA, 0xFA, 0xFA, 0.4),
+    };
+
+/// Whether the rim draws a chromatic fringe: BitChord's lens disperses red
+/// and blue apart at the edge, most at the corners; g1455's shader cannot, so
+/// the rim paints it (see `AppGlass`).
+bool appGlassChromaticRim(AppGlassLook look) => look == AppGlassLook.bitchord;
+
+/// The finish of every LIQUID surface for [look]; the fill above it sets the
+/// colour in both looks.
 GlassFinish appLiquidGlassFinish(AppGlassLook look) => switch (look) {
   AppGlassLook.sistrum => _sistrumFinish,
   AppGlassLook.bitchord => _bitChordFinish,
@@ -57,7 +87,7 @@ final GlassFinish _sistrumFinish = GlassFinish(
 
 final GlassFinish _bitChordFinish = GlassFinish(
   name: 'clear',
-  blurSigmaLogical: kAppGlassStyle.blurSigma,
+  blurSigmaLogical: kAppBitChordBlurSigma,
   tint: const Color(0x00000000),
   optics: _bitChordOptics,
 );
@@ -84,7 +114,10 @@ final ImageFilter _sistrumFrost = ImageFilter.blur(
 // filters to share one blur.
 final ImageFilter _bitChordFrost = ImageFilter.compose(
   outer: _vibrancy,
-  inner: _sistrumFrost,
+  inner: ImageFilter.blur(
+    sigmaX: kAppBitChordBlurSigma,
+    sigmaY: kAppBitChordBlurSigma,
+  ),
 );
 
 /// The FROSTED backdrop filter for [look]: the same single read either way;

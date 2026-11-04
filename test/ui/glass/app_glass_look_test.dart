@@ -55,12 +55,15 @@ void main() {
     expect(container.read(appGlassLookProvider), AppGlassLook.sistrum);
   });
 
-  test('both looks keep the blur at sigma 6 and differ in the lens only', () {
+  test('Sistrum keeps sigma 6; BitChord takes its own blur and lens', () {
     final sistrum = appLiquidGlassFinish(AppGlassLook.sistrum);
     final bitchord = appLiquidGlassFinish(AppGlassLook.bitchord);
     expect(sistrum, same(kAppLiquidGlassFinish));
     expect(sistrum.blurSigmaLogical, 6);
-    expect(bitchord.blurSigmaLogical, 6);
+    expect(appGlassBlurSigma(AppGlassLook.sistrum), 6);
+    // BitChord's 8 dp RenderEffect radius is sigma 5.1.
+    expect(bitchord.blurSigmaLogical, 5);
+    expect(appGlassBlurSigma(AppGlassLook.bitchord), 5);
     expect(sistrum.optics, const GlassOptics());
     expect(bitchord.optics.thickness, greaterThan(sistrum.optics.thickness));
     // One filter object per look, so grouped reads can share one blur.
@@ -68,6 +71,20 @@ void main() {
       appFrostFilter(AppGlassLook.bitchord),
       same(appFrostFilter(AppGlassLook.bitchord)),
     );
+  });
+
+  test('BitChord takes its 0.4 surface tint and a chromatic rim', () {
+    expect(appGlassLookFill(AppGlassLook.sistrum, dark: true), isNull);
+    expect(
+      appGlassLookFill(AppGlassLook.bitchord, dark: true),
+      const Color.fromRGBO(0x12, 0x12, 0x12, 0.4),
+    );
+    expect(
+      appGlassLookFill(AppGlassLook.bitchord, dark: false),
+      const Color.fromRGBO(0xFA, 0xFA, 0xFA, 0.4),
+    );
+    expect(appGlassChromaticRim(AppGlassLook.sistrum), isFalse);
+    expect(appGlassChromaticRim(AppGlassLook.bitchord), isTrue);
   });
 
   testWidgets('switching the look changes parameters, not the surfaces', (
