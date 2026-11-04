@@ -5,6 +5,7 @@ import 'package:sistrum/core/theme/app_glass_levels.dart';
 import 'package:sistrum/core/theme/app_theme.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/widgets/glass/artwork/app_artwork_ground.dart';
+import 'package:sistrum/widgets/glass/debug/app_liquid_diagnostic.dart';
 import 'package:sistrum/widgets/glass/artwork/app_artwork_glass.dart';
 import 'package:sistrum/widgets/glass/debug/app_artist_glass_isolation.dart';
 import 'package:sistrum/widgets/glass/debug/app_lyrics_diagnostics.dart';
@@ -196,7 +197,10 @@ class AppGlass extends ConsumerWidget {
     final effectiveMode =
         AppArtistGlassIsolationScope.disabledOf(context) ||
             !AppLyricsDiagnosticScope.of(context).glass ||
-            insideLiveBand
+            insideLiveBand ||
+            // Developer HUD only: LIQUID off isolates the host capture.
+            (mode == AppGlassMode.liquid &&
+                !ref.watch(appLiquidDiagnosticProvider))
         ? AppGlassMode.tint
         : liveVideoFallback
         ? AppGlassMode.frosted

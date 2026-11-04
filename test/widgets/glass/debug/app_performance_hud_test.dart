@@ -158,7 +158,7 @@ void main() {
       matches(
         RegExp(
           r'^sistrum-hud level=tinted reads=\d+ copies=\d+ '
-          r'bandblur=on ground=n/a hz=',
+          r'bandblur=on liquid=on ground=n/a hz=',
         ),
       ),
     );

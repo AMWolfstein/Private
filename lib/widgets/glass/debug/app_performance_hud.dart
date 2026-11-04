@@ -16,6 +16,7 @@ import 'package:sistrum/widgets/glass/debug/app_artist_glass_isolation.dart';
 import 'package:sistrum/widgets/glass/debug/app_lyrics_diagnostics.dart';
 import 'package:sistrum/widgets/glass/debug/app_backdrop_reads.dart';
 import 'package:sistrum/widgets/glass/debug/app_band_phase_diagnostics.dart';
+import 'package:sistrum/widgets/glass/debug/app_liquid_diagnostic.dart';
 import 'package:sistrum/widgets/glass/thumb/app_glass_look.dart';
 
 /// Build and raster statistics over a window of frames.
@@ -329,8 +330,9 @@ class _AppPerformanceHudState extends ConsumerState<AppPerformanceHud> {
         ? 'n/a'
         : '${ground.total.inMilliseconds}ms'
               '(decode ${ground.decode.inMilliseconds})';
+    final liquid = ref.read(appLiquidDiagnosticProvider) ? 'on' : 'off';
     return 'level=${level.name} '
-        'reads=${_reads()} bandblur=$band '
+        'reads=${_reads()} bandblur=$band liquid=$liquid '
         'ground=$groundText';
   }
 
@@ -530,6 +532,18 @@ class _AppPerformanceHudState extends ConsumerState<AppPerformanceHud> {
                                   AppArtistVideoBand.still
                               ? 'Video band: still'
                               : 'Video band: live',
+                        ),
+                      ),
+                      TextButton(
+                        key: const ValueKey('sistrum-performance-hud-liquid'),
+                        onPressed: () => ref
+                            .read(appLiquidDiagnosticProvider.notifier)
+                            .toggle(),
+                        style: buttonStyle,
+                        child: Text(
+                          ref.watch(appLiquidDiagnosticProvider)
+                              ? 'Liquid: on'
+                              : 'Liquid: off',
                         ),
                       ),
                       TextButton(
