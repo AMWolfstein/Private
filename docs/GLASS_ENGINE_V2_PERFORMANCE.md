@@ -180,3 +180,46 @@ How to read the result:
 
 For GPU-level proof (render passes, texture copies), capture a Perfetto system trace with GPU
 render stages, or use Android GPU Inspector on the same steps.
+
+### Result of the phase split and the fix (2026-11-04)
+
+Device, Glass normal, Band on, video on (raster P50/P95/P99 per phase):
+
+| Phase | Frames | Raster P50/P95/P99 | Jank |
+|---|---|---|---|
+| hidden+scroll | 154 | 4.5/14.3/17.9 | 2.6% |
+| **transition+scroll** | 169 | **13.9/22.7/24.7** | **34.3%** |
+| stable+scroll | 253 | 3.1/4.3/7.8 | 0% |
+
+Controls:
+
+| Condition | Transition+scroll P95 |
+|---|---|
+| Band off | 4.3 |
+| Artist glass disabled | 4.1 |
+
+The settled band read is cheap; frames while it fades are expensive, and their P50–P95 spread is
+wide. That points to a cost that varies within the fade itself. The band animated its blur
+**sigma** (`sigma × amount`). Impeller chooses the blur's resolution from its sigma
+(`CalculateScale`: ≤ 4 px full resolution, then 1/2, then 1/4 for the settled sigma 6). So most
+of each fade ran a full- or half-resolution blur over the backdrop.
+
+**Fix** (`appHeaderBandFilter`, `app_floating_header.dart`):
+
+- The blur keeps its settled sigma for the whole fade.
+- The 180 ms fade is the blurred backdrop's alpha (`ImageFilter.compose` with an alpha-scaling
+  colour matrix).
+- Impeller draws the filtered backdrop into the band's layer and composites that layer over the
+  page, so the alpha is a crossfade from sharp to blurred.
+- A settled band reuses one plain blur per sigma.
+
+Visual difference: during the 180 ms the band crossfades from sharp to blurred instead of its blur
+radius growing from zero. The duration, the tint fade and the settled look are unchanged.
+
+### HUD windows
+
+- The main line (`build=`/`raster=`, avg/P90/P99) covers the **last 300 frames**.
+- The band phase lines cover **every frame since the last Reset** (or mode or video change). That
+  is why their counts add up to more than 300. The HUD labels them "since Reset" and Copy adds
+  `band window=since-reset`.
+- Both skip the 30 warm-up frames.
