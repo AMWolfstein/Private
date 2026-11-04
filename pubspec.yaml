@@ -38,6 +38,8 @@ dependencies:
 
 
   # UI Components
+  # Liquid Glass refraction (MIT). See AGENTS.md, Glass Engine V2.
+  g1455: 0.4.0
   cupertino_icons: ^2.0.0
   volume_controller: ^3.7.1
 
