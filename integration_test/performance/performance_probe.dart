@@ -209,7 +209,6 @@ class PerformanceProbe {
       'physical_width': tester.view.physicalSize.width,
       'physical_height': tester.view.physicalSize.height,
       'device_pixel_ratio': tester.view.devicePixelRatio,
-      'shader_filters_supported': ui.ImageFilter.isShaderFilterSupported,
       'image_cache_bytes': PaintingBinding.instance.imageCache.currentSizeBytes,
       'rss_bytes': ProcessInfo.currentRss,
       'max_rss_bytes': ProcessInfo.maxRss,
