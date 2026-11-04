@@ -22,6 +22,8 @@ popover placement so it follows the tapped ellipsis. Keep the metadata page remo
 
 ## Progress
 
+**Collection header band without a live blur (2026-11-04):** Loved and playlist headers use the same artwork-ground band as the artist and album headers (`softenOverArtwork`), so their toolbar band keeps its tint without a live `BackdropFilter` over artwork. Video-on pages and pages without a ground keep the live blur.
+
 **Artist and album header band without a live blur (2026-11-04):** the pinned toolbar band on artist and album pages keeps its gradient tint and feather but no longer draws a live `BackdropFilter` when the page artwork ground is in use (`AppHeaderBacking.groundVeil`). The ground veil already softens the artwork. Video-on pages, pages without a ground and collection headers (Loved, playlists) keep the live blur. Raster and jank figures on device are still to be measured.
 
 **Glass buttons and header polish (2026-11-04):** every translucent control now uses the Tinted Lite back-button glass with no outer drop shadow (the rim stays): header circles and capsules, outlined action pills, the bottom bar and the Shuffle pills. The artist page no longer shows the shared Sort control, a lone header action (for example the album More button) renders as its own glass circle, and the profile photo placeholder gets a glass background. Full `flutter test` passes (2599). Device checks of the rim and shadow removal remain with the owner.
