@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart'
     show CupertinoButton, CupertinoDynamicColor, kCupertinoModalBarrierColor;
 import 'package:sistrum/core/theme/app_tokens.dart';
 import 'package:sistrum/core/theme/app_theme.dart';
+import 'package:sistrum/widgets/glass/artwork/app_screen_ground.dart';
 import 'package:sistrum/widgets/glass/chrome/app_chrome.dart';
 import 'package:sistrum/core/theme/app_icons.dart';
 
@@ -321,7 +322,16 @@ Future<T?> showAppModalBottomSheet<T>({
   Color? backgroundColor,
 }) {
   final sistrum = context.isAppTheme;
-  return showModalBottomSheet<T>(
+  final barrier = CupertinoDynamicColor.resolve(
+    kCupertinoModalBarrierColor,
+    context,
+  );
+  // The sheet's glass draws the screen under it, blurred once now, instead
+  // of re-blurring the page on every frame (see AppScreenGround).
+  final ground = sistrum
+      ? AppScreenGround.capture(context, barrier: barrier)
+      : null;
+  final route = showModalBottomSheet<T>(
     context: context,
     isScrollControlled: isScrollControlled,
     isDismissible: isDismissible,
@@ -330,15 +340,18 @@ Future<T?> showAppModalBottomSheet<T>({
     useSafeArea: useSafeArea,
     constraints: constraints,
     backgroundColor: Colors.transparent,
-    barrierColor: CupertinoDynamicColor.resolve(
-      kCupertinoModalBarrierColor,
-      context,
-    ),
+    barrierColor: barrier,
     elevation: 0,
     builder: (context) => sistrum
-        ? AppGlassPanel.overlay(child: Builder(builder: builder))
+        ? AppScreenGround.wrap(
+            ground,
+            AppGlassPanel.overlay(child: Builder(builder: builder)),
+          )
         : builder(context),
   );
+  return ground == null
+      ? route
+      : route.whenComplete(() => ground.image.dispose());
 }
 
 /// Flat rows sit directly on a sheet's glass; Material keeps its ListTile.

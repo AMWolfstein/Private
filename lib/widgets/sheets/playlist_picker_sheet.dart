@@ -6,6 +6,7 @@ import 'package:sistrum/core/models/track.dart';
 import 'package:sistrum/providers/library/library_collections_provider.dart';
 import 'package:sistrum/core/theme/app_theme.dart';
 import 'package:sistrum/utils/logging/logger.dart';
+import 'package:sistrum/widgets/glass/artwork/app_screen_ground.dart';
 import 'package:sistrum/widgets/primitives/app_action_button.dart';
 import 'package:sistrum/widgets/primitives/app_bottom_sheet.dart';
 import 'package:sistrum/widgets/glass/chrome/app_chrome.dart';
@@ -33,11 +34,19 @@ Future<void> showAddTracksToPlaylistSheet(
 
   if (!context.mounted) return;
 
+  final barrier =
+      Theme.of(context).bottomSheetTheme.modalBarrierColor ?? Colors.black54;
+  // The sheet's glass draws the screen under it, blurred once (see
+  // AppScreenGround).
+  final ground = context.isAppTheme
+      ? AppScreenGround.capture(context, barrier: barrier)
+      : null;
   await showModalBottomSheet<void>(
     context: context,
     useRootNavigator: true,
     showDragHandle: !context.isAppTheme,
     backgroundColor: Colors.transparent,
+    barrierColor: barrier,
     isScrollControlled: true,
     builder: (sheetContext) {
       final content = _PlaylistPickerSheetContent(
@@ -46,10 +55,13 @@ Future<void> showAddTracksToPlaylistSheet(
         preserveOccurrences: preserveOccurrences,
       );
       return sheetContext.isAppTheme
-          ? AppGlassPanel(tintOpacity: 0.78, child: content)
+          ? AppScreenGround.wrap(
+              ground,
+              AppGlassPanel(tintOpacity: 0.78, child: content),
+            )
           : content;
     },
-  );
+  ).whenComplete(() => ground?.image.dispose());
 }
 
 class _PlaylistPickerSheetContent extends ConsumerStatefulWidget {

@@ -1,4 +1,4 @@
-import 'dart:ui' show ColorFilter, ImageFilter;
+import 'dart:ui' show ColorFilter, ImageFilter, TileMode;
 
 import 'package:flutter/painting.dart' show Color;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -134,3 +134,20 @@ Color appGlassContactEdge(AppGlassLook look, {required bool dark}) =>
       AppGlassLook.sistrum => Color.fromRGBO(0, 0, 0, dark ? 0.5 : 0.16),
       AppGlassLook.bitchord => const Color.fromRGBO(255, 255, 255, 0.10),
     };
+
+/// The FROSTED look of [look] for a still image drawn [scale] times its
+/// logical size: the same blur (in the image's pixels) and, for BitChord,
+/// the same saturation lift. Blur and the colour matrix are both linear, so
+/// their order does not change the result.
+ImageFilter appFrostImageFilter(AppGlassLook look, double scale) {
+  final sigma = appGlassBlurSigma(look) * scale;
+  final blur = ImageFilter.blur(
+    sigmaX: sigma,
+    sigmaY: sigma,
+    tileMode: TileMode.clamp,
+  );
+  return switch (look) {
+    AppGlassLook.sistrum => blur,
+    AppGlassLook.bitchord => ImageFilter.compose(outer: _vibrancy, inner: blur),
+  };
+}

@@ -15,6 +15,7 @@ import 'package:sistrum/l10n/app_localizations.dart';
 import 'package:sistrum/l10n/supported_locales.dart';
 import 'package:sistrum/utils/layout/adaptive_layout.dart';
 import 'package:g1455/g1455.dart' show GlassHost;
+import 'package:sistrum/widgets/glass/artwork/app_screen_ground.dart';
 import 'package:sistrum/widgets/glass/debug/app_performance_hud.dart';
 import 'package:sistrum/widgets/primitives/app_snack_bar.dart';
 import 'package:sistrum/widgets/player/controls/playback_feedback.dart';
@@ -216,7 +217,10 @@ class SistrumApp extends ConsumerWidget {
               // samples its capture (see AGENTS.md, Glass Engine V2).
               child: GlassHost(
                 child: AppPerformanceHudHost(
-                  child: AdaptiveUiScaler(child: appContent),
+                  // Sheets capture this once as they open (AppScreenGround).
+                  child: AppScreenCapture(
+                    child: AdaptiveUiScaler(child: appContent),
+                  ),
                 ),
               ),
             );
