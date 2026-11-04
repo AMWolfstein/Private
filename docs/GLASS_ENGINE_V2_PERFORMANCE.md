@@ -276,3 +276,17 @@ blur strength). Into or out of focus the line crossfades a sharp copy with a cop
 constant sigma. The copy exists only during the 420 ms change and is hidden from semantics and hit
 testing; the line keeps its element and state. Below 100% strength the nearest lines' blur can
 itself be under 4 px; that is the setting's choice and is unchanged.
+
+## Album page scroll: build-bound (2026-11-04, open)
+
+Album page, no video, scrolling: build avg/P90/P99 9.8/17.7/21.7 ms, raster 4.7/11.2/27.2 ms,
+jank 19.3%, host snapshots 1496. The cost is on the UI thread. The pinned toolbar rebuilds on
+every scroll frame (`SliverLayoutBuilder`), but the artist page does the same and measured build
+1.0 ms, so that is not the cause; track rows, the scroll veil and the stretch are light.
+
+Candidate: g1455's host recaptures on nearly every scroll frame, and each capture walks the layer
+tree on the UI thread. g1455 exposes no timing for it. The HUD's **Liquid** switch (developer only,
+not persisted) draws every LIQUID surface as TINT, so the host records nothing; the Copy line
+shows `liquid=on|off`. Procedure: album page, Reset, scroll ~10 s, Copy; switch Liquid off and
+repeat. Build falling to ~1–2 ms points at the host capture; unchanged points elsewhere (next: a
+DevTools timeline on a profile build).
