@@ -17,21 +17,17 @@ for argument in "$@"; do
   esac
 done
 
-ANDROID_ABIS_RAW="${SISTRUM_RUST_ANDROID_ABIS-arm64-v8a,armeabi-v7a}"
-case "$ANDROID_ABIS_RAW" in
-  arm64-v8a|armeabi-v7a|arm64-v8a,armeabi-v7a|armeabi-v7a,arm64-v8a) ;;
-  *)
-    echo "Error: SISTRUM_RUST_ANDROID_ABIS must contain arm64-v8a and/or armeabi-v7a, comma-separated without spaces or duplicates." >&2
-    exit 1
-    ;;
-esac
+ANDROID_ABIS_RAW="${SISTRUM_RUST_ANDROID_ABIS-arm64-v8a}"
+if [[ "$ANDROID_ABIS_RAW" != "arm64-v8a" ]]; then
+  echo "Error: SISTRUM_RUST_ANDROID_ABIS must be arm64-v8a; only the arm64 APK is built." >&2
+  exit 1
+fi
 export SISTRUM_RUST_ANDROID_ABIS="$ANDROID_ABIS_RAW"
 IFS=',' read -r -a ANDROID_ABIS <<< "$ANDROID_ABIS_RAW"
 TARGET_PLATFORMS=()
 for abi in "${ANDROID_ABIS[@]}"; do
   case "$abi" in
     arm64-v8a) TARGET_PLATFORMS+=(android-arm64) ;;
-    armeabi-v7a) TARGET_PLATFORMS+=(android-arm) ;;
   esac
 done
 TARGET_PLATFORM_LIST="$(IFS=','; echo "${TARGET_PLATFORMS[*]}")"

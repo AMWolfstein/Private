@@ -15,7 +15,7 @@ Map<String, Object?> release(String version) => {
   'published_at': '2026-09-26T06:32:33Z',
   'html_url': 'https://github.com/amwolfstein/private/releases/tag/v$version',
   'assets': [
-    for (final abi in ['arm32', 'arm64'])
+    for (final abi in ['arm64'])
       {
         'name': 'Sistrum-v$version-$abi.apk',
         'browser_download_url':
@@ -33,10 +33,7 @@ void main() {
     LogBuffer().clear();
   });
 
-  for (final (abi, asset) in [
-    ('arm64-v8a', 'arm64'),
-    ('armeabi-v7a', 'arm32'),
-  ]) {
+  for (final (abi, asset) in [('arm64-v8a', 'arm64')]) {
     test('5.0.0 discovers 5.0.5 despite a recent cache ($abi)', () async {
       SharedPreferences.setMockInitialValues({
         'update_checker_releases_json': jsonEncode([release('5.0.0')]),
@@ -187,7 +184,7 @@ void main() {
       final checker = UpdateChecker(
         installedVersion: '5.0.0',
         isAndroid: true,
-        supportedAbis: ['armeabi-v7a'],
+        supportedAbis: ['arm64-v8a'],
         client: MockClient((_) async => throw http.ClientException('Offline')),
       );
       expect((await checker.checkForUpdate())?.version, '5.0.5');

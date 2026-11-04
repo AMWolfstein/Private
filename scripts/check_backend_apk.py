@@ -13,7 +13,6 @@ from typing import Iterable, Sequence, Tuple
 
 ABI_LAYOUT = {
     "arm64-v8a": (2, 183),
-    "armeabi-v7a": (1, 40),
 }
 CORE_LIBRARIES = ("libapp.so", "libflutter.so")
 

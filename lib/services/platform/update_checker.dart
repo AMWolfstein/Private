@@ -8,7 +8,7 @@ import 'package:sistrum/utils/logging/logger.dart';
 
 final _log = AppLogger('UpdateChecker');
 
-enum _ApkVariant { arm64, arm32, universal }
+enum _ApkVariant { arm64, universal }
 
 class _ApkAsset {
   final String name;
@@ -390,12 +390,6 @@ class UpdateChecker {
     if (name.contains('arm64') || name.contains('arm64-v8a')) {
       return _ApkVariant.arm64;
     }
-    if (name.contains('arm32') ||
-        name.contains('armeabi') ||
-        name.contains('armv7') ||
-        name.contains('v7a')) {
-      return _ApkVariant.arm32;
-    }
     return null;
   }
 
@@ -405,15 +399,11 @@ class UpdateChecker {
     }
 
     _ApkAsset? arm64Asset;
-    _ApkAsset? arm32Asset;
     _ApkAsset? universalAsset;
     for (final asset in assets) {
       switch (asset.variant) {
         case _ApkVariant.arm64:
           arm64Asset ??= asset;
-          break;
-        case _ApkVariant.arm32:
-          arm32Asset ??= asset;
           break;
         case _ApkVariant.universal:
           universalAsset ??= asset;
@@ -423,13 +413,9 @@ class UpdateChecker {
 
     final supportedAbis = _supportedAbis ?? await _getSupportedAndroidAbis();
     final hasArm64 = supportedAbis.any(_isArm64Abi);
-    final hasArm32 = supportedAbis.any(_isArm32Abi);
 
     if (hasArm64) {
-      return arm64Asset ?? universalAsset ?? arm32Asset;
-    }
-    if (hasArm32) {
-      return arm32Asset ?? universalAsset;
+      return arm64Asset ?? universalAsset;
     }
 
     if (universalAsset != null) {
@@ -469,7 +455,4 @@ class UpdateChecker {
 
   static bool _isArm64Abi(String abi) =>
       abi.contains('arm64') || abi.contains('aarch64');
-
-  static bool _isArm32Abi(String abi) =>
-      abi.contains('armeabi') || abi.contains('armv7') || abi.contains('arm');
 }

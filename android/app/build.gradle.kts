@@ -40,12 +40,12 @@ val rustAndroidAbis = providers.environmentVariable("SISTRUM_RUST_ANDROID_ABIS")
     .orElse("arm64-v8a")
     .get()
     .split(",")
-val supportedRustAndroidAbis = setOf("arm64-v8a", "armeabi-v7a")
+val supportedRustAndroidAbis = setOf("arm64-v8a")
 require(rustAndroidAbis.size == rustAndroidAbis.toSet().size) {
     "SISTRUM_RUST_ANDROID_ABIS must not contain duplicate ABIs"
 }
 require(rustAndroidAbis.all { it in supportedRustAndroidAbis }) {
-    "SISTRUM_RUST_ANDROID_ABIS must contain only arm64-v8a and/or armeabi-v7a"
+    "SISTRUM_RUST_ANDROID_ABIS must be arm64-v8a"
 }
 
 android {

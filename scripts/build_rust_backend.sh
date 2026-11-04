@@ -14,14 +14,11 @@ case "$PLATFORM" in
 esac
 
 if [[ "$PLATFORM" == "android" ]]; then
-  ANDROID_ABIS_RAW="${SISTRUM_RUST_ANDROID_ABIS-arm64-v8a,armeabi-v7a}"
-  case "$ANDROID_ABIS_RAW" in
-    arm64-v8a|armeabi-v7a|arm64-v8a,armeabi-v7a|armeabi-v7a,arm64-v8a) ;;
-    *)
-      echo "Error: SISTRUM_RUST_ANDROID_ABIS must contain arm64-v8a and/or armeabi-v7a, comma-separated without spaces or duplicates." >&2
-      exit 1
-      ;;
-  esac
+  ANDROID_ABIS_RAW="${SISTRUM_RUST_ANDROID_ABIS-arm64-v8a}"
+  if [[ "$ANDROID_ABIS_RAW" != "arm64-v8a" ]]; then
+    echo "Error: SISTRUM_RUST_ANDROID_ABIS must be arm64-v8a; only the arm64 APK is built." >&2
+    exit 1
+  fi
   IFS=',' read -r -a ANDROID_ABIS <<< "$ANDROID_ABIS_RAW"
 fi
 
@@ -79,14 +76,6 @@ if [[ "$PLATFORM" == "android" ]]; then
         export AR_aarch64_linux_android="$NDK_BIN/llvm-ar"
         export BINDGEN_EXTRA_CLANG_ARGS_aarch64_linux_android="--sysroot=\"$NDK_SYSROOT\" --target=aarch64-linux-android24"
         ;;
-      armeabi-v7a)
-        ANDROID_TARGETS+=(armv7-linux-androideabi)
-        ANDROID_LINKERS+=("$NDK_BIN/armv7a-linux-androideabi24-clang")
-        export CARGO_TARGET_ARMV7_LINUX_ANDROIDEABI_LINKER="$NDK_BIN/armv7a-linux-androideabi24-clang"
-        export CC_armv7_linux_androideabi="$CARGO_TARGET_ARMV7_LINUX_ANDROIDEABI_LINKER"
-        export AR_armv7_linux_androideabi="$NDK_BIN/llvm-ar"
-        export BINDGEN_EXTRA_CLANG_ARGS_armv7_linux_androideabi="--sysroot=\"$NDK_SYSROOT\" --target=armv7a-linux-androideabi24"
-        ;;
     esac
   done
 
@@ -106,7 +95,6 @@ if [[ "$PLATFORM" == "android" ]]; then
     cargo build --locked --release -p sistrum-mobile --target "$target"
     case "$target" in
       aarch64-linux-android) ABI="arm64-v8a" ;;
-      armv7-linux-androideabi) ABI="armeabi-v7a" ;;
     esac
     mkdir -p "$CARGO_TARGET_DIR/android/jniLibs/$ABI"
     cp "$CARGO_TARGET_DIR/$target/release/libsistrum_mobile.so" \

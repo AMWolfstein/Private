@@ -24,13 +24,13 @@ class BackendApkAuditTest(unittest.TestCase):
             ):
                 self.entries[f"lib/{abi}/{library}"] = bytes(header)
 
-    def audit(self, abis=("arm64-v8a", "armeabi-v7a")):
+    def audit(self, abis=("arm64-v8a",)):
         with zipfile.ZipFile(self.apk, "w") as zf:
             for name, data in self.entries.items():
                 zf.writestr(name, data)
         return checker.audit(self.apk, "rust", abis)
 
-    def test_universal_passes(self):
+    def test_arm64_apk_passes(self):
         self.assertEqual(len(self.audit()), 64)
 
     def test_split_apks_pass(self):
@@ -91,9 +91,9 @@ class BackendApkAuditTest(unittest.TestCase):
                     self.entries[path] = data
 
     def test_wrong_architecture_fails(self):
-        self.entries["lib/armeabi-v7a/libsistrum_mobile.so"] = self.entries[
-            "lib/arm64-v8a/libsistrum_mobile.so"
-        ]
+        wrong = bytearray(self.entries["lib/arm64-v8a/libsistrum_mobile.so"])
+        wrong[4] = 1  # ELFCLASS32 inside an arm64 directory
+        self.entries["lib/arm64-v8a/libsistrum_mobile.so"] = bytes(wrong)
         with self.assertRaisesRegex(checker.AuditError, "ELF class"):
             self.audit()
 

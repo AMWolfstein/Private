@@ -73,7 +73,7 @@ class AndroidBuildScriptTest(unittest.TestCase):
     def calls(self):
         return [json.loads(line) for line in self.log.read_text().splitlines()]
 
-    def test_default_builds_one_universal_apk_for_both_abis(self):
+    def test_default_builds_one_arm64_apk(self):
         result = self.run_build("--verbose")
         self.assertEqual(result.returncode, 0, result.stderr)
         calls = self.calls()
@@ -81,12 +81,12 @@ class AndroidBuildScriptTest(unittest.TestCase):
         preparation = next(call for call in calls if call["args"] == ["scripts/prepare_flutter_sdk.dart"])
         self.assertEqual(preparation["tool"], "dart")
         self.assertLess(calls.index(preparation), calls.index(build))
-        self.assertIn("android-arm64,android-arm", build["args"])
+        self.assertIn("android-arm64", build["args"])
         self.assertIn("--verbose", build["args"])
         self.assertNotIn("--split-per-abi", build["args"])
         audits = [call["args"] for call in calls if call["tool"] == "audit"]
         self.assertEqual([Path(args[0]).name for args in audits], ["app-release.apk"])
-        self.assertEqual(audits[0][audits[0].index("--abis") + 1], "arm64-v8a,armeabi-v7a")
+        self.assertEqual(audits[0][audits[0].index("--abis") + 1], "arm64-v8a")
 
     def test_split_per_abi_flag_is_refused(self):
         result = self.run_build("--split-per-abi")
@@ -135,7 +135,7 @@ class AndroidBuildScriptTest(unittest.TestCase):
         ])
 
     def test_invalid_or_overridden_abis_stop_before_flutter(self):
-        for abis in ("", "x86_64", "arm64-v8a,arm64-v8a", "armeabi-v7a, arm64-v8a"):
+        for abis in ("", "x86_64", "armeabi-v7a", "arm64-v8a,arm64-v8a"):
             with self.subTest(abis=abis):
                 self.env["SISTRUM_RUST_ANDROID_ABIS"] = abis
                 self.assertNotEqual(self.run_build().returncode, 0)
