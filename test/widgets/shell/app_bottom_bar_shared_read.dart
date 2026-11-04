@@ -41,7 +41,11 @@ Future<void> _pumpShell(
       ],
       child: MaterialApp(
         theme: AppTheme.build(brightness, chromeSurface: chromeSurface),
-        builder: (_, child) => RepaintBoundary(key: capture, child: child),
+        builder: (_, child) => RepaintBoundary(
+          key: capture,
+          // Production mounts one GlassHost above the navigator (app.dart).
+          child: GlassHost(child: child ?? const SizedBox.shrink()),
+        ),
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         home: Scaffold(

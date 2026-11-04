@@ -2,18 +2,25 @@ import 'dart:ui' show ImageFilter;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:g1455/g1455.dart' show GlassFinish, GlassSurface;
 import 'package:sistrum/core/theme/app_glass_levels.dart';
 import 'package:sistrum/core/theme/app_theme.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/widgets/glass/artwork/app_artwork_ground.dart';
 import 'package:sistrum/widgets/glass/artwork/app_artwork_glass.dart';
 
-/// Tinted Lite glass: a backdrop blur, a surface tint and a rim.
+/// Glass Engine V2 surface: GROUND, FROSTED, LIQUID or TINT.
+///
+/// - GROUND: over known artwork (the player, album and artist headers) it
+///   draws the artwork's pre-blurred ground and reads no backdrop.
+/// - LIQUID ([liquid]): the backdrop is refracted through a `GlassSurface`
+///   from the `g1455` package, under the host's one capture. Small chrome only.
+/// - FROSTED: a backdrop blur clipped to the glass bounds. The default.
+/// - TINT: an opaque or translucent fill with no sampling, for flat levels,
+///   low-end devices and surfaces nested inside another glass surface.
 ///
 /// A surface inside another glass surface draws its fill only, so nested
-/// glass never blurs twice. Over known artwork (the player, album and artist
-/// headers) it draws the artwork's pre-blurred ground instead of reading the
-/// backdrop. Foreground content stays above the glass.
+/// glass never samples twice. Foreground content stays above the glass.
 class AppGlass extends ConsumerWidget {
   const AppGlass({
     super.key,
@@ -30,12 +37,21 @@ class AppGlass extends ConsumerWidget {
     this.glassProgress = 1,
     this.samplesBackdrop = true,
     this.dropShadow = true,
+    this.liquid = false,
   });
 
   // One shared filter: never rebuilt per frame.
   static final _blur = ImageFilter.blur(
     sigmaX: kAppGlassStyle.blurSigma,
     sigmaY: kAppGlassStyle.blurSigma,
+  );
+
+  // The refraction keeps the Tinted Lite blur and adds no tint of its own:
+  // the surface fill above it sets the colour, as it did over the blur.
+  static final _liquidFinish = GlassFinish(
+    name: 'clear',
+    blurSigmaLogical: kAppGlassStyle.blurSigma,
+    tint: const Color(0x00000000),
   );
 
   final Widget child;
@@ -46,6 +62,10 @@ class AppGlass extends ConsumerWidget {
   final bool strongTint;
   final double? tintOpacity;
   final Color? tintColor;
+
+  /// Refract the backdrop (LIQUID) instead of blurring it (FROSTED). Set on
+  /// small chrome only; sheets and menus keep the blur.
+  final bool liquid;
 
   /// Paint the rim above the fill so tinted popovers keep a visible edge.
   final bool highlightBorder;
@@ -153,6 +173,13 @@ class AppGlass extends ConsumerWidget {
             fill: fill,
             opaqueFill: scheme.surfaceContainerHigh,
             child: _GlassBackdropScope(child: child),
+          )
+        : sampleBackdrop && liquid
+        ? GlassSurface(
+            borderRadius: shape,
+            finish: _liquidFinish,
+            labelled: false,
+            child: surface,
           )
         : sampleBackdrop
         ? BackdropFilter(filter: _blur, child: surface)

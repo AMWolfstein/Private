@@ -77,6 +77,7 @@ class HeaderCircleButton extends ConsumerWidget {
       return Center(
         widthFactor: 1,
         child: AppGlass(
+          liquid: true,
           dropShadow: false,
           radius: (buttonSize ?? kAppHeaderControlSize) / 2,
           tintColor: scheme.brightness == Brightness.dark

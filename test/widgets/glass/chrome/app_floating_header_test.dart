@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
+import 'package:g1455/g1455.dart' show GlassSurface;
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -107,8 +108,10 @@ void main() {
       ],
     );
     expect(appBar(tester).backgroundColor, Colors.transparent);
-    // The back circle and one capsule for both actions, each blurred.
-    expect(find.byType(BackdropFilter), findsNWidgets(2));
+    // The back circle and the capsule for both actions refract the backdrop
+    // (LIQUID), so neither is a blur.
+    expect(find.byType(GlassSurface), findsNWidgets(2));
+    expect(find.byType(BackdropFilter), findsNothing);
     expect(backing, findsNothing);
 
     await scrollUnder(tester, controller);

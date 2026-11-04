@@ -71,6 +71,12 @@ class AppActionButton extends StatelessWidget {
     // Outlined buttons are Tinted Lite glass like every other floating control.
     return prominent || !glass
         ? action
-        : AppGlass(radius: 28, blurEnabled: true, dropShadow: false, child: action);
+        : AppGlass(
+            radius: 28,
+            blurEnabled: true,
+            dropShadow: false,
+            liquid: true,
+            child: action,
+          );
   }
 }

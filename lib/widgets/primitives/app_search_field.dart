@@ -107,6 +107,7 @@ class AppSearchField extends StatelessWidget {
 
     return Consumer(
       builder: (context, ref, child) => AppGlass(
+        liquid: true,
         radius: 28,
         blurEnabled: ref.watch(appBlurEnabledProvider),
         samplesBackdrop: samplesBackdrop,

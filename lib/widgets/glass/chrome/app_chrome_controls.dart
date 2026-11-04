@@ -34,6 +34,7 @@ class AppSegmentedControl extends ConsumerWidget {
       child: SizedBox(
         height: height,
         child: AppGlass(
+          liquid: true,
           dropShadow: false,
           blurEnabled: ref.watch(appBlurEnabledProvider),
           radius: height / 2,
@@ -151,6 +152,7 @@ class AppTabBar extends ConsumerWidget {
                 scaleX: 1 + 0.025 * progress,
                 scaleY: 1 + 0.06 * progress,
                 child: AppGlass(
+                  liquid: true,
                   dropShadow: false,
                   blurEnabled: blurEnabled,
                   strongTint: true,

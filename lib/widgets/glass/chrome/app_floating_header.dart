@@ -311,6 +311,7 @@ class _HeaderGlass extends ConsumerWidget {
     final scheme = HeaderPalette.of(context);
     final dark = scheme.brightness == Brightness.dark;
     return AppGlass(
+      liquid: true,
       dropShadow: false,
       radius: kAppHeaderControlSize / 2,
       tintColor: dark ? Colors.black : Colors.white,
