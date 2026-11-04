@@ -290,3 +290,24 @@ not persisted) draws every LIQUID surface as TINT, so the host records nothing; 
 shows `liquid=on|off`. Procedure: album page, Reset, scroll ~10 s, Copy; switch Liquid off and
 repeat. Build falling to ~1–2 ms points at the host capture; unchanged points elsewhere (next: a
 DevTools timeline on a profile build).
+
+## Header band review (2026-11-04)
+
+A review of every band (`AppHeaderBacking`: `app_sliver_header.dart`, the artist and the album
+headers) found four faults:
+
+1. **The fade animated the blur sigma** (`sigma × amount`), so Impeller blurred at full or half
+   resolution through most of every fade (transition+scroll P95 22.7 ms, 34% jank). Fixed in
+   `2a99f79`: constant sigma, the fade is the blurred backdrop's alpha. Not yet measured on the
+   device; `full-blur` still has the old ramp.
+2. **Two page copies during every fade over a video.** The header controls kept their own read
+   until the band was fully shown and resumed it as soon as it began to leave. Fixed: the band
+   reports `covers` whenever its blur shows (`amount > 0`), so the controls draw their fill for
+   the whole fade. They hear it one frame late, so one frame per fade still has two copies.
+   Test: `a fading band copies the page once, not twice`.
+3. **The band copies the page on every scrolled frame for a blur mostly under its 0.72 tint.**
+   After fix 2 this is one copy, the minimum for a live blur (about 3 ms settled). Removing it
+   means a visual change (no live blur, or the band sampling the g1455 host capture the controls
+   already use); not done without the owner's choice.
+4. **`full-blur`:** every glass surface is an unkeyed `BackdropFilter` (`reads=6`, six page copies
+   per frame) plus the old ramp: raster 18.4/24.4/27.6 ms, 76% jank. Not changed here.
