@@ -7,6 +7,7 @@ import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/widgets/glass/chrome/app_floating_header.dart'
     show AppHeaderBacking, AppHeaderControls;
 import 'package:sistrum/widgets/glass/debug/app_backdrop_reads.dart';
+import 'package:sistrum/widgets/glass/thumb/app_glass_look.dart';
 import 'package:sistrum/widgets/glass/thumb/app_glass_surface.dart';
 
 final _sharedKey = BackdropKey();
@@ -242,5 +243,17 @@ void main() {
       expect(covers.value, isFalse);
       expect(find.byType(BackdropFilter), findsNWidgets(3));
     });
+  });
+
+  testWidgets('over a live video the read keeps the plain sigma 6 blur', (
+    tester,
+  ) async {
+    await _pump(tester, liveVideo: true);
+    // BitChord is the default look; its saturation pass and lighter blur
+    // stay off the per-frame read over a video.
+    expect(
+      tester.widget<BackdropFilter>(find.byType(BackdropFilter)).filter,
+      same(appFrostFilter(AppGlassLook.sistrum)),
+    );
   });
 }

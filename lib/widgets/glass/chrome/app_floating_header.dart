@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/services/library/covers/cover_palette.dart';
+import 'package:sistrum/core/theme/app_glass_levels.dart';
 import 'package:sistrum/core/theme/app_theme.dart';
 import 'package:sistrum/widgets/glass/artwork/app_artwork_ground.dart';
 import 'package:sistrum/widgets/glass/debug/app_artist_glass_isolation.dart';
@@ -118,6 +119,10 @@ class AppHeaderBacking extends ConsumerWidget {
             ref.watch(appHeaderBandBlurDisabledProvider) ||
             AppArtistGlassIsolationScope.disabledOf(context)
         ? 0.0
+        // Over a playing video the band keeps Sistrum's sigma 6, the cheaper
+        // blur to read every frame (see AppGlass).
+        : AppLiveVideoBackdrop.of(context)
+        ? kAppGlassStyle.blurSigma
         : appGlassBlurSigma(ref.watch(appGlassLookProvider));
     final base = color ?? Theme.of(context).scaffoldBackgroundColor;
     return TweenAnimationBuilder<double>(

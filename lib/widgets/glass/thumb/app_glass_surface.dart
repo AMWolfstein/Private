@@ -227,7 +227,14 @@ class AppGlass extends ConsumerWidget {
             child: surface,
           )
         : BackdropFilter(
-            filter: appFrostFilter(look),
+            // Over a playing video the page is read every frame, and the
+            // device measured BitChord's lighter blur plus its saturation
+            // pass at about twice Sistrum's cost there (raster P95 19.3 ms
+            // against 10.8 ms, one copy each). The read over a video keeps
+            // Sistrum's plain sigma 6; the look's tint, lens and rim stay.
+            filter: appFrostFilter(
+              liveVideoFallback ? AppGlassLook.sistrum : look,
+            ),
             // Header controls over a live video share one backdrop read: the
             // engine copies and blurs the page once for all of them, not once
             // per control (see [AppHeaderControls]).
