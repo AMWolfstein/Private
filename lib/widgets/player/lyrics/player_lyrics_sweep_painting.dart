@@ -158,7 +158,9 @@ class _SweepingTimedLyricTextState extends State<_SweepingTimedLyricText> {
                   ? (textScaler.scale(widget.style.fontSize ?? 24) * 0.05)
                         .clamp(0.0, 2.0)
                   : 0,
-              glowSigma: widget.liftEnabled
+              glowSigma:
+                  widget.liftEnabled &&
+                      AppLyricsDiagnosticScope.of(context).text
                   ? textScaler.scale(widget.style.fontSize ?? 24) * 0.2
                   : 0,
               rightToLeft: rightToLeft,

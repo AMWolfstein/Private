@@ -24,6 +24,7 @@ import 'package:sistrum/utils/lyrics/lyric_direction.dart';
 import 'package:sistrum/widgets/lyrics/lyric_supplement_transition.dart';
 import 'package:sistrum/widgets/lyrics/lyrics_text_scale.dart';
 import 'package:sistrum/widgets/player/controls/app_player_slider.dart';
+import 'package:sistrum/widgets/glass/debug/app_lyrics_diagnostics.dart';
 
 part 'player_lyrics_scroll.dart';
 part 'player_lyrics_measurement.dart';

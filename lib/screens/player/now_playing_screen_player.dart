@@ -266,92 +266,96 @@ extension _NowPlayingPlayer on _NowPlayingScreenState {
             swipeQueue[reportedIndex].id == mediaItem.id
         ? reportedIndex
         : swipeQueue.indexWhere((entry) => entry.id == mediaItem.id);
-    return PlayerTrackSwipe(
-      queue: swipeQueue,
-      currentIndex: swipeIndex,
-      onSelected: (item) async {
-        final latest = ref.read(playQueueProvider).value ?? const <MediaItem>[];
-        final index = latest.indexWhere((entry) => identical(entry, item));
-        if (index >= 0) {
-          await ref.read(musicPlayerControllerProvider).jumpTo(index);
-        }
-      },
-      child: HeroMode(
-        // A route Hero renders outside the panel's gradient and slide, briefly
-        // exposing a detached rectangle. Keep Sistrum artwork inside its panel.
-        enabled: false,
-        child: Theme(
-          data: AppTheme.fromContext(context, brightness: Brightness.dark),
-          // The player's menus and sheets draw their glass from this ground.
-          child: AppPlayerGround(
-            source: _coverSource(mediaItem),
-            immersive: immersive,
-            showArtwork: _currentPage == 0,
-            artworkAspectRatio: artworkRatio,
-            fadeStart: immersive ? .72 : .58,
-            insetArtworkKey: _expandedArtworkKey,
-            child: Stack(
-              fit: StackFit.expand,
-              children: [
-                AppArtworkContrast(
-                  enabled: false,
-                  targets: {
-                    'header': _artworkHeaderKey,
-                    'controls': _artworkControlsKey,
-                    'volume': _artworkVolumeKey,
-                  },
-                  onChanged: (colors) {
-                    if (!mounted) return;
-                    _artworkForeground.value = colors;
-                  },
-                  child: AppPlayerBackground(
-                    artUri: mediaItem.artUri,
-                    squareArtwork: !immersive,
-                    artworkAspectRatio: artworkRatio,
-                    fadeStart: immersive ? .72 : .58,
-                    showArtwork: _currentPage == 0,
-                    // The background fades this cover, then drifts it.
-                    artwork: immersive
-                        ? PlayerArtworkDragRegion(
-                            child: PlayerTransitionArtwork(
-                              artworkKey: _immersiveArtworkKey,
-                              child: Hero(
-                                tag: kNowPlayingArtworkHeroTag,
-                                child: PlayerArtwork(
-                                  artUri: mediaItem.artUri?.toString(),
-                                  colorScheme: colorScheme,
-                                  cacheWidth:
-                                      PlayerArtwork.transitionCacheWidth(
-                                        context,
-                                      ),
+    return AppLyricsDiagnosticScope(
+      child: PlayerTrackSwipe(
+        queue: swipeQueue,
+        currentIndex: swipeIndex,
+        onSelected: (item) async {
+          final latest =
+              ref.read(playQueueProvider).value ?? const <MediaItem>[];
+          final index = latest.indexWhere((entry) => identical(entry, item));
+          if (index >= 0) {
+            await ref.read(musicPlayerControllerProvider).jumpTo(index);
+          }
+        },
+        child: HeroMode(
+          // A route Hero renders outside the panel's gradient and slide, briefly
+          // exposing a detached rectangle. Keep Sistrum artwork inside its panel.
+          enabled: false,
+          child: Theme(
+            data: AppTheme.fromContext(context, brightness: Brightness.dark),
+            // The player's menus and sheets draw their glass from this ground.
+            child: AppPlayerGround(
+              source: _coverSource(mediaItem),
+              immersive: immersive,
+              showArtwork: _currentPage == 0,
+              artworkAspectRatio: artworkRatio,
+              fadeStart: immersive ? .72 : .58,
+              insetArtworkKey: _expandedArtworkKey,
+              child: Stack(
+                fit: StackFit.expand,
+                children: [
+                  AppArtworkContrast(
+                    enabled: false,
+                    targets: {
+                      'header': _artworkHeaderKey,
+                      'controls': _artworkControlsKey,
+                      'volume': _artworkVolumeKey,
+                    },
+                    onChanged: (colors) {
+                      if (!mounted) return;
+                      _artworkForeground.value = colors;
+                    },
+                    child: AppPlayerBackground(
+                      artUri: mediaItem.artUri,
+                      squareArtwork: !immersive,
+                      artworkAspectRatio: artworkRatio,
+                      fadeStart: immersive ? .72 : .58,
+                      showArtwork: _currentPage == 0,
+                      // The background fades this cover, then drifts it.
+                      artwork: immersive
+                          ? PlayerArtworkDragRegion(
+                              child: PlayerTransitionArtwork(
+                                artworkKey: _immersiveArtworkKey,
+                                child: Hero(
+                                  tag: kNowPlayingArtworkHeroTag,
+                                  child: PlayerArtwork(
+                                    artUri: mediaItem.artUri?.toString(),
+                                    colorScheme: colorScheme,
+                                    cacheWidth:
+                                        PlayerArtwork.transitionCacheWidth(
+                                          context,
+                                        ),
+                                  ),
                                 ),
                               ),
-                            ),
-                          )
-                        : null,
+                            )
+                          : null,
+                    ),
                   ),
-                ),
-                Listener(
-                  behavior: HitTestBehavior.translucent,
-                  onPointerDown: (event) {
-                    if (!_canAutoHideLyricsControls) return;
-                    if (_lyricsPointers.isEmpty) _lyricsPointerMoved = false;
-                    _lyricsPointers[event.pointer] = event.position;
-                    _lyricsIdleTimer?.cancel();
-                  },
-                  onPointerMove: (event) {
-                    final origin = _lyricsPointers[event.pointer];
-                    if (origin != null &&
-                        (event.position - origin).distance > 12) {
-                      _lyricsPointerMoved = true;
-                    }
-                  },
-                  onPointerUp: (event) => _endLyricsInteraction(event.pointer),
-                  onPointerCancel: (event) =>
-                      _endLyricsInteraction(event.pointer, cancelled: true),
-                  child: player,
-                ),
-              ],
+                  Listener(
+                    behavior: HitTestBehavior.translucent,
+                    onPointerDown: (event) {
+                      if (!_canAutoHideLyricsControls) return;
+                      if (_lyricsPointers.isEmpty) _lyricsPointerMoved = false;
+                      _lyricsPointers[event.pointer] = event.position;
+                      _lyricsIdleTimer?.cancel();
+                    },
+                    onPointerMove: (event) {
+                      final origin = _lyricsPointers[event.pointer];
+                      if (origin != null &&
+                          (event.position - origin).distance > 12) {
+                        _lyricsPointerMoved = true;
+                      }
+                    },
+                    onPointerUp: (event) =>
+                        _endLyricsInteraction(event.pointer),
+                    onPointerCancel: (event) =>
+                        _endLyricsInteraction(event.pointer, cancelled: true),
+                    child: player,
+                  ),
+                ],
+              ),
             ),
           ),
         ),

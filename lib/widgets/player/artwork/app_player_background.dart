@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sistrum/widgets/glass/debug/app_lyrics_diagnostics.dart';
 import 'package:sistrum/widgets/header/album_ken_burns.dart';
 import 'package:sistrum/services/library/covers/cover_palette.dart';
 import 'package:sistrum/providers/library/cover_palette_provider.dart';
@@ -106,7 +107,10 @@ class AppPlayerBackground extends StatelessWidget {
                         // content left a hard edge at the bottom on device.
                         child: AlbumKenBurns(
                           active: showArtwork,
-                          child: ShaderMask(
+                          child: AppDiagnosticShaderMask(
+                            masked: AppLyricsDiagnosticScope.of(
+                              context,
+                            ).background,
                             blendMode: BlendMode.dstIn,
                             shaderCallback: (bounds) => LinearGradient(
                               begin: Alignment.topCenter,

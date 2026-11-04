@@ -9,6 +9,7 @@ import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/widgets/glass/artwork/app_artwork_ground.dart';
 import 'package:sistrum/widgets/glass/artwork/app_artwork_glass.dart';
 import 'package:sistrum/widgets/glass/debug/app_artist_glass_isolation.dart';
+import 'package:sistrum/widgets/glass/debug/app_lyrics_diagnostics.dart';
 
 /// The rendering mode of one glass surface (Glass Engine V2).
 ///
@@ -179,7 +180,9 @@ class AppGlass extends ConsumerWidget {
           ]
         : null;
     // The Artist diagnostic (developer only) turns its glass into Tint.
-    final effectiveMode = AppArtistGlassIsolationScope.disabledOf(context)
+    final effectiveMode =
+        AppArtistGlassIsolationScope.disabledOf(context) ||
+            !AppLyricsDiagnosticScope.of(context).glass
         ? AppGlassMode.tint
         : mode;
     // The one place a surface's mode becomes a rendering. A known artwork

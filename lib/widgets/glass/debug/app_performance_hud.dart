@@ -13,6 +13,7 @@ import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/providers/settings/settings_provider.dart';
 import 'package:sistrum/widgets/glass/artwork/app_artwork_ground.dart';
 import 'package:sistrum/widgets/glass/debug/app_artist_glass_isolation.dart';
+import 'package:sistrum/widgets/glass/debug/app_lyrics_diagnostics.dart';
 import 'package:sistrum/widgets/glass/debug/app_backdrop_reads.dart';
 
 /// Build and raster statistics over a window of frames.
@@ -231,6 +232,20 @@ class _AppPerformanceHudState extends ConsumerState<AppPerformanceHud> {
     return reads;
   }
 
+  /// Lyrics switch states, A to D (on = normal rendering).
+  String _lyricsLine(AppLyricsDiagnostics state) {
+    String flag(bool on) => on ? 'on' : 'OFF';
+    return 'lyrics A glass ${flag(state.glass)} · B bg ${flag(state.background)}'
+        ' · C text ${flag(state.text)} · D motion ${flag(state.motion)}';
+  }
+
+  String _lyricsButton(AppLyricsDiagnosticGroup group) => switch (group) {
+    AppLyricsDiagnosticGroup.glass => 'A glass',
+    AppLyricsDiagnosticGroup.background => 'B bg',
+    AppLyricsDiagnosticGroup.text => 'C text',
+    AppLyricsDiagnosticGroup.motion => 'D motion',
+  };
+
   /// The developer diagnostic's state for the HUD: two lines.
   String _artistLine(GlassProxyHandle? handle) {
     final captures = (handle?.snapshots ?? 0) - _captureBase;
@@ -407,6 +422,9 @@ class _AppPerformanceHudState extends ConsumerState<AppPerformanceHud> {
                         Text(glass),
                         Text(artist),
                         Text(
+                          _lyricsLine(ref.watch(appLyricsDiagnosticsProvider)),
+                        ),
+                        Text(
                           '${stats.frames} frames @ '
                           '${stats.refreshRate.round()} Hz',
                         ),
@@ -418,6 +436,17 @@ class _AppPerformanceHudState extends ConsumerState<AppPerformanceHud> {
                   ),
                   Wrap(
                     children: [
+                      for (final group in AppLyricsDiagnosticGroup.values)
+                        TextButton(
+                          key: ValueKey(
+                            'sistrum-performance-hud-lyrics-${group.name}',
+                          ),
+                          onPressed: () => ref
+                              .read(appLyricsDiagnosticsProvider.notifier)
+                              .toggle(group),
+                          style: buttonStyle,
+                          child: Text(_lyricsButton(group)),
+                        ),
                       TextButton(
                         key: const ValueKey('sistrum-performance-hud-band'),
                         onPressed: () =>

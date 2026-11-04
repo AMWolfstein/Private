@@ -13,8 +13,10 @@ extension _SyncedLyricsViewStatePart3 on _SyncedLyricsViewState {
     final blurStrength = ref.watch(
       themeProvider.select((theme) => theme.lyricsBlur),
     );
-    final blurLyrics = blurStrength > 0 && !highContrast;
-    final motion = MediaQuery.disableAnimationsOf(context)
+    final diagnostics = AppLyricsDiagnosticScope.of(context);
+    final blurLyrics = blurStrength > 0 && !highContrast && diagnostics.text;
+    final animate = !diagnostics.motion;
+    final motion = MediaQuery.disableAnimationsOf(context) || animate
         ? Duration.zero
         : const Duration(milliseconds: 420);
 
@@ -285,10 +287,11 @@ extension _SyncedLyricsViewStatePart3 on _SyncedLyricsViewState {
                 );
               }
               content = AnimatedSwitcher(
-                duration: MediaQuery.disableAnimationsOf(context)
+                duration: MediaQuery.disableAnimationsOf(context) || animate
                     ? Duration.zero
                     : const Duration(milliseconds: 320),
-                reverseDuration: MediaQuery.disableAnimationsOf(context)
+                reverseDuration:
+                    MediaQuery.disableAnimationsOf(context) || animate
                     ? Duration.zero
                     : const Duration(milliseconds: 260),
                 switchInCurve: Curves.easeOutCubic,
@@ -339,7 +342,7 @@ extension _SyncedLyricsViewStatePart3 on _SyncedLyricsViewState {
                 progress: _scrollMotion,
                 distance: _scrollMotionDistance,
                 rowsAfterFocus: row - _scrollMotionFocus,
-                enabled: !isActive,
+                enabled: !isActive && !animate,
                 child: content,
               );
               return Directionality(

@@ -9,6 +9,8 @@ import 'package:volume_controller/volume_controller.dart';
 import 'package:sistrum/services/playback/core/music_playback_deck.dart';
 import 'package:sistrum/services/playback/audio/system_volume_service.dart';
 import 'package:g1455/g1455.dart' show GlassSlider;
+import 'package:sistrum/widgets/glass/debug/app_lyrics_diagnostics.dart';
+import 'package:sistrum/widgets/player/controls/app_player_slider.dart';
 
 final usbVolumeProvider = StreamProvider.autoDispose<UsbVolumeState?>((ref) {
   final events = StreamController<UsbVolumeState?>();
@@ -132,17 +134,39 @@ class _AppVolumeControlState extends ConsumerState<AppVolumeControl> {
                   ignoring: volume == null,
                   child: Opacity(
                     opacity: volume == null ? 0.4 : 1,
-                    child: GlassSlider(
-                      value: value,
-                      activeColor: widget.foreground.withValues(alpha: 0.70),
-                      trackColor: widget.foreground.withValues(alpha: 0.12),
-                      onChangeStart: (_) => _dragging = true,
-                      onChanged: _setVolume,
-                      onChangeEnd: (value) {
-                        _dragging = false;
-                        _setVolume(value);
-                      },
-                    ),
+                    // Diagnostic (developer only): the painted slider stands in
+                    // for the glass one while the lyrics glass is isolated.
+                    child: AppLyricsDiagnosticScope.of(context).glass
+                        ? GlassSlider(
+                            value: value,
+                            activeColor: widget.foreground.withValues(
+                              alpha: 0.70,
+                            ),
+                            trackColor: widget.foreground.withValues(
+                              alpha: 0.12,
+                            ),
+                            onChangeStart: (_) => _dragging = true,
+                            onChanged: _setVolume,
+                            onChangeEnd: (value) {
+                              _dragging = false;
+                              _setVolume(value);
+                            },
+                          )
+                        : AppPlayerSlider(
+                            value: value,
+                            activeColor: widget.foreground.withValues(
+                              alpha: 0.70,
+                            ),
+                            inactiveColor: widget.foreground.withValues(
+                              alpha: 0.12,
+                            ),
+                            onChangeStart: (_) => _dragging = true,
+                            onChanged: _setVolume,
+                            onChangeEnd: (value) {
+                              _dragging = false;
+                              _setVolume(value);
+                            },
+                          ),
                   ),
                 ),
               ),

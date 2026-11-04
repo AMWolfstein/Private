@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sistrum/widgets/glass/debug/app_lyrics_diagnostics.dart';
 import 'package:sistrum/widgets/player/lyrics/player_lyrics.dart';
 
 /// Masks the lyrics viewport above its visible height and reveals it as the
@@ -14,7 +15,8 @@ Widget appLyricsViewport(
       ? Duration.zero
       : const Duration(milliseconds: 220),
   curve: Curves.easeOutCubic,
-  builder: (context, reveal, child) => ShaderMask(
+  builder: (context, reveal, child) => AppDiagnosticShaderMask(
+    masked: AppLyricsDiagnosticScope.of(context).text && reveal < 1,
     blendMode: BlendMode.dstIn,
     shaderCallback: (bounds) {
       final height = bounds.height.clamp(1.0, double.infinity);
