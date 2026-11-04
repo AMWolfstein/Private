@@ -104,3 +104,79 @@ per run, three runs. Configurations:
 
 Run each with Look: Sistrum, then Look: BitChord. Record build and raster P50/P95/P99, jank,
 `reads`, `copies` and host snapshots from the HUD's Copy line.
+
+## Band blur over a live video: phase investigation (2026-11-04)
+
+### What the device numbers already show
+
+The HUD line's `build=` and `raster=` figures are **average/P90/P99**, not P50/P95/P99
+(`AppPhaseStats`).
+
+| Test | reads/copies (last frame) | raster avg/P90/P99 | jank |
+|---|---|---|---|
+| A: glass normal, Band on | 5/1 | 7.1/17.4/24.4 | 11.3% |
+| B: glass normal, Band off | 5/1 | 3.9/5.0/7.3 | 0.0% |
+| C: artist glass disabled | 0/0 | 3.7/4.6/5.4 | 0.0% |
+
+- B is within 0.4 ms of C, so the five grouped reads over the video (toolbar controls, Favorite,
+  Shuffle; one shared copy) cost almost nothing.
+- A and B differ only in the band's `BackdropFilter`, and in the toolbar controls switching
+  between their shared read and fill-only as the band settles (`AppLiveVideoBand`).
+- `reads`/`copies` describe the **last** frame only. A ended with the band hidden.
+- A's average is low (7.1) while its P90 is high (17.4). So most frames were cheap and roughly one
+  in ten was expensive. That fits frames during the band's presence or its 180 ms fades. It
+  doesn't fit a uniformly expensive state.
+
+### Candidate causes, from the code
+
+1. **The fade blurs at full resolution.** The band animates its sigma (`sigma × amount`).
+   Impeller picks the blur's downsample from the physical sigma
+   (`GaussianBlurFilterContents::CalculateScale`):
+   - sigma ≤ 4 px: no downsampling;
+   - 1/2 resolution until about 11 px;
+   - 1/4 beyond that.
+
+   At sigma 6 dp on a ~2.75× screen, the first third of each fade blurs the band at full
+   resolution and the next third at half. The settled band blurs at a quarter.
+2. **Two reads during the fade.** The toolbar controls keep their own read until the band is
+   fully shown, and resume it as soon as it starts to leave. During the 180 ms there are two page
+   copies, not one.
+3. **The steady band read itself.** One unkeyed full-screen copy and a blur clipped to the band,
+   every frame while the band shows.
+
+None of these is established by measurement yet, so this commit makes no rendering change.
+
+### Phase split (developer HUD)
+
+While the HUD is open, every frame is filed under the band's phase at the time it was built:
+`hidden`, `transition` (fading in or out), or `stable` (fully shown). Each is tagged `+scroll`
+while a vertical scroll is active (`AppBandPhaseDiagnostics`). The HUD shows raster
+P50/P95/P99 and raster-jank per bucket, and Copy appends them.
+
+How frames are matched: frames are matched to their timing by the engine's vsync target time,
+which is what `onBeginFrame` receives; each `FrameTiming` carries the matching vsync start. Frames
+the engine drew without a Dart frame (a new video frame redraws the last scene) take the phase in
+effect at the time and are counted as `unmatched`.
+
+These are Dart-side frame timings split by phase. They are not GPU copy or pass counts.
+
+### Procedure
+
+On a profile or release build, open the artist page with its video playing and open the HUD.
+Leave Band blur on, press Reset, and wait out the 30-frame warm-up. Then:
+
+1. Scroll down until the band is shown and hold still for ~3 s.
+2. Scroll up and down across the band threshold slowly ~5 times.
+3. Scroll back to the top and hold ~3 s.
+
+Press Copy. Repeat three times.
+
+How to read the result:
+
+| Result | Cause | Fix it points to |
+|---|---|---|
+| `transition` P95 high, `stable` low | 1 or 2 | Keep the fade off the full-resolution blur, or stop the controls switching back mid-fade |
+| `stable` high | 3 | The band read itself |
+
+For GPU-level proof (render passes, texture copies), capture a Perfetto system trace with GPU
+render stages, or use Android GPU Inspector on the same steps.
