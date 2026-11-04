@@ -9,6 +9,7 @@ import 'package:sistrum/core/theme/app_glass_levels.dart';
 import 'package:sistrum/core/theme/app_theme.dart';
 import 'package:sistrum/widgets/glass/artwork/app_artwork_ground.dart';
 import 'package:sistrum/widgets/glass/debug/app_artist_glass_isolation.dart';
+import 'package:sistrum/widgets/glass/debug/app_band_phase_diagnostics.dart';
 import 'package:sistrum/widgets/glass/thumb/app_glass_look.dart';
 import 'package:sistrum/widgets/glass/thumb/app_glass_surface.dart';
 import 'package:sistrum/widgets/header/profile_avatar.dart';
@@ -131,7 +132,10 @@ class AppHeaderBacking extends ConsumerWidget {
           ? Duration.zero
           : _duration,
       builder: (context, amount, _) {
-        report(sigma > 0 && amount >= 1 && AppLiveVideoBackdrop.of(context));
+        final overVideo = AppLiveVideoBackdrop.of(context);
+        report(sigma > 0 && amount >= 1 && overVideo);
+        // Developer HUD only: files frame timings under the band's phase.
+        if (overVideo) AppBandPhaseDiagnostics.instance.noteBand(amount);
         if (amount == 0) return const SizedBox.shrink();
         // Hold the tint across the toolbar and feather only its last third.
         // The blur fades with it, so the band never shows a hard edge.

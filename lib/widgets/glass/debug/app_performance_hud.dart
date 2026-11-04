@@ -15,6 +15,7 @@ import 'package:sistrum/widgets/glass/artwork/app_artwork_ground.dart';
 import 'package:sistrum/widgets/glass/debug/app_artist_glass_isolation.dart';
 import 'package:sistrum/widgets/glass/debug/app_lyrics_diagnostics.dart';
 import 'package:sistrum/widgets/glass/debug/app_backdrop_reads.dart';
+import 'package:sistrum/widgets/glass/debug/app_band_phase_diagnostics.dart';
 import 'package:sistrum/widgets/glass/thumb/app_glass_look.dart';
 
 /// Build and raster statistics over a window of frames.
@@ -155,11 +156,15 @@ class _AppPerformanceHudState extends ConsumerState<AppPerformanceHud> {
   /// The host's capture count when the current window started.
   int _captureBase = 0;
 
+  /// The display's refresh rate, read at build; the band phase split uses it.
+  double _refreshRate = 60;
+
   @override
   void initState() {
     super.initState();
     SchedulerBinding.instance.addTimingsCallback(_onTimings);
     AppPerformanceHud.debugRegisteredCallbacks++;
+    AppBandPhaseDiagnostics.instance.start();
     appDiagnosticWindowEpoch.addListener(_onWindowChanged);
     appArtistVideoPlaying.addListener(_onWindowChanged);
     // Refresh at most twice a second, so the HUD barely measures itself.
@@ -176,6 +181,7 @@ class _AppPerformanceHudState extends ConsumerState<AppPerformanceHud> {
     appArtistVideoPlaying.removeListener(_onWindowChanged);
     SchedulerBinding.instance.removeTimingsCallback(_onTimings);
     AppPerformanceHud.debugRegisteredCallbacks--;
+    AppBandPhaseDiagnostics.instance.stop();
     super.dispose();
   }
 
@@ -188,6 +194,10 @@ class _AppPerformanceHudState extends ConsumerState<AppPerformanceHud> {
       _build.add(timing.buildDuration.inMicroseconds / 1000);
       _raster.add(timing.rasterDuration.inMicroseconds / 1000);
     }
+    AppBandPhaseDiagnostics.instance.addTimings(
+      timings,
+      refreshRate: _refreshRate,
+    );
     final overflow = _build.length - AppPerformanceHud.window;
     if (overflow > 0) {
       _build.removeRange(0, overflow);
@@ -213,6 +223,7 @@ class _AppPerformanceHudState extends ConsumerState<AppPerformanceHud> {
       _skip = _warmupFrames;
       _captureBase = handle?.snapshots ?? 0;
     });
+    AppBandPhaseDiagnostics.instance.reset();
   }
 
   void _reset() => _restartWindow();
@@ -262,6 +273,31 @@ class _AppPerformanceHudState extends ConsumerState<AppPerformanceHud> {
     final warm = _skip > 0 ? ' warm-up $_skip' : '';
     return '${_artistState()}$warm\n'
         'host snapshots: $host, $captures in window';
+  }
+
+  /// Raster per band phase over a live video (avg/p90/p99 above is the
+  /// whole window; these are p50/p95/p99 of each phase's frames).
+  String _bandLines() {
+    final diagnostics = AppBandPhaseDiagnostics.instance;
+    final rows = diagnostics.stats(refreshRate: _refreshRate);
+    if (rows.isEmpty) return '';
+    return [
+      for (final (bucket, stats) in rows)
+        'band ${appBandBucketLabel(bucket)} ${stats.format()}',
+      if (diagnostics.unmatched > 0)
+        'band: ${diagnostics.unmatched} frames drawn without a Dart frame',
+    ].join('\n');
+  }
+
+  String _bandCopy() {
+    final diagnostics = AppBandPhaseDiagnostics.instance;
+    final rows = diagnostics.stats(refreshRate: _refreshRate);
+    if (rows.isEmpty) return '';
+    return [
+      for (final (bucket, stats) in rows)
+        ' | band ${appBandBucketLabel(bucket)} ${stats.format()}',
+      ' | unmatched=${diagnostics.unmatched}',
+    ].join();
   }
 
   /// The same state on one line, for the Copy summary.
@@ -320,6 +356,7 @@ class _AppPerformanceHudState extends ConsumerState<AppPerformanceHud> {
     ref.watch(appGlassLevelProvider);
     final bandBlurOff = ref.watch(appHeaderBandBlurDisabledProvider);
     final refreshRate = View.of(context).display.refreshRate;
+    _refreshRate = refreshRate > 0 ? refreshRate : 60;
     final stats = AppFrameStats.from(
       buildMs: _build,
       rasterMs: _raster,
@@ -328,6 +365,7 @@ class _AppPerformanceHudState extends ConsumerState<AppPerformanceHud> {
     final glass = _glass(context);
     final handle = GlassProxyScope.maybeOf(context);
     final artist = _artistLine(handle);
+    final band = _bandLines();
     final settings = ref.read(settingsProvider.notifier);
     const style = TextStyle(
       color: Colors.white,
@@ -426,6 +464,7 @@ class _AppPerformanceHudState extends ConsumerState<AppPerformanceHud> {
                       children: [
                         Text(glass),
                         Text(artist),
+                        if (band.isNotEmpty) Text(band),
                         Text(
                           _lyricsLine(ref.watch(appLyricsDiagnosticsProvider)),
                         ),
@@ -511,7 +550,8 @@ class _AppPerformanceHudState extends ConsumerState<AppPerformanceHud> {
                           ClipboardData(
                             text:
                                 '${stats.summary(glass: glass)} '
-                                '${_artistCopy(handle)}',
+                                '${_artistCopy(handle)}'
+                                '${_bandCopy()}',
                           ),
                         ),
                         style: buttonStyle,

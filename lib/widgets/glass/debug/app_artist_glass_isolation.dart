@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sistrum/widgets/glass/debug/app_band_phase_diagnostics.dart';
 
 /// Developer-only diagnostic: what the Artist screen draws while its video
 /// plays. Not a production setting; it is switched from the performance HUD
@@ -109,6 +110,7 @@ class _AppArtistGlassIsolationHostState
     WidgetsBinding.instance.addPostFrameCallback((_) {
       appArtistVideoPlaying.value = false;
     });
+    AppBandPhaseDiagnostics.instance.clearPage();
     super.dispose();
   }
 
@@ -119,7 +121,20 @@ class _AppArtistGlassIsolationHostState
         AppArtistGlassIsolation.glassDisabled;
     return AppArtistGlassIsolationScope(
       disabled: disabled,
-      child: widget.child,
+      // Developer HUD only: whether the page is being scrolled.
+      child: NotificationListener<ScrollNotification>(
+        onNotification: (notification) {
+          if (notification.metrics.axis == Axis.vertical) {
+            if (notification is ScrollStartNotification) {
+              AppBandPhaseDiagnostics.instance.noteScrolling(true);
+            } else if (notification is ScrollEndNotification) {
+              AppBandPhaseDiagnostics.instance.noteScrolling(false);
+            }
+          }
+          return false;
+        },
+        child: widget.child,
+      ),
     );
   }
 }
