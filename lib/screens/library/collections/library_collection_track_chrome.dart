@@ -76,6 +76,7 @@ extension _LibraryCollectionTracksScreenStatePart2
     return AlbumDetailHeader(
       title: title,
       immersive: context.isAppTheme,
+      softenOverArtwork: true,
       squareArtwork: true,
       appBarTitle: isSelectionMode
           ? context.l10n.selectionSelected(selectedIds.length)

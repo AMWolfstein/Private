@@ -143,6 +143,31 @@ void main() {
     );
 
     testWidgets(
+      'Loved header band softens over its artwork ground ($brightness)',
+      (tester) async {
+        tester.view.physicalSize = const Size(430, 1200);
+        tester.view.devicePixelRatio = 1;
+        addTearDown(tester.view.reset);
+        await tester.pumpWidget(
+          host(
+            const LibraryCollectionTracksScreen(
+              mode: LibraryCollectionMode.loved,
+            ),
+            collections: _Collections(),
+          ),
+        );
+        await tester.pumpAndSettle();
+        final header =
+            tester
+                    .widget<CollectionScaffold>(find.byType(CollectionScaffold))
+                    .appBar
+                as AlbumDetailHeader;
+        expect(header.softenOverArtwork, isTrue);
+        expect(tester.takeException(), isNull);
+      },
+    );
+
+    testWidgets(
       'album selection owns the header and closes without leaving ($brightness)',
       (tester) async {
         tester.view.physicalSize = const Size(430, 1200);
