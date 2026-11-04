@@ -117,13 +117,40 @@ void main() {
     expect(counted.copies, 1);
   });
 
-  testWidgets('a live video outside the header keeps separate reads', (
+  testWidgets('glass over a live video outside the toolbar joins the read', (
     tester,
   ) async {
-    await _pump(tester, liveVideo: true);
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          appGlassLevelProvider.overrideWithValue(AppGlassLevel.tinted),
+        ],
+        child: MaterialApp(
+          theme: AppTheme.build(Brightness.dark),
+          home: AppLiveVideoBackdrop(
+            live: true,
+            backdropKey: _sharedKey,
+            child: Scaffold(
+              body: Column(
+                children: [
+                  // The toolbar's controls.
+                  AppHeaderControls(
+                    child: Row(children: [_control(), _control()]),
+                  ),
+                  // The header's Favorite and Shuffle circles, in the page.
+                  Row(children: [_control(), _control()]),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
     // ignore: invalid_use_of_protected_member
     final layer = tester.binding.renderViews.first.layer;
-    expect(appCountBackdrops(layer), (reads: 1, copies: 1));
+    // Four live reads over the video, one copy of the page.
+    expect(appCountBackdrops(layer), (reads: 4, copies: 1));
   });
 
   testWidgets('without a live video the header controls stay LIQUID', (

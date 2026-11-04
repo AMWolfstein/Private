@@ -231,8 +231,11 @@ class AppGlass extends ConsumerWidget {
             // Header controls over a live video share one backdrop read: the
             // engine copies and blurs the page once for all of them, not once
             // per control (see [AppHeaderControls]).
+            // Every glass over a playing video (the toolbar controls and the
+            // header's Favorite and Shuffle circles alike) shares one read:
+            // the engine copies the page once for all of them.
             backdropGroupKey: liveVideoFallback
-                ? BackdropGroup.of(context)?.backdropKey
+                ? AppLiveVideoBackdrop.keyOf(context)
                 : null,
             child: surface,
           );
