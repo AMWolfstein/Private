@@ -91,7 +91,7 @@ the search field, the action buttons, the switch, slider and level-slider thumbs
 and the selection pill (`app_selection_pill.dart`). Sheets, menus and dialogs stay FROSTED, or
 GROUND when an artwork ground is open; the Artist and Album header band stays FROSTED or GROUND
 (see below). Video-covered Artist and Album pages keep their header band and controls FROSTED on
-the live backdrop (`AppArtistSurface.liveBackdrop`), because the video is not a host capture.
+the live backdrop (`AppArtistSurface.liveBackdrop`), because the video is not a host capture; those controls share one backdrop read (`AppLiveVideoBackdrop.backdropKey` through `AppHeaderControls`) and the band keeps its own.
 Low-end devices (`lowEndDeviceProvider`) and flat surfaces draw opaque fills. A FROSTED surface
 reads its own backdrop with a clipped `BackdropFilter`; there is no adaptive sampling.
 Surfaces nested in glass draw only their fill. The performance HUD is a hidden developer option
