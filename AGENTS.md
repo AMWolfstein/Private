@@ -68,23 +68,30 @@ contrast). Header controls (not the player's) are 48dp, 4dp from the edge, with 
 profile photo (opens Settings, rim outline, no glass) ends every header 8dp after the capsule and
 is hidden on Settings and its subpages. Headers mirror in RTL. Headers judge known backdrops
 (page, artwork top) and never sample themselves.
-Glass Engine V2 has four modes, all drawn by `AppGlass` and `AppGlassPanel` (no other glass
-renderer): GROUND (a pre-blurred artwork ground, read without sampling the live backdrop), FROSTED
-(a backdrop blur, `kAppGlassStyle`, sigma 6 and never lower, clipped to the glass bounds, with a
-surface tint and a rim), LIQUID (genuine refraction of the captured backdrop through the
-`g1455` package, see below) and TINT (a translucent fill with no sampling, for large or
-frequently updated surfaces). LIQUID is opt-in with `AppGlass(liquid: true)` and is used by the
-small chrome: header back circle and capsule, profile avatar, bottom bar, mini player, search
-field, action buttons and switch/slider thumbs. Sheets and menus stay FROSTED. There
-are no user-facing glass quality, clarity, lens, shader or Auto measurement settings and no
-Appearance glass controls; do not restore them. The mode is chosen by the engine from the
-context (ground available, surface size, scrolling or video behind it, device capability and
-reduced-transparency settings), never by a user setting.
+Glass Engine V2 has four rendering modes, `AppGlassMode` in `AppGlass` (and `AppGlassPanel`,
+which wraps it); no other code draws glass: GROUND (a pre-blurred artwork ground, reading no live
+backdrop), FROSTED (`BackdropFilter` with `kAppGlassStyle`, sigma 6 and never lower, clipped to the
+glass bounds, with a surface tint and a rim), LIQUID (the backdrop refracted through the `g1455`
+package's `GlassSurface`, using `kAppLiquidGlassFinish`) and TINT (the fill alone, no sampling).
+`AppGlassMode.auto` (the default) picks GROUND over a known artwork ground, TINT where glass is off
+(flat level, high contrast, low-end devices, or nested inside other glass) and FROSTED otherwise.
+Auto never picks LIQUID: a surface opts in explicitly with `mode: AppGlassMode.liquid`, and only
+where `GlassHost` captures its backdrop. An explicit LIQUID over an artwork ground still uses the
+ground. An explicit GROUND without a ground falls back to FROSTED. There are no user-facing glass
+quality, clarity, lens, shader or Auto measurement settings and no Appearance glass controls; do
+not restore them.
 LIQUID uses the MIT-licensed `g1455` package (`https://pub.dev/packages/g1455`, pinned in
-`pubspec.yaml`). `GlassHost` sits above the navigator and captures the painted tree once per
-change; each liquid surface samples its own slot of that capture. Declare a known, static backdrop
-(an artwork ground, a colour, a gradient) with `GlassBackdrop` so no capture is taken. Do not add
-other shader packages, `liquid_glass_easy`, or a second glass renderer.
+`pubspec.yaml`). `GlassHost` sits above the navigator in `app.dart` and captures the painted tree
+once per change; each liquid surface samples its own slot of that capture. Declare a known, static
+backdrop (an artwork ground, a colour, a gradient) with `GlassBackdrop` so no capture is taken. Do
+not add other shader packages, `liquid_glass_easy`, or a second glass renderer.
+Current LIQUID surfaces: the header back circle and action capsule (`AppHeaderCircle` and
+`AppHeaderActions` through `AppChromeControls`), the profile avatar, the bottom bar, the mini player,
+the search field, the action buttons, the switch, slider and level-slider thumbs (`AppGlassThumb`)
+and the selection pill (`app_selection_pill.dart`). Sheets, menus and dialogs stay FROSTED, or
+GROUND when an artwork ground is open; the Artist and Album header band stays FROSTED or GROUND
+(see below). Video-covered Artist and Album pages keep their header band and controls FROSTED on
+the live backdrop (`AppArtistSurface.liveBackdrop`), because the video is not a host capture.
 Low-end devices (`lowEndDeviceProvider`) and flat surfaces draw opaque fills. A FROSTED surface
 reads its own backdrop with a clipped `BackdropFilter`; there is no adaptive sampling.
 Surfaces nested in glass draw only their fill. The performance HUD is a hidden developer option
