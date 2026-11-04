@@ -42,6 +42,9 @@ class AppArtistSurface extends StatefulWidget {
 }
 
 class _AppArtistSurfaceState extends State<AppArtistSurface> {
+  // One stable key for the header controls' shared read over a live video.
+  final _liveBackdropKey = BackdropKey();
+
   @override
   void dispose() {
     ShellNavigationService.clearChromeBrightness(this);
@@ -102,6 +105,7 @@ class _AppArtistSurfaceState extends State<AppArtistSurface> {
                 ),
                 child: AppLiveVideoBackdrop(
                   live: widget.liveBackdrop,
+                  backdropKey: _liveBackdropKey,
                   child: HeaderPalette(
                     scheme: scheme,
                     // The header controls draw from the page's artwork.

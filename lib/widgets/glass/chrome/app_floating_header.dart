@@ -161,9 +161,15 @@ class AppHeaderControls extends StatelessWidget {
   Widget build(BuildContext context) {
     // On album and artist pages the controls draw from the header artwork.
     final page = AppArtworkGroundScope.pageOf(context);
-    return page == null
+    final grounded = page == null
         ? child
         : AppArtworkGroundScope(controller: page, child: child);
+    // Over a playing video they read the live page instead, through one
+    // backdrop shared by the leading and trailing controls.
+    final shared = AppLiveVideoBackdrop.keyOf(context);
+    return shared == null
+        ? grounded
+        : BackdropGroup(backdropKey: shared, child: grounded);
   }
 }
 

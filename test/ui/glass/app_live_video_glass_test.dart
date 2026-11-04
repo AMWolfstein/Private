@@ -4,7 +4,48 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:g1455/g1455.dart' show GlassHost, GlassSurface;
 import 'package:sistrum/core/theme/app_theme.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
+import 'package:sistrum/widgets/glass/chrome/app_floating_header.dart'
+    show AppHeaderControls;
+import 'package:sistrum/widgets/glass/debug/app_backdrop_reads.dart';
 import 'package:sistrum/widgets/glass/thumb/app_glass_surface.dart';
+
+final _sharedKey = BackdropKey();
+
+Widget _control() => const AppGlass(
+  blurEnabled: true,
+  mode: AppGlassMode.liquid,
+  child: SizedBox(width: 48, height: 48),
+);
+
+/// A toolbar's leading and trailing controls, each in [AppHeaderControls].
+Future<void> _pumpHeader(WidgetTester tester, {required bool liveVideo}) async {
+  await tester.pumpWidget(
+    ProviderScope(
+      overrides: [
+        appGlassLevelProvider.overrideWithValue(AppGlassLevel.tinted),
+      ],
+      child: MaterialApp(
+        theme: AppTheme.build(Brightness.dark),
+        home: AppLiveVideoBackdrop(
+          live: liveVideo,
+          backdropKey: _sharedKey,
+          child: Scaffold(
+            body: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                AppHeaderControls(child: _control()),
+                AppHeaderControls(
+                  child: Row(children: [_control(), _control()]),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    ),
+  );
+  await tester.pumpAndSettle();
+}
 
 Future<void> _pump(WidgetTester tester, {required bool liveVideo}) async {
   await tester.pumpWidget(
@@ -50,5 +91,46 @@ void main() {
     await _pump(tester, liveVideo: false);
     expect(find.byType(GlassSurface), findsOneWidget);
     expect(find.byType(BackdropFilter), findsNothing);
+  });
+
+  testWidgets('header controls over a live video share one backdrop copy', (
+    tester,
+  ) async {
+    await _pumpHeader(tester, liveVideo: true);
+    final filters = tester
+        .widgetList<BackdropFilter>(find.byType(BackdropFilter))
+        .toList();
+    expect(filters, hasLength(3));
+    for (final filter in filters) {
+      expect(
+        filter.backdropGroupKey ??
+            BackdropGroup.of(
+              tester.element(find.byWidget(filter)),
+            )?.backdropKey,
+        same(_sharedKey),
+      );
+    }
+    // ignore: invalid_use_of_protected_member
+    final layer = tester.binding.renderViews.first.layer;
+    final counted = appCountBackdrops(layer);
+    expect(counted.reads, 3);
+    expect(counted.copies, 1);
+  });
+
+  testWidgets('a live video outside the header keeps separate reads', (
+    tester,
+  ) async {
+    await _pump(tester, liveVideo: true);
+    // ignore: invalid_use_of_protected_member
+    final layer = tester.binding.renderViews.first.layer;
+    expect(appCountBackdrops(layer), (reads: 1, copies: 1));
+  });
+
+  testWidgets('without a live video the header controls stay LIQUID', (
+    tester,
+  ) async {
+    await _pumpHeader(tester, liveVideo: false);
+    expect(find.byType(BackdropFilter), findsNothing);
+    expect(find.byType(BackdropGroup), findsNothing);
   });
 }

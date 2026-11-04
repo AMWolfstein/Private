@@ -179,12 +179,16 @@ class AppGlass extends ConsumerWidget {
             ),
           ]
         : null;
+    // A LIQUID surface over a playing video reads the live backdrop instead
+    // (see [AppLiveVideoBackdrop]).
+    final liveVideoFallback =
+        mode == AppGlassMode.liquid && AppLiveVideoBackdrop.of(context);
     // The Artist diagnostic (developer only) turns its glass into Tint.
     final effectiveMode =
         AppArtistGlassIsolationScope.disabledOf(context) ||
             !AppLyricsDiagnosticScope.of(context).glass
         ? AppGlassMode.tint
-        : AppLiveVideoBackdrop.of(context) && mode == AppGlassMode.liquid
+        : liveVideoFallback
         ? AppGlassMode.frosted
         : mode;
     // The one place a surface's mode becomes a rendering. A known artwork
@@ -212,7 +216,16 @@ class AppGlass extends ConsumerWidget {
             labelled: false,
             child: surface,
           )
-        : BackdropFilter(filter: _blur, child: surface);
+        : BackdropFilter(
+            filter: _blur,
+            // Header controls over a live video share one backdrop read: the
+            // engine copies and blurs the page once for all of them, not once
+            // per control (see [AppHeaderControls]).
+            backdropGroupKey: liveVideoFallback
+                ? BackdropGroup.of(context)?.backdropKey
+                : null,
+            child: surface,
+          );
     return DecoratedBox(
       decoration: BoxDecoration(borderRadius: shape, boxShadow: shadows),
       child: CustomPaint(
@@ -330,14 +343,21 @@ class _AppGlassRim extends CustomPainter {
 /// Marks a subtree whose backdrop is a playing video. A texture is not
 /// readable by a LIQUID capture (it leaves a hole), so glass there must read
 /// the live backdrop with FROSTED instead.
+///
+/// [backdropKey] is the one shared read for the header controls there: every
+/// backdrop read costs a copy of the whole screen per frame while the video
+/// plays, so the controls (which never overlap) take one between them. It must
+/// be a stable object: a new key every build would read as a changed layer.
 class AppLiveVideoBackdrop extends InheritedWidget {
   const AppLiveVideoBackdrop({
     super.key,
     required this.live,
+    this.backdropKey,
     required super.child,
   });
 
   final bool live;
+  final BackdropKey? backdropKey;
 
   static bool of(BuildContext context) =>
       context
@@ -345,7 +365,14 @@ class AppLiveVideoBackdrop extends InheritedWidget {
           ?.live ??
       false;
 
+  /// The shared backdrop key under a live video, or null.
+  static BackdropKey? keyOf(BuildContext context) {
+    final scope = context
+        .dependOnInheritedWidgetOfExactType<AppLiveVideoBackdrop>();
+    return scope != null && scope.live ? scope.backdropKey : null;
+  }
+
   @override
   bool updateShouldNotify(AppLiveVideoBackdrop oldWidget) =>
-      oldWidget.live != live;
+      oldWidget.live != live || oldWidget.backdropKey != backdropKey;
 }

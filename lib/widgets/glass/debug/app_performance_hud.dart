@@ -220,16 +220,20 @@ class _AppPerformanceHudState extends ConsumerState<AppPerformanceHud> {
     ref.read(appArtistGlassIsolationProvider.notifier).toggle();
   }
 
-  /// Backdrop reads in the last composited frame, over every view.
-  int _reads() {
+  /// Backdrop reads in the last composited frame, over every view, and the
+  /// page copies the engine makes for them (grouped reads share one).
+  String _reads() {
     var reads = 0;
+    var copies = 0;
     for (final view in RendererBinding.instance.renderViews) {
       // The layer tree is protected API; this debug HUD only reads the
       // composited backdrop counter and never mutates the layer.
       // ignore: invalid_use_of_protected_member
-      reads += appCountBackdropReads(view.layer);
+      final counted = appCountBackdrops(view.layer);
+      reads += counted.reads;
+      copies += counted.copies;
     }
-    return reads;
+    return '$reads copies=$copies';
   }
 
   /// Lyrics switch states, A to D (on = normal rendering).
