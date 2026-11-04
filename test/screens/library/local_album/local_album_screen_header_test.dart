@@ -7,6 +7,7 @@ import 'package:sistrum/core/models/local_library_item.dart';
 import 'package:sistrum/providers/playback/playback_provider.dart';
 import 'package:sistrum/screens/library/local_album/local_album_screen.dart';
 import 'package:sistrum/core/theme/app_theme.dart';
+import 'package:sistrum/widgets/glass/chrome/app_floating_header.dart';
 
 class _Playback extends PlaybackController {
   final played = <String>[];
@@ -120,14 +121,12 @@ void main() {
         tester.element(find.byType(LocalAlbumScreen)),
       );
       expect(find.byTooltip(l10n.librarySortTitle), findsNothing);
-      // The header groups direct IconButtons into its glass capsule (the
-      // circle); a wrapped button would be drawn outside it.
-      final capsule = find.byWidgetPredicate(
-        (widget) => widget.runtimeType.toString() == '_HeaderCapsule',
-      );
+      // A lone header action is its own glass circle (AppHeaderCircle); the
+      // More button must sit inside it.
+      final circle = find.byType(AppHeaderCircle);
       expect(
         find.descendant(
-          of: capsule,
+          of: circle,
           matching: find.widgetWithIcon(IconButton, Icons.more_horiz),
         ),
         findsOneWidget,

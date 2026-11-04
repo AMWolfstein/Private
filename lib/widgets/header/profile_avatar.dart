@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/providers/settings/user_profile_provider.dart';
 import 'package:sistrum/core/navigation/shell_navigation.dart';
+import 'package:sistrum/widgets/glass/thumb/app_glass_surface.dart';
 
 class ProfileAvatar extends StatelessWidget {
   const ProfileAvatar({
@@ -14,12 +15,17 @@ class ProfileAvatar extends StatelessWidget {
     this.photoPath,
     this.photo,
     this.size = 40,
+    this.glassFallback = false,
   });
 
   final String name;
   final String? photoPath;
   final Uint8List? photo;
   final double size;
+
+  /// Draws the placeholder as Tinted Lite glass instead of a solid colour, for
+  /// the header profile button.
+  final bool glassFallback;
 
   @override
   Widget build(BuildContext context) {
@@ -39,25 +45,30 @@ class ProfileAvatar extends StatelessWidget {
 
   Widget _buildAvatar(BuildContext context, double diameter) {
     final scheme = Theme.of(context).colorScheme;
-    final fallback = ColoredBox(
-      color: scheme.primaryContainer,
-      child: Center(
-        child: name.trim().isEmpty
-            ? Icon(
-                Icons.person,
-                size: diameter * 0.55,
+    final content = Center(
+      child: name.trim().isEmpty
+          ? Icon(
+              Icons.person,
+              size: diameter * 0.55,
+              color: scheme.onPrimaryContainer,
+            )
+          : Text(
+              name.trim().characters.first.toUpperCase(),
+              style: TextStyle(
+                fontSize: diameter * 0.42,
+                fontWeight: FontWeight.w600,
                 color: scheme.onPrimaryContainer,
-              )
-            : Text(
-                name.trim().characters.first.toUpperCase(),
-                style: TextStyle(
-                  fontSize: diameter * 0.42,
-                  fontWeight: FontWeight.w600,
-                  color: scheme.onPrimaryContainer,
-                ),
               ),
-      ),
+            ),
     );
+    final fallback = glassFallback
+        ? AppGlass(
+            radius: diameter / 2,
+            blurEnabled: true,
+            dropShadow: false,
+            child: content,
+          )
+        : ColoredBox(color: scheme.primaryContainer, child: content);
     return ExcludeSemantics(
       child: ClipOval(
         child: SizedBox.square(
@@ -138,6 +149,7 @@ class HomeProfileButton extends ConsumerWidget {
           name: profile?.name ?? '',
           photoPath: profile?.photoPath,
           size: _size,
+          glassFallback: true,
         ),
       ),
     );

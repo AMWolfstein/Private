@@ -1,5 +1,4 @@
 import 'package:sistrum/providers/library/library_sort_provider.dart';
-import 'package:sistrum/widgets/library/app_library_sort.dart';
 import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
@@ -121,7 +120,11 @@ class _LocalArtistScreenState extends ConsumerState<LocalArtistScreen> {
     );
     final artistVideo = motion
         ? ref
-              .watch(animatedArtworkFileProvider(animatedArtistRef(widget.artistName)))
+              .watch(
+                animatedArtworkFileProvider(
+                  animatedArtistRef(widget.artistName),
+                ),
+              )
               .value
         : null;
     final artistId = LibraryDatabase.normalizeLookupText(widget.artistName);
@@ -165,12 +168,6 @@ class _LocalArtistScreenState extends ConsumerState<LocalArtistScreen> {
                         ),
                   showTitle: _showTitle,
                   toolbarActions: [
-                    appLibrarySortButton(
-                      context,
-                      ref,
-                      fileSize: true,
-                      releaseDate: true,
-                    ),
                     IconButton(
                       key: _imageMenuKey,
                       icon: const Icon(Icons.more_horiz),

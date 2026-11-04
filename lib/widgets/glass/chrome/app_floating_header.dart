@@ -207,7 +207,12 @@ class AppHeaderActions extends ConsumerWidget {
     void flush() {
       if (run.isEmpty) return;
       if (children.isNotEmpty) children.add(const SizedBox(width: 8));
-      children.add(_HeaderCapsule(children: run));
+      // A lone action is a circle, like the back button; several share a capsule.
+      children.add(
+        run.length == 1
+            ? AppHeaderCircle(child: run.first)
+            : _HeaderCapsule(children: run),
+      );
       run = <Widget>[];
     }
 
