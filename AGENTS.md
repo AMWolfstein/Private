@@ -98,7 +98,7 @@ the search field, the action buttons, the switch, slider and level-slider thumbs
 and the selection pill (`app_selection_pill.dart`). Sheets, menus and dialogs stay FROSTED, or
 GROUND when an artwork ground is open; the Artist and Album header band stays FROSTED or GROUND
 (see below). Video-covered Artist and Album pages keep their header band and controls FROSTED on
-the live backdrop (`AppArtistSurface.liveBackdrop`), because the video is not a host capture; those controls share one backdrop read (`AppLiveVideoBackdrop.backdropKey` through `AppHeaderControls`) and the band keeps its own.
+the live backdrop (`AppArtistSurface.liveBackdrop`), because the video is not a host capture; those controls share one backdrop read (`AppLiveVideoBackdrop.backdropKey` through `AppHeaderControls`) and the band keeps its own; once the band is fully shown with its blur the controls are nested glass on it and draw their fill only (`AppLiveVideoBand`). Glass Engine V2 has two looks over the same engine (`AppGlassLook`): Sistrum, the default, and BitChord-inspired (a deeper g1455 lens, saturation 1.5 on the frosted blur, a white hairline rim; blur stays sigma 6). The look is a developer HUD switch, never persisted; it is not an Appearance control. See `docs/GLASS_ENGINE_V2_PERFORMANCE.md`.
 Low-end devices (`lowEndDeviceProvider`) and flat surfaces draw opaque fills. A FROSTED surface
 reads its own backdrop with a clipped `BackdropFilter`; there is no adaptive sampling.
 Surfaces nested in glass draw only their fill. The performance HUD is a hidden developer option
