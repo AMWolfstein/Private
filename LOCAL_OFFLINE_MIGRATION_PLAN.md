@@ -22,6 +22,8 @@ popover placement so it follows the tapped ellipsis. Keep the metadata page remo
 
 ## Progress
 
+**BitChord look is the default (2026-11-04):** at the owner's request every launch starts in the BitChord look. The developer HUD can still switch to Sistrum's look for comparison, and that switch is not persisted.
+
 **BitChord look, owner override (2026-11-04):** for the BitChord look only, the owner allowed the blur below sigma 6. FROSTED, LIQUID and the header band use BitChord's sigma 5. Translucent surfaces take BitChord's 0.4 surface tint. The rim paints a chromatic fringe (warm outside, cool inside, strongest at the corners) as an approximation of BitChord's dispersion, which g1455's shader lacks. The Sistrum look is unchanged.
 
 **Glass Engine V2 GPU pass and BitChord look (2026-11-04):** after the shared control read the device measured 10.8 ms raster P95 with Band off and 18.2 ms with Band on: each live read copies the whole screen every frame while the video plays. When the header band is fully shown with its blur, the controls inside it now draw their fill only on the band (`AppLiveVideoBand`). That leaves one copy per frame where there were two (`87456a9`). A second look, BitChord-inspired, uses the same engine (`AppGlassLook`, developer HUD only, not persisted): a deeper g1455 lens, saturation 1.5 on the frosted blur and a white hairline rim (`5f8a710`). The g1455 motion of the controls is `91a83f8`. The investigation, counter semantics and profiling procedure are in `docs/GLASS_ENGINE_V2_PERFORMANCE.md`. Device measurements for both looks are pending.

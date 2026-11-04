@@ -58,7 +58,7 @@ Band on. They are consistent with the cost scaling with the number of page copie
 
 ## Two looks, one engine
 
-`AppGlassLook` (`app_glass_look.dart`): Sistrum (the default) and BitChord-inspired. Both use the
+`AppGlassLook` (`app_glass_look.dart`): BitChord-inspired (the default since the owner's 2026-11-04 decision) and Sistrum's own. Both use the
 same modes, capture, shaders and surfaces. The BitChord look is read from BitChord's
 `ui/components/LiquidGlass.kt`, which uses blur 8 dp at 0.33 resolution, saturation 1.5, a lens
 of 0.5 × 48 dp height and amount, tint 0.4, `Highlight.Default`, and a 0.5 dp white 10% edge. It
@@ -79,8 +79,8 @@ is translated as follows:
   further in, additive, faded toward the middle by a radial mask. It is strokes only, with no read
   and no new shader. It does not bend the image apart the way BitChord's does.
 
-The look is a developer HUD switch and is never persisted, because Appearance has no glass
-controls (`AGENTS.md`).
+Every launch starts in the BitChord look. The developer HUD can switch to Sistrum's look for
+comparison; the switch is never persisted, because Appearance has no glass controls (`AGENTS.md`).
 
 ## Regression risks
 
