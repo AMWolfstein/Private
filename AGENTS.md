@@ -68,11 +68,24 @@ contrast). Header controls (not the player's) are 48dp, 4dp from the edge, with 
 profile photo (opens Settings, rim outline, no glass) ends every header 8dp after the capsule and
 is hidden on Settings and its subpages. Headers mirror in RTL. Headers judge known backdrops
 (page, artwork top) and never sample themselves.
-Glass is one look: Tinted Lite, a backdrop blur (`kAppGlassStyle`, sigma 6, never lower), a surface
-tint and a rim, drawn by `AppGlass` and `AppGlassPanel`. There is no glass quality, clarity
-level, lens, shader or Auto measurement, and no Appearance glass controls; do not restore them.
-Low-end devices (`lowEndDeviceProvider`) and flat surfaces draw opaque fills. Each glass surface
-reads its own backdrop with a `BackdropFilter`; there is no shared batch or adaptive sampling.
+Glass Engine V2 has four modes, all drawn by `AppGlass` and `AppGlassPanel` (no other glass
+renderer): GROUND (a pre-blurred artwork ground, read without sampling the live backdrop), FROSTED
+(a backdrop blur, `kAppGlassStyle`, sigma 6 and never lower, clipped to the glass bounds, with a
+surface tint and a rim), LIQUID (genuine refraction of the captured backdrop through the
+`g1455` package, see below) and TINT (a translucent fill with no sampling, for large or
+frequently updated surfaces). LIQUID is the default for the small chrome controls and
+surfaces that sit over live content; it must be used by at least one user-visible surface. There
+are no user-facing glass quality, clarity, lens, shader or Auto measurement settings and no
+Appearance glass controls; do not restore them. The mode is chosen by the engine from the
+context (ground available, surface size, scrolling or video behind it, device capability and
+reduced-transparency settings), never by a user setting.
+LIQUID uses the MIT-licensed `g1455` package (`https://pub.dev/packages/g1455`, pinned in
+`pubspec.yaml`). `GlassHost` sits above the navigator and captures the painted tree once per
+change; each liquid surface samples its own slot of that capture. Declare a known, static backdrop
+(an artwork ground, a colour, a gradient) with `GlassBackdrop` so no capture is taken. Do not add
+other shader packages, `liquid_glass_easy`, or a second glass renderer.
+Low-end devices (`lowEndDeviceProvider`) and flat surfaces draw opaque fills. A FROSTED surface
+reads its own backdrop with a clipped `BackdropFilter`; there is no adaptive sampling.
 Surfaces nested in glass draw only their fill. The performance HUD is a hidden developer option
 (seven taps on About's version) and is absent when off; it starts top-left, drags, minimizes to a
 pill and its statistics never take touches.

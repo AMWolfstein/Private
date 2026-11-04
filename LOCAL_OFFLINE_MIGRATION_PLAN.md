@@ -22,6 +22,8 @@ popover placement so it follows the tapped ellipsis. Keep the metadata page remo
 
 ## Progress
 
+**Glass Engine V2 rules and g1455 pin (2026-11-04):** AGENTS.md now defines four glass modes (GROUND, FROSTED, LIQUID, TINT) inside `AppGlass`/`AppGlassPanel`, with LIQUID provided by the MIT `g1455` package 0.4.0 (`GlassHost` above the navigator, `GlassBackdrop` for static grounds). `pubspec.yaml` pins `g1455: 0.4.0`; no screen uses it yet, so the rendering cutover and legacy removal are still to do.
+
 **Collection header band without a live blur (2026-11-04):** Loved and playlist headers use the same artwork-ground band as the artist and album headers (`softenOverArtwork`), so their toolbar band keeps its tint without a live `BackdropFilter` over artwork. Video-on pages and pages without a ground keep the live blur.
 
 **Artist and album header band without a live blur (2026-11-04):** the pinned toolbar band on artist and album pages keeps its gradient tint and feather but no longer draws a live `BackdropFilter` when the page artwork ground is in use (`AppHeaderBacking.groundVeil`). The ground veil already softens the artwork. Video-on pages, pages without a ground and collection headers (Loved, playlists) keep the live blur. Raster and jank figures on device are still to be measured.
