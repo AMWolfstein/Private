@@ -69,7 +69,10 @@ is translated as follows:
   radius, which is sigma 0.57735 × 8 + 0.5 = 5.1. This look is allowed below Sistrum's sigma 6 by
   an owner override (2026-11-04).
 - Tint: BitChord's surface tint, 0.4 of `#121212` (dark) or `#FAFAFA` (light), replaces the fill
-  of every translucent surface that samples. Nested glass keeps its own fill.
+  of light glass (controls, chips, header buttons). Slabs that hold text or navigation
+  (`strongTint`: menus, sheets, the bottom bar) keep their own opaque fill, as BitChord's own menus
+  keep a 0.80 slab (`MENU_FROST_ALPHA`); the contrast tests over black and white pages require it.
+  Nested glass keeps its own fill.
 - FROSTED: the saturation 1.5 matrix is composed onto the same blur. It stays one read, with a
   colour matrix over the blurred pixels.
 - Rim: a white 10% hairline replaces the dark contact edge.
