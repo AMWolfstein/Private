@@ -61,7 +61,7 @@ Sistrum has no blur, glass, lens, shader or backdrop sampling anywhere: the liqu
 
 Any new blur or glass design must follow the reference copies in `docs/reference/liquid_glass_widgets/` (`SKILL.md` for the rules and `ARCHITECTURE.md` for the design). Read both before designing or implementing it, and do not add the `liquid_glass_widgets` package as a dependency.
 Sistrum album headers and the immersive player's cover drift slowly (Ken Burns, `AlbumKenBurns`); Appearance > Animated artwork turns it off. A saved video cover (see Video artwork below) replaces that drift on the same cover; the static fallback keeps it. Albums and the player's cover (both Normal and Immersive views) only: playlists, Loved and artist headers stay still. The player's drift pauses while lyrics show. It pauses for reduced motion, low-end devices, covered routes and a page scrolled past the cover.
-Pinned headers float: transparent toolbars with a plain round back button, and a solid backing band that fades in only once content scrolls under (its colour is the page background). Header controls (not the player's) are 48dp, 4dp from the edge, with 22dp icons. The trailing buttons (IconButton and menu actions plus the profile photo, which opens Settings and has a rim outline) share one solid capsule when there is more than one; a lone button is a solid circle. The profile photo is hidden on Settings and its subpages, so it is not counted there. Every header button has a solid fill, never a translucent one. Headers mirror in RTL.
+Pinned headers float: transparent toolbars with a plain round back button, and a solid backing band that fades in only once content scrolls under (its colour is the page background). Header controls (not the player's) are 48dp, 4dp from the edge, with 22dp icons. The trailing buttons (IconButton and menu actions plus the profile photo, which opens Settings and has a rim outline) share one solid capsule when there is more than one; a lone button is a solid circle. The profile photo is hidden on Settings and its subpages, so it is not counted there. Header buttons and capsules take a translucent tint (black at 45% in dark, white at 55% in light), with no blur behind them. Headers mirror in RTL.
 Cover colours come from one analysis per cover version (`CoverPalette` -> `appCoverColors`:
 bottom/top edge, dominant, harmonized accent; HCT, chroma never above the cover's, AA on-colours;
 stored in the library DB's derived `cover_analysis` table). Screens and grounds take every cover
@@ -129,7 +129,7 @@ keys and backups stay compatible.
 
 Album-style collection headers (albums, playlists and Loved) use one centered
 row ordered left to right: Loved, Play/Pause, Shuffle, Add to playlist. Reuse the filled
-Play and solid Shuffle pills with compact sizing and at least 48px touch targets;
+Play and translucent Shuffle pills with compact sizing and at least 48px touch targets;
 keep the outer icons in the same row, including RTL. Do not move Shuffle into the toolbar.
 The artist header retains its separate centered-Play design.
 

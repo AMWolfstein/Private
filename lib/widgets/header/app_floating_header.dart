@@ -101,16 +101,16 @@ class AppHeaderCircle extends StatelessWidget {
   );
 }
 
-/// The solid fill of a header control: a black or white tint over the surface,
-/// as one opaque colour.
+/// The translucent fill of a header control: a black or white tint that lets
+/// the page or artwork show through. No blur is applied behind it.
 Color appHeaderControlFill(BuildContext context) {
   final scheme = Theme.of(context).colorScheme;
   return scheme.brightness == Brightness.dark
-      ? Color.alphaBlend(Colors.black.withValues(alpha: 0.45), scheme.surface)
-      : Color.alphaBlend(Colors.white.withValues(alpha: 0.55), scheme.surface);
+      ? Colors.black.withValues(alpha: 0.45)
+      : Colors.white.withValues(alpha: 0.55);
 }
 
-/// A solid capsule that groups header actions, sized like the header controls.
+/// A translucent capsule that groups header actions, sized like the header controls.
 class _HeaderCapsule extends StatelessWidget {
   const _HeaderCapsule({required this.children});
 

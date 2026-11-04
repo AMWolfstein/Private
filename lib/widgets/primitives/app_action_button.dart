@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sistrum/core/theme/app_icons.dart';
 import 'package:sistrum/core/theme/app_theme.dart';
+import 'package:sistrum/widgets/header/app_floating_header.dart';
 import 'package:sistrum/widgets/primitives/app_surface.dart';
 
 /// Shared sheet actions follow the selected design on every platform.
@@ -80,7 +81,7 @@ class AppActionButton extends StatelessWidget {
     if (prominent || tonal || !filled) return action;
     return AppSurface(
       radius: 28,
-      color: scheme.surfaceContainerHigh,
+      color: appHeaderControlFill(context),
       child: action,
     );
   }
