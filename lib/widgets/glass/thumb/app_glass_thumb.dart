@@ -1,7 +1,6 @@
-import 'dart:ui' as ui;
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:g1455/g1455.dart' show GlassFinish, GlassSurface;
 import 'package:sistrum/core/theme/app_glass_levels.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
 
@@ -126,7 +125,7 @@ class AppGlassThumb extends StatelessWidget {
   }
 }
 
-/// The held thumb: a blur of what lies under it, a light veil and a rim.
+/// The held thumb: refracts what lies under it (LIQUID), a light veil and a rim.
 /// Nothing is painted (or read) while its opacity is zero.
 class _HeldGlassPill extends StatelessWidget {
   const _HeldGlassPill({super.key, required this.color, required this.radius});
@@ -134,10 +133,11 @@ class _HeldGlassPill extends StatelessWidget {
   final Color color;
   final double radius;
 
-  // One shared filter: never rebuilt per frame.
-  static final _blur = ui.ImageFilter.blur(
-    sigmaX: kAppGlassStyle.blurSigma,
-    sigmaY: kAppGlassStyle.blurSigma,
+  // Same LIQUID finish as AppGlass: the blur sigma, no tint of its own.
+  static final _liquidFinish = GlassFinish(
+    name: 'clear',
+    blurSigmaLogical: kAppGlassStyle.blurSigma,
+    tint: const Color(0x00000000),
   );
 
   @override
@@ -145,8 +145,10 @@ class _HeldGlassPill extends StatelessWidget {
     final shape = BorderRadius.circular(radius);
     return ClipRRect(
       borderRadius: shape,
-      child: BackdropFilter(
-        filter: _blur,
+      child: GlassSurface(
+        borderRadius: shape,
+        finish: _liquidFinish,
+        labelled: false,
         child: DecoratedBox(
           decoration: BoxDecoration(
             color: color.withValues(alpha: 0.6),
