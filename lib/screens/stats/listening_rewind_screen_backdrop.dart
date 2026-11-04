@@ -72,13 +72,10 @@ class _RewindBackdropState extends State<_RewindBackdrop>
             child: Transform.scale(
               // A slow Ken Burns drift.
               scale: 1.15 + 0.06 * math.sin(t),
-              child: ImageFiltered(
-                imageFilter: ImageFilter.blur(sigmaX: 48, sigmaY: 48),
-                child: PlayerArtwork(
-                  artUri: uri,
-                  colorScheme: Theme.of(context).colorScheme,
-                  cacheWidth: 200,
-                ),
+              child: PlayerArtwork(
+                artUri: uri,
+                colorScheme: Theme.of(context).colorScheme,
+                cacheWidth: 200,
               ),
             ),
           );

@@ -18,7 +18,7 @@ import 'package:sistrum/widgets/primitives/app_alert_dialog.dart';
 import 'package:sistrum/widgets/primitives/app_bottom_sheet.dart';
 import 'package:sistrum/widgets/primitives/app_level_slider.dart';
 import 'package:sistrum/widgets/primitives/app_sliver_header.dart';
-import 'package:sistrum/widgets/glass/chrome/app_chrome_controls.dart';
+import 'package:sistrum/widgets/primitives/app_selection_controls.dart';
 import 'package:sistrum/widgets/settings/settings_group.dart';
 import 'package:sistrum/widgets/settings/settings_item_rows.dart';
 import 'package:sistrum/widgets/settings/settings_chips_and_cards.dart';
@@ -218,11 +218,7 @@ class _EqualizerScreenState extends ConsumerState<EqualizerScreen> {
           final message = error ?? state.error;
           return message == null
               ? const SizedBox.shrink()
-              : SettingsInfoCard(
-                  message: message,
-                  icon: Icons.error_outline,
-                  glass: true,
-                );
+              : SettingsInfoCard(message: message, icon: Icons.error_outline);
         },
       ),
     );

@@ -21,7 +21,6 @@ import 'package:sistrum/providers/library/local_library_provider.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/providers/settings/settings_provider.dart';
 import 'package:sistrum/providers/settings/theme_provider.dart';
-import 'package:sistrum/services/glass/app_glass_auto_probe.dart';
 import 'package:sistrum/services/platform/notification_service.dart';
 import 'package:sistrum/services/native/native_device.dart';
 import 'package:sistrum/services/storage/app_state_database.dart';
@@ -73,10 +72,9 @@ void main() {
         yield LicenseEntryWithLineBreaks(const [
           'Local crash diagnostics',
         ], await rootBundle.loadString('assets/licenses/diagnostics.txt'));
-        yield LicenseEntryWithLineBreaks(
-          const ['Apple Music video artwork (Mornye lookup and download rules)'],
-          await rootBundle.loadString('assets/licenses/animated_artwork.txt'),
-        );
+        yield LicenseEntryWithLineBreaks(const [
+          'Apple Music video artwork (Mornye lookup and download rules)',
+        ], await rootBundle.loadString('assets/licenses/animated_artwork.txt'));
         yield LicenseEntryWithLineBreaks(const [
           'Material Color Utilities (native palette)',
           'Dart SDK (native Random compatibility)',
@@ -154,16 +152,8 @@ void main() {
           lowEndDeviceProvider.overrideWithValue(
             runtimeProfile.disableOverscrollEffects,
           ),
-          // The RAM tiers describe Android hardware. Other platforms keep
-          // the existing full material by default.
-          deviceSupportsLiquidGlassProvider.overrideWithValue(
-            !Platform.isAndroid || runtimeProfile.enableBackdropBlur,
-          ),
           initialSettingsProvider.overrideWithValue(bootstrapSettings),
           initialThemeSettingsProvider.overrideWithValue(bootstrapTheme),
-          initialGlassAutoResultProvider.overrideWithValue(
-            loadGlassAutoResult(prefs, build: appGlassAutoBuild()),
-          ),
         ],
       );
       runApp(

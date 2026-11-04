@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sistrum/core/models/app_glass.dart';
 import 'package:sistrum/core/models/settings.dart';
 import 'package:sistrum/core/models/tag_credit_settings.dart';
 import 'package:sistrum/core/models/automix_options.dart';
@@ -128,17 +127,6 @@ class SettingsNotifier extends Notifier<AppSettings> {
   void setKeepScreenOnLyrics(bool enabled) {
     state = state.copyWith(keepScreenOnLyrics: enabled);
     _saveSettings();
-  }
-
-  void setGlassQuality(AppGlassQuality quality) {
-    state = state.copyWith(glassQuality: quality.name);
-    _saveSettings();
-  }
-
-  /// [persist] false updates the app without writing preferences.
-  Future<void> setGlassClarityLevel(int level, {bool persist = true}) async {
-    state = state.copyWith(glassClarityLevel: level.clamp(1, 5));
-    if (persist) await _saveSettings();
   }
 }
 

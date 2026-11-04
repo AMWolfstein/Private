@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:sistrum/core/theme/app_theme.dart';
-import 'package:sistrum/widgets/glass/chrome/app_chrome.dart';
+import 'package:sistrum/widgets/primitives/app_surface.dart';
 import 'package:sistrum/widgets/selection/app_animated_selection_bar.dart';
 import 'package:sistrum/widgets/selection/app_selection_panel_drag.dart';
 import 'package:sistrum/l10n/l10n.dart';
@@ -261,11 +261,7 @@ class SelectionBottomBar extends StatelessWidget {
       header: header,
       bottomPadding: bottomPadding,
       children: children,
-      surfaceBuilder: (content) {
-        {
-          return AppGlassPanel.overlay(child: content);
-        }
-      },
+      surfaceBuilder: (content) => AppSurface(child: content),
     );
   }
 }

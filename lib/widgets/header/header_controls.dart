@@ -1,11 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:sistrum/providers/runtime_profile_provider.dart';
-import 'package:sistrum/services/library/covers/cover_palette.dart';
 import 'package:sistrum/core/theme/app_icons.dart';
-import 'package:sistrum/widgets/glass/thumb/app_glass_surface.dart';
-import 'package:sistrum/widgets/glass/chrome/app_floating_header.dart';
+import 'package:sistrum/services/library/covers/cover_palette.dart';
+import 'package:sistrum/widgets/header/app_floating_header.dart';
 
 class HeaderFilledButton extends StatelessWidget {
   const HeaderFilledButton({
@@ -39,7 +36,7 @@ class HeaderFilledButton extends StatelessWidget {
 
 /// Circular header icon button (add-to-playlist, love-all, ...). Sized to the
 /// minimum touch target and tinted from the [HeaderPalette].
-class HeaderCircleButton extends ConsumerWidget {
+class HeaderCircleButton extends StatelessWidget {
   const HeaderCircleButton({
     super.key,
     required this.icon,
@@ -65,7 +62,7 @@ class HeaderCircleButton extends ConsumerWidget {
   final double iconSize;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final scheme = HeaderPalette.of(context);
     {
       if (tonal) {
@@ -93,7 +90,6 @@ class HeaderCircleButton extends ConsumerWidget {
           ),
         );
       }
-      final blurEnabled = ref.watch(appBlurEnabledProvider);
       final button = IconButton(
         onPressed: onPressed,
         tooltip: tooltip,
@@ -103,19 +99,7 @@ class HeaderCircleButton extends ConsumerWidget {
           foregroundColor: iconColor ?? scheme.onSurface,
         ),
       );
-      return Center(
-        widthFactor: 1,
-        child: AppGlass.navigation(
-          radius: (buttonSize ?? kAppHeaderControlSize) / 2,
-          tintColor: scheme.brightness == Brightness.dark
-              ? Colors.black
-              : Colors.white,
-          tintOpacity: scheme.brightness == Brightness.dark ? 0.45 : 0.55,
-          blurEnabled: blurEnabled,
-          allowLens: appLiquidChromeEnabled(context, ref),
-          child: button,
-        ),
-      );
+      return Center(widthFactor: 1, child: button);
     }
   }
 }

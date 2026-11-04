@@ -1,17 +1,15 @@
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/l10n/l10n.dart';
-import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/widgets/primitives/app_bottom_sheet.dart';
-import 'package:sistrum/widgets/glass/thumb/app_glass_surface.dart';
+import 'package:sistrum/widgets/primitives/app_surface.dart';
 import 'package:sistrum/widgets/collection/app_metadata_row.dart';
 import 'package:sistrum/widgets/player/artwork/player_artwork.dart';
 
 /// Uses Sistrum's TrackInfoView layout: artwork header, then selectable values
-/// below small labels, separated by thin dividers on one glass surface.
-class AppPlayerDetailsSheet extends ConsumerWidget {
+/// below small labels, separated by thin dividers on one surface.
+class AppPlayerDetailsSheet extends StatelessWidget {
   const AppPlayerDetailsSheet({
     super.key,
     required this.rows,
@@ -24,11 +22,11 @@ class AppPlayerDetailsSheet extends ConsumerWidget {
   final MediaItem? mediaItem;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final item = mediaItem;
-    return AppGlass.navigation(
-      blurEnabled: ref.watch(appBlurEnabledProvider),
+    return AppSurface(
+      radius: 0,
       child: SafeArea(
         top: false,
         child: Column(

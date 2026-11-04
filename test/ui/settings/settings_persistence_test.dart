@@ -6,7 +6,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sistrum/core/models/settings.dart';
 import 'package:sistrum/providers/settings/settings_provider.dart';
-import 'package:sistrum/utils/logging/logger.dart';
 
 class _Preferences implements SharedPreferences {
   final writes = <Map<String, dynamic>>[];
@@ -34,9 +33,6 @@ class _Preferences implements SharedPreferences {
 class _Settings extends SettingsNotifier {
   _Settings(_Preferences preferences)
     : super(preferences: () async => preferences);
-
-  _Settings.withLoader(Future<SharedPreferences> Function() load)
-    : super(preferences: load);
 
   @override
   AppSettings build() => const AppSettings();
@@ -71,7 +67,6 @@ void main() {
         'isFirstLaunch': true,
         'hasCompletedTutorial': false,
         'localLibraryAutoScan': 'daily',
-        'glassQuality': 'off',
       });
       final failed = expectLater(restore, throwsStateError);
       await prefs.whenStarted(0);
@@ -80,7 +75,6 @@ void main() {
       expect(prefs.writes.single['localLibraryAutoScan'], 'weekly');
       prefs.release(0).complete(false);
       await failed;
-      expect(container.read(settingsProvider).glassQuality, 'auto');
       expect(container.read(settingsProvider).localLibraryAutoScan, 'weekly');
     },
   );
@@ -152,108 +146,6 @@ void main() {
       expect(container.read(settingsProvider).isFirstLaunch, isFalse);
       expect(container.read(settingsProvider).hasCompletedTutorial, isTrue);
       expect(container.read(settingsProvider).locale, 'fr');
-    },
-  );
-
-  test('queued save callers await the complete coalescing drain', () async {
-    final preferences = _Preferences();
-    final container = ProviderContainer(
-      overrides: [settingsProvider.overrideWith(() => _Settings(preferences))],
-    );
-    addTearDown(container.dispose);
-    final notifier = container.read(settingsProvider.notifier);
-    final first = notifier.setGlassClarityLevel(1);
-    await preferences.whenStarted(0);
-    final second = notifier.setGlassClarityLevel(2);
-    final third = notifier.setGlassClarityLevel(5);
-    var firstCompleted = false;
-    var secondCompleted = false;
-    var thirdCompleted = false;
-    unawaited(first.then((_) => firstCompleted = true));
-    unawaited(second.then((_) => secondCompleted = true));
-    unawaited(third.then((_) => thirdCompleted = true));
-    await Future<void>.delayed(Duration.zero);
-    expect(
-      [firstCompleted, secondCompleted, thirdCompleted],
-      [false, false, false],
-    );
-
-    preferences.release(0).complete(true);
-    await preferences.whenStarted(1);
-    expect(preferences.writes.length, 2);
-    expect(preferences.writes.last['glassClarityLevel'], 5);
-    expect(
-      [firstCompleted, secondCompleted, thirdCompleted],
-      [false, false, false],
-    );
-    preferences.release(1).complete(true);
-    await Future.wait([first, second, third]);
-    expect(
-      [firstCompleted, secondCompleted, thirdCompleted],
-      [true, true, true],
-    );
-    expect(preferences.writes.length, 2);
-  });
-
-  test(
-    'failed active save keeps logged-error API and releases its owner',
-    () async {
-      final preferences = _Preferences();
-      final container = ProviderContainer(
-        overrides: [
-          settingsProvider.overrideWith(() => _Settings(preferences)),
-        ],
-      );
-      addTearDown(container.dispose);
-      final notifier = container.read(settingsProvider.notifier);
-      final first = notifier.setGlassClarityLevel(1);
-      await preferences.whenStarted(0);
-      final queued = notifier.setGlassClarityLevel(3);
-      preferences.release(0).completeError(StateError('settings_save_failed'));
-      await Future.wait([first, queued]);
-      expect(
-        LogBuffer().entries.any(
-          (entry) =>
-              entry.tag == 'SettingsProvider' &&
-              entry.message.contains('settings_save_failed'),
-        ),
-        isTrue,
-      );
-
-      final retry = notifier.setGlassClarityLevel(4);
-      await preferences.whenStarted(1);
-      expect(preferences.writes.last['glassClarityLevel'], 4);
-      preferences.release(1).complete(true);
-      await retry;
-    },
-  );
-
-  test(
-    'synchronous preference failure does not retain a finished drain',
-    () async {
-      final preferences = _Preferences();
-      var loads = 0;
-      final container = ProviderContainer(
-        overrides: [
-          settingsProvider.overrideWith(
-            () => _Settings.withLoader(() {
-              if (loads++ == 0) throw StateError('settings_preferences_failed');
-              return Future.value(preferences);
-            }),
-          ),
-        ],
-      );
-      addTearDown(container.dispose);
-      final notifier = container.read(settingsProvider.notifier);
-      await notifier.setGlassClarityLevel(1);
-      expect(preferences.writes, isEmpty);
-
-      final retry = notifier.setGlassClarityLevel(4);
-      await preferences.whenStarted(0);
-      expect(loads, 2);
-      expect(preferences.writes.single['glassClarityLevel'], 4);
-      preferences.release(0).complete(true);
-      await retry;
     },
   );
 }

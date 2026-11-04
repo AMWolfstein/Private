@@ -45,7 +45,7 @@ extension _LocalAlbumHeader on _LocalAlbumScreenState {
     return AlbumDetailHeader(
       title: widget.albumName,
       appBarActions: [
-        // A direct IconButton so the header puts it in its glass circle.
+        // A direct IconButton so the header puts it in its circle.
         IconButton(
           key: _albumMenuKey,
           icon: const Icon(Icons.more_horiz),
@@ -82,7 +82,7 @@ extension _LocalAlbumHeader on _LocalAlbumScreenState {
       showTitleInAppBar: showTitleInAppBar,
       background: background,
       paletteSource: coverPath,
-      blurAndScrimBackground: coverPath != null,
+      scrimBackground: coverPath != null,
       coverBuilder: (context, coverSize) => coverPath != null
           ? Image.file(
               File(coverPath),

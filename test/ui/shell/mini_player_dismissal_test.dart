@@ -49,7 +49,6 @@ void main() {
                 playbackStateProvider.overrideWith((ref) => states.stream),
                 musicPlayerControllerProvider.overrideWithValue(controller),
                 lowEndDeviceProvider.overrideWithValue(true),
-                appLiquidGlassProvider.overrideWithValue(false),
               ],
               child: MaterialApp(
                 theme: AppTheme.build(Brightness.light),
@@ -147,7 +146,6 @@ void main() {
           playbackStateProvider.overrideWith((ref) => states.stream),
           musicPlayerControllerProvider.overrideWithValue(controller),
           lowEndDeviceProvider.overrideWithValue(true),
-          appLiquidGlassProvider.overrideWithValue(false),
         ],
         child: MaterialApp(
           theme: AppTheme.build(Brightness.light),

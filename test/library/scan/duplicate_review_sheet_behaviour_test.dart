@@ -18,7 +18,7 @@ import 'package:sistrum/widgets/sheets/duplicate_review_sheet.dart';
 import '../../support/pump_until.dart';
 import '../../support/sqlite_process_database.dart';
 
-/// Fixed defaults: the glass dialogs read settings, and the test has no
+/// Fixed defaults: the dialogs read settings, and the test has no
 /// shared-preferences plugin to load them from.
 class _Settings extends SettingsNotifier {
   @override

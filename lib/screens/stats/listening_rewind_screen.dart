@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'dart:async';
 import 'dart:io';
 import 'dart:math' as math;
-import 'dart:ui' show ImageByteFormat, ImageFilter;
+import 'dart:ui' show ImageByteFormat;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart' show RenderRepaintBoundary;

@@ -5,18 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sistrum/core/models/app_glass.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/core/theme/app_theme.dart';
 import 'package:sistrum/widgets/player/layout/app_landscape_player.dart';
 
 void main() {
-  Future<void> pumpPlayer(
-    WidgetTester tester, {
-    GlobalKey? capture,
-    bool blur = true,
-  }) async {
+  Future<void> pumpPlayer(WidgetTester tester, {GlobalKey? capture}) async {
     tester.view.physicalSize = const Size(852, 393);
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.resetPhysicalSize);
@@ -24,12 +19,7 @@ void main() {
     var page = 1;
     await tester.pumpWidget(
       ProviderScope(
-        overrides: [
-          lowEndDeviceProvider.overrideWithValue(true),
-          appGlassQualityProvider.overrideWithValue(
-            blur ? AppGlassQuality.full : AppGlassQuality.auto,
-          ),
-        ],
+        overrides: [lowEndDeviceProvider.overrideWithValue(true)],
         child: MaterialApp(
           theme: AppTheme.build(Brightness.dark),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -85,12 +75,10 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  for (final blur in [false, true]) {
-    testWidgets('landscape footer clears text behind controls (blur: $blur)', (
-      tester,
-    ) async {
+  {
+    testWidgets('landscape footer clears text behind controls', (tester) async {
       final capture = GlobalKey();
-      await pumpPlayer(tester, capture: capture, blur: blur);
+      await pumpPlayer(tester, capture: capture);
       final viewport = tester.getRect(
         find.byKey(const ValueKey('landscape-lyrics-viewport')),
       );
@@ -121,9 +109,8 @@ void main() {
       expect(await contrast(10), lessThan(5));
       final transitionContrast = (await contrast(74))!;
       // A longer opacity fade clears the footer on every GPU, without three
-      // overlapping backdrop filters over the moving lyric content.
+      // overlapping fades over the moving lyric content.
       expect(transitionContrast, lessThan(110));
-      expect(find.bySubtype<BackdropFilter>(), findsNothing);
 
       await tester.pump(const Duration(seconds: 5));
       await tester.pumpAndSettle();

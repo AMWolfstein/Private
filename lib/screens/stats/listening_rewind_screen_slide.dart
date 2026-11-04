@@ -414,5 +414,5 @@ String? _slideArtwork(_Slide slide, ListeningRewind rewind) => switch (slide) {
 /// One background behind every slide, so colors blend while swiping.
 ///
 /// Material floats large expressive shapes that drift, turn and follow the
-/// swipe. Sistrum cross-fades the slides' blurred artwork while it slowly
+/// swipe. Sistrum cross-fades the slides' artwork while it slowly
 /// zooms. Reduced motion keeps the shapes and artwork still.

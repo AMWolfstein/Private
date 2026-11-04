@@ -267,7 +267,7 @@ void _registerNowPlayingLyricsBackground() {
         findsNothing,
       );
       expect(
-        find.descendant(of: sheet, matching: find.byType(AppGlass)),
+        find.descendant(of: sheet, matching: find.byType(AppSurface)),
         findsOneWidget,
       );
       final titleRow = find.widgetWithText(AppMetadataRow, 'Title');

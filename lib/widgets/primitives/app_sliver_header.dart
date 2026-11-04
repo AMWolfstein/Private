@@ -1,21 +1,19 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/core/theme/app_tokens.dart';
 import 'package:sistrum/utils/layout/adaptive_layout.dart';
 import 'package:sistrum/utils/layout/app_bar_layout.dart';
-import 'package:sistrum/widgets/glass/chrome/app_floating_header.dart';
+import 'package:sistrum/widgets/header/app_floating_header.dart';
 import 'package:sistrum/widgets/header/header_controls.dart';
 import 'package:sistrum/core/theme/app_theme.dart';
 
 /// The collapsing header used by every top-level tab and every settings-style
 /// sub-page.
 ///
-/// Expanded titles use [AppTokens.headerExpandedTitleSize]. Unless the glass
-/// level is flat (or contrast blocks glass) the toolbar is transparent: the
-/// back button and actions float as glass, and a backing band fades in once
-/// content scrolls under the collapsed title.
-class AppSliverHeader extends ConsumerWidget {
+/// Expanded titles use [AppTokens.headerExpandedTitleSize]. The toolbar is
+/// transparent: the back button and actions float over the page, and a
+/// backing band fades in once content scrolls under the collapsed title.
+class AppSliverHeader extends StatelessWidget {
   /// Root of a navigation tab: no back button, and the title stays aligned with
   /// the content margin at every collapse ratio.
   const AppSliverHeader.tabRoot({
@@ -56,7 +54,7 @@ class AppSliverHeader extends ConsumerWidget {
   static const double _contentMargin = 24;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final tokens = context.tokens;
     final colorScheme = Theme.of(context).colorScheme;
     final topPadding = normalizedHeaderTopPadding(context);
@@ -69,7 +67,6 @@ class AppSliverHeader extends ConsumerWidget {
         : tokens.headerExpandedHeight;
     final maxHeight = expandedHeight + topPadding;
 
-    final opaque = appHeaderMaterial(context, ref) == AppHeaderMaterial.opaque;
     final leading = this.leading;
 
     return SliverAppBar(
@@ -77,7 +74,7 @@ class AppSliverHeader extends ConsumerWidget {
       collapsedHeight: kToolbarHeight,
       floating: false,
       pinned: true,
-      backgroundColor: opaque ? colorScheme.surface : Colors.transparent,
+      backgroundColor: Colors.transparent,
       surfaceTintColor: Colors.transparent,
       scrolledUnderElevation: 0,
       systemOverlayStyle: appHeaderOverlayStyle(colorScheme.brightness),
@@ -92,8 +89,8 @@ class AppSliverHeader extends ConsumerWidget {
                         HeaderCircleButton(
                           icon: CupertinoIcons.back,
                           iconColor: AppTheme.accentColor(
-                        Theme.of(context).brightness,
-                      ),
+                            Theme.of(context).brightness,
+                          ),
                           tooltip: MaterialLocalizations.of(
                             context,
                           ).backButtonTooltip,
@@ -154,7 +151,6 @@ class AppSliverHeader extends ConsumerWidget {
               ),
             ),
           );
-          if (opaque) return bar;
           return Stack(
             fit: StackFit.expand,
             children: [const AppHeaderBacking(), bar],

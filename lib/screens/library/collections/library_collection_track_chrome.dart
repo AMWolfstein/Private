@@ -84,7 +84,7 @@ extension _LibraryCollectionTracksScreenStatePart2
       showTitleInAppBar: showTitleInAppBar,
       background: background,
       paletteSource: coverSource,
-      blurAndScrimBackground: hasCustomCover || hasCoverUrl,
+      scrimBackground: hasCustomCover || hasCoverUrl,
       coverBuilder: (context, coverSize) {
         if (hasCustomCover) {
           return Image.file(

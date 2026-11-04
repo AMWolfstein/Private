@@ -24,26 +24,7 @@ void _registerNowPlayingLyricsLanguageMenu() {
       } else {
         await tester.tap(options);
         await _settlePlayer(tester);
-        final glass = tester.widget<AppGlassPanel>(
-          find.byType(AppGlassPanel).last,
-        );
-        // Over the player the menu draws from its artwork: no backdrop read.
-        final panel = find.byType(AppGlassPanel).last;
-        expect(
-          find.descendant(
-            of: panel,
-            matching: find.byType(AppArtworkGlassSurface),
-          ),
-          findsOneWidget,
-        );
-        expect(
-          find.descendant(
-            of: panel,
-            matching: find.bySubtype<BackdropFilter>(),
-          ),
-          findsNothing,
-        );
-        expect(glass.tintOpacity, inExclusiveRange(0, 1));
+        expect(find.byType(AppSurface), findsWidgets);
         expect(
           find.text('Hide Pronunciation'),
           supplement == 'pronunciation' ? findsOneWidget : findsNothing,

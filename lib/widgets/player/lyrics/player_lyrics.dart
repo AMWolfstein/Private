@@ -1,7 +1,6 @@
 import 'dart:async';
-import 'package:sistrum/providers/settings/theme_provider.dart';
 import 'dart:collection';
-import 'dart:ui' show BoxHeightStyle, ImageFilter;
+import 'dart:ui' show BoxHeightStyle;
 
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter/foundation.dart' show ValueListenable, listEquals;
@@ -12,7 +11,6 @@ import 'package:flutter/services.dart' show HapticFeedback;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/providers/playback/music_player_provider.dart';
-import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/core/theme/app_theme.dart';
 import 'package:sistrum/core/theme/app_tokens.dart';
 import 'package:sistrum/utils/lyrics/lyrics_parser.dart';
@@ -165,9 +163,9 @@ class _SyncedLyricsViewState extends ConsumerState<SyncedLyricsView>
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    // Appearance can rebuild when transport controls fade (for example with
-    // custom glass clarity). Keep the existing playback subscription and the
-    // user's scroll ownership; only new lyrics/page activation should reset it.
+    // Appearance can rebuild when transport controls fade. Keep the existing
+    // playback subscription and the user's scroll ownership; only new
+    // lyrics/page activation should reset it.
     _tickerEnabled = TickerMode.valuesOf(context).enabled;
     if ((_positionSubscription != null) != _visible) {
       _syncPositionSubscription(resetUserScroll: false);

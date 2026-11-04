@@ -14,13 +14,6 @@ double playbackNormalizationPreampFromJson(Object? value) =>
 String playbackNormalizationModeFromJson(Object? value) =>
     value == 'album' ? 'album' : 'track';
 
-/// Default Sistrum glass clarity level (Balanced).
-const int kDefaultGlassClarityLevel = 3;
-
-int glassClarityLevelFromJson(Object? value) => value is num && value.isFinite
-    ? value.round().clamp(1, 5)
-    : kDefaultGlassClarityLevel;
-
 String appLocaleFromJson(Object? value) => value is String ? value : 'system';
 
 double musicHapticsLevelFromJson(Object? value) =>
@@ -103,26 +96,6 @@ class AppSettings {
   /// `stable` or `preview` (includes pre-releases).
   final String updateChannel;
 
-  /// Revealed by tapping the About version row seven times.
-  final bool developerOptionsUnlocked;
-
-  /// Floating frame-timing overlay (a developer option).
-  final bool performanceHudEnabled;
-
-  /// Developer A/B switch: no backdrop sampling for the bottom bar's palette.
-  final bool barSamplerDisabled;
-
-  /// Developer A/B switch: the header backing band keeps its tint but drops
-  /// its backdrop blur.
-  final bool headerBandBlurDisabled;
-
-  /// Sistrum glass renderer: `auto` (the device decides), `lite`, `full` or
-  /// `off`. See [AppGlassQuality].
-  final String glassQuality;
-
-  /// Sistrum glass clarity level, 1 (Frosted) to 5 (Crystal).
-  @JsonKey(fromJson: glassClarityLevelFromJson)
-  final int glassClarityLevel;
   @JsonKey(fromJson: appLocaleFromJson)
   final String locale;
   final bool keepScreenOnLyrics;
@@ -177,12 +150,6 @@ class AppSettings {
     this.lyricsAboveSeekBar = false,
     this.checkForUpdates = true,
     this.updateChannel = 'stable',
-    this.developerOptionsUnlocked = false,
-    this.performanceHudEnabled = false,
-    this.barSamplerDisabled = false,
-    this.headerBandBlurDisabled = false,
-    this.glassQuality = 'auto',
-    this.glassClarityLevel = kDefaultGlassClarityLevel,
     this.locale = 'system',
     this.keepScreenOnLyrics = true,
     this.localLibraryShowDuplicates = true,
@@ -233,12 +200,6 @@ class AppSettings {
     bool? lyricsAboveSeekBar,
     bool? checkForUpdates,
     String? updateChannel,
-    bool? developerOptionsUnlocked,
-    bool? performanceHudEnabled,
-    bool? barSamplerDisabled,
-    bool? headerBandBlurDisabled,
-    String? glassQuality,
-    int? glassClarityLevel,
     String? locale,
     bool? keepScreenOnLyrics,
     bool? localLibraryShowDuplicates,
@@ -299,15 +260,6 @@ class AppSettings {
       lyricsAboveSeekBar: lyricsAboveSeekBar ?? this.lyricsAboveSeekBar,
       checkForUpdates: checkForUpdates ?? this.checkForUpdates,
       updateChannel: updateChannel ?? this.updateChannel,
-      developerOptionsUnlocked:
-          developerOptionsUnlocked ?? this.developerOptionsUnlocked,
-      performanceHudEnabled:
-          performanceHudEnabled ?? this.performanceHudEnabled,
-      barSamplerDisabled: barSamplerDisabled ?? this.barSamplerDisabled,
-      headerBandBlurDisabled:
-          headerBandBlurDisabled ?? this.headerBandBlurDisabled,
-      glassQuality: glassQuality ?? this.glassQuality,
-      glassClarityLevel: glassClarityLevel ?? this.glassClarityLevel,
       locale: locale ?? this.locale,
       keepScreenOnLyrics: keepScreenOnLyrics ?? this.keepScreenOnLyrics,
       localLibraryShowDuplicates:

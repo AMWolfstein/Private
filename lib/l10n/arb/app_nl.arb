@@ -42,29 +42,6 @@
   "@nowPlayingVolume": {
     "description": "System volume control label in the Sistrum player"
   },
-  "appearanceGlassClarity": "Glasdoorzichtigheid",
-  "appearanceGlassOutlines": "Glasranden",
-  "appearanceGlassOutlinesSubtitle": "Toon een lichte rand rond Sistrum-glas. Uitschakelen laat het glas zelf ongewijzigd.",
-  "appearanceGlassClaritySubtitle": "Pas de transparantie aan in Sistrum-menu's en navigatie. Tekstcontrast blijft behouden.",
-  "appearanceGlassTinted": "Getint",
-  "appearanceGlassClear": "Helder",
-  "appearanceGlassClearPerformance": "Heel helder glas kan meer energie gebruiken en op oudere toestellen minder soepel aanvoelen. Verlaag de helderheid indien nodig.",
-  "appearanceGlassQuality": "Glaskwaliteit",
-  "appearanceGlassQualityAuto": "Automatisch",
-  "appearanceGlassQualityLite": "Lite",
-  "appearanceGlassQualityFull": "Volledig",
-  "appearanceGlassQualityOff": "Uit",
-  "appearanceGlassQualitySubtitle": "Auto kiest Volledig, Lite of Uit voor dit toestel. Lite slaat breking over om energie te sparen.",
-  "appearanceGlassLevelFrosted": "Mat",
-  "appearanceGlassLevelSoft": "Zacht",
-  "appearanceGlassLevelBalanced": "Gebalanceerd",
-  "appearanceGlassLevelClear": "Helder",
-  "appearanceGlassLevelCrystal": "Kristal",
-  "appearanceGlassClarityOff": "Glas is uit. Kies Auto, Lite of Volledig om de helderheid aan te passen.",
-  "appearanceGlassClarityDeviceOpaque": "Glas is op dit toestel ondoorzichtig. Kies Lite of Volledig om de helderheid aan te passen.",
-  "appearanceGlassClarityContrast": "Je systeem vraagt om hoger contrast, dus glas blijft ondoorzichtig. Kies Lite of Volledig om toch glas te gebruiken; tekstcontrast blijft behouden.",
-  "appearanceGlassAutoMeasured": "Gemeten op dit toestel: Auto gebruikt {quality}.",
-  "appearanceGlassClarityAutoFrosted": "Auto heeft dit toestel gemeten en gebruikt Mat. Kies Lite of Volledig om de helderheid in te stellen.",
   "appName": "Sistrum",
   "@appName": {
     "description": "App name - DO NOT TRANSLATE"
@@ -190,17 +167,6 @@
   "@aboutVersion": {
     "description": "Version info label"
   },
-  "aboutDeveloperOptions": "Ontwikkelaarsopties",
-  "aboutDeveloperOptionsEnabled": "Ontwikkelaarsopties ingeschakeld",
-  "aboutPerformanceHud": "Prestatie-HUD",
-  "aboutPerformanceHudSubtitle": "Toon bouw- en rastertijden van frames boven elk scherm.",
-  "aboutHideDeveloperOptions": "Ontwikkelaarsopties verbergen",
-  "aboutBarSampler": "Onderbalk bemonsteren",
-  "aboutBarSamplerSubtitle": "Laat de onderbalk de helderheid van de pagina erachter volgen. Schakel uit om de kosten te meten.",
-  "aboutHeaderBandBlur": "Vervaging van koptekstband",
-  "aboutHeaderBandBlurSubtitle": "Vervaag de band achter gescrolde koppen. Schakel uit om de kosten te meten; de tint blijft.",
-  "aboutRemeasureGlass": "Auto-glas opnieuw meten",
-  "aboutRemeasureGlassSubtitle": "Auto meet de frametijden opnieuw en kiest Volledig, Lite of Lite Mat.",
   "aboutAppDescription": "Speel je lokale muziek af en beheer die, met bewerken van metadata en songteksten.",
   "trackMetadataShare": "Delen",
   "@trackMetadataShare": {

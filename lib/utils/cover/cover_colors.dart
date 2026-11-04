@@ -423,7 +423,7 @@ const _neutralAnalysis = CoverAnalysis(
 );
 
 /// The one place cover colours are derived. Every screen and the artwork
-/// glass grounds use it, so one cover looks the same everywhere.
+/// headers and menus use it, so one cover looks the same everywhere.
 CoverColors appCoverColors(CoverAnalysis? analysis) {
   final source = analysis ?? _neutralAnalysis;
   final bottom = Hct.fromInt(source.bottomEdge);

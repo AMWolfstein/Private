@@ -35,7 +35,7 @@ void main() {
     await tester.pumpAndSettle(const Duration(milliseconds: 16));
   }
 
-  testWidgets('glass switch supports tap, keyboard and accessible activation', (
+  testWidgets('switch supports tap, keyboard and accessible activation', (
     tester,
   ) async {
     var value = false;
@@ -68,7 +68,7 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('disabled glass switch has no toggle action', (tester) async {
+  testWidgets('disabled switch has no toggle action', (tester) async {
     await pumpSwitch(
       tester,
       builder: (_) => const AppSwitch(
@@ -79,7 +79,6 @@ void main() {
     );
     final node = tester.getSemantics(find.bySemanticsLabel('Disabled setting'));
     expect(node.getSemanticsData().hasAction(SemanticsAction.tap), isFalse);
-    expect(find.bySubtype<BackdropFilter>(), findsNothing);
     expect(tester.takeException(), isNull);
   });
 
@@ -115,7 +114,6 @@ void main() {
                 );
         },
       );
-      expect(find.bySubtype<BackdropFilter>(), findsNothing);
       await tester.tap(find.text('Example setting'));
       await tester.pumpAndSettle();
       expect(changes, [true]);

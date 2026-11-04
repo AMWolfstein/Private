@@ -67,7 +67,6 @@ Future<void> _pumpNowPlaying(
   Stream<PlaybackState>? playbackEvents,
   Widget Function(Widget)? wrapPlayer,
   MusicPlayerController? controller,
-  int glassLevel = 3,
   List<MediaItem> queue = const [],
 }) async {
   final prefs = await SharedPreferences.getInstance();
@@ -87,10 +86,7 @@ Future<void> _pumpNowPlaying(
         initialSettingsProvider.overrideWithValue(
           // The immersive drift repeats forever, so it would keep these
           // player animations from settling.
-          AppSettings(
-            glassClarityLevel: glassLevel,
-            animatedAlbumArtwork: false,
-          ),
+          AppSettings(animatedAlbumArtwork: false),
         ),
         if (controller != null)
           musicPlayerControllerProvider.overrideWithValue(controller),

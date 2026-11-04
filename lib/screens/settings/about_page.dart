@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/core/constants/app_info.dart';
 import 'package:sistrum/l10n/l10n.dart';
-import 'package:sistrum/providers/runtime_profile_provider.dart';
-import 'package:sistrum/providers/settings/settings_provider.dart';
 import 'package:sistrum/core/theme/app_icons.dart';
 import 'package:sistrum/utils/layout/adaptive_layout.dart';
 import 'package:sistrum/utils/layout/nav_bar_inset.dart';
@@ -12,42 +9,12 @@ import 'package:sistrum/widgets/settings/settings_search_highlight.dart';
 import 'package:sistrum/widgets/settings/settings_item_rows.dart';
 import 'package:sistrum/widgets/primitives/app_sliver_header.dart';
 
-class AboutPage extends ConsumerStatefulWidget {
+class AboutPage extends StatelessWidget {
   const AboutPage({super.key});
-
-  /// Taps on the version row that reveal the developer options.
-  static const developerTaps = 7;
-
-  @override
-  ConsumerState<AboutPage> createState() => _AboutPageState();
-}
-
-class _AboutPageState extends ConsumerState<AboutPage> {
-  int _versionTaps = 0;
-
-  void _onVersionTap() {
-    if (ref.read(settingsProvider).developerOptionsUnlocked) return;
-    if (++_versionTaps < AboutPage.developerTaps) return;
-    _versionTaps = 0;
-    ref.read(settingsProvider.notifier).setDeveloperOptionsUnlocked(true);
-    ScaffoldMessenger.maybeOf(context)?.showSnackBar(
-      SnackBar(content: Text(context.l10n.aboutDeveloperOptionsEnabled)),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final developer = ref.watch(
-      settingsProvider.select(
-        (s) => (
-          unlocked: s.developerOptionsUnlocked,
-          hud: s.performanceHudEnabled,
-          sampler: !s.barSamplerDisabled,
-          bandBlur: !s.headerBandBlurDisabled,
-        ),
-      ),
-    );
 
     return PopScope(
       canPop: true,
@@ -81,73 +48,10 @@ class _AboutPageState extends ConsumerState<AboutPage> {
                     subtitle:
                         'v${AppInfo.displayVersion} (build ${AppInfo.buildNumber})',
                     showDivider: false,
-                    onTap: _onVersionTap,
                   ),
                 ],
               ),
             ),
-
-            if (developer.unlocked) ...[
-              SliverToBoxAdapter(
-                child: SettingsSectionHeader(
-                  title: context.l10n.aboutDeveloperOptions,
-                ),
-              ),
-              SliverToBoxAdapter(
-                child: SettingsGroup(
-                  children: [
-                    SettingsSwitchItem(
-                      key: const ValueKey('performance-hud'),
-                      icon: Icons.speed,
-                      title: context.l10n.aboutPerformanceHud,
-                      subtitle: context.l10n.aboutPerformanceHudSubtitle,
-                      value: developer.hud,
-                      onChanged: ref
-                          .read(settingsProvider.notifier)
-                          .setPerformanceHudEnabled,
-                    ),
-                    // A/B switches for measuring glass costs on their own.
-                    SettingsSwitchItem(
-                      key: const ValueKey('developer-bar-sampler'),
-                      icon: Icons.contrast,
-                      title: context.l10n.aboutBarSampler,
-                      subtitle: context.l10n.aboutBarSamplerSubtitle,
-                      value: developer.sampler,
-                      onChanged: (on) => ref
-                          .read(settingsProvider.notifier)
-                          .setBarSamplerDisabled(!on),
-                    ),
-                    SettingsSwitchItem(
-                      key: const ValueKey('developer-header-band-blur'),
-                      icon: Icons.blur_on,
-                      title: context.l10n.aboutHeaderBandBlur,
-                      subtitle: context.l10n.aboutHeaderBandBlurSubtitle,
-                      value: developer.bandBlur,
-                      onChanged: (on) => ref
-                          .read(settingsProvider.notifier)
-                          .setHeaderBandBlurDisabled(!on),
-                    ),
-                    _AboutSettingsItem(
-                      key: const ValueKey('developer-remeasure-glass'),
-                      icon: Icons.refresh,
-                      title: context.l10n.aboutRemeasureGlass,
-                      subtitle: context.l10n.aboutRemeasureGlassSubtitle,
-                      onTap: ref
-                          .read(appGlassAutoResultProvider.notifier)
-                          .clear,
-                    ),
-                    _AboutSettingsItem(
-                      icon: Icons.visibility_off_outlined,
-                      title: context.l10n.aboutHideDeveloperOptions,
-                      showDivider: false,
-                      onTap: () => ref
-                          .read(settingsProvider.notifier)
-                          .setDeveloperOptionsUnlocked(false),
-                    ),
-                  ],
-                ),
-              ),
-            ],
 
             SliverToBoxAdapter(
               child: Padding(
@@ -266,7 +170,6 @@ class _AboutSettingsItem extends StatelessWidget {
   final String title;
   final String? subtitle;
   final bool showDivider;
-  final VoidCallback? onTap;
 
   const _AboutSettingsItem({
     super.key,
@@ -274,7 +177,6 @@ class _AboutSettingsItem extends StatelessWidget {
     required this.title,
     this.subtitle,
     this.showDivider = true,
-    this.onTap,
   });
 
   @override
@@ -328,9 +230,6 @@ class _AboutSettingsItem extends StatelessWidget {
           ),
       ],
     );
-    return SettingsSearchTarget(
-      label: title,
-      child: onTap == null ? content : InkWell(onTap: onTap, child: content),
-    );
+    return SettingsSearchTarget(label: title, child: content);
   }
 }

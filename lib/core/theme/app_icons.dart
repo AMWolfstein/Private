@@ -74,7 +74,6 @@ IconData appIconFor(IconData icon) {
     Icons.share || Icons.ios_share => CupertinoIcons.share,
     Icons.contrast => CupertinoIcons.circle_lefthalf_fill,
     Icons.animation => CupertinoIcons.play_rectangle,
-    Icons.blur_on => CupertinoIcons.drop,
     Icons.bug_report => CupertinoIcons.ant,
     Icons.timer_outlined => CupertinoIcons.timer,
     Icons.timer_off_outlined => CupertinoIcons.timer,

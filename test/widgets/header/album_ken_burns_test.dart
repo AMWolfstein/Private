@@ -148,21 +148,21 @@ void main() {
     expect(tester.getRect(clip), tester.getRect(find.byType(AlbumKenBurns)));
   });
 
-  testWidgets('stands still with the setting off, no glass or reduced motion', (
-    tester,
-  ) async {
-    for (final host in [
-      _host(settings: const AppSettings(animatedAlbumArtwork: false)),
-      _host(settings: const AppSettings(glassQuality: 'off')),
-      _host(settings: const AppSettings(), lowEnd: true),
-      _host(settings: const AppSettings(), reduceMotion: true),
-    ]) {
-      await tester.pumpWidget(host);
-      await tester.pump(const Duration(seconds: 3));
-      expect(_transform(tester), isNull);
-      expect(tester.hasRunningAnimations, isFalse);
-    }
-  });
+  testWidgets(
+    'stands still with the setting off, on low-end or reduced motion',
+    (tester) async {
+      for (final host in [
+        _host(settings: const AppSettings(animatedAlbumArtwork: false)),
+        _host(settings: const AppSettings(), lowEnd: true),
+        _host(settings: const AppSettings(), reduceMotion: true),
+      ]) {
+        await tester.pumpWidget(host);
+        await tester.pump(const Duration(seconds: 3));
+        expect(_transform(tester), isNull);
+        expect(tester.hasRunningAnimations, isFalse);
+      }
+    },
+  );
 
   testWidgets('stands still while inactive, such as lyrics on the player', (
     tester,

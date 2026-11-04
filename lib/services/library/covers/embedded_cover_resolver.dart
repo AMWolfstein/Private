@@ -161,7 +161,7 @@ class EmbeddedCoverResolver {
   }
 
   /// Returns the cached embedded cover, waiting for one shared extraction when
-  /// needed. Navigation uses this to start its Hero and blurred backdrop from
+  /// needed. Navigation uses this to start its Hero and backdrop from
   /// the same file artwork instead of swapping from a placeholder after
   /// the route is already visible.
   /// Cache hits answer synchronously and misses await extraction. Any synchronous

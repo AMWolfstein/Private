@@ -113,7 +113,7 @@ class HeaderProfileButton extends StatelessWidget {
   }
 }
 
-/// The profile photo, 48dp, outlined like the header glass rim.
+/// The profile photo, 48dp, with a thin rim.
 class HomeProfileButton extends ConsumerWidget {
   const HomeProfileButton({super.key});
 
@@ -144,7 +144,7 @@ class HomeProfileButton extends ConsumerWidget {
   }
 }
 
-/// The glass rim's contact stroke and top/bottom highlight, on a circle.
+/// The rim's contact stroke and top/bottom highlight, on a circle.
 class _ProfileRim extends CustomPainter {
   const _ProfileRim({required this.dark});
 

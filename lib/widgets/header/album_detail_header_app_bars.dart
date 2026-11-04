@@ -21,15 +21,11 @@ extension _AlbumDetailHeaderPart3 on AlbumDetailHeader {
                     ),
                   ],
                 ),
-                // The cover scrolls under the header controls' glass.
-                child: AppGroundAnchor(
-                  layout: const AppGroundLayout(radius: 14),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(14),
-                    child: LayoutBuilder(
-                      builder: (context, constraints) =>
-                          coverBuilder!(context, constraints.maxWidth),
-                    ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(14),
+                  child: LayoutBuilder(
+                    builder: (context, constraints) =>
+                        coverBuilder!(context, constraints.maxWidth),
                   ),
                 ),
               ),
@@ -99,14 +95,9 @@ extension _AlbumDetailHeaderPart3 on AlbumDetailHeader {
               children: [
                 if (plainArtworkHeader)
                   ColoredBox(color: headerScheme.surface)
-                else if (blurAndScrimBackground)
-                  ImageFiltered(
-                    imageFilter: ImageFilter.blur(sigmaX: 32, sigmaY: 32),
-                    child: background,
-                  )
                 else
                   background,
-                if (!plainArtworkHeader && blurAndScrimBackground)
+                if (!plainArtworkHeader && scrimBackground)
                   ColoredBox(color: scrimColor.withValues(alpha: 0.4)),
                 if (!plainArtworkHeader)
                   Positioned(

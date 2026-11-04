@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sistrum/core/theme/app_icons.dart';
 import 'package:sistrum/core/theme/app_tokens.dart';
-import 'package:sistrum/widgets/glass/chrome/app_chrome.dart';
 
 /// How a [SettingsChoiceChip] stacks its icon and label.
 enum SettingsChipLayout {
@@ -127,7 +126,6 @@ class SettingsInfoCard extends StatelessWidget {
     this.title,
 
     this.margin,
-    this.glass = false,
   });
 
   final String message;
@@ -135,9 +133,6 @@ class SettingsInfoCard extends StatelessWidget {
   final String? title;
 
   final EdgeInsetsGeometry? margin;
-
-  /// Uses the shared glass surface in Sistrum without changing Material cards.
-  final bool glass;
 
   @override
   Widget build(BuildContext context) {
@@ -149,19 +144,13 @@ class SettingsInfoCard extends StatelessWidget {
       alpha: .5,
     );
     final foreground = colorScheme.onSurfaceVariant;
-    final useGlass = glass;
-    final textColor = useGlass ? colorScheme.onSurface : foreground;
     final content = Padding(
       padding: EdgeInsets.all(tokens.gapLg),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (icon != null) ...[
-            Icon(
-              useGlass ? appIconFor(icon!) : icon,
-              size: 20,
-              color: useGlass ? colorScheme.primary : foreground,
-            ),
+            Icon(icon, size: 20, color: foreground),
             SizedBox(width: tokens.gapMd),
           ],
           Expanded(
@@ -173,7 +162,7 @@ class SettingsInfoCard extends StatelessWidget {
                   Text(
                     title!,
                     style: theme.textTheme.bodyMedium?.copyWith(
-                      color: textColor,
+                      color: colorScheme.onSurface,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -181,7 +170,9 @@ class SettingsInfoCard extends StatelessWidget {
                 ],
                 Text(
                   message,
-                  style: theme.textTheme.bodySmall?.copyWith(color: textColor),
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: colorScheme.onSurface,
+                  ),
                 ),
                 ...[],
               ],
@@ -197,15 +188,13 @@ class SettingsInfoCard extends StatelessWidget {
             horizontal: tokens.gapLg,
             vertical: tokens.gapXs,
           ),
-      child: useGlass
-          ? AppGlassPanel.overlay(child: content)
-          : DecoratedBox(
-              decoration: BoxDecoration(
-                color: background,
-                borderRadius: tokens.borderRadiusCard,
-              ),
-              child: content,
-            ),
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          color: background,
+          borderRadius: tokens.borderRadiusCard,
+        ),
+        child: content,
+      ),
     );
   }
 }

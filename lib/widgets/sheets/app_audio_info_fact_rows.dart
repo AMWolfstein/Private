@@ -3,7 +3,7 @@ import 'package:sistrum/core/theme/app_theme.dart';
 import 'package:sistrum/core/theme/app_tokens.dart';
 import 'package:sistrum/widgets/sheets/audio_info_facts.dart';
 
-/// Sistrum sheets are glass, so a settings cell color would vanish into them;
+/// Sistrum sheets are surfaces, so a settings cell color would vanish into them;
 /// rows use the translucent control fill, like the track details page.
 class AppAudioInfoFactGroup extends StatelessWidget {
   const AppAudioInfoFactGroup({super.key, required this.children});

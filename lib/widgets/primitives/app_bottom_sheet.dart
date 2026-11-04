@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart'
     show CupertinoButton, CupertinoDynamicColor, kCupertinoModalBarrierColor;
 import 'package:sistrum/core/theme/app_tokens.dart';
 import 'package:sistrum/core/theme/app_theme.dart';
-import 'package:sistrum/widgets/glass/chrome/app_chrome.dart';
+import 'package:sistrum/widgets/primitives/app_surface.dart';
 import 'package:sistrum/core/theme/app_icons.dart';
 
 /// The drag handle shown at the top of every modal sheet.
@@ -336,12 +336,12 @@ Future<T?> showAppModalBottomSheet<T>({
     ),
     elevation: 0,
     builder: (context) => sistrum
-        ? AppGlassPanel.overlay(child: Builder(builder: builder))
+        ? AppSurface(child: Builder(builder: builder))
         : builder(context),
   );
 }
 
-/// Flat rows sit directly on a sheet's glass; Material keeps its ListTile.
+/// Flat rows sit directly on a sheet's surface; Material keeps its ListTile.
 class AppSheetOption extends StatelessWidget {
   const AppSheetOption({
     super.key,

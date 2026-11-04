@@ -384,7 +384,6 @@ class _LibrarySettingsPageState extends ConsumerState<LibrarySettingsPage> {
 
           SliverToBoxAdapter(
             child: SettingsInfoCard(
-              glass: true,
               icon: Icons.info_outline,
               title: context.l10n.libraryAbout,
               message: context.l10n.libraryAboutDescription,

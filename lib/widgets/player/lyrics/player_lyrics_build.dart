@@ -10,14 +10,6 @@ extension _SyncedLyricsViewStatePart3 on _SyncedLyricsViewState {
         : ref.read(playbackLoadingProvider);
     final sistrum = context.isAppTheme;
     final highContrast = MediaQuery.highContrastOf(context);
-    final blurStrength = ref.watch(
-      themeProvider.select((theme) => theme.lyricsBlur),
-    );
-    final blurLyrics =
-        blurStrength > 0 &&
-        !highContrast &&
-        // Every defocused line is filtered again on each playback frame.
-        ref.watch(appLiquidGlassProvider);
     final motion = MediaQuery.disableAnimationsOf(context)
         ? Duration.zero
         : const Duration(milliseconds: 420);
@@ -303,35 +295,6 @@ extension _SyncedLyricsViewStatePart3 on _SyncedLyricsViewState {
                 ),
               );
               if (sistrum) {
-                final activeLead = active < 0 ? -1 : _focus;
-                final distance = activeLead < 0
-                    ? row + 1
-                    : (_displayLayout.rowForLine[leadIndex] -
-                              _displayLayout.rowForLine[activeLead])
-                          .abs();
-                // Nearby lines need visible defocus at the larger lyric size;
-                // progressively soften lines further from the current one.
-                final sigma = !blurLyrics || isActive || leadIndex == activeLead
-                    ? 0.0
-                    : blurStrength *
-                          (active < 0
-                              ? 4.8
-                              : distance == 1
-                              ? 2.4
-                              : distance == 2
-                              ? 3.6
-                              : 4.8);
-                content = TweenAnimationBuilder<double>(
-                  tween: Tween(end: sigma),
-                  duration: motion,
-                  curve: Curves.easeInOutCubic,
-                  child: RepaintBoundary(child: content),
-                  builder: (context, value, child) => ImageFiltered(
-                    enabled: value > 0,
-                    imageFilter: ImageFilter.blur(sigmaX: value, sigmaY: value),
-                    child: child,
-                  ),
-                );
                 content = FittedBox(
                   fit: BoxFit.scaleDown,
                   alignment: AlignmentDirectional.topStart,

@@ -27,7 +27,6 @@ void main() {
             (ref) => Stream.value(PlaybackState(playing: true)),
           ),
           lowEndDeviceProvider.overrideWithValue(true),
-          appLiquidGlassProvider.overrideWithValue(false),
         ],
         child: MaterialApp(
           theme: AppTheme.build(Brightness.light),

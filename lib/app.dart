@@ -14,16 +14,8 @@ import 'package:sistrum/services/platform/app_orientation.dart';
 import 'package:sistrum/l10n/app_localizations.dart';
 import 'package:sistrum/l10n/supported_locales.dart';
 import 'package:sistrum/utils/layout/adaptive_layout.dart';
-import 'package:sistrum/widgets/glass/chrome/app_backdrop_groups.dart';
-import 'package:sistrum/widgets/glass/thumb/app_glass_auto_probe_host.dart';
-import 'package:sistrum/widgets/glass/debug/app_performance_hud.dart';
 import 'package:sistrum/widgets/primitives/app_snack_bar.dart';
 import 'package:sistrum/widgets/player/controls/playback_feedback.dart';
-import 'dart:async';
-import 'package:sistrum/core/theme/app_glass_levels.dart';
-import 'package:sistrum/providers/runtime_profile_provider.dart';
-import 'package:sistrum/widgets/glass/thumb/app_glass_warmup.dart';
-import 'package:sistrum/widgets/glass/artwork/app_artwork_glass.dart';
 import 'package:sistrum/providers/settings/theme_provider.dart';
 import 'package:sistrum/core/theme/app_theme.dart';
 
@@ -212,23 +204,13 @@ class SistrumApp extends ConsumerWidget {
             final appContent = _OrientationFade(
               child: AppScaffoldMessenger(
                 child: PlaybackFeedback(
-                  // Header controls on pages outside the tabs (Settings and
-                  // what it opens) share one backdrop read, like the shell's.
-                  child: AppChromeBatch(
-                    child: child ?? const SizedBox.shrink(),
-                  ),
+                  child: child ?? const SizedBox.shrink(),
                 ),
               ),
             );
             return MediaQuery(
               data: mediaQuery.copyWith(displayFeatures: const []),
-              child: AppGlassPreparation(
-                child: AppGlassAutoProbeHost(
-                  child: AppPerformanceHudHost(
-                    child: AdaptiveUiScaler(child: appContent),
-                  ),
-                ),
-              ),
+              child: AdaptiveUiScaler(child: appContent),
             );
           },
           routerConfig: router,
@@ -255,35 +237,6 @@ class SistrumApp extends ConsumerWidget {
   }
 }
 
-/// Starts the one-time preparation when the full glass theme is enabled,
-/// including switching to Sistrum or enabling blur after the app has started.
-class AppGlassPreparation extends ConsumerWidget {
-  const AppGlassPreparation({super.key, required this.child});
-
-  final Widget child;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    // The artwork glass program loads at start whatever the level, so the
-    // first menu over the player has nothing left to load.
-    unawaited(AppArtworkGlassProgram.load());
-    // Lenses appear on full glass above Level 1, and as touch-only thumbs
-    // and segment pills under lite.
-    if (ref.watch(appBlurEnabledProvider) &&
-        !appGlassClarity(ref.watch(appGlassClarityLevelProvider)).plainBlur &&
-        !ref.watch(
-          appGlassContrastBlockedProvider(MediaQuery.highContrastOf(context)),
-        )) {
-      unawaited(AppGlassWarmup.prepare(View.of(context)));
-      // Its pipeline too, where it can refract.
-      if (ref.watch(appShaderFiltersSupportedProvider)) {
-        unawaited(AppArtworkGlassProgram.prepare());
-      }
-    }
-    return child;
-  }
-}
-
 class AppThemeWrapper extends ConsumerWidget {
   final Widget Function(ThemeData light, ThemeData dark, ThemeMode mode)
   builder;
@@ -292,8 +245,7 @@ class AppThemeWrapper extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // Select only what ThemeData needs; glass preferences have their own
-    // providers so the clarity slider does not rebuild MaterialApp.
+    // Select only what ThemeData needs.
     final themeMode = ref.watch(themeProvider.select((s) => s.themeMode));
 
     return builder(

@@ -4,12 +4,8 @@ import 'dart:math' as math;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:sistrum/providers/runtime_profile_provider.dart';
-import 'package:sistrum/core/theme/app_glass_levels.dart';
 import 'package:sistrum/core/theme/app_theme.dart';
-import 'package:sistrum/widgets/glass/artwork/app_artwork_ground.dart';
-import 'package:sistrum/widgets/glass/chrome/app_chrome.dart';
+import 'package:sistrum/widgets/primitives/app_surface.dart';
 
 /// Bounds of the tapped control or row, in the root overlay's coordinates.
 Rect? appMenuAnchor(BuildContext context) {
@@ -33,8 +29,6 @@ Future<T?> showAppContextMenu<T>({
 }) {
   final navigator = Navigator.of(context, rootNavigator: true);
   final themes = InheritedTheme.capture(from: context, to: navigator.context);
-  // Menus over the player draw from its artwork, not the screen.
-  final ground = AppArtworkGroundScope.forOverlays(context);
   final target = anchor ?? appMenuAnchor(context);
   // From the tap to the menu's first frame, for profile traces.
   final opening = TimelineTask()..start('Sistrum menu: open to first frame');
@@ -46,7 +40,6 @@ Future<T?> showAppContextMenu<T>({
       transitionDuration: MediaQuery.disableAnimationsOf(context)
           ? Duration.zero
           : const Duration(milliseconds: 320),
-      // Opacity layers isolate a BackdropFilter from the underlying artwork.
       transitionBuilder: (_, _, _, child) => child,
       pageBuilder: (context, animation, _) {
         final media = MediaQuery.of(context);
@@ -57,10 +50,7 @@ Future<T?> showAppContextMenu<T>({
           explicitChildNodes: true,
           child: AnimatedBuilder(
             animation: animation,
-            child: AppArtworkGroundScope.wrapOverlay(
-              ground,
-              themes.wrap(Builder(builder: builder)),
-            ),
+            child: themes.wrap(Builder(builder: builder)),
             builder: (context, child) {
               final motion = const Interval(
                 0,
@@ -87,8 +77,6 @@ Future<T?> showAppContextMenu<T>({
                     ignoring:
                         motion < 1 ||
                         animation.status == AnimationStatus.reverse,
-                    // One material from the first frame to the last: no
-                    // staged blur-to-glass reveal, over artwork or a page.
                     child: child!,
                   ),
                 ),
@@ -194,29 +182,18 @@ class _MenuLayout extends SingleChildLayoutDelegate {
       preferAbove != oldDelegate.preferAbove;
 }
 
-/// The menu's glass panel.
-class _MenuSurface extends ConsumerWidget {
+/// The menu's surface.
+class _MenuSurface extends StatelessWidget {
   const _MenuSurface({required this.child});
 
   final Widget child;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final dark = theme.brightness == Brightness.dark;
-    return AppGlassPanel.overlay(
+    return AppSurface(
       radius: 28,
-      smoothCorners: true,
-      highlightBorder: true,
-      highlightIntensity: 0.4,
-      tintColor: theme.extension<AppTheme>()?.chromeSurface != null
-          ? null
-          : dark
-          ? const Color(0xff414141)
-          : Colors.white,
-      tintOpacity: dark
-          ? appGlassClarity(ref.watch(appGlassClarityLevelProvider)).menuOpacity
-          : 0.80,
+      color: theme.colorScheme.surfaceContainerHigh,
       child: child,
     );
   }
@@ -240,7 +217,7 @@ class AppMenuAction {
   final bool destructive;
 }
 
-/// One frosted popover, with compact shortcuts and separated action groups.
+/// One popover, with compact shortcuts and separated action groups.
 class AppContextMenu extends StatelessWidget {
   const AppContextMenu({
     super.key,

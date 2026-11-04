@@ -242,8 +242,6 @@ class _LogPageState extends ConsumerState<LogPage> {
                     ),
                     child: AppSearchField(
                       controller: _searchController,
-                      // Scrolls over the plain page: tint, no backdrop.
-                      samplesBackdrop: false,
                       hintText: context.l10n.logSearchHint,
                       clearTooltip: context.l10n.logClearSearch,
                       onClear: () => setState(() => _searchQuery = ''),

@@ -12,7 +12,7 @@ class AppTheme extends ThemeExtension<AppTheme> {
 
   final Color? chromeSurface;
 
-  /// A single translucent fill for controls inside an existing glass surface.
+  /// A single translucent fill for controls on a surface.
   static Color controlFill(BuildContext context, {bool enabled = true}) {
     final theme = Theme.of(context);
     return theme.colorScheme.onSurface.withValues(
@@ -30,19 +30,6 @@ class AppTheme extends ThemeExtension<AppTheme> {
     return theme.colorScheme.onSurface.withValues(
       alpha: theme.brightness == Brightness.dark ? 0.14 : 0.17,
     );
-  }
-
-  static double chromeOpacity(BuildContext context) {
-    final theme = Theme.of(context);
-    if (theme.extension<AppTheme>()?.chromeSurface != null) return 0.36;
-    // Light glass needs more fill to keep dark subtitles readable over black.
-    return theme.brightness == Brightness.dark ? 0.60 : 0.70;
-  }
-
-  static double navigationOpacity(BuildContext context) {
-    final theme = Theme.of(context);
-    if (theme.extension<AppTheme>()?.chromeSurface != null) return 0.24;
-    return theme.brightness == Brightness.dark ? 0.36 : 0.49;
   }
 
   static const lightAccent = Color.fromRGBO(204, 46, 51, 1);

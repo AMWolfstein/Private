@@ -6,7 +6,7 @@ import 'package:sistrum/core/theme/app_theme.dart';
 import 'package:sistrum/widgets/primitives/app_alert_dialog.dart';
 import 'package:sistrum/widgets/primitives/app_bottom_sheet.dart';
 import 'package:sistrum/widgets/primitives/app_choice_chip.dart';
-import 'package:sistrum/widgets/glass/chrome/app_chrome.dart';
+import 'package:sistrum/widgets/primitives/app_surface.dart';
 
 Widget _app(ThemeData theme, Widget home) => ProviderScope(
   child: MaterialApp(
@@ -321,7 +321,7 @@ void main() {
         await tester.tap(find.text('Open'));
         await tester.pumpAndSettle();
         expect(
-          find.byType(AppGlassPanel),
+          find.byType(AppSurface),
           sistrum ? findsOneWidget : findsNothing,
         );
         await tester.tap(find.text('Unavailable'));
@@ -380,7 +380,7 @@ void main() {
         await tester.pumpAndSettle();
         expect(nestedNavigator.currentState!.canPop(), isTrue);
         expect(
-          find.byType(AppGlassPanel),
+          find.byType(AppSurface),
           sistrum ? findsOneWidget : findsNothing,
         );
         expect(

@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart' show CupertinoIcons;
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/core/theme/app_theme.dart';
-import 'package:sistrum/widgets/glass/thumb/app_glass_surface.dart';
+import 'package:sistrum/widgets/primitives/app_surface.dart';
 import 'package:sistrum/widgets/settings/settings_group.dart';
 
 /// The standard search field used by top-level app surfaces.
@@ -23,7 +21,6 @@ class AppSearchField extends StatelessWidget {
     this.suffixIcon,
     this.focusNode,
     this.autofocus = false,
-    this.samplesBackdrop = true,
   });
 
   final TextEditingController controller;
@@ -36,10 +33,6 @@ class AppSearchField extends StatelessWidget {
   final Widget? suffixIcon;
   final FocusNode? focusNode;
   final bool autofocus;
-
-  /// See [AppGlass.samplesBackdrop]: false where the field scrolls over
-  /// the plain page background.
-  final bool samplesBackdrop;
 
   @override
   Widget build(BuildContext context) {
@@ -105,14 +98,6 @@ class AppSearchField extends StatelessWidget {
       ),
     );
 
-    return Consumer(
-      builder: (context, ref, child) => AppGlass.navigation(
-        radius: 28,
-        blurEnabled: ref.watch(appBlurEnabledProvider),
-        samplesBackdrop: samplesBackdrop,
-        child: child!,
-      ),
-      child: field,
-    );
+    return AppSurface(radius: 28, child: field);
   }
 }

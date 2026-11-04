@@ -58,8 +58,6 @@ void main() {
     addTearDown(metadata.dispose);
     addTearDown(seekPreview.dispose);
     addTearDown(playback.close);
-    final artworkForeground = ValueNotifier<Map<String, Color>>({});
-    addTearDown(artworkForeground.dispose);
     final item = _item('First');
     final pending = metadata.load(item);
     var visualBuilds = 0;
@@ -100,7 +98,6 @@ void main() {
                   expanded: GlobalKey(),
                   compact: GlobalKey(),
                 ),
-                artworkForeground: artworkForeground,
                 lyricsControlsHidden: false,
                 lyricsOptionsOpen: false,
                 lyricsOptions: null,

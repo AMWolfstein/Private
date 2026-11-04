@@ -229,33 +229,6 @@ extension SettingsActions on SettingsNotifier {
     _saveSettings();
   }
 
-  void setDeveloperOptionsUnlocked(bool unlocked) {
-    _current = _current.copyWith(
-      developerOptionsUnlocked: unlocked,
-      // Hiding the options also removes the overlay and A/B switches they
-      // control.
-      performanceHudEnabled: unlocked && _current.performanceHudEnabled,
-      barSamplerDisabled: unlocked && _current.barSamplerDisabled,
-      headerBandBlurDisabled: unlocked && _current.headerBandBlurDisabled,
-    );
-    _saveSettings();
-  }
-
-  void setPerformanceHudEnabled(bool enabled) {
-    _current = _current.copyWith(performanceHudEnabled: enabled);
-    _saveSettings();
-  }
-
-  void setBarSamplerDisabled(bool disabled) {
-    _current = _current.copyWith(barSamplerDisabled: disabled);
-    _saveSettings();
-  }
-
-  void setHeaderBandBlurDisabled(bool disabled) {
-    _current = _current.copyWith(headerBandBlurDisabled: disabled);
-    _saveSettings();
-  }
-
   void setLocale(String locale) {
     _current = _current.copyWith(locale: locale);
     _saveSettings();

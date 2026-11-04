@@ -3,14 +3,12 @@ import 'package:sistrum/screens/shell/app_screens.dart';
 import 'package:sistrum/screens/lyrics/lyrics_share_screen.dart';
 import 'dart:async';
 import 'dart:convert';
-import 'dart:ui' show ImageFilter;
 import 'dart:ui' as ui;
 
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart'
-    show RenderParagraph, RenderRepaintBoundary;
+import 'package:flutter/rendering.dart' show RenderRepaintBoundary;
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -37,15 +35,12 @@ import 'package:sistrum/widgets/player/sheets/app_player_actions_sheet.dart';
 import 'package:sistrum/widgets/player/controls/app_player_favorite_button.dart';
 import 'package:sistrum/widgets/player/sheets/app_player_details_sheet.dart';
 import 'package:sistrum/widgets/collection/app_metadata_row.dart';
-import 'package:sistrum/widgets/glass/artwork/app_artwork_glass.dart';
-import 'package:sistrum/widgets/glass/chrome/app_chrome.dart';
-import 'package:sistrum/widgets/glass/thumb/app_glass_surface.dart';
 import 'package:sistrum/widgets/player/artwork/app_player_background.dart';
 import 'package:sistrum/widgets/player/mini_player.dart';
+import 'package:sistrum/widgets/primitives/app_surface.dart';
 import 'package:sistrum/widgets/player/controls/playback_seek_slider.dart';
 
 part 'now_playing_lyrics_navigation.dart';
-part 'now_playing_lyrics_glass.dart';
 part 'now_playing_lyrics_scrubbing.dart';
 part 'now_playing_lyrics_scrolling.dart';
 part 'now_playing_lyrics_background.dart';
@@ -62,7 +57,6 @@ part 'now_playing_lyrics_alignment.dart';
 
 void main() {
   _registerNowPlayingLyricsNavigation();
-  _registerNowPlayingLyricsGlass();
   _registerNowPlayingLyricsScrubbing();
   _registerNowPlayingLyricsScrolling();
   _registerNowPlayingLyricsBackground();

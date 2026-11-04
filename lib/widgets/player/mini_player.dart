@@ -5,16 +5,14 @@ import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/providers/playback/music_player_provider.dart';
-import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/core/theme/app_tokens.dart';
-import 'package:sistrum/core/theme/app_theme.dart';
 import 'package:sistrum/core/navigation/app_screens.dart';
 import 'package:sistrum/core/navigation/now_playing_route.dart';
 import 'package:sistrum/utils/text/string_utils.dart';
 import 'package:sistrum/widgets/status/audio_quality_badges.dart';
 import 'package:sistrum/widgets/animation/overflow_marquee.dart';
 import 'package:sistrum/widgets/player/artwork/player_artwork.dart';
-import 'package:sistrum/widgets/glass/thumb/app_glass_surface.dart';
+import 'package:sistrum/widgets/primitives/app_surface.dart';
 
 class MiniPlayer extends ConsumerStatefulWidget {
   const MiniPlayer({super.key, this.compact = false, this.bottomPadding = 8});
@@ -109,12 +107,6 @@ class _MiniPlayerState extends ConsumerState<MiniPlayer> {
     final colorScheme = Theme.of(context).colorScheme;
 
     final compact = widget.compact;
-    // Frosted and flat glass levels run on constrained Android hardware. They
-    // skip keeping a paused video decoder for the full player's motion cover,
-    // and stop the title marquee after a few passes: every marquee frame
-    // re-filters the blurred chrome around it.
-    final fullEffects = ref.watch(appLiquidGlassProvider);
-    final marqueeCycles = fullEffects ? null : 2;
 
     final player = Dismissible(
       key: ValueKey('mini-player-${mediaItem.id}'),
@@ -164,7 +156,6 @@ class _MiniPlayerState extends ConsumerState<MiniPlayer> {
                           children: [
                             OverflowMarquee(
                               resetKey: (mediaItem.id, mediaItem.title),
-                              maxCycles: marqueeCycles,
                               child: ExplicitTrackTitle(
                                 title: mediaItem.title,
                                 explicit:
@@ -180,7 +171,6 @@ class _MiniPlayerState extends ConsumerState<MiniPlayer> {
                             ),
                             OverflowMarquee(
                               resetKey: (mediaItem.id, mediaItem.artist),
-                              maxCycles: marqueeCycles,
                               child: Text(
                                 mediaItem.artist ?? '',
                                 style: Theme.of(context).textTheme.bodySmall
@@ -258,10 +248,9 @@ class _MiniPlayerState extends ConsumerState<MiniPlayer> {
     );
     return Padding(
       padding: EdgeInsets.only(bottom: widget.bottomPadding),
-      child: AppGlass.navigation(
-        strongTint: true,
-        tintOpacity: AppTheme.chromeOpacity(context),
-        blurEnabled: ref.watch(appBlurEnabledProvider),
+      child: AppSurface(
+        radius: 32,
+        color: colorScheme.surfaceContainerHigh,
         child: dismissible,
       ),
     );

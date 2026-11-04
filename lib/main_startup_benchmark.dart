@@ -144,14 +144,12 @@ class _RuntimeProfile {
   final int imageCacheMaximumSize;
   final int imageCacheMaximumSizeBytes;
   final bool disableOverscrollEffects;
-  final bool enableBackdropBlur;
 
   const _RuntimeProfile._({
     required this.tier,
     required this.imageCacheMaximumSize,
     required this.imageCacheMaximumSizeBytes,
     required this.disableOverscrollEffects,
-    required this.enableBackdropBlur,
   });
 
   const _RuntimeProfile.low()
@@ -160,7 +158,6 @@ class _RuntimeProfile {
         imageCacheMaximumSize: 120,
         imageCacheMaximumSizeBytes: 24 << 20,
         disableOverscrollEffects: true,
-        enableBackdropBlur: false,
       );
 
   const _RuntimeProfile.standard()
@@ -169,7 +166,6 @@ class _RuntimeProfile {
         imageCacheMaximumSize: 240,
         imageCacheMaximumSizeBytes: 60 << 20,
         disableOverscrollEffects: false,
-        enableBackdropBlur: false,
       );
 
   const _RuntimeProfile.high()
@@ -178,7 +174,6 @@ class _RuntimeProfile {
         imageCacheMaximumSize: 320,
         imageCacheMaximumSizeBytes: 80 << 20,
         disableOverscrollEffects: false,
-        enableBackdropBlur: true,
       );
 
   static _RuntimeProfile? fromTier(String tier) => switch (tier) {

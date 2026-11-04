@@ -18,12 +18,6 @@ ThemeSettings loadBootstrapThemeSettings(SharedPreferences prefs) {
     lyricsTimingOffsetMs: normalizeLyricsTimingOffset(
       prefs.getInt(kLyricsTimingOffsetKey),
     ),
-    lyricsBlur: normalizeLyricsBlur(
-      prefs.get(kLyricsBlurKey) is num
-          ? prefs.get(kLyricsBlurKey) as num
-          : null,
-    ),
-    appGlassOutlines: prefs.getBool(kAppGlassOutlinesKey) ?? true,
   );
 }
 
@@ -81,9 +75,7 @@ class ThemeNotifier extends Notifier<ThemeSettings> {
       await prefs.setString(kThemeModeKey, snapshot.themeMode.name);
       await prefs.setString(kPlayerViewKey, snapshot.playerView.name);
       await prefs.setDouble(kLyricsTextScaleKey, snapshot.lyricsTextScale);
-      await prefs.setDouble(kLyricsBlurKey, snapshot.lyricsBlur);
       await prefs.setInt(kLyricsTimingOffsetKey, snapshot.lyricsTimingOffsetMs);
-      await prefs.setBool(kAppGlassOutlinesKey, snapshot.appGlassOutlines);
     } catch (e) {
       debugPrint('Error saving theme settings: $e');
     }
@@ -104,19 +96,9 @@ class ThemeNotifier extends Notifier<ThemeSettings> {
     if (persist) await _saveToStorage();
   }
 
-  Future<void> setLyricsBlur(double value, {bool persist = true}) async {
-    _editState((current) => current.copyWith(lyricsBlur: value));
-    if (persist) await _saveToStorage();
-  }
-
   Future<void> setLyricsTimingOffset(int value, {bool persist = true}) async {
     _editState((current) => current.copyWith(lyricsTimingOffsetMs: value));
     if (persist) await _saveToStorage();
-  }
-
-  Future<void> setAppGlassOutlines(bool value) async {
-    _editState((current) => current.copyWith(appGlassOutlines: value));
-    await _saveToStorage();
   }
 }
 
@@ -129,6 +111,8 @@ Future<void> _removeRetiredAppearancePreferences(
     'use_system_font',
     'custom_font_id',
     'custom_font_name',
+    'lyrics_blur',
+    'sistrum_glass_outlines',
   ]) {
     await prefs.remove(key);
   }

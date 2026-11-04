@@ -1,5 +1,4 @@
 import 'package:audio_service/audio_service.dart';
-import 'package:flutter/foundation.dart' show ValueListenable;
 import 'package:flutter/material.dart';
 import 'package:sistrum/providers/settings/settings_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -47,7 +46,6 @@ class AppPlayerLayout extends ConsumerWidget {
     required this.insetArtwork,
     required this.artworkTopInset,
     required this.artworkKeys,
-    required this.artworkForeground,
     required this.lyricsControlsHidden,
     required this.lyricsOptionsOpen,
     required this.lyricsBuilder,
@@ -68,7 +66,6 @@ class AppPlayerLayout extends ConsumerWidget {
   final bool insetArtwork;
   final double artworkTopInset;
   final AppPlayerArtworkKeys artworkKeys;
-  final ValueListenable<Map<String, Color>> artworkForeground;
   final bool lyricsControlsHidden;
   final bool lyricsOptionsOpen;
   final Widget Function(bool showOptions) lyricsBuilder;
@@ -86,17 +83,6 @@ class AppPlayerLayout extends ConsumerWidget {
     final showLyrics = page == 1;
     final showQueue = page == 2;
     final compactStage = showLyrics || showQueue;
-    ColorScheme foreground(String region) {
-      final color = compactStage
-          ? null
-          : artworkForeground.value[region] ?? colorScheme.onSurface;
-      return color == null
-          ? colorScheme
-          : colorScheme.copyWith(
-              onSurface: color,
-              onSurfaceVariant: color.withValues(alpha: 0.72),
-            );
-    }
 
     final motion = MediaQuery.disableAnimationsOf(context)
         ? Duration.zero
@@ -366,18 +352,15 @@ class AppPlayerLayout extends ConsumerWidget {
         final transportShift = landscape
             ? 0.0
             : ((volumeGap - 16) / 2).clamp(0.0, 8.0);
-        Widget controls() => AnimatedBuilder(
-          animation: artworkForeground,
-          builder: (context, _) => PlayerPlaybackControls(
-            key: artworkKeys.controls,
-            mediaId: mediaItem.id,
-            duration: mediaItem.duration ?? Duration.zero,
-            seekPreview: seekPreview,
-            colorScheme: foreground('controls'),
-            metadata: metadata,
-            compact: landscape,
-            transportTopPadding: 16 + transportShift,
-          ),
+        Widget controls() => PlayerPlaybackControls(
+          key: artworkKeys.controls,
+          mediaId: mediaItem.id,
+          duration: mediaItem.duration ?? Duration.zero,
+          seekPreview: seekPreview,
+          colorScheme: colorScheme,
+          metadata: metadata,
+          compact: landscape,
+          transportTopPadding: 16 + transportShift,
         );
 
         if (landscape) {
@@ -417,12 +400,11 @@ class AppPlayerLayout extends ConsumerWidget {
                 id: AppPlayerHeaderSlot.header,
                 child: KeyedSubtree(
                   key: const ValueKey('player-track-header'),
-                  child: AnimatedBuilder(
+                  child: KeyedSubtree(
                     key: artworkKeys.header,
-                    animation: artworkForeground,
-                    builder: (context, _) => _trackHeader(
+                    child: _trackHeader(
                       context,
-                      foreground('header'),
+                      colorScheme,
                       compactProgress: progress,
                     ),
                   ),
@@ -443,12 +425,9 @@ class AppPlayerLayout extends ConsumerWidget {
                 controls(),
                 if (showVolume) ...[
                   SizedBox(height: volumeGap - transportShift),
-                  AnimatedBuilder(
-                    animation: artworkForeground,
-                    builder: (context, _) => AppVolumeControl(
-                      key: artworkKeys.volume,
-                      foreground: foreground('volume').onSurface,
-                    ),
+                  AppVolumeControl(
+                    key: artworkKeys.volume,
+                    foreground: colorScheme.onSurface,
                   ),
                 ],
                 const SizedBox(height: 8),

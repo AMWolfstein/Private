@@ -42,29 +42,6 @@
   "@nowPlayingVolume": {
     "description": "System volume control label in the Sistrum player"
   },
-  "appearanceGlassClarity": "玻璃清晰度",
-  "appearanceGlassOutlines": "玻璃邊框",
-  "appearanceGlassOutlinesSubtitle": "在 Sistrum 玻璃周圍顯示淡色邊框。關閉後玻璃本身不變。",
-  "appearanceGlassClaritySubtitle": "調整 Sistrum 選單與導覽列的透明度。文字對比會保持不變。",
-  "appearanceGlassTinted": "著色",
-  "appearanceGlassClear": "清透",
-  "appearanceGlassClearPerformance": "非常透明的玻璃在較舊的裝置上可能耗電較多，運作也較不順暢。必要時請降低透明度。",
-  "appearanceGlassQuality": "玻璃品質",
-  "appearanceGlassQualityAuto": "自動",
-  "appearanceGlassQualityLite": "精簡",
-  "appearanceGlassQualityFull": "完整",
-  "appearanceGlassQualityOff": "關閉",
-  "appearanceGlassQualitySubtitle": "「自動」會為此裝置選擇完整、精簡或關閉。精簡會略過折射以節省電力。",
-  "appearanceGlassLevelFrosted": "霧面",
-  "appearanceGlassLevelSoft": "柔和",
-  "appearanceGlassLevelBalanced": "平衡",
-  "appearanceGlassLevelClear": "清透",
-  "appearanceGlassLevelCrystal": "水晶",
-  "appearanceGlassClarityOff": "玻璃已關閉。請選擇「自動」、「精簡」或「完整」以調整透明度。",
-  "appearanceGlassClarityDeviceOpaque": "此裝置上的玻璃為不透明。請選擇「精簡」或「完整」以調整透明度。",
-  "appearanceGlassClarityContrast": "系統要求較高對比，因此玻璃維持不透明。若仍要使用玻璃，請選擇「精簡」或「完整」；文字對比會保留。",
-  "appearanceGlassAutoMeasured": "已在此裝置上測量：「自動」使用{quality}。",
-  "appearanceGlassClarityAutoFrosted": "「自動」已測量此裝置並使用霧面。請選擇「精簡」或「完整」以設定透明度。",
   "appName": "Sistrum",
   "@appName": {
     "description": "App name - DO NOT TRANSLATE"
@@ -190,17 +167,6 @@
   "@aboutVersion": {
     "description": "Version info label"
   },
-  "aboutDeveloperOptions": "開發者選項",
-  "aboutDeveloperOptionsEnabled": "已啟用開發者選項",
-  "aboutPerformanceHud": "效能 HUD",
-  "aboutPerformanceHudSubtitle": "在每個畫面上顯示建置與光柵影格時間。",
-  "aboutHideDeveloperOptions": "隱藏開發者選項",
-  "aboutBarSampler": "底部列取樣",
-  "aboutBarSamplerSubtitle": "讓底部列跟隨其後頁面的亮度變化。關閉以測量其耗費。",
-  "aboutHeaderBandBlur": "標題帶模糊",
-  "aboutHeaderBandBlurSubtitle": "模糊捲動後標題背後的色帶。關閉以測量其耗費；色調會保留。",
-  "aboutRemeasureGlass": "重新測量自動玻璃",
-  "aboutRemeasureGlassSubtitle": "「自動」會重新取樣影格時間，並選擇完整、精簡或精簡霧面。",
   "aboutAppDescription": "播放並整理你的本機音樂，並可編輯中繼資料與歌詞。",
   "trackMetadataShare": "分享",
   "@trackMetadataShare": {

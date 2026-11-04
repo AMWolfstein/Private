@@ -4,12 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/providers/playback/music_player_provider.dart';
-import 'package:sistrum/providers/runtime_profile_provider.dart';
-import 'package:sistrum/core/theme/app_theme.dart';
 import 'package:sistrum/widgets/player/mini_player.dart';
-import 'package:sistrum/widgets/glass/chrome/app_backdrop_groups.dart';
-import 'package:sistrum/widgets/glass/thumb/app_glass_surface.dart';
-import 'package:sistrum/widgets/glass/chrome/app_chrome_controls.dart';
+import 'package:sistrum/widgets/primitives/app_selection_controls.dart';
+import 'package:sistrum/widgets/primitives/app_surface.dart';
 
 /// Deliberate vertical drags minimize the chrome until the page returns to its
 /// top. Horizontal rows, programmatic scrolling and bounce must not minimize it.
@@ -72,7 +69,6 @@ class AppBottomBar extends ConsumerStatefulWidget {
     required this.onSelected,
     required this.onHome,
     required this.onSearch,
-    required this.blurEnabled,
   });
 
   final bool collapsed;
@@ -81,8 +77,6 @@ class AppBottomBar extends ConsumerStatefulWidget {
   final ValueChanged<int> onSelected;
   final VoidCallback onHome;
   final VoidCallback onSearch;
-  final bool blurEnabled;
-
   @override
   ConsumerState<AppBottomBar> createState() => _AppBottomBarState();
 }
@@ -98,7 +92,6 @@ class _AppBottomBarState extends ConsumerState<AppBottomBar>
     parent: _controller,
     curve: Curves.easeInOutCubic,
   );
-  late final _tabOpacity = ReverseAnimation(_collapse);
 
   void _updateCollapse() {
     final target = widget.collapsed ? 1.0 : 0.0;
@@ -136,34 +129,16 @@ class _AppBottomBarState extends ConsumerState<AppBottomBar>
     final onSelected = widget.onSelected;
     final onHome = widget.onHome;
     final onSearch = widget.onSearch;
-    final blurEnabled = widget.blurEnabled;
     final hasPlayer = ref.watch(
       currentMediaItemProvider.select((item) => item.value != null),
     );
-    final liquidGlass = ref.watch(appLiquidGlassProvider);
-    // Animated glass tabs already reserve 8px above their visible capsule.
-    final glassTabs = AppTabBar.usesLiquidGlass(
-      context,
-      blurEnabled: blurEnabled,
-      liquidGlass: liquidGlass,
-      contrastBlocked: ref.watch(
-        appGlassContrastBlockedProvider(MediaQuery.highContrastOf(context)),
-      ),
-    );
-    final tabGap = glassTabs ? 0.0 : 8.0;
+    const tabGap = 8.0;
     // These contents do not depend on animation progress. Retain their widget
-    // instances so folding only updates geometry and foreground opacity. A
-    // backdrop inside a fading layer loses access to the page behind the bar.
+    // instances so folding only updates geometry and foreground opacity.
     Widget sideSurface() => ScaleTransition(
       scale: _collapse,
       child: RepaintBoundary(
-        child: AppGlass.navigation(
-          blurEnabled: blurEnabled,
-          strongTint: true,
-          tintOpacity: AppTheme.navigationOpacity(context),
-          radius: 26,
-          child: const SizedBox.expand(),
-        ),
+        child: AppSurface(radius: 26, child: const SizedBox.expand()),
       ),
     );
     final leadingSurface = sideSurface();
@@ -172,7 +147,7 @@ class _AppBottomBarState extends ConsumerState<AppBottomBar>
     final leadingIndex = searchSelected ? 0 : selectedIndex;
     final scheme = Theme.of(context).colorScheme;
     final inactiveIconColor = scheme.onSurface;
-    // Progress ticks repaint the player alone, not the tab glass beside it.
+    // Progress ticks repaint the player alone, not the tabs beside it.
     final player = RepaintBoundary(
       child: MiniPlayer(compact: collapsed, bottomPadding: 0),
     );
@@ -184,28 +159,23 @@ class _AppBottomBarState extends ConsumerState<AppBottomBar>
           selectedIndex: selectedIndex,
           onSelected: (index) =>
               index == destinations.length - 1 ? onSearch() : onSelected(index),
-          blurEnabled: blurEnabled,
-          liquidGlass: liquidGlass,
-          contentOpacity: _tabOpacity,
           hiddenIconIndices: hideMovingIcons
               ? {leadingIndex, destinations.length - 1}
               : const {},
         ),
       ),
     );
-    // At rest the glass bar must paint its own active icon: its selected layer
-    // follows a dragged pill before the destination is committed. Hand them
-    // to the moving overlays only while folding, at the same coordinates.
+    // At rest the bar paints its own active icon. Hand them to the moving
+    // overlays only while folding, at the same coordinates.
     final fullTabs = tabs(hideMovingIcons: false);
     final foldingTabs = tabs(hideMovingIcons: true);
     return LayoutBuilder(
       builder: (context, constraints) {
         // Match the tab's actual label height, including accessibility scaling.
-        // Both icons stay mounted above the fading capsule for the whole trip.
-        final labelStyle = Theme.of(context).textTheme.labelSmall!.copyWith(
-          fontSize: glassTabs ? 11 : null,
-          fontWeight: FontWeight.w600,
-        );
+        // Both icons stay mounted above the fading surface for the whole trip.
+        final labelStyle = Theme.of(
+          context,
+        ).textTheme.labelSmall!.copyWith(fontWeight: FontWeight.w600);
         final labelPainter = TextPainter(
           text: TextSpan(text: destinations.first.label, style: labelStyle),
           textDirection: Directionality.of(context),
@@ -214,10 +184,8 @@ class _AppBottomBarState extends ConsumerState<AppBottomBar>
         )..layout();
         final labelHeight = labelPainter.height;
         labelPainter.dispose();
-        final fullIconBottom = glassTabs
-            ? 8 + math.max(64, 37 + labelHeight) / 2 + (labelHeight + 2) / 2
-            : math.max(64.0, 49 + labelHeight) - 23.5;
-        final tabInset = glassTabs ? 6.0 : 5.0;
+        final fullIconBottom = math.max(64.0, 49 + labelHeight) - 23.5;
+        const tabInset = 5.0;
         double fullIconStart(int index) =>
             tabInset +
             (constraints.maxWidth - tabInset * 2) /
@@ -253,13 +221,7 @@ class _AppBottomBarState extends ConsumerState<AppBottomBar>
                         Positioned.fill(
                           child: Offstage(
                             offstage: amount == 0,
-                            // Folding, the button crosses the tab capsule:
-                            // it reads on its own until it comes to rest.
-                            child: AppChromeMember(
-                              followRoute: false,
-                              join: amount == 1,
-                              child: surface,
-                            ),
+                            child: surface,
                           ),
                         ),
                         Material(
@@ -302,61 +264,56 @@ class _AppBottomBarState extends ConsumerState<AppBottomBar>
             return Stack(
               clipBehavior: Clip.none,
               children: [
-                // The player and tab surfaces share the shell's chrome
-                // read with the header controls.
-                AppChromeMember(
-                  followRoute: false,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      if (hasPlayer || amount > 0)
-                        Align(
-                          alignment: Alignment.bottomCenter,
-                          // With no track, introducing the row at full height would
-                          // make the bar jump taller on the first animation frame.
-                          heightFactor: hasPlayer ? 1 : amount,
-                          child: Padding(
-                            padding: EdgeInsets.only(
-                              bottom: hasPlayer
-                                  ? tabGap + (8 - tabGap) * amount
-                                  : 8,
-                            ),
-                            child: Row(
-                              children: [
-                                SizedBox(
-                                  width: 60 * amount,
-                                  height: hasPlayer ? 48 + 4 * amount : 52,
-                                ),
-                                Expanded(child: player),
-                                SizedBox(
-                                  width: 60 * amount,
-                                  height: hasPlayer ? 48 + 4 * amount : 52,
-                                ),
-                              ],
-                            ),
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (hasPlayer || amount > 0)
+                      Align(
+                        alignment: Alignment.bottomCenter,
+                        // With no track, introducing the row at full height would
+                        // make the bar jump taller on the first animation frame.
+                        heightFactor: hasPlayer ? 1 : amount,
+                        child: Padding(
+                          padding: EdgeInsets.only(
+                            bottom: hasPlayer
+                                ? tabGap + (8 - tabGap) * amount
+                                : 8,
+                          ),
+                          child: Row(
+                            children: [
+                              SizedBox(
+                                width: 60 * amount,
+                                height: hasPlayer ? 48 + 4 * amount : 52,
+                              ),
+                              Expanded(child: player),
+                              SizedBox(
+                                width: 60 * amount,
+                                height: hasPlayer ? 48 + 4 * amount : 52,
+                              ),
+                            ],
                           ),
                         ),
-                      Offstage(
-                        // Retain tab state, but drop its backdrop layers only
-                        // after the last visible frame of the fold.
-                        offstage: amount == 1,
-                        child: ClipRect(
-                          clipBehavior: amount == 0 ? Clip.none : Clip.hardEdge,
-                          child: Align(
-                            alignment: Alignment.bottomCenter,
-                            heightFactor: 1 - amount,
-                            child: IgnorePointer(
-                              ignoring: amount > 0.5,
-                              child: ExcludeSemantics(
-                                excluding: amount > 0.5,
-                                child: amount == 0 ? fullTabs : foldingTabs,
-                              ),
+                      ),
+                    Offstage(
+                      // Retain tab state, but drop its layers only
+                      // after the last visible frame of the fold.
+                      offstage: amount == 1,
+                      child: ClipRect(
+                        clipBehavior: amount == 0 ? Clip.none : Clip.hardEdge,
+                        child: Align(
+                          alignment: Alignment.bottomCenter,
+                          heightFactor: 1 - amount,
+                          child: IgnorePointer(
+                            ignoring: amount > 0.5,
+                            child: ExcludeSemantics(
+                              excluding: amount > 0.5,
+                              child: amount == 0 ? fullTabs : foldingTabs,
                             ),
                           ),
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
                 movingIcon(leading: true, surface: leadingSurface),
                 movingIcon(leading: false, surface: searchSurface),

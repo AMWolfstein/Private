@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sistrum/core/theme/app_theme.dart';
-import 'package:sistrum/widgets/glass/chrome/app_chrome.dart';
+import 'package:sistrum/widgets/primitives/app_surface.dart';
 
 /// Dialog presentation follows the selected design, including on Android.
 Future<T?> showAppDialog<T>({
@@ -59,8 +59,6 @@ class _AppDialogRoute<T> extends RawDialogRoute<T> {
     Widget child,
   ) {
     if (MediaQuery.disableAnimationsOf(context)) return child;
-    // Keep the backdrop in the page's compositing context. A fading dialog
-    // creates an opacity layer that hides the page from its BackdropFilter.
     final scaleAnimation = _scaleAnimation ??= CurvedAnimation(
       parent: animation,
       curve: Curves.easeOutCubic,
@@ -117,7 +115,7 @@ class AppAlertDialog extends StatelessWidget {
       insetPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 320),
-        child: AppGlassPanel.overlay(
+        child: AppSurface(
           child: Padding(
             padding: const EdgeInsets.all(16),
             child: Column(

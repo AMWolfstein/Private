@@ -211,7 +211,6 @@ class _HomeTabState extends ConsumerState<HomeTab>
 
     return AppSearchField(
       controller: _urlController,
-      samplesBackdrop: false,
       focusNode: _searchFocusNode,
       hintText: context.l10n.homeSearchHintDefault,
       clearTooltip: context.l10n.dialogClear,

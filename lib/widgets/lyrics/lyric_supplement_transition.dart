@@ -46,7 +46,7 @@ class LyricBackingTransition extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Text emerges from the lead's lower edge, so clip to the opening row.
-    // A shown row keeps the same tree unclipped, leaving blur halos intact.
+    // A shown row keeps the same tree unclipped.
     return ClipRect(
       clipBehavior: visibility >= 1 ? Clip.none : Clip.hardEdge,
       child: Align(

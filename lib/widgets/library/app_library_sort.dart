@@ -5,7 +5,7 @@ import 'package:sistrum/providers/library/library_sort_provider.dart';
 import 'package:sistrum/widgets/primitives/app_bottom_sheet.dart';
 import 'package:sistrum/core/models/track.dart';
 
-/// Returns the IconButton itself so header actions share their glass capsule.
+/// Returns the IconButton itself so header actions share their capsule.
 IconButton appLibrarySortButton(
   BuildContext context,
   WidgetRef ref, {

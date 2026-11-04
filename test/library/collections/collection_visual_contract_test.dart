@@ -13,8 +13,8 @@ import 'package:sistrum/widgets/header/album_play_actions.dart';
 import 'package:sistrum/widgets/collection/collection_scaffold.dart';
 import 'package:sistrum/widgets/library/local_collection_actions.dart';
 import 'package:sistrum/widgets/header/app_artist_header.dart';
-import 'package:sistrum/widgets/glass/chrome/app_chrome_controls.dart';
 import 'package:sistrum/widgets/header/header_controls.dart';
+import 'package:sistrum/widgets/primitives/app_selection_controls.dart';
 
 const _track = Track(
   id: '1',

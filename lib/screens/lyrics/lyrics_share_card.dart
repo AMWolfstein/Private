@@ -1,5 +1,3 @@
-import 'dart:ui' show ImageFilter;
-
 import 'package:flutter/material.dart';
 import 'package:sistrum/services/library/covers/cover_palette.dart';
 import 'package:sistrum/utils/lyrics/lyric_direction.dart';
@@ -242,19 +240,12 @@ class LyricsShareCard extends StatelessWidget {
           fit: StackFit.expand,
           children: [
             const ColoredBox(color: Color(0xFF1B1B1F)),
-            ImageFiltered(
-              imageFilter: ImageFilter.blur(
-                sigmaX: 36,
-                sigmaY: 36,
-                tileMode: TileMode.mirror,
-              ),
-              child: Transform.scale(
-                scale: 1.3,
-                child: PlayerArtwork(
-                  artUri: artUri,
-                  colorScheme: scheme,
-                  cacheWidth: 360,
-                ),
+            Transform.scale(
+              scale: 1.3,
+              child: PlayerArtwork(
+                artUri: artUri,
+                colorScheme: scheme,
+                cacheWidth: 360,
               ),
             ),
             const ColoredBox(color: Color(0x47000000)),

@@ -1,16 +1,12 @@
 import 'dart:math' as math;
-import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart' show RenderProxySliver;
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/providers/library/cover_palette_provider.dart';
-import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/services/library/covers/cover_palette.dart';
 import 'package:sistrum/core/theme/app_tokens.dart';
-import 'package:sistrum/widgets/glass/artwork/app_artwork_page_ground.dart';
-import 'package:sistrum/widgets/glass/chrome/app_floating_header.dart';
+import 'package:sistrum/widgets/header/app_floating_header.dart';
 import 'package:sistrum/widgets/header/header_controls.dart';
 import 'package:sistrum/core/theme/app_theme.dart';
 
@@ -21,8 +17,7 @@ part 'album_detail_header_app_bars.dart';
 part 'album_detail_header_parts.dart';
 
 /// Collapsing album-detail header shared by the album and local-album
-/// screens: full-bleed [background] (optionally blurred and
-/// scrimmed), bottom gradient, centered square cover, title, optional
+/// screens: full-bleed [background] (optionally scrimmed), bottom gradient, centered square cover, title, optional
 /// subtitle/meta/actions rows, and a circular back button. Content fades out
 /// below 30% expansion; the [title] fades into the toolbar instead.
 ///
@@ -38,7 +33,7 @@ class AlbumDetailHeader extends StatelessWidget {
     required this.showTitleInAppBar,
     required this.background,
     this.paletteSource,
-    this.blurAndScrimBackground = true,
+    this.scrimBackground = true,
     this.coverBuilder,
     this.subtitle,
     this.meta,
@@ -62,9 +57,9 @@ class AlbumDetailHeader extends StatelessWidget {
   /// app's own colour scheme.
   final String? paletteSource;
 
-  /// Blur the background and dim it 35%; disable for motion banners and
-  /// placeholder backgrounds.
-  final bool blurAndScrimBackground;
+  /// Dim the background by 40%; disable for motion banners and placeholder
+  /// backgrounds.
+  final bool scrimBackground;
 
   /// Builds the centered square cover for the given side length; null hides
   /// the cover block (the header wraps it in the shared shadow + rounding).

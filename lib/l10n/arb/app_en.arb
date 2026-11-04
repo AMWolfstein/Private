@@ -45,82 +45,6 @@
   "@nowPlayingVolume": {
     "description": "System volume control label in the Sistrum player"
   },
-  "appearanceGlassClarity": "Glass clarity",
-  "appearanceGlassOutlines": "Glass outlines",
-  "appearanceGlassOutlinesSubtitle": "Show a light rim around Sistrum glass. Turning it off leaves the glass itself unchanged.",
-  "appearanceGlassClaritySubtitle": "Adjust transparency in Sistrum menus and navigation. Text contrast is preserved.",
-  "appearanceGlassTinted": "Tinted",
-  "appearanceGlassClear": "Clear",
-  "appearanceGlassClearPerformance": "Very clear glass may use more power and feel less smooth on older devices. Lower clarity if needed.",
-  "appearanceGlassQuality": "Glass quality",
-  "@appearanceGlassQuality": {
-    "description": "Segmented control title choosing how Sistrum glass renders"
-  },
-  "appearanceGlassQualityAuto": "Auto",
-  "@appearanceGlassQualityAuto": {
-    "description": "Glass quality: the device decides"
-  },
-  "appearanceGlassQualityLite": "Lite",
-  "@appearanceGlassQualityLite": {
-    "description": "Glass quality: frosted glass without refraction"
-  },
-  "appearanceGlassQualityFull": "Full",
-  "@appearanceGlassQualityFull": {
-    "description": "Glass quality: liquid glass with refraction"
-  },
-  "appearanceGlassQualityOff": "Off",
-  "@appearanceGlassQualityOff": {
-    "description": "Glass quality: opaque surfaces"
-  },
-  "appearanceGlassQualitySubtitle": "Auto picks Full, Lite or Off for this device. Lite skips refraction to save power.",
-  "@appearanceGlassQualitySubtitle": {
-    "description": "Explains the glass quality choices"
-  },
-  "appearanceGlassLevelFrosted": "Frosted",
-  "@appearanceGlassLevelFrosted": {
-    "description": "Glass clarity level 1"
-  },
-  "appearanceGlassLevelSoft": "Soft",
-  "@appearanceGlassLevelSoft": {
-    "description": "Glass clarity level 2"
-  },
-  "appearanceGlassLevelBalanced": "Balanced",
-  "@appearanceGlassLevelBalanced": {
-    "description": "Glass clarity level 3 (default)"
-  },
-  "appearanceGlassLevelClear": "Clear",
-  "@appearanceGlassLevelClear": {
-    "description": "Glass clarity level 4"
-  },
-  "appearanceGlassLevelCrystal": "Crystal",
-  "@appearanceGlassLevelCrystal": {
-    "description": "Glass clarity level 5"
-  },
-  "appearanceGlassClarityOff": "Glass is off. Choose Auto, Lite or Full to adjust clarity.",
-  "@appearanceGlassClarityOff": {
-    "description": "Shown under the disabled clarity slider when glass quality is Off"
-  },
-  "appearanceGlassClarityDeviceOpaque": "Glass is opaque on this device. Choose Lite or Full to adjust clarity.",
-  "@appearanceGlassClarityDeviceOpaque": {
-    "description": "Shown under the disabled clarity slider when Auto renders opaque glass on a low-end device"
-  },
-  "appearanceGlassClarityContrast": "Your system requests increased contrast, so glass stays opaque. Choose Lite or Full to use glass anyway; text contrast is preserved.",
-  "@appearanceGlassClarityContrast": {
-    "description": "Explains the system contrast request (which can include medium contrast) and that an explicit glass quality overrides it"
-  },
-  "appearanceGlassAutoMeasured": "Measured on this device: Auto uses {quality}.",
-  "@appearanceGlassAutoMeasured": {
-    "description": "Shown under the glass quality control once Auto has measured the device",
-    "placeholders": {
-      "quality": {
-        "type": "String"
-      }
-    }
-  },
-  "appearanceGlassClarityAutoFrosted": "Auto measured this device and uses Frosted. Choose Lite or Full to set clarity.",
-  "@appearanceGlassClarityAutoFrosted": {
-    "description": "Shown under the disabled clarity slider when Auto measured that the device needs Level 1"
-  },
   "@@locale": "en",
   "@@last_modified": "2026-04-28",
   "appName": "Sistrum",
@@ -273,50 +197,6 @@
   "aboutVersion": "Version",
   "@aboutVersion": {
     "description": "Version info label"
-  },
-  "aboutDeveloperOptions": "Developer options",
-  "@aboutDeveloperOptions": {
-    "description": "About page section revealed by tapping the version row seven times"
-  },
-  "aboutDeveloperOptionsEnabled": "Developer options enabled",
-  "@aboutDeveloperOptionsEnabled": {
-    "description": "Snackbar after the seventh tap on the version row"
-  },
-  "aboutPerformanceHud": "Performance HUD",
-  "@aboutPerformanceHud": {
-    "description": "Developer option: floating frame-timing overlay"
-  },
-  "aboutPerformanceHudSubtitle": "Show build and raster frame timings over every screen.",
-  "@aboutPerformanceHudSubtitle": {
-    "description": "Subtitle for the performance HUD toggle"
-  },
-  "aboutHideDeveloperOptions": "Hide developer options",
-  "@aboutHideDeveloperOptions": {
-    "description": "Developer option that hides the section again"
-  },
-  "aboutBarSampler": "Bottom bar sampling",
-  "@aboutBarSampler": {
-    "description": "Developer A/B switch for the bottom bar backdrop sampler"
-  },
-  "aboutBarSamplerSubtitle": "Let the bottom bar follow the brightness of the page behind it. Turn off to measure its cost.",
-  "@aboutBarSamplerSubtitle": {
-    "description": "Subtitle for the bottom bar sampling switch"
-  },
-  "aboutHeaderBandBlur": "Header band blur",
-  "@aboutHeaderBandBlur": {
-    "description": "Developer A/B switch for the blur of the scrolled header band"
-  },
-  "aboutHeaderBandBlurSubtitle": "Blur the band behind scrolled headers. Turn off to measure its cost; the tint stays.",
-  "@aboutHeaderBandBlurSubtitle": {
-    "description": "Subtitle for the header band blur switch"
-  },
-  "aboutRemeasureGlass": "Measure Auto glass again",
-  "@aboutRemeasureGlass": {
-    "description": "Developer action that clears the Auto glass measurement"
-  },
-  "aboutRemeasureGlassSubtitle": "Auto samples frame times again and picks Full, Lite or Lite Frosted.",
-  "@aboutRemeasureGlassSubtitle": {
-    "description": "Subtitle for measuring Auto glass again"
   },
   "aboutAppDescription": "Play and organize your local music, with metadata and lyrics editing.",
   "@aboutAppDescription": {
@@ -1539,7 +1419,9 @@
   "@backupRestorePartiallyFailed": {
     "description": "Snackbar when a restore fails after some categories were applied",
     "placeholders": {
-      "categories": {"type": "String"}
+      "categories": {
+        "type": "String"
+      }
     }
   },
   "backupListeningStatisticsExcluded": "Listening statistics and play counts are not included.",
@@ -2227,12 +2109,20 @@
   "a11yPlayTrack": "Play {title}",
   "@a11yPlayTrack": {
     "description": "Play a track whose artist is not supplied",
-    "placeholders": {"title": {"type": "String"}}
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
   },
   "a11yPauseTrack": "Pause {title}",
   "@a11yPauseTrack": {
     "description": "Pause the currently playing track",
-    "placeholders": {"title": {"type": "String"}}
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
   },
   "a11yMoreOptionsFor": "More options for {title}",
   "@a11yMoreOptionsFor": {
@@ -3353,9 +3243,21 @@
   "homeFavoritesMix": "Favorites mix",
   "homeFreshMix": "Fresh finds",
   "homeNamedMix": "{name} mix",
-  "@homeNamedMix": {"placeholders": {"name": {"type": "String"}}},
+  "@homeNamedMix": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "homeMixTrackCount": "{count} songs · Offline",
-  "@homeMixTrackCount": {"placeholders": {"count": {"type": "int"}}},
+  "@homeMixTrackCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "autoplaySoundMatching": "Match the sound",
   "autoplaySoundMatchingDescription": "Use local audio summaries to find similar-sounding songs. Short windows are analyzed in the background while Autoplay is enabled. No audio leaves this device.",
   "nowPlayingShuffleLibrary": "Shuffle library",
@@ -3367,9 +3269,6 @@
   "audioInfoAndroidPcmRates": "Android PCM sample rates",
   "audioInfoAndroidPcmFormats": "Android PCM formats",
   "audioInfoSystemDefaultBuffer": "System default buffer",
-  "lyricsBlur": "Lyrics blur strength",
-  "lyricsBlurDescription": "Soften surrounding lines while keeping the current line clear.",
-  "lyricsBlurOff": "Off",
   "nowPlayingHideVolumeSlider": "Hide volume slider",
   "nowPlayingShowVolumeSlider": "Show volume slider",
   "equalizerCurve": "EQ curve (estimated)",
@@ -3415,8 +3314,12 @@
   "replayGainProgress": "{checked} of {total} songs checked",
   "@replayGainProgress": {
     "placeholders": {
-      "checked": {"type": "int"},
-      "total": {"type": "int"}
+      "checked": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
     }
   },
   "autoplayResetLearningDescription": "Clear what Autoplay learned from your listening and skips. Your music and listening history are kept.",

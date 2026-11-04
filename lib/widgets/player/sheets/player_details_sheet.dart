@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/providers/playback/player_metadata_controller.dart';
 import 'package:sistrum/core/theme/app_theme.dart';
-import 'package:sistrum/widgets/glass/artwork/app_artwork_ground.dart';
 import 'package:sistrum/widgets/player/sheets/app_player_details_sheet.dart';
 
 Future<void> showPlayerDetailsSheet(
@@ -15,34 +14,29 @@ Future<void> showPlayerDetailsSheet(
   final sistrum = context.isAppTheme;
   final fallback = metadata.detailsSnapshot(mediaItem);
   final metadataFuture = metadata.readDetails(mediaItem);
-  // The sheet's glass draws from the player's artwork.
-  final ground = AppArtworkGroundScope.forOverlays(context);
   return showModalBottomSheet<void>(
     context: context,
     isScrollControlled: true,
     useRootNavigator: sistrum,
     showDragHandle: !sistrum,
     backgroundColor: Colors.transparent,
-    builder: (context) => AppArtworkGroundScope.wrapOverlay(
-      ground,
-      DraggableScrollableSheet(
-        expand: false,
-        initialChildSize: sistrum ? 0.75 : 0.6,
-        maxChildSize: 0.9,
-        minChildSize: 0.4,
-        builder: (context, scrollController) {
-          return FutureBuilder<Map<String, dynamic>>(
-            future: metadataFuture,
-            initialData: fallback,
-            builder: (context, snapshot) => _MetadataList(
-              meta: snapshot.data ?? fallback,
-              colorScheme: colorScheme,
-              scrollController: scrollController,
-              mediaItem: mediaItem,
-            ),
-          );
-        },
-      ),
+    builder: (context) => DraggableScrollableSheet(
+      expand: false,
+      initialChildSize: sistrum ? 0.75 : 0.6,
+      maxChildSize: 0.9,
+      minChildSize: 0.4,
+      builder: (context, scrollController) {
+        return FutureBuilder<Map<String, dynamic>>(
+          future: metadataFuture,
+          initialData: fallback,
+          builder: (context, snapshot) => _MetadataList(
+            meta: snapshot.data ?? fallback,
+            colorScheme: colorScheme,
+            scrollController: scrollController,
+            mediaItem: mediaItem,
+          ),
+        );
+      },
     ),
   );
 }

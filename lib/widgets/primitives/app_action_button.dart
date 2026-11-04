@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sistrum/core/theme/app_icons.dart';
 import 'package:sistrum/core/theme/app_theme.dart';
-import 'package:sistrum/widgets/glass/thumb/app_glass_surface.dart';
 
 /// Shared sheet actions follow the selected design on every platform.
 class AppActionButton extends StatelessWidget {
@@ -13,7 +12,6 @@ class AppActionButton extends StatelessWidget {
     required this.label,
     this.style,
     this.outlined = false,
-    this.glass = true,
     this.tonal = false,
     this.isDestructive = false,
     this.fontSize = 17,
@@ -24,7 +22,6 @@ class AppActionButton extends StatelessWidget {
   final Widget label;
   final ButtonStyle? style;
   final bool outlined;
-  final bool glass;
   final bool tonal;
   final bool isDestructive;
   final double fontSize;
@@ -48,9 +45,7 @@ class AppActionButton extends StatelessWidget {
           : tonal
           ? AppTheme.controlFill(context)
           : Colors.transparent,
-      disabledColor: !prominent && !tonal && !glass
-          ? Colors.transparent
-          : tonal && !prominent
+      disabledColor: tonal && !prominent
           ? AppTheme.controlFill(context, enabled: false)
           : scheme.surfaceContainerHighest,
       onPressed: onPressed,
@@ -77,9 +72,6 @@ class AppActionButton extends StatelessWidget {
         ),
       ),
     );
-    // These buttons sit inside glass sheets/groups; avoid another blur pass.
-    return prominent || tonal || !glass
-        ? action
-        : AppGlass.navigation(radius: 28, blurEnabled: false, child: action);
+    return action;
   }
 }

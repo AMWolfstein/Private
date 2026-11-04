@@ -42,29 +42,6 @@
   "@nowPlayingVolume": {
     "description": "System volume control label in the Sistrum player"
   },
-  "appearanceGlassClarity": "Glastransparenz",
-  "appearanceGlassOutlines": "Glas-Konturen",
-  "appearanceGlassOutlinesSubtitle": "Zeigt einen hellen Rand um das Sistrum-Glas. Ausschalten lässt das Glas selbst unverändert.",
-  "appearanceGlassClaritySubtitle": "Transparenz in Sistrum-Menüs und der Navigation anpassen. Der Textkontrast bleibt erhalten.",
-  "appearanceGlassTinted": "Eingefärbt",
-  "appearanceGlassClear": "klar",
-  "appearanceGlassClearPerformance": "Sehr klares Glas kann mehr Energie verbrauchen und auf älteren Geräten weniger flüssig wirken. Verringere bei Bedarf die Klarheit.",
-  "appearanceGlassQuality": "Glasqualität",
-  "appearanceGlassQualityAuto": "Automatisch",
-  "appearanceGlassQualityLite": "Lite",
-  "appearanceGlassQualityFull": "Voll",
-  "appearanceGlassQualityOff": "Aus",
-  "appearanceGlassQualitySubtitle": "Auto wählt für dieses Gerät Voll, Lite oder Aus. Lite verzichtet auf Brechung, um Energie zu sparen.",
-  "appearanceGlassLevelFrosted": "Matt",
-  "appearanceGlassLevelSoft": "Sanft",
-  "appearanceGlassLevelBalanced": "Ausgewogen",
-  "appearanceGlassLevelClear": "Klar",
-  "appearanceGlassLevelCrystal": "Kristall",
-  "appearanceGlassClarityOff": "Glas ist aus. Wähle Auto, Lite oder Voll, um die Klarheit anzupassen.",
-  "appearanceGlassClarityDeviceOpaque": "Glas ist auf diesem Gerät undurchsichtig. Wähle Lite oder Voll, um die Klarheit anzupassen.",
-  "appearanceGlassClarityContrast": "Dein System fordert erhöhten Kontrast an, daher bleibt das Glas undurchsichtig. Wähle Lite oder Voll, um Glas trotzdem zu verwenden; der Textkontrast bleibt erhalten.",
-  "appearanceGlassAutoMeasured": "Auf diesem Gerät gemessen: Auto verwendet {quality}.",
-  "appearanceGlassClarityAutoFrosted": "Auto hat dieses Gerät gemessen und verwendet Matt. Wähle Lite oder Voll, um die Klarheit festzulegen.",
   "appName": "Sistrum",
   "@appName": {
     "description": "App name - DO NOT TRANSLATE"
@@ -190,17 +167,6 @@
   "@aboutVersion": {
     "description": "Version info label"
   },
-  "aboutDeveloperOptions": "Entwickleroptionen",
-  "aboutDeveloperOptionsEnabled": "Entwickleroptionen aktiviert",
-  "aboutPerformanceHud": "Leistungs-HUD",
-  "aboutPerformanceHudSubtitle": "Zeigt Build- und Raster-Frame-Zeiten über jedem Bildschirm an.",
-  "aboutHideDeveloperOptions": "Entwickleroptionen ausblenden",
-  "aboutBarSampler": "Abtastung der unteren Leiste",
-  "aboutBarSamplerSubtitle": "Lässt die untere Leiste der Helligkeit der dahinterliegenden Seite folgen. Ausschalten, um ihre Kosten zu messen.",
-  "aboutHeaderBandBlur": "Weichzeichnung des Kopfzeilenbands",
-  "aboutHeaderBandBlurSubtitle": "Weichzeichnen des Bands hinter gescrollten Kopfzeilen. Ausschalten, um die Kosten zu messen; die Tönung bleibt.",
-  "aboutRemeasureGlass": "Auto-Glas erneut messen",
-  "aboutRemeasureGlassSubtitle": "Auto misst die Frame-Zeiten erneut und wählt Voll, Lite oder Lite Matt.",
   "aboutAppDescription": "Spiele deine lokale Musik ab und organisiere sie, mit Bearbeitung von Metadaten und Liedtexten.",
   "trackMetadataShare": "Teilen",
   "@trackMetadataShare": {

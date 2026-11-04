@@ -8,7 +8,7 @@ import 'package:sistrum/core/theme/app_theme.dart';
 import 'package:sistrum/utils/logging/logger.dart';
 import 'package:sistrum/widgets/primitives/app_action_button.dart';
 import 'package:sistrum/widgets/primitives/app_bottom_sheet.dart';
-import 'package:sistrum/widgets/glass/chrome/app_chrome.dart';
+import 'package:sistrum/widgets/primitives/app_surface.dart';
 import 'package:sistrum/widgets/sheets/playlist_picker_name_prompt.dart';
 import 'package:sistrum/widgets/sheets/playlist_picker_rows.dart';
 
@@ -45,9 +45,7 @@ Future<void> showAddTracksToPlaylistSheet(
         playlistNamePrefill: playlistNamePrefill,
         preserveOccurrences: preserveOccurrences,
       );
-      return sheetContext.isAppTheme
-          ? AppGlassPanel(tintOpacity: 0.78, child: content)
-          : content;
+      return sheetContext.isAppTheme ? AppSurface(child: content) : content;
     },
   );
 }

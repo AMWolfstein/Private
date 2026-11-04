@@ -391,4 +391,4 @@ class _StoryProgress extends StatelessWidget {
 }
 
 /// Colors of one slide. Material cycles through the tonal containers;
-/// Sistrum stays dark over blurred artwork.
+/// Sistrum stays dark over artwork.

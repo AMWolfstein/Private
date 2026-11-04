@@ -42,29 +42,6 @@
   "@nowPlayingVolume": {
     "description": "System volume control label in the Sistrum player"
   },
-  "appearanceGlassClarity": "Cam netliği",
-  "appearanceGlassOutlines": "Cam çerçeveleri",
-  "appearanceGlassOutlinesSubtitle": "Sistrum camının etrafında hafif bir kenar göster. Kapatmak camın kendisini değiştirmez.",
-  "appearanceGlassClaritySubtitle": "Sistrum menülerinin ve gezinmenin saydamlığını ayarlayın. Metin kontrastı korunur.",
-  "appearanceGlassTinted": "Renkli",
-  "appearanceGlassClear": "Şeffaf",
-  "appearanceGlassClearPerformance": "Çok şeffaf cam daha fazla güç tüketebilir ve eski cihazlarda daha az akıcı hissettirebilir. Gerekirse netliği düşürün.",
-  "appearanceGlassQuality": "Cam kalitesi",
-  "appearanceGlassQualityAuto": "Otomatik",
-  "appearanceGlassQualityLite": "Hafif",
-  "appearanceGlassQualityFull": "Tam",
-  "appearanceGlassQualityOff": "Kapalı",
-  "appearanceGlassQualitySubtitle": "Otomatik, bu cihaz için Tam, Hafif veya Kapalı seçer. Hafif, pil tasarrufu için kırılmayı atlar.",
-  "appearanceGlassLevelFrosted": "Buzlu",
-  "appearanceGlassLevelSoft": "Yumuşak",
-  "appearanceGlassLevelBalanced": "Dengeli",
-  "appearanceGlassLevelClear": "Berrak",
-  "appearanceGlassLevelCrystal": "Kristal",
-  "appearanceGlassClarityOff": "Cam kapalı. Netliği ayarlamak için Otomatik, Hafif veya Tam seçin.",
-  "appearanceGlassClarityDeviceOpaque": "Bu cihazda cam opak. Netliği ayarlamak için Hafif veya Tam seçin.",
-  "appearanceGlassClarityContrast": "Sistem artırılmış kontrast istiyor, bu yüzden cam opak kalır. Yine de cam kullanmak için Hafif veya Tam seçin; metin kontrastı korunur.",
-  "appearanceGlassAutoMeasured": "Bu cihazda ölçüldü: Otomatik {quality} kullanır.",
-  "appearanceGlassClarityAutoFrosted": "Otomatik bu cihazı ölçtü ve Buzlu kullanıyor. Netliği ayarlamak için Hafif veya Tam seçin.",
   "appName": "Sistrum",
   "@appName": {
     "description": "App name - DO NOT TRANSLATE"
@@ -190,17 +167,6 @@
   "@aboutVersion": {
     "description": "Version info label"
   },
-  "aboutDeveloperOptions": "Geliştirici seçenekleri",
-  "aboutDeveloperOptionsEnabled": "Geliştirici seçenekleri etkin",
-  "aboutPerformanceHud": "Performans HUD",
-  "aboutPerformanceHudSubtitle": "Her ekranın üzerinde derleme ve raster kare sürelerini göster.",
-  "aboutHideDeveloperOptions": "Geliştirici seçeneklerini gizle",
-  "aboutBarSampler": "Alt çubuk örnekleme",
-  "aboutBarSamplerSubtitle": "Alt çubuğun arkasındaki sayfanın parlaklığını takip etmesini sağla. Maliyetini ölçmek için kapatın.",
-  "aboutHeaderBandBlur": "Üst bant bulanıklığı",
-  "aboutHeaderBandBlurSubtitle": "Kaydırılan üst başlıkların arkasındaki bandı bulanıklaştır. Maliyetini ölçmek için kapatın; ton kalır.",
-  "aboutRemeasureGlass": "Otomatik camı yeniden ölç",
-  "aboutRemeasureGlassSubtitle": "Otomatik kare sürelerini yeniden örnekler ve Tam, Hafif veya Buzlu Hafif seçer.",
   "aboutAppDescription": "Yerel müziğinizi çalın ve düzenleyin; etiket ve şarkı sözü düzenleme dahil.",
   "trackMetadataShare": "Paylaş",
   "@trackMetadataShare": {

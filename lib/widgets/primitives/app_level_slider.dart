@@ -1,10 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:liquid_glass_easy/liquid_glass_easy.dart';
-import 'package:sistrum/providers/runtime_profile_provider.dart';
-import 'package:sistrum/widgets/glass/thumb/app_glass_thumb.dart';
 
 /// An iOS-style slider: a thin rounded track and a white shadowed knob.
 ///
@@ -13,9 +9,7 @@ import 'package:sistrum/widgets/glass/thumb/app_glass_thumb.dart';
 /// [min] at the bottom. A vertical slider only claims vertical drags, so a
 /// row of them still scrolls sideways.
 ///
-/// A horizontal slider's knob turns into liquid glass while touched when the
-/// glass gate allows it; dense vertical faders keep the painted knob.
-class AppLevelSlider extends ConsumerStatefulWidget {
+class AppLevelSlider extends StatefulWidget {
   const AppLevelSlider({
     super.key,
     required this.value,
@@ -48,16 +42,10 @@ class AppLevelSlider extends ConsumerStatefulWidget {
   static const _trackThickness = 4.0;
 
   @override
-  ConsumerState<AppLevelSlider> createState() => _AppLevelSliderState();
+  State<AppLevelSlider> createState() => _AppLevelSliderState();
 }
 
-class _AppLevelSliderState extends ConsumerState<AppLevelSlider> {
-  static const _activeKnobSize = Size(58, 38.33);
-  static const _shadow = LiquidGlassShadow(inset: 3);
-
-  /// Whether the current touch shows glass, decided at touch-down.
-  bool? _touchGlass;
-
+class _AppLevelSliderState extends State<AppLevelSlider> {
   double get value => widget.value;
   double get min => widget.min;
   double get max => widget.max;
@@ -90,14 +78,6 @@ class _AppLevelSliderState extends ConsumerState<AppLevelSlider> {
     final increment = widget.step ?? (max - min) / 100;
     String format(double v) =>
         widget.semanticFormatterCallback?.call(v) ?? v.toStringAsFixed(1);
-    final glassAllowed =
-        enabled && !vertical && appGlassThumbsEnabled(context, ref);
-    final glass = _touchGlass ?? glassAllowed;
-    final outlines = glass && ref.watch(appGlassOutlinesProvider);
-    void release() {
-      if (_touchGlass != null) setState(() => _touchGlass = null);
-    }
-
     return Semantics(
       slider: true,
       enabled: enabled,
@@ -146,40 +126,10 @@ class _AppLevelSliderState extends ConsumerState<AppLevelSlider> {
                 active: active,
                 track: track,
                 knobRadius: knobRadius,
-                paintKnob: !glass,
               ),
             ),
           );
-          if (!glass) return gestures;
-          final r = knobRadius;
-          return Listener(
-            onPointerDown: (_) {
-              if (_touchGlass == null) {
-                setState(() => _touchGlass = glassAllowed);
-              }
-            },
-            onPointerUp: (_) => release(),
-            onPointerCancel: (_) => release(),
-            child: Stack(
-              clipBehavior: Clip.none,
-              children: [
-                gestures,
-                Positioned.fill(
-                  child: AppGlassThumb(
-                    center: Offset(
-                      r + fraction * (size.width - r * 2),
-                      size.height / 2,
-                    ),
-                    held: _touchGlass == true,
-                    restSize: Size.square(r * 2),
-                    activeSize: _activeKnobSize,
-                    style: appGlassThumbStyle(outlines: outlines),
-                    shadow: _shadow,
-                  ),
-                ),
-              ],
-            ),
-          );
+          return gestures;
         },
       ),
     );
@@ -194,14 +144,10 @@ class _LevelPainter extends CustomPainter {
     required this.active,
     required this.track,
     required this.knobRadius,
-    this.paintKnob = true,
   });
 
   final double fraction, origin, knobRadius;
   final bool vertical;
-
-  /// False while the knob is drawn as a glass thumb above the painter.
-  final bool paintKnob;
   final Color active, track;
 
   @override
@@ -232,12 +178,10 @@ class _LevelPainter extends CustomPainter {
         Paint()..color = active,
       );
     }
-    if (paintKnob) {
-      const CupertinoThumbPainter().paint(
-        canvas,
-        Rect.fromCircle(center: at(fraction), radius: r),
-      );
-    }
+    const CupertinoThumbPainter().paint(
+      canvas,
+      Rect.fromCircle(center: at(fraction), radius: r),
+    );
   }
 
   @override
@@ -247,6 +191,5 @@ class _LevelPainter extends CustomPainter {
       oldDelegate.vertical != vertical ||
       oldDelegate.active != active ||
       oldDelegate.track != track ||
-      oldDelegate.knobRadius != knobRadius ||
-      oldDelegate.paintKnob != paintKnob;
+      oldDelegate.knobRadius != knobRadius;
 }

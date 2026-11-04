@@ -13,13 +13,8 @@ import 'package:sistrum/core/theme/app_theme.dart';
 import 'package:sistrum/widgets/primitives/app_context_menu.dart';
 
 class _Settings extends SettingsNotifier {
-  _Settings(this._forceBlur);
-
-  final bool _forceBlur;
-
   @override
-  AppSettings build() =>
-      AppSettings(glassQuality: _forceBlur ? 'full' : 'auto');
+  AppSettings build() => const AppSettings();
 }
 
 void main() {
@@ -35,11 +30,9 @@ void main() {
     bool reduceMotion = false,
     bool preferAbove = false,
     bool highContrast = false,
-    bool forceBlur = false,
     bool lowEnd = false,
     Color? backgroundColor,
     GlobalKey? capture,
-    int glassLevel = 4,
     bool dense = false,
     Color? chromeSurface,
   }) async {
@@ -49,9 +42,8 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
-          settingsProvider.overrideWith(() => _Settings(forceBlur)),
+          settingsProvider.overrideWith(_Settings.new),
           lowEndDeviceProvider.overrideWithValue(lowEnd),
-          appGlassClarityLevelProvider.overrideWithValue(glassLevel),
         ],
         child: MaterialApp(
           theme: AppTheme.build(brightness, chromeSurface: chromeSurface),
@@ -173,7 +165,6 @@ void main() {
                 tester,
                 anchor: const Rect.fromLTWH(330, 144, 44, 44),
                 brightness: brightness,
-                glassLevel: level,
                 backgroundColor: background,
                 capture: capture,
                 onResult: (_) {},
@@ -201,7 +192,7 @@ void main() {
                       (luminances.last + 0.05) / (luminances.first + 0.05);
                   expect(contrast, greaterThanOrEqualTo(4.5));
                 }
-                // The panel remains even at both edges without an offset lens.
+                // The panel remains even at both edges.
                 expect(inside.r, closeTo(pixels.first.r, 0.015));
                 expect(inside.g, closeTo(pixels.first.g, 0.015));
                 expect(inside.b, closeTo(pixels.first.b, 0.015));
@@ -239,34 +230,6 @@ void main() {
       expect(tester.takeException(), isNull);
     });
   }
-
-  testWidgets('frosted glass still carries the artwork color', (tester) async {
-    final colors = <Color>[];
-    for (final background in [
-      const Color(0xff804020),
-      const Color(0xff204080),
-    ]) {
-      final capture = GlobalKey();
-      await openMenu(
-        tester,
-        anchor: const Rect.fromLTWH(330, 144, 44, 44),
-        brightness: Brightness.dark,
-        backgroundColor: background,
-        capture: capture,
-        onResult: (_) {},
-      );
-      final rect = tester.getRect(find.byType(AppContextMenu));
-      colors.addAll(
-        await samplePixels(tester, capture, [
-          Offset(rect.left + 8, rect.center.dy),
-        ]),
-      );
-      await tester.pumpWidget(const SizedBox.shrink());
-    }
-    expect(colors.first.r, greaterThan(colors.last.r + 0.03));
-    expect(colors.last.b, greaterThan(colors.first.b + 0.03));
-    expect(tester.takeException(), isNull);
-  });
 
   testWidgets('compact menus save space while keeping 48 dp touch targets', (
     tester,
@@ -310,7 +273,6 @@ void main() {
         tester,
         anchor: const Rect.fromLTWH(330, 144, 44, 44),
         brightness: Brightness.dark,
-        glassLevel: 5,
         backgroundColor: Colors.white,
         chromeSurface: cover,
         capture: capture,
@@ -331,57 +293,6 @@ void main() {
     }
     expect(colors.first.r, greaterThan(colors.first.b + 0.03));
     expect(colors.last.b, greaterThan(colors.last.r + 0.03));
-    expect(tester.takeException(), isNull);
-  });
-
-  for (final highContrast in [false, true]) {
-    testWidgets('menu stays readable without blur (contrast: $highContrast)', (
-      tester,
-    ) async {
-      final capture = GlobalKey();
-      await openMenu(
-        tester,
-        anchor: const Rect.fromLTWH(330, 144, 44, 44),
-        brightness: Brightness.dark,
-        backgroundColor: const Color(0xff6c3a22),
-        highContrast: highContrast,
-        lowEnd: !highContrast,
-        capture: capture,
-        onResult: (_) {},
-      );
-      final menu = find.byType(AppContextMenu);
-      final rect = tester.getRect(menu);
-      final pixels = await samplePixels(tester, capture, [
-        Offset(rect.left + 8, rect.center.dy),
-      ]);
-      final theme = AppTheme.build(Brightness.dark);
-      expect(pixels.single, theme.colorScheme.surfaceContainerHigh);
-      expect(
-        find.descendant(of: menu, matching: find.bySubtype<BackdropFilter>()),
-        findsNothing,
-      );
-      await tester.tap(find.text('Share'));
-      await tester.pumpAndSettle();
-      expect(menu, findsNothing);
-      expect(tester.takeException(), isNull);
-    });
-  }
-
-  testWidgets('glass override reaches context menu overlays', (tester) async {
-    await openMenu(
-      tester,
-      anchor: const Rect.fromLTWH(330, 144, 44, 44),
-      brightness: Brightness.dark,
-      highContrast: true,
-      forceBlur: true,
-      onResult: (_) {},
-    );
-    final menu = find.byType(AppContextMenu);
-    expect(find.bySubtype<BackdropFilter>(), findsWidgets);
-    expect(MediaQuery.highContrastOf(tester.element(menu)), isTrue);
-    await tester.tap(find.text('Share'));
-    await tester.pumpAndSettle();
-    expect(menu, findsNothing);
     expect(tester.takeException(), isNull);
   });
 

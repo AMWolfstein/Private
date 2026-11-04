@@ -39,8 +39,6 @@ import 'package:sistrum/widgets/sheets/playlist_picker_sheet.dart';
 import 'package:sistrum/widgets/settings/settings_group.dart';
 import 'package:sistrum/widgets/settings/settings_item_rows.dart';
 import 'package:sistrum/widgets/player/artwork/app_player_background.dart';
-import 'package:sistrum/widgets/player/artwork/app_player_ground.dart';
-import 'package:sistrum/widgets/glass/artwork/app_artwork_contrast.dart';
 import 'package:sistrum/widgets/player/sheets/app_player_actions_sheet.dart';
 import 'package:sistrum/widgets/primitives/app_context_menu.dart';
 import 'package:sistrum/utils/files/file_access.dart';
@@ -89,7 +87,6 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
   final _expandedArtworkKey = GlobalKey();
   final _immersiveArtworkKey = GlobalKey();
   final _compactArtworkKey = GlobalKey();
-  final _artworkForeground = ValueNotifier<Map<String, Color>>({});
   final _seekPreview = PlaybackSeekPreview();
   NowPlayingRoute? _artworkRoute;
 
@@ -151,7 +148,6 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
     _mediaItemSub?.close();
     _lyricsPlayingSub?.close();
     _trackMetadata.dispose();
-    _artworkForeground.dispose();
     _seekPreview.dispose();
     super.dispose();
   }

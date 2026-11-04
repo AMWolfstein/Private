@@ -14,10 +14,8 @@ extension AlbumDetailHeaderPart2 on AlbumDetailHeader {
       math.max(240.0, screenSize.height * 0.55),
     );
     final details = _buildAppDetails(context);
-    Widget toolbar({bool collapsed = true}) => Consumer(
-      builder: (context, ref, _) {
-        final opaque =
-            appHeaderMaterial(context, ref) == AppHeaderMaterial.opaque;
+    Widget toolbar({bool collapsed = true}) => Builder(
+      builder: (context) {
         final titleVisible =
             showTitleInAppBar ||
             appBarTitle != null ||
@@ -29,9 +27,7 @@ extension AlbumDetailHeaderPart2 on AlbumDetailHeader {
             brightness: artwork,
             child: SliverAppBar(
               pinned: true,
-              backgroundColor: opaque && collapsed
-                  ? scheme.surface
-                  : Colors.transparent,
+              backgroundColor: Colors.transparent,
               surfaceTintColor: Colors.transparent,
               scrolledUnderElevation: 0,
               // Without artwork data the transparent toolbar keeps the light
@@ -39,9 +35,9 @@ extension AlbumDetailHeaderPart2 on AlbumDetailHeader {
               systemOverlayStyle: appHeaderOverlayStyle(
                 artwork ?? (overArtwork ? Brightness.dark : scheme.brightness),
               ),
-              flexibleSpace: opaque
-                  ? null
-                  : AppHeaderBacking(visible: immersive ? titleVisible : null),
+              flexibleSpace: AppHeaderBacking(
+                visible: immersive ? titleVisible : null,
+              ),
               title: AnimatedOpacity(
                 opacity: titleVisible ? 1 : 0,
                 duration: const Duration(milliseconds: 180),
@@ -92,26 +88,21 @@ extension AlbumDetailHeaderPart2 on AlbumDetailHeader {
         scheme.surface.withValues(alpha: 0),
         scheme.surface,
       ];
-      // The header controls' ground: the cover under this gradient.
-      final artwork = AppGroundAnchor(
-        layout: AppGroundLayout(stops: const [0, 0.48, 1], colors: gradient),
-        child: Stack(
-          fit: StackFit.expand,
-          children: [
-            background,
-            DecoratedBox(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  stops: const [0, 0.48, 1],
-                  colors: gradient,
-                ),
+      final artwork = Stack(
+        fit: StackFit.expand,
+        children: [
+          background,
+          DecoratedBox(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                stops: const [0, 0.48, 1],
+                colors: gradient,
               ),
             ),
-            Positioned.fill(child: _AlbumScrollVeil(artworkBottom: detailsTop)),
-          ],
-        ),
+          ),
+        ],
       );
       return [
         // The toolbar paints above the header without reserving a second

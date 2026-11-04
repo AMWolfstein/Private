@@ -42,29 +42,6 @@
   "@nowPlayingVolume": {
     "description": "System volume control label in the Sistrum player"
   },
-  "appearanceGlassClarity": "Kebeningan kaca",
-  "appearanceGlassOutlines": "Garis tepi kaca",
-  "appearanceGlassOutlinesSubtitle": "Tampilkan garis dekoratif di tepi kaca Sistrum. Mematikannya tetap mempertahankan blur dan pembiasan.",
-  "appearanceGlassClaritySubtitle": "Atur kebeningan kaca menu dan navigasi Sistrum. Kontras teks tetap terjaga.",
-  "appearanceGlassTinted": "Berwarna",
-  "appearanceGlassClear": "Bening",
-  "appearanceGlassClearPerformance": "Kaca sangat bening dapat memakai lebih banyak daya dan terasa kurang lancar di perangkat lama. Kurangi kebeningan jika perlu.",
-  "appearanceGlassQuality": "Kualitas kaca",
-  "appearanceGlassQualityAuto": "Otomatis",
-  "appearanceGlassQualityLite": "Lite",
-  "appearanceGlassQualityFull": "Penuh",
-  "appearanceGlassQualityOff": "Mati",
-  "appearanceGlassQualitySubtitle": "Otomatis memilih Full, Lite, atau Mati untuk perangkat ini. Lite melewatkan refraksi untuk menghemat daya.",
-  "appearanceGlassLevelFrosted": "Buram",
-  "appearanceGlassLevelSoft": "Lembut",
-  "appearanceGlassLevelBalanced": "Seimbang",
-  "appearanceGlassLevelClear": "Jernih",
-  "appearanceGlassLevelCrystal": "Kristal",
-  "appearanceGlassClarityOff": "Kaca nonaktif. Pilih Otomatis, Lite, atau Full untuk mengatur kejernihan.",
-  "appearanceGlassClarityDeviceOpaque": "Kaca buram di perangkat ini. Pilih Lite atau Full untuk mengatur kejernihan.",
-  "appearanceGlassClarityContrast": "Sistem Anda meminta kontras tinggi, sehingga kaca tetap buram. Pilih Lite atau Full untuk tetap memakai kaca; kontras teks tetap terjaga.",
-  "appearanceGlassAutoMeasured": "Diukur di perangkat ini: Otomatis memakai {quality}.",
-  "appearanceGlassClarityAutoFrosted": "Otomatis mengukur perangkat ini dan memakai Buram. Pilih Lite atau Full untuk mengatur kejernihan.",
   "appName": "Sistrum",
   "@appName": {
     "description": "App name - DO NOT TRANSLATE"
@@ -190,17 +167,6 @@
   "@aboutVersion": {
     "description": "Version info label"
   },
-  "aboutDeveloperOptions": "Opsi pengembang",
-  "aboutDeveloperOptionsEnabled": "Opsi pengembang aktif",
-  "aboutPerformanceHud": "HUD performa",
-  "aboutPerformanceHudSubtitle": "Tampilkan waktu frame build dan raster di atas setiap layar.",
-  "aboutHideDeveloperOptions": "Sembunyikan opsi pengembang",
-  "aboutBarSampler": "Sampling bilah bawah",
-  "aboutBarSamplerSubtitle": "Biarkan bilah bawah mengikuti kecerahan halaman di belakangnya. Matikan untuk mengukur bebannya.",
-  "aboutHeaderBandBlur": "Blur pita header",
-  "aboutHeaderBandBlurSubtitle": "Blur pita di belakang header yang digulir. Matikan untuk mengukur bebannya; tintnya tetap.",
-  "aboutRemeasureGlass": "Ukur ulang kaca Otomatis",
-  "aboutRemeasureGlassSubtitle": "Otomatis mengambil sampel waktu frame lagi dan memilih Full, Lite, atau Lite Buram.",
   "aboutAppDescription": "Putar dan atur musik lokal Anda, dengan pengeditan metadata dan lirik.",
   "trackMetadataShare": "Bagikan",
   "@trackMetadataShare": {

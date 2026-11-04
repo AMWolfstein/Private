@@ -243,7 +243,6 @@ void main() {
 
       final updated = settings.copyWith(localLibraryAutoScan: 'daily');
       expect(updated.localLibraryAutoScan, 'daily');
-      expect(updated.glassQuality, settings.glassQuality);
     });
 
     test('round-trips json including local library settings', () {

@@ -10,8 +10,8 @@ import 'package:sistrum/services/playback/music_player/music_player_service.dart
 import 'package:sistrum/services/playback/music_player/music_player_runtime.dart';
 import 'package:sistrum/core/theme/app_theme.dart';
 import 'package:sistrum/widgets/primitives/app_snack_bar.dart';
-import 'package:sistrum/widgets/glass/chrome/app_chrome.dart';
 import 'package:sistrum/widgets/player/controls/playback_feedback.dart';
+import 'package:sistrum/widgets/primitives/app_surface.dart';
 
 void main() {
   for (final sistrum in [true]) {
@@ -53,7 +53,7 @@ void main() {
         find.text('Cannot open file: Audio output failed'),
         findsOneWidget,
       );
-      expect(find.byType(AppGlassPanel), findsOneWidget);
+      expect(find.byType(AppSurface), findsOneWidget);
       await tester.pump(const Duration(seconds: 4));
       await tester.pumpAndSettle();
       states.add(failed.copyWith(updatePosition: const Duration(seconds: 1)));
@@ -99,10 +99,7 @@ void main() {
       runtime.notifyMutedPlayback();
       await tester.pumpAndSettle();
       expect(find.text(message), findsOneWidget);
-      expect(
-        find.byType(AppGlassPanel),
-        sistrum ? findsOneWidget : findsNothing,
-      );
+      expect(find.byType(AppSurface), sistrum ? findsOneWidget : findsNothing);
       await tester.pump(const Duration(seconds: 4));
       await tester.pumpAndSettle();
       expect(find.text(message), findsNothing);

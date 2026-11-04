@@ -167,17 +167,6 @@ void _registerNowPlayingLyricsInstrumental() {
         await positionAt(seconds);
         expect(find.byType(LyricGapIndicator).hitTestable(), findsOneWidget);
         expect(dotAlphas(), expected);
-        if (layout != 'material') {
-          final filter = tester.widget<ImageFiltered>(
-            find
-                .ancestor(
-                  of: find.text(seconds >= 12 ? 'Last vocal' : 'First vocal'),
-                  matching: find.byType(ImageFiltered),
-                )
-                .first,
-          );
-          expect(filter.enabled, isTrue);
-        }
       }
 
       final firstDot = find.byKey(const ValueKey('lyric-gap-dot-0'));

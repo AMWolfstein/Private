@@ -1,13 +1,6 @@
 part of 'appearance_settings_test.dart';
 
-Map<String, dynamic> _savedGlass(SharedPreferences prefs) =>
-    jsonDecode(prefs.getString('app_settings')!) as Map<String, dynamic>;
-
-Future<void> _openSettings(
-  WidgetTester tester,
-  SharedPreferences prefs, {
-  bool lowEnd = false,
-}) async {
+Future<void> _openSettings(WidgetTester tester, SharedPreferences prefs) async {
   tester.view.physicalSize = const Size(390, 1000);
   tester.view.devicePixelRatio = 1;
   addTearDown(tester.view.reset);
@@ -17,8 +10,6 @@ Future<void> _openSettings(
         initialThemeSettingsProvider.overrideWithValue(
           loadBootstrapThemeSettings(prefs),
         ),
-        // Low-end Android on auto renders flat, opaque glass.
-        if (lowEnd) lowEndDeviceProvider.overrideWithValue(true),
       ],
       child: AppThemeWrapper(
         builder: (light, dark, mode) => MaterialApp(
@@ -61,38 +52,5 @@ void _registerAppearanceSettingsDefaults() {
       PlayerView.immersive,
     );
     expect(immersive, isNot(const ThemeSettings()));
-  });
-  test(
-    'old themes retain outlines and new themes serialize the preference',
-    () {
-      expect(ThemeSettings.fromJson({}).appGlassOutlines, isTrue);
-      const settings = ThemeSettings(appGlassOutlines: false);
-      expect(ThemeSettings.fromJson(settings.toJson()), settings);
-      expect(settings.copyWith(lyricsTextScale: 1.2).appGlassOutlines, isFalse);
-      expect(settings, isNot(const ThemeSettings()));
-    },
-  );
-  test('glass settings restore safely from old and invalid settings', () {
-    expect(AppSettings.fromJson({}).glassClarityLevel, 3);
-    expect(AppSettings.fromJson({}).glassQuality, 'auto');
-    for (final (saved, expected) in [
-      (1, 1),
-      (5, 5),
-      (0, 1),
-      (9, 5),
-      (2.6, 3),
-      (double.nan, 3),
-      ('4', 3),
-    ]) {
-      final settings = AppSettings.fromJson({'glassClarityLevel': saved});
-      expect(settings.glassClarityLevel, expected, reason: '$saved');
-      expect(
-        AppSettings.fromJson(settings.toJson()).glassClarityLevel,
-        expected,
-      );
-    }
-    expect(appGlassQualityFromString('lite'), AppGlassQuality.lite);
-    expect(appGlassQualityFromString('fancy'), AppGlassQuality.auto);
-    expect(AppSettings().toJson().containsKey('forceBackdropBlur'), isFalse);
   });
 }

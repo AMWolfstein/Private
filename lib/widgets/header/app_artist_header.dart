@@ -1,16 +1,11 @@
 import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/core/navigation/shell_navigation.dart';
 import 'package:sistrum/providers/library/cover_palette_provider.dart';
-import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:sistrum/services/library/covers/cover_palette.dart';
-import 'package:sistrum/core/theme/app_glass_levels.dart';
 import 'package:sistrum/core/theme/app_theme.dart';
-import 'package:sistrum/widgets/glass/artwork/app_artwork_page_ground.dart';
-import 'package:sistrum/widgets/glass/chrome/app_floating_header.dart';
+import 'package:sistrum/widgets/header/app_floating_header.dart';
 import 'package:sistrum/widgets/header/header_controls.dart';
-import 'package:sistrum/widgets/player/artwork/app_player_ground.dart';
 
 /// Share the same artwork-derived dark surface while loading and after the
 /// artist metadata arrives, including when the app itself uses light mode.
@@ -93,32 +88,7 @@ class _AppArtistSurfaceState extends State<AppArtistSurface> {
                   scaffoldBackgroundColor: surface,
                   colorScheme: scheme,
                 ),
-                child: HeaderPalette(
-                  scheme: scheme,
-                  // The header controls draw from the page's artwork.
-                  // Surfaces shown without Riverpod (previews) have no glass
-                  // settings, and so no ground.
-                  child:
-                      context
-                              .findAncestorWidgetOfExactType<
-                                UncontrolledProviderScope
-                              >() ==
-                          null
-                      ? widget.child
-                      : Consumer(
-                          builder: (context, ref, child) => AppPageGround(
-                            source: widget.imageSource,
-                            surface: surface,
-                            sigma: appGlassClarity(
-                              ref.watch(appGlassClarityLevelProvider),
-                            ).blurSigma,
-                            enabled: appGroundNeeded(context, ref),
-                            cover: appCoverProvider(widget.imageSource),
-                            child: child!,
-                          ),
-                          child: widget.child,
-                        ),
-                ),
+                child: HeaderPalette(scheme: scheme, child: widget.child),
               );
             },
           );
@@ -189,29 +159,20 @@ class AppArtistHeader extends StatelessWidget {
               listenersHeight +
               (actions.isEmpty ? 0 : 94) +
               32;
-          return Consumer(
-            builder: (context, ref, flexibleSpace) {
-              final opaque =
-                  appHeaderMaterial(context, ref) == AppHeaderMaterial.opaque;
-              return _toolbar(
-                context,
-                expandedHeight: expandedHeight,
-                backgroundColor: opaque ? surface : Colors.transparent,
-                flexibleSpace: opaque
-                    ? flexibleSpace!
-                    : Stack(
-                        fit: StackFit.expand,
-                        children: [
-                          flexibleSpace!,
-                          AppHeaderBacking(color: surface),
-                        ],
-                      ),
-              );
-            },
-            child: _flexibleSpace(
-              surface: surface,
-              identityHeight: identityHeight,
-              context: context,
+          return _toolbar(
+            context,
+            expandedHeight: expandedHeight,
+            backgroundColor: Colors.transparent,
+            flexibleSpace: Stack(
+              fit: StackFit.expand,
+              children: [
+                _flexibleSpace(
+                  surface: surface,
+                  identityHeight: identityHeight,
+                  context: context,
+                ),
+                AppHeaderBacking(color: surface),
+              ],
             ),
           );
         },
@@ -315,14 +276,14 @@ class AppArtistHeader extends StatelessWidget {
 
 /// Follow the sliver's actual collapse extent so scrolling back restores the
 /// same artwork immediately, without a timer or rebuilding the discography.
-class _ArtistCollapsingArtwork extends ConsumerWidget {
+class _ArtistCollapsingArtwork extends StatelessWidget {
   const _ArtistCollapsingArtwork({required this.surface, required this.child});
 
   final Color surface;
   final Widget child;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final settings = context
         .dependOnInheritedWidgetOfExactType<FlexibleSpaceBarSettings>();
     final range = settings == null
@@ -339,81 +300,57 @@ class _ArtistCollapsingArtwork extends ConsumerWidget {
       0.88,
       curve: Curves.easeInOut,
     ).transform(collapse);
-    // The photo softens by dissolving into the page's pre-blurred ground,
-    // never by re-blurring it on every scroll frame.
-    final soften = Curves.easeOut.transform(collapse);
-    final softenEnabled =
-        !MediaQuery.disableAnimationsOf(context) &&
-        ref.watch(appLiquidGlassProvider);
-
-    // The header controls' ground: this artwork under the same gradient,
-    // fading to the surface as the header collapses.
-    return AppGroundAnchor(
-      layout: AppGroundLayout(
-        alignment: Alignment.topCenter,
-        stops: const [0, 0.48, 0.82, 1],
-        colors: [
-          Colors.black.withValues(alpha: 0.15),
-          surface.withValues(alpha: 0),
-          surface.withValues(alpha: 0.55),
-          surface,
-        ],
-      ),
-      fade: fade,
-      child: ClipRect(
-        child: Stack(
-          fit: StackFit.expand,
-          children: [
-            TickerMode(
-              enabled: fade < 1,
-              child: LayoutBuilder(
-                builder: (context, constraints) {
-                  final height = settings?.maxExtent ?? constraints.maxHeight;
-                  final zoom = height > 0
-                      ? (constraints.maxHeight / height).clamp(
-                          1.0,
-                          double.infinity,
-                        )
-                      : 1.0;
-                  // Stretch the photograph uniformly around its top edge.
-                  // Identity and actions remain outside this transform, moving
-                  // down with the sliver without growing along with the image.
-                  return OverflowBox(
+    return ClipRect(
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          TickerMode(
+            enabled: fade < 1,
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                final height = settings?.maxExtent ?? constraints.maxHeight;
+                final zoom = height > 0
+                    ? (constraints.maxHeight / height).clamp(
+                        1.0,
+                        double.infinity,
+                      )
+                    : 1.0;
+                // Stretch the photograph uniformly around its top edge.
+                // Identity and actions remain outside this transform, moving
+                // down with the sliver without growing along with the image.
+                return OverflowBox(
+                  alignment: Alignment.topCenter,
+                  minHeight: height,
+                  maxHeight: height,
+                  child: Transform.scale(
+                    scale: zoom,
                     alignment: Alignment.topCenter,
-                    minHeight: height,
-                    maxHeight: height,
-                    child: Transform.scale(
-                      scale: zoom,
-                      alignment: Alignment.topCenter,
-                      child: RepaintBoundary(child: child),
-                    ),
-                  );
-                },
+                    child: RepaintBoundary(child: child),
+                  ),
+                );
+              },
+            ),
+          ),
+          DecoratedBox(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                stops: const [0, 0.48, 0.82, 1],
+                colors: [
+                  Colors.black.withValues(alpha: 0.15),
+                  surface.withValues(alpha: 0),
+                  surface.withValues(alpha: 0.55),
+                  surface,
+                ],
               ),
             ),
-            DecoratedBox(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  stops: const [0, 0.48, 0.82, 1],
-                  colors: [
-                    Colors.black.withValues(alpha: 0.15),
-                    surface.withValues(alpha: 0),
-                    surface.withValues(alpha: 0.55),
-                    surface,
-                  ],
-                ),
-              ),
-            ),
-            if (softenEnabled && fade < 1)
-              Positioned.fill(child: AppGroundVeil(opacity: soften)),
-            ColoredBox(
-              key: const ValueKey('artist-artwork-fade'),
-              color: surface.withValues(alpha: fade),
-            ),
-          ],
-        ),
+          ),
+          ColoredBox(
+            key: const ValueKey('artist-artwork-fade'),
+            color: surface.withValues(alpha: fade),
+          ),
+        ],
       ),
     );
   }

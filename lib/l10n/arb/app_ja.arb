@@ -42,29 +42,6 @@
   "@nowPlayingVolume": {
     "description": "System volume control label in the Sistrum player"
   },
-  "appearanceGlassClarity": "ガラスの透明度",
-  "appearanceGlassOutlines": "ガラスの輪郭",
-  "appearanceGlassOutlinesSubtitle": "Sistrum のガラスの周りに薄い縁を表示します。オフにしてもガラス自体は変わりません。",
-  "appearanceGlassClaritySubtitle": "Sistrum のメニューとナビゲーションの透明度を調整します。テキストのコントラストは維持されます。",
-  "appearanceGlassTinted": "色付き",
-  "appearanceGlassClear": "消去",
-  "appearanceGlassClearPerformance": "透明度を高いガラスは、古い端末では消費電力が増え、動きがなめらかでなく感じられることがあります。必要に応じて透明度を下げてください。",
-  "appearanceGlassQuality": "ガラスの品質",
-  "appearanceGlassQualityAuto": "自動",
-  "appearanceGlassQualityLite": "軽量",
-  "appearanceGlassQualityFull": "フル",
-  "appearanceGlassQualityOff": "オフ",
-  "appearanceGlassQualitySubtitle": "自動では、この端末に合わせてフル、軽量、オフのいずれかを選びます。軽量では屈折を省き、電力を節約します。",
-  "appearanceGlassLevelFrosted": "すりガラス",
-  "appearanceGlassLevelSoft": "ソフト",
-  "appearanceGlassLevelBalanced": "バランス",
-  "appearanceGlassLevelClear": "クリア",
-  "appearanceGlassLevelCrystal": "クリスタル",
-  "appearanceGlassClarityOff": "ガラスはオフです。透明度を調整するには、自動、軽量またはフルを選んでください。",
-  "appearanceGlassClarityDeviceOpaque": "この端末ではガラスは不透明です。透明度を調整するには、軽量またはフルを選んでください。",
-  "appearanceGlassClarityContrast": "システムでコントラストの強調が要求されているため、ガラスは不透明のままです。それでもガラスを使うには、軽量またはフルを選んでください。文字のコントラストは保たれます。",
-  "appearanceGlassAutoMeasured": "この端末で測定済み: 自動では {quality} を使用します。",
-  "appearanceGlassClarityAutoFrosted": "自動がこの端末を測定し、すりガラスを使用しています。透明度を設定するには、軽量またはフルを選んでください。",
   "appName": "Sistrum",
   "@appName": {
     "description": "App name - DO NOT TRANSLATE"
@@ -190,17 +167,6 @@
   "@aboutVersion": {
     "description": "Version info label"
   },
-  "aboutDeveloperOptions": "開発者向けオプション",
-  "aboutDeveloperOptionsEnabled": "開発者向けオプションが有効です",
-  "aboutPerformanceHud": "パフォーマンス HUD",
-  "aboutPerformanceHudSubtitle": "すべての画面に、ビルドとラスターのフレーム時間を表示します。",
-  "aboutHideDeveloperOptions": "開発者向けオプションを非表示",
-  "aboutBarSampler": "下部バーのサンプリング",
-  "aboutBarSamplerSubtitle": "下部バーを、背後のページの明るさに合わせます。コストを測るにはオフにしてください。",
-  "aboutHeaderBandBlur": "ヘッダー帯のぼかし",
-  "aboutHeaderBandBlurSubtitle": "スクロールされたヘッダーの背後の帯をぼかします。コストを測るにはオフにしてください。色合いは残ります。",
-  "aboutRemeasureGlass": "自動のガラスを再測定",
-  "aboutRemeasureGlassSubtitle": "自動はフレーム時間を再度測定し、フル、軽量またはすりガラス軽量のいずれかを選びます。",
   "aboutAppDescription": "ローカルの音楽を再生・整理し、タグや歌詞を編集できます。",
   "trackMetadataShare": "共有",
   "@trackMetadataShare": {

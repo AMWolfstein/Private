@@ -1,11 +1,6 @@
 part of 'now_playing_screen.dart';
 
 extension _NowPlayingPlayer on _NowPlayingScreenState {
-  static String? _coverSource(MediaItem item) {
-    final art = item.artUri;
-    return art?.scheme == 'file' ? art!.toFilePath() : art?.toString();
-  }
-
   Widget _buildPlayer(BuildContext context) {
     final immersive =
         !_landscape &&
@@ -170,7 +165,6 @@ extension _NowPlayingPlayer on _NowPlayingScreenState {
                     expanded: _expandedArtworkKey,
                     compact: _compactArtworkKey,
                   ),
-                  artworkForeground: _artworkForeground,
                   lyricsControlsHidden: _lyricsControlsHidden,
                   lyricsOptionsOpen: _lyricsOptionsOpen,
                   lyricsBuilder: (showOptions) => _lyricsSection(
@@ -282,77 +276,55 @@ extension _NowPlayingPlayer on _NowPlayingScreenState {
         enabled: false,
         child: Theme(
           data: AppTheme.fromContext(context, brightness: Brightness.dark),
-          // The player's menus and sheets draw their glass from this ground.
-          child: AppPlayerGround(
-            source: _coverSource(mediaItem),
-            immersive: immersive,
-            showArtwork: _currentPage == 0,
-            artworkAspectRatio: artworkRatio,
-            fadeStart: immersive ? .72 : .58,
-            insetArtworkKey: _expandedArtworkKey,
-            child: Stack(
-              fit: StackFit.expand,
-              children: [
-                AppArtworkContrast(
-                  enabled: false,
-                  targets: {
-                    'header': _artworkHeaderKey,
-                    'controls': _artworkControlsKey,
-                    'volume': _artworkVolumeKey,
-                  },
-                  onChanged: (colors) {
-                    if (!mounted) return;
-                    _artworkForeground.value = colors;
-                  },
-                  child: AppPlayerBackground(
-                    artUri: mediaItem.artUri,
-                    squareArtwork: !immersive,
-                    artworkAspectRatio: artworkRatio,
-                    fadeStart: immersive ? .72 : .58,
-                    showArtwork: _currentPage == 0,
-                    // The background fades this cover, then drifts it.
-                    artwork: immersive
-                        ? PlayerArtworkDragRegion(
-                            child: PlayerTransitionArtwork(
-                              artworkKey: _immersiveArtworkKey,
-                              child: Hero(
-                                tag: kNowPlayingArtworkHeroTag,
-                                child: PlayerArtwork(
-                                  artUri: mediaItem.artUri?.toString(),
-                                  colorScheme: colorScheme,
-                                  cacheWidth:
-                                      PlayerArtwork.transitionCacheWidth(
-                                        context,
-                                      ),
-                                ),
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              AppPlayerBackground(
+                artUri: mediaItem.artUri,
+                squareArtwork: !immersive,
+                artworkAspectRatio: artworkRatio,
+                fadeStart: immersive ? .72 : .58,
+                showArtwork: _currentPage == 0,
+                // The background fades this cover, then drifts it.
+                artwork: immersive
+                    ? PlayerArtworkDragRegion(
+                        child: PlayerTransitionArtwork(
+                          artworkKey: _immersiveArtworkKey,
+                          child: Hero(
+                            tag: kNowPlayingArtworkHeroTag,
+                            child: PlayerArtwork(
+                              artUri: mediaItem.artUri?.toString(),
+                              colorScheme: colorScheme,
+                              cacheWidth: PlayerArtwork.transitionCacheWidth(
+                                context,
                               ),
                             ),
-                          )
-                        : null,
-                  ),
-                ),
-                Listener(
-                  behavior: HitTestBehavior.translucent,
-                  onPointerDown: (event) {
-                    if (!_canAutoHideLyricsControls) return;
-                    if (_lyricsPointers.isEmpty) _lyricsPointerMoved = false;
-                    _lyricsPointers[event.pointer] = event.position;
-                    _lyricsIdleTimer?.cancel();
-                  },
-                  onPointerMove: (event) {
-                    final origin = _lyricsPointers[event.pointer];
-                    if (origin != null &&
-                        (event.position - origin).distance > 12) {
-                      _lyricsPointerMoved = true;
-                    }
-                  },
-                  onPointerUp: (event) => _endLyricsInteraction(event.pointer),
-                  onPointerCancel: (event) =>
-                      _endLyricsInteraction(event.pointer, cancelled: true),
-                  child: player,
-                ),
-              ],
-            ),
+                          ),
+                        ),
+                      )
+                    : null,
+              ),
+              Listener(
+                behavior: HitTestBehavior.translucent,
+                onPointerDown: (event) {
+                  if (!_canAutoHideLyricsControls) return;
+                  if (_lyricsPointers.isEmpty) _lyricsPointerMoved = false;
+                  _lyricsPointers[event.pointer] = event.position;
+                  _lyricsIdleTimer?.cancel();
+                },
+                onPointerMove: (event) {
+                  final origin = _lyricsPointers[event.pointer];
+                  if (origin != null &&
+                      (event.position - origin).distance > 12) {
+                    _lyricsPointerMoved = true;
+                  }
+                },
+                onPointerUp: (event) => _endLyricsInteraction(event.pointer),
+                onPointerCancel: (event) =>
+                    _endLyricsInteraction(event.pointer, cancelled: true),
+                child: player,
+              ),
+            ],
           ),
         ),
       ),

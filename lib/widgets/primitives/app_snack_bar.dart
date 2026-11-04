@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sistrum/l10n/l10n.dart';
-import 'package:sistrum/widgets/glass/chrome/app_chrome.dart';
+import 'package:sistrum/widgets/primitives/app_surface.dart';
 
 /// Applies the same transient-message policy to existing snackbar call sites.
 /// A new message replaces the old one instead of building a stale FIFO queue.
@@ -53,7 +53,7 @@ class _TransientSnackBar extends SnackBar {
 
   @override
   SnackBar withAnimation(Animation<double> newAnimation, {Key? fallbackKey}) {
-    // Delegate first so custom glass animations remain intact.
+    // Delegate first so custom animations remain intact.
     final animated = original.withAnimation(
       newAnimation,
       fallbackKey: fallbackKey,
@@ -94,7 +94,7 @@ void showCannotOpenFileSnackBar(BuildContext context, Object error) {
   );
 }
 
-/// Transient messages use the same glass as confirmation dialogs in Sistrum.
+/// Transient messages use the same surface as confirmation dialogs in Sistrum.
 ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showAppSnackBar(
   BuildContext context, {
   required Widget content,
@@ -111,10 +111,8 @@ ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showAppSnackBar(
     reduceMotion: reduceMotion,
     content: Theme(
       data: theme,
-      child: AppGlassPanel.overlay(
+      child: AppSurface(
         radius: 24,
-        // Messages have no modal scrim; let more of the page show through.
-        tintOpacity: 0.48,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
           child: DefaultTextStyle(
@@ -187,7 +185,7 @@ class _AppSnackBar extends SnackBar {
   @override
   SnackBar withAnimation(Animation<double> newAnimation, {Key? fallbackKey}) {
     // Keep the messenger's controller/timer for queuing and dismissal, but
-    // replace Material's opacity layer with movement so blur samples the page.
+    // replace Material's opacity layer with movement.
     return SnackBar(
       key: key ?? fallbackKey,
       duration: duration,

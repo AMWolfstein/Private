@@ -11,7 +11,7 @@ const kAlbumKenBurnsPeriod = Duration(seconds: 28);
 /// A slow zoom and pan of an album header's cover, and of the immersive
 /// player's artwork. The cover stays on its own layer, so only a transform
 /// changes per frame. It stands still with the setting off, with reduced
-/// motion, without glass (off or low-end devices), while [active] is false
+/// motion on low-end devices, while [active] is false
 /// (for example, the player shows lyrics), while its route is covered, and
 /// once the page is scrolled past the cover.
 class AlbumKenBurns extends ConsumerStatefulWidget {
@@ -72,10 +72,10 @@ class _AlbumKenBurnsState extends ConsumerState<AlbumKenBurns>
     final enabled = ref.watch(
       settingsProvider.select((s) => s.animatedAlbumArtwork),
     );
-    final glass = ref.watch(appGlassLevelProvider) != AppGlassLevel.flat;
+    final lowEnd = ref.watch(lowEndDeviceProvider);
     _allowed =
         enabled &&
-        glass &&
+        !lowEnd &&
         widget.active &&
         !MediaQuery.disableAnimationsOf(context);
     return LayoutBuilder(

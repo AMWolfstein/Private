@@ -42,29 +42,6 @@
   "@nowPlayingVolume": {
     "description": "System volume control label in the Sistrum player"
   },
-  "appearanceGlassClarity": "ग्लास की स्पष्टता",
-  "appearanceGlassOutlines": "ग्लास की रूपरेखा",
-  "appearanceGlassOutlinesSubtitle": "Sistrum ग्लास के चारों ओर हल्की किनारी दिखाएँ। इसे बंद करने पर ग्लास स्वयं नहीं बदलता।",
-  "appearanceGlassClaritySubtitle": "Sistrum के मेनू और नेविगेशन की पारदर्शिता समायोजित करें। टेक्स्ट का कंट्रास्ट बना रहता है।",
-  "appearanceGlassTinted": "टिंटेड",
-  "appearanceGlassClear": "साफ़",
-  "appearanceGlassClearPerformance": "बहुत साफ़ ग्लास अधिक बिजली ले सकता है और पुराने डिवाइस पर कम सहज लग सकता है। ज़रूरत हो तो स्पष्टता कम करें।",
-  "appearanceGlassQuality": "ग्लास गुणवत्ता",
-  "appearanceGlassQualityAuto": "स्वचालित",
-  "appearanceGlassQualityLite": "लाइट",
-  "appearanceGlassQualityFull": "फ़ुल",
-  "appearanceGlassQualityOff": "बंद",
-  "appearanceGlassQualitySubtitle": "स्वचालित इस डिवाइस के लिए फ़ुल, लाइट या बंद चुनता है। लाइट बिजली बचाने के लिए रिफ़्रैक्शन छोड़ देता है।",
-  "appearanceGlassLevelFrosted": "फ़्रॉस्टेड",
-  "appearanceGlassLevelSoft": "सॉफ़्ट",
-  "appearanceGlassLevelBalanced": "संतुलित",
-  "appearanceGlassLevelClear": "साफ़",
-  "appearanceGlassLevelCrystal": "क्रिस्टल",
-  "appearanceGlassClarityOff": "ग्लास बंद है। स्पष्टता बदलने के लिए स्वचालित, लाइट या फ़ुल चुनें।",
-  "appearanceGlassClarityDeviceOpaque": "इस डिवाइस पर ग्लास अपारदर्शी है। स्पष्टता बदलने के लिए लाइट या फ़ुल चुनें।",
-  "appearanceGlassClarityContrast": "आपके सिस्टम में बढ़ा हुआ कंट्रास्ट माँगा गया है, इसलिए ग्लास अपारदर्शी रहता है। फिर भी ग्लास चाहिए तो लाइट या फ़ुल चुनें; टेक्स्ट का कंट्रास्ट बना रहेगा।",
-  "appearanceGlassAutoMeasured": "इस डिवाइस पर मापा गया: स्वचालित {quality} उपयोग करता है।",
-  "appearanceGlassClarityAutoFrosted": "स्वचालित ने इस डिवाइस को मापा और फ़्रॉस्टेड उपयोग करता है। स्पष्टता सेट करने के लिए लाइट या फ़ुल चुनें।",
   "appName": "Sistrum",
   "@appName": {
     "description": "App name - DO NOT TRANSLATE"
@@ -190,17 +167,6 @@
   "@aboutVersion": {
     "description": "Version info label"
   },
-  "aboutDeveloperOptions": "डेवलपर विकल्प",
-  "aboutDeveloperOptionsEnabled": "डेवलपर विकल्प चालू",
-  "aboutPerformanceHud": "परफ़ॉर्मेंस HUD",
-  "aboutPerformanceHudSubtitle": "हर स्क्रीन पर बिल्ड और रास्टर फ़्रेम समय दिखाएँ।",
-  "aboutHideDeveloperOptions": "डेवलपर विकल्प छिपाएँ",
-  "aboutBarSampler": "निचली बार सैंपलिंग",
-  "aboutBarSamplerSubtitle": "निचली बार को उसके पीछे के पेज की चमक के अनुसार बदलने दें। इसकी लागत मापने के लिए बंद करें।",
-  "aboutHeaderBandBlur": "हेडर बैंड ब्लर",
-  "aboutHeaderBandBlurSubtitle": "स्क्रॉल किए गए हेडर के पीछे की पट्टी को ब्लर करें। लागत मापने के लिए बंद करें; टिंट बना रहेगा।",
-  "aboutRemeasureGlass": "स्वचालित ग्लास फिर से मापें",
-  "aboutRemeasureGlassSubtitle": "स्वचालित फ़्रेम समय फिर से नापता है और फ़ुल, लाइट या लाइट फ़्रॉस्टेड चुनता है।",
   "aboutAppDescription": "अपना स्थानीय संगीत चलाएँ और व्यवस्थित करें, मेटाडेटा और गीत संपादन के साथ।",
   "trackMetadataShare": "साझा करें",
   "@trackMetadataShare": {

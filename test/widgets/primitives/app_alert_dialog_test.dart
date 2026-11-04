@@ -4,91 +4,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/core/theme/app_theme.dart';
 import 'package:sistrum/widgets/primitives/app_alert_dialog.dart';
-import 'package:sistrum/widgets/glass/chrome/app_chrome.dart';
+import 'package:sistrum/widgets/primitives/app_surface.dart';
 
 void main() {
-  for (final brightness in Brightness.values) {
-    for (final reduceMotion in [false, true]) {
-      testWidgets(
-        'confirmation keeps blur during entry and cancels promptly ($brightness, reduce motion: $reduceMotion)',
-        (tester) async {
-          await tester.pumpWidget(
-            ProviderScope(
-              child: MaterialApp(
-                theme: AppTheme.build(brightness),
-                builder: (context, child) => MediaQuery(
-                  data: MediaQuery.of(
-                    context,
-                  ).copyWith(disableAnimations: reduceMotion),
-                  child: child!,
-                ),
-                home: Builder(
-                  builder: (context) => Scaffold(
-                    body: TextButton(
-                      child: const Text('Open'),
-                      onPressed: () => showAppDialog<void>(
-                        context: context,
-                        builder: (context) => AppAlertDialog(
-                          title: const Text('Delete Selected'),
-                          content: const Text(
-                            'This will also delete the files.',
-                          ),
-                          actions: [
-                            AppDialogAction(
-                              onPressed: () => Navigator.pop(context),
-                              child: const Text('Cancel'),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          );
-          await tester.tap(find.text('Open'));
-          await tester.pump();
-          for (final elapsed in [16, 64, 180]) {
-            await tester.pump(Duration(milliseconds: elapsed));
-            final blur = find.descendant(
-              of: find.byType(AppAlertDialog),
-              matching: find.bySubtype<BackdropFilter>(),
-            );
-            expect(blur, findsOneWidget);
-            // An opacity layer isolates the filter from the underlying page
-            // until the route finishes entering.
-            final fades = tester.widgetList<FadeTransition>(
-              find.ancestor(of: blur, matching: find.byType(FadeTransition)),
-            );
-            expect(fades.every((fade) => fade.opacity.value == 1), isTrue);
-            final bodyContext = tester.element(
-              find.text('This will also delete the files.'),
-            );
-            expect(
-              DefaultTextStyle.of(bodyContext).style.color,
-              Theme.of(bodyContext).colorScheme.onSurface,
-            );
-          }
-          final panel = find.byType(AppGlassPanel);
-          final openWidth = tester.getRect(panel).width;
-          await tester.tap(find.text('Cancel'));
-          await tester.pump();
-          await tester.pump(const Duration(milliseconds: 16));
-          if (!reduceMotion) {
-            // Closing must move on the first frame, rather than holding the
-            // fully open scale while a reversed entrance curve settles.
-            expect(tester.getRect(panel).width, lessThan(openWidth - 1));
-            await tester.pump(const Duration(milliseconds: 164));
-            await tester.pump();
-          }
-          expect(find.byType(AppAlertDialog), findsNothing);
-          expect(tester.takeException(), isNull);
-        },
-      );
-    }
-  }
-
   for (final sistrum in [true]) {
     testWidgets(
       'confirmation preserves cancel and confirm results (Sistrum: $sistrum)',
@@ -134,7 +52,7 @@ void main() {
         await tester.tap(find.text('Open'));
         await tester.pumpAndSettle();
         expect(
-          find.byType(AppGlassPanel),
+          find.byType(AppSurface),
           sistrum ? findsOneWidget : findsNothing,
         );
         expect(
@@ -178,7 +96,7 @@ void main() {
     );
   }
 
-  testWidgets('glass confirmation keeps actions reachable with long text', (
+  testWidgets('confirmation keeps actions reachable with long text', (
     tester,
   ) async {
     tester.view.physicalSize = const Size(393, 600);

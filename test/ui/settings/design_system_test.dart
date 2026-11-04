@@ -15,8 +15,6 @@ import 'package:sistrum/core/theme/app_tokens.dart';
 import 'package:sistrum/core/theme/app_theme.dart';
 import 'package:sistrum/widgets/primitives/app_bottom_sheet.dart';
 import 'package:sistrum/widgets/primitives/app_search_field.dart';
-import 'package:sistrum/widgets/glass/thumb/app_glass_surface.dart';
-import 'package:sistrum/widgets/glass/chrome/app_chrome_controls.dart';
 import 'package:sistrum/widgets/primitives/app_sliver_header.dart';
 import 'package:sistrum/widgets/collection/collection_scaffold.dart';
 import 'package:sistrum/widgets/selection/selection_action_button.dart';

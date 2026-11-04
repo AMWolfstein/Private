@@ -5,14 +5,11 @@ import 'package:sistrum/screens/settings/appearance/artist_images_settings_page.
 import 'package:sistrum/screens/settings/appearance/video_artwork_settings_page.dart';
 import 'package:sistrum/providers/settings/settings_provider.dart';
 import 'package:sistrum/providers/settings/theme_provider.dart';
-import 'package:sistrum/core/models/app_glass.dart';
 import 'package:sistrum/utils/layout/nav_bar_inset.dart';
 import 'package:sistrum/widgets/animation/animation_utils.dart';
 import 'package:sistrum/widgets/settings/settings_group.dart';
-import 'package:sistrum/widgets/settings/settings_search_highlight.dart';
 import 'package:sistrum/widgets/settings/settings_item_rows.dart';
 import 'package:sistrum/widgets/primitives/app_sliver_header.dart';
-import 'package:sistrum/screens/settings/appearance/appearance_glass_clarity_slider.dart';
 import 'package:sistrum/screens/settings/appearance/appearance_settings_selectors.dart';
 
 class AppearanceSettingsPage extends ConsumerWidget {
@@ -20,14 +17,9 @@ class AppearanceSettingsPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // Glass clarity changes on every slider tick; keep it out of this page.
     final themeSettings = ref.watch(
       themeProvider.select(
-        (s) => (
-          appGlassOutlines: s.appGlassOutlines,
-          themeMode: s.themeMode,
-          playerView: s.playerView,
-        ),
+        (s) => (themeMode: s.themeMode, playerView: s.playerView),
       ),
     );
     final settings = ref.watch(settingsProvider);
@@ -38,41 +30,6 @@ class AppearanceSettingsPage extends ConsumerWidget {
         body: CustomScrollView(
           slivers: [
             AppSliverHeader.page(title: context.l10n.appearanceTitle),
-
-            ...[
-              SliverToBoxAdapter(
-                child: SettingsSectionHeader(
-                  title: context.l10n.appearanceGlassQuality,
-                ),
-              ),
-              SliverToBoxAdapter(
-                child: SettingsGroup(
-                  children: [
-                    GlassQualitySelector(
-                      current: appGlassQualityFromString(settings.glassQuality),
-                      onChanged: ref
-                          .read(settingsProvider.notifier)
-                          .setGlassQuality,
-                    ),
-                    SettingsSearchTarget(
-                      label: context.l10n.appearanceGlassClarity,
-                      child: const AppGlassClaritySlider(),
-                    ),
-                    SettingsSwitchItem(
-                      key: const ValueKey('sistrum-glass-outlines'),
-                      icon: Icons.rounded_corner,
-                      title: context.l10n.appearanceGlassOutlines,
-                      subtitle: context.l10n.appearanceGlassOutlinesSubtitle,
-                      value: themeSettings.appGlassOutlines,
-                      onChanged: ref
-                          .read(themeProvider.notifier)
-                          .setAppGlassOutlines,
-                      showDivider: false,
-                    ),
-                  ],
-                ),
-              ),
-            ],
 
             SliverToBoxAdapter(
               child: SettingsSectionHeader(title: context.l10n.sectionTheme),

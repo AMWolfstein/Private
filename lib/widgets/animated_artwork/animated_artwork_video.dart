@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:sistrum/providers/runtime_profile_provider.dart';
 import 'package:video_player/video_player.dart';
 
 /// A looping, silent video cover over its static [fallback].
@@ -12,7 +11,7 @@ import 'package:video_player/video_player.dart';
 /// - The video never takes audio focus or changes music volume: it is muted
 ///   and created with `mixWithOthers`, so native music playback is untouched.
 /// - It plays only while the route is uncovered and the app is resumed, and
-///   only when the glass/performance policy and reduced motion allow it.
+///   only when reduced motion allows it.
 ///   Otherwise it is paused, and the decoder is released when disposed.
 class AnimatedArtworkVideo extends ConsumerStatefulWidget {
   const AnimatedArtworkVideo({
@@ -135,8 +134,7 @@ class _AnimatedArtworkVideoState extends ConsumerState<AnimatedArtworkVideo>
       _resumed &&
       !_covered &&
       !_reduceMotion &&
-      _tickerEnabled &&
-      ref.read(appGlassLevelProvider) != AppGlassLevel.flat;
+      _tickerEnabled;
 
   void _sync() {
     final controller = _controller;
@@ -200,8 +198,6 @@ class _AnimatedArtworkVideoState extends ConsumerState<AnimatedArtworkVideo>
 
   @override
   Widget build(BuildContext context) {
-    // Watching the policy keeps the video in step with the glass setting.
-    ref.watch(appGlassLevelProvider);
     final controller = _controller;
     final ready = controller != null && controller.value.isInitialized;
     return Stack(

@@ -25,7 +25,7 @@ import 'package:sistrum/core/theme/app_theme.dart';
 import 'package:sistrum/widgets/collection/collection_scaffold.dart';
 import 'package:sistrum/widgets/header/album_detail_header.dart';
 import 'package:sistrum/widgets/header/app_artist_header.dart';
-import 'package:sistrum/widgets/glass/chrome/app_floating_header.dart';
+import 'package:sistrum/widgets/header/app_floating_header.dart';
 
 class _Settings extends SettingsNotifier {
   @override

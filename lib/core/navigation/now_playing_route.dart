@@ -41,7 +41,7 @@ class NowPlayingRoute extends PageRoute<void> {
 
   // The player paints an opaque surface over the whole screen, including the
   // status bar and bottom safe area. Once settled, the framework therefore
-  // keeps the pages below offstage: their glass, marquees and tickers stop
+  // keeps the pages below offstage: their marquees and tickers stop
   // compositing. Every drag or dismissal moves the animation off `completed`,
   // which makes this route translucent again before the page is exposed.
   @override

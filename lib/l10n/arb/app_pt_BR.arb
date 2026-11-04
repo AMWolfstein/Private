@@ -42,29 +42,6 @@
   "@nowPlayingVolume": {
     "description": "System volume control label in the Sistrum player"
   },
-  "appearanceGlassClarity": "Clareza do vidro",
-  "appearanceGlassOutlines": "Contornos de vidro",
-  "appearanceGlassOutlinesSubtitle": "Mostra uma borda clara ao redor do vidro Sistrum. Desativar não altera o próprio vidro.",
-  "appearanceGlassClaritySubtitle": "Ajuste a transparência nos menus e na navegação do Sistrum. O contraste do texto é preservado.",
-  "appearanceGlassTinted": "Colorido",
-  "appearanceGlassClear": "Transparente",
-  "appearanceGlassClearPerformance": "Vidro muito transparente pode consumir mais energia e parecer menos fluido em aparelhos mais antigos. Reduza a transparência se necessário.",
-  "appearanceGlassQuality": "Qualidade do vidro",
-  "appearanceGlassQualityAuto": "Automático",
-  "appearanceGlassQualityLite": "Leve",
-  "appearanceGlassQualityFull": "Completo",
-  "appearanceGlassQualityOff": "Desativado",
-  "appearanceGlassQualitySubtitle": "Automático escolhe Completo, Leve ou Desativado para este aparelho. Leve não usa refração para economizar energia.",
-  "appearanceGlassLevelFrosted": "Fosco",
-  "appearanceGlassLevelSoft": "Suave",
-  "appearanceGlassLevelBalanced": "Equilibrado",
-  "appearanceGlassLevelClear": "Transparente",
-  "appearanceGlassLevelCrystal": "Cristal",
-  "appearanceGlassClarityOff": "O vidro está desativado. Escolha Automático, Leve ou Completo para ajustar a transparência.",
-  "appearanceGlassClarityDeviceOpaque": "O vidro é opaco neste aparelho. Escolha Leve ou Completo para ajustar a transparência.",
-  "appearanceGlassClarityContrast": "O sistema solicita mais contraste, então o vidro permanece opaco. Escolha Leve ou Completo para usar o vidro mesmo assim; o contraste do texto é preservado.",
-  "appearanceGlassAutoMeasured": "Medido neste aparelho: Automático usa {quality}.",
-  "appearanceGlassClarityAutoFrosted": "O modo Automático mediu este aparelho e usa Fosco. Escolha Leve ou Completo para definir a transparência.",
   "appName": "Sistrum",
   "@appName": {
     "description": "App name - DO NOT TRANSLATE"
@@ -190,17 +167,6 @@
   "@aboutVersion": {
     "description": "Version info label"
   },
-  "aboutDeveloperOptions": "Opções de desenvolvedor",
-  "aboutDeveloperOptionsEnabled": "Opções de desenvolvedor ativadas",
-  "aboutPerformanceHud": "HUD de desempenho",
-  "aboutPerformanceHudSubtitle": "Mostra os tempos de construção e rasterização dos quadros em todas as telas.",
-  "aboutHideDeveloperOptions": "Ocultar opções de desenvolvedor",
-  "aboutBarSampler": "Amostragem da barra inferior",
-  "aboutBarSamplerSubtitle": "Faz a barra inferior acompanhar o brilho da página atrás dela. Desative para medir o custo.",
-  "aboutHeaderBandBlur": "Desfoque da faixa do cabeçalho",
-  "aboutHeaderBandBlurSubtitle": "Desfoca a faixa atrás dos cabeçalhos rolados. Desative para medir o custo; a tonalidade permanece.",
-  "aboutRemeasureGlass": "Medir o vidro automático novamente",
-  "aboutRemeasureGlassSubtitle": "O modo Automático mede os tempos de quadro novamente e escolhe Completo, Leve ou Leve Fosco.",
   "aboutAppDescription": "Reproduza e organize sua música local, com edição de metadados e letras.",
   "trackMetadataShare": "Compartilhar",
   "@trackMetadataShare": {

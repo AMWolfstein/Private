@@ -38,7 +38,6 @@ dependencies:
 
 
   # UI Components
-  liquid_glass_easy: ^5.1.0
   cupertino_icons: ^2.0.0
   volume_controller: ^3.7.1
 
@@ -112,10 +111,6 @@ flutter_launcher_icons:
 flutter:
   uses-material-design: true
   generate: true
-
-  shaders:
-    - assets/shaders/app_selection_mask.frag
-    - assets/shaders/app_artwork_glass.frag
 
   assets:
     - assets/images/
