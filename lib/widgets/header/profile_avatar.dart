@@ -63,7 +63,7 @@ class ProfileAvatar extends StatelessWidget {
     );
     final fallback = glassFallback
         ? AppGlass(
-            liquid: true,
+            mode: AppGlassMode.liquid,
             radius: diameter / 2,
             blurEnabled: true,
             dropShadow: false,

@@ -3,7 +3,9 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:sistrum/core/theme/app_glass_levels.dart';
+import 'package:g1455/g1455.dart' show GlassSurface;
+import 'package:sistrum/widgets/glass/thumb/app_glass_surface.dart'
+    show kAppLiquidGlassFinish;
 import 'package:sistrum/widgets/glass/selection/app_selection_foreground.dart';
 import 'package:sistrum/widgets/glass/selection/app_selection_shared.dart';
 

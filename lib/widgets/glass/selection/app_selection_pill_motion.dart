@@ -128,56 +128,58 @@ extension _AppSelectionPillStatePart1 on _AppSelectionPillState {
 
   /// The held pill: a blur, a light veil and a rim, sliding to the selected
   /// item. It exists only while a press is in progress.
-  Widget _heldGlass(int selected, int count, double progress) =>
-      Positioned.fill(
-        child: IgnorePointer(
-          child: AnimatedAlign(
-            duration: _dragAlignment != null
-                ? Duration.zero
-                : const Duration(milliseconds: 220),
-            curve: Curves.easeOutCubic,
-            alignment: AlignmentDirectional(
-              _dragAlignment ??
-                  (count == 1 ? 0 : -1 + 2 * selected / (count - 1)),
-              0,
-            ),
-            child: FractionallySizedBox(
-              widthFactor: 1 / count,
-              heightFactor: 1,
-              child: Transform.scale(
-                scaleX: 1 + _heldWidthGrowth * progress,
-                scaleY: 1 + _heldHeightGrowth * progress,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(kAppSelectionPillRadius),
-                  child: BackdropFilter(
-                    filter: ui.ImageFilter.blur(
-                      sigmaX: kAppGlassStyle.blurSigma * progress,
-                      sigmaY: kAppGlassStyle.blurSigma * progress,
+  Widget _heldGlass(
+    int selected,
+    int count,
+    double progress,
+  ) => Positioned.fill(
+    child: IgnorePointer(
+      child: AnimatedAlign(
+        duration: _dragAlignment != null
+            ? Duration.zero
+            : const Duration(milliseconds: 220),
+        curve: Curves.easeOutCubic,
+        alignment: AlignmentDirectional(
+          _dragAlignment ?? (count == 1 ? 0 : -1 + 2 * selected / (count - 1)),
+          0,
+        ),
+        child: FractionallySizedBox(
+          widthFactor: 1 / count,
+          heightFactor: 1,
+          child: Transform.scale(
+            scaleX: 1 + _heldWidthGrowth * progress,
+            scaleY: 1 + _heldHeightGrowth * progress,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(kAppSelectionPillRadius),
+              child: GlassSurface(
+                presence: progress,
+                borderRadius: BorderRadius.circular(kAppSelectionPillRadius),
+                finish: kAppLiquidGlassFinish,
+                labelled: false,
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(
+                      kAppSelectionPillRadius,
                     ),
-                    child: DecoratedBox(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(
-                          kAppSelectionPillRadius,
-                        ),
-                        color: Colors.white.withValues(
-                          alpha:
-                              progress *
-                              (Theme.of(context).brightness == Brightness.light
-                                  ? 0.24
-                                  : 0.08),
-                        ),
-                        border: Border.all(
-                          color: Colors.white.withValues(alpha: 0.6 * progress),
-                          width: 0.75,
-                        ),
-                      ),
-                      child: const SizedBox.expand(),
+                    color: Colors.white.withValues(
+                      alpha:
+                          progress *
+                          (Theme.of(context).brightness == Brightness.light
+                              ? 0.24
+                              : 0.08),
+                    ),
+                    border: Border.all(
+                      color: Colors.white.withValues(alpha: 0.6 * progress),
+                      width: 0.75,
                     ),
                   ),
+                  child: const SizedBox.expand(),
                 ),
               ),
             ),
           ),
         ),
-      );
+      ),
+    ),
+  );
 }

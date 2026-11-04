@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:g1455/g1455.dart' show GlassFinish, GlassSurface;
-import 'package:sistrum/core/theme/app_glass_levels.dart';
+import 'package:g1455/g1455.dart' show GlassSurface;
+import 'package:sistrum/widgets/glass/thumb/app_glass_surface.dart'
+    show kAppLiquidGlassFinish;
 import 'package:sistrum/providers/runtime_profile_provider.dart';
 
 /// Marks the held glass of every [AppGlassThumb], for tests and diagnostics.
@@ -133,13 +134,6 @@ class _HeldGlassPill extends StatelessWidget {
   final Color color;
   final double radius;
 
-  // Same LIQUID finish as AppGlass: the blur sigma, no tint of its own.
-  static final _liquidFinish = GlassFinish(
-    name: 'clear',
-    blurSigmaLogical: kAppGlassStyle.blurSigma,
-    tint: const Color(0x00000000),
-  );
-
   @override
   Widget build(BuildContext context) {
     final shape = BorderRadius.circular(radius);
@@ -147,7 +141,7 @@ class _HeldGlassPill extends StatelessWidget {
       borderRadius: shape,
       child: GlassSurface(
         borderRadius: shape,
-        finish: _liquidFinish,
+        finish: kAppLiquidGlassFinish,
         labelled: false,
         child: DecoratedBox(
           decoration: BoxDecoration(

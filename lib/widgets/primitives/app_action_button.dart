@@ -75,7 +75,7 @@ class AppActionButton extends StatelessWidget {
             radius: 28,
             blurEnabled: true,
             dropShadow: false,
-            liquid: true,
+            mode: AppGlassMode.liquid,
             child: action,
           );
   }
