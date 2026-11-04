@@ -1146,9 +1146,9 @@
     "semantic_hash": "a7e4dc401d6563fb09eaade8e0421cbf"
   },
   "AGENTS.md": {
-    "mtime": 1793748381.5452173,
-    "seen": 1793749082.1780903,
-    "ast_hash": "2c011ac68a6f56b7204ca9aef2fbe95c",
+    "mtime": 1793750581.8393888,
+    "seen": 1793753501.1935544,
+    "ast_hash": "47261d4115ce2be32232f0eee6990c4e",
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
@@ -1650,9 +1650,9 @@
     "semantic_hash": "bfee1356e4c394e0644e2bbc91d17bec"
   },
   "LOCAL_OFFLINE_MIGRATION_PLAN.md": {
-    "mtime": 1793744894.2470722,
-    "seen": 1793746432.778609,
-    "ast_hash": "74cf4bade5f47bc604eb0dbc6111ef88",
+    "mtime": 1793750577.7785118,
+    "seen": 1793753501.1936312,
+    "ast_hash": "63ea6bb341d00d32b0ec84a7d572615d",
     "semantic_hash": ""
   },
   "third_party/audio_service/CHANGELOG.md": {
@@ -3900,9 +3900,9 @@
     "semantic_hash": ""
   },
   "lib/widgets/header/album_detail_header.dart": {
-    "mtime": 1793742483.1053662,
-    "seen": 1793746432.776959,
-    "ast_hash": "09e06804031ebff49f8dc23ca3ad9538",
+    "mtime": 1793751442.1497817,
+    "seen": 1793753501.1592624,
+    "ast_hash": "f7bc9d5afd23654914b772e67465c5bd",
     "semantic_hash": ""
   },
   "lib/widgets/header/album_ken_burns.dart": {
@@ -4056,9 +4056,9 @@
     "semantic_hash": ""
   },
   "lib/widgets/header/app_artist_header.dart": {
-    "mtime": 1793748154.1264503,
-    "seen": 1793748234.4699662,
-    "ast_hash": "413c139fd4662f0087a42c0eb5bb68c7",
+    "mtime": 1793751598.101093,
+    "seen": 1793753501.1593795,
+    "ast_hash": "6b58aae93fe8ec1440661318dc354e19",
     "semantic_hash": ""
   },
   "lib/widgets/primitives/app_context_menu.dart": {
@@ -6384,9 +6384,9 @@
     "semantic_hash": ""
   },
   "lib/screens/library/local_album/local_album_screen_header.dart": {
-    "mtime": 1793727091.2567723,
-    "seen": 1793746432.7763925,
-    "ast_hash": "2f7d537a73c3de2fba3556975c7ec1e5",
+    "mtime": 1793751513.9622846,
+    "seen": 1793753501.1512396,
+    "ast_hash": "0ff1ef9a5184fbcbaffe7c9f57acbce9",
     "semantic_hash": ""
   },
   "lib/screens/library/local_album/local_album_screen_selection.dart": {
@@ -7416,9 +7416,9 @@
     "semantic_hash": ""
   },
   "lib/widgets/glass/chrome/app_floating_header.dart": {
-    "mtime": 1793749230.079325,
-    "seen": 1793750568.1964576,
-    "ast_hash": "b0e3e10ea03ee1f834f73827da812d75",
+    "mtime": 1793751453.1475906,
+    "seen": 1793753501.1590667,
+    "ast_hash": "37b20ad10f6b618df050235b6e707b96",
     "semantic_hash": ""
   },
   "lib/widgets/glass/debug/app_performance_hud.dart": {
@@ -8538,9 +8538,9 @@
     "semantic_hash": ""
   },
   "test/screens/library/local_album/local_album_screen_header_test.dart": {
-    "mtime": 1793750065.780548,
-    "seen": 1793750568.217583,
-    "ast_hash": "9937968e00c4ad7e3f924cadb4a56624",
+    "mtime": 1793751489.9229803,
+    "seen": 1793753501.1803792,
+    "ast_hash": "0d03f0202182c6c994be99edb21852d7",
     "semantic_hash": ""
   },
   "test/screens/library/local_album/local_album_screen_selection_test.dart": {
@@ -10386,9 +10386,9 @@
     "semantic_hash": ""
   },
   "lib/widgets/header/album_detail_header_slivers.dart": {
-    "mtime": 1793733791.404226,
-    "seen": 1793746432.7769656,
-    "ast_hash": "46edf9f06bc68de8ab213c8ab7fa543d",
+    "mtime": 1793751442.1502194,
+    "seen": 1793753501.1593118,
+    "ast_hash": "654c8f46f31f9956a93de5336cc24a25",
     "semantic_hash": ""
   },
   "lib/widgets/header/album_detail_header_title.dart": {
@@ -12777,6 +12777,18 @@
     "mtime": 1793748350.8657255,
     "seen": 1793749082.1365464,
     "ast_hash": "2d2efb9c7dc4ee1f3852ec8ebfbb1ecf",
+    "semantic_hash": ""
+  },
+  "test/library/local/local_artist_header_band_test.dart": {
+    "mtime": 1793751603.7947977,
+    "seen": 1793753501.177662,
+    "ast_hash": "0a59adac8f2670a1e4c32d3cf465a8c1",
+    "semantic_hash": ""
+  },
+  "test/ui/glass/app_header_backing_ground_test.dart": {
+    "mtime": 1793751453.1275907,
+    "seen": 1793753501.1852891,
+    "ast_hash": "c3839fe706c6e9291210b748865cda26",
     "semantic_hash": ""
   }
 }
