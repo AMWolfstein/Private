@@ -106,18 +106,24 @@ class AppSegmentedControl extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: SizedBox(
         height: height,
-        child: AppSelectionPill(
-          labels: labels,
-          selectedIndex: selectedIndex,
-          onChanged: onChanged,
-          itemBuilder: (context, index, selected) => Center(
-            child: Text(
-              labels[index],
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: theme.colorScheme.onSurface,
-                fontWeight: selected ? FontWeight.w600 : FontWeight.w400,
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            color: theme.colorScheme.surfaceContainerHigh,
+            borderRadius: BorderRadius.circular(height / 2),
+          ),
+          child: AppSelectionPill(
+            labels: labels,
+            selectedIndex: selectedIndex,
+            onChanged: onChanged,
+            itemBuilder: (context, index, selected) => Center(
+              child: Text(
+                labels[index],
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: theme.colorScheme.onSurface,
+                  fontWeight: selected ? FontWeight.w600 : FontWeight.w400,
+                ),
               ),
             ),
           ),
@@ -168,39 +174,45 @@ class AppTabBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
-    return AppSelectionPill(
-      selectionColor: scheme.primary,
-      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-      labels: [for (final destination in destinations) destination.label],
-      selectedIndex: selectedIndex,
-      onChanged: onSelected,
-      itemBuilder: (context, index, selected) => ConstrainedBox(
-        constraints: const BoxConstraints(minHeight: 54),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            IconTheme(
-              data: IconThemeData(
-                size: 25,
-                color: selected ? scheme.primary : scheme.onSurface,
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: scheme.surfaceContainerHigh,
+        borderRadius: BorderRadius.circular(999),
+      ),
+      child: AppSelectionPill(
+        selectionColor: scheme.primary,
+        padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+        labels: [for (final destination in destinations) destination.label],
+        selectedIndex: selectedIndex,
+        onChanged: onSelected,
+        itemBuilder: (context, index, selected) => ConstrainedBox(
+          constraints: const BoxConstraints(minHeight: 54),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              IconTheme(
+                data: IconThemeData(
+                  size: 25,
+                  color: selected ? scheme.primary : scheme.onSurface,
+                ),
+                child: Opacity(
+                  opacity: hiddenIconIndices.contains(index) ? 0 : 1,
+                  child: destinations[index].icon,
+                ),
               ),
-              child: Opacity(
-                opacity: hiddenIconIndices.contains(index) ? 0 : 1,
-                child: destinations[index].icon,
+              const SizedBox(height: 2),
+              Text(
+                destinations[index].label,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                  fontWeight: FontWeight.w600,
+                  color: selected ? scheme.primary : scheme.onSurface,
+                ),
               ),
-            ),
-            const SizedBox(height: 2),
-            Text(
-              destinations[index].label,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                fontWeight: FontWeight.w600,
-                color: selected ? scheme.primary : scheme.onSurface,
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

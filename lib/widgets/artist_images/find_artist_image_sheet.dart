@@ -299,7 +299,10 @@ class _FindArtistImageSheetState extends ConsumerState<FindArtistImageSheet> {
                     ? l10n.artistImageNoPhoto
                     : artist.source == ArtistPhotoSource.apple
                     ? 'Apple Music'
-                    : l10n.artistImageCounts(artist.fans ?? 0, artist.albums ?? 0),
+                    : l10n.artistImageCounts(
+                        artist.fans ?? 0,
+                        artist.albums ?? 0,
+                      ),
               ),
               onTap: artist.pictureUrl == null
                   ? null
@@ -397,9 +400,7 @@ class _RemotePhoto extends StatelessWidget {
           ? child
           : const Center(child: CircularProgressIndicator(strokeWidth: 2)),
       errorBuilder: (context, error, stack) =>
-          fallback ??
-          const Center(child: Icon(Icons.person_outline)),
+          fallback ?? const Center(child: Icon(Icons.person_outline)),
     );
   }
 }
-

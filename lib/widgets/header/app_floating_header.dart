@@ -89,8 +89,46 @@ class AppHeaderCircle extends StatelessWidget {
   final Widget child;
 
   @override
-  Widget build(BuildContext context) =>
-      AppHeaderControls(child: _HeaderIconTheme(child: child));
+  Widget build(BuildContext context) => AppHeaderControls(
+    child: DecoratedBox(
+      decoration: BoxDecoration(
+        color: appHeaderControlFill(context),
+        shape: BoxShape.circle,
+      ),
+      child: _HeaderIconTheme(child: child),
+    ),
+  );
+}
+
+/// The solid fill of a header control: the tint that Mornye's glass circles
+/// and capsules carry over a page, flattened to one opaque colour.
+Color appHeaderControlFill(BuildContext context) {
+  final scheme = Theme.of(context).colorScheme;
+  return scheme.brightness == Brightness.dark
+      ? Color.alphaBlend(Colors.black.withValues(alpha: 0.45), scheme.surface)
+      : Color.alphaBlend(Colors.white.withValues(alpha: 0.55), scheme.surface);
+}
+
+/// A solid capsule that groups header actions, sized like the header controls.
+class _HeaderCapsule extends StatelessWidget {
+  const _HeaderCapsule({required this.children});
+
+  final List<Widget> children;
+
+  @override
+  Widget build(BuildContext context) => DecoratedBox(
+    decoration: BoxDecoration(
+      color: appHeaderControlFill(context),
+      borderRadius: BorderRadius.circular(kAppHeaderControlSize / 2),
+    ),
+    child: SizedBox(
+      height: kAppHeaderControlSize,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 2),
+        child: Row(mainAxisSize: MainAxisSize.min, children: children),
+      ),
+    ),
+  );
 }
 
 /// Trailing header actions followed by the profile photo at the trailing
@@ -114,7 +152,7 @@ class AppHeaderActions extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          ...actions,
+          if (actions.isNotEmpty) _HeaderCapsule(children: actions),
           if (showProfile) HeaderProfileButton(gap: actions.isEmpty ? 0 : 8),
         ],
       ),

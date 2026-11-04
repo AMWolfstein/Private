@@ -99,7 +99,16 @@ class HeaderCircleButton extends StatelessWidget {
           foregroundColor: iconColor ?? scheme.onSurface,
         ),
       );
-      return Center(widthFactor: 1, child: button);
+      return Center(
+        widthFactor: 1,
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            color: appHeaderControlFill(context),
+            shape: BoxShape.circle,
+          ),
+          child: button,
+        ),
+      );
     }
   }
 }

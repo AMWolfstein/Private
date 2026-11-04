@@ -121,7 +121,11 @@ class _LocalArtistScreenState extends ConsumerState<LocalArtistScreen> {
     );
     final artistVideo = motion
         ? ref
-              .watch(animatedArtworkFileProvider(animatedArtistRef(widget.artistName)))
+              .watch(
+                animatedArtworkFileProvider(
+                  animatedArtistRef(widget.artistName),
+                ),
+              )
               .value
         : null;
     final artistId = LibraryDatabase.normalizeLookupText(widget.artistName);

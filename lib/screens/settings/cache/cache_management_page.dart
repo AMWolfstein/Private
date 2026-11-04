@@ -141,6 +141,7 @@ class _CacheManagementPageState extends ConsumerState<CacheManagementPage> {
                         ),
                         AppActionButton(
                           outlined: true,
+                          filled: false,
                           onPressed: _isBusy ? null : _refreshOverview,
                           icon: const Icon(Icons.refresh),
                           label: Text(context.l10n.cacheRefreshStats),

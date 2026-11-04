@@ -389,10 +389,7 @@ class _FindAnimatedArtworkSheetState
           ),
         ],
         const SizedBox(height: 4),
-        Text(
-          l10n.animatedArtworkLinkHint,
-          style: theme.textTheme.bodySmall,
-        ),
+        Text(l10n.animatedArtworkLinkHint, style: theme.textTheme.bodySmall),
         const SizedBox(height: 12),
         FilledButton(
           onPressed: _searching || _busy ? null : _search,

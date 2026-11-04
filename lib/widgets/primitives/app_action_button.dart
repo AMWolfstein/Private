@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sistrum/core/theme/app_icons.dart';
 import 'package:sistrum/core/theme/app_theme.dart';
+import 'package:sistrum/widgets/primitives/app_surface.dart';
 
 /// Shared sheet actions follow the selected design on every platform.
 class AppActionButton extends StatelessWidget {
@@ -15,6 +16,7 @@ class AppActionButton extends StatelessWidget {
     this.tonal = false,
     this.isDestructive = false,
     this.fontSize = 17,
+    this.filled = true,
   });
 
   final VoidCallback? onPressed;
@@ -25,6 +27,10 @@ class AppActionButton extends StatelessWidget {
   final bool tonal;
   final bool isDestructive;
   final double fontSize;
+
+  /// Outlined buttons sit on a solid surface (the flattened glass of sheets
+  /// and groups); false leaves them bare on the page.
+  final bool filled;
 
   @override
   Widget build(BuildContext context) {
@@ -72,6 +78,11 @@ class AppActionButton extends StatelessWidget {
         ),
       ),
     );
-    return action;
+    if (prominent || tonal || !filled) return action;
+    return AppSurface(
+      radius: 28,
+      color: scheme.surfaceContainerHigh,
+      child: action,
+    );
   }
 }

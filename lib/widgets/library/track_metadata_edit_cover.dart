@@ -173,6 +173,7 @@ mixin _MetadataCoverEditing on State<EditMetadataSheet> {
             Expanded(
               child: AppActionButton(
                 outlined: true,
+                filled: false,
                 onPressed: _saving ? null : _pickCoverImage,
                 icon: const Icon(Icons.image_outlined),
                 label: Text(

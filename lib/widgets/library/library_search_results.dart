@@ -379,8 +379,7 @@ class _LibrarySearchResultsState extends ConsumerState<LibrarySearchResults> {
           slivers.add(
             SliverList.builder(
               itemCount: hits.length.clamp(0, pageSize),
-              itemBuilder: (context, index) =>
-                  _row(hits[index], artistPhotos),
+              itemBuilder: (context, index) => _row(hits[index], artistPhotos),
             ),
           );
           if (_kind != null && page == _pages - 1 && hits.length > pageSize) {
