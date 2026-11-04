@@ -6,6 +6,7 @@ import 'package:g1455/g1455.dart' show GlassHost;
 import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:sistrum/widgets/glass/selection/app_selection_pill.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/providers/playback/music_player_provider.dart';
 import 'package:sistrum/providers/runtime_profile_provider.dart';

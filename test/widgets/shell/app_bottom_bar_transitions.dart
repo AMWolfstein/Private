@@ -338,9 +338,6 @@ void _registerAppBottomBarTransitions() {
             }
             expect(tester.takeException(), isNull);
           },
-          // Pending device validation: the GlassTabBar label contrast reads
-          // the glass capture, which only a device GPU produces.
-          skip: true,
         );
       }
     }

@@ -43,7 +43,6 @@ import 'package:sistrum/widgets/glass/thumb/app_glass_surface.dart';
 import 'package:sistrum/widgets/player/artwork/app_player_background.dart';
 import 'package:sistrum/widgets/player/mini_player.dart';
 import 'package:sistrum/widgets/player/controls/playback_seek_slider.dart';
-import 'package:g1455/g1455.dart' show GlassSlider;
 
 part 'now_playing_lyrics_navigation.dart';
 part 'now_playing_lyrics_glass.dart';

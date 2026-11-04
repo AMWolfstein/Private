@@ -7,7 +7,6 @@ import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/providers/settings/theme_provider.dart';
 import 'package:sistrum/utils/lyrics/lyric_models.dart';
 import 'package:sistrum/widgets/lyrics/app_lyrics_timing_setting.dart';
-import 'package:g1455/g1455.dart' show GlassSlider;
 
 void main() {
   test(
@@ -72,13 +71,13 @@ void main() {
         ),
       );
       await tester.pumpAndSettle();
-      final slider = tester.widget<GlassSlider>(find.byType(GlassSlider));
-      slider.onChanged!((500 + 2000) / 4000);
+      final slider = tester.widget<Slider>(find.byType(Slider));
+      slider.onChanged!(500);
       await tester.pump();
       final prefs = await SharedPreferences.getInstance();
       expect(prefs.getInt(kLyricsTimingOffsetKey), isNull);
       expect(container.read(themeProvider).lyricsTimingOffsetMs, 500);
-      slider.onChangeEnd!((500 + 2000) / 4000);
+      slider.onChangeEnd!(500);
       await tester.pumpAndSettle();
       expect(loadBootstrapThemeSettings(prefs).lyricsTimingOffsetMs, 500);
       await tester.tap(find.byTooltip('Reset'));

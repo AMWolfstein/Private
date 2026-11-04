@@ -11,7 +11,6 @@ import 'package:sistrum/utils/lyrics/lyric_models.dart';
 import 'package:sistrum/widgets/lyrics/lyrics_size_setting.dart';
 import 'package:sistrum/widgets/lyrics/lyrics_text_scale.dart';
 import 'package:sistrum/widgets/player/lyrics/player_lyrics.dart';
-import 'package:g1455/g1455.dart' show GlassSlider;
 
 void main() {
   setUp(() => SharedPreferences.setMockInitialValues({}));
@@ -50,17 +49,17 @@ void main() {
     await tester.pumpAndSettle();
     final semantics = tester.ensureSemantics();
     expect(
-      tester.getSemantics(find.byType(GlassSlider)).label,
+      tester.getSemantics(find.byType(Slider)).label,
       contains('Lyrics blur strength'),
     );
     semantics.dispose();
-    final slider = tester.widget<GlassSlider>(find.byType(GlassSlider));
-    slider.onChanged!(.5 / 1.5);
+    final slider = tester.widget<Slider>(find.byType(Slider));
+    slider.onChanged!(.5);
     await tester.pump();
     expect(find.text('50%'), findsOneWidget);
     final prefs = await SharedPreferences.getInstance();
     expect(prefs.get(kLyricsBlurKey), isNull);
-    slider.onChangeEnd!(.5 / 1.5);
+    slider.onChangeEnd!(.5);
     await tester.pumpAndSettle();
     expect(loadBootstrapThemeSettings(prefs).lyricsBlur, .5);
     await tester.tap(find.byTooltip('Reset'));
@@ -96,17 +95,17 @@ void main() {
     await tester.pumpAndSettle();
     final semantics = tester.ensureSemantics();
     expect(
-      tester.getSemantics(find.byType(GlassSlider)).label,
+      tester.getSemantics(find.byType(Slider)).label,
       contains('Lyrics text size'),
     );
     semantics.dispose();
-    final slider = tester.widget<GlassSlider>(find.byType(GlassSlider));
-    slider.onChanged!((1.3 - 0.8) / 0.6);
+    final slider = tester.widget<Slider>(find.byType(Slider));
+    slider.onChanged!(1.3);
     await tester.pump();
     expect(find.text('130%'), findsOneWidget);
     final prefs = await SharedPreferences.getInstance();
     expect(prefs.getDouble(kLyricsTextScaleKey), isNull);
-    slider.onChangeEnd!((1.3 - 0.8) / 0.6);
+    slider.onChangeEnd!(1.3);
     await tester.pumpAndSettle();
     expect(loadBootstrapThemeSettings(prefs).lyricsTextScale, 1.3);
     await tester.tap(find.byTooltip('Reset'));

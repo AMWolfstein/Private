@@ -186,20 +186,20 @@ void _registerAppBottomBarFolding() {
     'glass bar stays mounted and pauses its tickers while collapsed',
     (tester) async {
       await _pumpShell(tester, blur: true);
-      final glass = tester.element(find.byType(AppTabBar));
+      final glass = tester.element(find.byType(AppSelectionPill));
       final player = tester.state(find.byType(MiniPlayer));
       expect(TickerMode.valuesOf(glass).enabled, isTrue);
       chrome.value = true;
       await tester.pumpAndSettle();
-      expect(find.byType(AppTabBar), findsNothing);
+      expect(find.byType(AppSelectionPill), findsNothing);
       expect(
-        tester.element(find.byType(AppTabBar, skipOffstage: false)),
+        tester.element(find.byType(AppSelectionPill, skipOffstage: false)),
         same(glass),
       );
       expect(TickerMode.valuesOf(glass).enabled, isFalse);
       chrome.expand();
       await tester.pumpAndSettle();
-      expect(tester.element(find.byType(AppTabBar)), same(glass));
+      expect(tester.element(find.byType(AppSelectionPill)), same(glass));
       expect(tester.state(find.byType(MiniPlayer)), same(player));
       expect(TickerMode.valuesOf(glass).enabled, isTrue);
       expect(tester.takeException(), isNull);

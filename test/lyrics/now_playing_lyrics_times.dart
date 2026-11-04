@@ -99,10 +99,7 @@ void _registerNowPlayingLyricsTimes() {
 
     final volume = find.byType(AppVolumeControl);
     final lyricsButton = find.byIcon(CupertinoIcons.quote_bubble);
-    final slider = find.descendant(
-      of: volume,
-      matching: find.byType(GlassSlider),
-    );
+    final slider = find.descendant(of: volume, matching: find.byType(Slider));
     expect(
       tester.getRect(volume).bottom,
       lessThan(tester.getRect(lyricsButton).top),
@@ -165,7 +162,7 @@ void _registerNowPlayingLyricsTimes() {
       );
       final volumeSlider = find.descendant(
         of: volume,
-        matching: find.byType(GlassSlider),
+        matching: find.byType(Slider),
       );
       final drag = await tester.startGesture(tester.getCenter(volumeSlider));
       await drag.moveBy(const Offset(30, 0));

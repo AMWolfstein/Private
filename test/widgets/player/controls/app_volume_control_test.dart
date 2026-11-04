@@ -6,7 +6,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/widgets/player/controls/app_volume_control.dart';
-import 'package:g1455/g1455.dart' show GlassSlider;
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -57,8 +56,7 @@ void main() {
     );
     volumes.add(0.5);
     await tester.pumpAndSettle();
-    GlassSlider slider() =>
-        tester.widget<GlassSlider>(find.byType(GlassSlider));
+    Slider slider() => tester.widget(find.byType(Slider));
 
     slider().onChangeStart!(0.5);
     slider().onChanged!(0.6);
