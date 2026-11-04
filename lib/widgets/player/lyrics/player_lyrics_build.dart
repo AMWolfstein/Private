@@ -320,16 +320,13 @@ extension _SyncedLyricsViewStatePart3 on _SyncedLyricsViewState {
                               : distance == 2
                               ? 3.6
                               : 4.8);
-                content = TweenAnimationBuilder<double>(
-                  tween: Tween(end: sigma),
+                // Focus changes crossfade at a constant blur instead of
+                // ramping the sigma through Impeller's full-resolution range.
+                content = AppLyricLineFocus(
+                  sigma: sigma,
+                  restSigma: blurLyrics ? blurStrength * 2.4 : 0,
                   duration: motion,
-                  curve: Curves.easeInOutCubic,
                   child: RepaintBoundary(child: content),
-                  builder: (context, value, child) => ImageFiltered(
-                    enabled: value > 0,
-                    imageFilter: ImageFilter.blur(sigmaX: value, sigmaY: value),
-                    child: child,
-                  ),
                 );
                 content = FittedBox(
                   fit: BoxFit.scaleDown,

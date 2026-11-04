@@ -18,6 +18,7 @@ import 'package:sistrum/utils/lyrics/lyrics_parser.dart';
 import 'package:sistrum/utils/lyrics/lyric_models.dart';
 import 'package:sistrum/utils/lyrics/synced_lyrics_scroll.dart';
 import 'package:sistrum/widgets/lyrics/aligned_lyric_pronunciation.dart';
+import 'package:sistrum/widgets/lyrics/app_lyric_line_focus.dart';
 import 'package:sistrum/widgets/lyrics/lyric_gap_indicator.dart';
 import 'package:sistrum/widgets/lyrics/lyric_scroll_motion.dart';
 import 'package:sistrum/utils/lyrics/lyric_direction.dart';
