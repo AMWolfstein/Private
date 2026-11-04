@@ -6414,9 +6414,9 @@
     "semantic_hash": ""
   },
   "lib/screens/library/local_artist/local_artist_screen.dart": {
-    "mtime": 1793749230.19133,
-    "seen": 1793750568.1885817,
-    "ast_hash": "d4d5842045d2939fff4d2ac94abf31d1",
+    "mtime": 1793759563.2347457,
+    "seen": 1793760504.7971969,
+    "ast_hash": "d0a956ccc24d3d96b22a26dc4ef9663f",
     "semantic_hash": ""
   },
   "lib/screens/library/section_tab/library_section_tab.dart": {
@@ -7416,15 +7416,15 @@
     "semantic_hash": ""
   },
   "lib/widgets/glass/chrome/app_floating_header.dart": {
-    "mtime": 1793757942.0994852,
-    "seen": 1793758832.835014,
-    "ast_hash": "461595ed39535e24ff4919f31d3d1f26",
+    "mtime": 1793759551.4087954,
+    "seen": 1793760504.8060205,
+    "ast_hash": "fe7d994503d82607b121e847e51e21f0",
     "semantic_hash": ""
   },
   "lib/widgets/glass/debug/app_performance_hud.dart": {
-    "mtime": 1793744127.7104445,
-    "seen": 1793746432.7769501,
-    "ast_hash": "5d5036e639db292f2e278cdcdbef252d",
+    "mtime": 1793759944.7331686,
+    "seen": 1793760504.806056,
+    "ast_hash": "cfe0de6a521b84e0855b469367516ed5",
     "semantic_hash": ""
   },
   "lib/widgets/glass/selection/app_selection_foreground.dart": {
@@ -7446,9 +7446,9 @@
     "semantic_hash": ""
   },
   "lib/widgets/glass/thumb/app_glass_surface.dart": {
-    "mtime": 1793757933.2994597,
-    "seen": 1793758832.8351269,
-    "ast_hash": "505545d6bfb8a8257dff5628206741ea",
+    "mtime": 1793759551.4037957,
+    "seen": 1793760504.806161,
+    "ast_hash": "1b5b085f85b2f261e1fac2e0de512430",
     "semantic_hash": ""
   },
   "lib/widgets/glass/thumb/app_glass_thumb.dart": {
@@ -12795,6 +12795,18 @@
     "mtime": 1793758097.0400155,
     "seen": 1793758832.8658273,
     "ast_hash": "90a97d960211ecdefc3523dd5a3c52a8",
+    "semantic_hash": ""
+  },
+  "lib/widgets/glass/debug/app_artist_glass_isolation.dart": {
+    "mtime": 1793759563.3427455,
+    "seen": 1793760504.8060231,
+    "ast_hash": "138cb77ee6b9c3b79994c43c2c82e557",
+    "semantic_hash": ""
+  },
+  "test/ui/glass/app_artist_glass_isolation_test.dart": {
+    "mtime": 1793759700.2211645,
+    "seen": 1793760504.8339899,
+    "ast_hash": "c3998324665d693cc3cf645cd4e4eed0",
     "semantic_hash": ""
   }
 }
