@@ -60,7 +60,14 @@ FLAC decoding to preserve source precision or label padded output as source bit 
 Switch and slider thumbs (AppSwitch, AppSlider, horizontal AppLevelSlider) turn into
 Tinted Lite glass (`AppGlassThumb`) only while touched and only when the glass thumb gate
 allows it; nothing is painted or read at rest, and the plain controls are the fallback. Seek,
-volume and vertical EQ faders keep their painted controls.
+volume and vertical EQ faders keep their painted controls. Only the motion comes from g1455 (the
+look stays Sistrum's): the thumb lifts and settles over 180 ms eased out, stretches while it
+speeds up and squashes as it brakes (`GlassDropStretchDriver`, none under reduced motion, none for
+a tap placing it) and moves in its own `GlassTravel` region; the switch knob travels 220 ms
+easeOutCubic and its track colour changes over 160 ms once the value commits. The selection pill
+(the floating tab bar and segmented pills) lifts on g1455's tab-bar spring (520/34, a slight
+overshoot), slides on its slide spring (380/36) carrying the finger's speed, and stretches the
+same way while held.
 Sistrum album headers and the immersive player's cover drift slowly (Ken Burns, `AlbumKenBurns`); Appearance > Animated artwork turns it off. A saved video cover (see Video artwork below) replaces that drift on the same cover; the static fallback keeps it. Albums and the player's cover (both Normal and Immersive views) only: playlists, Loved and artist headers stay still. The player's drift pauses while lyrics show. It pauses for reduced motion, glass off or low-end devices, covered routes and a page scrolled past the cover.
 Pinned headers float: transparent toolbars with a glass back circle, IconButton and menu actions in
 one glass capsule and a backing band only once content scrolls under (opaque on flat level or high
