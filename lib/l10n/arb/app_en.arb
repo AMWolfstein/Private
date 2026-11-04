@@ -3841,5 +3841,14 @@
   "animatedArtworkResetDone": "Video artwork was reset. The static cover is shown.",
   "@animatedArtworkResetDone": {
     "description": "Animated artwork: reset confirmation"
-  }
+  },
+  "devOptionsEntry": "Developer options",
+  "devOptionsTitle": "Developer options",
+  "devOptionsUnlocked": "Developer options unlocked",
+  "devOptionsPerfHud": "Performance HUD",
+  "devOptionsPerfHudSubtitle": "Floating frame timing overlay",
+  "devOptionsHudOpacity": "HUD opacity",
+  "devOptionsResetMetrics": "Reset performance metrics",
+  "devOptionsCopyReport": "Copy performance report",
+  "devOptionsCopied": "Performance report copied"
 }

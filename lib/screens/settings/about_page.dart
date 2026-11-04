@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sistrum/core/constants/perf_hud_build.dart';
+import 'package:sistrum/providers/performance/perf_hud_settings_provider.dart';
+import 'package:sistrum/screens/settings/developer/developer_options_page.dart';
 import 'package:sistrum/core/constants/app_info.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/core/theme/app_icons.dart';
@@ -39,18 +43,7 @@ class AboutPage extends StatelessWidget {
               child: SettingsSectionHeader(title: context.l10n.aboutApp),
             ),
             SliverToBoxAdapter(
-              child: SettingsGroup(
-                children: [
-                  _AboutSettingsItem(
-                    key: const ValueKey('about-version'),
-                    icon: Icons.info_outline,
-                    title: context.l10n.aboutVersion,
-                    subtitle:
-                        'v${AppInfo.displayVersion} (build ${AppInfo.buildNumber})',
-                    showDivider: false,
-                  ),
-                ],
-              ),
+              child: SettingsGroup(children: const [_VersionRows()]),
             ),
 
             SliverToBoxAdapter(
@@ -231,5 +224,73 @@ class _AboutSettingsItem extends StatelessWidget {
       ],
     );
     return SettingsSearchTarget(label: title, child: content);
+  }
+}
+
+/// Taps on the version row needed to unlock Developer Options.
+const int _developerUnlockTaps = 7;
+
+/// The version row, plus Developer options once unlocked. Seven taps unlock
+/// it only in builds that allow the performance HUD.
+class _VersionRows extends ConsumerStatefulWidget {
+  const _VersionRows();
+
+  @override
+  ConsumerState<_VersionRows> createState() => _VersionRowsState();
+}
+
+class _VersionRowsState extends ConsumerState<_VersionRows> {
+  int _taps = 0;
+
+  void _onVersionTap() {
+    if (!kPerfHudBuildAllowed) return;
+    final settings = ref.read(perfHudSettingsProvider);
+    if (settings.developerUnlocked) return;
+    _taps++;
+    if (_taps < _developerUnlockTaps) return;
+    _taps = 0;
+    ref.read(perfHudSettingsProvider.notifier).unlockDeveloperOptions();
+    if (!mounted) return;
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(context.l10n.devOptionsUnlocked)));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final unlocked =
+        kPerfHudBuildAllowed &&
+        ref.watch(perfHudSettingsProvider.select((s) => s.developerUnlocked));
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: _onVersionTap,
+          child: _AboutSettingsItem(
+            key: const ValueKey('about-version'),
+            icon: Icons.info_outline,
+            title: context.l10n.aboutVersion,
+            subtitle:
+                'v${AppInfo.displayVersion} (build ${AppInfo.buildNumber})',
+            showDivider: unlocked,
+          ),
+        ),
+        if (unlocked)
+          InkWell(
+            key: const ValueKey('about-developer-options'),
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute<void>(
+                builder: (_) => const DeveloperOptionsPage(),
+              ),
+            ),
+            child: _AboutSettingsItem(
+              icon: Icons.developer_mode,
+              title: context.l10n.devOptionsEntry,
+              showDivider: false,
+            ),
+          ),
+      ],
+    );
   }
 }

@@ -1,5 +1,7 @@
 import 'package:sistrum/providers/settings/equalizer_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:sistrum/core/constants/perf_hud_build.dart';
+import 'package:sistrum/widgets/performance/perf_hud_overlay.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:go_router/go_router.dart';
@@ -210,7 +212,17 @@ class SistrumApp extends ConsumerWidget {
             );
             return MediaQuery(
               data: mediaQuery.copyWith(displayFeatures: const []),
-              child: AdaptiveUiScaler(child: appContent),
+              // The developer HUD sits above the navigator, so it floats over
+              // every route, dialog and sheet. It is absent unless the build
+              // allows it.
+              child: Stack(
+                fit: StackFit.expand,
+                children: [
+                  AdaptiveUiScaler(child: appContent),
+                  if (kPerfHudBuildAllowed)
+                    const Positioned.fill(child: PerfHudOverlay()),
+                ],
+              ),
             );
           },
           routerConfig: router,
