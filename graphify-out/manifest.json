@@ -6414,9 +6414,9 @@
     "semantic_hash": ""
   },
   "lib/screens/library/local_artist/local_artist_screen.dart": {
-    "mtime": 1793759563.2347457,
-    "seen": 1793760504.7971969,
-    "ast_hash": "d0a956ccc24d3d96b22a26dc4ef9663f",
+    "mtime": 1793780165.601397,
+    "seen": 1793780701.8646474,
+    "ast_hash": "6a2af54cb7de2de981825f992367463c",
     "semantic_hash": ""
   },
   "lib/screens/library/section_tab/library_section_tab.dart": {
@@ -7422,9 +7422,9 @@
     "semantic_hash": ""
   },
   "lib/widgets/glass/debug/app_performance_hud.dart": {
-    "mtime": 1793764792.2150564,
-    "seen": 1793765560.5721126,
-    "ast_hash": "a2ac7f131e95540bc8a9224cb2e36ecb",
+    "mtime": 1793780165.5653973,
+    "seen": 1793780701.8754385,
+    "ast_hash": "a8d66716fee3f3b2c1be96e3bbaa2c89",
     "semantic_hash": ""
   },
   "lib/widgets/glass/selection/app_selection_foreground.dart": {
@@ -12798,9 +12798,9 @@
     "semantic_hash": ""
   },
   "lib/widgets/glass/debug/app_artist_glass_isolation.dart": {
-    "mtime": 1793759563.3427455,
-    "seen": 1793760504.8060231,
-    "ast_hash": "138cb77ee6b9c3b79994c43c2c82e557",
+    "mtime": 1793780162.0816603,
+    "seen": 1793780701.875371,
+    "ast_hash": "41a772953a94e037588c769686b47493",
     "semantic_hash": ""
   },
   "test/ui/glass/app_artist_glass_isolation_test.dart": {
@@ -12819,6 +12819,12 @@
     "mtime": 1793764854.1506279,
     "seen": 1793765560.59225,
     "ast_hash": "054726ba7278e722cb1d78264f6483eb",
+    "semantic_hash": ""
+  },
+  "test/ui/glass/app_artist_video_band_test.dart": {
+    "mtime": 1793780184.3693984,
+    "seen": 1793780701.909789,
+    "ast_hash": "e49b779cdc8d89c5ed479f59f0e47cd1",
     "semantic_hash": ""
   }
 }
