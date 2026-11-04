@@ -57,13 +57,10 @@ Scanned artwork that is absent or stale falls back to the bounded local embedded
 Full scans extract covers into fresh generations and publish stable filenames only after successful indexing. Cover pruning preserves references from local collections, playback sessions and Insights, holding store writer barriers and passing only a detached private reference projection to native maintenance.
 Exact PCM output decodes FLAC through the integer native source; never trust vendor raw
 FLAC decoding to preserve source precision or label padded output as source bit depth.
-Switches (`AppSwitch`) and sliders (`AppSlider`, and the volume control) are the g1455 `GlassSwitch`
-and `GlassSlider`, used unchanged with Sistrum's values and callbacks; they refract the host's
-capture (Glass Engine V2). `AppSwitch` lays out in a 71x48 box, so settings rows keep their size.
-`AppSlider` maps its min and max onto the glass slider's unit range (values stored at nine
-decimals), keeps its divisions and spoken value formatter, and shows its value bubble only while a
-finger drags. Seek and vertical EQ faders keep their painted controls; the horizontal
-`AppLevelSlider` thumb is still Tinted Lite glass (`AppGlassThumb`) only while touched.
+Switch and slider thumbs (AppSwitch, AppSlider, horizontal AppLevelSlider) turn into
+Tinted Lite glass (`AppGlassThumb`) only while touched and only when the glass thumb gate
+allows it; nothing is painted or read at rest, and the plain controls are the fallback. Seek,
+volume and vertical EQ faders keep their painted controls.
 Sistrum album headers and the immersive player's cover drift slowly (Ken Burns, `AlbumKenBurns`); Appearance > Animated artwork turns it off. A saved video cover (see Video artwork below) replaces that drift on the same cover; the static fallback keeps it. Albums and the player's cover (both Normal and Immersive views) only: playlists, Loved and artist headers stay still. The player's drift pauses while lyrics show. It pauses for reduced motion, glass off or low-end devices, covered routes and a page scrolled past the cover.
 Pinned headers float: transparent toolbars with a glass back circle, IconButton and menu actions in
 one glass capsule and a backing band only once content scrolls under (opaque on flat level or high
@@ -88,17 +85,10 @@ LIQUID uses the MIT-licensed `g1455` package (`https://pub.dev/packages/g1455`, 
 once per change; each liquid surface samples its own slot of that capture. Declare a known, static
 backdrop (an artwork ground, a colour, a gradient) with `GlassBackdrop` so no capture is taken. Do
 not add other shader packages, `liquid_glass_easy`, or a second glass renderer.
-The floating tab bar (`AppTabBar`, inside the bottom bar) is the g1455 `GlassTabBar`: its own
-refracted container, selected capsule and drag, in a fixed 80dp box. Its labels and icons use
-Sistrum's contrast (accent when selected, the theme foreground otherwise). The package picks its
-layout from the bar's width: icon beside label at phone widths. The flat fallback (reduced motion,
-contrast blocked, blur off, or fewer than two destinations) keeps the painted pill. The fold that
-collapses the tabs measures each tab icon after layout and starts from that icon.
 Current LIQUID surfaces: the header back circle and action capsule (`AppHeaderCircle` and
-`AppHeaderActions` through `AppChromeControls`), the profile avatar, the mini player, the search
-field, the action buttons, the level-slider thumb (`AppGlassThumb`), the selection pill
-(`app_selection_pill.dart`) and the bottom bar's collapsed side circles. The switch, sliders and
-floating tab bar are the g1455 components described above. Sheets, menus and dialogs stay FROSTED, or
+`AppHeaderActions` through `AppChromeControls`), the profile avatar, the bottom bar, the mini player,
+the search field, the action buttons, the switch, slider and level-slider thumbs (`AppGlassThumb`)
+and the selection pill (`app_selection_pill.dart`). Sheets, menus and dialogs stay FROSTED, or
 GROUND when an artwork ground is open; the Artist and Album header band stays FROSTED or GROUND
 (see below). Video-covered Artist and Album pages keep their header band and controls FROSTED on
 the live backdrop (`AppArtistSurface.liveBackdrop`), because the video is not a host capture.
