@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 import 'package:sistrum/widgets/glass_poc/sistrum_glass_mode.dart';
+import 'package:sistrum/widgets/glass_poc/sistrum_renderer_glass.dart';
 
 /// Blur radius for [SistrumGlassMode.basicBlur]. A single Flutter blur, not a
 /// second custom implementation.
@@ -41,7 +42,8 @@ LiquidGlassSettings? sistrumGlassLayerSettings(
     SistrumGlassMode.liquidGlass => const LiquidGlassSettings(),
     SistrumGlassMode.transparentBaseline ||
     SistrumGlassMode.basicBlur ||
-    SistrumGlassMode.referenceGlass => null,
+    SistrumGlassMode.referenceGlass ||
+    SistrumGlassMode.rendererGlass => null,
   };
 }
 
@@ -71,6 +73,9 @@ class SistrumGlassScope extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // The renderer draws each surface on its own layer (see
+    // sistrum_renderer_glass.dart), so the scope adds nothing for it.
+    if (mode.usesRenderer) return child;
     if (mode.usesSharedLayer) {
       final dark = Theme.of(context).brightness == Brightness.dark;
       return LiquidGlassLayer(
@@ -156,6 +161,11 @@ class SistrumGlassSurface extends StatelessWidget {
       ),
       // Standalone premium glass, as the demo's mini player: its own layer,
       // its own settings. This is the path the demo uses on its own surfaces.
+      SistrumGlassMode.rendererGlass => sistrumRendererSurface(
+        borderRadius: borderRadius,
+        dark: dark,
+        child: child,
+      ),
       SistrumGlassMode.referenceGlass => GlassContainer(
         shape: shape,
         quality: GlassQuality.premium,

@@ -98,14 +98,22 @@ void main() {
   ) async {
     await _pump(tester);
 
+    await tester.ensureVisible(
+      find.widgetWithText(ChoiceChip, 'C · Four surfaces, animated'),
+    );
+
     await tester.tap(
-      find.widgetWithText(SwitchListTile, 'Animated background'),
+      find.widgetWithText(ChoiceChip, 'C · Four surfaces, animated'),
     );
     await tester.pump(const Duration(milliseconds: 500));
     expect(tester.hasRunningAnimations, isTrue);
 
+    await tester.ensureVisible(
+      find.widgetWithText(ChoiceChip, 'B · Four surfaces, static'),
+    );
+
     await tester.tap(
-      find.widgetWithText(SwitchListTile, 'Animated background'),
+      find.widgetWithText(ChoiceChip, 'B · Four surfaces, static'),
     );
     await tester.pumpAndSettle();
     expect(tester.hasRunningAnimations, isFalse);
@@ -124,8 +132,11 @@ void main() {
     );
     await tester.tap(find.text('open'));
     await tester.pumpAndSettle();
+    await tester.ensureVisible(
+      find.widgetWithText(ChoiceChip, 'C · Four surfaces, animated'),
+    );
     await tester.tap(
-      find.widgetWithText(SwitchListTile, 'Animated background'),
+      find.widgetWithText(ChoiceChip, 'C · Four surfaces, animated'),
     );
     await tester.pump(const Duration(milliseconds: 200));
 

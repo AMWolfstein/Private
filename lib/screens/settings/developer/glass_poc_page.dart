@@ -1,9 +1,13 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/providers/performance/glass_poc_mode_provider.dart';
+import 'package:sistrum/services/performance/perf_frame_monitor.dart';
+import 'package:sistrum/services/performance/perf_frame_window.dart';
 import 'package:sistrum/widgets/glass_poc/sistrum_glass_mode.dart';
+import 'package:sistrum/widgets/glass_poc/sistrum_glass_scene.dart';
 import 'package:sistrum/widgets/glass_poc/sistrum_glass_surface.dart';
 
 /// Developer-only Glass POC. Shows the same header, scrolling list, mini
@@ -17,32 +21,62 @@ class GlassPocPage extends ConsumerStatefulWidget {
 }
 
 class _GlassPocPageState extends ConsumerState<GlassPocPage>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   static const double _sideInset = 16;
 
   late final AnimationController _background = AnimationController(
     vsync: this,
     duration: const Duration(seconds: 12),
   );
-  bool _animated = false;
+  // Scene D: the list moves at a fixed pace, one full pass per 20 seconds.
+  late final AnimationController _scroll = AnimationController(
+    vsync: this,
+    duration: const Duration(seconds: 20),
+  );
+  final ScrollController _list = ScrollController();
   bool _outlines = false;
 
   @override
+  void initState() {
+    super.initState();
+    _scroll.addListener(_onScrollTick);
+    _applyScene(ref.read(glassPocSceneProvider));
+  }
+
+  @override
   void dispose() {
-    // Disposing the controller also stops its ticker, so nothing keeps
+    // Disposing the controllers stops their tickers, so nothing keeps
     // animating after the page leaves the tree.
+    _scroll.removeListener(_onScrollTick);
     _background.dispose();
+    _scroll.dispose();
+    _list.dispose();
     super.dispose();
   }
 
-  void _setAnimated(bool value) {
-    setState(() => _animated = value);
-    if (value) {
+  void _onScrollTick() {
+    if (_list.hasClients) {
+      _list.jumpTo(_scroll.value * _list.position.maxScrollExtent);
+    }
+  }
+
+  /// Applies a scene's animation and scroll state. Leaving a scene stops and
+  /// resets what it started, so an inactive scene holds no ticker.
+  void _applyScene(SistrumGlassScene scene) {
+    if (scene.animated) {
       _background.repeat();
     } else {
       _background
         ..stop()
         ..value = 0;
+    }
+    if (scene.scrolling) {
+      _scroll.repeat();
+    } else {
+      _scroll
+        ..stop()
+        ..value = 0;
+      if (_list.hasClients) _list.jumpTo(0);
     }
   }
 
@@ -51,6 +85,7 @@ class _GlassPocPageState extends ConsumerState<GlassPocPage>
     final mode = ref.watch(glassPocModeProvider);
     final notifier = ref.read(glassPocModeProvider.notifier);
     final sharedBackdrop = ref.watch(glassPocSharedBackdropProvider);
+    final scene = ref.watch(glassPocSceneProvider);
     final width = MediaQuery.sizeOf(context).width;
     final barWidth = width - 2 * _sideInset;
 
@@ -58,42 +93,117 @@ class _GlassPocPageState extends ConsumerState<GlassPocPage>
       appBar: AppBar(title: const Text('Glass POC')),
       body: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(_sideInset, 8, _sideInset, 0),
-            child: Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: [
-                for (final m in SistrumGlassMode.values)
-                  ChoiceChip(
-                    label: Text(m.label),
-                    selected: mode == m,
-                    onSelected: (_) => notifier.select(m),
+          // Controls scroll on short screens, so the measured stage below
+          // always keeps the space that is left.
+          Flexible(
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(
+                      _sideInset,
+                      8,
+                      _sideInset,
+                      0,
+                    ),
+                    child: Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: [
+                        for (final m in SistrumGlassMode.values)
+                          ChoiceChip(
+                            label: Text(m.label),
+                            selected: mode == m,
+                            onSelected: (_) => notifier.select(m),
+                          ),
+                      ],
+                    ),
                   ),
-              ],
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(
+                      _sideInset,
+                      8,
+                      _sideInset,
+                      0,
+                    ),
+                    child: Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: [
+                        for (final sc in SistrumGlassScene.values)
+                          ChoiceChip(
+                            label: Text(sc.label),
+                            selected: scene == sc,
+                            onSelected: (_) {
+                              ref
+                                  .read(glassPocSceneProvider.notifier)
+                                  .select(sc);
+                              _applyScene(sc);
+                            },
+                          ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(
+                      _sideInset,
+                      4,
+                      _sideInset,
+                      0,
+                    ),
+                    child: Wrap(
+                      spacing: 8,
+                      children: [
+                        ActionChip(
+                          label: const Text('Reset metrics'),
+                          onPressed: () =>
+                              ref.read(perfFrameMonitorProvider).reset(),
+                        ),
+                        ActionChip(
+                          label: const Text('Copy metrics'),
+                          onPressed: () {
+                            final monitor = ref.read(perfFrameMonitorProvider);
+                            Clipboard.setData(
+                              ClipboardData(
+                                text: formatPerfReport(
+                                  screen: 'glass-poc',
+                                  snapshot: monitor.currentSnapshot(),
+                                  glassMode: glassPocReportLabel(
+                                    mode: mode,
+                                    sharedBackdrop: sharedBackdrop,
+                                    scene: scene,
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                  SwitchListTile(
+                    dense: true,
+                    title: const Text(
+                      'Shared backdrop group (Reference Glass only)',
+                    ),
+                    subtitle: const Text(
+                      'Comparison: one shared backdrop read for the Reference surfaces',
+                    ),
+                    value: sharedBackdrop,
+                    onChanged: (v) => ref
+                        .read(glassPocSharedBackdropProvider.notifier)
+                        .set(v),
+                  ),
+                  SwitchListTile(
+                    dense: true,
+                    title: const Text('Show layout outlines (diagnostic only)'),
+                    value: _outlines,
+                    onChanged: (v) => setState(() => _outlines = v),
+                  ),
+                ],
+              ),
             ),
-          ),
-          SwitchListTile(
-            dense: true,
-            title: const Text('Animated background'),
-            value: _animated,
-            onChanged: _setAnimated,
-          ),
-          SwitchListTile(
-            dense: true,
-            title: const Text('Shared backdrop group (Reference Glass only)'),
-            subtitle: const Text(
-              'Comparison: one shared backdrop read for the Reference surfaces',
-            ),
-            value: sharedBackdrop,
-            onChanged: (v) =>
-                ref.read(glassPocSharedBackdropProvider.notifier).set(v),
-          ),
-          SwitchListTile(
-            dense: true,
-            title: const Text('Show layout outlines (diagnostic only)'),
-            value: _outlines,
-            onChanged: (v) => setState(() => _outlines = v),
           ),
           Expanded(
             child: ClipRect(
@@ -107,7 +217,7 @@ class _GlassPocPageState extends ConsumerState<GlassPocPage>
                         animation: _background,
                         builder: (context, _) => CustomPaint(
                           painter: _PocBackgroundPainter(
-                            progress: _animated ? _background.value : 0,
+                            progress: scene.animated ? _background.value : 0,
                             dark:
                                 Theme.of(context).brightness == Brightness.dark,
                           ),
@@ -116,6 +226,7 @@ class _GlassPocPageState extends ConsumerState<GlassPocPage>
                     ),
                     Positioned.fill(
                       child: ListView.builder(
+                        controller: _list,
                         padding: const EdgeInsets.only(
                           top: _GlassPocPageConstants.headerHeight + 24,
                           bottom: 2 * _GlassPocPageConstants.barHeight + 40,
@@ -132,12 +243,13 @@ class _GlassPocPageState extends ConsumerState<GlassPocPage>
                         ),
                       ),
                     ),
-                    Positioned(
-                      top: 8,
-                      left: _sideInset,
-                      right: _sideInset,
-                      child: _PocHeader(mode: mode, outline: _outlines),
-                    ),
+                    if (scene.surfaces == 4)
+                      Positioned(
+                        top: 8,
+                        left: _sideInset,
+                        right: _sideInset,
+                        child: _PocHeader(mode: mode, outline: _outlines),
+                      ),
                     Positioned(
                       left: _sideInset,
                       bottom: 12,
@@ -149,12 +261,14 @@ class _GlassPocPageState extends ConsumerState<GlassPocPage>
                             width: barWidth,
                             outline: _outlines,
                           ),
-                          const SizedBox(height: 10),
-                          _PocTabBar(
-                            mode: mode,
-                            width: barWidth,
-                            outline: _outlines,
-                          ),
+                          if (scene.surfaces == 4) ...[
+                            const SizedBox(height: 10),
+                            _PocTabBar(
+                              mode: mode,
+                              width: barWidth,
+                              outline: _outlines,
+                            ),
+                          ],
                         ],
                       ),
                     ),

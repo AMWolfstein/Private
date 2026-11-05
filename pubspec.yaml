@@ -45,6 +45,10 @@ dependencies:
   # inspected revision; see docs/reference/liquid_glass_widgets/SOURCES.md.
   liquid_glass_widgets: 1.16.1
 
+  # Developer-only comparison renderer (Glass POC). Preview library: needs
+  # Flutter GPU, enabled only in the profile build type. Pinned.
+  liquid_glass_renderer: 1.0.0-dev.2
+
   # Local artwork color extraction
   material_color_utilities: 0.13.0
 

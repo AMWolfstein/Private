@@ -119,12 +119,12 @@ void main() {
       );
 
       expect(find.byType(GlassBackdropGroup), findsNothing);
-      await tester.tap(
-        find.widgetWithText(
-          SwitchListTile,
-          'Shared backdrop group (Reference Glass only)',
-        ),
+      final switchFinder = find.widgetWithText(
+        SwitchListTile,
+        'Shared backdrop group (Reference Glass only)',
       );
+      await tester.ensureVisible(switchFinder);
+      await tester.tap(switchFinder);
       await tester.pump();
 
       expect(container.read(glassPocSharedBackdropProvider), isTrue);

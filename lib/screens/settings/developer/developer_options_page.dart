@@ -84,11 +84,12 @@ class DeveloperOptionsPage extends ConsumerWidget {
                     final report = formatPerfReport(
                       screen: 'developer-options',
                       snapshot: monitor.currentSnapshot(),
-                      glassMode: glassPocPathLabel(
-                        ref.read(glassPocModeProvider),
+                      glassMode: glassPocReportLabel(
+                        mode: ref.read(glassPocModeProvider),
                         sharedBackdrop: ref.read(
                           glassPocSharedBackdropProvider,
                         ),
+                        scene: ref.read(glassPocSceneProvider),
                       ),
                     );
                     await Clipboard.setData(ClipboardData(text: report));

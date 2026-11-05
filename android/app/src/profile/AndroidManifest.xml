@@ -4,4 +4,11 @@
          to allow setting breakpoints, to provide hot reload, etc.
     -->
     <uses-permission android:name="android.permission.INTERNET"/>
+
+    <!-- Developer Glass POC comparison only (liquid_glass_renderer needs Flutter GPU,
+         a preview API). Profile builds only; the release manifest does not set it. -->
+    <application>
+        <meta-data android:name="io.flutter.embedding.android.EnableFlutterGPU"
+            android:value="true"/>
+    </application>
 </manifest>

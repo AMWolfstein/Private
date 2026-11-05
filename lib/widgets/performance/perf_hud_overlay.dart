@@ -317,9 +317,10 @@ class _PerfHudOverlayState extends ConsumerState<PerfHudOverlay> {
         text: formatPerfReport(
           screen: _route,
           snapshot: snap,
-          glassMode: glassPocPathLabel(
-            ref.read(glassPocModeProvider),
+          glassMode: glassPocReportLabel(
+            mode: ref.read(glassPocModeProvider),
             sharedBackdrop: ref.read(glassPocSharedBackdropProvider),
+            scene: ref.read(glassPocSceneProvider),
           ),
         ),
       ),
