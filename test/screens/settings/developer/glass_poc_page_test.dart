@@ -5,6 +5,7 @@ import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 import 'package:sistrum/providers/performance/glass_poc_mode_provider.dart';
 import 'package:sistrum/screens/settings/developer/glass_poc_page.dart';
 import 'package:sistrum/widgets/glass_poc/sistrum_glass_mode.dart';
+import 'package:sistrum/widgets/glass_poc/sistrum_glass_surface.dart';
 
 Future<ProviderContainer> _pump(WidgetTester tester) async {
   final container = ProviderContainer();
@@ -47,9 +48,23 @@ void main() {
 
       expect(container.read(glassPocModeProvider), mode, reason: mode.label);
       expect(_selected(tester, mode.label), isTrue, reason: mode.label);
+      // Only Liquid Glass has a shared layer. Reference Glass requests premium
+      // quality with its own layer on each of its four surfaces.
       expect(
-        find.byType(LiquidGlassLayer),
-        mode.usesLiquidGlass ? findsOneWidget : findsNothing,
+        find.descendant(
+          of: find.byType(SistrumGlassScope),
+          matching: find.byType(LiquidGlassLayer),
+        ),
+        mode == SistrumGlassMode.liquidGlass ? findsOneWidget : findsNothing,
+        reason: mode.label,
+      );
+      expect(
+        find.byWidgetPredicate(
+          (w) => w is GlassContainer && w.quality == GlassQuality.premium,
+        ),
+        mode == SistrumGlassMode.referenceGlass
+            ? findsNWidgets(4)
+            : findsNothing,
         reason: mode.label,
       );
       expect(
@@ -83,11 +98,15 @@ void main() {
   ) async {
     await _pump(tester);
 
-    await tester.tap(find.byType(SwitchListTile));
+    await tester.tap(
+      find.widgetWithText(SwitchListTile, 'Animated background'),
+    );
     await tester.pump(const Duration(milliseconds: 500));
     expect(tester.hasRunningAnimations, isTrue);
 
-    await tester.tap(find.byType(SwitchListTile));
+    await tester.tap(
+      find.widgetWithText(SwitchListTile, 'Animated background'),
+    );
     await tester.pumpAndSettle();
     expect(tester.hasRunningAnimations, isFalse);
   });
@@ -105,7 +124,9 @@ void main() {
     );
     await tester.tap(find.text('open'));
     await tester.pumpAndSettle();
-    await tester.tap(find.byType(SwitchListTile));
+    await tester.tap(
+      find.widgetWithText(SwitchListTile, 'Animated background'),
+    );
     await tester.pump(const Duration(milliseconds: 200));
 
     await tester.pageBack();

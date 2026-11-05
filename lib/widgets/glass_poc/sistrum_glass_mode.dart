@@ -13,8 +13,9 @@ enum SistrumGlassMode {
   /// The package's shared `LiquidGlassLayer` with its default settings.
   liquidGlass('Liquid Glass'),
 
-  /// The package's shared layer with the Apple Podcasts demo settings, at
-  /// `GlassQuality.premium` (see `sistrum_glass_surface.dart`).
+  /// Standalone `GlassQuality.premium` glass, each surface on its own layer
+  /// with the Apple Podcasts demo's mini-player settings (see
+  /// `sistrum_glass_surface.dart`).
   referenceGlass('Reference Glass');
 
   const SistrumGlassMode(this.label);
@@ -25,4 +26,7 @@ enum SistrumGlassMode {
   bool get usesLiquidGlass =>
       this == SistrumGlassMode.liquidGlass ||
       this == SistrumGlassMode.referenceGlass;
+
+  /// Whether this mode renders its surfaces through one shared layer.
+  bool get usesSharedLayer => this == SistrumGlassMode.liquidGlass;
 }

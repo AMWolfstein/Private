@@ -25,6 +25,7 @@ class _GlassPocPageState extends ConsumerState<GlassPocPage>
     duration: const Duration(seconds: 12),
   );
   bool _animated = false;
+  bool _outlines = false;
 
   @override
   void dispose() {
@@ -77,6 +78,12 @@ class _GlassPocPageState extends ConsumerState<GlassPocPage>
             value: _animated,
             onChanged: _setAnimated,
           ),
+          SwitchListTile(
+            dense: true,
+            title: const Text('Show layout outlines (diagnostic only)'),
+            value: _outlines,
+            onChanged: (v) => setState(() => _outlines = v),
+          ),
           Expanded(
             child: ClipRect(
               child: SistrumGlassScope(
@@ -117,7 +124,7 @@ class _GlassPocPageState extends ConsumerState<GlassPocPage>
                       top: 8,
                       left: _sideInset,
                       right: _sideInset,
-                      child: _PocHeader(mode: mode),
+                      child: _PocHeader(mode: mode, outline: _outlines),
                     ),
                     Positioned(
                       left: _sideInset,
@@ -125,9 +132,17 @@ class _GlassPocPageState extends ConsumerState<GlassPocPage>
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          _PocMiniPlayer(mode: mode, width: barWidth),
+                          _PocMiniPlayer(
+                            mode: mode,
+                            width: barWidth,
+                            outline: _outlines,
+                          ),
                           const SizedBox(height: 10),
-                          _PocTabBar(mode: mode, width: barWidth),
+                          _PocTabBar(
+                            mode: mode,
+                            width: barWidth,
+                            outline: _outlines,
+                          ),
                         ],
                       ),
                     ),
@@ -143,9 +158,10 @@ class _GlassPocPageState extends ConsumerState<GlassPocPage>
 }
 
 class _PocHeader extends StatelessWidget {
-  const _PocHeader({required this.mode});
+  const _PocHeader({required this.mode, required this.outline});
 
   final SistrumGlassMode mode;
+  final bool outline;
 
   @override
   Widget build(BuildContext context) {
@@ -157,6 +173,7 @@ class _PocHeader extends StatelessWidget {
           width: size,
           height: size,
           borderRadius: size / 2,
+          diagnosticOutline: outline,
           child: _PocTap(icon: Icons.arrow_back, onTap: () {}),
         ),
         const Spacer(),
@@ -166,6 +183,7 @@ class _PocHeader extends StatelessWidget {
           width: size * 2.2,
           height: size,
           borderRadius: size / 2,
+          diagnosticOutline: outline,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
@@ -180,10 +198,15 @@ class _PocHeader extends StatelessWidget {
 }
 
 class _PocMiniPlayer extends StatelessWidget {
-  const _PocMiniPlayer({required this.mode, required this.width});
+  const _PocMiniPlayer({
+    required this.mode,
+    required this.width,
+    required this.outline,
+  });
 
   final SistrumGlassMode mode;
   final double width;
+  final bool outline;
 
   @override
   Widget build(BuildContext context) {
@@ -192,6 +215,7 @@ class _PocMiniPlayer extends StatelessWidget {
       width: width,
       height: _GlassPocPageConstants.barHeight,
       borderRadius: _GlassPocPageConstants.barHeight / 2,
+      diagnosticOutline: outline,
       child: Row(
         children: [
           const SizedBox(width: 16),
@@ -208,10 +232,15 @@ class _PocMiniPlayer extends StatelessWidget {
 }
 
 class _PocTabBar extends StatelessWidget {
-  const _PocTabBar({required this.mode, required this.width});
+  const _PocTabBar({
+    required this.mode,
+    required this.width,
+    required this.outline,
+  });
 
   final SistrumGlassMode mode;
   final double width;
+  final bool outline;
 
   @override
   Widget build(BuildContext context) {
@@ -226,6 +255,7 @@ class _PocTabBar extends StatelessWidget {
       width: width,
       height: _GlassPocPageConstants.barHeight,
       borderRadius: _GlassPocPageConstants.barHeight / 2,
+      diagnosticOutline: outline,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [

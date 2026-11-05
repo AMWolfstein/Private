@@ -13,48 +13,44 @@ const double kSistrumGlassBasicBlurSigma = 12;
 Color sistrumGlassTint({required bool dark}) =>
     dark ? const Color(0x73000000) : const Color(0x8CFFFFFF);
 
-/// Reference settings: the Apple Podcasts demo's bottom bar configuration
-/// (`example/lib/apple_podcasts/apple_podcasts_demo.dart`, `GlassBottomBar`
-/// `settings:`), copied field-for-field. Fields not listed keep the package
-/// defaults. `chromaticAberration`, `lightAngle` and `specularSharpness` come
-/// from the demo as written.
+/// Reference settings: the Apple Podcasts demo's `GlassButton.custom` mini
+/// player (`example/lib/apple_podcasts/apple_podcasts_demo.dart`, the
+/// `bottomAccessory` block, around lines 386-400), which is a standalone
+/// surface drawn with `useOwnLayer: true` and `GlassQuality.premium`.
+/// Values are copied as written; the demo's bottom bar uses a different set.
 LiquidGlassSettings sistrumReferenceGlassSettings({required bool dark}) {
   return LiquidGlassSettings(
-    glassColor: dark ? const Color(0xAA1C1C1E) : const Color(0xAAF2F2F7),
-    thickness: 24,
-    blur: 3,
+    glassColor: dark ? const Color(0xCC1C1C1E) : const Color(0xCCF2F2F7),
+    thickness: 30,
+    blur: 2,
+    lightIntensity: 0.18,
     chromaticAberration: .01,
-    lightAngle: GlassDefaults.lightAngle,
-    lightIntensity: 0.2,
-    ambientStrength: 0,
-    refractiveIndex: 1.2,
-    fresnelStrength: 0.0,
     saturation: 1.2,
-    specularSharpness: GlassSpecularSharpness.medium,
+    fresnelStrength: 0.0,
   );
 }
 
-/// Settings for the one shared [LiquidGlassLayer] of a glass mode. Returns
-/// null for modes that do not use the package.
+/// Settings for the shared [LiquidGlassLayer] of a region. Only
+/// [SistrumGlassMode.liquidGlass] uses a shared layer. Returns null for every
+/// other mode.
 LiquidGlassSettings? sistrumGlassLayerSettings(
   SistrumGlassMode mode, {
   required bool dark,
 }) {
   return switch (mode) {
-    SistrumGlassMode.referenceGlass => sistrumReferenceGlassSettings(
-      dark: dark,
-    ),
     SistrumGlassMode.liquidGlass => const LiquidGlassSettings(),
-    SistrumGlassMode.transparentBaseline || SistrumGlassMode.basicBlur => null,
+    SistrumGlassMode.transparentBaseline ||
+    SistrumGlassMode.basicBlur ||
+    SistrumGlassMode.referenceGlass => null,
   };
 }
 
-/// Owns the single rendering layer for a region of glass surfaces.
+/// Owns the shared [LiquidGlassLayer] for a region of Liquid Glass surfaces.
 ///
-/// Glass modes wrap [child] in one shared [LiquidGlassLayer], so every
-/// [SistrumGlassSurface] inside it renders into the same layer. Other modes
-/// return [child] unchanged, so no package layer or shader exists while they
-/// are shown. The layer and its shader go away when the mode changes.
+/// Only [SistrumGlassMode.liquidGlass] is wrapped. The other modes return
+/// [child] unchanged, so no package layer exists while they are shown.
+/// Reference Glass draws each surface with its own layer, as the demo does for
+/// standalone glass, so it does not need this scope.
 ///
 /// Put the background under the surfaces inside [child]: the layer samples
 /// what is painted beneath the glass within it.
@@ -66,7 +62,7 @@ class SistrumGlassScope extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (!mode.usesLiquidGlass) return child;
+    if (!mode.usesSharedLayer) return child;
     final dark = Theme.of(context).brightness == Brightness.dark;
     return LiquidGlassLayer(
       settings: sistrumGlassLayerSettings(mode, dark: dark)!,
@@ -80,6 +76,9 @@ class SistrumGlassScope extends StatelessWidget {
 /// The geometry is identical in every mode: a [width] by [height] box with a
 /// [borderRadius] corner (use `height / 2` for a circle or capsule). Only the
 /// material changes, so modes can be compared on the same layout.
+///
+/// [diagnosticOutline] draws a 2 px red border over the surface. It is a
+/// layout aid only. A visible outline does not show that the glass shader ran.
 class SistrumGlassSurface extends StatelessWidget {
   const SistrumGlassSurface({
     required this.mode,
@@ -87,6 +86,7 @@ class SistrumGlassSurface extends StatelessWidget {
     required this.width,
     required this.height,
     required this.borderRadius,
+    this.diagnosticOutline = false,
     super.key,
   });
 
@@ -95,11 +95,13 @@ class SistrumGlassSurface extends StatelessWidget {
   final double width;
   final double height;
   final double borderRadius;
+  final bool diagnosticOutline;
 
   @override
   Widget build(BuildContext context) {
     final dark = Theme.of(context).brightness == Brightness.dark;
     final radius = BorderRadius.circular(borderRadius);
+    final shape = LiquidRoundedSuperellipse(borderRadius: borderRadius);
 
     final Widget surface = switch (mode) {
       SistrumGlassMode.transparentBaseline => ClipRRect(
@@ -123,17 +125,34 @@ class SistrumGlassSurface extends StatelessWidget {
         ),
       ),
       SistrumGlassMode.liquidGlass => GlassContainer(
-        shape: LiquidRoundedSuperellipse(borderRadius: borderRadius),
+        shape: shape,
         quality: GlassQuality.standard,
         child: child,
       ),
+      // Standalone premium glass, as the demo's mini player: its own layer,
+      // its own settings. This is the path the demo uses on its own surfaces.
       SistrumGlassMode.referenceGlass => GlassContainer(
-        shape: LiquidRoundedSuperellipse(borderRadius: borderRadius),
+        shape: shape,
         quality: GlassQuality.premium,
+        useOwnLayer: true,
+        settings: sistrumReferenceGlassSettings(dark: dark),
         child: child,
       ),
     };
 
-    return SizedBox(width: width, height: height, child: surface);
+    return SizedBox(
+      width: width,
+      height: height,
+      child: diagnosticOutline
+          ? DecoratedBox(
+              position: DecorationPosition.foreground,
+              decoration: BoxDecoration(
+                borderRadius: radius,
+                border: Border.all(color: const Color(0xFFFF2D2D), width: 2),
+              ),
+              child: surface,
+            )
+          : surface,
+    );
   }
 }

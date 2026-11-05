@@ -29,6 +29,14 @@ Widget _harness(SistrumGlassMode mode, {required VoidCallback onTap}) {
   );
 }
 
+Finder _outlineFinder() => find.byWidgetPredicate(
+  (w) =>
+      w is DecoratedBox &&
+      w.position == DecorationPosition.foreground &&
+      w.decoration is BoxDecoration &&
+      (w.decoration as BoxDecoration).border != null,
+);
+
 void main() {
   group('SistrumGlassSurface', () {
     for (final mode in SistrumGlassMode.values) {
@@ -49,17 +57,65 @@ void main() {
       });
     }
 
-    testWidgets('only the glass modes create a shared LiquidGlassLayer', (
+    testWidgets('only liquid glass wraps its region in a shared layer', (
       tester,
     ) async {
       for (final mode in SistrumGlassMode.values) {
         await tester.pumpWidget(_harness(mode, onTap: () {}));
         expect(
-          find.byType(LiquidGlassLayer),
-          mode.usesLiquidGlass ? findsOneWidget : findsNothing,
+          find.descendant(
+            of: find.byType(SistrumGlassScope),
+            matching: find.byType(LiquidGlassLayer),
+          ),
+          mode == SistrumGlassMode.liquidGlass ? findsOneWidget : findsNothing,
           reason: mode.label,
         );
       }
+    });
+
+    testWidgets('reference glass requests premium quality on its own layer', (
+      tester,
+    ) async {
+      // flutter_test has no shader support, so the package takes its fallback
+      // path here. This asserts the requested configuration, not the GPU path.
+      await tester.pumpWidget(
+        _harness(SistrumGlassMode.referenceGlass, onTap: () {}),
+      );
+      final container = tester.widget<GlassContainer>(
+        find.descendant(
+          of: find.byKey(const ValueKey('surface')),
+          matching: find.byType(GlassContainer),
+        ),
+      );
+      expect(container.quality, GlassQuality.premium);
+      expect(container.useOwnLayer, isTrue);
+      expect(container.settings, sistrumReferenceGlassSettings(dark: false));
+    });
+
+    testWidgets('the diagnostic outline is off by default and independent', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        _harness(SistrumGlassMode.referenceGlass, onTap: () {}),
+      );
+      expect(_outlineFinder(), findsNothing);
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: SistrumGlassSurface(
+              mode: SistrumGlassMode.transparentBaseline,
+              width: 120,
+              height: 48,
+              borderRadius: 24,
+              diagnosticOutline: true,
+              child: const Text('Child'),
+            ),
+          ),
+        ),
+      );
+      expect(_outlineFinder(), findsOneWidget);
+      expect(find.text('Child'), findsOneWidget);
     });
 
     testWidgets('only the basic blur mode samples the backdrop', (
@@ -77,7 +133,7 @@ void main() {
 
     testWidgets('switching modes removes the previous layer', (tester) async {
       await tester.pumpWidget(
-        _harness(SistrumGlassMode.referenceGlass, onTap: () {}),
+        _harness(SistrumGlassMode.liquidGlass, onTap: () {}),
       );
       expect(find.byType(LiquidGlassLayer), findsOneWidget);
 
@@ -116,28 +172,29 @@ void main() {
       }
     });
 
-    test('reference glass uses the Apple Podcasts demo values', () {
-      final dark = sistrumGlassLayerSettings(
-        SistrumGlassMode.referenceGlass,
-        dark: true,
-      )!;
-      expect(dark.glassColor, const Color(0xAA1C1C1E));
-      expect(dark.thickness, 24);
-      expect(dark.blur, 3);
-      expect(dark.chromaticAberration, .01);
-      expect(dark.lightIntensity, .2);
-      expect(dark.ambientStrength, 0);
-      expect(dark.refractiveIndex, 1.2);
-      expect(dark.fresnelStrength, 0.0);
-      expect(dark.saturation, 1.2);
-      expect(dark.specularSharpness, GlassSpecularSharpness.medium);
+    test(
+      'reference glass has no shared layer and uses the demo mini player',
+      () {
+        expect(
+          sistrumGlassLayerSettings(
+            SistrumGlassMode.referenceGlass,
+            dark: true,
+          ),
+          isNull,
+        );
+        final dark = sistrumReferenceGlassSettings(dark: true);
+        expect(dark.glassColor, const Color(0xCC1C1C1E));
+        expect(dark.thickness, 30);
+        expect(dark.blur, 2);
+        expect(dark.lightIntensity, .18);
+        expect(dark.chromaticAberration, .01);
+        expect(dark.saturation, 1.2);
+        expect(dark.fresnelStrength, 0.0);
 
-      final light = sistrumGlassLayerSettings(
-        SistrumGlassMode.referenceGlass,
-        dark: false,
-      )!;
-      expect(light.glassColor, const Color(0xAAF2F2F7));
-    });
+        final light = sistrumReferenceGlassSettings(dark: false);
+        expect(light.glassColor, const Color(0xCCF2F2F7));
+      },
+    );
 
     test('liquid glass uses the package defaults', () {
       final settings = sistrumGlassLayerSettings(
