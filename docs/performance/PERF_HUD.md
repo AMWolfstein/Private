@@ -116,8 +116,10 @@ fps_estimate=59.8 (estimated)
 Developer Options > Glass POC is a developer-only page that compares four
 rendering modes on identical geometry: Transparent Baseline, Basic Blur,
 Liquid Glass and Reference Glass. It is not reachable from production screens.
-Glass modes use the pinned `liquid_glass_widgets` 1.16.1 package through one
-shared `LiquidGlassLayer`. The selected mode is shown in the HUD panel
+Glass modes use the pinned `liquid_glass_widgets` 1.16.1 package. Liquid Glass
+shares one `LiquidGlassLayer`; Reference Glass gives each surface its own layer.
+A shared layer's grouped premium children are not drawn, so Reference Glass
+must not use one. The selected mode is shown in the HUD panel
 (`Glass`) and written to copied reports as `glass_mode=`. The mode is held in
 memory, so a restart returns to the baseline. Modes are reviewed on a physical
 device only; no benchmark results are recorded here before that review.
