@@ -1146,9 +1146,9 @@
     "semantic_hash": "a7e4dc401d6563fb09eaade8e0421cbf"
   },
   "AGENTS.md": {
-    "mtime": 1793876713.376243,
-    "seen": 1793879154.199181,
-    "ast_hash": "e305c65c538127c343b9068f3c17d023",
+    "mtime": 1793906907.571783,
+    "seen": 1793908884.7016263,
+    "ast_hash": "d0b336a7b17e6bbb1046637e7d40b1be",
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
@@ -12642,9 +12642,9 @@
     "semantic_hash": ""
   },
   "lib/screens/settings/developer/glass_poc_page.dart": {
-    "mtime": 1793903781.4174092,
-    "seen": 1793906896.5970056,
-    "ast_hash": "f62ea54f1835aa1b8f13e250da19b3c0",
+    "mtime": 1793908051.2444036,
+    "seen": 1793908884.6525571,
+    "ast_hash": "d744cb4db22638929c38bf373551ac89",
     "semantic_hash": ""
   },
   "lib/widgets/glass_poc/sistrum_glass_mode.dart": {
@@ -12762,15 +12762,15 @@
     "semantic_hash": ""
   },
   "lib/widgets/glass_poc/glass_benchmark_report.dart": {
-    "mtime": 1793898130.7998955,
-    "seen": 1793899094.504155,
-    "ast_hash": "9eae2662197fdc206acaf4d41bf93d26",
+    "mtime": 1793908063.884685,
+    "seen": 1793908884.6609824,
+    "ast_hash": "db82499d6e7a66095c7502c646ea867c",
     "semantic_hash": ""
   },
   "lib/widgets/glass_poc/glass_benchmark_runner.dart": {
-    "mtime": 1793897992.644566,
-    "seen": 1793899094.504203,
-    "ast_hash": "d61b082c01cd5903873151a6b7ca60cc",
+    "mtime": 1793908097.26461,
+    "seen": 1793908884.6610138,
+    "ast_hash": "e99db9c4ac0f8b1b8cf9caa6d561c420",
     "semantic_hash": ""
   },
   "test/screens/settings/developer/glass_poc_benchmark_test.dart": {
@@ -12792,9 +12792,9 @@
     "semantic_hash": ""
   },
   "test/widgets/glass_poc/glass_benchmark_runner_test.dart": {
-    "mtime": 1793898130.7638955,
-    "seen": 1793899094.558705,
-    "ast_hash": "24c8497dbc2f6fb1aabf3e279d6013aa",
+    "mtime": 1793908096.961847,
+    "seen": 1793908884.692702,
+    "ast_hash": "25d12a0d9d790c28c9cfe1bff78f604c",
     "semantic_hash": ""
   },
   "docs/performance/GLASS_FULL_BENCHMARK.md": {
@@ -12882,9 +12882,9 @@
     "semantic_hash": ""
   },
   "lib/services/display/display_refresh_rate.dart": {
-    "mtime": 1793904424.3285713,
-    "seen": 1793906896.598601,
-    "ast_hash": "d8b3344894a75b2315a968b830d7c103",
+    "mtime": 1793907994.6846125,
+    "seen": 1793908884.6542172,
+    "ast_hash": "80f6164820301ffb526502b4a724880f",
     "semantic_hash": ""
   },
   "lib/widgets/glass_poc/glass_display_mode_log.dart": {
@@ -12906,15 +12906,21 @@
     "semantic_hash": ""
   },
   "test/services/display/display_refresh_rate_test.dart": {
-    "mtime": 1793904445.4617057,
-    "seen": 1793906896.6301763,
-    "ast_hash": "8b09c9edc373530598e15b017e47682c",
+    "mtime": 1793908097.5686102,
+    "seen": 1793908884.6871328,
+    "ast_hash": "2f1549539dc5f79c8265acef91fbf128",
     "semantic_hash": ""
   },
   "test/widgets/glass_poc/glass_display_mode_log_test.dart": {
     "mtime": 1793903874.5782144,
     "seen": 1793906896.6356578,
     "ast_hash": "5119605182c7551f359bd6eafd58969f",
+    "semantic_hash": ""
+  },
+  "docs/performance/GLASS_REFRESH_METRICS.md": {
+    "mtime": 1793908268.0326061,
+    "seen": 1793908884.7027075,
+    "ast_hash": "097298a89faa802542e0158db3909d99",
     "semantic_hash": ""
   }
 }
