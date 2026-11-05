@@ -199,3 +199,163 @@ conclusion does not depend on it.
   references: fetched but not fully read. Their conclusions are not relied on.
 - Flutter `RenderRepaintBoundary.toImage` and `ImageFilter.blur` references
   (fetched): the RGBA and no-downsampling wording above.
+
+## 8. Addendum (2026-11-05, third review): shared backdrop in liquid_glass_widgets 1.16.1
+
+Sections 1–7 are unchanged. This section records what was checked in the
+pinned source (commit `5911897`), what the POC now does, and what remains
+unverified.
+
+### 8.1 APIs verified in 1.16.1
+
+- `GlassBackdropGroup({child, enabled, joinEnclosing})`
+  (`lib/src/renderer/glass_backdrop_group.dart`, exported). Its doc comment
+  states it applies to premium glass only: "Premium glass surfaces that read the
+  backdrop together". On Impeller, a shared read is taken for the blur and frost
+  passes of premium surfaces, and matching filters run once for all of them.
+  Refraction stays per surface.
+- `GlassBackdropGroup.keyOf(context)`: returns the group's `BackdropKey`.
+- `LiquidGlassLayer` (`lib/src/engine/liquid_glass_layer.dart`, around lines
+  224–267 and 520–545): each layer owns `_backdropKey`, and uses
+  `GlassBackdropGroup.keyOf(context) ?? _backdropKey`. Sharing needs an enclosing
+  group with at least two members, no render pass between the layer and the
+  group, and no backer.
+- `BackdropGroup` / `BackdropKey` (the package's internal backdrop group,
+  `lib/src/renderer/glass_backdrop_group_boundary.dart`).
+- Standard lightweight glass (`lib/widgets/shared/lightweight_liquid_glass.dart`):
+  no reference to `BackdropKey`, `BackdropGroup` or `keyOf`. It cannot join a group.
+- `GlassTabBar` and `GlassAppBar` group their own glass internally. They are not
+  used by the POC.
+
+Doc-stated limits that apply here: a group with one member changes nothing; glass
+that overlaps another glass in the same group shows the content behind both;
+`Opacity`, `FadeTransition` or a save-layer clip keeps glass out of the group.
+
+### 8.2 Which modes can use a shared read
+
+| Mode | Path (1.16.1) | Can share a read? | Why |
+|---|---|---|---|
+| Basic Blur | This app's own `BackdropFilter(ImageFilter.blur)` | No | Not package glass. The group reaches only package premium glass. |
+| Liquid Glass | Package standard, lightweight shader per surface | No | Lightweight path does not read the key. |
+| Reference Glass | Package premium, own layer per surface | Yes | Reads `keyOf` and joins the group. |
+
+So the switch can only change Reference Glass. The two modes whose device costs
+were measured (Basic Blur 21 ms, Liquid Glass 6–9 ms) cannot be changed by
+grouping in this package version.
+
+### 8.3 Rendering tree (current POC)
+
+```
+ClipRect
+  SistrumGlassScope(mode)
+    Stack
+      background CustomPaint        (repaints every frame when animated)
+      ListView                       (scrolling content)
+      header row
+        glass circle (back)          surface 1
+        glass capsule (search, more) surface 2
+      column (bottom)
+        mini player                  surface 3
+        tab bar                      surface 4
+```
+
+- Only the active mode is mounted. Changing mode changes the surface subtree,
+  so the previous mode's backdrop filters or layers are unmounted.
+- No two glass surfaces overlap. Surfaces 1 and 2 are in the header row; 3 and 4
+  are stacked with a 10 px gap. Overlap with the list is expected and intended.
+- No glass sits inside another glass surface, under an `Opacity`, or in a
+  save-layer clip.
+
+Cost structure per mode:
+
+- Basic Blur: 4 independent `BackdropFilter` passes, each at full resolution.
+  Four unique reads, no sharing.
+- Liquid Glass: 4 lightweight `BackdropFilter` passes with a shader. Unique
+  reads, no sharing. The shared `LiquidGlassLayer` wrapper exists only in this
+  mode and is not a backdrop read.
+- Reference Glass, switch off: 4 own layers, each with its own `BackdropKey`,
+  so 4 unique reads.
+- Reference Glass, switch on: 4 members in one `GlassBackdropGroup` key. The
+  blur and frost reads can be shared, since all four use the same settings.
+  Refraction stays per surface.
+- Animated background: the background repaints every frame, so every glass
+  surface re-samples every frame. Sharing does not remove that. Static
+  background: no background repaint.
+
+### 8.4 Implementation (commit `f8312b7`)
+
+- `lib/widgets/glass_poc/sistrum_glass_surface.dart`:
+  `SistrumGlassScope(sharedBackdrop: …)` wraps its child in `GlassBackdropGroup`
+  only for Reference Glass with the switch on (`sharedBackdropApplies`). Other
+  modes are unchanged.
+- `lib/providers/performance/glass_poc_mode_provider.dart`:
+  `glassPocSharedBackdropProvider` (in-memory, default off) and
+  `glassPocPathLabel`, which names "(shared backdrop)" only where the group applies.
+- `lib/screens/settings/developer/glass_poc_page.dart`: switch "Shared backdrop
+  group (Reference Glass only)". Developer-only.
+- HUD (`perf_hud_overlay.dart`) and copied reports (`developer_options_page.dart`):
+  the `Glass` row and `glass_mode=` line use `glassPocPathLabel`.
+- Geometry, quality, blur, tint, background and animation are unchanged. Only
+  one path renders at a time.
+
+### 8.5 Visual correctness check
+
+Linux Impeller harness (Mesa GLES, Xvfb 1280×800), Reference Glass, outlines on,
+same content:
+
+- Switch off and on: the screenshots are identical in every glass and header
+  region. The only changed pixels (bounding box 1200–1252 × 148–181) are the
+  switch's own toggle.
+- The surfaces are visible in both captures, with the same blur and tint.
+
+This shows the grouped path does not change the drawn result on this renderer. It
+does not show that it is faster. The harness is a CPU (llvmpipe) renderer, so
+its frame times say nothing about the device.
+
+### 8.6 Tests
+
+- `test/widgets/glass_poc/glass_shared_backdrop_test.dart`: the group applies only
+  to Reference with the switch on; the path label; the switch default and toggle;
+  the page switch adds the group for Reference only.
+- Full `flutter test`: All tests passed, 2,537 tests, exit 0. `flutter analyze`:
+  no issues.
+
+### 8.7 Plan B: `liquid_glass_renderer` (not adopted)
+
+Checked from pub.dev archive `liquid_glass_renderer-1.0.0-dev.2` (published
+2026-10-27):
+
+- SDK: `>=3.13.0 <3.14.0`, Flutter `>=3.47.0`. Sistrum's Dart is 3.13.5, so the
+  SDK constraint is compatible.
+- Dependencies: `flutter_gpu`, `flutter_gpu_shaders`, `flutter_shaders`, `hooks`
+  (native assets), `motor`, plus smaller packages.
+- Full glass needs Impeller and Flutter GPU, which the README calls "still in
+  preview". Flutter GPU is enabled with `--enable-flutter-gpu` or the Android
+  manifest meta-data `io.flutter.embedding.android.EnableFlutterGPU`. Sistrum's
+  manifest does not set it, so a production build would need a preview flag.
+- The README calls the package "Experimental: not yet battle-tested in production
+  apps", and lists a limit of 16 shapes per layer.
+- Its shared-capture API (`LiquidGlassCapture`, `BackdropGroup`, `useBackdropGroup`
+  in `fake_glass.dart`) is the closest published match to the shared-backdrop idea.
+  Its behaviour on device is unmeasured here.
+
+Decision: NO-GO for adopting it now. The GPU API is in preview, the package is
+experimental, and a migration is outside this task. A GO would need a separate,
+device-only spike, with the preview flag, and a comparison against the baseline.
+
+### 8.8 Remaining real-device validation
+
+Use the profile APK (`sistrum-shared-backdrop-profile.apk`, SHA-256
+`ba829e91ad4b4556610422ac6c80e915c047f06b0fb8d9272b3ec72104ad0b7e`):
+
+1. Developer Options > Glass POC > Reference Glass. Switch "Shared backdrop
+   group" off. Scroll the list for 20 seconds. Copy the HUD report.
+2. Switch it on. Repeat the same scroll. Copy the report.
+3. Compare Raster P50/P90/P99 and frame-budget exceedance between the two runs.
+   The HUD `Glass` row and `glass_mode=` line show which path ran.
+4. Repeat both with the animated background on.
+5. Confirm by eye that the surfaces look the same in both runs.
+
+A result counts only if the difference is clear and repeated across runs. Basic
+Blur and Liquid Glass are not affected by this switch. Their device costs remain
+as measured in section 2.
