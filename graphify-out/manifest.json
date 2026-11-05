@@ -12546,9 +12546,9 @@
     "semantic_hash": ""
   },
   "lib/services/performance/perf_frame_monitor.dart": {
-    "mtime": 1793872391.8666663,
-    "seen": 1793873775.2249053,
-    "ast_hash": "0e16900d969ed6659ab5ba3be3c92c98",
+    "mtime": 1793875329.9073544,
+    "seen": 1793876050.3770025,
+    "ast_hash": "069f835e03777e76625078e27a7d502b",
     "semantic_hash": ""
   },
   "lib/services/performance/perf_frame_window.dart": {
@@ -12612,9 +12612,9 @@
     "semantic_hash": ""
   },
   "docs/performance/PERF_HUD.md": {
-    "mtime": 1793873196.894118,
-    "seen": 1793873775.3042877,
-    "ast_hash": "c317de744d6364b6c319bd8478d48449",
+    "mtime": 1793875471.2246945,
+    "seen": 1793876050.4264328,
+    "ast_hash": "ac40a31b102ef7054408d8fd722237b3",
     "semantic_hash": ""
   },
   "docs/reference/liquid_glass_widgets/ARCHITECTURE.md": {
@@ -12642,9 +12642,9 @@
     "semantic_hash": ""
   },
   "lib/screens/settings/developer/glass_poc_page.dart": {
-    "mtime": 1793872832.071305,
-    "seen": 1793873775.2175288,
-    "ast_hash": "1d25fee7db068d920f6916fd97c16dcb",
+    "mtime": 1793875343.277749,
+    "seen": 1793876050.3729546,
+    "ast_hash": "29e69dc65f78e958b448cacf7b0e1bab",
     "semantic_hash": ""
   },
   "lib/widgets/glass_poc/sistrum_glass_mode.dart": {
@@ -12735,6 +12735,24 @@
     "mtime": 1793872926.391303,
     "seen": 1793873775.2884445,
     "ast_hash": "dffb13506c34d38842336ff5d71b1c67",
+    "semantic_hash": ""
+  },
+  "lib/services/performance/perf_spike_recorder.dart": {
+    "mtime": 1793875343.129749,
+    "seen": 1793876050.3771648,
+    "ast_hash": "71d49d688af650d73846ddef96c44d39",
+    "semantic_hash": ""
+  },
+  "test/services/performance/perf_spike_recorder_test.dart": {
+    "mtime": 1793875427.3435616,
+    "seen": 1793876050.4120998,
+    "ast_hash": "341504bb1f398e27a51c829a887babe5",
+    "semantic_hash": ""
+  },
+  "docs/performance/GLASS_JANK_INVESTIGATION.md": {
+    "mtime": 1793875477.8589478,
+    "seen": 1793876050.4264293,
+    "ast_hash": "af721c88d80dbd0e2369fc89989f1880",
     "semantic_hash": ""
   }
 }
