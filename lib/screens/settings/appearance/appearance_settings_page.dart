@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/screens/settings/appearance/artist_images_settings_page.dart';
 import 'package:sistrum/screens/settings/appearance/video_artwork_settings_page.dart';
+import 'package:sistrum/providers/settings/display_refresh_provider.dart';
 import 'package:sistrum/providers/settings/settings_provider.dart';
 import 'package:sistrum/providers/settings/theme_provider.dart';
 import 'package:sistrum/utils/layout/nav_bar_inset.dart';
@@ -117,6 +118,25 @@ class AppearanceSettingsPage extends ConsumerWidget {
                   PlayerViewSelector(
                     currentView: themeSettings.playerView,
                     onChanged: ref.read(themeProvider.notifier).setPlayerView,
+                  ),
+                ],
+              ),
+            ),
+
+            SliverToBoxAdapter(
+              child: SettingsSectionHeader(
+                title: context.l10n.displayRefreshRate,
+              ),
+            ),
+            SliverToBoxAdapter(
+              child: SettingsGroup(
+                children: [
+                  DisplayRefreshRateSelector(
+                    preferenceHz: settings.displayRefreshRate,
+                    state: ref.watch(displayRefreshProvider),
+                    onChanged: ref
+                        .read(settingsProvider.notifier)
+                        .setDisplayRefreshRate,
                   ),
                 ],
               ),

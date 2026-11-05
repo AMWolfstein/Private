@@ -1,3 +1,4 @@
+import 'package:sistrum/providers/settings/display_refresh_provider.dart';
 import 'package:sistrum/providers/settings/equalizer_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:sistrum/core/constants/perf_hud_build.dart';
@@ -168,6 +169,9 @@ class SistrumApp extends ConsumerWidget {
     ref.watch(equalizerProvider);
     ref.watch(artistImageAutoDownloadProvider);
     ref.watch(animatedArtworkAutoDownloadProvider);
+    // Keeps the display refresh-rate preference applied without rebuilding
+    // the app on each display report.
+    ref.listen(displayRefreshProvider, (_, _) {});
     final router = ref.watch(_routerProvider);
     final localeString = ref.watch(settingsProvider.select((s) => s.locale));
     final scrollBehavior = disableOverscrollEffects

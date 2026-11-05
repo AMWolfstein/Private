@@ -8,6 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/providers/performance/glass_poc_mode_provider.dart';
+import 'package:sistrum/providers/settings/display_refresh_provider.dart';
+import 'package:sistrum/providers/settings/settings_provider.dart';
 import 'package:sistrum/services/performance/glass_benchmark_aggregator.dart';
 import 'package:sistrum/services/performance/perf_frame_monitor.dart';
 import 'package:sistrum/services/performance/perf_frame_window.dart';
@@ -16,6 +18,7 @@ import 'package:sistrum/widgets/glass_poc/glass_benchmark_report.dart';
 import 'package:sistrum/services/performance/glass_frame_schedule.dart';
 import 'package:sistrum/widgets/glass_poc/glass_benchmark_run.dart';
 import 'package:sistrum/widgets/glass_poc/glass_benchmark_runner.dart';
+import 'package:sistrum/widgets/glass_poc/glass_display_mode_log.dart';
 import 'package:sistrum/widgets/glass_poc/sistrum_auto_scroll.dart';
 import 'package:sistrum/widgets/glass_poc/sistrum_glass_mode.dart';
 import 'package:sistrum/widgets/glass_poc/sistrum_glass_render_path.dart';
@@ -68,6 +71,9 @@ class _GlassPocPageState extends ConsumerState<GlassPocPage>
   bool _startedMonitor = false;
   bool _disposing = false;
 
+  /// Display-mode changes Android reports while a benchmark runs.
+  final GlassDisplayModeLog _displayModes = GlassDisplayModeLog();
+
   @override
   void initState() {
     super.initState();
@@ -101,6 +107,14 @@ class _GlassPocPageState extends ConsumerState<GlassPocPage>
       reportBuilder: _buildReport,
     );
     _registry.attach(_autoScroll, this);
+    ref.listenManual(displayRefreshProvider, (_, state) {
+      if (!_runner.isRunning) return;
+      _displayModes.onState(
+        state,
+        'phase=${_runner.phase.name} mode=${ref.read(glassPocModeProvider).name} '
+        'surfaces=$_benchSurfaces',
+      );
+    });
     // Developer diagnostics only: the recorder lives while this page is open.
     _spikes = PerfSpikeRecorder()
       ..budgetUs =
@@ -254,6 +268,7 @@ class _GlassPocPageState extends ConsumerState<GlassPocPage>
         phase == GlassBenchmarkPhase.complete ||
         phase == GlassBenchmarkPhase.failed ||
         phase == GlassBenchmarkPhase.cancelled;
+    if (finished) _displayModes.end();
     if (finished && _runner.reportText != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted && !_disposing) {
@@ -276,6 +291,11 @@ class _GlassPocPageState extends ConsumerState<GlassPocPage>
       'frame_budget_ms=${(1000 / rate.hz).toStringAsFixed(2)}',
       'shader_filters_supported=${ui.ImageFilter.isShaderFilterSupported}',
       'rendering_backend=not verifiable from Dart; see shader_filters_supported',
+      ...glassDisplayRefreshLines(
+        preferenceHz: ref.read(settingsProvider).displayRefreshRate,
+        state: ref.read(displayRefreshProvider),
+        log: _displayModes,
+      ),
     ];
     if (runner.plan.diagnostic) {
       return formatGlassDiagnosticReport(
@@ -394,11 +414,13 @@ class _GlassPocPageState extends ConsumerState<GlassPocPage>
   /// fresh run; elsewhere it clears the frame window.
   void _startBenchmark() {
     _spikes.noteEvent('benchmark=start');
+    _displayModes.begin(ref.read(displayRefreshProvider));
     _runner.start(plan: _standardPlan);
   }
 
   void _startDiagnostic() {
     _spikes.noteEvent('benchmark=diagnostic start');
+    _displayModes.begin(ref.read(displayRefreshProvider));
     _runner.start(plan: GlassBenchmarkPlan.diagnostic(timing: _standardPlan));
   }
 

@@ -70,6 +70,9 @@ AppSettings _$AppSettingsFromJson(Map<String, dynamic> json) => AppSettings(
   videoArtworkAutoDownload: json['videoArtworkAutoDownload'] as bool? ?? false,
   videoArtworkNetwork: json['videoArtworkNetwork'] as String? ?? 'wifi',
   lyricsAboveSeekBar: json['lyricsAboveSeekBar'] as bool? ?? false,
+  displayRefreshRate: json['displayRefreshRate'] == null
+      ? 0
+      : displayRefreshRateFromJson(json['displayRefreshRate']),
   checkForUpdates: json['checkForUpdates'] as bool? ?? true,
   updateChannel: json['updateChannel'] as String? ?? 'stable',
   locale: json['locale'] == null ? 'system' : appLocaleFromJson(json['locale']),
@@ -121,6 +124,7 @@ Map<String, dynamic> _$AppSettingsToJson(AppSettings instance) =>
       'videoArtworkAutoDownload': instance.videoArtworkAutoDownload,
       'videoArtworkNetwork': instance.videoArtworkNetwork,
       'lyricsAboveSeekBar': instance.lyricsAboveSeekBar,
+      'displayRefreshRate': instance.displayRefreshRate,
       'checkForUpdates': instance.checkForUpdates,
       'updateChannel': instance.updateChannel,
       'locale': instance.locale,

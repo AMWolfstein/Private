@@ -217,6 +217,15 @@ extension SettingsActions on SettingsNotifier {
     _saveSettings();
   }
 
+  /// [hz] in whole Hz; 0 is System Default. Saved as chosen, even when Android
+  /// later keeps another rate.
+  void setDisplayRefreshRate(int hz) {
+    _current = _current.copyWith(
+      displayRefreshRate: displayRefreshRateFromJson(hz),
+    );
+    _saveSettings();
+  }
+
   void setCheckForUpdates(bool enabled) {
     _current = _current.copyWith(checkForUpdates: enabled);
     _saveSettings();

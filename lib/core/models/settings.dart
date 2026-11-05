@@ -19,6 +19,14 @@ String appLocaleFromJson(Object? value) => value is String ? value : 'system';
 double musicHapticsLevelFromJson(Object? value) =>
     value is num && value.isFinite ? value.toDouble().clamp(0, 1) : 0.5;
 
+/// Whole-number Hz the app asks the display for; 0 is System Default.
+/// Anything else that is not a plausible rate also reads as System Default.
+int displayRefreshRateFromJson(Object? value) {
+  if (value is! num || !value.isFinite) return 0;
+  final hz = value.round();
+  return hz > 0 && hz <= 1000 ? hz : 0;
+}
+
 @JsonSerializable(explicitToJson: true)
 class AppSettings {
   final TagCreditSettings tagCredits;
@@ -90,6 +98,11 @@ class AppSettings {
   /// Show the sung lyric line above the player's seek bar.
   final bool lyricsAboveSeekBar;
 
+  /// Display refresh rate requested while the app is in front, in whole Hz.
+  /// 0 leaves the choice to Android (System Default).
+  @JsonKey(fromJson: displayRefreshRateFromJson)
+  final int displayRefreshRate;
+
   /// Offer new GitHub releases at startup. Versions far behind still prompt.
   final bool checkForUpdates;
 
@@ -148,6 +161,7 @@ class AppSettings {
     this.videoArtworkAutoDownload = false,
     this.videoArtworkNetwork = 'wifi',
     this.lyricsAboveSeekBar = false,
+    this.displayRefreshRate = 0,
     this.checkForUpdates = true,
     this.updateChannel = 'stable',
     this.locale = 'system',
@@ -198,6 +212,7 @@ class AppSettings {
     bool? videoArtworkAutoDownload,
     String? videoArtworkNetwork,
     bool? lyricsAboveSeekBar,
+    int? displayRefreshRate,
     bool? checkForUpdates,
     String? updateChannel,
     String? locale,
@@ -258,6 +273,7 @@ class AppSettings {
           videoArtworkAutoDownload ?? this.videoArtworkAutoDownload,
       videoArtworkNetwork: videoArtworkNetwork ?? this.videoArtworkNetwork,
       lyricsAboveSeekBar: lyricsAboveSeekBar ?? this.lyricsAboveSeekBar,
+      displayRefreshRate: displayRefreshRate ?? this.displayRefreshRate,
       checkForUpdates: checkForUpdates ?? this.checkForUpdates,
       updateChannel: updateChannel ?? this.updateChannel,
       locale: locale ?? this.locale,

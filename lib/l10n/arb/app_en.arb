@@ -15,6 +15,40 @@
   "appearancePlayerView": "Player view",
   "appearancePlayerViewNormal": "Normal view",
   "appearancePlayerViewImmersive": "Immersive view",
+  "displayRefreshRate": "Display refresh rate",
+  "displayRefreshRateSubtitle": "Asked for while Sistrum is open. Android decides, and may keep another rate.",
+  "displayRefreshRateSystem": "System",
+  "displayRefreshRateHz": "{hz} Hz",
+  "@displayRefreshRateHz": {
+    "description": "A refresh rate in hertz, for example 120 Hz.",
+    "placeholders": {
+      "hz": {
+        "type": "int"
+      }
+    }
+  },
+  "displayRefreshRateSelected": "Selected: {rate}",
+  "@displayRefreshRateSelected": {
+    "placeholders": {
+      "rate": {
+        "type": "String"
+      }
+    }
+  },
+  "displayRefreshRateActive": "Active display (reported by Android): {rate}",
+  "@displayRefreshRateActive": {
+    "placeholders": {
+      "rate": {
+        "type": "String"
+      }
+    }
+  },
+  "displayRefreshRateStatusRequested": "Status: requested, waiting for Android",
+  "displayRefreshRateStatusActive": "Status: Android reports the selected rate",
+  "displayRefreshRateStatusNotApplied": "Status: requested rate not currently active",
+  "displayRefreshRateStatusUnsupported": "Status: not supported at the current resolution",
+  "displayRefreshRateStatusUnavailable": "Status: display information unavailable",
+  "displayRefreshRateBatterySaver": "Battery saver is on and may limit the refresh rate.",
   "settingsPlaybackSubtitle": "Player, volume, AutoMix, and audio output",
   "sectionVolumeAndTransitions": "Volume and transitions",
   "sectionAudioOutput": "Audio output",

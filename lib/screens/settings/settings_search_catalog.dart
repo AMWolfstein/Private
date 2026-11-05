@@ -80,6 +80,12 @@ class SettingsSearchCatalog {
               '${l10n.appearancePlayerViewImmersive}',
           keywords: const ['player', 'normal', 'immersive', 'artwork', 'cover'],
         ),
+        SettingsSearchEntry(
+          icon: Icons.speed_outlined,
+          title: l10n.displayRefreshRate,
+          subtitle: l10n.displayRefreshRateSubtitle,
+          keywords: const ['hz', '120', '90', '60', 'smooth', 'screen'],
+        ),
       ],
       library = [
         SettingsSearchEntry(

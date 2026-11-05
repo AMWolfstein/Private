@@ -562,6 +562,9 @@ class MainActivity: FlutterFragmentActivity() {
         if (!flutterEngine.plugins.has(MusicHapticsPlugin::class.java)) {
             flutterEngine.plugins.add(MusicHapticsPlugin())
         }
+        if (!flutterEngine.plugins.has(DisplayRefreshRatePlugin::class.java)) {
+            flutterEngine.plugins.add(DisplayRefreshRatePlugin())
+        }
         audioOutputChannel = MethodChannel(messenger, "com.amwolfstein.sistrum/audio_output").also { channel ->
             channel.setMethodCallHandler { call, result ->
                 if (call.method != "show") {
