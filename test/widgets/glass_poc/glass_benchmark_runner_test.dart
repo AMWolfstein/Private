@@ -1,6 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/services/performance/glass_benchmark_aggregator.dart';
+import 'package:sistrum/services/performance/glass_frame_schedule.dart';
 import 'package:sistrum/widgets/glass_poc/glass_benchmark_report.dart';
+import 'package:sistrum/widgets/glass_poc/glass_benchmark_run.dart';
 import 'package:sistrum/widgets/glass_poc/glass_benchmark_runner.dart';
 import 'package:sistrum/widgets/glass_poc/sistrum_auto_scroll.dart';
 import 'package:sistrum/widgets/glass_poc/sistrum_glass_mode.dart';
@@ -9,7 +11,7 @@ import 'package:sistrum/widgets/glass_poc/sistrum_glass_scene.dart';
 
 const _budgetUs = 16667.0;
 
-const _plan = GlassBenchmarkPlan(
+final _plan = GlassBenchmarkPlan(
   modes: [SistrumGlassMode.transparentBaseline, SistrumGlassMode.basicBlur],
   transition: Duration(milliseconds: 100),
   warmup: Duration(milliseconds: 100),
@@ -84,11 +86,23 @@ class _FakeHost implements GlassBenchmarkHost {
   GlassBenchmarkConfig captureConfig() => config;
 
   @override
-  void applyRun(SistrumGlassMode mode) {
+  void applyRun(GlassBenchmarkRun run) {
     if (throwOnApply) throw StateError('boom');
-    current = mode;
+    current = run.mode;
+    surfaces.add(run.surfaces);
     scroll = scrollTemplate;
-    calls.add('apply:${mode.name}');
+    calls.add('apply:${run.mode.name}');
+  }
+
+  /// Surface counts applied, in run order.
+  final List<int> surfaces = [];
+
+  /// Recorder attached to the frame stream, if any.
+  GlassFrameScheduleRecorder? schedule;
+
+  @override
+  void attachSchedule(GlassFrameScheduleRecorder? recorder) {
+    schedule = recorder;
   }
 
   @override
@@ -273,7 +287,7 @@ void main() {
           fallback: true,
           fallbackReason: 'Flutter GPU did not load',
         );
-      final plan = const GlassBenchmarkPlan(
+      final plan = GlassBenchmarkPlan(
         modes: [SistrumGlassMode.newFullGlass],
         transition: Duration(milliseconds: 100),
         warmup: Duration(milliseconds: 100),
@@ -337,7 +351,7 @@ void main() {
     final host = _FakeHost();
     final runner = _runner(
       host,
-      plan: const GlassBenchmarkPlan(
+      plan: GlassBenchmarkPlan(
         modes: [SistrumGlassMode.transparentBaseline],
         transition: Duration(milliseconds: 100),
         warmup: Duration(milliseconds: 100),
@@ -376,7 +390,7 @@ void main() {
         );
       final runner = _runner(
         host,
-        plan: const GlassBenchmarkPlan(
+        plan: GlassBenchmarkPlan(
           modes: [SistrumGlassMode.transparentBaseline],
           transition: Duration(milliseconds: 100),
           warmup: Duration(milliseconds: 100),
@@ -400,7 +414,7 @@ void main() {
     final host = _FakeHost()..scrollTemplate = _activeScroll(overall: 400);
     final runner = _runner(
       host,
-      plan: const GlassBenchmarkPlan(
+      plan: GlassBenchmarkPlan(
         modes: [SistrumGlassMode.transparentBaseline],
         transition: Duration(milliseconds: 100),
         warmup: Duration(milliseconds: 100),
@@ -429,7 +443,7 @@ void main() {
         final host = _FakeHost()..scrollTemplate = scroll;
         final runner = _runner(
           host,
-          plan: const GlassBenchmarkPlan(
+          plan: GlassBenchmarkPlan(
             modes: [SistrumGlassMode.transparentBaseline],
             transition: Duration(milliseconds: 100),
             warmup: Duration(milliseconds: 100),
@@ -453,7 +467,7 @@ void main() {
       final host = _FakeHost();
       final runner = _runner(
         host,
-        plan: const GlassBenchmarkPlan(
+        plan: GlassBenchmarkPlan(
           modes: [SistrumGlassMode.transparentBaseline],
           transition: Duration(milliseconds: 100),
           warmup: Duration(milliseconds: 100),
@@ -488,7 +502,7 @@ void main() {
     final host = _FakeHost();
     final runner = _runner(
       host,
-      plan: const GlassBenchmarkPlan(
+      plan: GlassBenchmarkPlan(
         modes: [SistrumGlassMode.transparentBaseline],
         transition: Duration(milliseconds: 100),
         warmup: Duration(milliseconds: 100),
@@ -510,4 +524,51 @@ void main() {
     expect(result.frameBegins, 110);
     expect(result.frameTimings, 60);
   });
+
+  testWidgets(
+    'a multi-run plan applies each surface count in order and records each run',
+    (tester) async {
+      final host = _FakeHost();
+      final plan = GlassBenchmarkPlan(
+        runs: [
+          GlassBenchmarkRun(
+            mode: SistrumGlassMode.transparentBaseline,
+            surfaces: 4,
+            repeat: 1,
+          ),
+          GlassBenchmarkRun(
+            mode: SistrumGlassMode.transparentBaseline,
+            surfaces: 1,
+            repeat: 1,
+          ),
+        ],
+        transition: const Duration(milliseconds: 100),
+        warmup: const Duration(milliseconds: 100),
+        measure: const Duration(seconds: 1),
+        modeTimeout: const Duration(milliseconds: 500),
+        diagnostic: true,
+      );
+      final runner = _runner(host, plan: plan);
+      runner.start();
+      await tester.pump(const Duration(milliseconds: 100));
+      runner.onMeasurementStarted();
+      expect(host.schedule, isNotNull, reason: 'recorder attached in the run');
+      _feed(host);
+      await tester.pump(const Duration(seconds: 1));
+      // The first run ends, its recorder is detached, and the second starts.
+      expect(host.schedule, isNull);
+      expect(runner.results[0].schedule, isNotNull);
+      await tester.pump(const Duration(milliseconds: 100));
+      runner.onMeasurementStarted();
+      _feed(host);
+      await tester.pump(const Duration(seconds: 1));
+
+      expect(runner.phase, GlassBenchmarkPhase.complete);
+      expect(host.surfaces, [4, 1]);
+      expect(runner.results.map((r) => r.surfaces), [4, 1]);
+      expect(runner.results.map((r) => r.runOrder), [1, 2]);
+      expect(runner.plan.diagnostic, isTrue);
+      expect(runner.reportText, contains('runs_planned=2'));
+    },
+  );
 }

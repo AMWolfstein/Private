@@ -8,7 +8,7 @@ import 'package:sistrum/widgets/glass_poc/glass_benchmark_runner.dart';
 import 'package:sistrum/widgets/glass_poc/sistrum_glass_mode.dart';
 import 'package:sistrum/widgets/glass_poc/sistrum_glass_scene.dart';
 
-const _shortPlan = GlassBenchmarkPlan(
+final _shortPlan = GlassBenchmarkPlan(
   modes: [SistrumGlassMode.transparentBaseline, SistrumGlassMode.basicBlur],
   transition: Duration(milliseconds: 100),
   warmup: Duration(milliseconds: 200),
@@ -46,9 +46,7 @@ void main() {
       await tester.pumpWidget(
         UncontrolledProviderScope(
           container: container,
-          child: const MaterialApp(
-            home: GlassPocPage(benchmarkPlan: _shortPlan),
-          ),
+          child: MaterialApp(home: GlassPocPage(benchmarkPlan: _shortPlan)),
         ),
       );
 
@@ -78,8 +76,14 @@ void main() {
         await tester.pump(const Duration(milliseconds: 100));
         opened = find.text('Glass benchmark report').evaluate().isNotEmpty;
       }
-      final statusText = tester.widget<Text>(find.byKey(const Key('benchmarkStatus'))).data;
-      expect(opened, isTrue, reason: 'report dialog should open at the end; status: $statusText');
+      final statusText = tester
+          .widget<Text>(find.byKey(const Key('benchmarkStatus')))
+          .data;
+      expect(
+        opened,
+        isTrue,
+        reason: 'report dialog should open at the end; status: $statusText',
+      );
 
       // The POC configuration was restored.
       expect(

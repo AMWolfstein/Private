@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:sistrum/services/performance/glass_benchmark_aggregator.dart';
+import 'package:sistrum/services/performance/glass_frame_schedule.dart';
+import 'package:sistrum/widgets/glass_poc/glass_benchmark_run.dart';
 import 'package:sistrum/widgets/glass_poc/sistrum_auto_scroll.dart';
 import 'package:sistrum/widgets/glass_poc/sistrum_glass_mode.dart';
 import 'package:sistrum/widgets/glass_poc/sistrum_glass_scene.dart';
@@ -25,18 +27,46 @@ const double kGlassBenchmarkMinActiveFraction = 0.95;
 /// Target speed for every run of the benchmark.
 const SistrumScrollSpeed kGlassBenchmarkSpeed = SistrumScrollSpeed.fast;
 
-/// Timing of one benchmark. The default is the 60-second protocol. Tests pass
-/// shorter values through the same code path.
+/// Timing and runs of one benchmark. The default is the 60-second protocol with
+/// one run per mode. Tests pass shorter values through the same code path.
 class GlassBenchmarkPlan {
-  const GlassBenchmarkPlan({
-    this.modes = kGlassBenchmarkModes,
+  GlassBenchmarkPlan({
+    List<SistrumGlassMode> modes = kGlassBenchmarkModes,
+    List<GlassBenchmarkRun>? runs,
     this.transition = const Duration(seconds: 2),
     this.warmup = const Duration(seconds: 5),
     this.measure = const Duration(seconds: 60),
     this.modeTimeout = const Duration(seconds: 30),
-  });
+    this.diagnostic = false,
+  }) : runs = runs ?? [for (final mode in modes) GlassBenchmarkRun(mode: mode)];
 
-  final List<SistrumGlassMode> modes;
+  /// The diagnostic repeatability protocol: every configuration of
+  /// [glassDiagnosticConfigurations] three times, in counterbalanced order.
+  /// Same timing as the standard protocol for each run.
+  factory GlassBenchmarkPlan.diagnostic({
+    GlassBenchmarkPlan? timing,
+    bool includeBasicBlur = false,
+  }) {
+    final base = timing ?? GlassBenchmarkPlan();
+    return GlassBenchmarkPlan(
+      runs: glassDiagnosticRunOrder(
+        configurations: glassDiagnosticConfigurations(
+          includeBasicBlur: includeBasicBlur,
+        ),
+      ),
+      transition: base.transition,
+      warmup: base.warmup,
+      measure: base.measure,
+      modeTimeout: base.modeTimeout,
+      diagnostic: true,
+    );
+  }
+
+  /// The runs in the order they execute.
+  final List<GlassBenchmarkRun> runs;
+
+  /// Whether this is the diagnostic repeatability protocol.
+  final bool diagnostic;
 
   /// Pause between runs. The list is stopped and the next renderer mounts.
   final Duration transition;
@@ -120,9 +150,24 @@ class GlassBenchmarkModeResult {
     this.scrollMaxTickGapSeconds = 0,
     this.frameBegins = 0,
     this.frameTimings = 0,
+    this.surfaces = 4,
+    this.repeat = 1,
+    this.runOrder = 0,
+    this.schedule,
   });
 
   final SistrumGlassMode mode;
+
+  /// Glass surfaces the run drew (1, 2 or 4).
+  final int surfaces;
+
+  /// 1-based repeat of this configuration, and the 1-based position of this
+  /// run in the executed order. Zero when the run did not start.
+  final int repeat;
+  final int runOrder;
+
+  /// VSync, callback and raster intervals, or null when measurement never began.
+  final GlassFrameScheduleSummary? schedule;
   final GlassBenchmarkValidity validity;
   final List<String> reasons;
   final bool measurementStarted;
@@ -203,10 +248,10 @@ typedef GlassBenchmarkConfig = ({
 abstract interface class GlassBenchmarkHost {
   GlassBenchmarkConfig captureConfig();
 
-  /// Sets the mode and the fixed benchmark settings (Scene D, 900 px/s,
+  /// Sets the mode, the surface count and the fixed benchmark settings (900 px/s,
   /// animation and shared backdrop off), resets the frame monitor, holds frames,
   /// and restarts scrolling with the warm-up.
-  void applyRun(SistrumGlassMode mode);
+  void applyRun(GlassBenchmarkRun run);
 
   /// Stops scrolling and moves the list back to offset 0.
   void haltRun();
@@ -221,6 +266,9 @@ abstract interface class GlassBenchmarkHost {
 
   /// Connects the aggregator to the frame stream, or disconnects it with null.
   void attachAggregator(GlassBenchmarkAggregator? aggregator);
+
+  /// Connects the schedule recorder to the frame stream, or disconnects it.
+  void attachSchedule(GlassFrameScheduleRecorder? recorder);
 }
 
 /// Deterministic run of the benchmark:
@@ -232,9 +280,10 @@ class GlassBenchmarkRunner {
     required this.budgetUs,
     required this.onPhaseChanged,
     required this.reportBuilder,
-    this.plan = const GlassBenchmarkPlan(),
+    GlassBenchmarkPlan? plan,
     Stopwatch? stopwatch,
-  }) : _stopwatch = stopwatch ?? Stopwatch(),
+  }) : plan = plan ?? GlassBenchmarkPlan(),
+       _stopwatch = stopwatch ?? Stopwatch(),
        progress = ValueNotifier(const GlassBenchmarkProgress.idle()) {
     _aggregator = GlassBenchmarkAggregator(
       budgetUs: budgetUs,
@@ -244,7 +293,9 @@ class GlassBenchmarkRunner {
 
   final GlassBenchmarkHost host;
   final double budgetUs;
-  final GlassBenchmarkPlan plan;
+
+  /// The plan of the current or last run. [start] may replace it.
+  GlassBenchmarkPlan plan;
 
   /// Called on every phase change (start, run boundaries, end). It is not
   /// called once a second, so the page rebuilds only at those points.
@@ -259,6 +310,7 @@ class GlassBenchmarkRunner {
 
   final Stopwatch _stopwatch;
   late final GlassBenchmarkAggregator _aggregator;
+  GlassFrameScheduleRecorder? _frameSchedule;
 
   GlassBenchmarkPhase _phase = GlassBenchmarkPhase.idle;
   GlassBenchmarkConfig? _savedConfig;
@@ -294,9 +346,11 @@ class GlassBenchmarkRunner {
   DateTime? get startedAt => _startedAt;
   DateTime? get endedAt => _endedAt;
 
-  /// Begins the run. It refuses to start while another is running.
-  void start() {
+  /// Begins the run. It refuses to start while another is running. [plan]
+  /// replaces the plan for this run only when given.
+  void start({GlassBenchmarkPlan? plan}) {
     if (isRunning) return;
+    if (plan != null) this.plan = plan;
     _results.clear();
     _reportText = null;
     _failure = null;
@@ -307,12 +361,12 @@ class GlassBenchmarkRunner {
     _modeIndex = 0;
     _enter(GlassBenchmarkPhase.transition);
     _publish('starting');
-    _schedule(plan.transition, _startMode);
+    _schedule(this.plan.transition, _startMode);
   }
 
   void _startMode() {
     _guard(() {
-      final mode = plan.modes[_modeIndex];
+      final run = plan.runs[_modeIndex];
       _measurementStarted = false;
       _pathSamples = 0;
       _pathMatches = 0;
@@ -320,7 +374,9 @@ class GlassBenchmarkRunner {
       _fallbackSeen = false;
       _aggregator.discard();
       host.attachAggregator(null);
-      host.applyRun(mode);
+      _frameSchedule = null;
+      host.attachSchedule(null);
+      host.applyRun(run);
       _enter(GlassBenchmarkPhase.warmup);
       _publish('warm-up');
       _schedule(plan.modeTimeout, _modeTimedOut);
@@ -339,6 +395,11 @@ class GlassBenchmarkRunner {
         ..start();
       _aggregator.begin();
       _frameStart = host.frameCounts();
+      final schedule = GlassFrameScheduleRecorder(
+        nominalPeriodUs: budgetUs.round(),
+      );
+      _frameSchedule = schedule;
+      host.attachSchedule(schedule);
       host.attachAggregator(_aggregator);
       _enter(GlassBenchmarkPhase.measuring);
       _publish('measuring');
@@ -371,7 +432,9 @@ class GlassBenchmarkRunner {
       final summary = _measurementStarted
           ? _aggregator.summary(elapsedUs: elapsedUs)
           : null;
+      final schedule = _measurementStarted ? _frameSchedule?.summary() : null;
       host.attachAggregator(null);
+      host.attachSchedule(null);
       host.haltRun();
       _results.add(
         _result(
@@ -380,10 +443,11 @@ class GlassBenchmarkRunner {
           frames: frames,
           elapsedUs: elapsedUs,
           timedOut: timedOut,
+          schedule: schedule,
         ),
       );
       _modeIndex++;
-      if (_modeIndex >= plan.modes.length) {
+      if (_modeIndex >= plan.runs.length) {
         _complete();
       } else {
         _enter(GlassBenchmarkPhase.transition);
@@ -415,8 +479,10 @@ class GlassBenchmarkRunner {
     final partial = _measurementStarted
         ? _aggregator.summary(elapsedUs: elapsedUs)
         : null;
+    final schedule = _measurementStarted ? _frameSchedule?.summary() : null;
     _aggregator.discard();
     host.attachAggregator(null);
+    host.attachSchedule(null);
     host.haltRun();
     _results.add(
       _result(
@@ -425,6 +491,7 @@ class GlassBenchmarkRunner {
         frames: frames,
         elapsedUs: elapsedUs,
         cancelled: true,
+        schedule: schedule,
       ),
     );
     _finalize(GlassBenchmarkPhase.cancelled);
@@ -439,6 +506,7 @@ class GlassBenchmarkRunner {
     _stopwatch.stop();
     _aggregator.discard();
     host.attachAggregator(null);
+    host.attachSchedule(null);
     try {
       host.haltRun();
     } on Object {
@@ -465,8 +533,8 @@ class GlassBenchmarkRunner {
     _phase = terminal;
     _endedAt = DateTime.now();
     // Mark modes that never ran, so the report lists every mode.
-    for (var i = _results.length; i < plan.modes.length; i++) {
-      _results.add(_notRun(plan.modes[i]));
+    for (var i = _results.length; i < plan.runs.length; i++) {
+      _results.add(_notRun(plan.runs[i], i + 1));
     }
     final saved = _savedConfig;
     if (saved != null) {
@@ -488,7 +556,7 @@ class GlassBenchmarkRunner {
 
   /// Records one render-path observation for the current mode.
   void _sampleRenderPath() {
-    final mode = plan.modes[_modeIndex];
+    final mode = plan.runs[_modeIndex].mode;
     final expected = expectedGlassRenderPath(mode);
     final report = host.renderPath();
     _pathSamples++;
@@ -517,12 +585,12 @@ class GlassBenchmarkRunner {
   }
 
   void _publish(String message) {
-    final index = _modeIndex.clamp(0, plan.modes.length - 1);
+    final index = _modeIndex.clamp(0, plan.runs.length - 1);
     progress.value = GlassBenchmarkProgress(
       phase: _phase,
       modeIndex: _modeIndex,
-      modeCount: plan.modes.length,
-      modeLabel: plan.modes[index].label,
+      modeCount: plan.runs.length,
+      modeLabel: plan.runs[index].label,
       measuredMs: _stopwatch.elapsedMicroseconds / 1000,
       message: message,
     );
@@ -558,8 +626,10 @@ class GlassBenchmarkRunner {
     required int elapsedUs,
     bool timedOut = false,
     bool cancelled = false,
+    GlassFrameScheduleSummary? schedule,
   }) {
-    final mode = plan.modes[_modeIndex];
+    final run = plan.runs[_modeIndex];
+    final mode = run.mode;
     final expected = expectedGlassRenderPath(mode);
     final reasons = <String>[];
     var validity = GlassBenchmarkValidity.valid;
@@ -698,6 +768,10 @@ class GlassBenchmarkRunner {
 
     return GlassBenchmarkModeResult(
       mode: mode,
+      surfaces: run.surfaces,
+      repeat: run.repeat,
+      runOrder: _modeIndex + 1,
+      schedule: schedule,
       validity: validity,
       reasons: reasons,
       measurementStarted: _measurementStarted,
@@ -725,14 +799,17 @@ class GlassBenchmarkRunner {
   /// a little after their frames). Two frames or 2 %, whichever is larger.
   int _frameTolerance(int drawn) => drawn * 2 ~/ 100 > 2 ? drawn * 2 ~/ 100 : 2;
 
-  GlassBenchmarkModeResult _notRun(SistrumGlassMode mode) =>
+  GlassBenchmarkModeResult _notRun(GlassBenchmarkRun run, int runOrder) =>
       GlassBenchmarkModeResult(
-        mode: mode,
+        mode: run.mode,
+        surfaces: run.surfaces,
+        repeat: run.repeat,
+        runOrder: runOrder,
         validity: GlassBenchmarkValidity.notRun,
         reasons: const ['not reached because the benchmark stopped first'],
         measurementStarted: false,
         summary: null,
-        expectedPath: expectedGlassRenderPath(mode),
+        expectedPath: expectedGlassRenderPath(run.mode),
         pathSamples: 0,
         pathMatches: 0,
         lastPath: 'unknown',

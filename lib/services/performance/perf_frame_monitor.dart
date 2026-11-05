@@ -4,6 +4,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/services/performance/glass_benchmark_aggregator.dart';
+import 'package:sistrum/services/performance/glass_frame_schedule.dart';
 import 'package:sistrum/services/performance/perf_frame_window.dart';
 import 'package:sistrum/services/performance/perf_spike_recorder.dart';
 
@@ -36,6 +37,10 @@ class PerfFrameMonitor {
   /// Null outside a benchmark run.
   GlassBenchmarkAggregator? benchmarkAggregator;
 
+  /// Developer POC benchmark only: VSync, callback and raster intervals of the
+  /// measured interval. Null outside a benchmark run.
+  GlassFrameScheduleRecorder? benchmarkSchedule;
+
   void start() {
     if (_running) return;
     _running = true;
@@ -44,9 +49,10 @@ class PerfFrameMonitor {
     // FrameTiming delivery. Comparing the two counts shows lost timings.
     if (!_beginCounting) {
       _beginCounting = true;
-      SchedulerBinding.instance.addPersistentFrameCallback(
-        (_) => _beginFrames++,
-      );
+      SchedulerBinding.instance.addPersistentFrameCallback((_) {
+        _beginFrames++;
+        benchmarkSchedule?.onBeginFrame();
+      });
     }
   }
 
@@ -76,7 +82,13 @@ class PerfFrameMonitor {
   void onTimings(List<FrameTiming> timings) {
     _timingsReceived += timings.length;
     if (!_collecting) return;
+    final schedule = benchmarkSchedule;
+    schedule?.onTimingsArrived(timings.length);
     for (final timing in timings) {
+      schedule?.onFrameTiming(
+        vsyncStartUs: timing.timestampInMicroseconds(FramePhase.vsyncStart),
+        rasterFinishUs: timing.timestampInMicroseconds(FramePhase.rasterFinish),
+      );
       window.add(
         buildUs: timing.buildDuration.inMicroseconds,
         rasterUs: timing.rasterDuration.inMicroseconds,

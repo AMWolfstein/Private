@@ -42,7 +42,7 @@ GlassBenchmarkModeResult _measured(SistrumGlassMode mode) {
 }
 
 void main() {
-  const plan = GlassBenchmarkPlan();
+  final plan = GlassBenchmarkPlan();
 
   String report(List<GlassBenchmarkModeResult> results, {String? cancel}) =>
       formatGlassBenchmarkReport(
@@ -157,10 +157,6 @@ void main() {
       expect(text, contains('-- $label'), reason: label);
     }
     expect(text, contains('Worst spike episodes per renderer'));
-    expect(
-      plan.modes.length,
-      5,
-      reason: 'the default plan runs all five modes',
-    );
+    expect(plan.runs.length, 5, reason: 'the default plan runs all five modes');
   });
 }
