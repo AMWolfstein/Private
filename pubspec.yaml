@@ -41,6 +41,10 @@ dependencies:
   cupertino_icons: ^2.0.0
   volume_controller: ^3.7.1
 
+  # Developer-only Glass POC (Developer Options > Glass POC). Pinned to the
+  # inspected revision; see docs/reference/liquid_glass_widgets/SOURCES.md.
+  liquid_glass_widgets: 1.16.1
+
   # Local artwork color extraction
   material_color_utilities: 0.13.0
 

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:sistrum/providers/performance/glass_poc_mode_provider.dart';
 import 'package:sistrum/providers/performance/perf_hud_settings_provider.dart';
 import 'package:sistrum/services/performance/perf_frame_monitor.dart';
 import 'package:sistrum/services/performance/perf_frame_window.dart';
@@ -250,6 +251,7 @@ class _PerfHudOverlayState extends ConsumerState<PerfHudOverlay> {
       'Raster  p50 ${_ms(snap?.rasterP50Ms)}  p90 ${_ms(snap?.rasterP90Ms)}  p99 ${_ms(snap?.rasterP99Ms)}',
       'Window   ${snap?.windowMs == null ? 'n/a' : '${(snap!.windowMs! / 1000).toStringAsFixed(1)} s'}',
       'Route   $_route',
+      'Glass   ${ref.watch(glassPocModeProvider).label}',
       'Monitoring   ${monitor.isRunning ? 'on' : 'off'}',
     ];
     return Column(
@@ -312,7 +314,11 @@ class _PerfHudOverlayState extends ConsumerState<PerfHudOverlay> {
     if (snap == null) return;
     Clipboard.setData(
       ClipboardData(
-        text: formatPerfReport(screen: _route, snapshot: snap),
+        text: formatPerfReport(
+          screen: _route,
+          snapshot: snap,
+          glassMode: ref.read(glassPocModeProvider).label,
+        ),
       ),
     );
     setState(() => _copied = true);

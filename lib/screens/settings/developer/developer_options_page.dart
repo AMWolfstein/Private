@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/l10n/l10n.dart';
+import 'package:sistrum/providers/performance/glass_poc_mode_provider.dart';
 import 'package:sistrum/providers/performance/perf_hud_settings_provider.dart';
+import 'package:sistrum/screens/settings/developer/glass_poc_page.dart';
 import 'package:sistrum/services/performance/perf_frame_monitor.dart';
 import 'package:sistrum/services/performance/perf_frame_window.dart';
 import 'package:sistrum/utils/layout/adaptive_layout.dart';
@@ -66,6 +68,15 @@ class DeveloperOptionsPage extends ConsumerWidget {
                   onTap: monitor.reset,
                 ),
                 SettingsItem(
+                  icon: Icons.blur_on,
+                  title: 'Glass POC',
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute<void>(
+                      builder: (_) => const GlassPocPage(),
+                    ),
+                  ),
+                ),
+                SettingsItem(
                   icon: Icons.copy_outlined,
                   title: l10n.devOptionsCopyReport,
                   showDivider: false,
@@ -73,6 +84,7 @@ class DeveloperOptionsPage extends ConsumerWidget {
                     final report = formatPerfReport(
                       screen: 'developer-options',
                       snapshot: monitor.currentSnapshot(),
+                      glassMode: ref.read(glassPocModeProvider).label,
                     );
                     await Clipboard.setData(ClipboardData(text: report));
                     if (!context.mounted) return;

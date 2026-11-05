@@ -133,4 +133,16 @@ void main() {
     expect(report, contains('frame_budget_exceedance=33.3%'));
     expect(report, contains('window=rolling'));
   });
+
+  test('the report names the selected Glass POC mode when one is given', () {
+    final empty = PerfFrameWindow().snapshot(hz: 60, hzIsFallback: true);
+    final labelled = formatPerfReport(
+      screen: 'developer-options',
+      snapshot: empty,
+      glassMode: 'Reference Glass',
+    );
+    expect(labelled, endsWith('\nglass_mode=Reference Glass'));
+    final plain = formatPerfReport(screen: 'home', snapshot: empty);
+    expect(plain, isNot(contains('glass_mode=')));
+  });
 }
