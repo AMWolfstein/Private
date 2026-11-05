@@ -359,3 +359,149 @@ Use the profile APK (`sistrum-shared-backdrop-profile.apk`, SHA-256
 A result counts only if the difference is clear and repeated across runs. Basic
 Blur and Liquid Glass are not affected by this switch. Their device costs remain
 as measured in section 2.
+
+## 9. Addendum (2026-11-05, fourth review): `liquid_glass_renderer` comparison POC
+
+Sections 1–8 are unchanged. This section records the comparison POC. It is
+developer-only and reversible, and nothing in production uses it.
+
+### 9.1 Library and compatibility
+
+- Package: `liquid_glass_renderer` **1.0.0-dev.2** (pinned in `pubspec.yaml`,
+  published 2026-10-27 on pub.dev). Dependencies added by the solver:
+  `flutter_gpu`, `flutter_gpu_shaders`, `flutter_shaders`, `motor`; plus `hooks`
+  (native assets). Verified with `dart pub add --dry-run`, which changed no files.
+- SDK: the package needs Dart `>=3.13.0 <3.14.0` and Flutter `>=3.47.0`.
+  Sistrum uses Dart 3.13.5 and Flutter 3.47.7. **Compatible.** No upgrade needed.
+- Android: `minSdk` is 24 (the Flutter default). The package names no minimum
+  API of its own. Impeller on Android falls back to GLES, so a minimum of 24 is
+  **not verified** for full glass.
+- Flutter GPU is a preview API. It is enabled by the meta-data key
+  `io.flutter.embedding.android.EnableFlutterGPU`. It is set only in
+  `android/app/src/profile/AndroidManifest.xml`, so release builds are unchanged.
+  Verified: the key is in the built profile manifest. The release manifest has
+  no change.
+- Native assets are on by default in this Flutter (`features.dart`, stable).
+  The package's shader hook built on Linux and Android.
+
+### 9.2 Rendering architecture (verified in source, `5911897`-style check on the 1.0.0-dev.2 archive)
+
+- Public exports (`lib/liquid_glass_renderer.dart`): `LiquidGlassLayer`,
+  `LiquidGlass`, `LiquidGlassCapture`, `FakeGlass`, `LiquidGlassBlendGroup`,
+  `LiquidGlassSettings`, `LiquidRoundedSuperellipse` and others. Presets:
+  `LiquidGlassSettings.ios27RegularLight/Dark`, `ios27Clear`, `ios27Regular`.
+- `LiquidGlass.auto` creates its own layer when none encloses it. A
+  `LiquidGlassLayer` holds many `LiquidGlass` shapes (the README limits this to 16
+  per layer).
+- `FakeGlass` is the fallback without Flutter GPU. The library's own log says so:
+  "Flutter GPU is unavailable; LiquidGlassLayer is using FakeGlass."
+- Shared backdrop: `LiquidGlassCapture`, `BackdropGroup`, and `useBackdropGroup` /
+  `backdropKey` on `FakeGlass` and `LiquidGlass.auto` (`lib/src/fake_glass.dart`).
+  **Not used in this POC.** Its cost on device is unmeasured.
+- Resolution: the library reduces blur cost by Impeller's own Gaussian
+  downsampling, and raises a frost floor to Impeller's downsample point
+  (`lib/src/liquid_glass_settings.dart`, around lines 110–135 and 233–246). This
+  is **not** a fixed 0.33 factor. The BitChord 0.33 technique is **not** claimed
+  here.
+- GPU readback: not verified. The library describes its capture as a GPU pass
+  (`LiquidGlassCapture`). No CPU readback is documented, and none was measured.
+
+### 9.3 POC changes (commit `3c7b1a6`)
+
+- `lib/widgets/glass_poc/sistrum_glass_mode.dart`: `rendererGlass`, labelled
+  "New renderer (liquid_glass_renderer)". `usesRenderer` is true for it only.
+- `lib/widgets/glass_poc/sistrum_renderer_glass.dart`: the only file that imports
+  the renderer (prefix `lgr`, because the class names clash with the widgets
+  package). Each surface is `LiquidGlass.auto` with `ios27Regular{Dark,Light}`.
+- `lib/widgets/glass_poc/sistrum_glass_scene.dart`: scenes A–D (surface count,
+  background animation, list scrolling).
+- `lib/providers/performance/glass_poc_mode_provider.dart`: scene state, and
+  `glassPocReportLabel`, which names renderer, scene, animation and shared state.
+- `lib/screens/settings/developer/glass_poc_page.dart`: scene chips, Reset and Copy
+  metrics, a scrolling control block, and the stage kept below it.
+- HUD and Developer Options reports: the full label.
+- Tests: `test/widgets/glass_poc/renderer_comparison_test.dart` (mode selection,
+  scene configuration, label, renderer tree per scene, animation and scroll
+  state) and updates to the existing page and shared-backdrop tests. Full
+  `flutter test`: All tests passed, 2,548 tests, exit 0.
+
+### 9.4 Deviation: per-surface layer for the renderer
+
+The library's example puts many shapes in one `LiquidGlassLayer`. In the Linux
+Impeller harness, a shared layer drew **none** of its shapes. A standalone
+`LiquidGlass.auto` drew its glass, using `FakeGlass` (the render without Flutter
+GPU). So the renderer mode uses one layer per surface, as Reference Glass does.
+This is a deviation from the library's pattern, and the cause is not diagnosed.
+
+### 9.5 Visual correctness: what is and is not verified
+
+| Check | Result |
+|---|---|
+| Standalone renderer shape draws (Linux, Impeller, no Flutter GPU) | Verified: frosted, tinted surface; text behind it is blurred. `FakeGlass` path. |
+| Shared `LiquidGlassLayer` with several shapes (Linux) | **Failed**: nothing drawn. Reason not diagnosed. |
+| Full Flutter GPU shader path (Linux, `flutter run --enable-flutter-gpu`) | **Not verified**: no fallback message, but the glass is still not visible in the capture. |
+| Full Flutter GPU path on Android device | **Not verified**: needs the profile APK on the device. |
+| Rounded clipping, edge highlight, refraction, hit testing | **Not verified** on the full path. Hit testing: the widget tests tap the child. |
+| Shader compile on Android | **Not verified**. The hook built, but the device run has not been checked. |
+
+A low raster time with missing glass is an invalid result. Until the full path is
+visible on the device, the renderer's timings are not evidence of anything.
+
+### 9.6 HUD frame-budget audit (formula documented, not changed)
+
+Source: `lib/services/performance/perf_frame_window.dart` (`snapshot`) and
+`perf_frame_monitor.dart`. Flutter definitions: `dart:ui`
+`FrameTiming` (`root/bin/cache/pkg/sky_engine/lib/ui/platform_dispatcher.dart`).
+
+- Window: the last **300 frames** (rolling), regardless of time.
+- `build` and `raster` percentiles (P50/P90/P99): from `buildDuration` and
+  `rasterDuration` of the window's frames.
+- **`frame_budget_exceedance`** = (count of window frames with `totalSpan` >
+  `1e6 / hz` µs) ÷ (window frames) × 100. `totalSpan` is "the timespan between
+  vsync start and raster finish" (Flutter docs). It is **not** the raster time.
+- `fps_estimate` = (frames − 1) ÷ (newest raster-finish timestamp − oldest), in
+  frames per second. It counts frames delivered inside the window, so during idle
+  periods it reflects old frames, not the display's current rate.
+
+The apparent inconsistency is resolved. Raster P50 of 18.8 ms with exceedance of
+84–100% is consistent, because a raster time above the budget implies a span above
+the budget. The one assumption is that raster starts after vsync start, which the
+docs do not state outright. Under it, exceedance is at least the fraction of frames
+whose raster time is above the budget. The definition is documented here and was
+not changed.
+
+### 9.7 Benchmark methodology
+
+- Scenes (identical geometry in every renderer): A one surface; B four surfaces,
+  static; C four surfaces, animated background; D four surfaces, list scrolling
+  at one pass per 20 s.
+- Renderers: Transparent Baseline; Liquid Glass (widgets, standard); New renderer
+  (`liquid_glass_renderer`, per-surface); Reference Glass (widgets, premium own
+  layer). Basic Blur is unchanged.
+- Fairness limits: the renderer uses its own iOS 27 preset, not the widgets
+  settings. Blur and refraction models differ, so the look is matched by
+  intent only. The renderer's per-surface layers differ from the library's
+  shared-layer example. The shared-backdrop switch applies to Reference only.
+- Use the HUD's Reset metrics and Copy metrics buttons between runs. Each copied
+  report names the renderer, scene, animation and shared state.
+
+### 9.8 Decision and remaining measurements
+
+No recommendation to adopt the renderer. The decision criteria in the task need
+device evidence that has not been collected:
+
+1. Visible full-path glass on the device (not `FakeGlass`), in each scene.
+   Confirm rounded clipping, edge highlight and refraction by eye.
+2. Raster P50/P90/P99 and frame-budget exceedance for A, B, C and D, for each of the
+   three renderers, on the profile APK
+   (`sistrum-liquid-glass-comparison-profile.apk`, SHA-256
+   `e757326ab134d8be6467507569fb5116b540b74b73b90e9e6fa9356cc55f53fa`).
+3. Repeat each run at least twice. Judge only clear, repeated differences.
+4. Compare the same scenes against Transparent Baseline, to see the glass cost.
+5. Treat the library as a viable candidate only if its full path is visible,
+   raster P90 is below 16.67 ms with headroom in the scrolling and animated scenes,
+   and it stays stable. If Liquid Glass and this renderer both exceed the budget
+   under equivalent conditions, recommend against production integration.
+
+Until that is done, `liquid_glass_widgets` 1.16.1 remains the only glass
+dependency with device-collected numbers, and it remains POC-only.
