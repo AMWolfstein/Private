@@ -1,174 +1,213 @@
 # Glass rendering root cause (developer POC)
 
-Status: **provisional**. This report separates what the code and the recorded
-benchmark numbers establish from what needs a device capture that has not been
-made yet. Nothing here declares the performance problem fixed. Production UI is
-unchanged and remains glass-free (see `AGENTS.md`).
+Status: **open**. The instrumentation and the repeatability protocol are in
+place (commit `5483fa3`). The device runs that would answer the open questions
+have **not** been made from this environment, so no new performance result is
+claimed here. Production UI is unchanged and remains glass-free (see
+`AGENTS.md`). Nothing in this document declares the Glass engine fixed.
 
-Scope: the automated 60 s Scene D benchmark on `new-blur`, profile APK with
-`SISTRUM_PERF_HUD=true`, Android arm64. Modes: Transparent Baseline, Basic Blur,
-Old Liquid Glass, New Full Glass, New FakeGlass. Benchmark code:
-`lib/widgets/glass_poc/glass_benchmark_runner.dart`,
-`lib/services/performance/glass_benchmark_aggregator.dart`,
-`lib/widgets/glass_poc/glass_benchmark_report.dart`.
+Scope of the earlier evidence: one automated 60 s Scene D run per renderer on
+`new-blur`, profile APK with `SISTRUM_PERF_HUD=true`, Android arm64.
 
-## 1. Recorded results (single run, as reported)
+## 1. Recorded single-run results (unchanged)
 
 | Renderer | Raster P90 | Total span P90 | Budget exceedance |
 |---|---|---|---|
 | Transparent Baseline | 4.82 ms | 7.47 ms | 0% |
 | Old Liquid Glass | 7.25 ms | 9.52 ms | 0% |
-| New Full Glass | 23.71 ms | 28.57 ms | 100% |
+| New Full Glass (4 surfaces) | 23.71 ms | 28.57 ms | 100% |
 | New FakeGlass | 8.49 ms | 10.90 ms | 0.1% |
 | Basic Blur | 6.93 ms | 9.79 ms | 0% |
 
-Shared conditions: Scene D, four surfaces, automatic scroll at about
-896.4 logical px/s, 22 boundary reversals. Every mode produced about 44.9 Flutter
-frames per second (about 2694 frames over 60 s).
-
-Earlier manual New Full Glass runs gave a Raster P90 near 10 ms. Only one
-automated run per mode is on record, so no median or spread can be stated yet.
+All five modes produced about 44.9 frames per second, about 2694 frames over
+60 s. Earlier manual New Full Glass runs gave a raster P90 near 10 ms. Each mode
+has one automated run, so no median or spread can be stated.
 
 ## 2. Confirmed findings
 
-**F1. The 44.9 frames/s rate does not depend on the renderer.** Raster P90 ranges
-from 4.82 ms to 23.71 ms across the five modes, yet the frame count is the same.
-A rate limit that holds with a 4.8 ms raster and with a 23.7 ms raster is not
-caused by rasterization. The renderer cannot explain the frame count.
+**F1. The frame count does not depend on the renderer.** Raster P90 ranges from
+4.82 ms to 23.71 ms, yet every mode produced the same frame count. Rasterization
+cost cannot explain that count.
 
-**F2. The Full GPU path is only enabled in the profile build.** The profile
-manifest sets `io.flutter.embedding.android.EnableFlutterGPU`. The render-path
-probe (`sistrum_glass_render_path.dart`) classifies by the mounted widget tree:
-`_RawShapes` means the real layer is present, and `RawFakeGlass` means the
-FakeGlass fallback. A `full_gpu` result is therefore a **widget-tree
-configuration check**. It shows that the package built its GPU subtree. It does
-not show that Flutter GPU executed the shaders on the device.
+**F2. The `full_gpu` result is a widget-tree check, not GPU execution.** The
+render-path probe (`sistrum_glass_render_path.dart`) classifies by the mounted
+tree: `_RawShapes` is the real layer, `RawFakeGlass` is FakeGlass. The profile
+manifest enables `io.flutter.embedding.android.EnableFlutterGPU`. Whether the
+shaders ran on the device is not verified.
 
-**F3. Each Glass surface owns its own `LiquidGlassLayer`.** Four surfaces mean four
-layers in New Full Glass, and each layer is a separate backdrop read and
-composition. This is a structural cost that FakeGlass and Basic Blur do not pay
-in the same way. The cost is not measured separately yet.
+**F3. Each glass surface owns its own `LiquidGlassLayer`.** Four surfaces mean
+four separate layers in New Full Glass. The per-layer cost is not measured yet.
 
 **F4. The benchmark measures the whole interval.** `GlassBenchmarkAggregator`
-records every FrameTiming delivered during the 60 s Stopwatch interval, with
-episodes and coverage computed over that interval. The 44.9 figure is therefore
+records every FrameTiming during the 60 s Stopwatch interval. The 44.9 figure is
 not a rolling-window artefact.
 
-## 3. Not established (Task 1)
+## 3. Correction to the earlier manual/automatic comparison (Task 3)
 
-**U1. Cause of the New Full Glass raster variation (10 ms against 24 ms).** Not
-established. The code path was not profiled on a device. The suspects, in the
-order they should be tested, are:
+The earlier report said the manual measurements used user dragging. That is
+wrong, and the implementation shows why:
 
-1. Backdrop capture and the intermediate textures for four independent layers
-   (per-frame copy or allocation). Not verified against the package source in
-   this report.
-2. Shader pipeline compilation on the first frames of a run. This is not assumed.
-   It needs a trace that separates the first seconds of a run from the steady state.
-3. Thermal or clock throttling. A later run after a hot run would show it. Run
-   order was not randomized.
+- **"Manual" meant manual selection.** The user chose the renderer, scene and
+  speed in the Glass POC page. The benchmark itself was never dragged by hand.
+- **The scroll was the automatic scroller.** The earlier HUD captures recorded
+  `scroll_mode=auto`, `scroll_speed_preset=fast` and `scroll_speed_actual≈897
+  logical_px_per_second`. `SistrumAutoScroller` (a `Ticker`, no `animateTo`)
+  drives that scroll; a finger does not.
+- **Not every earlier test is covered by this correction.** Only the captures
+  whose HUD lines are on record are known to be auto-scrolled. Any earlier run
+  without those lines is not classified here.
 
-Manual and automated runs differ in run order, warm-up and whether the HUD
-overlay was in the same position, so their 10 ms vs 24 ms values cannot be
-attributed to the renderer until the runs are repeated under one protocol
-(Section 6).
+So the manual and automated runs compared earlier differed in run order,
+warm-up, and whether the same protocol and validity rules applied. They did not
+differ in how the list moved.
 
-## 4. Explanation of the 44.9 frames/second pattern (Task 2)
+## 4. Instrumentation added (Task 1)
 
-What is known:
+`GlassFrameScheduleRecorder` (`lib/services/performance/glass_frame_schedule.dart`)
+records four series for each measured interval, in bounded buffers with no
+per-frame allocation. Each series names its clock:
 
-- The pattern is identical across all renderers, so it sits above rendering.
-- The auto-scroller (`SistrumAutoScroller`) is driven by a `Ticker`. A Ticker
-  requests a frame per vsync and does not set a frame rate. It does not use
-  `animateTo`, and no fixed-rate timer exists in the benchmark path. The scroller
-  does not cap the frame rate.
-- `frame_begin_callbacks` (persistent frame callback) and
-  `frame_timings_received` (`addTimingsCallback`) are both recorded. If the two
-  counts match, no FrameTiming was lost. The count from the single reported run
-  was not checked against this, so it is not confirmed.
+| Series | Event or delivery | Clock |
+|---|---|---|
+| `vsync_start_interval_ms` | event (`FrameTiming.vsyncStart`) | engine |
+| `raster_finish_interval_ms` | event (`FramePhase.rasterFinish`) | engine |
+| `frame_begin_interval_ms` | delivery (persistent frame callback) | Dart Stopwatch |
+| `frame_timing_arrival_interval_ms` | delivery (`addTimingsCallback` batch) | Dart Stopwatch |
 
-Candidate explanations, not yet distinguished:
+Engine and delivery intervals are never subtracted from each other. Two engine
+series are event timestamps. Two Stopwatch series are the times Dart saw the
+callback, not the time the frame was scheduled.
 
-- **C1. The panel or the vsync signal runs at about 45 Hz, not 60 Hz** (for
-  example, a power or refresh-mode policy, or a reported 60 Hz that differs from
-  the active mode). Then Flutter renders every vsync and the count matches the
-  panel. Test: the active refresh rate during the run.
-- **C2. Android presentation drops frames.** The frames are produced but not all
-  presented. This is the Android display side, which Dart timings do not see.
-  Test: the Perfetto FrameTimeline present timestamps.
-- **C3. Flutter frame scheduling drops every few vsyncs** under load that the
-  raster P90 does not show. Test: the vsyncStart interval distribution.
+Also recorded per run: `frame_begin_events` (drawn frames),
+`timing_batches` and `timings` (FrameTiming received), `long_vsync_intervals`
+(engine vsync interval over 1.5 nominal periods), and `missed_slots` (nominal
+periods skipped by vsync intervals, a 2-period gap counts 1).
 
-Dart-side measurement cannot separate C1, C2 and C3. The frame-start timestamps
-are in `FrameTiming` (`FramePhase.vsyncStart`), but the benchmark does not record
-their intervals yet.
+**What this does and does not show.** The implied refresh from the median vsync
+interval is evidence about the vsync cadence only. It is not the display's
+measured frame rate, and the report does not present it as one.
 
-## 5. Manual against automated differences (Task 3)
+**Refresh rates.** The requested refresh rate is **not** available from Dart.
+The reported rate comes from `FlutterView.display.refreshRate`, which is the
+observed value. Reading the window's preferred mode needs a native channel, and
+none was added (see section 7 for the adb command that reads it without code).
 
-Checked against the code:
+**Thermal state.** Not accessible from Dart. See section 7.
 
-| Item | Manual | Automated | Status |
-|---|---|---|---|
-| Widget tree and surface geometry | same POC surfaces | same `SistrumGlassScene` | equal by construction, not re-verified on device |
-| Glass parameters | `sistrumRendererGlassSettings` | same function | equal |
-| Scrolling | user drag | `SistrumAutoScroller` Ticker | **differs** |
-| Warm-up | none | 5 s active warm-up, not sampled | **differs** |
-| Run order | user-chosen | fixed plan, 2 s transition between modes | **differs** |
-| Background | same | same | equal |
+## 5. Layer-count experiment and repeatability (Tasks 2, 4, 5)
 
-The run order and the warm-up mean the two protocols are not identical. The
-manual New Full Glass ~10 ms result cannot be compared with the automated 24 ms
-until both are run under the same protocol.
+Implemented in the developer POC only:
 
-No repeated measurements exist yet. No median, variability or worst-case figure
-is claimed from this report.
+- **Surface counts.** Scene D's four surfaces are the header back button, the
+  header capsule, the mini player and the tab bar. The experiment uses
+  - 1 surface: mini player only;
+  - 2 surfaces: mini player and tab bar;
+  - 4 surfaces: all four (the standard Scene D layout).
+  Surfaces are counted by the same render-path probe as before, so a missing or
+  extra layer makes the run invalid.
+- **Unavoidable differences.** The 1, 2 and 4 configurations do not have the same
+  glass-covered area. Stepping from 2 to 4 also adds the two header controls. So
+  the scaling result is layer count together with covered pixels. A
+  same-area control (one large layer against four small ones of equal total
+  area) is needed to separate them, and it is not in this change.
+- **Protocol.** Diagnostic plan: Transparent Baseline; New Full Glass at 1, 2
+  and 4 surfaces; Old Liquid Glass at 4; New FakeGlass at 4; Basic Blur optional.
+  Three repeats, counterbalanced: each round rotates the configuration list and
+  odd rounds run it backwards. The executed order is recorded per run. Each run
+  keeps the standard timing (2 s transition, 5 s warm-up, 60 s measured, Ticker
+  scroll at 900 px/s). The standard 60 s protocol is unchanged.
+- **No retries.** An invalid, incomplete or cancelled run stays in the report,
+  is excluded from every statistic, and is never replaced.
+- **Report.** `formatGlassDiagnosticReport`: device and clocks; executed order
+  and validity; VSync and frame production per run; per-run raster and span
+  P50/P90/P99 and exceedance; repeatability (median, min, max, range, CV) per
+  configuration; New Full Glass scaling with a repeat-separation check; frame-rate
+  evidence; conclusions; open questions.
 
-## 6. Recommended renderer for Sistrum (provisional)
+**Status: not yet run on a device.** The layer-scaling values, the repeatability
+statistics and the 44.9 frames/s evidence are **not measured** by this change.
+The profile APK is built with the protocol, but the numbers come from running
+it on the device (section 7).
 
-Production has no glass today, and the architecture decision requires device
-data in the same scene that meets the under-3% frame-budget target before any
-production glass. Against that rule:
+## 6. Hypotheses for the 44.9 frames/s pattern
 
-- New Full Glass fails the budget in the recorded run (100% exceedance) and its
-  variation is unexplained. It cannot be recommended.
-- Old Liquid Glass and Basic Blur stayed within budget (0% exceedance) in the
-  recorded run, but each run was single.
-- New FakeGlass had 0.1% exceedance with raster P90 of 8.49 ms.
+Confirmed: the rate is identical across renderers (F1).
 
-**Provisional recommendation:** keep production glass-free. If a renderer must
-be chosen for a later decision, the current evidence favours **New FakeGlass**
-over New Full Glass, because it stays within budget in the recorded run. It is not
-a production choice: it needs a repeated device run before it is considered.
+Plausible, not yet tested:
 
-## 7. Smallest justified next change
+- **H1. The panel or its refresh policy runs near 45 Hz.** The engine would then
+  deliver vsync at about 22 ms, and frames would match the vsync cadence. Test:
+  the vsync interval P50 and the adb refresh query (section 7). If the vsync
+  interval is about 22 ms, H1 is supported and H2 is not needed.
+- **H2. Flutter drops every few vsync slots.** The vsync cadence is 60 Hz, but
+  frames are not produced on some slots. Test: `missed_slots` and
+  `frames_per_s` in the diagnostic report.
+- **H3. Android drops frames after raster.** Frames are produced but not all
+  presented. Dart timings cannot see this. Test: the FrameTimeline trace in
+  section 7.
 
-One diagnostic change, no optimization and no renderer change:
+The diagnostic report's conclusions section applies these tests mechanically
+and labels each candidate as evidence, not as a cause.
 
-1. Add the vsyncStart and rasterFinish interval histogram to the benchmark report
-   (per mode), and the active display refresh rate read at the start and end of
-   each mode. Record `frame_begin_callbacks` and `frame_timings_received` in the
-   same line as the rate.
-2. Capture a Perfetto FrameTimeline trace for the Transparent Baseline mode and
-   for New Full Glass, on the same device, with the same protocol:
+## 7. Device-side verification (no Dart evidence is enough for these)
 
-   ```
-   adb shell cmd display get-display-modes   # active refresh rate
-   adb shell perfetto -c - --txt -o /data/misc/perfetto-traces/glass.pftrace <<'EOF'
-   buffers: { size_kb: 65536 }
-   data_sources: { config { name: "linux.ftrace" ftrace_config { ftrace_events: "sched/sched_switch" } } }
-   data_sources: { config { name: "android.surfaceflinger.frametimeline" } }
-   duration_ms: 70000
-   EOF
-   ```
+Run each command on the device with USB debugging on, the profile APK installed,
+and the device left in the same state for every run.
 
-   The trace answers C1 (refresh), C2 (presentation drops) and C3 (scheduling).
-3. Run each mode at least three times in a randomized order with the same
-   warm-up, then report median, spread and worst case.
+**Refresh rate (requested and observed).**
 
-## 8. Open items
+```
+adb shell dumpsys display | grep -iE "mRefreshRate|preferredRefreshRate|refreshRate" | head -20
+adb shell dumpsys SurfaceFlinger --display-id 2>/dev/null | head -40
+```
 
-- U1 (Full Glass raster variation): unresolved. Needs items 2 and 3 above.
-- U2 (44.9 frames/second): unresolved. Needs the refresh rate and the FrameTimeline
-  trace to decide between C1, C2 and C3.
-- The `full_gpu` result has not been confirmed by GPU execution. Only the widget
-  configuration was checked.
+Record the active mode and the preferred mode. A difference between them is
+evidence for H1.
+
+**Thermal state, before and after each run.**
+
+```
+adb shell dumpsys thermalservice | head -30
+```
+
+Record the `Thermal Status` value. Record the time of each run as well, so a
+thermal change can be matched to a run.
+
+**FrameTimeline trace.** Capture a system trace of the Transparent Baseline
+run and of a New Full Glass run, both at 4 surfaces, using the same device state.
+The FrameTimeline track lists the presentation time of each frame, which tests
+H3. Use Android Studio's System Trace or Perfetto's `record_android_trace` with
+the `frametimeline` and `sched` data sources, then open the trace in
+ui.perfetto.dev. The inline `perfetto -c -` configuration written in an earlier
+revision of this document was not run and is not recommended.
+
+**Protocol for the diagnostic runs.** Use `Run Diagnostic Repeats` in the POC
+page, then `Copy Diagnostic Report`. Keep the device on the charger, screen on,
+no other apps in the foreground, and do not touch the screen during a run.
+Record the adb refresh query and the thermal status before the first run and
+after the last one.
+
+## 8. Open questions
+
+1. The requested and observed display refresh rate during each run (section 7).
+2. Whether the 44.9 frames/s pattern comes from the vsync cadence (H1), the
+   frame scheduling (H2) or the presentation (H3). The FrameTimeline trace and
+   the repeat-run vsync data decide between them.
+3. Whether the New Full Glass raster cost (10 ms in one manual run, 24 ms in the
+   automated run) is repeatable. The three diagnostic repeats decide that.
+4. Whether layer count or covered area drives the scaling. Needs a same-area
+   control, which is not implemented.
+5. Whether `full_gpu` executes the shaders on the device. Only the widget tree is
+   checked.
+6. Thermal state during the runs (section 7).
+
+## 9. Renderer recommendation
+
+Production has no glass, and the architecture decision requires device
+measurements in the same scene that meet the under-3% frame-budget target before
+any production glass. Nothing in this document changes that.
+
+From the single earlier run only: New Full Glass exceeded the budget in every
+frame (100%) and its raster variation is unexplained. Old Liquid Glass and Basic
+Blur stayed within budget. New FakeGlass had 0.1% exceedance. None of this is
+repeated yet, so no renderer is recommended from it.
