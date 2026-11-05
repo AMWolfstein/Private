@@ -3912,8 +3912,8 @@
     "semantic_hash": ""
   },
   "lib/widgets/header/profile_avatar.dart": {
-    "mtime": 1793842077.4624984,
-    "seen": 1793842560.2107182,
+    "mtime": 1793883682.7240026,
+    "seen": 1793884567.3020992,
     "ast_hash": "965ed2f9b4179c4c4aa89e36e3750981",
     "semantic_hash": ""
   },
@@ -7056,8 +7056,8 @@
     "semantic_hash": ""
   },
   "lib/services/playback/music_player/music_player_runtime.dart": {
-    "mtime": 1793842077.4624984,
-    "seen": 1793842560.2089658,
+    "mtime": 1793883682.6440027,
+    "seen": 1793884567.2983074,
     "ast_hash": "3330e2214a7f3d356f36975afff78aef",
     "semantic_hash": ""
   },
@@ -12102,8 +12102,8 @@
     "semantic_hash": ""
   },
   "lib/services/playback/audio/replaygain_state.dart": {
-    "mtime": 1793842077.4624984,
-    "seen": 1793842560.2078137,
+    "mtime": 1793883682.6440027,
+    "seen": 1793884567.295958,
     "ast_hash": "72f446c7a3ba6279fafd5f91015c4077",
     "semantic_hash": ""
   },
@@ -12312,8 +12312,8 @@
     "semantic_hash": ""
   },
   "lib/providers/artist_images/artist_image_providers.dart": {
-    "mtime": 1793842077.4584985,
-    "seen": 1793842560.2022135,
+    "mtime": 1793883682.6400027,
+    "seen": 1793884567.284769,
     "ast_hash": "dbe4a4cb477b7875fc89912dc07fba5f",
     "semantic_hash": ""
   },
@@ -12366,8 +12366,8 @@
     "semantic_hash": ""
   },
   "lib/providers/animated_artwork/animated_artwork_providers.dart": {
-    "mtime": 1793842077.4584985,
-    "seen": 1793842560.2022097,
+    "mtime": 1793883682.3840027,
+    "seen": 1793884567.2847633,
     "ast_hash": "dc070d751e6accff866e7cd9cfd3f20f",
     "semantic_hash": ""
   },
@@ -12378,14 +12378,14 @@
     "semantic_hash": ""
   },
   "lib/services/animated_artwork/animated_artwork_auto_pass.dart": {
-    "mtime": 1793842077.4584985,
-    "seen": 1793842560.2051134,
+    "mtime": 1793883682.6400027,
+    "seen": 1793884567.2903736,
     "ast_hash": "d1b11fa0d13ab18410c8f6d87f173444",
     "semantic_hash": ""
   },
   "lib/services/animated_artwork/animated_artwork_download.dart": {
-    "mtime": 1793842077.4584985,
-    "seen": 1793842560.2051172,
+    "mtime": 1793883682.6400027,
+    "seen": 1793884567.2903783,
     "ast_hash": "7dfc46b7bc8e810076f6f41b0483e813",
     "semantic_hash": ""
   },
@@ -12396,20 +12396,20 @@
     "semantic_hash": ""
   },
   "lib/services/animated_artwork/animated_artwork_store.dart": {
-    "mtime": 1793842077.4584985,
-    "seen": 1793842560.2051675,
+    "mtime": 1793883682.6400027,
+    "seen": 1793884567.2904701,
     "ast_hash": "964911fb8a4b839e627aa9df2d3b13a6",
     "semantic_hash": ""
   },
   "lib/services/animated_artwork/apple_artwork_client.dart": {
-    "mtime": 1793842077.4584985,
-    "seen": 1793842560.20517,
+    "mtime": 1793883682.6440027,
+    "seen": 1793884567.2904737,
     "ast_hash": "c5d48f706c4d160a205f0d874591415b",
     "semantic_hash": ""
   },
   "lib/services/animated_artwork/apple_artwork_parse.dart": {
-    "mtime": 1793842077.4584985,
-    "seen": 1793842560.2051713,
+    "mtime": 1793883682.6440027,
+    "seen": 1793884567.2904766,
     "ast_hash": "4609a199cb9d41530c58ff4e3b66297e",
     "semantic_hash": ""
   },
@@ -12492,8 +12492,8 @@
     "semantic_hash": ""
   },
   "lib/widgets/header/app_floating_header.dart": {
-    "mtime": 1793842077.4624984,
-    "seen": 1793842560.2106965,
+    "mtime": 1793883682.6480026,
+    "seen": 1793884567.3020582,
     "ast_hash": "16f3b8980825f4ade764bb3afb2bf9c1",
     "semantic_hash": ""
   },
@@ -12546,9 +12546,9 @@
     "semantic_hash": ""
   },
   "lib/services/performance/perf_frame_monitor.dart": {
-    "mtime": 1793876311.0027905,
-    "seen": 1793879154.1376283,
-    "ast_hash": "4e1a0458c46e04c9cf78a637d27af433",
+    "mtime": 1793883579.716005,
+    "seen": 1793884567.2953088,
+    "ast_hash": "276dff2b9ba49f57bf48224e701ba6f8",
     "semantic_hash": ""
   },
   "lib/services/performance/perf_frame_window.dart": {
@@ -12642,9 +12642,9 @@
     "semantic_hash": ""
   },
   "lib/screens/settings/developer/glass_poc_page.dart": {
-    "mtime": 1793876598.9984708,
-    "seen": 1793879154.1334274,
-    "ast_hash": "6fd8d23935de5a4ac1e2919a9d166335",
+    "mtime": 1793883688.8229887,
+    "seen": 1793884567.2887146,
+    "ast_hash": "f37ead91eba6c487750389f36f728883",
     "semantic_hash": ""
   },
   "lib/widgets/glass_poc/sistrum_glass_mode.dart": {
@@ -12702,9 +12702,9 @@
     "semantic_hash": ""
   },
   "lib/widgets/glass_poc/sistrum_auto_scroll.dart": {
-    "mtime": 1793876101.8117585,
-    "seen": 1793879154.141653,
-    "ast_hash": "4f0581a4b6d6988e9e79016e7482b582",
+    "mtime": 1793883519.9420402,
+    "seen": 1793884567.3015165,
+    "ast_hash": "91c8baeefe0a41be24f755ce03cf4262",
     "semantic_hash": ""
   },
   "lib/widgets/glass_poc/sistrum_glass_render_path.dart": {
@@ -12720,15 +12720,15 @@
     "semantic_hash": ""
   },
   "test/services/performance/perf_frame_collecting_test.dart": {
-    "mtime": 1793873076.1432996,
-    "seen": 1793873775.2813802,
-    "ast_hash": "73b0ef8f23b59e0895e2b407cfa09366",
+    "mtime": 1793883846.6679988,
+    "seen": 1793884567.335361,
+    "ast_hash": "93dc4ebdd90c46df34ea955fe448b013",
     "semantic_hash": ""
   },
   "test/widgets/glass_poc/auto_scroll_test.dart": {
-    "mtime": 1793876631.2026412,
-    "seen": 1793879154.1858702,
-    "ast_hash": "3b01c1c8ca962300ad13ef613f4bdf6d",
+    "mtime": 1793883846.659999,
+    "seen": 1793884567.3395147,
+    "ast_hash": "9262e4b8cad5f3bf7363f2cadb1adb44",
     "semantic_hash": ""
   },
   "test/widgets/glass_poc/glass_render_path_test.dart": {
@@ -12762,15 +12762,15 @@
     "semantic_hash": ""
   },
   "lib/widgets/glass_poc/glass_benchmark_report.dart": {
-    "mtime": 1793876229.121729,
-    "seen": 1793879154.1416469,
-    "ast_hash": "4ef0b2d89b77b66815df60fe59b7d7d2",
+    "mtime": 1793883738.3760014,
+    "seen": 1793884567.301508,
+    "ast_hash": "b2341ae7f2ae3d700bfa646169b84923",
     "semantic_hash": ""
   },
   "lib/widgets/glass_poc/glass_benchmark_runner.dart": {
-    "mtime": 1793876615.6368122,
-    "seen": 1793879154.1416497,
-    "ast_hash": "3822cc19f34069ca26d4834df3753087",
+    "mtime": 1793883702.6779785,
+    "seen": 1793884567.301513,
+    "ast_hash": "8b3ee1e372a198d78e21a478a43efb33",
     "semantic_hash": ""
   },
   "test/screens/settings/developer/glass_poc_benchmark_test.dart": {
@@ -12786,21 +12786,27 @@
     "semantic_hash": ""
   },
   "test/widgets/glass_poc/glass_benchmark_report_test.dart": {
-    "mtime": 1793876518.161949,
-    "seen": 1793879154.1858742,
-    "ast_hash": "c305ec0d7cdefad93fc2d284b901f918",
+    "mtime": 1793883862.300906,
+    "seen": 1793884567.339518,
+    "ast_hash": "eb628f755fd510168b2334808d1151fd",
     "semantic_hash": ""
   },
   "test/widgets/glass_poc/glass_benchmark_runner_test.dart": {
-    "mtime": 1793876678.3582256,
-    "seen": 1793879154.185878,
-    "ast_hash": "9a29dce7416a931363aa75ebcda2962d",
+    "mtime": 1793883947.7052195,
+    "seen": 1793884567.3395212,
+    "ast_hash": "189dce576ff430400b5ec85bdb72e368",
     "semantic_hash": ""
   },
   "docs/performance/GLASS_FULL_BENCHMARK.md": {
-    "mtime": 1793876718.1848328,
-    "seen": 1793879154.2009113,
-    "ast_hash": "2a8ce85a8dc116e058c847e03d08cf2f",
+    "mtime": 1793884505.1335075,
+    "seen": 1793884567.348343,
+    "ast_hash": "893b16d32be18c7a49b92c8976fd3402",
+    "semantic_hash": ""
+  },
+  "docs/performance/GLASS_BENCHMARK_VALIDITY.md": {
+    "mtime": 1793883992.2039955,
+    "seen": 1793884567.3483398,
+    "ast_hash": "0881a313277f343dddc0b2df55cf23c9",
     "semantic_hash": ""
   }
 }
