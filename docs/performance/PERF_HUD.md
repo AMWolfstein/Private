@@ -111,6 +111,17 @@ fps_estimate=59.8 (estimated)
 `screen` is the current route path (from GoRouter when available, otherwise
 `unknown`). `hz_source` is `fallback` when the display gave no usable value.
 
+## Glass POC
+
+Developer Options > Glass POC is a developer-only page that compares four
+rendering modes on identical geometry: Transparent Baseline, Basic Blur,
+Liquid Glass and Reference Glass. It is not reachable from production screens.
+Glass modes use the pinned `liquid_glass_widgets` 1.16.1 package through one
+shared `LiquidGlassLayer`. The selected mode is shown in the HUD panel
+(`Glass`) and written to copied reports as `glass_mode=`. The mode is held in
+memory, so a restart returns to the baseline. Modes are reviewed on a physical
+device only; no benchmark results are recorded here before that review.
+
 ## Limitations
 
 - **Budget exceedance is not dropped-frame counting.** It compares each frame's
@@ -147,3 +158,5 @@ fps_estimate=59.8 (estimated)
   options.
 - `lib/screens/settings/about_page.dart`: the seven-tap unlock.
 - `lib/app.dart`: mounts the overlay above the navigator.
+- `lib/screens/settings/developer/glass_poc_page.dart`: the Glass POC page.
+- `lib/widgets/glass_poc/`: `SistrumGlassSurface`, `SistrumGlassScope` and modes.
