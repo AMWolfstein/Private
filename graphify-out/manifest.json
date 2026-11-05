@@ -3252,9 +3252,9 @@
     "semantic_hash": ""
   },
   "lib/widgets/library/library_search_results.dart": {
-    "mtime": 1793823810.0917432,
-    "seen": 1793826854.8779051,
-    "ast_hash": "cf4ffed79c9bec0ef3fb6840aa66bd90",
+    "mtime": 1793840009.7487319,
+    "seen": 1793840621.4604948,
+    "ast_hash": "cae7ec6ad9849838c2701b30b93dc9a4",
     "semantic_hash": ""
   },
   "lib/widgets/library/library_section_list.dart": {
@@ -6606,9 +6606,9 @@
     "semantic_hash": ""
   },
   "lib/services/library/browse/library_search.dart": {
-    "mtime": 1793818649.7806334,
-    "seen": 1793826854.8772566,
-    "ast_hash": "2efb6072707be4da5db9108abc48da3c",
+    "mtime": 1793840091.9681942,
+    "seen": 1793840621.455311,
+    "ast_hash": "210796c5ba0d1e7d4be0e7a3c179a8f0",
     "semantic_hash": ""
   },
   "lib/services/library/browse/library_tag_credits.dart": {

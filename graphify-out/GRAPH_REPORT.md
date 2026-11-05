@@ -1,17 +1,17 @@
 # Graph Report - Private  (2026-11-05)
 
 ## Corpus Check
-- 2000 files · ~1,706,550 words
+- 2000 files · ~1,706,634 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 136 file(s) not represented in the graph (top: .xml 40, .arb 20, (none) 19)
 
 ## Summary
-- 29856 nodes · 56052 edges · 1150 communities (739 shown, 411 thin omitted)
+- 29856 nodes · 56053 edges · 1150 communities (739 shown, 411 thin omitted)
 - Extraction: 95% EXTRACTED · 5% INFERRED · 0% AMBIGUOUS · INFERRED: 2866 edges (avg confidence: 0.83)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `bb26b3f9`
+- Built from commit: `d067d7ab`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -1001,19 +1001,19 @@
 ## Import Cycles
 - 1-file cycle: `rust_backend/vendor/rustix-1.1.6/src/timespec.rs -> rust_backend/vendor/rustix-1.1.6/src/timespec.rs`
 - 1-file cycle: `rust_backend/vendor/rustix-1.1.6/src/io_uring/mod.rs -> rust_backend/vendor/rustix-1.1.6/src/io_uring/mod.rs`
-- 1-file cycle: `rust_backend/vendor/rustix-1.1.6/src/fs/statx.rs -> rust_backend/vendor/rustix-1.1.6/src/fs/statx.rs`
 - 1-file cycle: `rust_backend/vendor/rustix-1.1.6/src/net/types.rs -> rust_backend/vendor/rustix-1.1.6/src/net/types.rs`
 - 1-file cycle: `rust_backend/vendor/rustix-1.1.6/src/path/arg.rs -> rust_backend/vendor/rustix-1.1.6/src/path/arg.rs`
 - 1-file cycle: `rust_backend/vendor/rustix-1.1.6/src/net/netdevice.rs -> rust_backend/vendor/rustix-1.1.6/src/net/netdevice.rs`
-- 1-file cycle: `rust_backend/vendor/rustix-1.1.6/src/thread/prctl.rs -> rust_backend/vendor/rustix-1.1.6/src/thread/prctl.rs`
 - 1-file cycle: `rust_backend/vendor/rustix-1.1.6/src/backend/linux_raw/conv.rs -> rust_backend/vendor/rustix-1.1.6/src/backend/linux_raw/conv.rs`
+- 1-file cycle: `rust_backend/vendor/rustix-1.1.6/src/thread/prctl.rs -> rust_backend/vendor/rustix-1.1.6/src/thread/prctl.rs`
+- 1-file cycle: `rust_backend/vendor/rustix-1.1.6/src/fs/statx.rs -> rust_backend/vendor/rustix-1.1.6/src/fs/statx.rs`
 - 1-file cycle: `rust_backend/vendor/rustix-1.1.6/src/pty.rs -> rust_backend/vendor/rustix-1.1.6/src/pty.rs`
 - 1-file cycle: `rust_backend/vendor/rustix-1.1.6/src/backend/libc/c.rs -> rust_backend/vendor/rustix-1.1.6/src/backend/libc/c.rs`
 - 2-file cycle: `rust_backend/crates/local/src/backend/library.rs -> rust_backend/crates/local/src/backend/library/scan.rs -> rust_backend/crates/local/src/backend/library.rs`
 - 2-file cycle: `rust_backend/crates/core/src/tags.rs -> rust_backend/crates/core/src/tags/write.rs -> rust_backend/crates/core/src/tags.rs`
 - 2-file cycle: `rust_backend/crates/core/src/tags.rs -> rust_backend/crates/core/src/tags/containers.rs -> rust_backend/crates/core/src/tags.rs`
-- 2-file cycle: `rust_backend/crates/core/src/tags.rs -> rust_backend/crates/core/src/tags/file.rs -> rust_backend/crates/core/src/tags.rs`
 - 2-file cycle: `rust_backend/crates/core/src/tags.rs -> rust_backend/crates/core/src/tags/id3.rs -> rust_backend/crates/core/src/tags.rs`
+- 2-file cycle: `rust_backend/crates/core/src/tags.rs -> rust_backend/crates/core/src/tags/file.rs -> rust_backend/crates/core/src/tags.rs`
 - 2-file cycle: `rust_backend/crates/core/src/tags.rs -> rust_backend/crates/core/src/tags/library.rs -> rust_backend/crates/core/src/tags.rs`
 - 2-file cycle: `rust_backend/crates/core/src/media/audio.rs -> rust_backend/crates/core/src/media/mod.rs -> rust_backend/crates/core/src/media/audio.rs`
 - 2-file cycle: `rust_backend/vendor/rustix-1.1.6/src/kernel_sigset.rs -> rust_backend/vendor/rustix-1.1.6/src/runtime_448b8ad740e2a26f.rs -> rust_backend/vendor/rustix-1.1.6/src/kernel_sigset.rs`
@@ -3996,7 +3996,7 @@ Cohesion: 0.29
 Nodes (7): libusb_version, describe, major, micro, minor, nano, rc
 
 ## Knowledge Gaps
-- **10951 isolated node(s):** `child`, `openOrigin`, `hasDismissArtwork`, `_dismissStart`, `_dismissStartValue` (+10946 more)
+- **10951 isolated node(s):** `LibrarySearchQuery`, `LibrarySearchHit`, `LibrarySearchStore`, `text`, `terms` (+10946 more)
   These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 16160 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
 - **411 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
@@ -4004,16 +4004,16 @@ Nodes (7): libusb_version, describe, major, micro, minor, nano, rc
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `BorrowedFd` connect `BorrowedFd` to `Pid`, `borrowed_fd`, `c`, `OwnedFd`, `SocketAddrLen`, `Backend`, `IoctlOutput`, `src/io_uring/mod.rs`, `process/prctl.rs`, `library_tag_credits.dart`, `Ipv4PathMtuDiscovery`, `net/types.rs`, `msg.rs`, `ArgReg`, `linux_raw/event/syscalls.rs`, `Ipv6PathMtuDiscovery`, `thread/prctl.rs`, `Flock`, `libc/pipe/syscalls.rs`, `.from`, `IoctlOutput`, `fs/ioctl.rs`, `linux_raw/termios/syscalls.rs`, `apple_artwork_client.dart`, `Timespec`, `SendAncillaryMessage`, `library_row_mapper.dart`, `ioctl/mod.rs`, `setns.rs`?**
-  _High betweenness centrality (0.054) - this node is a cross-community bridge._
-- **What connects `child`, `openOrigin`, `hasDismissArtwork` to the rest of the system?**
+  _High betweenness centrality (0.040) - this node is a cross-community bridge._
+- **What connects `LibrarySearchQuery`, `LibrarySearchHit`, `LibrarySearchStore` to the rest of the system?**
   _10951 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Errno` be split into smaller, more focused modules?**
   _Cohesion score 0.01282051282051282 - nodes in this community are weakly interconnected._
 - **Why does `_` connect `_` to `File`, `playback_seek_preview.dart`, `library_collections_benchmark.dart`, `ValueStream`, `MediaItemCopyWith`, `library_collection_tracks_screen.dart`, `theme_settings.dart`, `sqlite_process_database.dart`, `music_haptics.dart`, `backup_service.dart`, `dart:async`, `lyrics_share_screen.dart`, `Future`, `static final`, `work.py`, `String?`, `_AndroidVolumeDirectionMessageExtension`, `SendAncillaryBuffer<'buf, 'slice, 'fd>`, `media_session_filter_test.dart`, `audio_service_queue_platform_test.dart`, `usb_pcm_bridge.dart`, `AudioService`, `BaseAudioHandler`, `Duration`, `package:flutter/cupertino.dart`, `playback_feedback.dart`, `List`, `@Deprecated`, `_MediaButtonMessageExtension`, `AudioService`, `_MediaItemMessageExtension`, `_RatingMessageExtension`, `package:flutter/services.dart`, `sqlite_transaction_retry_test.dart`, `path_match_keys.dart`, `media_session_filter.dart`, `AudioHandler`, `package:flutter/material.dart`, `PlaybackStateCopyWith`, `now_playing_lyrics_transition_test.dart`, `shell_navigation.dart`, `AndroidPlaybackInfo`?**
-  _High betweenness centrality (0.035) - this node is a cross-community bridge._
+  _High betweenness centrality (0.037) - this node is a cross-community bridge._
 - **Should `audio_analysis_spectral_cutoff.dart` be split into smaller, more focused modules?**
   _Cohesion score 0.037037037037037035 - nodes in this community are weakly interconnected._
-- **Why does `&CStr` connect `Backend` to `Uid`, `Pid`, `CString`, `borrowed_fd`, `c`, `linux_raw/param/init.rs`, `OwnedFd`, `F`, `vdso.rs`, `process/prctl.rs`, `runtime_448b8ad740e2a26f.rs`, `mount_unmount.rs`, `library_tag_credits.dart`, `android_statx_smoke.rs`, `library_tagless_audio.rs`, `equalizer_screen.dart`, `Arg`, `ArgReg`, `thread/prctl.rs`, `automix_options.dart`, `BorrowedFd`, `linux_raw/termios/syscalls.rs`, `libc_auxv.rs`, `weak.rs`, `lyrics_save_actions_test.dart`, `arg.rs`, `raw_dir.rs`?**
-  _High betweenness centrality (0.018) - this node is a cross-community bridge._
+- **Why does `c_int` connect `process/prctl.rs` to `Errno`, `Pid`, `borrowed_fd`, `vdso_wrappers.rs`, `c`, `OwnedFd`, `Backend`, `library_tag_credits.dart`, `RetReg`, `equalizer_screen.dart`, `msg.rs`, `linux_raw/process/wait.rs`, `linux_raw/event/syscalls.rs`, `thread/prctl.rs`, `libc/c.rs`, `BorrowedFd`, `libc_auxv.rs`, `Timespec`, `SendAncillaryMessage`, `procctl.rs`, `winsock_c.rs`, `linux_raw/c.rs`, `setns.rs`, `powerpc.rs`?**
+  _High betweenness centrality (0.021) - this node is a cross-community bridge._
 - **Should `app.dart` be split into smaller, more focused modules?**
   _Cohesion score 0.0812807881773399 - nodes in this community are weakly interconnected._
