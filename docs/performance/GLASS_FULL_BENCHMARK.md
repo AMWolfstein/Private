@@ -80,6 +80,19 @@ When the run ends, the POC's mode, scene, shared backdrop and speed are restored
 - **CANCELLED**: stopped before the run finished (partial data kept).
 - **NOT RUN**: not reached because the benchmark stopped first.
 
+A run is VALID only if the intended workload ran. In addition to the render path:
+- scroll frames were received during measurement, and the list stayed attached;
+- active scrolling was at least 95% of the measured interval;
+- the longest gap between scroll frames was at most 0.5 s;
+- the actual speed over the whole interval was within 5% of 900 px/s.
+
+Scroll values are captured while the run is still active, before the scroller is
+halted, because halting clears them. Frame accounting compares drawn frames with
+FrameTiming callbacks; a run with missing timings is INCOMPLETE. An episode still
+open at the end of a run is finalized and reported as `open_at_end=true`.
+
+See `GLASS_BENCHMARK_VALIDITY.md` for the audit of the first run.
+
 ## Report
 
 Sections: 1 device and configuration; 2 validity and interruptions; 3 summary
