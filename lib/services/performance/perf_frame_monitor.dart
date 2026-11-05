@@ -4,6 +4,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/services/performance/perf_frame_window.dart';
+import 'package:sistrum/services/performance/perf_spike_recorder.dart';
 
 /// Collects FrameTiming samples while started. The callback only writes into
 /// the bounded window; it never calls setState or allocates per frame.
@@ -23,6 +24,10 @@ class PerfFrameMonitor {
 
   void setCollecting(bool value) => _collecting = value;
 
+  /// Developer POC only: captures sustained budget degradation. Null when no
+  /// POC page is open, so the hot path does no extra work.
+  PerfSpikeRecorder? spikeRecorder;
+
   void start() {
     if (_running) return;
     _running = true;
@@ -35,7 +40,10 @@ class PerfFrameMonitor {
     SchedulerBinding.instance.removeTimingsCallback(_onTimings);
   }
 
-  void reset() => window.reset();
+  void reset() {
+    window.reset();
+    spikeRecorder?.reset();
+  }
 
   /// Current statistics, using the reported refresh rate or the fallback.
   PerfWindowSnapshot currentSnapshot() {
@@ -47,6 +55,12 @@ class PerfFrameMonitor {
     if (!_collecting) return;
     for (final timing in timings) {
       window.add(
+        buildUs: timing.buildDuration.inMicroseconds,
+        rasterUs: timing.rasterDuration.inMicroseconds,
+        spanUs: timing.totalSpan.inMicroseconds,
+        endUs: timing.timestampInMicroseconds(FramePhase.rasterFinish),
+      );
+      spikeRecorder?.onFrame(
         buildUs: timing.buildDuration.inMicroseconds,
         rasterUs: timing.rasterDuration.inMicroseconds,
         spanUs: timing.totalSpan.inMicroseconds,

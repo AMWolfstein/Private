@@ -8,6 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/providers/performance/glass_poc_mode_provider.dart';
 import 'package:sistrum/services/performance/perf_frame_monitor.dart';
 import 'package:sistrum/services/performance/perf_frame_window.dart';
+import 'package:sistrum/services/performance/perf_spike_recorder.dart';
 import 'package:sistrum/widgets/glass_poc/sistrum_auto_scroll.dart';
 import 'package:sistrum/widgets/glass_poc/sistrum_glass_mode.dart';
 import 'package:sistrum/widgets/glass_poc/sistrum_glass_render_path.dart';
@@ -39,6 +40,8 @@ class _GlassPocPageState extends ConsumerState<GlassPocPage>
   late final GlassPocRunRegistry _registry;
   final GlobalKey _stageKey = GlobalKey();
   Timer? _pathTimer;
+  late final PerfSpikeRecorder _spikes;
+  AppLifecycleListener? _lifecycle;
   SistrumGlassRenderReport? _render;
   SistrumGlassRenderReport? _renderAtStart;
   bool _outlines = false;
@@ -56,6 +59,17 @@ class _GlassPocPageState extends ConsumerState<GlassPocPage>
       measurementReady: _readyToMeasure,
     );
     _registry.attach(_autoScroll, this);
+    // Developer diagnostics only: the recorder lives while this page is open.
+    _spikes = PerfSpikeRecorder()
+      ..budgetUs =
+          1e6 /
+          resolvePerfRefreshRate(PerfFrameMonitor.reportedRefreshRate()).hz
+      ..contextReader = _spikeContext;
+    _monitor.spikeRecorder = _spikes;
+    _lifecycle = AppLifecycleListener(
+      onStateChange: (state) =>
+          _spikes.noteEvent('app_lifecycle=${state.name}'),
+    );
     _applyScene(ref.read(glassPocSceneProvider));
     _render = _probeRender();
     // Re-probe while the page is open. Only a changed path rebuilds the page,
@@ -98,6 +112,17 @@ class _GlassPocPageState extends ConsumerState<GlassPocPage>
     return _probeRender().path != SistrumGlassRenderPath.unverified;
   }
 
+  /// The renderer, path, scene and scroll state at the moment of a spike. The
+  /// same fields as the copied report, read only when a spike starts.
+  Map<String, String> _spikeContext() {
+    final context = <String, String>{};
+    for (final line in glassPocReportLines(ref)) {
+      final eq = line.indexOf('=');
+      if (eq > 0) context[line.substring(0, eq)] = line.substring(eq + 1);
+    }
+    return context;
+  }
+
   void _onMeasurementStart() {
     _monitor.setCollecting(true);
     _renderAtStart = _probeRender();
@@ -114,6 +139,10 @@ class _GlassPocPageState extends ConsumerState<GlassPocPage>
     // Stopping and disposing the controllers stops their tickers, so nothing
     // keeps animating after the page leaves the tree.
     _pathTimer?.cancel();
+    _lifecycle?.dispose();
+    if (identical(_monitor.spikeRecorder, _spikes)) {
+      _monitor.spikeRecorder = null;
+    }
     _registry.detach(_autoScroll);
     _autoScroll.dispose();
     _monitor.setCollecting(true);
@@ -198,6 +227,7 @@ class _GlassPocPageState extends ConsumerState<GlassPocPage>
                             selected: mode == m,
                             onSelected: (_) {
                               notifier.select(m);
+                              _spikes.noteEvent('renderer=${m.label}');
                               _onRendererChanged();
                               _refreshRender();
                             },
@@ -221,6 +251,7 @@ class _GlassPocPageState extends ConsumerState<GlassPocPage>
                             label: Text(sc.label),
                             selected: scene == sc,
                             onSelected: (_) {
+                              _spikes.noteEvent('scene=${sc.code}');
                               ref
                                   .read(glassPocSceneProvider.notifier)
                                   .select(sc);
@@ -259,6 +290,7 @@ class _GlassPocPageState extends ConsumerState<GlassPocPage>
                               label: Text(s.label),
                               selected: speed == s,
                               onSelected: (_) {
+                                _spikes.noteEvent('speed=${s.name}');
                                 ref
                                     .read(glassPocScrollSpeedProvider.notifier)
                                     .select(s);
@@ -309,6 +341,23 @@ class _GlassPocPageState extends ConsumerState<GlassPocPage>
                         ActionChip(
                           label: const Text('Reset metrics'),
                           onPressed: () => _monitor.reset(),
+                        ),
+                        ActionChip(
+                          label: Text(
+                            'Copy spike log (${_spikes.snapshots.length})',
+                          ),
+                          onPressed: () {
+                            final snapshots = _spikes.snapshots;
+                            final text = snapshots.isEmpty
+                                ? 'sistrum-perf-spikes\nspikes=0'
+                                : [
+                                    'sistrum-perf-spikes',
+                                    'spikes=${snapshots.length}',
+                                    for (final snap in snapshots) snap.toText(),
+                                  ].join('\n\n');
+                            Clipboard.setData(ClipboardData(text: text));
+                            setState(() {});
+                          },
                         ),
                         ActionChip(
                           label: const Text('Copy metrics'),
