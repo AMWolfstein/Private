@@ -156,6 +156,10 @@ SistrumGlassRenderReport classifySistrumGlassRenderPath({
       return const SistrumGlassRenderReport.unverified(
         'liquid_glass_widgets is not instrumented; its path is not probed',
       );
+    case SistrumGlassMode.sistrumHybrid:
+      return const SistrumGlassRenderReport.unverified(
+        'Sistrum Hybrid tiers are not probed from the tree yet',
+      );
     case SistrumGlassMode.newFakeGlass:
       // fake: true was requested, so FakeGlass is the only correct result.
       if (census.layers == expectedSurfaces &&

@@ -118,14 +118,16 @@ void main() {
       expect(find.text('Child'), findsOneWidget);
     });
 
-    testWidgets('only the basic blur mode samples the backdrop', (
-      tester,
-    ) async {
+    testWidgets('only the blur modes sample the backdrop', (tester) async {
+      // Sistrum Hybrid's default tier is Frosted, which blurs the backdrop.
       for (final mode in SistrumGlassMode.values) {
         await tester.pumpWidget(_harness(mode, onTap: () {}));
+        final samples =
+            mode == SistrumGlassMode.basicBlur ||
+            mode == SistrumGlassMode.sistrumHybrid;
         expect(
           find.byType(BackdropFilter),
-          mode == SistrumGlassMode.basicBlur ? findsOneWidget : findsNothing,
+          samples ? findsOneWidget : findsNothing,
           reason: mode.label,
         );
       }

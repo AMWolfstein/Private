@@ -225,6 +225,7 @@ String _label(SistrumGlassMode mode) => switch (mode) {
   SistrumGlassMode.newFakeGlass => 'New FakeGlass',
   SistrumGlassMode.basicBlur => 'Basic Blur',
   SistrumGlassMode.referenceGlass => 'Reference Glass',
+  SistrumGlassMode.sistrumHybrid => 'Sistrum Hybrid',
 };
 
 String _validityText(GlassBenchmarkValidity v) => switch (v) {

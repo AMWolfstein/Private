@@ -3,6 +3,8 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 import 'package:sistrum/widgets/glass_poc/sistrum_glass_mode.dart';
+import 'package:sistrum/widgets/glass_poc/sistrum_hybrid_config.dart';
+import 'package:sistrum/widgets/glass_poc/sistrum_hybrid_surface.dart';
 import 'package:sistrum/widgets/glass_poc/sistrum_renderer_glass.dart';
 
 /// Blur radius for [SistrumGlassMode.basicBlur]. A single Flutter blur, not a
@@ -45,7 +47,8 @@ LiquidGlassSettings? sistrumGlassLayerSettings(
     SistrumGlassMode.referenceGlass ||
     SistrumGlassMode.newFullGlass ||
     SistrumGlassMode.newFullGlassSharedBackdrop ||
-    SistrumGlassMode.newFakeGlass => null,
+    SistrumGlassMode.newFakeGlass ||
+    SistrumGlassMode.sistrumHybrid => null,
   };
 }
 
@@ -174,6 +177,12 @@ class SistrumGlassSurface extends StatelessWidget {
         backdropKey: mode == SistrumGlassMode.newFullGlassSharedBackdrop
             ? backdropKey
             : null,
+        child: child,
+      ),
+      SistrumGlassMode.sistrumHybrid => SistrumHybridSurface(
+        config: SistrumHybridConfigScope.of(context),
+        dark: dark,
+        borderRadius: borderRadius,
         child: child,
       ),
       SistrumGlassMode.referenceGlass => GlassContainer(

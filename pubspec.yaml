@@ -120,6 +120,10 @@ flutter:
   uses-material-design: true
   generate: true
 
+  # First-party shaders (Sistrum-owned, no third-party source).
+  shaders:
+    - shaders/sistrum_lens.frag
+
   assets:
     - assets/images/
     - assets/licenses/usb.txt

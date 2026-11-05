@@ -69,7 +69,10 @@ void main() {
       );
       expect(
         find.byType(BackdropFilter),
-        mode == SistrumGlassMode.basicBlur ? findsWidgets : findsNothing,
+        mode == SistrumGlassMode.basicBlur ||
+                mode == SistrumGlassMode.sistrumHybrid
+            ? findsWidgets
+            : findsNothing,
         reason: mode.label,
       );
       expect(find.text('Mini player'), findsOneWidget);

@@ -143,7 +143,9 @@ SistrumGlassRenderPath? expectedGlassRenderPath(SistrumGlassMode mode) =>
       SistrumGlassMode.newFullGlassSharedBackdrop =>
         SistrumGlassRenderPath.fullGpu,
       SistrumGlassMode.newFakeGlass => SistrumGlassRenderPath.fakeBackdrop,
-      SistrumGlassMode.liquidGlass || SistrumGlassMode.referenceGlass => null,
+      SistrumGlassMode.liquidGlass ||
+      SistrumGlassMode.referenceGlass ||
+      SistrumGlassMode.sistrumHybrid => null,
     };
 
 /// One mode's result.

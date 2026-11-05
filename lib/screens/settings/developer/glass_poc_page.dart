@@ -27,6 +27,8 @@ import 'package:sistrum/widgets/glass_poc/sistrum_glass_mode.dart';
 import 'package:sistrum/widgets/glass_poc/sistrum_glass_render_path.dart';
 import 'package:sistrum/widgets/glass_poc/sistrum_glass_scene.dart';
 import 'package:sistrum/widgets/glass_poc/sistrum_glass_surface.dart';
+import 'package:sistrum/widgets/glass_poc/sistrum_hybrid_config.dart';
+import 'package:sistrum/widgets/glass_poc/sistrum_hybrid_controls.dart';
 
 /// Developer-only Glass POC. Shows the same header, scrolling list, mini
 /// player and tab bar in each [SistrumGlassMode], over a background that is
@@ -556,6 +558,7 @@ class _GlassPocPageState extends ConsumerState<GlassPocPage>
     final mode = ref.watch(glassPocModeProvider);
     final notifier = ref.read(glassPocModeProvider.notifier);
     final sharedBackdrop = ref.watch(glassPocSharedBackdropProvider);
+    final hybrid = ref.watch(glassPocHybridProvider);
     final scene = ref.watch(glassPocSceneProvider);
     final surfaces = _runner.isRunning ? _benchSurfaces : scene.surfaces;
     final speed = ref.watch(glassPocScrollSpeedProvider);
@@ -814,6 +817,8 @@ class _GlassPocPageState extends ConsumerState<GlassPocPage>
                       ],
                     ),
                   ),
+                  if (mode == SistrumGlassMode.sistrumHybrid)
+                    SistrumHybridControls(running: running),
                   SwitchListTile(
                     dense: true,
                     title: const Text(
@@ -850,81 +855,85 @@ class _GlassPocPageState extends ConsumerState<GlassPocPage>
                 );
                 return ClipRect(
                   key: _stageKey,
-                  child: SistrumGlassScope(
-                    mode: mode,
-                    sharedBackdrop: sharedBackdrop,
-                    child: Stack(
-                      children: [
-                        Positioned.fill(
-                          child: AnimatedBuilder(
-                            animation: _background,
-                            builder: (context, _) => CustomPaint(
-                              painter: _PocBackgroundPainter(
-                                progress: scene.animated
-                                    ? _background.value
-                                    : 0,
-                                dark:
-                                    Theme.of(context).brightness ==
-                                    Brightness.dark,
+                  child: SistrumHybridConfigScope(
+                    config: hybrid,
+                    child: SistrumGlassScope(
+                      mode: mode,
+                      sharedBackdrop: sharedBackdrop,
+                      child: Stack(
+                        children: [
+                          Positioned.fill(
+                            child: AnimatedBuilder(
+                              animation: _background,
+                              builder: (context, _) => CustomPaint(
+                                painter: _PocBackgroundPainter(
+                                  progress: scene.animated
+                                      ? _background.value
+                                      : 0,
+                                  dark:
+                                      Theme.of(context).brightness ==
+                                      Brightness.dark,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                        Positioned.fill(
-                          child: ListView.builder(
-                            controller: _list,
-                            padding: const EdgeInsets.only(
-                              top: _GlassPocPageConstants.headerHeight + 24,
-                              bottom: 2 * _GlassPocPageConstants.barHeight + 40,
-                            ),
-                            itemCount: 60,
-                            itemBuilder: (context, i) => Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: _sideInset,
-                                vertical: 10,
+                          Positioned.fill(
+                            child: ListView.builder(
+                              controller: _list,
+                              padding: const EdgeInsets.only(
+                                top: _GlassPocPageConstants.headerHeight + 24,
+                                bottom:
+                                    2 * _GlassPocPageConstants.barHeight + 40,
                               ),
-                              child: Text(
-                                'Track ${i + 1} — scrolling content under glass',
+                              itemCount: 60,
+                              itemBuilder: (context, i) => Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: _sideInset,
+                                  vertical: 10,
+                                ),
+                                child: Text(
+                                  'Track ${i + 1} — scrolling content under glass',
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                        if (surfaces == 4)
-                          Positioned(
-                            top: 8,
-                            left: _sideInset,
-                            right: _sideInset,
-                            child: _PocHeader(
-                              mode: mode,
-                              outline: _outlines,
-                              backdropKeys: keys.take(2).toList(),
-                            ),
-                          ),
-                        Positioned(
-                          left: _sideInset,
-                          bottom: 12,
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              _PocMiniPlayer(
+                          if (surfaces == 4)
+                            Positioned(
+                              top: 8,
+                              left: _sideInset,
+                              right: _sideInset,
+                              child: _PocHeader(
                                 mode: mode,
-                                width: barWidth,
                                 outline: _outlines,
-                                backdropKey: keys[surfaces == 4 ? 2 : 0],
+                                backdropKeys: keys.take(2).toList(),
                               ),
-                              if (surfaces >= 2) ...[
-                                const SizedBox(height: 10),
-                                _PocTabBar(
+                            ),
+                          Positioned(
+                            left: _sideInset,
+                            bottom: 12,
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                _PocMiniPlayer(
                                   mode: mode,
                                   width: barWidth,
                                   outline: _outlines,
-                                  backdropKey: keys[surfaces == 4 ? 3 : 1],
+                                  backdropKey: keys[surfaces == 4 ? 2 : 0],
                                 ),
+                                if (surfaces >= 2) ...[
+                                  const SizedBox(height: 10),
+                                  _PocTabBar(
+                                    mode: mode,
+                                    width: barWidth,
+                                    outline: _outlines,
+                                    backdropKey: keys[surfaces == 4 ? 3 : 1],
+                                  ),
+                                ],
                               ],
-                            ],
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 );

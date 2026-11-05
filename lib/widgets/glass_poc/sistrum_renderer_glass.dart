@@ -30,10 +30,11 @@ Widget sistrumRendererSurface({
   required bool fake,
   required Widget child,
   BackdropKey? backdropKey,
+  lgr.LiquidGlassSettings? settings,
 }) {
   return lgr.LiquidGlass.withOwnLayer(
     shape: lgr.LiquidRoundedSuperellipse(borderRadius: borderRadius),
-    settings: sistrumRendererGlassSettings(dark: dark),
+    settings: settings ?? sistrumRendererGlassSettings(dark: dark),
     fake: fake,
     useBackdropGroup: backdropKey != null,
     backdropKey: backdropKey,

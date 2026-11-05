@@ -4,6 +4,7 @@ import 'package:sistrum/widgets/glass_poc/sistrum_glass_mode.dart';
 import 'package:sistrum/widgets/glass_poc/sistrum_glass_render_path.dart';
 import 'package:sistrum/widgets/glass_poc/sistrum_glass_scene.dart';
 import 'package:sistrum/widgets/glass_poc/sistrum_glass_surface.dart';
+import 'package:sistrum/widgets/glass_poc/sistrum_hybrid_config.dart';
 
 /// The Glass POC mode selected on the developer page. Held in memory only, so
 /// a restart returns to the baseline. The performance HUD reads it to label
@@ -19,6 +20,22 @@ class GlassPocModeNotifier extends Notifier<SistrumGlassMode> {
 
   void select(SistrumGlassMode mode) {
     if (state != mode) state = mode;
+  }
+}
+
+/// The Sistrum Hybrid controls. Held in memory only, like the other POC state.
+final glassPocHybridProvider =
+    NotifierProvider<GlassPocHybridNotifier, SistrumHybridConfig>(
+      GlassPocHybridNotifier.new,
+    );
+
+class GlassPocHybridNotifier extends Notifier<SistrumHybridConfig> {
+  @override
+  SistrumHybridConfig build() => const SistrumHybridConfig();
+
+  void update(SistrumHybridConfig Function(SistrumHybridConfig) change) {
+    final next = change(state);
+    if (next != state) state = next;
   }
 }
 

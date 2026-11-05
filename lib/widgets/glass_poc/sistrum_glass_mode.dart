@@ -30,7 +30,11 @@ enum SistrumGlassMode {
 
   /// Same optics and independent layers as Full Glass; safe surfaces reuse
   /// backdrop inputs, assigned by the developer scene in paint order.
-  newFullGlassSharedBackdrop('New Full Glass — Shared Backdrop');
+  newFullGlassSharedBackdrop('New Full Glass — Shared Backdrop'),
+
+  /// Sistrum Hybrid: one of three tiers (Lightweight, Frosted, Full), chosen
+  /// with the Hybrid controls on the POC page. See `sistrum_hybrid_config.dart`.
+  sistrumHybrid('Sistrum Hybrid');
 
   const SistrumGlassMode(this.label);
 
