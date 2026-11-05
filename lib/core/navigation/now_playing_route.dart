@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sistrum/services/platform/app_orientation.dart';
 
-/// Hero tag shared by the mini player artwork and the full player artwork so
-/// the cover visually expands when the player opens.
-const kNowPlayingArtworkHeroTag = 'now-playing-artwork';
-
 /// Surface/artwork morph route for the full player. Supports live drag-to-dismiss: the
 /// page follows the finger (via [startDrag]/[updateDrag]/[endDrag]) and
 /// settles open or pops based on release position and velocity.

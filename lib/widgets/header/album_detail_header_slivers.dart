@@ -123,6 +123,10 @@ extension AlbumDetailHeaderPart2 on AlbumDetailHeader {
           child: Stack(
             alignment: Alignment.topCenter,
             children: [
+              // The artwork fades into this surface colour. An opaque layer
+              // underneath closes any sub-pixel gap, so no light canvas shows
+              // as a line across the header while the page scrolls.
+              Positioned.fill(child: ColoredBox(color: scheme.surface)),
               Positioned.fill(
                 child: squareArtwork
                     ? Align(

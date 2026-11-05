@@ -134,7 +134,7 @@ void _registerNowPlayingLyricsTimes() {
       addTearDown(tester.view.resetPadding);
       await _settlePlayer(tester);
 
-      final artwork = find.byType(Hero);
+      final artwork = find.byType(PlayerArtwork);
       final volume = find.byType(AppVolumeControl);
       final artRect = tester.getRect(artwork);
       expect(artRect.width, closeTo(artRect.height, 0.1));

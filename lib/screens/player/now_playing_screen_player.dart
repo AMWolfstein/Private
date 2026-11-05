@@ -290,14 +290,11 @@ extension _NowPlayingPlayer on _NowPlayingScreenState {
                     ? PlayerArtworkDragRegion(
                         child: PlayerTransitionArtwork(
                           artworkKey: _immersiveArtworkKey,
-                          child: Hero(
-                            tag: kNowPlayingArtworkHeroTag,
-                            child: PlayerArtwork(
-                              artUri: mediaItem.artUri?.toString(),
-                              colorScheme: colorScheme,
-                              cacheWidth: PlayerArtwork.transitionCacheWidth(
-                                context,
-                              ),
+                          child: PlayerArtwork(
+                            artUri: mediaItem.artUri?.toString(),
+                            colorScheme: colorScheme,
+                            cacheWidth: PlayerArtwork.transitionCacheWidth(
+                              context,
                             ),
                           ),
                         ),

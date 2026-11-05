@@ -131,20 +131,17 @@ class _MiniPlayerState extends ConsumerState<MiniPlayer> {
                   ),
                   child: Row(
                     children: [
-                      Hero(
-                        tag: kNowPlayingArtworkHeroTag,
-                        child: ClipRRect(
-                          key: _artworkKey,
-                          borderRadius: BorderRadius.circular(6),
-                          child: SizedBox(
-                            width: context.tokens.coverMini,
-                            height: context.tokens.coverMini,
-                            child: PlayerArtwork(
-                              artUri: mediaItem.artUri?.toString(),
-                              colorScheme: colorScheme,
-                              cacheWidth: 132,
-                              iconSize: 22,
-                            ),
+                      ClipRRect(
+                        key: _artworkKey,
+                        borderRadius: BorderRadius.circular(6),
+                        child: SizedBox(
+                          width: context.tokens.coverMini,
+                          height: context.tokens.coverMini,
+                          child: PlayerArtwork(
+                            artUri: mediaItem.artUri?.toString(),
+                            colorScheme: colorScheme,
+                            cacheWidth: 132,
+                            iconSize: 22,
                           ),
                         ),
                       ),

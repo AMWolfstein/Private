@@ -6,7 +6,6 @@ import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:sistrum/providers/playback/player_metadata_controller.dart';
 import 'package:sistrum/l10n/l10n.dart';
 import 'package:sistrum/providers/playback/music_player_provider.dart';
-import 'package:sistrum/core/navigation/now_playing_route.dart';
 import 'package:sistrum/utils/playback/playback_seek_preview.dart';
 import 'package:sistrum/widgets/primitives/app_context_menu.dart';
 import 'package:sistrum/widgets/player/layout/app_landscape_player.dart';
@@ -275,62 +274,54 @@ class AppPlayerLayout extends ConsumerWidget {
                                         : 'compact-player-artwork',
                                   ),
                                   child: PlayerArtworkDragRegion(
-                                    child: Hero(
-                                      tag: kNowPlayingArtworkHeroTag,
-                                      child: expanded
-                                          ? DecoratedBox(
-                                              decoration: BoxDecoration(
+                                    child: expanded
+                                        ? DecoratedBox(
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
+                                              boxShadow: const [
+                                                BoxShadow(
+                                                  color: Color(0x40000000),
+                                                  blurRadius: 28,
+                                                  offset: Offset(0, 16),
+                                                ),
+                                              ],
+                                            ),
+                                            child: PlayerTransitionArtwork(
+                                              artworkKey: artworkKeys.expanded,
+                                              child: ClipRRect(
                                                 borderRadius:
                                                     BorderRadius.circular(12),
-                                                boxShadow: const [
-                                                  BoxShadow(
-                                                    color: Color(0x40000000),
-                                                    blurRadius: 28,
-                                                    offset: Offset(0, 16),
-                                                  ),
-                                                ],
+                                                child: motionArtwork,
                                               ),
+                                            ),
+                                          )
+                                        : Semantics(
+                                            button: true,
+                                            label: context
+                                                .l10n
+                                                .nowPlayingTabPlayer,
+                                            child: GestureDetector(
+                                              behavior: HitTestBehavior.opaque,
+                                              onTap: () => onPageChanged(0),
                                               child: PlayerTransitionArtwork(
-                                                artworkKey:
-                                                    artworkKeys.expanded,
+                                                artworkKey: artworkKeys.compact,
                                                 child: ClipRRect(
                                                   borderRadius:
                                                       BorderRadius.circular(12),
-                                                  child: motionArtwork,
-                                                ),
-                                              ),
-                                            )
-                                          : Semantics(
-                                              button: true,
-                                              label: context
-                                                  .l10n
-                                                  .nowPlayingTabPlayer,
-                                              child: GestureDetector(
-                                                behavior:
-                                                    HitTestBehavior.opaque,
-                                                onTap: () => onPageChanged(0),
-                                                child: PlayerTransitionArtwork(
-                                                  artworkKey:
-                                                      artworkKeys.compact,
-                                                  child: ClipRRect(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                          12,
+                                                  child: PlayerArtwork(
+                                                    artUri: mediaItem.artUri
+                                                        ?.toString(),
+                                                    colorScheme: colorScheme,
+                                                    cacheWidth:
+                                                        PlayerArtwork.transitionCacheWidth(
+                                                          context,
                                                         ),
-                                                    child: PlayerArtwork(
-                                                      artUri: mediaItem.artUri
-                                                          ?.toString(),
-                                                      colorScheme: colorScheme,
-                                                      cacheWidth:
-                                                          PlayerArtwork.transitionCacheWidth(
-                                                            context,
-                                                          ),
-                                                    ),
                                                   ),
                                                 ),
                                               ),
                                             ),
-                                    ),
+                                          ),
                                   ),
                                 ),
                               ),

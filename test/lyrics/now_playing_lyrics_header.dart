@@ -136,7 +136,7 @@ void _registerNowPlayingLyricsHeader() {
     mediaItems.add(_item('first'));
     await _settlePlayer(tester);
 
-    final artwork = find.byType(Hero);
+    final artwork = find.byType(PlayerArtwork);
     final fullArtwork = tester.getRect(artwork);
     expect(fullArtwork.height, fullArtwork.width);
     final volume = find.byType(AppVolumeControl);
@@ -178,7 +178,7 @@ void _registerNowPlayingLyricsHeader() {
     await tester.pump(const Duration(milliseconds: 150));
     expect(fullCoverOpacity(), inExclusiveRange(0.0, 1.0));
     expect(
-      find.descendant(of: fullCover, matching: find.byType(Hero)),
+      find.descendant(of: fullCover, matching: find.byType(PlayerArtwork)),
       findsOneWidget,
     );
     await _settlePlayer(tester);

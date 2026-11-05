@@ -105,7 +105,7 @@ void _registerNowPlayingLyricsImmersive() {
           final mini = find.byType(MiniPlayer);
           final miniCover = find.descendant(
             of: mini,
-            matching: find.byType(Hero),
+            matching: find.byType(PlayerArtwork),
           );
           final destination = tester.getRect(miniCover);
           await tester.tap(

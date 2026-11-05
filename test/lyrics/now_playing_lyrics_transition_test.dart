@@ -1,3 +1,4 @@
+import 'package:sistrum/widgets/player/artwork/player_artwork.dart';
 import 'package:sistrum/core/navigation/app_screens.dart';
 import 'package:sistrum/screens/shell/app_screens.dart';
 import 'package:sistrum/screens/lyrics/lyrics_share_screen.dart';
