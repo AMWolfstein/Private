@@ -12546,9 +12546,9 @@
     "semantic_hash": ""
   },
   "lib/services/performance/perf_frame_monitor.dart": {
-    "mtime": 1793897977.319899,
-    "seen": 1793899094.4982123,
-    "ast_hash": "a5039fbdb2b755b5e1147a3da9626566",
+    "mtime": 1793909564.2139213,
+    "seen": 1793910476.5270388,
+    "ast_hash": "00269a3848fc6c1c403cab4cf782fa1e",
     "semantic_hash": ""
   },
   "lib/services/performance/perf_frame_window.dart": {
@@ -12921,6 +12921,12 @@
     "mtime": 1793908268.0326061,
     "seen": 1793908884.7027075,
     "ast_hash": "097298a89faa802542e0158db3909d99",
+    "semantic_hash": ""
+  },
+  "test/services/performance/perf_frame_budget_test.dart": {
+    "mtime": 1793909786.154216,
+    "seen": 1793910476.5622175,
+    "ast_hash": "57bad8513b3de0d7509937052e7591d5",
     "semantic_hash": ""
   }
 }
