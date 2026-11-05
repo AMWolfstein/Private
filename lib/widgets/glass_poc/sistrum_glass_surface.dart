@@ -55,21 +55,46 @@ LiquidGlassSettings? sistrumGlassLayerSettings(
 /// Put the background under the surfaces inside [child]: the layer samples
 /// what is painted beneath the glass within it.
 class SistrumGlassScope extends StatelessWidget {
-  const SistrumGlassScope({required this.mode, required this.child, super.key});
+  const SistrumGlassScope({
+    required this.mode,
+    required this.child,
+    this.sharedBackdrop = false,
+    super.key,
+  });
 
   final SistrumGlassMode mode;
   final Widget child;
 
+  /// Whether Reference Glass reads the backdrop as one group (see
+  /// [sharedBackdropApplies]). Off by default; the comparison switch sets it.
+  final bool sharedBackdrop;
+
   @override
   Widget build(BuildContext context) {
-    if (!mode.usesSharedLayer) return child;
-    final dark = Theme.of(context).brightness == Brightness.dark;
-    return LiquidGlassLayer(
-      settings: sistrumGlassLayerSettings(mode, dark: dark)!,
-      child: child,
-    );
+    if (mode.usesSharedLayer) {
+      final dark = Theme.of(context).brightness == Brightness.dark;
+      return LiquidGlassLayer(
+        settings: sistrumGlassLayerSettings(mode, dark: dark)!,
+        child: child,
+      );
+    }
+    if (sharedBackdropApplies(mode, sharedBackdrop)) {
+      return GlassBackdropGroup(child: child);
+    }
+    return child;
   }
 }
+
+/// Whether the shared backdrop group applies to [mode] with the switch on.
+///
+/// Verified in `liquid_glass_widgets` 1.16.1: `GlassBackdropGroup` shares the
+/// backdrop read only for premium glass rendered through its own layer
+/// (`LiquidGlassLayer` reads `GlassBackdropGroup.keyOf`). The standard
+/// lightweight path, which Liquid Glass uses, never reads that key. Basic
+/// Blur is a plain `BackdropFilter` of this app, not package glass, so no
+/// group reaches it. Only Reference Glass can therefore use the group.
+bool sharedBackdropApplies(SistrumGlassMode mode, bool sharedBackdrop) =>
+    sharedBackdrop && mode == SistrumGlassMode.referenceGlass;
 
 /// A translucent or glass surface whose mode is set by the Glass POC.
 ///

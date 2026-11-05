@@ -251,7 +251,7 @@ class _PerfHudOverlayState extends ConsumerState<PerfHudOverlay> {
       'Raster  p50 ${_ms(snap?.rasterP50Ms)}  p90 ${_ms(snap?.rasterP90Ms)}  p99 ${_ms(snap?.rasterP99Ms)}',
       'Window   ${snap?.windowMs == null ? 'n/a' : '${(snap!.windowMs! / 1000).toStringAsFixed(1)} s'}',
       'Route   $_route',
-      'Glass   ${ref.watch(glassPocModeProvider).label}',
+      'Glass   ${glassPocPathLabel(ref.watch(glassPocModeProvider), sharedBackdrop: ref.watch(glassPocSharedBackdropProvider))}',
       'Monitoring   ${monitor.isRunning ? 'on' : 'off'}',
     ];
     return Column(
@@ -317,7 +317,10 @@ class _PerfHudOverlayState extends ConsumerState<PerfHudOverlay> {
         text: formatPerfReport(
           screen: _route,
           snapshot: snap,
-          glassMode: ref.read(glassPocModeProvider).label,
+          glassMode: glassPocPathLabel(
+            ref.read(glassPocModeProvider),
+            sharedBackdrop: ref.read(glassPocSharedBackdropProvider),
+          ),
         ),
       ),
     );

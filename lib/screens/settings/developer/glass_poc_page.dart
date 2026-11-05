@@ -50,6 +50,7 @@ class _GlassPocPageState extends ConsumerState<GlassPocPage>
   Widget build(BuildContext context) {
     final mode = ref.watch(glassPocModeProvider);
     final notifier = ref.read(glassPocModeProvider.notifier);
+    final sharedBackdrop = ref.watch(glassPocSharedBackdropProvider);
     final width = MediaQuery.sizeOf(context).width;
     final barWidth = width - 2 * _sideInset;
 
@@ -80,6 +81,16 @@ class _GlassPocPageState extends ConsumerState<GlassPocPage>
           ),
           SwitchListTile(
             dense: true,
+            title: const Text('Shared backdrop group (Reference Glass only)'),
+            subtitle: const Text(
+              'Comparison: one shared backdrop read for the Reference surfaces',
+            ),
+            value: sharedBackdrop,
+            onChanged: (v) =>
+                ref.read(glassPocSharedBackdropProvider.notifier).set(v),
+          ),
+          SwitchListTile(
+            dense: true,
             title: const Text('Show layout outlines (diagnostic only)'),
             value: _outlines,
             onChanged: (v) => setState(() => _outlines = v),
@@ -88,6 +99,7 @@ class _GlassPocPageState extends ConsumerState<GlassPocPage>
             child: ClipRect(
               child: SistrumGlassScope(
                 mode: mode,
+                sharedBackdrop: sharedBackdrop,
                 child: Stack(
                   children: [
                     Positioned.fill(

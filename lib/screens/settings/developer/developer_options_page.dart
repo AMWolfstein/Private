@@ -84,7 +84,12 @@ class DeveloperOptionsPage extends ConsumerWidget {
                     final report = formatPerfReport(
                       screen: 'developer-options',
                       snapshot: monitor.currentSnapshot(),
-                      glassMode: ref.read(glassPocModeProvider).label,
+                      glassMode: glassPocPathLabel(
+                        ref.read(glassPocModeProvider),
+                        sharedBackdrop: ref.read(
+                          glassPocSharedBackdropProvider,
+                        ),
+                      ),
                     );
                     await Clipboard.setData(ClipboardData(text: report));
                     if (!context.mounted) return;
