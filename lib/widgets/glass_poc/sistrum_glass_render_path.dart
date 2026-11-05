@@ -121,6 +121,7 @@ bool sistrumRenderPathVerifiable(SistrumGlassMode mode) =>
     mode == SistrumGlassMode.transparentBaseline ||
     mode == SistrumGlassMode.basicBlur ||
     mode == SistrumGlassMode.newFullGlass ||
+    mode == SistrumGlassMode.newFullGlassSharedBackdrop ||
     mode == SistrumGlassMode.newFakeGlass;
 
 /// Classifies the path from the census. Anything that does not match exactly
@@ -169,6 +170,7 @@ SistrumGlassRenderReport classifySistrumGlassRenderPath({
         'FakeGlass layers are not all mounted yet (or the tree is mixed)',
       );
     case SistrumGlassMode.newFullGlass:
+    case SistrumGlassMode.newFullGlassSharedBackdrop:
       if (census.layers == expectedSurfaces &&
           census.realLayers == expectedSurfaces &&
           census.fakeWidgets == 0) {

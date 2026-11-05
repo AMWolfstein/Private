@@ -6,7 +6,10 @@ import 'package:sistrum/widgets/glass_poc/sistrum_glass_mode.dart';
 import 'package:sistrum/widgets/glass_poc/sistrum_glass_render_path.dart';
 
 /// A measured result with two sustained episodes, one of them with a turn.
-GlassBenchmarkModeResult _measured(SistrumGlassMode mode) {
+GlassBenchmarkModeResult _measured(
+  SistrumGlassMode mode, {
+  String? backdropConfiguration,
+}) {
   var turns = 0;
   final a = GlassBenchmarkAggregator(budgetUs: 16667, turnsReader: () => turns)
     ..begin();
@@ -25,6 +28,7 @@ GlassBenchmarkModeResult _measured(SistrumGlassMode mode) {
   a.end();
   return GlassBenchmarkModeResult(
     mode: mode,
+    backdropConfiguration: backdropConfiguration,
     validity: GlassBenchmarkValidity.valid,
     reasons: const [],
     measurementStarted: true,
@@ -42,6 +46,33 @@ GlassBenchmarkModeResult _measured(SistrumGlassMode mode) {
 }
 
 void main() {
+  test(
+    'shared experiment reports assignments without claiming visual parity',
+    () {
+      final text = formatGlassBenchmarkReport(
+        status: 'COMPLETE',
+        deviceLines: const [],
+        plan: GlassBenchmarkPlan.backdropSharing(),
+        startedAt: null,
+        endedAt: null,
+        cancelReason: null,
+        failure: null,
+        results: [
+          _measured(
+            SistrumGlassMode.newFullGlassSharedBackdrop,
+            backdropConfiguration: 'groups=0,0,0,1; stage=400x400',
+          ),
+        ],
+      );
+      expect(text, contains('shared_backdrop=per_run'));
+      expect(text, contains('shared_backdrop=requested'));
+      expect(text, contains('backdrop_configuration=groups=0,0,0,1'));
+      expect(text, contains('NOT_DEVICE_VERIFIED'));
+      expect(text, contains('performance_success=NOT_ESTABLISHED'));
+      expect(text, contains('nominal_refresh_hz='));
+    },
+  );
+
   final plan = GlassBenchmarkPlan();
 
   String report(List<GlassBenchmarkModeResult> results, {String? cancel}) =>

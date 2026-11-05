@@ -39,6 +39,7 @@ class GlassBenchmarkPlan {
     this.measure = const Duration(seconds: 60),
     this.modeTimeout = const Duration(seconds: 30),
     this.diagnostic = false,
+    this.backdropSharing = false,
   }) : runs = runs ?? [for (final mode in modes) GlassBenchmarkRun(mode: mode)];
 
   /// The diagnostic repeatability protocol: every configuration of
@@ -62,6 +63,22 @@ class GlassBenchmarkPlan {
       diagnostic: true,
     );
   }
+
+  /// Isolated A/B protocol; preserves the original benchmark and renderers.
+  factory GlassBenchmarkPlan.backdropSharing({GlassBenchmarkPlan? timing}) {
+    final base = timing ?? GlassBenchmarkPlan();
+    return GlassBenchmarkPlan(
+      runs: appGlassBackdropSharingRuns(),
+      transition: base.transition,
+      warmup: base.warmup,
+      measure: base.measure,
+      modeTimeout: base.modeTimeout,
+      diagnostic: true,
+      backdropSharing: true,
+    );
+  }
+
+  final bool backdropSharing;
 
   /// The runs in the order they execute.
   final List<GlassBenchmarkRun> runs;
@@ -122,7 +139,9 @@ SistrumGlassRenderPath? expectedGlassRenderPath(SistrumGlassMode mode) =>
     switch (mode) {
       SistrumGlassMode.transparentBaseline => SistrumGlassRenderPath.none,
       SistrumGlassMode.basicBlur => SistrumGlassRenderPath.backdropFilter,
-      SistrumGlassMode.newFullGlass => SistrumGlassRenderPath.fullGpu,
+      SistrumGlassMode.newFullGlass ||
+      SistrumGlassMode.newFullGlassSharedBackdrop =>
+        SistrumGlassRenderPath.fullGpu,
       SistrumGlassMode.newFakeGlass => SistrumGlassRenderPath.fakeBackdrop,
       SistrumGlassMode.liquidGlass || SistrumGlassMode.referenceGlass => null,
     };
@@ -162,6 +181,7 @@ class GlassBenchmarkModeResult {
     this.androidStart,
     this.androidEnd,
     this.displayModeChanges = 0,
+    this.backdropConfiguration,
   });
 
   final SistrumGlassMode mode;
@@ -198,6 +218,9 @@ class GlassBenchmarkModeResult {
   /// Active-mode changes Android reported during the measured interval. Any
   /// change makes the run invalid: its rate-dependent metrics mix two rates.
   final int displayModeChanges;
+
+  /// Surface-role group assignments and stage geometry at measurement start.
+  final String? backdropConfiguration;
 
   final GlassBenchmarkValidity validity;
   final List<String> reasons;
@@ -322,6 +345,7 @@ class GlassBenchmarkRunner {
     required this.budgetUs,
     required this.onPhaseChanged,
     required this.reportBuilder,
+    this.backdropConfiguration,
     GlassBenchmarkPlan? plan,
     Stopwatch? stopwatch,
   }) : plan = plan ?? GlassBenchmarkPlan(),
@@ -334,6 +358,18 @@ class GlassBenchmarkRunner {
   }
 
   final GlassBenchmarkHost host;
+  final String Function()? backdropConfiguration;
+  String? _backdropAtStart;
+  bool _backdropChanged = false;
+
+  /// Called by layout as well as sampled by the timer, so a transient resize
+  /// cannot disappear between samples and leave the measured run valid.
+  void observeBackdropConfiguration(String configuration) {
+    if (_measurementStarted && configuration != _backdropAtStart) {
+      _backdropChanged = true;
+    }
+  }
+
   final double budgetUs;
 
   /// The plan of the current or last run. [start] may replace it.
@@ -416,6 +452,8 @@ class GlassBenchmarkRunner {
     _guard(() {
       final run = plan.runs[_modeIndex];
       _measurementStarted = false;
+      _backdropAtStart = null;
+      _backdropChanged = false;
       _pathSamples = 0;
       _pathMatches = 0;
       _lastPath = 'unknown';
@@ -442,6 +480,7 @@ class GlassBenchmarkRunner {
     _guard(() {
       _cancelTimer();
       _measurementStarted = true;
+      _backdropAtStart = backdropConfiguration?.call();
       _stopwatch
         ..reset()
         ..start();
@@ -631,6 +670,10 @@ class GlassBenchmarkRunner {
 
   /// Records one render-path observation for the current mode.
   void _sampleRenderPath() {
+    if (_measurementStarted &&
+        backdropConfiguration?.call() != _backdropAtStart) {
+      _backdropChanged = true;
+    }
     final mode = plan.runs[_modeIndex].mode;
     final expected = expectedGlassRenderPath(mode);
     final report = host.renderPath();
@@ -714,6 +757,7 @@ class GlassBenchmarkRunner {
   }) {
     final run = plan.runs[_modeIndex];
     final mode = run.mode;
+    _sampleRenderPath();
     final expected = expectedGlassRenderPath(mode);
     final reasons = <String>[];
     var validity = GlassBenchmarkValidity.valid;
@@ -729,6 +773,12 @@ class GlassBenchmarkRunner {
       if (order.indexOf(v) > order.indexOf(validity)) validity = v;
     }
 
+    if (_measurementStarted && _backdropChanged) {
+      worsen(GlassBenchmarkValidity.invalid);
+      reasons.add(
+        'Backdrop assignment or stage geometry changed during measurement',
+      );
+    }
     if (cancelled) {
       worsen(GlassBenchmarkValidity.cancelled);
       reasons.add('cancelled: ${_cancelReason ?? 'unknown'}');
@@ -882,6 +932,7 @@ class GlassBenchmarkRunner {
       androidStart: _measurementStarted ? _androidStart : null,
       androidEnd: _measurementStarted ? _androidEnd : null,
       displayModeChanges: modeChanges,
+      backdropConfiguration: _backdropAtStart,
       validity: validity,
       reasons: reasons,
       measurementStarted: _measurementStarted,

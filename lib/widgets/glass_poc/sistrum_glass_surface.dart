@@ -44,6 +44,7 @@ LiquidGlassSettings? sistrumGlassLayerSettings(
     SistrumGlassMode.basicBlur ||
     SistrumGlassMode.referenceGlass ||
     SistrumGlassMode.newFullGlass ||
+    SistrumGlassMode.newFullGlassSharedBackdrop ||
     SistrumGlassMode.newFakeGlass => null,
   };
 }
@@ -118,6 +119,7 @@ class SistrumGlassSurface extends StatelessWidget {
     required this.height,
     required this.borderRadius,
     this.diagnosticOutline = false,
+    this.backdropKey,
     super.key,
   });
 
@@ -127,6 +129,7 @@ class SistrumGlassSurface extends StatelessWidget {
   final double height;
   final double borderRadius;
   final bool diagnosticOutline;
+  final BackdropKey? backdropKey;
 
   @override
   Widget build(BuildContext context) {
@@ -163,10 +166,14 @@ class SistrumGlassSurface extends StatelessWidget {
       // Standalone premium glass, as the demo's mini player: its own layer,
       // its own settings. This is the path the demo uses on its own surfaces.
       SistrumGlassMode.newFullGlass ||
+      SistrumGlassMode.newFullGlassSharedBackdrop ||
       SistrumGlassMode.newFakeGlass => sistrumRendererSurface(
         borderRadius: borderRadius,
         dark: dark,
         fake: mode.rendererFake,
+        backdropKey: mode == SistrumGlassMode.newFullGlassSharedBackdrop
+            ? backdropKey
+            : null,
         child: child,
       ),
       SistrumGlassMode.referenceGlass => GlassContainer(

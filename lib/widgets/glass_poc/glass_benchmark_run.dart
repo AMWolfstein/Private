@@ -30,6 +30,30 @@ class GlassBenchmarkRun {
 /// Surface counts the layer-count experiment uses for New Full Glass.
 const List<int> kGlassLayerScalingSurfaces = [1, 2, 4];
 
+/// Six counterbalanced rounds: every configuration occurs twice in each
+/// ordinal position and every directed within-round neighbour pair occurs
+/// twice. The original five-mode protocol stays unchanged.
+List<GlassBenchmarkRun> appGlassBackdropSharingRuns() {
+  const modes = [
+    SistrumGlassMode.transparentBaseline,
+    SistrumGlassMode.newFullGlass,
+    SistrumGlassMode.newFullGlassSharedBackdrop,
+  ];
+  const orders = [
+    [0, 1, 2],
+    [1, 2, 0],
+    [2, 0, 1],
+    [2, 1, 0],
+    [0, 2, 1],
+    [1, 0, 2],
+  ];
+  return [
+    for (var round = 0; round < orders.length; round++)
+      for (final index in orders[round])
+        GlassBenchmarkRun(mode: modes[index], repeat: round + 1),
+  ];
+}
+
 /// Configurations of the diagnostic repeatability protocol, in their base
 /// order. Each one is run once per repeat.
 List<GlassBenchmarkRun> glassDiagnosticConfigurations({

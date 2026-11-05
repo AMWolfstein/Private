@@ -75,7 +75,7 @@ String glassPocReportLabel({
 }) {
   final path = glassPocPathLabel(mode, sharedBackdrop: sharedBackdrop);
   return '$path; scene=${scene.label}; animated=${scene.animated ? 'on' : 'off'}; '
-      'shared=${sharedBackdropApplies(mode, sharedBackdrop) ? 'on' : 'off'}';
+      'shared=${mode == SistrumGlassMode.newFullGlassSharedBackdrop || sharedBackdropApplies(mode, sharedBackdrop) ? 'on' : 'off'}';
 }
 
 /// The Scene D auto-scroll preset. Held in memory only; the page applies it
@@ -150,7 +150,9 @@ List<String> glassPocReportLines(WidgetRef ref) {
     atStart: registry.renderPathAtMeasurementStart(),
     now: registry.renderPath(),
   );
-  final shared = sharedBackdropApplies(mode, sharedBackdrop);
+  final shared =
+      mode == SistrumGlassMode.newFullGlassSharedBackdrop ||
+      sharedBackdropApplies(mode, sharedBackdrop);
   final scrolling = scene.scrolling && scroll != null;
   final fallback = render.fallback;
   return [

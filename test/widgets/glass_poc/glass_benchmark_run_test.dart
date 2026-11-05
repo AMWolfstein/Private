@@ -4,6 +4,34 @@ import 'package:sistrum/widgets/glass_poc/glass_benchmark_runner.dart';
 import 'package:sistrum/widgets/glass_poc/sistrum_glass_mode.dart';
 
 void main() {
+  test('shared backdrop A/B balances positions and directed neighbours', () {
+    final plan = GlassBenchmarkPlan.backdropSharing();
+    expect(plan.backdropSharing, isTrue);
+    expect(plan.runs, hasLength(18));
+    final positions = <String, int>{};
+    final neighbours = <String, int>{};
+    for (var round = 0; round < 6; round++) {
+      final runs = plan.runs.sublist(round * 3, round * 3 + 3);
+      expect(runs.map((r) => r.mode).toSet(), hasLength(3));
+      for (var i = 0; i < runs.length; i++) {
+        expect(runs[i].repeat, round + 1);
+        expect(runs[i].surfaces, 4);
+        final key = '${runs[i].mode.name}@$i';
+        positions[key] = (positions[key] ?? 0) + 1;
+        if (i > 0) {
+          final pair = '${runs[i - 1].mode.name}->${runs[i].mode.name}';
+          neighbours[pair] = (neighbours[pair] ?? 0) + 1;
+        }
+      }
+    }
+    expect(positions, hasLength(9));
+    expect(positions.values, everyElement(2));
+    expect(neighbours, hasLength(6));
+    expect(neighbours.values, everyElement(2));
+    expect(plan.warmup, const Duration(seconds: 5));
+    expect(plan.measure, const Duration(seconds: 60));
+  });
+
   test('the standard protocol keeps five modes, four surfaces, one repeat', () {
     final plan = GlassBenchmarkPlan();
     expect(plan.runs, hasLength(5));

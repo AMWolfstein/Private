@@ -41,7 +41,13 @@ String formatGlassBenchmarkReport({
   }
   add('scene=D (four glass surfaces, scrolling)');
   add('animated_background=off');
-  add('shared_backdrop=off');
+  add('shared_backdrop=${plan.backdropSharing ? 'per_run' : 'off'}');
+  if (plan.backdropSharing) {
+    add('protocol=shared_backdrop_ab_six_counterbalanced_rounds');
+    add(
+      'visual_parity=NOT_DEVICE_VERIFIED; performance_success=NOT_ESTABLISHED',
+    );
+  }
   add('scroll_speed_preset=${kGlassBenchmarkSpeed.name}');
   add(
     'scroll_speed_target=${kGlassBenchmarkSpeed.pxPerSecond.toStringAsFixed(0)}',
@@ -78,6 +84,13 @@ String formatGlassBenchmarkReport({
     add('render_path_samples=${r.pathSamples} matching=${r.pathMatches}');
     add('fallback_seen=${r.fallbackSeen}');
     add('measurement_started=${r.measurementStarted}');
+    if (plan.backdropSharing) {
+      add('repeat=${r.repeat} run_order=${r.runOrder}');
+      add('backdrop_configuration=${r.backdropConfiguration ?? 'unavailable'}');
+      add(
+        'shared_backdrop=${r.mode == SistrumGlassMode.newFullGlassSharedBackdrop ? 'requested' : 'off'}',
+      );
+    }
     add(
       'scroll_speed_target=${kGlassBenchmarkSpeed.pxPerSecond.toStringAsFixed(0)} logical_px_per_second',
     );
@@ -207,6 +220,8 @@ String _label(SistrumGlassMode mode) => switch (mode) {
   SistrumGlassMode.transparentBaseline => 'Transparent Baseline',
   SistrumGlassMode.liquidGlass => 'Old Liquid Glass',
   SistrumGlassMode.newFullGlass => 'New Full Glass',
+  SistrumGlassMode.newFullGlassSharedBackdrop =>
+    'New Full Glass — Shared Backdrop',
   SistrumGlassMode.newFakeGlass => 'New FakeGlass',
   SistrumGlassMode.basicBlur => 'Basic Blur',
   SistrumGlassMode.referenceGlass => 'Reference Glass',

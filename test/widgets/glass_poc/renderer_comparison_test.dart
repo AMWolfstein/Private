@@ -7,6 +7,7 @@ import 'package:sistrum/providers/performance/glass_poc_mode_provider.dart';
 import 'package:sistrum/screens/settings/developer/glass_poc_page.dart';
 import 'package:sistrum/widgets/glass_poc/sistrum_glass_mode.dart';
 import 'package:sistrum/widgets/glass_poc/sistrum_glass_scene.dart';
+import 'package:sistrum/widgets/glass_poc/sistrum_glass_surface.dart';
 
 Future<ProviderContainer> _pump(WidgetTester tester) async {
   final container = ProviderContainer();
@@ -34,6 +35,7 @@ void main() {
         expect(
           mode.usesRenderer,
           mode == SistrumGlassMode.newFullGlass ||
+              mode == SistrumGlassMode.newFullGlassSharedBackdrop ||
               mode == SistrumGlassMode.newFakeGlass,
           reason: mode.label,
         );
@@ -100,6 +102,53 @@ void main() {
   });
 
   group('renderer widget tree', () {
+    testWidgets('shared input keeps control optics, geometry and four layers', (
+      tester,
+    ) async {
+      await _pump(tester);
+      await _tapChip(tester, 'New Full Glass');
+      final control = tester
+          .widgetList<lgr.LiquidGlassLayer>(find.byType(lgr.LiquidGlassLayer))
+          .toList();
+      expect(control, hasLength(4));
+      expect(
+        control.every(
+          (layer) => layer.backdropKey == null && !layer.useBackdropGroup,
+        ),
+        isTrue,
+      );
+      final sizes = [
+        for (final element in find.byType(SistrumGlassSurface).evaluate())
+          tester.getSize(find.byWidget(element.widget)),
+      ];
+      await _tapChip(tester, 'New Full Glass — Shared Backdrop');
+      final shared = tester
+          .widgetList<lgr.LiquidGlassLayer>(find.byType(lgr.LiquidGlassLayer))
+          .toList();
+      expect(shared, hasLength(4));
+      expect(
+        shared.every(
+          (layer) =>
+              layer.backdropKey != null &&
+              layer.useBackdropGroup &&
+              !layer.fake,
+        ),
+        isTrue,
+      );
+      expect(
+        shared.map((layer) => layer.backdropKey).toSet().length,
+        lessThan(4),
+      );
+      for (var i = 0; i < shared.length; i++) {
+        expect(shared[i].settings, control[i].settings);
+      }
+      expect([
+        for (final element in find.byType(SistrumGlassSurface).evaluate())
+          tester.getSize(find.byWidget(element.widget)),
+      ], sizes);
+      // Configuration parity only: host fallback is not GPU optical parity.
+    });
+
     testWidgets('each visible surface is one renderer glass shape', (
       tester,
     ) async {

@@ -29,11 +29,14 @@ Widget sistrumRendererSurface({
   required bool dark,
   required bool fake,
   required Widget child,
+  BackdropKey? backdropKey,
 }) {
   return lgr.LiquidGlass.withOwnLayer(
     shape: lgr.LiquidRoundedSuperellipse(borderRadius: borderRadius),
     settings: sistrumRendererGlassSettings(dark: dark),
     fake: fake,
+    useBackdropGroup: backdropKey != null,
+    backdropKey: backdropKey,
     child: child,
   );
 }

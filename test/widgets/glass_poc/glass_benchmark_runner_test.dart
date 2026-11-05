@@ -169,10 +169,15 @@ class _FakeHost implements GlassBenchmarkHost {
   }
 }
 
-GlassBenchmarkRunner _runner(_FakeHost host, {GlassBenchmarkPlan? plan}) {
+GlassBenchmarkRunner _runner(
+  _FakeHost host, {
+  GlassBenchmarkPlan? plan,
+  String Function()? backdropConfiguration,
+}) {
   final p = plan ?? _plan;
   return GlassBenchmarkRunner(
     host: host,
+    backdropConfiguration: backdropConfiguration,
     budgetUs: _budgetUs,
     plan: p,
     onPhaseChanged: () {},
@@ -201,6 +206,28 @@ void _feed(_FakeHost host, {int frames = 60, int spanUs = 10000}) {
 }
 
 void main() {
+  testWidgets('a transient backdrop layout change invalidates measurement', (
+    tester,
+  ) async {
+    final host = _FakeHost();
+    final runner = _runner(
+      host,
+      plan: _shortPlan(),
+      backdropConfiguration: () => 'groups=0,0,0,1',
+    );
+    runner.start();
+    await tester.pump(const Duration(milliseconds: 100));
+    runner.onMeasurementStarted();
+    _feed(host);
+    runner.observeBackdropConfiguration('groups=0,0,1,2');
+    runner.observeBackdropConfiguration('groups=0,0,0,1');
+    await tester.pump(const Duration(seconds: 1));
+    final result = runner.results.single;
+    expect(result.backdropConfiguration, 'groups=0,0,0,1');
+    expect(result.validity, GlassBenchmarkValidity.invalid);
+    expect(result.reasons.join(' '), contains('Backdrop assignment'));
+  });
+
   testWidgets('a full run goes transition, warm-up, measuring, then complete', (
     tester,
   ) async {

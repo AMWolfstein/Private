@@ -26,7 +26,11 @@ enum SistrumGlassMode {
 
   /// `liquid_glass_renderer` with `fake: true` on each surface's own layer.
   /// FakeGlass by request, never Full Glass.
-  newFakeGlass('New FakeGlass');
+  newFakeGlass('New FakeGlass'),
+
+  /// Same optics and independent layers as Full Glass; safe surfaces reuse
+  /// backdrop inputs, assigned by the developer scene in paint order.
+  newFullGlassSharedBackdrop('New Full Glass — Shared Backdrop');
 
   const SistrumGlassMode(this.label);
 
@@ -44,6 +48,7 @@ enum SistrumGlassMode {
   /// Whether this mode renders through `liquid_glass_renderer`.
   bool get usesRenderer =>
       this == SistrumGlassMode.newFullGlass ||
+      this == SistrumGlassMode.newFullGlassSharedBackdrop ||
       this == SistrumGlassMode.newFakeGlass;
 
   /// Whether the renderer is asked for FakeGlass (`fake: true`).

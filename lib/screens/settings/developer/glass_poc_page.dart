@@ -16,6 +16,8 @@ import 'package:sistrum/services/performance/perf_frame_monitor.dart';
 import 'package:sistrum/services/performance/perf_frame_window.dart';
 import 'package:sistrum/services/performance/perf_spike_recorder.dart';
 import 'package:sistrum/widgets/glass_poc/glass_benchmark_report.dart';
+import 'package:sistrum/widgets/glass_poc/app_glass_backdrop_plan.dart';
+import 'package:sistrum/widgets/glass_poc/sistrum_renderer_glass.dart';
 import 'package:sistrum/services/performance/glass_frame_schedule.dart';
 import 'package:sistrum/widgets/glass_poc/glass_benchmark_run.dart';
 import 'package:sistrum/widgets/glass_poc/glass_benchmark_runner.dart';
@@ -54,6 +56,11 @@ class _GlassPocPageState extends ConsumerState<GlassPocPage>
   late final PerfFrameMonitor _monitor;
   late final GlassPocRunRegistry _registry;
   final GlobalKey _stageKey = GlobalKey();
+  final List<BackdropKey> _backdropKeys = List.generate(
+    4,
+    (_) => BackdropKey(),
+  );
+  String _backdropConfiguration = 'unlaid_out';
   Timer? _pathTimer;
   late final PerfSpikeRecorder _spikes;
   AppLifecycleListener? _lifecycle;
@@ -105,6 +112,7 @@ class _GlassPocPageState extends ConsumerState<GlassPocPage>
     if (_startedMonitor) _monitor.start();
     _runner = GlassBenchmarkRunner(
       host: this,
+      backdropConfiguration: () => _backdropConfiguration,
       budgetUs:
           1e6 /
           resolvePerfRefreshRate(PerfFrameMonitor.reportedRefreshRate()).hz,
@@ -449,6 +457,92 @@ class _GlassPocPageState extends ConsumerState<GlassPocPage>
     _runner.start(plan: GlassBenchmarkPlan.diagnostic(timing: _standardPlan));
   }
 
+  void _startBackdropSharing() {
+    _spikes.noteEvent('benchmark=shared backdrop A/B start');
+    _displayModes.begin(ref.read(displayRefreshProvider));
+    _runner.start(
+      plan: GlassBenchmarkPlan.backdropSharing(timing: _standardPlan),
+    );
+  }
+
+  /// Same paint order and sizes as the Stack below. Account conservatively for
+  /// the package's blur, dispersion and refraction sampling reach, not only
+  /// silhouette overlap. No shadows are requested by our renderer adapter.
+  List<BackdropKey?> _planBackdrop(
+    BoxConstraints constraints,
+    SistrumGlassMode mode,
+    int surfaces,
+    double barWidth,
+  ) {
+    const h = _GlassPocPageConstants.headerHeight;
+    const b = _GlassPocPageConstants.barHeight;
+    final width = constraints.maxWidth;
+    final height = constraints.maxHeight;
+    final rtl = Directionality.of(context) == TextDirection.rtl;
+    final dark = Theme.of(context).brightness == Brightness.dark;
+    final boxes = <Rect>[
+      if (surfaces == 4) ...[
+        Rect.fromLTWH(rtl ? width - _sideInset - h : _sideInset, 8, h, h),
+        Rect.fromLTWH(
+          rtl ? _sideInset : width - _sideInset - h * 2.2,
+          8,
+          h * 2.2,
+          h,
+        ),
+      ],
+      Rect.fromLTWH(
+        _sideInset,
+        height - 12 - (surfaces >= 2 ? b * 2 + 10 : b),
+        barWidth,
+        b,
+      ),
+      if (surfaces >= 2)
+        Rect.fromLTWH(_sideInset, height - 12 - b, barWidth, b),
+    ];
+    final dpr = MediaQuery.devicePixelRatioOf(context);
+    final settings = sistrumRendererGlassSettings(dark: dark);
+    // Conservative envelope of the pinned package: contour is 0.75 dp;
+    // preset frost scales by at most 1.78 and has a 5.8-device-pixel floor.
+    // Use public settings only; never depend on @internal package getters.
+    final outset = 2 + 1 / dpr;
+    final frost = math.max(
+      math.max(settings.frost * 1.78, 2.1),
+      5.8 / math.max(dpr, 2),
+    );
+    final shrink = settings.backdropShrink.clamp(0.0, 0.75);
+    final paintBounds = [for (final box in boxes) box.inflate(outset)];
+    final samples = [
+      for (final box in boxes)
+        box.inflate(
+          outset +
+              frost * 3 +
+              1 / dpr +
+              math.max(0.001, settings.refractionAmount) *
+                  (1 + settings.dispersion.abs() * 0.5) +
+              (1 / (1 - shrink) - 1) * box.longestSide / 2,
+        ),
+    ];
+    final shared = mode == SistrumGlassMode.newFullGlassSharedBackdrop;
+    final assignments = shared
+        ? appGlassBackdropGroups(
+            paintBounds: paintBounds,
+            samplingBounds: samples,
+          )
+        : List.generate(boxes.length, (i) => i);
+    _backdropConfiguration =
+        'groups=${assignments.join(',')}; '
+        'roles=${surfaces == 4
+            ? 'back,trailing,mini,tab'
+            : surfaces == 2
+            ? 'mini,tab'
+            : 'mini'}; '
+        'stage=${width}x$height; dpr=$dpr; rtl=$rtl; dark=$dark';
+    _runner.observeBackdropConfiguration(_backdropConfiguration);
+    return [
+      for (final group in assignments) shared ? _backdropKeys[group] : null,
+    ];
+  }
+
   void _onRendererChanged() {
     if (ref.read(glassPocSceneProvider).scrolling) {
       _beginScrollRun();
@@ -631,6 +725,10 @@ class _GlassPocPageState extends ConsumerState<GlassPocPage>
                           label: const Text('Run Diagnostic Repeats'),
                           onPressed: running ? null : _startDiagnostic,
                         ),
+                        ActionChip(
+                          label: const Text('Run Shared Backdrop A/B'),
+                          onPressed: running ? null : _startBackdropSharing,
+                        ),
                         if (running)
                           ActionChip(
                             label: const Text('Cancel benchmark'),
@@ -639,7 +737,9 @@ class _GlassPocPageState extends ConsumerState<GlassPocPage>
                           ),
                         ActionChip(
                           label: Text(
-                            _runner.plan.diagnostic
+                            _runner.plan.backdropSharing
+                                ? 'Copy Shared Backdrop Report'
+                                : _runner.plan.diagnostic
                                 ? 'Copy Diagnostic Report'
                                 : 'Copy Report',
                           ),
@@ -740,76 +840,95 @@ class _GlassPocPageState extends ConsumerState<GlassPocPage>
             ),
           ),
           Expanded(
-            child: ClipRect(
-              key: _stageKey,
-              child: SistrumGlassScope(
-                mode: mode,
-                sharedBackdrop: sharedBackdrop,
-                child: Stack(
-                  children: [
-                    Positioned.fill(
-                      child: AnimatedBuilder(
-                        animation: _background,
-                        builder: (context, _) => CustomPaint(
-                          painter: _PocBackgroundPainter(
-                            progress: scene.animated ? _background.value : 0,
-                            dark:
-                                Theme.of(context).brightness == Brightness.dark,
-                          ),
-                        ),
-                      ),
-                    ),
-                    Positioned.fill(
-                      child: ListView.builder(
-                        controller: _list,
-                        padding: const EdgeInsets.only(
-                          top: _GlassPocPageConstants.headerHeight + 24,
-                          bottom: 2 * _GlassPocPageConstants.barHeight + 40,
-                        ),
-                        itemCount: 60,
-                        itemBuilder: (context, i) => Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: _sideInset,
-                            vertical: 10,
-                          ),
-                          child: Text(
-                            'Track ${i + 1} — scrolling content under glass',
-                          ),
-                        ),
-                      ),
-                    ),
-                    if (surfaces == 4)
-                      Positioned(
-                        top: 8,
-                        left: _sideInset,
-                        right: _sideInset,
-                        child: _PocHeader(mode: mode, outline: _outlines),
-                      ),
-                    Positioned(
-                      left: _sideInset,
-                      bottom: 12,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          _PocMiniPlayer(
-                            mode: mode,
-                            width: barWidth,
-                            outline: _outlines,
-                          ),
-                          if (surfaces >= 2) ...[
-                            const SizedBox(height: 10),
-                            _PocTabBar(
-                              mode: mode,
-                              width: barWidth,
-                              outline: _outlines,
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                final keys = _planBackdrop(
+                  constraints,
+                  mode,
+                  surfaces,
+                  barWidth,
+                );
+                return ClipRect(
+                  key: _stageKey,
+                  child: SistrumGlassScope(
+                    mode: mode,
+                    sharedBackdrop: sharedBackdrop,
+                    child: Stack(
+                      children: [
+                        Positioned.fill(
+                          child: AnimatedBuilder(
+                            animation: _background,
+                            builder: (context, _) => CustomPaint(
+                              painter: _PocBackgroundPainter(
+                                progress: scene.animated
+                                    ? _background.value
+                                    : 0,
+                                dark:
+                                    Theme.of(context).brightness ==
+                                    Brightness.dark,
+                              ),
                             ),
-                          ],
-                        ],
-                      ),
+                          ),
+                        ),
+                        Positioned.fill(
+                          child: ListView.builder(
+                            controller: _list,
+                            padding: const EdgeInsets.only(
+                              top: _GlassPocPageConstants.headerHeight + 24,
+                              bottom: 2 * _GlassPocPageConstants.barHeight + 40,
+                            ),
+                            itemCount: 60,
+                            itemBuilder: (context, i) => Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: _sideInset,
+                                vertical: 10,
+                              ),
+                              child: Text(
+                                'Track ${i + 1} — scrolling content under glass',
+                              ),
+                            ),
+                          ),
+                        ),
+                        if (surfaces == 4)
+                          Positioned(
+                            top: 8,
+                            left: _sideInset,
+                            right: _sideInset,
+                            child: _PocHeader(
+                              mode: mode,
+                              outline: _outlines,
+                              backdropKeys: keys.take(2).toList(),
+                            ),
+                          ),
+                        Positioned(
+                          left: _sideInset,
+                          bottom: 12,
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              _PocMiniPlayer(
+                                mode: mode,
+                                width: barWidth,
+                                outline: _outlines,
+                                backdropKey: keys[surfaces == 4 ? 2 : 0],
+                              ),
+                              if (surfaces >= 2) ...[
+                                const SizedBox(height: 10),
+                                _PocTabBar(
+                                  mode: mode,
+                                  width: barWidth,
+                                  outline: _outlines,
+                                  backdropKey: keys[surfaces == 4 ? 3 : 1],
+                                ),
+                              ],
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-              ),
+                  ),
+                );
+              },
             ),
           ),
         ],
@@ -856,10 +975,15 @@ class _BenchmarkStatus extends StatelessWidget {
 }
 
 class _PocHeader extends StatelessWidget {
-  const _PocHeader({required this.mode, required this.outline});
+  const _PocHeader({
+    required this.mode,
+    required this.outline,
+    required this.backdropKeys,
+  });
 
   final SistrumGlassMode mode;
   final bool outline;
+  final List<BackdropKey?> backdropKeys;
 
   @override
   Widget build(BuildContext context) {
@@ -872,6 +996,7 @@ class _PocHeader extends StatelessWidget {
           height: size,
           borderRadius: size / 2,
           diagnosticOutline: outline,
+          backdropKey: backdropKeys[0],
           child: _PocTap(icon: Icons.arrow_back, onTap: () {}),
         ),
         const Spacer(),
@@ -882,6 +1007,7 @@ class _PocHeader extends StatelessWidget {
           height: size,
           borderRadius: size / 2,
           diagnosticOutline: outline,
+          backdropKey: backdropKeys[1],
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
@@ -900,11 +1026,13 @@ class _PocMiniPlayer extends StatelessWidget {
     required this.mode,
     required this.width,
     required this.outline,
+    this.backdropKey,
   });
 
   final SistrumGlassMode mode;
   final double width;
   final bool outline;
+  final BackdropKey? backdropKey;
 
   @override
   Widget build(BuildContext context) {
@@ -914,6 +1042,7 @@ class _PocMiniPlayer extends StatelessWidget {
       height: _GlassPocPageConstants.barHeight,
       borderRadius: _GlassPocPageConstants.barHeight / 2,
       diagnosticOutline: outline,
+      backdropKey: backdropKey,
       child: Row(
         children: [
           const SizedBox(width: 16),
@@ -934,11 +1063,13 @@ class _PocTabBar extends StatelessWidget {
     required this.mode,
     required this.width,
     required this.outline,
+    this.backdropKey,
   });
 
   final SistrumGlassMode mode;
   final double width;
   final bool outline;
+  final BackdropKey? backdropKey;
 
   @override
   Widget build(BuildContext context) {
@@ -954,6 +1085,7 @@ class _PocTabBar extends StatelessWidget {
       height: _GlassPocPageConstants.barHeight,
       borderRadius: _GlassPocPageConstants.barHeight / 2,
       diagnosticOutline: outline,
+      backdropKey: backdropKey,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
