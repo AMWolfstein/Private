@@ -505,3 +505,140 @@ device evidence that has not been collected:
 
 Until that is done, `liquid_glass_widgets` 1.16.1 remains the only glass
 dependency with device-collected numbers, and it remains POC-only.
+
+## 10. Addendum (2026-11-05, fifth review): Full Glass, FakeGlass and the scroll benchmark
+
+This section does not change sections 1-9. Earlier results are historical: they
+were collected with the "New renderer" mode and the 20-second scroll pass, not
+the speed presets below, so they are not controlled comparisons with this
+benchmark.
+
+### 10.1 Package rendering architecture (verified in `liquid_glass_renderer` 1.0.0-dev.2)
+
+- `LiquidGlassLayer(fake: ...)` decides the path per layer. `fake: true` builds
+  FakeGlass for every shape in the layer.
+- `fake: false` builds the real path only when all of these hold: the
+  `ImageFilter.isShaderFilterSupported` check passes, and the
+  `FlutterGpuGeometryRenderer` loads. The load is asynchronous, runs after a
+  post-frame callback, and is retried on no later frame. Until it completes, and
+  if it fails, the layer builds FakeGlass.
+- Failure is silent in profile and release builds. The package logs a fallback
+  message only under `kDebugMode`, so a profile run has no log to read.
+- The package exposes no public accessor for its effective mode. Its
+  `LiquidGlassLayer` state is private. So the effective path cannot be read from
+  the API and must be inferred.
+- `LiquidGlass.withOwnLayer(shape:, settings:, fake:, child:)` is the public
+  per-surface entry point. The POC uses it for both renderer modes, so the
+  `fake` value is passed explicitly and not inherited.
+
+### 10.2 Actual rendering-path detection
+
+`lib/widgets/glass_poc/sistrum_glass_render_path.dart` reads the mounted stage
+(read-only, no tree mutation) and counts widget types:
+
+| Evidence in the tree | Meaning |
+|---|---|
+| `_RawShapes` on every `LiquidGlassLayer` | real GPU layer: `full_gpu` |
+| `FakeGlass` widgets (`RawFakeGlass`, consolidated layer) | `fake_backdrop` |
+| `BackdropFilter` on every surface | Basic Blur, `backdrop_filter` |
+
+Rules:
+- New Full Glass reports `full_gpu` only when every layer is real and no FakeGlass
+  is mounted. A Full Glass request that mounted FakeGlass is
+  `fake_backdrop` with `glass_fallback=true` and a reason.
+- New FakeGlass reports `fake_backdrop` only when every layer is FakeGlass.
+- Anything else (blank, initializing, mixed) is `unverified`. Blank and
+  initializing are not glass.
+- Old Liquid Glass and Reference Glass come from `liquid_glass_widgets`, which
+  is not instrumented. They always report `unverified`.
+
+Timing: the page re-probes every 500 ms (a timer, not a ticker) and reports
+changes on screen. Sampling starts only after warm-up and only once a verifiable
+path is confirmed. If the path changes between the start of measurement and the
+copy, the report says `unverified`.
+
+Limits of this method:
+- It uses `runtimeType` names. Profile builds keep them. A build with
+  `--obfuscate` may rename the private `_RawShapes`, and the probe would then
+  report `unverified` rather than guess. It must be checked on any obfuscated build.
+- It proves the widget tree, not GPU work. A real layer means the Flutter GPU
+  path was taken; it does not measure that path's cost.
+- Verified in the flutter_test VM (no Flutter GPU): New Full Glass is reported as
+  a fallback to FakeGlass, and the test asserts it is never `full_gpu`.
+
+### 10.3 Scroll implementation
+
+- One scroller, `SistrumAutoScroller` (`sistrum_auto_scroll.dart`), drives the
+  page's single list for every mode. It uses a `Ticker`, so each frame's offset
+  is `speed x elapsed frame time`. It never uses `animateTo`, so no animations
+  overlap.
+- Speed presets are logical pixels per second: Slow 150, Normal 400 (default),
+  Fast 900.
+- Boundary behaviour: reverse. The offset is a triangle wave over the distance
+  travelled, from 0 to the maximum extent and back. Each end is a turn, not a
+  reset, so the content never jumps. The report records `reverse`.
+- Turns are counted in the sample window (`scroll_boundary_transitions`), so a
+  window containing a turn can be identified. Per-frame spike attribution is not
+  available: the HUD does not link a frame to a turn.
+- Stop keeps the offset and the active time, so resuming continues from the same
+  point. Changing speed, changing renderer, or Reset benchmark starts a fresh run
+  from offset 0.
+- No ticker runs while stopped. The page's background `AnimationController`
+  (Scene C) is separate and unchanged.
+
+### 10.4 Measurement method
+
+- Warm-up is 2 s of active scrolling. Frames during warm-up are not counted: the
+  HUD monitor is held (`setCollecting(false)`) after each fresh run and released
+  when warm-up ends.
+- Sampling also waits for a verifiable render path. For New Full Glass, a blank
+  or initializing tree holds the sample, so shader initialization is not measured.
+- `scroll_speed_actual` is the displacement per second of the list's applied
+  offset over the last 300 scroll samples (about one HUD window at 60 Hz). It is
+  `unavailable` when there are too few samples or the span is under 0.5 s. It is
+  never the target.
+- Frame-budget exceedance is unchanged from section 9: the share of window
+  frames whose total span (vsync start to raster finish) exceeds the budget.
+  Estimated FPS is not Android display FPS.
+- Each configuration needs at least 300 counted frames. The report shows
+  `frames=` and `scroll_samples=`; check that both are 300 or more.
+
+### 10.5 Matrix and visual differences
+
+Matrix: Scene D, speeds Slow, Normal, Fast, for Old Liquid Glass, New Full
+Glass, New FakeGlass and Basic Blur (12 runs). Transparent Baseline is a
+reference only; Reference Glass is not in the matrix.
+
+Visual differences the comparison cannot remove:
+- Full Glass refracts the background. FakeGlass does not; it applies frost and
+  tint analytically. The POC does not disable Full Glass refraction to match,
+  and does not add refraction to FakeGlass.
+- Each renderer uses its own package and settings. Matching is by intent.
+- Old Liquid Glass shares one layer; the two renderer modes use one layer per
+  surface. This is the deviation recorded in section 9.
+
+### 10.6 Running the 12-run matrix
+
+1. Build and install the profile APK: `flutter build apk --profile --dart-define=SISTRUM_PERF_HUD=true` (with the JDK 25 environment from `/root/toolchains/env.sh`).
+2. Developer Options > Glass POC. Select scene D.
+3. For each renderer (New Full Glass, New FakeGlass, Old Liquid Glass, Basic Blur):
+   a. Select the renderer, then check the `glass_render_path` line on screen.
+      New Full Glass must show `full_gpu`. If it shows FALLBACK or `unverified`,
+      record that result as a fallback and do not count it as a Full Glass result.
+   b. For each speed (Slow, Normal, Fast): select the speed, let it run for at
+      least 8 seconds (2 s warm-up, then about 300 frames), then Copy metrics.
+   c. Check `frames`, `scroll_samples`, `scroll_speed_actual` and `scroll_warmup=complete`.
+4. Keep the copied reports as the record. Do not average runs whose render path differs.
+
+### 10.7 Known limitations and remaining verification
+
+- Not verified on a device in this session: no device run and no visual check of
+  the full Flutter GPU path. The Linux harness is not used for this section.
+- The probe is written against `liquid_glass_renderer` 1.0.0-dev.2. A version
+  change can rename the widgets it counts; re-check the classifier first.
+- Boundary turns are counted, not separated from steady-state percentiles.
+- Old Liquid Glass and Reference Glass paths are unverified by design.
+- Still required on the Android device: (1) confirm `full_gpu` on the real device
+  for New Full Glass and see refraction; (2) run the 12-run matrix; (3) confirm
+  the window shows at least 300 frames with no `scroll_warmup=waiting` after the
+  first run.

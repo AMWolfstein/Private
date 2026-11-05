@@ -120,7 +120,7 @@ Glass modes use the pinned `liquid_glass_widgets` 1.16.1 package. Liquid Glass
 shares one `LiquidGlassLayer`; Reference Glass gives each surface its own layer.
 A shared layer's grouped premium children are not drawn, so Reference Glass
 must not use one. The selected mode is shown in the HUD panel
-(`Glass`) and written to copied reports as `glass_mode=`. The mode is held in
+(`Glass`) and written to copied reports as `glass_mode=`. The Glass POC copy also writes `glass_render_path` (the verified path, `full_gpu`, `fake_backdrop`, `backdrop_filter`, `none` or `unverified`), `glass_fallback`, the scene, and the Scene D scroll fields (`scroll_speed_preset`, `scroll_speed_target`, `scroll_speed_actual`, `scroll_speed_unit`, `scroll_direction`, `scroll_boundary_behavior`, `scroll_boundary_transitions`); see `GLASS_ARCHITECTURE_DECISION.md` section 10. The mode is held in
 memory, so a restart returns to the baseline. Modes are reviewed on a physical
 device only; no benchmark results are recorded here before that review.
 
