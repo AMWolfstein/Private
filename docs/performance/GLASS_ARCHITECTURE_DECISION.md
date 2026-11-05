@@ -112,3 +112,90 @@ and we have none.
 - BitChord `b690dc1`: files listed in section 1.
 - `liquid_glass_widgets` 1.16.1, commit `5911897`: `lib/widgets/shared/lightweight_liquid_glass.dart`, `lib/widgets/shared/adaptive_glass.dart`.
 - Haze 1.3.1 and Kyant0/backdrop 2.0.0 (vendored in BitChord).
+
+## 7. Addendum (2026-11-05, second review): native BitChord-style Glass feasibility
+
+This addendum does not replace sections 1–6. Those record what was known when
+the decision was made. The points below are new.
+
+### 7.1 New evidence
+
+- The user reports that BitChord runs smoothly on the same Android device that
+  shows Sistrum's Flutter Glass frame-budget exceedance. BitChord's Liquid Glass
+  and its extra Blur option were both enabled during normal use.
+- This is an observation, not a measurement. BitChord's frame timings were not
+  captured, and no trace was taken on either app. It is evidence that the
+  effect is affordable on this device when implemented as BitChord does it. It
+  is not evidence of the cause.
+
+### 7.2 What BitChord does, re-checked
+
+Checked against `b690dc1`, the same files as section 1:
+
+- `LiquidGlass.kt`: `drawBackdrop` with `colorControls`, `blur`, and `lens`,
+  `backdropScale = GLASS_RESOLUTION_SCALE (0.33f)`.
+- `MainActivity.kt` (around lines 419–431): one `rememberLayerBackdrop`
+  records the page. Glass surfaces sample it.
+- `backdrop/effects/RenderEffect.kt` and `Blur.kt`: `android.graphics.RenderEffect`
+  and AGSL `RuntimeShader`. `isRenderEffectSupported()` needs API 31, and
+  `isRuntimeShaderSupported()` needs API 33 (`backdrop/Platform.kt`).
+- `OptimizedHaze.kt`: `HazeInputScale.Fixed(0.33f)`.
+
+All of this is Compose. The rendering is done by Android's RenderNode and
+RenderEffect, on the Compose side of the window. Flutter's renderer is a
+separate engine that draws into its own surface.
+
+### 7.3 Feasibility of each approach
+
+| Approach | Classification | Reason |
+|---|---|---|
+| A. Native Android overlay (a native glass View or window above Flutter) | NOT PRACTICAL | Flutter draws into its own surface (a `SurfaceView` or `TextureView`). Per the Android `SurfaceView` docs, the surface is "Z ordered ... behind the window" and the view hierarchy composites it. A native effect has no public way to read that surface's pixels. The only route to the pixels is a copy (`PixelCopy` or a GPU readback), once per frame. That is the per-frame readback the task rules out. The alternative, a compositor blur behind a window (`WindowManager.LayoutParams.setBlurBehindRadius`), blurs the window's rectangular area. It cannot follow a rounded shape, and it was not confirmed to behave that way here. |
+| B. Flutter texture or GPU interop | NOT PRACTICAL | Flutter's `Texture` widget brings native frames into Flutter. It does not export Flutter's scene back out. The only public capture is `RenderRepaintBoundary.toImage`, which returns "uncompressed raw RGBA bytes" (Flutter docs, fetched). Per-frame capture is excluded by the task rules, and no public API turns a `ui.Image` into an Android `HardwareBuffer` or a `RenderNode` input. |
+| C. Flutter-native adaptation of BitChord's optimisations | EXPERIMENTAL / UNPROVEN, and excluded by the rules as stated | Capturing the page once at reduced scale and blurring the small image would reproduce the shared-capture and one-third-resolution ideas. It needs a per-frame `toImage`, which the task rules exclude. `ImageFilter.blur` has no public input-resolution option (Flutter docs, fetched). So a reduced-resolution blur would need the custom pipeline the rules rule out. |
+
+Unverified: whether `View.setRenderEffect` applies only to the view's own
+content. The fetched page was too long to reach the method text. This matters
+for A, but A is already NOT PRACTICAL for the readback reason above, so the
+conclusion does not depend on it.
+
+### 7.4 Decision: NO-GO for a native BitChord-style POC
+
+- No credible approach exists that avoids per-frame readback and avoids
+  rebuilding the UI in Compose.
+- The one approach that would be credible on the device (reduced-resolution
+  shared backdrop with a hardware blur) cannot be built on public Flutter or
+  Android APIs without the excluded readback path.
+- So no native POC is implemented, and no Profile APK is built for this step.
+  The existing POC is unchanged.
+
+### 7.5 What the same-device observation does and does not change
+
+- It shows that a reduced-resolution, shared-backdrop design runs well on this
+  device. It does not show that Sistrum's Flutter `BackdropFilter`s are the
+  cause of the exceedance. That is still a hypothesis.
+- The decision in section 4 stands. Keep `liquid_glass_widgets` 1.16.1 for the
+  POC only. Production stays glass-free.
+
+### 7.6 Remaining validation requirements
+
+- Measure BitChord and Sistrum side by side with Perfetto on the same device,
+  same scene, and same refresh rate. Compare GPU time per frame and the
+  composition path, not only Flutter `FrameTiming`. A Flutter-only number
+  cannot show native composition costs.
+- Measure Sistrum's Reference and Liquid modes in the scenes listed in section 5
+  before any production decision.
+- Confirm whether `View.setRenderEffect` applies to the view's content only
+  (Android docs, full method text). Record the answer here.
+- If a production glass is still wanted, the lowest-risk option to test is one
+  surface only (the bottom bar or mini player) in Liquid Glass standard. Test it
+  against the baseline on the device. This is a product call and is not
+  recommended by this addendum.
+
+### 7.7 Sources used in this addendum
+
+- BitChord `b690dc1` (checked again): files named in sections 1 and 7.2.
+- Android `SurfaceView` reference (fetched): composition and Z-order wording.
+- Android `View.setRenderEffect` and `WindowManager.LayoutParams.setBlurBehindRadius`
+  references: fetched but not fully read. Their conclusions are not relied on.
+- Flutter `RenderRepaintBoundary.toImage` and `ImageFilter.blur` references
+  (fetched): the RGBA and no-downsampling wording above.
