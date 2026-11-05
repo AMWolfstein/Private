@@ -90,6 +90,11 @@ void main() {
     expect(text, contains('estimated_frame_production_rate='));
     expect(text, contains('scroll_speed_actual=899.4'));
     expect(text, contains('scroll_boundary_reversals=2'));
+    expect(text, contains('scroll_distance_px='));
+    expect(text, contains('scroll_active_fraction_pct='));
+    expect(text, contains('scroll_frames='));
+    expect(text, contains('frame_begin_callbacks='));
+    expect(text, contains('frame_timings_received='));
   });
 
   test('every episode line says the cause is unverified', () {

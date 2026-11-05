@@ -17,14 +17,62 @@ const _plan = GlassBenchmarkPlan(
   modeTimeout: Duration(milliseconds: 500),
 );
 
-/// A fake page: records every call, and returns a configurable render path.
+/// A scroll state as the scroller reports it while a run is active: 900 px/s,
+/// 60 s measured, one reversal, no detached or stopped frames.
+SistrumScrollStatus _activeScroll({
+  double overall = 900,
+  double measuredSeconds = 60,
+  int turns = 2,
+  int ticks = 3600,
+  int unattached = 0,
+  double maxGap = 0.02,
+}) => SistrumScrollStatus(
+  speed: SistrumScrollSpeed.fast,
+  running: true,
+  measuring: true,
+  actualPxPerSecond: overall,
+  direction: 'down',
+  samples: 300,
+  boundaryTransitions: turns,
+  overallPxPerSecond: overall,
+  measuredSeconds: measuredSeconds,
+  totalBoundaryTurns: turns,
+  measuredPathPx: overall * measuredSeconds,
+  measureTicks: ticks,
+  unattachedTicks: unattached,
+  maxTickGapSeconds: maxGap,
+  maxExtent: 1600,
+);
+
+/// What the scroller reports after it was halted: everything cleared.
+const SistrumScrollStatus _clearedScroll = SistrumScrollStatus(
+  speed: SistrumScrollSpeed.fast,
+  running: false,
+  measuring: false,
+  actualPxPerSecond: null,
+  direction: 'stopped',
+  samples: 0,
+  boundaryTransitions: 0,
+  overallPxPerSecond: null,
+  measuredSeconds: 0,
+  totalBoundaryTurns: 0,
+);
+
+/// A fake page: records every call. [scroll] is what the scroller reports
+/// while a run is active; halting clears it, as the real scroller does.
 class _FakeHost implements GlassBenchmarkHost {
   final List<String> calls = [];
   GlassBenchmarkAggregator? aggregator;
   SistrumGlassMode? current;
   SistrumGlassRenderReport Function(SistrumGlassMode mode)? pathFor;
+
+  /// What the scroller reports for each run, as applyRun restarts it.
+  SistrumScrollStatus? scrollTemplate = _activeScroll();
+  SistrumScrollStatus? scroll;
   bool throwOnApply = false;
   int restoreCount = 0;
+  int beginCount = 0;
+  int timingCount = 0;
   GlassBenchmarkConfig config = (
     mode: SistrumGlassMode.referenceGlass,
     sharedBackdrop: false,
@@ -39,11 +87,15 @@ class _FakeHost implements GlassBenchmarkHost {
   void applyRun(SistrumGlassMode mode) {
     if (throwOnApply) throw StateError('boom');
     current = mode;
+    scroll = scrollTemplate;
     calls.add('apply:${mode.name}');
   }
 
   @override
-  void haltRun() => calls.add('halt');
+  void haltRun() {
+    calls.add('halt');
+    scroll = _clearedScroll;
+  }
 
   @override
   void restoreConfig(GlassBenchmarkConfig c) {
@@ -69,7 +121,11 @@ class _FakeHost implements GlassBenchmarkHost {
   }
 
   @override
-  SistrumScrollStatus? scrollStatus() => null;
+  SistrumScrollStatus? scrollStatus() => scroll;
+
+  @override
+  ({int beginFrames, int timings}) frameCounts() =>
+      (beginFrames: beginCount, timings: timingCount);
 
   @override
   void attachAggregator(GlassBenchmarkAggregator? a) {
@@ -98,10 +154,13 @@ GlassBenchmarkRunner _runner(_FakeHost host, {GlassBenchmarkPlan? plan}) {
   );
 }
 
-/// Feeds [frames] normal frames (16 ms apart) into the run's aggregator.
+/// Feeds [frames] frames (16 ms apart) into the run's aggregator. Each frame is
+/// drawn and has a FrameTiming, so both counters move together.
 void _feed(_FakeHost host, {int frames = 60, int spanUs = 10000}) {
   final a = host.aggregator!;
   for (var i = 1; i <= frames; i++) {
+    host.beginCount++;
+    host.timingCount++;
     a.onFrame(buildUs: 3000, rasterUs: 6000, spanUs: spanUs, endUs: i * 16000);
   }
 }
@@ -136,7 +195,6 @@ void main() {
     _feed(host);
     await tester.pump(const Duration(seconds: 1));
 
-    // First run done: it returns to transition, then the second mode starts.
     expect(runner.phase, GlassBenchmarkPhase.transition);
     await tester.pump(const Duration(milliseconds: 100));
     runner.onMeasurementStarted();
@@ -184,7 +242,6 @@ void main() {
     expect(host.restoreCount, 1);
     expect(host.aggregator, isNull);
 
-    // Nothing resumes on its own after an interruption.
     await tester.pump(const Duration(seconds: 5));
     expect(host.calls.where((c) => c.startsWith('apply:')), hasLength(1));
   });
@@ -196,16 +253,13 @@ void main() {
       final runner = _runner(host);
       runner.start();
       await tester.pump(const Duration(milliseconds: 100));
-      // Never call onMeasurementStarted: the render path never verified.
       await tester.pump(const Duration(milliseconds: 550));
 
+      expect(runner.results, hasLength(1));
       expect(runner.results[0].validity, GlassBenchmarkValidity.invalid);
       expect(runner.results[0].measurementStarted, isFalse);
       expect(runner.results[0].reasons.join(), contains('never started'));
       expect(runner.phase, GlassBenchmarkPhase.transition);
-      expect(runner.results, hasLength(1));
-
-      // Clean up the rest so no timer is left pending.
       runner.interrupt('test cleanup');
     },
   );
@@ -271,5 +325,189 @@ void main() {
     expect(host.restoreCount, 1);
     await tester.pump(const Duration(seconds: 5));
     expect(host.calls.where((c) => c.startsWith('apply:')), hasLength(1));
+  });
+
+  // -- Regressions: scrolling evidence and sustained episodes -----------------
+
+  testWidgets('scroll metrics are captured during the run, not after the halt', (
+    tester,
+  ) async {
+    // The real scroller clears its totals when halted. The result must hold the
+    // values seen while the run was active.
+    final host = _FakeHost();
+    final runner = _runner(
+      host,
+      plan: const GlassBenchmarkPlan(
+        modes: [SistrumGlassMode.transparentBaseline],
+        transition: Duration(milliseconds: 100),
+        warmup: Duration(milliseconds: 100),
+        measure: Duration(seconds: 1),
+        modeTimeout: Duration(milliseconds: 500),
+      ),
+    );
+    runner.start();
+    await tester.pump(const Duration(milliseconds: 100));
+    runner.onMeasurementStarted();
+    _feed(host);
+    await tester.pump(const Duration(seconds: 1));
+
+    final result = runner.results.single;
+    expect(result.scrollOverallPxPerSecond, closeTo(900, 0.1));
+    expect(result.boundaryTurns, 2);
+    expect(result.scrollDirection, 'down');
+    expect(result.scrollDistancePx, closeTo(900 * 60, 0.1));
+    expect(result.validity, GlassBenchmarkValidity.valid);
+    expect(runner.reportText, contains('scroll_speed_actual=900.0'));
+    expect(runner.reportText, contains('scroll_boundary_reversals=2'));
+    expect(
+      runner.reportText,
+      isNot(contains('scroll_speed_actual=unavailable')),
+    );
+  });
+
+  testWidgets(
+    'a run whose list never scrolled is INVALID even though its timer completed',
+    (tester) async {
+      final host = _FakeHost()
+        ..scrollTemplate = _activeScroll(
+          overall: 0,
+          ticks: 0,
+          measuredSeconds: 0,
+        );
+      final runner = _runner(
+        host,
+        plan: const GlassBenchmarkPlan(
+          modes: [SistrumGlassMode.transparentBaseline],
+          transition: Duration(milliseconds: 100),
+          warmup: Duration(milliseconds: 100),
+          measure: Duration(seconds: 1),
+          modeTimeout: Duration(milliseconds: 500),
+        ),
+      );
+      runner.start();
+      await tester.pump(const Duration(milliseconds: 100));
+      runner.onMeasurementStarted();
+      _feed(host);
+      await tester.pump(const Duration(seconds: 1));
+
+      final result = runner.results.single;
+      expect(result.validity, GlassBenchmarkValidity.invalid);
+      expect(result.reasons.join(), contains('no scroll frames'));
+    },
+  );
+
+  testWidgets('a run at the wrong speed is INVALID', (tester) async {
+    final host = _FakeHost()..scrollTemplate = _activeScroll(overall: 400);
+    final runner = _runner(
+      host,
+      plan: const GlassBenchmarkPlan(
+        modes: [SistrumGlassMode.transparentBaseline],
+        transition: Duration(milliseconds: 100),
+        warmup: Duration(milliseconds: 100),
+        measure: Duration(seconds: 1),
+        modeTimeout: Duration(milliseconds: 500),
+      ),
+    );
+    runner.start();
+    await tester.pump(const Duration(milliseconds: 100));
+    runner.onMeasurementStarted();
+    _feed(host);
+    await tester.pump(const Duration(seconds: 1));
+
+    final result = runner.results.single;
+    expect(result.validity, GlassBenchmarkValidity.invalid);
+    expect(result.reasons.join(), contains('not within 5%'));
+  });
+
+  testWidgets(
+    'a scroll stop longer than the limit, or a detached list, is INVALID',
+    (tester) async {
+      for (final scroll in [
+        _activeScroll(maxGap: 2),
+        _activeScroll(unattached: 5),
+      ]) {
+        final host = _FakeHost()..scrollTemplate = scroll;
+        final runner = _runner(
+          host,
+          plan: const GlassBenchmarkPlan(
+            modes: [SistrumGlassMode.transparentBaseline],
+            transition: Duration(milliseconds: 100),
+            warmup: Duration(milliseconds: 100),
+            measure: Duration(seconds: 1),
+            modeTimeout: Duration(milliseconds: 500),
+          ),
+        );
+        runner.start();
+        await tester.pump(const Duration(milliseconds: 100));
+        runner.onMeasurementStarted();
+        _feed(host);
+        await tester.pump(const Duration(seconds: 1));
+        expect(runner.results.single.validity, GlassBenchmarkValidity.invalid);
+      }
+    },
+  );
+
+  testWidgets(
+    'a sustained 100% over-budget interval that is still open at the end records an episode',
+    (tester) async {
+      final host = _FakeHost();
+      final runner = _runner(
+        host,
+        plan: const GlassBenchmarkPlan(
+          modes: [SistrumGlassMode.transparentBaseline],
+          transition: Duration(milliseconds: 100),
+          warmup: Duration(milliseconds: 100),
+          measure: Duration(seconds: 1),
+          modeTimeout: Duration(milliseconds: 500),
+        ),
+      );
+      runner.start();
+      await tester.pump(const Duration(milliseconds: 100));
+      runner.onMeasurementStarted();
+      // Every frame over budget, through the end of the measurement.
+      _feed(host, frames: 120, spanUs: 30000);
+      await tester.pump(const Duration(seconds: 1));
+
+      final summary = runner.results.single.summary!;
+      expect(summary.exceedancePct, 100);
+      expect(
+        summary.episodeCount,
+        1,
+        reason: 'the open episode must be finalized',
+      );
+      expect(summary.worstEpisodes, hasLength(1));
+      expect(summary.worstEpisodes.single.openAtEnd, isTrue);
+      expect(runner.reportText, contains('sustained_degradation_episodes=1'));
+      expect(runner.reportText, contains('open_at_end=true'));
+    },
+  );
+
+  testWidgets('drawn frames without a FrameTiming make the run INCOMPLETE', (
+    tester,
+  ) async {
+    final host = _FakeHost();
+    final runner = _runner(
+      host,
+      plan: const GlassBenchmarkPlan(
+        modes: [SistrumGlassMode.transparentBaseline],
+        transition: Duration(milliseconds: 100),
+        warmup: Duration(milliseconds: 100),
+        measure: Duration(seconds: 1),
+        modeTimeout: Duration(milliseconds: 500),
+      ),
+    );
+    runner.start();
+    await tester.pump(const Duration(milliseconds: 100));
+    runner.onMeasurementStarted();
+    _feed(host);
+    // 50 frames were drawn but their timings never arrived.
+    host.beginCount += 50;
+    await tester.pump(const Duration(seconds: 1));
+
+    final result = runner.results.single;
+    expect(result.validity, GlassBenchmarkValidity.incomplete);
+    expect(result.reasons.join(), contains('no FrameTiming callback'));
+    expect(result.frameBegins, 110);
+    expect(result.frameTimings, 60);
   });
 }

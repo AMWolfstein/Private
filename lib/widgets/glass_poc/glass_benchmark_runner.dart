@@ -16,6 +16,12 @@ const List<SistrumGlassMode> kGlassBenchmarkModes = [
   SistrumGlassMode.basicBlur,
 ];
 
+/// Scroll validity limits. A run must keep its speed within the tolerance and
+/// must not stop for longer than the gap limit, or it is invalid.
+const double kGlassBenchmarkSpeedTolerance = 0.05;
+const double kGlassBenchmarkMaxScrollGapSeconds = 0.5;
+const double kGlassBenchmarkMinActiveFraction = 0.95;
+
 /// Target speed for every run of the benchmark.
 const SistrumScrollSpeed kGlassBenchmarkSpeed = SistrumScrollSpeed.fast;
 
@@ -107,6 +113,13 @@ class GlassBenchmarkModeResult {
     required this.scrollMeasuredSeconds,
     required this.boundaryTurns,
     required this.scrollDirection,
+    this.scrollDistancePx = 0,
+    this.scrollActiveFraction,
+    this.scrollTicks = 0,
+    this.scrollUnattachedTicks = 0,
+    this.scrollMaxTickGapSeconds = 0,
+    this.frameBegins = 0,
+    this.frameTimings = 0,
   });
 
   final SistrumGlassMode mode;
@@ -129,6 +142,21 @@ class GlassBenchmarkModeResult {
   final double scrollMeasuredSeconds;
   final int boundaryTurns;
   final String scrollDirection;
+
+  /// Total displacement applied during the measured interval, in logical px.
+  final double scrollDistancePx;
+
+  /// Active scrolling seconds divided by the Stopwatch time of the interval.
+  /// Null when the interval did not start.
+  final double? scrollActiveFraction;
+  final int scrollTicks;
+  final int scrollUnattachedTicks;
+  final double scrollMaxTickGapSeconds;
+
+  /// Drawn frames (persistent callbacks) and FrameTiming callbacks during the
+  /// measured interval. Their difference shows timings that never arrived.
+  final int frameBegins;
+  final int frameTimings;
 }
 
 /// Live state for the status line. Updated about once a second, and only a
@@ -188,6 +216,9 @@ abstract interface class GlassBenchmarkHost {
   SistrumGlassRenderReport renderPath();
   SistrumScrollStatus? scrollStatus();
 
+  /// Drawn frames and FrameTiming callbacks since the monitor started.
+  ({int beginFrames, int timings}) frameCounts();
+
   /// Connects the aggregator to the frame stream, or disconnects it with null.
   void attachAggregator(GlassBenchmarkAggregator? aggregator);
 }
@@ -236,6 +267,7 @@ class GlassBenchmarkRunner {
   Timer? _timer;
   Timer? _tick;
   bool _measurementStarted = false;
+  ({int beginFrames, int timings})? _frameStart;
   int _pathSamples = 0;
   int _pathMatches = 0;
   String _lastPath = 'unknown';
@@ -306,6 +338,7 @@ class GlassBenchmarkRunner {
         ..reset()
         ..start();
       _aggregator.begin();
+      _frameStart = host.frameCounts();
       host.attachAggregator(_aggregator);
       _enter(GlassBenchmarkPhase.measuring);
       _publish('measuring');
@@ -329,13 +362,26 @@ class GlassBenchmarkRunner {
       _stopTick();
       _stopwatch.stop();
       final elapsedUs = _stopwatch.elapsedMicroseconds;
+      // Capture while the run is still active: halting clears the scroller.
+      final scroll = host.scrollStatus();
+      final frames = _frameDelta();
+      // Close the aggregator before summarising, so an episode still open at the
+      // end is closed and included.
+      _aggregator.end();
       final summary = _measurementStarted
           ? _aggregator.summary(elapsedUs: elapsedUs)
           : null;
-      _aggregator.end();
       host.attachAggregator(null);
       host.haltRun();
-      _results.add(_result(summary, timedOut: timedOut));
+      _results.add(
+        _result(
+          summary,
+          scroll: scroll,
+          frames: frames,
+          elapsedUs: elapsedUs,
+          timedOut: timedOut,
+        ),
+      );
       _modeIndex++;
       if (_modeIndex >= plan.modes.length) {
         _complete();
@@ -362,13 +408,25 @@ class GlassBenchmarkRunner {
     _cancelTimer();
     _stopTick();
     _stopwatch.stop();
+    final elapsedUs = _stopwatch.elapsedMicroseconds;
+    final scroll = host.scrollStatus();
+    final frames = _frameDelta();
+    _aggregator.end();
     final partial = _measurementStarted
-        ? _aggregator.summary(elapsedUs: _stopwatch.elapsedMicroseconds)
+        ? _aggregator.summary(elapsedUs: elapsedUs)
         : null;
     _aggregator.discard();
     host.attachAggregator(null);
     host.haltRun();
-    _results.add(_result(partial, cancelled: true));
+    _results.add(
+      _result(
+        partial,
+        scroll: scroll,
+        frames: frames,
+        elapsedUs: elapsedUs,
+        cancelled: true,
+      ),
+    );
     _finalize(GlassBenchmarkPhase.cancelled);
     _enter(GlassBenchmarkPhase.cancelled);
     _publish('cancelled: $reason');
@@ -480,14 +538,29 @@ class GlassBenchmarkRunner {
     _timer = null;
   }
 
+  /// Frame counts over the measured interval (end minus start).
+  ({int beginFrames, int timings}) _frameDelta() {
+    final start = _frameStart;
+    if (!_measurementStarted || start == null) {
+      return (beginFrames: 0, timings: 0);
+    }
+    final now = host.frameCounts();
+    return (
+      beginFrames: now.beginFrames - start.beginFrames,
+      timings: now.timings - start.timings,
+    );
+  }
+
   GlassBenchmarkModeResult _result(
     GlassBenchmarkSummary? summary, {
+    required SistrumScrollStatus? scroll,
+    required ({int beginFrames, int timings}) frames,
+    required int elapsedUs,
     bool timedOut = false,
     bool cancelled = false,
   }) {
     final mode = plan.modes[_modeIndex];
     final expected = expectedGlassRenderPath(mode);
-    final scroll = host.scrollStatus();
     final reasons = <String>[];
     var validity = GlassBenchmarkValidity.valid;
 
@@ -513,8 +586,8 @@ class GlassBenchmarkRunner {
         'last render path: $_lastPath',
       );
     }
-    final frames = summary?.frames ?? 0;
-    if (_measurementStarted && frames == 0) {
+    final frameCount = summary?.frames ?? 0;
+    if (_measurementStarted && frameCount == 0) {
       worsen(GlassBenchmarkValidity.invalid);
       reasons.add('no frames observed during measurement');
     }
@@ -531,6 +604,82 @@ class GlassBenchmarkRunner {
       worsen(GlassBenchmarkValidity.validPathUnverified);
       reasons.add('render path not verified for this mode (not instrumented)');
     }
+
+    // Scrolling: it must have run for the whole interval, at the target speed.
+    // A run that only completed its timer is not valid.
+    final elapsedS = elapsedUs / Duration.microsecondsPerSecond;
+    final activeFraction = _measurementStarted && elapsedS > 0 && scroll != null
+        ? scroll.measuredSeconds / elapsedS
+        : null;
+    if (_measurementStarted) {
+      final target = kGlassBenchmarkSpeed.pxPerSecond;
+      if (scroll == null) {
+        worsen(GlassBenchmarkValidity.invalid);
+        reasons.add('scroll state unavailable during measurement');
+      } else {
+        if (scroll.measureTicks == 0) {
+          worsen(GlassBenchmarkValidity.invalid);
+          reasons.add(
+            'no scroll frames during measurement: the list did not move',
+          );
+        }
+        if (scroll.unattachedTicks > 0) {
+          worsen(GlassBenchmarkValidity.invalid);
+          reasons.add(
+            'scroll position detached during ${scroll.unattachedTicks} frames',
+          );
+        }
+        if (scroll.maxTickGapSeconds > kGlassBenchmarkMaxScrollGapSeconds) {
+          worsen(GlassBenchmarkValidity.invalid);
+          reasons.add(
+            'scrolling stopped for ${scroll.maxTickGapSeconds.toStringAsFixed(2)} s',
+          );
+        }
+        if (activeFraction != null &&
+            activeFraction < kGlassBenchmarkMinActiveFraction) {
+          worsen(GlassBenchmarkValidity.invalid);
+          reasons.add(
+            'active scrolling for ${(activeFraction * 100).toStringAsFixed(1)}% '
+            'of the interval',
+          );
+        }
+        final overall = scroll.overallPxPerSecond;
+        if (overall == null) {
+          worsen(GlassBenchmarkValidity.invalid);
+          reasons.add('actual scroll speed not measurable');
+        } else if ((overall - target).abs() >
+            target * kGlassBenchmarkSpeedTolerance) {
+          worsen(GlassBenchmarkValidity.invalid);
+          reasons.add(
+            'actual scroll speed ${overall.toStringAsFixed(1)} px/s is not '
+            'within ${(kGlassBenchmarkSpeedTolerance * 100).toStringAsFixed(0)}% '
+            'of the ${target.toStringAsFixed(0)} px/s target',
+          );
+        }
+      }
+    }
+
+    // Frames: every drawn frame should have a timing, and every timing should
+    // be in the summary (or counted as overflow).
+    if (_measurementStarted) {
+      final tolerance = _frameTolerance(frames.beginFrames);
+      final timingsGap = frames.beginFrames - frames.timings;
+      if (timingsGap > tolerance) {
+        worsen(GlassBenchmarkValidity.incomplete);
+        reasons.add(
+          '$timingsGap drawn frames had no FrameTiming callback '
+          '(drawn ${frames.beginFrames}, timings ${frames.timings})',
+        );
+      }
+      final kept = frameCount + (summary?.overflow ?? 0);
+      if (frames.timings - kept > tolerance) {
+        worsen(GlassBenchmarkValidity.incomplete);
+        reasons.add(
+          '${frames.timings - kept} timings did not reach the measurement',
+        );
+      }
+    }
+
     if (summary != null) {
       if (summary.overflow > 0) {
         worsen(GlassBenchmarkValidity.incomplete);
@@ -562,8 +711,19 @@ class GlassBenchmarkRunner {
       scrollMeasuredSeconds: scroll?.measuredSeconds ?? 0,
       boundaryTurns: scroll?.totalBoundaryTurns ?? 0,
       scrollDirection: scroll?.direction ?? 'unknown',
+      scrollDistancePx: scroll?.measuredPathPx ?? 0,
+      scrollActiveFraction: activeFraction,
+      scrollTicks: scroll?.measureTicks ?? 0,
+      scrollUnattachedTicks: scroll?.unattachedTicks ?? 0,
+      scrollMaxTickGapSeconds: scroll?.maxTickGapSeconds ?? 0,
+      frameBegins: frames.beginFrames,
+      frameTimings: frames.timings,
     );
   }
+
+  /// Frames that may be in flight at the end of an interval (timings arrive
+  /// a little after their frames). Two frames or 2 %, whichever is larger.
+  int _frameTolerance(int drawn) => drawn * 2 ~/ 100 > 2 ? drawn * 2 ~/ 100 : 2;
 
   GlassBenchmarkModeResult _notRun(SistrumGlassMode mode) =>
       GlassBenchmarkModeResult(

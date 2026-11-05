@@ -221,6 +221,9 @@ class _GlassPocPageState extends ConsumerState<GlassPocPage>
   SistrumScrollStatus? scrollStatus() => _autoScroll.status();
 
   @override
+  ({int beginFrames, int timings}) frameCounts() => _monitor.frameCounts;
+
+  @override
   void attachAggregator(GlassBenchmarkAggregator? aggregator) =>
       _monitor.benchmarkAggregator = aggregator;
 

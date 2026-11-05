@@ -16,6 +16,9 @@ class PerfFrameMonitor {
   final PerfFrameWindow window;
   bool _running = false;
   bool _collecting = true;
+  bool _beginCounting = false;
+  int _beginFrames = 0;
+  int _timingsReceived = 0;
 
   bool get isRunning => _running;
 
@@ -36,13 +39,21 @@ class PerfFrameMonitor {
   void start() {
     if (_running) return;
     _running = true;
-    SchedulerBinding.instance.addTimingsCallback(_onTimings);
+    SchedulerBinding.instance.addTimingsCallback(onTimings);
+    // A persistent callback runs once per drawn frame, independent of the
+    // FrameTiming delivery. Comparing the two counts shows lost timings.
+    if (!_beginCounting) {
+      _beginCounting = true;
+      SchedulerBinding.instance.addPersistentFrameCallback(
+        (_) => _beginFrames++,
+      );
+    }
   }
 
   void stop() {
     if (!_running) return;
     _running = false;
-    SchedulerBinding.instance.removeTimingsCallback(_onTimings);
+    SchedulerBinding.instance.removeTimingsCallback(onTimings);
   }
 
   void reset() {
@@ -56,7 +67,14 @@ class PerfFrameMonitor {
     return window.snapshot(hz: rate.hz, hzIsFallback: rate.isFallback);
   }
 
-  void _onTimings(List<FrameTiming> timings) {
+  /// Frame counts since the monitor started. Both only grow.
+  ({int beginFrames, int timings}) get frameCounts =>
+      (beginFrames: _beginFrames, timings: _timingsReceived);
+
+  /// Called by the engine with each batch of FrameTiming. Public so tests can
+  /// feed real timings; the app never calls it directly.
+  void onTimings(List<FrameTiming> timings) {
+    _timingsReceived += timings.length;
     if (!_collecting) return;
     for (final timing in timings) {
       window.add(

@@ -69,6 +69,11 @@ class SistrumScrollStatus {
     required this.overallPxPerSecond,
     required this.measuredSeconds,
     required this.totalBoundaryTurns,
+    this.measuredPathPx = 0,
+    this.measureTicks = 0,
+    this.unattachedTicks = 0,
+    this.maxTickGapSeconds = 0,
+    this.maxExtent = 0,
   });
 
   /// The target speed (the preset), never the measured one.
@@ -104,6 +109,24 @@ class SistrumScrollStatus {
   /// Turns at the ends of the range since measurement started (the whole
   /// interval, not the sample window).
   final int totalBoundaryTurns;
+
+  /// Total displacement applied to the list since measurement started, in
+  /// logical pixels (sum of the absolute offset changes).
+  final double measuredPathPx;
+
+  /// Scroll frames (ticks) received while measuring.
+  final int measureTicks;
+
+  /// Ticks received while measuring with no attached scroll position. Any
+  /// such tick means the list was detached while the run was supposed to scroll.
+  final int unattachedTicks;
+
+  /// Longest time, in active seconds, between two consecutive ticks while
+  /// measuring. A large value is a scroll stop, separate from a slow frame.
+  final double maxTickGapSeconds;
+
+  /// Scrollable range seen while measuring (maxScrollExtent), in logical pixels.
+  final double maxExtent;
 }
 
 /// The one auto-scroll implementation shared by every renderer on the Glass POC.
@@ -159,6 +182,11 @@ class SistrumAutoScroller {
   bool? _lastMovingDown;
   double _measureSinceSeconds = 0;
   int _totalTurns = 0;
+  int _measureTicks = 0;
+  int _unattachedTicks = 0;
+  double _maxTickGap = 0;
+  double? _prevTickSeconds;
+  double _maxExtentSeen = 0;
   int _head = 0;
   int _count = 0;
 
@@ -230,6 +258,11 @@ class SistrumAutoScroller {
       overallPxPerSecond: _overallPxPerSecond(),
       measuredSeconds: _measuring ? _lastSeconds - _measureSinceSeconds : 0,
       totalBoundaryTurns: _totalTurns,
+      measuredPathPx: _measuring ? _path : 0,
+      measureTicks: _measureTicks,
+      unattachedTicks: _unattachedTicks,
+      maxTickGapSeconds: _maxTickGap,
+      maxExtent: _maxExtentSeen,
     );
   }
 
@@ -261,6 +294,11 @@ class SistrumAutoScroller {
     _lastMovingDown = null;
     _measureSinceSeconds = 0;
     _totalTurns = 0;
+    _measureTicks = 0;
+    _unattachedTicks = 0;
+    _maxTickGap = 0;
+    _prevTickSeconds = null;
+    _maxExtentSeen = 0;
     _head = 0;
     _count = 0;
     if (controller.hasClients) controller.jumpTo(0);
@@ -273,8 +311,20 @@ class SistrumAutoScroller {
     final seconds =
         _baseSeconds + elapsed.inMicroseconds / Duration.microsecondsPerSecond;
     _lastSeconds = seconds;
-    if (!controller.hasClients) return;
+    final previous = _prevTickSeconds;
+    _prevTickSeconds = seconds;
+    if (_measuring) {
+      _measureTicks++;
+      if (previous != null && seconds - previous > _maxTickGap) {
+        _maxTickGap = seconds - previous;
+      }
+    }
+    if (!controller.hasClients) {
+      if (_measuring) _unattachedTicks++;
+      return;
+    }
     final maxExtent = _maxExtent();
+    if (maxExtent > _maxExtentSeen) _maxExtentSeen = maxExtent;
     controller.jumpTo(
       sistrumAutoScrollOffset(
         seconds: seconds,

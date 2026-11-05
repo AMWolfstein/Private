@@ -361,4 +361,81 @@ void main() {
       scroller.stop();
     });
   });
+
+  group('distance, detachment and tick gaps during measurement', () {
+    testWidgets(
+      'measured distance is the displacement applied since measurement',
+      (tester) async {
+        final controller = ScrollController();
+        addTearDown(controller.dispose);
+        await _pumpList(tester, controller);
+        final scroller = SistrumAutoScroller(
+          vsync: TestVSync(),
+          controller: controller,
+          speed: SistrumScrollSpeed.fast,
+          warmupSeconds: 0.1,
+        );
+        addTearDown(scroller.dispose);
+
+        scroller.restart();
+        await tester.pump();
+        await _frames(tester, 300, const Duration(milliseconds: 10)); // 3 s
+        final status = scroller.status();
+        expect(status.measuredPathPx, closeTo(900 * status.measuredSeconds, 2));
+        expect(status.measureTicks, greaterThan(250));
+        expect(status.unattachedTicks, 0);
+        expect(status.maxTickGapSeconds, lessThan(0.05));
+        expect(status.maxExtent, greaterThan(0));
+        scroller.stop();
+      },
+    );
+
+    testWidgets('ticks with no attached list are counted as unattached', (
+      tester,
+    ) async {
+      final controller = ScrollController();
+      addTearDown(controller.dispose);
+      await _pumpList(tester, controller);
+      final scroller = SistrumAutoScroller(
+        vsync: TestVSync(),
+        controller: controller,
+        warmupSeconds: 0.1,
+      );
+      addTearDown(scroller.dispose);
+
+      scroller.restart();
+      await tester.pump();
+      await _frames(tester, 50, const Duration(milliseconds: 10));
+      expect(scroller.status().measuring, isTrue);
+
+      // Take the list away while the scroller keeps ticking.
+      await tester.pumpWidget(const SizedBox());
+      await _frames(tester, 20, const Duration(milliseconds: 10));
+      expect(scroller.status().unattachedTicks, greaterThan(0));
+      scroller.stop();
+    });
+
+    testWidgets('a long frame gap while scrolling is recorded as a tick gap', (
+      tester,
+    ) async {
+      final controller = ScrollController();
+      addTearDown(controller.dispose);
+      await _pumpList(tester, controller);
+      final scroller = SistrumAutoScroller(
+        vsync: TestVSync(),
+        controller: controller,
+        warmupSeconds: 0.1,
+      );
+      addTearDown(scroller.dispose);
+
+      scroller.restart();
+      await tester.pump();
+      await _frames(tester, 50, const Duration(milliseconds: 10));
+      // One 1.5 s frame: the scroller saw no ticks for that long.
+      await tester.pump(const Duration(milliseconds: 1500));
+      await _frames(tester, 10, const Duration(milliseconds: 10));
+      expect(scroller.status().maxTickGapSeconds, closeTo(1.5, 0.05));
+      scroller.stop();
+    });
+  });
 }

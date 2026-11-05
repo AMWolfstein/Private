@@ -73,6 +73,24 @@ String formatGlassBenchmarkReport({
     add('render_path_samples=${r.pathSamples} matching=${r.pathMatches}');
     add('fallback_seen=${r.fallbackSeen}');
     add('measurement_started=${r.measurementStarted}');
+    add(
+      'scroll_speed_target=${kGlassBenchmarkSpeed.pxPerSecond.toStringAsFixed(0)} logical_px_per_second',
+    );
+    add(
+      'scroll_speed_actual=${_f(r.scrollOverallPxPerSecond, 1)} logical_px_per_second over ${_f(r.scrollMeasuredSeconds, 1)} s active',
+    );
+    add('scroll_distance_px=${_f(r.scrollDistancePx, 0)}');
+    add(
+      'scroll_active_fraction_pct=${_f(r.scrollActiveFraction == null ? null : r.scrollActiveFraction! * 100, 1)}',
+    );
+    add(
+      'scroll_frames=${r.scrollTicks} unattached_frames=${r.scrollUnattachedTicks} max_scroll_gap_s=${_f(r.scrollMaxTickGapSeconds, 2)}',
+    );
+    add('scroll_direction_at_end=${r.scrollDirection}');
+    add('scroll_boundary_reversals=${r.boundaryTurns}');
+    add(
+      'frame_begin_callbacks=${r.frameBegins} frame_timings_received=${r.frameTimings}',
+    );
     final s = r.summary;
     if (s == null) {
       add('frames=0 (no measured interval)');
@@ -101,11 +119,6 @@ String formatGlassBenchmarkReport({
       'frame_gaps_over_2_budgets=${s.gapCount} max_gap_ms=${_f(s.maxGapMs, 1)} gap_total_ms=${_f(s.gapTotalMs, 0)}',
     );
     add('frame_interval_ms=${_intervalText(s.intervalCounts)}');
-    add(
-      'scroll_speed_actual=${_f(r.scrollOverallPxPerSecond, 1)} logical_px_per_second over ${_f(r.scrollMeasuredSeconds, 1)} s',
-    );
-    add('scroll_direction_at_end=${r.scrollDirection}');
-    add('scroll_boundary_reversals=${r.boundaryTurns}');
     add('sustained_degradation_episodes=${s.episodeCount}');
     if (s.worstEpisodes.isNotEmpty) {
       add('worst_episode=${_episodeText(s.worstEpisodes.first)}');
