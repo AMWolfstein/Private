@@ -162,3 +162,5 @@ device only; no benchmark results are recorded here before that review.
 - `lib/app.dart`: mounts the overlay above the navigator.
 - `lib/screens/settings/developer/glass_poc_page.dart`: the Glass POC page.
 - `lib/widgets/glass_poc/`: `SistrumGlassSurface`, `SistrumGlassScope` and modes.
+
+Glass POC spike recorder: while the Glass POC page is open, sustained budget degradation (15 of the last 30 frames over budget) is captured with 120 frames before and after, and copied with "Copy spike log". It is developer-only, bounded (8 snapshots), and does not change the HUD's metrics. See `GLASS_JANK_INVESTIGATION.md`.
