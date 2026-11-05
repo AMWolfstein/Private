@@ -13,21 +13,27 @@ lgr.LiquidGlassSettings sistrumRendererGlassSettings({required bool dark}) =>
     ? lgr.LiquidGlassSettings.ios27RegularDark()
     : lgr.LiquidGlassSettings.ios27RegularLight();
 
-/// A renderer glass shape of [borderRadius], drawn on its own layer.
+/// A renderer glass shape of [borderRadius], on its own `LiquidGlassLayer`.
 ///
-/// Observed in this renderer comparison (Linux Impeller harness, without Flutter
-/// GPU): a `LiquidGlassLayer` holding several `LiquidGlass` shapes drew none of
-/// them, while a standalone `LiquidGlass.auto` drew its glass. So each surface
-/// owns its layer, as the Reference mode does. This is a deviation from the
-/// library's shared-layer example and is recorded as such in the decision doc.
+/// [fake] is passed to the package unchanged: `false` requests the full Flutter
+/// GPU path (the package may still fall back to FakeGlass), and `true` requests
+/// FakeGlass explicitly. The effective path is probed from the tree, not
+/// assumed from this flag.
+///
+/// Each surface owns its layer. Observed earlier (Linux Impeller harness,
+/// without Flutter GPU): a shared layer holding several shapes drew none of
+/// them, so each surface is its own layer. This deviates from the library's
+/// shared-layer example and is recorded in the decision doc.
 Widget sistrumRendererSurface({
   required double borderRadius,
   required bool dark,
+  required bool fake,
   required Widget child,
 }) {
-  return lgr.LiquidGlass.auto(
+  return lgr.LiquidGlass.withOwnLayer(
     shape: lgr.LiquidRoundedSuperellipse(borderRadius: borderRadius),
     settings: sistrumRendererGlassSettings(dark: dark),
+    fake: fake,
     child: child,
   );
 }

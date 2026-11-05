@@ -87,7 +87,7 @@ void main() {
       );
       expect(
         glassPocPathLabel(SistrumGlassMode.liquidGlass, sharedBackdrop: true),
-        'Liquid Glass',
+        'Old Liquid Glass',
       );
     });
   });

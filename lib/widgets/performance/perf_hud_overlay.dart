@@ -322,6 +322,7 @@ class _PerfHudOverlayState extends ConsumerState<PerfHudOverlay> {
             sharedBackdrop: ref.read(glassPocSharedBackdropProvider),
             scene: ref.read(glassPocSceneProvider),
           ),
+          extraLines: glassPocReportLines(ref),
         ),
       ),
     );

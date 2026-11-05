@@ -43,7 +43,8 @@ LiquidGlassSettings? sistrumGlassLayerSettings(
     SistrumGlassMode.transparentBaseline ||
     SistrumGlassMode.basicBlur ||
     SistrumGlassMode.referenceGlass ||
-    SistrumGlassMode.rendererGlass => null,
+    SistrumGlassMode.newFullGlass ||
+    SistrumGlassMode.newFakeGlass => null,
   };
 }
 
@@ -161,9 +162,11 @@ class SistrumGlassSurface extends StatelessWidget {
       ),
       // Standalone premium glass, as the demo's mini player: its own layer,
       // its own settings. This is the path the demo uses on its own surfaces.
-      SistrumGlassMode.rendererGlass => sistrumRendererSurface(
+      SistrumGlassMode.newFullGlass ||
+      SistrumGlassMode.newFakeGlass => sistrumRendererSurface(
         borderRadius: borderRadius,
         dark: dark,
+        fake: mode.rendererFake,
         child: child,
       ),
       SistrumGlassMode.referenceGlass => GlassContainer(

@@ -190,6 +190,7 @@ String formatPerfReport({
   required String screen,
   required PerfWindowSnapshot snapshot,
   String? glassMode,
+  List<String> extraLines = const [],
 }) {
   final hz = snapshot.hz % 1 == 0
       ? snapshot.hz.toInt().toString()
@@ -213,5 +214,6 @@ String formatPerfReport({
     'frame_budget_exceedance=${_fmt(snapshot.exceedancePct, 1)}%',
     'fps_estimate=${_fmt(snapshot.fpsEstimate, 1)} (estimated)',
     if (glassMode != null) 'glass_mode=$glassMode',
+    ...extraLines,
   ].join('\n');
 }

@@ -91,6 +91,7 @@ class DeveloperOptionsPage extends ConsumerWidget {
                         ),
                         scene: ref.read(glassPocSceneProvider),
                       ),
+                      extraLines: glassPocReportLines(ref),
                     );
                     await Clipboard.setData(ClipboardData(text: report));
                     if (!context.mounted) return;

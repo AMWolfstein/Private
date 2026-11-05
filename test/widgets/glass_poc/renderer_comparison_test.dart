@@ -33,7 +33,8 @@ void main() {
       for (final mode in SistrumGlassMode.values) {
         expect(
           mode.usesRenderer,
-          mode == SistrumGlassMode.rendererGlass,
+          mode == SistrumGlassMode.newFullGlass ||
+              mode == SistrumGlassMode.newFakeGlass,
           reason: mode.label,
         );
       }
@@ -42,8 +43,13 @@ void main() {
     test(
       'the renderer is not the widgets package and has no widgets layer',
       () {
-        expect(SistrumGlassMode.rendererGlass.usesLiquidGlass, isFalse);
-        expect(SistrumGlassMode.rendererGlass.usesSharedLayer, isFalse);
+        for (final mode in [
+          SistrumGlassMode.newFullGlass,
+          SistrumGlassMode.newFakeGlass,
+        ]) {
+          expect(mode.usesLiquidGlass, isFalse, reason: mode.label);
+          expect(mode.usesSharedLayer, isFalse, reason: mode.label);
+        }
       },
     );
   });
@@ -71,11 +77,11 @@ void main() {
   group('report label', () {
     test('names the renderer, scene, animation and shared state', () {
       final label = glassPocReportLabel(
-        mode: SistrumGlassMode.rendererGlass,
+        mode: SistrumGlassMode.newFullGlass,
         sharedBackdrop: true,
         scene: SistrumGlassScene.animatedBackground,
       );
-      expect(label, contains('New renderer (liquid_glass_renderer)'));
+      expect(label, contains('New Full Glass'));
       expect(label, contains('scene=C · Four surfaces, animated'));
       expect(label, contains('animated=on'));
       // The shared switch never applies to the renderer, so it reads off.
@@ -98,7 +104,7 @@ void main() {
       tester,
     ) async {
       await _pump(tester);
-      await _tapChip(tester, 'New renderer (liquid_glass_renderer)');
+      await _tapChip(tester, 'New Full Glass');
       await _tapChip(tester, 'B · Four surfaces, static');
 
       // Per-surface layers (see sistrum_renderer_glass.dart): no shared layer
@@ -109,7 +115,7 @@ void main() {
 
     testWidgets('scene A shows a single renderer surface', (tester) async {
       await _pump(tester);
-      await _tapChip(tester, 'New renderer (liquid_glass_renderer)');
+      await _tapChip(tester, 'New Full Glass');
       await _tapChip(tester, 'A · One surface, static');
 
       expect(find.byType(lgr.LiquidGlass), findsOneWidget);
@@ -121,7 +127,7 @@ void main() {
       tester,
     ) async {
       final container = await _pump(tester);
-      await _tapChip(tester, 'New renderer (liquid_glass_renderer)');
+      await _tapChip(tester, 'New Full Glass');
       expect(find.byType(lgr.LiquidGlass), findsNWidgets(4));
 
       await _tapChip(tester, 'Transparent Baseline');

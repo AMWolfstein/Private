@@ -145,4 +145,21 @@ void main() {
     final plain = formatPerfReport(screen: 'home', snapshot: empty);
     expect(plain, isNot(contains('glass_mode=')));
   });
+
+  test('extra report lines follow the glass_mode line in order', () {
+    final empty = PerfFrameWindow().snapshot(hz: 60, hzIsFallback: true);
+    final report = formatPerfReport(
+      screen: 'glass-poc',
+      snapshot: empty,
+      glassMode: 'New FakeGlass',
+      extraLines: const ['glass_render_path=fake_backdrop', 'scene=D'],
+    );
+    expect(
+      report.endsWith(
+        '\nglass_mode=New FakeGlass\n'
+        'glass_render_path=fake_backdrop\nscene=D',
+      ),
+      isTrue,
+    );
+  });
 }

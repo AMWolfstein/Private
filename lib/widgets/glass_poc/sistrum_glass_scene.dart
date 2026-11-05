@@ -4,6 +4,7 @@
 enum SistrumGlassScene {
   /// Scene A: one glass surface (the mini player) over a static background.
   oneSurface(
+    'A',
     'A · One surface, static',
     surfaces: 1,
     animated: false,
@@ -12,6 +13,7 @@ enum SistrumGlassScene {
 
   /// Scene B: four surfaces over a static background.
   fourSurfaces(
+    'B',
     'B · Four surfaces, static',
     surfaces: 4,
     animated: false,
@@ -20,6 +22,7 @@ enum SistrumGlassScene {
 
   /// Scene C: four surfaces over an animated background.
   animatedBackground(
+    'C',
     'C · Four surfaces, animated',
     surfaces: 4,
     animated: true,
@@ -28,6 +31,7 @@ enum SistrumGlassScene {
 
   /// Scene D: four surfaces over content that scrolls at a fixed pace.
   scrollingContent(
+    'D',
     'D · Four surfaces, scrolling',
     surfaces: 4,
     animated: false,
@@ -35,11 +39,15 @@ enum SistrumGlassScene {
   );
 
   const SistrumGlassScene(
+    this.code,
     this.label, {
     required this.surfaces,
     required this.animated,
     required this.scrolling,
   });
+
+  /// The scene letter used in copied reports (`scene=D`).
+  final String code;
 
   final String label;
 

@@ -13,8 +13,15 @@ class PerfFrameMonitor {
 
   final PerfFrameWindow window;
   bool _running = false;
+  bool _collecting = true;
 
   bool get isRunning => _running;
+
+  /// Whether arriving frames are counted. The Glass POC scroll benchmark turns
+  /// this off during warm-up, so warm-up frames stay out of the window.
+  bool get collecting => _collecting;
+
+  void setCollecting(bool value) => _collecting = value;
 
   void start() {
     if (_running) return;
@@ -37,6 +44,7 @@ class PerfFrameMonitor {
   }
 
   void _onTimings(List<FrameTiming> timings) {
+    if (!_collecting) return;
     for (final timing in timings) {
       window.add(
         buildUs: timing.buildDuration.inMicroseconds,

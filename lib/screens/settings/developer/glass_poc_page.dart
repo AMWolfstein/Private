@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'dart:math' as math;
+import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -6,7 +8,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/providers/performance/glass_poc_mode_provider.dart';
 import 'package:sistrum/services/performance/perf_frame_monitor.dart';
 import 'package:sistrum/services/performance/perf_frame_window.dart';
+import 'package:sistrum/widgets/glass_poc/sistrum_auto_scroll.dart';
 import 'package:sistrum/widgets/glass_poc/sistrum_glass_mode.dart';
+import 'package:sistrum/widgets/glass_poc/sistrum_glass_render_path.dart';
 import 'package:sistrum/widgets/glass_poc/sistrum_glass_scene.dart';
 import 'package:sistrum/widgets/glass_poc/sistrum_glass_surface.dart';
 
@@ -21,43 +25,101 @@ class GlassPocPage extends ConsumerStatefulWidget {
 }
 
 class _GlassPocPageState extends ConsumerState<GlassPocPage>
-    with TickerProviderStateMixin {
+    with TickerProviderStateMixin
+    implements GlassPocRunProbe {
   static const double _sideInset = 16;
 
   late final AnimationController _background = AnimationController(
     vsync: this,
     duration: const Duration(seconds: 12),
   );
-  // Scene D: the list moves at a fixed pace, one full pass per 20 seconds.
-  late final AnimationController _scroll = AnimationController(
-    vsync: this,
-    duration: const Duration(seconds: 20),
-  );
   final ScrollController _list = ScrollController();
+  late final SistrumAutoScroller _autoScroll;
+  late final PerfFrameMonitor _monitor;
+  late final GlassPocRunRegistry _registry;
+  final GlobalKey _stageKey = GlobalKey();
+  Timer? _pathTimer;
+  SistrumGlassRenderReport? _render;
+  SistrumGlassRenderReport? _renderAtStart;
   bool _outlines = false;
 
   @override
   void initState() {
     super.initState();
-    _scroll.addListener(_onScrollTick);
+    _monitor = ref.read(perfFrameMonitorProvider);
+    _registry = ref.read(glassPocRunRegistryProvider);
+    _autoScroll = SistrumAutoScroller(
+      vsync: this,
+      controller: _list,
+      speed: ref.read(glassPocScrollSpeedProvider),
+      onMeasurementStart: _onMeasurementStart,
+      measurementReady: _readyToMeasure,
+    );
+    _registry.attach(_autoScroll, this);
     _applyScene(ref.read(glassPocSceneProvider));
+    _render = _probeRender();
+    // Re-probe while the page is open. Only a changed path rebuilds the page,
+    // and the timer is not a ticker, so nothing is drawn while it is idle.
+    _pathTimer = Timer.periodic(
+      const Duration(milliseconds: 500),
+      (_) => _refreshRender(),
+    );
+  }
+
+  @override
+  SistrumGlassRenderReport renderPath() => _probeRender();
+
+  @override
+  SistrumGlassRenderReport? renderPathAtMeasurementStart() => _renderAtStart;
+
+  /// Probes the mounted stage. Its type names are the only evidence the package
+  /// gives, so an unmounted or incomplete stage stays unverified.
+  SistrumGlassRenderReport _probeRender() {
+    final context = _stageKey.currentContext;
+    if (context == null) {
+      return const SistrumGlassRenderReport.unverified('stage not mounted');
+    }
+    final mode = ref.read(glassPocModeProvider);
+    final scene = ref.read(glassPocSceneProvider);
+    return classifySistrumGlassRenderPath(
+      mode: mode,
+      expectedSurfaces: scene.surfaces,
+      census: sistrumGlassCensus(context as Element),
+      shaderFiltersSupported: ui.ImageFilter.isShaderFilterSupported,
+    );
+  }
+
+  /// Sampling waits for a verifiable path, so a blank or fallback render cannot
+  /// become a measured sample. Modes the probe cannot verify are not held.
+  bool _readyToMeasure() {
+    if (!sistrumRenderPathVerifiable(ref.read(glassPocModeProvider))) {
+      return true;
+    }
+    return _probeRender().path != SistrumGlassRenderPath.unverified;
+  }
+
+  void _onMeasurementStart() {
+    _monitor.setCollecting(true);
+    _renderAtStart = _probeRender();
+  }
+
+  void _refreshRender() {
+    if (!mounted) return;
+    final next = _probeRender();
+    if (next != _render) setState(() => _render = next);
   }
 
   @override
   void dispose() {
-    // Disposing the controllers stops their tickers, so nothing keeps
-    // animating after the page leaves the tree.
-    _scroll.removeListener(_onScrollTick);
+    // Stopping and disposing the controllers stops their tickers, so nothing
+    // keeps animating after the page leaves the tree.
+    _pathTimer?.cancel();
+    _registry.detach(_autoScroll);
+    _autoScroll.dispose();
+    _monitor.setCollecting(true);
     _background.dispose();
-    _scroll.dispose();
     _list.dispose();
     super.dispose();
-  }
-
-  void _onScrollTick() {
-    if (_list.hasClients) {
-      _list.jumpTo(_scroll.value * _list.position.maxScrollExtent);
-    }
   }
 
   /// Applies a scene's animation and scroll state. Leaving a scene stops and
@@ -71,12 +133,30 @@ class _GlassPocPageState extends ConsumerState<GlassPocPage>
         ..value = 0;
     }
     if (scene.scrolling) {
-      _scroll.repeat();
+      _beginScrollRun();
     } else {
-      _scroll
-        ..stop()
-        ..value = 0;
-      if (_list.hasClients) _list.jumpTo(0);
+      _autoScroll.halt();
+      _monitor.reset();
+    }
+  }
+
+  /// Begins a fresh Scene D run: moves to offset 0, clears the frame window and
+  /// holds frames during warm-up. Sampling starts when warm-up ends.
+  void _beginScrollRun() {
+    _monitor
+      ..reset()
+      ..setCollecting(false);
+    _renderAtStart = null;
+    _autoScroll.restart();
+  }
+
+  /// A renderer change keeps the scene and speed. In Scene D it starts a
+  /// fresh run; elsewhere it clears the frame window.
+  void _onRendererChanged() {
+    if (ref.read(glassPocSceneProvider).scrolling) {
+      _beginScrollRun();
+    } else {
+      _monitor.reset();
     }
   }
 
@@ -86,6 +166,7 @@ class _GlassPocPageState extends ConsumerState<GlassPocPage>
     final notifier = ref.read(glassPocModeProvider.notifier);
     final sharedBackdrop = ref.watch(glassPocSharedBackdropProvider);
     final scene = ref.watch(glassPocSceneProvider);
+    final speed = ref.watch(glassPocScrollSpeedProvider);
     final width = MediaQuery.sizeOf(context).width;
     final barWidth = width - 2 * _sideInset;
 
@@ -115,7 +196,11 @@ class _GlassPocPageState extends ConsumerState<GlassPocPage>
                           ChoiceChip(
                             label: Text(m.label),
                             selected: mode == m,
-                            onSelected: (_) => notifier.select(m),
+                            onSelected: (_) {
+                              notifier.select(m);
+                              _onRendererChanged();
+                              _refreshRender();
+                            },
                           ),
                       ],
                     ),
@@ -148,6 +233,72 @@ class _GlassPocPageState extends ConsumerState<GlassPocPage>
                   Padding(
                     padding: const EdgeInsets.fromLTRB(
                       _sideInset,
+                      8,
+                      _sideInset,
+                      0,
+                    ),
+                    child: Text(
+                      _renderLine(_render),
+                      key: const Key('pathLine'),
+                    ),
+                  ),
+                  if (scene.scrolling)
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(
+                        _sideInset,
+                        8,
+                        _sideInset,
+                        0,
+                      ),
+                      child: Wrap(
+                        spacing: 8,
+                        runSpacing: 8,
+                        children: [
+                          for (final s in SistrumScrollSpeed.values)
+                            ChoiceChip(
+                              label: Text(s.label),
+                              selected: speed == s,
+                              onSelected: (_) {
+                                ref
+                                    .read(glassPocScrollSpeedProvider.notifier)
+                                    .select(s);
+                                // A speed change stops, applies and starts a
+                                // fresh run from offset 0.
+                                _autoScroll.setSpeed(s);
+                                _monitor
+                                  ..reset()
+                                  ..setCollecting(false);
+                                setState(() {});
+                              },
+                            ),
+                          ActionChip(
+                            label: Text(
+                              _autoScroll.isRunning
+                                  ? 'Stop auto-scroll'
+                                  : 'Start auto-scroll',
+                            ),
+                            onPressed: () {
+                              if (_autoScroll.isRunning) {
+                                _autoScroll.stop();
+                              } else {
+                                _autoScroll.start();
+                              }
+                              setState(() {});
+                            },
+                          ),
+                          ActionChip(
+                            label: const Text('Reset benchmark'),
+                            onPressed: () {
+                              _beginScrollRun();
+                              setState(() {});
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(
+                      _sideInset,
                       4,
                       _sideInset,
                       0,
@@ -157,23 +308,22 @@ class _GlassPocPageState extends ConsumerState<GlassPocPage>
                       children: [
                         ActionChip(
                           label: const Text('Reset metrics'),
-                          onPressed: () =>
-                              ref.read(perfFrameMonitorProvider).reset(),
+                          onPressed: () => _monitor.reset(),
                         ),
                         ActionChip(
                           label: const Text('Copy metrics'),
                           onPressed: () {
-                            final monitor = ref.read(perfFrameMonitorProvider);
                             Clipboard.setData(
                               ClipboardData(
                                 text: formatPerfReport(
                                   screen: 'glass-poc',
-                                  snapshot: monitor.currentSnapshot(),
+                                  snapshot: _monitor.currentSnapshot(),
                                   glassMode: glassPocReportLabel(
                                     mode: mode,
                                     sharedBackdrop: sharedBackdrop,
                                     scene: scene,
                                   ),
+                                  extraLines: glassPocReportLines(ref),
                                 ),
                               ),
                             );
@@ -207,6 +357,7 @@ class _GlassPocPageState extends ConsumerState<GlassPocPage>
           ),
           Expanded(
             child: ClipRect(
+              key: _stageKey,
               child: SistrumGlassScope(
                 mode: mode,
                 sharedBackdrop: sharedBackdrop,
@@ -281,6 +432,20 @@ class _GlassPocPageState extends ConsumerState<GlassPocPage>
       ),
     );
   }
+}
+
+/// The render-path line on the page. Fallback and unverified are stated in
+/// words, so a FakeGlass render is never shown as Full Glass.
+String _renderLine(SistrumGlassRenderReport? report) {
+  if (report == null) return 'glass_render_path=… (probing)';
+  final fallback = report.fallback;
+  final suffix = switch (report.path) {
+    SistrumGlassRenderPath.fakeBackdrop when fallback == true =>
+      ' · FALLBACK to FakeGlass: ${report.fallbackReason}',
+    SistrumGlassRenderPath.unverified => ' · ${report.unverifiedReason}',
+    _ => '',
+  };
+  return 'glass_render_path=${report.path.wire}$suffix';
 }
 
 class _PocHeader extends StatelessWidget {

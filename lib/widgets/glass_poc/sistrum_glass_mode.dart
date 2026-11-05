@@ -10,18 +10,23 @@ enum SistrumGlassMode {
   /// Flutter's built-in `BackdropFilter` blur under the same tint.
   basicBlur('Basic Blur'),
 
-  /// The package's shared `LiquidGlassLayer` with its default settings.
-  liquidGlass('Liquid Glass'),
+  /// `liquid_glass_widgets` 1.16.1 shared `LiquidGlassLayer` with its default
+  /// settings. The package's own implementation, unchanged.
+  liquidGlass('Old Liquid Glass'),
 
   /// Standalone `GlassQuality.premium` glass, each surface on its own layer
   /// with the Apple Podcasts demo's mini-player settings (see
   /// `sistrum_glass_surface.dart`).
   referenceGlass('Reference Glass'),
 
-  /// `liquid_glass_renderer` 1.0.0-dev.2 (developer comparison only): one
-  /// `LiquidGlassLayer` for the region, `LiquidGlass` shapes on top of it.
-  /// Needs Flutter GPU, enabled in the profile build type only.
-  rendererGlass('New renderer (liquid_glass_renderer)');
+  /// `liquid_glass_renderer` with `fake: false` on each surface's own layer.
+  /// Full Glass needs Flutter GPU; the package may fall back to FakeGlass,
+  /// which the render-path probe reports (see `sistrum_glass_render_path.dart`).
+  newFullGlass('New Full Glass'),
+
+  /// `liquid_glass_renderer` with `fake: true` on each surface's own layer.
+  /// FakeGlass by request, never Full Glass.
+  newFakeGlass('New FakeGlass');
 
   const SistrumGlassMode(this.label);
 
@@ -37,5 +42,10 @@ enum SistrumGlassMode {
   bool get usesSharedLayer => this == SistrumGlassMode.liquidGlass;
 
   /// Whether this mode renders through `liquid_glass_renderer`.
-  bool get usesRenderer => this == SistrumGlassMode.rendererGlass;
+  bool get usesRenderer =>
+      this == SistrumGlassMode.newFullGlass ||
+      this == SistrumGlassMode.newFakeGlass;
+
+  /// Whether the renderer is asked for FakeGlass (`fake: true`).
+  bool get rendererFake => this == SistrumGlassMode.newFakeGlass;
 }
