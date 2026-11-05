@@ -9,6 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/providers/performance/glass_poc_mode_provider.dart';
 import 'package:sistrum/providers/settings/display_refresh_provider.dart';
+import 'package:sistrum/services/display/display_refresh_rate.dart';
 import 'package:sistrum/providers/settings/settings_provider.dart';
 import 'package:sistrum/services/performance/glass_benchmark_aggregator.dart';
 import 'package:sistrum/services/performance/perf_frame_monitor.dart';
@@ -74,6 +75,11 @@ class _GlassPocPageState extends ConsumerState<GlassPocPage>
   /// Display-mode changes Android reports while a benchmark runs.
   final GlassDisplayModeLog _displayModes = GlassDisplayModeLog();
 
+  /// Changes of Android's active mode since the page opened, and the last mode
+  /// seen (id, Hz). The runner reads the count at each run's start and end.
+  int _displayModeChanges = 0;
+  (int, double) _lastAndroidMode = (0, 0);
+
   @override
   void initState() {
     super.initState();
@@ -108,6 +114,13 @@ class _GlassPocPageState extends ConsumerState<GlassPocPage>
     );
     _registry.attach(_autoScroll, this);
     ref.listenManual(displayRefreshProvider, (_, state) {
+      // Counted for the whole page, so a run can compare its start and end.
+      if (state.activeModeId != 0 &&
+          (state.activeModeId != _lastAndroidMode.$1 ||
+              state.activeModeHz != _lastAndroidMode.$2)) {
+        if (_lastAndroidMode.$1 != 0) _displayModeChanges++;
+        _lastAndroidMode = (state.activeModeId, state.activeModeHz);
+      }
       if (!_runner.isRunning) return;
       _displayModes.onState(
         state,
@@ -258,6 +271,12 @@ class _GlassPocPageState extends ConsumerState<GlassPocPage>
   double reportedRefreshHz() =>
       resolvePerfRefreshRate(PerfFrameMonitor.reportedRefreshRate()).hz;
 
+  @override
+  DisplayRefreshState androidDisplay() => ref.read(displayRefreshProvider);
+
+  @override
+  int displayModeChangeCount() => _displayModeChanges;
+
   /// Rebuilds only on phase boundaries (start, each run, end). Per-second
   /// progress goes to the status widget, so the measured stage is not rebuilt.
   void _onRunnerPhaseChanged() {
@@ -280,6 +299,10 @@ class _GlassPocPageState extends ConsumerState<GlassPocPage>
 
   String _buildReport(GlassBenchmarkRunner runner) {
     final rate = resolvePerfRefreshRate(PerfFrameMonitor.reportedRefreshRate());
+    final nominal = nominalDisplayRefresh(
+      android: ref.read(displayRefreshProvider),
+      flutterHz: PerfFrameMonitor.reportedRefreshRate(),
+    );
     final status = runner.phase.name.toUpperCase();
     final deviceLines = [
       'device_model=not accessible from Dart (needs a native channel; not added to production code)',
@@ -288,7 +311,9 @@ class _GlassPocPageState extends ConsumerState<GlassPocPage>
       'build_mode=${kProfileMode ? 'profile' : (kReleaseMode ? 'release' : 'debug')}',
       'refresh_hz=${rate.hz.toStringAsFixed(rate.hz % 1 == 0 ? 0 : 2)} '
           '(${rate.isFallback ? 'fallback' : 'reported'})',
-      'frame_budget_ms=${(1000 / rate.hz).toStringAsFixed(2)}',
+      'nominal_refresh_hz=${nominal.hz.toStringAsFixed(2)} '
+          '(${nominal.source.name}; Android active mode when available)',
+      'frame_budget_ms=${(1000 / nominal.hz).toStringAsFixed(2)}',
       'shader_filters_supported=${ui.ImageFilter.isShaderFilterSupported}',
       'rendering_backend=not verifiable from Dart; see shader_filters_supported',
       ...glassDisplayRefreshLines(
@@ -301,7 +326,7 @@ class _GlassPocPageState extends ConsumerState<GlassPocPage>
       return formatGlassDiagnosticReport(
         status: status,
         deviceLines: deviceLines,
-        reportedHz: rate.hz,
+        reportedHz: nominal.hz,
         plan: runner.plan,
         startedAt: runner.startedAt,
         endedAt: runner.endedAt,

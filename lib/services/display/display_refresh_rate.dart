@@ -205,3 +205,54 @@ class DisplayRefreshRateChannel {
     }
   }
 }
+
+/// Where a nominal refresh rate came from.
+enum DisplayRefreshSource {
+  /// `Display.getMode()`: the mode Android reports as active.
+  androidActiveMode,
+
+  /// The engine's display refresh rate, as the Dart side sees it.
+  flutterReported,
+
+  /// Neither source had a usable value; [nominalDisplayRefresh] used the fallback.
+  fallback,
+}
+
+/// The nominal refresh rate a benchmark budget is computed from.
+typedef DisplayRefreshReference = ({double hz, DisplayRefreshSource source});
+
+/// Rate used when Android and Flutter both give nothing usable.
+const double kDisplayRefreshFallbackHz = 60;
+
+/// The nominal rate for frame budgets: Android's active mode first.
+///
+/// Flutter's value is not used while Android has an active mode. The engine
+/// refreshes its display snapshot only with display metrics (size, density),
+/// not on a refresh-only mode change, so the Dart value can stay at a rate
+/// the panel has left (the 90 Hz read on a 120 Hz panel).
+DisplayRefreshReference nominalDisplayRefresh({
+  required DisplayRefreshState android,
+  required double? flutterHz,
+}) {
+  if (android.attached && android.activeModeHz > 0) {
+    return (
+      hz: android.activeModeHz,
+      source: DisplayRefreshSource.androidActiveMode,
+    );
+  }
+  if (flutterHz != null && flutterHz > 0) {
+    return (hz: flutterHz, source: DisplayRefreshSource.flutterReported);
+  }
+  return (hz: kDisplayRefreshFallbackHz, source: DisplayRefreshSource.fallback);
+}
+
+/// Whether Flutter's value differs from Android's active mode by more than
+/// 1 Hz. Null when either value is missing.
+bool? displayRefreshDisagrees({
+  required DisplayRefreshState android,
+  required double? flutterHz,
+}) {
+  if (!android.attached || android.activeModeHz <= 0) return null;
+  if (flutterHz == null || flutterHz <= 0) return null;
+  return (android.activeModeHz - flutterHz).abs() > 1;
+}

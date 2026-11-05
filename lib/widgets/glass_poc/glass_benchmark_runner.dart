@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
+import 'package:sistrum/services/display/display_refresh_rate.dart';
 import 'package:sistrum/services/performance/glass_benchmark_aggregator.dart';
 import 'package:sistrum/services/performance/glass_frame_schedule.dart';
 import 'package:sistrum/widgets/glass_poc/glass_benchmark_run.dart';
@@ -156,6 +157,11 @@ class GlassBenchmarkModeResult {
     this.schedule,
     this.refreshHzStart,
     this.refreshHzEnd,
+    this.nominalHz,
+    this.nominalSource,
+    this.androidStart,
+    this.androidEnd,
+    this.displayModeChanges = 0,
   });
 
   final SistrumGlassMode mode;
@@ -177,6 +183,22 @@ class GlassBenchmarkModeResult {
   /// interval never started (start).
   final double? refreshHzStart;
   final double? refreshHzEnd;
+
+  /// Nominal refresh rate the frame budget of this run uses, and where it
+  /// came from. Null when measurement never began. Android's active mode is
+  /// the source whenever Android reported one.
+  final double? nominalHz;
+  final DisplayRefreshSource? nominalSource;
+
+  /// Android's display report at the start and end of the measured interval.
+  /// Null when measurement never began, or Android gave no report.
+  final DisplayRefreshState? androidStart;
+  final DisplayRefreshState? androidEnd;
+
+  /// Active-mode changes Android reported during the measured interval. Any
+  /// change makes the run invalid: its rate-dependent metrics mix two rates.
+  final int displayModeChanges;
+
   final GlassBenchmarkValidity validity;
   final List<String> reasons;
   final bool measurementStarted;
@@ -281,6 +303,14 @@ abstract interface class GlassBenchmarkHost {
 
   /// The display refresh rate the engine reports now. Reported, not measured.
   double reportedRefreshHz();
+
+  /// Android's latest display report (`Display.getMode()` and friends), or
+  /// [DisplayRefreshState.unavailable].
+  DisplayRefreshState androidDisplay();
+
+  /// Active-mode changes Android has reported since the page opened. The runner
+  /// compares the value at the start and end of a measured interval.
+  int displayModeChangeCount();
 }
 
 /// Deterministic run of the benchmark:
@@ -321,9 +351,14 @@ class GlassBenchmarkRunner {
   final ValueNotifier<GlassBenchmarkProgress> progress;
 
   final Stopwatch _stopwatch;
-  late final GlassBenchmarkAggregator _aggregator;
+  late GlassBenchmarkAggregator _aggregator;
   GlassFrameScheduleRecorder? _frameSchedule;
   double? _refreshHzStart;
+  DisplayRefreshReference? _nominal;
+  DisplayRefreshState? _androidStart;
+  DisplayRefreshState? _androidEnd;
+  int _modeChangesStart = 0;
+  int _modeChangesEnd = 0;
 
   GlassBenchmarkPhase _phase = GlassBenchmarkPhase.idle;
   GlassBenchmarkConfig? _savedConfig;
@@ -389,6 +424,9 @@ class GlassBenchmarkRunner {
       host.attachAggregator(null);
       _frameSchedule = null;
       _refreshHzStart = null;
+      _nominal = null;
+      _androidStart = null;
+      _androidEnd = null;
       host.attachSchedule(null);
       host.applyRun(run);
       _enter(GlassBenchmarkPhase.warmup);
@@ -407,13 +445,29 @@ class GlassBenchmarkRunner {
       _stopwatch
         ..reset()
         ..start();
+      // The budget follows the active display mode, not the value the engine
+      // reports (see nominalDisplayRefresh). Fixed for this run.
+      final flutterHz = host.reportedRefreshHz();
+      final android = host.androidDisplay();
+      final nominal = nominalDisplayRefresh(
+        android: android,
+        flutterHz: flutterHz,
+      );
+      _nominal = nominal;
+      _androidStart = android;
+      _modeChangesStart = host.displayModeChangeCount();
+      final nominalBudgetUs = 1e6 / nominal.hz;
+      _aggregator = GlassBenchmarkAggregator(
+        budgetUs: nominalBudgetUs,
+        turnsReader: () => host.scrollStatus()?.totalBoundaryTurns ?? 0,
+      );
       _aggregator.begin();
       _frameStart = host.frameCounts();
       final schedule = GlassFrameScheduleRecorder(
-        nominalPeriodUs: budgetUs.round(),
+        nominalPeriodUs: nominalBudgetUs.round(),
       );
       _frameSchedule = schedule;
-      _refreshHzStart = host.reportedRefreshHz();
+      _refreshHzStart = flutterHz;
       host.attachSchedule(schedule);
       host.attachAggregator(_aggregator);
       _enter(GlassBenchmarkPhase.measuring);
@@ -449,6 +503,7 @@ class GlassBenchmarkRunner {
           : null;
       final schedule = _measurementStarted ? _frameSchedule?.summary() : null;
       final refreshEnd = _measurementStarted ? host.reportedRefreshHz() : null;
+      _captureDisplayEnd();
       host.attachAggregator(null);
       host.attachSchedule(null);
       host.haltRun();
@@ -498,6 +553,7 @@ class GlassBenchmarkRunner {
         : null;
     final schedule = _measurementStarted ? _frameSchedule?.summary() : null;
     final refreshEnd = _measurementStarted ? host.reportedRefreshHz() : null;
+    _captureDisplayEnd();
     _aggregator.discard();
     host.attachAggregator(null);
     host.attachSchedule(null);
@@ -636,6 +692,14 @@ class GlassBenchmarkRunner {
       beginFrames: now.beginFrames - start.beginFrames,
       timings: now.timings - start.timings,
     );
+  }
+
+  /// Records Android's display report and the mode-change count at the end of
+  /// the measured interval. Nothing is recorded before measurement began.
+  void _captureDisplayEnd() {
+    if (!_measurementStarted) return;
+    _androidEnd = host.androidDisplay();
+    _modeChangesEnd = host.displayModeChangeCount();
   }
 
   GlassBenchmarkModeResult _result(
@@ -786,6 +850,25 @@ class GlassBenchmarkRunner {
       }
     }
 
+    final nominal = _nominal;
+    final modeChanges = _measurementStarted
+        ? (_modeChangesEnd - _modeChangesStart).clamp(0, 1 << 30)
+        : 0;
+    if (_measurementStarted && modeChanges > 0) {
+      worsen(GlassBenchmarkValidity.invalid);
+      reasons.add(
+        'Android reported $modeChanges display mode change(s) during the '
+        'measured interval: rate-dependent metrics mix two rates',
+      );
+    }
+    if (nominal != null && nominal.source == DisplayRefreshSource.fallback) {
+      worsen(GlassBenchmarkValidity.incomplete);
+      reasons.add(
+        'no display refresh rate was available: the frame budget uses the '
+        '${kDisplayRefreshFallbackHz.toStringAsFixed(0)} Hz fallback',
+      );
+    }
+
     return GlassBenchmarkModeResult(
       mode: mode,
       surfaces: run.surfaces,
@@ -794,6 +877,11 @@ class GlassBenchmarkRunner {
       schedule: schedule,
       refreshHzStart: _measurementStarted ? _refreshHzStart : null,
       refreshHzEnd: refreshEnd,
+      nominalHz: _measurementStarted ? nominal?.hz : null,
+      nominalSource: _measurementStarted ? nominal?.source : null,
+      androidStart: _measurementStarted ? _androidStart : null,
+      androidEnd: _measurementStarted ? _androidEnd : null,
+      displayModeChanges: modeChanges,
       validity: validity,
       reasons: reasons,
       measurementStarted: _measurementStarted,

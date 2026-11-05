@@ -164,4 +164,82 @@ void main() {
       expect(displayRefreshRateFromJson(89.6), 90);
     });
   });
+
+  group('nominal refresh', () {
+    DisplayRefreshState at(double hz) => DisplayRefreshState.fromMap({
+      'attached': true,
+      'activeModeId': 1,
+      'activeModeHz': hz,
+      'displayRefreshHz': hz,
+      'supportedRates': [60, 90, 120],
+    });
+
+    for (final hz in [60.0, 90.0, 120.0]) {
+      test(
+        '${hz.round()} Hz: Android and Flutter agree, nominal is ${hz.round()}',
+        () {
+          final ref = nominalDisplayRefresh(android: at(hz), flutterHz: hz);
+          expect(ref.hz, hz);
+          expect(ref.source, DisplayRefreshSource.androidActiveMode);
+          expect(
+            displayRefreshDisagrees(android: at(hz), flutterHz: hz),
+            isFalse,
+          );
+        },
+      );
+    }
+
+    test(
+      'mismatched Flutter value (stale 90 on a 120 Hz panel) is overridden',
+      () {
+        final ref = nominalDisplayRefresh(android: at(120), flutterHz: 90);
+        expect(ref.hz, 120);
+        expect(ref.source, DisplayRefreshSource.androidActiveMode);
+        expect(
+          displayRefreshDisagrees(android: at(120), flutterHz: 90),
+          isTrue,
+        );
+      },
+    );
+
+    test(
+      'observed cadence is not the nominal: a 120 Hz nominal stays 8.33 ms',
+      () {
+        final ref = nominalDisplayRefresh(android: at(120), flutterHz: 120);
+        expect(1000 / ref.hz, closeTo(8.333, 0.001));
+      },
+    );
+
+    test('without Android, Flutter\'s value is used and labelled as such', () {
+      final ref = nominalDisplayRefresh(
+        android: DisplayRefreshState.unavailable,
+        flutterHz: 90,
+      );
+      expect(ref.hz, 90);
+      expect(ref.source, DisplayRefreshSource.flutterReported);
+      expect(
+        displayRefreshDisagrees(
+          android: DisplayRefreshState.unavailable,
+          flutterHz: 90,
+        ),
+        isNull,
+      );
+    });
+
+    test('with neither source the fallback is labelled, not hidden', () {
+      final ref = nominalDisplayRefresh(
+        android: DisplayRefreshState.unavailable,
+        flutterHz: null,
+      );
+      expect(ref.hz, kDisplayRefreshFallbackHz);
+      expect(ref.source, DisplayRefreshSource.fallback);
+    });
+
+    test('a difference under 1 Hz is not a disagreement', () {
+      expect(
+        displayRefreshDisagrees(android: at(59.94), flutterHz: 60),
+        isFalse,
+      );
+    });
+  });
 }

@@ -1,3 +1,4 @@
+import 'package:sistrum/services/display/display_refresh_rate.dart';
 import 'package:sistrum/services/performance/glass_benchmark_aggregator.dart';
 import 'package:sistrum/services/performance/glass_frame_schedule.dart';
 import 'package:sistrum/services/performance/glass_series_stats.dart';
@@ -98,6 +99,16 @@ String formatGlassBenchmarkReport({
     add(
       'refresh_hz_start=${_f(r.refreshHzStart, 2)} '
       'refresh_hz_end=${_f(r.refreshHzEnd, 2)} (reported, not measured)',
+    );
+    add(
+      'nominal_refresh_hz=${_f(r.nominalHz, 2)} '
+      'source=${r.nominalSource?.name ?? 'not measured'} '
+      '(frame budget and missed-slot basis)',
+    );
+    add(
+      'android_mode_start=${_androidMode(r.androidStart)} '
+      'android_mode_end=${_androidMode(r.androidEnd)} '
+      'display_mode_changes=${r.displayModeChanges}',
     );
     for (final line in glassScheduleLines(r.schedule)) {
       add(line);
@@ -747,3 +758,9 @@ String formatGlassDiagnosticReport({
 
 bool _within(double a, double b, double tolerance) =>
     b != 0 && (a - b).abs() / b.abs() <= tolerance;
+
+/// `mode <id> @ <Hz>` from Android's report, or `unavailable`.
+String _androidMode(DisplayRefreshState? state) {
+  if (state == null || !state.attached) return 'unavailable';
+  return 'mode ${state.activeModeId} @ ${state.activeModeHz.toStringAsFixed(2)}Hz';
+}

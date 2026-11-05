@@ -1,3 +1,4 @@
+import 'package:sistrum/services/display/display_refresh_rate.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/services/performance/glass_benchmark_aggregator.dart';
 import 'package:sistrum/services/performance/glass_frame_schedule.dart';
@@ -71,6 +72,18 @@ class _FakeHost implements GlassBenchmarkHost {
 
   @override
   double reportedRefreshHz() => refreshHz;
+
+  /// Android's report, as the display controller would give it.
+  DisplayRefreshState android = DisplayRefreshState.unavailable;
+
+  /// Active-mode changes counted since the page opened.
+  int modeChanges = 0;
+
+  @override
+  DisplayRefreshState androidDisplay() => android;
+
+  @override
+  int displayModeChangeCount() => modeChanges;
 
   GlassBenchmarkAggregator? aggregator;
   SistrumGlassMode? current;
@@ -607,6 +620,59 @@ void main() {
     },
   );
 
+  testWidgets(
+    'the frame budget follows Android\'s active mode, not a stale Flutter value',
+    (tester) async {
+      // Flutter still reports 90 Hz; Android has the panel at 120 Hz.
+      final host = _FakeHost()
+        ..refreshHz = 90
+        ..android = _android(modeHz: 120);
+      final plan = _shortPlan();
+      final runner = _runner(host, plan: plan);
+      runner.start();
+      await tester.pump(const Duration(milliseconds: 100));
+      runner.onMeasurementStarted();
+      _feed(host);
+      await tester.pump(const Duration(seconds: 1));
+
+      final result = runner.results.single;
+      expect(result.nominalHz, 120);
+      expect(result.nominalSource, DisplayRefreshSource.androidActiveMode);
+      expect(result.refreshHzStart, 90);
+      expect(result.androidStart?.activeModeHz, 120);
+      expect(result.schedule!.nominalPeriodMs, closeTo(8.33, 0.01));
+      expect(result.displayModeChanges, 0);
+      expect(result.validity, GlassBenchmarkValidity.valid);
+    },
+  );
+
+  testWidgets(
+    'a display mode change during measurement makes the run INVALID',
+    (tester) async {
+      final host = _FakeHost()
+        ..refreshHz = 120
+        ..android = _android(modeHz: 120);
+      final runner = _runner(host, plan: _shortPlan());
+      runner.start();
+      await tester.pump(const Duration(milliseconds: 100));
+      runner.onMeasurementStarted();
+      _feed(host);
+      // Android switches the panel to 60 Hz part way through.
+      host.modeChanges = 1;
+      host.android = _android(modeHz: 60);
+      await tester.pump(const Duration(seconds: 1));
+
+      final result = runner.results.single;
+      expect(result.validity, GlassBenchmarkValidity.invalid);
+      expect(result.displayModeChanges, 1);
+      expect(
+        result.reasons.any((r) => r.contains('display mode change')),
+        isTrue,
+      );
+      expect(result.androidEnd?.activeModeHz, 60);
+    },
+  );
+
   testWidgets('a run that never measured has no refresh values', (
     tester,
   ) async {
@@ -622,3 +688,21 @@ void main() {
     runner.interrupt('test cleanup');
   });
 }
+
+DisplayRefreshState _android({required double modeHz}) =>
+    DisplayRefreshState.fromMap({
+      'attached': true,
+      'activeModeId': modeHz.round(),
+      'activeModeHz': modeHz,
+      'displayRefreshHz': modeHz,
+      'supportedRates': [60, 90, 120],
+    });
+
+GlassBenchmarkPlan _shortPlan() => GlassBenchmarkPlan(
+  runs: [GlassBenchmarkRun(mode: SistrumGlassMode.transparentBaseline)],
+  transition: const Duration(milliseconds: 100),
+  warmup: const Duration(milliseconds: 100),
+  measure: const Duration(seconds: 1),
+  modeTimeout: const Duration(milliseconds: 500),
+  diagnostic: true,
+);
