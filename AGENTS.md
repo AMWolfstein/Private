@@ -96,7 +96,11 @@ Artist detail Albums, Singles and Appears On always use release-tag chronology n
 Appearance exposes Player view with Normal view (the default inset artwork) and Immersive
 view (the existing full-bleed portrait artwork). Persist the choice across restarts; lyrics,
 queue, track changes and mini-player dismissal must work in both views. Landscape retains
-the two-column player. Do not restore the obsolete History View/Layout preference or search
+the two-column player. Appearance > Display refresh rate (default System) requests a rate only through the
+window's `preferredDisplayModeId` at the current resolution (`DisplayRefreshRatePlugin`); it never
+writes system settings. Android's own refresh setting is a ceiling, so the UI shows the selected
+rate, the Android-reported active mode and a status, and never reports a request active until
+`Display.getMode()` matches. Do not restore the obsolete History View/Layout preference or search
 entry; the Library overview uses matching category rows and dedicated Library sections
 use rows. The overview has no Recently Added album grid. Keep Genres directly below Songs, followed by Loved Songs and Favorite Artists,
 with Playlists in its own category. Genres uses bounded local tag queries against the visible
