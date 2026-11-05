@@ -202,7 +202,15 @@ class LibrarySearchStore {
     final select =
         '''
       SELECT '' AS source, c.name_key AS id, MIN(c.name) AS title,
-        MIN(c.name) AS artist, NULL AS cover, MIN(l.file_path) AS sample_path,
+        MIN(c.name) AS artist,
+        (SELECT NULLIF(n.cover_path, '')
+          FROM ${LibraryTagCreditsCache.tempTable} t
+          JOIN ${LibrarySchema.visibleView} n ON n.id = t.item_id
+          WHERE t.field IN ('album_artist', 'artist')
+            AND t.name_key = c.name_key
+            AND NULLIF(n.cover_path, '') IS NOT NULL
+          ORDER BY n.id LIMIT 1) AS cover,
+        MIN(l.file_path) AS sample_path,
         COUNT(DISTINCT c.item_id) AS track_count, MIN(c.name) AS title_key
       FROM ${LibraryTagCreditsCache.tempTable} c
       JOIN ${LibrarySchema.visibleView} l ON l.id = c.item_id
