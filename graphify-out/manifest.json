@@ -30,9 +30,9 @@
     "semantic_hash": "c6fc64b904bf49fb82608b8a0ed37f40"
   },
   "lib/app.dart": {
-    "mtime": 1793834048.1080346,
-    "seen": 1793834670.5417726,
-    "ast_hash": "ef04d923664ed1bc3b09de219911e5fa",
+    "mtime": 1793903703.8257256,
+    "seen": 1793906896.5938246,
+    "ast_hash": "7653532cc630feff101565375104714c",
     "semantic_hash": ""
   },
   "lib/l10n/l10n.dart": {
@@ -66,9 +66,9 @@
     "semantic_hash": ""
   },
   "lib/screens/settings/settings_search_catalog.dart": {
-    "mtime": 1793821851.9733868,
-    "seen": 1793826854.877093,
-    "ast_hash": "c08e8ac1c5f096e4f3c5c32a10378818",
+    "mtime": 1793903738.7338517,
+    "seen": 1793906896.597444,
+    "ast_hash": "47af55a1b56a43a1a8c02642b3fa1a55",
     "semantic_hash": ""
   },
   "lib/screens/settings/settings_tab.dart": {
@@ -2736,9 +2736,9 @@
     "semantic_hash": ""
   },
   "android/app/src/main/kotlin/com/amwolfstein/sistrum/MainActivity.kt": {
-    "mtime": 1793717929.0504885,
-    "seen": 1793826854.8763578,
-    "ast_hash": "e2f7515900b6876289c25ae905c0d7b8",
+    "mtime": 1793903626.6817274,
+    "seen": 1793906896.5912056,
+    "ast_hash": "d861c04f7d0cef75404697612add3e86",
     "semantic_hash": ""
   },
   "android/app/src/main/kotlin/com/amwolfstein/sistrum/MainActivitySafIo.kt": {
@@ -6492,15 +6492,15 @@
     "semantic_hash": ""
   },
   "lib/screens/settings/appearance/appearance_settings_page.dart": {
-    "mtime": 1793821948.8580377,
-    "seen": 1793826854.8770146,
-    "ast_hash": "6dafe28e7d3d8bb88328b5be096ca128",
+    "mtime": 1793903738.7333584,
+    "seen": 1793906896.5967817,
+    "ast_hash": "2a29282349c7f785c5a964885ddbb74b",
     "semantic_hash": ""
   },
   "lib/screens/settings/appearance/appearance_settings_selectors.dart": {
-    "mtime": 1793821948.8583553,
-    "seen": 1793826854.8770173,
-    "ast_hash": "c44d77623e9096c8892fb99d84453c91",
+    "mtime": 1793903788.5217237,
+    "seen": 1793906896.5967836,
+    "ast_hash": "c5a5745a2ece222b84a1f29b44081b40",
     "semantic_hash": ""
   },
   "lib/screens/settings/backup/backup_restore_page.dart": {
@@ -7446,15 +7446,15 @@
     "semantic_hash": ""
   },
   "lib/core/models/settings.dart": {
-    "mtime": 1793821824.0772493,
-    "seen": 1793826854.8766317,
-    "ast_hash": "1b93e8d354ad41140f0c63683458b596",
+    "mtime": 1793903652.449107,
+    "seen": 1793906896.5940802,
+    "ast_hash": "50a38ec7d755b462d1c59c4cf62d5bea",
     "semantic_hash": ""
   },
   "lib/core/models/settings.g.dart": {
-    "mtime": 1793821824.0777714,
-    "seen": 1793826854.8766413,
-    "ast_hash": "2a49f76ab475bbf3676303ef8cc8f46a",
+    "mtime": 1793903652.4495063,
+    "seen": 1793906896.5940824,
+    "ast_hash": "c2e9c9be18816cca04d45005447b7bf9",
     "semantic_hash": ""
   },
   "lib/core/models/tag_credit_settings.dart": {
@@ -9864,9 +9864,9 @@
     "semantic_hash": ""
   },
   "lib/providers/settings/settings_provider_actions.dart": {
-    "mtime": 1793821824.078076,
-    "seen": 1793826854.876856,
-    "ast_hash": "38c9f4bb1b03f28dc7fe10522941bb6d",
+    "mtime": 1793903658.4057267,
+    "seen": 1793906896.59545,
+    "ast_hash": "2ee69d6b7cb910d35f630cab902d08e8",
     "semantic_hash": ""
   },
   "lib/providers/settings/settings_provider_helpers.dart": {
@@ -12642,9 +12642,9 @@
     "semantic_hash": ""
   },
   "lib/screens/settings/developer/glass_poc_page.dart": {
-    "mtime": 1793897997.0460222,
-    "seen": 1793899094.4914575,
-    "ast_hash": "033ca89bacec120298e5ea519d5be250",
+    "mtime": 1793903781.4174092,
+    "seen": 1793906896.5970056,
+    "ast_hash": "f62ea54f1835aa1b8f13e250da19b3c0",
     "semantic_hash": ""
   },
   "lib/widgets/glass_poc/sistrum_glass_mode.dart": {
@@ -12855,6 +12855,66 @@
     "mtime": 1793890383.6649268,
     "seen": 1793899094.573871,
     "ast_hash": "0c7d4e0140880fb4200e82e8619cbfa8",
+    "semantic_hash": ""
+  },
+  "android/app/src/main/kotlin/com/amwolfstein/sistrum/DisplayRefreshRatePlugin.kt": {
+    "mtime": 1793904424.3280377,
+    "seen": 1793906896.5909312,
+    "ast_hash": "6bab9b67f057ea5aa0ee1d0222301ac4",
+    "semantic_hash": ""
+  },
+  "android/app/src/main/kotlin/com/amwolfstein/sistrum/DisplayRefreshRatePolicy.kt": {
+    "mtime": 1793903576.4657285,
+    "seen": 1793906896.5909343,
+    "ast_hash": "f61dd51936068fa2381e9081b8791b58",
+    "semantic_hash": ""
+  },
+  "android/app/src/test/kotlin/com/amwolfstein/sistrum/DisplayRefreshRatePolicyTest.kt": {
+    "mtime": 1793903586.5977283,
+    "seen": 1793906896.5924885,
+    "ast_hash": "d90af6ba0ad72802f21a0ddde25b2db6",
+    "semantic_hash": ""
+  },
+  "lib/providers/settings/display_refresh_provider.dart": {
+    "mtime": 1793904432.365709,
+    "seen": 1793906896.5953948,
+    "ast_hash": "8fce173954d71c9abd627818ab2a9744",
+    "semantic_hash": ""
+  },
+  "lib/services/display/display_refresh_rate.dart": {
+    "mtime": 1793904424.3285713,
+    "seen": 1793906896.598601,
+    "ast_hash": "d8b3344894a75b2315a968b830d7c103",
+    "semantic_hash": ""
+  },
+  "lib/widgets/glass_poc/glass_display_mode_log.dart": {
+    "mtime": 1793903766.993724,
+    "seen": 1793906896.6048903,
+    "ast_hash": "9f9622fefc7f586ee781fd0c61322e63",
+    "semantic_hash": ""
+  },
+  "test/providers/settings/display_refresh_provider_test.dart": {
+    "mtime": 1793904458.3537085,
+    "seen": 1793906896.6285303,
+    "ast_hash": "d335ec824857298c7a79513d16bb0192",
+    "semantic_hash": ""
+  },
+  "test/screens/settings/appearance/appearance_display_refresh_test.dart": {
+    "mtime": 1793903877.9777217,
+    "seen": 1793906896.6292963,
+    "ast_hash": "3d54cf028fd2b8fed1b36084a6e590fc",
+    "semantic_hash": ""
+  },
+  "test/services/display/display_refresh_rate_test.dart": {
+    "mtime": 1793904445.4617057,
+    "seen": 1793906896.6301763,
+    "ast_hash": "8b09c9edc373530598e15b017e47682c",
+    "semantic_hash": ""
+  },
+  "test/widgets/glass_poc/glass_display_mode_log_test.dart": {
+    "mtime": 1793903874.5782144,
+    "seen": 1793906896.6356578,
+    "ast_hash": "5119605182c7551f359bd6eafd58969f",
     "semantic_hash": ""
   }
 }
