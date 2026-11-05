@@ -61,42 +61,6 @@ void _registerLibraryBrowseStoreReleases() {
   tearDown(() => db.close());
 
   test(
-    'alphabet projection includes off-page names and keeps artist credit scopes separate',
-    () async {
-      await _addLocal('alpha', 1, title: 'Alpha', artist: 'Alpha');
-      await _addLocal('zulu', 1, title: 'Zulu', artist: 'Zulu');
-      await _addLocal('arabic', 1, title: 'أغنية', artist: 'محمد');
-      await db.rawUpdate(
-        "UPDATE library SET album_artist='Band', album_artist_norm='band' WHERE id='zulu'",
-      );
-      final songs = await store.alphabetRows(const LibraryBrowseDbQuery());
-      expect(
-        songs.fold<int>(0, (sum, r) => sum + (r['item_count'] as num).toInt()),
-        6,
-      );
-      expect(songs.any((r) => r['name'] == 'أغنية'), isTrue);
-      final reverse = await store.alphabetRows(
-        const LibraryBrowseDbQuery(sortMode: 'z-a'),
-      );
-      expect(
-        reverse.map((r) => r['initial']),
-        songs.reversed.map((r) => r['initial']),
-      );
-      final artists = await store.alphabetRows(
-        const LibraryBrowseDbQuery(),
-        artists: true,
-      );
-      final albumArtists = await store.alphabetRows(
-        const LibraryBrowseDbQuery(albumArtistsOnly: true),
-        artists: true,
-      );
-      expect(artists.any((r) => r['name'] == 'Zulu'), isTrue);
-      expect(albumArtists.any((r) => r['name'] == 'Band'), isTrue);
-      expect(albumArtists.any((r) => r['name'] == 'Zulu'), isFalse);
-    },
-  );
-
-  test(
     'artist ordering is applied before pagination with stable ties',
     () async {
       await _addLocal('alpha', 1, artist: 'Alpha');

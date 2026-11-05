@@ -1,5 +1,3 @@
-import 'package:sistrum/providers/library/library_alphabet_provider.dart';
-import 'package:sistrum/widgets/library/app_library_alphabet_index.dart';
 import 'package:sistrum/providers/library/library_sort_provider.dart';
 import 'package:sistrum/widgets/library/app_library_sort.dart';
 import 'package:sistrum/core/models/local_library_item.dart';
@@ -101,9 +99,6 @@ class _LibrarySectionTabState extends ConsumerState<LibrarySectionTab> {
       SelectionOverlayController();
   List<UserPlaylistCollection> _playlistSelectionOverlayItems = const [];
   double _playlistSelectionOverlayBottomPadding = 0;
-  final _alphabetScroll = AppLibrarySectionController();
-  int _alphabetGeneration = 0;
-  bool _alphabetNavigating = false;
   String get _sortMode {
     final mode = ref.read(librarySortProvider);
     return widget.librarySection == 'playlists' &&
@@ -144,8 +139,6 @@ class _LibrarySectionTabState extends ConsumerState<LibrarySectionTab> {
 
   @override
   void dispose() {
-    _alphabetGeneration++;
-    _alphabetScroll.cancel();
     _libraryGridExtentNotifier.dispose();
     _hideSelectionOverlay();
     _hidePlaylistSelectionOverlay();

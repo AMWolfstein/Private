@@ -243,32 +243,6 @@ class LibraryBrowseStore {
     ''', args);
   }
 
-  Future<List<Map<String, dynamic>>> alphabetRows(
-    LibraryBrowseDbQuery request, {
-    bool artists = false,
-  }) async {
-    final direction = request.sortMode == 'z-a' ? 'DESC' : 'ASC';
-    if (artists) {
-      await _ensureCredits(request, always: true);
-      final field = request.albumArtistsOnly ? 'album_artist' : 'artist';
-      return _db.rawQuery(
-        '''
-        SELECT SUBSTR(artist_key, 1, 1) AS initial, MIN(name) AS name, COUNT(*) AS item_count
-        FROM (SELECT name_key AS artist_key, MIN(name) AS name
-          FROM ${LibraryTagCreditsCache.tempTable}
-          WHERE field = ? AND name_key != '' GROUP BY name_key)
-        GROUP BY initial ORDER BY initial $direction
-      ''',
-        [field],
-      );
-    }
-    return _db.rawQuery('''
-      SELECT SUBSTR(track_name_norm, 1, 1) AS initial, MIN(track_name) AS name, COUNT(*) AS item_count
-      FROM ${LibrarySchema.visibleView}
-      GROUP BY initial ORDER BY initial $direction
-    ''');
-  }
-
   String _queueTrackSql(
     LibraryBrowseDbQuery request,
     List<Object?> args, {

@@ -193,8 +193,6 @@ extension _LibrarySectionTabFilterWidgets on _LibrarySectionTabState {
           SliverPadding(
             padding: EdgeInsets.symmetric(horizontal: wideListInset(context)),
             sliver: SectionedLibrarySliverList<UnifiedLibraryItem>(
-              controller: _alphabetScroll,
-              revealPadding: MediaQuery.paddingOf(context).top + kToolbarHeight,
               items: filteredUnifiedItems,
               groupingKey: (_sortMode, sectionLocale),
               labelOf: (_) => null,
@@ -303,27 +301,6 @@ extension _LibrarySectionTabFilterWidgets on _LibrarySectionTabState {
       child: content,
     );
 
-    if (filterMode == 'all' && const ['a-z', 'z-a'].contains(_sortMode)) {
-      final alphabet =
-          ref
-              .watch(
-                libraryAlphabetProvider((
-                  artists: false,
-                  albumArtists: false,
-                  descending: _sortMode == 'z-a',
-                )),
-              )
-              .asData
-              ?.value ??
-          const <LibraryAlphabetEntry>[];
-      return AppLibraryAlphabetIndex(
-        labels: alphabet.map((e) => e.label).toList(),
-        onSelected: (label) =>
-            _jumpToSongLetter(alphabet.firstWhere((e) => e.label == label)),
-        bottomPadding: context.navBarBottomInset,
-        child: scrollAwareContent,
-      );
-    }
     {
       return LibraryFastScroller(
         bottomPadding: context.navBarBottomInset,
