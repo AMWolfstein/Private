@@ -1,14 +1,19 @@
 import 'dart:async';
+import 'dart:io' show Platform;
 import 'dart:math' as math;
 import 'dart:ui' as ui;
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/providers/performance/glass_poc_mode_provider.dart';
+import 'package:sistrum/services/performance/glass_benchmark_aggregator.dart';
 import 'package:sistrum/services/performance/perf_frame_monitor.dart';
 import 'package:sistrum/services/performance/perf_frame_window.dart';
 import 'package:sistrum/services/performance/perf_spike_recorder.dart';
+import 'package:sistrum/widgets/glass_poc/glass_benchmark_report.dart';
+import 'package:sistrum/widgets/glass_poc/glass_benchmark_runner.dart';
 import 'package:sistrum/widgets/glass_poc/sistrum_auto_scroll.dart';
 import 'package:sistrum/widgets/glass_poc/sistrum_glass_mode.dart';
 import 'package:sistrum/widgets/glass_poc/sistrum_glass_render_path.dart';
@@ -19,7 +24,14 @@ import 'package:sistrum/widgets/glass_poc/sistrum_glass_surface.dart';
 /// player and tab bar in each [SistrumGlassMode], over a background that is
 /// either static or animated. Nothing here is wired into production screens.
 class GlassPocPage extends ConsumerStatefulWidget {
-  const GlassPocPage({super.key});
+  const GlassPocPage({
+    super.key,
+    this.benchmarkPlan = const GlassBenchmarkPlan(),
+  });
+
+  /// Timing of the full benchmark. Tests pass shorter values; the app uses the
+  /// 60-second protocol.
+  final GlassBenchmarkPlan benchmarkPlan;
 
   @override
   ConsumerState<GlassPocPage> createState() => _GlassPocPageState();
@@ -27,7 +39,7 @@ class GlassPocPage extends ConsumerStatefulWidget {
 
 class _GlassPocPageState extends ConsumerState<GlassPocPage>
     with TickerProviderStateMixin
-    implements GlassPocRunProbe {
+    implements GlassPocRunProbe, GlassBenchmarkHost {
   static const double _sideInset = 16;
 
   late final AnimationController _background = AnimationController(
@@ -45,18 +57,45 @@ class _GlassPocPageState extends ConsumerState<GlassPocPage>
   SistrumGlassRenderReport? _render;
   SistrumGlassRenderReport? _renderAtStart;
   bool _outlines = false;
+  late final GlassBenchmarkRunner _runner;
+  late final GlassPocModeNotifier _modeNotifier;
+  late final GlassPocSharedBackdropNotifier _sharedNotifier;
+  late final GlassPocSceneNotifier _sceneNotifier;
+  late final GlassPocScrollSpeedNotifier _speedNotifier;
+  bool _startedMonitor = false;
+  bool _disposing = false;
 
   @override
   void initState() {
     super.initState();
     _monitor = ref.read(perfFrameMonitorProvider);
     _registry = ref.read(glassPocRunRegistryProvider);
+    _modeNotifier = ref.read(glassPocModeProvider.notifier);
+    _sharedNotifier = ref.read(glassPocSharedBackdropProvider.notifier);
+    _sceneNotifier = ref.read(glassPocSceneProvider.notifier);
+    _speedNotifier = ref.read(glassPocScrollSpeedProvider.notifier);
     _autoScroll = SistrumAutoScroller(
       vsync: this,
       controller: _list,
       speed: ref.read(glassPocScrollSpeedProvider),
       onMeasurementStart: _onMeasurementStart,
       measurementReady: _readyToMeasure,
+      warmupSeconds:
+          widget.benchmarkPlan.warmup.inMicroseconds /
+          Duration.microsecondsPerSecond,
+    );
+    // The POC needs frames to measure. Start the monitor if the HUD has not,
+    // and stop it again only if this page started it.
+    _startedMonitor = !_monitor.isRunning;
+    if (_startedMonitor) _monitor.start();
+    _runner = GlassBenchmarkRunner(
+      host: this,
+      budgetUs:
+          1e6 /
+          resolvePerfRefreshRate(PerfFrameMonitor.reportedRefreshRate()).hz,
+      plan: widget.benchmarkPlan,
+      onPhaseChanged: _onRunnerPhaseChanged,
+      reportBuilder: _buildReport,
     );
     _registry.attach(_autoScroll, this);
     // Developer diagnostics only: the recorder lives while this page is open.
@@ -67,8 +106,13 @@ class _GlassPocPageState extends ConsumerState<GlassPocPage>
       ..contextReader = _spikeContext;
     _monitor.spikeRecorder = _spikes;
     _lifecycle = AppLifecycleListener(
-      onStateChange: (state) =>
-          _spikes.noteEvent('app_lifecycle=${state.name}'),
+      onStateChange: (state) {
+        _spikes.noteEvent('app_lifecycle=${state.name}');
+        // Leaving the foreground stops a benchmark. It never resumes by itself.
+        if (state != AppLifecycleState.resumed) {
+          _runner.interrupt('app lifecycle=${state.name}');
+        }
+      },
     );
     _applyScene(ref.read(glassPocSceneProvider));
     _render = _probeRender();
@@ -106,7 +150,13 @@ class _GlassPocPageState extends ConsumerState<GlassPocPage>
   /// Sampling waits for a verifiable path, so a blank or fallback render cannot
   /// become a measured sample. Modes the probe cannot verify are not held.
   bool _readyToMeasure() {
-    if (!sistrumRenderPathVerifiable(ref.read(glassPocModeProvider))) {
+    final mode = ref.read(glassPocModeProvider);
+    // A benchmark needs the real GPU path. FakeGlass during initialization is
+    // not a result, so the run waits for full_gpu (and times out if it never comes).
+    if (_runner.isRunning && mode == SistrumGlassMode.newFullGlass) {
+      return _probeRender().path == SistrumGlassRenderPath.fullGpu;
+    }
+    if (!sistrumRenderPathVerifiable(mode)) {
       return true;
     }
     return _probeRender().path != SistrumGlassRenderPath.unverified;
@@ -126,6 +176,122 @@ class _GlassPocPageState extends ConsumerState<GlassPocPage>
   void _onMeasurementStart() {
     _monitor.setCollecting(true);
     _renderAtStart = _probeRender();
+    _runner.onMeasurementStarted();
+  }
+
+  // -- Benchmark host ------------------------------------------------------
+
+  @override
+  GlassBenchmarkConfig captureConfig() => (
+    mode: ref.read(glassPocModeProvider),
+    sharedBackdrop: ref.read(glassPocSharedBackdropProvider),
+    speed: ref.read(glassPocScrollSpeedProvider),
+    scene: ref.read(glassPocSceneProvider),
+  );
+
+  @override
+  void applyRun(SistrumGlassMode mode) {
+    _modeNotifier.select(mode);
+    _sharedNotifier.set(false);
+    _speedNotifier.select(kGlassBenchmarkSpeed);
+    _sceneNotifier.select(SistrumGlassScene.scrollingContent);
+    _autoScroll.setSpeed(kGlassBenchmarkSpeed);
+    // Scene D: no animated background. Begins a fresh run with the warm-up.
+    _applyScene(SistrumGlassScene.scrollingContent);
+    _renderAtStart = null;
+  }
+
+  @override
+  void haltRun() => _autoScroll.halt();
+
+  @override
+  void restoreConfig(GlassBenchmarkConfig config) {
+    _modeNotifier.select(config.mode);
+    _sharedNotifier.set(config.sharedBackdrop);
+    _speedNotifier.select(config.speed);
+    _sceneNotifier.select(config.scene);
+    _autoScroll.setSpeed(config.speed);
+    _applyScene(config.scene);
+    if (config.scene.scrolling) _autoScroll.stop();
+    _monitor.setCollecting(true);
+    _renderAtStart = null;
+  }
+
+  @override
+  SistrumScrollStatus? scrollStatus() => _autoScroll.status();
+
+  @override
+  void attachAggregator(GlassBenchmarkAggregator? aggregator) =>
+      _monitor.benchmarkAggregator = aggregator;
+
+  /// Rebuilds only on phase boundaries (start, each run, end). Per-second
+  /// progress goes to the status widget, so the measured stage is not rebuilt.
+  void _onRunnerPhaseChanged() {
+    if (_disposing || !mounted) return;
+    setState(() {});
+    final phase = _runner.phase;
+    final finished =
+        phase == GlassBenchmarkPhase.complete ||
+        phase == GlassBenchmarkPhase.failed ||
+        phase == GlassBenchmarkPhase.cancelled;
+    if (finished && _runner.reportText != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted && !_disposing) _showReport(_runner.reportText!);
+      });
+    }
+  }
+
+  String _buildReport(GlassBenchmarkRunner runner) {
+    final rate = resolvePerfRefreshRate(PerfFrameMonitor.reportedRefreshRate());
+    return formatGlassBenchmarkReport(
+      status: runner.phase.name.toUpperCase(),
+      deviceLines: [
+        'device_model=not accessible from Dart (needs a native channel; not added to production code)',
+        'os=${Platform.operatingSystem} ${Platform.operatingSystemVersion}',
+        'dart=${Platform.version.split(' ').first}',
+        'build_mode=${kProfileMode ? 'profile' : (kReleaseMode ? 'release' : 'debug')}',
+        'refresh_hz=${rate.hz.toStringAsFixed(rate.hz % 1 == 0 ? 0 : 2)} '
+            '(${rate.isFallback ? 'fallback' : 'reported'})',
+        'frame_budget_ms=${(1000 / rate.hz).toStringAsFixed(2)}',
+        'shader_filters_supported=${ui.ImageFilter.isShaderFilterSupported}',
+        'rendering_backend=not verifiable from Dart; see shader_filters_supported',
+      ],
+      plan: widget.benchmarkPlan,
+      startedAt: runner.startedAt,
+      endedAt: runner.endedAt,
+      cancelReason: runner.cancelReason,
+      failure: runner.failure,
+      results: runner.results,
+    );
+  }
+
+  void _showReport(String text) {
+    showDialog<void>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('Glass benchmark report'),
+        content: SizedBox(
+          width: double.maxFinite,
+          height: 420,
+          child: SingleChildScrollView(
+            child: SelectableText(
+              text,
+              style: const TextStyle(fontFamily: 'monospace', fontSize: 11),
+            ),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Clipboard.setData(ClipboardData(text: text)),
+            child: const Text('Copy Report'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(),
+            child: const Text('Close'),
+          ),
+        ],
+      ),
+    );
   }
 
   void _refreshRender() {
@@ -138,8 +304,13 @@ class _GlassPocPageState extends ConsumerState<GlassPocPage>
   void dispose() {
     // Stopping and disposing the controllers stops their tickers, so nothing
     // keeps animating after the page leaves the tree.
+    _disposing = true;
+    // A running benchmark is cancelled first and the POC configuration restored.
+    _runner.dispose();
     _pathTimer?.cancel();
     _lifecycle?.dispose();
+    if (_startedMonitor) _monitor.stop();
+    _monitor.benchmarkAggregator = null;
     if (identical(_monitor.spikeRecorder, _spikes)) {
       _monitor.spikeRecorder = null;
     }
@@ -181,6 +352,11 @@ class _GlassPocPageState extends ConsumerState<GlassPocPage>
 
   /// A renderer change keeps the scene and speed. In Scene D it starts a
   /// fresh run; elsewhere it clears the frame window.
+  void _startBenchmark() {
+    _spikes.noteEvent('benchmark=start');
+    _runner.start();
+  }
+
   void _onRendererChanged() {
     if (ref.read(glassPocSceneProvider).scrolling) {
       _beginScrollRun();
@@ -196,6 +372,7 @@ class _GlassPocPageState extends ConsumerState<GlassPocPage>
     final sharedBackdrop = ref.watch(glassPocSharedBackdropProvider);
     final scene = ref.watch(glassPocSceneProvider);
     final speed = ref.watch(glassPocScrollSpeedProvider);
+    final running = _runner.isRunning;
     final width = MediaQuery.sizeOf(context).width;
     final barWidth = width - 2 * _sideInset;
 
@@ -225,12 +402,14 @@ class _GlassPocPageState extends ConsumerState<GlassPocPage>
                           ChoiceChip(
                             label: Text(m.label),
                             selected: mode == m,
-                            onSelected: (_) {
-                              notifier.select(m);
-                              _spikes.noteEvent('renderer=${m.label}');
-                              _onRendererChanged();
-                              _refreshRender();
-                            },
+                            onSelected: running
+                                ? null
+                                : (_) {
+                                    notifier.select(m);
+                                    _spikes.noteEvent('renderer=${m.label}');
+                                    _onRendererChanged();
+                                    _refreshRender();
+                                  },
                           ),
                       ],
                     ),
@@ -250,13 +429,15 @@ class _GlassPocPageState extends ConsumerState<GlassPocPage>
                           ChoiceChip(
                             label: Text(sc.label),
                             selected: scene == sc,
-                            onSelected: (_) {
-                              _spikes.noteEvent('scene=${sc.code}');
-                              ref
-                                  .read(glassPocSceneProvider.notifier)
-                                  .select(sc);
-                              _applyScene(sc);
-                            },
+                            onSelected: running
+                                ? null
+                                : (_) {
+                                    _spikes.noteEvent('scene=${sc.code}');
+                                    ref
+                                        .read(glassPocSceneProvider.notifier)
+                                        .select(sc);
+                                    _applyScene(sc);
+                                  },
                           ),
                       ],
                     ),
@@ -289,19 +470,24 @@ class _GlassPocPageState extends ConsumerState<GlassPocPage>
                             ChoiceChip(
                               label: Text(s.label),
                               selected: speed == s,
-                              onSelected: (_) {
-                                _spikes.noteEvent('speed=${s.name}');
-                                ref
-                                    .read(glassPocScrollSpeedProvider.notifier)
-                                    .select(s);
-                                // A speed change stops, applies and starts a
-                                // fresh run from offset 0.
-                                _autoScroll.setSpeed(s);
-                                _monitor
-                                  ..reset()
-                                  ..setCollecting(false);
-                                setState(() {});
-                              },
+                              onSelected: running
+                                  ? null
+                                  : (_) {
+                                      _spikes.noteEvent('speed=${s.name}');
+                                      ref
+                                          .read(
+                                            glassPocScrollSpeedProvider
+                                                .notifier,
+                                          )
+                                          .select(s);
+                                      // A speed change stops, applies and starts a
+                                      // fresh run from offset 0.
+                                      _autoScroll.setSpeed(s);
+                                      _monitor
+                                        ..reset()
+                                        ..setCollecting(false);
+                                      setState(() {});
+                                    },
                             ),
                           ActionChip(
                             label: Text(
@@ -309,25 +495,71 @@ class _GlassPocPageState extends ConsumerState<GlassPocPage>
                                   ? 'Stop auto-scroll'
                                   : 'Start auto-scroll',
                             ),
-                            onPressed: () {
-                              if (_autoScroll.isRunning) {
-                                _autoScroll.stop();
-                              } else {
-                                _autoScroll.start();
-                              }
-                              setState(() {});
-                            },
+                            onPressed: running
+                                ? null
+                                : () {
+                                    if (_autoScroll.isRunning) {
+                                      _autoScroll.stop();
+                                    } else {
+                                      _autoScroll.start();
+                                    }
+                                    setState(() {});
+                                  },
                           ),
                           ActionChip(
                             label: const Text('Reset benchmark'),
-                            onPressed: () {
-                              _beginScrollRun();
-                              setState(() {});
-                            },
+                            onPressed: running
+                                ? null
+                                : () {
+                                    _beginScrollRun();
+                                    setState(() {});
+                                  },
                           ),
                         ],
                       ),
                     ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(
+                      _sideInset,
+                      8,
+                      _sideInset,
+                      0,
+                    ),
+                    child: Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      crossAxisAlignment: WrapCrossAlignment.center,
+                      children: [
+                        ActionChip(
+                          label: const Text('Run Full Benchmark'),
+                          onPressed: running ? null : _startBenchmark,
+                        ),
+                        if (running)
+                          ActionChip(
+                            label: const Text('Cancel benchmark'),
+                            onPressed: () =>
+                                _runner.interrupt('cancelled by user'),
+                          ),
+                        ActionChip(
+                          label: const Text('Copy Report'),
+                          onPressed: _runner.reportText == null
+                              ? null
+                              : () => Clipboard.setData(
+                                  ClipboardData(text: _runner.reportText!),
+                                ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(
+                      _sideInset,
+                      4,
+                      _sideInset,
+                      0,
+                    ),
+                    child: _BenchmarkStatus(runner: _runner),
+                  ),
                   Padding(
                     padding: const EdgeInsets.fromLTRB(
                       _sideInset,
@@ -340,7 +572,7 @@ class _GlassPocPageState extends ConsumerState<GlassPocPage>
                       children: [
                         ActionChip(
                           label: const Text('Reset metrics'),
-                          onPressed: () => _monitor.reset(),
+                          onPressed: running ? null : () => _monitor.reset(),
                         ),
                         ActionChip(
                           label: Text(
@@ -390,9 +622,11 @@ class _GlassPocPageState extends ConsumerState<GlassPocPage>
                       'Comparison: one shared backdrop read for the Reference surfaces',
                     ),
                     value: sharedBackdrop,
-                    onChanged: (v) => ref
-                        .read(glassPocSharedBackdropProvider.notifier)
-                        .set(v),
+                    onChanged: running
+                        ? null
+                        : (v) => ref
+                              .read(glassPocSharedBackdropProvider.notifier)
+                              .set(v),
                   ),
                   SwitchListTile(
                     dense: true,
@@ -495,6 +729,29 @@ String _renderLine(SistrumGlassRenderReport? report) {
     _ => '',
   };
   return 'glass_render_path=${report.path.wire}$suffix';
+}
+
+/// Benchmark status line. It listens to per-second progress on its own, so
+/// that updates rebuild this line only, never the measured stage.
+class _BenchmarkStatus extends StatelessWidget {
+  const _BenchmarkStatus({required this.runner});
+
+  final GlassBenchmarkRunner runner;
+
+  @override
+  Widget build(BuildContext context) {
+    return ValueListenableBuilder<GlassBenchmarkProgress>(
+      valueListenable: runner.progress,
+      builder: (context, p, _) {
+        final text = p.phase == GlassBenchmarkPhase.idle
+            ? 'Benchmark: idle. Runs the five modes at 900 px/s, about six minutes.'
+            : 'Benchmark ${p.phase.name}: ${(p.modeIndex + 1).clamp(1, p.modeCount)}/${p.modeCount} '
+                  '${p.modeLabel} · measured ${(p.measuredMs / 1000).toStringAsFixed(1)} s '
+                  '· ${p.message}';
+        return Text(text, key: const Key('benchmarkStatus'));
+      },
+    );
+  }
 }
 
 class _PocHeader extends StatelessWidget {

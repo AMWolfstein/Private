@@ -313,4 +313,52 @@ void main() {
       expect(tester.takeException(), isNull);
     });
   });
+
+  group('whole-interval totals for the benchmark', () {
+    testWidgets('overall speed covers the whole interval, not a window', (
+      tester,
+    ) async {
+      final controller = ScrollController();
+      addTearDown(controller.dispose);
+      await _pumpList(tester, controller);
+      final scroller = SistrumAutoScroller(
+        vsync: TestVSync(),
+        controller: controller,
+        speed: SistrumScrollSpeed.fast,
+        warmupSeconds: 0.1,
+      );
+      addTearDown(scroller.dispose);
+
+      scroller.restart();
+      await tester.pump();
+      // 5 s of 10 ms frames: far more than the 300-sample window holds.
+      await _frames(tester, 500, const Duration(milliseconds: 10));
+      final status = scroller.status();
+      expect(status.measuring, isTrue);
+      expect(status.measuredSeconds, closeTo(4.9, 0.05));
+      expect(status.overallPxPerSecond, closeTo(900, 2));
+      expect(status.totalBoundaryTurns, 0);
+      scroller.stop();
+    });
+
+    testWidgets('warm-up length is the configured value', (tester) async {
+      final controller = ScrollController();
+      addTearDown(controller.dispose);
+      await _pumpList(tester, controller);
+      final scroller = SistrumAutoScroller(
+        vsync: TestVSync(),
+        controller: controller,
+        warmupSeconds: 1.5,
+      );
+      addTearDown(scroller.dispose);
+
+      scroller.restart();
+      await tester.pump();
+      await _frames(tester, 100, const Duration(milliseconds: 10)); // 1 s
+      expect(scroller.status().measuring, isFalse);
+      await _frames(tester, 100, const Duration(milliseconds: 10)); // 2 s
+      expect(scroller.status().measuring, isTrue);
+      scroller.stop();
+    });
+  });
 }

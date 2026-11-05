@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sistrum/services/performance/glass_benchmark_aggregator.dart';
 import 'package:sistrum/services/performance/perf_frame_window.dart';
 import 'package:sistrum/services/performance/perf_spike_recorder.dart';
 
@@ -27,6 +28,10 @@ class PerfFrameMonitor {
   /// Developer POC only: captures sustained budget degradation. Null when no
   /// POC page is open, so the hot path does no extra work.
   PerfSpikeRecorder? spikeRecorder;
+
+  /// Developer POC benchmark only: receives frames of the measured interval.
+  /// Null outside a benchmark run.
+  GlassBenchmarkAggregator? benchmarkAggregator;
 
   void start() {
     if (_running) return;
@@ -61,6 +66,12 @@ class PerfFrameMonitor {
         endUs: timing.timestampInMicroseconds(FramePhase.rasterFinish),
       );
       spikeRecorder?.onFrame(
+        buildUs: timing.buildDuration.inMicroseconds,
+        rasterUs: timing.rasterDuration.inMicroseconds,
+        spanUs: timing.totalSpan.inMicroseconds,
+        endUs: timing.timestampInMicroseconds(FramePhase.rasterFinish),
+      );
+      benchmarkAggregator?.onFrame(
         buildUs: timing.buildDuration.inMicroseconds,
         rasterUs: timing.rasterDuration.inMicroseconds,
         spanUs: timing.totalSpan.inMicroseconds,

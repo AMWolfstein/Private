@@ -66,6 +66,9 @@ class SistrumScrollStatus {
     required this.direction,
     required this.samples,
     required this.boundaryTransitions,
+    required this.overallPxPerSecond,
+    required this.measuredSeconds,
+    required this.totalBoundaryTurns,
   });
 
   /// The target speed (the preset), never the measured one.
@@ -90,6 +93,17 @@ class SistrumScrollStatus {
   /// Turns at the ends of the scroll range, in the sample window. Each turn is
   /// marked on its sample, so a window can be checked for boundary frames.
   final int boundaryTransitions;
+
+  /// Displacement per second over the whole measured interval (not the window),
+  /// or null before warm-up ends or when the interval is shorter than 0.5 s.
+  final double? overallPxPerSecond;
+
+  /// Active seconds since measurement started (the whole interval).
+  final double measuredSeconds;
+
+  /// Turns at the ends of the range since measurement started (the whole
+  /// interval, not the sample window).
+  final int totalBoundaryTurns;
 }
 
 /// The one auto-scroll implementation shared by every renderer on the Glass POC.
@@ -105,11 +119,15 @@ class SistrumAutoScroller {
     SistrumScrollSpeed speed = SistrumScrollSpeed.normal,
     this.onMeasurementStart,
     this.measurementReady,
+    this.warmupSeconds = kSistrumScrollWarmupSeconds,
   }) : _speed = speed {
     _ticker = vsync.createTicker(_onTick);
   }
 
   final ScrollController controller;
+
+  /// Active seconds of scrolling before sampling starts. The benchmark uses 5.
+  final double warmupSeconds;
 
   /// Called once per run, when warm-up ends and sampling starts.
   final VoidCallback? onMeasurementStart;
@@ -139,6 +157,8 @@ class SistrumAutoScroller {
   final Float64List _atSeconds = Float64List(_ringSize);
   final Uint8List _turnFlags = Uint8List(_ringSize);
   bool? _lastMovingDown;
+  double _measureSinceSeconds = 0;
+  int _totalTurns = 0;
   int _head = 0;
   int _count = 0;
 
@@ -207,7 +227,17 @@ class SistrumAutoScroller {
           : 'stopped',
       samples: _count,
       boundaryTransitions: _turnsInWindow(),
+      overallPxPerSecond: _overallPxPerSecond(),
+      measuredSeconds: _measuring ? _lastSeconds - _measureSinceSeconds : 0,
+      totalBoundaryTurns: _totalTurns,
     );
+  }
+
+  double? _overallPxPerSecond() {
+    if (!_measuring) return null;
+    final span = _lastSeconds - _measureSinceSeconds;
+    if (span < kSistrumScrollMinSpanSeconds) return null;
+    return _path / span;
   }
 
   int _turnsInWindow() {
@@ -229,6 +259,8 @@ class SistrumAutoScroller {
     _lastPixels = null;
     _path = 0;
     _lastMovingDown = null;
+    _measureSinceSeconds = 0;
+    _totalTurns = 0;
     _head = 0;
     _count = 0;
     if (controller.hasClients) controller.jumpTo(0);
@@ -263,9 +295,10 @@ class SistrumAutoScroller {
   void _record(double seconds, double pixels, bool turned) {
     if (!_measuring) {
       _lastPixels = pixels;
-      if (seconds < kSistrumScrollWarmupSeconds) return;
+      if (seconds < warmupSeconds) return;
       if (measurementReady != null && !measurementReady!()) return;
       _measuring = true;
+      _measureSinceSeconds = seconds;
       _path = 0;
       _push(0, seconds, false);
       onMeasurementStart?.call();
@@ -273,6 +306,7 @@ class SistrumAutoScroller {
     }
     _path += (pixels - _lastPixels!).abs();
     _lastPixels = pixels;
+    if (turned) _totalTurns++;
     _push(_path, seconds, turned);
   }
 
