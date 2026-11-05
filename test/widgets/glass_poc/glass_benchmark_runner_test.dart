@@ -64,6 +64,14 @@ const SistrumScrollStatus _clearedScroll = SistrumScrollStatus(
 /// while a run is active; halting clears it, as the real scroller does.
 class _FakeHost implements GlassBenchmarkHost {
   final List<String> calls = [];
+
+  /// Reported refresh returned to the runner. Tests change it between calls to
+  /// check that the start and end values are recorded separately.
+  double refreshHz = 60;
+
+  @override
+  double reportedRefreshHz() => refreshHz;
+
   GlassBenchmarkAggregator? aggregator;
   SistrumGlassMode? current;
   SistrumGlassRenderReport Function(SistrumGlassMode mode)? pathFor;
@@ -571,4 +579,46 @@ void main() {
       expect(runner.reportText, contains('runs_planned=2'));
     },
   );
+
+  testWidgets(
+    'the reported refresh is recorded at the start and at the end of a run',
+    (tester) async {
+      final host = _FakeHost()..refreshHz = 60;
+      final plan = GlassBenchmarkPlan(
+        runs: [GlassBenchmarkRun(mode: SistrumGlassMode.transparentBaseline)],
+        transition: const Duration(milliseconds: 100),
+        warmup: const Duration(milliseconds: 100),
+        measure: const Duration(seconds: 1),
+        modeTimeout: const Duration(milliseconds: 500),
+        diagnostic: true,
+      );
+      final runner = _runner(host, plan: plan);
+      runner.start();
+      await tester.pump(const Duration(milliseconds: 100));
+      runner.onMeasurementStarted();
+      _feed(host);
+      // The display reports a different rate by the end of the run.
+      host.refreshHz = 45;
+      await tester.pump(const Duration(seconds: 1));
+
+      final result = runner.results.single;
+      expect(result.refreshHzStart, 60);
+      expect(result.refreshHzEnd, 45);
+    },
+  );
+
+  testWidgets('a run that never measured has no refresh values', (
+    tester,
+  ) async {
+    final host = _FakeHost()..refreshHz = 60;
+    final runner = _runner(host);
+    runner.start();
+    await tester.pump(const Duration(milliseconds: 100));
+    await tester.pump(const Duration(milliseconds: 550));
+    final result = runner.results[0];
+    expect(result.measurementStarted, isFalse);
+    expect(result.refreshHzStart, isNull);
+    expect(result.refreshHzEnd, isNull);
+    runner.interrupt('test cleanup');
+  });
 }

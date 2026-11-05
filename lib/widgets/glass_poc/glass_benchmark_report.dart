@@ -95,6 +95,10 @@ String formatGlassBenchmarkReport({
     add(
       'frame_begin_callbacks=${r.frameBegins} frame_timings_received=${r.frameTimings}',
     );
+    add(
+      'refresh_hz_start=${_f(r.refreshHzStart, 2)} '
+      'refresh_hz_end=${_f(r.refreshHzEnd, 2)} (reported, not measured)',
+    );
     for (final line in glassScheduleLines(r.schedule)) {
       add(line);
     }
@@ -305,7 +309,94 @@ List<String> glassScheduleLines(GlassFrameScheduleSummary? s) {
         'missed_slots=${s.missedSlots}',
     'frame_begin_events=${s.beginEvents} timing_batches=${s.batches} '
         'timings=${s.timings}',
+    // Phase differences name the interval between two recorded points. The raster
+    // slice contains every wait inside it; the phases cannot say which wait.
+    'phase_vsync_to_build_start_ms[engine]: ${series(s.phases.vsyncToBuildStart)}',
+    'phase_build_ms[engine]: ${series(s.phases.build)}',
+    'phase_build_finish_to_raster_start_ms[engine]: '
+        '${series(s.phases.buildFinishToRasterStart)}',
+    'phase_raster_slice_ms[engine]: ${series(s.phases.rasterSlice)}',
+    'phase_invalid_samples=${s.phases.invalidSamples} '
+        'zero_raster_slices=${s.phases.zeroRasterSlices}',
   ];
+}
+
+/// A raster P90 at or above this value is counted as the high-raster plateau in
+/// the cross-tab. It is a classification threshold chosen between the clean
+/// (about 5 ms) and high (about 23 ms) states, not a measured constant.
+const double kGlassRasterPlateauP90Ms = 18;
+
+/// Cadence class of one run from its median engine vsync interval. `nominal`
+/// means within 10% of the reported display period; `slow` means the median
+/// interval is longer, with the rate it implies.
+String _cadenceClass(GlassFrameScheduleSummary? s) {
+  final p50 = s?.vsync.p50;
+  if (s == null || p50 == null || p50 <= 0) return 'unknown';
+  final nominal = s.nominalPeriodMs;
+  if ((p50 - nominal).abs() <= nominal * 0.1) return 'nominal';
+  return 'slow(${(1000 / p50).toStringAsFixed(1)}Hz)';
+}
+
+/// Per-run cross-tab built only from fields already in each run. It shows which
+/// runs had the raster plateau and which cadence they ran at. It is a count of
+/// co-occurrence in these runs, not evidence of cause.
+List<String> glassCrossTabLines(List<GlassBenchmarkModeResult> results) {
+  final lines = <String>[];
+  var plateau = 0;
+  var plateauNominal = 0;
+  var plateauSlow = 0;
+  var clean = 0;
+  var cleanNominal = 0;
+  var cleanSlow = 0;
+  var refreshDisagrees = 0;
+  for (final r in results) {
+    if (!_isMeasured(r)) continue;
+    final sum = r.summary!;
+    final sch = r.schedule;
+    final cadence = _cadenceClass(sch);
+    final highRaster = (sum.rasterP90Ms ?? 0) >= kGlassRasterPlateauP90Ms;
+    final nominalHz = sch == null ? null : 1000 / sch.nominalPeriodMs;
+    final refresh = [r.refreshHzStart, r.refreshHzEnd];
+    final disagrees =
+        cadence.startsWith('slow') &&
+        nominalHz != null &&
+        refresh.any(
+          (hz) => hz != null && (hz - nominalHz).abs() > nominalHz * 0.05,
+        );
+    if (disagrees) refreshDisagrees++;
+    if (highRaster) {
+      plateau++;
+      if (cadence == 'nominal') plateauNominal++;
+      if (cadence.startsWith('slow')) plateauSlow++;
+    } else {
+      clean++;
+      if (cadence == 'nominal') cleanNominal++;
+      if (cadence.startsWith('slow')) cleanSlow++;
+    }
+    lines.add(
+      'order=${r.runOrder} config=${_config(r)} '
+      'vsync_p50_ms=${_f(sch?.vsync.p50, 2)} cadence=$cadence '
+      'raster_p50_ms=${_f(sum.rasterP50Ms, 2)} '
+      'raster_p90_ms=${_f(sum.rasterP90Ms, 2)} '
+      'plateau=${highRaster ? 'yes' : 'no'} '
+      'raster_slice_p90_ms=${_f(sch?.phases.rasterSlice.p90, 2)} '
+      'queue_wait_p90_ms=${_f(sch?.phases.buildFinishToRasterStart.p90, 2)} '
+      'frames_per_s=${_f(_framesPerSecond(r), 2)} '
+      'refresh_start_hz=${_f(r.refreshHzStart, 2)} '
+      'refresh_end_hz=${_f(r.refreshHzEnd, 2)}',
+    );
+  }
+  final out = <String>[
+    'plateau_threshold_raster_p90_ms=$kGlassRasterPlateauP90Ms',
+    'plateau_runs=$plateau nominal_cadence=$plateauNominal '
+        'slow_cadence=$plateauSlow',
+    'clean_runs=$clean nominal_cadence=$cleanNominal slow_cadence=$cleanSlow',
+    'slow_cadence_runs_where_reported_refresh_differs_from_nominal='
+        '$refreshDisagrees',
+    'Association counts across these runs only. They do not show that one causes the other.',
+    ...lines,
+  ];
+  return out;
 }
 
 /// A run that produced a usable measurement. Invalid, cancelled and not-run
@@ -479,6 +570,11 @@ String formatGlassDiagnosticReport({
     for (final r in groups[key]!)
       if (_isMeasured(r)) r,
   ];
+
+  section('4b. Per-run cross-tab (existing data)');
+  for (final line in glassCrossTabLines(results)) {
+    add(line);
+  }
 
   section('5. Repeatability per configuration (valid repeats only)');
   for (final key in groups.keys) {

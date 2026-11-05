@@ -240,6 +240,10 @@ class _GlassPocPageState extends ConsumerState<GlassPocPage>
   void attachSchedule(GlassFrameScheduleRecorder? recorder) =>
       _monitor.benchmarkSchedule = recorder;
 
+  @override
+  double reportedRefreshHz() =>
+      resolvePerfRefreshRate(PerfFrameMonitor.reportedRefreshRate()).hz;
+
   /// Rebuilds only on phase boundaries (start, each run, end). Per-second
   /// progress goes to the status widget, so the measured stage is not rebuilt.
   void _onRunnerPhaseChanged() {

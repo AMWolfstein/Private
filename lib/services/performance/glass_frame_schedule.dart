@@ -32,7 +32,11 @@ class GlassFrameScheduleRecorder {
        _begin = GlassSeriesBuffer(capacity),
        _arrival = GlassSeriesBuffer(capacity),
        _vsync = GlassSeriesBuffer(capacity),
-       _raster = GlassSeriesBuffer(capacity);
+       _raster = GlassSeriesBuffer(capacity),
+       _phaseVsyncToBuild = GlassSeriesBuffer(capacity),
+       _phaseBuild = GlassSeriesBuffer(capacity),
+       _phaseQueueWait = GlassSeriesBuffer(capacity),
+       _phaseRasterSlice = GlassSeriesBuffer(capacity);
 
   /// Nominal frame period from the reported refresh rate, in microseconds.
   /// Missed slots are measured against it.
@@ -43,6 +47,16 @@ class GlassFrameScheduleRecorder {
   final GlassSeriesBuffer _arrival;
   final GlassSeriesBuffer _vsync;
   final GlassSeriesBuffer _raster;
+
+  // Per-frame phase durations, from the same FrameTiming timestamps. Each series
+  // keeps its own non-negative samples; a negative difference is dropped and
+  // counted in [_phaseInvalid].
+  final GlassSeriesBuffer _phaseVsyncToBuild;
+  final GlassSeriesBuffer _phaseBuild;
+  final GlassSeriesBuffer _phaseQueueWait;
+  final GlassSeriesBuffer _phaseRasterSlice;
+  int _phaseInvalid = 0;
+  int _zeroRasterSlices = 0;
 
   int _lastBeginUs = -1;
   int _lastArrivalUs = -1;
@@ -87,6 +101,36 @@ class GlassFrameScheduleRecorder {
     _lastRasterUs = rasterFinishUs;
   }
 
+  /// Called once per FrameTiming with the phase timestamps it carries. Each
+  /// phase is a difference of two engine timestamps of the same frame.
+  ///
+  /// These differences name the time between two recorded points only. The
+  /// raster slice is `rasterFinish - rasterStart`, the same as
+  /// `FrameTiming.rasterDuration`. It contains every wait inside that slice.
+  /// Phase timestamps cannot say which wait (for example a fence or an image
+  /// acquire) made the slice long.
+  void onFramePhases({
+    required int vsyncStartUs,
+    required int buildStartUs,
+    required int buildFinishUs,
+    required int rasterStartUs,
+    required int rasterFinishUs,
+  }) {
+    _addPhase(_phaseVsyncToBuild, buildStartUs - vsyncStartUs);
+    _addPhase(_phaseBuild, buildFinishUs - buildStartUs);
+    _addPhase(_phaseQueueWait, rasterStartUs - buildFinishUs);
+    _addPhase(_phaseRasterSlice, rasterFinishUs - rasterStartUs);
+    if (rasterFinishUs == rasterStartUs) _zeroRasterSlices++;
+  }
+
+  void _addPhase(GlassSeriesBuffer buffer, int durationUs) {
+    if (durationUs < 0) {
+      _phaseInvalid++;
+      return;
+    }
+    buffer.add(durationUs);
+  }
+
   GlassFrameScheduleSummary summary() => GlassFrameScheduleSummary(
     nominalPeriodMs: nominalPeriodUs / 1000,
     beginEvents: _beginEvents,
@@ -98,7 +142,68 @@ class GlassFrameScheduleRecorder {
     arrival: _arrival.stats(),
     vsync: _vsync.stats(),
     raster: _raster.stats(),
+    phases: GlassFramePhaseStats(
+      vsyncToBuildStart: _phaseVsyncToBuild.stats(),
+      build: _phaseBuild.stats(),
+      buildFinishToRasterStart: _phaseQueueWait.stats(),
+      rasterSlice: _phaseRasterSlice.stats(),
+      invalidSamples: _phaseInvalid,
+      zeroRasterSlices: _zeroRasterSlices,
+    ),
   );
+}
+
+/// Per-frame phase durations of one run, in milliseconds. Each phase is a
+/// difference of two engine timestamps of the same frame.
+///
+/// Names describe the interval between the two recorded points only:
+/// - `vsyncToBuildStart`: vsyncStart to buildStart (`FrameTiming.vsyncOverhead`).
+/// - `build`: buildStart to buildFinish (`FrameTiming.buildDuration`).
+/// - `buildFinishToRasterStart`: UI finished, raster thread not yet started.
+///   It includes any wait for the raster thread to become free.
+/// - `rasterSlice`: rasterStart to rasterFinish (`FrameTiming.rasterDuration`).
+///   It includes every wait inside the raster slice, and the phase timestamps
+///   do not say which one.
+class GlassFramePhaseStats {
+  const GlassFramePhaseStats({
+    required this.vsyncToBuildStart,
+    required this.build,
+    required this.buildFinishToRasterStart,
+    required this.rasterSlice,
+    required this.invalidSamples,
+    required this.zeroRasterSlices,
+  });
+
+  /// No samples. Used when the run never measured frames.
+  const GlassFramePhaseStats.empty()
+    : vsyncToBuildStart = _noStats,
+      build = _noStats,
+      buildFinishToRasterStart = _noStats,
+      rasterSlice = _noStats,
+      invalidSamples = 0,
+      zeroRasterSlices = 0;
+
+  static const GlassSeriesStats _noStats = GlassSeriesStats(
+    count: 0,
+    overflow: 0,
+    p50: null,
+    p90: null,
+    p99: null,
+    max: null,
+  );
+
+  final GlassSeriesStats vsyncToBuildStart;
+  final GlassSeriesStats build;
+  final GlassSeriesStats buildFinishToRasterStart;
+  final GlassSeriesStats rasterSlice;
+
+  /// Negative differences dropped across all phases. Non-zero means a
+  /// timestamp ordering the phase definitions did not expect.
+  final int invalidSamples;
+
+  /// Frames whose raster start and finish are the same instant. The engine
+  /// records that for frames it did not draw, so their raster slice is zero.
+  final int zeroRasterSlices;
 }
 
 /// Schedule statistics of one measured run, in milliseconds.
@@ -114,9 +219,13 @@ class GlassFrameScheduleSummary {
     required this.arrival,
     required this.vsync,
     required this.raster,
+    this.phases = const GlassFramePhaseStats.empty(),
   });
 
   final double nominalPeriodMs;
+
+  /// Per-frame phase durations (see [GlassFramePhaseStats]).
+  final GlassFramePhaseStats phases;
 
   /// Drawn frames (persistent callbacks) in the interval.
   final int beginEvents;

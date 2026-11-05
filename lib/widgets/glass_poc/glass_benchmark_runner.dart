@@ -154,6 +154,8 @@ class GlassBenchmarkModeResult {
     this.repeat = 1,
     this.runOrder = 0,
     this.schedule,
+    this.refreshHzStart,
+    this.refreshHzEnd,
   });
 
   final SistrumGlassMode mode;
@@ -168,6 +170,13 @@ class GlassBenchmarkModeResult {
 
   /// VSync, callback and raster intervals, or null when measurement never began.
   final GlassFrameScheduleSummary? schedule;
+
+  /// Reported display refresh (`FlutterView.display.refreshRate`) when the
+  /// measured interval began and when it ended. Reported by the engine, not
+  /// measured on the panel. Null when measurement never began (end) or the
+  /// interval never started (start).
+  final double? refreshHzStart;
+  final double? refreshHzEnd;
   final GlassBenchmarkValidity validity;
   final List<String> reasons;
   final bool measurementStarted;
@@ -269,6 +278,9 @@ abstract interface class GlassBenchmarkHost {
 
   /// Connects the schedule recorder to the frame stream, or disconnects it.
   void attachSchedule(GlassFrameScheduleRecorder? recorder);
+
+  /// The display refresh rate the engine reports now. Reported, not measured.
+  double reportedRefreshHz();
 }
 
 /// Deterministic run of the benchmark:
@@ -311,6 +323,7 @@ class GlassBenchmarkRunner {
   final Stopwatch _stopwatch;
   late final GlassBenchmarkAggregator _aggregator;
   GlassFrameScheduleRecorder? _frameSchedule;
+  double? _refreshHzStart;
 
   GlassBenchmarkPhase _phase = GlassBenchmarkPhase.idle;
   GlassBenchmarkConfig? _savedConfig;
@@ -375,6 +388,7 @@ class GlassBenchmarkRunner {
       _aggregator.discard();
       host.attachAggregator(null);
       _frameSchedule = null;
+      _refreshHzStart = null;
       host.attachSchedule(null);
       host.applyRun(run);
       _enter(GlassBenchmarkPhase.warmup);
@@ -399,6 +413,7 @@ class GlassBenchmarkRunner {
         nominalPeriodUs: budgetUs.round(),
       );
       _frameSchedule = schedule;
+      _refreshHzStart = host.reportedRefreshHz();
       host.attachSchedule(schedule);
       host.attachAggregator(_aggregator);
       _enter(GlassBenchmarkPhase.measuring);
@@ -433,6 +448,7 @@ class GlassBenchmarkRunner {
           ? _aggregator.summary(elapsedUs: elapsedUs)
           : null;
       final schedule = _measurementStarted ? _frameSchedule?.summary() : null;
+      final refreshEnd = _measurementStarted ? host.reportedRefreshHz() : null;
       host.attachAggregator(null);
       host.attachSchedule(null);
       host.haltRun();
@@ -444,6 +460,7 @@ class GlassBenchmarkRunner {
           elapsedUs: elapsedUs,
           timedOut: timedOut,
           schedule: schedule,
+          refreshEnd: refreshEnd,
         ),
       );
       _modeIndex++;
@@ -480,6 +497,7 @@ class GlassBenchmarkRunner {
         ? _aggregator.summary(elapsedUs: elapsedUs)
         : null;
     final schedule = _measurementStarted ? _frameSchedule?.summary() : null;
+    final refreshEnd = _measurementStarted ? host.reportedRefreshHz() : null;
     _aggregator.discard();
     host.attachAggregator(null);
     host.attachSchedule(null);
@@ -492,6 +510,7 @@ class GlassBenchmarkRunner {
         elapsedUs: elapsedUs,
         cancelled: true,
         schedule: schedule,
+        refreshEnd: refreshEnd,
       ),
     );
     _finalize(GlassBenchmarkPhase.cancelled);
@@ -627,6 +646,7 @@ class GlassBenchmarkRunner {
     bool timedOut = false,
     bool cancelled = false,
     GlassFrameScheduleSummary? schedule,
+    double? refreshEnd,
   }) {
     final run = plan.runs[_modeIndex];
     final mode = run.mode;
@@ -772,6 +792,8 @@ class GlassBenchmarkRunner {
       repeat: run.repeat,
       runOrder: _modeIndex + 1,
       schedule: schedule,
+      refreshHzStart: _measurementStarted ? _refreshHzStart : null,
+      refreshHzEnd: refreshEnd,
       validity: validity,
       reasons: reasons,
       measurementStarted: _measurementStarted,

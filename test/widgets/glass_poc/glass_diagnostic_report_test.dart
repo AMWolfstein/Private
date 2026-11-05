@@ -26,6 +26,9 @@ GlassBenchmarkModeResult _result({
   required int order,
   required double rasterMs,
   GlassBenchmarkValidity validity = GlassBenchmarkValidity.valid,
+  double? vsyncP50Ms,
+  double? refreshStartHz = 60,
+  double? refreshEndHz = 60,
 }) {
   final a = GlassBenchmarkAggregator(budgetUs: 16667, turnsReader: () => 0)
     ..begin();
@@ -45,10 +48,21 @@ GlassBenchmarkModeResult _result({
     missedSlots: 0,
     begin: _empty,
     arrival: _empty,
-    vsync: _empty,
+    vsync: vsyncP50Ms == null
+        ? _empty
+        : GlassSeriesStats(
+            count: 299,
+            overflow: 0,
+            p50: vsyncP50Ms,
+            p90: vsyncP50Ms,
+            p99: vsyncP50Ms,
+            max: vsyncP50Ms,
+          ),
     raster: _empty,
   );
   return GlassBenchmarkModeResult(
+    refreshHzStart: refreshStartHz,
+    refreshHzEnd: refreshEndHz,
     mode: mode,
     surfaces: surfaces,
     repeat: repeat,
@@ -259,6 +273,114 @@ void main() {
       expect(text, contains('vsync_start_interval_ms[engine]'));
       expect(text, contains('frame_begin_interval_ms[delivery]'));
       expect(text, contains('runs_planned=5'));
+    });
+  });
+
+  group('per-run cross-tab', () {
+    test('plateau and cadence are tallied, with the association caveat', () {
+      final text = formatGlassDiagnosticReport(
+        status: 'COMPLETE',
+        deviceLines: const ['os=android 14'],
+        reportedHz: 60,
+        plan: GlassBenchmarkPlan.diagnostic(),
+        startedAt: null,
+        endedAt: null,
+        cancelReason: null,
+        failure: null,
+        results: [
+          // Clean run, nominal cadence (16.67 ms).
+          _result(
+            mode: SistrumGlassMode.transparentBaseline,
+            surfaces: 4,
+            repeat: 1,
+            order: 1,
+            rasterMs: 5,
+            vsyncP50Ms: 16.67,
+          ),
+          // Plateau run at the slow cadence (22.27 ms).
+          _result(
+            mode: SistrumGlassMode.newFullGlass,
+            surfaces: 4,
+            repeat: 1,
+            order: 2,
+            rasterMs: 23,
+            vsyncP50Ms: 22.27,
+            refreshEndHz: 45,
+          ),
+          // Clean run at the slow cadence.
+          _result(
+            mode: SistrumGlassMode.liquidGlass,
+            surfaces: 4,
+            repeat: 1,
+            order: 3,
+            rasterMs: 6,
+            vsyncP50Ms: 22.27,
+          ),
+        ],
+      );
+      expect(text, contains('== 4b. Per-run cross-tab (existing data) =='));
+      expect(text, contains('plateau_runs=1 nominal_cadence=0 slow_cadence=1'));
+      expect(text, contains('clean_runs=2 nominal_cadence=1 slow_cadence=1'));
+      // Only the plateau run at 22.27 ms reported a refresh away from 44.9 Hz at its end.
+      expect(
+        text,
+        contains(
+          'slow_cadence_runs_where_reported_refresh_differs_from_nominal=1',
+        ),
+      );
+      expect(text, contains('Association counts across these runs only'));
+      expect(text, contains('cadence=slow(44.9Hz)'));
+      expect(text, contains('refresh_start_hz=60.00 refresh_end_hz=45.00'));
+    });
+
+    test('a run without VSync data is listed as cadence unknown', () {
+      final text = formatGlassDiagnosticReport(
+        status: 'COMPLETE',
+        deviceLines: const ['os=android 14'],
+        reportedHz: 60,
+        plan: GlassBenchmarkPlan.diagnostic(),
+        startedAt: null,
+        endedAt: null,
+        cancelReason: null,
+        failure: null,
+        results: [
+          _result(
+            mode: SistrumGlassMode.newFullGlass,
+            surfaces: 1,
+            repeat: 1,
+            order: 1,
+            rasterMs: 23,
+          ),
+        ],
+      );
+      expect(text, contains('cadence=unknown'));
+      expect(text, contains('plateau=yes'));
+    });
+
+    test('invalid runs stay out of the cross-tab tallies', () {
+      final text = formatGlassDiagnosticReport(
+        status: 'COMPLETE',
+        deviceLines: const ['os=android 14'],
+        reportedHz: 60,
+        plan: GlassBenchmarkPlan.diagnostic(),
+        startedAt: null,
+        endedAt: null,
+        cancelReason: null,
+        failure: null,
+        results: [
+          _result(
+            mode: SistrumGlassMode.newFullGlass,
+            surfaces: 4,
+            repeat: 1,
+            order: 1,
+            rasterMs: 23,
+            vsyncP50Ms: 22.27,
+            validity: GlassBenchmarkValidity.invalid,
+          ),
+        ],
+      );
+      expect(text, contains('plateau_runs=0 nominal_cadence=0 slow_cadence=0'));
+      expect(text, isNot(contains('order=1 config=')));
     });
   });
 }

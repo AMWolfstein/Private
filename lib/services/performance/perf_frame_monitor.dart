@@ -89,6 +89,13 @@ class PerfFrameMonitor {
         vsyncStartUs: timing.timestampInMicroseconds(FramePhase.vsyncStart),
         rasterFinishUs: timing.timestampInMicroseconds(FramePhase.rasterFinish),
       );
+      schedule?.onFramePhases(
+        vsyncStartUs: timing.timestampInMicroseconds(FramePhase.vsyncStart),
+        buildStartUs: timing.timestampInMicroseconds(FramePhase.buildStart),
+        buildFinishUs: timing.timestampInMicroseconds(FramePhase.buildFinish),
+        rasterStartUs: timing.timestampInMicroseconds(FramePhase.rasterStart),
+        rasterFinishUs: timing.timestampInMicroseconds(FramePhase.rasterFinish),
+      );
       window.add(
         buildUs: timing.buildDuration.inMicroseconds,
         rasterUs: timing.rasterDuration.inMicroseconds,
