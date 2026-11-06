@@ -282,3 +282,68 @@ appearance is preserved. Device appearance and cost are not verified.
 
 Run **Run Hybrid Atlas A/B (current)** for off and on with the current
 controls, 400 and 900 px/s, three counterbalanced rounds.
+
+## 9. Cropped backdrop blur: source investigation and decision (no toggle added)
+
+Question: can a cropped backdrop blur reduce the backdrop work of Sistrum Hybrid
+without changing the look? Sources checked: `liquid_glass_renderer` 1.0.0-dev.2
+(`lib/src/rendering/liquid_glass_render_object.dart`, `lib/src/internal/backdrop_seed.dart`),
+and the engine in `/root/flutter/engine/src/flutter/impeller` (`display_list/canvas.cc`,
+`entity/save_layer_utils.cc`, `entity/contents/filters/*`).
+
+### What the package crops, and how
+
+`planSeededBackdropPass` sizes an offscreen pass to the glass rectangle plus the
+blur reach, intersected with the clips, and places the backdrop read inside it. It
+is built on the package's own retained layers (`SeededBackdropPassLayer`,
+`RetainedGlassClip`, compositor translation). Sistrum does not use these layers, and
+reproducing them would replace the glass engine, which the brief forbids.
+
+### What Impeller already does for a plain BackdropFilter
+
+- `Canvas::saveLayer` with a backdrop filter calls `ComputeSaveLayerCoverage` with
+  `flood_input_coverage = true`, so the content coverage becomes unbounded.
+- With an image filter, the coverage is then `GetSourceCoverage(clip)`.
+- Gaussian blur source coverage = the output limit plus its blur radius (about 3 sigma).
+- A runtime-effect (lens) source coverage = the output limit, unchanged.
+- Sistrum's surfaces are `ClipRRect(BackdropFilter(...))`, so the blur subpass is already
+  the glass rectangle plus blur reach, and the lens (composed with the blur) is the same.
+
+Result: **already_cropped** for the BackdropFilter, BackdropGroup and Full (lens)
+paths. The filter's own pass is already the minimum correct region.
+
+### What is not cropped, and why cropping cannot remove it
+
+`Canvas::FlipBackdrop` ends the current render pass and reads the backdrop from that
+whole pass's target. That end-pass and full-target read is the per-filter cost that
+the earlier measurements pointed to (section 4, section 8). A smaller filter pass
+does not avoid it. Only avoiding the flip avoids it, which is what the atlas does
+(one capture for all surfaces, section 8) and what the package's seeded passes do
+with their own layers.
+
+### Atlas path
+
+The atlas already captures only each slot's surface plus reach (`_SlotGeometry.source`),
+blurs each slot inside its own `saveLayer` bounds, and packs the slots into a shelf
+texture. Texture size is the packed slot sizes (at most 2048 px per side), and a
+capture is repeated only when the declared inputs or the signature change. The atlas
+is therefore **already_cropped** at its minimum correct region.
+
+### Refraction
+
+The Edge shader (`shaders/sistrum_atlas_edge.frag`) samples the atlas texture clamped to the surface, so it
+needs no margin beyond the atlas slot. The Full lens inherits the BackdropFilter
+bounds above. No refraction shader was changed for this section.
+
+### Decision
+
+No genuine additional crop exists in the current Flutter/Impeller API for these
+paths: the filter passes are already clipped to the glass plus blur reach, and the
+remaining full-frame flip cannot be removed by a smaller filter. A toggle that only
+changed a visible clip, or re-clipped an already clipped pass, would be fake or
+redundant, so no Cropped Backdrop Blur toggle was added. The existing rendering paths
+are unchanged. Benchmarks for this item were not run, since there is no second
+configuration to compare.
+
+Open: reducing the flip itself would need either the atlas (already in place, opt-in)
+or a different engine approach, which is outside this POC.
