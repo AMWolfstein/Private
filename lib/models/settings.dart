@@ -186,6 +186,11 @@ class AppSettings {
   /// profile disabled it for this device tier. Off means "follow the
   /// device default".
   final bool forceBackdropBlur;
+
+  /// Diagnostic: how a batch of Mornye glass lenses shares its backdrop read
+  /// and blurs. 'separate_pass' (the default and the reviewed look),
+  /// 'single_pass' or 'shader_blur'. Read when a batch builds.
+  final String glassBatchRenderer;
   final String
   extensionVerificationBrowserMode; // 'external_first' or 'in_app_first'
   final String locale;
@@ -366,6 +371,7 @@ class AppSettings {
     this.showExtensionStore = true,
     this.heroAnimationsEnabled = true,
     this.forceBackdropBlur = false,
+    this.glassBatchRenderer = 'separate_pass',
     this.extensionVerificationBrowserMode = 'in_app_first',
     this.locale = 'system',
     this.lyricsMode = 'embed',
@@ -527,6 +533,7 @@ class AppSettings {
     bool? showExtensionStore,
     bool? heroAnimationsEnabled,
     bool? forceBackdropBlur,
+    String? glassBatchRenderer,
     String? extensionVerificationBrowserMode,
     String? locale,
     String? lyricsMode,
@@ -689,6 +696,7 @@ class AppSettings {
       heroAnimationsEnabled:
           heroAnimationsEnabled ?? this.heroAnimationsEnabled,
       forceBackdropBlur: forceBackdropBlur ?? this.forceBackdropBlur,
+      glassBatchRenderer: glassBatchRenderer ?? this.glassBatchRenderer,
       extensionVerificationBrowserMode:
           extensionVerificationBrowserMode ??
           this.extensionVerificationBrowserMode,

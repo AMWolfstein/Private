@@ -87,6 +87,32 @@ class _PerformanceHubPageState extends ConsumerState<PerformanceHubPage> {
                 value: settings.performanceHud,
                 onChanged: notifier.setPerformanceHud,
               ),
+              SettingsItem(
+                icon: Icons.blur_on,
+                title: 'Glass batch renderer',
+                subtitle:
+                    'Diagnostic: how batched glass shares its read and blurs. Default is the reviewed look.',
+                trailing: DropdownButton<String>(
+                  value: settings.glassBatchRenderer,
+                  items: const [
+                    DropdownMenuItem(
+                      value: 'separate_pass',
+                      child: Text('Separate pass (default)'),
+                    ),
+                    DropdownMenuItem(
+                      value: 'single_pass',
+                      child: Text('Single pass'),
+                    ),
+                    DropdownMenuItem(
+                      value: 'shader_blur',
+                      child: Text('Shader blur'),
+                    ),
+                  ],
+                  onChanged: (v) {
+                    if (v != null) notifier.setGlassBatchRenderer(v);
+                  },
+                ),
+              ),
               SettingsSwitchItem(
                 icon: Icons.touch_app,
                 title: 'Enable First Interaction Analysis',

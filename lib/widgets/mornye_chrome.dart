@@ -325,9 +325,14 @@ class MornyeGlass extends ConsumerWidget {
     // A batched lens composes blur and refraction into one backdrop read.
     // Outside a batch it takes a key of its own: sharing one with the page or
     // an overlapping menu would lose their glass.
+    final renderer = ref.watch(mornyeGlassBatchRendererProvider);
     final backdrop = lens != null
         ? LiquidGlassBatch.backdropIdOf(context) == null
-              ? LiquidGlassBatch(child: lens)
+              ? LiquidGlassBatch(
+                  mode: renderer.mode,
+                  blurMethod: renderer.blurMethod,
+                  child: lens,
+                )
               : lens
         : sampleBackdrop
         ? BackdropFilter.grouped(

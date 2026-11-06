@@ -2,9 +2,56 @@ import 'dart:ui' show ImageFilter;
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:liquid_glass_easy/liquid_glass_easy.dart';
 import 'package:mornye/providers/runtime_profile_provider.dart';
+import 'package:mornye/providers/settings_provider.dart';
 import 'package:mornye/theme/mornye_theme.dart';
+
+/// How a batch of Mornye lenses shares its backdrop read and blurs its
+/// members. Only the first option is the reviewed default; the others are
+/// diagnostics for comparing renderers on a device without a rebuild.
+///
+/// Source-verified in liquid_glass_easy 5.2.0: `separatePass` blurs in its
+/// own keyed pass over the batch copy; `singlePass` folds the blur into each
+/// member's pass; `shader` blurs inside the lens shader with no blur pass,
+/// but its grain differs from the Gaussian. None is measured on hardware yet.
+enum MornyeGlassBatchRenderer {
+  separatePass(
+    'separate_pass',
+    LiquidGlassBatchMode.separatePass,
+    LiquidGlassBlurMethod.engine,
+  ),
+  singlePass(
+    'single_pass',
+    LiquidGlassBatchMode.singlePass,
+    LiquidGlassBlurMethod.engine,
+  ),
+  shader(
+    'shader_blur',
+    LiquidGlassBatchMode.separatePass,
+    LiquidGlassBlurMethod.shader,
+  );
+
+  const MornyeGlassBatchRenderer(this.wire, this.mode, this.blurMethod);
+
+  /// The persisted value in `AppSettings.glassBatchRenderer`.
+  final String wire;
+  final LiquidGlassBatchMode mode;
+  final LiquidGlassBlurMethod blurMethod;
+
+  /// Unknown or missing values keep the reviewed default.
+  static MornyeGlassBatchRenderer fromWire(String value) => values.firstWhere(
+    (renderer) => renderer.wire == value,
+    orElse: () => separatePass,
+  );
+}
+
+final mornyeGlassBatchRendererProvider = Provider<MornyeGlassBatchRenderer>(
+  (ref) => MornyeGlassBatchRenderer.fromWire(
+    ref.watch(settingsProvider.select((s) => s.glassBatchRenderer)),
+  ),
+);
 
 /// The one place that maps the Glass clarity slider (0 to 1) and the glass
 /// level to render decisions. Every Mornye glass surface reads these values,
