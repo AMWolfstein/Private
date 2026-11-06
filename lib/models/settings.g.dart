@@ -7,6 +7,12 @@ part of 'settings.dart';
 // **************************************************************************
 
 AppSettings _$AppSettingsFromJson(Map<String, dynamic> json) => AppSettings(
+  performanceMonitoring: json['performanceMonitoring'] as bool? ?? false,
+  performanceHud: json['performanceHud'] as bool? ?? false,
+  performanceFirstInteraction:
+      json['performanceFirstInteraction'] as bool? ?? false,
+  performanceIdleMs: (json['performanceIdleMs'] as num?)?.toInt() ?? 3000,
+  performanceWindowMs: (json['performanceWindowMs'] as num?)?.toInt() ?? 10000,
   defaultService: json['defaultService'] as String? ?? '',
   audioQuality: json['audioQuality'] as String? ?? 'LOSSLESS',
   filenameFormat: json['filenameFormat'] as String? ?? '{title} - {artist}',
@@ -322,6 +328,11 @@ Map<String, dynamic> _$AppSettingsToJson(
   'playerShowPronunciation': instance.playerShowPronunciation,
   'playerShowTranslation': instance.playerShowTranslation,
   'playerShowVolume': instance.playerShowVolume,
+  'performanceMonitoring': instance.performanceMonitoring,
+  'performanceHud': instance.performanceHud,
+  'performanceFirstInteraction': instance.performanceFirstInteraction,
+  'performanceIdleMs': instance.performanceIdleMs,
+  'performanceWindowMs': instance.performanceWindowMs,
 };
 
 const _$AutoMixEffectEnumMap = {

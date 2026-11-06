@@ -280,7 +280,15 @@ class AppSettings {
   /// Whether the phone Now Playing screen shows its volume slider.
   final bool playerShowVolume;
 
+  final bool performanceMonitoring, performanceHud, performanceFirstInteraction;
+  final int performanceIdleMs, performanceWindowMs;
+
   const AppSettings({
+    this.performanceMonitoring = false,
+    this.performanceHud = false,
+    this.performanceFirstInteraction = false,
+    this.performanceIdleMs = 3000,
+    this.performanceWindowMs = 10000,
     this.defaultService = '',
     this.audioQuality = 'LOSSLESS',
     this.filenameFormat = '{title} - {artist}',
@@ -434,6 +442,11 @@ class AppSettings {
       : 'fullscreen';
 
   AppSettings copyWith({
+    bool? performanceMonitoring,
+    bool? performanceHud,
+    bool? performanceFirstInteraction,
+    int? performanceIdleMs,
+    int? performanceWindowMs,
     String? defaultService,
     String? audioQuality,
     String? filenameFormat,
@@ -565,6 +578,13 @@ class AppSettings {
     bool? playerShowVolume,
   }) {
     return AppSettings(
+      performanceMonitoring:
+          performanceMonitoring ?? this.performanceMonitoring,
+      performanceHud: performanceHud ?? this.performanceHud,
+      performanceFirstInteraction:
+          performanceFirstInteraction ?? this.performanceFirstInteraction,
+      performanceIdleMs: performanceIdleMs ?? this.performanceIdleMs,
+      performanceWindowMs: performanceWindowMs ?? this.performanceWindowMs,
       defaultService: defaultService ?? this.defaultService,
       audioQuality: audioQuality ?? this.audioQuality,
       filenameFormat: filenameFormat ?? this.filenameFormat,

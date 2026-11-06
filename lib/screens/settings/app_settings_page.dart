@@ -1,3 +1,4 @@
+import 'package:mornye/screens/settings/performance_hub_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart' show CupertinoActivityIndicator;
 import 'package:mornye/theme/mornye_icons.dart';
@@ -32,6 +33,20 @@ class AppSettingsPage extends ConsumerWidget {
               title: context.l10n.sectionApp,
               connected: true,
               children: [
+                SettingsItem(
+                  icon: Icons.speed,
+                  title: 'Performance Hub',
+                  subtitle:
+                      'Frame timings, display mode and interaction diagnostics',
+                  onTap: () => Navigator.of(context, rootNavigator: true).push(
+                    MaterialPageRoute<void>(
+                      settings: const RouteSettings(
+                        name: '/settings/app/performance',
+                      ),
+                      builder: (_) => const PerformanceHubPage(),
+                    ),
+                  ),
+                ),
                 SettingsSwitchItem(
                   icon: Icons.extension,
                   title: context.l10n.optionsExtensionStore,

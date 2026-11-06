@@ -961,6 +961,17 @@ class SettingsNotifier extends Notifier<AppSettings> {
         : state.copyWith(homeFeedProvider: provider),
   );
 
+  void setPerformanceMonitoring(bool value) =>
+      _commit(state.copyWith(performanceMonitoring: value));
+  void setPerformanceHud(bool value) =>
+      _commit(state.copyWith(performanceHud: value));
+  void setPerformanceFirstInteraction(bool value) =>
+      _commit(state.copyWith(performanceFirstInteraction: value));
+  void setPerformanceIdleMs(int value) =>
+      _commit(state.copyWith(performanceIdleMs: value.clamp(500, 30000)));
+  void setPerformanceWindowMs(int value) =>
+      _commit(state.copyWith(performanceWindowMs: value.clamp(1000, 60000)));
+
   void setEnableLogging(bool enabled) {
     _commit(state.copyWith(enableLogging: enabled));
     LogBuffer.loggingEnabled = enabled;

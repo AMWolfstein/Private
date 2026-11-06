@@ -1,3 +1,5 @@
+import 'package:mornye/providers/performance_provider.dart';
+import 'package:mornye/widgets/performance_runtime.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:material_ui/material_ui.dart' as material_ui;
@@ -64,7 +66,10 @@ final _routerProvider = Provider<GoRouter>((ref) {
 
   return GoRouter(
     navigatorKey: AppNavigationService.rootNavigatorKey,
-    observers: [AppOrientationObserver()],
+    observers: [
+      AppOrientationObserver(),
+      PerformanceRouteObserver(ref.read(performanceControllerProvider)),
+    ],
     initialLocation: initialLocation,
     routes: [
       GoRoute(path: '/', builder: (context, state) => const MainShell()),
@@ -222,7 +227,9 @@ Widget buildAppContent(
       ),
     );
   }
-  return AndroidKeyboardLifecycle(child: _AppMediaQuery(child: appContent));
+  return AndroidKeyboardLifecycle(
+    child: _AppMediaQuery(child: PerformanceRuntime(child: appContent)),
+  );
 }
 
 /// Treats the display as one continuous surface so bottom sheets and dialogs

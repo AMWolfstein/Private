@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:ui' show ImageFilter;
+import 'package:mornye/providers/performance_provider.dart';
 import 'package:mornye/controllers/open_audio_controller.dart';
 import 'package:mornye/services/audio_file_open_service.dart';
 import 'package:device_info_plus/device_info_plus.dart';
@@ -529,6 +530,15 @@ class _MainShellState extends ConsumerState<MainShell>
       // cannot do this because _currentIndex is already updated below.)
       ref.read(previewPlayerProvider.notifier).stop();
       setState(() => _currentIndex = index);
+      ref
+          .read(performanceControllerProvider)
+          .setTab(
+            shellTabAt(
+              index,
+              mornye: context.isMornye,
+              showStore: ref.read(settingsProvider).showExtensionStore,
+            ).name,
+          );
       ShellNavigationService.syncState(
         currentTabIndex: _currentIndex,
         showRepoTab: showStore,
@@ -560,6 +570,15 @@ class _MainShellState extends ConsumerState<MainShell>
     if (_currentIndex != index) {
       ref.read(previewPlayerProvider.notifier).stop();
       setState(() => _currentIndex = index);
+      ref
+          .read(performanceControllerProvider)
+          .setTab(
+            shellTabAt(
+              index,
+              mornye: context.isMornye,
+              showStore: ref.read(settingsProvider).showExtensionStore,
+            ).name,
+          );
       final showStore = ref.read(
         settingsProvider.select((s) => s.showExtensionStore),
       );
@@ -948,6 +967,7 @@ class _MainShellState extends ConsumerState<MainShell>
     final tabs = <Widget>[
       _TabNavigator(
         key: const ValueKey('tab-home'),
+        screen: 'home',
         navigatorKey: _homeTabNavigatorKey,
         observers: [_homePreviewStopObserver],
         heroAnimationsEnabled: heroAnimationsEnabled,
@@ -959,6 +979,7 @@ class _MainShellState extends ConsumerState<MainShell>
       ),
       _TabNavigator(
         key: const ValueKey('tab-library'),
+        screen: 'library',
         navigatorKey: _libraryTabNavigatorKey,
         observers: [
           _libraryPreviewStopObserver,
@@ -970,6 +991,7 @@ class _MainShellState extends ConsumerState<MainShell>
       if (showStore)
         _TabNavigator(
           key: const ValueKey('tab-repo'),
+          screen: 'repository',
           navigatorKey: _repoTabNavigatorKey,
           observers: [_repoPreviewStopObserver],
           heroAnimationsEnabled: heroAnimationsEnabled,
@@ -979,6 +1001,7 @@ class _MainShellState extends ConsumerState<MainShell>
       if (context.isMornye)
         _TabNavigator(
           key: const ValueKey('tab-search'),
+          screen: 'search',
           navigatorKey: _searchTabNavigatorKey,
           observers: [_searchPreviewStopObserver],
           heroAnimationsEnabled: heroAnimationsEnabled,
@@ -1416,13 +1439,16 @@ class _MainShellState extends ConsumerState<MainShell>
   }
 }
 
-class _TabNavigator extends StatefulWidget {
+class _TabNavigator extends ConsumerStatefulWidget {
   final GlobalKey<NavigatorState> navigatorKey;
   final Widget child;
   final List<NavigatorObserver> observers;
   final bool heroAnimationsEnabled;
 
+  final String screen;
+
   const _TabNavigator({
+    required this.screen,
     super.key,
     required this.navigatorKey,
     required this.child,
@@ -1431,10 +1457,14 @@ class _TabNavigator extends StatefulWidget {
   });
 
   @override
-  State<_TabNavigator> createState() => _TabNavigatorState();
+  ConsumerState<_TabNavigator> createState() => _TabNavigatorState();
 }
 
-class _TabNavigatorState extends State<_TabNavigator> {
+class _TabNavigatorState extends ConsumerState<_TabNavigator> {
+  late final _performanceObserver = PerformanceRouteObserver(
+    ref.read(performanceControllerProvider),
+    scope: widget.screen,
+  );
   late final ShellChromeObserver _chromeObserver = ShellChromeObserver(
     widget.navigatorKey,
   );
@@ -1460,6 +1490,7 @@ class _TabNavigatorState extends State<_TabNavigator> {
           : TraversalEdgeBehavior.stop,
       observers: [
         _chromeObserver,
+        _performanceObserver,
         if (widget.heroAnimationsEnabled) _heroController,
         if (isDesktopPlatform) _nowPlayingCloser,
         ...widget.observers,
