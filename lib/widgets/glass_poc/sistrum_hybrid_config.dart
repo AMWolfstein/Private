@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:sistrum/widgets/glass_poc/sistrum_hybrid_atlas.dart';
 
 /// Rendering tiers of Sistrum Hybrid, the developer-only glass POC.
 ///
@@ -50,6 +51,7 @@ class SistrumHybridConfig {
     this.chromaticAberration = true,
     this.sharedBackdrop = false,
     this.sharedAtlas = false,
+    this.atlasResolution = SistrumAtlasResolution.baseline,
   });
 
   final SistrumHybridTier tier;
@@ -77,6 +79,9 @@ class SistrumHybridConfig {
   /// is drawn, instead of a `BackdropFilter` per surface. Supported for the
   /// blur only; see [atlasUnsupportedReason].
   final bool sharedAtlas;
+
+  /// Experimental: the atlas capture resolution. Only used when [usesAtlas].
+  final SistrumAtlasResolution atlasResolution;
 
   /// Why the atlas cannot serve this configuration, or null when it can.
   /// Unsupported combinations keep the existing pipeline and say so.
@@ -106,6 +111,7 @@ class SistrumHybridConfig {
     bool? chromaticAberration,
     bool? sharedBackdrop,
     bool? sharedAtlas,
+    SistrumAtlasResolution? atlasResolution,
   }) => SistrumHybridConfig(
     tier: tier ?? this.tier,
     blurSigma: (blurSigma ?? this.blurSigma).clamp(0.0, 24.0),
@@ -114,6 +120,7 @@ class SistrumHybridConfig {
     chromaticAberration: chromaticAberration ?? this.chromaticAberration,
     sharedBackdrop: sharedBackdrop ?? this.sharedBackdrop,
     sharedAtlas: sharedAtlas ?? this.sharedAtlas,
+    atlasResolution: atlasResolution ?? this.atlasResolution,
   );
 
   /// The controls that take effect for [tier]. The page shows the others as
@@ -127,7 +134,8 @@ class SistrumHybridConfig {
       'tint_opacity=${tintOpacity.toStringAsFixed(2)} '
       'refraction=$refraction chromatic=$chromaticAberration '
       'shared_backdrop_requested=$sharedBackdrop '
-      'atlas_requested=$sharedAtlas';
+      'atlas_requested=$sharedAtlas '
+      'atlas_resolution=${atlasResolution.wire}';
 
   @override
   bool operator ==(Object other) =>
@@ -138,7 +146,8 @@ class SistrumHybridConfig {
       other.refraction == refraction &&
       other.chromaticAberration == chromaticAberration &&
       other.sharedBackdrop == sharedBackdrop &&
-      other.sharedAtlas == sharedAtlas;
+      other.sharedAtlas == sharedAtlas &&
+      other.atlasResolution == atlasResolution;
 
   @override
   int get hashCode => Object.hash(
@@ -149,6 +158,7 @@ class SistrumHybridConfig {
     chromaticAberration,
     sharedBackdrop,
     sharedAtlas,
+    atlasResolution,
   );
 }
 

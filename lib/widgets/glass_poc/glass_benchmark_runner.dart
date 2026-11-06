@@ -45,6 +45,7 @@ class GlassBenchmarkPlan {
     this.hybridMatrix = false,
     this.hybridSharedAb = false,
     this.hybridAbAtlas = false,
+    this.hybridAbResolution = false,
   }) : runs = runs ?? [for (final mode in modes) GlassBenchmarkRun(mode: mode)];
 
   /// The diagnostic repeatability protocol: every configuration of
@@ -104,6 +105,29 @@ class GlassBenchmarkPlan {
     );
   }
 
+  /// The atlas resolution sweep: the atlas off, then on at each resolution, at
+  /// 400 and 900 px/s, [repeats] counterbalanced rounds, standard timing.
+  factory GlassBenchmarkPlan.hybridAtlasResolution({
+    required SistrumHybridConfig config,
+    GlassBenchmarkPlan? timing,
+    int repeats = 3,
+  }) {
+    final base = timing ?? GlassBenchmarkPlan();
+    return GlassBenchmarkPlan(
+      runs: glassDiagnosticRunOrder(
+        configurations: glassHybridAtlasResolutionConfigurations(config),
+        repeats: repeats,
+      ),
+      transition: base.transition,
+      warmup: base.warmup,
+      measure: base.measure,
+      modeTimeout: base.modeTimeout,
+      hybridSharedAb: true,
+      hybridAbAtlas: true,
+      hybridAbResolution: true,
+    );
+  }
+
   /// The Hybrid shared-backdrop A/B: [config] with the shared read off and on,
   /// at 400 and 900 px/s, [repeats] counterbalanced rounds, standard timing.
   factory GlassBenchmarkPlan.hybridSharedAb({
@@ -135,6 +159,9 @@ class GlassBenchmarkPlan {
   /// In a [hybridSharedAb] plan: the toggled flag is the shared atlas, not
   /// the shared `BackdropFilter` read.
   final bool hybridAbAtlas;
+
+  /// In a [hybridAbAtlas] plan: the runs also vary the atlas resolution.
+  final bool hybridAbResolution;
 
   /// Whether this is the Sistrum Hybrid A–E matrix.
   final bool hybridMatrix;

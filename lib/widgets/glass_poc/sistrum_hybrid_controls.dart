@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sistrum/providers/performance/glass_poc_mode_provider.dart';
 import 'package:sistrum/widgets/glass_poc/sistrum_hybrid_config.dart';
+import 'package:sistrum/widgets/glass_poc/sistrum_hybrid_atlas.dart';
 
 /// Developer controls for Sistrum Hybrid. A control that the selected tier
 /// does not implement is shown disabled, with its reason, never as working.
@@ -146,6 +147,39 @@ class SistrumHybridControls extends ConsumerWidget {
           onChanged: running
               ? null
               : (v) => update((c) => c.copyWith(sharedAtlas: v)),
+        ),
+        ListTile(
+          dense: true,
+          enabled: config.sharedAtlas && !running,
+          title: const Text('Atlas resolution (experimental)'),
+          subtitle: Text(
+            config.sharedAtlas
+                ? 'Capture resolution as a fraction of native pixels. Blur '
+                      'stays at the same logical radius.'
+                : 'Applies when the shared backdrop atlas is on.',
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+          child: Align(
+            alignment: AlignmentDirectional.centerStart,
+            child: DropdownButton<SistrumAtlasResolution>(
+              key: const Key('hybridAtlasResolution'),
+              isExpanded: true,
+              value: config.atlasResolution,
+              items: [
+                for (final r in SistrumAtlasResolution.values)
+                  DropdownMenuItem(value: r, child: Text(r.label)),
+              ],
+              onChanged: config.sharedAtlas && !running
+                  ? (v) {
+                      if (v != null) {
+                        update((c) => c.copyWith(atlasResolution: v));
+                      }
+                    }
+                  : null,
+            ),
+          ),
         ),
         ListTile(
           dense: true,

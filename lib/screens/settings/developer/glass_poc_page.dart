@@ -583,6 +583,17 @@ class _GlassPocPageState extends ConsumerState<GlassPocPage>
     );
   }
 
+  void _startHybridAtlasResolutionSweep() {
+    _spikes.noteEvent('benchmark=hybrid atlas resolution sweep start');
+    _displayModes.begin(ref.read(displayRefreshProvider));
+    _runner.start(
+      plan: GlassBenchmarkPlan.hybridAtlasResolution(
+        config: ref.read(glassPocHybridProvider),
+        timing: _standardPlan,
+      ),
+    );
+  }
+
   void _startBackdropSharing() {
     _spikes.noteEvent('benchmark=shared backdrop A/B start');
     _displayModes.begin(ref.read(displayRefreshProvider));
@@ -913,6 +924,13 @@ class _GlassPocPageState extends ConsumerState<GlassPocPage>
                           onPressed: running ? null : _startHybridAtlasAb,
                         ),
                         ActionChip(
+                          key: const Key('hybridAtlasResolutionSweep'),
+                          label: const Text('Run Atlas Resolution sweep'),
+                          onPressed: running
+                              ? null
+                              : _startHybridAtlasResolutionSweep,
+                        ),
+                        ActionChip(
                           key: const Key('hybridMatrix'),
                           label: const Text('Run Hybrid A–E Matrix'),
                           onPressed: running ? null : _startHybridMatrix,
@@ -1047,6 +1065,7 @@ class _GlassPocPageState extends ConsumerState<GlassPocPage>
                       hybrid.sharedAtlas,
                   unsupportedReason: hybrid.atlasUnsupportedReason,
                   sigma: hybrid.blurSigma,
+                  resolution: hybrid.atlasResolution,
                   invalidations: _atlasInvalidations,
                 );
                 final background = Positioned.fill(

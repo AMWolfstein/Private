@@ -960,11 +960,14 @@ String formatGlassHybridSharedAbReport({
       ? r.hybridConfig?.sharedAtlas ?? false
       : r.hybridConfig?.sharedBackdrop ?? false;
   String cfg(GlassBenchmarkModeResult r) =>
-      '${r.speed.pxPerSecond.round()}px/s $toggle=${sharedOf(r) ? 'ON' : 'OFF'}';
+      '${r.speed.pxPerSecond.round()}px/s $toggle=${sharedOf(r) ? 'ON' : 'OFF'}'
+      '${plan.hybridAbResolution && sharedOf(r) ? ' res=${r.hybridConfig?.atlasResolution.wire}' : ''}';
   final repeats = plan.runs.fold<int>(0, (m, r) => r.repeat > m ? r.repeat : m);
 
   add(
-    plan.hybridAbAtlas
+    plan.hybridAbResolution
+        ? 'sistrum-glass-hybrid-atlas-resolution-sweep'
+        : plan.hybridAbAtlas
         ? 'sistrum-glass-hybrid-atlas-ab'
         : 'sistrum-glass-hybrid-shared-ab',
   );

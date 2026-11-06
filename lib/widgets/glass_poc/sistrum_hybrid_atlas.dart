@@ -34,6 +34,30 @@ import 'package:flutter/widgets.dart';
 /// Largest atlas side, in texture pixels.
 const int kSistrumAtlasMaxSide = 2048;
 
+/// Experimental atlas capture resolution (Glass POC only). [baseline] is the
+/// existing sigma-based scale and the default. The others capture at a fixed
+/// fraction of the device's native pixels (`devicePixelRatio * fraction`), so
+/// 1.00 is the native reference. Blur is always applied in atlas pixels as
+/// `sigma * scale`, so its radius stays `sigma` logical pixels at every option.
+enum SistrumAtlasResolution {
+  baseline('baseline', 'Baseline (auto, current)', null),
+  quarter('quarter', '0.25×', 0.25),
+  third('third', '0.33×', 0.33),
+  half('half', '0.50×', 0.5),
+  full('full', '1.00× (reference)', 1.0);
+
+  const SistrumAtlasResolution(this.wire, this.label, this.fraction);
+
+  /// The value written to reports and configuration strings.
+  final String wire;
+
+  /// The label shown in the controls.
+  final String label;
+
+  /// Fraction of native device pixels, or null for [baseline].
+  final double? fraction;
+}
+
 /// Instrumented atlas counters and state, as recorded by the code below.
 typedef SistrumAtlasStats = ({
   bool requested,
@@ -48,6 +72,7 @@ typedef SistrumAtlasStats = ({
   int picturesDrawn,
   ui.Size? textureSize,
   double? samplingScale,
+  SistrumAtlasResolution resolution,
 });
 
 /// Report lines for [stats]. Counters are counted in code; GPU work is
@@ -64,6 +89,7 @@ List<String> sistrumAtlasLines(SistrumAtlasStats? stats) {
     'hybrid_atlas_update_count=${stats.updateCount} (instrumented: declared invalidations)',
     'hybrid_atlas_late_invalidations=${stats.lateInvalidations} (instrumented: undeclared changes caught after the frame)',
     'hybrid_atlas_texture_size=${size == null ? 'none' : '${size.width.round()}x${size.height.round()}'}',
+    'hybrid_atlas_resolution=${stats.resolution.wire} (${stats.resolution.label})',
     'hybrid_atlas_sampling_scale=${stats.samplingScale?.toStringAsFixed(3) ?? 'none'} (atlas px per logical px)',
     'hybrid_atlas_layers_walked=${stats.layersWalked} pictures_drawn=${stats.picturesDrawn} (instrumented, last capture)',
     'hybrid_atlas_gpu_passes_per_capture=estimated 2 (atlas raster + its blur layer); not measured',
@@ -75,7 +101,10 @@ List<String> sistrumAtlasLines(SistrumAtlasStats? stats) {
 double sistrumAtlasScale({
   required double sigma,
   required double devicePixelRatio,
+  SistrumAtlasResolution resolution = SistrumAtlasResolution.baseline,
 }) {
+  final fraction = resolution.fraction;
+  if (fraction != null) return devicePixelRatio * fraction;
   if (sigma <= 0) return math.min(devicePixelRatio, 2);
   return (2 / sigma).clamp(0.25, math.min(devicePixelRatio, 2.0));
 }
@@ -112,6 +141,7 @@ class SistrumHybridAtlas extends ChangeNotifier {
   bool _requested = false;
   String? _configReason;
   double _sigma = 0;
+  SistrumAtlasResolution _resolution = SistrumAtlasResolution.baseline;
   Listenable? _invalidations;
 
   ui.Image? _image;
@@ -156,6 +186,7 @@ class SistrumHybridAtlas extends ChangeNotifier {
         ? null
         : ui.Size(_image!.width.toDouble(), _image!.height.toDouble()),
     samplingScale: _image == null ? null : _scale,
+    resolution: _resolution,
   );
 
   /// Called by the page when it builds the stage. [unsupportedReason] is the
@@ -165,11 +196,14 @@ class SistrumHybridAtlas extends ChangeNotifier {
     required String? unsupportedReason,
     required double sigma,
     required Listenable invalidations,
+    SistrumAtlasResolution resolution = SistrumAtlasResolution.baseline,
   }) {
     final changed =
         requested != _requested ||
         unsupportedReason != _configReason ||
-        sigma != _sigma;
+        sigma != _sigma ||
+        resolution != _resolution;
+    _resolution = resolution;
     _requested = requested;
     _configReason = requested ? unsupportedReason : null;
     _sigma = sigma;
@@ -183,6 +217,8 @@ class SistrumHybridAtlas extends ChangeNotifier {
       _failure = null;
       _signature = null;
       if (!requested) _dropImage();
+      // The surfaces must repaint to recapture at the new settings.
+      _invalidate();
     }
   }
 
@@ -262,7 +298,11 @@ class SistrumHybridAtlas extends ChangeNotifier {
       return null;
     }
     final dpr = slot.devicePixelRatio;
-    final scale = sistrumAtlasScale(sigma: _sigma, devicePixelRatio: dpr);
+    final scale = sistrumAtlasScale(
+      sigma: _sigma,
+      devicePixelRatio: dpr,
+      resolution: _resolution,
+    );
     final reach = _sigma * 3 + 1;
     final bounds = Offset.zero & backdrop.size;
     final surfaces = <RenderSistrumAtlasSlot, (Rect, Rect)>{};

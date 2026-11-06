@@ -1,6 +1,7 @@
 import 'package:sistrum/widgets/glass_poc/sistrum_auto_scroll.dart';
 import 'package:sistrum/widgets/glass_poc/sistrum_glass_mode.dart';
 import 'package:sistrum/widgets/glass_poc/sistrum_hybrid_config.dart';
+import 'package:sistrum/widgets/glass_poc/sistrum_hybrid_atlas.dart';
 
 /// One run of the benchmark: a renderer, the number of glass surfaces it draws
 /// and which repeat of that configuration it is. The standard protocol uses
@@ -145,6 +146,29 @@ List<GlassBenchmarkRun> glassDiagnosticRunOrder({
 List<GlassBenchmarkRun> glassHybridMatrixConfigurations() => [
   for (final variant in SistrumHybridVariant.values)
     GlassBenchmarkRun(mode: SistrumGlassMode.sistrumHybrid, hybrid: variant),
+];
+
+/// Configurations of the atlas resolution sweep: the atlas off, then on at each
+/// [SistrumAtlasResolution], at 400 and 900 logical px/s. Only the atlas state,
+/// its resolution and the speed differ; everything else is [config] as given.
+List<GlassBenchmarkRun> glassHybridAtlasResolutionConfigurations(
+  SistrumHybridConfig config,
+) => [
+  for (final speed in const [
+    SistrumScrollSpeed.normal,
+    SistrumScrollSpeed.fast,
+  ])
+    for (final resolution in <SistrumAtlasResolution?>[
+      null,
+      ...SistrumAtlasResolution.values,
+    ])
+      GlassBenchmarkRun(
+        mode: SistrumGlassMode.sistrumHybrid,
+        hybridConfig: resolution == null
+            ? config.copyWith(sharedAtlas: false)
+            : config.copyWith(sharedAtlas: true, atlasResolution: resolution),
+        speed: speed,
+      ),
 ];
 
 /// Configurations of the Hybrid A/B: [config] with the shared read off and on
