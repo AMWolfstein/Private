@@ -150,15 +150,16 @@ class MornyeLiquidBackdrop extends StatelessWidget {
     final index = 1 / math.sqrt(1 - math.pow(edgeBend.clamp(0, 0.95), 2));
     return LiquidGlassLens(
       style: LiquidGlassStyle(
-        shape: LiquidGlassShape(
-          cornerStyle: smoothCorners
-              ? LiquidGlassCornerStyle.squircle
-              : LiquidGlassCornerStyle.roundedRectangle,
-          clipQuality: smoothCorners
-              ? LiquidGlassClipQuality.exact
-              : LiquidGlassClipQuality.roundedRectangle,
-          cornerRadius: borderRadius.topLeft.x,
-        ),
+        // The package's named constructors set the corner style and clip
+        // quality together, so the two ternaries become one choice.
+        shape: smoothCorners
+            ? LiquidGlassShape.squircle(
+                cornerRadius: borderRadius.topLeft.x,
+                clipQuality: LiquidGlassClipQuality.exact,
+              )
+            : LiquidGlassShape.roundedRectangle(
+                cornerRadius: borderRadius.topLeft.x,
+              ),
         specular: LiquidGlassLight.specular(
           thickness: outlines ? 0.75 * 5.4 : 0,
           angle: 0,
