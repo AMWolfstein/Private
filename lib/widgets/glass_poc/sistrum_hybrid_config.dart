@@ -49,6 +49,7 @@ class SistrumHybridConfig {
     this.refraction = true,
     this.chromaticAberration = true,
     this.sharedBackdrop = false,
+    this.sharedAtlas = false,
   });
 
   final SistrumHybridTier tier;
@@ -72,11 +73,30 @@ class SistrumHybridConfig {
   /// regions cannot see each other's paint (`appGlassBackdropGroups`).
   final bool sharedBackdrop;
 
+  /// Experimental: sample one shared backdrop atlas, captured in the frame it
+  /// is drawn, instead of a `BackdropFilter` per surface. Supported for the
+  /// blur only; see [atlasUnsupportedReason].
+  final bool sharedAtlas;
+
+  /// Why the atlas cannot serve this configuration, or null when it can.
+  /// Unsupported combinations keep the existing pipeline and say so.
+  String? get atlasUnsupportedReason {
+    if (!sharedAtlas) return null;
+    if (!tier.readsBackdrop) return 'tier_reads_no_backdrop';
+    if (blurSigma <= 0) return 'zero_blur_bypass';
+    if (isGenuineRefraction) return 'refraction_not_supported_by_atlas';
+    return null;
+  }
+
+  /// Whether the atlas is requested and supported for this configuration.
+  bool get usesAtlas => sharedAtlas && atlasUnsupportedReason == null;
+
   /// Whether the surface reads the live backdrop through a genuine refraction.
   bool get isGenuineRefraction => tier == SistrumHybridTier.full && refraction;
 
   /// Whether a shared backdrop read is requested for a tier that can use it.
-  bool get sharesBackdrop => sharedBackdrop && tier.readsBackdrop;
+  bool get sharesBackdrop =>
+      sharedBackdrop && tier.readsBackdrop && !sharedAtlas;
 
   SistrumHybridConfig copyWith({
     SistrumHybridTier? tier,
@@ -85,6 +105,7 @@ class SistrumHybridConfig {
     bool? refraction,
     bool? chromaticAberration,
     bool? sharedBackdrop,
+    bool? sharedAtlas,
   }) => SistrumHybridConfig(
     tier: tier ?? this.tier,
     blurSigma: (blurSigma ?? this.blurSigma).clamp(0.0, 24.0),
@@ -92,6 +113,7 @@ class SistrumHybridConfig {
     refraction: refraction ?? this.refraction,
     chromaticAberration: chromaticAberration ?? this.chromaticAberration,
     sharedBackdrop: sharedBackdrop ?? this.sharedBackdrop,
+    sharedAtlas: sharedAtlas ?? this.sharedAtlas,
   );
 
   /// The controls that take effect for [tier]. The page shows the others as
@@ -104,7 +126,8 @@ class SistrumHybridConfig {
       'tier=${tier.name} blur_sigma=${blurSigma.toStringAsFixed(1)} '
       'tint_opacity=${tintOpacity.toStringAsFixed(2)} '
       'refraction=$refraction chromatic=$chromaticAberration '
-      'shared_backdrop_requested=$sharedBackdrop';
+      'shared_backdrop_requested=$sharedBackdrop '
+      'atlas_requested=$sharedAtlas';
 
   @override
   bool operator ==(Object other) =>
@@ -114,7 +137,8 @@ class SistrumHybridConfig {
       other.tintOpacity == tintOpacity &&
       other.refraction == refraction &&
       other.chromaticAberration == chromaticAberration &&
-      other.sharedBackdrop == sharedBackdrop;
+      other.sharedBackdrop == sharedBackdrop &&
+      other.sharedAtlas == sharedAtlas;
 
   @override
   int get hashCode => Object.hash(
@@ -124,6 +148,7 @@ class SistrumHybridConfig {
     refraction,
     chromaticAberration,
     sharedBackdrop,
+    sharedAtlas,
   );
 }
 

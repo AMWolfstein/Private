@@ -888,6 +888,110 @@ void main() {
       expect(text, contains('not GPU execution time'));
     });
   });
+  group('Sistrum Hybrid shared A/B', () {
+    const settings = SistrumHybridConfig(
+      tier: SistrumHybridTier.full,
+      blurSigma: 7,
+      refraction: false,
+    );
+
+    test('only the shared flag and the speed vary, three rounds', () {
+      final plan = GlassBenchmarkPlan.hybridSharedAb(config: settings);
+      expect(plan.hybridSharedAb, isTrue);
+      expect(plan.runs, hasLength(12));
+      final keys = <String>{};
+      for (final run in plan.runs) {
+        final c = run.effectiveHybridConfig!;
+        expect(c.copyWith(sharedBackdrop: false), settings);
+        expect(run.effectiveSpeed.pxPerSecond, anyOf(400, 900));
+        keys.add(run.configKey);
+      }
+      expect(keys, hasLength(4));
+      for (final key in keys) {
+        expect(plan.runs.where((r) => r.configKey == key), hasLength(3));
+      }
+      expect(
+        expectedGlassRenderPathForRun(plan.runs.first),
+        SistrumGlassRenderPath.backdropFilter,
+      );
+    });
+
+    GlassBenchmarkPlan one(SistrumScrollSpeed speed) => GlassBenchmarkPlan(
+      runs: [
+        GlassBenchmarkRun(
+          mode: SistrumGlassMode.sistrumHybrid,
+          hybridConfig: settings,
+          speed: speed,
+        ),
+      ],
+      transition: const Duration(milliseconds: 100),
+      warmup: const Duration(milliseconds: 100),
+      measure: const Duration(seconds: 1),
+      modeTimeout: const Duration(milliseconds: 500),
+      hybridSharedAb: true,
+    );
+
+    Future<GlassBenchmarkModeResult> run(
+      WidgetTester tester,
+      SistrumScrollSpeed speed,
+      double actual,
+    ) async {
+      final blur = SistrumHybridTelemetrySnapshot.of([
+        for (var i = 0; i < 4; i++)
+          const SistrumHybridDecision(
+            requestedTier: SistrumHybridTier.full,
+            path: SistrumHybridEffectivePath.blur,
+            fallback: SistrumHybridFallback.refractionOff,
+          ),
+      ]);
+      final host = _FakeHost()
+        ..scrollTemplate = _activeScroll(overall: actual)
+        ..hybrid = (() => blur)
+        ..pathFor = (_) =>
+            classifyHybridRenderPath(expectedSurfaces: 4, snapshot: blur);
+      final runner = _runner(host, plan: one(speed));
+      runner.start();
+      await tester.pump(const Duration(milliseconds: 100));
+      runner.onMeasurementStarted();
+      _feed(host);
+      await tester.pump(const Duration(seconds: 1));
+      return runner.results.single;
+    }
+
+    testWidgets('a 400 px/s run is validated against 400, not 900', (
+      tester,
+    ) async {
+      final ok = await run(tester, SistrumScrollSpeed.normal, 400);
+      expect(
+        ok.validity,
+        GlassBenchmarkValidity.valid,
+        reason: '${ok.reasons}',
+      );
+      expect(ok.speed, SistrumScrollSpeed.normal);
+      final wrong = await run(tester, SistrumScrollSpeed.normal, 900);
+      expect(wrong.validity, GlassBenchmarkValidity.invalid);
+      expect(wrong.reasons.join(' '), contains('400 px/s target'));
+    });
+
+    test('the A/B report compares only matching speeds', () {
+      final text = formatGlassHybridSharedAbReport(
+        status: 'COMPLETE',
+        deviceLines: const ['device_model=test'],
+        plan: GlassBenchmarkPlan.hybridSharedAb(config: settings),
+        startedAt: null,
+        endedAt: null,
+        cancelReason: null,
+        failure: null,
+        results: const [],
+      );
+      expect(text, startsWith('sistrum-glass-hybrid-shared-ab'));
+      expect(text, contains('-- 400 px/s'));
+      expect(text, contains('-- 900 px/s'));
+      expect(text, contains('vsync->build p50/p90'));
+      expect(text, contains('not a measured GPU operation'));
+      expect(text, contains('No metric here is display presentation'));
+    });
+  });
 }
 
 DisplayRefreshState _android({required double modeHz}) =>

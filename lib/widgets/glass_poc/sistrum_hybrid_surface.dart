@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:sistrum/widgets/glass_poc/sistrum_hybrid_atlas.dart';
 import 'package:sistrum/widgets/glass_poc/sistrum_hybrid_config.dart';
 import 'package:sistrum/widgets/glass_poc/sistrum_hybrid_telemetry.dart';
 import 'package:sistrum/widgets/glass_poc/sistrum_lens_glass.dart';
@@ -21,6 +22,7 @@ class SistrumHybridSurface extends StatefulWidget {
     required this.borderRadius,
     required this.child,
     this.backdropKey,
+    this.atlasEligible = true,
     super.key,
   });
 
@@ -34,12 +36,17 @@ class SistrumHybridSurface extends StatefulWidget {
   /// safe for this surface.
   final BackdropKey? backdropKey;
 
+  /// Whether this surface may sample the shared atlas. False when its blur
+  /// reaches glass painted before it, which a single-level atlas lacks.
+  final bool atlasEligible;
+
   @override
   State<SistrumHybridSurface> createState() => _SistrumHybridSurfaceState();
 }
 
 class _SistrumHybridSurfaceState extends State<SistrumHybridSurface> {
   SistrumHybridTelemetry? _telemetry;
+  SistrumHybridAtlas? _atlas;
 
   @override
   void didChangeDependencies() {
@@ -49,12 +56,68 @@ class _SistrumHybridSurfaceState extends State<SistrumHybridSurface> {
       _telemetry?.remove(this);
       _telemetry = next;
     }
+    final atlas = SistrumHybridAtlasScope.maybeOf(context);
+    if (!identical(atlas, _atlas)) {
+      _atlas?.removeListener(_onAtlas);
+      _atlas = atlas;
+      atlas?.addListener(_onAtlas);
+    }
+  }
+
+  /// The atlas failed or recovered: rebuild with the matching path.
+  void _onAtlas() {
+    if (mounted) setState(() {});
   }
 
   @override
   void dispose() {
     _telemetry?.remove(this);
+    _atlas?.removeListener(_onAtlas);
     super.dispose();
+  }
+
+  /// The existing Frosted filter, used where the atlas cannot serve.
+  Widget _blurFilter() => ClipRRect(
+    borderRadius: _radius,
+    child: BackdropFilter(
+      filter: ImageFilter.blur(
+        sigmaX: _config.blurSigma,
+        sigmaY: _config.blurSigma,
+      ),
+      child: _material(widget.child),
+    ),
+  );
+
+  /// The atlas branch, or null when the atlas is not requested and supported.
+  Widget? _atlasSurface() {
+    final atlas = _atlas;
+    if (!_config.usesAtlas || atlas == null) return null;
+    final reason = !widget.atlasEligible
+        ? SistrumHybridFallback.atlasExcludedOverlap
+        : !atlas.active
+        ? SistrumHybridFallback.atlasCaptureFailed
+        : null;
+    if (reason != null) {
+      _report(
+        SistrumHybridDecision(
+          requestedTier: _config.tier,
+          path: SistrumHybridEffectivePath.blur,
+          fallback: reason,
+        ),
+      );
+      return _blurFilter();
+    }
+    _report(
+      SistrumHybridDecision(
+        requestedTier: _config.tier,
+        path: SistrumHybridEffectivePath.atlas,
+      ),
+    );
+    // Same clip and material as Frosted; only the backdrop source differs.
+    return ClipRRect(
+      borderRadius: _radius,
+      child: SistrumAtlasSlot(atlas: atlas, child: _material(widget.child)),
+    );
   }
 
   void _report(SistrumHybridDecision decision) =>
@@ -107,6 +170,8 @@ class _SistrumHybridSurfaceState extends State<SistrumHybridSurface> {
 
   @override
   Widget build(BuildContext context) {
+    final atlasSurface = _atlasSurface();
+    if (atlasSurface != null) return atlasSurface;
     final tier = _config.tier;
     switch (tier) {
       case SistrumHybridTier.opaque:

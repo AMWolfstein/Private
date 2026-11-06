@@ -123,6 +123,7 @@ class SistrumGlassSurface extends StatelessWidget {
     required this.borderRadius,
     this.diagnosticOutline = false,
     this.backdropKey,
+    this.atlasEligible = true,
     super.key,
   });
 
@@ -133,6 +134,9 @@ class SistrumGlassSurface extends StatelessWidget {
   final double borderRadius;
   final bool diagnosticOutline;
   final BackdropKey? backdropKey;
+
+  /// Sistrum Hybrid only: whether this surface may use the shared atlas.
+  final bool atlasEligible;
 
   @override
   Widget build(BuildContext context) {
@@ -186,6 +190,7 @@ class SistrumGlassSurface extends StatelessWidget {
         dark: dark,
         borderRadius: borderRadius,
         backdropKey: backdropKey,
+        atlasEligible: atlasEligible,
         child: child,
       ),
       SistrumGlassMode.referenceGlass => GlassContainer(

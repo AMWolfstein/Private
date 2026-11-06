@@ -43,6 +43,8 @@ class GlassBenchmarkPlan {
     this.diagnostic = false,
     this.backdropSharing = false,
     this.hybridMatrix = false,
+    this.hybridSharedAb = false,
+    this.hybridAbAtlas = false,
   }) : runs = runs ?? [for (final mode in modes) GlassBenchmarkRun(mode: mode)];
 
   /// The diagnostic repeatability protocol: every configuration of
@@ -102,7 +104,37 @@ class GlassBenchmarkPlan {
     );
   }
 
+  /// The Hybrid shared-backdrop A/B: [config] with the shared read off and on,
+  /// at 400 and 900 px/s, [repeats] counterbalanced rounds, standard timing.
+  factory GlassBenchmarkPlan.hybridSharedAb({
+    required SistrumHybridConfig config,
+    GlassBenchmarkPlan? timing,
+    int repeats = 3,
+    bool atlas = false,
+  }) {
+    final base = timing ?? GlassBenchmarkPlan();
+    return GlassBenchmarkPlan(
+      runs: glassDiagnosticRunOrder(
+        configurations: glassHybridSharedAbConfigurations(config, atlas: atlas),
+        repeats: repeats,
+      ),
+      transition: base.transition,
+      warmup: base.warmup,
+      measure: base.measure,
+      modeTimeout: base.modeTimeout,
+      hybridSharedAb: true,
+      hybridAbAtlas: atlas,
+    );
+  }
+
   final bool backdropSharing;
+
+  /// Whether this is the Hybrid shared-backdrop A/B at two speeds.
+  final bool hybridSharedAb;
+
+  /// In a [hybridSharedAb] plan: the toggled flag is the shared atlas, not
+  /// the shared `BackdropFilter` read.
+  final bool hybridAbAtlas;
 
   /// Whether this is the Sistrum Hybrid A–E matrix.
   final bool hybridMatrix;
@@ -178,8 +210,8 @@ SistrumGlassRenderPath? expectedGlassRenderPath(SistrumGlassMode mode) =>
 /// The render path a run must show. A Hybrid matrix run expects the path of
 /// its variant, read from the surfaces' telemetry; other runs follow their mode.
 SistrumGlassRenderPath? expectedGlassRenderPathForRun(GlassBenchmarkRun run) {
-  final variant = run.hybrid;
-  if (variant != null) return expectedHybridRenderPath(variant.config);
+  final config = run.effectiveHybridConfig;
+  if (config != null) return expectedHybridRenderPath(config);
   return expectedGlassRenderPath(run.mode);
 }
 
@@ -220,6 +252,8 @@ class GlassBenchmarkModeResult {
     this.displayModeChanges = 0,
     this.backdropConfiguration,
     this.hybrid,
+    this.hybridConfig,
+    this.speed = SistrumScrollSpeed.fast,
     this.hybridAtStart,
     this.hybridAtEnd,
   });
@@ -228,6 +262,12 @@ class GlassBenchmarkModeResult {
 
   /// The Hybrid matrix variant of this run, or null.
   final SistrumHybridVariant? hybrid;
+
+  /// The Hybrid configuration the run applied, or null.
+  final SistrumHybridConfig? hybridConfig;
+
+  /// The scroll speed the run targeted.
+  final SistrumScrollSpeed speed;
 
   /// Hybrid telemetry when measurement started and when it ended. Null when
   /// the run is not a Hybrid run or never started measuring.
@@ -890,7 +930,7 @@ class GlassBenchmarkRunner {
         ? scroll.measuredSeconds / elapsedS
         : null;
     if (_measurementStarted) {
-      final target = kGlassBenchmarkSpeed.pxPerSecond;
+      final target = run.effectiveSpeed.pxPerSecond;
       if (scroll == null) {
         worsen(GlassBenchmarkValidity.invalid);
         reasons.add('scroll state unavailable during measurement');
@@ -1008,6 +1048,8 @@ class GlassBenchmarkRunner {
       displayModeChanges: modeChanges,
       backdropConfiguration: _backdropAtStart,
       hybrid: run.hybrid,
+      hybridConfig: run.effectiveHybridConfig,
+      speed: run.effectiveSpeed,
       hybridAtStart: hybridStart,
       hybridAtEnd: hybridEnd,
       validity: validity,
@@ -1044,6 +1086,8 @@ class GlassBenchmarkRunner {
         repeat: run.repeat,
         runOrder: runOrder,
         hybrid: run.hybrid,
+        hybridConfig: run.effectiveHybridConfig,
+        speed: run.effectiveSpeed,
         validity: GlassBenchmarkValidity.notRun,
         reasons: const ['not reached because the benchmark stopped first'],
         measurementStarted: false,

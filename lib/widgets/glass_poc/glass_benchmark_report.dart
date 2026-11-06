@@ -5,6 +5,7 @@ import 'package:sistrum/services/performance/glass_series_stats.dart';
 import 'package:sistrum/widgets/glass_poc/glass_benchmark_run.dart';
 import 'package:sistrum/widgets/glass_poc/glass_benchmark_runner.dart';
 import 'package:sistrum/widgets/glass_poc/glass_diagnostic_stats.dart';
+import 'package:sistrum/widgets/glass_poc/sistrum_auto_scroll.dart';
 import 'package:sistrum/widgets/glass_poc/sistrum_glass_mode.dart';
 import 'package:sistrum/widgets/glass_poc/sistrum_hybrid_config.dart';
 
@@ -930,5 +931,172 @@ String formatGlassHybridMatrixReport({
   add('- For per-pass GPU cost, capture the same variants with Android GPU');
   add('  Inspector or Perfetto GPU counters on the device.');
   add('- No 120 FPS claim follows from any single run of this report.');
+  return out.join('\n');
+}
+
+/// The Hybrid shared-backdrop A/B report: the same Hybrid settings with the
+/// shared read off and on, at 400 and 900 px/s. Comparisons are only between
+/// runs at the same speed. Build, phases, raster, span and cadence are kept
+/// apart, because exceedance counts the span, not raster alone.
+String formatGlassHybridSharedAbReport({
+  required String status,
+  required List<String> deviceLines,
+  required GlassBenchmarkPlan plan,
+  required DateTime? startedAt,
+  required DateTime? endedAt,
+  required String? cancelReason,
+  required String? failure,
+  required List<GlassBenchmarkModeResult> results,
+}) {
+  final out = <String>[];
+  void add(String line) => out.add(line);
+  void section(String title) {
+    out.add('');
+    out.add('== $title ==');
+  }
+
+  final toggle = plan.hybridAbAtlas ? 'atlas' : 'shared';
+  bool sharedOf(GlassBenchmarkModeResult r) => plan.hybridAbAtlas
+      ? r.hybridConfig?.sharedAtlas ?? false
+      : r.hybridConfig?.sharedBackdrop ?? false;
+  String cfg(GlassBenchmarkModeResult r) =>
+      '${r.speed.pxPerSecond.round()}px/s $toggle=${sharedOf(r) ? 'ON' : 'OFF'}';
+  final repeats = plan.runs.fold<int>(0, (m, r) => r.repeat > m ? r.repeat : m);
+
+  add(
+    plan.hybridAbAtlas
+        ? 'sistrum-glass-hybrid-atlas-ab'
+        : 'sistrum-glass-hybrid-shared-ab',
+  );
+  add('toggled=$toggle (everything else identical between ON and OFF)');
+  add('status=$status');
+  add('started=${startedAt?.toIso8601String() ?? 'n/a'}');
+  add('ended=${endedAt?.toIso8601String() ?? 'n/a'}');
+  if (cancelReason != null) add('cancel_reason=$cancelReason');
+  if (failure != null) add('failure=$failure');
+  add('repeats_per_configuration=$repeats runs_planned=${plan.runs.length}');
+  add(
+    'warmup_s=${plan.warmup.inSeconds} measure_s=${plan.measure.inSeconds} '
+    'transition_s=${plan.transition.inSeconds}',
+  );
+  add('run_order=counterbalanced (diagnostic rotation; odd rounds reversed)');
+
+  section('1. Device and fixed settings');
+  for (final line in deviceLines) {
+    add(line);
+  }
+  add('scene=D (four surfaces), animated_background=off');
+  final first = results.isEmpty ? null : results.first.hybridConfig;
+  add(
+    'hybrid_settings=${first?.copyWith(sharedBackdrop: false, sharedAtlas: false).reportText ?? 'n/a'} '
+    '(only $toggle and the scroll speed vary)',
+  );
+
+  section('2. Every run, in executed order');
+  add(
+    'order | repeat | config | validity | build p50/p90 | vsync->build p50/p90 | '
+    'build->raster p50/p90 | raster p50/p90/p99 | span p50/p90/p99 | '
+    'exceed% | est_rate | vsync_int p50 | missed_slots | reads(implied) | atlas',
+  );
+  for (final r in results) {
+    final s = r.summary;
+    final sch = r.schedule;
+    add(
+      '${r.runOrder} | ${r.repeat} | ${cfg(r)} | ${_validityText(r.validity)} | '
+      '${_f(s?.buildP50Ms, 2)}/${_f(s?.buildP90Ms, 2)} | '
+      '${_f(sch?.phases.vsyncToBuildStart.p50, 2)}/${_f(sch?.phases.vsyncToBuildStart.p90, 2)} | '
+      '${_f(sch?.phases.buildFinishToRasterStart.p50, 2)}/${_f(sch?.phases.buildFinishToRasterStart.p90, 2)} | '
+      '${_f(s?.rasterP50Ms, 2)}/${_f(s?.rasterP90Ms, 2)}/${_f(s?.rasterP99Ms, 2)} | '
+      '${_f(s?.spanP50Ms, 2)}/${_f(s?.spanP90Ms, 2)}/${_f(s?.spanP99Ms, 2)} | '
+      '${_f(s?.exceedancePct, 1)} | ${_f(s?.estimatedProductionFps, 1)} | '
+      '${_f(sch?.vsync.p50, 2)} | ${sch?.missedSlots ?? 'n/a'} | '
+      '${r.hybridAtStart?.backdropReads ?? 'n/a'} | '
+      '${r.hybridAtStart == null ? 'n/a' : '${r.hybridAtStart!.atlasSurfaces}/${r.hybridAtStart!.surfaces} '
+                'captures=${r.hybridAtStart!.atlas?.captureCount ?? 0}->${r.hybridAtEnd?.atlas?.captureCount ?? 0}'}',
+    );
+    for (final reason in r.reasons) {
+      add('  reason: $reason');
+    }
+  }
+
+  section('3. Medians over valid repeats, per speed');
+  final speeds = <SistrumScrollSpeed>{
+    for (final r in plan.runs) r.effectiveSpeed,
+  };
+  for (final speed in speeds) {
+    add('');
+    add('-- ${speed.pxPerSecond.round()} px/s');
+    final medians = <bool, Map<String, double?>>{};
+    for (final shared in const [false, true]) {
+      final valid = results
+          .where(
+            (r) => r.speed == speed && sharedOf(r) == shared && _isMeasured(r),
+          )
+          .toList();
+      double? m(double? Function(GlassBenchmarkModeResult r) pick) =>
+          GlassRepeatStats.of(_pick(valid, pick))?.median;
+      final row = <String, double?>{
+        'build_p50': m((r) => r.summary?.buildP50Ms),
+        'raster_p50': m((r) => r.summary?.rasterP50Ms),
+        'raster_p99': m((r) => r.summary?.rasterP99Ms),
+        'span_p50': m((r) => r.summary?.spanP50Ms),
+        'span_p90': m((r) => r.summary?.spanP90Ms),
+        'span_p99': m((r) => r.summary?.spanP99Ms),
+        'exceed_pct': m((r) => r.summary?.exceedancePct),
+        'missed_slots': m((r) => r.schedule?.missedSlots.toDouble()),
+      };
+      medians[shared] = row;
+      add(
+        '$toggle=${shared ? 'ON ' : 'OFF'} n=${valid.length} '
+        '${row.entries.map((e) => '${e.key}=${_f(e.value, 2)}').join(' ')}',
+      );
+      add(
+        '  ${_statLine('raster_p50_ms', _pick(valid, (r) => r.summary?.rasterP50Ms))}',
+      );
+      add(
+        '  ${_statLine('span_p90_ms', _pick(valid, (r) => r.summary?.spanP90Ms))}',
+      );
+    }
+    final off = medians[false]!;
+    final on = medians[true]!;
+    add(
+      'ON-OFF: ${off.keys.map((k) {
+        final a = off[k];
+        final b = on[k];
+        return '$k=${a == null || b == null ? 'n/a' : '${b - a >= 0 ? '+' : ''}${_f(b - a, 2)}'}';
+      }).join(' ')}',
+    );
+  }
+
+  section('4. Order, warm-up and thermal drift');
+  add(
+    'Raster P50 by executed order. A steady rise across the session for both '
+    'configurations points to thermal or clock drift; a first-run outlier '
+    'points to warm-up. Each configuration appears in a different position '
+    'per round, so ordering is separable from the configuration.',
+  );
+  for (final r in results) {
+    add(
+      'order=${r.runOrder} ${cfg(r)} raster_p50=${_f(r.summary?.rasterP50Ms, 2)} '
+      'span_p90=${_f(r.summary?.spanP90Ms, 2)}',
+    );
+  }
+
+  section('5. Notes');
+  add('- Exceedance counts frames whose total span (vsync start to raster');
+  add('  finish) is over the budget. Span = vsync->build start + build +');
+  add('  build->raster start + raster, so it can exceed 8.33 ms while raster');
+  add('  P99 is below it. Section 2 shows each phase.');
+  add('- reads(implied) is derived from the widget decisions and the engine');
+  add('  source (FlipBackdrop per independent filter or shared group). It is');
+  add('  not a measured GPU operation. Measure GPU passes with Android GPU');
+  add('  Inspector or Perfetto GPU render stages.');
+  add('- No metric here is display presentation. FrameTiming stops at raster');
+  add('  finish. For presented frames use, during a run:');
+  add(
+    '  adb shell dumpsys SurfaceFlinger --latency <Sistrum SurfaceView layer>',
+  );
+  add('- est_rate is frames per second of Flutter callbacks, not display FPS.');
+  add('- Visual parity of shared ON vs OFF is not verified by this report.');
   return out.join('\n');
 }

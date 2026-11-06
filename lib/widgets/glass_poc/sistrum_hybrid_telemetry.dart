@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:sistrum/widgets/glass_poc/sistrum_glass_render_path.dart';
+import 'package:sistrum/widgets/glass_poc/sistrum_hybrid_atlas.dart';
 import 'package:sistrum/widgets/glass_poc/sistrum_hybrid_config.dart';
 
 /// What one Sistrum Hybrid surface actually handed to the engine.
@@ -14,7 +15,10 @@ enum SistrumHybridEffectivePath {
   blur('blur'),
 
   /// `BackdropFilter` with `ImageFilter.compose(lens shader, blur)`.
-  lens('lens');
+  lens('lens'),
+
+  /// The shared backdrop atlas slot, drawn as an image: no `BackdropFilter`.
+  atlas('atlas');
 
   const SistrumHybridEffectivePath(this.wire);
 
@@ -44,7 +48,15 @@ enum SistrumHybridFallback {
 
   /// Blur sigma is 0 and no lens is drawn, so no `BackdropFilter` is built at
   /// all: the surface draws the tint material only (a requested bypass).
-  zeroBlurBypass('zero_blur_bypass');
+  zeroBlurBypass('zero_blur_bypass'),
+
+  /// The atlas was requested, but this surface's blur reaches glass painted
+  /// before it, which a single-level atlas does not contain. The surface keeps
+  /// its own `BackdropFilter`, a planned exclusion for correctness.
+  atlasExcludedOverlap('atlas_excluded_overlaps_earlier_glass'),
+
+  /// The atlas was requested and failed (see the atlas fallback reason).
+  atlasCaptureFailed('atlas_capture_failed');
 
   const SistrumHybridFallback(this.wire);
 
@@ -52,7 +64,10 @@ enum SistrumHybridFallback {
 
   /// A requested configuration is not a fallback; everything else is.
   bool get isFallback =>
-      this != none && this != refractionOff && this != zeroBlurBypass;
+      this != none &&
+      this != refractionOff &&
+      this != zeroBlurBypass &&
+      this != atlasExcludedOverlap;
 }
 
 /// One surface's rendering decision, recorded where the widget builds its
@@ -135,12 +150,15 @@ class SistrumHybridTelemetry {
 
   void remove(Object owner) => _surfaces.remove(owner);
 
-  SistrumHybridTelemetrySnapshot snapshot({SistrumLensProgramState? program}) =>
-      SistrumHybridTelemetrySnapshot.of(
-        _surfaces.values,
-        decisionChanges: _changes,
-        program: program,
-      );
+  SistrumHybridTelemetrySnapshot snapshot({
+    SistrumLensProgramState? program,
+    SistrumAtlasStats? atlas,
+  }) => SistrumHybridTelemetrySnapshot.of(
+    _surfaces.values,
+    decisionChanges: _changes,
+    program: program,
+    atlas: atlas,
+  );
 }
 
 /// Gives the Hybrid surfaces of a stage their telemetry collector.
@@ -178,12 +196,14 @@ class SistrumHybridTelemetrySnapshot {
     required this.fallbacks,
     required this.decisionChanges,
     this.program,
+    this.atlas,
   });
 
   factory SistrumHybridTelemetrySnapshot.of(
     Iterable<SistrumHybridDecision> decisions, {
     int decisionChanges = 0,
     SistrumLensProgramState? program,
+    SistrumAtlasStats? atlas,
   }) {
     final paths = <SistrumHybridEffectivePath, int>{};
     final tiers = <SistrumHybridTier>{};
@@ -236,6 +256,7 @@ class SistrumHybridTelemetrySnapshot {
       fallbacks: Set.unmodifiable(fallbacks),
       decisionChanges: decisionChanges,
       program: program,
+      atlas: atlas,
     );
   }
 
@@ -274,6 +295,13 @@ class SistrumHybridTelemetrySnapshot {
   final int decisionChanges;
 
   final SistrumLensProgramState? program;
+
+  /// Atlas counters (instrumented), or null. Not part of equality: the capture
+  /// count moves every scrolled frame.
+  final SistrumAtlasStats? atlas;
+
+  /// Surfaces drawing an atlas slot.
+  int get atlasSurfaces => paths[SistrumHybridEffectivePath.atlas] ?? 0;
 
   bool get sharedBackdropActive => sharedGroups > 0;
 
@@ -326,6 +354,8 @@ class SistrumHybridTelemetrySnapshot {
     '${prefix}fallback_reasons=$fallbackText',
     '${prefix}decision_changes=$decisionChanges',
     '${prefix}lens_program=$programText',
+    '${prefix}atlas_surfaces=$atlasSurfaces/$surfaces (from decisions)',
+    ...sistrumAtlasLines(atlas),
   ];
 
   @override
@@ -362,6 +392,7 @@ SistrumGlassRenderPath expectedHybridRenderPath(SistrumHybridConfig config) =>
     switch (config.tier) {
       SistrumHybridTier.opaque => SistrumGlassRenderPath.opaque,
       SistrumHybridTier.lightweight => SistrumGlassRenderPath.tint,
+      _ when config.usesAtlas => SistrumGlassRenderPath.atlas,
       SistrumHybridTier.frosted =>
         config.blurSigma > 0
             ? SistrumGlassRenderPath.backdropFilter
@@ -385,7 +416,17 @@ SistrumGlassRenderReport classifyHybridRenderPath({
       'Hybrid surfaces reported ${snapshot.surfaces} of $expectedSurfaces',
     );
   }
-  final uniform = snapshot.uniformPath;
+  var uniform = snapshot.uniformPath;
+  // Atlas with planned per-surface exclusions (their own blur) is the atlas
+  // path; the atlas_surfaces line says how many surfaces use it.
+  final atlasMix =
+      snapshot.atlasSurfaces > 0 &&
+      snapshot.paths.keys.every(
+        (p) =>
+            p == SistrumHybridEffectivePath.atlas ||
+            p == SistrumHybridEffectivePath.blur,
+      );
+  if (atlasMix) uniform = SistrumHybridEffectivePath.atlas;
   if (uniform == null) {
     return SistrumGlassRenderReport.unverified(
       'Hybrid surfaces differ: ${snapshot.effectivePathText}',
@@ -396,6 +437,7 @@ SistrumGlassRenderReport classifyHybridRenderPath({
     SistrumHybridEffectivePath.tint => SistrumGlassRenderPath.tint,
     SistrumHybridEffectivePath.blur => SistrumGlassRenderPath.backdropFilter,
     SistrumHybridEffectivePath.lens => SistrumGlassRenderPath.lensShader,
+    SistrumHybridEffectivePath.atlas => SistrumGlassRenderPath.atlas,
   };
   final fallback = snapshot.fallbacks.where((f) => f.isFallback).toList();
   if (fallback.isEmpty) {
@@ -405,7 +447,7 @@ SistrumGlassRenderReport classifyHybridRenderPath({
     path: path,
     fallback: true,
     fallbackReason:
-        'lens requested, blur drawn: '
+        'requested path not drawn on every surface: '
         '${(fallback.map((f) => f.wire).toList()..sort()).join(',')}',
   );
 }

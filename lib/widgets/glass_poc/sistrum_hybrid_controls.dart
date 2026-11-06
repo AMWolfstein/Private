@@ -125,15 +125,27 @@ class SistrumHybridControls extends ConsumerWidget {
           dense: true,
           title: const Text('Shared backdrop read (matrix variant E)'),
           subtitle: Text(
-            caps.sharedBackdrop
+            config.sharedAtlas
+                ? 'Disabled while the shared backdrop atlas is on'
+                : caps.sharedBackdrop
                 ? 'One backdrop read for surfaces that cannot see each other '
                       '(BackdropFilter.backdropGroupKey)'
                 : unsupported('Shared backdrop (this tier reads no backdrop)'),
           ),
           value: config.sharedBackdrop,
-          onChanged: caps.sharedBackdrop && !running
+          onChanged: caps.sharedBackdrop && !config.sharedAtlas && !running
               ? (v) => update((c) => c.copyWith(sharedBackdrop: v))
               : null,
+        ),
+        SwitchListTile(
+          key: const Key('hybridSharedAtlas'),
+          dense: true,
+          title: const Text('Shared backdrop atlas (experimental)'),
+          subtitle: Text(_atlasSubtitle(config)),
+          value: config.sharedAtlas,
+          onChanged: running
+              ? null
+              : (v) => update((c) => c.copyWith(sharedAtlas: v)),
         ),
         ListTile(
           dense: true,
@@ -146,4 +158,24 @@ class SistrumHybridControls extends ConsumerWidget {
       ],
     );
   }
+}
+
+/// What the atlas switch does for [config], including unsupported cases,
+/// which keep the existing pipeline and are reported instead of degraded.
+String _atlasSubtitle(SistrumHybridConfig config) {
+  final reason = config.copyWith(sharedAtlas: true).atlasUnsupportedReason;
+  final what =
+      'One capture of the content under all glass, blurred once at low '
+      'resolution and sampled per surface, in the same frame';
+  if (reason == null) return what;
+  final why = switch (reason) {
+    'refraction_not_supported_by_atlas' =>
+      'Not supported with refraction on: the lens needs a backdrop filter',
+    'zero_blur_bypass' => 'Not used at blur 0: nothing reads the backdrop',
+    'tier_reads_no_backdrop' => 'Not used: this tier reads no backdrop',
+    _ => 'Not supported: $reason',
+  };
+  return config.sharedAtlas
+      ? '$why. The existing pipeline is drawn and the reason is reported.'
+      : '$what. $why.';
 }

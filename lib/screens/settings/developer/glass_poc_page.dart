@@ -27,6 +27,7 @@ import 'package:sistrum/widgets/glass_poc/sistrum_glass_mode.dart';
 import 'package:sistrum/widgets/glass_poc/sistrum_glass_render_path.dart';
 import 'package:sistrum/widgets/glass_poc/sistrum_glass_scene.dart';
 import 'package:sistrum/widgets/glass_poc/sistrum_glass_surface.dart';
+import 'package:sistrum/widgets/glass_poc/sistrum_hybrid_atlas.dart';
 import 'package:sistrum/widgets/glass_poc/sistrum_hybrid_telemetry.dart';
 import 'package:sistrum/widgets/glass_poc/sistrum_lens_glass.dart';
 import 'package:sistrum/widgets/glass_poc/sistrum_hybrid_config.dart';
@@ -72,6 +73,20 @@ class _GlassPocPageState extends ConsumerState<GlassPocPage>
 
   /// The run the benchmark applied last, while it runs.
   GlassBenchmarkRun? _currentRun;
+
+  /// Experimental shared backdrop atlas of the stage (Hybrid only). Scroll and
+  /// background animation are its declared invalidations.
+  final SistrumHybridAtlas _atlas = SistrumHybridAtlas();
+  late final Listenable _atlasInvalidations = Listenable.merge([
+    _list,
+    _background,
+  ]);
+
+  /// Keeps the list's state when the atlas wraps or unwraps the backdrop.
+  final GlobalKey _listKey = GlobalKey(debugLabel: 'glass-poc-list');
+
+  /// Per surface, in paint order: may it sample the atlas.
+  List<bool> _atlasEligible = const [true, true, true, true];
   Timer? _pathTimer;
   late final PerfSpikeRecorder _spikes;
   AppLifecycleListener? _lifecycle;
@@ -205,8 +220,10 @@ class _GlassPocPageState extends ConsumerState<GlassPocPage>
     );
   }
 
-  SistrumHybridTelemetrySnapshot _hybridSnapshot() =>
-      _hybridTelemetry.snapshot(program: SistrumLensProgram.state);
+  SistrumHybridTelemetrySnapshot _hybridSnapshot() => _hybridTelemetry.snapshot(
+    program: SistrumLensProgram.state,
+    atlas: _atlas.stats,
+  );
 
   @override
   SistrumHybridTelemetrySnapshot? hybridTelemetry() =>
@@ -232,7 +249,7 @@ class _GlassPocPageState extends ConsumerState<GlassPocPage>
     // A Hybrid matrix run measures only its variant's path: Full waits for the
     // lens (blur while the program loads is not a Full result).
     final run = _currentRun;
-    if (_runner.isRunning && run != null && run.hybrid != null) {
+    if (_runner.isRunning && run != null && run.effectiveHybridConfig != null) {
       final report = _probeRender();
       return report.fallback == false &&
           report.path == expectedGlassRenderPathForRun(run);
@@ -275,16 +292,16 @@ class _GlassPocPageState extends ConsumerState<GlassPocPage>
   void applyRun(GlassBenchmarkRun run) {
     _benchSurfaces = run.surfaces;
     _currentRun = run;
-    final variant = run.hybrid;
-    if (variant != null) {
-      // Fixed variant settings, whatever the controls held before the run.
-      ref.read(glassPocHybridProvider.notifier).update((_) => variant.config);
+    final hybridConfig = run.effectiveHybridConfig;
+    if (hybridConfig != null) {
+      // Fixed run settings, whatever the controls held before the run.
+      ref.read(glassPocHybridProvider.notifier).update((_) => hybridConfig);
     }
     _modeNotifier.select(run.mode);
     _sharedNotifier.set(false);
-    _speedNotifier.select(kGlassBenchmarkSpeed);
+    _speedNotifier.select(run.effectiveSpeed);
     _sceneNotifier.select(SistrumGlassScene.scrollingContent);
-    _autoScroll.setSpeed(kGlassBenchmarkSpeed);
+    _autoScroll.setSpeed(run.effectiveSpeed);
     // Scene D: no animated background. Begins a fresh run with the warm-up.
     _applyScene(SistrumGlassScene.scrollingContent);
     _renderAtStart = null;
@@ -377,6 +394,18 @@ class _GlassPocPageState extends ConsumerState<GlassPocPage>
         log: _displayModes,
       ),
     ];
+    if (runner.plan.hybridSharedAb) {
+      return formatGlassHybridSharedAbReport(
+        status: status,
+        deviceLines: deviceLines,
+        plan: runner.plan,
+        startedAt: runner.startedAt,
+        endedAt: runner.endedAt,
+        cancelReason: runner.cancelReason,
+        failure: runner.failure,
+        results: runner.results,
+      );
+    }
     if (runner.plan.hybridMatrix) {
       return formatGlassHybridMatrixReport(
         status: status,
@@ -475,6 +504,7 @@ class _GlassPocPageState extends ConsumerState<GlassPocPage>
     _registry.detach(_autoScroll);
     _autoScroll.dispose();
     _monitor.setCollecting(true);
+    _atlas.dispose();
     _background.dispose();
     _list.dispose();
     super.dispose();
@@ -528,6 +558,31 @@ class _GlassPocPageState extends ConsumerState<GlassPocPage>
     _runner.start(plan: GlassBenchmarkPlan.hybridMatrix(timing: _standardPlan));
   }
 
+  /// Shared off/on with the current Hybrid controls, at 400 and 900 px/s.
+  void _startHybridSharedAb() {
+    _spikes.noteEvent('benchmark=hybrid shared A/B start');
+    _displayModes.begin(ref.read(displayRefreshProvider));
+    _runner.start(
+      plan: GlassBenchmarkPlan.hybridSharedAb(
+        config: ref.read(glassPocHybridProvider),
+        timing: _standardPlan,
+      ),
+    );
+  }
+
+  /// Atlas off/on with the current Hybrid controls, at 400 and 900 px/s.
+  void _startHybridAtlasAb() {
+    _spikes.noteEvent('benchmark=hybrid atlas A/B start');
+    _displayModes.begin(ref.read(displayRefreshProvider));
+    _runner.start(
+      plan: GlassBenchmarkPlan.hybridSharedAb(
+        config: ref.read(glassPocHybridProvider),
+        timing: _standardPlan,
+        atlas: true,
+      ),
+    );
+  }
+
   void _startBackdropSharing() {
     _spikes.noteEvent('benchmark=shared backdrop A/B start');
     _displayModes.begin(ref.read(displayRefreshProvider));
@@ -574,6 +629,8 @@ class _GlassPocPageState extends ConsumerState<GlassPocPage>
     final dpr = MediaQuery.devicePixelRatioOf(context);
     final hybridShared =
         mode == SistrumGlassMode.sistrumHybrid && hybrid.sharesBackdrop;
+    final hybridAtlas =
+        mode == SistrumGlassMode.sistrumHybrid && hybrid.usesAtlas;
     final settings = sistrumRendererGlassSettings(dark: dark);
     // Conservative envelope of the pinned package: contour is 0.75 dp;
     // preset frost scales by at most 1.78 and has a 5.8-device-pixel floor.
@@ -587,7 +644,7 @@ class _GlassPocPageState extends ConsumerState<GlassPocPage>
     final paintBounds = [for (final box in boxes) box.inflate(outset)];
     final samples = [
       for (final box in boxes)
-        hybridShared
+        hybridShared || hybridAtlas
             // Hybrid reach: the blur kernel (3 sigma) plus the largest lens
             // shift (half the rim band) plus a pixel of rounding.
             ? box.inflate(
@@ -615,6 +672,19 @@ class _GlassPocPageState extends ConsumerState<GlassPocPage>
             samplingBounds: samples,
           )
         : List.generate(boxes.length, (i) => i);
+    // The atlas holds the backdrop painted before any glass, so a surface may
+    // use it only when nothing painted earlier (glass included) enters its
+    // blur reach: exactly the planner's first group.
+    final atlasGroups = hybridAtlas
+        ? appGlassBackdropGroups(
+            paintBounds: paintBounds,
+            samplingBounds: samples,
+          )
+        : null;
+    _atlasEligible = [
+      for (var i = 0; i < boxes.length; i++)
+        atlasGroups?[i] == 0 || !hybridAtlas,
+    ];
     if (hybridShared && hybrid.isGenuineRefraction) {
       // Two equal lens filters on one key would be rendered once over the
       // whole screen. Equal lens uniforms mean equal size and radius.
@@ -629,11 +699,20 @@ class _GlassPocPageState extends ConsumerState<GlassPocPage>
             : surfaces == 2
             ? 'mini,tab'
             : 'mini'}; '
-        'stage=${width}x$height; dpr=$dpr; rtl=$rtl; dark=$dark';
+        'stage=${width}x$height; dpr=$dpr; rtl=$rtl; dark=$dark'
+        '${hybridAtlas ? '; atlas_eligible=${_atlasEligible.map((e) => e ? 1 : 0).join(',')}' : ''}';
     _runner.observeBackdropConfiguration(_backdropConfiguration);
     return [
       for (final group in assignments) shared ? _backdropKeys[group] : null,
     ];
+  }
+
+  /// The stage stack. With the atlas on it is its own repaint boundary, so
+  /// the atlas surfaces' per-frame repaint stays inside the stage, painted
+  /// after the backdrop boundary in the same pass.
+  Widget _atlasStage({required bool atlasOn, required List<Widget> children}) {
+    final stack = Stack(children: children);
+    return atlasOn ? RepaintBoundary(child: stack) : stack;
   }
 
   void _onRendererChanged() {
@@ -824,6 +903,16 @@ class _GlassPocPageState extends ConsumerState<GlassPocPage>
                           onPressed: running ? null : _startBackdropSharing,
                         ),
                         ActionChip(
+                          key: const Key('hybridSharedAb'),
+                          label: const Text('Run Hybrid Shared A/B (current)'),
+                          onPressed: running ? null : _startHybridSharedAb,
+                        ),
+                        ActionChip(
+                          key: const Key('hybridAtlasAb'),
+                          label: const Text('Run Hybrid Atlas A/B (current)'),
+                          onPressed: running ? null : _startHybridAtlasAb,
+                        ),
+                        ActionChip(
                           key: const Key('hybridMatrix'),
                           label: const Text('Run Hybrid A–E Matrix'),
                           onPressed: running ? null : _startHybridMatrix,
@@ -950,88 +1039,121 @@ class _GlassPocPageState extends ConsumerState<GlassPocPage>
                   barWidth,
                   hybrid,
                 );
+                final atlasOn =
+                    mode == SistrumGlassMode.sistrumHybrid && hybrid.usesAtlas;
+                _atlas.configure(
+                  requested:
+                      mode == SistrumGlassMode.sistrumHybrid &&
+                      hybrid.sharedAtlas,
+                  unsupportedReason: hybrid.atlasUnsupportedReason,
+                  sigma: hybrid.blurSigma,
+                  invalidations: _atlasInvalidations,
+                );
+                final background = Positioned.fill(
+                  child: AnimatedBuilder(
+                    animation: _background,
+                    builder: (context, _) => CustomPaint(
+                      painter: _PocBackgroundPainter(
+                        progress: scene.animated ? _background.value : 0,
+                        dark: Theme.of(context).brightness == Brightness.dark,
+                      ),
+                    ),
+                  ),
+                );
+                final list = Positioned.fill(
+                  child: ListView.builder(
+                    key: _listKey,
+                    controller: _list,
+                    padding: const EdgeInsets.only(
+                      top: _GlassPocPageConstants.headerHeight + 24,
+                      bottom: 2 * _GlassPocPageConstants.barHeight + 40,
+                    ),
+                    itemCount: 60,
+                    itemBuilder: (context, i) => Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: _sideInset,
+                        vertical: 10,
+                      ),
+                      child: Text(
+                        'Track ${i + 1} — scrolling content under glass',
+                      ),
+                    ),
+                  ),
+                );
                 return ClipRect(
                   key: _stageKey,
-                  child: SistrumHybridTelemetryScope(
-                    telemetry: _hybridTelemetry,
-                    child: SistrumHybridConfigScope(
-                      config: hybrid,
-                      child: SistrumGlassScope(
-                        mode: mode,
-                        sharedBackdrop: sharedBackdrop,
-                        child: Stack(
-                          children: [
-                            Positioned.fill(
-                              child: AnimatedBuilder(
-                                animation: _background,
-                                builder: (context, _) => CustomPaint(
-                                  painter: _PocBackgroundPainter(
-                                    progress: scene.animated
-                                        ? _background.value
-                                        : 0,
-                                    dark:
-                                        Theme.of(context).brightness ==
-                                        Brightness.dark,
+                  child: SistrumHybridAtlasScope(
+                    atlas: _atlas,
+                    child: SistrumHybridTelemetryScope(
+                      telemetry: _hybridTelemetry,
+                      child: SistrumHybridConfigScope(
+                        config: hybrid,
+                        child: SistrumGlassScope(
+                          mode: mode,
+                          sharedBackdrop: sharedBackdrop,
+                          child: _atlasStage(
+                            atlasOn: atlasOn,
+                            children: [
+                              // Atlas on: the content under the glass is one
+                              // repaint boundary the atlas records. Off: as before.
+                              if (atlasOn)
+                                Positioned.fill(
+                                  child: SistrumAtlasBackdrop(
+                                    key: _atlas.backdropKey,
+                                    child: Stack(children: [background, list]),
                                   ),
-                                ),
-                              ),
-                            ),
-                            Positioned.fill(
-                              child: ListView.builder(
-                                controller: _list,
-                                padding: const EdgeInsets.only(
-                                  top: _GlassPocPageConstants.headerHeight + 24,
-                                  bottom:
-                                      2 * _GlassPocPageConstants.barHeight + 40,
-                                ),
-                                itemCount: 60,
-                                itemBuilder: (context, i) => Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: _sideInset,
-                                    vertical: 10,
-                                  ),
-                                  child: Text(
-                                    'Track ${i + 1} — scrolling content under glass',
-                                  ),
-                                ),
-                              ),
-                            ),
-                            if (surfaces == 4)
-                              Positioned(
-                                top: 8,
-                                left: _sideInset,
-                                right: _sideInset,
-                                child: _PocHeader(
-                                  mode: mode,
-                                  outline: _outlines,
-                                  backdropKeys: keys.take(2).toList(),
-                                ),
-                              ),
-                            Positioned(
-                              left: _sideInset,
-                              bottom: 12,
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  _PocMiniPlayer(
+                                )
+                              else ...[
+                                background,
+                                list,
+                              ],
+                              if (surfaces == 4)
+                                Positioned(
+                                  top: 8,
+                                  left: _sideInset,
+                                  right: _sideInset,
+                                  child: _PocHeader(
                                     mode: mode,
-                                    width: barWidth,
                                     outline: _outlines,
-                                    backdropKey: keys[surfaces == 4 ? 2 : 0],
+                                    backdropKeys: keys.take(2).toList(),
+                                    atlasEligible: _atlasEligible
+                                        .take(2)
+                                        .toList(),
                                   ),
-                                  if (surfaces >= 2) ...[
-                                    const SizedBox(height: 10),
-                                    _PocTabBar(
+                                ),
+                              Positioned(
+                                left: _sideInset,
+                                bottom: 12,
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    _PocMiniPlayer(
                                       mode: mode,
                                       width: barWidth,
                                       outline: _outlines,
-                                      backdropKey: keys[surfaces == 4 ? 3 : 1],
+                                      backdropKey: keys[surfaces == 4 ? 2 : 0],
+                                      atlasEligible:
+                                          _atlasEligible[surfaces == 4 ? 2 : 0],
                                     ),
+                                    if (surfaces >= 2) ...[
+                                      const SizedBox(height: 10),
+                                      _PocTabBar(
+                                        mode: mode,
+                                        width: barWidth,
+                                        outline: _outlines,
+                                        backdropKey:
+                                            keys[surfaces == 4 ? 3 : 1],
+                                        atlasEligible:
+                                            _atlasEligible[surfaces == 4
+                                                ? 3
+                                                : 1],
+                                      ),
+                                    ],
                                   ],
-                                ],
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     ),
@@ -1098,11 +1220,13 @@ class _PocHeader extends StatelessWidget {
     required this.mode,
     required this.outline,
     required this.backdropKeys,
+    this.atlasEligible = const [true, true],
   });
 
   final SistrumGlassMode mode;
   final bool outline;
   final List<BackdropKey?> backdropKeys;
+  final List<bool> atlasEligible;
 
   @override
   Widget build(BuildContext context) {
@@ -1116,6 +1240,7 @@ class _PocHeader extends StatelessWidget {
           borderRadius: size / 2,
           diagnosticOutline: outline,
           backdropKey: backdropKeys[0],
+          atlasEligible: atlasEligible[0],
           child: _PocTap(icon: Icons.arrow_back, onTap: () {}),
         ),
         const Spacer(),
@@ -1127,6 +1252,7 @@ class _PocHeader extends StatelessWidget {
           borderRadius: size / 2,
           diagnosticOutline: outline,
           backdropKey: backdropKeys[1],
+          atlasEligible: atlasEligible[1],
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
@@ -1146,12 +1272,14 @@ class _PocMiniPlayer extends StatelessWidget {
     required this.width,
     required this.outline,
     this.backdropKey,
+    this.atlasEligible = true,
   });
 
   final SistrumGlassMode mode;
   final double width;
   final bool outline;
   final BackdropKey? backdropKey;
+  final bool atlasEligible;
 
   @override
   Widget build(BuildContext context) {
@@ -1162,6 +1290,7 @@ class _PocMiniPlayer extends StatelessWidget {
       borderRadius: _GlassPocPageConstants.barHeight / 2,
       diagnosticOutline: outline,
       backdropKey: backdropKey,
+      atlasEligible: atlasEligible,
       child: Row(
         children: [
           const SizedBox(width: 16),
@@ -1183,12 +1312,14 @@ class _PocTabBar extends StatelessWidget {
     required this.width,
     required this.outline,
     this.backdropKey,
+    this.atlasEligible = true,
   });
 
   final SistrumGlassMode mode;
   final double width;
   final bool outline;
   final BackdropKey? backdropKey;
+  final bool atlasEligible;
 
   @override
   Widget build(BuildContext context) {
@@ -1205,6 +1336,7 @@ class _PocTabBar extends StatelessWidget {
       borderRadius: _GlassPocPageConstants.barHeight / 2,
       diagnosticOutline: outline,
       backdropKey: backdropKey,
+      atlasEligible: atlasEligible,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [

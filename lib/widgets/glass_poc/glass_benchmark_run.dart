@@ -1,3 +1,4 @@
+import 'package:sistrum/widgets/glass_poc/sistrum_auto_scroll.dart';
 import 'package:sistrum/widgets/glass_poc/sistrum_glass_mode.dart';
 import 'package:sistrum/widgets/glass_poc/sistrum_hybrid_config.dart';
 
@@ -10,6 +11,8 @@ class GlassBenchmarkRun {
     this.surfaces = 4,
     this.repeat = 1,
     this.hybrid,
+    this.hybridConfig,
+    this.speed,
   });
 
   final SistrumGlassMode mode;
@@ -17,6 +20,20 @@ class GlassBenchmarkRun {
   /// The Sistrum Hybrid matrix variant this run applies, or null. Set only
   /// with [SistrumGlassMode.sistrumHybrid].
   final SistrumHybridVariant? hybrid;
+
+  /// An explicit Hybrid configuration for this run, or null. It takes
+  /// precedence over [hybrid]'s fixed settings.
+  final SistrumHybridConfig? hybridConfig;
+
+  /// Scroll speed of this run, or null for the standard 900 px/s.
+  final SistrumScrollSpeed? speed;
+
+  /// The speed the run scrolls at and is validated against.
+  SistrumScrollSpeed get effectiveSpeed => speed ?? SistrumScrollSpeed.fast;
+
+  /// The Hybrid configuration the run applies, or null when it applies none.
+  SistrumHybridConfig? get effectiveHybridConfig =>
+      hybridConfig ?? hybrid?.config;
 
   /// Glass surfaces on the stage: 1 (mini player), 2 (mini player and tab bar)
   /// or 4 (adds the header back button and trailing capsule).
@@ -27,7 +44,9 @@ class GlassBenchmarkRun {
 
   /// Stable key of the configuration, without the repeat.
   String get configKey =>
-      '${mode.name}-s$surfaces${hybrid == null ? '' : '-${hybrid!.code}'}';
+      '${mode.name}-s$surfaces${hybrid == null ? '' : '-${hybrid!.code}'}'
+      '${hybridConfig == null ? '' : '-shared${hybridConfig!.sharedBackdrop ? 'On' : 'Off'}-atlas${hybridConfig!.sharedAtlas ? 'On' : 'Off'}'}'
+      '${speed == null ? '' : '-${speed!.pxPerSecond.round()}'}';
 
   /// Human-readable label used in the status line and the reports.
   String get label {
@@ -35,6 +54,12 @@ class GlassBenchmarkRun {
     final surfaceText = '$surfaces surface${surfaces == 1 ? '' : 's'}';
     if (variant != null) {
       return 'Hybrid ${variant.code} ${variant.label} · $surfaceText';
+    }
+    final config = hybridConfig;
+    if (config != null) {
+      return 'Hybrid shared ${config.sharedBackdrop ? 'ON' : 'OFF'} '
+          'atlas ${config.sharedAtlas ? 'ON' : 'OFF'} · '
+          '${effectiveSpeed.pxPerSecond.round()} px/s · $surfaceText';
     }
     return '${mode.label} · $surfaceText';
   }
@@ -106,6 +131,8 @@ List<GlassBenchmarkRun> glassDiagnosticRunOrder({
           surfaces: base.surfaces,
           repeat: round + 1,
           hybrid: base.hybrid,
+          hybridConfig: base.hybridConfig,
+          speed: base.speed,
         ),
       );
     }
@@ -118,4 +145,26 @@ List<GlassBenchmarkRun> glassDiagnosticRunOrder({
 List<GlassBenchmarkRun> glassHybridMatrixConfigurations() => [
   for (final variant in SistrumHybridVariant.values)
     GlassBenchmarkRun(mode: SistrumGlassMode.sistrumHybrid, hybrid: variant),
+];
+
+/// Configurations of the Hybrid A/B: [config] with the shared read off and on
+/// (or, with [atlas], the shared atlas off and on), each at 400 and 900
+/// logical px/s. Only that flag and the speed differ; everything else is
+/// [config] as given.
+List<GlassBenchmarkRun> glassHybridSharedAbConfigurations(
+  SistrumHybridConfig config, {
+  bool atlas = false,
+}) => [
+  for (final speed in const [
+    SistrumScrollSpeed.normal,
+    SistrumScrollSpeed.fast,
+  ])
+    for (final shared in const [false, true])
+      GlassBenchmarkRun(
+        mode: SistrumGlassMode.sistrumHybrid,
+        hybridConfig: atlas
+            ? config.copyWith(sharedAtlas: shared)
+            : config.copyWith(sharedBackdrop: shared, sharedAtlas: false),
+        speed: speed,
+      ),
 ];

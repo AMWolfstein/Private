@@ -26,6 +26,11 @@ enum SistrumGlassRenderPath {
   /// shader, as recorded by the surfaces' telemetry.
   lensShader('lens_shader'),
 
+  /// Sistrum Hybrid shared backdrop atlas (experimental): surfaces sample one
+  /// atlas captured in the same frame. Some surfaces may keep their own
+  /// `BackdropFilter`; the telemetry's atlas lines give the count.
+  atlas('atlas'),
+
   /// The path cannot be determined from the tree, or the tree is incomplete.
   unverified('unverified');
 
