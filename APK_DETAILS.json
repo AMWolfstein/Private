@@ -1,0 +1,23 @@
+{
+  "app": "Mornye Local",
+  "version": "5.3.1",
+  "version_code": 167,
+  "package_id": "com.zarz.mornye",
+  "build": "release",
+  "abi": "arm64-v8a",
+  "apk": "mornye-local-arm64-release.apk",
+  "size_bytes": 88377932,
+  "sha256": "9a39c53516c440c325953a28f69ba6c27b698b7155b2b15146a81a3a7e557ecf",
+  "signing": "Android Debug; APK v2 signature verified",
+  "certificate_sha256": "fe6e5e3398814a32a468a2a60a4075490a31a523814aa1242689fbc0f83cb2b2",
+  "source_branch": "mornye-reboot",
+  "source_base_commit": "0912a8e9fedfca35e9a25197be6debcbde6437c2",
+  "source_changes_committed": false,
+  "new_flutter_tests_passed": 19,
+  "selected_regression_tests_passed": 49,
+  "android_tests_passed": 177,
+  "android_tests_skipped": 2,
+  "full_flutter_suite": "failed/incomplete; 6204 passed, 25 skipped, 86 reported failures/errors",
+  "device_verified": false,
+  "discord_sdk": "existing SDK-free stub; proprietary SDK absent"
+}
