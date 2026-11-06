@@ -210,3 +210,75 @@ Profile APK built with `--dart-define=SISTRUM_PERF_HUD=true`. Unlock: Settings
 
 For per-pass GPU cost, capture D and E with Android GPU Inspector or Perfetto
 GPU counters.
+
+## 7. Shared backdrop on, sigma 7, refraction off (device, HUD window)
+
+Raster P50/P90/P99 5.26/6.05/7.72 ms, exceedance 21%, estimated 119.8 /s,
+shared group of 3, implied reads 2, decision changes 73. A single rolling-window
+capture; not a repeated A/B.
+
+- **Exceedance above raster P99.** Exceedance counts the total span (vsync start
+  to raster finish), not raster. Span adds vsync-to-build start, build and the
+  wait from build finish to raster start. The new Shared A/B report lists each
+  phase per run, so the 21% can be attributed on the device.
+- **73 decision changes are cumulative and come from settings.** The counter
+  starts when the POC page opens. A test of the page (Scene D, Full, refraction
+  off, sigma 7) gives 0 changes over 200 scrolled frames, 0 over five blur
+  steps, 4 for switching the shared read on (every surface's key changes), and
+  8 for two tier switches. 73 is about 18 settings changes earlier in the
+  session. The benchmark runner invalidates any run whose decisions change
+  while it measures; a HUD window cannot tell.
+- **The fourth surface is the tab bar.** Mini player and tab bar are 56 dp
+  tall with a 10 dp gap. At sigma 7 the planner's sampling reach is
+  3 x 7 + 1 + 1/dpr ≈ 22.4 dp, and the mini player's paint bounds are inflated
+  by 2 + 1/dpr, so the tab bar's blur would sample the mini player. A shared
+  capture is taken before the first member paints, so sharing would drop the
+  mini player from the tab bar's blur. It would share only below sigma ≈ 2.
+- **Equal filters in the shared group.** The three members use the same
+  `ImageFilter.blur(7)`, so Impeller blurs the whole cached frame once and each
+  member samples its rectangle (`all_filters_equal`). One full-frame blur and
+  one flip, plus the tab bar's own flip and small blur.
+- **Implied versus measured.** "Reads 2" follows from the decisions and the
+  engine source; no GPU pass was counted. Use AGI or Perfetto GPU render stages
+  for measured passes.
+
+Run **Run Hybrid Shared A/B (current)** to compare off and on with the current
+controls at 400 and 900 px/s, three counterbalanced rounds (12 runs, about
+14 minutes).
+
+## 8. Experimental shared backdrop atlas (inspired by PlugFox/g1455)
+
+Toggle: Hybrid controls > **Shared backdrop atlas (experimental)**. Off keeps
+the existing pipeline unchanged (no extra boundary, the same filters).
+
+g1455 (MIT, read at `6024b77`): one host records what is painted under every
+glass surface with `OffsetLayer.toImageSync` and a walk of the composited
+layer tree (`proxy_walk.dart`), packs the regions into one atlas, gets most of
+its blur from a downscale, and lets each surface sample its slot in a shader.
+It records in a post-frame callback, so its surfaces show the previous frame;
+its host calls that one-frame delay structural.
+
+Sistrum's version (`sistrum_hybrid_atlas.dart`, no g1455 code copied):
+
+| Part | How |
+|---|---|
+| Capture | The first atlas surface to paint in a frame walks the backdrop boundary's layer tree, already painted in the same pass, and redraws its pictures into one `PictureRecorder`; `Picture.toImageSync` makes the texture. No CPU readback, no GPU wait. |
+| Freshness | Same-frame: a change under the glass is in the atlas of that frame (tested red to blue in one pump). |
+| Invalidation | Declared: scroll position and background animation repaint the atlas surfaces. A post-frame signature check counts undeclared changes (`late_invalidations`) and repaints them one frame late. A still screen reuses the capture. |
+| Packing | One slot per surface (surface plus 3 sigma), stacked rows, 2 px apart, at most 2048 px a side. |
+| Blur | Once per slot at atlas resolution; scale = 2 / sigma atlas px per logical px (0.25 to 2), so about 2 atlas px of blur, then bilinear sampling. |
+| Overlap | A surface whose blur reaches glass painted earlier keeps its own `BackdropFilter` (the planner's first group decides). In Scene D at sigma 7 that is the tab bar, so the atlas serves 3 of 4. |
+| Unsupported | Refraction (the lens needs a filter context), blur 0, non-axis-aligned transforms, and layers the walk cannot redraw (`BackdropFilterLayer`, `ShaderMaskLayer`, platform views, textures, followers): named in `hybrid_atlas_fallback_reason`, existing pipeline drawn. |
+
+Expected cost in Scene D (derived, not measured): one `FlipBackdrop` (the tab
+bar) instead of four, plus one small offscreen raster of the atlas and its blur
+per changed frame, plus a CPU layer walk on the UI thread. The walk and capture
+run in paint, so build/paint time can rise while raster falls; the A/B report
+keeps them apart.
+
+Host render (software Skia, not the device), Scene D, sigma 7: atlas on vs off
+differ by a mean 0.3 to 0.8 of 255 per channel with no pixel over 24, so the
+appearance is preserved. Device appearance and cost are not verified.
+
+Run **Run Hybrid Atlas A/B (current)** for off and on with the current
+controls, 400 and 900 px/s, three counterbalanced rounds.
