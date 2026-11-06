@@ -218,7 +218,7 @@ void main() {
       },
     );
 
-    testWidgets('refraction on is reported as unsupported, not degraded', (
+    testWidgets('refraction on runs as Edge on the atlas, not degraded', (
       tester,
     ) async {
       final container = await hybrid(
@@ -231,15 +231,19 @@ void main() {
       final snap = container
           .read(glassPocRunRegistryProvider)
           .hybridTelemetry()!;
-      expect(snap.atlasSurfaces, 0);
+      expect(snap.atlasSurfaces, 3);
       expect(snap.atlas!.requested, isTrue);
-      expect(snap.atlas!.fallbackReason, 'refraction_not_supported_by_atlas');
-      expect(find.byType(SistrumAtlasSlot), findsNothing);
+      // Without a loaded shader (host tests), the rim draws nothing extra and
+      // the reason is named; it is never a silent degrade.
+      expect(
+        snap.atlas!.fallbackReason,
+        anyOf(isNull, 'shader_filters_unsupported'),
+      );
+      expect(snap.atlas!.edgeStatus, isNotNull);
+      expect(find.byType(SistrumAtlasSlot), findsNWidgets(3));
       expect(
         snap.lines().join('\n'),
-        contains(
-          'hybrid_atlas_fallback_reason=refraction_not_supported_by_atlas',
-        ),
+        contains('hybrid_atlas_refraction='),
       );
     });
 

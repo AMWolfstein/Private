@@ -123,6 +123,7 @@ flutter:
   # First-party shaders (Sistrum-owned, no third-party source).
   shaders:
     - shaders/sistrum_lens.frag
+    - shaders/sistrum_atlas_edge.frag
 
   assets:
     - assets/images/

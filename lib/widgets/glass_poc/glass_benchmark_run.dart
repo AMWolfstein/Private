@@ -46,7 +46,7 @@ class GlassBenchmarkRun {
   /// Stable key of the configuration, without the repeat.
   String get configKey =>
       '${mode.name}-s$surfaces${hybrid == null ? '' : '-${hybrid!.code}'}'
-      '${hybridConfig == null ? '' : '-shared${hybridConfig!.sharedBackdrop ? 'On' : 'Off'}-atlas${hybridConfig!.sharedAtlas ? 'On' : 'Off'}'}'
+      '${hybridConfig == null ? '' : '-shared${hybridConfig!.sharedBackdrop ? 'On' : 'Off'}-atlas${hybridConfig!.sharedAtlas ? 'On' : 'Off'}-refraction${hybridConfig!.refraction ? 'On' : 'Off'}'}'
       '${speed == null ? '' : '-${speed!.pxPerSecond.round()}'}';
 
   /// Human-readable label used in the status line and the reports.
@@ -147,6 +147,33 @@ List<GlassBenchmarkRun> glassHybridMatrixConfigurations() => [
   for (final variant in SistrumHybridVariant.values)
     GlassBenchmarkRun(mode: SistrumGlassMode.sistrumHybrid, hybrid: variant),
 ];
+
+/// Configurations of the refraction comparison, all with [config]'s blur,
+/// tint and chromatic setting and the Full tier: refraction OFF, Edge (the
+/// atlas with edge-only refraction) and Full (the lens in its own
+/// BackdropFilter), each at 400 and 900 logical px/s.
+List<GlassBenchmarkRun> glassHybridRefractionConfigurations(
+  SistrumHybridConfig config,
+) {
+  final base = config.copyWith(tier: SistrumHybridTier.full);
+  final modes = <SistrumHybridConfig>[
+    base.copyWith(refraction: false, sharedAtlas: false),
+    base.copyWith(refraction: true, sharedAtlas: true),
+    base.copyWith(refraction: true, sharedAtlas: false),
+  ];
+  return [
+    for (final speed in const [
+      SistrumScrollSpeed.normal,
+      SistrumScrollSpeed.fast,
+    ])
+      for (final mode in modes)
+        GlassBenchmarkRun(
+          mode: SistrumGlassMode.sistrumHybrid,
+          hybridConfig: mode,
+          speed: speed,
+        ),
+  ];
+}
 
 /// Configurations of the atlas resolution sweep: the atlas off, then on at each
 /// [SistrumAtlasResolution], at 400 and 900 logical px/s. Only the atlas state,

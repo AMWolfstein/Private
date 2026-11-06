@@ -46,6 +46,7 @@ class GlassBenchmarkPlan {
     this.hybridSharedAb = false,
     this.hybridAbAtlas = false,
     this.hybridAbResolution = false,
+    this.hybridAbRefraction = false,
   }) : runs = runs ?? [for (final mode in modes) GlassBenchmarkRun(mode: mode)];
 
   /// The diagnostic repeatability protocol: every configuration of
@@ -102,6 +103,28 @@ class GlassBenchmarkPlan {
       measure: base.measure,
       modeTimeout: base.modeTimeout,
       hybridMatrix: true,
+    );
+  }
+
+  /// The refraction comparison: OFF, Edge and Full, at 400 and 900 px/s,
+  /// [repeats] counterbalanced rounds, standard timing.
+  factory GlassBenchmarkPlan.hybridRefraction({
+    required SistrumHybridConfig config,
+    GlassBenchmarkPlan? timing,
+    int repeats = 3,
+  }) {
+    final base = timing ?? GlassBenchmarkPlan();
+    return GlassBenchmarkPlan(
+      runs: glassDiagnosticRunOrder(
+        configurations: glassHybridRefractionConfigurations(config),
+        repeats: repeats,
+      ),
+      transition: base.transition,
+      warmup: base.warmup,
+      measure: base.measure,
+      modeTimeout: base.modeTimeout,
+      hybridSharedAb: true,
+      hybridAbRefraction: true,
     );
   }
 
@@ -162,6 +185,9 @@ class GlassBenchmarkPlan {
 
   /// In a [hybridAbAtlas] plan: the runs also vary the atlas resolution.
   final bool hybridAbResolution;
+
+  /// In a [hybridSharedAb] plan: the runs compare refraction OFF, Edge and Full.
+  final bool hybridAbRefraction;
 
   /// Whether this is the Sistrum Hybrid A–E matrix.
   final bool hybridMatrix;

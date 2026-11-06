@@ -1,3 +1,4 @@
+import 'package:flutter/painting.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sistrum/widgets/glass_poc/sistrum_hybrid_atlas.dart';
 import 'package:sistrum/widgets/glass_poc/glass_benchmark_run.dart';
@@ -86,5 +87,67 @@ void main() {
     expect(plan.runs, hasLength(36));
     expect(plan.hybridAbResolution, isTrue);
     expect(plan.hybridAbAtlas, isTrue);
+  });
+
+  test('refraction comparison is OFF, Edge and Full at two speeds', () {
+    final configs = glassHybridRefractionConfigurations(
+      const SistrumHybridConfig(tier: SistrumHybridTier.frosted),
+    );
+    expect(configs, hasLength(6));
+    final edge = configs.where((r) => r.hybridConfig!.usesAtlasEdge).toList();
+    expect(edge, hasLength(2));
+    final full = configs
+        .where(
+          (r) =>
+              r.hybridConfig!.refraction && !r.hybridConfig!.sharedAtlas,
+        )
+        .toList();
+    expect(full, hasLength(2));
+    expect(
+      configs.where((r) => !r.hybridConfig!.refraction),
+      everyElement(
+        predicate<GlassBenchmarkRun>((r) => !r.hybridConfig!.sharedAtlas),
+      ),
+    );
+    expect(
+      GlassBenchmarkPlan.hybridRefraction(
+        config: const SistrumHybridConfig(tier: SistrumHybridTier.frosted),
+        repeats: 3,
+      ).runs,
+      hasLength(18),
+    );
+  });
+
+  test('the Edge shader uniforms are packed in declaration order', () {
+    final values = sistrumAtlasEdgeUniforms(
+      surface: const Rect.fromLTWH(10, 20, 200, 100),
+      borderRadius: 24,
+      chromatic: true,
+      sourceInAtlas: const Rect.fromLTWH(4, 8, 400, 200),
+      scale: 2,
+      atlasSize: const Size(1024, 512),
+    );
+    expect(values, hasLength(13));
+    expect(values.sublist(0, 2), [200, 100]); // uSize
+    expect(values[2], 24); // uRadius
+    expect(values[3], kSistrumAtlasEdgeBand); // uBand
+    expect(values[5], 1); // uDispersion, chromatic on
+    expect(values.sublist(6, 8), [10, 20]); // uOrigin
+    expect(values.sublist(8, 10), [4, 8]); // uAtlasOrigin
+    expect(values[10], 2); // uScale
+    expect(values.sublist(11, 13), [1024, 512]); // uAtlasSize
+  });
+
+  test('a small surface caps the Edge band at half its short side', () {
+    final values = sistrumAtlasEdgeUniforms(
+      surface: const Rect.fromLTWH(0, 0, 20, 12),
+      borderRadius: 6,
+      chromatic: false,
+      sourceInAtlas: Rect.zero,
+      scale: 1,
+      atlasSize: const Size(64, 64),
+    );
+    expect(values[3], 6);
+    expect(values[5], 0);
   });
 }

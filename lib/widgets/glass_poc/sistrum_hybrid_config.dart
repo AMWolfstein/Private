@@ -89,12 +89,16 @@ class SistrumHybridConfig {
     if (!sharedAtlas) return null;
     if (!tier.readsBackdrop) return 'tier_reads_no_backdrop';
     if (blurSigma <= 0) return 'zero_blur_bypass';
-    if (isGenuineRefraction) return 'refraction_not_supported_by_atlas';
     return null;
   }
 
   /// Whether the atlas is requested and supported for this configuration.
   bool get usesAtlas => sharedAtlas && atlasUnsupportedReason == null;
+
+  /// Whether the atlas draws Edge-only refraction: the rim ring is sampled
+  /// from the atlas by a shader. Full refraction without the atlas keeps its
+  /// own BackdropFilter.
+  bool get usesAtlasEdge => usesAtlas && isGenuineRefraction;
 
   /// Whether the surface reads the live backdrop through a genuine refraction.
   bool get isGenuineRefraction => tier == SistrumHybridTier.full && refraction;

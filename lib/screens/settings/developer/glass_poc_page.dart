@@ -583,6 +583,17 @@ class _GlassPocPageState extends ConsumerState<GlassPocPage>
     );
   }
 
+  void _startHybridRefractionAb() {
+    _spikes.noteEvent('benchmark=hybrid refraction compare start');
+    _displayModes.begin(ref.read(displayRefreshProvider));
+    _runner.start(
+      plan: GlassBenchmarkPlan.hybridRefraction(
+        config: ref.read(glassPocHybridProvider),
+        timing: _standardPlan,
+      ),
+    );
+  }
+
   void _startHybridAtlasResolutionSweep() {
     _spikes.noteEvent('benchmark=hybrid atlas resolution sweep start');
     _displayModes.begin(ref.read(displayRefreshProvider));
@@ -924,6 +935,11 @@ class _GlassPocPageState extends ConsumerState<GlassPocPage>
                           onPressed: running ? null : _startHybridAtlasAb,
                         ),
                         ActionChip(
+                          key: const Key('hybridRefractionAb'),
+                          label: const Text('Run Refraction OFF/Edge/Full'),
+                          onPressed: running ? null : _startHybridRefractionAb,
+                        ),
+                        ActionChip(
                           key: const Key('hybridAtlasResolutionSweep'),
                           label: const Text('Run Atlas Resolution sweep'),
                           onPressed: running
@@ -1066,6 +1082,8 @@ class _GlassPocPageState extends ConsumerState<GlassPocPage>
                   unsupportedReason: hybrid.atlasUnsupportedReason,
                   sigma: hybrid.blurSigma,
                   resolution: hybrid.atlasResolution,
+                  edgeRefraction: hybrid.usesAtlasEdge,
+                  chromatic: hybrid.chromaticAberration,
                   invalidations: _atlasInvalidations,
                 );
                 final background = Positioned.fill(

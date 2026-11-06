@@ -955,17 +955,37 @@ String formatGlassHybridSharedAbReport({
     out.add('== $title ==');
   }
 
-  final toggle = plan.hybridAbAtlas ? 'atlas' : 'shared';
+  final toggle = plan.hybridAbRefraction
+      ? 'refraction'
+      : plan.hybridAbAtlas
+      ? 'atlas'
+      : 'shared';
   bool sharedOf(GlassBenchmarkModeResult r) => plan.hybridAbAtlas
       ? r.hybridConfig?.sharedAtlas ?? false
       : r.hybridConfig?.sharedBackdrop ?? false;
+  // The comparison's mode label: ON/OFF for the two-state plans, otherwise
+  // the refraction or resolution mode.
+  String modeOf(GlassBenchmarkModeResult r) {
+    final c = r.hybridConfig;
+    if (plan.hybridAbRefraction) {
+      if (c == null || !c.refraction) return 'off';
+      return c.sharedAtlas ? 'edge' : 'full';
+    }
+    if (plan.hybridAbResolution) {
+      return sharedOf(r) ? (c?.atlasResolution.wire ?? 'n/a') : 'off';
+    }
+    return sharedOf(r) ? 'ON' : 'OFF';
+  }
+
   String cfg(GlassBenchmarkModeResult r) =>
-      '${r.speed.pxPerSecond.round()}px/s $toggle=${sharedOf(r) ? 'ON' : 'OFF'}'
+      '${r.speed.pxPerSecond.round()}px/s $toggle=${modeOf(r)}'
       '${plan.hybridAbResolution && sharedOf(r) ? ' res=${r.hybridConfig?.atlasResolution.wire}' : ''}';
   final repeats = plan.runs.fold<int>(0, (m, r) => r.repeat > m ? r.repeat : m);
 
   add(
-    plan.hybridAbResolution
+    plan.hybridAbRefraction
+        ? 'sistrum-glass-hybrid-refraction-compare'
+        : plan.hybridAbResolution
         ? 'sistrum-glass-hybrid-atlas-resolution-sweep'
         : plan.hybridAbAtlas
         ? 'sistrum-glass-hybrid-atlas-ab'
@@ -1029,11 +1049,28 @@ String formatGlassHybridSharedAbReport({
   for (final speed in speeds) {
     add('');
     add('-- ${speed.pxPerSecond.round()} px/s');
-    final medians = <bool, Map<String, double?>>{};
-    for (final shared in const [false, true]) {
+    // The first mode is the baseline; every other mode is compared with it.
+    const canonical = [
+      'OFF',
+      'ON',
+      'off',
+      'edge',
+      'full',
+      'baseline',
+      'quarter',
+      'third',
+      'half',
+    ];
+    final present = {for (final r in results) modeOf(r)};
+    final modes = [
+      for (final m in canonical)
+        if (present.contains(m)) m,
+    ];
+    final medians = <String, Map<String, double?>>{};
+    for (final mode in modes) {
       final valid = results
           .where(
-            (r) => r.speed == speed && sharedOf(r) == shared && _isMeasured(r),
+            (r) => r.speed == speed && modeOf(r) == mode && _isMeasured(r),
           )
           .toList();
       double? m(double? Function(GlassBenchmarkModeResult r) pick) =>
@@ -1048,9 +1085,9 @@ String formatGlassHybridSharedAbReport({
         'exceed_pct': m((r) => r.summary?.exceedancePct),
         'missed_slots': m((r) => r.schedule?.missedSlots.toDouble()),
       };
-      medians[shared] = row;
+      medians[mode] = row;
       add(
-        '$toggle=${shared ? 'ON ' : 'OFF'} n=${valid.length} '
+        '$toggle=$mode n=${valid.length} '
         '${row.entries.map((e) => '${e.key}=${_f(e.value, 2)}').join(' ')}',
       );
       add(
@@ -1060,15 +1097,18 @@ String formatGlassHybridSharedAbReport({
         '  ${_statLine('span_p90_ms', _pick(valid, (r) => r.summary?.spanP90Ms))}',
       );
     }
-    final off = medians[false]!;
-    final on = medians[true]!;
-    add(
-      'ON-OFF: ${off.keys.map((k) {
-        final a = off[k];
-        final b = on[k];
-        return '$k=${a == null || b == null ? 'n/a' : '${b - a >= 0 ? '+' : ''}${_f(b - a, 2)}'}';
-      }).join(' ')}',
-    );
+    if (modes.length < 2) continue;
+    final base = medians[modes.first]!;
+    for (final mode in modes.skip(1)) {
+      final cur = medians[mode]!;
+      add(
+        '$mode-${modes.first}: ${base.keys.map((k) {
+          final a = base[k];
+          final b = cur[k];
+          return '$k=${a == null || b == null ? 'n/a' : '${b - a >= 0 ? '+' : ''}${_f(b - a, 2)}'}';
+        }).join(' ')}',
+      );
+    }
   }
 
   section('4. Order, warm-up and thermal drift');

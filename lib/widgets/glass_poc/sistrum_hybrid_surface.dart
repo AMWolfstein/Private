@@ -116,7 +116,11 @@ class _SistrumHybridSurfaceState extends State<SistrumHybridSurface> {
     // Same clip and material as Frosted; only the backdrop source differs.
     return ClipRRect(
       borderRadius: _radius,
-      child: SistrumAtlasSlot(atlas: atlas, child: _material(widget.child)),
+      child: SistrumAtlasSlot(
+        atlas: atlas,
+        borderRadius: widget.borderRadius,
+        child: _material(widget.child),
+      ),
     );
   }
 

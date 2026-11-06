@@ -73,6 +73,8 @@ typedef SistrumAtlasStats = ({
   ui.Size? textureSize,
   double? samplingScale,
   SistrumAtlasResolution resolution,
+  String? edgeStatus,
+  int edgePaints,
 });
 
 /// Report lines for [stats]. Counters are counted in code; GPU work is
@@ -90,6 +92,7 @@ List<String> sistrumAtlasLines(SistrumAtlasStats? stats) {
     'hybrid_atlas_late_invalidations=${stats.lateInvalidations} (instrumented: undeclared changes caught after the frame)',
     'hybrid_atlas_texture_size=${size == null ? 'none' : '${size.width.round()}x${size.height.round()}'}',
     'hybrid_atlas_resolution=${stats.resolution.wire} (${stats.resolution.label})',
+    'hybrid_atlas_refraction=${stats.edgeStatus ?? 'off'} edge_paints=${stats.edgePaints} (instrumented: rim rings drawn; the shader runs only when this is above 0)',
     'hybrid_atlas_sampling_scale=${stats.samplingScale?.toStringAsFixed(3) ?? 'none'} (atlas px per logical px)',
     'hybrid_atlas_layers_walked=${stats.layersWalked} pictures_drawn=${stats.picturesDrawn} (instrumented, last capture)',
     'hybrid_atlas_gpu_passes_per_capture=estimated 2 (atlas raster + its blur layer); not measured',
@@ -107,6 +110,44 @@ double sistrumAtlasScale({
   if (fraction != null) return devicePixelRatio * fraction;
   if (sigma <= 0) return math.min(devicePixelRatio, 2);
   return (2 / sigma).clamp(0.25, math.min(devicePixelRatio, 2.0));
+}
+
+/// Rim width of the Edge-only refraction, logical px, before the half-size cap.
+const double kSistrumAtlasEdgeBand = 16;
+
+/// Asset key of the Edge-only atlas refraction shader (`pubspec.yaml`).
+const String kSistrumAtlasEdgeShaderAsset = 'shaders/sistrum_atlas_edge.frag';
+
+/// Uniform values for [kSistrumAtlasEdgeShaderAsset], in declaration order.
+/// A `vec2` takes two float slots: size, radius, band, refraction, dispersion,
+/// origin, atlas origin, scale, atlas size (13 values).
+List<double> sistrumAtlasEdgeUniforms({
+  required Rect surface,
+  required double borderRadius,
+  required bool chromatic,
+  required Rect sourceInAtlas,
+  required double scale,
+  required ui.Size atlasSize,
+}) {
+  final band = math.min(
+    kSistrumAtlasEdgeBand,
+    math.min(surface.width, surface.height) / 2,
+  );
+  return [
+    surface.width,
+    surface.height,
+    borderRadius,
+    band,
+    1.0,
+    chromatic ? 1.0 : 0.0,
+    surface.left,
+    surface.top,
+    sourceInAtlas.left,
+    sourceInAtlas.top,
+    scale,
+    atlasSize.width,
+    atlasSize.height,
+  ];
 }
 
 class _SlotGeometry {
@@ -161,6 +202,14 @@ class SistrumHybridAtlas extends ChangeNotifier {
   int _layers = 0;
   int _pictures = 0;
 
+  // Edge-only refraction (the shader that samples the atlas on the rim).
+  bool _edgeWanted = false;
+  bool _edgeChromatic = false;
+  ui.FragmentProgram? _edgeProgram;
+  bool _edgeLoading = false;
+  String? _edgeStatus;
+  int _edgePaints = 0;
+
   /// Whether surfaces should use the atlas now.
   bool get active => _requested && _configReason == null && _failure == null;
 
@@ -187,6 +236,8 @@ class SistrumHybridAtlas extends ChangeNotifier {
         : ui.Size(_image!.width.toDouble(), _image!.height.toDouble()),
     samplingScale: _image == null ? null : _scale,
     resolution: _resolution,
+    edgeStatus: _edgeWanted ? (_edgeStatus ?? 'pending') : null,
+    edgePaints: _edgePaints,
   );
 
   /// Called by the page when it builds the stage. [unsupportedReason] is the
@@ -197,13 +248,25 @@ class SistrumHybridAtlas extends ChangeNotifier {
     required double sigma,
     required Listenable invalidations,
     SistrumAtlasResolution resolution = SistrumAtlasResolution.baseline,
+    bool edgeRefraction = false,
+    bool chromatic = false,
   }) {
+    final edge = requested && edgeRefraction && unsupportedReason == null;
     final changed =
         requested != _requested ||
         unsupportedReason != _configReason ||
         sigma != _sigma ||
-        resolution != _resolution;
+        resolution != _resolution ||
+        edge != _edgeWanted ||
+        chromatic != _edgeChromatic;
     _resolution = resolution;
+    _edgeWanted = edge;
+    _edgeChromatic = chromatic;
+    if (edge) {
+      _requestEdgeProgram();
+    } else {
+      _edgeStatus = null;
+    }
     _requested = requested;
     _configReason = requested ? unsupportedReason : null;
     _sigma = sigma;
@@ -275,6 +338,78 @@ class SistrumHybridAtlas extends ChangeNotifier {
     final object = backdropKey.currentContext?.findRenderObject();
     if (object is! RenderSistrumAtlasBackdrop || !object.attached) return null;
     return object;
+  }
+
+  /// Loads the Edge refraction program once. Surfaces keep the plain atlas
+  /// until it is ready, and the status says so.
+  void _requestEdgeProgram() {
+    if (_edgeProgram != null || _edgeLoading) return;
+    if (!ui.ImageFilter.isShaderFilterSupported) {
+      _edgeStatus = 'shader_filters_unsupported';
+      return;
+    }
+    _edgeLoading = true;
+    _edgeStatus = 'loading';
+    ui.FragmentProgram.fromAsset(kSistrumAtlasEdgeShaderAsset).then(
+      (program) {
+        _edgeLoading = false;
+        if (_disposed) return;
+        _edgeProgram = program;
+        _edgeStatus = 'active';
+        _invalidate();
+        notifyListeners();
+      },
+      onError: (Object _) {
+        _edgeLoading = false;
+        if (_disposed) return;
+        _edgeStatus = 'failed';
+        notifyListeners();
+      },
+    );
+  }
+
+  /// The Edge program when the rim should be drawn now, otherwise null.
+  ui.FragmentProgram? get _edgeReady => _edgeWanted ? _edgeProgram : null;
+
+  /// Draws the rim ring of one surface, sampling the atlas texture of this
+  /// frame. The ring is the surface minus its inset rounded rectangle, so the
+  /// centre keeps the plain atlas image drawn beneath it.
+  void _drawEdge(
+    ui.Canvas canvas,
+    Rect rect,
+    ({ui.Image image, Rect source}) hit,
+    ui.FragmentProgram program,
+    double borderRadius,
+  ) {
+    final scale = _scale ?? 1.0;
+    final shader = program.fragmentShader();
+    final values = sistrumAtlasEdgeUniforms(
+      surface: rect,
+      borderRadius: borderRadius,
+      chromatic: _edgeChromatic,
+      sourceInAtlas: hit.source,
+      scale: scale,
+      atlasSize: ui.Size(hit.image.width.toDouble(), hit.image.height.toDouble()),
+    );
+    for (var i = 0; i < values.length; i++) {
+      shader.setFloat(i, values[i]);
+    }
+    shader.setImageSampler(0, hit.image, filterQuality: FilterQuality.low);
+    final band = math.min(kSistrumAtlasEdgeBand, math.min(rect.width, rect.height) / 2);
+    final radius = math.min(borderRadius, math.min(rect.width, rect.height) / 2);
+    final ring = Path.combine(
+      PathOperation.difference,
+      Path()..addRRect(RRect.fromRectAndRadius(rect, Radius.circular(radius))),
+      Path()
+        ..addRRect(
+          RRect.fromRectAndRadius(
+            rect.deflate(band),
+            Radius.circular(math.max(0.0, radius - band)),
+          ),
+        ),
+    );
+    canvas.drawPath(ring, Paint()..shader = shader);
+    _edgePaints++;
   }
 
   void _fail(String reason) {
@@ -632,13 +767,22 @@ class SistrumHybridAtlasScope extends InheritedWidget {
 
 /// Draws this surface's slot of the atlas under its child.
 class SistrumAtlasSlot extends SingleChildRenderObjectWidget {
-  const SistrumAtlasSlot({required this.atlas, super.child, super.key});
+  const SistrumAtlasSlot({
+    required this.atlas,
+    this.borderRadius = 0,
+    super.child,
+    super.key,
+  });
 
   final SistrumHybridAtlas atlas;
 
+  /// Logical corner radius of the surface, for the Edge refraction ring.
+  final double borderRadius;
+
   @override
   RenderSistrumAtlasSlot createRenderObject(BuildContext context) =>
-      RenderSistrumAtlasSlot(atlas, View.of(context).devicePixelRatio);
+      RenderSistrumAtlasSlot(atlas, View.of(context).devicePixelRatio)
+        ..borderRadius = borderRadius;
 
   @override
   void updateRenderObject(
@@ -647,7 +791,8 @@ class SistrumAtlasSlot extends SingleChildRenderObjectWidget {
   ) {
     renderObject
       ..atlas = atlas
-      ..devicePixelRatio = View.of(context).devicePixelRatio;
+      ..devicePixelRatio = View.of(context).devicePixelRatio
+      ..borderRadius = borderRadius;
   }
 }
 
@@ -655,6 +800,9 @@ class SistrumAtlasSlot extends SingleChildRenderObjectWidget {
 /// it paints with its ancestors, after the backdrop boundary in the same pass.
 class RenderSistrumAtlasSlot extends RenderProxyBox {
   RenderSistrumAtlasSlot(this._atlas, this._devicePixelRatio);
+
+  /// Logical corner radius of the surface, for the Edge refraction ring.
+  double borderRadius = 0;
 
   SistrumHybridAtlas _atlas;
   set atlas(SistrumHybridAtlas value) {
@@ -686,6 +834,7 @@ class RenderSistrumAtlasSlot extends RenderProxyBox {
   }
 
   @override
+  @override
   void paint(PaintingContext context, Offset offset) {
     final hit = _atlas._slotImage(this);
     if (hit != null) {
@@ -695,6 +844,10 @@ class RenderSistrumAtlasSlot extends RenderProxyBox {
         offset & size,
         Paint()..filterQuality = FilterQuality.low,
       );
+      final edge = _atlas._edgeReady;
+      if (edge != null) {
+        _atlas._drawEdge(context.canvas, offset & size, hit, edge, borderRadius);
+      }
     }
     super.paint(context, offset);
   }

@@ -226,12 +226,20 @@ void main() {
   );
 
   test('unsupported combinations are named, not degraded silently', () {
+    // Refraction is supported by the atlas as Edge-only, so it is not listed.
     expect(
       const SistrumHybridConfig(
         tier: SistrumHybridTier.full,
         sharedAtlas: true,
       ).atlasUnsupportedReason,
-      'refraction_not_supported_by_atlas',
+      isNull,
+    );
+    expect(
+      const SistrumHybridConfig(
+        tier: SistrumHybridTier.full,
+        sharedAtlas: true,
+      ).usesAtlasEdge,
+      isTrue,
     );
     expect(
       const SistrumHybridConfig(
