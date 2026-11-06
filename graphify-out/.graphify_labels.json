@@ -1,7 +1,6 @@
 {
   "16": "_",
   "23": "usbi_get_device_priv",
-  "56": "FocusManager",
   "88": "darwin_usb.c",
   "148": "write.rs",
   "159": "windows_common.c",
