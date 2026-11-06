@@ -12564,9 +12564,9 @@
     "semantic_hash": ""
   },
   "lib/widgets/performance/perf_hud_overlay.dart": {
-    "mtime": 1793872809.2719748,
-    "seen": 1793873775.2338667,
-    "ast_hash": "cbbc0ac1f7ee878a3c401d44771266b4",
+    "mtime": 1793968431.4735286,
+    "seen": 1793971035.3175805,
+    "ast_hash": "75517261b1cc540bd435e52cbbf558c4",
     "semantic_hash": ""
   },
   "test/providers/performance/perf_hud_settings_provider_test.dart": {
