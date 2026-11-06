@@ -7,6 +7,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sistrum/providers/performance/glass_poc_mode_provider.dart';
 import 'package:sistrum/providers/performance/perf_hud_settings_provider.dart';
+import 'package:sistrum/providers/settings/display_refresh_provider.dart';
+import 'package:sistrum/providers/settings/settings_provider.dart';
+import 'package:sistrum/services/display/display_refresh_rate.dart';
 import 'package:sistrum/services/performance/perf_frame_monitor.dart';
 import 'package:sistrum/services/performance/perf_frame_window.dart';
 import 'package:sistrum/widgets/performance/perf_hud_geometry.dart';
@@ -241,11 +244,21 @@ class _PerfHudOverlayState extends ConsumerState<PerfHudOverlay> {
         ? 'n/a'
         : '${snap.hz.toStringAsFixed(snap.hz % 1 == 0 ? 0 : 2)} Hz'
               '${snap.hzIsFallback ? ' (fallback)' : ''}';
+    // The saved preference against Android's own report. Both come from the
+    // refresh-rate controller; this line adds no second request.
+    final savedHz = ref.watch(
+      settingsProvider.select((s) => s.displayRefreshRate),
+    );
+    final refresh = ref.watch(displayRefreshProvider);
+    final requestLabel =
+        '${savedHz == 0 ? 'System Default' : '$savedHz Hz'} '
+        '(${_refreshStatusLabel(displayRefreshStatus(savedHz, refresh), refresh)})';
     final lines = <String>[
       'FPS (estimated)   ${snap?.fpsEstimate == null ? 'n/a' : snap!.fpsEstimate!.toStringAsFixed(1)}',
       'Budget exceeded   ${snap?.exceedancePct == null ? 'n/a' : '${snap!.exceedancePct!.toStringAsFixed(1)}%'}',
       'Frames   ${snap?.frames ?? 0} (total ${snap?.totalFrames ?? 0})',
       'Refresh   $hzLabel',
+      'Requested   $requestLabel',
       'Budget   ${snap == null ? 'n/a' : '${snap.budgetMs.toStringAsFixed(2)} ms'}',
       'Build   p50 ${_ms(snap?.buildP50Ms)}  p90 ${_ms(snap?.buildP90Ms)}  p99 ${_ms(snap?.buildP99Ms)}',
       'Raster  p50 ${_ms(snap?.rasterP50Ms)}  p90 ${_ms(snap?.rasterP90Ms)}  p99 ${_ms(snap?.rasterP99Ms)}',
@@ -333,3 +346,18 @@ class _PerfHudOverlayState extends ConsumerState<PerfHudOverlay> {
     });
   }
 }
+
+/// English label for a refresh-rate status, for the HUD's text lines.
+String _refreshStatusLabel(
+  DisplayRefreshStatus status,
+  DisplayRefreshState state,
+) => switch (status) {
+  DisplayRefreshStatus.systemDefault => 'Android decides',
+  DisplayRefreshStatus.requested => 'requested, switching',
+  DisplayRefreshStatus.active => 'accepted, active',
+  DisplayRefreshStatus.notApplied =>
+    'overridden, Android reports ${state.activeModeHz.round()} Hz',
+  DisplayRefreshStatus.unsupported => 'no such mode at this resolution',
+  DisplayRefreshStatus.unavailable => 'no Android report',
+};
+
