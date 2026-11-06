@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:liquid_glass_easy/liquid_glass_easy.dart';
 import 'package:mornye/widgets/mornye_selection_pill.dart';
+import 'package:mornye/widgets/mornye_liquid_backdrop.dart';
 import 'package:mornye/l10n/l10n.dart';
 import 'package:mornye/providers/music_player_provider.dart';
 import 'package:mornye/providers/runtime_profile_provider.dart';
@@ -187,8 +188,8 @@ void main() {
     testWidgets(
       'liquid side capsules join the bar read only at rest (player: $withPlayer)',
       (tester) async {
-        MornyeGlass.debugShaderFilterSupport = true;
-        addTearDown(() => MornyeGlass.debugShaderFilterSupport = null);
+        MornyeGlassRules.debugShaderFilterSupport = true;
+        addTearDown(() => MornyeGlassRules.debugShaderFilterSupport = null);
         await pumpShell(tester, blur: true, withPlayer: withPlayer);
         // Every painted lens carries a batch key, so each takes the single
         // composed pass, and lenses with the same key share one read.

@@ -1,8 +1,62 @@
+import 'dart:ui' show ImageFilter;
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:liquid_glass_easy/liquid_glass_easy.dart';
+import 'package:mornye/providers/runtime_profile_provider.dart';
 import 'package:mornye/theme/mornye_theme.dart';
+
+/// The one place that maps the Glass clarity slider (0 to 1) and the glass
+/// level to render decisions. Every Mornye glass surface reads these values,
+/// so the thresholds and blur budgets cannot drift between surfaces.
+abstract final class MornyeGlassRules {
+  /// Blur budgets for the backdrop, from the largest to the smallest.
+  /// Index 1 is the frosted fallback budget; the others follow clarity.
+  static const blurSigmas = [2.0, 3.0, 6.0, 16.0];
+
+  /// Shared, immutable filters so a clarity animation never rebuilds one.
+  static final blurFilters = [
+    for (final sigma in blurSigmas)
+      ImageFilter.blur(sigmaX: sigma, sigmaY: sigma),
+  ];
+
+  /// Host tests cannot run shader filters; this lets them build the lens.
+  @visibleForTesting
+  static bool? debugShaderFilterSupport;
+
+  /// Whether the shader lens can render here: Impeller only, and never in a
+  /// test host unless [debugShaderFilterSupport] says so.
+  static bool get shaderLensSupported =>
+      debugShaderFilterSupport ?? ImageFilter.isShaderFilterSupported;
+
+  /// Clarity above which the surface samples its backdrop. Frosted glass
+  /// waits longer so a 10 % setting never enables sampling on a mid GPU.
+  static double backdropMinClarity(MornyeGlassLevel level) =>
+      level == MornyeGlassLevel.frosted ? 0.5 : 0.2;
+
+  /// Index into [blurSigmas] for a level and clarity: frosted always uses
+  /// index 1; liquid uses 2 (sigma 6) from 0.6, 0 (sigma 2) from 0.9, else 3.
+  static int blurIndex(MornyeGlassLevel level, double clarity) {
+    if (level == MornyeGlassLevel.frosted) return 1;
+    if (clarity >= 0.9) return 0;
+    if (clarity >= 0.6) return 2;
+    return 3;
+  }
+
+  /// Opacity of the tint: the slider's tinted end is opaque, the clear end
+  /// reveals more of the page.
+  static double tintStrength(double clarity) => (1 - clarity) * (1 - clarity);
+
+  /// How much of the clear fill replaces the tint on a liquid lens, from
+  /// clarity 0.2 (none) to 1 (all).
+  static double clearFillMix(double clarity) =>
+      ((clarity - 0.2) / 0.8).clamp(0.0, 1.0);
+
+  /// Widest colour split in logical pixels, for a clarity and an effect
+  /// amount (`progress` of a held lens, `1` at rest).
+  static double dispersion(double clarity, double effect) =>
+      1.32 * clarity * effect;
+}
 
 /// A bounded package lens without a captured-screen view or a touch ticker.
 class MornyeLiquidBackdrop extends StatelessWidget {
@@ -75,7 +129,7 @@ class MornyeLiquidBackdrop extends StatelessWidget {
         refractionIndex: index,
         refractionWidth: refractionWidth,
         // Version 5 expresses the widest colour split in logical pixels.
-        dispersion: 1.32 * clarity * effect,
+        dispersion: MornyeGlassRules.dispersion(clarity, effect),
       ),
       child: child,
     );

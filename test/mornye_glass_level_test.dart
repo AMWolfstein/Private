@@ -12,6 +12,7 @@ import 'package:mornye/theme/mornye_theme.dart';
 import 'package:mornye/widgets/app_switch.dart';
 import 'package:mornye/widgets/extension_repo_card.dart';
 import 'package:mornye/widgets/mornye_chrome.dart';
+import 'package:mornye/widgets/mornye_liquid_backdrop.dart';
 import 'package:mornye/widgets/mornye_selection_pill.dart';
 
 class _Settings extends SettingsNotifier {
@@ -463,8 +464,8 @@ void main() {
   testWidgets('every lens composes into exactly one batch read', (
     tester,
   ) async {
-    MornyeGlass.debugShaderFilterSupport = true;
-    addTearDown(() => MornyeGlass.debugShaderFilterSupport = null);
+    MornyeGlassRules.debugShaderFilterSupport = true;
+    addTearDown(() => MornyeGlassRules.debugShaderFilterSupport = null);
     Widget glass(String key, {Widget? child}) => MornyeGlass.navigation(
       key: ValueKey(key),
       blurEnabled: true,

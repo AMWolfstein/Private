@@ -1,4 +1,4 @@
-import 'dart:ui' show ImageFilter, lerpDouble;
+import 'dart:ui' show lerpDouble;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -61,7 +61,10 @@ class MornyeSegmentedControl extends ConsumerWidget {
               liquidInteraction:
                   !isDesktopPlatform &&
                   ref.watch(mornyeLiquidGlassProvider) &&
-                  MornyeTheme.glassClarityOf(context) > 0.2,
+                  MornyeTheme.glassClarityOf(context) >
+                      MornyeGlassRules.backdropMinClarity(
+                        MornyeGlassLevel.liquid,
+                      ),
               labels: labels,
               selectedIndex: selectedIndex,
               onChanged: onChanged,
@@ -178,18 +181,6 @@ class MornyeGlass extends ConsumerWidget {
     this.glassProgress = 1,
   });
 
-  // Quantized and shared across surfaces. Avoid composed color filters and
-  // rebuilding a Gaussian filter for each clarity-slider animation frame.
-  static const _blurSigmas = [2.0, 3.0, 6.0, 16.0];
-  static final _blurs = [
-    for (final sigma in _blurSigmas)
-      ImageFilter.blur(sigmaX: sigma, sigmaY: sigma),
-  ];
-
-  /// Host tests cannot run shader filters; this lets them build the lens.
-  @visibleForTesting
-  static bool? debugShaderFilterSupport;
-
   final Widget child;
   final bool blurEnabled;
   final double radius;
@@ -267,9 +258,10 @@ class MornyeGlass extends ConsumerWidget {
       }
       // Let the upper end of the clarity slider reveal more of the page. Keep
       // the tinted endpoint opaque and the single-pass blur budget unchanged.
-      final tintStrength = (1 - clarity) * (1 - clarity);
       tint = Color.alphaBlend(
-        scheme.surfaceContainerHigh.withValues(alpha: tintStrength),
+        scheme.surfaceContainerHigh.withValues(
+          alpha: MornyeGlassRules.tintStrength(clarity),
+        ),
         baseTint,
       );
     }
@@ -278,33 +270,26 @@ class MornyeGlass extends ConsumerWidget {
         null;
     // At low clarity the tint obscures almost all detail. In particular, 10%
     // must not suddenly enable backdrop sampling on a mid-range GPU.
-    final blurThreshold = level == MornyeGlassLevel.frosted ? 0.5 : 0.2;
     final sampleBackdrop =
         translucent &&
         samplesBackdrop &&
         !insideGlass &&
-        clarity > blurThreshold;
+        clarity > MornyeGlassRules.backdropMinClarity(level);
     final useLens =
         sampleBackdrop &&
         firstInGroup &&
         lastInGroup &&
         level == MornyeGlassLevel.liquid &&
-        (debugShaderFilterSupport ?? ImageFilter.isShaderFilterSupported);
+        MornyeGlassRules.shaderLensSupported;
     // Clear glass softens the backdrop less. Keep the mid-range fallback at
     // its small blur budget, and reuse these filters in the lens renderer too.
-    final filterIndex = level == MornyeGlassLevel.frosted
-        ? 1
-        : clarity >= 0.9
-        ? 0
-        : clarity >= 0.6
-        ? 2
-        : 3;
+    final filterIndex = MornyeGlassRules.blurIndex(level, clarity);
     final clearFill = (dark ? const Color(0xff999999) : Colors.white)
         .withValues(alpha: dark ? 0.17 : 0.46);
     final fill = Color.lerp(
       scheme.surfaceContainerHigh,
       useLens && !strongTint
-          ? Color.lerp(tint, clearFill, ((clarity - 0.2) / 0.8).clamp(0, 1))
+          ? Color.lerp(tint, clearFill, MornyeGlassRules.clearFillMix(clarity))
           : tint,
       reveal,
     );
@@ -330,7 +315,7 @@ class MornyeGlass extends ConsumerWidget {
         ? MornyeLiquidBackdrop(
             borderRadius: shape,
             clarity: clarity,
-            blurSigma: _blurSigmas[filterIndex],
+            blurSigma: MornyeGlassRules.blurSigmas[filterIndex],
             refractionDepth: refractionDepth * reveal,
             smoothCorners: squircle,
             highlightIntensity: highlightIntensity * reveal,
@@ -345,7 +330,10 @@ class MornyeGlass extends ConsumerWidget {
               ? LiquidGlassBatch(child: lens)
               : lens
         : sampleBackdrop
-        ? BackdropFilter.grouped(filter: _blurs[filterIndex], child: surface)
+        ? BackdropFilter.grouped(
+            filter: MornyeGlassRules.blurFilters[filterIndex],
+            child: surface,
+          )
         : surface;
     return DecoratedBox(
       decoration: squircle

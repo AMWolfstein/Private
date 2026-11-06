@@ -162,7 +162,7 @@ class _MornyeSelectionPillState extends State<MornyeSelectionPill>
     final scheme = Theme.of(context).colorScheme;
     final lensEnabled =
         widget.liquidInteraction &&
-        ui.ImageFilter.isShaderFilterSupported &&
+        MornyeGlassRules.shaderLensSupported &&
         !MediaQuery.disableAnimationsOf(context) &&
         !(widget.contrastBlocked ?? MediaQuery.highContrastOf(context));
     final pressProgress = lensEnabled ? _pressAnimation.value : 0.0;
