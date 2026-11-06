@@ -1,4 +1,5 @@
 import 'package:sistrum/widgets/glass_poc/sistrum_glass_mode.dart';
+import 'package:sistrum/widgets/glass_poc/sistrum_hybrid_config.dart';
 
 /// One run of the benchmark: a renderer, the number of glass surfaces it draws
 /// and which repeat of that configuration it is. The standard protocol uses
@@ -8,9 +9,14 @@ class GlassBenchmarkRun {
     required this.mode,
     this.surfaces = 4,
     this.repeat = 1,
+    this.hybrid,
   });
 
   final SistrumGlassMode mode;
+
+  /// The Sistrum Hybrid matrix variant this run applies, or null. Set only
+  /// with [SistrumGlassMode.sistrumHybrid].
+  final SistrumHybridVariant? hybrid;
 
   /// Glass surfaces on the stage: 1 (mini player), 2 (mini player and tab bar)
   /// or 4 (adds the header back button and trailing capsule).
@@ -20,11 +26,18 @@ class GlassBenchmarkRun {
   final int repeat;
 
   /// Stable key of the configuration, without the repeat.
-  String get configKey => '${mode.name}-s$surfaces';
+  String get configKey =>
+      '${mode.name}-s$surfaces${hybrid == null ? '' : '-${hybrid!.code}'}';
 
   /// Human-readable label used in the status line and the reports.
-  String get label =>
-      '${mode.label} · $surfaces surface${surfaces == 1 ? '' : 's'}';
+  String get label {
+    final variant = hybrid;
+    final surfaceText = '$surfaces surface${surfaces == 1 ? '' : 's'}';
+    if (variant != null) {
+      return 'Hybrid ${variant.code} ${variant.label} · $surfaceText';
+    }
+    return '${mode.label} · $surfaceText';
+  }
 }
 
 /// Surface counts the layer-count experiment uses for New Full Glass.
@@ -92,9 +105,17 @@ List<GlassBenchmarkRun> glassDiagnosticRunOrder({
           mode: base.mode,
           surfaces: base.surfaces,
           repeat: round + 1,
+          hybrid: base.hybrid,
         ),
       );
     }
   }
   return order;
 }
+
+/// Configurations of the Sistrum Hybrid raster matrix (variants A to E), all
+/// in Scene D with four surfaces.
+List<GlassBenchmarkRun> glassHybridMatrixConfigurations() => [
+  for (final variant in SistrumHybridVariant.values)
+    GlassBenchmarkRun(mode: SistrumGlassMode.sistrumHybrid, hybrid: variant),
+];

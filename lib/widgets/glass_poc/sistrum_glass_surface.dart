@@ -179,10 +179,13 @@ class SistrumGlassSurface extends StatelessWidget {
             : null,
         child: child,
       ),
+      // The page gives Hybrid a key only when a shared read is requested and
+      // safe for this surface; otherwise the key is null.
       SistrumGlassMode.sistrumHybrid => SistrumHybridSurface(
         config: SistrumHybridConfigScope.of(context),
         dark: dark,
         borderRadius: borderRadius,
+        backdropKey: backdropKey,
         child: child,
       ),
       SistrumGlassMode.referenceGlass => GlassContainer(

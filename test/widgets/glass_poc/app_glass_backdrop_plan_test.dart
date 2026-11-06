@@ -116,4 +116,22 @@ void main() {
       throwsArgumentError,
     );
   });
+
+  test('equal lens filters never share a group', () {
+    // Groups 0,0,0 with two equal identities: the repeat gets its own group.
+    expect(appGlassSplitEqualFilters([0, 0, 0, 1], ['a', 'b', 'a', 'a']), [
+      0,
+      0,
+      2,
+      1,
+    ]);
+    // Distinct identities keep the original grouping.
+    expect(appGlassSplitEqualFilters([0, 0, 0, 1], ['a', 'b', 'c', 'a']), [
+      0,
+      0,
+      0,
+      1,
+    ]);
+    expect(() => appGlassSplitEqualFilters([0], const []), throwsArgumentError);
+  });
 }

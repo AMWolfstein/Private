@@ -16,6 +16,16 @@ enum SistrumGlassRenderPath {
   /// No blur or glass (Transparent Baseline).
   none('none'),
 
+  /// Sistrum Hybrid opaque fill, no backdrop read (matrix variant A).
+  opaque('opaque'),
+
+  /// Sistrum Hybrid translucent material, no backdrop read (variant B).
+  tint('tint'),
+
+  /// Sistrum Hybrid `BackdropFilter` blur composed with the first-party lens
+  /// shader, as recorded by the surfaces' telemetry.
+  lensShader('lens_shader'),
+
   /// The path cannot be determined from the tree, or the tree is incomplete.
   unverified('unverified');
 
@@ -122,7 +132,9 @@ bool sistrumRenderPathVerifiable(SistrumGlassMode mode) =>
     mode == SistrumGlassMode.basicBlur ||
     mode == SistrumGlassMode.newFullGlass ||
     mode == SistrumGlassMode.newFullGlassSharedBackdrop ||
-    mode == SistrumGlassMode.newFakeGlass;
+    mode == SistrumGlassMode.newFakeGlass ||
+    // Classified from the surfaces' own telemetry (sistrum_hybrid_telemetry).
+    mode == SistrumGlassMode.sistrumHybrid;
 
 /// Classifies the path from the census. Anything that does not match exactly
 /// one of the expected shapes is unverified, never a guess.
@@ -157,8 +169,10 @@ SistrumGlassRenderReport classifySistrumGlassRenderPath({
         'liquid_glass_widgets is not instrumented; its path is not probed',
       );
     case SistrumGlassMode.sistrumHybrid:
+      // The page classifies Hybrid from its surfaces' telemetry
+      // (classifyHybridRenderPath), not from type names in the tree.
       return const SistrumGlassRenderReport.unverified(
-        'Sistrum Hybrid tiers are not probed from the tree yet',
+        'Sistrum Hybrid is classified from its telemetry, not the tree census',
       );
     case SistrumGlassMode.newFakeGlass:
       // fake: true was requested, so FakeGlass is the only correct result.

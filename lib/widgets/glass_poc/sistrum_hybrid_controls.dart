@@ -52,7 +52,7 @@ class SistrumHybridControls extends ConsumerWidget {
           title: Text('Blur radius: ${config.blurSigma.toStringAsFixed(1)} px'),
           subtitle: Text(
             caps.blur
-                ? 'Gaussian sigma of the live backdrop (Frosted)'
+                ? 'Gaussian sigma of the live backdrop (Frosted and Full)'
                 : unsupported('Blur (this tier has no backdrop blur)'),
           ),
         ),
@@ -72,7 +72,7 @@ class SistrumHybridControls extends ConsumerWidget {
           subtitle: Text(
             caps.tint
                 ? 'Theme-adaptive tint over the surface'
-                : unsupported('Tint (the Full tier uses the package tint)'),
+                : unsupported('Tint (the Opaque tier has no transparency)'),
           ),
         ),
         Slider(
@@ -90,8 +90,8 @@ class SistrumHybridControls extends ConsumerWidget {
           subtitle: Text(
             caps.refraction
                 ? (config.refraction
-                      ? 'Full tier: refractive surface'
-                      : 'Off: FakeGlass is drawn, which is not refraction')
+                      ? 'Full tier: blur, then the Sistrum lens shader'
+                      : 'Off: the Frosted blur is drawn, which is not refraction')
                 : unsupported('Refraction (Full tier only)'),
           ),
           value: config.refraction,
@@ -120,12 +120,25 @@ class SistrumHybridControls extends ConsumerWidget {
             'Flutter cannot downsample a BackdropFilter input; the tiers sample at native resolution.',
           ),
         ),
+        SwitchListTile(
+          key: const Key('hybridSharedBackdrop'),
+          dense: true,
+          title: const Text('Shared backdrop read (matrix variant E)'),
+          subtitle: Text(
+            caps.sharedBackdrop
+                ? 'One backdrop read for surfaces that cannot see each other '
+                      '(BackdropFilter.backdropGroupKey)'
+                : unsupported('Shared backdrop (this tier reads no backdrop)'),
+          ),
+          value: config.sharedBackdrop,
+          onChanged: caps.sharedBackdrop && !running
+              ? (v) => update((c) => c.copyWith(sharedBackdrop: v))
+              : null,
+        ),
         ListTile(
           dense: true,
           enabled: false,
-          title: Text(
-            unsupported('Saturation (1.5 reference) and shared backdrop'),
-          ),
+          title: Text(unsupported('Saturation (1.5 reference)')),
           subtitle: const Text(
             'Not applied to any Sistrum Hybrid tier. See docs/performance for the reasons.',
           ),

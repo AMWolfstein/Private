@@ -14,6 +14,8 @@ void main() {
       final text = source.readAsStringSync();
       for (final uniform in [
         'uniform vec2 uSize;',
+        'uniform float uRadius;',
+        'uniform float uBand;',
         'uniform float uRefraction;',
         'uniform float uDispersion;',
         'uniform sampler2D uBackdrop;',
@@ -24,6 +26,45 @@ void main() {
         File('pubspec.yaml').readAsStringSync(),
         contains('- $kSistrumLensShaderAsset'),
       );
+    });
+
+    test(
+      'uniform packing is in physical pixels and matches the shader order',
+      () {
+        final values = sistrumLensUniforms(
+          size: const Size(200, 80),
+          borderRadius: 40,
+          devicePixelRatio: 2.5,
+          refraction: 1,
+          chromatic: true,
+        );
+        expect(values, [500, 200, 100, 40, 1, 1]);
+      },
+    );
+
+    test('the rim band is capped at half the shorter side', () {
+      final values = sistrumLensUniforms(
+        size: const Size(200, 20),
+        borderRadius: 10,
+        devicePixelRatio: 1,
+        refraction: 1,
+        chromatic: false,
+      );
+      // 16 px band, but the shorter side is 20 px, so the cap is 10 px.
+      expect(values[3], 10);
+      expect(values[5], 0);
+    });
+
+    test('pill radius reaches the shader unchanged in physical pixels', () {
+      // A height/2 radius on a 120x48 pill, at 3x: the shader clamps it.
+      final values = sistrumLensUniforms(
+        size: const Size(120, 48),
+        borderRadius: 24,
+        devicePixelRatio: 3,
+        refraction: 1,
+        chromatic: false,
+      );
+      expect(values[2], 72);
     });
 
     test('the Hybrid path imports no third-party glass package', () {

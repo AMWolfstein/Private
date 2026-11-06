@@ -46,3 +46,25 @@ List<int> appGlassBackdropGroups({
   }
   return groups;
 }
+
+/// Splits a shared group whose members would hand the engine *equal* filters
+/// that are not translation-invariant (the lens shader).
+///
+/// Impeller processes a shared backdrop once over the whole cached texture
+/// when every filter on the key is equal (`all_filters_equal` in
+/// impeller/display_list/canvas.cc; a runtime-effect filter is equal when its
+/// effect and uniforms are). That is correct for a blur but not for the lens,
+/// whose geometry comes from the input size. A member whose [identities]
+/// entry repeats an earlier member of its group gets a group of its own, so a
+/// shared group never holds two equal lens filters.
+List<int> appGlassSplitEqualFilters(List<int> groups, List<Object> identities) {
+  if (groups.length != identities.length) {
+    throw ArgumentError('Every surface needs a filter identity');
+  }
+  var next = groups.isEmpty ? 0 : groups.reduce((a, b) => a > b ? a : b) + 1;
+  final seen = <String>{};
+  return [
+    for (var i = 0; i < groups.length; i++)
+      seen.add('${groups[i]}|${identities[i]}') ? groups[i] : next++,
+  ];
+}

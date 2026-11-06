@@ -9,6 +9,8 @@ import 'package:sistrum/widgets/glass_poc/sistrum_auto_scroll.dart';
 import 'package:sistrum/widgets/glass_poc/sistrum_glass_mode.dart';
 import 'package:sistrum/widgets/glass_poc/sistrum_glass_scene.dart';
 import 'package:sistrum/widgets/glass_poc/sistrum_glass_render_path.dart';
+import 'package:sistrum/widgets/glass_poc/sistrum_hybrid_config.dart';
+import 'package:sistrum/widgets/glass_poc/sistrum_hybrid_telemetry.dart';
 
 /// The five modes of the full benchmark, in run order.
 const List<SistrumGlassMode> kGlassBenchmarkModes = [
@@ -40,6 +42,7 @@ class GlassBenchmarkPlan {
     this.modeTimeout = const Duration(seconds: 30),
     this.diagnostic = false,
     this.backdropSharing = false,
+    this.hybridMatrix = false,
   }) : runs = runs ?? [for (final mode in modes) GlassBenchmarkRun(mode: mode)];
 
   /// The diagnostic repeatability protocol: every configuration of
@@ -78,7 +81,31 @@ class GlassBenchmarkPlan {
     );
   }
 
+  /// The Sistrum Hybrid raster matrix: variants A to E in Scene D, each
+  /// [repeats] times in counterbalanced order (the diagnostic run order), with
+  /// the standard timing for every run.
+  factory GlassBenchmarkPlan.hybridMatrix({
+    GlassBenchmarkPlan? timing,
+    int repeats = 3,
+  }) {
+    final base = timing ?? GlassBenchmarkPlan();
+    return GlassBenchmarkPlan(
+      runs: glassDiagnosticRunOrder(
+        configurations: glassHybridMatrixConfigurations(),
+        repeats: repeats,
+      ),
+      transition: base.transition,
+      warmup: base.warmup,
+      measure: base.measure,
+      modeTimeout: base.modeTimeout,
+      hybridMatrix: true,
+    );
+  }
+
   final bool backdropSharing;
+
+  /// Whether this is the Sistrum Hybrid A–E matrix.
+  final bool hybridMatrix;
 
   /// The runs in the order they execute.
   final List<GlassBenchmarkRun> runs;
@@ -148,6 +175,14 @@ SistrumGlassRenderPath? expectedGlassRenderPath(SistrumGlassMode mode) =>
       SistrumGlassMode.sistrumHybrid => null,
     };
 
+/// The render path a run must show. A Hybrid matrix run expects the path of
+/// its variant, read from the surfaces' telemetry; other runs follow their mode.
+SistrumGlassRenderPath? expectedGlassRenderPathForRun(GlassBenchmarkRun run) {
+  final variant = run.hybrid;
+  if (variant != null) return expectedHybridRenderPath(variant.config);
+  return expectedGlassRenderPath(run.mode);
+}
+
 /// One mode's result.
 class GlassBenchmarkModeResult {
   const GlassBenchmarkModeResult({
@@ -184,9 +219,20 @@ class GlassBenchmarkModeResult {
     this.androidEnd,
     this.displayModeChanges = 0,
     this.backdropConfiguration,
+    this.hybrid,
+    this.hybridAtStart,
+    this.hybridAtEnd,
   });
 
   final SistrumGlassMode mode;
+
+  /// The Hybrid matrix variant of this run, or null.
+  final SistrumHybridVariant? hybrid;
+
+  /// Hybrid telemetry when measurement started and when it ended. Null when
+  /// the run is not a Hybrid run or never started measuring.
+  final SistrumHybridTelemetrySnapshot? hybridAtStart;
+  final SistrumHybridTelemetrySnapshot? hybridAtEnd;
 
   /// Glass surfaces the run drew (1, 2 or 4).
   final int surfaces;
@@ -296,6 +342,7 @@ typedef GlassBenchmarkConfig = ({
   bool sharedBackdrop,
   SistrumScrollSpeed speed,
   SistrumGlassScene scene,
+  SistrumHybridConfig hybrid,
 });
 
 /// What the runner needs from the page. The page owns the providers, the
@@ -336,6 +383,10 @@ abstract interface class GlassBenchmarkHost {
   /// Active-mode changes Android has reported since the page opened. The runner
   /// compares the value at the start and end of a measured interval.
   int displayModeChangeCount();
+
+  /// What the mounted Sistrum Hybrid surfaces handed to the engine, or null
+  /// when Hybrid is not shown. A map read; no tree walk.
+  SistrumHybridTelemetrySnapshot? hybridTelemetry();
 }
 
 /// Deterministic run of the benchmark:
@@ -397,6 +448,7 @@ class GlassBenchmarkRunner {
   DisplayRefreshState? _androidEnd;
   int _modeChangesStart = 0;
   int _modeChangesEnd = 0;
+  SistrumHybridTelemetrySnapshot? _hybridStart;
 
   GlassBenchmarkPhase _phase = GlassBenchmarkPhase.idle;
   GlassBenchmarkConfig? _savedConfig;
@@ -467,6 +519,7 @@ class GlassBenchmarkRunner {
       _nominal = null;
       _androidStart = null;
       _androidEnd = null;
+      _hybridStart = null;
       host.attachSchedule(null);
       host.applyRun(run);
       _enter(GlassBenchmarkPhase.warmup);
@@ -497,6 +550,7 @@ class GlassBenchmarkRunner {
       _nominal = nominal;
       _androidStart = android;
       _modeChangesStart = host.displayModeChangeCount();
+      _hybridStart = host.hybridTelemetry();
       final nominalBudgetUs = 1e6 / nominal.hz;
       _aggregator = GlassBenchmarkAggregator(
         budgetUs: nominalBudgetUs,
@@ -676,8 +730,7 @@ class GlassBenchmarkRunner {
         backdropConfiguration?.call() != _backdropAtStart) {
       _backdropChanged = true;
     }
-    final mode = plan.runs[_modeIndex].mode;
-    final expected = expectedGlassRenderPath(mode);
+    final expected = expectedGlassRenderPathForRun(plan.runs[_modeIndex]);
     final report = host.renderPath();
     _pathSamples++;
     _lastPath = report.path.wire;
@@ -760,7 +813,12 @@ class GlassBenchmarkRunner {
     final run = plan.runs[_modeIndex];
     final mode = run.mode;
     _sampleRenderPath();
-    final expected = expectedGlassRenderPath(mode);
+    final expected = expectedGlassRenderPathForRun(run);
+    final hybridStart =
+        _measurementStarted && run.mode == SistrumGlassMode.sistrumHybrid
+        ? _hybridStart
+        : null;
+    final hybridEnd = hybridStart != null ? host.hybridTelemetry() : null;
     final reasons = <String>[];
     var validity = GlassBenchmarkValidity.valid;
 
@@ -780,6 +838,20 @@ class GlassBenchmarkRunner {
       reasons.add(
         'Backdrop assignment or stage geometry changed during measurement',
       );
+    }
+    if (hybridStart != null && hybridStart != hybridEnd) {
+      worsen(GlassBenchmarkValidity.invalid);
+      reasons.add(
+        'Hybrid render decisions changed during measurement: '
+        '${hybridStart.effectivePathText} (reads ${hybridStart.backdropReads}) -> '
+        '${hybridEnd?.effectivePathText ?? 'none'} (reads ${hybridEnd?.backdropReads ?? 0})',
+      );
+    }
+    if (run.mode == SistrumGlassMode.sistrumHybrid &&
+        _measurementStarted &&
+        hybridStart == null) {
+      worsen(GlassBenchmarkValidity.invalid);
+      reasons.add('Hybrid telemetry unavailable at measurement start');
     }
     if (cancelled) {
       worsen(GlassBenchmarkValidity.cancelled);
@@ -935,6 +1007,9 @@ class GlassBenchmarkRunner {
       androidEnd: _measurementStarted ? _androidEnd : null,
       displayModeChanges: modeChanges,
       backdropConfiguration: _backdropAtStart,
+      hybrid: run.hybrid,
+      hybridAtStart: hybridStart,
+      hybridAtEnd: hybridEnd,
       validity: validity,
       reasons: reasons,
       measurementStarted: _measurementStarted,
@@ -968,11 +1043,12 @@ class GlassBenchmarkRunner {
         surfaces: run.surfaces,
         repeat: run.repeat,
         runOrder: runOrder,
+        hybrid: run.hybrid,
         validity: GlassBenchmarkValidity.notRun,
         reasons: const ['not reached because the benchmark stopped first'],
         measurementStarted: false,
         summary: null,
-        expectedPath: expectedGlassRenderPath(run.mode),
+        expectedPath: expectedGlassRenderPathForRun(run),
         pathSamples: 0,
         pathMatches: 0,
         lastPath: 'unknown',

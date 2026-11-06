@@ -9,6 +9,8 @@ import 'package:sistrum/widgets/glass_poc/sistrum_auto_scroll.dart';
 import 'package:sistrum/widgets/glass_poc/sistrum_glass_mode.dart';
 import 'package:sistrum/widgets/glass_poc/sistrum_glass_render_path.dart';
 import 'package:sistrum/widgets/glass_poc/sistrum_glass_scene.dart';
+import 'package:sistrum/widgets/glass_poc/sistrum_hybrid_config.dart';
+import 'package:sistrum/widgets/glass_poc/sistrum_hybrid_telemetry.dart';
 
 const _budgetUs = 16667.0;
 
@@ -85,6 +87,12 @@ class _FakeHost implements GlassBenchmarkHost {
   @override
   int displayModeChangeCount() => modeChanges;
 
+  /// Hybrid telemetry the page would report; null outside Hybrid.
+  SistrumHybridTelemetrySnapshot? Function()? hybrid;
+
+  @override
+  SistrumHybridTelemetrySnapshot? hybridTelemetry() => hybrid?.call();
+
   GlassBenchmarkAggregator? aggregator;
   SistrumGlassMode? current;
   SistrumGlassRenderReport Function(SistrumGlassMode mode)? pathFor;
@@ -101,6 +109,7 @@ class _FakeHost implements GlassBenchmarkHost {
     sharedBackdrop: false,
     speed: SistrumScrollSpeed.normal,
     scene: SistrumGlassScene.fourSurfaces,
+    hybrid: const SistrumHybridConfig(),
   );
 
   @override
@@ -713,6 +722,171 @@ void main() {
     expect(result.refreshHzStart, isNull);
     expect(result.refreshHzEnd, isNull);
     runner.interrupt('test cleanup');
+  });
+  group('Sistrum Hybrid matrix', () {
+    SistrumHybridTelemetrySnapshot snapshot(
+      SistrumHybridEffectivePath path, {
+      SistrumHybridFallback fallback = SistrumHybridFallback.none,
+      int changes = 0,
+    }) => SistrumHybridTelemetrySnapshot.of([
+      for (var i = 0; i < 4; i++)
+        SistrumHybridDecision(
+          requestedTier: SistrumHybridTier.full,
+          path: path,
+          fallback: fallback,
+        ),
+    ], decisionChanges: changes);
+
+    GlassBenchmarkPlan onePlan(SistrumHybridVariant variant) =>
+        GlassBenchmarkPlan(
+          runs: [
+            GlassBenchmarkRun(
+              mode: SistrumGlassMode.sistrumHybrid,
+              hybrid: variant,
+            ),
+          ],
+          transition: const Duration(milliseconds: 100),
+          warmup: const Duration(milliseconds: 100),
+          measure: const Duration(seconds: 1),
+          modeTimeout: const Duration(milliseconds: 500),
+          hybridMatrix: true,
+        );
+
+    Future<GlassBenchmarkModeResult> runOnce(
+      WidgetTester tester,
+      _FakeHost host,
+      SistrumHybridVariant variant, {
+      void Function()? duringMeasurement,
+    }) async {
+      final runner = _runner(host, plan: onePlan(variant));
+      runner.start();
+      await tester.pump(const Duration(milliseconds: 100));
+      runner.onMeasurementStarted();
+      _feed(host);
+      duringMeasurement?.call();
+      await tester.pump(const Duration(seconds: 1));
+      return runner.results.single;
+    }
+
+    test('runs A to E three times each, counterbalanced, in Scene D', () {
+      final plan = GlassBenchmarkPlan.hybridMatrix();
+      expect(plan.hybridMatrix, isTrue);
+      expect(plan.runs, hasLength(15));
+      for (final v in SistrumHybridVariant.values) {
+        final runs = plan.runs.where((r) => r.hybrid == v).toList();
+        expect(runs, hasLength(3), reason: v.code);
+        expect(runs.map((r) => r.repeat).toSet(), {1, 2, 3});
+        expect(runs.every((r) => r.surfaces == 4), isTrue);
+        expect(
+          runs.every((r) => r.mode == SistrumGlassMode.sistrumHybrid),
+          isTrue,
+        );
+      }
+      // Not the same variant first in every round.
+      final firsts = {for (var i = 0; i < 15; i += 5) plan.runs[i].hybrid};
+      expect(firsts.length, greaterThan(1));
+    });
+
+    test('each variant expects its own render path', () {
+      GlassBenchmarkRun run(SistrumHybridVariant v) =>
+          GlassBenchmarkRun(mode: SistrumGlassMode.sistrumHybrid, hybrid: v);
+      final expected = {
+        SistrumHybridVariant.a: SistrumGlassRenderPath.opaque,
+        SistrumHybridVariant.b: SistrumGlassRenderPath.tint,
+        SistrumHybridVariant.c: SistrumGlassRenderPath.backdropFilter,
+        SistrumHybridVariant.d: SistrumGlassRenderPath.lensShader,
+        SistrumHybridVariant.e: SistrumGlassRenderPath.lensShader,
+      };
+      for (final entry in expected.entries) {
+        expect(
+          expectedGlassRenderPathForRun(run(entry.key)),
+          entry.value,
+          reason: entry.key.code,
+        );
+      }
+      expect(run(SistrumHybridVariant.e).configKey, 'sistrumHybrid-s4-E');
+      expect(SistrumHybridVariant.e.config.sharesBackdrop, isTrue);
+      expect(SistrumHybridVariant.d.config.sharesBackdrop, isFalse);
+    });
+
+    testWidgets(
+      'a Full run with the lens active is valid and keeps telemetry',
+      (tester) async {
+        final lens = snapshot(SistrumHybridEffectivePath.lens);
+        final host = _FakeHost()
+          ..hybrid = (() => lens)
+          ..pathFor = (_) =>
+              classifyHybridRenderPath(expectedSurfaces: 4, snapshot: lens);
+        final result = await runOnce(tester, host, SistrumHybridVariant.d);
+        expect(
+          result.validity,
+          GlassBenchmarkValidity.valid,
+          reason: '${result.reasons}',
+        );
+        expect(result.hybrid, SistrumHybridVariant.d);
+        expect(result.hybridAtStart, lens);
+        expect(result.hybridAtEnd, lens);
+        expect(result.expectedPath, SistrumGlassRenderPath.lensShader);
+      },
+    );
+
+    testWidgets('a Full run that draws the fallback blur is invalid', (
+      tester,
+    ) async {
+      final blur = snapshot(
+        SistrumHybridEffectivePath.blur,
+        fallback: SistrumHybridFallback.shaderFiltersUnsupported,
+      );
+      final host = _FakeHost()
+        ..hybrid = (() => blur)
+        ..pathFor = (_) =>
+            classifyHybridRenderPath(expectedSurfaces: 4, snapshot: blur);
+      final result = await runOnce(tester, host, SistrumHybridVariant.d);
+      expect(result.validity, GlassBenchmarkValidity.invalid);
+      expect(result.reasons.join(' '), contains('render path mismatch'));
+    });
+
+    testWidgets('a decision change during measurement invalidates the run', (
+      tester,
+    ) async {
+      var current = snapshot(SistrumHybridEffectivePath.lens);
+      final host = _FakeHost()
+        ..hybrid = (() => current)
+        ..pathFor = (_) =>
+            classifyHybridRenderPath(expectedSurfaces: 4, snapshot: current);
+      final result = await runOnce(
+        tester,
+        host,
+        SistrumHybridVariant.d,
+        duringMeasurement: () =>
+            current = snapshot(SistrumHybridEffectivePath.lens, changes: 1),
+      );
+      expect(result.validity, GlassBenchmarkValidity.invalid);
+      expect(
+        result.reasons.join(' '),
+        contains('Hybrid render decisions changed during measurement'),
+      );
+    });
+
+    test('the matrix report lists every variant and the step costs', () {
+      final text = formatGlassHybridMatrixReport(
+        status: 'COMPLETE',
+        deviceLines: const ['device_model=test'],
+        plan: GlassBenchmarkPlan.hybridMatrix(),
+        startedAt: null,
+        endedAt: null,
+        cancelReason: null,
+        failure: null,
+        results: const [],
+      );
+      expect(text, startsWith('sistrum-glass-hybrid-matrix'));
+      for (final v in SistrumHybridVariant.values) {
+        expect(text, contains('variant_${v.code}='));
+      }
+      expect(text, contains('A->B (translucent material)'));
+      expect(text, contains('D->E (shared backdrop read)'));
+      expect(text, contains('not GPU execution time'));
+    });
   });
 }
 

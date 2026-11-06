@@ -6,6 +6,7 @@ import 'package:sistrum/widgets/glass_poc/glass_benchmark_run.dart';
 import 'package:sistrum/widgets/glass_poc/glass_benchmark_runner.dart';
 import 'package:sistrum/widgets/glass_poc/glass_diagnostic_stats.dart';
 import 'package:sistrum/widgets/glass_poc/sistrum_glass_mode.dart';
+import 'package:sistrum/widgets/glass_poc/sistrum_hybrid_config.dart';
 
 /// Plain-text report for a finished benchmark. The Copy Report action copies
 /// this exact text, so everything the report says is in it, not only the summary
@@ -779,4 +780,155 @@ bool _within(double a, double b, double tolerance) =>
 String _androidMode(DisplayRefreshState? state) {
   if (state == null || !state.attached) return 'unavailable';
   return 'mode ${state.activeModeId} @ ${state.activeModeHz.toStringAsFixed(2)}Hz';
+}
+
+/// The Sistrum Hybrid A–E raster matrix report. Medians are over the valid
+/// repeats of each variant; neighbour deltas are differences of those medians,
+/// so each one isolates one rendering step. Nothing here is a significance
+/// test, and no variant is declared a winner.
+String formatGlassHybridMatrixReport({
+  required String status,
+  required List<String> deviceLines,
+  required GlassBenchmarkPlan plan,
+  required DateTime? startedAt,
+  required DateTime? endedAt,
+  required String? cancelReason,
+  required String? failure,
+  required List<GlassBenchmarkModeResult> results,
+}) {
+  final out = <String>[];
+  void add(String line) => out.add(line);
+  void section(String title) {
+    out.add('');
+    out.add('== $title ==');
+  }
+
+  final repeats = plan.runs.fold<int>(0, (m, r) => r.repeat > m ? r.repeat : m);
+  add('sistrum-glass-hybrid-matrix');
+  add('status=$status');
+  add('started=${startedAt?.toIso8601String() ?? 'n/a'}');
+  add('ended=${endedAt?.toIso8601String() ?? 'n/a'}');
+  if (cancelReason != null) add('cancel_reason=$cancelReason');
+  if (failure != null) add('failure=$failure');
+  add('repeats_per_variant=$repeats runs_planned=${plan.runs.length}');
+  add(
+    'warmup_s=${plan.warmup.inSeconds} measure_s=${plan.measure.inSeconds} '
+    'transition_s=${plan.transition.inSeconds}',
+  );
+
+  section('1. Device and fixed scene');
+  for (final line in deviceLines) {
+    add(line);
+  }
+  add('scene=D (four surfaces: back, trailing capsule, mini player, tab bar)');
+  add('animated_background=off');
+  add(
+    'scroll_speed_target=${kGlassBenchmarkSpeed.pxPerSecond.toStringAsFixed(0)} '
+    'logical_px_per_second (Ticker-driven)',
+  );
+  add('run_order=counterbalanced (diagnostic rotation; odd rounds reversed)');
+  for (final v in SistrumHybridVariant.values) {
+    add('variant_${v.code}=${v.label}: ${v.config.reportText}');
+  }
+
+  section('2. Executed order and validity');
+  for (final r in results) {
+    add(
+      'order=${r.runOrder} repeat=${r.repeat} '
+      'variant=${r.hybrid?.code ?? '?'} '
+      'validity=${_validityText(r.validity)}',
+    );
+    for (final reason in r.reasons) {
+      add('  reason: $reason');
+    }
+  }
+
+  section('3. Matrix (medians over valid repeats)');
+  add(
+    'variant | n | raster_p50 | raster_p90 | raster_p99 | build_p50 | '
+    'exceed_pct | est_fps | backdrop_reads | shader_filters | path',
+  );
+  final medians = <SistrumHybridVariant, double?>{};
+  for (final v in SistrumHybridVariant.values) {
+    final valid = results
+        .where((r) => r.hybrid == v && _isMeasured(r))
+        .toList();
+    double? median(double? Function(GlassBenchmarkModeResult r) pick) =>
+        GlassRepeatStats.of(_pick(valid, pick))?.median;
+    final rasterP50 = median((r) => r.summary?.rasterP50Ms);
+    medians[v] = rasterP50;
+    final telemetry = valid.isEmpty ? null : valid.first.hybridAtStart;
+    add(
+      '${v.code} ${v.label} | ${valid.length} | ${_f(rasterP50, 2)} | '
+      '${_f(median((r) => r.summary?.rasterP90Ms), 2)} | '
+      '${_f(median((r) => r.summary?.rasterP99Ms), 2)} | '
+      '${_f(median((r) => r.summary?.buildP50Ms), 2)} | '
+      '${_f(median((r) => r.summary?.exceedancePct), 1)} | '
+      '${_f(median((r) => r.summary?.estimatedProductionFps), 1)} | '
+      '${telemetry?.backdropReads ?? 'n/a'} | '
+      '${telemetry?.shaderFilters ?? 'n/a'} | '
+      '${telemetry?.effectivePathText ?? 'n/a'}',
+    );
+  }
+  for (final v in SistrumHybridVariant.values) {
+    final valid = results.where((r) => r.hybrid == v && _isMeasured(r));
+    add(
+      _statLine(
+        'variant_${v.code}_raster_p50_ms',
+        _pick(valid, (r) => r.summary?.rasterP50Ms),
+      ),
+    );
+  }
+
+  section('4. Step costs (difference of raster P50 medians)');
+  const steps = [
+    (SistrumHybridVariant.a, SistrumHybridVariant.b, 'translucent material'),
+    (SistrumHybridVariant.b, SistrumHybridVariant.c, 'backdrop reads + blur'),
+    (SistrumHybridVariant.c, SistrumHybridVariant.d, 'lens shader after blur'),
+    (SistrumHybridVariant.d, SistrumHybridVariant.e, 'shared backdrop read'),
+  ];
+  for (final (from, to, what) in steps) {
+    final a = medians[from];
+    final b = medians[to];
+    add(
+      '${from.code}->${to.code} ($what): '
+      '${a == null || b == null ? 'n/a (no valid repeats)' : '${b - a >= 0 ? '+' : ''}${_f(b - a, 2)} ms'}',
+    );
+  }
+  add(
+    'A negative D->E is the saving of the shared read. Deltas need valid '
+    'repeats on both sides and are not significance-tested.',
+  );
+
+  section('5. Per-run telemetry (measurement start)');
+  for (final r in results) {
+    add('');
+    add('-- order=${r.runOrder} variant=${r.hybrid?.code ?? '?'}');
+    final t = r.hybridAtStart;
+    if (t == null) {
+      add('  telemetry=unavailable (measurement did not start)');
+      continue;
+    }
+    for (final line in t.lines()) {
+      add('  $line');
+    }
+    final end = r.hybridAtEnd;
+    add('  telemetry_unchanged_at_end=${end != null && end == t}');
+    add('  backdrop_configuration=${r.backdropConfiguration ?? 'unavailable'}');
+  }
+
+  section('6. What these numbers can and cannot say');
+  add('- Raster is FrameTiming raster time on the raster thread. It includes');
+  add(
+    '  encoding, submission and any wait for the GPU or the swapchain; it is',
+  );
+  add('  not GPU execution time and cannot name a GPU pass on its own.');
+  add('- Telemetry is the filters the widgets handed to the engine.');
+  add('  backdrop_reads follows Impeller canvas.cc (one FlipBackdrop per');
+  add('  independent BackdropFilter, one per shared key used twice or more);');
+  add('  it is derived, not counted on the GPU.');
+  add('- For per-pass GPU cost, capture the same variants with Android GPU');
+  add('  Inspector or Perfetto GPU counters on the device.');
+  add('- No 120 FPS claim follows from any single run of this report.');
+  return out.join('\n');
 }

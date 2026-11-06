@@ -27,6 +27,8 @@ import 'package:sistrum/widgets/glass_poc/sistrum_glass_mode.dart';
 import 'package:sistrum/widgets/glass_poc/sistrum_glass_render_path.dart';
 import 'package:sistrum/widgets/glass_poc/sistrum_glass_scene.dart';
 import 'package:sistrum/widgets/glass_poc/sistrum_glass_surface.dart';
+import 'package:sistrum/widgets/glass_poc/sistrum_hybrid_telemetry.dart';
+import 'package:sistrum/widgets/glass_poc/sistrum_lens_glass.dart';
 import 'package:sistrum/widgets/glass_poc/sistrum_hybrid_config.dart';
 import 'package:sistrum/widgets/glass_poc/sistrum_hybrid_controls.dart';
 
@@ -63,10 +65,20 @@ class _GlassPocPageState extends ConsumerState<GlassPocPage>
     (_) => BackdropKey(),
   );
   String _backdropConfiguration = 'unlaid_out';
+
+  /// Decisions of the mounted Sistrum Hybrid surfaces. Read by the probe, the
+  /// benchmark and the copied metrics; written by the surfaces themselves.
+  final SistrumHybridTelemetry _hybridTelemetry = SistrumHybridTelemetry();
+
+  /// The run the benchmark applied last, while it runs.
+  GlassBenchmarkRun? _currentRun;
   Timer? _pathTimer;
   late final PerfSpikeRecorder _spikes;
   AppLifecycleListener? _lifecycle;
   SistrumGlassRenderReport? _render;
+
+  /// Hybrid telemetry shown on the path line, refreshed with the probe.
+  SistrumHybridTelemetrySnapshot? _renderHybrid;
   SistrumGlassRenderReport? _renderAtStart;
   bool _outlines = false;
   late final GlassBenchmarkRunner _runner;
@@ -178,6 +190,13 @@ class _GlassPocPageState extends ConsumerState<GlassPocPage>
       return const SistrumGlassRenderReport.unverified('stage not mounted');
     }
     final mode = ref.read(glassPocModeProvider);
+    if (mode == SistrumGlassMode.sistrumHybrid) {
+      // From the surfaces' own decisions: no tree walk, no type names.
+      return classifyHybridRenderPath(
+        expectedSurfaces: _currentSurfaces(),
+        snapshot: _hybridSnapshot(),
+      );
+    }
     return classifySistrumGlassRenderPath(
       mode: mode,
       expectedSurfaces: _currentSurfaces(),
@@ -185,6 +204,15 @@ class _GlassPocPageState extends ConsumerState<GlassPocPage>
       shaderFiltersSupported: ui.ImageFilter.isShaderFilterSupported,
     );
   }
+
+  SistrumHybridTelemetrySnapshot _hybridSnapshot() =>
+      _hybridTelemetry.snapshot(program: SistrumLensProgram.state);
+
+  @override
+  SistrumHybridTelemetrySnapshot? hybridTelemetry() =>
+      ref.read(glassPocModeProvider) == SistrumGlassMode.sistrumHybrid
+      ? _hybridSnapshot()
+      : null;
 
   /// Glass surfaces on the stage: the run's count during a benchmark, otherwise
   /// the scene's.
@@ -200,6 +228,14 @@ class _GlassPocPageState extends ConsumerState<GlassPocPage>
     // not a result, so the run waits for full_gpu (and times out if it never comes).
     if (_runner.isRunning && mode == SistrumGlassMode.newFullGlass) {
       return _probeRender().path == SistrumGlassRenderPath.fullGpu;
+    }
+    // A Hybrid matrix run measures only its variant's path: Full waits for the
+    // lens (blur while the program loads is not a Full result).
+    final run = _currentRun;
+    if (_runner.isRunning && run != null && run.hybrid != null) {
+      final report = _probeRender();
+      return report.fallback == false &&
+          report.path == expectedGlassRenderPathForRun(run);
     }
     if (!sistrumRenderPathVerifiable(mode)) {
       return true;
@@ -232,11 +268,18 @@ class _GlassPocPageState extends ConsumerState<GlassPocPage>
     sharedBackdrop: ref.read(glassPocSharedBackdropProvider),
     speed: ref.read(glassPocScrollSpeedProvider),
     scene: ref.read(glassPocSceneProvider),
+    hybrid: ref.read(glassPocHybridProvider),
   );
 
   @override
   void applyRun(GlassBenchmarkRun run) {
     _benchSurfaces = run.surfaces;
+    _currentRun = run;
+    final variant = run.hybrid;
+    if (variant != null) {
+      // Fixed variant settings, whatever the controls held before the run.
+      ref.read(glassPocHybridProvider.notifier).update((_) => variant.config);
+    }
     _modeNotifier.select(run.mode);
     _sharedNotifier.set(false);
     _speedNotifier.select(kGlassBenchmarkSpeed);
@@ -252,6 +295,8 @@ class _GlassPocPageState extends ConsumerState<GlassPocPage>
 
   @override
   void restoreConfig(GlassBenchmarkConfig config) {
+    _currentRun = null;
+    ref.read(glassPocHybridProvider.notifier).update((_) => config.hybrid);
     _modeNotifier.select(config.mode);
     _sharedNotifier.set(config.sharedBackdrop);
     _speedNotifier.select(config.speed);
@@ -332,6 +377,18 @@ class _GlassPocPageState extends ConsumerState<GlassPocPage>
         log: _displayModes,
       ),
     ];
+    if (runner.plan.hybridMatrix) {
+      return formatGlassHybridMatrixReport(
+        status: status,
+        deviceLines: deviceLines,
+        plan: runner.plan,
+        startedAt: runner.startedAt,
+        endedAt: runner.endedAt,
+        cancelReason: runner.cancelReason,
+        failure: runner.failure,
+        results: runner.results,
+      );
+    }
     if (runner.plan.diagnostic) {
       return formatGlassDiagnosticReport(
         status: status,
@@ -392,7 +449,13 @@ class _GlassPocPageState extends ConsumerState<GlassPocPage>
   void _refreshRender() {
     if (!mounted) return;
     final next = _probeRender();
-    if (next != _render) setState(() => _render = next);
+    final hybrid = hybridTelemetry();
+    if (next != _render || hybrid != _renderHybrid) {
+      setState(() {
+        _render = next;
+        _renderHybrid = hybrid;
+      });
+    }
   }
 
   @override
@@ -459,6 +522,12 @@ class _GlassPocPageState extends ConsumerState<GlassPocPage>
     _runner.start(plan: GlassBenchmarkPlan.diagnostic(timing: _standardPlan));
   }
 
+  void _startHybridMatrix() {
+    _spikes.noteEvent('benchmark=hybrid matrix start');
+    _displayModes.begin(ref.read(displayRefreshProvider));
+    _runner.start(plan: GlassBenchmarkPlan.hybridMatrix(timing: _standardPlan));
+  }
+
   void _startBackdropSharing() {
     _spikes.noteEvent('benchmark=shared backdrop A/B start');
     _displayModes.begin(ref.read(displayRefreshProvider));
@@ -475,6 +544,7 @@ class _GlassPocPageState extends ConsumerState<GlassPocPage>
     SistrumGlassMode mode,
     int surfaces,
     double barWidth,
+    SistrumHybridConfig hybrid,
   ) {
     const h = _GlassPocPageConstants.headerHeight;
     const b = _GlassPocPageConstants.barHeight;
@@ -502,6 +572,8 @@ class _GlassPocPageState extends ConsumerState<GlassPocPage>
         Rect.fromLTWH(_sideInset, height - 12 - b, barWidth, b),
     ];
     final dpr = MediaQuery.devicePixelRatioOf(context);
+    final hybridShared =
+        mode == SistrumGlassMode.sistrumHybrid && hybrid.sharesBackdrop;
     final settings = sistrumRendererGlassSettings(dark: dark);
     // Conservative envelope of the pinned package: contour is 0.75 dp;
     // preset frost scales by at most 1.78 and has a 5.8-device-pixel floor.
@@ -515,22 +587,41 @@ class _GlassPocPageState extends ConsumerState<GlassPocPage>
     final paintBounds = [for (final box in boxes) box.inflate(outset)];
     final samples = [
       for (final box in boxes)
-        box.inflate(
-          outset +
-              frost * 3 +
-              1 / dpr +
-              math.max(0.001, settings.refractionAmount) *
-                  (1 + settings.dispersion.abs() * 0.5) +
-              (1 / (1 - shrink) - 1) * box.longestSide / 2,
-        ),
+        hybridShared
+            // Hybrid reach: the blur kernel (3 sigma) plus the largest lens
+            // shift (half the rim band) plus a pixel of rounding.
+            ? box.inflate(
+                hybrid.blurSigma * 3 +
+                    (hybrid.isGenuineRefraction
+                        ? kSistrumLensRefraction * kSistrumLensBandLogical / 2
+                        : 0) +
+                    1 +
+                    1 / dpr,
+              )
+            : box.inflate(
+                outset +
+                    frost * 3 +
+                    1 / dpr +
+                    math.max(0.001, settings.refractionAmount) *
+                        (1 + settings.dispersion.abs() * 0.5) +
+                    (1 / (1 - shrink) - 1) * box.longestSide / 2,
+              ),
     ];
-    final shared = mode == SistrumGlassMode.newFullGlassSharedBackdrop;
-    final assignments = shared
+    final shared =
+        mode == SistrumGlassMode.newFullGlassSharedBackdrop || hybridShared;
+    var assignments = shared
         ? appGlassBackdropGroups(
             paintBounds: paintBounds,
             samplingBounds: samples,
           )
         : List.generate(boxes.length, (i) => i);
+    if (hybridShared && hybrid.isGenuineRefraction) {
+      // Two equal lens filters on one key would be rendered once over the
+      // whole screen. Equal lens uniforms mean equal size and radius.
+      assignments = appGlassSplitEqualFilters(assignments, [
+        for (final box in boxes) '${box.width}x${box.height}',
+      ]);
+    }
     _backdropConfiguration =
         'groups=${assignments.join(',')}; '
         'roles=${surfaces == 4
@@ -640,7 +731,7 @@ class _GlassPocPageState extends ConsumerState<GlassPocPage>
                       0,
                     ),
                     child: Text(
-                      _renderLine(_render),
+                      _renderLine(_render, hybrid: _renderHybrid),
                       key: const Key('pathLine'),
                     ),
                   ),
@@ -731,6 +822,11 @@ class _GlassPocPageState extends ConsumerState<GlassPocPage>
                         ActionChip(
                           label: const Text('Run Shared Backdrop A/B'),
                           onPressed: running ? null : _startBackdropSharing,
+                        ),
+                        ActionChip(
+                          key: const Key('hybridMatrix'),
+                          label: const Text('Run Hybrid A–E Matrix'),
+                          onPressed: running ? null : _startHybridMatrix,
                         ),
                         if (running)
                           ActionChip(
@@ -852,87 +948,91 @@ class _GlassPocPageState extends ConsumerState<GlassPocPage>
                   mode,
                   surfaces,
                   barWidth,
+                  hybrid,
                 );
                 return ClipRect(
                   key: _stageKey,
-                  child: SistrumHybridConfigScope(
-                    config: hybrid,
-                    child: SistrumGlassScope(
-                      mode: mode,
-                      sharedBackdrop: sharedBackdrop,
-                      child: Stack(
-                        children: [
-                          Positioned.fill(
-                            child: AnimatedBuilder(
-                              animation: _background,
-                              builder: (context, _) => CustomPaint(
-                                painter: _PocBackgroundPainter(
-                                  progress: scene.animated
-                                      ? _background.value
-                                      : 0,
-                                  dark:
-                                      Theme.of(context).brightness ==
-                                      Brightness.dark,
+                  child: SistrumHybridTelemetryScope(
+                    telemetry: _hybridTelemetry,
+                    child: SistrumHybridConfigScope(
+                      config: hybrid,
+                      child: SistrumGlassScope(
+                        mode: mode,
+                        sharedBackdrop: sharedBackdrop,
+                        child: Stack(
+                          children: [
+                            Positioned.fill(
+                              child: AnimatedBuilder(
+                                animation: _background,
+                                builder: (context, _) => CustomPaint(
+                                  painter: _PocBackgroundPainter(
+                                    progress: scene.animated
+                                        ? _background.value
+                                        : 0,
+                                    dark:
+                                        Theme.of(context).brightness ==
+                                        Brightness.dark,
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                          Positioned.fill(
-                            child: ListView.builder(
-                              controller: _list,
-                              padding: const EdgeInsets.only(
-                                top: _GlassPocPageConstants.headerHeight + 24,
-                                bottom:
-                                    2 * _GlassPocPageConstants.barHeight + 40,
-                              ),
-                              itemCount: 60,
-                              itemBuilder: (context, i) => Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: _sideInset,
-                                  vertical: 10,
+                            Positioned.fill(
+                              child: ListView.builder(
+                                controller: _list,
+                                padding: const EdgeInsets.only(
+                                  top: _GlassPocPageConstants.headerHeight + 24,
+                                  bottom:
+                                      2 * _GlassPocPageConstants.barHeight + 40,
                                 ),
-                                child: Text(
-                                  'Track ${i + 1} — scrolling content under glass',
+                                itemCount: 60,
+                                itemBuilder: (context, i) => Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: _sideInset,
+                                    vertical: 10,
+                                  ),
+                                  child: Text(
+                                    'Track ${i + 1} — scrolling content under glass',
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                          if (surfaces == 4)
-                            Positioned(
-                              top: 8,
-                              left: _sideInset,
-                              right: _sideInset,
-                              child: _PocHeader(
-                                mode: mode,
-                                outline: _outlines,
-                                backdropKeys: keys.take(2).toList(),
-                              ),
-                            ),
-                          Positioned(
-                            left: _sideInset,
-                            bottom: 12,
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                _PocMiniPlayer(
+                            if (surfaces == 4)
+                              Positioned(
+                                top: 8,
+                                left: _sideInset,
+                                right: _sideInset,
+                                child: _PocHeader(
                                   mode: mode,
-                                  width: barWidth,
                                   outline: _outlines,
-                                  backdropKey: keys[surfaces == 4 ? 2 : 0],
+                                  backdropKeys: keys.take(2).toList(),
                                 ),
-                                if (surfaces >= 2) ...[
-                                  const SizedBox(height: 10),
-                                  _PocTabBar(
+                              ),
+                            Positioned(
+                              left: _sideInset,
+                              bottom: 12,
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  _PocMiniPlayer(
                                     mode: mode,
                                     width: barWidth,
                                     outline: _outlines,
-                                    backdropKey: keys[surfaces == 4 ? 3 : 1],
+                                    backdropKey: keys[surfaces == 4 ? 2 : 0],
                                   ),
+                                  if (surfaces >= 2) ...[
+                                    const SizedBox(height: 10),
+                                    _PocTabBar(
+                                      mode: mode,
+                                      width: barWidth,
+                                      outline: _outlines,
+                                      backdropKey: keys[surfaces == 4 ? 3 : 1],
+                                    ),
+                                  ],
                                 ],
-                              ],
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -948,16 +1048,26 @@ class _GlassPocPageState extends ConsumerState<GlassPocPage>
 
 /// The render-path line on the page. Fallback and unverified are stated in
 /// words, so a FakeGlass render is never shown as Full Glass.
-String _renderLine(SistrumGlassRenderReport? report) {
+String _renderLine(
+  SistrumGlassRenderReport? report, {
+  SistrumHybridTelemetrySnapshot? hybrid,
+}) {
   if (report == null) return 'glass_render_path=… (probing)';
   final fallback = report.fallback;
   final suffix = switch (report.path) {
     SistrumGlassRenderPath.fakeBackdrop when fallback == true =>
       ' · FALLBACK to FakeGlass: ${report.fallbackReason}',
     SistrumGlassRenderPath.unverified => ' · ${report.unverifiedReason}',
+    _ when fallback == true => ' · FALLBACK: ${report.fallbackReason}',
     _ => '',
   };
-  return 'glass_render_path=${report.path.wire}$suffix';
+  final hybridText = hybrid == null
+      ? ''
+      : ' · backdrop_reads=${hybrid.backdropReads}'
+            ' shader_filters=${hybrid.shaderFilters}'
+            ' shared=${hybrid.sharedBackdropActive}'
+            ' lens_program=${hybrid.program?.status.wire ?? 'unknown'}';
+  return 'glass_render_path=${report.path.wire}$suffix$hybridText';
 }
 
 /// Benchmark status line. It listens to per-second progress on its own, so

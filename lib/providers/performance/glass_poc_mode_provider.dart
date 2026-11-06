@@ -5,6 +5,7 @@ import 'package:sistrum/widgets/glass_poc/sistrum_glass_render_path.dart';
 import 'package:sistrum/widgets/glass_poc/sistrum_glass_scene.dart';
 import 'package:sistrum/widgets/glass_poc/sistrum_glass_surface.dart';
 import 'package:sistrum/widgets/glass_poc/sistrum_hybrid_config.dart';
+import 'package:sistrum/widgets/glass_poc/sistrum_hybrid_telemetry.dart';
 
 /// The Glass POC mode selected on the developer page. Held in memory only, so
 /// a restart returns to the baseline. The performance HUD reads it to label
@@ -124,6 +125,10 @@ abstract interface class GlassPocRunProbe {
 
   /// The path when warm-up ended, or null if measurement has not started.
   SistrumGlassRenderReport? renderPathAtMeasurementStart();
+
+  /// Decisions of the mounted Sistrum Hybrid surfaces, or null when Hybrid is
+  /// not shown.
+  SistrumHybridTelemetrySnapshot? hybridTelemetry();
 }
 
 class GlassPocRunRegistry {
@@ -150,6 +155,9 @@ class GlassPocRunRegistry {
 
   SistrumGlassRenderReport? renderPathAtMeasurementStart() =>
       _probe?.renderPathAtMeasurementStart();
+
+  SistrumHybridTelemetrySnapshot? hybridTelemetry() =>
+      _probe?.hybridTelemetry();
 }
 
 /// Every benchmark line for a copied report, read from the providers at the
@@ -172,6 +180,9 @@ List<String> glassPocReportLines(WidgetRef ref) {
       sharedBackdropApplies(mode, sharedBackdrop);
   final scrolling = scene.scrolling && scroll != null;
   final fallback = render.fallback;
+  final hybrid = mode == SistrumGlassMode.sistrumHybrid
+      ? registry.hybridTelemetry()
+      : null;
   return [
     'glass_render_path=${render.path.wire}',
     'glass_fallback=${fallback == null
@@ -184,7 +195,10 @@ List<String> glassPocReportLines(WidgetRef ref) {
       'glass_unverified_reason=${render.unverifiedReason}',
     'scene=${scene.code}',
     'animated_background=${scene.animated ? 'on' : 'off'}',
-    'shared_backdrop=${shared ? 'on' : 'off'}',
+    'shared_backdrop=${shared || (hybrid?.sharedBackdropActive ?? false) ? 'on' : 'off'}',
+    if (mode == SistrumGlassMode.sistrumHybrid)
+      'hybrid_requested=${ref.read(glassPocHybridProvider).reportText}',
+    if (hybrid != null) ...hybrid.lines(),
     if (!scrolling)
       'scroll_mode=off'
     else ...[

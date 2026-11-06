@@ -2,6 +2,8 @@ import 'package:flutter/widgets.dart';
 
 /// Rendering tiers of Sistrum Hybrid, the developer-only glass POC.
 ///
+/// - [opaque]: an opaque fill with the same shape and hairline. No glass and
+///   no backdrop read; the cost floor of the scene (matrix variant A).
 /// - [lightweight]: tint, highlight and hairline only. No backdrop read.
 /// - [frosted]: a live `BackdropFilter` blur at native resolution.
 /// - [full]: blur, then the first-party lens shader (`shaders/sistrum_lens.frag`)
@@ -9,6 +11,7 @@ import 'package:flutter/widgets.dart';
 ///   [SistrumHybridConfig.refraction] is on; with it off the tier draws the
 ///   Frosted filter. Falls back to Frosted where shader filters are unsupported.
 enum SistrumHybridTier {
+  opaque('Opaque'),
   lightweight('Lightweight'),
   frosted('Frosted'),
   full('Full');
@@ -16,6 +19,9 @@ enum SistrumHybridTier {
   const SistrumHybridTier(this.label);
 
   final String label;
+
+  /// Whether the tier hands a `BackdropFilter` to the engine.
+  bool get readsBackdrop => this == frosted || this == full;
 }
 
 /// Reference values taken from BitChord's `OptimizedHaze.kt` and
@@ -42,24 +48,35 @@ class SistrumHybridConfig {
     this.tintOpacity = kSistrumHybridDefaultTintOpacity,
     this.refraction = true,
     this.chromaticAberration = true,
+    this.sharedBackdrop = false,
   });
 
   final SistrumHybridTier tier;
 
-  /// Gaussian blur sigma in logical pixels ([SistrumHybridTier.frosted] only).
+  /// Gaussian blur sigma in logical pixels (Frosted and Full).
   final double blurSigma;
 
-  /// Opacity of the theme-adaptive tint, 0 to 1.
+  /// Opacity of the theme-adaptive tint, 0 to 1 (Lightweight, Frosted, Full).
   final double tintOpacity;
 
-  /// Genuine refraction on [SistrumHybridTier.full]. Off draws FakeGlass.
+  /// Genuine refraction on [SistrumHybridTier.full]. Off draws the Frosted
+  /// filter, which is not refraction.
   final bool refraction;
 
   /// Chromatic dispersion on [SistrumHybridTier.full], when refraction is on.
   final bool chromaticAberration;
 
+  /// Requests one shared backdrop read for the surfaces of the stage
+  /// (`BackdropFilter.backdropGroupKey`). Only tiers that read the backdrop
+  /// use it, and the page shares a read only between surfaces whose sampling
+  /// regions cannot see each other's paint (`appGlassBackdropGroups`).
+  final bool sharedBackdrop;
+
   /// Whether the surface reads the live backdrop through a genuine refraction.
   bool get isGenuineRefraction => tier == SistrumHybridTier.full && refraction;
+
+  /// Whether a shared backdrop read is requested for a tier that can use it.
+  bool get sharesBackdrop => sharedBackdrop && tier.readsBackdrop;
 
   SistrumHybridConfig copyWith({
     SistrumHybridTier? tier,
@@ -67,18 +84,27 @@ class SistrumHybridConfig {
     double? tintOpacity,
     bool? refraction,
     bool? chromaticAberration,
+    bool? sharedBackdrop,
   }) => SistrumHybridConfig(
     tier: tier ?? this.tier,
     blurSigma: (blurSigma ?? this.blurSigma).clamp(0.0, 24.0),
     tintOpacity: (tintOpacity ?? this.tintOpacity).clamp(0.0, 1.0),
     refraction: refraction ?? this.refraction,
     chromaticAberration: chromaticAberration ?? this.chromaticAberration,
+    sharedBackdrop: sharedBackdrop ?? this.sharedBackdrop,
   );
 
   /// The controls that take effect for [tier]. The page shows the others as
   /// unsupported rather than as working controls.
   SistrumHybridCapabilities get capabilities =>
       SistrumHybridCapabilities.of(tier);
+
+  /// One-line description for copied reports.
+  String get reportText =>
+      'tier=${tier.name} blur_sigma=${blurSigma.toStringAsFixed(1)} '
+      'tint_opacity=${tintOpacity.toStringAsFixed(2)} '
+      'refraction=$refraction chromatic=$chromaticAberration '
+      'shared_backdrop_requested=$sharedBackdrop';
 
   @override
   bool operator ==(Object other) =>
@@ -87,7 +113,8 @@ class SistrumHybridConfig {
       other.blurSigma == blurSigma &&
       other.tintOpacity == tintOpacity &&
       other.refraction == refraction &&
-      other.chromaticAberration == chromaticAberration;
+      other.chromaticAberration == chromaticAberration &&
+      other.sharedBackdrop == sharedBackdrop;
 
   @override
   int get hashCode => Object.hash(
@@ -96,11 +123,44 @@ class SistrumHybridConfig {
     tintOpacity,
     refraction,
     chromaticAberration,
+    sharedBackdrop,
   );
 }
 
-/// Which controls work for a tier. Saturation, the sampling scale and the
-/// shared backdrop are false on every tier: none is implemented for Hybrid.
+/// The comparable configurations of the Scene D raster matrix. Every variant
+/// keeps the default blur, tint, refraction and chromatic settings, so only
+/// the named difference changes between neighbours:
+///
+/// - A to B: a translucent material instead of an opaque one.
+/// - B to C: a live backdrop read and blur.
+/// - C to D: the lens shader after the blur.
+/// - D to E: one shared backdrop read instead of one per surface.
+enum SistrumHybridVariant {
+  a('A', 'No glass (opaque)', SistrumHybridTier.opaque),
+  b('B', 'Tint only', SistrumHybridTier.lightweight),
+  c('C', 'Frosted', SistrumHybridTier.frosted),
+  d('D', 'Full Hybrid', SistrumHybridTier.full),
+  e('E', 'Full Hybrid, shared backdrop', SistrumHybridTier.full, shared: true);
+
+  const SistrumHybridVariant(
+    this.code,
+    this.label,
+    this.tier, {
+    this.shared = false,
+  });
+
+  final String code;
+  final String label;
+  final SistrumHybridTier tier;
+  final bool shared;
+
+  /// The fixed configuration this variant runs with.
+  SistrumHybridConfig get config =>
+      SistrumHybridConfig(tier: tier, sharedBackdrop: shared);
+}
+
+/// Which controls work for a tier. Saturation and the sampling scale are false
+/// on every tier: neither is implemented for Hybrid.
 @immutable
 class SistrumHybridCapabilities {
   const SistrumHybridCapabilities({
@@ -115,6 +175,15 @@ class SistrumHybridCapabilities {
 
   factory SistrumHybridCapabilities.of(SistrumHybridTier tier) =>
       switch (tier) {
+        SistrumHybridTier.opaque => const SistrumHybridCapabilities(
+          blur: false,
+          tint: false,
+          refraction: false,
+          chromaticAberration: false,
+          saturation: false,
+          samplingScale: false,
+          sharedBackdrop: false,
+        ),
         SistrumHybridTier.lightweight => const SistrumHybridCapabilities(
           blur: false,
           tint: true,
@@ -131,16 +200,18 @@ class SistrumHybridCapabilities {
           chromaticAberration: false,
           saturation: false,
           samplingScale: false,
-          sharedBackdrop: false,
+          sharedBackdrop: true,
         ),
+        // Full composes the same blur before the lens and draws the same
+        // material, so blur and tint apply to it too.
         SistrumHybridTier.full => const SistrumHybridCapabilities(
-          blur: false,
-          tint: false,
+          blur: true,
+          tint: true,
           refraction: true,
           chromaticAberration: true,
           saturation: false,
           samplingScale: false,
-          sharedBackdrop: false,
+          sharedBackdrop: true,
         ),
       };
 
@@ -150,6 +221,8 @@ class SistrumHybridCapabilities {
   final bool chromaticAberration;
   final bool saturation;
   final bool samplingScale;
+
+  /// Whether the tier reads the backdrop, so a shared read can apply.
   final bool sharedBackdrop;
 }
 
