@@ -283,7 +283,12 @@ class MornyeGlass extends ConsumerWidget {
         MornyeGlassRules.shaderLensSupported;
     // Clear glass softens the backdrop less. Keep the mid-range fallback at
     // its small blur budget, and reuse these filters in the lens renderer too.
-    final filterIndex = MornyeGlassRules.blurIndex(level, clarity);
+    final experiment = ref.watch(mornyeGlassExperimentProvider);
+    final filterIndex = MornyeGlassRules.blurIndex(
+      level,
+      clarity,
+      sigmaEarly: experiment == MornyeGlassExperiment.sigmaEarly,
+    );
     final clearFill = (dark ? const Color(0xff999999) : Colors.white)
         .withValues(alpha: dark ? 0.17 : 0.46);
     final fill = Color.lerp(

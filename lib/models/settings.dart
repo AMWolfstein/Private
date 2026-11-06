@@ -191,6 +191,12 @@ class AppSettings {
   /// and blurs. 'separate_pass' (the default and the reviewed look),
   /// 'single_pass' or 'shader_blur'. Read when a batch builds.
   final String glassBatchRenderer;
+
+  /// Diagnostic experiment for Mornye glass: 'off' (default, the reviewed
+  /// look), 'header_batch' (Artist and Album share one backdrop read) or
+  /// 'sigma_early' (sigma 6 from clarity 0.4 instead of 0.6). Read when the
+  /// surface builds.
+  final String glassExperiment;
   final String
   extensionVerificationBrowserMode; // 'external_first' or 'in_app_first'
   final String locale;
@@ -372,6 +378,7 @@ class AppSettings {
     this.heroAnimationsEnabled = true,
     this.forceBackdropBlur = false,
     this.glassBatchRenderer = 'separate_pass',
+    this.glassExperiment = 'off',
     this.extensionVerificationBrowserMode = 'in_app_first',
     this.locale = 'system',
     this.lyricsMode = 'embed',
@@ -534,6 +541,7 @@ class AppSettings {
     bool? heroAnimationsEnabled,
     bool? forceBackdropBlur,
     String? glassBatchRenderer,
+    String? glassExperiment,
     String? extensionVerificationBrowserMode,
     String? locale,
     String? lyricsMode,
@@ -697,6 +705,7 @@ class AppSettings {
           heroAnimationsEnabled ?? this.heroAnimationsEnabled,
       forceBackdropBlur: forceBackdropBlur ?? this.forceBackdropBlur,
       glassBatchRenderer: glassBatchRenderer ?? this.glassBatchRenderer,
+      glassExperiment: glassExperiment ?? this.glassExperiment,
       extensionVerificationBrowserMode:
           extensionVerificationBrowserMode ??
           this.extensionVerificationBrowserMode,

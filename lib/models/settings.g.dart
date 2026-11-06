@@ -134,6 +134,7 @@ AppSettings _$AppSettingsFromJson(Map<String, dynamic> json) => AppSettings(
   heroAnimationsEnabled: json['heroAnimationsEnabled'] as bool? ?? true,
   forceBackdropBlur: json['forceBackdropBlur'] as bool? ?? false,
   glassBatchRenderer: json['glassBatchRenderer'] as String? ?? 'separate_pass',
+  glassExperiment: json['glassExperiment'] as String? ?? 'off',
   extensionVerificationBrowserMode:
       json['extensionVerificationBrowserMode'] as String? ?? 'in_app_first',
   locale: json['locale'] as String? ?? 'system',
@@ -281,6 +282,7 @@ Map<String, dynamic> _$AppSettingsToJson(
   'heroAnimationsEnabled': instance.heroAnimationsEnabled,
   'forceBackdropBlur': instance.forceBackdropBlur,
   'glassBatchRenderer': instance.glassBatchRenderer,
+  'glassExperiment': instance.glassExperiment,
   'extensionVerificationBrowserMode': instance.extensionVerificationBrowserMode,
   'locale': instance.locale,
   'lyricsMode': instance.lyricsMode,

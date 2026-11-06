@@ -82,4 +82,41 @@ void main() {
     expect(MornyeGlassRules.clearFillMix(0.6), closeTo(0.5, 1e-9));
     expect(MornyeGlassRules.clearFillMix(1), 1);
   });
+
+  test('sigma-early moves the sigma-6 band down to clarity 0.4', () {
+    expect(MornyeGlassRules.blurIndex(MornyeGlassLevel.liquid, 0.4), 3);
+    expect(
+      MornyeGlassRules.blurIndex(
+        MornyeGlassLevel.liquid,
+        0.4,
+        sigmaEarly: true,
+      ),
+      2,
+    );
+    expect(
+      MornyeGlassRules.blurIndex(
+        MornyeGlassLevel.liquid,
+        0.39,
+        sigmaEarly: true,
+      ),
+      3,
+    );
+    expect(
+      MornyeGlassRules.blurIndex(
+        MornyeGlassLevel.liquid,
+        0.9,
+        sigmaEarly: true,
+      ),
+      0,
+    );
+  });
+
+  test('unknown experiment values keep the reviewed look', () {
+    expect(MornyeGlassExperiment.fromWire('off'), MornyeGlassExperiment.off);
+    expect(
+      MornyeGlassExperiment.fromWire('header_batch'),
+      MornyeGlassExperiment.headerBatch,
+    );
+    expect(MornyeGlassExperiment.fromWire('bogus'), MornyeGlassExperiment.off);
+  });
 }

@@ -47,6 +47,41 @@ enum MornyeGlassBatchRenderer {
   );
 }
 
+/// Diagnostic experiments for Mornye glass. [off] is the reviewed look.
+/// [headerBatch] shares one backdrop read across Artist and Album headers;
+/// [sigmaEarly] moves the sigma-6 band down to clarity 0.4. Neither is
+/// measured on hardware yet.
+enum MornyeGlassExperiment {
+  off('off'),
+  headerBatch('header_batch'),
+  sigmaEarly('sigma_early');
+
+  const MornyeGlassExperiment(this.wire);
+
+  final String wire;
+
+  static MornyeGlassExperiment fromWire(String value) => values.firstWhere(
+    (experiment) => experiment.wire == value,
+    orElse: () => off,
+  );
+}
+
+final mornyeGlassExperimentProvider = Provider<MornyeGlassExperiment>(
+  (ref) => MornyeGlassExperiment.fromWire(
+    ref.watch(settingsProvider.select((s) => s.glassExperiment)),
+  ),
+);
+
+/// Puts a Mornye page's glass in one backdrop batch when the header experiment
+/// is on. Material has no lenses, so it is returned unchanged.
+Widget mornyeHeaderBatch(BuildContext context, WidgetRef ref, Widget child) {
+  final enabled =
+      context.isMornye &&
+      ref.watch(mornyeGlassExperimentProvider) ==
+          MornyeGlassExperiment.headerBatch;
+  return enabled ? LiquidGlassBatch(child: child) : child;
+}
+
 final mornyeGlassBatchRendererProvider = Provider<MornyeGlassBatchRenderer>(
   (ref) => MornyeGlassBatchRenderer.fromWire(
     ref.watch(settingsProvider.select((s) => s.glassBatchRenderer)),
@@ -83,10 +118,14 @@ abstract final class MornyeGlassRules {
 
   /// Index into [blurSigmas] for a level and clarity: frosted always uses
   /// index 1; liquid uses 2 (sigma 6) from 0.6, 0 (sigma 2) from 0.9, else 3.
-  static int blurIndex(MornyeGlassLevel level, double clarity) {
+  static int blurIndex(
+    MornyeGlassLevel level,
+    double clarity, {
+    bool sigmaEarly = false,
+  }) {
     if (level == MornyeGlassLevel.frosted) return 1;
     if (clarity >= 0.9) return 0;
-    if (clarity >= 0.6) return 2;
+    if (clarity >= (sigmaEarly ? 0.4 : 0.6)) return 2;
     return 3;
   }
 
