@@ -12642,9 +12642,9 @@
     "semantic_hash": ""
   },
   "lib/screens/settings/developer/glass_poc_page.dart": {
-    "mtime": 1793926967.3064125,
-    "seen": 1793927429.500375,
-    "ast_hash": "151bb329b66b6d75bc2729fff290b78f",
+    "mtime": 1793930833.6844952,
+    "seen": 1793958695.1060264,
+    "ast_hash": "5d8bd4ce4b4c4c2c1dfe68d243bdada3",
     "semantic_hash": ""
   },
   "lib/widgets/glass_poc/sistrum_glass_mode.dart": {
@@ -12654,9 +12654,9 @@
     "semantic_hash": ""
   },
   "lib/widgets/glass_poc/sistrum_glass_surface.dart": {
-    "mtime": 1793926426.3682387,
-    "seen": 1793927429.5059185,
-    "ast_hash": "3155d8bec5f5a875d1c3aa9c3656975a",
+    "mtime": 1793930682.8139238,
+    "seen": 1793958695.111937,
+    "ast_hash": "3285e651774f2e653a1cd77c911fec98",
     "semantic_hash": ""
   },
   "test/screens/settings/developer/glass_poc_page_test.dart": {
@@ -12708,9 +12708,9 @@
     "semantic_hash": ""
   },
   "lib/widgets/glass_poc/sistrum_glass_render_path.dart": {
-    "mtime": 1793926361.2122362,
-    "seen": 1793927429.505899,
-    "ast_hash": "f352ee999377718f22fb935c9dcdc147",
+    "mtime": 1793930636.27478,
+    "seen": 1793958695.1119142,
+    "ast_hash": "6833983ef117f36008884dac05143dbb",
     "semantic_hash": ""
   },
   "test/screens/settings/developer/glass_poc_run_test.dart": {
@@ -12762,15 +12762,15 @@
     "semantic_hash": ""
   },
   "lib/widgets/glass_poc/glass_benchmark_report.dart": {
-    "mtime": 1793926813.0602524,
-    "seen": 1793927429.5058224,
-    "ast_hash": "f864b2293bdcf17a83714469e98f4a1d",
+    "mtime": 1793930833.6840305,
+    "seen": 1793958695.111827,
+    "ast_hash": "b03e1f54e5f77470d491a346e0a741da",
     "semantic_hash": ""
   },
   "lib/widgets/glass_poc/glass_benchmark_runner.dart": {
-    "mtime": 1793926813.0682523,
-    "seen": 1793927429.5058277,
-    "ast_hash": "659fb2c0cf9b097860f0b4e45c3f88af",
+    "mtime": 1793930833.7540774,
+    "seen": 1793958695.1118329,
+    "ast_hash": "18c48ca03253005cc893558abf451a7a",
     "semantic_hash": ""
   },
   "test/screens/settings/developer/glass_poc_benchmark_test.dart": {
@@ -12792,9 +12792,9 @@
     "semantic_hash": ""
   },
   "test/widgets/glass_poc/glass_benchmark_runner_test.dart": {
-    "mtime": 1793926813.1442523,
-    "seen": 1793927429.5274212,
-    "ast_hash": "06836bf129fd15f1531d28dd101b7be4",
+    "mtime": 1793928559.5881402,
+    "seen": 1793958695.1352105,
+    "ast_hash": "e41c06416022c6a32310b0a85a14ba49",
     "semantic_hash": ""
   },
   "docs/performance/GLASS_FULL_BENCHMARK.md": {
@@ -12822,9 +12822,9 @@
     "semantic_hash": ""
   },
   "lib/widgets/glass_poc/glass_benchmark_run.dart": {
-    "mtime": 1793926437.6338425,
-    "seen": 1793927429.5058248,
-    "ast_hash": "37ed09a1ff2152efd903cd40fda998ab",
+    "mtime": 1793930833.683089,
+    "seen": 1793958695.1118305,
+    "ast_hash": "1322b756314c602e45a1a396a002c76d",
     "semantic_hash": ""
   },
   "lib/widgets/glass_poc/glass_diagnostic_stats.dart": {
@@ -12936,21 +12936,21 @@
     "semantic_hash": ""
   },
   "lib/widgets/glass_poc/sistrum_hybrid_config.dart": {
-    "mtime": 1793926296.1522338,
-    "seen": 1793927429.5059204,
-    "ast_hash": "cfaa5e5e8122b578ed8eb3eff4fb5b64",
+    "mtime": 1793930463.1183975,
+    "seen": 1793958695.1119416,
+    "ast_hash": "7d02f92ea56721d25fb3ceef233394b4",
     "semantic_hash": ""
   },
   "lib/widgets/glass_poc/sistrum_hybrid_controls.dart": {
-    "mtime": 1793926680.6693246,
-    "seen": 1793927429.5059226,
-    "ast_hash": "1543f1c2e785f6d81cafa33c7d862ecf",
+    "mtime": 1793930805.8298388,
+    "seen": 1793958695.111944,
+    "ast_hash": "1847a1409fc0695ce3b07ed38793f027",
     "semantic_hash": ""
   },
   "lib/widgets/glass_poc/sistrum_hybrid_surface.dart": {
-    "mtime": 1793927231.0508637,
-    "seen": 1793927429.5059245,
-    "ast_hash": "462e125cd2d827397df616e25f3ca06d",
+    "mtime": 1793930668.1059687,
+    "seen": 1793958695.1119459,
+    "ast_hash": "1e880f7ccb1c59e469c7baed15a438c5",
     "semantic_hash": ""
   },
   "lib/widgets/glass_poc/sistrum_lens_glass.dart": {
@@ -12996,21 +12996,33 @@
     "semantic_hash": ""
   },
   "lib/widgets/glass_poc/sistrum_hybrid_telemetry.dart": {
-    "mtime": 1793927231.0503538,
-    "seen": 1793927429.5059268,
-    "ast_hash": "00ba144a87d179d18be0a7d24bd3deb9",
+    "mtime": 1793930636.274539,
+    "seen": 1793958695.1119485,
+    "ast_hash": "0be701258000d1859fc8412b599bb9ff",
     "semantic_hash": ""
   },
   "test/screens/settings/developer/glass_poc_hybrid_page_test.dart": {
-    "mtime": 1793926918.1202562,
-    "seen": 1793927429.522741,
-    "ast_hash": "0c8afb0e5e51cc2367120a11aac25e34",
+    "mtime": 1793931048.174201,
+    "seen": 1793958695.1303897,
+    "ast_hash": "447140e7ba7c22c274d37580db1ab7e3",
     "semantic_hash": ""
   },
   "docs/performance/GLASS_HYBRID_RASTER_DIAGNOSIS.md": {
-    "mtime": 1793927318.19228,
-    "seen": 1793927429.5329943,
-    "ast_hash": "049e12e02745fd93e5bc3170d7d2320d",
+    "mtime": 1793931181.25809,
+    "seen": 1793958695.1416266,
+    "ast_hash": "14957dfbb0d050367a15dcb9bbea6f2e",
+    "semantic_hash": ""
+  },
+  "lib/widgets/glass_poc/sistrum_hybrid_atlas.dart": {
+    "mtime": 1793930967.506808,
+    "seen": 1793958695.111939,
+    "ast_hash": "035ddcfa53649329f4b0596abcb6487c",
+    "semantic_hash": ""
+  },
+  "test/widgets/glass_poc/sistrum_hybrid_atlas_test.dart": {
+    "mtime": 1793931028.9300845,
+    "seen": 1793958695.1353261,
+    "ast_hash": "909517c1435d9e8465b7f8db593e5187",
     "semantic_hash": ""
   }
 }

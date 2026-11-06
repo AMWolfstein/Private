@@ -20,7 +20,6 @@
   "350": "Calibration",
   "383": "threads_windows.h",
   "385": "AudioServicePlugin",
-  "399": "libusb_config_descriptor",
   "400": "Findings",
   "403": "Findings",
   "422": "threads_posix.h",
@@ -171,9 +170,5 @@
   "822": "audio_service/android/settings.gradle.kts",
   "823": "Android Media Notification Control Set (xhdpi)",
   "826": "build.gradle",
-  "827": "settings.gradle",
-  "1622": "libusb_interface_association_descriptor",
-  "1623": "libusb_ss_usb_device_capability_descriptor",
-  "1644": "libusb_ssplus_usb_device_capability_descriptor",
-  "1645": "libusb_version"
+  "827": "settings.gradle"
 }
