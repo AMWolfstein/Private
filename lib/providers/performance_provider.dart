@@ -29,16 +29,13 @@ final performanceControllerProvider = Provider<PerformanceController>((ref) {
     },
     fireImmediately: true,
   );
-  ref.listen(
-    themeProvider.select(
-      (t) => (t.style.name, t.mornyeGlassClarity, t.mornyeGlassOutlines),
-    ),
-    (_, next) {
-      controller.glassConfiguration =
-          'style:${next.$1},clarity_preference:${next.$2},outlines_preference:${next.$3}; effective_per_surface_parameters:unavailable';
-    },
-    fireImmediately: true,
-  );
+  ref.listen(themeProvider.select((t) => (t.style.name, t.mornyeGlassOutlines)), (
+    _,
+    next,
+  ) {
+    controller.glassConfiguration =
+        'style:${next.$1},clarity:fixed_clear,outlines_preference:${next.$2}; effective_per_surface_parameters:unavailable';
+  }, fireImmediately: true);
   ref.onDispose(controller.dispose);
   return controller;
 });

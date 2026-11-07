@@ -46,7 +46,6 @@ void main() {
     Color? backdrop,
     Color? chromeSurface,
     Widget? body,
-    double glassClarity = 0.75,
     ValueNotifier<int>? activeTab,
   }) async {
     tester.view.physicalSize = const Size(393, 760);
@@ -73,11 +72,7 @@ void main() {
           mornyeLiquidGlassProvider.overrideWithValue(liquidGlass),
         ],
         child: MaterialApp(
-          theme: MornyeTheme.build(
-            brightness,
-            chromeSurface: chromeSurface,
-            glassClarity: glassClarity,
-          ),
+          theme: MornyeTheme.build(brightness, chromeSurface: chromeSurface),
           builder: (_, child) => RepaintBoundary(key: capture, child: child),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
@@ -249,7 +244,6 @@ void main() {
           blur: true,
           liquidGlass: liquidGlass,
           brightness: Brightness.dark,
-          glassClarity: 1,
           body: const SizedBox.expand(
             child: CustomPaint(painter: _StripedBackdrop()),
           ),
@@ -589,20 +583,19 @@ void main() {
   }
 
   for (final brightness in Brightness.values) {
-    for (final clarity in [0.0, 0.75, 1.0]) {
+    {
       for (final backdrop in [
         Colors.white,
         Colors.black,
         if (brightness == Brightness.dark) albumBlue,
       ]) {
         testWidgets(
-          'floating glass stays legible in $brightness over $backdrop (clarity: $clarity)',
+          'floating glass stays legible in $brightness over $backdrop ',
           (tester) async {
             await pumpShell(
               tester,
               blur: true,
               brightness: brightness,
-              glassClarity: clarity,
               backdrop: backdrop,
               chromeSurface: backdrop == albumBlue ? albumBlue : null,
             );

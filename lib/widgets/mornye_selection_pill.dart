@@ -431,7 +431,6 @@ class _MornyeSelectionPillState extends State<MornyeSelectionPill>
               child: LiquidGlassBatch.exclude(
                 child: MornyeLiquidBackdrop(
                   borderRadius: BorderRadius.circular(_pillRadius),
-                  clarity: 1,
                   interaction: true,
                   progress: progress,
                   blurSigma: 0,

@@ -15,7 +15,7 @@ class _Settings extends SettingsNotifier {
   AppSettings build() => const AppSettings();
 }
 
-Future<void> _pumpGlass(WidgetTester tester, double clarity) async {
+Future<void> _pumpGlass(WidgetTester tester) async {
   await tester.pumpWidget(
     ProviderScope(
       overrides: [
@@ -24,7 +24,7 @@ Future<void> _pumpGlass(WidgetTester tester, double clarity) async {
         deviceSupportsLiquidGlassProvider.overrideWithValue(true),
       ],
       child: MaterialApp(
-        theme: MornyeTheme.build(Brightness.light, glassClarity: clarity),
+        theme: MornyeTheme.build(Brightness.light),
         home: const Scaffold(
           body: MornyeGlass.navigation(
             blurEnabled: true,
@@ -41,40 +41,28 @@ void main() {
   setUp(() => MornyeGlassRules.debugShaderFilterSupport = true);
   tearDown(() => MornyeGlassRules.debugShaderFilterSupport = null);
 
-  // Clear end of the slider: sigma steps down to 2 and the dispersion keeps
-  // scaling with clarity. 0.75 is the default and must not change.
-  const expectations = <(double clarity, double sigma, double dispersion)>[
-    (0.75, 6, 0.99),
-    (0.9, 2, 1.188),
-    (0.95, 2, 1.254),
-    (1.0, 2, 1.32),
-  ];
-  for (final (clarity, sigma, dispersion) in expectations) {
-    testWidgets('clarity $clarity maps to sigma and dispersion', (
-      tester,
-    ) async {
-      await _pumpGlass(tester, clarity);
-      final lens = tester.widget<LiquidGlassLens>(
-        find.byType(LiquidGlassLens).first,
-      );
-      final backdrop = tester.widget<MornyeLiquidBackdrop>(
-        find.byType(MornyeLiquidBackdrop).first,
-      );
-      expect(backdrop.clarity, clarity);
-      expect(backdrop.blurSigma, sigma);
-      expect(lens.style.dispersion, closeTo(dispersion, 1e-9));
-    });
-  }
-
-  testWidgets('the held lens is forced to clarity 1 and no blur', (
+  // Glass is fixed at the old Clear end: sigma 2 and the full dispersion.
+  testWidgets('fixed Clear glass maps to sigma 2 and dispersion 1.32', (
     tester,
   ) async {
-    // The pill is built at a low clarity; its held lens must still ignore it.
+    await _pumpGlass(tester);
+    final lens = tester.widget<LiquidGlassLens>(
+      find.byType(LiquidGlassLens).first,
+    );
+    final backdrop = tester.widget<MornyeLiquidBackdrop>(
+      find.byType(MornyeLiquidBackdrop).first,
+    );
+    expect(backdrop.blurSigma, MornyeGlassRules.clearSigma);
+    expect(backdrop.blurSigma, 2);
+    expect(lens.style.dispersion, closeTo(1.32, 1e-9));
+  });
+
+  testWidgets('the held lens has no blur', (tester) async {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [settingsProvider.overrideWith(_Settings.new)],
         child: MaterialApp(
-          theme: MornyeTheme.build(Brightness.light, glassClarity: 0.75),
+          theme: MornyeTheme.build(Brightness.light),
           home: Center(
             child: SizedBox(
               width: 300,
@@ -116,7 +104,6 @@ void main() {
         matching: find.byType(MornyeLiquidBackdrop),
       ),
     );
-    expect(backdrop.clarity, 1);
     expect(backdrop.blurSigma, 0);
     expect(backdrop.interaction, isTrue);
     expect(backdrop.progress, greaterThan(0));

@@ -31,7 +31,7 @@ void main() {
           mornyeBlurEnabledProvider.overrideWithValue(true),
         ],
         child: MaterialApp(
-          theme: MornyeTheme.build(Brightness.dark, glassClarity: 1),
+          theme: MornyeTheme.build(Brightness.dark),
           builder: (context, child) => RepaintBoundary(
             key: capture,
             child: MediaQuery(

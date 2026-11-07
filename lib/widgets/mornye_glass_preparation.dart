@@ -5,7 +5,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mornye/controllers/mornye_glass_warmup.dart';
 import 'package:mornye/providers/runtime_profile_provider.dart';
 import 'package:mornye/theme/mornye_theme.dart';
-import 'package:mornye/widgets/mornye_liquid_backdrop.dart';
 
 /// Starts the one-time preparation when the full glass theme is enabled,
 /// including switching to Mornye or enabling blur after the app has started.
@@ -18,8 +17,6 @@ class MornyeGlassPreparation extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     if (context.isMornye &&
         ref.watch(mornyeGlassLevelProvider) == MornyeGlassLevel.liquid &&
-        MornyeTheme.glassClarityOf(context) >
-            MornyeGlassRules.backdropMinClarity(MornyeGlassLevel.liquid) &&
         !ref.watch(
           mornyeGlassContrastBlockedProvider(
             MediaQuery.highContrastOf(context),
