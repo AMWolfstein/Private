@@ -321,74 +321,77 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('artist artwork blurs, disappears, and returns with scroll', (
-    tester,
-  ) async {
-    tester.view.physicalSize = const Size(390, 844);
-    tester.view.devicePixelRatio = 1;
-    tester.view.padding = FakeViewPadding(top: 59, bottom: 34);
-    addTearDown(tester.view.reset);
-    final controller = ScrollController();
-    addTearDown(controller.dispose);
-    const artworkKey = ValueKey('artist-artwork');
-    await tester.pumpWidget(
-      ProviderScope(
-        child: MaterialApp(
-          theme: MornyeTheme.build(Brightness.dark),
-          home: Scaffold(
-            body: CustomScrollView(
-              controller: controller,
-              slivers: const [
-                MornyeArtistHeader(
-                  name: 'Artist',
-                  artwork: ColoredBox(key: artworkKey, color: Colors.orange),
-                  actions: [Text('Artist action')],
-                  showTitle: false,
-                ),
-                SliverToBoxAdapter(child: SizedBox(height: 2000)),
-              ],
+  testWidgets(
+    'artist artwork stays sharp, fades out, and returns with scroll',
+    (tester) async {
+      tester.view.physicalSize = const Size(390, 844);
+      tester.view.devicePixelRatio = 1;
+      tester.view.padding = FakeViewPadding(top: 59, bottom: 34);
+      addTearDown(tester.view.reset);
+      final controller = ScrollController();
+      addTearDown(controller.dispose);
+      const artworkKey = ValueKey('artist-artwork');
+      await tester.pumpWidget(
+        ProviderScope(
+          child: MaterialApp(
+            theme: MornyeTheme.build(Brightness.dark),
+            home: Scaffold(
+              body: CustomScrollView(
+                controller: controller,
+                slivers: const [
+                  MornyeArtistHeader(
+                    name: 'Artist',
+                    artwork: ColoredBox(key: artworkKey, color: Colors.orange),
+                    actions: [Text('Artist action')],
+                    showTitle: false,
+                  ),
+                  SliverToBoxAdapter(child: SizedBox(height: 2000)),
+                ],
+              ),
             ),
           ),
         ),
-      ),
-    );
-    await tester.pumpAndSettle();
-    double fade() => tester
-        .widget<ColoredBox>(find.byKey(const ValueKey('artist-artwork-fade')))
-        .color
-        .a;
-    ImageFiltered filter() => tester.widget<ImageFiltered>(
-      find.ancestor(
-        of: find.byKey(artworkKey),
-        matching: find.byType(ImageFiltered),
-      ),
-    );
-    final artwork = tester.element(find.byKey(artworkKey));
-    expect(fade(), 0);
-    expect(filter().enabled, isFalse);
+      );
+      await tester.pumpAndSettle();
+      double fade() => tester
+          .widget<ColoredBox>(find.byKey(const ValueKey('artist-artwork-fade')))
+          .color
+          .a;
+      // The collapse only darkens and dissolves the artwork; it never blurs it.
+      void expectSharp() => expect(
+        find.ancestor(
+          of: find.byKey(artworkKey),
+          matching: find.byType(ImageFiltered),
+        ),
+        findsNothing,
+      );
+      final artwork = tester.element(find.byKey(artworkKey));
+      expect(fade(), 0);
+      expectSharp();
 
-    controller.jumpTo(120);
-    await tester.pumpAndSettle();
-    expect(filter().enabled, isTrue);
-    expect(fade(), inExclusiveRange(0, 1));
-    expect(find.text('Artist action').hitTestable(), findsOneWidget);
+      controller.jumpTo(120);
+      await tester.pumpAndSettle();
+      expectSharp();
+      expect(fade(), inExclusiveRange(0, 1));
+      expect(find.text('Artist action').hitTestable(), findsOneWidget);
 
-    controller.jumpTo(340);
-    await tester.pumpAndSettle();
-    expect(fade(), 1);
-    expect(filter().enabled, isFalse);
-    expect(TickerMode.valuesOf(artwork).enabled, isFalse);
-    expect(find.byTooltip('Back').hitTestable(), findsOneWidget);
+      controller.jumpTo(340);
+      await tester.pumpAndSettle();
+      expect(fade(), 1);
+      expectSharp();
+      expect(TickerMode.valuesOf(artwork).enabled, isFalse);
+      expect(find.byTooltip('Back').hitTestable(), findsOneWidget);
 
-    controller.jumpTo(0);
-    await tester.pumpAndSettle();
-    expect(fade(), 0);
-    expect(filter().enabled, isFalse);
-    expect(TickerMode.valuesOf(artwork).enabled, isTrue);
-    expect(find.text('Artist action').hitTestable(), findsOneWidget);
-    expect(tester.element(find.byKey(artworkKey)), same(artwork));
-    expect(tester.takeException(), isNull);
-  });
+      controller.jumpTo(0);
+      await tester.pumpAndSettle();
+      expect(fade(), 0);
+      expectSharp();
+      expect(TickerMode.valuesOf(artwork).enabled, isTrue);
+      expect(find.text('Artist action').hitTestable(), findsOneWidget);
+      expect(tester.element(find.byKey(artworkKey)), same(artwork));
+      expect(tester.takeException(), isNull);
+    },
+  );
 
   testWidgets('pulling the artist header zooms only the artwork', (
     tester,
