@@ -283,12 +283,7 @@ class MornyeGlass extends ConsumerWidget {
         MornyeGlassRules.shaderLensSupported;
     // Clear glass softens the backdrop less. Keep the mid-range fallback at
     // its small blur budget, and reuse these filters in the lens renderer too.
-    final experiment = ref.watch(mornyeGlassExperimentProvider);
-    final filterIndex = MornyeGlassRules.blurIndex(
-      level,
-      clarity,
-      sigmaEarly: experiment == MornyeGlassExperiment.sigmaEarly,
-    );
+    final filterIndex = MornyeGlassRules.blurIndex(level, clarity);
     final clearFill = (dark ? const Color(0xff999999) : Colors.white)
         .withValues(alpha: dark ? 0.17 : 0.46);
     final fill = Color.lerp(
@@ -330,14 +325,9 @@ class MornyeGlass extends ConsumerWidget {
     // A batched lens composes blur and refraction into one backdrop read.
     // Outside a batch it takes a key of its own: sharing one with the page or
     // an overlapping menu would lose their glass.
-    final renderer = ref.watch(mornyeGlassBatchRendererProvider);
     final backdrop = lens != null
         ? LiquidGlassBatch.backdropIdOf(context) == null
-              ? LiquidGlassBatch(
-                  mode: renderer.mode,
-                  blurMethod: renderer.blurMethod,
-                  child: lens,
-                )
+              ? LiquidGlassBatch(child: lens)
               : lens
         : sampleBackdrop
         ? BackdropFilter.grouped(

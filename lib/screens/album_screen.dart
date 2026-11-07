@@ -3,7 +3,6 @@ import 'package:mornye/theme/app_tokens.dart';
 import 'package:mornye/theme/mornye_theme.dart';
 import 'package:mornye/theme/cover_palette.dart';
 import 'package:mornye/widgets/collection_scaffold.dart';
-import 'package:mornye/widgets/mornye_liquid_backdrop.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:mornye/services/cover_cache_manager.dart';
@@ -516,7 +515,7 @@ class _AlbumScreenState extends ConsumerState<AlbumScreen>
       onSelectAll: ids.isEmpty ? null : () => selectAll(ids),
       onClearSelection: isSelectionMode ? exitSelectionMode : null,
       onActivate: () => _desktopActivations[selectionAnchorId]?.call(),
-      child: mornyeHeaderBatch(context, ref, scaffold),
+      child: scaffold,
     );
   }
 

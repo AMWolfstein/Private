@@ -1005,12 +1005,6 @@ class SettingsNotifier extends Notifier<AppSettings> {
   void setForceBackdropBlur(bool enabled) =>
       _commit(state.copyWith(forceBackdropBlur: enabled));
 
-  void setGlassBatchRenderer(String renderer) =>
-      _commit(state.copyWith(glassBatchRenderer: renderer));
-
-  void setGlassExperiment(String experiment) =>
-      _commit(state.copyWith(glassExperiment: experiment));
-
   void setExtensionVerificationBrowserMode(String mode) => _commit(
     state.copyWith(
       extensionVerificationBrowserMode:

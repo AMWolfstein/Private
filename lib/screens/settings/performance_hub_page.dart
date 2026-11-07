@@ -87,58 +87,6 @@ class _PerformanceHubPageState extends ConsumerState<PerformanceHubPage> {
                 value: settings.performanceHud,
                 onChanged: notifier.setPerformanceHud,
               ),
-              SettingsItem(
-                icon: Icons.science_outlined,
-                title: 'Glass experiment',
-                subtitle:
-                    'Diagnostic: Artist and Album share one backdrop read, or Clear softens sooner. Default is the reviewed look.',
-                trailing: DropdownButton<String>(
-                  value: settings.glassExperiment,
-                  items: const [
-                    DropdownMenuItem(
-                      value: 'off',
-                      child: Text('Off (default)'),
-                    ),
-                    DropdownMenuItem(
-                      value: 'header_batch',
-                      child: Text('Shared header backdrop'),
-                    ),
-                    DropdownMenuItem(
-                      value: 'sigma_early',
-                      child: Text('Clear softens sooner'),
-                    ),
-                  ],
-                  onChanged: (v) {
-                    if (v != null) notifier.setGlassExperiment(v);
-                  },
-                ),
-              ),
-              SettingsItem(
-                icon: Icons.blur_on,
-                title: 'Glass batch renderer',
-                subtitle:
-                    'Diagnostic: how batched glass shares its read and blurs. Default is the reviewed look.',
-                trailing: DropdownButton<String>(
-                  value: settings.glassBatchRenderer,
-                  items: const [
-                    DropdownMenuItem(
-                      value: 'separate_pass',
-                      child: Text('Separate pass (default)'),
-                    ),
-                    DropdownMenuItem(
-                      value: 'single_pass',
-                      child: Text('Single pass'),
-                    ),
-                    DropdownMenuItem(
-                      value: 'shader_blur',
-                      child: Text('Shader blur'),
-                    ),
-                  ],
-                  onChanged: (v) {
-                    if (v != null) notifier.setGlassBatchRenderer(v);
-                  },
-                ),
-              ),
               SettingsSwitchItem(
                 icon: Icons.touch_app,
                 title: 'Enable First Interaction Analysis',
