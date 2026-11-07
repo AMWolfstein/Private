@@ -8,6 +8,7 @@ import 'package:mornye/theme/mornye_theme.dart';
 import 'package:mornye/utils/desktop_platform.dart';
 import 'package:mornye/widgets/mornye_glass_press.dart';
 import 'package:mornye/widgets/mornye_selection_pill.dart';
+import 'package:mornye/widgets/mornye_glass_lens_fade.dart';
 import 'package:mornye/widgets/mornye_liquid_backdrop.dart';
 import 'package:mornye/widgets/mornye_squircle_border.dart';
 import 'package:mornye/widgets/animation_utils.dart';
@@ -257,18 +258,27 @@ class MornyeGlass extends ConsumerWidget {
     final insideGlass =
         context.dependOnInheritedWidgetOfExactType<_GlassBackdropScope>() !=
         null;
-    final sampleBackdrop = translucent && samplesBackdrop && !insideGlass;
-    final useLens =
-        sampleBackdrop &&
+    // Header buttons fade their lens out as the header collapses into a flat
+    // bar; everything else reads 1.
+    final lensFade = MornyeGlassLensFade.opacityOf(context);
+    final canSample = translucent && samplesBackdrop && !insideGlass;
+    final sampleBackdrop = canSample && lensFade > 0;
+    final lensEligible =
+        canSample &&
         firstInGroup &&
         lastInGroup &&
         level == MornyeGlassLevel.liquid &&
         MornyeGlassRules.shaderLensSupported;
+    final useLens = lensEligible && lensFade > 0;
     final clearFill = (dark ? const Color(0xff999999) : Colors.white)
         .withValues(alpha: dark ? 0.17 : 0.46);
     final fill = Color.lerp(
       scheme.surfaceContainerHigh,
-      useLens && !strongTint ? clearFill : tint,
+      // A fading header lens blends its clear fill back to the tint, so the
+      // fill is continuous when the lens is removed.
+      lensEligible && !strongTint
+          ? Color.lerp(tint, clearFill, lensFade)!
+          : tint,
       reveal,
     );
     final squircle = smoothCorners && firstInGroup && lastInGroup;
@@ -296,6 +306,7 @@ class MornyeGlass extends ConsumerWidget {
             refractionDepth: refractionDepth * reveal,
             smoothCorners: squircle,
             highlightIntensity: highlightIntensity * reveal,
+            opacity: lensFade,
             child: surface,
           )
         : null;

@@ -59,6 +59,7 @@ class MornyeLiquidBackdrop extends StatelessWidget {
     this.refractionWidth = 20,
     this.smoothCorners = false,
     this.highlightIntensity = 1,
+    this.opacity = 1,
   });
 
   final BorderRadius borderRadius;
@@ -70,6 +71,10 @@ class MornyeLiquidBackdrop extends StatelessWidget {
   final double refractionWidth;
   final bool smoothCorners;
   final double highlightIntensity;
+
+  /// Fades the whole lens (refraction, tint, rim and its blur); `0` costs no
+  /// backdrop pass and leaves the child.
+  final double opacity;
 
   @override
   Widget build(BuildContext context) {
@@ -88,6 +93,7 @@ class MornyeLiquidBackdrop extends StatelessWidget {
         70;
     final index = 1 / math.sqrt(1 - math.pow(edgeBend.clamp(0, 0.95), 2));
     return LiquidGlassLens(
+      opacity: opacity,
       style: LiquidGlassStyle(
         // The package's named constructors set the corner style and clip
         // quality together, so the two ternaries become one choice.

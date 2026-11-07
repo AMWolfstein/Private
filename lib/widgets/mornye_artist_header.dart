@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:mornye/widgets/mornye_glass_lens_fade.dart';
 import 'package:mornye/theme/cover_palette.dart';
 import 'package:mornye/theme/mornye_theme.dart';
 import 'package:mornye/services/shell_navigation_service.dart';
@@ -308,17 +309,30 @@ class MornyeArtistHeader extends StatelessWidget {
                   (viewportHeight * 0.82).clamp(420.0, 820.0),
                 )
               : photoHeight + contentHeight;
+          final appBarHeight =
+              expandedHeight - MediaQuery.paddingOf(context).top;
+          // Scroll offset at which the header is a flat toolbar: its buttons
+          // fade their glass lens out as they approach it.
+          final collapseExtent = appBarHeight - kToolbarHeight;
           return SliverAppBar(
             pinned: true,
             stretch: !MediaQuery.disableAnimationsOf(context),
-            expandedHeight: expandedHeight - MediaQuery.paddingOf(context).top,
+            expandedHeight: appBarHeight,
             backgroundColor: surface,
             surfaceTintColor: Colors.transparent,
             leadingWidth: 64,
-            leading: back,
+            leading: MornyeGlassLensFade(
+              collapseExtent: collapseExtent,
+              child: back,
+            ),
             actions: toolbarActions.isEmpty
                 ? null
-                : [MornyeActionCapsule(children: toolbarActions)],
+                : [
+                    MornyeGlassLensFade(
+                      collapseExtent: collapseExtent,
+                      child: MornyeActionCapsule(children: toolbarActions),
+                    ),
+                  ],
             actionsPadding: EdgeInsetsDirectional.only(
               end: isDesktopPlatform ? 8 : 12,
             ),
