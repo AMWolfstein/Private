@@ -56,7 +56,7 @@ void main() {
     expect(source.cacheManager, same(CoverCacheManager.instance));
     await tester.pumpAndSettle();
     final fallback = find.descendant(
-      of: find.byType(FlexibleSpaceBar),
+      of: find.byKey(const ValueKey('artist-header')),
       matching: find.text(name),
     );
     expect(tester.getSize(fallback).height, greaterThan(96));
@@ -304,7 +304,7 @@ void main() {
     expect(
       find
           .descendant(
-            of: find.byType(FlexibleSpaceBar),
+            of: find.byKey(const ValueKey('artist-header')),
             matching: find.text('Example Artist'),
           )
           .hitTestable(),
@@ -312,7 +312,7 @@ void main() {
     );
     expect(find.text('Artist action').hitTestable(), findsOneWidget);
     final background = tester.getRect(
-      find.byKey(const ValueKey('artist-artwork-fade')),
+      find.byKey(const ValueKey('artist-header')),
     );
     final action = tester.getRect(find.text('Artist action'));
     expect(background.contains(action.center), isTrue);
@@ -322,7 +322,7 @@ void main() {
   });
 
   testWidgets(
-    'artist artwork stays sharp, fades out, and returns with scroll',
+    'artist header scrolls away, stays sharp, and returns with scroll',
     (tester) async {
       tester.view.physicalSize = const Size(390, 844);
       tester.view.devicePixelRatio = 1;
@@ -353,11 +353,7 @@ void main() {
         ),
       );
       await tester.pumpAndSettle();
-      double fade() => tester
-          .widget<ColoredBox>(find.byKey(const ValueKey('artist-artwork-fade')))
-          .color
-          .a;
-      // The collapse only darkens and dissolves the artwork; it never blurs it.
+      // The collapse only moves the header; it never blurs or fades it.
       void expectSharp() => expect(
         find.ancestor(
           of: find.byKey(artworkKey),
@@ -366,25 +362,24 @@ void main() {
         findsNothing,
       );
       final artwork = tester.element(find.byKey(artworkKey));
-      expect(fade(), 0);
+      final header = find.byKey(const ValueKey('artist-header'));
+      final top = tester.getTopLeft(header).dy;
       expectSharp();
+      expect(TickerMode.valuesOf(artwork).enabled, isTrue);
+      expect(find.text('Artist action').hitTestable(), findsOneWidget);
+      expect(find.byTooltip('Back').hitTestable(), findsOneWidget);
 
       controller.jumpTo(120);
       await tester.pumpAndSettle();
       expectSharp();
-      expect(fade(), inExclusiveRange(0, 1));
-      expect(find.text('Artist action').hitTestable(), findsOneWidget);
+      expect(tester.getTopLeft(header).dy, top - 120);
 
-      controller.jumpTo(340);
+      controller.jumpTo(700);
       await tester.pumpAndSettle();
-      expect(fade(), 1);
-      expectSharp();
       expect(TickerMode.valuesOf(artwork).enabled, isFalse);
-      expect(find.byTooltip('Back').hitTestable(), findsOneWidget);
 
       controller.jumpTo(0);
       await tester.pumpAndSettle();
-      expect(fade(), 0);
       expectSharp();
       expect(TickerMode.valuesOf(artwork).enabled, isTrue);
       expect(find.text('Artist action').hitTestable(), findsOneWidget);

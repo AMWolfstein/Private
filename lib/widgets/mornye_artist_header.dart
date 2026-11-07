@@ -242,9 +242,241 @@ class MornyeArtistHeader extends StatelessWidget {
   // A SliverMainAxisGroup clamps negative overlap, preventing this header from
   // receiving the overscroll used for its stretch animation.
   @override
-  Widget build(BuildContext context) => buildSlivers(context).single;
+  Widget build(BuildContext context) {
+    final slivers = buildSlivers(context);
+    return slivers.length == 1
+        ? slivers.single
+        : SliverMainAxisGroup(slivers: slivers);
+  }
 
-  List<Widget> buildSlivers(BuildContext context) {
+  /// The mobile header is two slivers so its toolbar stays pinned; use these
+  /// directly in the scroll view. [build] wraps them in a group.
+  List<Widget> buildSlivers(BuildContext context) => isDesktopPlatform
+      ? _buildDesktopSlivers(context)
+      : _buildMobileSlivers(context);
+
+  double _textHeight(
+    BuildContext context,
+    String text,
+    TextStyle style,
+    double maxWidth,
+  ) {
+    final painter = TextPainter(
+      text: TextSpan(
+        text: text,
+        style: DefaultTextStyle.of(context).style.merge(style),
+      ),
+      textDirection: Directionality.of(context),
+      textScaler: MediaQuery.textScalerOf(context),
+      textAlign: TextAlign.center,
+    )..layout(maxWidth: maxWidth);
+    final height = painter.height;
+    painter.dispose();
+    return height;
+  }
+
+  /// The header's full height, the identity block's, and the listeners row's.
+  ({double expanded, double identity, double listeners}) _mobileMetrics(
+    BuildContext context,
+    double width,
+  ) {
+    final textWidth = (width - 48).clamp(0.0, double.infinity);
+    final nameHeight = _textHeight(
+      context,
+      name,
+      TextStyle(fontSize: _nameSize, fontWeight: FontWeight.bold),
+      textWidth,
+    );
+    final hasLogo = logoUrl?.trim().isNotEmpty == true;
+    final identityHeight = hasLogo
+        ? nameHeight.clamp(_logoSize.height, double.infinity)
+        : nameHeight;
+    final listenersHeight = listeners == null
+        ? 0.0
+        : 7 +
+              _textHeight(
+                context,
+                listeners!,
+                const TextStyle(fontSize: 13),
+                textWidth,
+              );
+    final photoHeight = (width * 0.76).clamp(240.0, 340.0);
+    final contentHeight =
+        identityHeight + listenersHeight + (actions.isEmpty ? 0 : 94) + 32;
+    return (
+      expanded: photoHeight + contentHeight,
+      identity: identityHeight,
+      listeners: listenersHeight,
+    );
+  }
+
+  /// The photo or video and the identity scroll away with the page, like the
+  /// album header; only the toolbar stays pinned above them. Nothing here is
+  /// rebuilt or repainted per scroll frame.
+  List<Widget> _buildMobileSlivers(BuildContext context) {
+    final surface = Theme.of(context).colorScheme.surface;
+    final back = Padding(
+      padding: const EdgeInsetsDirectional.only(start: 12),
+      child: Align(
+        alignment: AlignmentDirectional.centerStart,
+        widthFactor: 1,
+        child: HeaderCircleButton(
+          icon: Icons.arrow_back,
+          tooltip: MaterialLocalizations.of(context).backButtonTooltip,
+          onPressed: () => Navigator.pop(context),
+        ),
+      ),
+    );
+    return [
+      SliverLayoutInfoBuilder(
+        select: (constraints) => constraints.crossAxisExtent,
+        builder: (context, width) {
+          final metrics = _mobileMetrics(context, width);
+          // The scroll offset at which the photo and identity have gone under
+          // the toolbar: its buttons fade their glass out as they approach it.
+          final collapseOffset =
+              metrics.expanded -
+              kToolbarHeight -
+              MediaQuery.paddingOf(context).top;
+          return SliverLayoutInfoBuilder(
+            select: (constraints) => constraints.scrollOffset >= collapseOffset,
+            builder: (context, collapsed) => MornyeOverlayToolbar(
+              child: SliverAppBar(
+                pinned: true,
+                backgroundColor: collapsed ? surface : Colors.transparent,
+                surfaceTintColor: Colors.transparent,
+                scrolledUnderElevation: 0,
+                leadingWidth: 64,
+                leading: MornyeGlassLensFade(
+                  collapseExtent: collapseOffset,
+                  child: back,
+                ),
+                actions: toolbarActions.isEmpty
+                    ? null
+                    : [
+                        MornyeGlassLensFade(
+                          collapseExtent: collapseOffset,
+                          child: MornyeActionCapsule(children: toolbarActions),
+                        ),
+                      ],
+                actionsPadding: const EdgeInsetsDirectional.only(end: 12),
+                title: AnimatedOpacity(
+                  opacity: showTitle || collapsed ? 1 : 0,
+                  duration: const Duration(milliseconds: 180),
+                  child: Text(
+                    name,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      fontSize: 17,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+      SliverLayoutInfoBuilder(
+        select: (constraints) => constraints.crossAxisExtent,
+        builder: (context, width) {
+          final metrics = _mobileMetrics(context, width);
+          final collapseOffset =
+              metrics.expanded -
+              kToolbarHeight -
+              MediaQuery.paddingOf(context).top;
+          return SliverLayoutInfoBuilder(
+            select: (constraints) => constraints.scrollOffset >= collapseOffset,
+            builder: (context, scrolledAway) => SliverToBoxAdapter(
+              child: SizedBox(
+                key: const ValueKey('artist-header'),
+                height: metrics.expanded,
+                // A video stops once the header is under the toolbar.
+                child: TickerMode(
+                  enabled: !scrolledAway,
+                  child: Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      MornyeStretchArtwork(
+                        child: Stack(
+                          fit: StackFit.expand,
+                          children: [
+                            ClipRect(child: RepaintBoundary(child: artwork)),
+                            DecoratedBox(
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  begin: Alignment.topCenter,
+                                  end: Alignment.bottomCenter,
+                                  stops: const [0, 0.48, 0.82, 1],
+                                  colors: [
+                                    Colors.black.withValues(alpha: 0.15),
+                                    surface.withValues(alpha: 0),
+                                    surface.withValues(alpha: 0.55),
+                                    surface,
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(24, 0, 24, 32),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              if (badge != null)
+                                Padding(
+                                  padding: const EdgeInsets.only(bottom: 8),
+                                  child: badge,
+                                ),
+                              ConstrainedBox(
+                                constraints: BoxConstraints(
+                                  maxHeight: metrics.identity,
+                                ),
+                                child: _buildIdentity(context),
+                              ),
+                              if (listeners != null) ...[
+                                const SizedBox(height: 7),
+                                Text(
+                                  listeners!,
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    color: Colors.white.withValues(alpha: 0.7),
+                                  ),
+                                ),
+                              ],
+                              if (actions.isNotEmpty) ...[
+                                const SizedBox(height: 16),
+                                SizedBox(
+                                  height: 74,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    spacing: 24,
+                                    children: actions,
+                                  ),
+                                ),
+                              ],
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+    ];
+  }
+
+  List<Widget> _buildDesktopSlivers(BuildContext context) {
     final surface = Theme.of(context).colorScheme.surface;
     final back = Padding(
       padding: EdgeInsetsDirectional.only(start: isDesktopPlatform ? 8 : 12),

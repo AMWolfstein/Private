@@ -233,7 +233,7 @@ class AlbumDetailHeader extends StatelessWidget {
             return SliverLayoutInfoBuilder(
               select: (constraints) =>
                   constraints.scrollOffset >= collapseOffset,
-              builder: (context, collapsed) => _AlbumOverlayToolbar(
+              builder: (context, collapsed) => MornyeOverlayToolbar(
                 child: toolbar(
                   collapsed: collapsed,
                   fadeExtent: collapseOffset,
@@ -252,10 +252,10 @@ class AlbumDetailHeader extends StatelessWidget {
                         alignment: Alignment.topCenter,
                         child: SizedBox.square(
                           dimension: artworkSize,
-                          child: _AlbumStretchArtwork(child: artwork),
+                          child: MornyeStretchArtwork(child: artwork),
                         ),
                       )
-                    : _AlbumStretchArtwork(child: artwork),
+                    : MornyeStretchArtwork(child: artwork),
               ),
               Column(
                 children: [
@@ -613,8 +613,10 @@ class MornyeActionCapsule extends ConsumerWidget {
   }
 }
 
-class _AlbumStretchArtwork extends StatelessWidget {
-  const _AlbumStretchArtwork({required this.child});
+/// Pulling the page down past its top enlarges the artwork from its top edge
+/// instead of stretching the layout. Shared by the album and artist headers.
+class MornyeStretchArtwork extends StatelessWidget {
+  const MornyeStretchArtwork({super.key, required this.child});
 
   final Widget child;
 
@@ -666,8 +668,8 @@ Widget headerToolbarTitle(
 
 /// Keeps the pinned toolbar above the artwork without shifting the artwork or
 /// metadata down by the toolbar's safe-area height.
-class _AlbumOverlayToolbar extends SingleChildRenderObjectWidget {
-  const _AlbumOverlayToolbar({required super.child});
+class MornyeOverlayToolbar extends SingleChildRenderObjectWidget {
+  const MornyeOverlayToolbar({super.key, required super.child});
 
   @override
   RenderProxySliver createRenderObject(BuildContext context) =>
