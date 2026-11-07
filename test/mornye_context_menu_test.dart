@@ -364,23 +364,29 @@ void main() {
     });
   }
 
-  testWidgets('glass override reaches context menu overlays', (tester) async {
-    await openMenu(
-      tester,
-      anchor: const Rect.fromLTWH(330, 144, 44, 44),
-      brightness: Brightness.dark,
-      highContrast: true,
-      forceBlur: true,
-      onResult: (_) {},
-    );
-    final menu = find.byType(MornyeContextMenu);
-    expect(find.byType(BackdropFilter), findsWidgets);
-    expect(MediaQuery.highContrastOf(tester.element(menu)), isTrue);
-    await tester.tap(find.text('Share'));
-    await tester.pumpAndSettle();
-    expect(menu, findsNothing);
-    expect(tester.takeException(), isNull);
-  });
+  testWidgets(
+    'context menu overlays keep their tint without a backdrop filter',
+    (tester) async {
+      await openMenu(
+        tester,
+        anchor: const Rect.fromLTWH(330, 144, 44, 44),
+        brightness: Brightness.dark,
+        highContrast: true,
+        forceBlur: true,
+        onResult: (_) {},
+      );
+      final menu = find.byType(MornyeContextMenu);
+      expect(
+        find.descendant(of: menu, matching: find.byType(BackdropFilter)),
+        findsNothing,
+      );
+      expect(MediaQuery.highContrastOf(tester.element(menu)), isTrue);
+      await tester.tap(find.text('Share'));
+      await tester.pumpAndSettle();
+      expect(menu, findsNothing);
+      expect(tester.takeException(), isNull);
+    },
+  );
 
   testWidgets(
     'large text in landscape keeps shortcuts and last action usable',

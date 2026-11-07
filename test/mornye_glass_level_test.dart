@@ -466,7 +466,10 @@ void main() {
                 // Overlapping standalone glass must not share a backdrop.
                 Stack(children: [glass('back'), glass('front')]),
                 glass('outer', child: glass('inner')),
-                MornyeGlassPanel.overlay(child: const SizedBox(height: 40)),
+                MornyeGlassPanel.overlay(
+                  samplesBackdrop: true,
+                  child: const SizedBox(height: 40),
+                ),
                 MornyeSegmentedControl(
                   labels: const ['One', 'Two'],
                   selectedIndex: 0,
@@ -510,4 +513,29 @@ void main() {
     expect(keyOf('back'), isNot(keyOf('front')));
     expect(tester.takeException(), isNull);
   });
+
+  testWidgets(
+    'overlay glass keeps its tint and skips the backdrop by default',
+    (tester) async {
+      MornyeGlassRules.debugShaderFilterSupport = true;
+      addTearDown(() => MornyeGlassRules.debugShaderFilterSupport = null);
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            mornyeGlassLevelProvider.overrideWithValue(MornyeGlassLevel.liquid),
+          ],
+          child: MaterialApp(
+            theme: MornyeTheme.build(Brightness.dark),
+            home: Scaffold(
+              body: MornyeGlassPanel.overlay(child: const SizedBox(height: 40)),
+            ),
+          ),
+        ),
+      );
+      expect(find.byType(LiquidGlassLens), findsNothing);
+      expect(find.byType(BackdropFilter), findsNothing);
+      expect(find.byType(MornyeGlassPanel), findsOneWidget);
+      expect(tester.takeException(), isNull);
+    },
+  );
 }

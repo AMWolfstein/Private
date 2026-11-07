@@ -111,7 +111,10 @@ class MornyeGlassPanel extends ConsumerWidget {
     this.tintOpacity = 0.78,
     this.tintColor,
     this.blurEnabled = true,
-    this.samplesBackdrop = true,
+    // Overlays carry a strong tint, so the page behind them is barely visible:
+    // they keep the tint and skip the backdrop read and blur. Pass true to
+    // sample anyway.
+    this.samplesBackdrop = false,
     this.highlightBorder = false,
     this.smoothCorners = false,
     this.highlightIntensity = 1,
