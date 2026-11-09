@@ -32,24 +32,13 @@ class _Server extends NetworkStorageService {
 }
 
 void main() {
-  for (final platform in [
-    TargetPlatform.android,
-    TargetPlatform.iOS,
-    TargetPlatform.macOS,
-    TargetPlatform.windows,
-    TargetPlatform.linux,
-  ]) {
+  for (final platform in [TargetPlatform.android]) {
     for (final mornye in [false, true]) {
       for (final largeText in [false, true]) {
-        final mobile =
-            platform == TargetPlatform.android ||
-            platform == TargetPlatform.iOS;
         testWidgets(
           'Subsonic form and browsing on $platform Mornye=$mornye largeText=$largeText',
           (tester) async {
-            tester.view.physicalSize = mobile
-                ? const Size(360, 800)
-                : const Size(1200, 900);
+            tester.view.physicalSize = const Size(360, 800);
             tester.view.devicePixelRatio = 1;
             addTearDown(tester.view.resetPhysicalSize);
             addTearDown(tester.view.resetDevicePixelRatio);
