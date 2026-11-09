@@ -632,7 +632,7 @@ void main() {
         'history_path': history.path,
         'source_id': 'test-source',
         'expected_source_path': media.path,
-        'platform': Platform.isAndroid ? 'android' : 'ios',
+        'platform': Platform.isAndroid ? 'android' : 'other',
       };
       final firstRow = <String, dynamic>{
         'id': 'first',
@@ -787,7 +787,7 @@ void main() {
       ).writeAsString('${jsonEncode(track)}\n');
       final common = {
         'history_path': database.path,
-        'platform': Platform.isAndroid ? 'android' : 'ios',
+        'platform': Platform.isAndroid ? 'android' : 'other',
       };
       expect(
         (await _job('backup_history_import', {

@@ -386,7 +386,7 @@ void main() {
           '${flatBackdrop ? 'flat light/dark surfaces' : 'generated stripes/grid'}; '
           'paused in-memory playback and settings, no persistent data or network.',
       'captureSurface':
-          '${Platform.isAndroid ? 'Android converted Flutter image view' : 'iOS window'}; '
+          '${Platform.isAndroid ? 'Android converted Flutter image view' : 'other window'}; '
           'visual-only, no timings.',
       'halfPose':
           'Production animation controller stopped at linear progress 0.5.',
