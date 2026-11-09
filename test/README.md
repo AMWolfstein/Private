@@ -79,11 +79,8 @@ breaks the subclasses.
 Several suites read production source text on purpose. Two of them exist
 only for that:
 
-- `test/source_contracts_test.dart` pins text across Dart, Kotlin and Swift:
   - `lib/services/app_state_database.dart`: database version 4 and its
     playback-session migration.
-  - `ios/Runner/AppDelegate.swift` and
-    `lib/providers/download_queue_provider.dart`: the iOS background download
     task is acquired before work starts, and expiry cancels downloads before
     notifying Dart, which pauses and requeues.
   - `NativeDownloadFinalizer.kt`, `NativeFinalizerHistory.kt`,
@@ -118,7 +115,6 @@ Other suites read a production file alongside their behavior tests:
 `library_queue_store_test.dart`, `album_completeness_test.dart`,
 `album_completeness_query_test.dart` and `replaygain_library_filter_test.dart`
 (`CREATE TABLE` text from `lib/services/history_schema.dart` and
-`library_schema.dart`). Find them with `rg -n "File\('(lib|android|ios)/" test`.
 
 When a refactor moves pinned code, update the path or the assertion in the
 same commit. Never delete these checks.
