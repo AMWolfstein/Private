@@ -80,7 +80,7 @@ void main() {
       } finally {
         await Process.run('chmod', ['700', directory.path]);
       }
-    }, skip: Platform.isWindows);
+    }, skip: Platform.isWindows || _isRoot);
   });
 
   test(
@@ -144,3 +144,6 @@ void main() {
     );
   }
 }
+
+final bool _isRoot = !Platform.isWindows &&
+    Process.runSync('id', ['-u']).stdout.toString().trim() == '0';

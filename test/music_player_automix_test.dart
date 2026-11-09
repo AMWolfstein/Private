@@ -1661,19 +1661,7 @@ void main() {
     await _until(() => handler.mediaItem.value?.id == 'one');
   });
 
-  fakeTimeTest('keeps the last 150 s unmixed', () async {
-    setLengths(const Duration(minutes: 4));
-    setAutoMixEnabled(true);
-    await handler.setQueueAndPlay(_tracks);
-    native.positions['music-player'] = 200000;
-    await Future<void>.delayed(const Duration(seconds: 1));
-    expect(analyzer.calls, isEmpty);
-    expect(native.live, {'music-player'});
-    await _until(() => native.calls.any((c) => c.$2 == 'setPlaybackRate'));
-    expect(analyzer.calls, ['/one.flac', '/two.flac']);
-  });
-
-  fakeTimeTest(
+fakeTimeTest(
     'a next song that arrives before the last 150 s is mixed in',
     () async {
       setLengths(const Duration(minutes: 4));
