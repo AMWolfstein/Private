@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -56,15 +55,12 @@ class UpdateInfo {
 class UpdateChecker {
   final http.Client? _client;
   final String _installedVersion;
-  final List<String>? _supportedAbis;
 
   UpdateChecker({
     http.Client? client,
     String installedVersion = AppInfo.version,
-    List<String>? supportedAbis,
   }) : _client = client,
-       _installedVersion = installedVersion,
-       _supportedAbis = supportedAbis;
+       _installedVersion = installedVersion;
 
   /// Installed versions this many stable releases (or more) behind must
   /// update before continuing to use the app.
@@ -214,7 +210,7 @@ class UpdateChecker {
           releaseData['html_url'] as String? ??
           'https://github.com/${AppInfo.githubRepo}/releases';
 
-      final apk = await _selectApkForCurrentDevice(
+      final apk = _selectApk(
         _collectApkAssets(
           _collectReleaseAssets(
             releaseData['assets'] as List<dynamic>? ?? const [],
@@ -320,41 +316,8 @@ class UpdateChecker {
     return RegExp(r'^[a-f0-9]{64}$').hasMatch(normalized) ? normalized : null;
   }
 
-  /// The arm64 APK when this device runs arm64; null otherwise, or when the
-  /// release has no arm64 APK.
-  Future<ReleaseAsset?> _selectApkForCurrentDevice(
-    List<ReleaseAsset> apks,
-  ) async {
-    if (apks.isEmpty) {
-      return null;
-    }
-    final supportedAbis = _supportedAbis ?? await _getSupportedAndroidAbis();
-    if (!supportedAbis.any(_isArm64Abi)) {
-      _log.w(
-        'This device does not run arm64 (ABIs: ${supportedAbis.join(', ')}); '
-        'no APK to install.',
-      );
-      return null;
-    }
-    return apks.first;
-  }
-
-  static Future<List<String>> _getSupportedAndroidAbis() async {
-    try {
-      final androidInfo = await DeviceInfoPlugin().androidInfo;
-      final supportedAbis = androidInfo.supportedAbis
-          .map((abi) => abi.toLowerCase())
-          .where((abi) => abi.isNotEmpty)
-          .toSet()
-          .toList();
-      _log.i('Detected supported Android ABIs: ${supportedAbis.join(', ')}');
-      return supportedAbis;
-    } catch (e) {
-      _log.w('Failed to detect supported Android ABIs: $e');
-      return const [];
-    }
-  }
-
-  static bool _isArm64Abi(String abi) =>
-      abi.contains('arm64') || abi.contains('aarch64');
+  /// The release's arm64 APK, or null when it has none. The app runs only on
+  /// arm64, so the device ABIs are not read.
+  static ReleaseAsset? _selectApk(List<ReleaseAsset> apks) =>
+      apks.isEmpty ? null : apks.first;
 }

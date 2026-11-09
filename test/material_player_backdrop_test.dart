@@ -489,7 +489,7 @@ void main() {
           reason: cover.path,
         );
       }
-    }, skip: true);
+    }, skip: true); // Fails at the pre-work commit too; the blur needs its own fix (log.md).
   }
 
   testWidgets('masks only the band of the cover the fade changes', (
@@ -587,7 +587,7 @@ void main() {
           }
         }
         expect(tester.takeException(), isNull);
-      }, skip: true);
+      }, skip: true); // Fails at the pre-work commit too; the blur needs its own fix (log.md).
     }
   }
 }

@@ -95,6 +95,5 @@ void main() {
         semantics.dispose();
       }
     },
-    skip: true,
   );
 }

@@ -174,7 +174,8 @@ void main() {
 
       // Remember the fetched times: updating an object stamps its touched time.
       final fetchedTouched = {
-        for (final object in objects.take(10)) object.id!: object.touched!.millisecondsSinceEpoch,
+        for (final object in objects.take(10))
+          object.id!: object.touched!.millisecondsSinceEpoch,
       };
       await Future<void>.delayed(const Duration(milliseconds: 5));
       for (final object in objects.take(10)) {
@@ -202,6 +203,17 @@ void main() {
       await repository.close();
       expect(writes.count, 3);
       expect(encoded, 31);
+      // Closing flushes the touch-only changes: the saved index holds the
+      // new stamps too.
+      final savedTouched = {
+        for (final row in _rows(file)) row['_id'] as int: row['touched'],
+      };
+      for (final object in objects.take(10)) {
+        expect(
+          savedTouched[object.id],
+          greaterThan(fetchedTouched[object.id]!),
+        );
+      }
     }, writes);
     expect(_rows(file), hasLength(39));
   });
