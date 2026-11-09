@@ -5,7 +5,17 @@
   "phase": "plan",
   "base": "e6875b0d99fb726f29d659459c32df184181a936",
   "created": "2026-11-09T07:51:43+00:00",
-  "rounds": [],
+  "rounds": [
+    {
+      "stage": "design",
+      "round": 1,
+      "result": "dirty",
+      "reviewer": "design-critic",
+      "fingerprint": "5d14b8d8deeeff04c3992c408882e9fb1eb581beeba63d8a718f9d2c19fd3228",
+      "assurance": "5d14b8d8deeeff04c3992c408882e9fb1eb581beeba63d8a718f9d2c19fd3228",
+      "at": "2026-11-09T08:01:51+00:00"
+    }
+  ],
   "history": [
     {
       "phase": "spec",
