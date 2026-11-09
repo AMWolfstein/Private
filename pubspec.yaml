@@ -29,16 +29,12 @@ dependencies:
   flutter_secure_storage: 10.3.4
   path_provider: ^2.1.6
   path: ^1.9.1
-  # Desktop backend library bindings (lib/services/backend).
-  ffi: ^2.2.0
   sqflite: ^2.4.5
 
 # HTTP & Network
   http: ^1.6.0
   connectivity_plus: ^7.3.1
   crypto: ^3.0.8
-  # Mornye Link: finds the desktop app on the local network (mDNS).
-  bonsoir: ^7.1.5
 
   # Streaming backup archives
   archive: ^4.5.2
