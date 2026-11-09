@@ -821,7 +821,7 @@ class _HomeShelf extends StatelessWidget {
     final coverSize = this.coverSize ?? _homeShelfCoverSizeOf(context);
     return SizedBox(
       height: coverSize + 52 * textScale,
-      child: DesktopScrollArrows(
+      child: ShelfScrollArrows(
         builder: (context, controller) => ListView.separated(
           controller: controller,
           scrollDirection: Axis.horizontal,
@@ -1296,7 +1296,7 @@ class _HomeTopPicksShelf extends StatelessWidget {
         final width = math.min(content - 44, 280.0);
         return SizedBox(
           height: width / MornyeMixBanner.aspectRatio,
-          child: DesktopScrollArrows(
+          child: ShelfScrollArrows(
             builder: (context, controller) => ListView.separated(
               controller: controller,
               scrollDirection: Axis.horizontal,

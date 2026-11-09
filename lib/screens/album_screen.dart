@@ -31,7 +31,7 @@ import 'package:mornye/widgets/animation_utils.dart';
 import 'package:mornye/widgets/playlist_picker_sheet.dart';
 import 'package:mornye/widgets/cross_extension_share_sheet.dart';
 import 'package:mornye/widgets/track_list_tile.dart';
-import 'package:mornye/widgets/desktop/desktop_selection.dart';
+import 'package:mornye/widgets/track_lists/list_selection.dart';
 import 'package:mornye/widgets/audio_quality_badges.dart';
 import 'package:mornye/widgets/motion_header_banner.dart';
 import 'package:mornye/widgets/track_detail_actions.dart';
@@ -507,7 +507,7 @@ class _AlbumScreenState extends ConsumerState<AlbumScreen>
         ],
       ],
     );
-    return DesktopListScope(
+    return ListScope(
       onSelectAll: ids.isEmpty ? null : () => selectAll(ids),
       onClearSelection: isSelectionMode ? exitSelectionMode : null,
       onActivate: () => _desktopActivations[selectionAnchorId]?.call(),

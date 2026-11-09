@@ -7,8 +7,8 @@ import 'package:mornye/theme/app_motion.dart';
 import 'package:mornye/theme/app_tokens.dart';
 import 'package:mornye/theme/mornye_theme.dart';
 import 'package:mornye/widgets/app_icon.dart';
-import 'package:mornye/widgets/desktop/context_menu.dart';
-import 'package:mornye/widgets/desktop/desktop_selection.dart';
+import 'package:mornye/widgets/track_lists/context_menu.dart';
+import 'package:mornye/widgets/track_lists/list_selection.dart';
 import 'package:mornye/widgets/now_playing_indicator.dart';
 
 /// A column of a [SliverTrackTable], in display order.
@@ -68,7 +68,7 @@ class TrackTableRow {
 /// third click restores the original order. Rows follow the desktop list
 /// gestures: a click runs [onActivate], Cmd/Ctrl-click toggles, Shift-click
 /// selects a range in the shown order, and a right-click runs
-/// [onContextMenu]. Wrap the screen in a [DesktopListScope]
+/// [onContextMenu]. Wrap the screen in a [ListScope]
 /// for the keyboard.
 ///
 /// Lists sorted by their source, such as the paged Library, pass [onSort]:
@@ -112,7 +112,7 @@ class SliverTrackTable extends StatefulWidget {
 
   /// A click of `kind` on the row `id`; `orderedIds` lists the rows in the
   /// order shown.
-  final void Function(String id, DesktopClick kind, List<String> orderedIds)
+  final void Function(String id, RowClick kind, List<String> orderedIds)
   onSelect;
 
   /// Plays or opens the row with this id.

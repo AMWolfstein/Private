@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:mornye/widgets/desktop/desktop_selection.dart';
+import 'package:mornye/widgets/track_lists/list_selection.dart';
 import 'package:mornye/widgets/selection_bottom_bar.dart';
 
 /// Shared multi-select state for list screens: enter/exit selection mode,
@@ -48,7 +48,7 @@ mixin SelectionModeMixin<T extends StatefulWidget> on State<T> {
   /// visible items in display order, for Shift ranges.
   void applyDesktopClick(
     String itemId,
-    DesktopClick kind,
+    RowClick kind,
     List<String> orderedIds,
   ) {
     setState(() {
@@ -75,7 +75,7 @@ mixin SelectionModeMixin<T extends StatefulWidget> on State<T> {
     final forMenu = !selectedIds.contains(itemId);
     if (forMenu) {
       contextMenuSelection = true;
-      applyDesktopClick(itemId, DesktopClick.replace, const []);
+      applyDesktopClick(itemId, RowClick.replace, const []);
     }
     final chosen = await show();
     if (!forMenu || !mounted) return;

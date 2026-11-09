@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:mornye/utils/ordered_range_selection.dart';
 
 /// How a desktop click changes a list selection.
-enum DesktopClick {
+enum RowClick {
   /// A plain click: the item becomes the whole selection.
   replace,
 
@@ -21,19 +21,19 @@ enum DesktopClick {
 T? applyDesktopClickTo<T>(
   Set<T> selected, {
   required T target,
-  required DesktopClick kind,
+  required RowClick kind,
   required List<T> orderedIds,
   required T? anchor,
 }) {
   switch (kind) {
-    case DesktopClick.replace:
+    case RowClick.replace:
       selected
         ..clear()
         ..add(target);
       return target;
-    case DesktopClick.toggle:
+    case RowClick.toggle:
       return toggleOrderedSelection(selected: selected, target: target);
-    case DesktopClick.extend:
+    case RowClick.extend:
       selected.clear();
       addOrderedSelectionRange(
         selected: selected,
@@ -52,10 +52,10 @@ bool get desktopPrimaryModifierPressed {
 }
 
 /// The selection change for a click made with the modifiers held right now.
-DesktopClick desktopClickKind() {
-  if (HardwareKeyboard.instance.isShiftPressed) return DesktopClick.extend;
-  if (desktopPrimaryModifierPressed) return DesktopClick.toggle;
-  return DesktopClick.replace;
+RowClick desktopClickKind() {
+  if (HardwareKeyboard.instance.isShiftPressed) return RowClick.extend;
+  if (desktopPrimaryModifierPressed) return RowClick.toggle;
+  return RowClick.replace;
 }
 
 /// Whether [event] is Shift+F10 or the Menu key, which open the context menu
@@ -70,7 +70,7 @@ bool isContextMenuKey(KeyEvent event) {
 
 /// Detects double clicks on rows that rebuild between the two clicks, which
 /// would reset a per-widget recognizer.
-abstract final class DesktopDoubleClick {
+abstract final class RowDoubleClick {
   /// The macOS default; Windows uses 500 ms as well.
   static const timeout = Duration(milliseconds: 500);
 
@@ -103,23 +103,23 @@ abstract final class DesktopDoubleClick {
 /// click kind. The second click of a double click does nothing, so it never
 /// activates the row twice. Returns the click kind, or null for a plain
 /// click.
-DesktopClick? handleDesktopRowClick(
+RowClick? handleDesktopRowClick(
   Object target, {
-  required ValueChanged<DesktopClick> select,
+  required ValueChanged<RowClick> select,
   required VoidCallback activate,
 }) {
   final kind = desktopClickKind();
-  if (kind == DesktopClick.replace) {
-    if (!DesktopDoubleClick.register(target)) activate();
+  if (kind == RowClick.replace) {
+    if (!RowDoubleClick.register(target)) activate();
     return null;
   }
-  DesktopDoubleClick.reset();
+  RowDoubleClick.reset();
   select(kind);
   return kind;
 }
 
 /// An item that can open its context menu from the keyboard.
-abstract interface class DesktopContextMenuTarget {
+abstract interface class ContextMenuTarget {
   bool get mounted;
 
   void openContextMenuFromKeyboard();
@@ -133,8 +133,8 @@ abstract interface class DesktopContextMenuTarget {
 /// Backspace runs [onDelete], Enter runs [onActivate], and Shift+F10 or the
 /// Menu key opens the context menu of the item clicked last. Text fields keep
 /// their own keys. Phones and tablets get [child] unchanged.
-class DesktopListScope extends StatefulWidget {
-  const DesktopListScope({
+class ListScope extends StatefulWidget {
+  const ListScope({
     super.key,
     required this.child,
     this.onSelectAll,
@@ -157,11 +157,11 @@ class DesktopListScope extends StatefulWidget {
   final VoidCallback? onActivate;
 
   @override
-  State<DesktopListScope> createState() => _DesktopListScopeState();
+  State<ListScope> createState() => _ListScopeState();
 }
 
-class _DesktopListScopeState extends State<DesktopListScope> {
-  final _node = FocusScopeNode(debugLabel: 'DesktopListScope');
+class _ListScopeState extends State<ListScope> {
+  final _node = FocusScopeNode(debugLabel: 'ListScope');
 
   @override
   void dispose() {

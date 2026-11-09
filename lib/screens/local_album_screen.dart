@@ -31,8 +31,8 @@ import 'package:mornye/screens/track_metadata_screen.dart';
 import 'package:mornye/widgets/cached_cover_image.dart';
 import 'package:mornye/widgets/collection_scaffold.dart';
 import 'package:mornye/widgets/collection_suggestions_section.dart';
-import 'package:mornye/widgets/desktop/desktop_selection.dart';
-import 'package:mornye/widgets/desktop/library_track_menu.dart';
+import 'package:mornye/widgets/track_lists/list_selection.dart';
+import 'package:mornye/widgets/track_lists/library_track_menu.dart';
 import 'package:mornye/widgets/playlist_picker_sheet.dart';
 import 'package:mornye/widgets/expressive_button.dart';
 import 'package:mornye/widgets/album_track_tile.dart';
@@ -312,7 +312,7 @@ class _LocalAlbumScreenState extends ConsumerState<LocalAlbumScreen>
       ],
       selectionBar: _buildSelectionBottomBar(tracks, bottomPadding),
     );
-    return DesktopListScope(
+    return ListScope(
       onSelectAll: tracks.isEmpty
           ? null
           : () => selectAll(tracks.map((track) => track.id)),

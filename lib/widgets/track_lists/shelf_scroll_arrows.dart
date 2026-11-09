@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 
 /// Builds a horizontal list that scrolls with [controller].
-typedef DesktopScrollArrowsBuilder =
+typedef ShelfScrollArrowsBuilder =
     Widget Function(BuildContext context, ScrollController controller);
 
 /// Hosts a horizontal list and owns its [ScrollController]. Phones and tablets
 /// scroll the list by touch, so it is passed through unchanged.
-class DesktopScrollArrows extends StatefulWidget {
-  const DesktopScrollArrows({super.key, required this.builder});
+class ShelfScrollArrows extends StatefulWidget {
+  const ShelfScrollArrows({super.key, required this.builder});
 
-  final DesktopScrollArrowsBuilder builder;
+  final ShelfScrollArrowsBuilder builder;
 
   @override
-  State<DesktopScrollArrows> createState() => _DesktopScrollArrowsState();
+  State<ShelfScrollArrows> createState() => _ShelfScrollArrowsState();
 }
 
-class _DesktopScrollArrowsState extends State<DesktopScrollArrows> {
+class _ShelfScrollArrowsState extends State<ShelfScrollArrows> {
   final _controller = ScrollController();
 
   @override

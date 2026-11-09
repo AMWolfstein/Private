@@ -6,7 +6,7 @@ import 'package:mornye/theme/mornye_icons.dart';
 import 'package:mornye/theme/mornye_theme.dart';
 import 'package:mornye/utils/android_tv.dart';
 import 'package:mornye/widgets/app_icon.dart';
-import 'package:mornye/widgets/desktop/desktop_selection.dart';
+import 'package:mornye/widgets/track_lists/list_selection.dart';
 import 'package:mornye/widgets/mornye_context_menu.dart';
 
 /// One row of a desktop context menu. Use `Icons.*`; Mornye swaps in the
@@ -117,10 +117,10 @@ Offset? contextMenuPositionBelow(BuildContext context) {
 
 /// Opens [onContextMenu] on desktop on a right-click, a Control-click on
 /// macOS, or Shift+F10 and the Menu key while the item or its
-/// [DesktopListScope] has focus. Phones and tablets get [child] unchanged;
+/// [ListScope] has focus. Phones and tablets get [child] unchanged;
 /// their long press keeps the same actions.
-class DesktopContextMenuRegion extends StatefulWidget {
-  const DesktopContextMenuRegion({
+class ContextMenuRegion extends StatefulWidget {
+  const ContextMenuRegion({
     super.key,
     required this.onContextMenu,
     required this.child,
@@ -131,12 +131,12 @@ class DesktopContextMenuRegion extends StatefulWidget {
   final Widget child;
 
   @override
-  State<DesktopContextMenuRegion> createState() =>
-      _DesktopContextMenuRegionState();
+  State<ContextMenuRegion> createState() =>
+      _ContextMenuRegionState();
 }
 
-class _DesktopContextMenuRegionState extends State<DesktopContextMenuRegion>
-    implements DesktopContextMenuTarget {
+class _ContextMenuRegionState extends State<ContextMenuRegion>
+    implements ContextMenuTarget {
   @override
   void openContextMenuFromKeyboard() {
     final origin = contextMenuOriginOf(context);

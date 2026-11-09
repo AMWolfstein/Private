@@ -29,9 +29,9 @@ import 'package:mornye/widgets/app_refresh_indicator.dart';
 import 'package:mornye/widgets/app_sliver_header.dart';
 import 'package:mornye/widgets/app_snack_bar.dart';
 import 'package:mornye/widgets/cached_cover_image.dart';
-import 'package:mornye/widgets/desktop/context_menu.dart';
-import 'package:mornye/widgets/desktop/desktop_selection.dart';
-import 'package:mornye/widgets/desktop/library_track_menu.dart';
+import 'package:mornye/widgets/track_lists/context_menu.dart';
+import 'package:mornye/widgets/track_lists/list_selection.dart';
+import 'package:mornye/widgets/track_lists/library_track_menu.dart';
 import 'package:mornye/widgets/error_card.dart';
 import 'package:mornye/widgets/expressive_button.dart';
 import 'package:mornye/widgets/library_selection_playback_actions.dart';
@@ -406,7 +406,7 @@ class _LibraryDirectoryViewState extends ConsumerState<LibraryDirectoryView>
       onPopInvokedWithResult: (didPop, _) {
         if (!didPop && isSelectionMode) exitSelectionMode();
       },
-      child: DesktopListScope(
+      child: ListScope(
         onSelectAll: items.isEmpty
             ? null
             : () => selectAll(items.map((item) => item.id)),

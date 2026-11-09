@@ -6,8 +6,8 @@ import 'package:mornye/models/track.dart';
 import 'package:mornye/providers/music_player_provider.dart';
 import 'package:mornye/utils/adaptive_layout.dart';
 import 'package:mornye/widgets/cached_cover_image.dart';
-import 'package:mornye/widgets/desktop/desktop_selection.dart';
-import 'package:mornye/widgets/desktop/track_table.dart';
+import 'package:mornye/widgets/track_lists/list_selection.dart';
+import 'package:mornye/widgets/track_lists/track_table.dart';
 import 'package:mornye/widgets/preview_button.dart';
 import 'package:mornye/widgets/track_card.dart';
 import 'package:mornye/widgets/track_collection_quick_actions.dart';
@@ -49,7 +49,7 @@ class TrackListTable extends ConsumerStatefulWidget {
   /// Whether each track, by index, is in the download history.
   final List<bool> isInHistory;
   final Set<String> selectedIds;
-  final void Function(String id, DesktopClick kind, List<String> orderedIds)
+  final void Function(String id, RowClick kind, List<String> orderedIds)
   onSelect;
 
   /// Runs the row at this index.

@@ -10,7 +10,7 @@ import 'package:mornye/screens/artist_screen.dart';
 import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/theme/mornye_theme.dart';
 import 'package:mornye/widgets/animation_utils.dart';
-import 'package:mornye/widgets/desktop/desktop_scroll_arrows.dart';
+import 'package:mornye/widgets/track_lists/shelf_scroll_arrows.dart';
 import 'package:mornye/widgets/selection_bottom_bar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -197,7 +197,7 @@ void main() {
       ];
       await _pumpArtist(tester, mornye: mornye, albums: albums);
       // Mornye's highlights row scrolls too; the albums are the last shelf.
-      final shelf = find.byType(DesktopScrollArrows).last;
+      final shelf = find.byType(ShelfScrollArrows).last;
       final list = find.descendant(of: shelf, matching: find.byType(ListView));
       final mouse = await tester.createGesture(kind: PointerDeviceKind.mouse);
       addTearDown(mouse.removePointer);

@@ -11,7 +11,7 @@ import 'package:mornye/services/collection_suggestions.dart';
 import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/theme/mornye_theme.dart';
 import 'package:mornye/widgets/collection_suggestions_section.dart';
-import 'package:mornye/widgets/desktop/track_list_table.dart';
+import 'package:mornye/widgets/track_lists/track_list_table.dart';
 
 import 'support/fixed_settings.dart';
 

@@ -353,7 +353,7 @@ extension _HomeTabSearchWideUI on _HomeTabState {
           );
           return SizedBox(
             height: extent + searchCoverTextHeight(context) + 8,
-            child: DesktopScrollArrows(
+            child: ShelfScrollArrows(
               key: ValueKey('search-shelf-$kind'),
               builder: (context, controller) => ListView.separated(
                 controller: controller,

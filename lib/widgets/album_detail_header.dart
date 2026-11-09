@@ -22,8 +22,8 @@ import 'package:mornye/widgets/expressive_button.dart';
 import 'package:mornye/widgets/expressive_button_group.dart';
 import 'package:mornye/widgets/expressive_icon_button.dart';
 import 'package:mornye/utils/adaptive_layout.dart';
-import 'package:mornye/widgets/desktop/context_menu.dart';
-import 'package:mornye/widgets/desktop/detail_header.dart';
+import 'package:mornye/widgets/track_lists/context_menu.dart';
+import 'package:mornye/widgets/track_lists/detail_header.dart';
 import 'package:mornye/widgets/settled_blur.dart';
 import 'package:mornye/widgets/sliver_layout_info_builder.dart';
 

@@ -5,7 +5,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart' as p;
 import 'package:mornye/widgets/collection_scaffold.dart';
-import 'package:mornye/widgets/desktop/desktop_selection.dart';
+import 'package:mornye/widgets/track_lists/list_selection.dart';
 import 'package:mornye/widgets/expressive_button.dart';
 import 'package:mornye/widgets/expressive_button_group.dart';
 import 'package:mornye/widgets/app_bottom_sheet.dart';
@@ -465,7 +465,7 @@ class _LibraryTracksFolderScreenState
       onPopInvokedWithResult: (didPop, _) {
         if (!didPop && _editingOrder) _cancelOrder();
       },
-      child: DesktopListScope(
+      child: ListScope(
         onSelectAll: entries.isEmpty || _editingOrder
             ? null
             : () => selectAll(ids),

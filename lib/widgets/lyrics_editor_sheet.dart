@@ -20,7 +20,7 @@ import 'package:mornye/widgets/app_icon.dart';
 import 'package:mornye/widgets/app_icon_button.dart';
 import 'package:mornye/widgets/app_loading_indicator.dart';
 import 'package:mornye/widgets/app_snack_bar.dart';
-import 'package:mornye/widgets/desktop/context_menu.dart';
+import 'package:mornye/widgets/track_lists/context_menu.dart';
 import 'package:mornye/widgets/discard_changes_dialog.dart';
 import 'package:mornye/widgets/expressive_button.dart';
 import 'package:mornye/widgets/expressive_button_group.dart';

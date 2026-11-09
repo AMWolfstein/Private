@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
-import 'package:mornye/services/platform_bridge.dart';
 
 /// A Cast receiver on the network, listed where the app draws the picker.
 @immutable
@@ -60,17 +59,6 @@ class MethodChannelCastTransport implements CastTransport {
       const EventChannel(
         'com.zarz.mornye/cast/events',
       ).receiveBroadcastStream();
-}
-
-class DesktopCastTransport implements CastTransport {
-  const DesktopCastTransport();
-
-  @override
-  Future<Object?> invoke(String method, [Map<String, Object?>? arguments]) =>
-      PlatformBridge.castCall(method, arguments);
-
-  @override
-  Stream<Object?> events() => PlatformBridge.castEvents();
 }
 
 /// The Cast session. On Android it survives Activity recreation with the

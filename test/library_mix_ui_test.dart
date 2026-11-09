@@ -16,7 +16,7 @@ import 'package:mornye/screens/library_mix_screen.dart';
 import 'package:mornye/services/library_mixes.dart';
 import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/theme/mornye_theme.dart';
-import 'package:mornye/widgets/desktop/track_table.dart';
+import 'package:mornye/widgets/track_lists/track_table.dart';
 import 'package:mornye/widgets/library_mix_cover.dart';
 import 'package:mornye/widgets/library_track_selection_bar.dart';
 import 'package:mornye/widgets/mornye_mix_banner.dart';

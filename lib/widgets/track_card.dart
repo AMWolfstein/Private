@@ -8,7 +8,7 @@ import 'package:mornye/theme/mornye_theme.dart';
 import 'package:mornye/theme/player_artwork_theme.dart';
 import 'package:mornye/widgets/animation_utils.dart';
 import 'package:mornye/widgets/app_content_card.dart';
-import 'package:mornye/widgets/desktop/context_menu.dart';
+import 'package:mornye/widgets/track_lists/context_menu.dart';
 import 'package:mornye/widgets/now_playing_indicator.dart';
 import 'package:mornye/widgets/settings_group.dart';
 
@@ -140,7 +140,7 @@ class TrackCard extends StatelessWidget {
   final VoidCallback? onLongPress;
 
   /// Desktop right-click, with the global pointer position. See
-  /// [DesktopContextMenuRegion].
+  /// [ContextMenuRegion].
   final ValueChanged<Offset>? onContextMenu;
 
   /// Overrides the default outer margin. Prefer the default so track lists stay

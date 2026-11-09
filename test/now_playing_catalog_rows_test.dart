@@ -16,7 +16,7 @@ import 'package:mornye/screens/library_tracks_folder_screen.dart';
 import 'package:mornye/services/library_search.dart';
 import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/theme/mornye_theme.dart';
-import 'package:mornye/widgets/desktop/track_list_table.dart';
+import 'package:mornye/widgets/track_lists/track_list_table.dart';
 import 'package:mornye/widgets/library_search_results.dart';
 import 'package:mornye/widgets/now_playing_indicator.dart';
 import 'package:mornye/widgets/track_card.dart';

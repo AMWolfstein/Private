@@ -523,7 +523,7 @@ Future<bool> _launchVerificationUrl(
   }
   // Desktop has no in-app browser or web auth session: the system browser
   // opens the page and returns through the registered mornye:// scheme
-  // (DesktopDeepLinks hands the callback to the backend).
+  // (the deep-link handler hands the callback to the backend).
 
   final preferInApp = browserMode.trim().toLowerCase() == 'in_app_first';
   final firstMode = preferInApp

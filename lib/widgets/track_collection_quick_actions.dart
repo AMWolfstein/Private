@@ -13,7 +13,7 @@ import 'package:mornye/services/cover_cache_manager.dart';
 import 'package:mornye/controllers/clickable_metadata.dart';
 import 'package:mornye/controllers/local_playback.dart';
 import 'package:mornye/utils/service_track_link.dart';
-import 'package:mornye/widgets/desktop/context_menu.dart';
+import 'package:mornye/widgets/track_lists/context_menu.dart';
 import 'package:mornye/widgets/playlist_picker_sheet.dart';
 import 'package:mornye/widgets/mornye_context_menu.dart';
 import 'package:share_plus/share_plus.dart';

@@ -96,9 +96,9 @@ import 'package:mornye/widgets/animation_utils.dart';
 import 'package:mornye/widgets/selection_bottom_bar.dart';
 import 'package:mornye/widgets/smoothed_progress.dart';
 import 'package:mornye/widgets/two_finger_pinch_listener.dart';
-import 'package:mornye/widgets/desktop/context_menu.dart';
-import 'package:mornye/widgets/desktop/desktop_selection.dart';
-import 'package:mornye/widgets/desktop/library_track_menu.dart';
+import 'package:mornye/widgets/track_lists/context_menu.dart';
+import 'package:mornye/widgets/track_lists/list_selection.dart';
+import 'package:mornye/widgets/track_lists/library_track_menu.dart';
 
 part 'queue_tab_helpers.dart';
 part 'queue_tab_widgets.dart';
@@ -1024,13 +1024,13 @@ class _QueueTabState extends ConsumerState<QueueTab> {
         ],
       ),
     );
-    return DesktopListScope(
+    return ListScope(
       onSelectAll: selectionItems.isEmpty
           ? null
           : () {
               _applyDesktopClick(
                 selectionItems.first.id,
-                DesktopClick.replace,
+                RowClick.replace,
                 const [],
               );
               _selectAll(selectionItems);

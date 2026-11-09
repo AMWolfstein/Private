@@ -8,7 +8,7 @@ import 'package:mornye/providers/theme_provider.dart';
 import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/theme/dynamic_color_wrapper.dart';
 import 'package:mornye/theme/mornye_theme.dart';
-import 'package:mornye/widgets/desktop/context_menu.dart';
+import 'package:mornye/widgets/track_lists/context_menu.dart';
 import 'package:mornye/widgets/settings_group.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

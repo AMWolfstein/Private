@@ -2215,7 +2215,7 @@ class PlatformBridge {
   }
 
   // Android reports process exits natively; desktop uses the session marker
-  // in DesktopDiagnostics.
+  // in the diagnostics session marker.
 
   static Future<Map<String, dynamic>?> getPendingAppCrash() async {
     if (kIsWeb || defaultTargetPlatform != TargetPlatform.android) return null;

@@ -8,7 +8,7 @@ import 'package:mornye/utils/adaptive_layout.dart';
 import 'package:mornye/widgets/album_detail_header.dart';
 import 'package:mornye/widgets/app_icon.dart';
 import 'package:mornye/widgets/app_icon_button.dart';
-import 'package:mornye/widgets/desktop/context_menu.dart';
+import 'package:mornye/widgets/track_lists/context_menu.dart';
 import 'package:mornye/widgets/sliver_layout_info_builder.dart';
 
 /// Space below a desktop detail page, so its last rows clear the floating

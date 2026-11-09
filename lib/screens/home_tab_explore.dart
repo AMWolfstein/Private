@@ -80,7 +80,7 @@ extension _HomeTabExploreUI on _HomeTabState {
         ),
         SizedBox(
           height: sectionHeight,
-          child: DesktopScrollArrows(
+          child: ShelfScrollArrows(
             builder: (context, controller) => ListView.builder(
               controller: controller,
               scrollDirection: Axis.horizontal,

@@ -74,7 +74,7 @@ extension _QueueTabSelectionActions on _QueueTabState {
   /// songs in the order shown.
   void _applyDesktopClick(
     String itemId,
-    DesktopClick kind,
+    RowClick kind,
     List<String> orderedIds,
   ) {
     var shouldHideOverlay = false;
@@ -109,7 +109,7 @@ extension _QueueTabSelectionActions on _QueueTabState {
     final forMenu = !_selectedIds.contains(item.id);
     if (forMenu) {
       _contextMenuSelection = true;
-      _applyDesktopClick(item.id, DesktopClick.replace, const []);
+      _applyDesktopClick(item.id, RowClick.replace, const []);
       _hideSelectionOverlay();
     }
     final chosen = await showContextMenu(

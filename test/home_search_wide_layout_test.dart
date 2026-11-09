@@ -7,7 +7,7 @@ import 'package:mornye/models/settings.dart';
 import 'package:mornye/providers/extension_provider.dart';
 import 'package:mornye/utils/adaptive_layout.dart';
 import 'package:mornye/widgets/animation_utils.dart';
-import 'package:mornye/widgets/desktop/desktop_scroll_arrows.dart';
+import 'package:mornye/widgets/track_lists/shelf_scroll_arrows.dart';
 
 import 'support/search_results_fixture.dart';
 
@@ -183,13 +183,13 @@ void main() {
         filters: searchFixtureAllFilters,
       );
       expect(_songCell(0), findsNothing);
-      expect(find.byType(DesktopScrollArrows), findsNothing);
+      expect(find.byType(ShelfScrollArrows), findsNothing);
       expect(find.text('Found track 7'), findsOneWidget);
 
       await tester.tap(_viewTool('Grid'));
       await tester.pumpAndSettle();
       expect(_songCell(0), findsOneWidget);
-      expect(find.byType(DesktopScrollArrows), findsNWidgets(4));
+      expect(find.byType(ShelfScrollArrows), findsNWidgets(4));
       expect(_viewTool('Grid'), findsNothing);
 
       await tester.tap(_viewTool('List'));
@@ -382,7 +382,7 @@ void main() {
           findsOneWidget,
         );
       }
-      expect(find.byType(DesktopScrollArrows), findsNWidgets(4));
+      expect(find.byType(ShelfScrollArrows), findsNWidgets(4));
       // Only Mornye's mixed preview cards form a grid.
       expect(find.byType(SliverGrid), mornye ? findsOneWidget : findsNothing);
 

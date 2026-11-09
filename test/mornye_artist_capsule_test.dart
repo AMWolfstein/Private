@@ -5,7 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mornye/l10n/l10n.dart';
 import 'package:mornye/theme/mornye_theme.dart';
 import 'package:mornye/widgets/album_detail_header.dart';
-import 'package:mornye/widgets/desktop/context_menu.dart';
+import 'package:mornye/widgets/track_lists/context_menu.dart';
 import 'package:mornye/widgets/mornye_artist_header.dart';
 import 'package:mornye/widgets/mornye_chrome.dart';
 

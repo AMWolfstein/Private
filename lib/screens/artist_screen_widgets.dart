@@ -893,12 +893,12 @@ extension _ArtistScreenSections on _ArtistScreenState {
           onNotification: _onAlbumsScroll,
           child: SizedBox(
             height: sectionHeight,
-            child: DesktopListScope(
+            child: ListScope(
               onSelectAll: () => selectAll(
                 (_albums ?? const <ArtistAlbum>[]).map((album) => album.id),
               ),
               onClearSelection: showsSelectionBar ? exitSelectionMode : null,
-              child: DesktopScrollArrows(
+              child: ShelfScrollArrows(
                 builder: (context, controller) => ListView.builder(
                   controller: controller,
                   scrollDirection: Axis.horizontal,
