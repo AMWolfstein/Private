@@ -1304,11 +1304,7 @@ class PlatformBridge {
     try {
       final directories = <String>{
         for (final path in paths)
-          if (path.startsWith('/'))
-            p.posix.dirname(path)
-          else if (p.windows.isAbsolute(path) &&
-              !p.windows.isRootRelative(path))
-            p.windows.dirname(path),
+          if (path.startsWith('/')) p.posix.dirname(path),
       };
       for (final directory in directories) {
         scopes.add(await acquireDownloadDirectory(directory));

@@ -340,7 +340,7 @@ void main() {
     await repository.close();
     await Process.run('chmod', ['644', file.path]);
     expect(file.readAsBytesSync(), written);
-  }, skip: Platform.isWindows || _isRoot ? 'needs POSIX permissions and a non-root user' : null);
+  }, skip: _isRoot ? 'needs POSIX permissions and a non-root user' : null);
 
   test('a corrupt index is reported and replaced', () async {
     await file.writeAsString('[{"_id": 1, "url": ');
@@ -360,5 +360,5 @@ void main() {
 }
 
 // Root reads files whatever their mode, so permission tests cannot fail.
-final bool _isRoot = !Platform.isWindows &&
+final bool _isRoot =
     Process.runSync('id', ['-u']).stdout.toString().trim() == '0';

@@ -120,10 +120,6 @@ class NotificationService {
   static const String libraryChannelDescription =
       'Shows local library scan progress';
 
-  /// notification settings and activation callback to them.
-  static const String windowsAppUserModelId = 'com.zarz.mornye';
-  static const String windowsNotificationGuid =
-      '1a458cb1-f396-4430-8ee3-23d66b56e12f';
 
 
   Future<void> initialize() {

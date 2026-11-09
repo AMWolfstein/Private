@@ -58,7 +58,7 @@ extension DownloadQueueLibraryReorganization on DownloadQueueNotifier {
     if (!safMode && state.outputDir.isEmpty) await _initOutputDir();
     final root = safMode
         ? settings.downloadTreeUri
-        : p.normalize(plainWindowsPath(state.outputDir));
+        : p.normalize(state.outputDir);
 
     if (!settings.separateSingles && settings.folderOrganization == 'custom') {
       // Fail fast with a clear error instead of once per track.
@@ -324,7 +324,7 @@ extension DownloadQueueLibraryReorganization on DownloadQueueNotifier {
   String _pathKey(String path, {required bool safMode}) {
     final trimmed = path.trim();
     if (safMode || isContentUri(trimmed)) return trimmed;
-    final normalized = p.normalize(plainWindowsPath(trimmed));
+    final normalized = p.normalize(trimmed);
     return normalized;
   }
 
@@ -377,7 +377,7 @@ extension DownloadQueueLibraryReorganization on DownloadQueueNotifier {
 
   _StoredLocation? _localLocation(String path, String root) {
     if (isContentUri(path) || root.isEmpty) return null;
-    final normalized = p.normalize(plainWindowsPath(path));
+    final normalized = p.normalize(path);
     if (!p.isWithin(root, normalized)) return null;
     final relativeDir = p.relative(p.dirname(normalized), from: root);
     return _StoredLocation(

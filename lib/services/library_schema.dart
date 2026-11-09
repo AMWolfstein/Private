@@ -278,16 +278,6 @@ abstract final class LibrarySchema {
       SELECT l.* FROM library l
       JOIN library_sources s ON s.id = l.source_id
       WHERE s.enabled = 1 AND s.available = 1
-        AND NOT EXISTS (
-          SELECT 1 FROM library_path_keys own
-          JOIN library_path_keys other ON other.path_key = own.path_key
-          JOIN library duplicate ON duplicate.id = other.item_id
-          JOIN library_sources ds ON ds.id = duplicate.source_id
-          WHERE own.item_id = l.id
-            AND own.path_key GLOB 'windows-file:*'
-            AND duplicate.id < l.id
-            AND ds.enabled = 1 AND ds.available = 1
-        )
         AND l.file_path NOT IN (
           SELECT c.file_path FROM library_cue_split_sources c
           JOIN (

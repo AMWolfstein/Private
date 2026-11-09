@@ -603,7 +603,6 @@ void main() {
       await covers.warmUp();
       expect(covers.indexedFile(ref), isNull);
     },
-    skip: Platform.isWindows ? 'FIFO fixture requires a Unix host' : false,
   );
 
   test(

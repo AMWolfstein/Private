@@ -55,7 +55,7 @@ void main() {
         (result as FileAccessUnavailable).error,
         isA<FileSystemException>(),
       );
-    }, skip: Platform.isWindows);
+    });
 
     test('permission denied is unavailable instead of deleted', () async {
       final directory = await Directory(
@@ -80,7 +80,7 @@ void main() {
       } finally {
         await Process.run('chmod', ['700', directory.path]);
       }
-    }, skip: Platform.isWindows || _isRoot);
+    }, skip: _isRoot);
   });
 
   test(
@@ -145,5 +145,5 @@ void main() {
   }
 }
 
-final bool _isRoot = !Platform.isWindows &&
+final bool _isRoot =
     Process.runSync('id', ['-u']).stdout.toString().trim() == '0';
