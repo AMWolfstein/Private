@@ -163,7 +163,6 @@ extension _LocalLibraryScan on LocalLibraryNotifier {
   Future<void> _runScan(
     String folderPath, {
     required bool forceFullScan,
-    required String? iosBookmark,
     required String? sourceId,
   }) async {
     var activeSourceId = sourceId;
@@ -176,7 +175,6 @@ extension _LocalLibraryScan on LocalLibraryNotifier {
           final source = await addSource(
             path: folderPath,
             displayName: _displayNameForPath(folderPath),
-            bookmark: iosBookmark,
             isRemovable: _looksLikeRemovablePath(folderPath),
           );
           activeSourceId = source.id;
@@ -184,10 +182,7 @@ extension _LocalLibraryScan on LocalLibraryNotifier {
       }
 
       _activeScanSourceId = activeSourceId;
-      final available = await _isPathAvailable(
-        folderPath,
-        bookmark: iosBookmark,
-      );
+      final available = await _isPathAvailable(folderPath);
       if (!ref.mounted || _scanCancelRequested) return;
       if (!available) {
         _sourceVersion++;

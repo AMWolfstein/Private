@@ -145,8 +145,7 @@ class LocalLibraryState {
   }
 }
 
-typedef LocalLibraryAvailabilityProbe =
-    Future<bool?> Function(String path, {String? bookmark});
+typedef LocalLibraryAvailabilityProbe = Future<bool?> Function(String path);
 
 class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
   LocalLibraryNotifier({
@@ -376,7 +375,6 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
   Future<LocalLibrarySource> addSource({
     required String path,
     required String displayName,
-    String? bookmark,
     String? volumeId,
     bool isRemovable = false,
   }) async {
@@ -407,7 +405,6 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
       displayName: displayName.trim().isEmpty
           ? _displayNameForPath(trimmedPath)
           : displayName.trim(),
-      bookmark: bookmark?.trim().isEmpty == true ? null : bookmark,
       volumeId: volumeId?.trim().isEmpty == true ? null : volumeId,
       isRemovable: isRemovable || _looksLikeRemovablePath(trimmedPath),
       enabled: true,
@@ -527,7 +524,6 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
       await startScan(
         source.path,
         forceFullScan: forceFullScan,
-        iosBookmark: source.bookmark,
         sourceId: source.id,
         notify: notify,
         waitForCurrentScan: reconnect || waitForCurrentScan,
@@ -539,7 +535,6 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
   Future<void> startScan(
     String folderPath, {
     bool forceFullScan = false,
-    String? iosBookmark,
     String? sourceId,
     bool notify = true,
     bool waitForCurrentScan = false,
@@ -574,7 +569,6 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
       await _runScan(
         folderPath,
         forceFullScan: forceFullScan,
-        iosBookmark: iosBookmark,
         sourceId: sourceId,
       );
     } finally {

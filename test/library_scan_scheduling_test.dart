@@ -173,7 +173,7 @@ void main() {
     available = {
       for (final source in database.sources) source.path: source.available,
     };
-    probe = (path, {bookmark}) async => available[path];
+    probe = (path) async => available[path];
     scans = [];
     calls = [];
     notificationCalls = [];
@@ -205,8 +205,7 @@ void main() {
           () => LocalLibraryNotifier(
             database: database,
             networkStorage: storage,
-            availabilityProbe: (path, {bookmark}) =>
-                probe(path, bookmark: bookmark),
+            availabilityProbe: (path) => probe(path),
           ),
         ),
       ],
@@ -621,7 +620,7 @@ void main() {
   test('concurrent starts own one preflight and one native scan', () async {
     final pending = Completer<bool?>();
     var probes = 0;
-    probe = (path, {bookmark}) {
+    probe = (path) {
       probes++;
       return pending.future;
     };
@@ -640,7 +639,7 @@ void main() {
     test('${dispose ? 'disposal' : 'cancel'} stops owned preflight', () async {
       final pending = Completer<bool?>();
       final started = Completer<void>();
-      probe = (path, {bookmark}) {
+      probe = (path) {
         started.complete();
         return pending.future;
       };
@@ -656,7 +655,7 @@ void main() {
       expect(scans, isEmpty);
       if (!dispose) {
         expect(container.read(localLibraryProvider).scanWasCancelled, isTrue);
-        probe = (path, {bookmark}) async => available[path];
+        probe = (path) async => available[path];
         final retry = library.startSourceScan('active');
         await _waitFor(() => scans.length == 1);
         scans.single.$2.complete('{"cancelled":true}');
@@ -675,7 +674,7 @@ void main() {
           final snapshot = Completer<List<LocalLibrarySource>>();
           final oldSources = List.of(database.sources);
           if (duringProbe) {
-            probe = (path, {bookmark}) {
+            probe = (path) {
               started.complete();
               return pending.future;
             };
@@ -788,7 +787,7 @@ void main() {
     await reconnect();
     final pending = Completer<bool?>();
     final started = Completer<void>();
-    probe = (path, {bookmark}) {
+    probe = (path) {
       if (path.endsWith('/reconnect') && !started.isCompleted) {
         started.complete();
         return pending.future;

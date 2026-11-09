@@ -322,9 +322,9 @@ class AlbumDetailHeader extends StatelessWidget {
   Widget _buildAppBar(BuildContext context, ColorScheme headerScheme) {
     final tokens = context.tokens;
     final plainArtworkHeader = context.isMornye && coverBuilder != null;
-    // controls and header content an explicit inset so circular actions do not
-    // smaller inset for the same reason.
-    final iosEdgeInset = detailHeaderEdgeInset(context);
+    // Controls and header content get an explicit edge inset so circular
+    // actions do not touch the screen edge.
+    final headerEdgeInset = detailHeaderEdgeInset(context);
     // Scrim and gradient are drawn from the palette surface instead of black,
     // so a light theme gets a light header with dark text and a dark theme
     // keeps the familiar dark treatment — both tinted by the artwork.
@@ -487,8 +487,8 @@ class AlbumDetailHeader extends StatelessWidget {
                     ),
                   ),
                 Positioned(
-                  left: 20 + iosEdgeInset,
-                  right: 20 + iosEdgeInset,
+                  left: 20 + headerEdgeInset,
+                  right: 20 + headerEdgeInset,
                   bottom: 40,
                   child: expressive
                       ? IgnorePointer(
@@ -514,9 +514,9 @@ class AlbumDetailHeader extends StatelessWidget {
           );
         },
       ),
-      leadingWidth: kToolbarHeight + iosEdgeInset,
+      leadingWidth: kToolbarHeight + headerEdgeInset,
       leading: Padding(
-        padding: EdgeInsetsDirectional.only(start: iosEdgeInset),
+        padding: EdgeInsetsDirectional.only(start: headerEdgeInset),
         child:
             leading ??
             // Centered so the tight leading slot cannot stretch the circle.
@@ -537,7 +537,7 @@ class AlbumDetailHeader extends StatelessWidget {
               ),
             ),
       ),
-      actionsPadding: EdgeInsetsDirectional.only(end: iosEdgeInset),
+      actionsPadding: EdgeInsetsDirectional.only(end: headerEdgeInset),
       actions: appBarActions,
     );
   }

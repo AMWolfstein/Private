@@ -143,7 +143,7 @@ void main() {
   }
 
   test('runtime tiers map to Mornye glass levels', () {
-    // Low tier: arm32-only or low-RAM Android.
+    // Low tier: low-RAM Android.
     expect(
       _levelFor(lowEnd: true, blur: false, liquidCapable: false),
       MornyeGlassLevel.flat,

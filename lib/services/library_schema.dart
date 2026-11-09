@@ -1,4 +1,3 @@
-
 import 'package:sqflite/sqflite.dart';
 import 'package:mornye/models/library_database_models.dart';
 import 'package:mornye/services/library_row_mapper.dart';
@@ -225,7 +224,6 @@ abstract final class LibrarySchema {
         id TEXT PRIMARY KEY,
         path TEXT NOT NULL UNIQUE,
         display_name TEXT NOT NULL,
-        bookmark TEXT,
         volume_id TEXT,
         is_removable INTEGER NOT NULL DEFAULT 0,
         enabled INTEGER NOT NULL DEFAULT 1,

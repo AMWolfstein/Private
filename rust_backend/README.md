@@ -41,8 +41,8 @@ decoding for the Hi-Res check), `roxmltree` and pinned Unicode tables.
 
 **network.** Shared, cancellable HTTP transport for the embedded backend: the
 client, cookies, DNS lookup, TLS roots, request policy, query and URL
-handling. It is built on `hyper-util`, `hyper-rustls` and `tokio`; Apple
-Android verifies certificates with `rustls-native-certs`.
+handling. It is built on `hyper-util`, `hyper-rustls` and `tokio`; Android
+verifies certificates with `rustls-native-certs`.
 
 **providers.** Built-in provider clients and shared lookup services for the
 native app owners: Deezer, MusicBrainz, lyrics, the resolver, and a request
@@ -56,21 +56,20 @@ download backend. Its main types are `ExtensionRuntime` and
 `ExtensionServices`.
 
 **mobile.** The UniFFI mobile API (`uniffi::setup_scaffolding!`). This crate
-is the only backend and routes the app on both platforms. It is built as
-It adds native data jobs, the native library, cache, collections, playlists
-and backup, lyrics, ID3 and network tags, `rusqlite`, and USB audio
-(`libusb1-sys`, Android only).
-
-
+is the only backend and routes the app. It is built as `lib` and `cdylib`
+(Android `libmornye_mobile.so`). It adds native data jobs, the native
+library, cache, collections, playlists and backup, lyrics, ID3 and network
+tags, `rusqlite`, and USB audio (`libusb1-sys`, Android only).
 
 **bindgen.** The UniFFI bindgen command line (`uniffi_bindgen_main`), used
+only to generate the Kotlin bindings. It enables the `cli` and
 `cargo-metadata` features of `uniffi`; the build script builds the library
 in a separate cargo call so those features do not reach the shipped library.
 
 ### Vendored Patches
 
 `Cargo.toml` patches two crates.io packages with copies in
-`rust_backend/vendor/`: `rustix` 1.1.5 (Android `statx` fallback) and
+`rust_backend/vendor/`: `rustix` 1.1.6 (Android `statx` fallback) and
 `libusb1-sys` 0.7.0 (libusb 1.0.30 sources). The reasons and the upgrade
 checks are in `rust_backend/vendor/README.md`. Third-party notices are in
 `rust_backend/NOTICE`.
@@ -89,7 +88,10 @@ vendored patches.
 
 The host step always runs first. It builds `mornye-mobile` in release
 mode, then runs `mornye-bindgen generate` against the host library for
+Kotlin. Output goes to `rust_backend/target/`:
 
+- `target/release/`: host library (`.so` on Linux)
+- `target/bindings/kotlin/`: generated bindings
 - `target/android/jniLibs/<abi>/`: Android libraries
 
 ### Android
@@ -116,7 +118,8 @@ The binding names come from `rust_backend/crates/mobile/uniffi.toml`.
 | Android | Kotlin package `com.mornye.backend`, loading `mornye_mobile` through JNA | `android/app/build.gradle.kts` adds `target/bindings/kotlin` and `target/android/jniLibs` as source dirs; used by `android/app/src/rust/kotlin/com/zarz/mornye/SelectedCoreBackend.kt` and its neighbors |
 
 The generated files are build output under `target/` and are not tracked.
-After changing an exported function, rebuild for the platform you test; the
+After changing an exported function, rebuild; the Kotlin call sites must
+match the new signatures.
 
 ## Tests
 
@@ -137,5 +140,5 @@ bash scripts/check_rust_backend.sh
   title casing, kept for parity with the Go backend). It is marked
   `DO NOT EDIT`; the generator is no longer in the repository, and it must not
   be regenerated from newer tables.
-  and the Android build with Kotlin unit tests (`gradle -p android
-  :app:assembleDebug :app:testDebugUnitTest`).
+- The Android build and its Kotlin unit tests run with
+  `gradle -p android :app:assembleDebug :app:testDebugUnitTest`.

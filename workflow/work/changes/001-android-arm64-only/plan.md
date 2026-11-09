@@ -113,11 +113,20 @@ The final diff from the base commit is `git diff 365dcae a26367d` plus the later
 - PD-8: One non-split release APK containing arm64-v8a only. Alternatives: an ABI split with one arm64 output
   (rejected: AGP 9.5 rejects it together with the NDK ABI filter).
 - PD-9: Remove Windows path identity from Dart, Rust and the shared path-key contract, and every other remnant
-  that is not Android (owner decision). Kept: Linux as the build host in scripts, `cap-primitives` (used by the
-  Android file code), `*_desktop.frag` asset names inside `liquid_glass_easy`, and the Windows/Linux/Darwin
+  that is not Android (owner decision). The vendored `cap-primitives` Windows UNC patch is removed; the upstream crate stays as the unpatched
+  dependency of `cap-std` (checked: `cargo check --workspace --all-targets --locked`). iOS/macOS security-scoped
+  bookmarks (settings fields, library source column and plumbing), the arm32 runtime-profile branch, and the
+  non-Android platform registrations of `third_party/audio_service` and `ffmpeg_kit_flutter_new_audio` are removed too.
+  Kept: Linux as the build host in scripts, `*_desktop.frag` asset names inside `liquid_glass_easy`, and the Windows/Linux/Darwin
   options of the `file_picker` platform interface that the test fake must override.
 - PD-10: Remove dead code after an audit, each removal checked by reference search and `flutter analyze`
   (owner request).
+- PD-11: The generic guards `kIsWeb || defaultTargetPlatform != TargetPlatform.android` (for example
+  `platform_bridge.dart`, `audio_output_button.dart`, `android_keyboard_lifecycle.dart`, and the vendored
+  `audio_service`) stay. They are platform-neutral checks that keep host-side tests and the Flutter test
+  environment (which reports a non-Android default platform) on the safe path; they name no removed platform and
+  add no iOS, macOS, Windows or Linux behaviour. Alternative: delete them and run Android-only code unguarded
+  (rejected: unit tests would then call Android channels on the host).
 
 ## Constitution check
 
@@ -138,8 +147,9 @@ The final diff from the base commit is `git diff 365dcae a26367d` plus the later
 
 | Deviation | Why needed | Simpler option rejected because |
 |---|---|---|
-| Blur and pixel tests in `album_detail_header`, `listening_rewind_backdrop`, `material_player_backdrop` skipped (7 skips, each with a reason) | They fail at the pre-work commit e02860c too (baseline run in log.md); the header blur stays live while music plays and needs its own fix. A new header test covers title, cover, action size and collapsing without blur | Fixing `SettledBlur` changes rendering behaviour outside this change |
+| Four band-mask cases in `material_player_backdrop_test.dart` skipped (each `skip: true` with the reason in a comment) | The quarter-resolution snapshot quantizes two levels away from the whole-box mask; they fail at the pre-work commit too (baseline in log.md). `SettledBlur` itself is fixed (commit 60af01a) and its other blur tests pass | Changing the snapshot pipeline of `material_player_backdrop` changes rendering behaviour outside this change |
 | One permission test in `cover_cache_info_repository_test.dart` skipped as root | Root bypasses permission bits in the sandbox; it runs for non-root users | No unreadable-but-existing file can be made as root |
+| Owner-approved history rewrite: the branch was reset and force-pushed with `--force-with-lease` (constitution X forbids force push) | The owner explicitly asked for the commits to be restructured into a documents commit and one implementation commit | Without a rewrite the requested commit layout cannot be produced. Recovery: the local `backup/mornye-reboot3-*` branches hold the earlier tips |
 
 ## Verification plan
 
@@ -148,8 +158,15 @@ The final diff from the base commit is `git diff 365dcae a26367d` plus the later
   need the patched SDK (`scripts/prepare_flutter_sdk.dart`), which the semantics regression test guards.
 - Searches (SC-002): `rg -n -e 'Discord|discord' -e 'Mornye Link|LinkService|link_sync|whatsNewLink' -e
   'isDesktopPlatform|desktop_platform|DesktopCast' -e 'Platform\.is(IOS|MacOS|Windows|Linux)|TargetPlatform\.(iOS|macOS)'
-  -e 'armeabi|armv7|isUniversalApk' -e 'windows-file|windowsPathIdentity|windows_path_identity' lib test
-  integration_test android/app/src rust_backend/crates scripts` returns no match. Allowed elsewhere: the change
+  -e 'armeabi|armv7|isUniversalApk' -e 'windows-file|windowsPathIdentity|windows_path_identity'
+  -e '[a-z]Bookmark|[bB]ookmark[A-Z:]|ios[A-Z][a-z]|32BitAbis|ARM32|arm32'
+  -g '!rust_backend/vendor' -g '!CHANGELOG.md' -g '!workflow/**' -g '!*.lock' lib test integration_test
+  android/app/src rust_backend/crates rust_backend/Cargo.toml rust_backend/README.md scripts
+  third_party/*/pubspec.yaml third_party/*/*.md NETWORK_STORAGE.md README.md`, with the Material icon names
+  `Icons.bookmark*` filtered out, returns only these kept lines: the upstream `audio_service` README example
+  (`saveBookmark`), the three Rust comments that describe the retired Go backend's ARM32 integer behaviour
+  (`progress.rs`, `transfer_policy.rs`, `binary.rs`; a compatibility contract), and the `arm32` fixture assets in
+  `test/update_checker_test.dart` (a release asset the app must not choose). Allowed elsewhere: the change
   records, `CHANGELOG.md`, `rust_backend/vendor/` and the items kept in PD-9.
 - Update check: `test/update_checker_test.dart` (arm64 APK offered without reading the device ABIs, a release
   without an arm64 APK is a typed no-match, release page fallback).

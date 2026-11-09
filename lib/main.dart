@@ -431,11 +431,10 @@ Future<_RuntimeProfile> _resolveRuntimeProfile(SharedPreferences prefs) async {
 
   try {
     final androidInfo = await DeviceInfoPlugin().androidInfo;
-    final isArm32Only = androidInfo.supported64BitAbis.isEmpty;
     final isLowRamDevice =
         androidInfo.isLowRamDevice || androidInfo.physicalRamSize <= 2500;
 
-    final profile = (isArm32Only || isLowRamDevice)
+    final profile = isLowRamDevice
         ? const _RuntimeProfile.low()
         : androidInfo.physicalRamSize >= 6000
         ? const _RuntimeProfile.high()

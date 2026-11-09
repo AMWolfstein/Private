@@ -59,7 +59,6 @@ class AppSettings {
   final String downloadDirectory;
   final String networkDownloadFolder;
   final String networkDownloadLabel;
-  final String downloadDirectoryBookmark;
   final String storageMode; // 'app' or 'saf'
   final String downloadTreeUri; // SAF persistable tree URI
   final bool autoFallback;
@@ -208,8 +207,6 @@ class AppSettings {
 
   final bool localLibraryEnabled;
   final String localLibraryPath;
-  final String
-  localLibraryBookmark; // Base64-encoded bookmark of the library folder
   final bool localLibraryShowDuplicates;
   final String
   localLibraryAutoScan; // Auto-scan mode: 'off', 'on_open', 'daily', 'weekly'
@@ -278,7 +275,6 @@ class AppSettings {
     this.downloadDirectory = '',
     this.networkDownloadFolder = '',
     this.networkDownloadLabel = '',
-    this.downloadDirectoryBookmark = '',
     this.storageMode = 'app',
     this.downloadTreeUri = '',
     this.autoFallback = true,
@@ -368,7 +364,6 @@ class AppSettings {
     this.concurrentDownloads = 1,
     this.localLibraryEnabled = false,
     this.localLibraryPath = '',
-    this.localLibraryBookmark = '',
     this.localLibraryShowDuplicates = true,
     this.localLibraryAutoScan = 'off',
     this.hasCompletedTutorial = false,
@@ -428,7 +423,6 @@ class AppSettings {
     String? downloadDirectory,
     String? networkDownloadFolder,
     String? networkDownloadLabel,
-    String? downloadDirectoryBookmark,
     String? storageMode,
     String? downloadTreeUri,
     bool? autoFallback,
@@ -521,7 +515,6 @@ class AppSettings {
     int? concurrentDownloads,
     bool? localLibraryEnabled,
     String? localLibraryPath,
-    String? localLibraryBookmark,
     bool? localLibraryShowDuplicates,
     String? localLibraryAutoScan,
     bool? hasCompletedTutorial,
@@ -557,8 +550,6 @@ class AppSettings {
       networkDownloadFolder:
           networkDownloadFolder ?? this.networkDownloadFolder,
       networkDownloadLabel: networkDownloadLabel ?? this.networkDownloadLabel,
-      downloadDirectoryBookmark:
-          downloadDirectoryBookmark ?? this.downloadDirectoryBookmark,
       storageMode: storageMode ?? this.storageMode,
       downloadTreeUri: downloadTreeUri ?? this.downloadTreeUri,
       autoFallback: autoFallback ?? this.autoFallback,
@@ -679,7 +670,6 @@ class AppSettings {
       concurrentDownloads: concurrentDownloads ?? this.concurrentDownloads,
       localLibraryEnabled: localLibraryEnabled ?? this.localLibraryEnabled,
       localLibraryPath: localLibraryPath ?? this.localLibraryPath,
-      localLibraryBookmark: localLibraryBookmark ?? this.localLibraryBookmark,
       localLibraryShowDuplicates:
           localLibraryShowDuplicates ?? this.localLibraryShowDuplicates,
       localLibraryAutoScan: localLibraryAutoScan ?? this.localLibraryAutoScan,

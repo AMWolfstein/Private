@@ -303,9 +303,7 @@ class _LibrarySettingsPageState extends ConsumerState<LibrarySettingsPage> {
     await ref.read(localLibraryProvider.notifier).removeSource(source.id);
     final settings = ref.read(settingsProvider);
     if (settings.localLibraryPath == source.path) {
-      ref
-          .read(settingsProvider.notifier)
-          .setLocalLibraryPathAndBookmark('', '');
+      ref.read(settingsProvider.notifier).setLocalLibraryPath('');
     }
   }
 

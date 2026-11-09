@@ -46,8 +46,6 @@ class ExtensionNotifier extends Notifier<ExtensionState> {
     ref.listen<AppSettings>(settingsProvider, (previous, next) {
       if (state.isInitialized &&
           (previous?.downloadDirectory != next.downloadDirectory ||
-              previous?.downloadDirectoryBookmark !=
-                  next.downloadDirectoryBookmark ||
               previous?.storageMode != next.storageMode)) {
         unawaited(_syncDownloadDirectory(next));
       }
@@ -72,7 +70,6 @@ class ExtensionNotifier extends Notifier<ExtensionState> {
           final candidate = settings.downloadDirectory.trim();
           final path =
               settings.storageMode == 'app' &&
-                  settings.downloadDirectoryBookmark.isEmpty &&
                   candidate.startsWith('/') &&
                   await Directory(candidate).exists()
               ? candidate
@@ -180,9 +177,7 @@ class ExtensionNotifier extends Notifier<ExtensionState> {
       final allowedDirectories = <String>[];
       // External scopes are acquired by the file/download operation. Missing
       // output folders are resolved by the queue and must not prevent startup.
-      if (snapshot.storageMode == 'app' &&
-          snapshot.downloadDirectoryBookmark.isEmpty &&
-          outputDirectory.startsWith('/')) {
+      if (snapshot.storageMode == 'app' && outputDirectory.startsWith('/')) {
         final directory = Directory(outputDirectory);
         if (await directory.exists()) {
           allowedDirectories.add(directory.path);

@@ -68,14 +68,12 @@ AppSettings resetInstallationBoundSettings(AppSettings settings) {
     downloadDirectory: '',
     networkDownloadFolder: '',
     networkDownloadLabel: '',
-    downloadDirectoryBookmark: '',
     storageMode: 'app',
     downloadTreeUri: '',
     isFirstLaunch: true,
     useAllFilesAccess: false,
     localLibraryEnabled: false,
     localLibraryPath: '',
-    localLibraryBookmark: '',
     localLibraryAutoScan: 'off',
     hasCompletedTutorial: false,
   );
@@ -436,7 +434,6 @@ class SettingsNotifier extends Notifier<AppSettings> {
       downloadDirectory: current.downloadDirectory,
       networkDownloadFolder: current.networkDownloadFolder,
       networkDownloadLabel: current.networkDownloadLabel,
-      downloadDirectoryBookmark: current.downloadDirectoryBookmark,
       storageMode: current.storageMode,
       downloadTreeUri: current.downloadTreeUri,
       embeddedCoverMaxDimension: _normalizeEmbeddedCoverMaxDimension(
@@ -546,7 +543,6 @@ class SettingsNotifier extends Notifier<AppSettings> {
       networkDownloadFolder: '',
       networkDownloadLabel: '',
       downloadDirectory: directory,
-      downloadDirectoryBookmark: '',
     ),
   );
 
@@ -572,7 +568,6 @@ class SettingsNotifier extends Notifier<AppSettings> {
       state.copyWith(
         storageMode: 'app',
         downloadDirectory: directory,
-        downloadDirectoryBookmark: '',
         downloadTreeUri: '',
       ),
     );
@@ -585,9 +580,6 @@ class SettingsNotifier extends Notifier<AppSettings> {
       downloadTreeUri: uri,
       storageMode: uri.isNotEmpty ? 'saf' : state.storageMode,
       downloadDirectory: displayName ?? state.downloadDirectory,
-      downloadDirectoryBookmark: uri.isNotEmpty
-          ? ''
-          : state.downloadDirectoryBookmark,
     ),
   );
 
@@ -1021,9 +1013,8 @@ class SettingsNotifier extends Notifier<AppSettings> {
   void setLocalLibraryEnabled(bool enabled) =>
       _commit(state.copyWith(localLibraryEnabled: enabled));
 
-  void setLocalLibraryPathAndBookmark(String path, String bookmark) => _commit(
-    state.copyWith(localLibraryPath: path, localLibraryBookmark: bookmark),
-  );
+  void setLocalLibraryPath(String path) =>
+      _commit(state.copyWith(localLibraryPath: path));
 
   void setLocalLibraryShowDuplicates(bool show) =>
       _commit(state.copyWith(localLibraryShowDuplicates: show));

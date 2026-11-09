@@ -139,14 +139,8 @@ extension _LocalLibrarySources on LocalLibraryNotifier {
     await _db.migrateLegacySource(
       path: path,
       displayName: _displayNameForPath(path),
-      bookmark: settings.localLibraryBookmark.trim().isEmpty
-          ? null
-          : settings.localLibraryBookmark,
       isRemovable: _looksLikeRemovablePath(path),
-      available: await _isPathAvailable(
-        path,
-        bookmark: settings.localLibraryBookmark,
-      ),
+      available: await _isPathAvailable(path),
       lastScannedAt: legacyLastScannedAt,
     );
   }
@@ -185,17 +179,17 @@ extension _LocalLibrarySources on LocalLibraryNotifier {
         !normalized.startsWith('/storage/emulated/');
   }
 
-  Future<bool> _isPathAvailable(String path, {String? bookmark}) async {
-    return await _probePathAvailability(path, bookmark: bookmark) ?? true;
+  Future<bool> _isPathAvailable(String path) async {
+    return await _probePathAvailability(path) ?? true;
   }
 
-  Future<bool?> _probePathAvailability(String path, {String? bookmark}) async {
+  Future<bool?> _probePathAvailability(String path) async {
     // Network outages are transient. Keep the indexed collection visible;
     // opening/scanning a source reports connectivity errors without dropping it.
     if (path.startsWith('network://')) return true;
     try {
       if (_availabilityProbe != null) {
-        return await _availabilityProbe(path, bookmark: bookmark);
+        return await _availabilityProbe(path);
       }
       if (Platform.isAndroid && isContentUri(path)) {
         return await PlatformBridge.probeSafTreeReadAccess(path);
@@ -224,10 +218,7 @@ extension _LocalLibrarySources on LocalLibraryNotifier {
       final sources = await _db.getSources();
       var inconclusive = false;
       for (final source in sources) {
-        final available = await _probePathAvailability(
-          source.path,
-          bookmark: source.bookmark,
-        );
+        final available = await _probePathAvailability(source.path);
         if (!ref.mounted ||
             sourceVersion != _sourceVersion ||
             requestVersion != _availabilityRequestVersion) {
