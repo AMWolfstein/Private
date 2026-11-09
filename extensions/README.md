@@ -18,7 +18,7 @@ are unchanged. This import neither installs an updater nor publishes packages.
 
 **Jellyfin is excluded at the owner's request.** The Python-only utilities package,
 original installable packages, upstream registry, icons and store are not imported.
-The application's built-in Rust lyrics providers are not copied or changed here.
+The application's built-in Rust lyrics providers remain unchanged. Separate source ports now live under `lyrics/`; they are not activated.
 
 Each `sources/<provider>/index.js` registers only `getArtistArtwork`, optional
 `initialize`/`cleanup`, and (Apple only) `getAlbumArtwork`/`fetchLyrics`. The artwork
@@ -36,7 +36,8 @@ a runtime sandbox or a guarantee that only artwork requests occur.
 
 ## Layout
 
-- `sources/`: selected declarations, a limited registration adapter and `source.json`.
+- `sources/`: selected upstream JavaScript declarations, a limited registration adapter and `source.json`.
+- `lyrics/`: staged JavaScript ports of the 14 native lyrics providers, with original Rust retained; see its README and draft host contract.
 - `upstream-lock.json`: exact upstream commit, provider versions and hashes.
 - `tools/`: development-only reproducible AST extraction tools; no application dependency.
 - `tests/`: offline upstream artwork/lyrics tests and import/dependency/adapter checks.

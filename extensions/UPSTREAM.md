@@ -36,6 +36,8 @@ support needed by the retained functions. Their presence is not permission to
 restore public catalog browsing, downloads or an extension store. See README.md
 for the boundary between this source import and a future runtime implementation.
 
+The later `lyrics/` directory is a separate port of this application's native Rust providers, not an additional import from Mornye-Extension; its origin and integration limitations are recorded there.
+
 ## Refreshing selected sources
 
 1. Fetch the upstream repository separately and review changes affecting these
