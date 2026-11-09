@@ -1,0 +1,19 @@
+{
+  "id": "001-android-arm64-only",
+  "title": "Android arm64 only",
+  "size": "architecture",
+  "phase": "plan",
+  "base": "e6875b0d99fb726f29d659459c32df184181a936",
+  "created": "2026-11-09T07:51:43+00:00",
+  "rounds": [],
+  "history": [
+    {
+      "phase": "spec",
+      "at": "2026-11-09T07:51:43+00:00"
+    },
+    {
+      "phase": "plan",
+      "at": "2026-11-09T07:52:54+00:00"
+    }
+  ]
+}

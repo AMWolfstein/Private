@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "port": {
+    "applies": false,
+    "reason": "No code is ported from another project. Removal only."
+  },
+  "bridge": {
+    "applies": false,
+    "reason": "No Dart-Kotlin-Rust payload, method, unit or error changes. The removed desktop FFI transport is not an Android contract."
+  },
+  "prerequisites": [],
+  "device_checks": [
+    {
+      "case": "arm64-v8a release APK installs and opens library, playback and settings on an arm64 Android device",
+      "status": "pending"
+    }
+  ]
+}
