@@ -82,39 +82,15 @@ directly; without a revision, the footer shows only the copyright.
 
 ### Android APKs
 
-For production releases, stage the official Discord Social SDK with
-`bash scripts/setup_discord_sdk.sh /path/to/discord_social_sdk`, then build:
+Mornye targets Android arm64 only. Build the release APK with:
 
 ```bash
-bash scripts/build_android.sh --production
+bash scripts/build_android.sh
 ```
 
-Production mode requires the staged SDK and rejects `--lite`. Release CI uses
-this mode and requires Discord on both Android and iOS. Fresh hosted runners
-must prepare the SDK before the release checks can pass. See
-[Discord build setup](third_party/mornye_discord/README.md#build-setup) for
-local staging and the CI decryption secret. Unencrypted SDK files are not
-committed to the repository.
-
-For development release APKs, use `bash scripts/build_android.sh`. Full builds
-remain the default; add `--lite` to omit the optional Discord SDK while keeping
-playback and downloads. Debug builds can also run without the SDK.
-
-To build only ARM64, set `MORNYE_RUST_ANDROID_ABIS=arm64-v8a`. The script uses
-the Flutter version in `.fvmrc` and audits the selected split APKs and universal
-APK. Android Gradle builds the Rust native artifacts automatically.
-
-### iOS Builds
-
-On macOS, run `bash scripts/build_ios.sh`, then `(cd ios && pod install)` before
-opening `ios/Runner.xcworkspace`. The application uses the Rust backend.
-
-For iOS Lite, run CocoaPods and the app build with `MORNYE_DISCORD_SDK=0`.
-An existing Pods installation must be regenerated with that setting. Production
-release CI requires the staged Discord SDK on iOS as well.
-
-For native iOS codec checks, see the
-[FFmpeg capability probe](scripts/README_ios_ffmpeg_capabilities.md).
+The script uses the Flutter version in `.fvmrc`, builds `app-release.apk` for
+`arm64-v8a`, and audits it. Android Gradle builds the Rust native library
+automatically. Desktop and iOS builds are not supported.
 
 ### Android Crash Symbols
 
@@ -169,7 +145,7 @@ ios/          iOS platform bridge and application project
 test/         Flutter unit and widget tests
 integration_test/ Device and emulator tests (including performance drivers)
 third_party/  Vendored and patched packages (audio_service, audioplayers forks,
-              Discord bridge and encrypted SDK)
+              audio playback forks)
 assets/       Images, fonts, and bundled resources
 docs/         Local documentation and migration archives (gitignored)
 scripts/      Reproducible project build helpers

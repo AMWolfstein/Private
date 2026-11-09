@@ -148,8 +148,6 @@ class MainActivity: FlutterFragmentActivity() {
         "startBackgroundWork",
         "updateBackgroundWork",
         "stopBackgroundWork",
-        "startLinkConnectionService",
-        "stopLinkConnectionService",
         "startNativeDownloadWorker",
         "appendNativeDownloadWorkerRequests",
         "finishNativeDownloadWorkerPreparation",
@@ -588,18 +586,6 @@ class MainActivity: FlutterFragmentActivity() {
                             result.success(DownloadService.isServiceRunning())
                         }
                         "startBackgroundWork" -> handleStartBackgroundWork(call, result)
-                        "startLinkConnectionService" -> {
-                            result.success(
-                                LinkConnectionService.start(
-                                    this@MainActivity,
-                                    call.argument<String>("name") ?: "Mornye",
-                                ),
-                            )
-                        }
-                        "stopLinkConnectionService" -> {
-                            LinkConnectionService.stop(this@MainActivity)
-                            result.success(null)
-                        }
                         "updateBackgroundWork" -> handleUpdateBackgroundWork(call, result)
                         "stopBackgroundWork" -> {
                             BackgroundWorkService.stop(call.argument<String>("kind") ?: "")

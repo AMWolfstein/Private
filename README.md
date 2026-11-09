@@ -71,8 +71,7 @@
       <p>
         Full-screen cover art, a detailed audio quality label, queue
         controls and a sleep timer. AutoMix blends tracks with its own beat
-        detection, and home screen widgets on Android and iOS follow your
-        wallpaper colors.
+        detection, and home screen widgets follow your wallpaper colors.
       </p>
       <p></p>
     </td>
@@ -213,8 +212,7 @@
       </p>
       <p>
         Back up and restore settings, history and playlists. The app is open
-        source, available in 20 languages, and offers an AltStore / SideStore
-        source on iOS.
+        source, and available in 20 languages.
       </p>
       <p></p>
     </td>
@@ -226,10 +224,10 @@
 ## <picture><source media="(prefers-color-scheme: dark)" srcset="assets/readme/sections/section-development-dark.svg"><img src="assets/readme/sections/section-development-light.svg" height="32" align="top" alt=""></picture> Development
 
 Mornye combines a Flutter/Dart UI, a Rust backend from
-[`rust_backend/`](rust_backend/), and thin Android/iOS platform bridges.
+[`rust_backend/`](rust_backend/), and a thin Android platform bridge.
 
-See the [Contributing Guide](CONTRIBUTING.md) for setup, Android and iOS builds,
-Full/Lite variants, crash symbols, validation, and pull request guidelines.
+See the [Contributing Guide](CONTRIBUTING.md) for setup, the Android build,
+crash symbols, validation, and pull request guidelines.
 
 ---
 
@@ -299,8 +297,7 @@ in the built-in player. It can also point out duplicates.
 Yes. Open **Settings > Network storage** and connect to an SMB, WebDAV,
 HTTP / HTTPS or Subsonic / OpenSubsonic server. Sign-in details are stored
 securely on your device. Subsonic supports browsing artists and albums,
-searching, streaming and syncing the server catalogue to Library on mobile
-and desktop. Choose salted-token, password or API-key authentication to match
+searching, streaming and syncing the server catalogue to Library. Choose salted-token, password or API-key authentication to match
 your server, and approve its certificate fingerprint if it uses a private
 HTTPS certificate. Subsonic is a read-only source; network download folders
 still require SMB or WebDAV.
@@ -451,13 +448,6 @@ Interested in contributing? Check out the [Contributing Guide](CONTRIBUTING.md) 
   <a href="https://squigly.link"><b>Squigly</b></a>
 </p>
 
----
-
-## Code signing policy
-
-See the [Windows code signing policy and release setup](.github/signpath/README.md#code-signing-policy).
-
----
 
 ## <picture><source media="(prefers-color-scheme: dark)" srcset="assets/readme/sections/section-disclaimer-dark.svg"><img src="assets/readme/sections/section-disclaimer-light.svg" height="32" align="top" alt=""></picture> Disclaimer
 
