@@ -66,7 +66,6 @@ class _SetupScreenState extends ConsumerState<SetupScreen>
   /// Set once Android refuses Nearby devices, so setup can go on.
   bool _nearbyRefused = false;
   String? _selectedDirectory;
-  String? _selectedDirectoryBookmark;
   String? _selectedTreeUri;
   bool _isLoading = false;
   int _androidSdkVersion = 0;
@@ -121,7 +120,6 @@ class _SetupScreenState extends ConsumerState<SetupScreen>
         final draft = jsonDecode(saved) as Map<String, dynamic>;
         _currentStep = ((draft['step'] as int?) ?? 0).clamp(0, _totalSteps - 1);
         _selectedDirectory = draft['directory'] as String?;
-        _selectedDirectoryBookmark = draft['bookmark'] as String?;
         _selectedTreeUri = draft['treeUri'] as String?;
         _notificationPermissionSkipped = draft['skipNotifications'] == true;
         _nearbyRefused = draft['nearbyRefused'] == true;
@@ -163,7 +161,6 @@ class _SetupScreenState extends ConsumerState<SetupScreen>
     await _progressStore.writeDraft({
       'step': step ?? _currentStep,
       'directory': _selectedDirectory,
-      'bookmark': _selectedDirectoryBookmark,
       'treeUri': _selectedTreeUri,
       'skipNotifications': _notificationPermissionSkipped,
       'nearbyRefused': _nearbyRefused,
@@ -201,16 +198,7 @@ class _SetupScreenState extends ConsumerState<SetupScreen>
       }
       return;
     }
-    if (_platform == TargetPlatform.iOS) {
-      final notificationStatus = await Permission.notification.status;
-      if (mounted) {
-        setState(() {
-          _storagePermissionGranted = true;
-          _notificationPermissionGranted =
-              notificationStatus.isGranted || notificationStatus.isProvisional;
-        });
-      }
-    } else if (_platform == TargetPlatform.android) {
+    if (_platform == TargetPlatform.android) {
       final storageGranted = await _hasAndroidStoragePermission();
 
       PermissionStatus notificationStatus = PermissionStatus.granted;
@@ -252,9 +240,7 @@ class _SetupScreenState extends ConsumerState<SetupScreen>
     try {
       await _saveProgress();
       if (!mounted) return;
-      if (_platform == TargetPlatform.iOS) {
-        setState(() => _storagePermissionGranted = true);
-      } else if (_platform == TargetPlatform.android) {
+      if (_platform == TargetPlatform.android) {
         var allGranted = await _hasAndroidStoragePermission();
 
         if (!allGranted && _androidSdkVersion >= 33) {
@@ -321,15 +307,7 @@ class _SetupScreenState extends ConsumerState<SetupScreen>
     try {
       await _saveProgress();
       if (!mounted) return;
-      if (_platform == TargetPlatform.iOS) {
-        final status = await Permission.notification.request();
-        if (!mounted) return;
-        if (status.isGranted || status.isProvisional) {
-          setState(() => _notificationPermissionGranted = true);
-        } else if (status.isPermanentlyDenied) {
-          await _showPermissionDeniedDialog(permissionNotification);
-        }
-      } else if (_androidSdkVersion >= 33) {
+      if (_androidSdkVersion >= 33) {
         final status = await Permission.notification.request();
         if (!mounted) return;
         if (status.isGranted) {
@@ -479,25 +457,15 @@ class _SetupScreenState extends ConsumerState<SetupScreen>
     setState(() => _isLoading = true);
 
     try {
-      if (_platform != TargetPlatform.android ||
-          _selectedTreeUri == null ||
-          _selectedTreeUri!.isEmpty) {
-        final iosBookmark = _platform == TargetPlatform.iOS
-            ? _selectedDirectoryBookmark
-            : null;
-        if (iosBookmark == null || iosBookmark.isEmpty) {
-          final dir = Directory(_selectedDirectory!);
-          if (!await dir.exists()) {
-            await dir.create(recursive: true);
-          }
+      if (_selectedTreeUri == null || _selectedTreeUri!.isEmpty) {
+        final dir = Directory(_selectedDirectory!);
+        if (!await dir.exists()) {
+          await dir.create(recursive: true);
         }
         ref.read(settingsProvider.notifier).setStorageMode('app');
         ref
             .read(settingsProvider.notifier)
-            .setDownloadDirectory(
-              _selectedDirectory!,
-              iosBookmark: iosBookmark,
-            );
+            .setDownloadDirectory(_selectedDirectory!);
         ref.read(settingsProvider.notifier).setDownloadTreeUri('');
       } else {
         ref.read(settingsProvider.notifier).setStorageMode('saf');

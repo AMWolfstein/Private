@@ -81,7 +81,6 @@ class PlaybackDependencies {
     SourceDeletionEvents? sourceDeletionEvents,
     SourceMetadataEvents? sourceMetadataEvents,
     Stream<double>? volumeChanges,
-    bool? isIOS,
     bool? isAndroid,
     this.notificationChannel = const MethodChannel(
       'com.zarz.mornye/playback_notification',
@@ -95,7 +94,6 @@ class PlaybackDependencies {
        _sourceDeletionEvents = sourceDeletionEvents,
        _sourceMetadataEvents = sourceMetadataEvents,
        _volumeChanges = volumeChanges,
-       _isIOS = isIOS,
        _isAndroid = isAndroid;
 
   final PlaybackDeck Function(String playerId) createDeck;
@@ -158,7 +156,7 @@ class PlaybackDependencies {
   final SourceDeletionEvents? _sourceDeletionEvents;
   final SourceMetadataEvents? _sourceMetadataEvents;
   final Stream<double>? _volumeChanges;
-  final bool? _isIOS, _isAndroid;
+  final bool? _isAndroid;
 
   AppStateDatabase get sessionDatabase =>
       _sessionDatabase ?? AppStateDatabase.instance;
@@ -176,7 +174,6 @@ class PlaybackDependencies {
       _sourceMetadataEvents ?? SourceMetadataEvents.instance;
   Stream<double> get volumeChanges =>
       _volumeChanges ?? SystemVolumeService.instance.changes;
-  bool get isIOS => _isIOS ?? Platform.isIOS;
   bool get isAndroid => _isAndroid ?? Platform.isAndroid;
 
   // Windows and Linux play through libmpv. Without the library they fall
@@ -433,14 +430,6 @@ class MusicPlayerRuntime {
     _notification = presentation;
     _toggleFavorite = toggleFavorite;
     _handler?.refreshNotificationControls();
-    if (dependencies.isIOS) {
-      dependencies.notificationChannel.setMethodCallHandler((call) async {
-        if (call.method == 'favorite') {
-          await _handler?.customAction(PlaybackNotification.favoriteAction);
-        }
-      });
-      unawaited(_publishNotificationFavorite());
-    }
   }
 
   Future<bool?> toggleFavorite(MediaItem item) async =>
@@ -449,21 +438,6 @@ class MusicPlayerRuntime {
   void updateFavorite(MediaItem item, bool loved) {
     _notification = _notification.withFavorite(item, loved);
     _handler?.refreshNotificationControls();
-    if (dependencies.isIOS) unawaited(_publishNotificationFavorite());
-  }
-
-  Future<void> _publishNotificationFavorite() async {
-    try {
-      await dependencies.notificationChannel.invokeMethod<void>('update', {
-        'enabled': _notification.mornye && _notification.mediaId != null,
-        'loved': _notification.loved,
-        'label': _notification.favoriteActionLabel,
-      });
-    } on MissingPluginException {
-      // Tests do not install the iOS remote-command bridge.
-    } on PlatformException catch (error) {
-      _log.w('Could not update the system favorite action: ${error.code}');
-    }
   }
 
   void attach(MusicPlayerHandler handler) {
@@ -526,7 +500,7 @@ class MusicPlayerRuntime {
       }
       _initializing = false;
       _handlers.add(handler);
-      if (dependencies.isAndroid || dependencies.isIOS) {
+      if (dependencies.isAndroid) {
         PlayerWidgetService.instance.bind(handler);
       }
       return handler;

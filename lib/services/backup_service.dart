@@ -403,8 +403,6 @@ class BackupService {
         'history_path': snapshotPath,
         'ndjson_path': path,
         'platform': nativePlatformName(),
-        if (Platform.isIOS)
-          'documents_path': (await getApplicationDocumentsDirectory()).path,
       });
       if (result['published'] != true || result['count'] is! int) {
         throw const FormatException('Incomplete native history backup');

@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:mornye/utils/logger.dart';
@@ -16,7 +15,7 @@ class ConnectivityMonitor {
     this.pollInterval = const Duration(seconds: 2),
   }) : assert(pollInterval > Duration.zero),
        _connectivity = connectivity ?? Connectivity(),
-       _usePolling = usePolling ?? Platform.isWindows;
+       _usePolling = usePolling ?? false;
 
   static final ConnectivityMonitor instance = ConnectivityMonitor();
 

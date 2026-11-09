@@ -357,7 +357,7 @@ class AudioplayersPlaybackDeck implements PlaybackDeck {
     _routeLost = false;
     _nativeStarted = false;
     await _setOrdinarySource(
-      UrlSource(arriving && (Platform.isMacOS) ? darwinArrivingUrl(url) : url),
+      UrlSource(url),
     );
   }
 

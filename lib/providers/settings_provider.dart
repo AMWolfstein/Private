@@ -542,12 +542,12 @@ class SettingsNotifier extends Notifier<AppSettings> {
   void setSingleFilenameFormat(String format) =>
       _commit(state.copyWith(singleFilenameFormat: format));
 
-  void setDownloadDirectory(String directory, {String? iosBookmark}) => _commit(
+  void setDownloadDirectory(String directory) => _commit(
     state.copyWith(
       networkDownloadFolder: '',
       networkDownloadLabel: '',
       downloadDirectory: directory,
-      downloadDirectoryBookmark: iosBookmark ?? '',
+      downloadDirectoryBookmark: '',
     ),
   );
 

@@ -47,7 +47,6 @@ class _AudioOutputButtonState extends State<AudioOutputButton> {
 
   CastOutput get _output => widget.output ?? CastOutput.instance;
 
-  bool get _ios => defaultTargetPlatform == TargetPlatform.iOS;
 
   Future<void> _showPicker() async {
     if (_opening) return;
@@ -66,14 +65,8 @@ class _AudioOutputButtonState extends State<AudioOutputButton> {
             mainAxisSize: MainAxisSize.min,
             children: [
               AppSheetOption(
-                title: Text(
-                  _ios
-                      ? context.l10n.audioOutputAirPlay
-                      : context.l10n.audioOutputSystem,
-                ),
-                leading: Icon(
-                  _ios ? Icons.airplay : Icons.speaker_group_outlined,
-                ),
+                title: Text(context.l10n.audioOutputSystem),
+                leading: const Icon(Icons.speaker_group_outlined),
                 onTap: () => Navigator.pop(context, _OutputChoice.system),
               ),
               AppSheetOption(
@@ -150,8 +143,6 @@ class _AudioOutputButtonState extends State<AudioOutputButton> {
   Widget _button(BuildContext context) {
     final icon = _output.connected
         ? Icons.cast_connected
-        : _ios
-        ? Icons.airplay
         : Icons.speaker_group_outlined;
     if (widget.backgroundColor case final background?) {
       return ExpressiveIconButton(

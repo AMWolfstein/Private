@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart' show kPrimaryButton;
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -146,7 +145,6 @@ class _DesktopContextMenuRegionState extends State<DesktopContextMenuRegion>
 
   void _handlePointerDown(PointerDownEvent event) {
     final controlClick =
-        defaultTargetPlatform == TargetPlatform.macOS &&
         event.buttons == kPrimaryButton &&
         HardwareKeyboard.instance.isControlPressed;
     if (controlClick) widget.onContextMenu?.call(event.position);

@@ -133,10 +133,7 @@ class PlatformBridge {
   }
 
   static Future<void> setScreenAwake(bool enabled) async {
-    if (defaultTargetPlatform != TargetPlatform.android &&
-        defaultTargetPlatform != TargetPlatform.iOS) {
-      return;
-    }
+    if (defaultTargetPlatform != TargetPlatform.android) return;
     await _channel.invokeMethod<void>('setScreenAwake', {'enabled': enabled});
   }
 

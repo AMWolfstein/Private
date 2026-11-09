@@ -28,7 +28,6 @@ export 'package:mornye/services/network_offline_saver.dart'
 
 String offlineDeviceFilterLabel(BuildContext context) =>
     switch (defaultTargetPlatform) {
-      TargetPlatform.iOS => context.l10n.offlineOnIPhone,
       TargetPlatform.android => context.l10n.offlineOnPhone,
       _ => context.l10n.offlineOnDevice,
     };

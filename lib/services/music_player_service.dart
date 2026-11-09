@@ -4,8 +4,7 @@ import 'dart:math';
 
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter/foundation.dart' show compute, visibleForTesting;
-import 'package:flutter/widgets.dart'
-    show AppLifecycleState, WidgetsBinding, WidgetsBindingObserver;
+import 'package:flutter/widgets.dart' show AppLifecycleState, WidgetsBindingObserver;
 import 'package:mornye/services/playback_notification.dart';
 import 'package:audio_session/audio_session.dart'
     show
@@ -63,11 +62,6 @@ part 'music_player_gapless.dart';
 part 'music_player_prefetch.dart';
 
 final _log = AppLogger('MusicPlayer');
-
-/// Muted artwork shares the music session. Recover its Now Playing ownership
-/// after video initialization, including failed or abandoned initialization.
-Future<void> restoreMusicAudioSessionAfterVideo() async =>
-    musicPlayerRuntime.handler?.restoreIosNowPlaying();
 
 /// Gain and rate the player applies to the current track.
 class PlaybackProcessing {
@@ -419,7 +413,6 @@ class MusicPlayerHandler extends BaseAudioHandler
 
     _listenToPlayer(_player);
     _cast.initialize();
-    if (_dependencies.isIOS) WidgetsBinding.instance.addObserver(this);
   }
 
   /// Writes listening time every 10 s from the start of playback until a
@@ -447,11 +440,6 @@ class MusicPlayerHandler extends BaseAudioHandler
       unawaited(_runtime.personalization.flush());
       unawaited(_runtime.taste.flush());
       unawaited(_runtime.ranker.flush());
-    }
-    if (state == AppLifecycleState.resumed ||
-        state == AppLifecycleState.inactive ||
-        state == AppLifecycleState.paused) {
-      unawaited(restoreIosNowPlaying());
     }
   }
 
@@ -492,32 +480,6 @@ class MusicPlayerHandler extends BaseAudioHandler
             state.playing &&
             state.processingState == AudioProcessingState.ready,
       );
-    }
-  }
-
-  /// Recover system controls without reloading, seeking or restarting audio.
-  /// Never reclaim audio focus for a paused/interrupted/stopped player.
-  Future<void> restoreIosNowPlaying() async {
-    final generation = _playRequestGeneration;
-    bool canRestore() =>
-        _dependencies.isIOS &&
-        !_disposed &&
-        generation == _playRequestGeneration &&
-        !_interruptionActive &&
-        !_userPaused &&
-        playbackState.value.playing &&
-        playbackState.value.processingState == AudioProcessingState.ready &&
-        mediaItem.value != null;
-    if (!canRestore()) return;
-    try {
-      final session = _audioSession ?? await _dependencies.audioSession();
-      if (!canRestore()) return;
-      await session.configure(const AudioSessionConfiguration.music());
-      if (!canRestore()) return;
-      if (!await session.setActive(true) || !canRestore()) return;
-      await AudioService.refreshNowPlayingInfo();
-    } catch (error) {
-      _log.w('Could not restore iOS playback controls: $error');
     }
   }
 
@@ -834,11 +796,6 @@ class MusicPlayerHandler extends BaseAudioHandler
       if (generation != _playRequestGeneration || _disposed) return false;
       final session = _audioSession ?? await _dependencies.audioSession();
       _audioSession = session;
-      // Other media plugins can change the process-wide iOS category/options
-      // after initialization. Mixing makes us ineligible for Now Playing.
-      if (_dependencies.isIOS) {
-        await session.configure(const AudioSessionConfiguration.music());
-      }
       if (generation != _playRequestGeneration || _disposed) return false;
       final granted = await session.setActive(true);
       if (!granted) {
@@ -2741,7 +2698,6 @@ class MusicPlayerHandler extends BaseAudioHandler
     await _cast.dispose();
     _runtime.personalization.finish();
     await _runtime.personalization.flush();
-    if (_dependencies.isIOS) WidgetsBinding.instance.removeObserver(this);
     if (identical(musicPlayerRuntime.handler, this)) {
       autoMixStatus.value = AutoMixStatus.idle;
       autoMixPreparing.value = false;
