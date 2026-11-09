@@ -56,12 +56,9 @@ void main() {
 
   Future<PlayerMetadataController> open(
     WidgetTester tester,
-    String lyrics, {
-    bool desktop = false,
-  }) async {
-    tester.view.physicalSize = desktop
-        ? const Size(1280, 900)
-        : const Size(400, 860);
+    String lyrics,
+  ) async {
+    tester.view.physicalSize = const Size(400, 860);
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.reset);
     final metadata = PlayerMetadataController(
@@ -166,7 +163,6 @@ void main() {
     await open(
       tester,
       [for (var i = 0; i < 40; i++) '[00:${(i + 10)}.00]Line $i'].join('\n'),
-      desktop: true,
     );
     final field = find.widgetWithText(TextField, 'Line 3');
     final before = tester.getTopLeft(field).dy;
@@ -186,8 +182,8 @@ void main() {
   testWidgets('a line can be inserted and deleted from its menu', (
     tester,
   ) async {
-    await open(tester, '[00:01.00]One\n[00:02.00]Two', desktop: true);
-    expect(find.byKey(const ValueKey('app-sheet-dialog')), findsOneWidget);
+    await open(tester, '[00:01.00]One\n[00:02.00]Two');
+    expect(find.text('Edit lyrics'), findsOneWidget);
     await tester.tap(find.byTooltip('Line actions').first);
     await tester.pumpAndSettle();
     await tester.tap(find.text('Delete line'));

@@ -165,53 +165,51 @@ void main() {
   });
   tearDown(() => messenger.setMockMethodCallHandler(channel, null));
 
-  for (final desktop in [false]) {
-    for (final mornye in [false, true]) {
-      testWidgets('translation mode applies on tap '
-          '(desktop=$desktop, mornye=$mornye)', (tester) async {
-        tester.view.physicalSize = Size(desktop ? 1200 : 390, 800);
-        tester.view.devicePixelRatio = 1;
-        addTearDown(tester.view.reset);
-        await tester.pumpWidget(
-          _app(
-            mornye: mornye,
-            overrides: [
-              initialSettingsProvider.overrideWithValue(const AppSettings()),
-              lyricsAiKeyStoreProvider.overrideWithValue(
-                MemoryLyricsAiKeyStore(),
-              ),
-              lyricsTranslationCacheProvider.overrideWithValue(_MemoryCache()),
-            ],
-            home: const LyricsAiTranslationPage(),
-          ),
-        );
-        await tester.pumpAndSettle();
-        final mode = find.byKey(const ValueKey('lyrics-ai-mode'));
-        await tester.scrollUntilVisible(mode, 250);
-        await tester.pumpAndSettle();
-        final container = ProviderScope.containerOf(
-          tester.element(find.byType(LyricsAiTranslationPage)),
-        );
-        expect(container.read(settingsProvider).lyricsAiWordSync, isFalse);
-        await tester.tap(mode);
-        await tester.pumpAndSettle();
-        expect(find.textContaining('Takes longer'), findsOneWidget);
-        await tester.tap(find.text('Synced'));
-        await tester.pumpAndSettle();
-        expect(container.read(settingsProvider).lyricsAiWordSync, isTrue);
-        expect(
-          find.descendant(of: mode, matching: find.text('Synced')),
-          findsOneWidget,
-        );
-        await tester.tap(mode);
-        await tester.pumpAndSettle();
-        await tester.tap(find.text('Fast'));
-        await tester.pumpAndSettle();
-        expect(container.read(settingsProvider).lyricsAiWordSync, isFalse);
-        expect(tester.takeException(), isNull);
-        await tester.pumpWidget(const SizedBox.shrink());
-      });
-    }
+  for (final mornye in [false, true]) {
+    testWidgets('translation mode applies on tap '
+        '(mornye=$mornye)', (tester) async {
+      tester.view.physicalSize = const Size(390, 800);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.reset);
+      await tester.pumpWidget(
+        _app(
+          mornye: mornye,
+          overrides: [
+            initialSettingsProvider.overrideWithValue(const AppSettings()),
+            lyricsAiKeyStoreProvider.overrideWithValue(
+              MemoryLyricsAiKeyStore(),
+            ),
+            lyricsTranslationCacheProvider.overrideWithValue(_MemoryCache()),
+          ],
+          home: const LyricsAiTranslationPage(),
+        ),
+      );
+      await tester.pumpAndSettle();
+      final mode = find.byKey(const ValueKey('lyrics-ai-mode'));
+      await tester.scrollUntilVisible(mode, 250);
+      await tester.pumpAndSettle();
+      final container = ProviderScope.containerOf(
+        tester.element(find.byType(LyricsAiTranslationPage)),
+      );
+      expect(container.read(settingsProvider).lyricsAiWordSync, isFalse);
+      await tester.tap(mode);
+      await tester.pumpAndSettle();
+      expect(find.textContaining('Takes longer'), findsOneWidget);
+      await tester.tap(find.text('Synced'));
+      await tester.pumpAndSettle();
+      expect(container.read(settingsProvider).lyricsAiWordSync, isTrue);
+      expect(
+        find.descendant(of: mode, matching: find.text('Synced')),
+        findsOneWidget,
+      );
+      await tester.tap(mode);
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Fast'));
+      await tester.pumpAndSettle();
+      expect(container.read(settingsProvider).lyricsAiWordSync, isFalse);
+      expect(tester.takeException(), isNull);
+      await tester.pumpWidget(const SizedBox.shrink());
+    });
   }
 
   for (final mornye in [false, true]) {

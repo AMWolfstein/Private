@@ -101,13 +101,10 @@ void main() {
 
   Future<_Collections> open(
     WidgetTester tester, {
-    bool desktop = false,
     bool mornye = false,
     LibraryTracksFolderMode mode = LibraryTracksFolderMode.loved,
   }) async {
-    tester.view.physicalSize = desktop
-        ? const Size(1200, 900)
-        : const Size(430, 1000);
+    tester.view.physicalSize = const Size(430, 1000);
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.reset);
     final collections = _Collections();
@@ -148,7 +145,6 @@ void main() {
   Future<void> moveFirstToLast(
     WidgetTester tester, {
     bool holdRow = false,
-    bool desktop = false,
   }) async {
     final handle = find.byKey(const ValueKey('collection-order-handle-a'));
     await tester.ensureVisible(handle);
@@ -162,7 +158,7 @@ void main() {
     final target = Offset(origin.dx, lastBottom.dy + 80);
     final gesture = await tester.startGesture(
       origin,
-      kind: desktop ? PointerDeviceKind.mouse : PointerDeviceKind.touch,
+      kind: PointerDeviceKind.touch,
     );
     if (holdRow) await tester.pump(const Duration(milliseconds: 650));
     await gesture.moveBy(const Offset(0, 4));

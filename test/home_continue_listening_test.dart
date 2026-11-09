@@ -67,7 +67,6 @@ Widget _home({bool saved = true}) => ProviderScope(
 
 Future<void> _open(
   WidgetTester tester, {
-  required bool desktop,
   double width = 1280,
   bool saved = true,
 }) async {
@@ -99,11 +98,10 @@ void main() {
     expect(tester.widget<PlayerArtwork>(artwork).artUri, cover);
   });
 
-
   testWidgets('phones keep two columns of shortcuts under the card', (
     tester,
   ) async {
-    await _open(tester, desktop: false, width: 400);
+    await _open(tester, width: 400);
     expect(tester.takeException(), isNull);
     final shuffle = tester.getRect(find.text('Shuffle library'));
     expect(tester.getRect(find.text('Equalizer')).top, shuffle.top);
