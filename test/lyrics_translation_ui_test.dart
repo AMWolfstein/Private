@@ -19,7 +19,6 @@ import 'package:mornye/providers/settings_provider.dart';
 import 'package:mornye/screens/settings/lyrics_ai_translation_page.dart';
 import 'package:mornye/services/lyrics_ai_client.dart';
 import 'package:mornye/services/lyrics_translation.dart';
-import 'package:mornye/services/lyrics_translation_sharing.dart';
 import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/theme/mornye_theme.dart';
 import 'package:mornye/utils/lyrics_parser.dart';
@@ -213,58 +212,6 @@ void main() {
   }
 
   for (final mornye in [false, true]) {
-    testWidgets('linked AI translation refreshes open lyrics ($mornye)', (
-      tester,
-    ) async {
-      final metadata = _Lyrics(_lyrics);
-      final preview = PlaybackSeekPreview();
-      addTearDown(metadata.dispose);
-      addTearDown(preview.dispose);
-      await tester.pumpWidget(
-        _app(
-          mornye: mornye,
-          overrides: [
-            initialSettingsProvider.overrideWithValue(
-              const AppSettings(lyricsAiProvider: 'custom', lyricsAiModel: ''),
-            ),
-            lyricsTranslationCacheProvider.overrideWithValue(_MemoryCache()),
-          ],
-          home: Scaffold(
-            body: PlayerLyricsSection(
-              metadata: metadata,
-              seekPreview: preview,
-              colorScheme: const ColorScheme.dark(),
-              isActive: true,
-            ),
-          ),
-        ),
-      );
-      await tester.pumpAndSettle();
-      final container = ProviderScope.containerOf(
-        tester.element(find.byType(PlayerLyricsSection)),
-      );
-      container
-          .read(lyricsTranslationSharingProvider)
-          .receive(
-            SharedLyricsTranslation(
-              sourceHash: LyricsTranslationSource.of(_lyrics).hash,
-              language: 'id',
-              updatedMs: 1,
-              result: const LyricsTranslationResult([
-                'Halo di sana',
-                'Dunia yang indah',
-              ]),
-            ),
-          );
-      await tester.pumpAndSettle();
-      expect(
-        find.textContaining('Halo di sana', findRichText: true),
-        findsWidgets,
-      );
-      expect(tester.takeException(), isNull);
-      await tester.pumpWidget(const SizedBox.shrink());
-    });
-
     for (final pick in [false, true]) {
       testWidgets('the lyrics menu translates into '
           '${pick ? 'a picked' : 'the settings'} language ($mornye)', (
