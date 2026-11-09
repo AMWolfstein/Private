@@ -31,7 +31,7 @@ void main() {
   testWidgets('native Mornye glass visual poses and attached layers', (
     tester,
   ) async {
-    expect(Platform.isAndroid || Platform.isIOS, isTrue);
+    expect(Platform.isAndroid, isTrue);
     expect(ui.ImageFilter.isShaderFilterSupported, isTrue);
     binding.framePolicy = LiveTestWidgetsFlutterBindingFramePolicy.fullyLive;
     final directory = (await tester.runAsync(() async {
