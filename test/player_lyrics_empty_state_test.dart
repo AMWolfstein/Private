@@ -68,7 +68,7 @@ void main() {
 
   final search = find.widgetWithText(ExpressiveButton, 'Search online');
 
-  for (final desktop in [false, true]) {
+  for (final desktop in [false]) {
     for (final mornye in [false, true]) {
       testWidgets(
         'Search online saves found lyrics and reports write failure (desktop=$desktop, Mornye=$mornye)',

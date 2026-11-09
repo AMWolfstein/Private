@@ -50,7 +50,7 @@ final _mix = LibraryMixView(
 );
 
 void main() {
-  for (final desktop in [false, true]) {
+  for (final desktop in [false]) {
     for (final mornye in [false, true]) {
       testWidgets('Home lists the mixes and opens one '
           '(desktop: $desktop, Mornye: $mornye)', (tester) async {

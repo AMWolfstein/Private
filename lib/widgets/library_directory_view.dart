@@ -1,4 +1,8 @@
 import 'dart:math';
+import 'package:mornye/providers/settings_provider.dart';
+import 'package:mornye/screens/track_metadata_screen.dart';
+import 'package:mornye/widgets/app_icon_button.dart';
+import 'package:mornye/widgets/local_library_artwork_builder.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -530,8 +534,127 @@ class _LibraryDirectoryViewState extends ConsumerState<LibraryDirectoryView>
       else if (!songsValue.hasValue)
         SliverToBoxAdapter(
           child: TrackListSkeleton(itemCount: min(folder.tracks.length, 8)),
+        )
+      else
+        SliverPadding(
+          padding: EdgeInsets.symmetric(horizontal: inset),
+          sliver: SliverList.builder(
+            itemCount: items.length,
+            itemBuilder: (context, index) => TrackCardSegment.at(
+              key: ValueKey(items[index].id),
+              index: index,
+              count: items.length,
+              child: _songRow(context, items, items[index]),
+            ),
+          ),
         ),
     ];
+  }
+
+  PlaybackRowKey _playbackKey(UnifiedLibraryItem item) => (
+    id: item.historyItem?.id ?? item.localItem?.id ?? item.id,
+    path: item.filePath,
+  );
+
+  Future<void> _openDetails(UnifiedLibraryItem item) {
+    final local = [for (final item in _items) ?item.localItem];
+    final downloads = [for (final item in _items) ?item.historyItem];
+    // The details pager steps through one kind of record.
+    final localOnly = local.length == _items.length;
+    final downloadsOnly = downloads.length == _items.length;
+    return pushPage<void>(
+      context,
+      (_) => TrackMetadataScreen(
+        item: item.historyItem,
+        localItem: item.localItem,
+        localNavigationItems: localOnly ? local : null,
+        historyNavigationItems: downloadsOnly ? downloads : null,
+        navigationIndex: localOnly || downloadsOnly
+            ? _items.indexWhere((entry) => entry.id == item.id)
+            : null,
+      ),
+    );
+  }
+
+  Future<bool> _showSongMenu(UnifiedLibraryItem item, Offset position) {
+    final items = _selectedItems;
+    return showContextMenu(
+      context,
+      position: position,
+      groups: libraryTrackMenuGroups(
+        context,
+        ref,
+        items: items,
+        onPlay: () => _play(_items, start: item),
+        onOpenDetails: () => _openDetails(item),
+        onDone: exitSelectionMode,
+        onReEnrich: () => _reEnrich(items),
+        onConvert: () => showBatchConvertSheet(
+          context,
+          ref,
+          items,
+          onExitSelectionMode: _finishSelectionAction,
+        ),
+        onDelete: () => _delete(items),
+      ),
+    );
+  }
+
+  Widget _songRow(
+    BuildContext context,
+    List<UnifiedLibraryItem> items,
+    UnifiedLibraryItem item,
+  ) {
+    final qualityMode = ref.watch(
+      settingsProvider.select((s) => s.libraryQualityLabelMode),
+    );
+    final quality = item.qualityForMode(qualityMode);
+    return Consumer(
+      builder: (context, ref, _) {
+        final playback = ref.watch(
+          mediaItemPlaybackUiProvider(_playbackKey(item)),
+        );
+        return TrackCard(
+          style: context.isMornye ? TrackCardStyle.flat : TrackCardStyle.filled,
+          leading: _SongArtwork(item: item, size: context.tokens.coverList),
+          leadingArtwork: true,
+          title: item.trackName,
+          subtitle: Text(
+            [item.artistName, ?quality].join(' · '),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+          isCurrent: playback.isCurrent,
+          isPlaying: playback.isPlaying,
+          trailing: AppIconButton(
+            tooltip: playback.isPlaying
+                ? context.l10n.actionPause
+                : context.l10n.tooltipPlay,
+            icon: Icon(
+              playback.isPlaying
+                  ? Icons.pause_rounded
+                  : Icons.play_arrow_rounded,
+            ),
+            // The current song pauses and resumes in place.
+            onPressed: playback.isCurrent
+                ? () => ref
+                      .read(musicPlayerControllerProvider)
+                      .togglePlayPause(playback.isPlaying)
+                : () => _play(items, start: item),
+          ),
+          isSelectionMode: isSelectionMode,
+          isSelected: selectedIds.contains(item.id),
+          onTap: isSelectionMode
+              ? () => toggleSelection(item.id)
+              : () => _openDetails(item),
+          onLongPress: isSelectionMode
+              ? () => toggleSelection(item.id)
+              : () => enterSelectionMode(item.id),
+          onContextMenu: (position) =>
+              showSelectionMenu(item.id, () => _showSongMenu(item, position)),
+        );
+      },
+    );
   }
 
   Widget _folderRow(LibraryDirectory parent, LibraryDirectory folder) {
@@ -596,6 +719,52 @@ class _FolderArtwork extends StatelessWidget {
                 localCacheWidth: (size * MediaQuery.devicePixelRatioOf(context))
                     .round(),
                 placeholder: glyph,
+              ),
+      ),
+    );
+  }
+}
+
+/// A song's artwork: the download's cover, or the scanned file's thumbnail
+/// with its embedded artwork recovered when the thumbnail is gone.
+class _SongArtwork extends StatelessWidget {
+  const _SongArtwork({required this.item, required this.size});
+
+  final UnifiedLibraryItem item;
+  final double size;
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    Widget placeholder(BuildContext context) => ColoredBox(
+      color: colorScheme.surfaceContainerHighest,
+      child: Center(
+        child: AppIcon.adaptive(
+          Icons.music_note,
+          size: size * 0.45,
+          color: colorScheme.onSurfaceVariant,
+        ),
+      ),
+    );
+    Widget image(String? cover) => cover == null || cover.isEmpty
+        ? placeholder(context)
+        : LocalOrNetworkCoverImage(
+            url: cover,
+            localCacheWidth: (size * MediaQuery.devicePixelRatioOf(context))
+                .round(),
+            placeholder: placeholder,
+          );
+    final local = item.localItem;
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(size > 40 ? 8 : 4),
+      child: SizedBox.square(
+        dimension: size,
+        child: local == null
+            ? image(item.coverUrl)
+            : LocalLibraryArtworkBuilder(
+                coverPath: local.coverPath,
+                filePath: local.filePath,
+                builder: (context, cover) => image(cover),
               ),
       ),
     );

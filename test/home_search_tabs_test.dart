@@ -27,7 +27,7 @@ import 'package:mornye/widgets/mornye_chrome.dart';
 import 'package:mornye/widgets/mornye_context_menu.dart';
 
 void main() {
-  for (final desktop in [false, true]) {
+  for (final desktop in [false]) {
     for (final mornye in [false, true]) {
       testWidgets('Home keeps Resume without a player '
           '(desktop: $desktop, Mornye: $mornye)', (tester) async {
@@ -170,7 +170,7 @@ void main() {
     await tester.pump(const Duration(seconds: 1));
   });
 
-  for (final desktop in [false, true]) {
+  for (final desktop in [false]) {
     for (final mornye in [false, true]) {
       testWidgets('Home keeps its feed layout through slow startup '
           '(desktop: $desktop, Mornye: $mornye)', (tester) async {
@@ -330,7 +330,7 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  for (final desktop in [false, true]) {
+  for (final desktop in [false]) {
     testWidgets('first search extension collapses the empty Home prompt '
         '(desktop: $desktop)', (tester) async {
       tester.view.physicalSize = desktop

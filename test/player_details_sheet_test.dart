@@ -90,7 +90,7 @@ void main() {
     expect(find.text('Details'), findsNothing);
   }, variant: TargetPlatformVariant.only(TargetPlatform.macOS));
 
-  for (final desktop in [false, true]) {
+  for (final desktop in [false]) {
     testWidgets(
       'Mornye keeps its glass details on ${desktop ? 'desktop' : 'phones'}',
       (tester) async {

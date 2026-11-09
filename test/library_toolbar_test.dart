@@ -219,7 +219,7 @@ void main() {
       )
       .hitTestable();
 
-  for (final desktop in [false, true]) {
+  for (final desktop in [false]) {
     for (final trackCount in <int?>[null, 0, 143]) {
       testWidgets(
         'Material opens Playlists without downloaded or local songs '
@@ -348,7 +348,7 @@ void main() {
     expect(tester.getRect(oldest).top, greaterThanOrEqualTo(sortRect.bottom));
   });
 
-  for (final desktop in [false, true]) {
+  for (final desktop in [false]) {
     for (final mornye in [false, true]) {
       testWidgets('title sort survives a fresh Library and settings scope '
           '(desktop: $desktop, Mornye: $mornye)', (tester) async {

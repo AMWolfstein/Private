@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:mornye/widgets/track_card.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -16,6 +17,7 @@ import 'package:mornye/services/library_mixes.dart';
 import 'package:mornye/services/local_track_redownload_service.dart';
 import 'package:mornye/services/playable_media.dart' show PlayableMedia;
 import 'package:mornye/theme/app_tokens.dart';
+import 'package:mornye/utils/adaptive_layout.dart';
 import 'package:mornye/theme/cover_palette.dart';
 import 'package:mornye/theme/mornye_theme.dart';
 import 'package:mornye/utils/file_access.dart';
@@ -129,6 +131,61 @@ class _LibraryMixScreenState extends ConsumerState<LibraryMixScreen>
     return _buildPage(context);
   }
 
+  Widget _buildTrackList(BuildContext context) {
+    final tokens = context.tokens;
+    return SliverPadding(
+      padding: EdgeInsets.symmetric(horizontal: wideListInset(context)),
+      sliver: SliverList.builder(
+        itemCount: _items.length,
+        itemBuilder: (context, index) {
+          final item = _items[index];
+          return Consumer(
+            key: ValueKey(item.id),
+            builder: (context, ref, _) {
+              final playback = ref.watch(
+                mediaItemPlaybackUiProvider(_rowKey(item)),
+              );
+              return TrackCard(
+                style: context.isMornye
+                    ? TrackCardStyle.flat
+                    : TrackCardStyle.filled,
+                leadingArtwork: true,
+                leading: ClipRRect(
+                  borderRadius: BorderRadius.circular(tokens.radiusThumb),
+                  child: LibraryItemArtwork(
+                    item: item,
+                    size: tokens.coverCompact,
+                  ),
+                ),
+                title: item.trackName,
+                subtitle: Text(
+                  item.artistName,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                isCurrent: playback.isCurrent,
+                isPlaying: playback.isPlaying,
+                isSelectionMode: isSelectionMode,
+                isSelected: selectedIds.contains(item.id),
+                // A long press selects, as on the album pages.
+                onTap: isSelectionMode
+                    ? () => toggleSelection(item.id)
+                    : playback.isCurrent
+                    ? () => ref
+                          .read(musicPlayerControllerProvider)
+                          .togglePlayPause(playback.isPlaying)
+                    : () => _play(index),
+                onLongPress: isSelectionMode
+                    ? null
+                    : () => enterSelectionMode(item.id),
+              );
+            },
+          );
+        },
+      ),
+    );
+  }
+
   Widget _buildPage(BuildContext context) {
     final ids = [for (final item in _items) item.id];
     pruneSelection(ids.toSet());
@@ -137,7 +194,7 @@ class _LibraryMixScreenState extends ConsumerState<LibraryMixScreen>
         isSelectionMode: showsSelectionBar,
         onExitSelectionMode: exitSelectionMode,
         appBar: _buildHeader(context),
-        slivers: [],
+        slivers: [_buildTrackList(context)],
         selectionBar: _buildSelectionBar(context, ids),
       );
   }

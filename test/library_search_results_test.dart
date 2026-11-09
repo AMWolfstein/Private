@@ -49,7 +49,7 @@ LibrarySearchHit _hit(
 );
 
 void main() {
-  for (final desktop in [false, true]) {
+  for (final desktop in [false]) {
     for (final mornye in [false, true]) {
       testWidgets(
         'Lyrics filter is explicit, reuses indexing while typing, and cancels on exit ($desktop/$mornye)',

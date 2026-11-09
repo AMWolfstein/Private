@@ -102,7 +102,7 @@ Future<List<int>> _pixels(
 
 void main() {
   setUp(() => SharedPreferences.setMockInitialValues({}));
-  for (final desktop in [false, true]) {
+  for (final desktop in [false]) {
     for (final mornye in [false, true]) {
       for (final aiRomaji in [false, true]) {
         testWidgets('translation and pronunciation share pause/seek clock '

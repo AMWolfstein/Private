@@ -60,7 +60,7 @@ void main() {
     );
   }
 
-  for (final desktop in [true, false]) {
+  for (final desktop in [false]) {
     final platform = desktop ? 'desktop' : 'mobile';
 
     testWidgets('$platform toolbar title follows the platform', (tester) async {

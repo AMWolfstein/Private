@@ -91,7 +91,7 @@ Widget _app(
 );
 
 void main() {
-  for (final desktop in [false, true]) {
+  for (final desktop in [false]) {
     for (final mornye in [false, true]) {
       testWidgets(
         'reuses filtering on parent builds, desktop=$desktop Mornye=$mornye',

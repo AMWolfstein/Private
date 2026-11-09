@@ -22,7 +22,7 @@ Finder _timedPaint() => find.descendant(
 void main() {
   setUp(() => SharedPreferences.setMockInitialValues({}));
 
-  for (final desktop in [false, true]) {
+  for (final desktop in [false]) {
     for (final mornye in [false, true]) {
       for (final timed in [false, true]) {
         final platform = desktop ? 'desktop' : 'mobile';

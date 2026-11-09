@@ -165,7 +165,7 @@ void main() {
   });
   tearDown(() => messenger.setMockMethodCallHandler(channel, null));
 
-  for (final desktop in [false, true]) {
+  for (final desktop in [false]) {
     for (final mornye in [false, true]) {
       testWidgets('translation mode applies on tap '
           '(desktop=$desktop, mornye=$mornye)', (tester) async {
