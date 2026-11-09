@@ -20,7 +20,6 @@ import 'package:mornye/widgets/animation_utils.dart';
 import 'package:mornye/widgets/cached_cover_image.dart';
 import 'package:mornye/widgets/motion_header_banner.dart';
 import 'package:mornye/widgets/track_list_tile.dart';
-import 'package:mornye/widgets/track_lists/list_selection.dart';
 import 'package:mornye/widgets/track_detail_actions.dart';
 import 'package:mornye/controllers/collapsing_header_scroll_mixin.dart';
 import 'package:mornye/widgets/error_card.dart';
@@ -59,8 +58,6 @@ class _PlaylistScreenState extends ConsumerState<PlaylistScreen>
         CollapsingHeaderScrollMixin<PlaylistScreen> {
   final _historySnapshot = TrackHistorySnapshot();
 
-  /// Double click and Enter actions of the desktop table rows, by row id.
-  final Map<String, VoidCallback> _desktopActivations = {};
   List<Track>? _fetchedTracks;
   bool _isLoading = false;
   String? _error;
@@ -267,11 +264,7 @@ class _PlaylistScreenState extends ConsumerState<PlaylistScreen>
     ];
     pruneSelection(ids.toSet());
 
-    return ListScope(
-      onSelectAll: ids.isEmpty ? null : () => selectAll(ids),
-      onClearSelection: isSelectionMode ? exitSelectionMode : null,
-      onActivate: () => _desktopActivations[selectionAnchorId]?.call(),
-      child: CollectionScaffold(
+    return CollectionScaffold(
         scrollController: scrollController,
         isSelectionMode: isSelectionMode,
         onExitSelectionMode: exitSelectionMode,
@@ -293,8 +286,7 @@ class _PlaylistScreenState extends ConsumerState<PlaylistScreen>
               tracks: _tracks,
             ),
         ],
-      ),
-    );
+      );
   }
 
   Widget _buildAppBar(BuildContext context, ColorScheme colorScheme) {

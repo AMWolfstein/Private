@@ -80,9 +80,7 @@ extension _HomeTabExploreUI on _HomeTabState {
         ),
         SizedBox(
           height: sectionHeight,
-          child: ShelfScrollArrows(
-            builder: (context, controller) => ListView.builder(
-              controller: controller,
+          child: ListView.builder(
               scrollDirection: Axis.horizontal,
               padding: EdgeInsets.symmetric(horizontal: 12 + inset),
               itemCount: section.items.length,
@@ -101,7 +99,6 @@ extension _HomeTabExploreUI on _HomeTabState {
                 );
               },
             ),
-          ),
         ),
       ],
     );

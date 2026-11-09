@@ -1,12 +1,8 @@
-import 'package:flutter/gestures.dart' show kPrimaryButton;
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:flutter/services.dart';
 import 'package:mornye/theme/mornye_icons.dart';
 import 'package:mornye/theme/mornye_theme.dart';
-import 'package:mornye/utils/android_tv.dart';
 import 'package:mornye/widgets/app_icon.dart';
-import 'package:mornye/widgets/track_lists/list_selection.dart';
 import 'package:mornye/widgets/mornye_context_menu.dart';
 
 /// One row of a desktop context menu. Use `Icons.*`; Mornye swaps in the
@@ -113,66 +109,6 @@ Offset? contextMenuPositionBelow(BuildContext context) {
   final box = context.findRenderObject();
   if (box is! RenderBox || !box.attached || !box.hasSize) return null;
   return box.localToGlobal(box.size.bottomLeft(Offset.zero));
-}
-
-/// Opens [onContextMenu] on desktop on a right-click, a Control-click on
-/// macOS, or Shift+F10 and the Menu key while the item or its
-/// [ListScope] has focus. Phones and tablets get [child] unchanged;
-/// their long press keeps the same actions.
-class ContextMenuRegion extends StatefulWidget {
-  const ContextMenuRegion({
-    super.key,
-    required this.onContextMenu,
-    required this.child,
-  });
-
-  /// Opens the item's menu at a global position. Null turns the region off.
-  final ValueChanged<Offset>? onContextMenu;
-  final Widget child;
-
-  @override
-  State<ContextMenuRegion> createState() =>
-      _ContextMenuRegionState();
-}
-
-class _ContextMenuRegionState extends State<ContextMenuRegion>
-    implements ContextMenuTarget {
-  @override
-  void openContextMenuFromKeyboard() {
-    final origin = contextMenuOriginOf(context);
-    if (origin != null) widget.onContextMenu?.call(origin);
-  }
-
-  void _handlePointerDown(PointerDownEvent event) {
-    final controlClick =
-        event.buttons == kPrimaryButton &&
-        HardwareKeyboard.instance.isControlPressed;
-    if (controlClick) widget.onContextMenu?.call(event.position);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final onContextMenu = widget.onContextMenu;
-    if ((!isAndroidTv) || onContextMenu == null) {
-      return widget.child;
-    }
-    return Focus(
-      canRequestFocus: false,
-      skipTraversal: true,
-      onKeyEvent: (_, event) {
-        if (!isContextMenuKey(event)) return KeyEventResult.ignored;
-        openContextMenuFromKeyboard();
-        return KeyEventResult.handled;
-      },
-      child: Listener(
-        onPointerDown: _handlePointerDown,
-        child: GestureDetector(
-          onSecondaryTapUp: (details) => onContextMenu(details.globalPosition),
-          child: widget.child,
-        ),
-      ),
-    );
-  }
 }
 
 /// A full-window route that hosts a [MenuAnchor] opened at a point, so a

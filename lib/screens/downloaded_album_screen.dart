@@ -31,7 +31,6 @@ import 'package:mornye/screens/track_metadata_screen.dart';
 import 'package:mornye/services/downloaded_embedded_cover_resolver.dart';
 import 'package:mornye/widgets/collection_scaffold.dart';
 import 'package:mornye/widgets/collection_suggestions_section.dart';
-import 'package:mornye/widgets/track_lists/list_selection.dart';
 import 'package:mornye/widgets/track_lists/library_track_menu.dart';
 import 'package:mornye/widgets/playlist_picker_sheet.dart';
 import 'package:mornye/widgets/cached_cover_image.dart';
@@ -283,19 +282,7 @@ class _DownloadedAlbumScreenState extends ConsumerState<DownloadedAlbumScreen>
         ? MediaQuery.paddingOf(context).bottom
         : 0.0;
 
-    return ListScope(
-      onSelectAll: tracks.isEmpty
-          ? null
-          : () => selectAll(tracks.map((track) => track.id)),
-      onClearSelection: isSelectionMode ? exitSelectionMode : null,
-      onDelete: isSelectionMode ? () => _deleteSelected(tracks) : null,
-      onActivate: () {
-        final anchor = tracks
-            .where((track) => track.id == selectionAnchorId)
-            .firstOrNull;
-        if (anchor != null) _openFile(anchor, queueItems: tracks);
-      },
-      child: CollectionScaffold(
+    return CollectionScaffold(
         scrollController: scrollController,
         isSelectionMode: showsSelectionBar,
         onExitSelectionMode: exitSelectionMode,
@@ -322,8 +309,7 @@ class _DownloadedAlbumScreenState extends ConsumerState<DownloadedAlbumScreen>
             ),
         ],
         selectionBar: _buildSelectionBottomBar(tracks, bottomPadding),
-      ),
-    );
+      );
   }
 
   String? _resolveAlbumEmbeddedCoverPath(List<DownloadHistoryItem> tracks) {

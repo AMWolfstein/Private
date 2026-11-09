@@ -21,7 +21,6 @@ import 'package:mornye/theme/mornye_theme.dart';
 import 'package:mornye/utils/file_access.dart';
 import 'package:mornye/widgets/album_detail_header.dart';
 import 'package:mornye/widgets/collection_scaffold.dart';
-import 'package:mornye/widgets/track_lists/list_selection.dart';
 import 'package:mornye/widgets/track_lists/library_track_menu.dart';
 import 'package:mornye/widgets/library_mix_cover.dart';
 import 'package:mornye/widgets/library_selection_playback_actions.dart';
@@ -133,23 +132,14 @@ class _LibraryMixScreenState extends ConsumerState<LibraryMixScreen>
   Widget _buildPage(BuildContext context) {
     final ids = [for (final item in _items) item.id];
     pruneSelection(ids.toSet());
-    return ListScope(
-      onSelectAll: ids.isEmpty ? null : () => selectAll(ids),
-      onClearSelection: isSelectionMode ? exitSelectionMode : null,
-      onDelete: isSelectionMode ? _deleteSelected : null,
-      onActivate: () {
-        final index = ids.indexOf(selectionAnchorId ?? '');
-        if (index >= 0) _play(index);
-      },
-      child: CollectionScaffold(
+    return CollectionScaffold(
         scrollController: scrollController,
         isSelectionMode: showsSelectionBar,
         onExitSelectionMode: exitSelectionMode,
         appBar: _buildHeader(context),
         slivers: [],
         selectionBar: _buildSelectionBar(context, ids),
-      ),
-    );
+      );
   }
 
   /// The Library selection bar of the album pages: playback, FLAC upgrade,

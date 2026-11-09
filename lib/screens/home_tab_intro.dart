@@ -821,9 +821,7 @@ class _HomeShelf extends StatelessWidget {
     final coverSize = this.coverSize ?? _homeShelfCoverSizeOf(context);
     return SizedBox(
       height: coverSize + 52 * textScale,
-      child: ShelfScrollArrows(
-        builder: (context, controller) => ListView.separated(
-          controller: controller,
+      child: ListView.separated(
           scrollDirection: Axis.horizontal,
           padding: EdgeInsets.symmetric(horizontal: inset),
           itemCount: itemCount,
@@ -831,7 +829,6 @@ class _HomeShelf extends StatelessWidget {
               SizedBox(width: context.isMornye ? _homeMornyeShelfGap : 12),
           itemBuilder: itemBuilder,
         ),
-      ),
     );
   }
 }
@@ -1296,9 +1293,7 @@ class _HomeTopPicksShelf extends StatelessWidget {
         final width = math.min(content - 44, 280.0);
         return SizedBox(
           height: width / MornyeMixBanner.aspectRatio,
-          child: ShelfScrollArrows(
-            builder: (context, controller) => ListView.separated(
-              controller: controller,
+          child: ListView.separated(
               scrollDirection: Axis.horizontal,
               padding: EdgeInsets.symmetric(horizontal: inset),
               itemCount: mixes.length + playlists.length,
@@ -1339,7 +1334,6 @@ class _HomeTopPicksShelf extends StatelessWidget {
                 );
               },
             ),
-          ),
         );
       },
     );

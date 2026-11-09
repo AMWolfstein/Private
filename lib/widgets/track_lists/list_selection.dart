@@ -98,26 +98,6 @@ abstract final class RowDoubleClick {
   }
 }
 
-/// Applies a desktop click on a row: a plain click runs [activate], as a tap
-/// does on a phone, and Cmd/Ctrl-click or Shift-click runs [select] with the
-/// click kind. The second click of a double click does nothing, so it never
-/// activates the row twice. Returns the click kind, or null for a plain
-/// click.
-RowClick? handleDesktopRowClick(
-  Object target, {
-  required ValueChanged<RowClick> select,
-  required VoidCallback activate,
-}) {
-  final kind = desktopClickKind();
-  if (kind == RowClick.replace) {
-    if (!RowDoubleClick.register(target)) activate();
-    return null;
-  }
-  RowDoubleClick.reset();
-  select(kind);
-  return kind;
-}
-
 /// An item that can open its context menu from the keyboard.
 abstract interface class ContextMenuTarget {
   bool get mounted;

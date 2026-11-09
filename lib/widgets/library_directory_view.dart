@@ -30,7 +30,6 @@ import 'package:mornye/widgets/app_sliver_header.dart';
 import 'package:mornye/widgets/app_snack_bar.dart';
 import 'package:mornye/widgets/cached_cover_image.dart';
 import 'package:mornye/widgets/track_lists/context_menu.dart';
-import 'package:mornye/widgets/track_lists/list_selection.dart';
 import 'package:mornye/widgets/track_lists/library_track_menu.dart';
 import 'package:mornye/widgets/error_card.dart';
 import 'package:mornye/widgets/expressive_button.dart';
@@ -400,32 +399,18 @@ class _LibraryDirectoryViewState extends ConsumerState<LibraryDirectoryView>
         const NavBarSliverSpacer(),
       ],
     );
-    final items = _items;
     return PopScope(
       canPop: !isSelectionMode,
       onPopInvokedWithResult: (didPop, _) {
         if (!didPop && isSelectionMode) exitSelectionMode();
       },
-      child: ListScope(
-        onSelectAll: items.isEmpty
-            ? null
-            : () => selectAll(items.map((item) => item.id)),
-        onClearSelection: isSelectionMode ? exitSelectionMode : null,
-        onDelete: isSelectionMode ? () => _delete(_selectedItems) : null,
-        onActivate: () {
-          final anchor = items
-              .where((item) => item.id == selectionAnchorId)
-              .firstOrNull;
-          if (anchor != null) _play(items, start: anchor);
-        },
-        child: AppRefreshIndicator(
+      child: AppRefreshIndicator(
           onRefresh: () async {
             ref.invalidate(libraryDirectoryIndexProvider);
             await ref.read(libraryDirectoryIndexProvider.future);
           },
           child: scrollView,
         ),
-      ),
     );
   }
 

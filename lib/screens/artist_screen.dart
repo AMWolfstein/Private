@@ -60,8 +60,6 @@ import 'package:mornye/widgets/downloadable_cover.dart';
 import 'package:mornye/widgets/expressive_button_group.dart';
 import 'package:mornye/widgets/expressive_icon_button.dart';
 import 'package:mornye/widgets/track_lists/context_menu.dart';
-import 'package:mornye/widgets/track_lists/shelf_scroll_arrows.dart';
-import 'package:mornye/widgets/track_lists/list_selection.dart';
 import 'package:mornye/theme/app_motion.dart';
 import 'package:mornye/theme/material_expressive.dart';
 

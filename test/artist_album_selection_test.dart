@@ -10,7 +10,6 @@ import 'package:mornye/screens/artist_screen.dart';
 import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/theme/mornye_theme.dart';
 import 'package:mornye/widgets/animation_utils.dart';
-import 'package:mornye/widgets/track_lists/shelf_scroll_arrows.dart';
 import 'package:mornye/widgets/selection_bottom_bar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -181,60 +180,7 @@ void main() {
       await _disposeArtist(tester);
     }, variant: TargetPlatformVariant.only(TargetPlatform.windows));
 
-    testWidgets('$style: selecting an album keeps the shelf scroll position', (
-      tester,
-    ) async {
-      final albums = [
-        for (var i = 0; i < 24; i++)
-          ArtistAlbum(
-            id: 'album-$i',
-            name: 'Album $i',
-            releaseDate: '2020',
-            totalTracks: 1,
-            albumType: 'album',
-            artists: 'Example Artist',
-          ),
-      ];
-      await _pumpArtist(tester, mornye: mornye, albums: albums);
-      // Mornye's highlights row scrolls too; the albums are the last shelf.
-      final shelf = find.byType(ShelfScrollArrows).last;
-      final list = find.descendant(of: shelf, matching: find.byType(ListView));
-      final mouse = await tester.createGesture(kind: PointerDeviceKind.mouse);
-      addTearDown(mouse.removePointer);
-      await mouse.addPointer(location: Offset.zero);
-      await mouse.moveTo(tester.getCenter(_card(2)));
-      await tester.pumpAndSettle();
-      await tester.tap(find.byTooltip('Scroll forward'));
-      await tester.pumpAndSettle();
-      final offset = tester.widget<ListView>(list).controller!.offset;
-      expect(offset, greaterThan(0));
-      // Select a card whose center is within the viewport after paging.
-      final visible = [
-        for (var i = 0; i < albums.length; i++)
-          if (_card(i).evaluate().isNotEmpty &&
-              tester.getRect(shelf).contains(tester.getCenter(_card(i))))
-            i,
-      ];
-      final target = visible[visible.length ~/ 2];
-      await tester.sendKeyDownEvent(LogicalKeyboardKey.controlLeft);
-      await _click(tester, target);
-      await tester.sendKeyUpEvent(LogicalKeyboardKey.controlLeft);
-      expect(tester.widget<ListView>(list).controller!.offset, offset);
-      expect(_card(target).hitTestable(), findsOneWidget);
-      expect(
-        tester
-            .widget<SelectionBottomBar>(find.byType(SelectionBottomBar))
-            .selectedCount,
-        1,
-      );
-      await _click(tester, target);
-      expect(find.byType(SelectionBottomBar), findsNothing);
-      expect(tester.widget<ListView>(list).controller!.offset, offset);
-      expect(_card(target).hitTestable(), findsOneWidget);
-      await _disposeArtist(tester);
-    }, variant: TargetPlatformVariant.only(TargetPlatform.windows));
-
-    testWidgets('$style: touch long press still selects albums', (
+testWidgets('$style: touch long press still selects albums', (
       tester,
     ) async {
       await _pumpArtist(tester, mornye: mornye);

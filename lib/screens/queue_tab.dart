@@ -1024,31 +1024,7 @@ class _QueueTabState extends ConsumerState<QueueTab> {
         ],
       ),
     );
-    return ListScope(
-      onSelectAll: selectionItems.isEmpty
-          ? null
-          : () {
-              _applyDesktopClick(
-                selectionItems.first.id,
-                RowClick.replace,
-                const [],
-              );
-              _selectAll(selectionItems);
-            },
-      onClearSelection: _isPlaylistSelectionMode
-          ? _exitPlaylistSelectionMode
-          : _isSelectionMode
-          ? _exitSelectionMode
-          : null,
-      onDelete: _isSelectionMode ? () => _deleteSelected(selectionItems) : null,
-      onActivate: () {
-        final anchor = selectionItems
-            .where((item) => item.id == _selectionAnchorId)
-            .firstOrNull;
-        if (anchor != null) _playLibraryItem(anchor, selectionItems);
-      },
-      child: page,
-    );
+    return page;
   }
 
   Widget _buildQueueHeaderSliver(

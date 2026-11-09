@@ -893,14 +893,7 @@ extension _ArtistScreenSections on _ArtistScreenState {
           onNotification: _onAlbumsScroll,
           child: SizedBox(
             height: sectionHeight,
-            child: ListScope(
-              onSelectAll: () => selectAll(
-                (_albums ?? const <ArtistAlbum>[]).map((album) => album.id),
-              ),
-              onClearSelection: showsSelectionBar ? exitSelectionMode : null,
-              child: ShelfScrollArrows(
-                builder: (context, controller) => ListView.builder(
-                  controller: controller,
+            child: ListView.builder(
                   scrollDirection: Axis.horizontal,
                   padding: EdgeInsets.symmetric(horizontal: listPadding),
                   itemCount: albums.length,
@@ -920,8 +913,6 @@ extension _ArtistScreenSections on _ArtistScreenState {
                     );
                   },
                 ),
-              ),
-            ),
           ),
         ),
       ],

@@ -353,20 +353,14 @@ extension _HomeTabSearchWideUI on _HomeTabState {
           );
           return SizedBox(
             height: extent + searchCoverTextHeight(context) + 8,
-            child: ShelfScrollArrows(
+            child: ListView.separated(
               key: ValueKey('search-shelf-$kind'),
-              builder: (context, controller) => ListView.separated(
-                controller: controller,
-                scrollDirection: Axis.horizontal,
-                padding: EdgeInsets.symmetric(horizontal: edge),
-                itemCount: count,
-                separatorBuilder: (_, _) =>
-                    const SizedBox(width: searchCoverGap),
-                itemBuilder: (context, index) => SizedBox(
-                  width: extent,
-                  child: cell(context, index, extent),
-                ),
-              ),
+              scrollDirection: Axis.horizontal,
+              padding: EdgeInsets.symmetric(horizontal: edge),
+              itemCount: count,
+              separatorBuilder: (_, _) => const SizedBox(width: searchCoverGap),
+              itemBuilder: (context, index) =>
+                  SizedBox(width: extent, child: cell(context, index, extent)),
             ),
           );
         },

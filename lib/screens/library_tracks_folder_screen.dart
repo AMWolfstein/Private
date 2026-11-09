@@ -5,7 +5,6 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart' as p;
 import 'package:mornye/widgets/collection_scaffold.dart';
-import 'package:mornye/widgets/track_lists/list_selection.dart';
 import 'package:mornye/widgets/expressive_button.dart';
 import 'package:mornye/widgets/expressive_button_group.dart';
 import 'package:mornye/widgets/app_bottom_sheet.dart';
@@ -19,7 +18,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mornye/l10n/l10n.dart';
 import 'package:mornye/models/track.dart';
 import 'package:mornye/services/m3u_playlist_service.dart';
-import 'package:mornye/services/downloaded_embedded_cover_resolver.dart';
 import 'package:mornye/utils/file_access.dart';
 import 'package:mornye/providers/download_queue_provider.dart';
 import 'package:mornye/providers/collection_track_files_provider.dart';
@@ -38,13 +36,11 @@ import 'package:mornye/controllers/library_tracks_folder_data.dart';
 import 'package:mornye/controllers/selection_mode_mixin.dart';
 import 'package:mornye/widgets/collection_reorder_sliver.dart';
 import 'package:mornye/widgets/discard_changes_dialog.dart';
-import 'package:mornye/screens/track_metadata_screen.dart';
 import 'package:mornye/widgets/selection_action_button.dart';
 import 'package:mornye/widgets/destructive_selection_button.dart';
 import 'package:mornye/widgets/network_offline_actions.dart';
 import 'package:mornye/widgets/playlist_picker_sheet.dart';
 import 'package:mornye/widgets/collection_suggestions_section.dart';
-import 'package:mornye/widgets/animation_utils.dart';
 import 'package:mornye/widgets/track_detail_actions.dart';
 import 'package:mornye/services/playable_media.dart';
 
@@ -384,20 +380,11 @@ class _LibraryTracksFolderScreenState
       LibraryTracksFolderMode.playlist =>
         context.l10n.collectionPlaylistEmptySubtitle,
     };
-    final folderTracks = _folderData.tracks;
-    final existingHistoryKeys = _editingOrder
-        ? const <String>{}
-        : ref.watch(
-            downloadHistoryVisibleBatchExistsProvider(
-              _folderData.historyRequest,
-            ),
-          );
 
     final bottomPadding = isSelectionMode
         ? MediaQuery.paddingOf(context).bottom
         : 0.0;
 
-    final inHistory = _folderData.inHistory(existingHistoryKeys);
     final ids = [for (final entry in entries) entry.key];
     final scaffold = CollectionScaffold(
       scrollController: scrollController,
@@ -465,56 +452,8 @@ class _LibraryTracksFolderScreenState
       onPopInvokedWithResult: (didPop, _) {
         if (!didPop && _editingOrder) _cancelOrder();
       },
-      child: ListScope(
-        onSelectAll: entries.isEmpty || _editingOrder
-            ? null
-            : () => selectAll(ids),
-        onClearSelection: _editingOrder
-            ? _cancelOrder
-            : isSelectionMode
-            ? exitSelectionMode
-            : null,
-        onDelete: isSelectionMode ? () => _removeSelected(entries) : null,
-        onActivate: () {
-          if (_editingOrder) return;
-          final index = entries.indexWhere(
-            (entry) => entry.key == selectionAnchorId,
-          );
-          if (index >= 0) {
-            _activateEntry(entries, folderTracks, inHistory, index);
-          }
-        },
-        child: scaffold,
-      ),
+      child: scaffold,
     );
-  }
-
-  /// Double click and Enter on a desktop row: plays a downloaded track,
-  /// downloads a wishlist one, and otherwise does what a tap on the mobile
-  /// row does.
-  void _activateEntry(
-    List<CollectionTrackEntry> entries,
-    List<Track> tracks,
-    List<bool> inHistory,
-    int index,
-  ) {
-    if (inHistory[index]) {
-      _playFrom(tracks, index);
-    } else if (widget.mode == LibraryTracksFolderMode.wishlist) {
-      downloadSingleTrack(context, ref, entries[index].track);
-    } else {
-      _openCollectionTrack(context, ref, entries[index].track);
-    }
-  }
-
-  Future<void> _playFrom(List<Track> tracks, int index) async {
-    try {
-      await ref
-          .read(playbackProvider.notifier)
-          .playTrackList(tracks, startIndex: index);
-    } catch (error) {
-      if (mounted) showCannotOpenFileSnackBar(context, error);
-    }
   }
 
   CollectionTrackFilesRequest _selectedTrackFiles(
@@ -1108,69 +1047,6 @@ class _LibraryTracksFolderScreenState
       SnackBar(content: Text(context.l10n.collectionPlaylistRenamed)),
     );
   }
-}
-
-/// Opens the metadata of [track]'s downloaded or library file, or downloads
-/// it when there is none.
-Future<void> _openCollectionTrack(
-  BuildContext context,
-  WidgetRef ref,
-  Track track,
-) async {
-  final historyNotifier = ref.read(downloadHistoryProvider.notifier);
-
-  var historyItem = await historyNotifier.getBySpotifyIdAsync(track.id);
-  if (!context.mounted) return;
-
-  if (historyItem == null && track.isrc != null && track.isrc!.isNotEmpty) {
-    historyItem = await historyNotifier.getByIsrcAsync(track.isrc!);
-    if (!context.mounted) return;
-  }
-
-  historyItem ??= await historyNotifier.findByTrackAndArtistAsync(
-    track.name,
-    track.artistName,
-  );
-  if (!context.mounted) return;
-
-  if (historyItem != null) {
-    final embeddedCoverPath =
-        await DownloadedEmbeddedCoverResolver.resolveOrExtract(
-          historyItem.filePath,
-        );
-    if (!context.mounted) return;
-    await precacheMetadataBackdrop(
-      context,
-      embeddedCoverPath ?? historyItem.coverUrl,
-    );
-    if (!context.mounted) return;
-    await Navigator.of(
-      context,
-    ).push(slidePageRoute<void>(page: TrackMetadataScreen(item: historyItem)));
-    return;
-  }
-
-  final localItem = ref.read(settingsProvider).localLibraryEnabled
-      ? await ref
-            .read(localLibraryProvider.notifier)
-            .findExistingAsync(
-              isrc: track.isrc,
-              trackName: track.name,
-              artistName: track.artistName,
-            )
-      : null;
-  if (!context.mounted) return;
-
-  if (localItem != null) {
-    await precacheMetadataBackdrop(context, localItem.coverPath);
-    if (!context.mounted) return;
-    await Navigator.of(context).push(
-      slidePageRoute<void>(page: TrackMetadataScreen(localItem: localItem)),
-    );
-    return;
-  }
-
-  downloadSingleTrack(context, ref, track);
 }
 
 class _EmptyFolderState extends StatelessWidget {
