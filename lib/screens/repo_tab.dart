@@ -264,11 +264,6 @@ class _RepoTabState extends ConsumerState<RepoTab> {
     );
   }
 
-  /// Columns of the desktop store grid for [width] of content: one per
-  /// 360dp, up to four.
-  static int _desktopGridColumns(double width) =>
-      ((width + _desktopGridGap) / (360 + _desktopGridGap)).floor().clamp(1, 4);
-
   static const double _desktopGridGap = 12;
 
   /// Desktop extensions as a grid of tiles that fills the pane.

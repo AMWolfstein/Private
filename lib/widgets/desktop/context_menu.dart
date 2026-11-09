@@ -145,7 +145,6 @@ class _DesktopContextMenuRegionState extends State<DesktopContextMenuRegion>
   }
 
   void _handlePointerDown(PointerDownEvent event) {
-    DesktopListScope.markCurrent(context, this);
     final controlClick =
         defaultTargetPlatform == TargetPlatform.macOS &&
         event.buttons == kPrimaryButton &&

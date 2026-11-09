@@ -624,7 +624,6 @@ class _TrackTableRowViewState extends State<_TrackTableRowView> {
     final selected = widget.selected;
     final current = widget.current;
     final onTap = widget.onTap;
-    final onContextMenu = widget.onContextMenu;
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final tokens = context.tokens;

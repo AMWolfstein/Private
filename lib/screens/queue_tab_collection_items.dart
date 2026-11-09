@@ -436,25 +436,6 @@ extension _QueueTabCollectionItemWidgets on _QueueTabState {
     return card;
   }
 
-  /// The desktop menu of a folder that offers nothing beyond opening it.
-  void _showOpenMenu(
-    BuildContext context,
-    Offset position,
-    VoidCallback onOpen,
-  ) => showContextMenu(
-    context,
-    position: position,
-    groups: [
-      [
-        ContextMenuAction(
-          icon: Icons.open_in_new,
-          label: context.l10n.desktopMenuOpen,
-          onSelected: onOpen,
-        ),
-      ],
-    ],
-  );
-
   /// The desktop menu of a playlist: open, rename, and delete. Deleting a
   /// playlist outside the selection deletes only that playlist.
   void _showPlaylistMenu(

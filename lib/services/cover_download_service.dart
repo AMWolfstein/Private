@@ -31,7 +31,6 @@ class CoverDownloadService {
         : safeBaseName.trim();
     final tempDir = await Directory.systemTemp.createTemp('save_cover_');
     var tempPath = p.join(tempDir.path, 'cover.image');
-    IosSecurityScopedAccess? iosBookmarkAccess;
 
     try {
       final download = await PlatformBridge.downloadCoverToFile(

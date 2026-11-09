@@ -1,13 +1,12 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:math' as math;
-import 'package:flutter/cupertino.dart' show CupertinoButton, CupertinoIcons;
+import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:mornye/widgets/app_snack_bar.dart';
 import 'package:mornye/widgets/tv_navigation.dart';
 import 'package:mornye/theme/app_tokens.dart';
-import 'package:mornye/theme/cover_palette.dart';
 import 'package:mornye/theme/mornye_theme.dart';
 import 'package:mornye/widgets/app_switch.dart';
 import 'package:mornye/widgets/app_checkbox.dart';

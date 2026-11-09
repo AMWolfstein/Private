@@ -45,7 +45,6 @@ class SongFeatureAnalyzer {
   static Future<({int id, Future<bool> completed})> _start(
     List<String> arguments,
   ) async {
-    final inputIndex = arguments.indexOf('-i') + 1;
     final session = await FFmpegExecution.start(arguments);
     final timeout = Timer(const Duration(seconds: 30), () {
       unawaited(FFmpegExecution.cancel(session.id));

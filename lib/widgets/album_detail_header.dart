@@ -271,23 +271,6 @@ class AlbumDetailHeader extends StatelessWidget {
     ];
   }
 
-  List<Widget> _buildDesktopSlivers(BuildContext context) =>
-      desktopDetailHeaderSlivers(
-        context,
-        title: title,
-        artwork: (context, size) =>
-            coverBuilder?.call(context, size) ?? background,
-        paletteSource: paletteSource,
-        subtitle: subtitle,
-        meta: meta,
-        actions: actions,
-        appBarActions: appBarActions,
-        moreMenu: moreMenu,
-        appBarTitle: appBarTitle,
-        leading: leading,
-        backgroundColor: backgroundColor,
-      );
-
   Widget _buildMornyeDetails(BuildContext context) => Padding(
     padding: EdgeInsets.fromLTRB(20, immersive ? 0 : 20, 20, 28),
     child: Column(
@@ -780,75 +763,6 @@ class AlbumPlayActions extends StatelessWidget {
     );
   }
 
-  /// Shuffle, Play and "+" at their own widths along the artwork's bottom
-  /// edge: round gray buttons around the Play capsule in Mornye, a filled
-  /// Play button with tonal icon buttons in Material.
-  Widget _buildDesktop(BuildContext context, ColorScheme scheme) {
-    final addLabel = context.l10n.collectionAddToPlaylist;
-    if (context.isMornye) {
-      return Row(
-        mainAxisSize: MainAxisSize.min,
-        spacing: 10,
-        children: [
-          if (onDownload != null)
-            HeaderCircleButton(
-              icon: Icons.download_for_offline_outlined,
-              tooltip: context.l10n.offlineSave,
-              onPressed: onDownload,
-            ),
-          HeaderCircleButton(
-            icon: CupertinoIcons.shuffle,
-            tooltip: shuffleTooltip,
-            tonal: true,
-            onPressed: onShuffle,
-          ),
-          _MornyeHeaderButton(
-            icon: isPlaying
-                ? CupertinoIcons.pause_fill
-                : CupertinoIcons.play_fill,
-            label: playLabel,
-            onPressed: onPlay,
-          ),
-          if (onAddToPlaylist != null)
-            HeaderCircleButton(
-              icon: CupertinoIcons.add,
-              tooltip: addLabel,
-              tonal: true,
-              onPressed: onAddToPlaylist,
-            ),
-        ],
-      );
-    }
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      spacing: 8,
-      children: [
-        if (onDownload != null)
-          HeaderCircleButton(
-            icon: Icons.download_for_offline_outlined,
-            tooltip: context.l10n.offlineSave,
-            onPressed: onDownload,
-          ),
-        FilledButton.icon(
-          onPressed: onPlay,
-          icon: AppIcon(isPlaying ? Icons.pause : Icons.play_arrow, size: 20),
-          label: Text(playLabel),
-          style: FilledButton.styleFrom(minimumSize: const Size(112, 40)),
-        ),
-        IconButton.filledTonal(
-          tooltip: shuffleTooltip,
-          onPressed: onShuffle,
-          icon: const AppIcon(Icons.shuffle),
-        ),
-        if (onAddToPlaylist != null)
-          IconButton.filledTonal(
-            tooltip: addLabel,
-            onPressed: onAddToPlaylist,
-            icon: const AppIcon(Icons.playlist_add),
-          ),
-      ],
-    );
-  }
 }
 
 /// Primary action pill in a detail header (download all, play all). Reads its

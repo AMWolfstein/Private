@@ -642,16 +642,6 @@ class _MainShellState extends ConsumerState<MainShell>
     }
   }
 
-  ShellTab _tabForIndex(int index, bool showStore) {
-    if (index == 0) return ShellTab.home;
-    if (index == 1) return ShellTab.library;
-    if (showStore && index == 2) return ShellTab.repository;
-    if (_mornyeSettingsTab && index == _settingsIndex(showStore)) {
-      return ShellTab.settings;
-    }
-    return context.isMornye ? ShellTab.search : ShellTab.settings;
-  }
-
   NavigatorState? _navigatorForTab(int index, bool showStore) {
     if (index == 0) return _homeTabNavigatorKey.currentState;
     if (index == 1) return _libraryTabNavigatorKey.currentState;

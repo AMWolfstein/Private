@@ -28,72 +28,11 @@ class MornyePlayerQueue extends ConsumerWidget {
     final start = ref.watch(currentQueueIndexProvider) + 1;
     final count = queue.length - start;
     final controller = ref.read(musicPlayerControllerProvider);
-    final autoMix = ref.watch(settingsProvider.select((s) => s.autoMix));
     final autoplay = ref.watch(settingsProvider.select((s) => s.autoplay));
     final type = Theme.of(context).textTheme;
-    final repeatLabel = switch (playback.repeat) {
-      AudioServiceRepeatMode.one => context.l10n.nowPlayingRepeatOne,
-      AudioServiceRepeatMode.none => context.l10n.nowPlayingRepeatOff,
-      _ => context.l10n.nowPlayingRepeatAll,
-    };
-
-    Widget modeButton({
-      required IconData icon,
-      required String label,
-      required bool selected,
-      required VoidCallback onPressed,
-    }) => Expanded(
-      child: Semantics(
-        selected: selected,
-        child: Tooltip(
-          message: label,
-          child: FilledButton(
-            style: FilledButton.styleFrom(
-              backgroundColor: Colors.white.withValues(
-                alpha: selected ? 0.3 : 0.12,
-              ),
-              foregroundColor: Colors.white,
-              minimumSize: const Size(0, 44),
-              padding: const EdgeInsets.symmetric(horizontal: 8),
-              shape: const StadiumBorder(),
-            ),
-            onPressed: onPressed,
-            child: Icon(icon, semanticLabel: label, size: 24),
-          ),
-        ),
-      ),
-    );
 
     // Desktop shuffle and repeat live in the player capsule, so the
     // panel keeps only the two wide queue modes, drawn as their icons.
-    Widget desktopModeButton({
-      required IconData icon,
-      required String label,
-      required String stateLabel,
-      required bool selected,
-      required VoidCallback onPressed,
-    }) => Expanded(
-      child: Semantics(
-        selected: selected,
-        label: stateLabel,
-        excludeSemantics: true,
-        button: true,
-        child: FilledButton(
-          style: FilledButton.styleFrom(
-            backgroundColor: Colors.white.withValues(
-              alpha: selected ? 0.82 : 0.12,
-            ),
-            foregroundColor: selected ? Colors.black : Colors.white,
-            minimumSize: const Size(0, 36),
-            padding: const EdgeInsets.symmetric(horizontal: 12),
-            shape: const StadiumBorder(),
-            textStyle: Theme.of(context).textTheme.bodyMedium,
-          ),
-          onPressed: onPressed,
-          child: Icon(icon, semanticLabel: label, size: 20),
-        ),
-      ),
-    );
 
     return CustomScrollView(
       key: const PageStorageKey('mornye-player-queue'),

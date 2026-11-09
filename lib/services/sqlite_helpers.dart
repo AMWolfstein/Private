@@ -18,9 +18,6 @@ final _log = AppLogger('AppSqlite');
 /// user's Documents folder.
 Future<Directory> appDatabaseDirectory() async {
   return getApplicationDocumentsDirectory();
-  final directory = await getApplicationSupportDirectory();
-  await directory.create(recursive: true);
-  return directory;
 }
 
 Future<bool>? _trigramFts5Capability;

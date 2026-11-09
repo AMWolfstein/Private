@@ -18,20 +18,16 @@ import 'package:mornye/services/playable_media.dart' show PlayableMedia;
 import 'package:mornye/theme/app_tokens.dart';
 import 'package:mornye/theme/cover_palette.dart';
 import 'package:mornye/theme/mornye_theme.dart';
-import 'package:mornye/utils/adaptive_layout.dart';
 import 'package:mornye/utils/file_access.dart';
 import 'package:mornye/widgets/album_detail_header.dart';
 import 'package:mornye/widgets/collection_scaffold.dart';
-import 'package:mornye/widgets/desktop/context_menu.dart';
 import 'package:mornye/widgets/desktop/desktop_selection.dart';
 import 'package:mornye/widgets/desktop/library_track_menu.dart';
-import 'package:mornye/widgets/desktop/track_table.dart';
 import 'package:mornye/widgets/library_mix_cover.dart';
 import 'package:mornye/widgets/library_selection_playback_actions.dart';
 import 'package:mornye/widgets/library_track_selection_bar.dart';
 import 'package:mornye/widgets/mornye_artist_header.dart';
 import 'package:mornye/widgets/playlist_picker_sheet.dart';
-import 'package:mornye/widgets/track_card.dart';
 
 /// A mix's name: what it gathers, such as "Hip-Hop Mix".
 String libraryMixTitle(AppLocalizations l10n, LibraryMix mix) =>
@@ -332,122 +328,6 @@ class _LibraryMixScreenState extends ConsumerState<LibraryMixScreen>
         ref,
         items: _items,
         onPlay: () => _play(0),
-      ),
-    );
-  }
-
-  Widget _buildTrackList(BuildContext context) {
-    final tokens = context.tokens;
-    return SliverPadding(
-      padding: EdgeInsets.symmetric(horizontal: wideListInset(context)),
-      sliver: SliverList.builder(
-        itemCount: _items.length,
-        itemBuilder: (context, index) {
-          final item = _items[index];
-          return Consumer(
-            key: ValueKey(item.id),
-            builder: (context, ref, _) {
-              final playback = ref.watch(
-                mediaItemPlaybackUiProvider(_rowKey(item)),
-              );
-              return TrackCard(
-                style: context.isMornye
-                    ? TrackCardStyle.flat
-                    : TrackCardStyle.filled,
-                leadingArtwork: true,
-                leading: ClipRRect(
-                  borderRadius: BorderRadius.circular(tokens.radiusThumb),
-                  child: LibraryItemArtwork(
-                    item: item,
-                    size: tokens.coverCompact,
-                  ),
-                ),
-                title: item.trackName,
-                subtitle: Text(
-                  item.artistName,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                isCurrent: playback.isCurrent,
-                isPlaying: playback.isPlaying,
-                isSelectionMode: isSelectionMode,
-                isSelected: selectedIds.contains(item.id),
-                // A long press selects, as on the album pages.
-                onTap: isSelectionMode
-                    ? () => toggleSelection(item.id)
-                    : playback.isCurrent
-                    ? () => ref
-                          .read(musicPlayerControllerProvider)
-                          .togglePlayPause(playback.isPlaying)
-                    : () => _play(index),
-                onLongPress: isSelectionMode
-                    ? null
-                    : () => enterSelectionMode(item.id),
-              );
-            },
-          );
-        },
-      ),
-    );
-  }
-
-  /// The desktop song table: a click selects, a double click plays from
-  /// the song, a right click opens the Library song menu.
-  Widget _buildDesktopTable(BuildContext context, List<String> ids) {
-    final byId = {for (final item in _items) item.id: item};
-    return SliverPadding(
-      padding: EdgeInsets.symmetric(horizontal: wideListInset(context)),
-      sliver: SliverTrackTable(
-        rows: [
-          for (final (index, item) in _items.indexed)
-            TrackTableRow(
-              id: item.id,
-              number: index + 1,
-              title: item.trackName,
-              artist: item.artistName,
-              album: item.albumName,
-              duration: switch (_durationSeconds(item)) {
-                final seconds? when seconds > 0 => Duration(seconds: seconds),
-                _ => null,
-              },
-              leading: ClipRRect(
-                borderRadius: BorderRadius.circular(4),
-                child: LibraryItemArtwork(item: item, size: 32, iconSize: 16),
-              ),
-              playback: mediaItemPlaybackUiProvider(_rowKey(item)),
-            ),
-        ],
-        columns: const [
-          TrackTableColumn.number,
-          TrackTableColumn.title,
-          TrackTableColumn.artist,
-          TrackTableColumn.album,
-          TrackTableColumn.duration,
-        ],
-        selectedIds: selectedIds,
-        onSelect: applyDesktopClick,
-        onActivate: (id) => _play(ids.indexOf(id)),
-        onContextMenu: (id, position) {
-          final item = byId[id];
-          if (item == null) return;
-          showSelectionMenu(
-            id,
-            () => showContextMenu(
-              context,
-              position: position,
-              groups: libraryTrackMenuGroups(
-                context,
-                ref,
-                items: _selectedItems,
-                onPlay: () => _play(ids.indexOf(id)),
-                onDone: exitSelectionMode,
-                onReEnrich: _reEnrichSelected,
-                onConvert: () => _convertSelected(this.context),
-                onDelete: _deleteSelected,
-              ),
-            ),
-          );
-        },
       ),
     );
   }

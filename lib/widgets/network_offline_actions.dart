@@ -105,19 +105,6 @@ Future<void> deleteOfflineServerCopies(
   }
   if (!context.mounted) return;
   final container = ProviderScope.containerOf(context, listen: false);
-  final originalItems = [
-    for (final item in items)
-      if (item.historyItem case final history?
-          when history.originFilePath != null)
-        UnifiedLibraryItem.fromLocalLibrary(
-          LocalLibraryItem.fromJson({
-            ...history.toJson(),
-            'filePath': history.originFilePath,
-            'coverPath': history.coverUrl,
-            'scannedAt': history.downloadedAt.toIso8601String(),
-          }),
-        ),
-  ];
   final storage = NetworkStorageService.instance;
   for (final origin in origins) {
     if (!await storage.canDeleteFile(origin)) {

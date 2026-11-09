@@ -11,9 +11,7 @@ import 'package:mornye/models/unified_library_item.dart';
 import 'package:mornye/providers/library_directory_provider.dart';
 import 'package:mornye/providers/music_player_provider.dart';
 import 'package:mornye/providers/playback_provider.dart';
-import 'package:mornye/providers/settings_provider.dart';
 import 'package:mornye/screens/library_directory_screen.dart';
-import 'package:mornye/screens/track_metadata_screen.dart';
 import 'package:mornye/services/batch_track_actions.dart';
 import 'package:mornye/services/library_directory_index.dart';
 import 'package:mornye/services/local_track_redownload_service.dart';
@@ -26,7 +24,6 @@ import 'package:mornye/utils/nav_bar_inset.dart';
 import 'package:mornye/widgets/album_detail_header.dart';
 import 'package:mornye/widgets/animation_utils.dart';
 import 'package:mornye/widgets/app_icon.dart';
-import 'package:mornye/widgets/app_icon_button.dart';
 import 'package:mornye/widgets/app_loading_indicator.dart';
 import 'package:mornye/widgets/app_refresh_indicator.dart';
 import 'package:mornye/widgets/app_sliver_header.dart';
@@ -35,13 +32,11 @@ import 'package:mornye/widgets/cached_cover_image.dart';
 import 'package:mornye/widgets/desktop/context_menu.dart';
 import 'package:mornye/widgets/desktop/desktop_selection.dart';
 import 'package:mornye/widgets/desktop/library_track_menu.dart';
-import 'package:mornye/widgets/desktop/track_table.dart';
 import 'package:mornye/widgets/error_card.dart';
 import 'package:mornye/widgets/expressive_button.dart';
 import 'package:mornye/widgets/library_selection_playback_actions.dart';
 import 'package:mornye/widgets/network_offline_actions.dart';
 import 'package:mornye/widgets/library_track_selection_bar.dart';
-import 'package:mornye/widgets/local_library_artwork_builder.dart';
 import 'package:mornye/widgets/playlist_picker_sheet.dart';
 import 'package:mornye/widgets/selection_bottom_bar.dart';
 import 'package:mornye/widgets/track_card.dart';
@@ -82,18 +77,9 @@ class _LibraryDirectoryViewState extends ConsumerState<LibraryDirectoryView>
   /// The folder's own songs as last built, for the selection and the bar.
   List<UnifiedLibraryItem> _items = const [];
 
-  /// The ids and the desktop table rows of the last song list, kept while
-  /// the list (and for the rows the quality label mode) stays the same, so
-  /// a click does not walk every song again.
+  /// The ids of the last song list, kept so a click does not walk every song
+  /// again.
   (List<UnifiedLibraryItem>, Set<String>)? _itemIds;
-  (
-    List<UnifiedLibraryItem>,
-    String,
-    List<TrackTableRow>,
-    Map<String, UnifiedLibraryItem>,
-  )?
-  _table;
-
   bool _starting = false;
 
   @override
@@ -207,11 +193,6 @@ class _LibraryDirectoryViewState extends ConsumerState<LibraryDirectoryView>
     onComplete: _finishSelectionAction,
   );
 
-  PlaybackRowKey _playbackKey(UnifiedLibraryItem item) => (
-    id: item.historyItem?.id ?? item.localItem?.id ?? item.id,
-    path: item.filePath,
-  );
-
   PlayableMedia _media(UnifiedLibraryItem item) => item.localItem != null
       ? playableFromLocal(item.localItem!)
       : playableFromHistory(item.historyItem!);
@@ -301,26 +282,6 @@ class _LibraryDirectoryViewState extends ConsumerState<LibraryDirectoryView>
     );
   }
 
-  Future<void> _openDetails(UnifiedLibraryItem item) {
-    final local = [for (final item in _items) ?item.localItem];
-    final downloads = [for (final item in _items) ?item.historyItem];
-    // The details pager steps through one kind of record.
-    final localOnly = local.length == _items.length;
-    final downloadsOnly = downloads.length == _items.length;
-    return pushPage<void>(
-      context,
-      (_) => TrackMetadataScreen(
-        item: item.historyItem,
-        localItem: item.localItem,
-        localNavigationItems: localOnly ? local : null,
-        historyNavigationItems: downloadsOnly ? downloads : null,
-        navigationIndex: localOnly || downloadsOnly
-            ? _items.indexWhere((entry) => entry.id == item.id)
-            : null,
-      ),
-    );
-  }
-
   Future<void> _showFolderMenu(LibraryDirectory folder, Offset position) async {
     final items = await ref.read(libraryDirectoryItemsLoaderProvider)(
       folder.allTracks,
@@ -356,30 +317,6 @@ class _LibraryDirectoryViewState extends ConsumerState<LibraryDirectoryView>
         ],
         ...groups,
       ],
-    );
-  }
-
-  Future<bool> _showSongMenu(UnifiedLibraryItem item, Offset position) {
-    final items = _selectedItems;
-    return showContextMenu(
-      context,
-      position: position,
-      groups: libraryTrackMenuGroups(
-        context,
-        ref,
-        items: items,
-        onPlay: () => _play(_items, start: item),
-        onOpenDetails: () => _openDetails(item),
-        onDone: exitSelectionMode,
-        onReEnrich: () => _reEnrich(items),
-        onConvert: () => showBatchConvertSheet(
-          context,
-          ref,
-          items,
-          onExitSelectionMode: _finishSelectionAction,
-        ),
-        onDelete: () => _delete(items),
-      ),
     );
   }
 
@@ -550,20 +487,6 @@ class _LibraryDirectoryViewState extends ConsumerState<LibraryDirectoryView>
         ),
       ],
     );
-    Widget sectionTitle(String text) => SliverToBoxAdapter(
-      child: Padding(
-        padding: EdgeInsetsDirectional.fromSTEB(
-          gutter,
-          tokens.gapLg,
-          gutter,
-          tokens.gapMd,
-        ),
-        child: Text(
-          text,
-          style: textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
-        ),
-      ),
-    );
     return [
       if (summary)
         SliverToBoxAdapter(
@@ -644,63 +567,6 @@ class _LibraryDirectoryViewState extends ConsumerState<LibraryDirectoryView>
     );
   }
 
-  Widget _songRow(
-    BuildContext context,
-    List<UnifiedLibraryItem> items,
-    UnifiedLibraryItem item,
-  ) {
-    final qualityMode = ref.watch(
-      settingsProvider.select((s) => s.libraryQualityLabelMode),
-    );
-    final quality = item.qualityForMode(qualityMode);
-    return Consumer(
-      builder: (context, ref, _) {
-        final playback = ref.watch(
-          mediaItemPlaybackUiProvider(_playbackKey(item)),
-        );
-        return TrackCard(
-          style: context.isMornye ? TrackCardStyle.flat : TrackCardStyle.filled,
-          leading: _SongArtwork(item: item, size: context.tokens.coverList),
-          leadingArtwork: true,
-          title: item.trackName,
-          subtitle: Text(
-            [item.artistName, ?quality].join(' · '),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-          ),
-          isCurrent: playback.isCurrent,
-          isPlaying: playback.isPlaying,
-          trailing: AppIconButton(
-            tooltip: playback.isPlaying
-                ? context.l10n.actionPause
-                : context.l10n.tooltipPlay,
-            icon: Icon(
-              playback.isPlaying
-                  ? Icons.pause_rounded
-                  : Icons.play_arrow_rounded,
-            ),
-            // The current song pauses and resumes in place.
-            onPressed: playback.isCurrent
-                ? () => ref
-                      .read(musicPlayerControllerProvider)
-                      .togglePlayPause(playback.isPlaying)
-                : () => _play(items, start: item),
-          ),
-          isSelectionMode: isSelectionMode,
-          isSelected: selectedIds.contains(item.id),
-          onTap: isSelectionMode
-              ? () => toggleSelection(item.id)
-              : () => _openDetails(item),
-          onLongPress: isSelectionMode
-              ? () => toggleSelection(item.id)
-              : () => enterSelectionMode(item.id),
-          onContextMenu: (position) =>
-              showSelectionMenu(item.id, () => _showSongMenu(item, position)),
-        );
-      },
-    );
-  }
-
   Set<String> _idsOf(List<UnifiedLibraryItem> items) {
     final cached = _itemIds;
     if (cached != null && identical(cached.$1, items)) return cached.$2;
@@ -709,86 +575,20 @@ class _LibraryDirectoryViewState extends ConsumerState<LibraryDirectoryView>
     return ids;
   }
 
-  (List<TrackTableRow>, Map<String, UnifiedLibraryItem>) _tableRows(
-    List<UnifiedLibraryItem> items,
-    String qualityMode,
-  ) {
-    final cached = _table;
-    if (cached != null &&
-        identical(cached.$1, items) &&
-        cached.$2 == qualityMode) {
-      return (cached.$3, cached.$4);
-    }
-    final rows = [
-      for (final item in items)
-        TrackTableRow(
-          id: item.id,
-          title: item.trackName,
-          artist: item.artistName,
-          album: item.albumName,
-          quality: item.qualityForMode(qualityMode),
-          duration: switch (item.historyItem?.duration ??
-              item.localItem?.duration) {
-            final seconds? when seconds > 0 => Duration(seconds: seconds),
-            _ => null,
-          },
-          leading: _SongArtwork(item: item, size: 32),
-          playback: mediaItemPlaybackUiProvider(_playbackKey(item)),
-        ),
-    ];
-    final byId = {for (final item in items) item.id: item};
-    _table = (items, qualityMode, rows, byId);
-    return (rows, byId);
-  }
-
-  Widget _songTable(BuildContext context, List<UnifiedLibraryItem> items) {
-    final qualityMode = ref.watch(
-      settingsProvider.select((s) => s.libraryQualityLabelMode),
-    );
-    final (rows, byId) = _tableRows(items, qualityMode);
-    return SliverPadding(
-      padding: EdgeInsets.symmetric(horizontal: wideListInset(context)),
-      sliver: SliverTrackTable(
-        rows: rows,
-        uniformRowHeight: true,
-        columns: const [
-          TrackTableColumn.title,
-          TrackTableColumn.artist,
-          TrackTableColumn.album,
-          TrackTableColumn.quality,
-          TrackTableColumn.duration,
-        ],
-        selectedIds: selectedIds,
-        onSelect: applyDesktopClick,
-        onActivate: (id) {
-          final item = byId[id];
-          if (item != null) _play(items, start: item);
-        },
-        onContextMenu: (id, position) {
-          final item = byId[id];
-          if (item == null) return;
-          showSelectionMenu(id, () => _showSongMenu(item, position));
-        },
-      ),
-    );
-  }
 }
 
 /// The cover of the folder's first song, or a folder glyph for a folder
 /// whose songs have none or that only holds folders.
 class _FolderArtwork extends StatelessWidget {
-  const _FolderArtwork({required this.folder, this.size, this.radius = 8});
+  const _FolderArtwork({required this.folder});
 
   final LibraryDirectory folder;
-
-  /// The list cover size when null.
-  final double? size;
-  final double radius;
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final size = this.size ?? context.tokens.coverList;
+    final size = context.tokens.coverList;
+    const radius = 8.0;
     Widget glyph(BuildContext context) => ColoredBox(
       color: colorScheme.secondaryContainer,
       child: Center(
@@ -811,52 +611,6 @@ class _FolderArtwork extends StatelessWidget {
                 localCacheWidth: (size * MediaQuery.devicePixelRatioOf(context))
                     .round(),
                 placeholder: glyph,
-              ),
-      ),
-    );
-  }
-}
-
-/// A song's artwork: the download's cover, or the scanned file's thumbnail
-/// with its embedded artwork recovered when the thumbnail is gone.
-class _SongArtwork extends StatelessWidget {
-  const _SongArtwork({required this.item, required this.size});
-
-  final UnifiedLibraryItem item;
-  final double size;
-
-  @override
-  Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    Widget placeholder(BuildContext context) => ColoredBox(
-      color: colorScheme.surfaceContainerHighest,
-      child: Center(
-        child: AppIcon.adaptive(
-          Icons.music_note,
-          size: size * 0.45,
-          color: colorScheme.onSurfaceVariant,
-        ),
-      ),
-    );
-    Widget image(String? cover) => cover == null || cover.isEmpty
-        ? placeholder(context)
-        : LocalOrNetworkCoverImage(
-            url: cover,
-            localCacheWidth: (size * MediaQuery.devicePixelRatioOf(context))
-                .round(),
-            placeholder: placeholder,
-          );
-    final local = item.localItem;
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(size > 40 ? 8 : 4),
-      child: SizedBox.square(
-        dimension: size,
-        child: local == null
-            ? image(item.coverUrl)
-            : LocalLibraryArtworkBuilder(
-                coverPath: local.coverPath,
-                filePath: local.filePath,
-                builder: (context, cover) => image(cover),
               ),
       ),
     );

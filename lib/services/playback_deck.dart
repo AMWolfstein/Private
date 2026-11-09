@@ -23,10 +23,6 @@ PlaybackEngine get playbackEngine {
   final override = debugPlaybackEngineOverride;
   if (override != null) return override;
   return PlaybackEngine.audioplayers;
-  return switch (defaultTargetPlatform) {
-    TargetPlatform.windows => PlaybackEngine.mediaKit,
-    _ => PlaybackEngine.audioplayers,
-  };
 }
 
 /// In-app output gain from 0 to 1 for platforms where the app must not change

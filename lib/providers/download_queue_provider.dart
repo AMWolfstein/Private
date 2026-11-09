@@ -29,7 +29,6 @@ import 'package:mornye/services/download_metadata_embedding.dart';
 import 'package:mornye/services/download_saf_file_replacer.dart';
 import 'package:mornye/services/download_connectivity_policy.dart';
 import 'package:mornye/services/connectivity_monitor.dart';
-import 'package:mornye/services/download_keep_awake.dart';
 import 'package:mornye/services/download_scheduler.dart';
 import 'package:mornye/services/download_retry_backoff.dart';
 import 'package:mornye/services/source_deletion_events.dart';
@@ -182,8 +181,6 @@ class DownloadQueueNotifier extends Notifier<DownloadQueueState> {
   bool _queueStorageReady = true;
   bool? _startupPausedOverride;
   bool _foregroundResumeScheduled = false;
-  bool _iosBackgroundExecutionExpired = false;
-  StreamSubscription<List<String>>? _iosBackgroundExpirationSubscription;
   final Set<String> _ensuredDirs = {};
   final Map<String, Future<void>> _qualityVariantFileLocks = {};
   Future<String>? _appFolderStorageFallback;
@@ -354,62 +351,6 @@ class DownloadQueueNotifier extends Notifier<DownloadQueueState> {
   Future<void> handleVerificationNotificationTap(
     VerificationNotification target,
   ) => _handleVerificationNotificationTap(target);
-
-  void _handleIosBackgroundDownloadExpiration(List<String> nativeItemIds) {
-    return;
-    final cancelledItemIds = nativeItemIds.toSet();
-    final requeueItemIds = cancelledItemIds.where((id) {
-      final item = state.lookup.byItemId[id];
-      return item != null && item.status != DownloadStatus.completed;
-    }).toSet();
-    if (!state.isProcessing && requeueItemIds.isEmpty) return;
-
-    final alreadyForeground =
-        WidgetsBinding.instance.lifecycleState == AppLifecycleState.resumed;
-    _log.w(
-      'iOS background execution time expired; safely deferring active downloads until foreground',
-    );
-    _iosBackgroundExecutionExpired = true;
-    if (state.isProcessing && !state.isPaused) {
-      pauseQueue(
-        persistAcrossRestarts: false,
-        nativeCancelledItemIds: cancelledItemIds,
-      );
-    }
-
-    if (requeueItemIds.isNotEmpty) {
-      final updatedItems = state.items
-          .map((item) {
-            if (!requeueItemIds.contains(item.id)) {
-              return item;
-            }
-            return item.resetToQueued();
-          })
-          .toList(growable: false);
-      if (state.isProcessing) {
-        _pausePendingItemIds.addAll(requeueItemIds);
-      }
-      state = state.copyWith(
-        items: updatedItems,
-        isPaused: true,
-        currentDownload: null,
-      );
-    } else if (!state.isProcessing) {
-      state = state.copyWith(isPaused: true, currentDownload: null);
-    }
-    unawaited(
-      flushQueuePersistence().catchError((Object error) {
-        _log.e('Failed to flush expired iOS queue: $error');
-      }),
-    );
-    // The native expiration callback cancels the download synchronously before this
-    // asynchronous event reaches Dart. If foregrounding won that race, still
-    // requeue the cancelled item, then immediately let the running queue loop
-    // continue instead of misclassifying it as a skipped download.
-    if (alreadyForeground) {
-      resumePendingDownloadsOnForeground();
-    }
-  }
 
   Future<void> _loadQueueFromStorage() async {
     if (_isLoaded || !ref.mounted) return;
@@ -1608,7 +1549,6 @@ class DownloadQueueNotifier extends Notifier<DownloadQueueState> {
         if (Platform.isAndroid) {
           await PlatformBridge.stopDownloadService();
         }
-        await downloadKeepAwake.end();
       } catch (cleanupError, cleanupStack) {
         _log.e(
           'Failed to release download execution window: $cleanupError',
@@ -1650,7 +1590,6 @@ class DownloadQueueNotifier extends Notifier<DownloadQueueState> {
       updateSettings(settings);
       isSafMode = _isSafMode(settings);
     }
-    IosSecurityScopedAccess? iosDownloadBookmarkAccess;
 
     // Validate SAF before handing the batch to either queue implementation.
     // Never silently redirect a user-selected SAF destination into private app
@@ -1767,7 +1706,6 @@ class DownloadQueueNotifier extends Notifier<DownloadQueueState> {
     }
 
     // Desktop: keep the computer from idle sleeping until the queue stops.
-    if (_totalQueuedAtStart > 0) await downloadKeepAwake.begin();
 
     if (!isSafMode && state.outputDir.isEmpty) {
       _log.d('Output dir empty, initializing...');
@@ -1806,7 +1744,6 @@ class DownloadQueueNotifier extends Notifier<DownloadQueueState> {
       }
     }
 
-    await downloadKeepAwake.end();
 
     if (stoppedWhilePaused && _downloadCount > 0) {
       try {

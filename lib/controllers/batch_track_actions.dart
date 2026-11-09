@@ -77,7 +77,6 @@ Future<void> showBatchConvertSheet(
   VoidCallback? onSheetOpen,
   Future<void> Function(bool didStartConversion)? onSheetClosed,
 }) async {
-  final container = ProviderScope.containerOf(context, listen: false);
   final sourceFormats = <String>{};
   final sourceBitDepths = <int?>[];
   final sourceSampleRates = <int?>[];

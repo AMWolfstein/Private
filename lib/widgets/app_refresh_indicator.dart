@@ -119,32 +119,3 @@ class _AppRefreshIndicatorState extends State<AppRefreshIndicator> {
     return MaterialExpressiveScope(child: indicator);
   }
 }
-
-/// Stops the leading edge instead of bouncing past it, and keeps the list
-/// at that edge while [holdsPull]. A refused move is reported as overscroll,
-/// so the indicator still follows the pointer.
-class _PullEdgeScrollPhysics extends ScrollPhysics {
-  const _PullEdgeScrollPhysics({required this.holdsPull, super.parent});
-
-  final bool Function() holdsPull;
-
-  @override
-  _PullEdgeScrollPhysics applyTo(ScrollPhysics? ancestor) =>
-      _PullEdgeScrollPhysics(
-        holdsPull: holdsPull,
-        parent: buildParent(ancestor),
-      );
-
-  @override
-  double applyBoundaryConditions(ScrollMetrics position, double value) {
-    final min = position.minScrollExtent;
-    if (value < position.pixels && position.pixels <= min) {
-      return value - position.pixels;
-    }
-    if (value < min && min < position.pixels) return value - min;
-    if (value > position.pixels && position.pixels <= min && holdsPull()) {
-      return value - position.pixels;
-    }
-    return super.applyBoundaryConditions(position, value);
-  }
-}

@@ -432,7 +432,6 @@ class DownloadFolderDestination implements OfflineRollbackDestination {
 
   @override
   Future<void> discard(OfflineStored stored) async {
-    IosSecurityScopedAccess? access;
     try {
       await deleteFile(stored.filePath);
     } finally {
@@ -472,7 +471,6 @@ class DownloadFolderDestination implements OfflineRollbackDestination {
         fileName: name,
       );
     }
-    IosSecurityScopedAccess? access;
     try {
       var root = settings.downloadDirectory.trim();
       if (root.isEmpty) {

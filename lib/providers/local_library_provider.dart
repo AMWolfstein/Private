@@ -674,31 +674,26 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
     await _releaseNativeScanPause();
   }
 
-  Future<int> cleanupMissingFiles({String? iosBookmark}) async {
+  Future<int> cleanupMissingFiles() async {
     await refreshSourceAvailability();
     var removed = 0;
     for (final source in state.sources) {
       if (!source.enabled || !source.available) continue;
-      IosSecurityScopedAccess? securityAccess;
-      try {
-        removed += await _db.cleanupMissingFiles(
-          sourceId: source.id,
-          canDelete: () async {
-            if (isContentUri(source.path)) {
-              return await PlatformBridge.probeSafTreeReadAccess(source.path) ==
-                  true;
-            }
-            // Recheck access after the file probes, before deleting a page.
-            // An empty but readable source is valid; an offline one throws.
-            await Directory(
-              securityAccess?.path ?? source.path,
-            ).list(followLinks: false).take(1).drain<void>();
-            return true;
-          },
-        );
-      } finally {
-        
-      }
+      removed += await _db.cleanupMissingFiles(
+        sourceId: source.id,
+        canDelete: () async {
+          if (isContentUri(source.path)) {
+            return await PlatformBridge.probeSafTreeReadAccess(source.path) ==
+                true;
+          }
+          // Recheck access after the file probes, before deleting a page.
+          // An empty but readable source is valid; an offline one throws.
+          await Directory(
+            source.path,
+          ).list(followLinks: false).take(1).drain<void>();
+          return true;
+        },
+      );
     }
     if (removed > 0) await _refreshSummaryFromStorage();
     return removed;

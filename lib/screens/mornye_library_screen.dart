@@ -22,9 +22,6 @@ import 'package:mornye/widgets/tv_navigation.dart';
 import 'package:mornye/widgets/app_refresh_indicator.dart';
 import 'package:mornye/widgets/app_search_field.dart';
 import 'package:mornye/widgets/app_sliver_header.dart';
-import 'package:mornye/widgets/app_snack_bar.dart';
-import 'package:mornye/widgets/album_play.dart';
-import 'package:mornye/widgets/desktop/context_menu.dart';
 import 'package:mornye/widgets/cached_cover_image.dart';
 import 'package:mornye/widgets/local_library_artwork_builder.dart';
 import 'package:mornye/widgets/library_search_results.dart';
@@ -586,43 +583,6 @@ class _MornyeLibraryScreenState extends ConsumerState<MornyeLibraryScreen> {
           const NavBarSliverSpacer(),
         ],
       ),
-    );
-  }
-
-  Future<void> _playAlbum(LibraryBrowseEntry entry) async {
-    try {
-      if (entry.source == 'local') {
-        await playLocalAlbum(ref, await _loadLocalAlbum(entry));
-      } else {
-        await playDownloadedAlbum(
-          ref,
-          albumName: entry.name,
-          artistName: entry.artist,
-        );
-      }
-    } catch (e) {
-      if (mounted) showCannotOpenFileSnackBar(context, e);
-    }
-  }
-
-  void _showAlbumMenu(LibraryBrowseEntry entry, Offset position) {
-    showContextMenu(
-      context,
-      position: position,
-      groups: [
-        [
-          ContextMenuAction(
-            icon: Icons.open_in_new,
-            label: context.l10n.desktopMenuOpen,
-            onSelected: () => _openAlbum(entry),
-          ),
-          ContextMenuAction(
-            icon: Icons.play_arrow,
-            label: context.l10n.tooltipPlay,
-            onSelected: () => _playAlbum(entry),
-          ),
-        ],
-      ],
     );
   }
 

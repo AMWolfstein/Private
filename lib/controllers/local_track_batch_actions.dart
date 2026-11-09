@@ -148,7 +148,6 @@ Future<void> reEnrichLibraryTracks(
   required VoidCallback onComplete,
 }) async {
   if (selected.isEmpty) return;
-  final container = ProviderScope.containerOf(context, listen: false);
   final downloads = selected
       .map((item) => item.historyItem)
       .whereType<DownloadHistoryItem>()
@@ -259,10 +258,6 @@ Future<void> reEnrichLocalTracks(
   Map<String, String> sourceTrackIds = const {},
 }) async {
   if (selected.isEmpty) return;
-  final container = ProviderScope.containerOf(context, listen: false);
-  final items = [
-    for (final item in selected) UnifiedLibraryItem.fromLocalLibrary(item),
-  ];
   // Capture a stable route context before a caller removes its overlay.
   context = Navigator.of(context, rootNavigator: true).context;
   await onSelectionHide();
@@ -627,7 +622,6 @@ Future<void> deleteLibraryTracks(
   required VoidCallback onComplete,
 }) async {
   if (selected.isEmpty) return;
-  final actionContainer = ProviderScope.containerOf(context, listen: false);
   final confirmed = await showAppConfirmDialog(
     context,
     title: context.l10n.dialogDeleteSelectedTitle,

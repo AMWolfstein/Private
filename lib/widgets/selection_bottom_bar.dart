@@ -6,8 +6,6 @@ import 'package:flutter/scheduler.dart';
 import 'package:mornye/theme/app_motion.dart';
 import 'package:mornye/theme/app_tokens.dart';
 import 'package:mornye/theme/mornye_theme.dart';
-import 'package:mornye/widgets/desktop/detail_header.dart'
-    show desktopDetailBottomInset;
 import 'package:mornye/widgets/mornye_chrome.dart';
 import 'package:mornye/widgets/app_bottom_sheet.dart';
 import 'package:mornye/widgets/expressive_button.dart';
@@ -410,43 +408,6 @@ class SelectionBottomBar extends StatelessWidget {
     // player, rather than a sheet across the whole pane. There is no drag
     // handle, since pointer input has no gesture to tuck the actions away;
     // the close button ends the selection.
-    return Align(
-      alignment: Alignment.bottomCenter,
-      heightFactor: 1,
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 640),
-        child: Padding(
-          padding: EdgeInsets.only(
-            bottom: context.isMornye ? desktopDetailBottomInset : 0,
-          ),
-          child: surface(
-            ConstrainedBox(
-              constraints: BoxConstraints(
-                maxHeight: MediaQuery.sizeOf(context).height * 0.6,
-              ),
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    header,
-                    Flexible(
-                      child: SingleChildScrollView(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [const SizedBox(height: 12), ...children],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
   }
 }
 

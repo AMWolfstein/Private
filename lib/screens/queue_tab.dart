@@ -99,7 +99,6 @@ import 'package:mornye/widgets/two_finger_pinch_listener.dart';
 import 'package:mornye/widgets/desktop/context_menu.dart';
 import 'package:mornye/widgets/desktop/desktop_selection.dart';
 import 'package:mornye/widgets/desktop/library_track_menu.dart';
-import 'package:mornye/widgets/desktop/track_table.dart';
 
 part 'queue_tab_helpers.dart';
 part 'queue_tab_widgets.dart';
@@ -243,7 +242,6 @@ class _QueueTabState extends ConsumerState<QueueTab> {
     (List<UnifiedLibraryItem>, List<DownloadHistoryItem>, _LibraryNavigation)
   >
   _navigationByMode = {};
-  final Map<String, _LibrarySongTableRows> _songTableByMode = {};
 
   final QueueLibraryPager<
     LibraryCountsRequest,

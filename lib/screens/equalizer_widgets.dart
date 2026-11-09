@@ -254,25 +254,11 @@ class _PresetBar extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final custom = ref.watch(
-      equalizerProvider.select((state) => state.presets),
-    );
-    final presets = [...EqualizerPreset.builtIn, ...custom];
-    final selected = ref.watch(_selectedEqualizerPresetProvider);
     final l10n = context.l10n;
     final tokens = context.tokens;
     return LayoutBuilder(
       builder: (context, constraints) {
         final inset = settingsHorizontalInset(context, constraints.maxWidth);
-        final chips = [
-          for (final preset in presets)
-            AppChoiceChip(
-              label: Text(preset.name),
-              selected: preset == selected,
-              singleChoice: true,
-              onSelected: (_) => onApply(preset),
-            ),
-        ];
         return Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [

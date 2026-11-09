@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart' show LogicalKeyboardKey;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mornye/providers/settings_provider.dart';
@@ -278,13 +277,6 @@ class _TutorialScreenState extends ConsumerState<TutorialScreen> {
     );
     return scaffold;
     // Enter moves on, as the default button of a desktop window would.
-    return CallbackShortcuts(
-      bindings: {
-        const SingleActivator(LogicalKeyboardKey.enter): _nextPage,
-        const SingleActivator(LogicalKeyboardKey.numpadEnter): _nextPage,
-      },
-      child: Focus(autofocus: true, child: scaffold),
-    );
   }
 
   /// Desktop windows keep the tour in one centered column.

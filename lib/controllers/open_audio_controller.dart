@@ -18,7 +18,6 @@ final openAudioControllerProvider = NotifierProvider<OpenAudioController, bool>(
 class OpenAudioController extends Notifier<bool> {
   int _request = 0;
   final _hydrated = <String>{};
-  final _iosLeases = <IosSecurityScopedAccess>[];
 
   @override
   bool build() {
@@ -41,9 +40,6 @@ class OpenAudioController extends Notifier<bool> {
     });
     ref.onDispose(() {
       _request++;
-      for (final token in _iosLeases) {
-        unawaited(PlatformBridge.stopAccessingIosBookmark(token));
-      }
     });
     return false;
   }
@@ -75,12 +71,8 @@ class OpenAudioController extends Notifier<bool> {
     if (ref.mounted && path != null) await open([OpenAudioFile(path)]);
   }
 
-  Future<void> open(
-    Iterable<OpenAudioFile> inputs, {
-    IosSecurityScopedAccess? access,
-  }) async {
+  Future<void> open(Iterable<OpenAudioFile> inputs) async {
     final request = ++_request;
-    var retainedAccess = false;
     state = true;
     try {
       final files = await collectOpenAudioFiles(inputs);
@@ -106,19 +98,7 @@ class OpenAudioController extends Notifier<bool> {
           ),
       ], initialIndex: 0);
       if (!ref.mounted || request != _request) return;
-      final oldLeases = _iosLeases.toList();
-      _iosLeases.clear();
-      if (access != null) {
-        _iosLeases.add(access);
-        retainedAccess = true;
-      }
-      for (final old in oldLeases) {
-        await PlatformBridge.stopAccessingIosBookmark(old);
-      }
     } finally {
-      if (access != null && !retainedAccess) {
-        await PlatformBridge.stopAccessingIosBookmark(access);
-      }
       if (ref.mounted && request == _request) state = false;
     }
   }

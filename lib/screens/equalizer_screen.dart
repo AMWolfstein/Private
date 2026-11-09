@@ -16,7 +16,6 @@ import 'package:mornye/theme/material_expressive.dart';
 import 'package:mornye/theme/mornye_theme.dart';
 import 'package:mornye/widgets/app_alert_dialog.dart';
 import 'package:mornye/widgets/app_bottom_sheet.dart';
-import 'package:mornye/widgets/app_choice_chip.dart';
 import 'package:mornye/widgets/app_icon.dart';
 import 'package:mornye/widgets/app_menu_button.dart';
 import 'package:mornye/widgets/app_slider.dart';

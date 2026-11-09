@@ -43,9 +43,6 @@ import 'package:mornye/utils/file_access.dart' show fileExists;
 
 final _log = AppLogger('MusicPlayerRuntime');
 
-/// The handler the system media session talks to.
-({SwitchAudioHandler session, MusicPlayerHandler local})? _systemSession;
-
 /// A song the player could not play because of its [format]; [skipped]
 /// when the next song plays in its place.
 typedef UnplayableSong = ({String format, bool skipped});
@@ -246,7 +243,7 @@ class PlaybackDependencies {
     // send it only the states their sessions cannot advance themselves.
     installMediaSessionFilter();
     late final MusicPlayerHandler handler;
-    final session = await AudioService.init(
+    await AudioService.init(
       builder: () => SwitchAudioHandler(handler = builder()),
       cacheManager: mediaSessionArtCache(),
       config: const AudioServiceConfig(
@@ -262,7 +259,6 @@ class PlaybackDependencies {
         androidBrowsableRootExtras: MediaLibraryBrowser.rootExtras,
       ),
     );
-    _systemSession = (session: session, local: handler);
     return handler;
   }
 }

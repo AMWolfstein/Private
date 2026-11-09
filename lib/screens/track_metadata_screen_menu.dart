@@ -323,44 +323,6 @@ extension _TrackMetadataMenu on _TrackMetadataScreenState {
     );
   }
 
-  /// Material desktop opens the items as a menu anchored under the More
-  /// button, like the Library's right-click menus, instead of a phone sheet.
-  void _showDesktopOptionsMenu(
-    BuildContext screenContext,
-    WidgetRef ref,
-    ColorScheme colorScheme, {
-    Rect? anchor,
-  }) {
-    final options = _menuOptions(
-      screenContext,
-      ref,
-      colorScheme,
-      screenContext.l10n,
-    );
-    final groups = <List<ContextMenuAction>>[];
-    for (final option in options) {
-      if (groups.isEmpty || option.dividerAbove || option.destructive) {
-        groups.add([]);
-      }
-      groups.last.add(
-        ContextMenuAction(
-          icon: option.icon,
-          label: option.label,
-          destructive: option.destructive,
-          onSelected: option.onTap,
-        ),
-      );
-    }
-    showContextMenu(
-      screenContext,
-      position:
-          anchor?.bottomLeft ??
-          contextMenuOriginOf(screenContext) ??
-          MediaQuery.sizeOf(screenContext).center(Offset.zero),
-      groups: groups,
-    );
-  }
-
   Widget _buildOptionsHeaderCover(ColorScheme colorScheme) {
     const size = 56.0;
     const cacheWidth = 112;

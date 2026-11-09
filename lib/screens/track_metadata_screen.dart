@@ -72,7 +72,6 @@ import 'package:mornye/theme/mornye_theme.dart';
 import 'package:mornye/theme/mornye_icons.dart';
 import 'package:mornye/widgets/album_detail_header.dart'
     show HeaderMetaRow, HeaderMetaItem, HeaderCircleButton, HeaderFilledButton;
-import 'package:mornye/widgets/desktop/context_menu.dart';
 import 'package:mornye/widgets/mornye_context_menu.dart';
 import 'package:mornye/widgets/mornye_metadata_row.dart';
 import 'package:mornye/widgets/player_artwork.dart';

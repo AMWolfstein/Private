@@ -167,7 +167,6 @@ extension _LocalLibraryScan on LocalLibraryNotifier {
     required String? sourceId,
   }) async {
     var activeSourceId = sourceId;
-    IosSecurityScopedAccess? securityAccess;
     try {
       if (activeSourceId == null) {
         final existingSource = await _db.getSourceByPath(folderPath);

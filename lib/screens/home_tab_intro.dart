@@ -3,13 +3,7 @@ part of 'home_tab.dart';
 const _homeShelfLimit = 10;
 const _homeShelfCoverSize = 120.0;
 const _homeMixCoverSize = 152.0;
-const _homeDesktopShelfCoverSize = 168.0;
-const _homeDesktopMixCoverSize = 192.0;
 const _homeMornyeShelfGap = 16.0;
-
-/// The pane width from which the Material desktop Home sets Continue
-/// listening and Shortcuts side by side.
-const _homeDesktopColumnsMinWidth = 720.0;
 
 double _homeShelfCoverSizeOf(BuildContext context) => _homeShelfCoverSize;
 
@@ -856,16 +850,6 @@ class _HomeShelfSize extends StatelessWidget {
       return builder(context, _homeShelfCoverSizeOf(context));
     }
     return builder(context, 160);
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final content = constraints.maxWidth - 2 * inset;
-        final perPane = (content + _homeMornyeShelfGap) / 6.1;
-        return builder(
-          context,
-          (perPane - _homeMornyeShelfGap).clamp(130.0, 280.0),
-        );
-      },
-    );
   }
 }
 

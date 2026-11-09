@@ -47,7 +47,6 @@ class CollectionSuggestionsSliver extends ConsumerStatefulWidget {
 class _CollectionSuggestionsSliverState
     extends ConsumerState<CollectionSuggestionsSliver> {
   var _round = 0;
-  var _selectedIds = const <String>{};
   final _filter = CollectionSuggestionFilter();
   List<Track> _entryTracks = const [];
 
@@ -132,7 +131,6 @@ class _CollectionSuggestionsSliverState
       related: suggestions.related,
       onRefresh: () => setState(() {
         _round++;
-        _selectedIds = const {};
       }),
     );
     final inset = wideListInset(context);

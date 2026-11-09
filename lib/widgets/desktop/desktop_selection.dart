@@ -156,22 +156,12 @@ class DesktopListScope extends StatefulWidget {
   /// Plays or opens the selection anchor.
   final VoidCallback? onActivate;
 
-  /// Records [target] as the item Shift+F10 opens a menu for.
-  static void markCurrent(
-    BuildContext context,
-    DesktopContextMenuTarget target,
-  ) {
-    context.findAncestorStateOfType<_DesktopListScopeState>()?._current =
-        target;
-  }
-
   @override
   State<DesktopListScope> createState() => _DesktopListScopeState();
 }
 
 class _DesktopListScopeState extends State<DesktopListScope> {
   final _node = FocusScopeNode(debugLabel: 'DesktopListScope');
-  DesktopContextMenuTarget? _current;
 
   @override
   void dispose() {
@@ -179,89 +169,8 @@ class _DesktopListScopeState extends State<DesktopListScope> {
     super.dispose();
   }
 
-  bool get _editingText =>
-      FocusManager.instance.primaryFocus?.context
-          ?.findAncestorStateOfType<EditableTextState>() !=
-      null;
-
-  KeyEventResult _handleKey(FocusNode node, KeyEvent event) {
-    if (event is! KeyDownEvent && event is! KeyRepeatEvent) {
-      return KeyEventResult.ignored;
-    }
-    if (_editingText) return KeyEventResult.ignored;
-    final keyboard = HardwareKeyboard.instance;
-    final key = event.logicalKey;
-    if (isContextMenuKey(event)) {
-      final current = _current;
-      if (current == null || !current.mounted) return KeyEventResult.ignored;
-      current.openContextMenuFromKeyboard();
-      return KeyEventResult.handled;
-    }
-    final onSelectAll = widget.onSelectAll;
-    if (key == LogicalKeyboardKey.keyA &&
-        desktopPrimaryModifierPressed &&
-        !keyboard.isShiftPressed &&
-        !keyboard.isAltPressed &&
-        onSelectAll != null) {
-      onSelectAll();
-      return KeyEventResult.handled;
-    }
-    final onClear = widget.onClearSelection;
-    if (key == LogicalKeyboardKey.escape && onClear != null) {
-      onClear();
-      return KeyEventResult.handled;
-    }
-    // A focused button or row keeps Enter and Delete for itself.
-    if (FocusManager.instance.primaryFocus != _node) {
-      return KeyEventResult.ignored;
-    }
-    final onDelete = widget.onDelete;
-    if ((key == LogicalKeyboardKey.delete ||
-            key == LogicalKeyboardKey.backspace) &&
-        onDelete != null) {
-      onDelete();
-      return KeyEventResult.handled;
-    }
-    final onActivate = widget.onActivate;
-    if ((key == LogicalKeyboardKey.enter ||
-            key == LogicalKeyboardKey.numpadEnter) &&
-        onActivate != null) {
-      onActivate();
-      return KeyEventResult.handled;
-    }
-    return KeyEventResult.ignored;
-  }
-
-  void _claimFocus(PointerDownEvent event) {
-    final primary = FocusManager.instance.primaryFocus;
-    if (primary == _node) return;
-    // Clicking inside a focused text field keeps its focus, so text
-    // selection still works.
-    if (_editingText) {
-      final box = primary?.context?.findRenderObject();
-      if (box is RenderBox &&
-          box.attached &&
-          box.hasSize &&
-          (box.localToGlobal(Offset.zero) & box.size).contains(
-            event.position,
-          )) {
-        return;
-      }
-    }
-    _node.requestScopeFocus();
-  }
-
   @override
   Widget build(BuildContext context) {
     return widget.child;
-    return FocusScope(
-      node: _node,
-      onKeyEvent: _handleKey,
-      child: Listener(
-        behavior: HitTestBehavior.translucent,
-        onPointerDown: _claimFocus,
-        child: widget.child,
-      ),
-    );
   }
 }

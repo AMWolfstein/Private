@@ -1231,23 +1231,3 @@ class _LibraryPlaybackButton extends ConsumerWidget {
     );
   }
 }
-
-/// The desktop Songs table rows of one song list, with the inputs they were
-/// built from.
-class _LibrarySongTableRows {
-  const _LibrarySongTableRows({
-    required this.items,
-    required this.qualityMode,
-    required this.colorScheme,
-    required this.rows,
-    required this.rowByItem,
-    required this.byId,
-  });
-
-  final List<UnifiedLibraryItem> items;
-  final String qualityMode;
-  final ColorScheme colorScheme;
-  final List<TrackTableRow> rows;
-  final Map<UnifiedLibraryItem, TrackTableRow> rowByItem;
-  final Map<String, UnifiedLibraryItem> byId;
-}

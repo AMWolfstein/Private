@@ -31,11 +31,9 @@ import 'package:mornye/screens/track_metadata_screen.dart';
 import 'package:mornye/widgets/cached_cover_image.dart';
 import 'package:mornye/widgets/collection_scaffold.dart';
 import 'package:mornye/widgets/collection_suggestions_section.dart';
-import 'package:mornye/widgets/desktop/context_menu.dart';
 import 'package:mornye/widgets/desktop/desktop_selection.dart';
 import 'package:mornye/widgets/desktop/library_track_menu.dart';
 import 'package:mornye/widgets/playlist_picker_sheet.dart';
-import 'package:mornye/widgets/desktop/track_table.dart';
 import 'package:mornye/widgets/expressive_button.dart';
 import 'package:mornye/widgets/album_track_tile.dart';
 import 'package:mornye/widgets/animation_utils.dart';
@@ -147,7 +145,6 @@ class _LocalAlbumScreenState extends ConsumerState<LocalAlbumScreen>
 
   Future<void> _deleteSelected(List<LocalLibraryItem> currentTracks) async {
     final container = ProviderScope.containerOf(context, listen: false);
-    final selected = _selectedUnifiedItems(currentTracks);
     final libraryNotifier = ref.read(localLibraryProvider.notifier);
     final tracksById = {for (final track in currentTracks) track.id: track};
 
@@ -570,117 +567,6 @@ class _LocalAlbumScreenState extends ConsumerState<LocalAlbumScreen>
     return SliverPadding(
       padding: EdgeInsets.symmetric(horizontal: wideListInset(context)),
       sliver: SliverMainAxisGroup(slivers: slivers),
-    );
-  }
-
-  /// The desktop song table: a click plays, right-click opens the
-  /// selection's actions.
-  Widget _buildDesktopTable(
-    BuildContext context,
-    List<LocalLibraryItem> tracks,
-  ) {
-    final mode = ref.watch(
-      settingsProvider.select((s) => s.libraryQualityLabelMode),
-    );
-    final byId = {for (final track in tracks) track.id: track};
-    return SliverPadding(
-      padding: EdgeInsets.symmetric(horizontal: wideListInset(context)),
-      sliver: SliverTrackTable(
-        rows: [
-          for (final track in tracks)
-            TrackTableRow(
-              id: track.id,
-              number: track.trackNumber,
-              title: track.trackName,
-              artist: track.artistName,
-              album: track.albumName,
-              quality: buildLibraryAudioQualityLabel(
-                mode: mode,
-                format: track.format,
-                filePath: track.filePath,
-                bitrateKbps: track.bitrate,
-                bitDepth: track.bitDepth,
-                sampleRate: track.sampleRate,
-              ),
-              duration: track.duration == null
-                  ? null
-                  : Duration(seconds: track.duration!),
-              playback: mediaItemPlaybackUiProvider(_playbackKey(track)),
-              trailing: Consumer(
-                builder: (context, ref, _) {
-                  final isCurrent = ref.watch(
-                    currentMediaItemProvider.select(
-                      (state) => _isCurrentTrack(state.value, track),
-                    ),
-                  );
-                  final isPlaying =
-                      isCurrent && ref.watch(playbackPlayingProvider);
-                  return AlbumTrackPlayButton(
-                    isPlaying: isPlaying,
-                    onPlay: isCurrent
-                        ? () => ref
-                              .read(musicPlayerControllerProvider)
-                              .togglePlayPause(isPlaying)
-                        : () => _openFile(track),
-                    dense: true,
-                  );
-                },
-              ),
-            ),
-        ],
-        columns: const [
-          TrackTableColumn.number,
-          TrackTableColumn.title,
-          TrackTableColumn.artist,
-          TrackTableColumn.quality,
-          TrackTableColumn.duration,
-        ],
-        selectedIds: selectedIds,
-        albumLayout: context.isMornye,
-        albumArtist: widget.artistName,
-        onSelect: applyDesktopClick,
-        onActivate: (id) {
-          final track = byId[id];
-          if (track != null) _openFile(track);
-        },
-        onContextMenu: (id, position) {
-          final track = byId[id];
-          if (track == null) return;
-          showSelectionMenu(
-            id,
-            () => _showDesktopMenu(context, tracks, track, position),
-          );
-        },
-      ),
-    );
-  }
-
-  Future<bool> _showDesktopMenu(
-    BuildContext context,
-    List<LocalLibraryItem> tracks,
-    LocalLibraryItem track,
-    Offset position,
-  ) {
-    final items = _selectedUnifiedItems(tracks);
-    return showContextMenu(
-      context,
-      position: position,
-      groups: libraryTrackMenuGroups(
-        context,
-        ref,
-        items: items,
-        onPlay: () => _openFile(track),
-        onOpenDetails: () => _openMetadata(track),
-        onDone: exitSelectionMode,
-        onReEnrich: () => _reEnrichSelected(tracks),
-        onConvert: () => showBatchConvertSheet(
-          this.context,
-          ref,
-          items,
-          onExitSelectionMode: exitSelectionMode,
-        ),
-        onDelete: () => _deleteSelected(tracks),
-      ),
     );
   }
 

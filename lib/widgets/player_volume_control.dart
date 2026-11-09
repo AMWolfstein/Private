@@ -8,7 +8,6 @@ import 'package:mornye/providers/system_volume_provider.dart';
 import 'package:mornye/theme/mornye_theme.dart';
 import 'package:mornye/widgets/app_icon.dart';
 import 'package:mornye/widgets/app_slider.dart';
-import 'package:mornye/widgets/desktop/desktop_volume_scroll.dart';
 import 'package:mornye/widgets/mornye_player_slider.dart';
 import 'package:mornye/utils/logger.dart';
 import 'package:mornye/services/music_playback_deck.dart';
@@ -144,7 +143,7 @@ class _PlayerVolumeControlState extends ConsumerState<PlayerVolumeControl> {
               ),
       ),
     );
-    return DesktopVolumeScroll(child: control);
+    return control;
   }
 
   /// The expressive slider has no drag-start callback, so the pointer marks
