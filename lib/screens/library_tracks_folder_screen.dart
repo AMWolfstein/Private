@@ -1,4 +1,11 @@
 import 'dart:io';
+import 'package:mornye/widgets/app_icon_button.dart';
+import 'package:mornye/theme/app_tokens.dart';
+import 'package:mornye/widgets/track_card.dart';
+import 'package:mornye/services/downloaded_embedded_cover_resolver.dart';
+import 'package:mornye/screens/track_metadata_screen.dart';
+import 'package:mornye/widgets/in_library_badge.dart';
+import 'package:mornye/widgets/animation_utils.dart';
 import 'dart:math';
 
 import 'package:file_picker/file_picker.dart';
@@ -385,6 +392,16 @@ class _LibraryTracksFolderScreenState
         ? MediaQuery.paddingOf(context).bottom
         : 0.0;
 
+    final folderTracks = _folderData.tracks;
+    final existingHistoryKeys = _editingOrder
+        ? const <String>{}
+        : ref.watch(
+            downloadHistoryVisibleBatchExistsProvider(
+              _folderData.historyRequest,
+            ),
+          );
+
+    final inHistory = _folderData.inHistory(existingHistoryKeys);
     final ids = [for (final entry in entries) entry.key];
     final scaffold = CollectionScaffold(
       scrollController: scrollController,
@@ -434,6 +451,38 @@ class _LibraryTracksFolderScreenState
                 _orderDraft = next;
               });
             },
+          )
+        else
+          SliverPadding(
+            padding: EdgeInsets.symmetric(horizontal: wideListInset(context)),
+            sliver: SliverList(
+              delegate: SliverChildBuilderDelegate((context, index) {
+                final entry = entries[index];
+                final isSelected = selectedIds.contains(entry.key);
+                final isInHistory = inHistory[index];
+                return KeyedSubtree(
+                  key: ValueKey(entry.key),
+                  child: StaggeredListItem(
+                    index: index,
+                    child: _CollectionTrackTile(
+                      entry: entry,
+                      mode: widget.mode,
+                      folderTracks: folderTracks,
+                      trackIndex: index,
+                      isInHistory: isInHistory,
+                      isSelectionMode: isSelectionMode,
+                      isSelected: isSelected,
+                      onTap: isSelectionMode
+                          ? () => toggleSelection(entry.key)
+                          : null,
+                      onLongPress: isSelectionMode
+                          ? null
+                          : () => enterSelectionMode(entry.key),
+                    ),
+                  ),
+                );
+              }, childCount: entries.length),
+            ),
           ),
         if (playlist case final playlist?
             when playlist.tracks.isNotEmpty &&
@@ -1088,4 +1137,270 @@ class _EmptyFolderState extends StatelessWidget {
       ),
     );
   }
+}
+
+class _CollectionTrackTile extends ConsumerWidget {
+  final CollectionTrackEntry entry;
+  final LibraryTracksFolderMode mode;
+  final List<Track> folderTracks;
+  final int trackIndex;
+  final bool isInHistory;
+  final bool isSelectionMode;
+  final bool isSelected;
+  final VoidCallback? onTap;
+  final VoidCallback? onLongPress;
+
+  const _CollectionTrackTile({
+    required this.entry,
+    required this.mode,
+    required this.folderTracks,
+    required this.trackIndex,
+    required this.isInHistory,
+    this.isSelectionMode = false,
+    this.isSelected = false,
+    this.onTap,
+    this.onLongPress,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final track = entry.track;
+    final rawCoverUrl = _resolveRawCoverUrl(track);
+    final localCoverUrl = rawCoverUrl == null
+        ? ref
+              .watch(
+                localLibraryCoverProvider(
+                  LocalLibraryCoverRequest(
+                    isrc: track.isrc?.trim(),
+                    trackName: track.name,
+                    artistName: track.artistName,
+                  ),
+                ),
+              )
+              .maybeWhen(data: (cover) => cover, orElse: () => null)
+        : null;
+    final effectiveCoverUrl = rawCoverUrl ?? localCoverUrl;
+
+    // Fine-grained provider watches – only this tile rebuilds when its own
+    // history / local-library entry changes.
+    final inMemoryHistoryItem = ref.watch(
+      downloadHistoryProvider.select((state) {
+        final byId = state.getBySpotifyId(track.id);
+        if (byId != null) return byId;
+        final isrc = track.isrc?.trim();
+        if (isrc != null && isrc.isNotEmpty) {
+          final byIsrc = state.getByIsrc(isrc);
+          if (byIsrc != null) return byIsrc;
+        }
+        return state.findByTrackAndArtist(track.name, track.artistName);
+      }),
+    );
+    final showLocalLibraryIndicator = ref.watch(
+      settingsProvider.select(
+        (s) => s.localLibraryEnabled && s.localLibraryShowDuplicates,
+      ),
+    );
+    final isInLocalLibrary = showLocalLibraryIndicator
+        ? ref.watch(
+            localLibraryProvider.select((state) {
+              final isrc = track.isrc?.trim();
+              return state.existsInLibrary(
+                isrc: isrc,
+                trackName: track.name,
+                artistName: track.artistName,
+              );
+            }),
+          )
+        : false;
+
+    final heroTag = inMemoryHistoryItem != null
+        ? 'cover_${inMemoryHistoryItem.id}'
+        : null;
+    // Material rows mark the current track; Mornye rows show no
+    // current-track state.
+    final playback = context.isMornye
+        ? null
+        : ref.watch(catalogTrackPlaybackUiProvider(catalogTrackKey(track)));
+    final isCurrent = playback?.isCurrent ?? false;
+    final isPlaying = playback?.isPlaying ?? false;
+
+    return TrackCard(
+      style: TrackCardStyle.flat,
+      isSelectionMode: isSelectionMode,
+      isSelected: isSelected,
+      isCurrent: isCurrent,
+      isPlaying: isPlaying,
+      leadingArtwork: true,
+      leading: HeroMode(
+        enabled: heroTag != null,
+        child: Builder(
+          builder: (context) {
+            final size = context.tokens.coverCompact;
+            final cover = ClipRRect(
+              borderRadius: context.tokens.borderRadiusThumb,
+              child: effectiveCoverUrl != null && effectiveCoverUrl.isNotEmpty
+                  ? _buildTrackCover(context, effectiveCoverUrl, size)
+                  : TrackCoverPlaceholder(size: size),
+            );
+            return heroTag != null ? Hero(tag: heroTag, child: cover) : cover;
+          },
+        ),
+      ),
+      title: track.name,
+      subtitle: Row(
+        children: [
+          Flexible(
+            child: Text(
+              track.artistName,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+          if (isInLocalLibrary || isInHistory) ...[
+            const SizedBox(width: 6),
+            const InLibraryBadge(),
+          ],
+        ],
+      ),
+      // The button reads its colours inside the row, which follow the fill
+      // of the current track.
+      trailing: isInHistory || isInLocalLibrary
+          ? Builder(
+              builder: (context) {
+                final colorScheme = Theme.of(context).colorScheme;
+                return AppIconButton(
+                  tooltip: isPlaying
+                      ? context.l10n.actionPause
+                      : context.l10n.tooltipPlay,
+                  onPressed: isCurrent
+                      ? () => ref
+                            .read(musicPlayerControllerProvider)
+                            .togglePlayPause(isPlaying)
+                      : () => _playFromHere(context, ref),
+                  icon: Icon(
+                    isPlaying ? Icons.pause : Icons.play_arrow,
+                    color: colorScheme.primary,
+                  ),
+                  style: IconButton.styleFrom(
+                    minimumSize: Size.square(context.tokens.minTouchTarget),
+                    backgroundColor: colorScheme.primaryContainer.withValues(
+                      alpha: 0.3,
+                    ),
+                  ),
+                );
+              },
+            )
+          : null,
+      onTap: isSelectionMode
+          ? onTap
+          : () {
+              if (mode == LibraryTracksFolderMode.wishlist) {
+                _downloadTrack(context, ref);
+                return;
+              }
+
+              _navigateToMetadata(context, ref);
+            },
+      onLongPress: isSelectionMode ? onTap : onLongPress,
+    );
+  }
+
+  Future<void> _playFromHere(BuildContext context, WidgetRef ref) async {
+    try {
+      await ref
+          .read(playbackProvider.notifier)
+          .playTrackList(folderTracks, startIndex: trackIndex);
+    } catch (error) {
+      if (!context.mounted) return;
+      showCannotOpenFileSnackBar(context, error);
+    }
+  }
+
+  Widget _buildTrackCover(BuildContext context, String coverUrl, double size) {
+    final colorScheme = Theme.of(context).colorScheme;
+    Widget placeholder() => Container(
+      width: size,
+      height: size,
+      color: colorScheme.surfaceContainerHighest,
+      child: Icon(Icons.music_note, color: colorScheme.onSurfaceVariant),
+    );
+
+    return LocalOrNetworkCoverImage(
+      url: coverUrl,
+      width: size,
+      height: size,
+      networkCacheWidth: (size * 2).toInt(),
+      fadeInDuration: const Duration(milliseconds: 180),
+      fadeOutDuration: const Duration(milliseconds: 90),
+      placeholder: (_) => placeholder(),
+    );
+  }
+
+  void _downloadTrack(BuildContext context, WidgetRef ref) {
+    downloadSingleTrack(context, ref, entry.track);
+  }
+
+  Future<void> _navigateToMetadata(BuildContext context, WidgetRef ref) =>
+      _openCollectionTrack(context, ref, entry.track);
+}
+
+Future<void> _openCollectionTrack(
+  BuildContext context,
+  WidgetRef ref,
+  Track track,
+) async {
+  final historyNotifier = ref.read(downloadHistoryProvider.notifier);
+
+  var historyItem = await historyNotifier.getBySpotifyIdAsync(track.id);
+  if (!context.mounted) return;
+
+  if (historyItem == null && track.isrc != null && track.isrc!.isNotEmpty) {
+    historyItem = await historyNotifier.getByIsrcAsync(track.isrc!);
+    if (!context.mounted) return;
+  }
+
+  historyItem ??= await historyNotifier.findByTrackAndArtistAsync(
+    track.name,
+    track.artistName,
+  );
+  if (!context.mounted) return;
+
+  if (historyItem != null) {
+    final embeddedCoverPath =
+        await DownloadedEmbeddedCoverResolver.resolveOrExtract(
+          historyItem.filePath,
+        );
+    if (!context.mounted) return;
+    await precacheMetadataBackdrop(
+      context,
+      embeddedCoverPath ?? historyItem.coverUrl,
+    );
+    if (!context.mounted) return;
+    await Navigator.of(
+      context,
+    ).push(slidePageRoute<void>(page: TrackMetadataScreen(item: historyItem)));
+    return;
+  }
+
+  final localItem = ref.read(settingsProvider).localLibraryEnabled
+      ? await ref
+            .read(localLibraryProvider.notifier)
+            .findExistingAsync(
+              isrc: track.isrc,
+              trackName: track.name,
+              artistName: track.artistName,
+            )
+      : null;
+  if (!context.mounted) return;
+
+  if (localItem != null) {
+    await precacheMetadataBackdrop(context, localItem.coverPath);
+    if (!context.mounted) return;
+    await Navigator.of(context).push(
+      slidePageRoute<void>(page: TrackMetadataScreen(localItem: localItem)),
+    );
+    return;
+  }
+
+  downloadSingleTrack(context, ref, track);
 }
