@@ -43,6 +43,7 @@ a runtime sandbox or a guarantee that only artwork requests occur.
 - `tests/`: offline upstream artwork/lyrics tests and import/dependency/adapter checks.
 - `LICENSE`, `COPYING`, `NOTICE`: upstream redistribution terms and attribution.
 - `UPSTREAM.md`: import provenance, exclusions and update procedure.
+- `updates/`: fortnightly upstream review scripts, tests and an inactive GitHub Actions template. All files stay inside this directory tree; activation requires the documented GitHub workflow-path exception.
 
 `source.json` is **not** an installable extension manifest. Its `upstream_permissions`
 and `upstream_settings` describe the original provider for later dependency review;
