@@ -81,7 +81,7 @@ void main() {
   final report = <String, dynamic>{
     'platform': Platform.operatingSystem,
     'note':
-        'Five alternating old/new pairs per size of real queue preflight with an inaccessible Android SAF tree or invalid iOS bookmark. Timing covers resume through failure publication, including platform validation. Private platform SQLite persistence verified outside timing. Debug builds are correctness only.',
+        'Five alternating old/new pairs per size of real queue preflight with an inaccessible Android SAF tree or invalid bookmark. Timing covers resume through failure publication, including platform validation. Private platform SQLite persistence verified outside timing. Debug builds are correctness only.',
   };
   var completed = 0;
   late Directory root;
