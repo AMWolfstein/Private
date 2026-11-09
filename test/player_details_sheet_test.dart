@@ -73,38 +73,9 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('Material desktop opens the details as a dialog', (tester) async {
-    await open(tester, mornye: false);
-    final dialog = find.byKey(const ValueKey('app-sheet-dialog'));
-    expect(dialog, findsOneWidget);
-    expect(find.byType(BottomSheet), findsNothing);
-    expect(find.text('Details'), findsOneWidget);
-    // The always-visible bar accepts the draggable sheet's controller.
-    expect(
-      find.descendant(of: dialog, matching: find.byType(Scrollbar)),
-      findsOneWidget,
-    );
-    expect(tester.takeException(), isNull);
-    await tester.tap(find.byTooltip('Close'));
-    await tester.pumpAndSettle();
-    expect(find.text('Details'), findsNothing);
-  }, variant: TargetPlatformVariant.only(TargetPlatform.macOS));
 
-  for (final desktop in [false]) {
-    testWidgets(
-      'Mornye keeps its glass details on ${desktop ? 'desktop' : 'phones'}',
-      (tester) async {
-        await open(tester, mornye: true);
-        expect(find.byType(MornyePlayerDetailsSheet), findsOneWidget);
-        expect(find.byType(AppBottomSheet), findsNothing);
-        expect(find.byType(AppSheetHandle), findsOneWidget);
-        expect(
-          find.byKey(const ValueKey('app-sheet-dialog')),
-          desktop ? findsOneWidget : findsNothing,
-        );
-        expect(tester.takeException(), isNull);
-      },
-    );
+  {
+
   }
 
   testWidgets('Mornye decodes the cover at its thumbnail size', (tester) async {

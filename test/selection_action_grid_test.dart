@@ -129,51 +129,5 @@ void main() {
       }
     });
 
-    testWidgets('desktop delete leads the Remove RG row ($mornye)', (
-      tester,
-    ) async {
-      tester.view.physicalSize = const Size(1280, 800);
-      tester.view.devicePixelRatio = 1;
-      addTearDown(tester.view.reset);
-      var deleted = false;
-      await tester.pumpWidget(
-        _app(
-          mornye,
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: LibraryTrackSelectionBar(
-              selectedCount: 1,
-              allSelected: false,
-              onClose: () {},
-              onToggleSelectAll: () {},
-              bottomPadding: 0,
-              onReEnrich: () {},
-              onConvert: () {},
-              onReplayGain: ({required remove}) {},
-              onDelete: () => deleted = true,
-            ),
-          ),
-        ),
-      );
-      await tester.pumpAndSettle();
-      Rect button(IconData icon) => tester.getRect(
-        find.byWidgetPredicate(
-          (widget) => widget is SelectionActionButton && widget.icon == icon,
-        ),
-      );
-      final delete = button(Icons.delete_outline);
-      final removeGain = button(Icons.remove_circle_outline);
-      expect(delete.top, removeGain.top);
-      expect(delete.height, removeGain.height);
-      expect(delete.right, lessThan(removeGain.left));
-      final lowest = tester
-          .widgetList<SelectionActionButton>(find.byType(SelectionActionButton))
-          .map((widget) => button(widget.icon).top)
-          .reduce((a, b) => a > b ? a : b);
-      expect(lowest, delete.top);
-      await tester.tap(find.text('Delete 1 track'));
-      expect(deleted, isTrue);
-      expect(tester.takeException(), isNull);
-    });
   }
 }

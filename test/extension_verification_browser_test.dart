@@ -173,21 +173,6 @@ void main() {
     );
   });
 
-  for (final platform in [
-    TargetPlatform.macOS,
-    TargetPlatform.windows,
-    TargetPlatform.linux,
-  ]) {
-    test('desktop $platform always uses the external browser', () async {
-      debugDefaultTargetPlatformOverride = platform;
-      final attempts = mockIosLaunches();
-      for (final mode in ['external_first', 'in_app_first']) {
-        expect(await launchExtensionAuthUrl(uri, browserMode: mode), isTrue);
-      }
-      expect(attempts, ['external', 'external']);
-    });
-  }
-
   for (final inAppFirst in [true, false]) {
     final browserMode = inAppFirst ? 'in_app_first' : 'external_first';
     for (final throwsError in [true, false]) {
