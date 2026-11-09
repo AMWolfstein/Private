@@ -147,7 +147,6 @@ The final diff from the base commit is `git diff 365dcae a26367d` plus the later
 
 | Deviation | Why needed | Simpler option rejected because |
 |---|---|---|
-| One permission test in `cover_cache_info_repository_test.dart` skipped as root | Root bypasses permission bits in the sandbox; it runs for non-root users | No unreadable-but-existing file can be made as root |
 | Owner-approved history rewrite: the branch was reset and force-pushed with `--force-with-lease` (constitution X forbids force push) | The owner explicitly asked for the commits to be restructured into a documents commit and one implementation commit | Without a rewrite the requested commit layout cannot be produced. Recovery: the local `backup/mornye-reboot3-*` branches hold the earlier tips |
 
 ## Verification plan

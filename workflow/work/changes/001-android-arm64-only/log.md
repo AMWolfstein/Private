@@ -50,6 +50,9 @@
   noise cover reaching two levels (about 0.01% of channels; opaque covers stay within one): it is rounded twice, by
   the offscreen copy and by the blend. `_expectRounding` now allows two levels for a translucent cover and bounds
   how many channels may exceed one. All 13 tests in the file pass, none skipped.
+- 2026-11-09: The unreadable-index test in `cover_cache_info_repository_test.dart` is unskipped. It made the file
+  unreadable with `chmod 000`, which root ignores; it now fails the read through an `IOOverrides` file and refuses
+  the worker so the read runs in the test isolate. It passes as root. No test in the change is skipped now.
 
 ## Close
 
