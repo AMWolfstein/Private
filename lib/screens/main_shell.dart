@@ -90,7 +90,7 @@ int? shellIndexOfTab(
   ShellTab tab, {
   required bool mornye,
   required bool showStore,
-  required bool desktop,
+  required bool tv,
 }) => switch (tab) {
   ShellTab.home => 0,
   ShellTab.library => 1,
@@ -101,7 +101,7 @@ int? shellIndexOfTab(
   ShellTab.settings =>
     !mornye
         ? (showStore ? 3 : 2)
-        : desktop
+        : tv
         ? (showStore ? 4 : 3)
         : null,
 };
@@ -178,7 +178,7 @@ class _MainShellState extends ConsumerState<MainShell>
           tab,
           mornye: mornye,
           showStore: showStore,
-          desktop: isAndroidTv,
+          tv: isAndroidTv,
         ) ??
         0;
     if (index == _currentIndex) return;

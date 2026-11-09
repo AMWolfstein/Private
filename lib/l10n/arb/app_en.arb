@@ -8664,12 +8664,12 @@
   "@optionsEmbeddedCoverSizeOriginal": {
     "description": "Option that preserves the provider artwork at its original resolution"
   },
-  "desktopMenuOpen": "Open",
-  "@desktopMenuOpen": {
+  "menuOpen": "Open",
+  "@menuOpen": {
     "description": "Context menu item that opens an album, artist, playlist or folder"
   },
-  "desktopMenuShowDetails": "Show details",
-  "@desktopMenuShowDetails": {
+  "menuShowDetails": "Show details",
+  "@menuShowDetails": {
     "description": "Context menu item that opens a track's metadata page"
   },
   "playlistEditOrder": "Edit order",

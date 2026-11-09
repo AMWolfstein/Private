@@ -77,8 +77,7 @@ class _TutorialScreenState extends ConsumerState<TutorialScreen> {
     final scaffold = Scaffold(
       backgroundColor: colorScheme.surface,
       body: SafeArea(
-        child: _desktopColumn(
-          Column(
+        child: Column(
             children: [
               Padding(
                 padding: EdgeInsets.symmetric(
@@ -272,13 +271,11 @@ class _TutorialScreenState extends ConsumerState<TutorialScreen> {
               ),
             ],
           ),
-        ),
       ),
     );
     return scaffold;
   }
 
-  Widget _desktopColumn(Widget child) => child;
 
   Widget _buildFeatureList(
     BuildContext context,

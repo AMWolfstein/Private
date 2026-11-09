@@ -547,7 +547,6 @@ class WhatsNewFeature {
 List<WhatsNewHighlight> whatsNewHighlights(
   AppLocalizations l10n, {
   bool? androidPhone,
-  bool? desktop,
   bool nearbyDevices = false,
 }) {
   final showAndroidAuto = androidPhone ?? (Platform.isAndroid && !isAndroidTv);

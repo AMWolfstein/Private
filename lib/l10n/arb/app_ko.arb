@@ -8495,12 +8495,12 @@
   "@optionsEmbeddedCoverSizeOriginal": {
     "description": "Option that preserves the provider artwork at its original resolution"
   },
-  "desktopMenuOpen": "열기",
-  "@desktopMenuOpen": {
+  "menuOpen": "열기",
+  "@menuOpen": {
     "description": "Context menu item that opens an album, artist, playlist or folder"
   },
-  "desktopMenuShowDetails": "세부 정보 표시",
-  "@desktopMenuShowDetails": {
+  "menuShowDetails": "세부 정보 표시",
+  "@menuShowDetails": {
     "description": "Context menu item that opens a track's metadata page"
   },
   "playlistEditOrder": "Edit order",

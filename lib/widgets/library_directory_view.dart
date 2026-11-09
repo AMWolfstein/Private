@@ -313,7 +313,7 @@ class _LibraryDirectoryViewState extends ConsumerState<LibraryDirectoryView>
         [
           ContextMenuAction(
             icon: Icons.folder_open_outlined,
-            label: l10n.desktopMenuOpen,
+            label: l10n.menuOpen,
             onSelected: () => _openFolder(folder),
           ),
         ],

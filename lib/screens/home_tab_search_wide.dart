@@ -577,7 +577,7 @@ class _SearchTopCollectionCard extends StatelessWidget {
           [
             ContextMenuAction(
               icon: Icons.open_in_new,
-              label: l10n.desktopMenuOpen,
+              label: l10n.menuOpen,
               onSelected: onTap,
             ),
             if (hasCover)

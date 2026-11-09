@@ -105,7 +105,7 @@ List<List<ContextMenuAction>> libraryTrackMenuGroups(
       if (onOpenDetails != null && count == 1)
         ContextMenuAction(
           icon: Icons.info_outline,
-          label: l10n.desktopMenuShowDetails,
+          label: l10n.menuShowDetails,
           onSelected: () {
             onDone?.call();
             onOpenDetails();

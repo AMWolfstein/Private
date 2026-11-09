@@ -99,7 +99,6 @@ class _RepoTabState extends ConsumerState<RepoTab> {
     // Controls share the centered column of the extension list on tablets.
     // other tabs.
     final edge = 16 + wideListInset(context);
-    final desktopColumns = 1;
 
     return Scaffold(
       body: AppRefreshIndicator(
@@ -201,14 +200,7 @@ class _RepoTabState extends ConsumerState<RepoTab> {
                   ),
                 ),
 
-                if (desktopColumns > 1)
-                  _desktopExtensionGrid(
-                    filteredExtensions,
-                    columns: desktopColumns,
-                    edge: edge,
-                    downloadingId: downloadingId,
-                  )
-                else if (context.isMornye)
+                if (context.isMornye)
                   SliverToBoxAdapter(
                     child: ExtensionRepoCard(
                       margin: EdgeInsets.symmetric(
@@ -258,58 +250,6 @@ class _RepoTabState extends ConsumerState<RepoTab> {
             ],
             const NavBarSliverSpacer(),
           ],
-        ),
-      ),
-    );
-  }
-
-  static const double _desktopGridGap = 12;
-
-  Widget _desktopExtensionGrid(
-    List<RepoExtension> extensions, {
-    required int columns,
-    required double edge,
-    required String? downloadingId,
-  }) {
-    Widget tile(RepoExtension ext) {
-      final item = _ExtensionItem(
-        extension: ext,
-        showDivider: false,
-        isDownloading: downloadingId == ext.id,
-        onInstall: () => _installExtension(ext),
-        onUpdate: () => _updateExtension(ext),
-        onTap: () => _showExtensionDetails(ext),
-      );
-      return context.isMornye
-          ? ExtensionRepoCard(margin: EdgeInsets.zero, child: item)
-          : SettingsGroup(
-              connected: true,
-              margin: EdgeInsets.zero,
-              children: [item],
-            );
-    }
-
-    final rows = (extensions.length / columns).ceil();
-    return SliverPadding(
-      key: const ValueKey('store-desktop-grid'),
-      padding: EdgeInsets.fromLTRB(edge, 4, edge, 0),
-      sliver: SliverList.builder(
-        itemCount: rows,
-        itemBuilder: (context, row) => Padding(
-          padding: const EdgeInsets.only(bottom: _desktopGridGap),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              for (var column = 0; column < columns; column++) ...[
-                if (column > 0) const SizedBox(width: _desktopGridGap),
-                Expanded(
-                  child: row * columns + column < extensions.length
-                      ? tile(extensions[row * columns + column])
-                      : const SizedBox.shrink(),
-                ),
-              ],
-            ],
-          ),
         ),
       ),
     );

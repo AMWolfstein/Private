@@ -66,10 +66,10 @@ class PlayerPlaybackControls extends ConsumerWidget {
     final isPlaying = ref.watch(playbackPlayingProvider);
     final isLoading = ref.watch(playbackLoadingProvider);
     // and repeat at the timeline's ends; its phone player has them in the queue.
-    final desktopMornye = mornye && edgeAligned;
+    final wideMornye = mornye && edgeAligned;
     final showModes = showPlaybackModes && (!mornye || edgeAligned);
-    final skipSize = desktopMornye ? 30.0 : 40.0;
-    final playPauseSize = desktopMornye
+    final skipSize = wideMornye ? 30.0 : 40.0;
+    final playPauseSize = wideMornye
         ? (isPlaying ? 34.0 : 32.0)
         : compact
         ? (isPlaying ? 44.0 : 40.0)

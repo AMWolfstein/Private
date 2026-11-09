@@ -451,7 +451,7 @@ extension _QueueTabCollectionItemWidgets on _QueueTabState {
         [
           ContextMenuAction(
             icon: Icons.open_in_new,
-            label: l10n.desktopMenuOpen,
+            label: l10n.menuOpen,
             onSelected: () => _openPlaylistById(playlist.id),
           ),
           ContextMenuAction(

@@ -7864,12 +7864,12 @@
   "@optionsEmbeddedCoverSizeOriginal": {
     "description": "Option that preserves the provider artwork at its original resolution"
   },
-  "desktopMenuOpen": "Buka",
-  "@desktopMenuOpen": {
+  "menuOpen": "Buka",
+  "@menuOpen": {
     "description": "Context menu item that opens an album, artist, playlist or folder"
   },
-  "desktopMenuShowDetails": "Lihat detail",
-  "@desktopMenuShowDetails": {
+  "menuShowDetails": "Lihat detail",
+  "@menuShowDetails": {
     "description": "Context menu item that opens a track's metadata page"
   },
   "libraryFolders": "Folder",

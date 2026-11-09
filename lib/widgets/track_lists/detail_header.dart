@@ -12,19 +12,19 @@ import 'package:mornye/widgets/track_lists/context_menu.dart';
 import 'package:mornye/widgets/sliver_layout_info_builder.dart';
 
 /// player.
-const double desktopDetailBottomInset = 90;
+const double detailBottomInset = 90;
 
 const double _toolbarHeight = 52;
 
 /// The header artwork side for a content column: about a third of it, from
 /// 200 to 300.
-double desktopDetailArtworkSize(double contentWidth) =>
+double detailArtworkSize(double contentWidth) =>
     (contentWidth * 0.32).clamp(200.0, 300.0);
 
 ///
 /// Pass a [context] inside the header (a `Builder` around the subtitle), so
 /// a Material header takes the accent of its artwork scheme.
-TextStyle desktopDetailSubtitleStyle(BuildContext context) {
+TextStyle detailSubtitleStyle(BuildContext context) {
   final scheme = Theme.of(context).colorScheme;
   return context.isMornye
       ? TextStyle(
@@ -50,7 +50,7 @@ TextStyle desktopDetailSubtitleStyle(BuildContext context) {
 /// In Material, the artwork and details take the scheme of [paletteSource]
 /// (a cover URL or local path) through [PlayerArtworkTheme] and
 /// [HeaderPalette]; the toolbar and the page below keep the app scheme.
-List<Widget> desktopDetailHeaderSlivers(
+List<Widget> detailHeaderSlivers(
   BuildContext context, {
   required String title,
   required Widget Function(BuildContext context, double size) artwork,
@@ -73,7 +73,7 @@ List<Widget> desktopDetailHeaderSlivers(
   final trailing = [...?appBarActions, ?more];
 
   Widget details(BuildContext context, BoxConstraints constraints) {
-    final side = desktopDetailArtworkSize(constraints.maxWidth);
+    final side = detailArtworkSize(constraints.maxWidth);
     const gap = 28.0;
     final textWidth = (constraints.maxWidth - side - gap).clamp(
       0.0,

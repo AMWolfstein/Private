@@ -8495,12 +8495,12 @@
   "@optionsEmbeddedCoverSizeOriginal": {
     "description": "Option that preserves the provider artwork at its original resolution"
   },
-  "desktopMenuOpen": "Mở",
-  "@desktopMenuOpen": {
+  "menuOpen": "Mở",
+  "@menuOpen": {
     "description": "Context menu item that opens an album, artist, playlist or folder"
   },
-  "desktopMenuShowDetails": "Xem chi tiết",
-  "@desktopMenuShowDetails": {
+  "menuShowDetails": "Xem chi tiết",
+  "@menuShowDetails": {
     "description": "Context menu item that opens a track's metadata page"
   },
   "playlistEditOrder": "Edit order",

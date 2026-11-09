@@ -8495,12 +8495,12 @@
   "@optionsEmbeddedCoverSizeOriginal": {
     "description": "Option that preserves the provider artwork at its original resolution"
   },
-  "desktopMenuOpen": "Відкрити",
-  "@desktopMenuOpen": {
+  "menuOpen": "Відкрити",
+  "@menuOpen": {
     "description": "Context menu item that opens an album, artist, playlist or folder"
   },
-  "desktopMenuShowDetails": "Показати деталі",
-  "@desktopMenuShowDetails": {
+  "menuShowDetails": "Показати деталі",
+  "@menuShowDetails": {
     "description": "Context menu item that opens a track's metadata page"
   },
   "playlistEditOrder": "Edit order",

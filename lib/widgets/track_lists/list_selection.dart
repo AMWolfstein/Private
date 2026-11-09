@@ -15,7 +15,7 @@ enum RowClick {
 /// the new range anchor. [orderedIds] lists the visible items in display
 /// order. A Shift range replaces the selection and keeps [anchor], as in
 /// Finder and Explorer.
-T? applyDesktopClickTo<T>(
+T? applySelectionClickTo<T>(
   Set<T> selected, {
   required T target,
   required RowClick kind,
@@ -42,15 +42,15 @@ T? applyDesktopClickTo<T>(
   }
 }
 
-bool get desktopPrimaryModifierPressed {
+bool get selectionModifierPressed {
   final keyboard = HardwareKeyboard.instance;
   return keyboard.isControlPressed;
 }
 
 /// The selection change for a click made with the modifiers held right now.
-RowClick desktopClickKind() {
+RowClick selectionClickKind() {
   if (HardwareKeyboard.instance.isShiftPressed) return RowClick.extend;
-  if (desktopPrimaryModifierPressed) return RowClick.toggle;
+  if (selectionModifierPressed) return RowClick.toggle;
   return RowClick.replace;
 }
 

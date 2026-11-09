@@ -245,7 +245,7 @@ class _LibrarySearchResultsState extends ConsumerState<LibrarySearchResults> {
           [
             ContextMenuAction(
               icon: Icons.open_in_new,
-              label: l10n.desktopMenuOpen,
+              label: l10n.menuOpen,
               onSelected: () => _open(hit),
             ),
           ],

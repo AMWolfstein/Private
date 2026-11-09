@@ -43,13 +43,13 @@ mixin SelectionModeMixin<T extends StatefulWidget> on State<T> {
   }
 
   /// visible items in display order, for Shift ranges.
-  void applyDesktopClick(
+  void applySelectionClick(
     String itemId,
     RowClick kind,
     List<String> orderedIds,
   ) {
     setState(() {
-      selectionAnchorId = applyDesktopClickTo(
+      selectionAnchorId = applySelectionClickTo(
         selectedIds,
         target: itemId,
         kind: kind,
@@ -71,7 +71,7 @@ mixin SelectionModeMixin<T extends StatefulWidget> on State<T> {
     final forMenu = !selectedIds.contains(itemId);
     if (forMenu) {
       contextMenuSelection = true;
-      applyDesktopClick(itemId, RowClick.replace, const []);
+      applySelectionClick(itemId, RowClick.replace, const []);
     }
     final chosen = await show();
     if (!forMenu || !mounted) return;
