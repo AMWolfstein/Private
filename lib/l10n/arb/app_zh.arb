@@ -542,34 +542,6 @@
   "@setupDownloadLocationTitle": {
     "description": "Download location dialog title"
   },
-  "setupDownloadLocationIosMessage": "在 iOS 上，下载内容会保存到应用的 Documents 文件夹。你可以通过“文件”应用访问。",
-  "@setupDownloadLocationIosMessage": {
-    "description": "iOS-specific folder info"
-  },
-  "setupAppDocumentsFolder": "应用程序文档文件夹",
-  "@setupAppDocumentsFolder": {
-    "description": "iOS documents folder option"
-  },
-  "setupAppDocumentsFolderSubtitle": "推荐 - 可通过“文件”应用访问",
-  "@setupAppDocumentsFolderSubtitle": {
-    "description": "Subtitle for documents folder"
-  },
-  "setupChooseFromFiles": "从“文件”中选择",
-  "@setupChooseFromFiles": {
-    "description": "iOS file picker option"
-  },
-  "setupChooseFromFilesSubtitle": "选择 iCloud 或其他位置",
-  "@setupChooseFromFilesSubtitle": {
-    "description": "Subtitle for file picker"
-  },
-  "setupIosEmptyFolderWarning": "iOS 限制：无法选择空文件夹。请选择至少包含一个文件的文件夹。",
-  "@setupIosEmptyFolderWarning": {
-    "description": "iOS folder selection warning"
-  },
-  "setupIcloudNotSupported": "不支持 iCloud Drive。请使用应用 Documents 文件夹。",
-  "@setupIcloudNotSupported": {
-    "description": "Error when user selects iCloud Drive on iOS"
-  },
   "setupDownloadInFlac": "Download music in lossless and Hi-Res quality",
   "@setupDownloadInFlac": {
     "description": "App tagline in setup"
@@ -1966,10 +1938,6 @@
   "downloadAutoConvertFormat": "Output format",
   "@downloadAutoConvertFormat": {
     "description": "Automatic conversion output format setting"
-  },
-  "downloadAutoConvertFormatSubtitle": "Choose the lossy format used for newly completed downloads.",
-  "@downloadAutoConvertFormatSubtitle": {
-    "description": "Automatic conversion format picker explanation"
   },
   "downloadAutoConvertBitrate": "Output quality",
   "@downloadAutoConvertBitrate": {
@@ -5768,10 +5736,6 @@
   "permissionNotification": "Notification",
   "@permissionNotification": {
     "description": "Notification permission type label"
-  },
-  "errorInvalidFolderSelected": "Invalid folder selected",
-  "@errorInvalidFolderSelected": {
-    "description": "Error when the selected folder is invalid"
   },
   "storeAnyVersion": "Any",
   "@storeAnyVersion": {
