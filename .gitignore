@@ -14,7 +14,6 @@ Desktop.ini
 .rtk/
 .claude/settings.local.json
 CLAUDE.md
-AGENTS.md
 
 # Local release notes, screenshots and promo assets
 /output/
@@ -112,3 +111,7 @@ NUL
 *.log
 hs_err_*.log
 flutter_*.log
+
+# Workflow
+.work/
+__pycache__/

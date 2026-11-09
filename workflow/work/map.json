@@ -1,0 +1,118 @@
+{
+  "version": 1,
+  "notes": [
+    "CodeGraph AST/resolver extraction; bridge/contracts enrichment stays in the workflow.",
+    "Corpus globs use fnmatch. Partial and unindexed files are reported, not treated as complete.",
+    "Pin the engine version; configure extractor.command as argv or put codegraph on PATH. No automatic downloads."
+  ],
+  "extractor": {
+    "name": "codegraph",
+    "package": "@colbymchenry/codegraph",
+    "version": "1.6.2",
+    "enabled": true,
+    "allow_unverified": false,
+    "timeout": 900,
+    "command": [
+      "codegraph"
+    ]
+  },
+  "corpus": {
+    "include": [
+      "*.dart",
+      "*.kt",
+      "*.kts",
+      "*.rs",
+      "*.c",
+      "*.h",
+      "*.cpp",
+      "*.cc",
+      "*.cxx",
+      "*.hpp",
+      "*.java",
+      "*.py",
+      "*.sh",
+      "*.bash",
+      "*.gradle",
+      "*.cs",
+      "*.js",
+      "*.jsx",
+      "*.ts",
+      "*.tsx",
+      "*.m",
+      "*.mm",
+      "*.rb",
+      "*.php",
+      "*.scala",
+      "*.lua",
+      "*.zig",
+      "*.ps1",
+      "*.mjs",
+      "*.cjs",
+      "*.xml",
+      "*.yaml",
+      "*.yml",
+      "*.json",
+      "*.toml",
+      "*.arb"
+    ],
+    "exclude": [
+      ".*/*",
+      ".*",
+      "workflow/*",
+      ".work/*",
+      "graphify-out/*",
+      "build/*",
+      "*/build/*",
+      ".dart_tool/*",
+      "*/.dart_tool/*",
+      "*/.gradle/*",
+      ".git/*",
+      "*/node_modules/*",
+      "*.g.dart",
+      "*.freezed.dart",
+      "*.gr.dart",
+      "*.mocks.dart",
+      "*.pb.dart",
+      "*.pbenum.dart",
+      "*.pbjson.dart",
+      "lib/l10n/app_localizations*.dart",
+      "*/generated/*",
+      "*/bindings/*",
+      "third_party/*",
+      "*/vendor/*",
+      "vendor/*",
+      "reference/*",
+      "reviews/*",
+      "new workflow/*",
+      "docs/*"
+    ],
+    "exceptions": []
+  },
+  "bridges": {
+    "dart_channel_types": [
+      "MethodChannel",
+      "OptionalMethodChannel",
+      "EventChannel",
+      "BasicMessageChannel"
+    ],
+    "dart_invoke_methods": [
+      "invokeMethod",
+      "invokeMapMethod",
+      "invokeListMethod"
+    ],
+    "dart_wrappers": [],
+    "kotlin_channel_types": [
+      "MethodChannel",
+      "EventChannel",
+      "BasicMessageChannel"
+    ]
+  },
+  "context": {
+    "budget_tokens": 2500,
+    "entry_files": 8,
+    "per_section": 12,
+    "excerpt_lines": 10,
+    "max_excerpts": 3,
+    "fallback_hits": 20
+  }
+}
