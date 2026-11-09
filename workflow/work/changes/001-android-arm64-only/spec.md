@@ -1,10 +1,21 @@
 # Spec 001-android-arm64-only: Android arm64 only
 
-Status: Clarified (v2: owner decisions on update check, Link and database)
+Status: Clarified (v3: owner decisions on first install, Discord and finishing in one change)
 Created: 2026-11-09
 Input: The owner works only on the Android arm64 APK. Remove everything else from the source: desktop, iOS, and
 32-bit ARM (armeabi-v7a). Keep only arm64 in the source. Discord SDK removal comes later, in a separate change.
 Binding decisions: none
+
+## Clarifications v3 (owner, later in the same session)
+
+- Discord is removed completely in this change, with everything related to it. This supersedes the earlier
+  decision to keep Discord (FR-007, Out of scope, PD-3). Android-related files that mention Discord are edited so
+  they stay Android-only.
+- The app is treated as a first install: nobody has installed it, so no database migration and no migration test
+  are needed. This supersedes FR-011 and FR-012 and the drop-tables step in T004 and T034. Link sync tables are not
+  created, and no existing user data is carried over.
+- Desktop, iOS and armeabi-v7a are removed from the source; only arm64 remains.
+- Run the work to the end in this change; the change is not split further.
 
 ## User scenarios
 
