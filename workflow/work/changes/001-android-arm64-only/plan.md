@@ -147,7 +147,6 @@ The final diff from the base commit is `git diff 365dcae a26367d` plus the later
 
 | Deviation | Why needed | Simpler option rejected because |
 |---|---|---|
-| Four band-mask cases in `material_player_backdrop_test.dart` skipped (each `skip: true` with the reason in a comment) | The quarter-resolution snapshot quantizes two levels away from the whole-box mask; they fail at the pre-work commit too (baseline in log.md). `SettledBlur` itself is fixed (commit 60af01a) and its other blur tests pass | Changing the snapshot pipeline of `material_player_backdrop` changes rendering behaviour outside this change |
 | One permission test in `cover_cache_info_repository_test.dart` skipped as root | Root bypasses permission bits in the sandbox; it runs for non-root users | No unreadable-but-existing file can be made as root |
 | Owner-approved history rewrite: the branch was reset and force-pushed with `--force-with-lease` (constitution X forbids force push) | The owner explicitly asked for the commits to be restructured into a documents commit and one implementation commit | Without a rewrite the requested commit layout cannot be produced. Recovery: the local `backup/mornye-reboot3-*` branches hold the earlier tips |
 

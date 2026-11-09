@@ -46,6 +46,10 @@
   unpatched SDK and guards the project's patch applied by `scripts/prepare_flutter_sdk.dart`; unskipped in 4fac672
 - 2026-11-09: Update check no longer reads the device ABIs (4fac672); regression test failed before the fix and
   passes after; state.json base set to 365dcae, an ancestor of HEAD
+- 2026-11-09: The four material_player_backdrop band-mask cases are unskipped. The failure was the translucent
+  noise cover reaching two levels (about 0.01% of channels; opaque covers stay within one): it is rounded twice, by
+  the offscreen copy and by the blend. `_expectRounding` now allows two levels for a translucent cover and bounds
+  how many channels may exceed one. All 13 tests in the file pass, none skipped.
 
 ## Close
 
