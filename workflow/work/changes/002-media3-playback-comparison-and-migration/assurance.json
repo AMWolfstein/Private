@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "port": {
+    "applies": false,
+    "reason": "This deliverable compares pinned source and writes a draft roadmap only; no source implementation is copied or adapted. Before any E01 code batch, T006 must reclassify port applicability and inventory the imported components, licences, destinations and parity checks. This declaration is not evidence that the planned migration is non-port work."
+  },
+  "bridge": {
+    "applies": false,
+    "reason": "No current MethodChannel/EventChannel/JNI/UniFFI signature, dispatcher or payload changes in this documentation-only batch. T006 must declare actual caller/native contracts and shared checks before bridge implementation. The draft requirements in the plan are not a completed bridge."
+  },
+  "prerequisites": [],
+  "device_checks": []
+}

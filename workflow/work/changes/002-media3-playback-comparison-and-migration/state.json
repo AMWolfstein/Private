@@ -1,0 +1,19 @@
+{
+  "id": "002-media3-playback-comparison-and-migration",
+  "title": "Media3 playback comparison and migration",
+  "size": "architecture",
+  "phase": "plan",
+  "base": "933e0bd6fbc00899372a815a74ab6fffc3a5fe73",
+  "created": "2026-11-09T23:48:51+00:00",
+  "rounds": [],
+  "history": [
+    {
+      "phase": "spec",
+      "at": "2026-11-09T23:48:51+00:00"
+    },
+    {
+      "phase": "plan",
+      "at": "2026-11-09T23:54:31+00:00"
+    }
+  ]
+}
