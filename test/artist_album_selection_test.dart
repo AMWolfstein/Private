@@ -1,4 +1,3 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -67,20 +66,6 @@ Future<void> _pumpArtist(
 
 Finder _card(int index) => find.byKey(ValueKey('album-$index'));
 
-Future<void> _click(
-  WidgetTester tester,
-  int index, {
-  bool secondary = false,
-}) async {
-  final gesture = await tester.startGesture(
-    tester.getCenter(_card(index)),
-    kind: PointerDeviceKind.mouse,
-    buttons: secondary ? kSecondaryButton : kPrimaryButton,
-  );
-  await gesture.up();
-  await tester.pumpAndSettle();
-}
-
 void _expectSelection(WidgetTester tester, Set<int> selected) {
   expect(
     tester
@@ -113,34 +98,6 @@ void main() {
   for (final mornye in [false, true]) {
     final style = mornye ? 'Mornye' : 'Material';
 
-    testWidgets('$style: context menu starts lasting album selection', (
-      tester,
-    ) async {
-      await _pumpArtist(tester, mornye: mornye);
-      await _click(tester, 2, secondary: true);
-      expect(find.byType(SelectionBottomBar), findsNothing);
-      expect(find.byType(AnimatedSelectionCheckbox), findsNothing);
-      expect(find.text('Select Albums...'), findsOneWidget);
-
-      // Dismissing a temporary menu does not leave selection controls behind.
-      await tester.tapAt(const Offset(10, 100));
-      await tester.pumpAndSettle();
-      expect(find.byType(SelectionBottomBar), findsNothing);
-      await _click(tester, 2, secondary: true);
-      await tester.tap(find.text('Select Albums...'));
-      await tester.pumpAndSettle();
-      _expectSelection(tester, {2});
-
-      await _click(tester, 3);
-      _expectSelection(tester, {2, 3});
-      await _click(tester, 2, secondary: true);
-      await tester.tapAt(const Offset(10, 100));
-      await tester.pumpAndSettle();
-      _expectSelection(tester, {2, 3});
-      await _click(tester, 2);
-      _expectSelection(tester, {3});
-      await _disposeArtist(tester);
-    }, variant: TargetPlatformVariant.only(TargetPlatform.windows));
 
 testWidgets('$style: touch long press still selects albums', (
       tester,

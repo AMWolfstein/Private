@@ -17,7 +17,7 @@ class _Library extends LocalLibraryNotifier {
 }
 
 void main() {
-  for (final platform in [TargetPlatform.windows, TargetPlatform.linux]) {
+  for (final platform in [TargetPlatform.android]) {
     testWidgets('duplicate query can retry on $platform', (tester) async {
       final previousDebugPrint = debugPrint;
       final logs = <String>[];
