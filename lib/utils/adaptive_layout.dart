@@ -110,8 +110,6 @@ double wideListInset(BuildContext context, {double? contentMaxWidth}) =>
 /// edge; elsewhere Home centers with [wideListInset].
 double homeContentInset(BuildContext context) => wideListInset(context);
 
-const double wideContentMaxWidth = 1600;
-
 /// The M3 large window class starts at 1200dp; the extra 80dp leaves room
 /// for the navigation rail, since the inset is measured on the window width.
 const double materialContentMaxWidth = 1280;
