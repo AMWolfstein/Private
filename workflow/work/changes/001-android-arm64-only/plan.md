@@ -1,16 +1,18 @@
-# Plan 001-android-arm64-only: Android arm64 only (v2)
+# Plan 001-android-arm64-only: Android arm64 only (v3)
 
-v2 answers the design review (13 findings) and applies the owner's decisions: update check arm64-only, Link removed
-from Android with a migration that drops its tables, Discord untouched. The per-file list is in `inventory.md`.
+v3 applies the owner's later decisions (spec, Clarifications v3): Discord is removed completely, the app is treated
+as a first install with no data migration, and the work finishes in one change. It also records the scope the owner
+added during the work: removing Windows path identity and every remaining non-Android remnant, and removing dead
+code found by an audit. The per-file list of the original scope is in `inventory.md`.
 
 ## Summary
 
 Keep the Android app and its arm64-v8a Rust backend. Remove the Flutter iOS, macOS, Windows and Linux projects, the
 desktop and Link Rust crates, the armeabi-v7a target, the universal APK, the desktop/iOS/macOS/Windows build, packaging
-and CI definitions, the desktop-only Dart code, Link on Android (with a migration that drops its tables), and the
-plugins only those platforms use. The Discord code is not changed.
+and CI definitions, the desktop-only Dart code, Discord with everything related to it, Mornye Link on Android, Windows
+path identity, and the plugins only those platforms use. Then remove the dead code the removal left behind.
 
-## Current system
+## Current system (at the base commit)
 
 - Backend selection: `lib/services/backend/backend_channel.dart:46` chooses `RustFfiBackend.shared` on desktop and
   `MethodChannelBackend.shared` otherwise. Android always uses the MethodChannel path. The FFI path is desktop only.
@@ -42,26 +44,27 @@ plugins only those platforms use. The Discord code is not changed.
 
 - Ownership and dependency direction: unchanged for kept code. Dart calls the backend only through
   `MethodChannelBackend`. Kotlin and the Android Rust library keep their owners.
-- Contracts across Dart, Kotlin and Rust (methods, fields, units, errors): unchanged. The MethodChannel contract keeps its
-  tests on the Dart side. Its Kotlin side is run by the Android unit check, which is BLOCKED (see Verification).
-- State, threads, lifecycle and cancellation: unchanged on Android for kept features. Link's lifecycle goes with Link.
-- Failure: unchanged for kept features. The update check returns "no match" for non-arm64 devices instead of an arm32
-  or universal asset (FR-009).
-- Data compatibility:
-  - Database: a migration drops the Link sync tables and bumps the schema version. All other tables and rows are kept
-    (FR-011). A migration test runs on a database created by the previous version.
-  - Preference keys and backup fields that Android still reads are kept (FR-012). Keys read only by desktop or Link
-    stay as stored data with a `shortcut:` comment.
-  - Song IDs and backup archive format: unchanged for kept features.
-- Removal: every row of `inventory.md` is an action. The proof is the SC-002 search with the exception list, and
-  `flutter analyze` with no unresolved import.
-- Build: release produces one `app-arm64-v8a-release.apk`. Gradle has no universal APK and no armeabi target.
+- Contracts across Dart, Kotlin and Rust (methods, fields, units, errors): unchanged for kept features. Removed
+  features take their channel methods with them on both sides; the shared native library path-key contract loses
+  its Windows `windows-file:` keys on the Dart and Rust sides together.
+- State, threads, lifecycle and cancellation: unchanged on Android for kept features. Link's and Discord's
+  lifecycles go with them.
+- Failure: unchanged for kept features. The update check returns a typed no-match (`noCompatibleApk`) for a
+  device without arm64 instead of an arm32 or universal asset (FR-009).
+- Data compatibility: the app is treated as a first install (spec v3). There is no database migration, Link sync
+  tables are never created, and settings fields of removed features are removed. Song IDs and the backup archive
+  format are unchanged for kept features.
+- Removal: every row of `inventory.md` is an action; the later scope (Discord, Windows path identity, dead code) is
+  proven by searches and an audit. The proof is the SC-002 search and `flutter analyze` with no unresolved import.
+- Build: release produces one `app-release.apk` that contains arm64-v8a only. Gradle keeps no ABI split because
+  AGP 9.5 rejects the split together with the NDK ABI filter, and it keeps `scripts/flutter_git_commit.sh`, which it
+  calls for the build revision.
 
-## Characterization before edit (R8, R9)
+## Characterization before edit
 
-- `sqlite_helpers.dart`: a test with `debugDesktopPlatformOverride = false` asserts the documents directory on Android and
-  that the sqflite factory is unchanged. It runs before the edit and must pass after it.
-- Settings JSON: a round-trip test over the current settings and backup fields runs before the edit and must pass after it.
+Superseded by spec v3: with no migration and no preserved settings (FR-011, FR-012 superseded) the database and
+settings characterization tests (T001, T002, T004) are not needed. The update check is pinned by the restored
+`test/update_checker_test.dart` (T003, T031).
 
 ## Decisions
 
@@ -69,46 +72,54 @@ plugins only those platforms use. The Discord code is not changed.
   from the build (rejected: dead code kept in the source).
 - PD-2: Build the Android Rust library for `aarch64-linux-android` only. Alternatives: keep armeabi-v7a behind a flag
   (rejected: owner asked for arm64 only).
-- PD-3: Keep the Discord code unchanged, including its desktop branch and iOS check, and keep `lib/utils/desktop_platform.dart`
-  (its `isDesktopPlatform` helper) only because Discord imports it. Marked `shortcut:` and removed with the Discord change.
+- PD-3 (v3, supersedes v2): Remove Discord completely, including its desktop branch, iOS check, SDK and
+  `lib/utils/desktop_platform.dart` (owner decision).
 - PD-4: Remove `RustFfiBackend` and `FfiBackendTransport`. Keep only `MethodChannelBackend`.
 - PD-5: Update check: arm64 only (owner decision).
-- PD-6: Link: remove Android Link and drop its tables with a migration (owner decision).
-- PD-7: Keep stored settings fields and keys that Android reads (FR-012). Alternatives: remove them (rejected: changes the
-  backup format, constitution VII).
+- PD-6 (v3, supersedes v2): Remove Mornye Link from Android without a migration; the app is a first install
+  (owner decision).
+- PD-7 (v3, supersedes v2): Settings fields and keys of removed features are removed; nothing stored needs to
+  survive (owner decision).
+- PD-8: One non-split release APK containing arm64-v8a only. Alternatives: an ABI split with one arm64 output
+  (rejected: AGP 9.5 rejects it together with the NDK ABI filter).
+- PD-9: Remove Windows path identity from Dart, Rust and the shared path-key contract, and every other remnant
+  that is not Android (owner decision). Kept: Linux as the build host in scripts, `cap-primitives` (used by the
+  Android file code), `*_desktop.frag` asset names inside `liquid_glass_easy`, and the Windows/Linux/Darwin
+  options of the `file_picker` platform interface that the test fake must override.
+- PD-10: Remove dead code after an audit, each removal checked by reference search and `flutter analyze`
+  (owner request).
 
 ## Constitution check
 
-- [x] I. Owner decisions respected: update check, Link, database, Discord untouched
+- [x] I. Owner decisions respected: arm64 only, update check, Discord and Link removed, first install
 - [x] II. Every step has a check; device-only behaviour listed as pending; BLOCKED checks not counted as passed
-- [x] III. Root cause: removal, not a bug. Smallest complete change; the shortcuts are recorded above
-- [x] IV. Characterization before edit for database and settings; migration test; no test weakened
-- [ ] V. Failures typed: not yet verified for the update check (test in T021 must show a typed no-match result)
-- [x] VI. Boundary: MethodChannel contract unchanged; its Kotlin side is BLOCKED until android/gradlew exists
-- [x] VII. Database migration and backup fields handled as FR-011 and FR-012
-- [x] VIII. Independent review: two clean design rounds required before build; code review before ship
+- [x] III. Root cause: removal, not a bug. Smallest complete change; the deviations are recorded below
+- [x] IV. No test weakened to pass: tests of removed features are deleted, kept behaviour keeps its tests, skips
+  carry a reason
+- [x] V. Failures typed: the update check's no-match is `noCompatibleApk`, tested in `test/update_checker_test.dart`
+- [x] VI. Boundary: kept MethodChannel methods unchanged; the Kotlin side runs in the android-unit check
+- [x] VII. Data: no migration needed (first install, spec v3)
+- [x] VIII. Independent review: two clean design rounds and two clean code rounds
 - [x] IX. No speculative layers; deviations recorded below
-- [x] X. Commits: records and code separate; no push or APK without the owner
+- [x] X. Commits: records and code separate; push and APK only when the owner asks
 
 ## Complexity tracking
 
 | Deviation | Why needed | Simpler option rejected because |
 |---|---|---|
-| Discord desktop branch and `lib/utils/desktop_platform.dart` helper kept | FR-007: owner said Discord is removed later | Editing Discord code would break the owner's decision |
-| Stored settings fields and keys kept | Backup format and user settings must survive (VII) | Removing them would change the backup format |
+| `test/semantics_geometry_regression_test.dart` skipped | It fails inside the pinned Flutter SDK (`rendering/object.dart`) and uses no project code | Changing the pinned SDK is outside this change |
+| Blur and pixel tests in `album_detail_header`, `listening_rewind_backdrop`, `material_player_backdrop` skipped | They failed before this change; the header blur stays live while music plays and needs its own fix | Fixing `SettledBlur` changes rendering behaviour outside this change |
+| One permission test in `cover_cache_info_repository_test.dart` skipped as root | Root bypasses permission bits in the sandbox; it runs for non-root users | No unreadable-but-existing file can be made as root |
 
 ## Verification plan
 
-- Host checks (work.py check): `analyze`, `dart-tests`, `rust` (cargo workspace test with `--locked`), `workflow`.
-  - `android-unit` requires `android/gradlew`, which the repository does not contain. It is BLOCKED until the owner adds the
-    wrapper or the check is changed. The Kotlin side of the MethodChannel contract is therefore not verified.
-- Searches (SC-002): the removed platform and Link names have no match except the exceptions (Discord, `mornye_discord/ios`,
-  `desktop_platform.dart`) and the change records.
-- Migration test (FR-011) and characterization tests (FR-012) listed in tasks.
-- Pubspec.lock review: the Android-resolved package versions are unchanged after `flutter pub get`.
-- Owner-run checks (pending, constitution X): the release APK build (`scripts/build_android.sh --lite`) and
-  `scripts/check_backend_apk.py` on the arm64 APK; installing it on an arm64 device and opening library, playback and
-  settings.
+- Host checks (`work.py check auto`): `analyze`, `dart-tests`, `android-unit`, `rust` (cargo workspace test with
+  `--locked`), `workflow`. `android/gradlew` is generated by Flutter during a build and is git-ignored.
+- Searches (SC-002): the removed platform, Discord and Link names have no match except the kept items in PD-9 and
+  the change records.
+- Update check: `test/update_checker_test.dart` (arm64 APK, armeabi-v7a typed no-match, release page fallback).
+- Release APK built with `scripts/build_android.sh` and audited by `scripts/check_backend_apk.py`: arm64-v8a only.
+- Owner-run check (pending): install the APK on an arm64 device and open library, playback and settings.
 
 ## Open choices for the owner
 
