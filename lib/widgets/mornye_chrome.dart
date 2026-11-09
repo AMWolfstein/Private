@@ -29,7 +29,6 @@ class MornyeSegmentedControl extends ConsumerWidget {
   /// See [MornyeGlass.samplesBackdrop].
   final bool samplesBackdrop;
 
-  /// A pointer-sized control for a desktop toolbar, 36 tall.
   final bool compact;
 
   @override
@@ -56,7 +55,6 @@ class MornyeSegmentedControl extends ConsumerWidget {
             child: MornyeSelectionPill(
               contrastBlocked: contrastBlocked,
               // The held lens follows a finger. A click never holds it, and
-              // over an opaque toolbar it only refracts a flat fill, so desktop
               // skips it.
               liquidInteraction: ref.watch(mornyeLiquidGlassProvider),
               labels: labels,

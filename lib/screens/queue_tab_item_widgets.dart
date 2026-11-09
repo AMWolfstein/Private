@@ -382,7 +382,6 @@ extension _QueueTabItemWidgets on _QueueTabState {
     );
   }
 
-  /// The queued download's actions: a menu at [position] on desktop, a
   /// sheet elsewhere.
   Future<void> _showQueuedItemMenu(BuildContext context, DownloadItem item) {
     final notifier = ref.read(downloadQueueProvider.notifier);
@@ -1098,7 +1097,6 @@ extension _QueueTabItemWidgets on _QueueTabState {
               child: _buildLibraryQualityBadge(context, colorScheme, quality),
             ),
           ),
-        // A desktop click selects, so the play button stays during selection.
         if (!_isSelectionMode)
           PositionedDirectional(
             end: 4,

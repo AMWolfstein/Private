@@ -74,7 +74,6 @@ class PlatformBridge {
   /// that contain a percentage but no byte counts.
   static const int notificationPercentTotal = 10000;
 
-  /// MethodChannel on Android and iOS, the Rust library on desktop.
   static BackendChannel get _channel => backendChannel;
 
   static int _nativeDataJobSerial = 0;
@@ -206,8 +205,6 @@ class PlatformBridge {
       StreamController<Map<Object?, Object?>>.broadcast();
   static bool _backendEventHandlerInstalled = false;
 
-  /// The Rust backend answers on Android and iOS through the MethodChannel
-  /// and on desktop through dart:ffi, with plain filesystem paths.
   static bool get supportsCoreBackend => Platform.isAndroid;
 
   static bool get supportsExtensionSystem => supportsCoreBackend;
@@ -238,7 +235,6 @@ class PlatformBridge {
       _channel.invokeMethod<String>('consumeVerificationNotification');
 
 
-  // Desktop Google Cast (rust_backend/crates/cast): one call per service
   // method, and the session and device list as events.
 
   static Future<Object?> castCall(
@@ -826,7 +822,6 @@ class PlatformBridge {
     return reset;
   }
 
-  /// iOS only: run a verification/OAuth page inside ASWebAuthenticationSession.
   /// The session intercepts the callback scheme in-process, so the flow
   /// completes even where the app's URL scheme is not registered with the OS
   /// (e.g. sideload containers like LiveContainer). Returns true when the
@@ -1443,7 +1438,6 @@ class PlatformBridge {
       _invokeVoid('stopDownloadService');
 
   /// Keeps user-started work of [kind] alive with the screen off: an Android
-  /// foreground service, or an iOS background-task grace period. Returns
   /// whether the platform accepted it.
   static Future<bool> startBackgroundWork(
     String kind, {
@@ -2214,7 +2208,6 @@ class PlatformBridge {
     }
   }
 
-  // Android reports process exits natively; desktop uses the session marker
   // in the diagnostics session marker.
 
   static Future<Map<String, dynamic>?> getPendingAppCrash() async {

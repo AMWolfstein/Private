@@ -344,7 +344,6 @@ class _TrackItemWithStatus extends ConsumerWidget {
   }
 
   /// A tap on a search song: skip a queued song, refuse a duplicate unless
-  /// variants are allowed, otherwise download it. The desktop song table
   /// runs the same on a click, reading the queue and library itself.
   static Future<void> activate(
     BuildContext context,

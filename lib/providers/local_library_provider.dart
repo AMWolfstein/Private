@@ -653,7 +653,6 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
       return;
     }
     // A paused scan does no work; release the foreground service and wake
-    // lock (iOS background task) until the user resumes.
     await _notificationService.endBackgroundWork(
       NotificationService.libraryScanWorkKind,
     );

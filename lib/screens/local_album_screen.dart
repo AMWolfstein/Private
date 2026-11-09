@@ -387,7 +387,6 @@ class _LocalAlbumScreenState extends ConsumerState<LocalAlbumScreen>
                 color: colorScheme.onSurfaceVariant,
               ),
             ),
-      // Built inside the header, so desktop reads its artwork scheme.
       subtitle: Builder(
         builder: (header) => Text(
           widget.artistName,

@@ -26,7 +26,6 @@ class SongAnalysisResult {
   final bool retry;
 }
 
-/// Decodes two short mono windows of a song, at about 30% and 60% of it to
 /// skip intros, on one decoder thread, and describes them natively. The raw
 /// PCM is deleted at once and never reaches the user's Library.
 class SongFeatureAnalyzer {
@@ -57,7 +56,6 @@ class SongFeatureAnalyzer {
     );
   }
 
-  /// Where the windows start, in seconds. Unknown durations start past most
   /// intros; a short song gets one window from its middle.
   static List<double> windowOffsets(Duration? duration) {
     final seconds = (duration?.inMilliseconds ?? 0) / 1000;

@@ -883,7 +883,6 @@ extension _HomeTabSearchResultsUI on _HomeTabState {
     ];
     // The chips never overlap, so their glass shares one backdrop read.
     final chipRow = LiquidGlassBatch(
-      // A mouse cannot swipe a clipped row, so desktop windows wrap every
       // filter onto view.
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,

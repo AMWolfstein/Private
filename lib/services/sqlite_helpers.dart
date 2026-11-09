@@ -14,7 +14,6 @@ final _log = AppLogger('AppSqlite');
 
 
 /// Directory that holds the app databases. Mobile keeps the documents
-/// directory; desktop uses application support so the files stay out of the
 /// user's Documents folder.
 Future<Directory> appDatabaseDirectory() async {
   return getApplicationDocumentsDirectory();
@@ -370,7 +369,6 @@ Future<void> createPathKeyTable(DatabaseExecutor db, String table) async {
   );
 }
 
-/// Adds the plain-path keys that rows stored with a Windows verbatim path
 /// (`\\?\C:\…`, `\\?\UNC\server\…`) lacked before those keys existed.
 /// Without them a scanned file and the download of the same file look like
 /// two files. Rows that already have their plain key cost one indexed probe.
@@ -415,7 +413,6 @@ Future<int> repairWindowsVerbatimPathKeys(
   return rows.length;
 }
 
-/// [repairWindowsVerbatimPathKeys] for a database being opened. A failed
 /// repair is logged and leaves the database usable.
 Future<void> repairWindowsPathKeysOnOpen(
   Database db,

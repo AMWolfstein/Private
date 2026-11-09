@@ -65,8 +65,6 @@ Widget _home({bool saved = true}) => ProviderScope(
   ),
 );
 
-/// Opens [_home] in a [width] wide window, as the desktop app when
-/// [desktop] is true.
 Future<void> _open(
   WidgetTester tester, {
   required bool desktop,

@@ -104,7 +104,6 @@ void main() {
         );
         await _dismissSnackBars(tester);
 
-        // The cover stays savable: a right-click menu on desktop, a long
         // press on the cover elsewhere.
         if (desktop) {
           await _rightClick(tester, cells.first);

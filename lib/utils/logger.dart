@@ -136,7 +136,6 @@ class LogBuffer extends ChangeNotifier {
   static bool _loggingEnabled = false;
 
   /// Receives every entry the buffer keeps, already redacted and filtered.
-  /// Desktop writes these to rotating log files.
   static void Function(LogEntry entry)? fileSink;
 
   static bool get loggingEnabled => _loggingEnabled;

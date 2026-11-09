@@ -2,19 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mornye/utils/ordered_range_selection.dart';
 
-/// How a desktop click changes a list selection.
 enum RowClick {
   /// A plain click: the item becomes the whole selection.
   replace,
 
-  /// Cmd-click on macOS, Ctrl-click elsewhere: adds or removes the item.
   toggle,
 
   /// Shift-click: selects the range from the anchor to the item.
   extend,
 }
 
-/// Applies a desktop click of [kind] on [target] to [selected] and returns
 /// the new range anchor. [orderedIds] lists the visible items in display
 /// order. A Shift range replaces the selection and keeps [anchor], as in
 /// Finder and Explorer.
@@ -45,7 +42,6 @@ T? applyDesktopClickTo<T>(
   }
 }
 
-/// Command on macOS, Control elsewhere.
 bool get desktopPrimaryModifierPressed {
   final keyboard = HardwareKeyboard.instance;
   return keyboard.isControlPressed;
@@ -71,7 +67,6 @@ bool isContextMenuKey(KeyEvent event) {
 /// Detects double clicks on rows that rebuild between the two clicks, which
 /// would reset a per-widget recognizer.
 abstract final class RowDoubleClick {
-  /// The macOS default; Windows uses 500 ms as well.
   static const timeout = Duration(milliseconds: 500);
 
   static Object? _lastTarget;
@@ -105,7 +100,6 @@ abstract interface class ContextMenuTarget {
   void openContextMenuFromKeyboard();
 }
 
-/// Keyboard handling for a selectable desktop list or grid.
 ///
 /// A click anywhere inside takes keyboard focus for the list (the scope node
 /// itself, so Space still toggles playback). While it has focus:

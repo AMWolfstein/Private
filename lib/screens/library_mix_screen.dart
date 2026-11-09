@@ -315,7 +315,6 @@ class _LibraryMixScreenState extends ConsumerState<LibraryMixScreen>
       blurAndScrimBackground: cover != null,
       coverBuilder: (context, coverSize) =>
           LibraryMixCover(items: _items, size: coverSize),
-      // Built inside the header, so desktop reads its artwork scheme.
       subtitle: Builder(
         builder: (header) => Text(
           libraryMixSubtitle(l10n, mix),
@@ -338,7 +337,6 @@ class _LibraryMixScreenState extends ConsumerState<LibraryMixScreen>
           HeaderMetaItem(l10n.homeMixUpdatedDaily),
         ],
       ),
-      // Phones save from the toolbar; the desktop header has its own "+".
       appBarActions: [
         HeaderCircleButton(
           icon: Icons.playlist_add,

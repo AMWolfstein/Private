@@ -7,11 +7,9 @@ enum PlaybackDeckState { stopped, playing, paused, completed, disposed }
 
 /// The engine behind `PlaybackDependencies.createDeck`.
 enum PlaybackEngine {
-  /// audioplayers: Android, iOS and macOS, where the forks carry the
   /// equalizer tap and Android's USB output.
   audioplayers,
 
-  /// libmpv through media_kit: Windows and Linux.
   mediaKit,
 }
 
@@ -26,7 +24,6 @@ PlaybackEngine get playbackEngine {
 }
 
 /// In-app output gain from 0 to 1 for platforms where the app must not change
-/// the system volume (desktop). Every deck multiplies the gain it is given
 /// (normalization, AutoMix fades) by this value. Mobile keeps it at 1.
 final playbackOutputVolume = ValueNotifier<double>(1);
 

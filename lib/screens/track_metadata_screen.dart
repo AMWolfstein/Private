@@ -281,7 +281,6 @@ class _TrackMetadataScreenState extends ConsumerState<TrackMetadataScreen>
   @override
   double calculateExpandedHeight(BuildContext context) {
     final mediaSize = MediaQuery.sizeOf(context);
-    // Desktop windows are wide and short, so the header takes more of the
     // height to leave the cover room (see _buildHeaderBackground).
     return (mediaSize.height * 0.55).clamp(360.0, 520.0);
   }

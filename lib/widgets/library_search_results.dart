@@ -232,7 +232,6 @@ class _LibrarySearchResultsState extends ConsumerState<LibrarySearchResults> {
     );
   }
 
-  /// The desktop menu of a result. A song outside the selection becomes the
   /// selection for this menu only, so the menu acts on the song clicked: the
   /// selection bar stays hidden under the menu, and the selection ends if
   /// the menu closes without a choice.
@@ -674,7 +673,6 @@ class _LibrarySearchResultsState extends ConsumerState<LibrarySearchResults> {
     final size = artist ? 160.0 : 180.0;
     return SizedBox(
       height: size + 8 + _tileTextHeight(artist: artist) + 16,
-      // Shelves have no paging arrows, so they keep the desktop scrollbar
       // the app hides on other sideways rows.
       child: ScrollConfiguration(
         behavior: const MaterialScrollBehavior().copyWith(

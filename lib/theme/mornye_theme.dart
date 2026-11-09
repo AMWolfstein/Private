@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:mornye/models/theme_settings.dart';
 import 'package:mornye/theme/app_tokens.dart';
 
-/// Flutter counterpart of Mornye's iPhone visual system. Reference values come
 /// from AccentColor.colorset, Components.swift, PlayerViews.swift and Motion.md
 /// in the Mornye project; keep this palette independent of wallpaper colors.
 @immutable
@@ -60,7 +59,6 @@ class MornyeTheme extends ThemeExtension<MornyeTheme> {
   }
 
   static const lightAccent = Color.fromRGBO(204, 46, 51, 1);
-  // iOS dark systemRed: accent text stays readable on #1C1C1E cells.
   static const darkAccent = Color.fromRGBO(255, 69, 58, 1);
 
   static Color accentColor(MornyeAccent accent, Brightness brightness) {
@@ -476,7 +474,6 @@ extension MornyeThemeContext on BuildContext {
   bool get isMornye => Theme.of(this).extension<MornyeTheme>() != null;
 }
 
-/// Settings uses iOS's inset grouped surfaces while the music library keeps
 /// its artwork-led, plain background.
 class MornyeSettingsTheme extends StatelessWidget {
   const MornyeSettingsTheme({super.key, required this.child});

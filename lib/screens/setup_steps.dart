@@ -104,7 +104,6 @@ extension _SetupScreenSteps on _SetupScreenState {
         final titleGap = (shortestSide * 0.06).clamp(16.0, 32.0);
         final descriptionGap = (shortestSide * 0.04).clamp(8.0, 16.0);
         final actionGap = (shortestSide * 0.09).clamp(20.0, 48.0);
-        // Desktop already centers setup in a narrow column, so the inset
         // follows this step's width rather than the window's.
         final inset = wideInsetForWidth(
           constraints.maxWidth,

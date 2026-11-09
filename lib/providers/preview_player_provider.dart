@@ -71,7 +71,6 @@ class PreviewPlayerState {
   }
 }
 
-/// Plays previews through the runtime's preview deck, so desktop previews
 /// use the same engine and in-app volume as the main player.
 class PreviewPlayerController extends Notifier<PreviewPlayerState> {
   PlaybackDeck? _player;

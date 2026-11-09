@@ -374,7 +374,6 @@ class BackupService {
       await restoreNativeHistory(database, bundle);
       return;
     }
-    // Desktop and legacy in-memory callers retain the established codec.
     await HistoryDatabase.instance.clearAll();
     var batch = <Map<String, dynamic>>[];
     await for (final item in bundle.streamHistory()) {

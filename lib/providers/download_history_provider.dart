@@ -1327,7 +1327,6 @@ class DownloadHistoryNotifier extends Notifier<DownloadHistoryState> {
     }
   }
 
-  /// Serializes backup replacement with existing history writes. Repair iOS
   /// paths before publishing the restored history to Library and maintenance.
   Future<void> restoreFromBackupOperation(Future<void> Function() restore) =>
       _enqueueHistoryWrite(() async {

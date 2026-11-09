@@ -1123,7 +1123,6 @@ class DownloadQueueNotifier extends Notifier<DownloadQueueState> {
         _pausePendingItemIds.addAll(activeIds);
         for (final id in activeIds) {
           if (nativeWorkerActive || nativeCancelledItemIds.contains(id)) {
-            // The native worker or iOS expiry already cancelled this attempt.
             // A second cancel can arrive after it unwinds and leave a flag
             // that aborts the resumed download before it starts.
             _verificationWaitCoordinator.cancelItem(id);
@@ -1705,7 +1704,6 @@ class DownloadQueueNotifier extends Notifier<DownloadQueueState> {
       }
     }
 
-    // Desktop: keep the computer from idle sleeping until the queue stops.
 
     if (!isSafMode && state.outputDir.isEmpty) {
       _log.d('Output dir empty, initializing...');
@@ -1796,7 +1794,6 @@ class DownloadQueueNotifier extends Notifier<DownloadQueueState> {
     } else {
       _log.i('Queue processing finished');
     }
-    // All per-item futures have completed at this point. Remove any iOS
     // expiration guards that arrived after an individual worker's finally
     // block, otherwise the safely requeued item would be filtered forever on
     // the next queue run.

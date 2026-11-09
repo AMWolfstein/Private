@@ -11,7 +11,6 @@ import 'package:mornye/widgets/app_icon_button.dart';
 import 'package:mornye/widgets/track_lists/context_menu.dart';
 import 'package:mornye/widgets/sliver_layout_info_builder.dart';
 
-/// Space below a desktop detail page, so its last rows clear the floating
 /// player.
 const double desktopDetailBottomInset = 90;
 
@@ -22,7 +21,6 @@ const double _toolbarHeight = 52;
 double desktopDetailArtworkSize(double contentWidth) =>
     (contentWidth * 0.32).clamp(200.0, 300.0);
 
-/// The artist line under a desktop detail title, large and in the accent color.
 ///
 /// Pass a [context] inside the header (a `Builder` around the subtitle), so
 /// a Material header takes the accent of its artwork scheme.
@@ -41,7 +39,6 @@ TextStyle desktopDetailSubtitleStyle(BuildContext context) {
         );
 }
 
-/// The desktop header of album, playlist, folder and artist pages.
 ///
 /// The artwork sits on the left edge of the list below, with the title,
 /// [subtitle] and [meta] centered beside it and [actions] along its bottom

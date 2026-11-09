@@ -52,7 +52,6 @@ String _paintFingerprint(WidgetTester tester) {
 /// SHA-1 of each fingerprint, recorded on the base layout (commit 44cbb57b)
 /// before search results gained cover grids and shelves on wide screens, with
 /// the Material values re-recorded when sort and view became a grouped
-/// toolbar, the Material desktop value when Home took M3's 24dp window
 /// margin, and the Mornye values when blue became the default accent and the
 /// filter chips gained their glass press layer, and the Mornye values again when Glass
 /// became fixed at Clear (the retired Glass Quality slider's old default 0.75 painted a

@@ -25,13 +25,11 @@ class OfflineSong {
 
   final LocalLibraryItem item;
 
-  /// The desktop catalog id or stable network source of [item].
   final String songId;
   final String? relativeDir;
   final String? fileName;
 }
 
-/// Fetches a desktop song's original file.
 abstract interface class OfflineTransport {
   /// Writes the original file of [songId] to [output]. [checkpoint] throws
   /// to cancel between chunks.
@@ -424,7 +422,6 @@ class OfflineSaver {
 
 /// [OfflineDestination] for the download folder the settings choose:
 /// Android's storage access tree in `saf` mode, else the download directory
-/// (through its security-scoped bookmark on iOS), else `Documents/Mornye`.
 class DownloadFolderDestination implements OfflineRollbackDestination {
   const DownloadFolderDestination(this.settings);
 

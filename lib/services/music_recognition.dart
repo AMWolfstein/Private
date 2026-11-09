@@ -226,8 +226,6 @@ abstract interface class RecognitionMicrophone {
 }
 
 /// Captures with the `record` plugin on every platform: AudioRecord on
-/// Android, AVFoundation on iOS and macOS, Media Foundation on Windows and
-/// `parecord` on Linux.
 class RecordMicrophone implements RecognitionMicrophone {
   RecordMicrophone();
 

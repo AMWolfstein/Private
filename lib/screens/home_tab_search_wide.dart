@@ -2,7 +2,6 @@
 part of 'home_tab.dart';
 
 /// Search results once the content is [searchCoverLayoutMinWidth] wide, on
-/// tablets and desktop windows: every filter, Songs included, shows a grid
 /// of covers, and the All view shows one shelf of covers per kind.
 extension _HomeTabSearchWideUI on _HomeTabState {
   List<Widget> _buildWideSearchResults({
@@ -336,7 +335,6 @@ extension _HomeTabSearchWideUI on _HomeTabState {
   }
 
   /// One [kind] in the All view: [count] covers from [cell] in a row that
-  /// scrolls sideways, with arrows for a mouse on desktop.
   Widget _buildSearchCoverShelf(
     int count,
     String kind,

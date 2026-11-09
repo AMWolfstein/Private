@@ -504,7 +504,6 @@ void main() {
     testWidgets('desktop groups line up with page-wide cards ($style)', (
       tester,
     ) async {
-      // A laptop's full screen, and a window past the desktop reading width.
       for (final (width, edge) in [
         (1100.0, 16.0),
         (2400.0, mornye ? 416.0 : 576.0),

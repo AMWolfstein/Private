@@ -7,8 +7,6 @@ typedef BackendCallHandler = Future<dynamic> Function(MethodCall call);
 
 /// Transport between Dart and the Rust backend.
 ///
-/// Android and iOS keep the platform channels ([MethodChannelBackend]);
-/// desktop builds call the Rust library directly ([RustFfiBackend]).
 abstract class BackendChannel {
   const BackendChannel();
 

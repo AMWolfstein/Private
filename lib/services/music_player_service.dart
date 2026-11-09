@@ -75,7 +75,6 @@ class PlaybackProcessing {
   final double normalizationGain;
 
   /// A verified native direct path that bypasses the system mixer and DSP.
-  /// Desktop exclusive output may still apply software processing.
   final bool direct;
 
   /// AutoMix tempo matching; 1 outside a transition.
@@ -453,7 +452,6 @@ class MusicPlayerHandler extends BaseAudioHandler
     // Use a stable document identity for both direct playback and AutoMix.
     // Haptics opens its own SAF input; the player's descriptor is short-lived.
     final path = document ? source : (resolved.isNotEmpty ? resolved : source);
-    // Desktop has no vibration motor.
     final local =
         path.isNotEmpty &&
         (document || !path.contains('://')) &&
@@ -622,7 +620,6 @@ class MusicPlayerHandler extends BaseAudioHandler
   /// pauses and the UI/notification reflect the real state instead of staying
   /// stuck on "playing".
   Future<void> _configureAudioSession() async {
-    // audio_session models mobile audio focus; desktop has no equivalent.
     try {
       final session = await _dependencies.audioSession();
       _audioSession = session;
@@ -682,7 +679,6 @@ class MusicPlayerHandler extends BaseAudioHandler
   void _refreshPlaybackAutomation() {
     if (_disposed) return;
     // Both follow mobile system volume and audio_session routes, which
-    // desktop does not use.
     final pauseOnMute =
         !_cast.active &&
         _settings.playerMode == 'internal' &&
@@ -1392,7 +1388,6 @@ class MusicPlayerHandler extends BaseAudioHandler
   }
 
   /// Shows the restored song's cover from its file when the saved session
-  /// kept none, as playing it would. The desktop backend reads files only
   /// once extensions are ready, which may be after the restore.
   Future<void> recoverRestoredArtwork() async {
     if (_index < 0 || _index >= _media.length) return;

@@ -4,7 +4,6 @@ import 'dart:typed_data';
 /// the transport has already released the native buffer.
 typedef NativeMessageListener = void Function(int id, int kind, Uint8List data);
 
-/// Callback kinds of the desktop backend C ABI.
 abstract final class NativeMessageKind {
   static const result = 0;
   static const error = 1;
@@ -15,7 +14,6 @@ abstract final class NativeMessageKind {
   static const log = 13;
 }
 
-/// Raw access to the desktop backend's exported functions, injectable so the
 /// message handling can be tested without the native library.
 abstract interface class NativeBackendTransport {
   /// `mornye_init`: installs [listener] and passes the config JSON.

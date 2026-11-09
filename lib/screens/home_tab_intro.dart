@@ -528,7 +528,6 @@ class _HomeSection extends StatelessWidget {
 class _HomeContinueListeningCard extends ConsumerStatefulWidget {
   const _HomeContinueListeningCard() : hero = false;
 
-  /// The desktop card beside Shortcuts: the cover fills its height, the
   /// title sits above, and the progress and play button run along the
   /// bottom.
   final bool hero;
@@ -834,7 +833,6 @@ class _HomeShelf extends StatelessWidget {
 }
 
 /// Hands [builder] the shelf cover size, fitting about six covers across a
-/// Mornye desktop pane.
 class _HomeShelfSize extends StatelessWidget {
   const _HomeShelfSize({required this.inset, required this.builder});
 
@@ -1229,7 +1227,6 @@ class _HomeMixesShelf extends StatelessWidget {
 }
 
 /// Mornye's first shelf: the day's mixes as tall banners, a little over three
-/// to the pane on desktop and one with its neighbor peeking on phones.
 class _HomeTopPicksShelf extends StatelessWidget {
   const _HomeTopPicksShelf({
     required this.mixes,
@@ -1373,10 +1370,8 @@ enum _HomeShortcutsLayout {
   grid,
 
   /// One connected list that fills the height it is given, beside the
-  /// desktop Continue listening card.
   list,
 
-  /// One row of short tiles across the desktop pane.
   row,
 }
 

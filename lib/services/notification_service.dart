@@ -47,7 +47,6 @@ class NotificationService {
   final Set<String> _serviceNotificationKinds = {};
 
   /// Keeps user-started work running when the screen turns off (Android
-  /// foreground service, iOS background task). Pair with [endBackgroundWork].
   Future<void> beginBackgroundWork(String kind, {required String title}) async {
     if (!Platform.isAndroid) return;
     try {
@@ -140,7 +139,6 @@ class NotificationService {
   static const String libraryChannelDescription =
       'Shows local library scan progress';
 
-  /// Windows toast identity. Keep both values stable: Windows ties the
   /// notification settings and activation callback to them.
   static const String windowsAppUserModelId = 'com.zarz.mornye';
   static const String windowsNotificationGuid =
@@ -187,7 +185,6 @@ class NotificationService {
         verificationNotifications.receive(response.payload);
       },
     );
-    // Linux delivers launch responses through initialize's callback and does
     // not implement the separate launch-details query.
     if (Platform.isAndroid) {
       final launch = await _notifications.getNotificationAppLaunchDetails();

@@ -33,7 +33,6 @@ class ToolButton {
 /// A page's tools (sort, filter, view) as one connected Material 3
 /// Expressive button group, so the related controls read as one object, as
 /// on Library pages and search results. The group is 44dp tall on phones
-/// and 40dp for desktop pointer input; both keep the 48dp touch target.
 class ToolButtonGroup extends StatefulWidget {
   const ToolButtonGroup({super.key, required this.tools});
 

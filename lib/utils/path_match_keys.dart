@@ -107,8 +107,6 @@ Set<String> _buildPathMatchKeys(
       }
     }
 
-    // Windows resolves paths to the verbatim form (`\\?\C:\…`,
-    // `\\?\UNC\server\…`), which the desktop scanner stores, while
     // downloads keep the plain form. Both name the same file.
     final plain = withoutWindowsVerbatimPrefix(trimmed);
     if (plain != null) addNormalized(plain);
@@ -184,7 +182,6 @@ Set<String> _buildPathMatchKeys(
   return result;
 }
 
-/// [path] without its Windows verbatim prefix, in either separator:
 /// `\\?\C:\a` → `C:\a` and `\\?\UNC\server\share\a` →
 /// `\\server\share\a`. Null when [path] has no such prefix, or names a
 /// device or volume GUID that has no plain spelling.

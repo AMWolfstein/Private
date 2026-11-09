@@ -18,7 +18,6 @@ import 'package:mornye/widgets/track_detail_actions.dart';
 
 /// Songs like an album's, single's or playlist's under it, each with a
 /// preview, an add button and a tap that downloads it. Phones list them as
-/// rows, desktop in the song table the page uses. Shows nothing while
 /// loading, without a source extension, or when nothing new was found: the
 /// section is a bonus below the collection, not part of it.
 class CollectionSuggestionsSliver extends ConsumerStatefulWidget {

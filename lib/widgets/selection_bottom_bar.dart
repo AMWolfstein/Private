@@ -297,7 +297,6 @@ class SelectionBottomBar extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                // The tap hint describes touch selection; desktop rows select
                 // with the pointer and modifiers, and the toolbar stays short.
                 Text(
                   allSelected
@@ -404,7 +403,6 @@ class SelectionBottomBar extends StatelessWidget {
       children: children,
     );
 
-    // Desktop: a bounded toolbar over the page, clear of Mornye's floating
     // player, rather than a sheet across the whole pane. There is no drag
     // handle, since pointer input has no gesture to tuck the actions away;
     // the close button ends the selection.

@@ -65,7 +65,6 @@ class PlayerPlaybackControls extends ConsumerWidget {
     final mornye = context.isMornye;
     final isPlaying = ref.watch(playbackPlayingProvider);
     final isLoading = ref.watch(playbackLoadingProvider);
-    // Mornye's desktop player keeps a compact transport, with shuffle
     // and repeat at the timeline's ends; its phone player has them in the queue.
     final desktopMornye = mornye && edgeAligned;
     final showModes = showPlaybackModes && (!mornye || edgeAligned);

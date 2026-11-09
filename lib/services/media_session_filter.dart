@@ -153,8 +153,6 @@ class MediaSessionFilter extends AudioServicePlatform {
 }
 
 /// Installs [MediaSessionFilter] before `AudioService.init`, which reads the
-/// platform instance once. The Android, iOS and macOS sessions advance the
-/// position on their own; Windows and Linux keep every state as before.
 void installMediaSessionFilter() {
   final platform = AudioServicePlatform.instance;
   if (platform is MediaSessionFilter) return;

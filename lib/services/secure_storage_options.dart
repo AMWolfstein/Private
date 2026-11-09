@@ -12,7 +12,6 @@ const secureStorageAndroidOptions = AndroidOptions(
 
 // The data protection keychain needs a signed keychain-access-groups
 // entitlement; the login keychain works for Developer ID and local builds.
-// Linux keeps the default libsecret options.
 const secureStorageMacOsOptions = MacOsOptions(
   usesDataProtectionKeychain: false,
 );

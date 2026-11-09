@@ -273,7 +273,6 @@ impl ExtensionFiles {
         check: &dyn Fn() -> Result<(), String>,
     ) -> Result<OutputGuard, String> {
         // Go coordinates case-folded paths, including aliases on the default
-        // case-insensitive mobile/macOS filesystems.
         self.registry
             .lock(Path::new(&path.display().to_lowercase()), check)
     }

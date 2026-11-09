@@ -213,7 +213,6 @@ class ExtensionNotifier extends Notifier<ExtensionState> {
       if (Platform.isAndroid) {
         // Exchange a cold-start browser callback before restored downloads can
         // bootstrap a replacement challenge and invalidate its original state.
-        // Desktop queues a launch URL in the backend before this point.
         await PlatformBridge.processPendingExtensionCallbacks();
       }
       state = state.copyWith(

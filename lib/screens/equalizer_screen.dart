@@ -133,7 +133,6 @@ class _EqualizerScreenState extends ConsumerState<EqualizerScreen> {
                 AppSheetOption(
                   title: Text(preset.name),
                   selected: preset == selected,
-                  // iOS lists mark the choice with a trailing checkmark.
                   leading: mornye
                       ? null
                       : preset == selected
@@ -246,7 +245,6 @@ class _EqualizerScreenState extends ConsumerState<EqualizerScreen> {
         slivers: [
           AppSliverHeader.page(title: l10n.equalizerTitle),
           if (mornye) ...[
-            // iOS order: the master switch, its footnote, then the response.
             section(
               SettingsGroup(
                 children: [
@@ -458,7 +456,6 @@ class _EqualizerScreenState extends ConsumerState<EqualizerScreen> {
             ),
           ),
           if (mornye) ...[
-            // iOS keeps a destructive command in its own group at the end.
             const SliverToBoxAdapter(child: SizedBox(height: 28)),
             section(
               SettingsGroup(

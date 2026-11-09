@@ -10,10 +10,8 @@ import 'package:mornye/services/playback_equalizer.dart';
 
 final _log = AppLogger('AudioOutput');
 
-/// [url] marked for the Darwin audioplayers fork as a file still arriving.
 /// The fork then prepares it without indexing its timing first, which would
 /// read to the end of a file still being written and time out (see
-/// third_party/audioplayers_darwin/MORNYE_PATCHES.md).
 @visibleForTesting
 String darwinArrivingUrl(String url) => '$url#mornye-arriving';
 
@@ -150,7 +148,6 @@ PlaybackDeckState _deckState(PlayerState state) => switch (state) {
   PlayerState.disposed => PlaybackDeckState.disposed,
 };
 
-/// The audioplayers deck (Android, iOS, macOS), with Android's native USB
 /// path. Each prepare owns a token so delayed native events cannot affect a
 /// new song.
 class AudioplayersPlaybackDeck implements PlaybackDeck {
@@ -159,7 +156,6 @@ class AudioplayersPlaybackDeck implements PlaybackDeck {
     bool? nativeAvailable,
     bool? equalizerAvailable,
   }) : _ordinary = AudioPlayer(playerId: playerId),
-       // The Darwin fork's tap is shared source, so macOS has it as well.
        _equalizerAvailable = equalizerAvailable ?? Platform.isAndroid,
        _platformChainsPlayers = Platform.isAndroid,
        _nativeAvailable = nativeAvailable ?? Platform.isAndroid {
@@ -219,7 +215,6 @@ class AudioplayersPlaybackDeck implements PlaybackDeck {
     if (_disposed || _equalizerDisposed) return;
     final settings = playbackEqualizer.value;
     if (!_equalizerAvailable) {
-      // Windows and Linux get the equalizer with their own deck. Until then
       // the editor must not claim it is active.
       return;
     }
@@ -323,7 +318,6 @@ class AudioplayersPlaybackDeck implements PlaybackDeck {
   @override
   Future<void> configureOutput() async {
     await _ordinary.setReleaseMode(ReleaseMode.stop);
-    // audioplayers has no audio context outside Android and iOS.
     if (Platform.isAndroid) {
       await _ordinary.setAudioContext(_musicAudioContext);
     }
@@ -649,7 +643,6 @@ class AudioplayersPlaybackDeck implements PlaybackDeck {
   @override
   Future<bool> setNextDeck(PlaybackDeck? next) async {
     // The forks chain their own players: Android with
-    // MediaPlayer.setNextMediaPlayer, Darwin from the end notification.
     if (_direct || !_chainsPlayers) return false;
     final player = next is AudioplayersPlaybackDeck && !next._direct
         ? next._ordinary

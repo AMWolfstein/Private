@@ -271,7 +271,6 @@ abstract final class LibrarySchema {
 
   static Future<void> _createVisibleView(DatabaseExecutor db) async {
     // Keep alias records addressable by old playlist IDs. Only suppress a
-    // Windows physical-file alias while another available record represents
     // it. The dedicated keys keep converted formats and CUE tracks distinct.
     await db.execute('DROP VIEW IF EXISTS $visibleView');
     await db.execute('''

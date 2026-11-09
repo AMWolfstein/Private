@@ -138,7 +138,6 @@ class TrackCard extends StatelessWidget {
   final VoidCallback? onTap;
   final VoidCallback? onLongPress;
 
-  /// Desktop right-click, with the global pointer position. See
   /// [ContextMenuRegion].
   final ValueChanged<Offset>? onContextMenu;
 
@@ -508,7 +507,6 @@ class TrackGridCard extends StatelessWidget {
   final VoidCallback? onTap;
   final VoidCallback? onLongPress;
 
-  /// Desktop right-click, with the global pointer position.
   final ValueChanged<Offset>? onContextMenu;
   final bool isSelected;
   final String? semanticLabel;

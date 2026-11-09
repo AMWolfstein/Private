@@ -138,7 +138,6 @@ class _HomeTabState extends ConsumerState<HomeTab>
   static const int _minLiveSearchChars = 3;
   static const Duration _liveSearchDelay = Duration(milliseconds: 800);
 
-  /// The Mornye desktop Search page can switch between the library and the
   /// selected online provider.
   bool _embeddedCoverRefreshScheduled = false;
   List<Extension>? _thumbnailSizesExtensionsCache;
@@ -167,7 +166,6 @@ class _HomeTabState extends ConsumerState<HomeTab>
   List<int>? _sortedTrackIndexesCache;
 
   double _exploreCardSize(BuildContext context) {
-    // Six phone-sized cards across an iPad made the feed look like a desktop
     // page zoomed out. A higher tablet cap gives roughly five generous cards
     // in portrait while leaving all phone sizes unchanged.
     final scale = responsiveScale(context: context, min: 0.82, max: 1.32);
@@ -250,7 +248,6 @@ class _HomeTabState extends ConsumerState<HomeTab>
   }
 
   void _fetchExploreIfNeeded() {
-    // The desktop Mornye Search page browses the feed too.
     if (!_showsHome) return;
     if (ref.read(settingsProvider).homeFeedProvider ==
         AppSettings.homeFeedProviderOff) {

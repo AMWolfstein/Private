@@ -27,7 +27,6 @@ import 'package:mornye/widgets/expressive_button.dart';
 
 /// The highlights of [AppInfo.whatsNewRelease] on phones and tablets, shown
 /// once after an update and again from About. It keeps the look of the
-/// 5.2 rebrand tour; pages list only what this device can use. Desktop uses
 /// [showWhatsNewDialog] instead.
 class WhatsNewScreen extends ConsumerStatefulWidget {
   const WhatsNewScreen({super.key, this.localNetworkAccess});
@@ -267,7 +266,6 @@ class _WhatsNewScreenState extends ConsumerState<WhatsNewScreen> {
   }
 }
 
-/// The tour as a desktop dialog: the sections listed beside the selected
 /// one, Skip and Continue in the footer. Closing it any way marks it seen.
 Future<void> showWhatsNewDialog(BuildContext context) async {
   final settings = ProviderScope.containerOf(

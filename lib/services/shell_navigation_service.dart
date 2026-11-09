@@ -7,7 +7,6 @@ class ShellNavigationService {
   static final chromeBrightness = ValueNotifier<Brightness?>(null);
   static final chromeSurface = ValueNotifier<Color?>(null);
 
-  /// The artwork of the visible page's hero, which the desktop sidebar shows
   /// blurred under its tint.
   static final chromeBackdrop = ValueNotifier<String?>(null);
 
@@ -154,7 +153,6 @@ class ShellNavigationService {
   }
 
   /// Opens a Library sidebar link (`downloads`, `songs`, ...) where the
-  /// shell has them, the Mornye desktop sidebar. Returns false elsewhere, so
   /// callers fall back to [requestTab].
   static bool requestLibraryLink(String id) =>
       _libraryLinkHandler?.call(id) ?? false;
@@ -194,7 +192,6 @@ class ShellNavigationService {
   static Object? _settingsDetailOwner;
   static ValueGetter<NavigatorState?>? _settingsDetailNavigator;
 
-  /// Registers the desktop Settings detail pane, whose pages Escape and Back
   /// close while Settings is the active destination.
   static void registerSettingsDetailNavigator({
     required Object owner,
@@ -214,7 +211,6 @@ class ShellNavigationService {
       _activeTabNavigatorKey()?.currentState;
 
   /// The navigator whose pages Back closes in the active destination.
-  /// Settings has no tab navigator; on desktop its detail pane stands in.
   static NavigatorState? activeBackNavigator() {
     final key = _activeTabNavigatorKey();
     if (key != null) return key.currentState;

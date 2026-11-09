@@ -153,7 +153,6 @@ void main() {
       _levelFor(lowEnd: false, blur: false, liquidCapable: false),
       MornyeGlassLevel.frosted,
     );
-    // iOS runs the standard tier but keeps the full material.
     expect(
       _levelFor(lowEnd: false, blur: false, liquidCapable: true),
       MornyeGlassLevel.liquid,

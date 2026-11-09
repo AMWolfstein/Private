@@ -23,7 +23,6 @@ import 'package:mornye/widgets/expressive_button_group.dart';
 import 'package:mornye/widgets/expressive_icon_button.dart';
 import 'package:mornye/utils/adaptive_layout.dart';
 import 'package:mornye/widgets/track_lists/context_menu.dart';
-import 'package:mornye/widgets/track_lists/detail_header.dart';
 import 'package:mornye/widgets/settled_blur.dart';
 import 'package:mornye/widgets/sliver_layout_info_builder.dart';
 
@@ -36,8 +35,6 @@ import 'package:mornye/widgets/sliver_layout_info_builder.dart';
 /// Colours come from a scheme derived from [paletteSource] (see [CoverPalette])
 /// and are published to descendants through [HeaderPalette], so the header
 /// follows both the artwork and the app's light/dark mode instead of assuming a
-/// black backdrop with white text. The Material desktop header scopes the same
-/// scheme to its artwork and details (see [desktopDetailHeaderSlivers]).
 class AlbumDetailHeader extends StatelessWidget {
   const AlbumDetailHeader({
     super.key,
@@ -61,7 +58,6 @@ class AlbumDetailHeader extends StatelessWidget {
     this.moreMenu,
   });
 
-  /// Desktop only: page actions behind a "More" button in the toolbar.
   final List<List<ContextMenuAction>> Function()? moreMenu;
 
   final String title;
@@ -326,9 +322,7 @@ class AlbumDetailHeader extends StatelessWidget {
   Widget _buildAppBar(BuildContext context, ColorScheme headerScheme) {
     final tokens = context.tokens;
     final plainArtworkHeader = context.isMornye && coverBuilder != null;
-    // iOS does not add horizontal safe-area padding in portrait. Give toolbar
     // controls and header content an explicit inset so circular actions do not
-    // sit against the glass edge on either iPhone or iPad. Android uses a
     // smaller inset for the same reason.
     final iosEdgeInset = detailHeaderEdgeInset(context);
     // Scrim and gradient are drawn from the palette surface instead of black,
@@ -690,7 +684,6 @@ class AlbumPlayActions extends StatelessWidget {
   final VoidCallback onShuffle;
   final bool isPlaying;
 
-  /// Desktop only: a round "+" after Play that adds the songs to a playlist.
   final VoidCallback? onAddToPlaylist;
   final VoidCallback? onDownload;
 

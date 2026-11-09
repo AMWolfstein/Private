@@ -505,7 +505,6 @@ Future<void> _completeSessionGrantFromClipboard(
 }
 
 /// Opens an extension auth/verification page using the browser preference.
-/// In-app HTTPS verification on iOS uses ASWebAuthenticationSession to capture
 /// the mornye:// callback even when the app's URL scheme is not registered
 /// with the OS (sideload containers like LiveContainer).
 Future<bool> launchExtensionAuthUrl(Uri uri, {required String browserMode}) {
@@ -521,7 +520,6 @@ Future<bool> _launchVerificationUrl(
   if (cancellationSignal != null) {
     unawaited(cancellationSignal.then((_) => cancelled = true));
   }
-  // Desktop has no in-app browser or web auth session: the system browser
   // opens the page and returns through the registered mornye:// scheme
   // (the deep-link handler hands the callback to the backend).
 

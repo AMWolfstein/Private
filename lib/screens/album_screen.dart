@@ -604,7 +604,6 @@ class _AlbumScreenState extends ConsumerState<AlbumScreen>
                   )
           : null,
       subtitle: (artistName != null && artistName.isNotEmpty)
-          // Built inside the header, so desktop reads its artwork scheme.
           ? Builder(
               builder: (header) => ClickableArtistName(
                 artistName: artistName,

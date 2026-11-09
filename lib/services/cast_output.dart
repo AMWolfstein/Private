@@ -31,7 +31,6 @@ class CastDevice {
 }
 
 /// How [CastOutput] reaches the platform: Android's Google Cast plugin and
-/// the iOS Rust sender answer on a MethodChannel; desktop calls the Rust
 /// backend over dart:ffi. Events are session snapshots, or `{"devices"}`
 /// when the discovered list changes.
 abstract interface class CastTransport {

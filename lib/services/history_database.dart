@@ -644,7 +644,6 @@ class HistoryDatabase {
         'downloaded_at',
       ],
       // A double-quoted "" is an identifier in SQLite; builds without the
-      // legacy fallback (DQS), as on Windows, reject it.
       where: "file_path IS NOT NULL AND file_path != ''",
       orderBy: 'sort_added DESC, id DESC',
       limit: limit,

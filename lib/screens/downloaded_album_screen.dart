@@ -400,7 +400,6 @@ class _DownloadedAlbumScreenState extends ConsumerState<DownloadedAlbumScreen>
         coverSize,
         cacheWidth,
       ),
-      // Built inside the header, so desktop reads its artwork scheme.
       subtitle: Builder(
         builder: (header) => Text(
           widget.artistName,

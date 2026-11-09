@@ -121,9 +121,7 @@ String normalizeRelativeLibraryDir(String value) => value
     .where((part) => part.isNotEmpty && part != '.' && part != '..')
     .join('/');
 
-/// The plain spelling of a Windows "verbatim" path: `\\?\C:\Music` becomes
 /// `C:\Music` and `\\?\UNC\server\share` becomes `\\server\share`. The
-/// desktop library scan reports files in the verbatim form, while settings
 /// hold plain paths; both name the same file. Other paths are unchanged.
 String plainWindowsPath(String path) {
   if (path.startsWith(r'\\?\UNC\')) return '\\\\${path.substring(8)}';
@@ -154,7 +152,6 @@ String lyricsSidecarName(String fileName) {
 
 /// Gives every planned target a name that no other planned target and no
 /// file that stays in place already uses. Comparison ignores case because
-/// Android shared storage, Windows and macOS do.
 List<LibraryReorganizationMove> resolveLibraryReorganizationConflicts(
   List<LibraryReorganizationMove> moves, {
   Iterable<String> occupied = const [],

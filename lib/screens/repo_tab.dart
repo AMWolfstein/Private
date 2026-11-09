@@ -97,7 +97,6 @@ class _RepoTabState extends ConsumerState<RepoTab> {
     final colorScheme = Theme.of(context).colorScheme;
     final l10n = context.l10n;
     // Controls share the centered column of the extension list on tablets.
-    // Desktop fills the pane with a grid instead, with the same edges as the
     // other tabs.
     final edge = 16 + wideListInset(context);
     final desktopColumns = 1;
@@ -266,7 +265,6 @@ class _RepoTabState extends ConsumerState<RepoTab> {
 
   static const double _desktopGridGap = 12;
 
-  /// Desktop extensions as a grid of tiles that fills the pane.
   Widget _desktopExtensionGrid(
     List<RepoExtension> extensions, {
     required int columns,
@@ -666,7 +664,6 @@ class _RepoTabState extends ConsumerState<RepoTab> {
 }
 
 /// Category filters scroll sideways on phones. A mouse cannot swipe a clipped
-/// row, so desktop windows wrap every category onto view.
 class _CategoryChipRow extends StatelessWidget {
   const _CategoryChipRow({required this.edge, required this.children});
 

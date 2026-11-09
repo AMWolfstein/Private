@@ -126,7 +126,6 @@ LibraryFileLocation? _fileLocation(String path) {
   var separator = '/';
   final String rest;
   if (normalized.startsWith('//')) {
-    // A Windows network share.
     root = '//';
     rootLabel = r'\\';
     separator = r'\';

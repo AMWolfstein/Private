@@ -113,7 +113,6 @@ class _CollectionScaffoldState extends State<CollectionScaffold> {
                 key: const ValueKey('collection-selection-spacer'),
                 height: widget.isSelectionMode
                     ? _selectionBarHeight
-                    // Desktop pages scroll under the floating player.
                     : 32,
               ),
             ),

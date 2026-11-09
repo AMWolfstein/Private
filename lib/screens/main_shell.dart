@@ -273,7 +273,6 @@ class _MainShellState extends ConsumerState<MainShell>
   }
 
   /// Restores the last session, then its song's cover from the file once
-  /// extensions are ready; the desktop backend reads files only then.
   Future<void> _restorePlayback() async {
     final runtime = ref.read(musicPlayerRuntimeProvider);
     try {
@@ -423,7 +422,6 @@ class _MainShellState extends ConsumerState<MainShell>
     if (!context.isMornye) ref.read(trackProvider.notifier).clear();
   }
 
-  /// Desktop and TV show Settings after Search in the content pane.
   /// Phones and tablets open it as a page instead.
   bool get _mornyeSettingsTab => context.isMornye && (isAndroidTv);
 
@@ -931,7 +929,6 @@ class _MainShellState extends ConsumerState<MainShell>
   }
 
   /// The phone and tablet chrome around [pageView]: the bottom bar, or the
-  /// rail in wide windows, and the mini player.
   Widget _mobileScaffold(
     BuildContext context,
     WidgetRef ref, {
@@ -945,7 +942,6 @@ class _MainShellState extends ConsumerState<MainShell>
     // Material follows its expanded window class: landscape tablets get the
     // rail, portrait tablets keep the bottom bar. Mornye keeps a bottom tab
     // bar on tablets, compact and centered once the window is expanded, and
-    // reserves the rail for desktop-width windows.
     final useNavigationRail = context.isMornye
         ? useNavigationRailForWidth(screenSize.width)
         : useMaterialNavigationRailForWidth(screenSize.width);
@@ -1022,7 +1018,6 @@ class _MainShellState extends ConsumerState<MainShell>
               child: SafeArea(
                 top: false,
                 minimum: const EdgeInsets.fromLTRB(20, 0, 20, 8),
-                // iPadOS-style chrome: one compact, centered pill rather
                 // than a bar spread across a landscape tablet.
                 child: Center(
                   heightFactor: 1,

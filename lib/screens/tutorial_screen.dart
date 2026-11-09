@@ -276,10 +276,8 @@ class _TutorialScreenState extends ConsumerState<TutorialScreen> {
       ),
     );
     return scaffold;
-    // Enter moves on, as the default button of a desktop window would.
   }
 
-  /// Desktop windows keep the tour in one centered column.
   Widget _desktopColumn(Widget child) => child;
 
   Widget _buildFeatureList(

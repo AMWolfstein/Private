@@ -3,8 +3,6 @@ import 'package:mornye/theme/mornye_theme.dart';
 import 'package:mornye/utils/android_tv.dart';
 
 /// Keeps touch-first tablets on the bottom navigation used by phones. A rail
-/// is reserved for genuinely desktop-width windows; the old 600dp threshold
-/// made an iPad portrait layout look like a shrunken desktop app.
 const double navigationRailBreakpoint = 1440;
 
 /// Material's expanded window class. Landscape tablets switch the Material
@@ -24,10 +22,7 @@ bool useMaterialNavigationRailForWidth(double width) =>
 /// headers. Filled expressive circles need breathing room from the device edge.
 double detailHeaderEdgeInset(BuildContext context) => 8;
 
-/// Visual scale for touch-first tablet surfaces. Large iPads have enough
 /// pixels to make an unscaled phone density feel miniature, especially when
-/// Simulator shrinks the whole device to fit a desktop display. Desktop
-/// windows keep native density at every size.
 double adaptiveUiScaleForSize(Size size) {
   if (size.shortestSide < 600 || size.width >= navigationRailBreakpoint) {
     return 1;
@@ -104,9 +99,6 @@ double wideInsetForWidth(
 
 /// Horizontal inset that centers full-width list content on tablets/landscape;
 /// zero on phones, so rows stop stretching across the whole screen. Mornye
-/// desktop pages run across the whole content pane and center
-/// only past [desktopContentMaxWidth]. Material desktop pages center past
-/// [desktopMaterialContentMaxWidth], so long lists keep a reading width
 /// instead of stretching across a wide window.
 double wideListInset(BuildContext context, {double? contentMaxWidth}) =>
     wideInsetForWidth(
@@ -114,9 +106,7 @@ double wideListInset(BuildContext context, {double? contentMaxWidth}) =>
       contentMaxWidth: contentMaxWidth ?? (defaultWideContentMaxWidth),
     );
 
-/// The Home tab's extra side inset. Material desktop runs Home across the
 /// whole pane, as M3 panes do, with the 24dp margin of expanded and larger
-/// windows (the 16dp phone edge plus 8), so its cover shelves reach the
 /// edge; elsewhere Home centers with [wideListInset].
 double homeContentInset(BuildContext context) => wideListInset(context);
 

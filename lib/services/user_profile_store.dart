@@ -14,14 +14,12 @@ class UserProfile {
   final String? photoPath;
 }
 
-/// Local identity only. Persist a relative filename so iOS container relocation
 /// does not break the avatar after reinstalling an app update.
 class UserProfileStore {
   UserProfileStore({
     Future<SharedPreferences> Function()? preferences,
     Future<Directory> Function()? documents,
   }) : _preferences = preferences ?? SharedPreferences.getInstance,
-       // Desktop Documents is the user's own folder; keep the avatar in the
        // app's support folder there.
        _documents = documents ?? (getApplicationDocumentsDirectory);
 

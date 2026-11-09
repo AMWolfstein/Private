@@ -50,7 +50,6 @@ import 'package:mornye/widgets/track_card.dart';
 ///
 /// Songs keep the Library's actions: long-press selection with the Library
 /// selection bar on phones, the song table with click selection and the
-/// right-click menu on desktop. Desktop also opens a folder under the album
 /// pages' header and shows the folders inside it as a grid of covers.
 class LibraryDirectoryView extends ConsumerStatefulWidget {
   const LibraryDirectoryView({
@@ -396,7 +395,6 @@ class _LibraryDirectoryViewState extends ConsumerState<LibraryDirectoryView>
         if (widget.showHeader) AppSliverHeader.page(title: title),
         ...body,
         // Same reserve as the Library list, so the last rows can scroll
-        // clear of the selection bar; desktop pages scroll under the
         // floating player.
         if (showsSelectionBar)
           const SliverToBoxAdapter(child: SizedBox(height: 100)),
@@ -418,7 +416,6 @@ class _LibraryDirectoryViewState extends ConsumerState<LibraryDirectoryView>
     );
   }
 
-  /// Play, Shuffle and, on desktop, Add to Playlist over every song under
   /// [folder].
   Widget _playActions(LibraryDirectory folder) => AlbumPlayActions(
     playLabel: context.l10n.tooltipPlay,
@@ -444,7 +441,6 @@ class _LibraryDirectoryViewState extends ConsumerState<LibraryDirectoryView>
     final tokens = context.tokens;
     final mornye = context.isMornye;
     final inset = wideListInset(context);
-    // Desktop lines up with the detail header's artwork.
     final gutter = (mornye ? 20.0 : tokens.gapLg) + inset;
     final textTheme = Theme.of(context).textTheme;
     final colorScheme = Theme.of(context).colorScheme;

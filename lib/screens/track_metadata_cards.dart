@@ -11,7 +11,6 @@ const _trackMetadataHeroScheme = ColorScheme.dark(
 const double _trackMetadataTwoColumnMinWidth = 960;
 
 /// The content width for a window [width]: the reading width on phones and
-/// small windows, wide enough for the two columns once they fit.
 double _trackMetadataContentMaxWidth(double width) =>
     width >= _trackMetadataTwoColumnMinWidth + 32
     ? math.min(width, desktopMaterialContentMaxWidth)
@@ -127,7 +126,6 @@ extension _TrackMetadataCards on _TrackMetadataScreenState {
                       style: TextStyle(color: colorScheme.error),
                     ),
                   ),
-                // Wide windows put the tags and file facts beside lyrics and
                 // analysis instead of one long column of stretched rows.
                 if (twoColumns)
                   Row(
@@ -225,7 +223,6 @@ extension _TrackMetadataCards on _TrackMetadataScreenState {
     // below the toolbar after the title block, so nothing rises into it.
     final toolbarBottom = MediaQuery.paddingOf(context).top + kToolbarHeight;
     const textBlockHeight = 190.0;
-    // Desktop allows up to 260, close to the desktop album header's cover.
     final coverSize = math.min(
       (MediaQuery.sizeOf(context).width * 0.5).clamp(150.0, 210.0),
       math.max(96.0, expandedHeight - toolbarBottom - textBlockHeight),

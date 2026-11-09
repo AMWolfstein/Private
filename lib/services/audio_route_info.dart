@@ -74,7 +74,6 @@ class AudioRouteInfo {
   final bool? lowLatency;
   final bool? proAudio;
 
-  /// Android: stream steps out of [maxVolume]. iOS: a 0–1 fraction.
   final double? volume;
   final int? maxVolume;
   final bool? fixedVolume;
@@ -162,7 +161,6 @@ class AudioRouteStream {
         hardwareDecoder: map['hardwareDecoder'] as bool?,
       );
 
-  /// MIME type on Android (audio/flac), a format code on iOS (flac, alac).
   final String? mime;
   final int? sampleRate;
   final int? channels;

@@ -301,7 +301,6 @@ Future<int> clearLibraryCoverFiles(
 ) async {
   await CacheMaintenanceService.clearDirectoryContents(directory.path);
   // Rows keep the scan's spelling of the folder (canonical /data/data on
-  // older Android, backslashes on Windows), so match the folder by name:
   // after the clear, every file in a library_covers folder is gone.
   // Below the audio version, the incremental snapshot reports the file as
   // changed; the lyrics version keeps lyrics filters as they were meanwhile.

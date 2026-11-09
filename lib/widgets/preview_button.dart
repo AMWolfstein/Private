@@ -12,7 +12,6 @@ class PreviewButton extends ConsumerWidget {
   final Track track;
   final double size;
 
-  /// A 32dp pointer target for desktop table rows.
   final bool dense;
 
   const PreviewButton({

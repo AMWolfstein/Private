@@ -1,6 +1,5 @@
 part of 'equalizer_screen.dart';
 
-/// iOS section footer: secondary text under the group it explains.
 class _Footnote extends StatelessWidget {
   const _Footnote(this.text);
 
@@ -24,7 +23,6 @@ class _Footnote extends StatelessWidget {
   );
 }
 
-/// iOS "value" cell detail: the current choice in secondary text before the
 /// disclosure chevron.
 class _DetailValue extends StatelessWidget {
   const _DetailValue(this.value);
@@ -54,7 +52,6 @@ class _DetailValue extends StatelessWidget {
   }
 }
 
-/// iOS action cell: tinted text that runs a command instead of navigating.
 class _ActionRow extends StatelessWidget {
   const _ActionRow({
     required this.label,
@@ -262,7 +259,6 @@ class _PresetBar extends ConsumerWidget {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // A mouse cannot swipe a clipped row, so desktop windows wrap
             // every preset onto view.
             SizedBox(height: tokens.gapMd),
             Padding(
@@ -529,7 +525,6 @@ class _BandFader extends StatelessWidget {
             height: 32,
             child: Center(
               child: Material(
-                // iOS shows the gain as plain tinted text, Material as a badge.
                 color: active && !mornye
                     ? colors.secondaryContainer
                     : Colors.transparent,
@@ -706,7 +701,6 @@ class _SliderTile extends ConsumerWidget {
             title: title,
             subtitle: subtitle,
             value: _format(value),
-            // Mornye rows, like iOS Settings, carry no leading glyphs.
             leading: icon == null || mornye
                 ? null
                 : AppIcon.adaptive(

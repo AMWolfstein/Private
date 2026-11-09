@@ -9,7 +9,6 @@ import 'package:mornye/theme/material_expressive.dart';
 /// Mornye and reduced motion keep Flutter's [RefreshIndicator].
 ///
 /// The page on screen also refreshes through [refreshVisible], which the
-/// desktop Refresh command (Cmd/Ctrl+R) runs.
 class AppRefreshIndicator extends StatefulWidget {
   const AppRefreshIndicator({
     super.key,
@@ -113,7 +112,6 @@ class _AppRefreshIndicatorState extends State<AppRefreshIndicator> {
         child: widget.child,
       ),
     );
-    // macOS lists bounce past their top edge. Under a pinned header that
     // bounce opens a gap below the title, and the indicator ignores a pull
     // that starts while it is still closing, so the top edge stays put.
     return MaterialExpressiveScope(child: indicator);

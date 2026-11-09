@@ -39,7 +39,6 @@ class LibraryTrackSelectionBar extends StatelessWidget {
   final VoidCallback? onQueueFlac;
   final Widget? playbackActions;
 
-  /// Album pages keep delete the full-width button on desktop too, with the
   /// downloaded album labels.
   final bool albumDelete;
 

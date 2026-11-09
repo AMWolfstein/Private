@@ -10,7 +10,6 @@ import 'package:mornye/widgets/selection_bottom_bar.dart';
 /// local album and library tracks folder screens; queue_tab keeps its own
 /// selection state.
 ///
-/// Desktop clicks go through [applyDesktopClick] and [showSelectionMenu],
 /// which drive the same selection mode.
 mixin SelectionModeMixin<T extends StatefulWidget> on State<T> {
   bool isSelectionMode = false;
@@ -23,7 +22,6 @@ mixin SelectionModeMixin<T extends StatefulWidget> on State<T> {
   /// Whether the screen shows its selection bar.
   bool get showsSelectionBar => isSelectionMode && !contextMenuSelection;
 
-  /// Where a desktop Shift-click range starts: the item clicked last without
   /// Shift.
   String? selectionAnchorId;
 
@@ -44,7 +42,6 @@ mixin SelectionModeMixin<T extends StatefulWidget> on State<T> {
     });
   }
 
-  /// Applies a desktop click of [kind] on [itemId]. [orderedIds] lists the
   /// visible items in display order, for Shift ranges.
   void applyDesktopClick(
     String itemId,
@@ -63,7 +60,6 @@ mixin SelectionModeMixin<T extends StatefulWidget> on State<T> {
     });
   }
 
-  /// Opens the desktop menu of [itemId] with [show], which returns whether a
   /// row was chosen. A right-click outside the selection selects only that
   /// item, so the menu acts on the item it was opened on. That selection is
   /// for the menu: the bar stays hidden under it, and the selection ends if
@@ -97,7 +93,6 @@ mixin SelectionModeMixin<T extends StatefulWidget> on State<T> {
     });
   }
 
-  /// Adds [ids] to the selection, entering selection mode for desktop
   /// Cmd/Ctrl+A.
   void selectAll(Iterable<String> ids) {
     setState(() {

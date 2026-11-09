@@ -130,7 +130,6 @@ class _QueueTabState extends ConsumerState<QueueTab> {
   final LibraryFileAvailabilityCache _fileExistsCache =
       LibraryFileAvailabilityCache();
   late final CompletionBridgePlayableProbeCache _completionBridgePlayableProbe;
-  // Desktop windows are much wider than a phone, so covers start larger
   // there; pinching (or a trackpad pinch) resizes within the range.
   static double get _libraryGridMinExtent => 92;
   static double get _libraryGridDefaultExtent => 126;
@@ -234,7 +233,6 @@ class _QueueTabState extends ConsumerState<QueueTab> {
 
   /// Per mode, what the page derives from its loaded songs: their ids, the
   /// songs without the pinned download rows, their navigation lists and the
-  /// desktop table rows. Each is kept while its inputs stay the same, so a
   /// click or a resize does not walk every loaded song.
   final Map<String, _LoadedSongs> _loadedSongsByMode = {};
   final Map<
@@ -579,7 +577,6 @@ class _QueueTabState extends ConsumerState<QueueTab> {
         slivers: [
           AppSliverHeader.page(title: context.l10n.libraryDownloads),
           _buildQueueHeaderSliver(context, colors),
-          // The rows share the header's centered column on wide windows.
           SliverPadding(
             padding: EdgeInsets.symmetric(horizontal: wideListInset(context)),
             sliver: SliverList.builder(

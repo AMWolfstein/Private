@@ -64,7 +64,6 @@ class _LoadingOrErrorScaffold extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (isLoading) {
-      // Desktop shows its compact header in both styles.
       if ((!context.isMornye) && collectionHeader) {
         // The real header with the title and cover already known; only the
         // rows that wait for the tracks are skeletons.
@@ -198,7 +197,6 @@ class _ArtistLoadingScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Mornye keeps its full-pane hero on desktop too.
     if (context.isMornye) {
       return MornyeArtistSurface(
         imageSource: coverUrl,

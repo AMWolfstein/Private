@@ -22,7 +22,6 @@ import 'package:mornye/theme/cover_palette.dart';
 import 'package:mornye/utils/lyrics_parser.dart';
 import 'package:mornye/widgets/audio_analysis_widget.dart';
 
-// Run on a real Android/iOS host. These tests intentionally use the actual
 // channel and native workers; missing bindings must fail, never use a fallback.
 Future<Map<String, dynamic>> _job(
   String operation,

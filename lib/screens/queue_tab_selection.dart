@@ -70,7 +70,6 @@ extension _QueueTabSelectionActions on _QueueTabState {
     });
   }
 
-  /// A desktop click of [kind] on a library song; [orderedIds] lists the
   /// songs in the order shown.
   void _applyDesktopClick(
     String itemId,
@@ -95,7 +94,6 @@ extension _QueueTabSelectionActions on _QueueTabState {
     if (shouldHideOverlay) _hideSelectionOverlay();
   }
 
-  /// Opens the desktop menu of a library song. A song outside the selection
   /// becomes the selection for this menu only, so the menu acts on the song
   /// clicked: the selection toolbar does not open under the menu, and the
   /// selection ends if the menu closes without a choice.

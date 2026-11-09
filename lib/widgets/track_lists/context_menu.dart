@@ -5,7 +5,6 @@ import 'package:mornye/theme/mornye_theme.dart';
 import 'package:mornye/widgets/app_icon.dart';
 import 'package:mornye/widgets/mornye_context_menu.dart';
 
-/// One row of a desktop context menu. Use `Icons.*`; Mornye swaps in the
 /// Cupertino glyph.
 class ContextMenuAction {
   const ContextMenuAction({
@@ -30,7 +29,6 @@ class ContextMenuAction {
   final bool checked;
 }
 
-/// Mornye menus are as wide as the iOS popover, minus its touch padding.
 const double _mornyeMenuWidth = 280;
 
 /// Shows [groups] as a context menu at [position], in global coordinates.

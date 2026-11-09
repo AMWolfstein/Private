@@ -32,7 +32,6 @@ part 'player_lyrics_word_sweep.dart';
 
 const _mornyeLyricFontSize = 34.0;
 
-/// Material lyric sizes on desktop, where the lyrics panel is far wider than
 /// a phone. Null keeps the text theme's size (phones and tablets).
 double? get _materialLyricFontSize => null;
 double get _materialBackgroundLyricFontSize => 18;
@@ -126,7 +125,6 @@ class _SyncedLyricsViewState extends ConsumerState<SyncedLyricsView>
   /// estimated offset, before settling on the line.
   bool _awaitingFirstScroll = false;
   bool _tickerEnabled = true;
-  // An inactive app is still on screen: a desktop window behind another
   // app's window, or a phone under a system overlay.
   bool get _visible =>
       widget.isActive &&
@@ -259,7 +257,6 @@ class _SyncedLyricsViewState extends ConsumerState<SyncedLyricsView>
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    // Focus moving between windows keeps the lyrics running as they are.
     if ((_positionSubscription != null) != _visible) {
       _syncPositionSubscription(resetUserScroll: false);
     }

@@ -132,7 +132,6 @@ class _LibrarySettingsPageState extends ConsumerState<LibrarySettingsPage> {
         }
       }
     } else {
-      // Older Android needs storage permission; iOS chooses internal or Files.
       if (!_hasStoragePermission) {
         final granted = await _requestStoragePermission();
         if (!granted) return;
@@ -141,7 +140,6 @@ class _LibrarySettingsPageState extends ConsumerState<LibrarySettingsPage> {
       try {
         result = await FilePicker.getDirectoryPath();
       } catch (e) {
-        // Linux reaches the picker through the desktop portal, which a
         // session may not run.
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(

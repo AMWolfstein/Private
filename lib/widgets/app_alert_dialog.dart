@@ -241,7 +241,6 @@ class AppAlertDialog extends StatelessWidget {
     if (!context.isMornye) {
       return AlertDialog(
         // M3 basic dialogs are 280 to 560dp wide; without a cap, a long
-        // message stretches the dialog across a wide window. Desktop starts
         // at the compact class, so a short question or a single field is
         // not squeezed to the minimum.
         constraints: BoxConstraints(

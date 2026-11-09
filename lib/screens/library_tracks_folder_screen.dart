@@ -635,7 +635,6 @@ class _LibraryTracksFolderScreenState
               colorScheme: colorScheme,
             ),
             // Removing entries keeps the files, so it stays a plain action.
-            // Desktop keeps file deletion a toolbar button beside it, as in
             // the Library selection bar.
             SelectionActionButton(
               onPressed: selectedCount > 0
@@ -739,7 +738,6 @@ class _LibraryTracksFolderScreenState
     final hasCustomCover =
         customCoverPath != null && customCoverPath.isNotEmpty;
     final hasCoverUrl = coverUrl != null;
-    // Desktop: Mornye Link transfers of the whole collection while a phone
     // is connected.
     final dpr = MediaQuery.devicePixelRatioOf(context);
     final cacheWidth = (MediaQuery.sizeOf(context).width * dpr).round().clamp(

@@ -165,7 +165,6 @@ class TrackListTile extends ConsumerWidget {
     onDownload();
   }
 
-  /// What a tap on the row does, for the desktop song table: offers another
   /// quality, plays the local copy, or downloads [track].
   static Future<void> activate(
     BuildContext context,
@@ -198,7 +197,6 @@ class TrackListTile extends ConsumerWidget {
 }
 
 /// Explicit, Dolby Atmos and In Library badges of a [TrackListTile], for the
-/// title cell of the desktop song table. Quality has its own column there.
 class TrackListTileBadges extends ConsumerWidget {
   const TrackListTileBadges({
     super.key,

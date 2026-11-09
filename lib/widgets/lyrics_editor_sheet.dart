@@ -40,7 +40,6 @@ bool canEditPlayerLyrics(PlayerMetadataController metadata) {
 }
 
 /// Opens the lyrics editor for [metadata]'s track: a full-height sheet on
-/// phones, a 720dp editor dialog on desktop.
 Future<void> openLyricsEditor(
   BuildContext context,
   PlayerMetadataController metadata,
@@ -330,7 +329,6 @@ class _LyricsEditorSheetState extends ConsumerState<LyricsEditorSheet> {
       ),
     );
     // On phones the sheet takes most of the screen and rises with the
-    // keyboard; the desktop dialog brings its own height cap.
 
     body = SizedBox(
       height: media.size.height * 0.92,

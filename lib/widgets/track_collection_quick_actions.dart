@@ -26,7 +26,6 @@ class TrackCollectionQuickActions extends ConsumerWidget {
   final Track track;
   final bool hasLocalPlaybackCandidate;
 
-  /// A 32dp pointer target for desktop table rows.
   final bool dense;
 
   const TrackCollectionQuickActions({
@@ -38,7 +37,6 @@ class TrackCollectionQuickActions extends ConsumerWidget {
 
   /// Track options: a bottom sheet (Material) or popover (Mornye) on phones
   /// and tablets, a context menu at [position] or under [context] on
-  /// desktop.
   static void showTrackOptionsSheet(
     BuildContext context,
     WidgetRef ref,
@@ -98,7 +96,6 @@ class TrackCollectionQuickActions extends ConsumerWidget {
   }
 }
 
-/// The track options as desktop context menu groups: playback and download,
 /// collections, navigation, then copying.
 List<List<ContextMenuAction>> trackOptionMenuGroups(
   BuildContext context,

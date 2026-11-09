@@ -310,7 +310,6 @@ class _FactRow extends StatelessWidget {
     final colors = theme.colorScheme;
     final tokens = context.tokens;
     final mornye = context.isMornye;
-    // Mornye rows line up with the section header, as in iOS inset lists.
     final inset = mornye ? 16.0 : tokens.rowPaddingH;
     final valueStyle =
         (mornye ? theme.textTheme.bodyLarge : theme.textTheme.bodyMedium)

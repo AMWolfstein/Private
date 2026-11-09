@@ -5,7 +5,6 @@ import 'package:mornye/utils/logger.dart';
 
 final _log = AppLogger('ConnectivityMonitor');
 
-/// Windows can reject the Network List Manager's event registration. Flutter
 /// reports that EventChannel activation failure globally, outside a stream's
 /// onError handler. Query connectivity there without opening the event channel.
 class ConnectivityMonitor {

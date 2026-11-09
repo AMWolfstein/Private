@@ -420,7 +420,6 @@ class _MornyeLibraryScreenState extends ConsumerState<MornyeLibraryScreen> {
                         ),
                       ),
                     ]) ...[
-                      // The desktop shell paints its background without a
                       // Material, which would hide the row's ink.
                       Material(
                         type: MaterialType.transparency,

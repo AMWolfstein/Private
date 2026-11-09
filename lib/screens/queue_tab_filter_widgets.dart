@@ -276,7 +276,6 @@ extension _QueueTabFilterWidgets on _QueueTabState {
     // Active downloads and the library tracks below them form one connected
     // run of rows.
     Widget leadListCell(int index) {
-      // Sectioned lists and desktop tables keep the active downloads as
       // their own run.
       final runLength = (rootLibrary && !context.isMornye)
           ? leadCount

@@ -176,8 +176,6 @@ class PlaybackDependencies {
       _volumeChanges ?? SystemVolumeService.instance.changes;
   bool get isAndroid => _isAndroid ?? Platform.isAndroid;
 
-  // Windows and Linux play through libmpv. Without the library they fall
-  // back to audioplayers, which has no equalizer there. macOS plays through
   // AVPlayer and moves to libmpv for exclusive output (hog mode).
   static PlaybackDeck _createDeck(String playerId) {
     return AudioplayersPlaybackDeck(playerId: playerId);
@@ -188,7 +186,6 @@ class PlaybackDependencies {
     MediaItem? Function() metadata,
   ) => CastPlaybackDeck(output: output, metadata: metadata);
 
-  // Previews follow the in-app volume on desktop. Mobile previews keep
   // playing without the equalizer.
   static PlaybackDeck _createPreviewDeck(String playerId) =>
       AudioplayersPlaybackDeck(playerId: playerId, equalizerAvailable: false);
@@ -236,7 +233,6 @@ class PlaybackDependencies {
   static Future<MusicPlayerHandler> _initializeAudioHandler(
     MusicPlayerHandler Function() builder,
   ) async {
-    // MPRIS on Linux and SMTC on Windows; other OSes keep the plugin and
     // send it only the states their sessions cannot advance themselves.
     installMediaSessionFilter();
     late final MusicPlayerHandler handler;
@@ -488,7 +484,6 @@ class MusicPlayerRuntime {
     try {
       // Defer even a synchronous test initializer until _initFuture is stored.
       await Future<void>.value();
-      // Desktop decks start at the in-app volume the listener left.
       final handler = await dependencies.initializeHandler(() {
         if (_disposed) throw StateError('This playback runtime was disposed');
         return created = MusicPlayerHandler(runtime: this);

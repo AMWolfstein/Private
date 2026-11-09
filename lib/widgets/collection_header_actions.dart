@@ -9,7 +9,6 @@ import 'package:mornye/widgets/album_detail_header.dart';
 import 'package:mornye/widgets/expressive_button_group.dart';
 
 /// Love all, download all and add to playlist buttons of a track collection
-/// header, laid out for desktop, Mornye or Material. All three are disabled
 /// while [tracks] is empty.
 class CollectionHeaderActions extends StatelessWidget {
   const CollectionHeaderActions({

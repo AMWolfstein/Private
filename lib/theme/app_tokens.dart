@@ -77,7 +77,6 @@ class AppTokens extends ThemeExtension<AppTokens> {
     motionSlow: Duration(milliseconds: 400),
   );
 
-  /// Material on desktop. Pointer input needs less row height than touch, so
   /// rows, row artwork and the page header tighten (M3 density -2) while
   /// radii, motion and the 48dp control target stay the same. Mornye registers
   /// its own copy of the tokens and is unaffected.

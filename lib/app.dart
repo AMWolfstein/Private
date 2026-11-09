@@ -40,7 +40,6 @@ final _routerProvider = Provider<GoRouter>((ref) {
       (settings) => (
         isFirstLaunch: settings.isFirstLaunch,
         hasCompletedTutorial: settings.hasCompletedTutorial,
-        // Desktop shows the tour as a dialog over the shell instead.
         hasSeenWhatsNew: settings.whatsNewSeen == AppInfo.whatsNewRelease,
       ),
     ),
@@ -74,7 +73,6 @@ final _routerProvider = Provider<GoRouter>((ref) {
   );
 });
 
-/// iOS-style fluid scroll on mobile and macOS: momentum glide + bounce instead
 /// of the Android clamping stop. Widgets that set explicit physics (queue filter
 /// PageView, bottom sheets) are unaffected.
 class _FluidScrollBehavior extends _VerticalScrollbarBehavior {
@@ -85,7 +83,6 @@ class _FluidScrollBehavior extends _VerticalScrollbarBehavior {
       const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics());
 }
 
-/// Desktop scrollbars mark long vertical content only. Rows that scroll
 /// sideways (carousels, shelves, recent cards) already show arrows and read
 /// cleaner without a bar.
 class _VerticalScrollbarBehavior extends MaterialScrollBehavior {
@@ -101,8 +98,6 @@ class _VerticalScrollbarBehavior extends MaterialScrollBehavior {
       : super.buildScrollbar(context, child, details);
 }
 
-/// Mobile and macOS use the fluid bounce. Windows and Linux keep Material's
-/// desktop behavior: clamping physics with scrollbars.
 @visibleForTesting
 ScrollBehavior appScrollBehavior({required bool disableOverscrollEffects}) {
   if (disableOverscrollEffects) {
@@ -189,9 +184,7 @@ Widget buildAppContent(
   if (!heroAnimationsEnabled) {
     appContent = HeroControllerScope.none(child: appContent);
   }
-  // Above the root navigator, so shortcuts and the macOS menu bar also reach
   // Now Playing, dialogs and pushed pages. It stays outside every conditional
-  // wrapper: remounting it would mount a second macOS menu bar before the
   // first is gone.
   if (isAndroidTv) {
     appContent = ColoredBox(

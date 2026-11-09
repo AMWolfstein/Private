@@ -82,14 +82,12 @@ pub fn write_atomic(
 /// equivalent or nothing.
 pub trait OpenOptionsPortableExt {
     /// Refuse to follow a final-component link and never block on a FIFO or
-    /// device. Unix: `O_NOFOLLOW | O_NONBLOCK`. Windows:
     /// `FILE_FLAG_OPEN_REPARSE_POINT`, so a symlink, junction or mount point
     /// opens as itself and fails the caller's regular-file check. Replaces
     /// earlier custom flags.
     fn nofollow_nonblock(&mut self) -> &mut Self;
     /// Unix: `O_NONBLOCK`, replacing earlier custom flags. No-op elsewhere.
     fn nonblock(&mut self) -> &mut Self;
-    /// Unix: the creation mode. No-op elsewhere; Windows files inherit the
     /// ACL of their parent directory.
     fn unix_mode(&mut self, mode: u32) -> &mut Self;
 }
@@ -127,7 +125,6 @@ impl OpenOptionsPortableExt for std::fs::OpenOptions {
 
 /// Portable spelling of [`std::os::unix::fs::DirBuilderExt::mode`].
 pub trait DirBuilderPortableExt {
-    /// Unix: the creation mode. No-op elsewhere; Windows directories inherit
     /// the ACL of their parent directory.
     fn unix_mode(&mut self, mode: u32) -> &mut Self;
 }

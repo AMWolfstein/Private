@@ -320,7 +320,6 @@ extension DownloadQueueLibraryReorganization on DownloadQueueNotifier {
       ignoreCase ? a.toLowerCase() == b.toLowerCase() : a == b;
 
   /// Identity of a stored file across history and the Local Library.
-  /// Windows paths ignore case and the verbatim `\\?\` prefix, as the file
   /// system does.
   String _pathKey(String path, {required bool safMode}) {
     final trimmed = path.trim();
@@ -378,7 +377,6 @@ extension DownloadQueueLibraryReorganization on DownloadQueueNotifier {
 
   _StoredLocation? _localLocation(String path, String root) {
     if (isContentUri(path) || root.isEmpty) return null;
-    // Scanned Windows files arrive as `\\?\C:\…`; compare plain spellings.
     final normalized = p.normalize(plainWindowsPath(path));
     if (!p.isWithin(root, normalized)) return null;
     final relativeDir = p.relative(p.dirname(normalized), from: root);

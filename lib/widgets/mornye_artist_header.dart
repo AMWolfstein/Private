@@ -48,7 +48,6 @@ class _MornyeArtistSurfaceState extends State<MornyeArtistSurface> {
 
   @override
   Widget build(BuildContext context) {
-    // Desktop album and playlist pages keep the plain pane background and
     // app accent; artist pages keep their artwork tint.
     final baseTheme = Theme.of(context);
     if (!identical(baseTheme, _baseTheme) ||
@@ -450,7 +449,6 @@ class MornyeArtistHeader extends StatelessWidget {
     ];
   }
 
-  /// The name and logo are larger over the wide desktop portrait.
   static double get _nameSize => 30;
   static Size get _logoSize => const Size(320, 96);
 

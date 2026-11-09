@@ -31,7 +31,6 @@ class MornyePlayerQueue extends ConsumerWidget {
     final autoplay = ref.watch(settingsProvider.select((s) => s.autoplay));
     final type = Theme.of(context).textTheme;
 
-    // Desktop shuffle and repeat live in the player capsule, so the
     // panel keeps only the two wide queue modes, drawn as their icons.
 
     return CustomScrollView(

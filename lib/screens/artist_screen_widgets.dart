@@ -57,7 +57,6 @@ extension _ArtistScreenSections on _ArtistScreenState {
       ),
     );
 
-    // Mornye keeps the full-pane hero on desktop.
 
     if (context.isMornye) {
       final artwork = hasValidImage
@@ -68,7 +67,6 @@ extension _ArtistScreenSections on _ArtistScreenState {
                 imageUrl: imageUrl,
                 fit: BoxFit.cover,
                 alignment: Alignment.topCenter,
-                // The desktop hero spans the content pane.
                 memCacheWidth: 800,
                 errorWidget: (_, _, _) =>
                     const Center(child: Icon(CupertinoIcons.person, size: 80)),

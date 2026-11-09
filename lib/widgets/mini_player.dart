@@ -402,7 +402,6 @@ class _MiniPlayerBodyState extends ConsumerState<_MiniPlayerBody> {
     );
     // Swiping up opens the full player. Sideways swipes dismiss a paused
     // local Material player; otherwise they change tracks.
-    // Desktop has no touch gestures: a click opens the player instead.
     final swipeable = GestureDetector(
       // Measure from touch-down so the slop counts toward the swipe.
       dragStartBehavior: DragStartBehavior.down,

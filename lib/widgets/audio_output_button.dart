@@ -14,8 +14,6 @@ import 'package:mornye/widgets/expressive_icon_button.dart';
 enum _OutputChoice { system, cast, disconnect }
 
 /// One sheet for both kinds of output: the system's routes (Android's
-/// output switcher, or AirPlay and Bluetooth on iOS) and Google Cast, which
-/// opens Google's device dialog on Android and the app's list on iOS.
 class AudioOutputButton extends StatefulWidget {
   const AudioOutputButton({
     super.key,

@@ -19,7 +19,6 @@ final usbVolumeProvider = StreamProvider.autoDispose<UsbVolumeState?>((ref) {
 
 /// A single shared subscription for the visible player, including hardware
 /// volume-button changes. This controls system volume, not ReplayGain gain.
-/// Desktop controls the in-app output gain of every deck instead.
 final systemVolumeProvider = StreamProvider.autoDispose<double>(
   (ref) => SystemVolumeService.instance.changes,
 );

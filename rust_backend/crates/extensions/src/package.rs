@@ -236,7 +236,6 @@ fn clean_path(name: &[u8]) -> Result<PathBuf, PackageError> {
         )))
     }
     // Extraction joins this onto the staging directory with `std::fs`, so a
-    // drive prefix, stream name or device name would escape it on Windows.
 }
 
 fn number16(bytes: &[u8], offset: usize) -> u64 {
@@ -315,7 +314,6 @@ fn central_names(input: &mut File) -> Result<Vec<Vec<u8>>, PackageError> {
         let mut name = vec![0; name_length as usize];
         input.read_exact(&mut name).map_err(corrupt)?;
         let normalized = clean_path(&name)?;
-        // Unix encoded bytes are the raw name bytes; Windows paths are UTF-8.
         let key = lowercase(&decode_go_utf8(normalized.as_os_str().as_encoded_bytes()));
         if !seen.insert(key) {
             return Err(error(format!(

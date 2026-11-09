@@ -31,7 +31,6 @@ Future<void> showPlayerDetailsSheet(
       );
   if (!context.isMornye) {
     // The shared sheet supplies the handle, shape and header on phones, and
-    // opens as a desktop dialog.
     final item = mediaItem;
     final subtitle = [
       item?.title,

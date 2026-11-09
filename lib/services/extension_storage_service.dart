@@ -70,7 +70,6 @@ class ExtensionStorageService {
     final dataDir = Directory(p.join(supportDir.path, 'extension_data'));
 
     // Mobile builds once kept extensions in the app's private Documents
-    // folder. On desktop that folder is the user's own Documents, which never
     // held app storage, so nothing there may be moved.
 
     final documentsDir = await getApplicationDocumentsDirectory();
@@ -225,7 +224,6 @@ class ExtensionStorageService {
       try {
         await temporary.rename(target.path);
       } on FileSystemException {
-        // Windows cannot atomically replace an existing file. Mobile platforms
         // take the first branch; this fallback keeps development migrations
         // functional while retaining the source until replacement succeeds.
         if (!await target.exists()) rethrow;

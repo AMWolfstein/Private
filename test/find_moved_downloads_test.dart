@@ -82,7 +82,6 @@ class _Notifier extends DownloadHistoryNotifier {
 }
 
 /// [DownloadFileRecovery] follows only `/` paths and Android SAF folders, so
-/// a file moved between drive-letter folders is not recovered on Windows.
 final String? _movedFilesSkip = Platform.isWindows
     ? 'Moved files are only recovered on / paths and SAF folders'
     : null;

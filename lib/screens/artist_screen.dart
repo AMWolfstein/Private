@@ -669,7 +669,6 @@ class _ArtistScreenState extends ConsumerState<ArtistScreen>
                     albums: albums,
                     hasDiscography: hasDiscography,
                   ),
-                  // Desktop keeps the sections in the header's column.
                   SliverPadding(
                     padding: EdgeInsets.symmetric(horizontal: 0),
                     sliver: SliverMainAxisGroup(

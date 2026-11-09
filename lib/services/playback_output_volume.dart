@@ -7,7 +7,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 final _log = AppLogger('OutputVolume');
 
-/// Keeps [playbackOutputVolume] across launches on desktop, where it takes
 /// the place of the system volume. Mobile never moves it from 1.
 abstract final class PlaybackOutputVolumeStore {
   static const storageKey = 'playback_output_volume_v1';

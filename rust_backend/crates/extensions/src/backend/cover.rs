@@ -40,8 +40,6 @@ pub fn library_cover_stem(key: &str) -> String {
 }
 
 /// Songs that embed the same picture share one stored thumbnail through hard
-/// links on desktop and iOS; every song keeps its own name. Android uses
-/// content names. Windows keeps copies because a reader's sharing mode
 /// covers every name of a file.
 const LINK_THUMBNAILS: bool = cfg!(target_os = "linux");
 
@@ -1009,7 +1007,6 @@ pub(super) mod tests {
         std::fs::metadata(path).unwrap().ino()
     }
 
-    /// Desktop and iOS link identical thumbnails; Android keeps copies.
     const LINKED: bool = cfg!(target_os = "linux");
 
     #[cfg(unix)]

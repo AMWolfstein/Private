@@ -59,7 +59,6 @@ class _Destination {
   final Widget Function() pageBuilder;
   final bool showDonationProgress;
 
-  /// Marks the entry with a Beta tag in the phone list. The desktop category
   /// column is too narrow for it, so those pages show the tag themselves.
   final bool beta;
 

@@ -203,7 +203,6 @@ fn uri_text(uri: &Url) -> String {
     output
 }
 
-/// Dart's `withoutWindowsVerbatimPrefix`: `\\?\C:\a` → `C:\a` and
 /// `\\?\UNC\server\a` → `\\server\a`, in either separator.
 fn without_windows_verbatim_prefix(path: &str) -> Option<String> {
     let bytes = path.as_bytes();

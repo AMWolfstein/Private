@@ -436,7 +436,6 @@ extension _QueueTabCollectionItemWidgets on _QueueTabState {
     return card;
   }
 
-  /// The desktop menu of a playlist: open, rename, and delete. Deleting a
   /// playlist outside the selection deletes only that playlist.
   void _showPlaylistMenu(
     BuildContext context,
