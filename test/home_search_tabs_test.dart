@@ -25,18 +25,16 @@ import 'package:mornye/widgets/mornye_chrome.dart';
 import 'package:mornye/widgets/mornye_context_menu.dart';
 
 void main() {
-  for (final desktop in [false]) {
+  {
     for (final mornye in [false, true]) {
       testWidgets('Home keeps Resume without a player '
-          '(desktop: $desktop, Mornye: $mornye)', (tester) async {
+          '(Mornye: $mornye)', (tester) async {
         tester.platformDispatcher.accessibilityFeaturesTestValue =
             const FakeAccessibilityFeatures(disableAnimations: true);
         addTearDown(
           tester.platformDispatcher.clearAccessibilityFeaturesTestValue,
         );
-        tester.view.physicalSize = desktop
-            ? const Size(1280, 800)
-            : const Size(430, 932);
+        tester.view.physicalSize = const Size(430, 932);
         tester.view.devicePixelRatio = 1;
         addTearDown(tester.view.reset);
         final controller = _ResumeController();
@@ -168,13 +166,11 @@ void main() {
     await tester.pump(const Duration(seconds: 1));
   });
 
-  for (final desktop in [false]) {
+  {
     for (final mornye in [false, true]) {
       testWidgets('Home keeps its feed layout through slow startup '
-          '(desktop: $desktop, Mornye: $mornye)', (tester) async {
-        tester.view.physicalSize = desktop
-            ? const Size(1280, 800)
-            : const Size(430, 932);
+          '(Mornye: $mornye)', (tester) async {
+        tester.view.physicalSize = const Size(430, 932);
         tester.view.devicePixelRatio = 1;
         addTearDown(tester.view.reset);
         final extensions = _StartupExtensions();
@@ -328,12 +324,9 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  for (final desktop in [false]) {
-    testWidgets('first search extension collapses the empty Home prompt '
-        '(desktop: $desktop)', (tester) async {
-      tester.view.physicalSize = desktop
-          ? const Size(1280, 800)
-          : const Size(430, 932);
+  {
+    testWidgets('first search extension collapses the empty Home prompt ', (tester) async {
+      tester.view.physicalSize = const Size(430, 932);
       tester.view.devicePixelRatio = 1;
       addTearDown(tester.view.reset);
       final extensions = _StartupExtensions();

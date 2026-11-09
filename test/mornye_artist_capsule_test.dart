@@ -14,7 +14,6 @@ void main() {
   Future<void> pumpHeader(
     WidgetTester tester, {
     required List<String> log,
-    required bool desktop,
     bool showTitle = false,
   }) async {
     await tester.binding.setSurfaceSize(const Size(900, 800));
@@ -60,31 +59,30 @@ void main() {
     );
   }
 
-  for (final desktop in [false]) {
-    final platform = desktop ? 'desktop' : 'mobile';
+  {
+    const platform = 'mobile';
 
     testWidgets('$platform toolbar title follows the platform', (tester) async {
-      await pumpHeader(tester, log: [], desktop: desktop, showTitle: true);
+      await pumpHeader(tester, log: [], showTitle: true);
       // The hero always names the artist; only the phone repeats it above.
-      expect(find.text('Artist'), findsNWidgets(desktop ? 1 : 2));
+      expect(find.text('Artist'), findsNWidgets(2));
     });
 
     testWidgets('$platform groups Share and More at the trailing edge', (
       tester,
     ) async {
       final log = <String>[];
-      await pumpHeader(tester, log: log, desktop: desktop);
+      await pumpHeader(tester, log: log);
 
       final capsule = find.byType(MornyeActionCapsule);
       final bounds = tester.getRect(
         find.descendant(of: capsule, matching: find.byType(MornyeGlass)),
       );
-      expect(bounds.right, 900 - (desktop ? 8 : 12));
+      expect(bounds.right, 900 - 12);
       // Level with the round back button.
       final back = tester.getRect(find.byTooltip('Back'));
       expect(bounds.center.dy, back.center.dy);
       expect(bounds.height, 44);
-      if (desktop) expect(back.left, 8);
       final share = tester.getRect(find.byTooltip('Share'));
       final more = tester.getRect(
         find.byTooltip(

@@ -159,7 +159,6 @@ Future<void> pumpSearchFixture(
   WidgetTester tester, {
   required Size size,
   required bool mornye,
-  bool desktop = false,
   Brightness brightness = Brightness.dark,
   SearchFixtureResults? results,
   List<SearchFilter> filters = const [],

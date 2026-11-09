@@ -1,4 +1,3 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mornye/models/settings.dart';
@@ -14,16 +13,6 @@ const _grid = AppSettings(
   hasSearchedBefore: true,
   searchViewMode: 'grid',
 );
-
-Future<void> _rightClick(WidgetTester tester, Finder finder) async {
-  final gesture = await tester.startGesture(
-    tester.getCenter(finder),
-    kind: PointerDeviceKind.mouse,
-    buttons: kSecondaryButton,
-  );
-  await gesture.up();
-  await tester.pumpAndSettle();
-}
 
 /// The cover save started: its progress notice, or the failure a test
 /// binding reports in its place.
@@ -53,8 +42,8 @@ void main() {
     final style = mornye ? 'Mornye' : 'Material';
 
 
-    for (final (platform, size, desktop) in [
-      ('tablet', _tablet, false),
+    for (final (platform, size) in [
+      ('tablet', _tablet),
     ]) {
       testWidgets('$style $platform album filter shows a grid of covers', (
         tester,
@@ -67,13 +56,12 @@ void main() {
           tester,
           size: size,
           mornye: mornye,
-          desktop: desktop,
           settings: _grid,
           results: results,
           filters: searchFixtureAllFilters,
         );
         await tester.tap(
-          find.text(mornye && desktop ? 'Albums' : 'Albums filter'),
+          find.text('Albums filter'),
         );
         await tester.pumpAndSettle();
         expect(results.requestedFilters.last, 'album');
@@ -104,17 +92,9 @@ void main() {
         );
         await _dismissSnackBars(tester);
 
-        // press on the cover elsewhere.
-        if (desktop) {
-          await _rightClick(tester, cells.first);
-          expect(find.text('Open'), findsOneWidget);
-          await tester.tap(find.text('Save Cover Art'));
-          await tester.pump();
-          await tester.pump();
-        } else {
-          await tester.longPress(cells.first);
-          await tester.pump();
-        }
+        // Long press on the cover opens the save-cover action.
+        await tester.longPress(cells.first);
+        await tester.pump();
         _expectCoverSaveStarted();
         await _dismissSnackBars(tester);
 
