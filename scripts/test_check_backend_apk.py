@@ -55,13 +55,13 @@ class CheckBackendApkTest(unittest.TestCase):
             self.audit()
 
     def test_rejects_other_abi_directories(self):
-        self.entries["lib/armeabi-v7a/libapp.so"] = elf(machine=40)
+        self.entries["lib/x86_64/libapp.so"] = elf(machine=62)
         with self.assertRaisesRegex(checker.AuditError, "unexpected lib ABI"):
             self.audit()
 
     def test_rejects_unsupported_abi_argument(self):
         with self.assertRaisesRegex(checker.AuditError, "unsupported ABI"):
-            checker.parse_abis("armeabi-v7a")
+            checker.parse_abis("x86_64")
 
 
 if __name__ == "__main__":

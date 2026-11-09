@@ -10,7 +10,6 @@ case "${1:-arm64-v8a}" in
 esac
 : "${ANDROID_NDK_HOME:?Set ANDROID_NDK_HOME}"
 case "$(uname -s)" in
-  Darwin) ndk_host=darwin-x86_64 ;;
   Linux) ndk_host=linux-x86_64 ;;
   *) exit 2 ;;
 esac

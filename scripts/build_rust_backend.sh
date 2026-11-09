@@ -27,9 +27,8 @@ export CARGO_TARGET_DIR="$RUST_BACKEND_DIR/target"
 # do not force target-feature=+aes on Android.
 
 case "$(uname -s)" in
-  Darwin) HOST_LIBRARY="$CARGO_TARGET_DIR/release/libmornye_mobile.dylib" ;;
   Linux) HOST_LIBRARY="$CARGO_TARGET_DIR/release/libmornye_mobile.so" ;;
-  *) echo "Error: use macOS or Linux for this build script." >&2; exit 1 ;;
+  *) echo "Error: use Linux for this build script." >&2; exit 1 ;;
 esac
 
 # Build separately from bindgen so CLI and cargo-metadata features are not
@@ -48,7 +47,6 @@ if [[ "$PLATFORM" == "android" ]]; then
     exit 1
   fi
   case "$(uname -s)" in
-    Darwin) NDK_HOST="darwin-x86_64" ;;
     Linux) NDK_HOST="linux-x86_64" ;;
   esac
   NDK_BIN="$ANDROID_NDK_HOME/toolchains/llvm/prebuilt/$NDK_HOST/bin"

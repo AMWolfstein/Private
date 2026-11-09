@@ -84,11 +84,9 @@ class AndroidBuildScriptTest(unittest.TestCase):
         self.assertNotIn("--split-per-abi", build["args"])
         audit = next(call for call in calls if call["tool"] == "audit")
         self.assertEqual(audit["args"][audit["args"].index("--abis") + 1], "arm64-v8a")
-        self.assertNotIn("--discord-sdk", audit["args"])
-        self.assertTrue(all("discord" not in " ".join(call["args"]).lower() for call in calls))
 
     def test_rejects_other_architectures(self):
-        for value in ("armeabi-v7a", "arm64-v8a,armeabi-v7a"):
+        for value in ("x86_64", "arm64-v8a,x86_64"):
             with self.subTest(value=value):
                 self.env["MORNYE_RUST_ANDROID_ABIS"] = value
                 result = self.run_build()

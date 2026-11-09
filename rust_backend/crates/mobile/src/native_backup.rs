@@ -352,12 +352,6 @@ fn decode(stored: &Map<String, Value>, request: &Value) -> Map<String, Value> {
             stored.get(*column).cloned().unwrap_or(Value::Null),
         );
     }
-    if request["platform"] == "ios"
-        && let Some(documents) = request["documents_path"].as_str()
-        && let Some(path) = json["filePath"].as_str()
-    {
-        json.insert("filePath".into(), rebase_ios(path, documents).into());
-    }
     for (key, column) in [
         ("safRepaired", "saf_repaired"),
         ("explicit", "explicit"),
@@ -386,34 +380,6 @@ fn decode(stored: &Map<String, Value>, request: &Value) -> Map<String, Value> {
         );
     }
     json
-}
-
-fn rebase_ios(path: &str, documents: &str) -> String {
-    use std::sync::OnceLock;
-    static ROOT: OnceLock<regex::Regex> = OnceLock::new();
-    let regex=ROOT.get_or_init(||regex::Regex::new(r"(?i)^(?:/private)?/var/mobile/Containers/Data/Application/[A-F0-9\-]+|^/[^\n]+/Library/Developer/CoreSimulator/Devices/[A-F0-9\-]+/data/Containers/Data/Application/[A-F0-9\-]+").expect("iOS container pattern"));
-    let Some(current) = regex.find(documents) else {
-        return path.into();
-    };
-    let Some(previous) = regex.find(path) else {
-        return path.into();
-    };
-    if &documents[current.end()..] != "/Documents" || !path[previous.end()..].starts_with('/') {
-        return path.into();
-    }
-    let suffix = &path[previous.end()..];
-    if suffix.split('/').any(|v| v == "..")
-        || ![
-            "/Documents",
-            "/Library/Application Support",
-            "/Library/Caches",
-        ]
-        .iter()
-        .any(|root| suffix == *root || suffix.starts_with(&format!("{root}/")))
-    {
-        return path.into();
-    }
-    format!("{}{suffix}", &documents[..current.end()])
 }
 
 fn import(request: &Value, check: Check<'_>) -> Result<Value, String> {
