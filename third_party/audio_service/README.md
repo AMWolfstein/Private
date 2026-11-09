@@ -138,7 +138,7 @@ Custom actions:
 
 ```dart
 _audioHandler.customAction('setVolume', {'volume': 0.8});
-_audioHandler.customAction('saveBookmark');
+_audioHandler.customAction('setSleepTimer', {'minutes': 30});
 ```
 
 ### Broadcasting state changes

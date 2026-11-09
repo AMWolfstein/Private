@@ -24,7 +24,7 @@ Map<String, Object?> release(String version) => {
   'published_at': '2026-09-26T06:32:33Z',
   'html_url': 'https://github.com/mornyeapp/Mornye/releases/tag/v$version',
   'assets': [
-    for (final abi in ['arm32', 'arm64'])
+    for (final abi in ['x86_64', 'arm64'])
       {
         'name': 'Mornye-v$version-$abi.apk',
         'browser_download_url':
@@ -118,12 +118,12 @@ void main() {
   });
 
   test('a newer release without an arm64 APK is a typed no-match', () async {
-    final arm32Only = release('5.0.5')
+    final wrongAbiOnly = release('5.0.5')
       ..['assets'] = [
         {
-          'name': 'Mornye-v5.0.5-arm32.apk',
+          'name': 'Mornye-v5.0.5-x86_64.apk',
           'browser_download_url':
-              'https://example.test/Mornye-v5.0.5-arm32.apk',
+              'https://example.test/Mornye-v5.0.5-x86_64.apk',
           'digest': 'sha256:${List.filled(64, 'a').join()}',
         },
       ];
@@ -131,7 +131,7 @@ void main() {
       installedVersion: '5.0.0',
       client: MockClient(
         (_) async =>
-            http.Response(jsonEncode([arm32Only, release('5.0.0')]), 200),
+            http.Response(jsonEncode([wrongAbiOnly, release('5.0.0')]), 200),
       ),
     );
 
@@ -145,7 +145,7 @@ void main() {
   test('discovers Mornye release assets after the app rename', () async {
     final renamedRelease = release('5.2.1')
       ..['assets'] = [
-        for (final abi in ['arm32', 'arm64'])
+        for (final abi in ['x86_64', 'arm64'])
           {
             'name': 'Mornye-5.2.1-$abi.apk',
             'browser_download_url':

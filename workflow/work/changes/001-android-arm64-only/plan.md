@@ -163,10 +163,7 @@ The final diff from the base commit is `git diff 365dcae a26367d` plus the later
   -g '!rust_backend/vendor' -g '!CHANGELOG.md' -g '!workflow/**' -g '!*.lock' lib test integration_test
   android/app/src rust_backend/crates rust_backend/Cargo.toml rust_backend/README.md scripts
   third_party/*/pubspec.yaml third_party/*/*.md NETWORK_STORAGE.md README.md`, with the Material icon names
-  `Icons.bookmark*` filtered out, returns only these kept lines: the upstream `audio_service` README example
-  (`saveBookmark`), the three Rust comments that describe the retired Go backend's ARM32 integer behaviour
-  (`progress.rs`, `transfer_policy.rs`, `binary.rs`; a compatibility contract), and the `arm32` fixture assets in
-  `test/update_checker_test.dart` (a release asset the app must not choose). Allowed elsewhere: the change
+  `Icons.bookmark*` filtered out, returns no match. Allowed elsewhere: the change
   records, `CHANGELOG.md`, `rust_backend/vendor/` and the items kept in PD-9.
 - Update check: `test/update_checker_test.dart` (arm64 APK offered without reading the device ABIs, a release
   without an arm64 APK is a typed no-match, release page fallback).
