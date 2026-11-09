@@ -469,27 +469,34 @@ void main() {
     (const Size(1080, 2340), 2.625),
     (const Size(800, 1000), 2.0),
   ]) {
-    testWidgets('the band mask draws the whole-box mask at $physical, '
-        '${dpr}x', (tester) async {
-      tester.view.physicalSize = physical;
-      tester.view.devicePixelRatio = dpr;
-      addTearDown(tester.view.reset);
+    testWidgets(
+      'the band mask draws the whole-box mask at $physical, '
+      '${dpr}x',
+      // Skipped: this quarter-resolution snapshot quantizes 2 levels away
+      // from the live whole-box mask. It fails at the pre-work commit too;
+      // the snapshot pipeline needs its own fix (log.md).
+      skip: true,
+      (tester) async {
+        tester.view.physicalSize = physical;
+        tester.view.devicePixelRatio = dpr;
+        addTearDown(tester.view.reset);
 
-      for (final cover in [_cover, _noise, _translucent]) {
-        Future<Uint8List> capture(_BuildBackdrop backdrop) async {
-          await tester.pumpWidget(_app(backdrop(_item(cover), true)));
-          await _waitForImages(tester);
-          return _capture(tester, dpr);
+        for (final cover in [_cover, _noise, _translucent]) {
+          Future<Uint8List> capture(_BuildBackdrop backdrop) async {
+            await tester.pumpWidget(_app(backdrop(_item(cover), true)));
+            await _waitForImages(tester);
+            return _capture(tester, dpr);
+          }
+
+          _expectRounding(
+            await capture(_bandMask),
+            await capture(_wholeBoxMask),
+            opaque: cover != _translucent,
+            reason: cover.path,
+          );
         }
-
-        _expectRounding(
-          await capture(_bandMask),
-          await capture(_wholeBoxMask),
-          opaque: cover != _translucent,
-          reason: cover.path,
-        );
-      }
-    }, skip: true); // Fails at the pre-work commit too; the blur needs its own fix (log.md).
+      },
+    );
   }
 
   testWidgets('masks only the band of the cover the fade changes', (
@@ -587,7 +594,7 @@ void main() {
           }
         }
         expect(tester.takeException(), isNull);
-      }, skip: true); // Fails at the pre-work commit too; the blur needs its own fix (log.md).
+      });
     }
   }
 }

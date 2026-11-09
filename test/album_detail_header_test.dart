@@ -172,7 +172,7 @@ void main() {
     expect(liveFrames, 2);
     expect(images, hasLength(1));
     expect(images.single!.debugDisposed, isFalse);
-  }, skip: true); // Fails at the pre-work commit too; the blur needs its own fix (log.md).
+  });
 
   testWidgets('a new window size or theme blurs the header cover again', (
     tester,
@@ -208,7 +208,7 @@ void main() {
 
     await tester.pumpWidget(const SizedBox());
     expect(_blursLive(tester), isFalse);
-  }, skip: true); // Fails at the pre-work commit too; the blur needs its own fix (log.md).
+  });
 
   testWidgets('the settled header matches its live blur', (tester) async {
     _phone(tester);
@@ -236,5 +236,5 @@ void main() {
     // Mean and largest channel difference out of 255 over the whole page.
     expect(sum / live.length, lessThan(0.5));
     expect(largest, lessThan(8));
-  }, skip: true); // Fails at the pre-work commit too; the blur needs its own fix (log.md).
+  });
 }
