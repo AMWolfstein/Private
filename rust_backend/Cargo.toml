@@ -78,7 +78,7 @@ rustix = { version = "=1.1.6", features = ["fs"] }
 roxmltree = "=0.21.2"
 rusqlite = { version = "=0.41.1", features = ["bundled", "modern_sqlite", "hooks"] }
 libc = "=0.2.191"
-windows-sys = "0.61"
+
 hyper = { version = "=1.12.0", features = ["server", "http1"] }
 tokio-rustls = { version = "=0.26.6", default-features = false, features = ["ring", "tls12"] }
 mdns-sd = "=0.21.6"

@@ -319,7 +319,7 @@ fn export(request: &Value, check: Check<'_>) -> Result<Value, String> {
                 };
                 stored.insert(column.clone(), value);
             }
-            let json = decode(&stored, request);
+            let json = decode(&stored);
             let encoded = serde_json::to_vec(&json).map_err(|e| err("encode History export", e))?;
             bytes += encoded.len() as u64 + 1;
             if bytes > MAX_HISTORY_BYTES {
@@ -344,7 +344,7 @@ fn export(request: &Value, check: Check<'_>) -> Result<Value, String> {
     result
 }
 
-fn decode(stored: &Map<String, Value>, request: &Value) -> Map<String, Value> {
+fn decode(stored: &Map<String, Value>) -> Map<String, Value> {
     let mut json = Map::new();
     for (key, column) in COLUMNS {
         json.insert(

@@ -26,7 +26,7 @@ fn actual_complete_dart_history_codec_and_path_identity_parity() {
             row["input"]["id"]
         );
         assert_eq!(
-            Value::Object(decode(&encoded, &json!({}))),
+            Value::Object(decode(&encoded)),
             row["decoded"],
             "decoding {:?}",
             row["input"]["id"]
