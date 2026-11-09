@@ -8,7 +8,6 @@ import 'package:mornye/controllers/extension_auth_launcher.dart';
 import 'package:mornye/providers/settings_provider.dart';
 import 'package:mornye/providers/track_provider.dart';
 import 'package:mornye/services/platform_bridge.dart';
-import 'package:mornye/utils/desktop_platform.dart';
 
 import 'support/fixed_settings.dart';
 
@@ -22,7 +21,6 @@ void main() {
 
   tearDown(() {
     debugDefaultTargetPlatformOverride = null;
-    debugDesktopPlatformOverride = null;
     messenger.setMockMethodCallHandler(channel, null);
     messenger.setMockMethodCallHandler(backend, null);
   });
@@ -181,7 +179,6 @@ void main() {
     TargetPlatform.linux,
   ]) {
     test('desktop $platform always uses the external browser', () async {
-      debugDesktopPlatformOverride = true;
       debugDefaultTargetPlatformOverride = platform;
       final attempts = mockIosLaunches();
       for (final mode in ['external_first', 'in_app_first']) {

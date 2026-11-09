@@ -7,16 +7,13 @@ import 'package:mornye/l10n/l10n.dart';
 import 'package:mornye/models/track.dart';
 import 'package:mornye/providers/track_provider.dart';
 import 'package:mornye/screens/artist_screen.dart';
-import 'package:mornye/utils/desktop_platform.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
-  tearDown(() => debugDesktopPlatformOverride = null);
 
   testWidgets('desktop artist singles shelf pages with hover arrows', (
     tester,
   ) async {
-    debugDesktopPlatformOverride = true;
     SharedPreferences.setMockInitialValues({});
     await tester.binding.setSurfaceSize(const Size(1200, 1600));
     addTearDown(() => tester.binding.setSurfaceSize(null));

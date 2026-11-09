@@ -9,7 +9,6 @@ import 'package:mornye/providers/track_provider.dart';
 import 'package:mornye/screens/artist_screen.dart';
 import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/theme/mornye_theme.dart';
-import 'package:mornye/utils/desktop_platform.dart';
 import 'package:mornye/widgets/animation_utils.dart';
 import 'package:mornye/widgets/desktop/desktop_scroll_arrows.dart';
 import 'package:mornye/widgets/selection_bottom_bar.dart';
@@ -110,7 +109,6 @@ Future<void> _disposeArtist(WidgetTester tester) async {
 
 void main() {
   tearDown(() {
-    debugDesktopPlatformOverride = null;
   });
 
   for (final mornye in [false, true]) {
@@ -119,7 +117,6 @@ void main() {
       testWidgets(
         '$style $platform: modifier clicks select albums and keyboard clears them',
         (tester) async {
-          debugDesktopPlatformOverride = true;
           await _pumpArtist(tester, mornye: mornye);
           final modifier = platform == TargetPlatform.macOS
               ? LogicalKeyboardKey.metaLeft
@@ -158,7 +155,6 @@ void main() {
     testWidgets('$style: context menu starts lasting album selection', (
       tester,
     ) async {
-      debugDesktopPlatformOverride = true;
       await _pumpArtist(tester, mornye: mornye);
       await _click(tester, 2, secondary: true);
       expect(find.byType(SelectionBottomBar), findsNothing);
@@ -188,7 +184,6 @@ void main() {
     testWidgets('$style: selecting an album keeps the shelf scroll position', (
       tester,
     ) async {
-      debugDesktopPlatformOverride = true;
       final albums = [
         for (var i = 0; i < 24; i++)
           ArtistAlbum(
@@ -242,7 +237,6 @@ void main() {
     testWidgets('$style: touch long press still selects albums', (
       tester,
     ) async {
-      debugDesktopPlatformOverride = false;
       await _pumpArtist(tester, mornye: mornye);
       await tester.longPress(_card(2));
       await tester.pumpAndSettle();
@@ -256,7 +250,6 @@ void main() {
     testWidgets('$style: select all toggle clears but keeps selection mode', (
       tester,
     ) async {
-      debugDesktopPlatformOverride = false;
       await _pumpArtist(tester, mornye: mornye);
       await tester.longPress(_card(2));
       await tester.pumpAndSettle();

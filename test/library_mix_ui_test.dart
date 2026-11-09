@@ -16,7 +16,6 @@ import 'package:mornye/screens/library_mix_screen.dart';
 import 'package:mornye/services/library_mixes.dart';
 import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/theme/mornye_theme.dart';
-import 'package:mornye/utils/desktop_platform.dart';
 import 'package:mornye/widgets/desktop/track_table.dart';
 import 'package:mornye/widgets/library_mix_cover.dart';
 import 'package:mornye/widgets/library_track_selection_bar.dart';
@@ -56,8 +55,6 @@ void main() {
     for (final mornye in [false, true]) {
       testWidgets('Home lists the mixes and opens one '
           '(desktop: $desktop, Mornye: $mornye)', (tester) async {
-        debugDesktopPlatformOverride = desktop;
-        addTearDown(() => debugDesktopPlatformOverride = null);
         tester.view.physicalSize = desktop
             ? const Size(1280, 800)
             : const Size(430, 932);
@@ -108,8 +105,6 @@ void main() {
   for (final mornye in [false, true]) {
     testWidgets('a long press on a phone row selects songs for the Library '
         'actions (Mornye: $mornye)', (tester) async {
-      debugDesktopPlatformOverride = false;
-      addTearDown(() => debugDesktopPlatformOverride = null);
       tester.view.physicalSize = const Size(430, 932);
       tester.view.devicePixelRatio = 1;
       addTearDown(tester.view.reset);

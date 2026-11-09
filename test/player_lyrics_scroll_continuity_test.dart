@@ -7,20 +7,17 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mornye/providers/music_player_provider.dart';
 import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/theme/mornye_theme.dart';
-import 'package:mornye/utils/desktop_platform.dart';
 import 'package:mornye/utils/lyrics_parser.dart';
 import 'package:mornye/widgets/lyric_scroll_motion.dart';
 import 'package:mornye/widgets/player_lyrics.dart';
 
 void main() {
-  tearDown(() => debugDesktopPlatformOverride = null);
 
   for (final mornye in [false, true]) {
     final style = mornye ? 'Mornye' : 'Material';
     testWidgets(
       '$style desktop keeps upcoming rows continuous on fast phrases',
       (tester) async {
-        debugDesktopPlatformOverride = true;
         tester.view.physicalSize = const Size(700, 900);
         tester.view.devicePixelRatio = 1;
         addTearDown(tester.view.resetPhysicalSize);

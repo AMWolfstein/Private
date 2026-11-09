@@ -7,7 +7,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mornye/providers/music_player_provider.dart';
 import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/theme/mornye_theme.dart';
-import 'package:mornye/utils/desktop_platform.dart';
 import 'package:mornye/utils/lyrics_parser.dart';
 import 'package:mornye/widgets/player_lyrics.dart';
 
@@ -22,7 +21,6 @@ Finder _timedPaint() => find.descendant(
 
 void main() {
   setUp(() => SharedPreferences.setMockInitialValues({}));
-  tearDown(() => debugDesktopPlatformOverride = null);
 
   for (final desktop in [false, true]) {
     for (final mornye in [false, true]) {
@@ -33,7 +31,6 @@ void main() {
         testWidgets('$platform $style $format preserves active line wrapping', (
           tester,
         ) async {
-          debugDesktopPlatformOverride = desktop;
           tester.view.physicalSize = const Size(900, 1200);
           tester.view.devicePixelRatio = 1;
           addTearDown(tester.view.resetPhysicalSize);

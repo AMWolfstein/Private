@@ -11,7 +11,6 @@ import 'package:mornye/services/playback_deck.dart';
 import 'package:mornye/services/playback_output_volume.dart';
 import 'package:mornye/services/system_volume_service.dart';
 import 'package:mornye/theme/mornye_theme.dart';
-import 'package:mornye/utils/desktop_platform.dart';
 import 'package:mornye/widgets/app_slider.dart';
 import 'package:mornye/widgets/player_volume_control.dart';
 
@@ -44,10 +43,8 @@ void main() {
       channel,
       (call) async => calls.add(call),
     );
-    debugDesktopPlatformOverride = true;
     addTearDown(() {
       messenger.setMockMethodCallHandler(channel, null);
-      debugDesktopPlatformOverride = null;
       playbackOutputVolume.value = 1;
     });
     final volume = SystemVolumeService();
@@ -137,11 +134,9 @@ void main() {
       'Desktop wheel adjusts volume without scrolling the page ($mornye)',
       (tester) async {
         PlaybackOutputVolumeStore.debugReset();
-        debugDesktopPlatformOverride = true;
         playbackOutputVolume.value = 0.5;
         addTearDown(() {
           PlaybackOutputVolumeStore.debugReset();
-          debugDesktopPlatformOverride = null;
           playbackOutputVolume.value = 1;
         });
         final scroll = ScrollController();

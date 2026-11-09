@@ -94,7 +94,6 @@ class _Player {
           autoplay: false,
         ),
         dependencies: PlaybackDependencies(
-          isMacOS: avPlayer,
           isAndroid: android,
           synchronizePlaybackState: () async {},
           recoverMissingFile: recoverMissingFile ?? (_) async => null,

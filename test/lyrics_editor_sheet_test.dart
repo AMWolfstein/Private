@@ -10,7 +10,6 @@ import 'package:mornye/l10n/app_localizations.dart';
 import 'package:mornye/providers/music_player_provider.dart';
 import 'package:mornye/services/source_metadata_events.dart';
 import 'package:mornye/theme/app_theme.dart';
-import 'package:mornye/utils/desktop_platform.dart';
 import 'package:mornye/utils/lyrics_parser.dart';
 import 'package:mornye/widgets/lyrics_editor_sheet.dart';
 
@@ -65,8 +64,6 @@ void main() {
         : const Size(400, 860);
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.reset);
-    debugDesktopPlatformOverride = desktop;
-    addTearDown(() => debugDesktopPlatformOverride = null);
     final metadata = PlayerMetadataController(
       readMetadata: (_) async => {'lyrics': lyrics},
       parseLyrics: (raw) async => LyricsParser.parse(raw),

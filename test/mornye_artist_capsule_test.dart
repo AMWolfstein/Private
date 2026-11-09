@@ -4,14 +4,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mornye/l10n/l10n.dart';
 import 'package:mornye/theme/mornye_theme.dart';
-import 'package:mornye/utils/desktop_platform.dart';
 import 'package:mornye/widgets/album_detail_header.dart';
 import 'package:mornye/widgets/desktop/context_menu.dart';
 import 'package:mornye/widgets/mornye_artist_header.dart';
 import 'package:mornye/widgets/mornye_chrome.dart';
 
 void main() {
-  tearDown(() => debugDesktopPlatformOverride = null);
 
   Future<void> pumpHeader(
     WidgetTester tester, {
@@ -19,7 +17,6 @@ void main() {
     required bool desktop,
     bool showTitle = false,
   }) async {
-    debugDesktopPlatformOverride = desktop;
     await tester.binding.setSurfaceSize(const Size(900, 800));
     addTearDown(() => tester.binding.setSurfaceSize(null));
     await tester.pumpWidget(
@@ -109,7 +106,6 @@ void main() {
   }
 
   testWidgets('selection mode leaves the toolbar empty', (tester) async {
-    debugDesktopPlatformOverride = false;
     await tester.pumpWidget(
       ProviderScope(
         child: MaterialApp(

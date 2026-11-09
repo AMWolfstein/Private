@@ -10,7 +10,6 @@ import 'package:mornye/providers/settings_provider.dart';
 import 'package:mornye/services/collection_suggestions.dart';
 import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/theme/mornye_theme.dart';
-import 'package:mornye/utils/desktop_platform.dart';
 import 'package:mornye/widgets/collection_suggestions_section.dart';
 import 'package:mornye/widgets/desktop/track_list_table.dart';
 
@@ -98,8 +97,6 @@ void main() {
       testWidgets(
         'reuses filtering on parent builds, desktop=$desktop Mornye=$mornye',
         (tester) async {
-          debugDesktopPlatformOverride = desktop;
-          addTearDown(() => debugDesktopPlatformOverride = null);
           final collection = [for (var i = 0; i < 200; i++) _CountingTrack(i)];
           var suggestions = const CollectionSuggestions(
             tracks: [_fresh],

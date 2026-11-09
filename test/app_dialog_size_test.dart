@@ -5,7 +5,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mornye/l10n/l10n.dart';
 import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/theme/mornye_theme.dart';
-import 'package:mornye/utils/desktop_platform.dart';
 import 'package:mornye/widgets/app_alert_dialog.dart';
 import 'package:mornye/widgets/app_bottom_sheet.dart';
 
@@ -14,9 +13,7 @@ const _dialogKey = ValueKey('app-sheet-dialog');
 void main() {
   setUp(() {
     SharedPreferences.setMockInitialValues({});
-    debugDesktopPlatformOverride = true;
   });
-  tearDown(() => debugDesktopPlatformOverride = null);
 
   Future<void> open(
     WidgetTester tester,
@@ -191,7 +188,6 @@ void main() {
     });
 
     testWidgets('phones keep the 280dp minimum', (tester) async {
-      debugDesktopPlatformOverride = false;
       final rect = await alert(tester, 'Remove it?');
       expect(rect.width, lessThan(440));
       expect(rect.width, greaterThanOrEqualTo(280));

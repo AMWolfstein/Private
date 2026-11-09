@@ -9,7 +9,6 @@ import 'package:mornye/providers/music_player_provider.dart';
 import 'package:mornye/services/lyrics_translation.dart';
 import 'package:mornye/services/lyrics_translation_alignment.dart';
 import 'package:mornye/theme/mornye_theme.dart';
-import 'package:mornye/utils/desktop_platform.dart';
 import 'package:mornye/utils/lyrics_parser.dart';
 import 'package:mornye/widgets/player_lyrics.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -108,8 +107,6 @@ void main() {
       for (final aiRomaji in [false, true]) {
         testWidgets('translation and pronunciation share pause/seek clock '
             '(desktop=$desktop, mornye=$mornye, ai=$aiRomaji)', (tester) async {
-          debugDesktopPlatformOverride = desktop;
-          addTearDown(() => debugDesktopPlatformOverride = null);
           tester.view.physicalSize = Size(desktop ? 1200 : 390, 800);
           tester.view.devicePixelRatio = 1;
           addTearDown(tester.view.resetPhysicalSize);

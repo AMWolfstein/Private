@@ -22,7 +22,6 @@ import 'package:mornye/services/lyrics_translation.dart';
 import 'package:mornye/services/lyrics_translation_sharing.dart';
 import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/theme/mornye_theme.dart';
-import 'package:mornye/utils/desktop_platform.dart';
 import 'package:mornye/utils/lyrics_parser.dart';
 import 'package:mornye/utils/playback_seek_preview.dart';
 import 'package:mornye/widgets/lyrics_options_button.dart';
@@ -170,8 +169,6 @@ void main() {
     for (final mornye in [false, true]) {
       testWidgets('translation mode applies on tap '
           '(desktop=$desktop, mornye=$mornye)', (tester) async {
-        debugDesktopPlatformOverride = desktop;
-        addTearDown(() => debugDesktopPlatformOverride = null);
         tester.view.physicalSize = Size(desktop ? 1200 : 390, 800);
         tester.view.devicePixelRatio = 1;
         addTearDown(tester.view.reset);

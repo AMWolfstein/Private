@@ -19,7 +19,6 @@ import 'package:mornye/services/library_search.dart';
 import 'package:mornye/services/library_lyrics_search.dart';
 import 'package:mornye/services/music_player_service.dart';
 import 'package:mornye/theme/mornye_theme.dart';
-import 'package:mornye/utils/desktop_platform.dart';
 import 'package:mornye/widgets/app_choice_chip.dart';
 import 'package:mornye/widgets/library_search_results.dart';
 import 'package:mornye/widgets/track_card.dart';
@@ -55,8 +54,6 @@ void main() {
       testWidgets(
         'Lyrics filter is explicit, reuses indexing while typing, and cancels on exit ($desktop/$mornye)',
         (tester) async {
-          debugDesktopPlatformOverride = desktop;
-          addTearDown(() => debugDesktopPlatformOverride = null);
           tester.view.physicalSize = Size(desktop ? 1280 : 390, 900);
           tester.view.devicePixelRatio = 1;
           addTearDown(tester.view.reset);

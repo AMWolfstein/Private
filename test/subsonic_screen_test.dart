@@ -5,7 +5,6 @@ import 'package:mornye/l10n/l10n.dart';
 import 'package:mornye/screens/network_storage_screen.dart';
 import 'package:mornye/services/network_storage_service.dart';
 import 'package:mornye/theme/mornye_theme.dart';
-import 'package:mornye/utils/desktop_platform.dart';
 import 'package:mornye/widgets/app_action_button.dart';
 import 'package:mornye/widgets/settings_group.dart';
 
@@ -55,8 +54,6 @@ void main() {
             addTearDown(tester.view.resetPhysicalSize);
             addTearDown(tester.view.resetDevicePixelRatio);
             final service = _Server();
-            debugDesktopPlatformOverride = !mobile;
-            addTearDown(() => debugDesktopPlatformOverride = null);
             addTearDown(service.dispose);
             final theme =
                 (mornye

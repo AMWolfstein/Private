@@ -16,7 +16,6 @@ import 'package:mornye/screens/library_tracks_folder_screen.dart';
 import 'package:mornye/services/library_search.dart';
 import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/theme/mornye_theme.dart';
-import 'package:mornye/utils/desktop_platform.dart';
 import 'package:mornye/widgets/desktop/track_list_table.dart';
 import 'package:mornye/widgets/library_search_results.dart';
 import 'package:mornye/widgets/now_playing_indicator.dart';
@@ -173,7 +172,6 @@ void _expectOnlyCurrentMarked(WidgetTester tester) {
 
 void main() {
   setUp(() => SharedPreferences.setMockInitialValues({}));
-  tearDown(() => debugDesktopPlatformOverride = null);
 
   group('TrackListTile', () {
     Widget list() => Scaffold(
@@ -228,7 +226,6 @@ void main() {
     );
 
     testWidgets('marks only the playing track (Material)', (tester) async {
-      debugDesktopPlatformOverride = true;
       tester.view.physicalSize = const Size(1200, 800);
       tester.view.devicePixelRatio = 1;
       addTearDown(tester.view.reset);
@@ -257,7 +254,6 @@ void main() {
     });
 
     testWidgets('Mornye rows show no current-track state', (tester) async {
-      debugDesktopPlatformOverride = true;
       tester.view.physicalSize = const Size(1200, 800);
       tester.view.devicePixelRatio = 1;
       addTearDown(tester.view.reset);
@@ -274,7 +270,6 @@ void main() {
     );
 
     testWidgets('phone rows mark only the playing track', (tester) async {
-      debugDesktopPlatformOverride = false;
       tester.view.physicalSize = const Size(400, 900);
       tester.view.devicePixelRatio = 1;
       addTearDown(tester.view.reset);
@@ -285,7 +280,6 @@ void main() {
     });
 
     testWidgets('desktop rows mark only the playing track', (tester) async {
-      debugDesktopPlatformOverride = true;
       tester.view.physicalSize = const Size(1200, 900);
       tester.view.devicePixelRatio = 1;
       addTearDown(tester.view.reset);
@@ -347,7 +341,6 @@ void main() {
       testWidgets('rows mark only the playing file (desktop: $desktop)', (
         tester,
       ) async {
-        debugDesktopPlatformOverride = desktop;
         await tester.pumpWidget(
           _app(results(), current: current, overrides: searchOverrides),
         );

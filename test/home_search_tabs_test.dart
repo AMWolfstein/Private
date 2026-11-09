@@ -18,7 +18,6 @@ import 'package:mornye/screens/home_tab.dart';
 import 'package:mornye/services/library_search.dart';
 import 'package:mornye/services/music_player_service.dart'
     show PlayableMedia, PlaybackResumePreview;
-import 'package:mornye/utils/desktop_platform.dart';
 import 'package:mornye/theme/mornye_theme.dart';
 import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/animation_utils.dart';
@@ -32,8 +31,6 @@ void main() {
     for (final mornye in [false, true]) {
       testWidgets('Home keeps Resume without a player '
           '(desktop: $desktop, Mornye: $mornye)', (tester) async {
-        debugDesktopPlatformOverride = desktop;
-        addTearDown(() => debugDesktopPlatformOverride = null);
         tester.platformDispatcher.accessibilityFeaturesTestValue =
             const FakeAccessibilityFeatures(disableAnimations: true);
         addTearDown(
@@ -177,8 +174,6 @@ void main() {
     for (final mornye in [false, true]) {
       testWidgets('Home keeps its feed layout through slow startup '
           '(desktop: $desktop, Mornye: $mornye)', (tester) async {
-        debugDesktopPlatformOverride = desktop;
-        addTearDown(() => debugDesktopPlatformOverride = null);
         tester.view.physicalSize = desktop
             ? const Size(1280, 800)
             : const Size(430, 932);
@@ -338,8 +333,6 @@ void main() {
   for (final desktop in [false, true]) {
     testWidgets('first search extension collapses the empty Home prompt '
         '(desktop: $desktop)', (tester) async {
-      debugDesktopPlatformOverride = desktop;
-      addTearDown(() => debugDesktopPlatformOverride = null);
       tester.view.physicalSize = desktop
           ? const Size(1280, 800)
           : const Size(430, 932);
@@ -506,8 +499,6 @@ void main() {
   testWidgets('Material desktop Home runs across a full screen window', (
     tester,
   ) async {
-    debugDesktopPlatformOverride = true;
-    addTearDown(() => debugDesktopPlatformOverride = null);
     const size = Size(2000, 1200);
     tester.view.physicalSize = size;
     tester.view.devicePixelRatio = 1;
@@ -870,8 +861,6 @@ void main() {
 
   testWidgets('Mornye desktop Search centers the field over a row of recent '
       'cards and can search the library instead', (tester) async {
-    debugDesktopPlatformOverride = true;
-    addTearDown(() => debugDesktopPlatformOverride = null);
     tester.view.physicalSize = const Size(1280, 800);
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.reset);

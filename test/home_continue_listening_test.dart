@@ -14,7 +14,6 @@ import 'package:mornye/providers/settings_provider.dart';
 import 'package:mornye/screens/home_tab.dart';
 import 'package:mornye/services/playable_media.dart';
 import 'package:mornye/theme/app_theme.dart';
-import 'package:mornye/utils/desktop_platform.dart';
 import 'package:mornye/widgets/player_artwork.dart';
 
 import 'support/fixed_settings.dart';
@@ -77,8 +76,6 @@ Future<void> _open(
   tester.view.physicalSize = Size(width, 1400);
   tester.view.devicePixelRatio = 1;
   addTearDown(tester.view.reset);
-  debugDesktopPlatformOverride = desktop;
-  addTearDown(() => debugDesktopPlatformOverride = null);
   await tester.pumpWidget(_home(saved: saved));
   await tester.pump();
   await tester.pump();

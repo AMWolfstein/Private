@@ -7,7 +7,6 @@ import 'package:mornye/providers/settings_provider.dart';
 import 'package:mornye/services/library_database.dart';
 import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/theme/mornye_theme.dart';
-import 'package:mornye/utils/desktop_platform.dart';
 import 'package:mornye/widgets/duplicate_review_sheet.dart';
 
 import 'support/fixed_settings.dart';
@@ -20,8 +19,6 @@ class _Library extends LocalLibraryNotifier {
 void main() {
   for (final platform in [TargetPlatform.windows, TargetPlatform.linux]) {
     testWidgets('duplicate query can retry on $platform', (tester) async {
-      debugDesktopPlatformOverride = true;
-      addTearDown(() => debugDesktopPlatformOverride = null);
       final previousDebugPrint = debugPrint;
       final logs = <String>[];
       debugPrint = (message, {wrapWidth}) {
@@ -66,8 +63,6 @@ void main() {
         testWidgets(
           'duplicate rows with percent paths render on $platform ($mornye, $brightness)',
           (tester) async {
-            debugDesktopPlatformOverride = true;
-            addTearDown(() => debugDesktopPlatformOverride = null);
             tester.view.physicalSize = const Size(1280, 720);
             tester.view.devicePixelRatio = 1;
             addTearDown(tester.view.reset);

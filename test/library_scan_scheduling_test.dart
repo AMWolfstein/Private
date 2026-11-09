@@ -12,8 +12,6 @@ import 'package:mornye/models/settings.dart';
 import 'package:mornye/providers/local_library_provider.dart';
 import 'package:mornye/providers/settings_provider.dart';
 import 'package:mornye/services/library_database.dart';
-import 'package:mornye/services/link/client/link_client_library.dart';
-import 'package:mornye/services/link/desktop/link_phone_library.dart';
 import 'package:mornye/services/platform_bridge.dart';
 import 'package:mornye/services/notification_service.dart';
 import 'package:mornye/services/network_storage_service.dart';
@@ -481,79 +479,6 @@ void main() {
       } else {
         expect((shows.last.arguments as Map)['title'], 'Library scan complete');
       }
-    });
-  }
-
-  for (final desktop in [false, true]) {
-    test(
-      'Link automatic scan failures stay silent (desktop: $desktop)',
-      () async {
-        const connection = NetworkConnection(
-          id: 'peer',
-          name: 'Peer',
-          protocol: NetworkProtocol.smb,
-          address: 'smb://peer.test/music/',
-        );
-        await storage.save(connection);
-        final root = NetworkStorageService.source('peer', '');
-        database.sources[0] = LocalLibrarySource(
-          id: 'active',
-          path: root,
-          displayName: 'Peer',
-        );
-        available[root] = true;
-        final bridge = Provider<Future<void> Function(String)>((ref) {
-          if (desktop) {
-            return LinkPhoneLibraryBridge(ref, database: database).rescan;
-          }
-          return LinkNetworkLibraryBridge(
-            ref,
-            database: database,
-            storage: storage,
-          ).rescan;
-        });
-        await container.read(bridge)('peer');
-        await storage.started.future.timeout(const Duration(seconds: 5));
-        storage.listing.completeError(
-          const SocketException('Peer disconnected'),
-        );
-        await _waitFor(
-          () =>
-              database.sources.first.lastScanError?.contains(
-                'Peer disconnected',
-              ) ==
-              true,
-        );
-        final prefs = await SharedPreferences.getInstance();
-        await _waitFor(
-          () => !prefs.containsKey(localLibraryActiveScanSourceKey),
-        );
-        expect(
-          notificationCalls.where((call) => call.method == 'show'),
-          isEmpty,
-        );
-      },
-    );
-
-    test('Link disposal cancels a pending source lookup ($desktop)', () async {
-      final response = Completer<LocalLibrarySource?>();
-      database.sourceLookup = (_) => response.future;
-      final bridge = Provider<Future<void> Function(String)>((ref) {
-        if (desktop) {
-          return LinkPhoneLibraryBridge(ref, database: database).rescan;
-        }
-        return LinkNetworkLibraryBridge(
-          ref,
-          database: database,
-          storage: storage,
-        ).rescan;
-      });
-      final pending = container.read(bridge)('peer');
-      container.dispose();
-      response.complete(database.sources.first);
-      await pending;
-      expect(scans, isEmpty);
-      expect(storage.started.isCompleted, isFalse);
     });
   }
 

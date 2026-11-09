@@ -19,7 +19,6 @@ import 'package:mornye/services/history_database.dart';
 import 'package:mornye/services/library_database.dart';
 import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/theme/mornye_theme.dart';
-import 'package:mornye/utils/desktop_platform.dart';
 import 'package:mornye/widgets/app_search_field.dart';
 import 'package:mornye/widgets/library_directory_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -132,7 +131,6 @@ void main() {
     });
     addTearDown(() => messenger.setMockMethodCallHandler(sqlite, null));
   });
-  tearDown(() => debugDesktopPlatformOverride = null);
 
   Future<void> pumpLibrary(
     WidgetTester tester, {
@@ -144,7 +142,6 @@ void main() {
     bool withQueueItem = true,
   }) async {
     final preferences = await SharedPreferences.getInstance();
-    debugDesktopPlatformOverride = desktop;
     tester.view.physicalSize = const Size(1280, 900);
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.reset);

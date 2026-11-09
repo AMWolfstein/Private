@@ -15,7 +15,6 @@ import 'package:mornye/services/backup_service.dart';
 import 'package:mornye/services/shell_navigation_service.dart';
 import 'package:mornye/services/user_profile_store.dart';
 import 'package:mornye/theme/mornye_theme.dart';
-import 'package:mornye/utils/desktop_platform.dart';
 import 'package:mornye/widgets/profile_avatar.dart';
 import 'package:mornye/widgets/settings_group.dart';
 
@@ -263,8 +262,6 @@ void main() {
     tester.view.physicalSize = const Size(1400, 800);
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.reset);
-    debugDesktopPlatformOverride = true;
-    addTearDown(() => debugDesktopPlatformOverride = null);
     final container = ProviderContainer(
       overrides: [userProfileStoreProvider.overrideWithValue(store)],
     );

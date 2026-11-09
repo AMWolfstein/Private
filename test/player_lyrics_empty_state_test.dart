@@ -10,7 +10,6 @@ import 'package:mornye/utils/playback_seek_preview.dart';
 import 'package:mornye/utils/lyrics_parser.dart';
 import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/theme/mornye_theme.dart';
-import 'package:mornye/utils/desktop_platform.dart';
 import 'package:mornye/widgets/expressive_button.dart';
 import 'package:mornye/widgets/player_lyrics.dart';
 import 'package:mornye/widgets/player_lyrics_section.dart';
@@ -74,8 +73,6 @@ void main() {
       testWidgets(
         'Search online saves found lyrics and reports write failure (desktop=$desktop, Mornye=$mornye)',
         (tester) async {
-          debugDesktopPlatformOverride = desktop;
-          addTearDown(() => debugDesktopPlatformOverride = null);
           final saving = Completer<void>();
           final writes = <(String, String)>[];
           final metadata = PlayerMetadataController(

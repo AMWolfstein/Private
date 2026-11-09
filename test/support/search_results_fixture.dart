@@ -14,7 +14,6 @@ import 'package:mornye/providers/track_provider.dart';
 import 'package:mornye/screens/home_tab.dart';
 import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/theme/mornye_theme.dart';
-import 'package:mornye/utils/desktop_platform.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'fixed_settings.dart';
@@ -171,8 +170,6 @@ Future<void> pumpSearchFixture(
   TextDirection textDirection = TextDirection.ltr,
 }) async {
   SharedPreferences.setMockInitialValues({});
-  debugDesktopPlatformOverride = desktop;
-  addTearDown(() => debugDesktopPlatformOverride = null);
   tester.view.physicalSize = size;
   tester.view.devicePixelRatio = 1;
   addTearDown(tester.view.reset);
