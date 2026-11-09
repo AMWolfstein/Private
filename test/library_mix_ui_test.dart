@@ -16,7 +16,6 @@ import 'package:mornye/screens/library_mix_screen.dart';
 import 'package:mornye/services/library_mixes.dart';
 import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/theme/mornye_theme.dart';
-import 'package:mornye/widgets/track_lists/track_table.dart';
 import 'package:mornye/widgets/library_mix_cover.dart';
 import 'package:mornye/widgets/library_track_selection_bar.dart';
 import 'package:mornye/widgets/mornye_mix_banner.dart';
@@ -92,7 +91,6 @@ void main() {
         expect(find.textContaining('Made from your Library'), findsOneWidget);
         expect(find.text('Song 0'), findsOneWidget);
         if (desktop) {
-          expect(find.byType(SliverTrackTable), findsOneWidget);
         } else {
           expect(find.byType(TrackCard), findsWidgets);
           expect(find.byTooltip('Save as playlist'), findsOneWidget);

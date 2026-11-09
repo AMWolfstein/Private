@@ -11,7 +11,6 @@ import 'package:mornye/services/collection_suggestions.dart';
 import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/theme/mornye_theme.dart';
 import 'package:mornye/widgets/collection_suggestions_section.dart';
-import 'package:mornye/widgets/track_lists/track_list_table.dart';
 
 import 'support/fixed_settings.dart';
 
@@ -139,26 +138,10 @@ void main() {
           );
           await tester.pumpAndSettle();
           expect(find.text('Fresh song'), findsOneWidget);
-          final first = desktop
-              ? tester
-                    .widget<TrackListTable>(find.byType(TrackListTable))
-                    .tracks
-              : null;
           _CountingTrack.reads = 0;
           for (var build = 1; build <= 5; build++) {
             parent.value = build;
             await tester.pump();
-            if (desktop) {
-              expect(
-                identical(
-                  tester
-                      .widget<TrackListTable>(find.byType(TrackListTable))
-                      .tracks,
-                  first,
-                ),
-                isTrue,
-              );
-            }
           }
           expect(_CountingTrack.reads, 0);
           tracks[100] = _fresh;

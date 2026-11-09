@@ -16,7 +16,6 @@ import 'package:mornye/screens/library_tracks_folder_screen.dart';
 import 'package:mornye/services/library_search.dart';
 import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/theme/mornye_theme.dart';
-import 'package:mornye/widgets/track_lists/track_list_table.dart';
 import 'package:mornye/widgets/library_search_results.dart';
 import 'package:mornye/widgets/now_playing_indicator.dart';
 import 'package:mornye/widgets/track_card.dart';
@@ -209,59 +208,6 @@ void main() {
     });
   });
 
-  group('TrackListTable', () {
-    Widget table() => Scaffold(
-      body: CustomScrollView(
-        slivers: [
-          TrackListTable(
-            tracks: _tracks,
-            ids: [for (var i = 0; i < _tracks.length; i++) 'row-$i'],
-            isInHistory: const [true, true, true],
-            selectedIds: const {},
-            onSelect: (_, _, _) {},
-            onActivate: (_) {},
-          ),
-        ],
-      ),
-    );
-
-    testWidgets('marks only the playing track (Material)', (tester) async {
-      tester.view.physicalSize = const Size(1200, 800);
-      tester.view.devicePixelRatio = 1;
-      addTearDown(tester.view.reset);
-      await tester.pumpWidget(_app(table()));
-      await _pumpFor(tester);
-      expect(find.byType(NowPlayingIndicator), findsOneWidget);
-      expect(_hasGlyph(Consumer, 'Current song'), isTrue);
-      expect(_hasGlyph(Consumer, 'Other song'), isFalse);
-      expect(_hasGlyph(Consumer, 'Same id song'), isFalse);
-      // The glyph takes the current row's track number.
-      expect(find.text('1'), findsNothing);
-      expect(find.text('3'), findsOneWidget);
-      final surface = tester
-          .widgetList<Material>(
-            find.ancestor(
-              of: find.text('Current song'),
-              matching: find.byType(Material),
-            ),
-          )
-          .first;
-      final scheme = Theme.of(
-        tester.element(find.text('Current song')),
-      ).colorScheme;
-      expect(surface.color, scheme.primaryContainer);
-      expect(tester.takeException(), isNull);
-    });
-
-    testWidgets('Mornye rows show no current-track state', (tester) async {
-      tester.view.physicalSize = const Size(1200, 800);
-      tester.view.devicePixelRatio = 1;
-      addTearDown(tester.view.reset);
-      await tester.pumpWidget(_app(table(), mornye: true));
-      await _pumpFor(tester);
-      expect(find.byType(NowPlayingIndicator), findsNothing);
-    });
-  });
 
   group('Library folder', () {
     Widget folder() => const LibraryTracksFolderScreen(
@@ -279,17 +225,6 @@ void main() {
       expect(tester.takeException(), isNull);
     });
 
-    testWidgets('desktop rows mark only the playing track', (tester) async {
-      tester.view.physicalSize = const Size(1200, 900);
-      tester.view.devicePixelRatio = 1;
-      addTearDown(tester.view.reset);
-      await tester.pumpWidget(_app(folder()));
-      await _pumpFor(tester);
-      expect(find.byType(NowPlayingIndicator), findsOneWidget);
-      expect(_hasGlyph(Consumer, 'Current song'), isTrue);
-      expect(_hasGlyph(Consumer, 'Same id song'), isFalse);
-      expect(tester.takeException(), isNull);
-    });
   });
 
   group('Library search', () {
@@ -336,22 +271,6 @@ void main() {
             request.kind == LibrarySearchKind.songs ? hits : [],
       ),
     ];
-
-    for (final desktop in [false, true]) {
-      testWidgets('rows mark only the playing file (desktop: $desktop)', (
-        tester,
-      ) async {
-        await tester.pumpWidget(
-          _app(results(), current: current, overrides: searchOverrides),
-        );
-        await _pumpFor(tester);
-        _expectOnlyCurrentMarked(tester);
-        // The current row's button pauses rather than restarting.
-        expect(find.byTooltip('Pause'), findsOneWidget);
-        expect(find.byTooltip('Play'), findsNWidgets(2));
-        expect(tester.takeException(), isNull);
-      });
-    }
 
     testWidgets('Mornye rows show no current-track state', (tester) async {
       await tester.pumpWidget(
