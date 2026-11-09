@@ -20,12 +20,12 @@
       "stall": 600
     },
     "android-unit": {
-      "run": ["bash", "android/gradlew", "-p", "android", "testDebugUnitTest"],
+      "run": ["bash", "android/gradlew", "-p", "android", ":app:testDebugUnitTest"],
       "requires": ["android/gradlew"],
       "timeout": 2400
     },
     "rust": {
-      "run": ["cargo", "test", "--manifest-path", "rust_backend/Cargo.toml", "--workspace"],
+      "run": ["cargo", "+1.99.1", "test", "--manifest-path", "rust_backend/Cargo.toml", "--workspace"],
       "requires": ["rust_backend/Cargo.toml"],
       "timeout": 2400
     },
