@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:mornye/utils/windows_path_identity.dart';
+
 const _androidStoragePathAliases = <String>[
   '/storage/emulated/0',
   '/storage/emulated/legacy',
@@ -83,6 +85,8 @@ Set<String> _buildPathMatchKeys(
 
   final keys = <String>{};
   final visited = <String>{};
+  final windowsPath = windowsPathIdentity(cleaned);
+  if (windowsPath != null) keys.add('windows-file:$windowsPath');
 
   // A DocumentsProvider document can be reached through an album tree, its
   // parent tree, or a direct document URI. Keep that identity independent of
@@ -107,6 +111,8 @@ Set<String> _buildPathMatchKeys(
       }
     }
 
+    // Windows resolves paths to the verbatim form (`\\?\C:\…`,
+    // `\\?\UNC\server\…`), which the desktop scanner stores, while
     // downloads keep the plain form. Both name the same file.
     final plain = withoutWindowsVerbatimPrefix(trimmed);
     if (plain != null) addNormalized(plain);
@@ -161,6 +167,7 @@ Set<String> _buildPathMatchKeys(
   }
 
   addNormalized(cleaned);
+  if (windowsPath != null) addNormalized(windowsPath);
 
   if (includeExtensionless) {
     final extensionStrippedKeys = <String>{};
@@ -182,6 +189,7 @@ Set<String> _buildPathMatchKeys(
   return result;
 }
 
+/// [path] without its Windows verbatim prefix, in either separator:
 /// `\\?\C:\a` → `C:\a` and `\\?\UNC\server\share\a` →
 /// `\\server\share\a`. Null when [path] has no such prefix, or names a
 /// device or volume GUID that has no plain spelling.
