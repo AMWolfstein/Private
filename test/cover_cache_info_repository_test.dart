@@ -188,14 +188,14 @@ void main() {
       await repository.update(objects[12].copyWith(eTag: '"new"'));
       await _until(() => writes.count == 2, 'the update save');
       expect(encoded, 31);
-      final touchedRows = {
-        for (final row in _rows(file)) row['_id'] as int: row['touched'],
+      // Touch-only changes persist later, so read the stamped times from the
+      // repository rather than from the file.
+      final current = {
+        for (final object in await repository.getAllObjects())
+          object.id!: object.touched!.millisecondsSinceEpoch,
       };
       for (final object in objects.take(10)) {
-        expect(
-          touchedRows[object.id],
-          greaterThan(fetchedTouched[object.id]!),
-        );
+        expect(current[object.id], greaterThan(fetchedTouched[object.id]!));
       }
 
       await repository.delete(objects[19].id!);
