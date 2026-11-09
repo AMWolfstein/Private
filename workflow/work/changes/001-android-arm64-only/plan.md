@@ -33,8 +33,8 @@ path identity, and the plugins only those platforms use. Then remove the dead co
 - Persisted settings: `lib/models/settings.dart:116-120` (exclusive output, desktop-only), link keys in
   `link_desktop_host.dart:43, :46` and `desktop_commands.dart:270`.
 - Platform checks: about 147 Dart files (inventory rows `edit`).
-- Discord: `lib/services/discord_presence_service.dart` contains a desktop branch (~124) and an iOS check (~128),
-  and `third_party/mornye_discord/ios` is Discord iOS code. Both are exceptions (FR-007).
+- Discord (base state, all removed by PD-3 in v3): `lib/services/discord_presence_service.dart` had a desktop
+  branch (~124) and an iOS check (~128), and `third_party/mornye_discord` held the plugin, including iOS code.
 - Third party: `third_party/audioplayers_darwin` (whole plugin, pubspec override), `third_party/media_kit_libs_windows_audio`,
   and the non-Android subfolders of `third_party/ffmpeg_kit_flutter_new_audio` and `third_party/audio_service`.
 - Docs: `README.md:34, :68, :96`, `rust_backend/README.md:93-96, :144`; launcher icon config in `pubspec.yaml`
@@ -45,26 +45,56 @@ path identity, and the plugins only those platforms use. Then remove the dead co
 - Ownership and dependency direction: unchanged for kept code. Dart calls the backend only through
   `MethodChannelBackend`. Kotlin and the Android Rust library keep their owners.
 - Contracts across Dart, Kotlin and Rust (methods, fields, units, errors): unchanged for kept features. Removed
-  features take their channel methods with them on both sides; the shared native library path-key contract loses
-  its Windows `windows-file:` keys on the Dart and Rust sides together.
+  features take their channel methods with them on both sides. The path-key contract (Dart
+  `lib/utils/path_match_keys.dart`, Rust `crates/mobile/src/native_library/path_keys.rs`, shared fixture
+  `test/fixtures/native_library_contract.json`) loses its Windows `windows-file:` keys on both sides together, and
+  the visible-library SQL view in `lib/services/library_schema.dart` drops its clause that hid `windows-file:`
+  aliases. No MethodChannel, JNI or UniFFI method of a kept feature changes.
 - State, threads, lifecycle and cancellation: unchanged on Android for kept features. Link's and Discord's
   lifecycles go with them.
-- Failure: unchanged for kept features. The update check returns a typed no-match (`noCompatibleApk`) for a
-  device without arm64 instead of an arm32 or universal asset (FR-009).
+- Failure: unchanged for kept features. The update check offers the release's arm64 APK and does not read the
+  device ABIs, because the app runs only on arm64; a newer release without an arm64 APK is a typed no-match
+  (`noCompatibleApk`) that the update dialog reports (`lib/widgets/update_dialog.dart`, FR-009).
 - Data compatibility: the app is treated as a first install (spec v3). There is no database migration, Link sync
   tables are never created, and settings fields of removed features are removed. Song IDs and the backup archive
   format are unchanged for kept features.
 - Removal: every row of `inventory.md` is an action; the later scope (Discord, Windows path identity, dead code) is
   proven by searches and an audit. The proof is the SC-002 search and `flutter analyze` with no unresolved import.
-- Build: release produces one `app-release.apk` that contains arm64-v8a only. Gradle keeps no ABI split because
-  AGP 9.5 rejects the split together with the NDK ABI filter, and it keeps `scripts/flutter_git_commit.sh`, which it
-  calls for the build revision.
+- Build: release produces one `app-release.apk` that contains arm64-v8a only. Gradle keeps no ABI split, because
+  AGP 9.5 rejects the split together with the NDK ABI filter.
+- Gradle calls `scripts/flutter_git_commit.sh` for the build revision, so that script stays.
 
 ## Characterization before edit
 
-Superseded by spec v3: with no migration and no preserved settings (FR-011, FR-012 superseded) the database and
-settings characterization tests (T001, T002, T004) are not needed. The update check is pinned by the restored
-`test/update_checker_test.dart` (T003, T031).
+Superseded by spec v3: with no migration and no preserved settings (FR-011, FR-012) the database and settings
+characterization tests are not needed (tasks.md T001, T002, T004). The update check is pinned by
+`test/update_checker_test.dart`, which the removal had deleted and which was restored from the base commit and
+rewritten for arm64 only (tasks.md T003, T031).
+
+## Added scope inventory (v3)
+
+The original scope is in `inventory.md`. The scope added in v3 removed:
+
+- Discord: `lib/services/discord_presence_service.dart`, `lib/utils/desktop_platform.dart`, `third_party/mornye_discord`,
+  `third_party/discord`, the Discord settings and strings, and the Discord SDK lines in `android/app/build.gradle.kts`
+  and `AndroidManifest.xml`.
+- Windows path identity: `lib/utils/windows_path_identity.dart`, the `windows-file:` keys and the verbatim-prefix alias
+  in `lib/utils/path_match_keys.dart`, `plainWindowsPath` and `matchWindowsPathSpelling` in
+  `lib/services/library_reorganizer.dart`, the repair on open in `lib/services/sqlite_helpers.dart`, the
+  `windows-file:` clause in `lib/services/library_schema.dart`, `crates/core/src/windows_path_identity.rs`, the Windows
+  rules in `crates/mobile/src/native_library/path_keys.rs`, `crates/extensions/tests/windows_path_prefix.rs`, and the
+  unused `windows-sys` workspace dependency.
+- Mornye Link remnants: the What's New Link pages, `lib/services/lyrics_translation_sharing.dart` and its provider
+  wiring, and the Link strings in every ARB file.
+- Dead code (each with a reference search and `flutter analyze`): `lib/widgets/track_lists/detail_header.dart`,
+  `lib/services/backend/native_backend_transport.dart`, `lib/services/playback_output_volume.dart`, unused list
+  selection declarations (`ListScope`, `RowDoubleClick`, `ContextMenuTarget`), `TrackListTileBadges`, the shell
+  navigation back/forward history and backdrop state, `PlatformBridge.castEvents`, `showWhatsNewDialog`, the autoplay
+  background trainers, `selectAutoplayTracks`, `mergeVisibleHistoryLookupKeys`, `libraryGenreFamilies`, the Rust
+  cancel-active chain, `get_available_lyrics_providers_json`, the unused `rustls-platform-verifier` dependency, and the
+  orphaned test fixtures `autoplay_taste_fixture.dart` and `directory_stats_reference.dart`.
+
+The final diff from the base commit is `git diff 365dcae a26367d` plus the later commits on `mornye-reboot3`.
 
 ## Decisions
 
@@ -99,7 +129,8 @@ settings characterization tests (T001, T002, T004) are not needed. The update ch
 - [x] V. Failures typed: the update check's no-match is `noCompatibleApk`, tested in `test/update_checker_test.dart`
 - [x] VI. Boundary: kept MethodChannel methods unchanged; the Kotlin side runs in the android-unit check
 - [x] VII. Data: no migration needed (first install, spec v3)
-- [x] VIII. Independent review: two clean design rounds and two clean code rounds
+- [x] VIII. Independent review required before ship: two consecutive clean design rounds, then two clean code
+  rounds over the diff from 365dcae. The implementation landed before design round 2, so the code rounds review it
 - [x] IX. No speculative layers; deviations recorded below
 - [x] X. Commits: records and code separate; push and APK only when the owner asks
 
@@ -107,17 +138,21 @@ settings characterization tests (T001, T002, T004) are not needed. The update ch
 
 | Deviation | Why needed | Simpler option rejected because |
 |---|---|---|
-| `test/semantics_geometry_regression_test.dart` skipped | It fails inside the pinned Flutter SDK (`rendering/object.dart`) and uses no project code | Changing the pinned SDK is outside this change |
-| Blur and pixel tests in `album_detail_header`, `listening_rewind_backdrop`, `material_player_backdrop` skipped | They failed before this change; the header blur stays live while music plays and needs its own fix | Fixing `SettledBlur` changes rendering behaviour outside this change |
+| Blur and pixel tests in `album_detail_header`, `listening_rewind_backdrop`, `material_player_backdrop` skipped (7 skips, each with a reason) | They fail at the pre-work commit e02860c too (baseline run in log.md); the header blur stays live while music plays and needs its own fix. A new header test covers title, cover, action size and collapsing without blur | Fixing `SettledBlur` changes rendering behaviour outside this change |
 | One permission test in `cover_cache_info_repository_test.dart` skipped as root | Root bypasses permission bits in the sandbox; it runs for non-root users | No unreadable-but-existing file can be made as root |
 
 ## Verification plan
 
 - Host checks (`work.py check auto`): `analyze`, `dart-tests`, `android-unit`, `rust` (cargo workspace test with
-  `--locked`), `workflow`. `android/gradlew` is generated by Flutter during a build and is git-ignored.
-- Searches (SC-002): the removed platform, Discord and Link names have no match except the kept items in PD-9 and
-  the change records.
-- Update check: `test/update_checker_test.dart` (arm64 APK, armeabi-v7a typed no-match, release page fallback).
+  `--locked`), `workflow`. `android/gradlew` is generated by Flutter during a build and is git-ignored. Dart tests
+  need the patched SDK (`scripts/prepare_flutter_sdk.dart`), which the semantics regression test guards.
+- Searches (SC-002): `rg -n -e 'Discord|discord' -e 'Mornye Link|LinkService|link_sync|whatsNewLink' -e
+  'isDesktopPlatform|desktop_platform|DesktopCast' -e 'Platform\.is(IOS|MacOS|Windows|Linux)|TargetPlatform\.(iOS|macOS)'
+  -e 'armeabi|armv7|isUniversalApk' -e 'windows-file|windowsPathIdentity|windows_path_identity' lib test
+  integration_test android/app/src rust_backend/crates scripts` returns no match. Allowed elsewhere: the change
+  records, `CHANGELOG.md`, `rust_backend/vendor/` and the items kept in PD-9.
+- Update check: `test/update_checker_test.dart` (arm64 APK offered without reading the device ABIs, a release
+  without an arm64 APK is a typed no-match, release page fallback).
 - Release APK built with `scripts/build_android.sh` and audited by `scripts/check_backend_apk.py`: arm64-v8a only.
 - Owner-run check (pending): install the APK on an arm64 device and open library, playback and settings.
 

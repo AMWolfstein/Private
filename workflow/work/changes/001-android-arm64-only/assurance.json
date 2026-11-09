@@ -6,7 +6,7 @@
   },
   "bridge": {
     "applies": false,
-    "reason": "No Dart-Kotlin-Rust payload, method, unit or error changes. The removed desktop FFI transport is not an Android contract."
+    "reason": "No MethodChannel, JNI or UniFFI method, payload, unit or error of a kept feature changes; methods of removed features are removed on both sides. The Dart and Rust path-key builders drop the windows-file key together, proven by the shared fixture test/fixtures/native_library_contract.json (test/native_library_contract_test.dart on the Dart side, crates/mobile native_library tests on the Rust side)."
   },
   "prerequisites": [],
   "device_checks": [

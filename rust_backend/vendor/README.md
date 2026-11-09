@@ -19,9 +19,9 @@ References:
 - [Upstream Rustix](https://github.com/bytecodealliance/rustix)
 
 When upgrading Rustix, check whether upstream has fixed this path before removing
-the patch. Keep the Android metadata smoke test and verify both APK ABIs.
+the patch. Keep the Android metadata smoke test and verify the arm64-v8a APK.
 
-Run `bash scripts/check_android_statx.sh arm64-v8a` (or `armeabi-v7a`) with
+Run `bash scripts/check_android_statx.sh arm64-v8a` with
 `ANDROID_NDK_HOME` set and a matching Android device connected through `adb`.
 The isolated test executable checks regular metadata access, then hides the libc
 symbol and blocks the raw syscall to exercise the legacy fallback. A final probe
@@ -35,7 +35,7 @@ sandbox check complements testing the APK on an actual older ARM32 device.
 libusb 1.0.27, so the workspace patch replaces the C source directory and MSVC
 configuration with the official libusb 1.0.30 release. The Rust API and bindings
 are unchanged; `build.rs` reports 1.0.30 when compiling the vendored C library.
-The Android dependency keeps its `vendored` feature, so both APK ABIs use these
+The Android dependency keeps its `vendored` feature, so the arm64-v8a APK uses these
 sources instead of an arbitrary host installation. Upstream licenses are retained.
 
 Source: https://github.com/libusb/libusb/releases/download/v1.0.30/libusb-1.0.30.tar.bz2
