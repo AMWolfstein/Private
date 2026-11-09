@@ -239,7 +239,7 @@ class DownloadHistoryNotifier extends Notifier<DownloadHistoryState> {
   /// Reloads history another writer may have changed, such as a native
   /// download that finished while the app was suspended. Unlike
   /// [reloadFromStorage], an unchanged snapshot publishes nothing, so Library
-  /// views and the Link catalog keep their revision.
+  /// views keep their revision.
   Future<void> refreshFromStorage() =>
       _reloadFuture ??
       (_refreshFuture ??=
@@ -392,7 +392,7 @@ class DownloadHistoryNotifier extends Notifier<DownloadHistoryState> {
     ),
   );
 
-  /// Serialized with Link, NAS transfers and ordinary History mutations.
+  /// Serialized with NAS transfers and ordinary History mutations.
   /// A concurrent transfer must not publish a second row for one origin.
   Future<void> saveOfflineCopy(DownloadHistoryItem item) =>
       _enqueueHistoryWrite(() async {

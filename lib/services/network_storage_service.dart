@@ -455,8 +455,7 @@ class NetworkStorageService {
 
   /// Whether the `network://` [source] can play now: a host its virtual
   /// source reaches, or a saved connection not known to be out of reach.
-  /// Songs of a host neither knows, such as a phone after Link stopped,
-  /// cannot.
+  /// Songs of a host that is no longer known cannot.
   Future<bool> reachable(String source) async {
     final host = Uri.tryParse(source)?.host ?? '';
     if (virtualFor(host) case final virtual?) return virtual.reachable(host);

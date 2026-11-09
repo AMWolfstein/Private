@@ -76,8 +76,8 @@ class _SetupScreenState extends ConsumerState<SetupScreen>
       ? (_asksNearby ? 6 : 5)
       : 4;
 
-  /// Android 17 asks for Nearby devices before LAN access, which Mornye Link
-  /// and network storage need. Earlier releases allow it without asking.
+  /// Android 17 asks for Nearby devices before LAN access, which network
+  /// storage needs. Earlier releases allow it without asking.
   bool get _asksNearby =>
       _platform == TargetPlatform.android &&
       !isAndroidTv &&

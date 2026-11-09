@@ -4,7 +4,8 @@ import 'dart:math';
 
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter/foundation.dart' show compute, visibleForTesting;
-import 'package:flutter/widgets.dart' show AppLifecycleState, WidgetsBindingObserver;
+import 'package:flutter/widgets.dart'
+    show AppLifecycleState, WidgetsBindingObserver;
 import 'package:mornye/services/playback_notification.dart';
 import 'package:audio_session/audio_session.dart'
     show
@@ -1625,7 +1626,7 @@ class MusicPlayerHandler extends BaseAudioHandler
     // AudioPlayer.play combines prepare/seek/resume without a cancellation
     // boundary. A late prepare from an old request could resume the wrong
     // source. Serialize preparation and recheck before making it audible.
-    // Link may resolve a network song to its completed local copy.
+    // A network song may resolve to its completed local copy.
     // A file still arriving resolves to its HTTP stream instead.
     try {
       if (const {'http', 'https'}.contains(Uri.tryParse(path)?.scheme)) {

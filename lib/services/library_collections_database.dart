@@ -19,8 +19,7 @@ final _log = AppLogger('LibraryCollectionsDb');
 
 const _dbFileName = 'library_collections.db';
 
-/// v3 adds Mornye Link change tracking (tables and triggers) beside the
-/// unchanged collection tables.
+/// Schema version of the collection database.
 const _dbVersion = 3;
 
 /// Native jobs read and write private copies holding only the collection
@@ -1075,7 +1074,7 @@ class LibraryCollectionsDatabase {
     });
   }
 
-  /// Playlist order is the `added_at` order, which Link sync also carries,
+  /// Playlist order is the `added_at` order,
   /// so a reorder rewrites those stamps instead of adding a position column.
   Future<void> reorderPlaylistTracks({
     required String playlistId,
@@ -1111,7 +1110,6 @@ class LibraryCollectionsDatabase {
   }
 
   /// Updates only ordering stamps, retaining membership and track metadata.
-  /// The existing collection triggers publish the change to Link atomically.
   Future<void> reorderSavedTracks({
     required LibraryTracksFolderMode mode,
     required Map<String, String> addedAtByKey,
@@ -1183,8 +1181,7 @@ class LibraryCollectionsDatabase {
         // after sqflite closes that file; only the database owner publishes
         // into the live database, preserving its WAL and connection caches.
         final stagedPath = '${temporary.path}/$_dbFileName';
-        // Staging holds only the collection tables: the live database's
-        // triggers record the published rows.
+        // Staging holds only the collection tables.
         final stagedDatabase = await openDatabase(
           stagedPath,
           version: _nativeSchemaVersion,

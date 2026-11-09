@@ -11,7 +11,7 @@ import 'package:mornye/utils/file_access.dart'
     show deleteFileQuietly, isContentUri, isCueVirtualPath;
 
 /// Whether [item] is a file on this device that can be copied to network
-/// storage: a path or an Android content URI. Network and Link songs already
+/// storage: a path or an Android content URI. Network songs already
 /// live on a server, an offline copy came from one, and a CUE track is only a
 /// range of its album file.
 bool canUploadLibraryItem(UnifiedLibraryItem item) {

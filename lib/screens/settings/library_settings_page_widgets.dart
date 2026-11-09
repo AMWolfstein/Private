@@ -3,8 +3,6 @@ part of 'library_settings_page.dart';
 class _LibrarySourceSettingsItem extends StatelessWidget {
   final LocalLibrarySource source;
 
-  /// Whether [source] is a paired computer or phone over Mornye Link.
-
   /// Files the last finished scan of [source] could not read.
   final LibraryScanFailures? failures;
   final bool isScanning;

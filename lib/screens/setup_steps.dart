@@ -329,7 +329,7 @@ extension _SetupScreenSteps on _SetupScreenState {
       title: context.l10n.setupNearbyEnable,
       description: context.l10n.setupNearbyDescription,
       icon: Icons.devices,
-      // No Skip: Android 17 blocks Link and network storage without it.
+      // No Skip: Android 17 blocks network storage without it.
       // A refusal still enables Next, so nobody is stuck here.
       child: _nearbyGranted
           ? _SuccessCard(

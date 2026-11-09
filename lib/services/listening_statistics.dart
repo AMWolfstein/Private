@@ -286,7 +286,7 @@ class ListeningStatisticsStore {
 
   final _database = sqlite.SingleFlightInitializer<Database>();
 
-  /// v2 adds Mornye Link change tracking beside the `listening` table.
+  /// Schema version of the statistics database.
   static const _version = 2;
 
   Future<Database> _open() => _database.getOrCreate(
@@ -331,7 +331,7 @@ class ListeningStatisticsStore {
     ),
   );
 
-  /// The statistics database (Mornye Link history sync).
+  /// The statistics database.
   Future<Database> get database => _open();
 
   Future<void> add(List<ListeningDelta> deltas) async =>

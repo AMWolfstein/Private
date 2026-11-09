@@ -104,7 +104,7 @@ Future<void> deleteLibraryItemsByIds(Database db, Iterable<String> ids) async {
 }
 
 /// Every store besides the `library` table that keeps Library cover paths
-/// copied from rows, the player or Link save offline.
+/// copied from rows, or the player saves offline.
 Future<List<LibraryCoverReferenceColumn>>
 appLibraryCoverReferenceColumns() async {
   final collections = await LibraryCollectionsDatabase.instance.database;
@@ -223,9 +223,7 @@ Future<int> _pruneUnreferencedLibraryCovers(
     return deleted;
   }
   if (privateSnapshotPath != null) {
-    throw StateError(
-      'The cache adapter requires explicit cover references',
-    );
+    throw StateError('The cache adapter requires explicit cover references');
   }
   final path = directory.path;
   final outcome = await _pruneCoversOnWorker(path, referencedPaths, minimumAge);

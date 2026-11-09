@@ -15,8 +15,7 @@ import 'package:mornye/widgets/network_upload_actions.dart';
 ///
 /// The playback and playlist actions match [LibrarySelectionPlaybackActions];
 /// the screen passes its own selection-bar callbacks for the rest, and omits
-/// those it does not offer. Mornye Link adds "Send to (phone)" and "Save to
-/// this computer" while a phone is connected. Actions that finish with the
+/// those it does not offer. Actions that finish with the
 /// menu (play, queue, playlist, transfers, details) call [onDone] to end the
 /// selection; the bulk actions keep it and end it themselves.
 List<List<ContextMenuAction>> libraryTrackMenuGroups(
