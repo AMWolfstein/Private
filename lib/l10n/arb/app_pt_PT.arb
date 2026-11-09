@@ -192,7 +192,6 @@
   "dapExclusive": "DAP de alta resolução (Exclusivo AAudio)",
   "dapExclusiveDescription": "Utilize o Oboe/AAudio com a taxa e a precisão originais da faixa para arquivos FLAC/WAV PCM. Requer Android 8.1 ou superior e hardware compatível. O acesso exclusivo é verificado; caso não esteja disponível, utiliza-se a reprodução normal. Para DSD, é necessário o driver USB direto. A configuração entra em vigor a partir da próxima faixa.",
   "dapExclusiveUnavailable": "O acesso exclusivo via AAudio não está disponível para esta faixa e para a saída atual. A reprodução ocorrerá de modo normal. No caso de um DAC USB, tente utilizar o driver USB direto.",
-  "exclusiveOutputDevice": "Output device",
   "usbDirect": "Driver USB direto",
   "usbDirectDescription": "Utilize áudio USB exclusivo para arquivos FLAC/WAV, DSF/DFF e WavPack DSD, mediante permissão de acesso USB no Android. O DSD nativo requer um DAC compatível reconhecido. Outros formatos PCM utilizam a reprodução padrão. A configuração entra em vigor a partir da próxima faixa.",
   "usbDsdOverPcm": "DSD sobre PCM (DoP)",
@@ -712,57 +711,30 @@
     "description": "Section for special thanks"
   },
   "aboutLinks": "Links",
-  "@aboutLinks": {
-    "description": "Section for external links"
-  },
   "aboutMobileSource": "Código-fonte do app móvel",
-  "@aboutMobileSource": {
-    "description": "Link to mobile GitHub repo"
-  },
   "aboutLyricsWebsite": "Lyrics website",
-  "@aboutLyricsWebsite": {
-    "description": "Link to the Zarz-LRC website for searching and saving word-timed lyrics"
-  },
   "aboutServiceStatus": "Service status",
-  "@aboutServiceStatus": {
-    "description": "Link to the status page of the Mornye online services"
-  },
   "aboutReportIssue": "Reportar um problema",
-  "@aboutReportIssue": {
-    "description": "Link to report bugs"
-  },
   "aboutReportIssueSubtitle": "Reporte qualquer problema que encontrar",
   "@aboutReportIssueSubtitle": {
     "description": "Subtitle for report issue"
   },
   "aboutFeatureRequest": "Solicitação de recurso",
-  "@aboutFeatureRequest": {
-    "description": "Link to suggest features"
-  },
   "aboutFeatureRequestSubtitle": "Sugira novos recursos para o aplicativo",
   "@aboutFeatureRequestSubtitle": {
     "description": "Subtitle for feature request"
   },
   "aboutTelegramChannel": "Canal do Telegram",
-  "@aboutTelegramChannel": {
-    "description": "Link to Telegram channel"
-  },
   "aboutTelegramChannelSubtitle": "Anúncios e atualizações",
   "@aboutTelegramChannelSubtitle": {
     "description": "Subtitle for Telegram channel"
   },
   "aboutTelegramChat": "Comunidade do Telegram",
-  "@aboutTelegramChat": {
-    "description": "Link to Telegram chat group"
-  },
   "aboutTelegramChatSubtitle": "Converse com outros usuários",
   "@aboutTelegramChatSubtitle": {
     "description": "Subtitle for Telegram chat"
   },
   "aboutSocial": "Social",
-  "@aboutSocial": {
-    "description": "Section for social links"
-  },
   "aboutApp": "Aplicativo",
   "@aboutApp": {
     "description": "Section for app info"
@@ -977,13 +949,7 @@
     "description": "Description on the Nearby devices page of the What's New tour, followed by a list of uses"
   },
   "whatsNewNearbyLinkTitle": "Finding your computer",
-  "@whatsNewNearbyLinkTitle": {
-    "description": "Use of the Nearby devices permission: Mornye Link finds the computer"
-  },
   "whatsNewNearbyLinkBody": "Mornye Link looks for your computer on the same Wi-Fi and stays connected to it.",
-  "@whatsNewNearbyLinkBody": {
-    "description": "Explains how Mornye Link uses the Nearby devices permission"
-  },
   "whatsNewNearbyStorageTitle": "Network storage",
   "@whatsNewNearbyStorageTitle": {
     "description": "Use of the Nearby devices permission: SMB and WebDAV servers at home"
@@ -1181,9 +1147,6 @@
     "description": "Track option and sheet title listing streaming platforms where the track can be opened"
   },
   "trackOpenOnNoLinks": "Nenhum link de plataforma encontrado para esta faixa.",
-  "@trackOpenOnNoLinks": {
-    "description": "Shown in the Open on sheet when song.link returns no links"
-  },
   "libraryReviewDuplicates": "Verificar duplicados",
   "@libraryReviewDuplicates": {
     "description": "Library settings row opening the duplicate review sheet"
@@ -4745,9 +4708,6 @@
     "description": "Error shown on downloads that failed because the persisted Android SAF folder grant is no longer valid"
   },
   "downloadErrorFolderAccessLost": "Download folder access lost. Please re-select your download folder in Settings.",
-  "@downloadErrorFolderAccessLost": {
-    "description": "Error shown on downloads that failed because the iOS download folder bookmark could not be opened"
-  },
   "downloadFilenameDescription": "Use {artist}, {title}, {album}, {track}, {year}, {date}, {disc} as placeholders.",
   "@downloadFilenameDescription": {
     "description": "Description shown in filename format editor"
@@ -6512,9 +6472,6 @@
     }
   },
   "extensionOauthConnectHint": "Tap Connect to Spotify to fill this field.",
-  "@extensionOauthConnectHint": {
-    "description": "Hint for an OAuth login link field before connecting Spotify"
-  },
   "extensionLastChecked": "Last checked {time}",
   "@extensionLastChecked": {
     "description": "Timestamp for the latest extension service health check",
@@ -6708,20 +6665,13 @@
     "description": "Title and tooltip for finding the current collection in other services"
   },
   "shareSheetNoExtensions": "No other compatible services",
-  "@shareSheetNoExtensions": {
-    "description": "Empty state when no extensions can be searched for cross-service links"
-  },
   "shareSheetNotFound": "Not found",
   "@shareSheetNotFound": {
     "description": "Cross-service share sheet row subtitle when a service has no match"
   },
   "shareSheetCopyLink": "Copy Link",
-  "@shareSheetCopyLink": {
-    "description": "Tooltip for copying a cross-service link"
-  },
   "shareSheetLinkCopied": "{service} link copied",
   "@shareSheetLinkCopied": {
-    "description": "Snackbar after copying a cross-service link",
     "placeholders": {
       "service": {}
     }
@@ -7190,7 +7140,6 @@
   },
   "linkHandoffSending": "Sending this song to {name}...",
   "@linkHandoffSending": {
-    "description": "Mornye Link: the phone uploads the current song, which the paired desktop lacks, before it plays there",
     "placeholders": {
       "name": {
         "type": "String"
@@ -7198,13 +7147,7 @@
     }
   },
   "linkSaveToPhoneCancelled": "Saving stopped",
-  "@linkSaveToPhoneCancelled": {
-    "description": "Mornye Link: the listener cancelled saving desktop songs to the phone"
-  },
   "announcementUnableToOpenLink": "Unable to open link. Please try again.",
-  "@announcementUnableToOpenLink": {
-    "description": "Snackbar shown when an announcement CTA link cannot be opened"
-  },
   "trackConvertLosslessOutputWithCap": "Lossless output with {quality} cap",
   "@trackConvertLosslessOutputWithCap": {
     "description": "Hint shown when lossless conversion will cap bit depth or sample rate",
@@ -7815,9 +7758,6 @@
     "description": "Rotating Home prompt under the greeting"
   },
   "homeTaglineLink": "Got a link? Drop it in the search",
-  "@homeTaglineLink": {
-    "description": "Rotating Home prompt explaining that links can be pasted into search"
-  },
   "homeTaglineDiscover": "Find your next favorite album",
   "@homeTaglineDiscover": {
     "description": "Rotating Home prompt under the greeting"
@@ -7835,9 +7775,6 @@
     "description": "Home section header for the most played tracks of the last four weeks"
   },
   "homeShortcuts": "Shortcuts",
-  "@homeShortcuts": {
-    "description": "Home section header for quick links to player tools"
-  },
   "homeMixesForYou": "Mixes for you",
   "@homeMixesForYou": {
     "description": "Home section header for daily mixes made from the user's own Library songs"
@@ -8558,24 +8495,6 @@
   "@optionsEmbeddedCoverSizeOriginal": {
     "description": "Option that preserves the provider artwork at its original resolution"
   },
-  "desktopTableSortedAscending": "{column}, sorted ascending",
-  "@desktopTableSortedAscending": {
-    "description": "Screen reader label of a song table column header that sorts the table A to Z",
-    "placeholders": {
-      "column": {
-        "type": "String"
-      }
-    }
-  },
-  "desktopTableSortedDescending": "{column}, sorted descending",
-  "@desktopTableSortedDescending": {
-    "description": "Screen reader label of a song table column header that sorts the table Z to A",
-    "placeholders": {
-      "column": {
-        "type": "String"
-      }
-    }
-  },
   "desktopMenuOpen": "Open",
   "@desktopMenuOpen": {
     "description": "Context menu item that opens an album, artist, playlist or folder"
@@ -8649,7 +8568,6 @@
   },
   "playlistImportResult": "Imported {count, plural, =1{1 track} other{{count} tracks}} into {name}, {matched} matched to files on this device",
   "@playlistImportResult": {
-    "description": "Snackbar after importing a playlist file; matched counts tracks linked to a local file",
     "placeholders": {
       "count": {
         "type": "int"
