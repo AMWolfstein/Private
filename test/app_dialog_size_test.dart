@@ -129,7 +129,7 @@ void main() {
       await tester.pumpAndSettle();
       expect(dialog, findsNothing);
     },
-    variant: TargetPlatformVariant.only(TargetPlatform.macOS),
+    variant: TargetPlatformVariant.only(TargetPlatform.android),
   );
 
   testWidgets('dialog corners follow the sheet radius of each style', (
