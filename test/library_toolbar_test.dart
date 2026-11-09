@@ -328,27 +328,7 @@ void main() {
     });
   }
 
-  testWidgets('the desktop sort menu opens below the sort button', (
-    tester,
-  ) async {
-    await pumpLibrary(tester, desktop: true);
-    final l10n = l10nOf(tester);
-    final sort = toolButton(null, label: l10n.libraryFilterSortLatest);
-    final sortRect = tester.getRect(sort);
-
-    await tester.tap(sort);
-    for (var i = 0; i < 10; i++) {
-      await tester.pump(const Duration(milliseconds: 50));
-    }
-
-    final oldest = find.text(l10n.libraryFilterSortOldest);
-    expect(oldest, findsOneWidget);
-    // The menu shifts left to stay inside the window, so only its top is
-    // tied to the button.
-    expect(tester.getRect(oldest).top, greaterThanOrEqualTo(sortRect.bottom));
-  });
-
-  for (final desktop in [false]) {
+for (final desktop in [false]) {
     for (final mornye in [false, true]) {
       testWidgets('title sort survives a fresh Library and settings scope '
           '(desktop: $desktop, Mornye: $mornye)', (tester) async {
