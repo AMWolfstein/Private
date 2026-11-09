@@ -28,10 +28,41 @@ class MornyePlayerQueue extends ConsumerWidget {
     final start = ref.watch(currentQueueIndexProvider) + 1;
     final count = queue.length - start;
     final controller = ref.read(musicPlayerControllerProvider);
+    final autoMix = ref.watch(settingsProvider.select((s) => s.autoMix));
     final autoplay = ref.watch(settingsProvider.select((s) => s.autoplay));
+    final repeatLabel = switch (playback.repeat) {
+      AudioServiceRepeatMode.one => context.l10n.nowPlayingRepeatOne,
+      AudioServiceRepeatMode.none => context.l10n.nowPlayingRepeatOff,
+      _ => context.l10n.nowPlayingRepeatAll,
+    };
     final type = Theme.of(context).textTheme;
 
-    // panel keeps only the two wide queue modes, drawn as their icons.
+    Widget modeButton({
+      required IconData icon,
+      required String label,
+      required bool selected,
+      required VoidCallback onPressed,
+    }) => Expanded(
+      child: Semantics(
+        selected: selected,
+        child: Tooltip(
+          message: label,
+          child: FilledButton(
+            style: FilledButton.styleFrom(
+              backgroundColor: Colors.white.withValues(
+                alpha: selected ? 0.3 : 0.12,
+              ),
+              foregroundColor: Colors.white,
+              minimumSize: const Size(0, 44),
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              shape: const StadiumBorder(),
+            ),
+            onPressed: onPressed,
+            child: Icon(icon, semanticLabel: label, size: 24),
+          ),
+        ),
+      ),
+    );
 
     return CustomScrollView(
       key: const PageStorageKey('mornye-player-queue'),
@@ -42,6 +73,56 @@ class MornyePlayerQueue extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                Row(
+                  children: [
+                    modeButton(
+                      icon: CupertinoIcons.arrow_merge,
+                      label: autoMix
+                          ? context.l10n.autoMixOn
+                          : context.l10n.autoMixOff,
+                      selected: autoMix,
+                      onPressed: () => ref
+                          .read(settingsProvider.notifier)
+                          .setAutoMix(!autoMix),
+                    ),
+                    const SizedBox(width: 12),
+                    modeButton(
+                      icon: CupertinoIcons.shuffle,
+                      label: playback.shuffle
+                          ? context.l10n.nowPlayingShuffleOn
+                          : context.l10n.nowPlayingPlayInOrder,
+                      selected: playback.shuffle,
+                      onPressed: () => controller.setShuffle(!playback.shuffle),
+                    ),
+                    const SizedBox(width: 12),
+                    modeButton(
+                      icon: playback.repeat == AudioServiceRepeatMode.one
+                          ? CupertinoIcons.repeat_1
+                          : CupertinoIcons.repeat,
+                      label: repeatLabel,
+                      selected: playback.repeat != AudioServiceRepeatMode.none,
+                      onPressed: () =>
+                          controller.setRepeatMode(switch (playback.repeat) {
+                            AudioServiceRepeatMode.none =>
+                              AudioServiceRepeatMode.all,
+                            AudioServiceRepeatMode.all =>
+                              AudioServiceRepeatMode.one,
+                            _ => AudioServiceRepeatMode.none,
+                          }),
+                    ),
+                    const SizedBox(width: 12),
+                    modeButton(
+                      icon: CupertinoIcons.infinite,
+                      label: autoplay
+                          ? context.l10n.autoplayOn
+                          : context.l10n.autoplayOff,
+                      selected: autoplay,
+                      onPressed: () => ref
+                          .read(settingsProvider.notifier)
+                          .setAutoplay(!autoplay),
+                    ),
+                  ],
+                ),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 12),
                   child: Column(

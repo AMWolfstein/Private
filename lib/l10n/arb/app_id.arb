@@ -7941,5 +7941,7 @@
   "offlineNoSongs": "Tidak ada lagu Library jaringan dalam pilihan ini.",
   "offlineCopyUnavailable": "Salinan offline tidak tersedia. Simpan kembali sebelum menghapus salinan server.",
   "offlinePlayingLocal": "Memutar dari perangkat ini",
-  "offlineStreaming": "Streaming dari {server}"
+  "offlineStreaming": "Streaming dari {server}",
+  "autoMixOn": "AutoMix hidup",
+  "autoMixOff": "AutoMix mati"
 }

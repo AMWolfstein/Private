@@ -8882,5 +8882,7 @@
         "type": "String"
       }
     }
-  }
+  },
+  "autoMixOn": "AutoMix on",
+  "autoMixOff": "AutoMix off"
 }

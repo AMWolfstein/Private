@@ -8882,5 +8882,7 @@
         "type": "String"
       }
     }
-  }
+  },
+  "autoMixOn": "AutoMix 켜기",
+  "autoMixOff": "AutoMix 끄기"
 }

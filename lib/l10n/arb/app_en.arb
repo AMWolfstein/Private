@@ -9182,5 +9182,7 @@
   "updateNoCompatibleApk": "This update has no build for this device. Install it from the release page.",
   "@updateNoCompatibleApk": {
     "description": "Shown in the update dialog when the release has no APK for the device processor."
-  }
+  },
+  "autoMixOn": "AutoMix on",
+  "autoMixOff": "AutoMix off"
 }
