@@ -160,23 +160,6 @@ impl CancellationRegistry {
         Ok(())
     }
 
-    /// Cancel active work only. Idle sentinels remain available to reset/retry.
-    /// IDs are sorted for deterministic native results; Go's ordering is unspecified.
-    pub fn cancel_active(&self) -> Result<Vec<String>, CancellationError> {
-        let state = self.shared.state.lock().expect("cancellation state lock");
-        state.check_open()?;
-        let mut ids = Vec::new();
-        for (id, entry) in &state.entries {
-            if entry.references > 0 {
-                entry.cancelled.store(true, Ordering::Release);
-                ids.push(id.clone());
-            }
-        }
-        drop(state);
-        self.shared.notify();
-        Ok(ids)
-    }
-
     pub fn is_cancelled(&self, id: &str) -> Result<bool, CancellationError> {
         let state = self.shared.state.lock().expect("cancellation state lock");
         state.check_open()?;
@@ -469,7 +452,7 @@ mod tests {
         assert!(!anonymous.is_cancelled().unwrap());
         // Dropping the temporary idle lease also notifies its release.
         let before = observer.calls.load(Ordering::Relaxed);
-        assert_eq!(registry.cancel_active().unwrap(), ["first", "second"]);
+        registry.cancel("second").unwrap();
         assert!(second.is_cancelled().unwrap());
         assert!(!anonymous.is_cancelled().unwrap());
         assert_eq!(observer.calls.load(Ordering::Relaxed), before + 1);

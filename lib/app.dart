@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:material_ui/material_ui.dart' as material_ui;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -13,20 +12,13 @@ import 'package:mornye/providers/settings_provider.dart';
 import 'package:mornye/providers/equalizer_provider.dart';
 import 'package:mornye/services/app_navigation_service.dart';
 import 'package:mornye/services/app_orientation.dart';
-import 'package:mornye/services/link/client/link_client_controller.dart';
-import 'package:mornye/services/link/features/link_phone_features.dart';
-import 'package:mornye/services/link/sync/link_sync_runner.dart';
 import 'package:mornye/theme/dynamic_color_wrapper.dart';
 import 'package:mornye/l10n/app_localizations.dart';
 import 'package:mornye/l10n/supported_locales.dart';
 import 'package:mornye/utils/adaptive_layout.dart';
 import 'package:mornye/utils/android_tv.dart';
-import 'package:mornye/utils/desktop_platform.dart';
 import 'package:mornye/widgets/android_keyboard_lifecycle.dart';
 import 'package:mornye/widgets/app_snack_bar.dart';
-import 'package:mornye/widgets/desktop/desktop_shortcuts.dart';
-import 'package:mornye/widgets/desktop/library_drop_target.dart';
-import 'package:mornye/widgets/link/link_actions.dart';
 import 'package:mornye/widgets/mornye_glass_preparation.dart';
 import 'package:mornye/widgets/playback_feedback.dart';
 import 'package:mornye/widgets/tv_navigation.dart';
@@ -48,10 +40,7 @@ final _routerProvider = Provider<GoRouter>((ref) {
       (settings) => (
         isFirstLaunch: settings.isFirstLaunch,
         hasCompletedTutorial: settings.hasCompletedTutorial,
-        // Desktop shows the tour as a dialog over the shell instead.
-        hasSeenWhatsNew:
-            isDesktopPlatform ||
-            settings.whatsNewSeen == AppInfo.whatsNewRelease,
+        hasSeenWhatsNew: settings.whatsNewSeen == AppInfo.whatsNewRelease,
       ),
     ),
   );
@@ -84,7 +73,6 @@ final _routerProvider = Provider<GoRouter>((ref) {
   );
 });
 
-/// iOS-style fluid scroll on mobile and macOS: momentum glide + bounce instead
 /// of the Android clamping stop. Widgets that set explicit physics (queue filter
 /// PageView, bottom sheets) are unaffected.
 class _FluidScrollBehavior extends _VerticalScrollbarBehavior {
@@ -95,7 +83,6 @@ class _FluidScrollBehavior extends _VerticalScrollbarBehavior {
       const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics());
 }
 
-/// Desktop scrollbars mark long vertical content only. Rows that scroll
 /// sideways (carousels, shelves, recent cards) already show arrows and read
 /// cleaner without a bar.
 class _VerticalScrollbarBehavior extends MaterialScrollBehavior {
@@ -111,15 +98,10 @@ class _VerticalScrollbarBehavior extends MaterialScrollBehavior {
       : super.buildScrollbar(context, child, details);
 }
 
-/// Mobile and macOS use the fluid bounce. Windows and Linux keep Material's
-/// desktop behavior: clamping physics with scrollbars.
 @visibleForTesting
 ScrollBehavior appScrollBehavior({required bool disableOverscrollEffects}) {
   if (disableOverscrollEffects) {
     return const _VerticalScrollbarBehavior().copyWith(overscroll: false);
-  }
-  if (isDesktopPlatform && defaultTargetPlatform != TargetPlatform.macOS) {
-    return const _VerticalScrollbarBehavior();
   }
   return const _FluidScrollBehavior();
 }
@@ -192,11 +174,7 @@ Widget buildAppContent(
 }) {
   Widget appContent = _OrientationFade(
     child: AppScaffoldMessenger(
-      child: PlaybackFeedback(
-        child: DesktopLibraryDropTarget(
-          child: child ?? const SizedBox.shrink(),
-        ),
-      ),
+      child: PlaybackFeedback(child: child ?? const SizedBox.shrink()),
     ),
   );
   // HeroMode only affects heroes below a *route* subtree. At this level it
@@ -206,13 +184,8 @@ Widget buildAppContent(
   if (!heroAnimationsEnabled) {
     appContent = HeroControllerScope.none(child: appContent);
   }
-  // Above the root navigator, so shortcuts and the macOS menu bar also reach
   // Now Playing, dialogs and pushed pages. It stays outside every conditional
-  // wrapper: remounting it would mount a second macOS menu bar before the
   // first is gone.
-  if (isDesktopPlatform) {
-    appContent = DesktopShortcuts(child: appContent);
-  }
   if (isAndroidTv) {
     appContent = ColoredBox(
       color: Theme.of(context).scaffoldBackgroundColor,
@@ -258,14 +231,6 @@ class MornyeApp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     // Keeps the equalizer loaded for the app's lifetime without rebuilding.
     ref.listen(equalizerProvider, (_, _) {});
-    // On phones, keeps the link to a paired computer, its sync and the
-    // remote control features running.
-    if (ref.read(linkClientSupportedProvider)) {
-      ref.listen(linkClientControllerProvider, (_, _) {});
-      ref.listen(linkSyncRunnerProvider, (_, _) {});
-      ref.listen(linkPhoneFeaturesProvider, (_, _) {});
-      ref.listen(linkTransferOfferNoticesProvider, (_, _) {});
-    }
     final router = ref.watch(_routerProvider);
     final localeString = ref.watch(settingsProvider.select((s) => s.locale));
     final heroAnimationsEnabled = ref.watch(

@@ -653,7 +653,6 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
       return;
     }
     // A paused scan does no work; release the foreground service and wake
-    // lock (iOS background task) until the user resumes.
     await _notificationService.endBackgroundWork(
       NotificationService.libraryScanWorkKind,
     );
@@ -674,41 +673,26 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
     await _releaseNativeScanPause();
   }
 
-  Future<int> cleanupMissingFiles({String? iosBookmark}) async {
+  Future<int> cleanupMissingFiles() async {
     await refreshSourceAvailability();
     var removed = 0;
     for (final source in state.sources) {
       if (!source.enabled || !source.available) continue;
-      IosSecurityScopedAccess? securityAccess;
-      try {
-        if (Platform.isIOS &&
-            source.bookmark != null &&
-            source.bookmark!.isNotEmpty) {
-          securityAccess = await PlatformBridge.startAccessingIosBookmark(
-            source.bookmark!,
-          );
-          if (securityAccess == null) continue;
-        }
-        removed += await _db.cleanupMissingFiles(
-          sourceId: source.id,
-          canDelete: () async {
-            if (isContentUri(source.path)) {
-              return await PlatformBridge.probeSafTreeReadAccess(source.path) ==
-                  true;
-            }
-            // Recheck access after the file probes, before deleting a page.
-            // An empty but readable source is valid; an offline one throws.
-            await Directory(
-              securityAccess?.path ?? source.path,
-            ).list(followLinks: false).take(1).drain<void>();
-            return true;
-          },
-        );
-      } finally {
-        if (securityAccess != null) {
-          await PlatformBridge.stopAccessingIosBookmark(securityAccess);
-        }
-      }
+      removed += await _db.cleanupMissingFiles(
+        sourceId: source.id,
+        canDelete: () async {
+          if (isContentUri(source.path)) {
+            return await PlatformBridge.probeSafTreeReadAccess(source.path) ==
+                true;
+          }
+          // Recheck access after the file probes, before deleting a page.
+          // An empty but readable source is valid; an offline one throws.
+          await Directory(
+            source.path,
+          ).list(followLinks: false).take(1).drain<void>();
+          return true;
+        },
+      );
     }
     if (removed > 0) await _refreshSummaryFromStorage();
     return removed;

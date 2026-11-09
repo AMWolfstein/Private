@@ -2,7 +2,6 @@
 part of 'home_tab.dart';
 
 /// Search results once the content is [searchCoverLayoutMinWidth] wide, on
-/// tablets and desktop windows: every filter, Songs included, shows a grid
 /// of covers, and the All view shows one shelf of covers per kind.
 extension _HomeTabSearchWideUI on _HomeTabState {
   List<Widget> _buildWideSearchResults({
@@ -336,7 +335,6 @@ extension _HomeTabSearchWideUI on _HomeTabState {
   }
 
   /// One [kind] in the All view: [count] covers from [cell] in a row that
-  /// scrolls sideways, with arrows for a mouse on desktop.
   Widget _buildSearchCoverShelf(
     int count,
     String kind,
@@ -353,20 +351,14 @@ extension _HomeTabSearchWideUI on _HomeTabState {
           );
           return SizedBox(
             height: extent + searchCoverTextHeight(context) + 8,
-            child: DesktopScrollArrows(
+            child: ListView.separated(
               key: ValueKey('search-shelf-$kind'),
-              builder: (context, controller) => ListView.separated(
-                controller: controller,
-                scrollDirection: Axis.horizontal,
-                padding: EdgeInsets.symmetric(horizontal: edge),
-                itemCount: count,
-                separatorBuilder: (_, _) =>
-                    const SizedBox(width: searchCoverGap),
-                itemBuilder: (context, index) => SizedBox(
-                  width: extent,
-                  child: cell(context, index, extent),
-                ),
-              ),
+              scrollDirection: Axis.horizontal,
+              padding: EdgeInsets.symmetric(horizontal: edge),
+              itemCount: count,
+              separatorBuilder: (_, _) => const SizedBox(width: searchCoverGap),
+              itemBuilder: (context, index) =>
+                  SizedBox(width: extent, child: cell(context, index, extent)),
             ),
           );
         },
@@ -422,62 +414,57 @@ class _SearchTopResultCard extends StatelessWidget {
     final subtitle = artistName.isEmpty
         ? kindLabel
         : '$kindLabel · $artistName';
-    return DesktopContextMenuRegion(
-      onContextMenu: onContextMenu,
-      child: Material(
-        color: colorScheme.onSurface.withValues(alpha: 0.08),
-        borderRadius: radius,
-        clipBehavior: Clip.antiAlias,
-        child: InkWell(
-          onTap: onTap,
-          onLongPress: onLongPress,
-          hoverColor: colorScheme.onSurface.withValues(alpha: 0.05),
-          child: Padding(
-            padding: const EdgeInsetsDirectional.only(start: 14, end: 4),
-            child: Row(
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(5),
-                  child: coverUrl?.isNotEmpty == true
-                      ? CachedCoverImage(
-                          imageUrl: coverUrl!,
-                          width: _artwork,
-                          height: _artwork,
-                          fit: BoxFit.cover,
-                          errorWidget: (_, _, _) => placeholder,
-                        )
-                      : placeholder,
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      ExplicitTrackTitle(
-                        title: title,
-                        explicit: explicit,
-                        maxLines: 1,
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          fontSize: 15,
-                        ),
+    return Material(
+      color: colorScheme.onSurface.withValues(alpha: 0.08),
+      borderRadius: radius,
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: onTap,
+        onLongPress: onLongPress,
+        hoverColor: colorScheme.onSurface.withValues(alpha: 0.05),
+        child: Padding(
+          padding: const EdgeInsetsDirectional.only(start: 14, end: 4),
+          child: Row(
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(5),
+                child: coverUrl?.isNotEmpty == true
+                    ? CachedCoverImage(
+                        imageUrl: coverUrl!,
+                        width: _artwork,
+                        height: _artwork,
+                        fit: BoxFit.cover,
+                        errorWidget: (_, _, _) => placeholder,
+                      )
+                    : placeholder,
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ExplicitTrackTitle(
+                      title: title,
+                      explicit: explicit,
+                      maxLines: 1,
+                      style: theme.textTheme.bodyMedium?.copyWith(fontSize: 15),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      subtitle,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        fontSize: 13,
+                        color: colorScheme.onSurfaceVariant,
                       ),
-                      const SizedBox(height: 2),
-                      Text(
-                        subtitle,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: theme.textTheme.bodySmall?.copyWith(
-                          fontSize: 13,
-                          color: colorScheme.onSurfaceVariant,
-                        ),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-                trailing,
-              ],
-            ),
+              ),
+              trailing,
+            ],
           ),
         ),
       ),
@@ -590,7 +577,7 @@ class _SearchTopCollectionCard extends StatelessWidget {
           [
             ContextMenuAction(
               icon: Icons.open_in_new,
-              label: l10n.desktopMenuOpen,
+              label: l10n.menuOpen,
               onSelected: onTap,
             ),
             if (hasCover)
@@ -707,74 +694,66 @@ class _SearchSongCoverCell extends ConsumerWidget {
       ),
     );
 
-    final desktopMaterial = isDesktopPlatform && !mornye;
-    return DesktopContextMenuRegion(
-      onContextMenu: (position) => showOptions(position: position),
-      child: Material(
-        type: MaterialType.transparency,
-        child: InkWell(
-          onTap: () => _TrackItemWithStatus.activate(
-            context,
-            ref,
-            track,
-            isQueued: isQueued,
-            isInHistory: isInHistory,
-            isInLocalLibrary: isInLocalLibrary,
-            onDownload: onDownload,
-          ),
-          onLongPress: showOptions,
-          borderRadius: radius,
-          // The M3 hover state layer; a pointer press shows as a state
-          // layer rather than a ripple.
-          hoverColor: mornye
-              ? null
-              : colorScheme.onSurface.withValues(alpha: 0.08),
-          highlightColor: desktopMaterial
-              ? colorScheme.onSurface.withValues(alpha: 0.1)
-              : null,
-          splashFactory: desktopMaterial ? NoSplash.splashFactory : null,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox.square(
-                dimension: extent,
-                child: Stack(
-                  children: [
-                    cover,
-                    PositionedDirectional(
-                      start: 4,
-                      bottom: 4,
-                      child: PreviewButton(track: track, size: 28, dense: true),
+    return Material(
+      type: MaterialType.transparency,
+      child: InkWell(
+        onTap: () => _TrackItemWithStatus.activate(
+          context,
+          ref,
+          track,
+          isQueued: isQueued,
+          isInHistory: isInHistory,
+          isInLocalLibrary: isInLocalLibrary,
+          onDownload: onDownload,
+        ),
+        onLongPress: showOptions,
+        borderRadius: radius,
+        // The M3 hover state layer; a pointer press shows as a state
+        // layer rather than a ripple.
+        hoverColor: mornye
+            ? null
+            : colorScheme.onSurface.withValues(alpha: 0.08),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox.square(
+              dimension: extent,
+              child: Stack(
+                children: [
+                  cover,
+                  PositionedDirectional(
+                    start: 4,
+                    bottom: 4,
+                    child: PreviewButton(track: track, size: 28, dense: true),
+                  ),
+                  if (isInLocalLibrary)
+                    const PositionedDirectional(
+                      end: 8,
+                      top: 8,
+                      child: InLibraryBadge(),
                     ),
-                    if (isInLocalLibrary)
-                      const PositionedDirectional(
-                        end: 8,
-                        top: 8,
-                        child: InLibraryBadge(),
-                      ),
-                  ],
-                ),
+                ],
               ),
-              const SizedBox(height: 8),
-              Text(
-                track.name,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  fontWeight: FontWeight.w600,
-                ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              track.name,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                fontWeight: FontWeight.w600,
               ),
-              const SizedBox(height: 2),
-              Text(
-                track.artistName,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: theme.textTheme.bodySmall?.copyWith(
-                  color: colorScheme.onSurfaceVariant,
-                ),
+            ),
+            const SizedBox(height: 2),
+            Text(
+              track.artistName,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: colorScheme.onSurfaceVariant,
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -858,72 +837,46 @@ class _SearchCoverCell extends StatelessWidget {
     );
 
     final textAlign = isArtist ? TextAlign.center : TextAlign.start;
-    final desktopMaterial = isDesktopPlatform && !mornye;
-    return DesktopContextMenuRegion(
-      onContextMenu: (position) => showContextMenu(
-        context,
-        position: position,
-        groups: [
-          [
-            ContextMenuAction(
-              icon: Icons.open_in_new,
-              label: l10n.desktopMenuOpen,
-              onSelected: onTap,
-            ),
-            if (hasCover)
-              ContextMenuAction(
-                icon: Icons.image_outlined,
-                label: l10n.trackSaveCoverArt,
-                onSelected: onSaveCover,
+    return Material(
+      type: MaterialType.transparency,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: radius,
+        // The M3 hover state layer; a pointer press shows as a state
+        // layer rather than a ripple.
+        hoverColor: mornye
+            ? null
+            : colorScheme.onSurface.withValues(alpha: 0.08),
+        child: Column(
+          crossAxisAlignment: isArtist
+              ? CrossAxisAlignment.center
+              : CrossAxisAlignment.start,
+          children: [
+            cover,
+            const SizedBox(height: 8),
+            Text(
+              item.name,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              textAlign: textAlign,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                fontWeight: FontWeight.w600,
               ),
-          ],
-        ],
-      ),
-      child: Material(
-        type: MaterialType.transparency,
-        child: InkWell(
-          onTap: onTap,
-          borderRadius: radius,
-          // The M3 hover state layer; a pointer press shows as a state
-          // layer rather than a ripple.
-          hoverColor: mornye
-              ? null
-              : colorScheme.onSurface.withValues(alpha: 0.08),
-          highlightColor: desktopMaterial
-              ? colorScheme.onSurface.withValues(alpha: 0.1)
-              : null,
-          splashFactory: desktopMaterial ? NoSplash.splashFactory : null,
-          child: Column(
-            crossAxisAlignment: isArtist
-                ? CrossAxisAlignment.center
-                : CrossAxisAlignment.start,
-            children: [
-              cover,
-              const SizedBox(height: 8),
+            ),
+            // Artist cards need no repeated artist-name subtitle.
+            if (!(mornye && isArtist)) ...[
+              const SizedBox(height: 2),
               Text(
-                item.name,
+                _CollectionItemWidget.subtitleOf(context, item),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 textAlign: textAlign,
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  fontWeight: FontWeight.w600,
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: colorScheme.onSurfaceVariant,
                 ),
               ),
-              // Artist cards need no repeated artist-name subtitle.
-              if (!(mornye && isArtist)) ...[
-                const SizedBox(height: 2),
-                Text(
-                  _CollectionItemWidget.subtitleOf(context, item),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  textAlign: textAlign,
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: colorScheme.onSurfaceVariant,
-                  ),
-                ),
-              ],
             ],
-          ),
+          ],
         ),
       ),
     );

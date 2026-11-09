@@ -6,7 +6,6 @@ preference key `theme_style`, loaded by `lib/providers/theme_provider.dart`):
 
 - **Material**: Material 3 with dynamic color or a seed color, optional AMOLED
   surfaces, and Material 3 Expressive motion and components.
-- **Mornye**: the Flutter counterpart of Mornye's iPhone visual system: iOS
   system colors, Cupertino typography and icons, and glass surfaces. Its
   palette is kept independent of wallpaper colors.
 
@@ -41,13 +40,10 @@ replacing them.
 - Mornye: `MornyeTheme.build(brightness, ...)` takes the Mornye accent
   (`MornyeAccent`, red by default), the system-font and custom-font choices,
   glass clarity (default 0.75) and glass outlines. It seeds a `ColorScheme`
-  from the accent and overrides the roles with iOS grouped colors (for
   example `#F2F2F7` and `#1C1C1E`). Text uses Cupertino styles. The font is
   the custom font when one is set; otherwise the Cupertino system font
-  (`CupertinoSystemText`, SF on Apple) on iOS and macOS or when the system
   font is chosen, and Inter elsewhere. It registers its own
   `MornyeTheme.tokens`, a copy of `AppTokens.standard` with different radii
-  (smaller for most shapes, larger for sheets) and iOS title sizes, and
   removes ink splashes.
 
 `MornyeTheme.build` caches up to 16 base themes; changing only glass clarity
@@ -67,7 +63,6 @@ user's Mornye preferences.
 - Gate Material 3 Expressive motion with `materialExpressiveEnabled` (false
   for Mornye and when the OS asks for reduced motion). `AppMotion` presets
   return the call site's fallback spec in those cases.
-- Wrap settings pages in `MornyeSettingsTheme` for iOS inset grouped
   surfaces; it does nothing in the Material style.
 
 ## Mornye Outside This Folder

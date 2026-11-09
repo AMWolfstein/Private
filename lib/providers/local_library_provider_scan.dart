@@ -144,7 +144,7 @@ extension _LocalLibraryScan on LocalLibraryNotifier {
       final result = await _db.replaceSourceScanFile(
         sourceId,
         scanFile,
-        requestId: _nativeLibraryRequestId ?? 'desktop-library-scan',
+        requestId: _nativeLibraryRequestId ?? 'library-scan',
         isCancelled: () => _scanCancelRequested || !ref.mounted,
       );
       _log.i(
@@ -167,7 +167,6 @@ extension _LocalLibraryScan on LocalLibraryNotifier {
     required String? sourceId,
   }) async {
     var activeSourceId = sourceId;
-    IosSecurityScopedAccess? securityAccess;
     try {
       if (activeSourceId == null) {
         final existingSource = await _db.getSourceByPath(folderPath);
@@ -266,20 +265,6 @@ extension _LocalLibraryScan on LocalLibraryNotifier {
       if (!folderPath.startsWith('network://')) _startProgressPolling();
 
       String? resolvedPath;
-      if (Platform.isIOS && iosBookmark != null && iosBookmark.isNotEmpty) {
-        securityAccess = await PlatformBridge.startAccessingIosBookmark(
-          iosBookmark,
-        );
-        resolvedPath = securityAccess?.path;
-        if (securityAccess != null) {
-          _log.i('Started iOS security-scoped access: $resolvedPath');
-        } else {
-          _log.w(
-            'Failed to start iOS security-scoped access, '
-            'falling back to original path',
-          );
-        }
-      }
       if (!ref.mounted || _scanCancelRequested) return;
       final effectiveFolderPath = resolvedPath ?? folderPath;
 
@@ -561,10 +546,6 @@ extension _LocalLibraryScan on LocalLibraryNotifier {
       await _notificationService.endBackgroundWork(
         NotificationService.libraryScanWorkKind,
       );
-      if (securityAccess != null) {
-        await PlatformBridge.stopAccessingIosBookmark(securityAccess);
-        _log.i('Stopped iOS security-scoped access');
-      }
       if (_scanPauseRequested) {
         _scanPauseRequested = false;
         await _releaseNativeScanPause();

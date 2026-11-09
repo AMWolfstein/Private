@@ -172,6 +172,11 @@ void main() {
       expect(encoded, 20);
       expect(_rows(file), hasLength(40));
 
+      // Remember the fetched times: updating an object stamps its touched time.
+      final fetchedTouched = {
+        for (final object in objects.take(10)) object.id!: object.touched!.millisecondsSinceEpoch,
+      };
+      await Future<void>.delayed(const Duration(milliseconds: 5));
       for (final object in objects.take(10)) {
         await repository.update(object);
       }
@@ -183,14 +188,14 @@ void main() {
       await repository.update(objects[12].copyWith(eTag: '"new"'));
       await _until(() => writes.count == 2, 'the update save');
       expect(encoded, 31);
-      final touchedRows = {
-        for (final row in _rows(file)) row['_id'] as int: row['touched'],
+      // Touch-only changes persist later, so read the stamped times from the
+      // repository rather than from the file.
+      final current = {
+        for (final object in await repository.getAllObjects())
+          object.id!: object.touched!.millisecondsSinceEpoch,
       };
       for (final object in objects.take(10)) {
-        expect(
-          touchedRows[object.id],
-          greaterThan(object.touched!.millisecondsSinceEpoch),
-        );
+        expect(current[object.id], greaterThan(fetchedTouched[object.id]!));
       }
 
       await repository.delete(objects[19].id!);
@@ -335,7 +340,7 @@ void main() {
     await repository.close();
     await Process.run('chmod', ['644', file.path]);
     expect(file.readAsBytesSync(), written);
-  }, skip: Platform.isWindows ? 'needs POSIX permissions' : null);
+  }, skip: _isRoot ? 'needs POSIX permissions and a non-root user' : null);
 
   test('a corrupt index is reported and replaced', () async {
     await file.writeAsString('[{"_id": 1, "url": ');
@@ -353,3 +358,7 @@ void main() {
     expect(_rows(file), hasLength(1));
   });
 }
+
+// Root reads files whatever their mode, so permission tests cannot fail.
+final bool _isRoot =
+    Process.runSync('id', ['-u']).stdout.toString().trim() == '0';

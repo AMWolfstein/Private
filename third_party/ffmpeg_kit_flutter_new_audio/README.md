@@ -3,7 +3,6 @@
 [![pub package](https://img.shields.io/pub/v/ffmpeg_kit_flutter_new_audio?logo=dart)](https://pub.dev/packages/ffmpeg_kit_flutter_new_audio)
 [![FFmpeg](https://img.shields.io/badge/FFmpeg-8.1.2-green)](https://ffmpeg.org/download.html)
 [![License](https://img.shields.io/badge/license-LGPL--3.0-blue)](LICENSE)
-[![Discord](https://img.shields.io/discord/1387108888452665427?logo=discord&logoColor=white&label=discord)](https://discord.gg/8NVwykjA)
 
 Run FFmpeg and FFprobe commands from Dart on Android, iOS, macOS, Windows and Linux.
 
@@ -257,6 +256,5 @@ FFmpeg and the bundled third-party libraries keep their own licenses. On Windows
 
 ## Support
 
-- Questions and discussion: [Discord](https://discord.gg/8NVwykjA)
 - Bug reports and feature requests: [GitHub issues](https://github.com/sk3llo/ffmpeg_kit_flutter/issues)
 - Support development: [Buy Me a Coffee](https://buymeacoffee.com/sk3llo)

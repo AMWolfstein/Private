@@ -18,7 +18,7 @@ enum LastfmProblem {
   rejected,
 }
 
-/// Bound only to the local audio handler. Remote Link sessions and short
+/// Bound only to the local audio handler. Remote sessions and short
 /// catalog previews never feed this service.
 class LastfmService extends ChangeNotifier {
   LastfmService({

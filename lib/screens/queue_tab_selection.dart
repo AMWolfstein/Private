@@ -70,18 +70,17 @@ extension _QueueTabSelectionActions on _QueueTabState {
     });
   }
 
-  /// A desktop click of [kind] on a library song; [orderedIds] lists the
   /// songs in the order shown.
-  void _applyDesktopClick(
+  void _applySelectionClick(
     String itemId,
-    DesktopClick kind,
+    RowClick kind,
     List<String> orderedIds,
   ) {
     var shouldHideOverlay = false;
     _setState(() {
       _isPlaylistSelectionMode = false;
       _selectedPlaylistIds.clear();
-      _selectionAnchorId = applyDesktopClickTo(
+      _selectionAnchorId = applySelectionClickTo(
         _selectedIds,
         target: itemId,
         kind: kind,
@@ -95,7 +94,6 @@ extension _QueueTabSelectionActions on _QueueTabState {
     if (shouldHideOverlay) _hideSelectionOverlay();
   }
 
-  /// Opens the desktop menu of a library song. A song outside the selection
   /// becomes the selection for this menu only, so the menu acts on the song
   /// clicked: the selection toolbar does not open under the menu, and the
   /// selection ends if the menu closes without a choice.
@@ -109,7 +107,7 @@ extension _QueueTabSelectionActions on _QueueTabState {
     final forMenu = !_selectedIds.contains(item.id);
     if (forMenu) {
       _contextMenuSelection = true;
-      _applyDesktopClick(item.id, DesktopClick.replace, const []);
+      _applySelectionClick(item.id, RowClick.replace, const []);
       _hideSelectionOverlay();
     }
     final chosen = await showContextMenu(
@@ -417,9 +415,7 @@ extension _QueueTabSelectionActions on _QueueTabState {
               foregroundColor: selectedCount > 0
                   ? colorScheme.onPrimary
                   : colorScheme.onSurfaceVariant,
-              padding: EdgeInsets.symmetric(
-                vertical: isDesktopPlatform ? 8 : 16,
-              ),
+              padding: EdgeInsets.symmetric(vertical: 16),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16),
               ),
@@ -448,9 +444,7 @@ extension _QueueTabSelectionActions on _QueueTabState {
               foregroundColor: selectedCount > 0
                   ? colorScheme.onError
                   : colorScheme.onSurfaceVariant,
-              padding: EdgeInsets.symmetric(
-                vertical: isDesktopPlatform ? 8 : 16,
-              ),
+              padding: EdgeInsets.symmetric(vertical: 16),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16),
               ),

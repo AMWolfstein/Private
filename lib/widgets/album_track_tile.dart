@@ -81,7 +81,6 @@ class AlbumTrackPlayButton extends StatelessWidget {
   final bool isPlaying;
   final VoidCallback? onPlay;
 
-  /// A 32dp pointer target for desktop table rows.
   final bool dense;
 
   @override

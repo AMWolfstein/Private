@@ -13,10 +13,8 @@ from typing import Iterable, Sequence, Tuple
 
 ABI_LAYOUT = {
     "arm64-v8a": (2, 183),
-    "armeabi-v7a": (1, 40),
 }
 CORE_LIBRARIES = ("libapp.so", "libflutter.so")
-DISCORD_LIBRARIES = ("libmornye_discord.so", "libdiscord_partner_sdk.so")
 
 
 class AuditError(Exception):
@@ -124,7 +122,7 @@ def check_backend_markers(
         raise AuditError("Go APK contains forbidden libmornye_mobile.so")
 
 
-def audit(path: Path, backend: str, abis: Sequence[str], discord_sdk: bool = False) -> str:
+def audit(path: Path, backend: str, abis: Sequence[str]) -> str:
     if not path.is_file():
         raise AuditError("APK is not a regular file: " + str(path))
     digest = artifact_sha256(path)
@@ -133,9 +131,6 @@ def audit(path: Path, backend: str, abis: Sequence[str], discord_sdk: bool = Fal
             infos = zf.infolist()
             check_archive_integrity(zf, infos)
             names = [info.filename for info in infos]
-            for name in names:
-                if not discord_sdk and name.rsplit("/", 1)[-1] == "libdiscord_partner_sdk.so":
-                    raise AuditError("APK unexpectedly contains Discord SDK library: " + name)
             if "assets/flutter_assets/kernel_blob.bin" in names:
                 raise AuditError("debug APK contains assets/flutter_assets/kernel_blob.bin")
             check_abi_directories(names, abis)
@@ -146,8 +141,6 @@ def audit(path: Path, backend: str, abis: Sequence[str], discord_sdk: bool = Fal
             libraries = CORE_LIBRARIES + (backend_library,)
             if backend == "rust":
                 libraries += ("libjnidispatch.so",)
-            if discord_sdk:
-                libraries += DISCORD_LIBRARIES
             for abi in abis:
                 for library in libraries:
                     entry_path = f"lib/{abi}/{library}"
@@ -164,7 +157,6 @@ def make_parser() -> argparse.ArgumentParser:
     parser.add_argument("apk", type=Path, help="release APK to audit")
     parser.add_argument("--backend", choices=("rust", "go"), required=True)
     parser.add_argument("--abis", required=True, metavar="ABI[,ABI...]", help="expected APK ABIs")
-    parser.add_argument("--discord-sdk", action="store_true", help="require Discord SDK and bridge in every ABI")
     return parser
 
 
@@ -172,7 +164,7 @@ def main(argv: Sequence[str] = None) -> int:
     args = make_parser().parse_args(argv)
     try:
         abis = parse_abis(args.abis)
-        digest = audit(args.apk, args.backend, abis, args.discord_sdk)
+        digest = audit(args.apk, args.backend, abis)
     except (AuditError, OSError) as exc:
         print("error: " + str(exc), file=sys.stderr)
         return 1

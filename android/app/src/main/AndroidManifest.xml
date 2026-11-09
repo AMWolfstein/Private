@@ -17,8 +17,6 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_LOCAL_NETWORK" />
-    <!-- Mornye Link finds the desktop app over mDNS (multicast lock). -->
-    <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" 
         android:maxSdkVersion="29" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" 
@@ -50,9 +48,6 @@
         <meta-data
             android:name="com.google.android.gms.cast.framework.OPTIONS_PROVIDER_CLASS_NAME"
             android:value="com.zarz.mornye.MornyeCastOptionsProvider" />
-        <!-- Presence uses RPC only; do not expose unused SDK voice/auth components. -->
-        <service android:name="com.discord.socialsdk.ForegroundService" tools:node="remove" />
-        <activity android:name="com.discord.socialsdk.AuthenticationActivity" tools:node="remove" />
         <activity
             android:name=".AudioOutputActivity"
             android:exported="false"
@@ -185,12 +180,6 @@
             android:name=".BackgroundWorkService"
             android:exported="false"
             android:foregroundServiceType="dataSync" />
-
-        <service
-            android:name=".LinkConnectionService"
-            android:exported="false"
-            android:stopWithTask="true"
-            android:foregroundServiceType="connectedDevice" />
 
         <receiver
             android:name=".DownloadQueueWidgetProvider"

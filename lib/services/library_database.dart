@@ -83,7 +83,6 @@ class LibraryDatabase {
         },
         onUpgrade: LibrarySchema.upgrade,
         onOpen: (db) async {
-          await LibrarySchema.onOpen(db);
           await migrateAndroidLibraryCovers(db);
         },
       );
@@ -106,7 +105,6 @@ class LibraryDatabase {
   ) => _ingestion.readNetworkScanRows(sourceId, paths);
 
   /// Keeps native scan output native through parsing, indexing and the atomic
-  /// source swap. The stream implementation remains the desktop/test adapter.
   Future<({int inserted, int skipped})> replaceSourceScanFile(
     String sourceId,
     LibraryScanNDJSONFile scan, {

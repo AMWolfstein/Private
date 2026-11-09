@@ -7,12 +7,12 @@ void main() {
     int index, {
     required bool fromMornye,
     required bool showStore,
-    bool desktop = true,
+    bool tv = true,
   }) => shellIndexOfTab(
     shellTabAt(index, mornye: fromMornye, showStore: showStore),
     mornye: !fromMornye,
     showStore: showStore,
-    desktop: desktop,
+    tv: tv,
   );
 
   for (final showStore in [false, true]) {
@@ -49,7 +49,7 @@ void main() {
             materialSettings,
             fromMornye: false,
             showStore: showStore,
-            desktop: false,
+            tv: false,
           ),
           isNull,
         );
