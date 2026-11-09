@@ -1,0 +1,52 @@
+# Template only. GitHub requires this file at .github/workflows/extension-updates.yml
+# on the default branch to enable scheduling. All implementation stays in extensions/.
+name: Review extension upstream updates
+
+on:
+  schedule:
+    # Weekly trigger; watch.py permits only alternating Mondays (14 days).
+    - cron: '17 6 * * 1'
+  workflow_dispatch:
+    inputs:
+      force:
+        description: Check now regardless of the fortnight schedule
+        type: boolean
+        default: true
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: extension-upstream-review
+  cancel-in-progress: false
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout the source-review target
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: extension-system
+          fetch-depth: 1
+          persist-credentials: true
+      - name: Test the local watcher and PR-only boundaries
+        run: python3 -m unittest discover -s extensions/updates/tests -v
+      - name: Install pinned local test parsers
+        run: npm ci --prefix extensions/tools --ignore-scripts --no-audit --no-fund
+      - name: Test existing local sources
+        env:
+          NODE_PATH: ${{ github.workspace }}/extensions/tools/node_modules
+        run: node --test extensions/tests/*.test.cjs extensions/lyrics/tests/*.test.cjs
+      - name: Inspect selected upstream files as data only
+        id: watch
+        env:
+          WATCH_FORCE: ${{ github.event_name == 'workflow_dispatch' && inputs.force && 'true' || 'false' }}
+        run: python3 extensions/updates/watch.py
+      - name: Open a draft review PR only
+        if: steps.watch.outputs.proposal == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 extensions/updates/publish.py

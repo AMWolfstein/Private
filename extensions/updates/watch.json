@@ -1,0 +1,77 @@
+{
+  "schema": 1,
+  "anchor_monday": "2026-11-09",
+  "interval_days": 14,
+  "target_branch": "extension-system",
+  "sources": [
+    {
+      "id": "extensions",
+      "repository": "mornyeapp/Mornye-Extension",
+      "branch": "main",
+      "paths": [
+        "COPYING",
+        "LICENSE",
+        "NOTICE",
+        "sources/amazon/index.js",
+        "sources/amazon/manifest.json",
+        "sources/apple-music/index.js",
+        "sources/apple-music/manifest.json",
+        "sources/beatport/index.js",
+        "sources/beatport/manifest.json",
+        "sources/bugs-music/index.js",
+        "sources/bugs-music/manifest.json",
+        "sources/deezer/index.js",
+        "sources/deezer/manifest.json",
+        "sources/genie-music/index.js",
+        "sources/genie-music/manifest.json",
+        "sources/jiosaavn/index.js",
+        "sources/jiosaavn/manifest.json",
+        "sources/melon-music/index.js",
+        "sources/melon-music/manifest.json",
+        "sources/qobuz-web/index.js",
+        "sources/qobuz-web/manifest.json",
+        "sources/soundcloud/index.js",
+        "sources/soundcloud/manifest.json",
+        "sources/spotify-web/index.js",
+        "sources/spotify-web/manifest.json",
+        "sources/tidal-web/index.js",
+        "sources/tidal-web/manifest.json",
+        "sources/ytmusic-spotiflac/index.js",
+        "sources/ytmusic-spotiflac/manifest.json",
+        "tests/apple_artist_artwork.test.cjs",
+        "tests/apple_lyrics_unsynced.test.cjs"
+      ],
+      "prefixes": [
+        "sources/amazon/",
+        "sources/apple-music/",
+        "sources/beatport/",
+        "sources/bugs-music/",
+        "sources/deezer/",
+        "sources/genie-music/",
+        "sources/jiosaavn/",
+        "sources/melon-music/",
+        "sources/qobuz-web/",
+        "sources/soundcloud/",
+        "sources/spotify-web/",
+        "sources/tidal-web/",
+        "sources/ytmusic-spotiflac/"
+      ]
+    },
+    {
+      "id": "mornye",
+      "repository": "mornyeapp/Mornye",
+      "branch": "main",
+      "paths": [
+        "rust_backend/crates/core/src/lyrics.rs",
+        "rust_backend/crates/providers/src/lyrics.rs",
+        "rust_backend/crates/extensions/src/lyrics.rs",
+        "rust_backend/crates/extensions/src/provider.js",
+        "rust_backend/crates/extensions/src/backend/lyrics.rs"
+      ],
+      "prefixes": [
+        "rust_backend/crates/providers/src/lyrics/",
+        "rust_backend/crates/core/src/lyrics/"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "schema": 1,
+  "sources": {
+    "extensions": {
+      "reviewed_commit": "12530ceda46dc78a10f9258b7d65a71452dfcf50"
+    },
+    "mornye": {
+      "reviewed_commit": null,
+      "baseline_origin": "local native sources retained at 15a9badecb8c67610c4844c789142367186e5005; not claimed to be an upstream commit",
+      "files": {
+        "rust_backend/crates/core/src/lyrics.rs": "f03bf1a8a76ef89f266a3cb0e689e380e5cca123",
+        "rust_backend/crates/core/src/lyrics/config.rs": "64d5413a95152c434bfe3ecf75ae3d4e6a1d487a",
+        "rust_backend/crates/core/src/lyrics/errors.rs": "8cd8f3ab46d401905b7ecd5bd248362640d7f930",
+        "rust_backend/crates/core/src/lyrics/file.rs": "e5228003f8dcf69b9f8a96d52d4f448a45123664",
+        "rust_backend/crates/core/src/lyrics/json.rs": "c9c10b671e62c76f702f7b69b8b42f7c0097f911",
+        "rust_backend/crates/core/src/lyrics/lrc.rs": "251ba868a39d7d19cb27ff2c2670c43196bfaaba",
+        "rust_backend/crates/core/src/lyrics/lrclib.rs": "1132915648679e4e369060d17f7325e0b6c95c0b",
+        "rust_backend/crates/core/src/lyrics/matching.rs": "d7df7818038c6320fbdf0a410b6bab66d5a31e60",
+        "rust_backend/crates/core/src/lyrics/models.rs": "bd20d5756b10f13cc6e42faf072a9add1dc6b763",
+        "rust_backend/crates/core/src/lyrics/payloads.rs": "eaee909c7a0aa72c7215dae8e51635b2c77ed2b2",
+        "rust_backend/crates/core/src/lyrics/payloads/tests.rs": "7714519dbf291fea769d25d09ab33a2645acbd2a",
+        "rust_backend/crates/core/src/lyrics/payloads/ttml.rs": "11f8990fb6ac1e93ef265072b9d6d7f8f1412626",
+        "rust_backend/crates/extensions/src/backend/lyrics.rs": "3706c636b84b2052fa8f7cd8004ee88f4feaee80",
+        "rust_backend/crates/extensions/src/lyrics.rs": "e2a76f6a7e1d54b17bc106592535a31f30314a25",
+        "rust_backend/crates/extensions/src/provider.js": "f110f8c8f547680759ba2ab4761f404ae3bb0d35",
+        "rust_backend/crates/providers/src/lyrics.rs": "3e483c657fd1089f72d2d3f37a8399bdfc137dc4",
+        "rust_backend/crates/providers/src/lyrics/builtin.rs": "a4aa145c2662bf64cca3ee9025d65903c2ce5e8f",
+        "rust_backend/crates/providers/src/lyrics/builtin/apple.rs": "6317e612ab6ed4d22fa3cec0fe090073fe0f9d1e",
+        "rust_backend/crates/providers/src/lyrics/builtin/direct.rs": "16c23ce25d3428ce3da5d66ad2830bd644728cc5",
+        "rust_backend/crates/providers/src/lyrics/builtin/proxy.rs": "a414c82c9d23f098c32a5cdcccb8d3c31da8098b",
+        "rust_backend/crates/providers/src/lyrics/builtin/ttml.rs": "0a278b1b7f35430fdcb001d29859ba93ad54e8cf",
+        "rust_backend/crates/providers/src/lyrics/cache.rs": "e9e80539c083f57679e56043df5961fdba1d6a4c",
+        "rust_backend/crates/providers/src/lyrics/calls.rs": "edaf2e1df864cf76c836ed8dc67bced4226e4702",
+        "rust_backend/crates/providers/src/lyrics/http.rs": "a396ba1f0ae844024f61335d6433cf90d61cabb6",
+        "rust_backend/crates/providers/src/lyrics/lrclib.rs": "8e1dd48d91f031e00b1de9470a3ff6b11dc19cb6",
+        "rust_backend/crates/providers/src/lyrics/service.rs": "77afcbe1e3bee376e07ce847af06bc7aa340343b",
+        "rust_backend/crates/providers/src/lyrics/service/tests.rs": "059a096ba1fda2dd6d2102a47ed5bfb91f9a46fe"
+      }
+    }
+  }
+}
