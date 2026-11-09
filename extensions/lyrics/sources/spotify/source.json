@@ -1,0 +1,15 @@
+{
+  "id": "spotify",
+  "capabilities": [
+    "lyrics"
+  ],
+  "version": "0.1.0",
+  "host_contract": "lyrics-host-v1-draft",
+  "entry": "provider.cjs",
+  "upstream_rust": "rust_backend/crates/providers/src/lyrics/builtin/proxy.rs",
+  "integration_status": "staged; not installed or called by the app",
+  "minimum_request_timeout_ms": 15000,
+  "network_hosts": [
+    "lyrics.paxsenix.org"
+  ]
+}

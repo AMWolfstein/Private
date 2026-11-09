@@ -1,0 +1,17 @@
+{
+  "id": "mornye_lyrics",
+  "capabilities": [
+    "lyrics"
+  ],
+  "version": "0.1.0",
+  "host_contract": "lyrics-host-v1-draft",
+  "entry": "provider.cjs",
+  "upstream_rust": "rust_backend/crates/providers/src/lyrics/builtin/apple.rs",
+  "integration_status": "staged; not installed or called by the app",
+  "minimum_request_timeout_ms": 65000,
+  "network_hosts": [
+    "beta.music.apple.com",
+    "amp-api.music.apple.com",
+    "api.zarz.moe"
+  ]
+}

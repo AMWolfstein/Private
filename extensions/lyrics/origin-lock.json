@@ -1,0 +1,97 @@
+{
+  "source_repository": "https://github.com/AMWolfstein/Private",
+  "source_commit": "52b81e2af6c52a388d6c942d52aecaf3aa620d83",
+  "providers": [
+    "lrclib",
+    "netease",
+    "musixmatch",
+    "apple_music",
+    "mornye_lyrics",
+    "qqmusic",
+    "spotify",
+    "deezer",
+    "youtube",
+    "kugou",
+    "genius",
+    "lyricsplus",
+    "lrcred",
+    "betterlyrics"
+  ],
+  "excluded": [
+    "jellyfin"
+  ],
+  "rust_sources": [
+    {
+      "path": "rust_backend/crates/providers/src/lyrics/builtin.rs",
+      "sha256": "f6d5620b86e34f3f6bdf1a804c8b371c1454316e39dd67a01454effc3ccd1086",
+      "disposition": "retained unchanged; source of provider port"
+    },
+    {
+      "path": "rust_backend/crates/providers/src/lyrics/builtin/apple.rs",
+      "sha256": "f8e5b2b43242048f4d28d3c99b7172b36f92c116223421f2327451845f8947d3",
+      "disposition": "retained unchanged; source of provider port"
+    },
+    {
+      "path": "rust_backend/crates/providers/src/lyrics/builtin/direct.rs",
+      "sha256": "8144fd7de3225a5972c29b4681c1b2e7458757c7ee38d12d827f9d462b3dd0fb",
+      "disposition": "retained unchanged; source of provider port"
+    },
+    {
+      "path": "rust_backend/crates/providers/src/lyrics/builtin/proxy.rs",
+      "sha256": "b785113be585bb47aae6eba6264a121de7fffd954ef063060686466f6afc1fa2",
+      "disposition": "retained unchanged; source of provider port"
+    },
+    {
+      "path": "rust_backend/crates/providers/src/lyrics/builtin/ttml.rs",
+      "sha256": "2375bc591dda54b5d407de7eb62943597eb8625dbc03e8b92d162ca7a528a8d3",
+      "disposition": "retained unchanged; source of provider port"
+    },
+    {
+      "path": "rust_backend/crates/providers/src/lyrics/lrclib.rs",
+      "sha256": "62c84109fa88fd97e8e199693f12dd57edd44c4b01cb83e5ef408dfd04b6ce54",
+      "disposition": "retained unchanged; source of provider port"
+    },
+    {
+      "path": "rust_backend/crates/providers/src/lyrics/http.rs",
+      "sha256": "2f4f12c5ae2de4ad5c37d280f805d0c6f7d8593cf6f0c56b3f6f50d6890e6912",
+      "disposition": "retained unchanged; source of provider port"
+    },
+    {
+      "path": "rust_backend/crates/providers/src/lyrics/service.rs",
+      "sha256": "50dba711d28e9263538adb90be724896b37e35f03e5b19b0d811698ee15fe9d0",
+      "disposition": "retained native; not ported"
+    },
+    {
+      "path": "rust_backend/crates/providers/src/lyrics/cache.rs",
+      "sha256": "95b740dc9c1693e62b08b03616928abee2afee450b30f271367a8dbbc756b41c",
+      "disposition": "retained native; not ported"
+    },
+    {
+      "path": "rust_backend/crates/core/src/lyrics/config.rs",
+      "sha256": "afdda8b9ab0c2854944a7dc9f5328d33c5baead77048e8a4a8db1141bbb8b6c2",
+      "disposition": "retained native; not ported"
+    },
+    {
+      "path": "rust_backend/crates/core/src/lyrics/matching.rs",
+      "sha256": "4d4ea8c540a8f568077907d8f18d7ada42142b4503618461e7557baeb2f902fd",
+      "disposition": "retained native; not ported"
+    },
+    {
+      "path": "rust_backend/crates/core/src/lyrics/payloads.rs",
+      "sha256": "a2933818ed6f55b910bcd790d020a4f425f76113717157ec381a6791c6f70b3e",
+      "disposition": "retained native; not ported"
+    },
+    {
+      "path": "rust_backend/crates/core/src/lyrics/lrclib.rs",
+      "sha256": "dcca06993b012cdd92a48d6a1c0b58824580a88d60ad8e1601f49bb4f05ed83c",
+      "disposition": "retained native; not ported"
+    }
+  ],
+  "native_core_retained": [
+    "matching",
+    "payload parsing and timing",
+    "cache and provider ordering",
+    "cancellation and file access"
+  ],
+  "application_integration": false
+}
