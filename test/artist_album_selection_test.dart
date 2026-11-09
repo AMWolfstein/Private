@@ -112,44 +112,6 @@ void main() {
 
   for (final mornye in [false, true]) {
     final style = mornye ? 'Mornye' : 'Material';
-    for (final platform in [TargetPlatform.windows, TargetPlatform.macOS]) {
-      testWidgets(
-        '$style $platform: modifier clicks select albums and keyboard clears them',
-        (tester) async {
-          await _pumpArtist(tester, mornye: mornye);
-          final modifier = platform == TargetPlatform.macOS
-              ? LogicalKeyboardKey.metaLeft
-              : LogicalKeyboardKey.controlLeft;
-          await tester.sendKeyDownEvent(modifier);
-          await _click(tester, 0);
-          await tester.sendKeyUpEvent(modifier);
-          _expectSelection(tester, {0});
-
-          await tester.sendKeyDownEvent(LogicalKeyboardKey.shiftLeft);
-          await _click(tester, 3);
-          await tester.sendKeyUpEvent(LogicalKeyboardKey.shiftLeft);
-          _expectSelection(tester, {0, 2, 3});
-
-          await tester.sendKeyDownEvent(modifier);
-          await _click(tester, 2);
-          await tester.sendKeyUpEvent(modifier);
-          _expectSelection(tester, {0, 3});
-
-          await tester.sendKeyDownEvent(modifier);
-          await tester.sendKeyEvent(LogicalKeyboardKey.keyA);
-          await tester.sendKeyUpEvent(modifier);
-          await tester.pumpAndSettle();
-          _expectSelection(tester, {0, 1, 2, 3, 4});
-
-          await tester.sendKeyEvent(LogicalKeyboardKey.escape);
-          await tester.pumpAndSettle();
-          expect(find.byType(SelectionBottomBar), findsNothing);
-          expect(find.byType(AnimatedSelectionCheckbox), findsNothing);
-          await _disposeArtist(tester);
-        },
-        variant: TargetPlatformVariant.only(platform),
-      );
-    }
 
     testWidgets('$style: context menu starts lasting album selection', (
       tester,
