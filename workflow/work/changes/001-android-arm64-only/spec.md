@@ -111,3 +111,6 @@ Session 2026-11-09
 - Q: Update check on devices without arm64 (arm32 or universal APK)? → A: arm64 only, remove the branches (FR-009).
 - Q: Mornye Link on Android? → A: Remove Link too (FR-010).
 - Q: Link sync tables and existing user data? → A: Drop the tables with a migration; the schema version is bumped and a migration test is required (FR-011, FR-012).
+- Q: Split the change? → A: Split in three: (a) build, CI, Rust crates, platform folders, pubspec, third_party and docs for arm64 only; (b) Dart desktop and iOS removal, update check arm64-only, FFI backend removal; (c) Link removal with the database migration. Each part has its own change record and checks. (applied to Status and to the plan's scope)
+- Q: Translation keys for Link (lib/l10n/arb/*.arb)? → A: Remove the keys from every ARB file and regenerate the localizations (applied to FR-010; part (c)).
+
