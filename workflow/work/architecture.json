@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "notes": [
+    "Reviewed mapping of the architecture contract (workflow/work/guides/architecture.md) onto real paths. Human-maintained; the map only reads it.",
+    "Add a module only for a real ownership boundary, once its paths exist. status: reviewed (accepted by the owner or a clean design review) or proposed. source: where it was decided.",
+    "Schema and examples: workflow/work/guides/map.md. Empty lists are the honest starting state of a new repository."
+  ],
+  "modules": [],
+  "constraints": []
+}
