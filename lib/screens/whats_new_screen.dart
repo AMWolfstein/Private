@@ -15,13 +15,11 @@ import 'package:material_3_expressive/material_3_expressive.dart'
 import 'package:mornye/constants/app_info.dart';
 import 'package:mornye/l10n/l10n.dart';
 import 'package:mornye/providers/settings_provider.dart';
-import 'package:mornye/services/link/client/link_client_controller.dart';
 import 'package:mornye/services/local_network_access.dart';
 import 'package:mornye/theme/app_tokens.dart';
 import 'package:mornye/theme/mornye_icons.dart';
 import 'package:mornye/theme/mornye_theme.dart';
 import 'package:mornye/utils/android_tv.dart';
-import 'package:mornye/utils/desktop_platform.dart';
 import 'package:mornye/widgets/app_bottom_sheet.dart';
 import 'package:mornye/widgets/app_icon_button.dart';
 import 'package:mornye/widgets/app_shape.dart';
@@ -104,12 +102,6 @@ class _WhatsNewScreenState extends ConsumerState<WhatsNewScreen> {
     try {
       await _localNetwork.ensureGranted();
       // Discovery that found nothing without it starts over.
-      if (ref.read(linkClientSupportedProvider)) {
-        ref
-            .read(linkClientControllerProvider.notifier)
-            .requestLocalNetworkAccess()
-            .ignore();
-      }
       if (mounted) setState(() => _nearbyAllowed = true);
     } on LocalNetworkPermissionException {
       if (mounted) setState(() => _nearbyAllowed = false);
@@ -273,16 +265,6 @@ class _WhatsNewScreenState extends ConsumerState<WhatsNewScreen> {
       ),
     );
   }
-}
-
-/// Desktop shows the tour once over the app, as the dialog of
-/// [showWhatsNewDialog], instead of the phone's full-screen pages.
-Future<void> maybeShowWhatsNewDialog(BuildContext context, WidgetRef ref) {
-  if (!isDesktopPlatform ||
-      ref.read(settingsProvider).whatsNewSeen == AppInfo.whatsNewRelease) {
-    return Future.value();
-  }
-  return showWhatsNewDialog(context);
 }
 
 /// The tour as a desktop dialog: the sections listed beside the selected
@@ -571,7 +553,6 @@ List<WhatsNewHighlight> whatsNewHighlights(
   bool nearbyDevices = false,
 }) {
   final showAndroidAuto = androidPhone ?? (Platform.isAndroid && !isAndroidTv);
-  final showExclusiveOutput = desktop ?? isDesktopPlatform;
   final sections = [
     WhatsNewHighlight(
       icon: Icons.computer,
@@ -642,12 +623,6 @@ List<WhatsNewHighlight> whatsNewHighlights(
             Icons.directions_car,
             l10n.whatsNewPlayerAutoTitle,
             l10n.whatsNewPlayerAutoBody,
-          ),
-        if (showExclusiveOutput)
-          WhatsNewFeature(
-            Icons.high_quality,
-            l10n.whatsNewPlayerExclusiveTitle,
-            l10n.whatsNewPlayerExclusiveBody,
           ),
       ],
     ),

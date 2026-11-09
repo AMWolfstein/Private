@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:math' as math;
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:material_3_expressive/material_3_expressive.dart';
 import 'package:mornye/theme/material_expressive.dart';
@@ -117,18 +116,6 @@ class _AppRefreshIndicatorState extends State<AppRefreshIndicator> {
     // macOS lists bounce past their top edge. Under a pinned header that
     // bounce opens a gap below the title, and the indicator ignores a pull
     // that starts while it is still closing, so the top edge stays put.
-    if (defaultTargetPlatform == TargetPlatform.macOS) {
-      final behavior = ScrollConfiguration.of(context);
-      indicator = ScrollConfiguration(
-        behavior: behavior.copyWith(
-          physics: _PullEdgeScrollPhysics(
-            holdsPull: _holdsPull,
-            parent: behavior.getScrollPhysics(context),
-          ),
-        ),
-        child: indicator,
-      );
-    }
     return MaterialExpressiveScope(child: indicator);
   }
 }

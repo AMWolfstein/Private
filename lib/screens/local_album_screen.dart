@@ -31,13 +31,9 @@ import 'package:mornye/screens/track_metadata_screen.dart';
 import 'package:mornye/widgets/cached_cover_image.dart';
 import 'package:mornye/widgets/collection_scaffold.dart';
 import 'package:mornye/widgets/collection_suggestions_section.dart';
-import 'package:mornye/utils/desktop_platform.dart';
 import 'package:mornye/widgets/desktop/context_menu.dart';
 import 'package:mornye/widgets/desktop/desktop_selection.dart';
-import 'package:mornye/widgets/desktop/detail_header.dart';
 import 'package:mornye/widgets/desktop/library_track_menu.dart';
-import 'package:mornye/widgets/link/link_library_actions.dart';
-import 'package:mornye/services/link/link_library_jobs.dart';
 import 'package:mornye/widgets/playlist_picker_sheet.dart';
 import 'package:mornye/widgets/desktop/track_table.dart';
 import 'package:mornye/widgets/expressive_button.dart';
@@ -45,7 +41,6 @@ import 'package:mornye/widgets/album_track_tile.dart';
 import 'package:mornye/widgets/animation_utils.dart';
 import 'package:mornye/widgets/app_snack_bar.dart';
 import 'package:mornye/widgets/library_track_selection_bar.dart';
-import 'package:mornye/widgets/link/link_actions.dart';
 import 'package:mornye/widgets/network_offline_actions.dart';
 import 'package:mornye/widgets/network_upload_actions.dart';
 import 'package:mornye/widgets/library_selection_playback_actions.dart';
@@ -153,18 +148,6 @@ class _LocalAlbumScreenState extends ConsumerState<LocalAlbumScreen>
   Future<void> _deleteSelected(List<LocalLibraryItem> currentTracks) async {
     final container = ProviderScope.containerOf(context, listen: false);
     final selected = _selectedUnifiedItems(currentTracks);
-    if (hasLinkLibrarySongs(container, selected)) {
-      await runLinkLibraryAction(
-        context,
-        container,
-        selected,
-        LinkLibraryAction.delete,
-        onAccepted: () {
-          if (mounted) exitSelectionMode();
-        },
-      );
-      return;
-    }
     final libraryNotifier = ref.read(localLibraryProvider.notifier);
     final tracksById = {for (final track in currentTracks) track.id: track};
 
@@ -425,17 +408,13 @@ class _LocalAlbumScreenState extends ConsumerState<LocalAlbumScreen>
       subtitle: Builder(
         builder: (header) => Text(
           widget.artistName,
-          style: isDesktopPlatform
-              ? desktopDetailSubtitleStyle(header)
-              : TextStyle(
-                  color: context.isMornye
-                      ? colorScheme.primary
-                      : HeaderPalette.of(context).onSurfaceVariant,
-                  fontSize: context.tokens.headerSubtitleSize,
-                  fontWeight: context.isMornye
-                      ? FontWeight.w400
-                      : FontWeight.w600,
-                ),
+          style: TextStyle(
+            color: context.isMornye
+                ? colorScheme.primary
+                : HeaderPalette.of(context).onSurfaceVariant,
+            fontSize: context.tokens.headerSubtitleSize,
+            fontWeight: context.isMornye ? FontWeight.w400 : FontWeight.w600,
+          ),
           textAlign: TextAlign.center,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
@@ -445,8 +424,6 @@ class _LocalAlbumScreenState extends ConsumerState<LocalAlbumScreen>
       appBarActions: [
         NetworkOfflineButton(items: _albumItems()),
         NetworkUploadButton(items: _albumItems()),
-        if (ref.watch(linkPhoneClientProvider) != null)
-          LinkTransferButtons(items: _albumItems()),
       ],
       actions: Consumer(
         builder: (context, ref, _) {
@@ -559,7 +536,6 @@ class _LocalAlbumScreenState extends ConsumerState<LocalAlbumScreen>
     ColorScheme colorScheme,
     List<LocalLibraryItem> tracks,
   ) {
-    if (isDesktopPlatform) return _buildDesktopTable(context, tracks);
     final discGroups = _discGroupsCache;
     final hasMultipleDiscs = _hasMultipleDiscsCache;
 

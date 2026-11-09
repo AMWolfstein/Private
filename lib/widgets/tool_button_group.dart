@@ -10,7 +10,6 @@ import 'package:material_3_expressive/material_3_expressive.dart'
         M3EButtonStyle;
 import 'package:mornye/theme/app_tokens.dart';
 import 'package:mornye/theme/material_expressive.dart';
-import 'package:mornye/utils/desktop_platform.dart';
 
 /// One tool in a [ToolButtonGroup].
 class ToolButton {
@@ -83,7 +82,7 @@ class _ToolButtonGroupState extends State<ToolButtonGroup> {
   @override
   Widget build(BuildContext context) {
     final tools = widget.tools;
-    final height = isDesktopPlatform ? 40.0 : 44.0;
+    final height = 44.0;
     return GestureDetector(
       onLongPressStart: tools.any((tool) => tool.onLongPress != null)
           ? _handleLongPress

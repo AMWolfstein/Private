@@ -11,22 +11,11 @@ const _homeMornyeShelfGap = 16.0;
 /// listening and Shortcuts side by side.
 const _homeDesktopColumnsMinWidth = 720.0;
 
-/// Whether Home lays out for a pointer and a wide pane rather than a phone:
-/// the Material desktop app. The Mornye style keeps its own Home.
-bool _homeDesktop(BuildContext context) =>
-    isDesktopPlatform && !context.isMornye;
+double _homeShelfCoverSizeOf(BuildContext context) => _homeShelfCoverSize;
 
-double _homeShelfCoverSizeOf(BuildContext context) =>
-    _homeDesktop(context) ? _homeDesktopShelfCoverSize : _homeShelfCoverSize;
-
-double _homeMixCoverSizeOf(BuildContext context) =>
-    _homeDesktop(context) ? _homeDesktopMixCoverSize : _homeMixCoverSize;
+double _homeMixCoverSizeOf(BuildContext context) => _homeMixCoverSize;
 
 double _homeShelfRadiusOf(BuildContext context) => context.isMornye ? 10 : 20;
-
-/// Whether Home uses compact Mornye desktop typography.
-bool _homeCompactText(BuildContext context) =>
-    context.isMornye && isDesktopPlatform;
 
 typedef HomeRecentlyAdded = ({List<UnifiedLibraryItem> items, int trackCount});
 
@@ -391,9 +380,7 @@ class _HomeSections extends ConsumerWidget {
     final hasTopPicks = mornye && _HomeTopPicksSection.hasPicks(ref);
     final sections = <Widget>[
       if (hasTopPicks) _HomeTopPicksSection(inset: inset),
-      if (_homeDesktop(context))
-        _HomeDesktopTop(inset: inset, showContinue: showContinue)
-      else ...[
+      ...[
         if (recentlyPlayed.isNotEmpty)
           _HomeSection(
             title: l10n.homeRecentlyPlayed,
@@ -469,86 +456,6 @@ class _HomeSections extends ConsumerWidget {
   }
 }
 
-/// Continue listening and Shortcuts on the Material desktop Home: side by
-/// side at one height once the pane is wide enough, the shortcuts as a list
-/// beside the player and as one row without it.
-class _HomeDesktopTop extends StatelessWidget {
-  const _HomeDesktopTop({required this.inset, required this.showContinue});
-
-  final double inset;
-  final bool showContinue;
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = context.l10n;
-    if (!showContinue) {
-      return _HomeSection(
-        title: l10n.homeShortcuts,
-        inset: inset,
-        child: const _HomeShortcuts(layout: _HomeShortcutsLayout.row),
-      );
-    }
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        if (constraints.maxWidth - 2 * inset < _homeDesktopColumnsMinWidth) {
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              _HomeSection(
-                title: l10n.homeContinueListening,
-                inset: inset,
-                child: const _HomeContinueListeningCard(),
-              ),
-              const SizedBox(height: 28),
-              _HomeSection(
-                title: l10n.homeShortcuts,
-                inset: inset,
-                child: const _HomeShortcuts(layout: _HomeShortcutsLayout.row),
-              ),
-            ],
-          );
-        }
-        // Four shortcut rows of at least 56dp each set the shared height.
-        final textScale = MediaQuery.textScalerOf(context).scale(1);
-        final height = math.max(240.0, 4 * 56 * textScale + 3 * 4);
-        return Padding(
-          padding: EdgeInsets.symmetric(horizontal: inset),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                flex: 3,
-                child: _HomeSection(
-                  title: l10n.homeContinueListening,
-                  inset: 0,
-                  child: SizedBox(
-                    height: height,
-                    child: const _HomeContinueListeningCard(hero: true),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 24),
-              Expanded(
-                flex: 2,
-                child: _HomeSection(
-                  title: l10n.homeShortcuts,
-                  inset: 0,
-                  child: SizedBox(
-                    height: height,
-                    child: const _HomeShortcuts(
-                      layout: _HomeShortcutsLayout.list,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-}
-
 class _HomeSection extends StatelessWidget {
   const _HomeSection({
     required this.title,
@@ -575,7 +482,6 @@ class _HomeSection extends StatelessWidget {
       title,
       style: Theme.of(context).textTheme.titleMedium?.copyWith(
         color: colorScheme.onSurface,
-        fontSize: _homeCompactText(context) ? 15 : null,
         fontWeight: FontWeight.w600,
       ),
     );
@@ -626,7 +532,7 @@ class _HomeSection extends StatelessWidget {
 
 /// The active track or the last dismissed session, with its saved progress.
 class _HomeContinueListeningCard extends ConsumerStatefulWidget {
-  const _HomeContinueListeningCard({this.hero = false});
+  const _HomeContinueListeningCard() : hero = false;
 
   /// The desktop card beside Shortcuts: the cover fills its height, the
   /// title sits above, and the progress and play button run along the
@@ -644,14 +550,10 @@ class _HomeContinueListeningCardState
   bool _resuming = false;
 
   void _openPlayer() {
-    if (isDesktopPlatform) {
-      openDesktopNowPlaying();
-    } else {
-      Navigator.of(
-        context,
-        rootNavigator: true,
-      ).push(NowPlayingRoute(child: const NowPlayingScreen()));
-    }
+    Navigator.of(
+      context,
+      rootNavigator: true,
+    ).push(NowPlayingRoute(child: const NowPlayingScreen()));
   }
 
   Future<void> _resume({bool openPlayer = false}) async {
@@ -953,7 +855,7 @@ class _HomeShelfSize extends StatelessWidget {
     if (!context.isMornye) {
       return builder(context, _homeShelfCoverSizeOf(context));
     }
-    if (!isDesktopPlatform) return builder(context, 160);
+    return builder(context, 160);
     return LayoutBuilder(
       builder: (context, constraints) {
         final content = constraints.maxWidth - 2 * inset;
@@ -992,7 +894,6 @@ class _HomeShelfTile extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
     final size = this.size ?? _homeShelfCoverSizeOf(context);
     final radius = _homeShelfRadiusOf(context);
-    final compactText = _homeCompactText(context);
     return Semantics(
       button: true,
       label: semanticLabel,
@@ -1016,8 +917,6 @@ class _HomeShelfTile extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
                 style: textTheme.labelLarge?.copyWith(
                   color: colorScheme.onSurface,
-                  fontSize: compactText ? 13 : null,
-                  fontWeight: compactText ? FontWeight.w400 : null,
                 ),
               ),
               Text(
@@ -1026,7 +925,6 @@ class _HomeShelfTile extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
                 style: textTheme.bodySmall?.copyWith(
                   color: colorScheme.onSurfaceVariant,
-                  fontSize: compactText ? 13 : null,
                 ),
               ),
             ],
@@ -1411,9 +1309,7 @@ class _HomeTopPicksShelf extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         final content = constraints.maxWidth - 2 * inset;
-        final width = isDesktopPlatform
-            ? ((content + _gap) / 4.6 - _gap).clamp(180.0, 320.0)
-            : math.min(content - 44, 280.0);
+        final width = math.min(content - 44, 280.0);
         return SizedBox(
           height: width / MornyeMixBanner.aspectRatio,
           child: DesktopScrollArrows(
@@ -1508,7 +1404,7 @@ enum _HomeShortcutsLayout {
 
 /// Quick ways into player tools that otherwise sit a few screens deep.
 class _HomeShortcuts extends ConsumerWidget {
-  const _HomeShortcuts({this.layout = _HomeShortcutsLayout.grid});
+  const _HomeShortcuts() : layout = _HomeShortcutsLayout.grid;
 
   final _HomeShortcutsLayout layout;
 

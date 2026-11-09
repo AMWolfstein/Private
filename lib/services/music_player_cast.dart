@@ -94,7 +94,7 @@ class _MusicCast {
     if (device != null) {
       // iOS keeps the session for the Cast plugin's silent keep-alive, which
       // lets the app keep serving the TV in the background.
-      if (!Platform.isIOS) await handler._audioSession?.setActive(false);
+      await handler._audioSession?.setActive(false);
       _showVolume();
     } else {
       _volumeIndex = null;

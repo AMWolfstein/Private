@@ -7,7 +7,6 @@ import 'package:mornye/controllers/player_metadata_controller.dart';
 import 'package:mornye/l10n/l10n.dart';
 import 'package:mornye/providers/music_player_provider.dart';
 import 'package:mornye/providers/settings_provider.dart';
-import 'package:mornye/services/link/link_source_names.dart';
 import 'package:mornye/theme/app_motion.dart';
 import 'package:mornye/theme/app_tokens.dart';
 import 'package:mornye/theme/material_expressive.dart';
@@ -664,14 +663,7 @@ class _QualityBadge extends StatelessWidget {
           type: MaterialType.transparency,
           child: InkWell(
             borderRadius: radius,
-            onTap: () => showAudioInfoSheet(
-              context,
-              metadata: metadata,
-              linkSources: ProviderScope.containerOf(
-                context,
-                listen: false,
-              ).read(linkSourceNamesProvider),
-            ),
+            onTap: () => showAudioInfoSheet(context, metadata: metadata),
             child: badge,
           ),
         ),

@@ -1,7 +1,5 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:mornye/utils/desktop_platform.dart';
 import 'package:mornye/utils/ordered_range_selection.dart';
 
 /// How a desktop click changes a list selection.
@@ -50,9 +48,7 @@ T? applyDesktopClickTo<T>(
 /// Command on macOS, Control elsewhere.
 bool get desktopPrimaryModifierPressed {
   final keyboard = HardwareKeyboard.instance;
-  return defaultTargetPlatform == TargetPlatform.macOS
-      ? keyboard.isMetaPressed
-      : keyboard.isControlPressed;
+  return keyboard.isControlPressed;
 }
 
 /// The selection change for a click made with the modifiers held right now.
@@ -257,7 +253,7 @@ class _DesktopListScopeState extends State<DesktopListScope> {
 
   @override
   Widget build(BuildContext context) {
-    if (!isDesktopPlatform) return widget.child;
+    return widget.child;
     return FocusScope(
       node: _node,
       onKeyEvent: _handleKey,

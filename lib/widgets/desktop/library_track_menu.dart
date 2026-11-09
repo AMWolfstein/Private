@@ -4,7 +4,6 @@ import 'package:mornye/l10n/l10n.dart';
 import 'package:mornye/models/unified_library_item.dart';
 import 'package:mornye/providers/music_player_provider.dart';
 import 'package:mornye/widgets/desktop/context_menu.dart';
-import 'package:mornye/widgets/desktop/desktop_link_transfer_actions.dart';
 import 'package:mornye/widgets/playlist_picker_sheet.dart';
 import 'package:mornye/services/network_offline_saver.dart';
 import 'package:mornye/widgets/network_offline_actions.dart';
@@ -79,7 +78,6 @@ List<List<ContextMenuAction>> libraryTrackMenuGroups(
         },
       ),
     ],
-    desktopLinkTransferActions(context, ref, items, onDone: onDone),
     [
       if (items.any((item) => networkOfflineOrigin(item) != null))
         ContextMenuAction(

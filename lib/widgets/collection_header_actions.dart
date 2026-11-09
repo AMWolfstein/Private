@@ -5,7 +5,6 @@ import 'package:mornye/l10n/l10n.dart';
 import 'package:mornye/models/track.dart';
 import 'package:mornye/providers/library_collections_provider.dart';
 import 'package:mornye/theme/mornye_theme.dart';
-import 'package:mornye/utils/desktop_platform.dart';
 import 'package:mornye/widgets/album_detail_header.dart';
 import 'package:mornye/widgets/expressive_button_group.dart';
 
@@ -69,13 +68,6 @@ class CollectionHeaderActions extends StatelessWidget {
       tooltip: context.l10n.tooltipAddToPlaylist,
       onPressed: enabled ? onAddToPlaylist : null,
     );
-    if (isDesktopPlatform) {
-      return Row(
-        mainAxisSize: MainAxisSize.min,
-        spacing: 10,
-        children: [love, download, addToPlaylist],
-      );
-    }
     if (mornye) {
       return Row(
         mainAxisAlignment: MainAxisAlignment.center,

@@ -22,10 +22,9 @@ import 'package:mornye/widgets/tv_navigation.dart';
 import 'package:mornye/widgets/app_refresh_indicator.dart';
 import 'package:mornye/widgets/app_search_field.dart';
 import 'package:mornye/widgets/app_sliver_header.dart';
-import 'package:mornye/utils/desktop_platform.dart';
 import 'package:mornye/widgets/app_snack_bar.dart';
+import 'package:mornye/widgets/album_play.dart';
 import 'package:mornye/widgets/desktop/context_menu.dart';
-import 'package:mornye/widgets/desktop/hover_play_button.dart';
 import 'package:mornye/widgets/cached_cover_image.dart';
 import 'package:mornye/widgets/local_library_artwork_builder.dart';
 import 'package:mornye/widgets/library_search_results.dart';
@@ -153,38 +152,6 @@ class _MornyeLibraryScreenState extends ConsumerState<MornyeLibraryScreen> {
     return rows.map(LocalLibraryItem.fromJson).toList(growable: false);
   }
 
-  /// Desktop shows the choices as a checked menu below [buttonContext];
-  /// returns null there and on phones, where the caller opens its sheet.
-  Future<String?>? _chooseFromMenu(
-    BuildContext buttonContext,
-    List<(String, String, IconData)> options,
-    String current,
-  ) {
-    final position = isDesktopPlatform
-        ? contextMenuPositionBelow(buttonContext)
-        : null;
-    if (position == null) return null;
-    final chosen = Completer<String?>();
-    showContextMenu(
-      buttonContext,
-      position: position,
-      groups: [
-        [
-          for (final option in options)
-            ContextMenuAction(
-              icon: option.$3,
-              label: option.$2,
-              checked: option.$1 == current,
-              onSelected: () => chosen.complete(option.$1),
-            ),
-        ],
-      ],
-    ).whenComplete(() {
-      if (!chosen.isCompleted) chosen.complete(null);
-    });
-    return chosen.future;
-  }
-
   Future<void> _chooseSort(BuildContext buttonContext) async {
     final options = [
       ('a-z', context.l10n.searchSortTitleAZ, Icons.sort_by_alpha),
@@ -203,8 +170,7 @@ class _MornyeLibraryScreenState extends ConsumerState<MornyeLibraryScreen> {
       ],
     ];
     final selected =
-        await (_chooseFromMenu(buttonContext, options, _sort) ??
-            showAppBottomSheet<String>(
+        await (showAppBottomSheet<String>(
               context: context,
               builder: (context) => Column(
                 mainAxisSize: MainAxisSize.min,
@@ -245,8 +211,7 @@ class _MornyeLibraryScreenState extends ConsumerState<MornyeLibraryScreen> {
       ),
     ];
     final selected =
-        await (_chooseFromMenu(buttonContext, options, _completeness ?? '') ??
-            showAppBottomSheet<String>(
+        await (showAppBottomSheet<String>(
               context: context,
               builder: (context) => Column(
                 mainAxisSize: MainAxisSize.min,
@@ -535,38 +500,23 @@ class _MornyeLibraryScreenState extends ConsumerState<MornyeLibraryScreen> {
                     );
                     return Column(
                       children: [
-                        DesktopContextMenuRegion(
-                          onContextMenu: (position) => showContextMenu(
-                            context,
-                            position: position,
-                            groups: [
-                              [
-                                ContextMenuAction(
-                                  icon: Icons.open_in_new,
-                                  label: context.l10n.desktopMenuOpen,
-                                  onSelected: open,
-                                ),
-                              ],
-                            ],
+                        ListTile(
+                          contentPadding: EdgeInsets.symmetric(
+                            horizontal: 24 + listInset,
+                            vertical: 8,
                           ),
-                          child: ListTile(
-                            contentPadding: EdgeInsets.symmetric(
-                              horizontal: 24 + listInset,
-                              vertical: 8,
+                          leading: ClipOval(
+                            child: SizedBox.square(
+                              dimension: 56,
+                              child: _LibraryBrowseArtwork(entry: entry),
                             ),
-                            leading: ClipOval(
-                              child: SizedBox.square(
-                                dimension: 56,
-                                child: _LibraryBrowseArtwork(entry: entry),
-                              ),
-                            ),
-                            title: Text(entry.artist),
-                            subtitle: Text(
-                              context.l10n.queueTrackCount(entry.trackCount),
-                            ),
-                            trailing: const Icon(Icons.chevron_right),
-                            onTap: open,
                           ),
+                          title: Text(entry.artist),
+                          subtitle: Text(
+                            context.l10n.queueTrackCount(entry.trackCount),
+                          ),
+                          trailing: const Icon(Icons.chevron_right),
+                          onTap: open,
                         ),
                         Divider(
                           height: 1,
@@ -603,11 +553,7 @@ class _MornyeLibraryScreenState extends ConsumerState<MornyeLibraryScreen> {
                         itemCount: _rows.length,
                         itemBuilder: (context, index) {
                           final entry = _rows[index];
-                          return DesktopContextMenuRegion(
-                            onContextMenu: (position) =>
-                                _showAlbumMenu(entry, position),
-                            child: _buildAlbumTile(entry, colors),
-                          );
+                          return _buildAlbumTile(entry, colors);
                         },
                       );
                     },
@@ -704,10 +650,6 @@ class _MornyeLibraryScreenState extends ConsumerState<MornyeLibraryScreen> {
                       bottom: 8,
                       child: _buildCompletenessBadge(entry.completeness!),
                     ),
-                  DesktopHoverPlayButton(
-                    tooltip: context.l10n.tooltipPlay,
-                    onPlay: () => _playAlbum(entry),
-                  ),
                 ],
               ),
             ),

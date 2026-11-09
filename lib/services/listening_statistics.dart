@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart' show visibleForTesting;
 import 'package:mornye/services/cover_store.dart';
-import 'package:mornye/services/link/sync/link_history_sync_schema.dart';
 import 'package:mornye/services/sqlite_helpers.dart' as sqlite;
 import 'package:mornye/utils/artist_utils.dart';
 import 'package:mornye/utils/logger.dart';
@@ -313,12 +312,9 @@ class ListeningStatisticsStore {
         PRIMARY KEY (day, track_key)
       )
     ''');
-    await createLinkHistorySyncSchema(db);
   }
 
-  static Future<void> _upgrade(Database db, int oldVersion, int _) async {
-    if (oldVersion < 2) await createLinkHistorySyncSchema(db);
-  }
+  static Future<void> _upgrade(Database db, int oldVersion, int _) async {}
 
   /// Opens [path] with the statistics schema through [factory], for host
   /// tests that use FFI.

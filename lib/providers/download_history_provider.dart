@@ -202,13 +202,6 @@ class DownloadHistoryNotifier extends Notifier<DownloadHistoryState> {
       }
 
       var pathsMigrated = false;
-      if (Platform.isIOS) {
-        pathsMigrated = await _db.migrateIosContainerPaths();
-        if (!ref.mounted) return;
-        if (pathsMigrated) {
-          _historyLog.i('Migrated iOS container paths after app update');
-        }
-      }
 
       final countFuture = _db.getCount();
       final jsonList = await _db.getAll(limit: _initialHistoryLoadLimit);
@@ -1339,7 +1332,6 @@ class DownloadHistoryNotifier extends Notifier<DownloadHistoryState> {
   Future<void> restoreFromBackupOperation(Future<void> Function() restore) =>
       _enqueueHistoryWrite(() async {
         await restore();
-        await _db.migrateIosContainerPaths(force: true);
         await _loadFromDatabase();
       });
 }

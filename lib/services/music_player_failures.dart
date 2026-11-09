@@ -79,12 +79,13 @@ class _MusicFailures {
     if (media.isNetwork ||
         media.originSource != null ||
         (resolved == null && !media.isContentUri) ||
-        _MusicFormats._isUrl(resolved ?? '')) {
+        const {
+          'http',
+          'https',
+        }.contains(Uri.tryParse(resolved ?? '')?.scheme)) {
       return false;
     }
-    final path = media.isContentUri || handler._formats.owns(resolved)
-        ? media.source
-        : resolved ?? media.source;
+    final path = media.isContentUri ? media.source : resolved ?? media.source;
     if (path.isEmpty) return false;
     final access = await handler._dependencies.fileAccess(path);
     if (!handler._isCurrentPlayRequest(generation, media)) return true;

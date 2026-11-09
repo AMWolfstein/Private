@@ -395,7 +395,6 @@ extension _SetupScreenSteps on _SetupScreenState {
               ),
               child: Text(context.l10n.setupSelectFolder),
             ),
-          const ExtensionStorageSetting(),
         ],
       ),
     );

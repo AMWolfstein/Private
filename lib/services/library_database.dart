@@ -83,7 +83,6 @@ class LibraryDatabase {
         },
         onUpgrade: LibrarySchema.upgrade,
         onOpen: (db) async {
-          await LibrarySchema.onOpen(db);
           await migrateAndroidLibraryCovers(db);
         },
       );

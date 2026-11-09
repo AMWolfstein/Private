@@ -31,10 +31,8 @@ import 'package:mornye/screens/track_metadata_screen.dart';
 import 'package:mornye/services/downloaded_embedded_cover_resolver.dart';
 import 'package:mornye/widgets/collection_scaffold.dart';
 import 'package:mornye/widgets/collection_suggestions_section.dart';
-import 'package:mornye/utils/desktop_platform.dart';
 import 'package:mornye/widgets/desktop/context_menu.dart';
 import 'package:mornye/widgets/desktop/desktop_selection.dart';
-import 'package:mornye/widgets/desktop/detail_header.dart';
 import 'package:mornye/widgets/desktop/library_track_menu.dart';
 import 'package:mornye/widgets/playlist_picker_sheet.dart';
 import 'package:mornye/widgets/desktop/track_table.dart';
@@ -44,7 +42,6 @@ import 'package:mornye/widgets/album_track_tile.dart';
 import 'package:mornye/widgets/animation_utils.dart';
 import 'package:mornye/widgets/library_track_selection_bar.dart';
 import 'package:mornye/widgets/library_selection_playback_actions.dart';
-import 'package:mornye/widgets/link/link_actions.dart';
 import 'package:mornye/widgets/network_offline_actions.dart';
 import 'package:mornye/widgets/network_upload_actions.dart';
 import 'package:mornye/widgets/disc_separator_chip.dart';
@@ -423,17 +420,13 @@ class _DownloadedAlbumScreenState extends ConsumerState<DownloadedAlbumScreen>
       subtitle: Builder(
         builder: (header) => Text(
           widget.artistName,
-          style: isDesktopPlatform
-              ? desktopDetailSubtitleStyle(header)
-              : TextStyle(
-                  color: context.isMornye
-                      ? colorScheme.primary
-                      : HeaderPalette.of(context).onSurfaceVariant,
-                  fontSize: context.tokens.headerSubtitleSize,
-                  fontWeight: context.isMornye
-                      ? FontWeight.w400
-                      : FontWeight.w600,
-                ),
+          style: TextStyle(
+            color: context.isMornye
+                ? colorScheme.primary
+                : HeaderPalette.of(context).onSurfaceVariant,
+            fontSize: context.tokens.headerSubtitleSize,
+            fontWeight: context.isMornye ? FontWeight.w400 : FontWeight.w600,
+          ),
           textAlign: TextAlign.center,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
@@ -455,13 +448,6 @@ class _DownloadedAlbumScreenState extends ConsumerState<DownloadedAlbumScreen>
               UnifiedLibraryItem.fromDownloadHistory(track),
           ],
         ),
-        if (ref.watch(linkPhoneClientProvider) != null)
-          LinkTransferButtons(
-            items: [
-              for (final track in tracks)
-                UnifiedLibraryItem.fromDownloadHistory(track),
-            ],
-          ),
       ],
       actions: tracks.isNotEmpty
           ? AlbumPlayActions(
@@ -624,7 +610,6 @@ class _DownloadedAlbumScreenState extends ConsumerState<DownloadedAlbumScreen>
     final tracks = order.tracks;
     final discMap = order.discGroups;
 
-    if (isDesktopPlatform) return _buildDesktopTable(context, tracks);
     if (discMap.length <= 1) {
       return SliverPadding(
         padding: EdgeInsets.symmetric(horizontal: wideListInset(context)),

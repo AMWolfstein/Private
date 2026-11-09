@@ -10480,5 +10480,7 @@
   "lyricsEditLineActions": "Line actions",
   "lyricsEditSaved": "Lyrics saved",
   "lyricsEditSaveFailed": "Couldn't save the lyrics to this file",
-  "lyricsEditReadOnly": "Lyrics can't be saved to this song's file"
+  "lyricsEditReadOnly": "Lyrics can't be saved to this song's file",
+  "updateNoCompatibleApk": "This update has no build for this device. Install it from the release page.",
+  "@updateNoCompatibleApk": {"description": "Shown in the update dialog when the release has no APK for the device processor."}
 }

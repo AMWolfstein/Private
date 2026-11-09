@@ -22,7 +22,6 @@ import 'package:mornye/widgets/expressive_button.dart';
 import 'package:mornye/widgets/expressive_button_group.dart';
 import 'package:mornye/widgets/expressive_icon_button.dart';
 import 'package:mornye/utils/adaptive_layout.dart';
-import 'package:mornye/utils/desktop_platform.dart';
 import 'package:mornye/widgets/desktop/context_menu.dart';
 import 'package:mornye/widgets/desktop/detail_header.dart';
 import 'package:mornye/widgets/settled_blur.dart';
@@ -122,8 +121,7 @@ class AlbumDetailHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (isDesktopPlatform ||
-        (context.isMornye && (coverBuilder != null || immersive))) {
+    if ((context.isMornye && (coverBuilder != null || immersive))) {
       final scheme = Theme.of(context).colorScheme;
       return HeaderPalette(
         scheme: scheme,
@@ -142,7 +140,6 @@ class AlbumDetailHeader extends StatelessWidget {
   /// Keep the toolbar at the collection scroll-view level so it stays pinned
   /// after the dynamically sized artwork and metadata have scrolled away.
   List<Widget> buildSlivers(BuildContext context) {
-    if (isDesktopPlatform) return _buildDesktopSlivers(context);
     if (!context.isMornye || (coverBuilder == null && !immersive)) {
       return [this];
     }
@@ -718,7 +715,6 @@ class AlbumPlayActions extends StatelessWidget {
   Widget build(BuildContext context) {
     final tokens = context.tokens;
     final scheme = HeaderPalette.of(context);
-    if (isDesktopPlatform) return _buildDesktop(context, scheme);
     if (context.isMornye) {
       return Row(
         children: [
@@ -935,27 +931,15 @@ class HeaderCircleButton extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final tokens = context.tokens;
     final scheme = HeaderPalette.of(context);
-    // Desktop headers use pointer-sized controls.
-    final desktop = isDesktopPlatform;
-    // Tonal circles stay level with the action pills beside them.
-    final toolbarGlass = context.isMornye && !tonal;
-    final buttonSize =
-        this.buttonSize ??
-        (desktop ? (context.isMornye ? (tonal ? 36.0 : 44.0) : 40.0) : null);
-    final iconSize = desktop && this.iconSize == 22 && !toolbarGlass
-        ? 18.0
-        : this.iconSize;
+    final buttonSize = this.buttonSize;
+    final iconSize = this.iconSize;
     if (context.isMornye && HeaderActionGroup.of(context)) {
       return IconButton(
         onPressed: onPressed,
         tooltip: tooltip,
         icon: AppIcon(mornyeIconFor(icon), size: iconSize),
         style: IconButton.styleFrom(
-          // Pointer controls use a compact width within the shared capsule.
-          minimumSize: desktop
-              ? Size(42, buttonSize ?? 44)
-              : Size.square(buttonSize ?? 44),
-          padding: desktop ? EdgeInsets.zero : null,
+          minimumSize: Size.square(buttonSize ?? 44),
           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
           foregroundColor: iconColor ?? scheme.onSurface,
         ),
@@ -997,8 +981,6 @@ class HeaderCircleButton extends ConsumerWidget {
         icon: AppIcon(mornyeIconFor(icon), size: iconSize),
         style: IconButton.styleFrom(
           minimumSize: Size.square(buttonSize ?? 44),
-          // Keep the glass circle at the button's size for the pointer.
-          tapTargetSize: desktop ? MaterialTapTargetSize.shrinkWrap : null,
           foregroundColor: iconColor ?? scheme.onSurface,
         ),
       );
@@ -1071,27 +1053,20 @@ class _MornyeHeaderButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final scheme = HeaderPalette.of(context);
-    // Desktop action pills use a compact, neutral fill.
-    final desktop = isDesktopPlatform;
-    final filled = prominent && !desktop;
+    final filled = prominent;
     final foreground = onPressed == null
         ? scheme.onSurfaceVariant
         : filled
         ? scheme.onPrimary
         : scheme.primary;
     return ConstrainedBox(
-      constraints: desktop
-          ? const BoxConstraints(minHeight: 36, maxHeight: 36, minWidth: 130)
-          : const BoxConstraints(minHeight: 50),
+      constraints: const BoxConstraints(minHeight: 50),
       child: MornyeGlassPress(
-        radius: desktop ? 18 : 28,
+        radius: 28,
         enabled: onPressed != null,
         child: CupertinoButton(
-          padding: desktop
-              ? const EdgeInsets.symmetric(horizontal: 18)
-              : const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          minimumSize: desktop ? const Size(130, 36) : null,
-          borderRadius: BorderRadius.circular(desktop ? 18 : 28),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          borderRadius: BorderRadius.circular(28),
           color: filled
               ? scheme.primary
               : scheme.onSurface.withValues(
@@ -1102,15 +1077,15 @@ class _MornyeHeaderButton extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
             children: [
-              AppIcon(icon, size: desktop ? 16 : 20, color: foreground),
-              SizedBox(width: desktop ? 6 : 8),
+              AppIcon(icon, size: 20, color: foreground),
+              const SizedBox(width: 8),
               Flexible(
                 child: Text(
                   label,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
-                    fontSize: desktop ? 15 : 17,
+                    fontSize: 17,
                     fontWeight: FontWeight.w600,
                     color: foreground,
                   ),
@@ -1151,7 +1126,7 @@ class HeaderMetaRow extends StatelessWidget {
     }
 
     return Wrap(
-      alignment: isDesktopPlatform ? WrapAlignment.start : WrapAlignment.center,
+      alignment: WrapAlignment.center,
       crossAxisAlignment: WrapCrossAlignment.center,
       runSpacing: 4,
       children: parts,
@@ -1169,23 +1144,16 @@ class HeaderMetaItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final scheme = HeaderPalette.of(context);
-    final desktop = isDesktopPlatform;
     final textStyle = TextStyle(
-      color: context.isMornye || desktop
-          ? scheme.onSurfaceVariant
-          : scheme.onSurface,
-      fontSize: desktop && context.isMornye ? 12 : 13,
-      fontWeight: desktop ? FontWeight.w600 : FontWeight.w500,
+      color: context.isMornye ? scheme.onSurfaceVariant : scheme.onSurface,
+      fontSize: 13,
+      fontWeight: FontWeight.w500,
     );
     if (icon == null) return Text(label, style: textStyle);
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        AppIcon(
-          icon,
-          size: 15,
-          color: desktop ? scheme.onSurfaceVariant : scheme.onSurface,
-        ),
+        AppIcon(icon, size: 15, color: scheme.onSurface),
         const SizedBox(width: 4),
         Text(label, style: textStyle),
       ],

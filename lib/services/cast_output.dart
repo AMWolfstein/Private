@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:mornye/services/platform_bridge.dart';
-import 'package:mornye/utils/desktop_platform.dart';
 
 /// A Cast receiver on the network, listed where the app draws the picker.
 @immutable
@@ -88,9 +87,7 @@ class CastOutput extends ChangeNotifier {
        nativePicker =
            nativePicker ?? defaultTargetPlatform == TargetPlatform.android;
 
-  static final instance = CastOutput(
-    transport: isDesktopPlatform ? const DesktopCastTransport() : null,
-  );
+  static final instance = CastOutput(transport: null);
 
   /// Android shows Google's own device dialog ([showPicker]); other
   /// platforms list [devices] after [discover].

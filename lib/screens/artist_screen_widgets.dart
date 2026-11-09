@@ -107,17 +107,6 @@ extension _ArtistScreenSections on _ArtistScreenState {
     );
 
     // Mornye keeps the full-pane hero on desktop.
-    if (isDesktopPlatform && !context.isMornye) {
-      return _buildDesktopHeader(
-        context,
-        colorScheme,
-        albums: albums,
-        hasDiscography: hasDiscography,
-        imageUrl: hasValidImage ? imageUrl : null,
-        listenersText: listenersText,
-        isFavoriteArtist: isFavoriteArtist,
-      );
-    }
 
     if (context.isMornye) {
       final artwork = hasValidImage
@@ -129,7 +118,7 @@ extension _ArtistScreenSections on _ArtistScreenState {
                 fit: BoxFit.cover,
                 alignment: Alignment.topCenter,
                 // The desktop hero spans the content pane.
-                memCacheWidth: isDesktopPlatform ? 1600 : 800,
+                memCacheWidth: 800,
                 errorWidget: (_, _, _) =>
                     const Center(child: Icon(CupertinoIcons.person, size: 80)),
               ),
@@ -679,102 +668,6 @@ extension _ArtistScreenSections on _ArtistScreenState {
     );
   }
 
-  /// Latest Release and Top Songs share one row of equal
-  /// columns that scroll sideways together, each snapping to the left edge.
-  Widget _buildMornyeDesktopHighlights(
-    BuildContext context,
-    ColorScheme colorScheme,
-    ArtistAlbum? latest,
-  ) {
-    const rowsPerColumn = 3;
-    const rowExtent = 56.0;
-    const contentExtent = rowsPerColumn * rowExtent;
-    const headingExtent = 44.0;
-    final tracks = _topTracks ?? const <Track>[];
-    _historySnapshot.update(tracks);
-    final historyKeys = _historySnapshot.lookupKeys;
-    final existingHistoryKeys = ref.watch(
-      downloadHistoryVisibleBatchExistsProvider(_historySnapshot.request),
-    );
-    final titleStyle = Theme.of(
-      context,
-    ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold);
-    Widget column({required String? heading, required Widget child}) => Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SizedBox(
-          height: headingExtent,
-          child: heading == null
-              ? null
-              : Text(heading, maxLines: 1, style: titleStyle),
-        ),
-        SizedBox(height: contentExtent, child: child),
-      ],
-    );
-    final columns = [
-      if (latest != null)
-        column(
-          heading: context.l10n.artistLatestRelease,
-          child: _buildMornyeLatestRelease(context, latest, contentExtent),
-        ),
-      for (var start = 0; start < tracks.length; start += rowsPerColumn)
-        column(
-          heading: start == 0 ? context.l10n.artistTopSongs : null,
-          child: Column(
-            children: [
-              for (
-                var index = start;
-                index < math.min(start + rowsPerColumn, tracks.length);
-                index++
-              )
-                SizedBox(
-                  height: rowExtent,
-                  child: _buildPopularTrackItem(
-                    index + 1,
-                    tracks[index],
-                    colorScheme,
-                    existingHistoryKeys.contains(historyKeys[index]),
-                    compact: true,
-                    separated:
-                        index <
-                        math.min(start + rowsPerColumn, tracks.length) - 1,
-                  ),
-                ),
-            ],
-          ),
-        ),
-    ];
-    return Padding(
-      padding: const EdgeInsets.only(top: 28),
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          final width = _mornyeHighlightColumn(constraints.maxWidth);
-          return SizedBox(
-            height: headingExtent + contentExtent,
-            child: DesktopScrollArrows(
-              builder: (context, controller) => ListView.separated(
-                key: const ValueKey('artist-highlights'),
-                controller: controller,
-                scrollDirection: Axis.horizontal,
-                physics: _ColumnSnapPhysics(
-                  extent: width + _mornyeHighlightGap,
-                ),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: _mornyeSectionInset,
-                ),
-                itemCount: columns.length,
-                separatorBuilder: (_, _) =>
-                    const SizedBox(width: _mornyeHighlightGap),
-                itemBuilder: (context, index) =>
-                    SizedBox(width: width, child: columns[index]),
-              ),
-            ),
-          );
-        },
-      ),
-    );
-  }
-
   /// The newest release, cover first with its details beside it.
   Widget _buildMornyeLatestRelease(
     BuildContext context,
@@ -964,154 +857,142 @@ extension _ArtistScreenSections on _ArtistScreenState {
 
         final isQueued = queueItem != null;
 
-        final row = DesktopContextMenuRegion(
-          onContextMenu: (position) =>
-              TrackCollectionQuickActions.showTrackOptionsSheet(
-                context,
-                ref,
-                track,
-                position: position,
-                hasLocalPlaybackCandidate: isInHistory || isInLocalLibrary,
-              ),
-          child: InkWell(
-            onTap: () => _handlePopularTrackTap(
-              track,
-              isQueued: isQueued,
-              isInHistory: isInHistory,
-              isInLocalLibrary: isInLocalLibrary,
-            ),
-            onLongPress: () =>
-                TrackCollectionQuickActions.showTrackOptionsSheet(
-                  context,
-                  ref,
-                  track,
-                  hasLocalPlaybackCandidate: isInHistory || isInLocalLibrary,
-                ),
-            child: Padding(
-              padding: compact
-                  ? const EdgeInsets.symmetric(vertical: 4)
-                  : EdgeInsetsDirectional.fromSTEB(
-                      context.isMornye ? 20 : 16,
-                      8,
-                      10,
-                      8,
-                    ),
-              child: Row(
-                children: [
-                  if (!context.isMornye) ...[
-                    SizedBox(
-                      width: 24,
-                      child: Text(
-                        '$rank',
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: colorScheme.onSurfaceVariant,
-                        ),
-                        textAlign: TextAlign.center,
+        final row = InkWell(
+          onTap: () => _handlePopularTrackTap(
+            track,
+            isQueued: isQueued,
+            isInHistory: isInHistory,
+            isInLocalLibrary: isInLocalLibrary,
+          ),
+          onLongPress: () => TrackCollectionQuickActions.showTrackOptionsSheet(
+            context,
+            ref,
+            track,
+            hasLocalPlaybackCandidate: isInHistory || isInLocalLibrary,
+          ),
+          child: Padding(
+            padding: compact
+                ? const EdgeInsets.symmetric(vertical: 4)
+                : EdgeInsetsDirectional.fromSTEB(
+                    context.isMornye ? 20 : 16,
+                    8,
+                    10,
+                    8,
+                  ),
+            child: Row(
+              children: [
+                if (!context.isMornye) ...[
+                  SizedBox(
+                    width: 24,
+                    child: Text(
+                      '$rank',
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: colorScheme.onSurfaceVariant,
                       ),
+                      textAlign: TextAlign.center,
                     ),
-                    const SizedBox(width: 12),
-                  ],
-                  track.coverUrl != null
-                      ? DownloadableCover(
-                          coverUrl: track.coverUrl,
-                          baseName: '${track.artistName} - ${track.name}',
-                          child: CachedCoverImage(
-                            imageUrl: track.coverUrl!,
-                            width: 48,
-                            height: 48,
-                            borderRadius: BorderRadius.circular(4),
-                            placeholder: (context, url) => ShimmerLoading(
-                              child: Container(
-                                width: 48,
-                                height: 48,
-                                color: colorScheme.surfaceContainerHighest,
-                              ),
-                            ),
-                            errorWidget: (context, url, error) => Container(
+                  ),
+                  const SizedBox(width: 12),
+                ],
+                track.coverUrl != null
+                    ? DownloadableCover(
+                        coverUrl: track.coverUrl,
+                        baseName: '${track.artistName} - ${track.name}',
+                        child: CachedCoverImage(
+                          imageUrl: track.coverUrl!,
+                          width: 48,
+                          height: 48,
+                          borderRadius: BorderRadius.circular(4),
+                          placeholder: (context, url) => ShimmerLoading(
+                            child: Container(
                               width: 48,
                               height: 48,
                               color: colorScheme.surfaceContainerHighest,
-                              child: Icon(
-                                Icons.music_note,
-                                color: colorScheme.onSurfaceVariant,
-                                size: 24,
-                              ),
                             ),
                           ),
-                        )
-                      : Container(
-                          width: 48,
-                          height: 48,
-                          color: colorScheme.surfaceContainerHighest,
-                          child: Icon(
-                            Icons.music_note,
-                            color: colorScheme.onSurfaceVariant,
-                            size: 24,
+                          errorWidget: (context, url, error) => Container(
+                            width: 48,
+                            height: 48,
+                            color: colorScheme.surfaceContainerHighest,
+                            child: Icon(
+                              Icons.music_note,
+                              color: colorScheme.onSurfaceVariant,
+                              size: 24,
+                            ),
                           ),
                         ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          track.name,
-                          style: Theme.of(context).textTheme.bodyMedium
-                              ?.copyWith(
-                                fontSize: compact
-                                    ? 14
-                                    : context.isMornye
-                                    ? 17
-                                    : null,
-                                fontWeight: context.isMornye
-                                    ? FontWeight.w400
-                                    : FontWeight.w500,
-                              ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
+                      )
+                    : Container(
+                        width: 48,
+                        height: 48,
+                        color: colorScheme.surfaceContainerHighest,
+                        child: Icon(
+                          Icons.music_note,
+                          color: colorScheme.onSurfaceVariant,
+                          size: 24,
                         ),
-                        if (track.albumName.isNotEmpty ||
-                            isInLocalLibrary ||
-                            isInHistory)
-                          Row(
-                            children: [
-                              if (track.albumName.isNotEmpty)
-                                Expanded(
-                                  child: ClickableAlbumName(
-                                    albumName: track.albumName,
-                                    albumId: track.albumId,
-                                    artistName: track.artistName,
-                                    coverUrl: track.coverUrl,
-                                    extensionId: widget.extensionId,
-                                    style: Theme.of(context).textTheme.bodySmall
-                                        ?.copyWith(
-                                          color: colorScheme.onSurfaceVariant,
-                                          fontSize: compact
-                                              ? 13
-                                              : context.isMornye
-                                              ? 15
-                                              : null,
-                                        ),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
+                      ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        track.name,
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          fontSize: compact
+                              ? 14
+                              : context.isMornye
+                              ? 17
+                              : null,
+                          fontWeight: context.isMornye
+                              ? FontWeight.w400
+                              : FontWeight.w500,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      if (track.albumName.isNotEmpty ||
+                          isInLocalLibrary ||
+                          isInHistory)
+                        Row(
+                          children: [
+                            if (track.albumName.isNotEmpty)
+                              Expanded(
+                                child: ClickableAlbumName(
+                                  albumName: track.albumName,
+                                  albumId: track.albumId,
+                                  artistName: track.artistName,
+                                  coverUrl: track.coverUrl,
+                                  extensionId: widget.extensionId,
+                                  style: Theme.of(context).textTheme.bodySmall
+                                      ?.copyWith(
+                                        color: colorScheme.onSurfaceVariant,
+                                        fontSize: compact
+                                            ? 13
+                                            : context.isMornye
+                                            ? 15
+                                            : null,
+                                      ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
                                 ),
-                              if (isInLocalLibrary || isInHistory) ...[
-                                if (track.albumName.isNotEmpty)
-                                  const SizedBox(width: 6),
-                                const InLibraryBadge(),
-                              ],
+                              ),
+                            if (isInLocalLibrary || isInHistory) ...[
+                              if (track.albumName.isNotEmpty)
+                                const SizedBox(width: 6),
+                              const InLibraryBadge(),
                             ],
-                          ),
-                      ],
-                    ),
+                          ],
+                        ),
+                    ],
                   ),
-                  TrackCollectionQuickActions(
-                    track: track,
-                    hasLocalPlaybackCandidate: isInHistory || isInLocalLibrary,
-                  ),
-                ],
-              ),
+                ),
+                TrackCollectionQuickActions(
+                  track: track,
+                  hasLocalPlaybackCandidate: isInHistory || isInLocalLibrary,
+                ),
+              ],
             ),
           ),
         );
@@ -1201,38 +1082,6 @@ extension _ArtistScreenSections on _ArtistScreenState {
     ColorScheme colorScheme, {
     bool showTypeBadge = false,
   }) {
-    if (isDesktopPlatform && context.isMornye) {
-      // Four covers to the pane's width: two line up under each highlight
-      // column above.
-      return LayoutBuilder(
-        builder: (context, constraints) {
-          final column = _mornyeHighlightColumn(constraints.maxWidth);
-          final tile = (column - _mornyeHighlightGap) / 2;
-          return _albumShelf(
-            context,
-            title,
-            albums,
-            colorScheme,
-            showTypeBadge: showTypeBadge,
-            tileSize: tile,
-            sectionHeight:
-                tile +
-                artistAlbumSectionHeight(context) -
-                artistAlbumTileSize(context),
-            headingStyle: Theme.of(
-              context,
-            ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
-            headingPadding: const EdgeInsets.fromLTRB(
-              _mornyeSectionInset,
-              28,
-              _mornyeSectionInset,
-              12,
-            ),
-            listPadding: _mornyeSectionInset - 4,
-          );
-        },
-      );
-    }
     return _albumShelf(
       context,
       '$title (${albums.length})',
@@ -1318,21 +1167,15 @@ extension _ArtistScreenSections on _ArtistScreenState {
   }) {
     final isSelected = selectedIds.contains(album.id);
 
-    return DesktopContextMenuRegion(
-      onContextMenu: (position) => showSelectionMenu(
-        album.id,
-        () => _showAlbumMenu(context, album, position),
-      ),
-      child: _buildAlbumCardBody(
-        context,
-        album,
-        colorScheme,
-        sectionAlbums: sectionAlbums,
-        isSelected: isSelected,
-        tileSize: tileSize,
-        sectionHeight: sectionHeight,
-        showTypeBadge: showTypeBadge,
-      ),
+    return _buildAlbumCardBody(
+      context,
+      album,
+      colorScheme,
+      sectionAlbums: sectionAlbums,
+      isSelected: isSelected,
+      tileSize: tileSize,
+      sectionHeight: sectionHeight,
+      showTypeBadge: showTypeBadge,
     );
   }
 
@@ -1412,19 +1255,7 @@ extension _ArtistScreenSections on _ArtistScreenState {
           : context.l10n.a11yOpenAlbum(album.name),
       child: GestureDetector(
         onTap: () {
-          final kind = isDesktopPlatform
-              ? desktopClickKind()
-              : DesktopClick.replace;
-          if (isDesktopPlatform &&
-              (isSelectionMode || kind != DesktopClick.replace)) {
-            applyDesktopClick(
-              album.id,
-              kind == DesktopClick.replace ? DesktopClick.toggle : kind,
-              kind == DesktopClick.extend
-                  ? sectionAlbums.map((album) => album.id).toList()
-                  : const [],
-            );
-          } else if (isSelectionMode) {
+          if (isSelectionMode) {
             toggleSelection(album.id);
           } else {
             _navigateToAlbum(album);

@@ -1,8 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:mornye/services/backend/method_channel_backend.dart';
-import 'package:mornye/services/backend/rust_ffi_backend.dart';
-import 'package:mornye/utils/desktop_platform.dart';
 
 /// Handles a host to Dart call, like [MethodChannel.setMethodCallHandler].
 typedef BackendCallHandler = Future<dynamic> Function(MethodCall call);
@@ -42,5 +40,4 @@ abstract class BackendChannel {
 }
 
 /// The backend of the running platform.
-BackendChannel get backendChannel =>
-    isDesktopPlatform ? RustFfiBackend.shared : MethodChannelBackend.shared;
+BackendChannel get backendChannel => MethodChannelBackend.shared;

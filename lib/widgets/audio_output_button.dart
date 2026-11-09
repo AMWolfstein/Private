@@ -139,7 +139,7 @@ class _AudioOutputButtonState extends State<AudioOutputButton> {
   Widget build(BuildContext context) {
     if (kIsWeb) return const SizedBox.shrink();
     return switch (defaultTargetPlatform) {
-      TargetPlatform.android || TargetPlatform.iOS => ListenableBuilder(
+      TargetPlatform.android => ListenableBuilder(
         listenable: _output,
         builder: (context, _) => _button(context),
       ),

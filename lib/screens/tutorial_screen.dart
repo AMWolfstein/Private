@@ -6,7 +6,6 @@ import 'package:mornye/providers/settings_provider.dart';
 import 'package:mornye/l10n/l10n.dart';
 import 'package:mornye/theme/app_tokens.dart';
 import 'package:mornye/utils/adaptive_layout.dart';
-import 'package:mornye/utils/desktop_platform.dart';
 import 'package:mornye/widgets/scroll_edge_fade.dart';
 import 'package:mornye/widgets/app_icon_button.dart';
 import 'package:mornye/widgets/app_loading_indicator.dart';
@@ -277,7 +276,7 @@ class _TutorialScreenState extends ConsumerState<TutorialScreen> {
         ),
       ),
     );
-    if (!isDesktopPlatform) return scaffold;
+    return scaffold;
     // Enter moves on, as the default button of a desktop window would.
     return CallbackShortcuts(
       bindings: {
@@ -289,14 +288,7 @@ class _TutorialScreenState extends ConsumerState<TutorialScreen> {
   }
 
   /// Desktop windows keep the tour in one centered column.
-  Widget _desktopColumn(Widget child) => isDesktopPlatform
-      ? Center(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 560),
-            child: child,
-          ),
-        )
-      : child;
+  Widget _desktopColumn(Widget child) => child;
 
   Widget _buildFeatureList(
     BuildContext context,

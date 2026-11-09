@@ -1,21 +1,11 @@
 part of 'home_tab.dart';
 
 extension _HomeTabRecentUI on _HomeTabState {
-  /// The Mornye desktop Search page lays recents out as a horizontal card shelf.
-  bool get _recentAccessAsCards =>
-      context.isMornye &&
-      isDesktopPlatform &&
-      widget.mode == HomeTabMode.search;
-
   Widget _buildRecentAccess(_RecentAccessView view, ColorScheme colorScheme) {
     return SliverMainAxisGroup(
       slivers: [
         SliverToBoxAdapter(child: _buildRecentAccessHeader(view, colorScheme)),
-        if (view.uniqueItems.isNotEmpty && _recentAccessAsCards)
-          SliverToBoxAdapter(
-            child: _buildRecentAccessCardRow(view, colorScheme),
-          )
-        else if (view.uniqueItems.isNotEmpty)
+        if (view.uniqueItems.isNotEmpty)
           SliverPadding(
             padding:
                 const EdgeInsets.fromLTRB(16, 0, 16, 8) +
@@ -58,19 +48,12 @@ extension _HomeTabRecentUI on _HomeTabState {
             children: [
               Semantics(
                 header: true,
-                child: _recentAccessAsCards
-                    ? Text(
-                        context.l10n.searchRecentlySearched,
-                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.w700,
-                        ),
-                      )
-                    : Text(
-                        context.l10n.homeRecent,
-                        style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                          color: colorScheme.onSurfaceVariant,
-                        ),
-                      ),
+                child: Text(
+                  context.l10n.homeRecent,
+                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                    color: colorScheme.onSurfaceVariant,
+                  ),
+                ),
               ),
               if (uniqueItems.isNotEmpty)
                 ExpressiveButton(

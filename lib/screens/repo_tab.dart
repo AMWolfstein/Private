@@ -17,7 +17,6 @@ import 'package:mornye/widgets/settings_group.dart';
 import 'package:mornye/widgets/animation_utils.dart';
 import 'package:mornye/screens/repo/extension_details_screen.dart';
 import 'package:mornye/utils/adaptive_layout.dart';
-import 'package:mornye/utils/desktop_platform.dart';
 import 'package:mornye/utils/nav_bar_inset.dart';
 import 'package:mornye/providers/runtime_profile_provider.dart';
 import 'package:mornye/theme/mornye_theme.dart';
@@ -101,9 +100,7 @@ class _RepoTabState extends ConsumerState<RepoTab> {
     // Desktop fills the pane with a grid instead, with the same edges as the
     // other tabs.
     final edge = 16 + wideListInset(context);
-    final desktopColumns = isDesktopPlatform
-        ? _desktopGridColumns(MediaQuery.sizeOf(context).width - edge * 2)
-        : 1;
+    final desktopColumns = 1;
 
     return Scaffold(
       body: AppRefreshIndicator(
@@ -684,12 +681,6 @@ class _CategoryChipRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final padding = EdgeInsets.symmetric(horizontal: edge, vertical: 8);
-    if (isDesktopPlatform) {
-      return Padding(
-        padding: padding,
-        child: Wrap(spacing: 8, runSpacing: 8, children: children),
-      );
-    }
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       padding: padding,

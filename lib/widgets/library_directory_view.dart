@@ -21,7 +21,6 @@ import 'package:mornye/services/playable_media.dart';
 import 'package:mornye/theme/app_tokens.dart';
 import 'package:mornye/theme/mornye_theme.dart';
 import 'package:mornye/utils/adaptive_layout.dart';
-import 'package:mornye/utils/desktop_platform.dart';
 import 'package:mornye/utils/file_access.dart';
 import 'package:mornye/utils/nav_bar_inset.dart';
 import 'package:mornye/widgets/album_detail_header.dart';
@@ -35,8 +34,6 @@ import 'package:mornye/widgets/app_snack_bar.dart';
 import 'package:mornye/widgets/cached_cover_image.dart';
 import 'package:mornye/widgets/desktop/context_menu.dart';
 import 'package:mornye/widgets/desktop/desktop_selection.dart';
-import 'package:mornye/widgets/desktop/detail_header.dart';
-import 'package:mornye/widgets/desktop/hover_play_button.dart';
 import 'package:mornye/widgets/desktop/library_track_menu.dart';
 import 'package:mornye/widgets/desktop/track_table.dart';
 import 'package:mornye/widgets/error_card.dart';
@@ -47,7 +44,6 @@ import 'package:mornye/widgets/library_track_selection_bar.dart';
 import 'package:mornye/widgets/local_library_artwork_builder.dart';
 import 'package:mornye/widgets/playlist_picker_sheet.dart';
 import 'package:mornye/widgets/selection_bottom_bar.dart';
-import 'package:mornye/widgets/sliver_layout_info_builder.dart';
 import 'package:mornye/widgets/track_card.dart';
 
 /// One Library folder: its path and counts, Play and Shuffle over every
@@ -407,16 +403,9 @@ class _LibraryDirectoryViewState extends ConsumerState<LibraryDirectoryView>
     // A folder that lost its songs keeps no selectable rows.
     _items = const [];
     if (folder == null || folder.trackCount == 0) pruneSelection(const {});
-    // A folder opened on desktop takes the album pages' header.
-    final detailHeader =
-        isDesktopPlatform &&
-        widget.showHeader &&
-        key != null &&
-        folder != null &&
-        folder.trackCount > 0;
     final List<Widget> body;
     if (folder != null && folder.trackCount > 0) {
-      body = _buildFolder(context, folder, summary: !detailHeader);
+      body = _buildFolder(context, folder, summary: true);
     } else if (index == null && indexValue.hasError) {
       body = [
         SliverFillRemaining(
@@ -464,20 +453,13 @@ class _LibraryDirectoryViewState extends ConsumerState<LibraryDirectoryView>
       key: PageStorageKey('library-folder:${key ?? ''}'),
       physics: const AlwaysScrollableScrollPhysics(),
       slivers: [
-        if (detailHeader)
-          ..._desktopHeader(context, folder)
-        else if (widget.showHeader)
-          AppSliverHeader.page(title: title),
+        if (widget.showHeader) AppSliverHeader.page(title: title),
         ...body,
         // Same reserve as the Library list, so the last rows can scroll
         // clear of the selection bar; desktop pages scroll under the
         // floating player.
         if (showsSelectionBar)
-          const SliverToBoxAdapter(child: SizedBox(height: 100))
-        else if (isDesktopPlatform)
-          const SliverToBoxAdapter(
-            child: SizedBox(height: desktopDetailBottomInset),
-          ),
+          const SliverToBoxAdapter(child: SizedBox(height: 100)),
         const NavBarSliverSpacer(),
       ],
     );
@@ -528,41 +510,6 @@ class _LibraryDirectoryViewState extends ConsumerState<LibraryDirectoryView>
           },
   );
 
-  /// The album pages' desktop header: the folder's cover, name and path,
-  /// its counts and the folder-wide actions.
-  List<Widget> _desktopHeader(BuildContext context, LibraryDirectory folder) =>
-      desktopDetailHeaderSlivers(
-        context,
-        title: folder.name,
-        artwork: (context, size) =>
-            _FolderArtwork(folder: folder, size: size, radius: 0),
-        paletteSource: folder.cover,
-        // A volume's top folder is already named by its path.
-        subtitle: folder.name == folder.path
-            ? null
-            // Built inside the header, so Material reads its artwork scheme.
-            : Builder(
-                builder: (header) => Text(
-                  folder.path,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: Theme.of(header).textTheme.titleMedium?.copyWith(
-                    color: Theme.of(header).colorScheme.onSurfaceVariant,
-                  ),
-                ),
-              ),
-        meta: HeaderMetaRow(
-          items: [
-            if (folder.folders.isNotEmpty)
-              HeaderMetaItem(
-                context.l10n.libraryFolderCount(folder.folders.length),
-              ),
-            HeaderMetaItem(context.l10n.queueTrackCount(folder.trackCount)),
-          ],
-        ),
-        actions: _playActions(folder),
-      );
-
   List<Widget> _buildFolder(
     BuildContext context,
     LibraryDirectory folder, {
@@ -570,10 +517,9 @@ class _LibraryDirectoryViewState extends ConsumerState<LibraryDirectoryView>
   }) {
     final tokens = context.tokens;
     final mornye = context.isMornye;
-    final desktop = isDesktopPlatform;
     final inset = wideListInset(context);
     // Desktop lines up with the detail header's artwork.
-    final gutter = (mornye || desktop ? 20.0 : tokens.gapLg) + inset;
+    final gutter = (mornye ? 20.0 : tokens.gapLg) + inset;
     final textTheme = Theme.of(context).textTheme;
     final colorScheme = Theme.of(context).colorScheme;
     final songsValue = folder.tracks.isEmpty
@@ -604,9 +550,6 @@ class _LibraryDirectoryViewState extends ConsumerState<LibraryDirectoryView>
         ),
       ],
     );
-    // Desktop names the folders and the songs when a folder holds both.
-    final sectionTitles =
-        desktop && folder.folders.isNotEmpty && folder.tracks.isNotEmpty;
     Widget sectionTitle(String text) => SliverToBoxAdapter(
       child: Padding(
         padding: EdgeInsetsDirectional.fromSTEB(
@@ -631,35 +574,23 @@ class _LibraryDirectoryViewState extends ConsumerState<LibraryDirectoryView>
               gutter,
               tokens.gapMd,
             ),
-            // Desktop keeps the actions beside the path, as a toolbar.
-            child: desktop
-                ? Row(
-                    children: [
-                      Expanded(child: details),
-                      SizedBox(width: tokens.gapLg),
-                      _playActions(folder),
-                    ],
-                  )
-                : Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      details,
-                      SizedBox(height: tokens.gapMd),
-                      Align(
-                        alignment: AlignmentDirectional.centerStart,
-                        child: ConstrainedBox(
-                          constraints: const BoxConstraints(maxWidth: 480),
-                          child: _playActions(folder),
-                        ),
-                      ),
-                    ],
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                details,
+                SizedBox(height: tokens.gapMd),
+                Align(
+                  alignment: AlignmentDirectional.centerStart,
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 480),
+                    child: _playActions(folder),
                   ),
+                ),
+              ],
+            ),
           ),
         ),
-      if (sectionTitles) sectionTitle(context.l10n.libraryFolders),
-      if (folder.folders.isNotEmpty && desktop)
-        _folderGrid(folder, gutter)
-      else if (folder.folders.isNotEmpty)
+      if (folder.folders.isNotEmpty)
         SliverPadding(
           padding: EdgeInsets.symmetric(horizontal: inset),
           sliver: SliverList.builder(
@@ -672,9 +603,7 @@ class _LibraryDirectoryViewState extends ConsumerState<LibraryDirectoryView>
             ),
           ),
         ),
-      if (sectionTitles)
-        sectionTitle(context.l10n.searchSongs)
-      else if (folder.folders.isNotEmpty && folder.tracks.isNotEmpty)
+      if (folder.folders.isNotEmpty && folder.tracks.isNotEmpty)
         SliverToBoxAdapter(child: SizedBox(height: tokens.gapMd)),
       if (songsValue == null)
         const SliverToBoxAdapter(child: SizedBox.shrink())
@@ -693,117 +622,8 @@ class _LibraryDirectoryViewState extends ConsumerState<LibraryDirectoryView>
       else if (!songsValue.hasValue)
         SliverToBoxAdapter(
           child: TrackListSkeleton(itemCount: min(folder.tracks.length, 8)),
-        )
-      else if (isDesktopPlatform)
-        _songTable(context, items)
-      else
-        SliverPadding(
-          padding: EdgeInsets.symmetric(horizontal: inset),
-          sliver: SliverList.builder(
-            itemCount: items.length,
-            itemBuilder: (context, index) => TrackCardSegment.at(
-              key: ValueKey(items[index].id),
-              index: index,
-              count: items.length,
-              child: _songRow(context, items, items[index]),
-            ),
-          ),
         ),
     ];
-  }
-
-  /// Desktop shows folders as a grid of covers like the album grids: Play
-  /// on hover, the folder menu on right click.
-  Widget _folderGrid(LibraryDirectory parent, double gutter) {
-    final spacing = context.isMornye ? 20.0 : 12.0;
-    return SliverPadding(
-      padding: EdgeInsets.symmetric(horizontal: gutter),
-      sliver: SliverLayoutInfoBuilder(
-        select: (constraints) => constraints.crossAxisExtent,
-        builder: (context, crossAxisExtent) {
-          // Cells of up to 180, as in the Library album grid.
-          final columns = max(2, (crossAxisExtent / (180 + spacing)).ceil());
-          final width = (crossAxisExtent - spacing * (columns - 1)) / columns;
-          final textHeight =
-              MediaQuery.textScalerOf(context).scale(16) * 3.2 + 24;
-          return SliverGrid.builder(
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: columns,
-              crossAxisSpacing: spacing,
-              mainAxisSpacing: 16,
-              mainAxisExtent: width + textHeight,
-            ),
-            itemCount: parent.folders.length,
-            itemBuilder: (context, index) => KeyedSubtree(
-              key: ValueKey('folder:${parent.folders[index].key}'),
-              child: _folderTile(parent.folders[index], width),
-            ),
-          );
-        },
-      ),
-    );
-  }
-
-  Widget _folderTile(LibraryDirectory folder, double size) {
-    final mornye = context.isMornye;
-    final textTheme = Theme.of(context).textTheme;
-    final colorScheme = Theme.of(context).colorScheme;
-    return Semantics(
-      button: true,
-      child: DesktopContextMenuRegion(
-        onContextMenu: (position) => _showFolderMenu(folder, position),
-        child: GestureDetector(
-          behavior: HitTestBehavior.opaque,
-          onTap: () => _openFolder(folder),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox.square(
-                dimension: size,
-                child: Stack(
-                  fit: StackFit.expand,
-                  children: [
-                    _FolderArtwork(
-                      folder: folder,
-                      size: size,
-                      radius: mornye ? 8 : 12,
-                    ),
-                    DesktopHoverPlayButton(
-                      tooltip: context.l10n.tooltipPlay,
-                      onPlay: () => _playFolder(folder),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                folder.name,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: mornye
-                    ? const TextStyle(fontSize: 16)
-                    : textTheme.bodyMedium?.copyWith(
-                        fontWeight: FontWeight.w600,
-                      ),
-              ),
-              Text(
-                _summary(folder),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: mornye
-                    ? TextStyle(
-                        fontSize: 14,
-                        color: colorScheme.onSurfaceVariant,
-                      )
-                    : textTheme.bodySmall?.copyWith(
-                        color: colorScheme.onSurfaceVariant,
-                      ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
   }
 
   Widget _folderRow(LibraryDirectory parent, LibraryDirectory folder) {

@@ -367,31 +367,25 @@ class TrackCard extends StatelessWidget {
     if (material) {
       // The card keeps its connected-group corners; a clip inside the
       // margin rounds the current row's ends into a pill, ripple included.
-      return DesktopContextMenuRegion(
-        onContextMenu: onContextMenu,
-        child: morph(
-          card,
-          from: RoundedRectangleBorder(borderRadius: borderRadius),
-          to: const StadiumBorder(),
-          inset: cardMargin.resolve(textDirection),
-        ),
+      return morph(
+        card,
+        from: RoundedRectangleBorder(borderRadius: borderRadius),
+        to: const StadiumBorder(),
+        inset: cardMargin.resolve(textDirection),
       );
     }
-    return DesktopContextMenuRegion(
-      onContextMenu: onContextMenu,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          card,
-          Padding(
-            padding: EdgeInsetsDirectional.only(
-              start: tokens.coverList + 40,
-              end: 20,
-            ),
-            child: const Divider(),
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        card,
+        Padding(
+          padding: EdgeInsetsDirectional.only(
+            start: tokens.coverList + 40,
+            end: 20,
           ),
-        ],
-      ),
+          child: const Divider(),
+        ),
+      ],
     );
   }
 }
@@ -527,10 +521,7 @@ class TrackGridCard extends StatelessWidget {
     final colorScheme = theme.colorScheme;
     final borderRadius = tokens.borderRadiusThumb;
 
-    return DesktopContextMenuRegion(
-      onContextMenu: onContextMenu,
-      child: _buildCell(context, tokens, theme, colorScheme, borderRadius),
-    );
+    return _buildCell(context, tokens, theme, colorScheme, borderRadius);
   }
 
   Widget _buildCell(

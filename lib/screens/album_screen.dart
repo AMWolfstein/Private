@@ -30,12 +30,8 @@ import 'package:mornye/utils/ttl_cache.dart';
 import 'package:mornye/widgets/animation_utils.dart';
 import 'package:mornye/widgets/playlist_picker_sheet.dart';
 import 'package:mornye/widgets/cross_extension_share_sheet.dart';
-import 'package:mornye/widgets/link/link_actions.dart';
 import 'package:mornye/widgets/track_list_tile.dart';
-import 'package:mornye/utils/desktop_platform.dart';
-import 'package:mornye/widgets/desktop/detail_header.dart';
 import 'package:mornye/widgets/desktop/desktop_selection.dart';
-import 'package:mornye/widgets/desktop/track_list_table.dart';
 import 'package:mornye/widgets/audio_quality_badges.dart';
 import 'package:mornye/widgets/motion_header_banner.dart';
 import 'package:mornye/widgets/track_detail_actions.dart';
@@ -624,15 +620,13 @@ class _AlbumScreenState extends ConsumerState<AlbumScreen>
                 artistId: _artistId,
                 coverUrl: widget.coverUrl,
                 extensionId: widget.extensionId,
-                style: isDesktopPlatform
-                    ? desktopDetailSubtitleStyle(header)
-                    : TextStyle(
-                        color: colorScheme.primary,
-                        fontSize: context.tokens.headerSubtitleSize,
-                        fontWeight: context.isMornye
-                            ? FontWeight.w400
-                            : FontWeight.w600,
-                      ),
+                style: TextStyle(
+                  color: colorScheme.primary,
+                  fontSize: context.tokens.headerSubtitleSize,
+                  fontWeight: context.isMornye
+                      ? FontWeight.w400
+                      : FontWeight.w600,
+                ),
                 textAlign: TextAlign.center,
               ),
             )
@@ -662,11 +656,6 @@ class _AlbumScreenState extends ConsumerState<AlbumScreen>
       appBarActions: isSelectionMode
           ? const []
           : [
-              if (ref.watch(linkPhoneClientProvider) != null)
-                LinkDownloadOnDesktopButton(
-                  tracks: tracks,
-                  service: _recommendedDownloadService(),
-                ),
               HeaderCircleButton(
                 icon: Icons.open_in_new_rounded,
                 tooltip: context.l10n.openInOtherServices,
@@ -701,44 +690,6 @@ class _AlbumScreenState extends ConsumerState<AlbumScreen>
     final hasMultipleDiscs = tracks.any(
       (track) => discNumber(track) > 1 || (track.totalDiscs ?? 1) > 1,
     );
-    if (isDesktopPlatform) {
-      final ids = [
-        for (var i = 0; i < tracks.length; i++) _trackSelectionId(tracks[i], i),
-      ];
-      final inHistory = [
-        for (final key in historyKeys) existingHistoryKeys.contains(key),
-      ];
-      void activate(int index) => TrackListTile.activate(
-        context,
-        ref,
-        tracks[index],
-        isInHistory: inHistory[index],
-        onDownload: ({bool forceQualityPicker = false}) => _downloadTrack(
-          context,
-          tracks[index],
-          forceQualityPicker: forceQualityPicker,
-        ),
-      );
-      _desktopActivations
-        ..clear()
-        ..addAll({
-          for (var i = 0; i < ids.length; i++) ids[i]: () => activate(i),
-        });
-      return TrackListTable(
-        tracks: tracks,
-        ids: ids,
-        isInHistory: inHistory,
-        selectedIds: selectedIds,
-        onSelect: applyDesktopClick,
-        onActivate: activate,
-        albumLayout: context.isMornye,
-        albumArtist:
-            widget.artistName ??
-            (tracks.isEmpty
-                ? null
-                : (tracks.first.albumArtist ?? tracks.first.artistName)),
-      );
-    }
     return SliverPadding(
       padding: EdgeInsets.symmetric(horizontal: wideListInset(context)),
       sliver: SliverList(

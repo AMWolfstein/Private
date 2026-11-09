@@ -6,7 +6,6 @@ import 'package:mornye/widgets/mornye_glass_lens_fade.dart';
 import 'package:mornye/theme/cover_palette.dart';
 import 'package:mornye/theme/mornye_theme.dart';
 import 'package:mornye/services/shell_navigation_service.dart';
-import 'package:mornye/utils/desktop_platform.dart';
 import 'package:mornye/widgets/album_detail_header.dart';
 import 'package:mornye/widgets/cached_cover_image.dart';
 import 'package:mornye/widgets/sliver_layout_info_builder.dart';
@@ -64,7 +63,6 @@ class _MornyeArtistSurfaceState extends State<MornyeArtistSurface> {
   Widget build(BuildContext context) {
     // Desktop album and playlist pages keep the plain pane background and
     // app accent; artist pages keep their artwork tint.
-    if (isDesktopPlatform && widget.neutralActions) return widget.child;
     final baseTheme = Theme.of(context);
     if (!identical(baseTheme, _baseTheme) ||
         defaultTargetPlatform != _basePlatform) {
@@ -127,9 +125,7 @@ class _MornyeArtistSurfaceState extends State<MornyeArtistSurface> {
               route: route,
               brightness: Brightness.dark,
               surface: surface,
-              backdrop: isDesktopPlatform && !widget.neutralActions
-                  ? source
-                  : null,
+              backdrop: null,
             );
           }
           return CoverPaletteBuilder(
@@ -192,15 +188,7 @@ class _MornyeArtistSurfaceState extends State<MornyeArtistSurface> {
                 scheme: _innerTheme.colorScheme,
                 child: widget.child,
               );
-              return Theme(
-                data: _innerTheme,
-                child: isDesktopPlatform && !widget.neutralActions
-                    ? NotificationListener<ScrollNotification>(
-                        onNotification: _onPageScroll,
-                        child: page,
-                      )
-                    : page,
-              );
+              return Theme(data: _innerTheme, child: page);
             },
           );
         },
@@ -251,9 +239,8 @@ class MornyeArtistHeader extends StatelessWidget {
 
   /// The mobile header is two slivers so its toolbar stays pinned; use these
   /// directly in the scroll view. [build] wraps them in a group.
-  List<Widget> buildSlivers(BuildContext context) => isDesktopPlatform
-      ? _buildDesktopSlivers(context)
-      : _buildMobileSlivers(context);
+  List<Widget> buildSlivers(BuildContext context) =>
+      _buildMobileSlivers(context);
 
   double _textHeight(
     BuildContext context,
@@ -479,7 +466,7 @@ class MornyeArtistHeader extends StatelessWidget {
   List<Widget> _buildDesktopSlivers(BuildContext context) {
     final surface = Theme.of(context).colorScheme.surface;
     final back = Padding(
-      padding: EdgeInsetsDirectional.only(start: isDesktopPlatform ? 8 : 12),
+      padding: EdgeInsetsDirectional.only(start: 12),
       child: Align(
         alignment: AlignmentDirectional.centerStart,
         widthFactor: 1,
@@ -494,10 +481,7 @@ class MornyeArtistHeader extends StatelessWidget {
       // Keep safe-area dependencies inside this sliver: folding the shell
       // navigation must not rebuild the artist's entire discography.
       SliverLayoutInfoBuilder(
-        select: (constraints) => (
-          constraints.crossAxisExtent,
-          isDesktopPlatform ? constraints.viewportMainAxisExtent : 0.0,
-        ),
+        select: (constraints) => (constraints.crossAxisExtent, 0.0),
         builder: (context, extents) {
           final (width, viewportHeight) = extents;
           final textWidth = (width - 48).clamp(0.0, double.infinity);
@@ -535,12 +519,7 @@ class MornyeArtistHeader extends StatelessWidget {
               (actions.isEmpty ? 0 : 94) +
               32;
           // The desktop portrait fills most of the content pane.
-          final expandedHeight = isDesktopPlatform
-              ? math.max(
-                  contentHeight + 160,
-                  (viewportHeight * 0.82).clamp(420.0, 820.0),
-                )
-              : photoHeight + contentHeight;
+          final expandedHeight = photoHeight + contentHeight;
           final appBarHeight =
               expandedHeight - MediaQuery.paddingOf(context).top;
           // Scroll offset at which the header is a flat toolbar: its buttons
@@ -565,29 +544,25 @@ class MornyeArtistHeader extends StatelessWidget {
                       child: MornyeActionCapsule(children: toolbarActions),
                     ),
                   ],
-            actionsPadding: EdgeInsetsDirectional.only(
-              end: isDesktopPlatform ? 8 : 12,
-            ),
+            actionsPadding: EdgeInsetsDirectional.only(end: 12),
             // The desktop hero already displays the artist's name.
-            title: isDesktopPlatform
-                ? null
-                : headerToolbarTitle(
-                    showTitleListenable,
-                    showTitle,
-                    (showTitle) => AnimatedOpacity(
-                      opacity: showTitle ? 1 : 0,
-                      duration: const Duration(milliseconds: 180),
-                      child: Text(
-                        name,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                          fontSize: 17,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ),
+            title: headerToolbarTitle(
+              showTitleListenable,
+              showTitle,
+              (showTitle) => AnimatedOpacity(
+                opacity: showTitle ? 1 : 0,
+                duration: const Duration(milliseconds: 180),
+                child: Text(
+                  name,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    fontSize: 17,
+                    fontWeight: FontWeight.w600,
                   ),
+                ),
+              ),
+            ),
             flexibleSpace: FlexibleSpaceBar(
               collapseMode: CollapseMode.pin,
               stretchModes: const [StretchMode.zoomBackground],
@@ -649,9 +624,8 @@ class MornyeArtistHeader extends StatelessWidget {
   }
 
   /// The name and logo are larger over the wide desktop portrait.
-  static double get _nameSize => isDesktopPlatform ? 44 : 30;
-  static Size get _logoSize =>
-      isDesktopPlatform ? const Size(440, 128) : const Size(320, 96);
+  static double get _nameSize => 30;
+  static Size get _logoSize => const Size(320, 96);
 
   Widget _buildIdentity(BuildContext context) {
     final fallback = Text(

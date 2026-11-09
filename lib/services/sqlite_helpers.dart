@@ -4,35 +4,20 @@ import 'package:flutter/foundation.dart' show visibleForTesting;
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:mornye/services/library_shadow_sql.dart';
-import 'package:mornye/utils/desktop_platform.dart';
 import 'package:mornye/utils/logger.dart';
 import 'package:mornye/utils/path_match_keys.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:sqflite_common_ffi/sqflite_ffi.dart' show databaseFactoryFfi;
 
 export 'package:mornye/services/library_shadow_sql.dart';
 
 final _log = AppLogger('AppSqlite');
 
-var _ffiDatabaseFactoryInstalled = false;
-
-/// Routes sqflite through FFI and the bundled SQLite on Windows and Linux,
-/// which have no sqflite platform plugin. Mobile and macOS keep the plugin.
-/// Every app database open goes through [openAppDatabase] first, so later
-/// direct `openDatabase` calls also see this factory.
-void ensureAppDatabaseFactory() {
-  if (_ffiDatabaseFactoryInstalled || !isDesktopPlatform || Platform.isMacOS) {
-    return;
-  }
-  databaseFactory = databaseFactoryFfi;
-  _ffiDatabaseFactoryInstalled = true;
-}
 
 /// Directory that holds the app databases. Mobile keeps the documents
 /// directory; desktop uses application support so the files stay out of the
 /// user's Documents folder.
 Future<Directory> appDatabaseDirectory() async {
-  if (!isDesktopPlatform) return getApplicationDocumentsDirectory();
+  return getApplicationDocumentsDirectory();
   final directory = await getApplicationSupportDirectory();
   await directory.create(recursive: true);
   return directory;
@@ -86,7 +71,6 @@ Future<Database> openAppDatabase(
   bool foreignKeys = false,
   bool incrementalAutoVacuum = true,
 }) async {
-  ensureAppDatabaseFactory();
   final dbPath = await appDatabaseDirectory();
   final path = join(dbPath.path, fileName);
 

@@ -4,6 +4,7 @@ import 'package:mornye/widgets/open_audio_button.dart';
 import 'package:flutter/foundation.dart'
     show ValueListenable, listEquals, setEquals;
 import 'package:flutter/material.dart';
+import 'package:mornye/widgets/album_play.dart';
 import 'package:mornye/widgets/app_alert_dialog.dart';
 import 'package:mornye/widgets/app_choice_chip.dart';
 import 'package:mornye/widgets/app_content_card.dart';
@@ -47,7 +48,6 @@ import 'package:material_3_expressive/material_3_expressive.dart'
         M3EButtonStyle;
 import 'package:mornye/providers/library_browse_provider.dart';
 import 'package:mornye/providers/library_counts_provider.dart';
-import 'package:mornye/services/platform_bridge.dart';
 import 'package:mornye/widgets/app_shape.dart';
 import 'package:mornye/widgets/library_fast_scroller.dart';
 import 'package:mornye/widgets/player_artwork.dart';
@@ -96,10 +96,8 @@ import 'package:mornye/widgets/animation_utils.dart';
 import 'package:mornye/widgets/selection_bottom_bar.dart';
 import 'package:mornye/widgets/smoothed_progress.dart';
 import 'package:mornye/widgets/two_finger_pinch_listener.dart';
-import 'package:mornye/utils/desktop_platform.dart';
 import 'package:mornye/widgets/desktop/context_menu.dart';
 import 'package:mornye/widgets/desktop/desktop_selection.dart';
-import 'package:mornye/widgets/desktop/hover_play_button.dart';
 import 'package:mornye/widgets/desktop/library_track_menu.dart';
 import 'package:mornye/widgets/desktop/track_table.dart';
 
@@ -135,9 +133,9 @@ class _QueueTabState extends ConsumerState<QueueTab> {
   late final CompletionBridgePlayableProbeCache _completionBridgePlayableProbe;
   // Desktop windows are much wider than a phone, so covers start larger
   // there; pinching (or a trackpad pinch) resizes within the range.
-  static double get _libraryGridMinExtent => isDesktopPlatform ? 140 : 92;
-  static double get _libraryGridDefaultExtent => isDesktopPlatform ? 180 : 126;
-  static double get _libraryGridMaxExtent => isDesktopPlatform ? 260 : 190;
+  static double get _libraryGridMinExtent => 92;
+  static double get _libraryGridDefaultExtent => 126;
+  static double get _libraryGridMaxExtent => 190;
   bool _embeddedCoverRefreshScheduled = false;
   // Version counter to trigger targeted cover image rebuilds
   // without rebuilding the entire widget tree via setState.

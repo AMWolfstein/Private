@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:mornye/l10n/l10n.dart';
-import 'package:mornye/utils/desktop_platform.dart';
 import 'package:mornye/widgets/destructive_selection_button.dart';
 import 'package:mornye/widgets/selection_action_button.dart';
 import 'package:mornye/widgets/selection_bottom_bar.dart';
@@ -47,7 +46,6 @@ class LibraryTrackSelectionBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final inlineDelete = isDesktopPlatform && !albumDelete;
     final hasSelection = selectedCount > 0;
     final deleteLabel = hasSelection
         ? context.l10n.selectionDeleteTracksCount(selectedCount)
@@ -95,37 +93,16 @@ class LibraryTrackSelectionBar extends StatelessWidget {
               colorScheme: colorScheme,
             ),
             replayGain(remove: false),
-            // Desktop keeps delete a toolbar button. It shares a row with
-            // the other removal, delete first, so neither wraps onto a row
-            // of its own.
-            if (inlineDelete)
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                spacing: 8,
-                children: [
-                  SelectionActionButton(
-                    icon: Icons.delete_outline,
-                    label: deleteLabel,
-                    onPressed: hasSelection ? onDelete : null,
-                    colorScheme: colorScheme,
-                    destructive: true,
-                  ),
-                  replayGain(remove: true),
-                ],
-              )
-            else
-              replayGain(remove: true),
+            replayGain(remove: true),
           ],
         ),
-        if (!inlineDelete) ...[
-          const SizedBox(height: 8),
-          DestructiveSelectionButton(
-            count: selectedCount,
-            colorScheme: colorScheme,
-            onPressed: onDelete,
-            label: albumDelete ? null : deleteLabel,
-          ),
-        ],
+        const SizedBox(height: 8),
+        DestructiveSelectionButton(
+          count: selectedCount,
+          colorScheme: colorScheme,
+          onPressed: onDelete,
+          label: albumDelete ? null : deleteLabel,
+        ),
       ],
     );
   }

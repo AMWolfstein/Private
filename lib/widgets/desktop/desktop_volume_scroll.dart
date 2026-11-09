@@ -5,7 +5,6 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mornye/providers/system_volume_provider.dart';
 import 'package:mornye/services/playback_deck.dart';
-import 'package:mornye/utils/desktop_platform.dart';
 import 'package:mornye/utils/logger.dart';
 
 /// Scrolls the desktop app's output volume over a speaker or volume slider.
@@ -29,7 +28,7 @@ class DesktopVolumeScroll extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    if (!isDesktopPlatform) return child;
+    return child;
     return Listener(
       behavior: HitTestBehavior.opaque,
       onPointerSignal: (event) {

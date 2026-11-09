@@ -681,14 +681,6 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
       if (!source.enabled || !source.available) continue;
       IosSecurityScopedAccess? securityAccess;
       try {
-        if (Platform.isIOS &&
-            source.bookmark != null &&
-            source.bookmark!.isNotEmpty) {
-          securityAccess = await PlatformBridge.startAccessingIosBookmark(
-            source.bookmark!,
-          );
-          if (securityAccess == null) continue;
-        }
         removed += await _db.cleanupMissingFiles(
           sourceId: source.id,
           canDelete: () async {
@@ -705,9 +697,7 @@ class LocalLibraryNotifier extends Notifier<LocalLibraryState> {
           },
         );
       } finally {
-        if (securityAccess != null) {
-          await PlatformBridge.stopAccessingIosBookmark(securityAccess);
-        }
+        
       }
     }
     if (removed > 0) await _refreshSummaryFromStorage();

@@ -19,13 +19,11 @@ import 'package:mornye/theme/app_tokens.dart';
 import 'package:mornye/theme/cover_palette.dart';
 import 'package:mornye/theme/mornye_theme.dart';
 import 'package:mornye/utils/adaptive_layout.dart';
-import 'package:mornye/utils/desktop_platform.dart';
 import 'package:mornye/utils/file_access.dart';
 import 'package:mornye/widgets/album_detail_header.dart';
 import 'package:mornye/widgets/collection_scaffold.dart';
 import 'package:mornye/widgets/desktop/context_menu.dart';
 import 'package:mornye/widgets/desktop/desktop_selection.dart';
-import 'package:mornye/widgets/desktop/detail_header.dart';
 import 'package:mornye/widgets/desktop/library_track_menu.dart';
 import 'package:mornye/widgets/desktop/track_table.dart';
 import 'package:mornye/widgets/library_mix_cover.dart';
@@ -152,12 +150,7 @@ class _LibraryMixScreenState extends ConsumerState<LibraryMixScreen>
         isSelectionMode: showsSelectionBar,
         onExitSelectionMode: exitSelectionMode,
         appBar: _buildHeader(context),
-        slivers: [
-          if (isDesktopPlatform)
-            _buildDesktopTable(context, ids)
-          else
-            _buildTrackList(context),
-        ],
+        slivers: [],
         selectionBar: _buildSelectionBar(context, ids),
       ),
     );
@@ -283,17 +276,13 @@ class _LibraryMixScreenState extends ConsumerState<LibraryMixScreen>
       subtitle: Builder(
         builder: (header) => Text(
           libraryMixSubtitle(l10n, mix),
-          style: isDesktopPlatform
-              ? desktopDetailSubtitleStyle(header)
-              : TextStyle(
-                  color: context.isMornye
-                      ? colorScheme.primary
-                      : HeaderPalette.of(header).onSurfaceVariant,
-                  fontSize: context.tokens.headerSubtitleSize,
-                  fontWeight: context.isMornye
-                      ? FontWeight.w400
-                      : FontWeight.w600,
-                ),
+          style: TextStyle(
+            color: context.isMornye
+                ? colorScheme.primary
+                : HeaderPalette.of(header).onSurfaceVariant,
+            fontSize: context.tokens.headerSubtitleSize,
+            fontWeight: context.isMornye ? FontWeight.w400 : FontWeight.w600,
+          ),
           textAlign: TextAlign.center,
           maxLines: 2,
           overflow: TextOverflow.ellipsis,
@@ -307,15 +296,13 @@ class _LibraryMixScreenState extends ConsumerState<LibraryMixScreen>
         ],
       ),
       // Phones save from the toolbar; the desktop header has its own "+".
-      appBarActions: isDesktopPlatform
-          ? null
-          : [
-              HeaderCircleButton(
-                icon: Icons.playlist_add,
-                tooltip: l10n.homeMixSaveAsPlaylist,
-                onPressed: () => _saveAsPlaylist(context),
-              ),
-            ],
+      appBarActions: [
+        HeaderCircleButton(
+          icon: Icons.playlist_add,
+          tooltip: l10n.homeMixSaveAsPlaylist,
+          onPressed: () => _saveAsPlaylist(context),
+        ),
+      ],
       actions: Consumer(
         builder: (context, ref, _) {
           final isCurrent = ref.watch(

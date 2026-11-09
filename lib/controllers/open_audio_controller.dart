@@ -71,22 +71,6 @@ class OpenAudioController extends Notifier<bool> {
       await open(files.map(OpenAudioFile.parse).whereType<OpenAudioFile>());
       return;
     }
-    if (Platform.isIOS) {
-      final folder = await PlatformBridge.pickIosDirectory();
-      if (!ref.mounted || folder == null) return;
-      final access = await PlatformBridge.startAccessingIosBookmark(
-        folder.bookmark,
-      );
-      if (access == null) {
-        throw const FileSystemException('Folder access was not granted');
-      }
-      if (!ref.mounted) {
-        await PlatformBridge.stopAccessingIosBookmark(access);
-        return;
-      }
-      await open([OpenAudioFile(access.path)], access: access);
-      return;
-    }
     final path = await FilePicker.getDirectoryPath();
     if (ref.mounted && path != null) await open([OpenAudioFile(path)]);
   }

@@ -278,21 +278,6 @@ class _PresetBar extends ConsumerWidget {
           children: [
             // A mouse cannot swipe a clipped row, so desktop windows wrap
             // every preset onto view.
-            if (isDesktopPlatform)
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: inset),
-                child: Wrap(
-                  spacing: tokens.gapSm,
-                  runSpacing: tokens.gapSm,
-                  children: chips,
-                ),
-              )
-            else
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                padding: EdgeInsets.symmetric(horizontal: inset),
-                child: Row(spacing: tokens.gapSm, children: chips),
-              ),
             SizedBox(height: tokens.gapMd),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: inset),

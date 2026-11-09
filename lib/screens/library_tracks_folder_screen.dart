@@ -6,11 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:path/path.dart' as p;
 import 'package:mornye/widgets/app_icon_button.dart';
 import 'package:mornye/widgets/collection_scaffold.dart';
-import 'package:mornye/utils/desktop_platform.dart';
 import 'package:mornye/widgets/desktop/context_menu.dart';
-import 'package:mornye/widgets/desktop/desktop_link_transfer_actions.dart';
 import 'package:mornye/widgets/desktop/desktop_selection.dart';
-import 'package:mornye/widgets/desktop/track_list_table.dart';
 import 'package:mornye/widgets/expressive_button.dart';
 import 'package:mornye/widgets/expressive_button_group.dart';
 import 'package:mornye/theme/app_tokens.dart';
@@ -49,7 +46,6 @@ import 'package:mornye/screens/track_metadata_screen.dart';
 import 'package:mornye/widgets/selection_action_button.dart';
 import 'package:mornye/widgets/destructive_selection_button.dart';
 import 'package:mornye/widgets/in_library_badge.dart';
-import 'package:mornye/widgets/link/link_actions.dart';
 import 'package:mornye/widgets/network_offline_actions.dart';
 import 'package:mornye/widgets/playlist_picker_sheet.dart';
 import 'package:mornye/widgets/collection_suggestions_section.dart';
@@ -456,61 +452,6 @@ class _LibraryTracksFolderScreenState
                 _orderDraft = next;
               });
             },
-          )
-        else if (isDesktopPlatform)
-          TrackListTable(
-            tracks: folderTracks,
-            ids: ids,
-            isInHistory: inHistory,
-            selectedIds: selectedIds,
-            onSelect: applyDesktopClick,
-            onActivate: (index) =>
-                _activateEntry(entries, folderTracks, inHistory, index),
-            onContextMenu: (index, position) => showSelectionMenu(
-              entries[index].key,
-              () => _showEntryMenu(
-                context,
-                entries,
-                folderTracks,
-                inHistory,
-                index,
-                position,
-              ),
-            ),
-            showArtwork: true,
-            showAlbum: true,
-          )
-        else
-          SliverPadding(
-            padding: EdgeInsets.symmetric(horizontal: wideListInset(context)),
-            sliver: SliverList(
-              delegate: SliverChildBuilderDelegate((context, index) {
-                final entry = entries[index];
-                final isSelected = selectedIds.contains(entry.key);
-                final isInHistory = inHistory[index];
-                return KeyedSubtree(
-                  key: ValueKey(entry.key),
-                  child: StaggeredListItem(
-                    index: index,
-                    child: _CollectionTrackTile(
-                      entry: entry,
-                      mode: widget.mode,
-                      folderTracks: folderTracks,
-                      trackIndex: index,
-                      isInHistory: isInHistory,
-                      isSelectionMode: isSelectionMode,
-                      isSelected: isSelected,
-                      onTap: isSelectionMode
-                          ? () => toggleSelection(entry.key)
-                          : null,
-                      onLongPress: isSelectionMode
-                          ? null
-                          : () => enterSelectionMode(entry.key),
-                    ),
-                  ),
-                );
-              }, childCount: entries.length),
-            ),
           ),
         if (playlist case final playlist?
             when playlist.tracks.isNotEmpty &&
@@ -716,11 +657,6 @@ class _LibraryTracksFolderScreenState
             onSelected: () => _addSelectedToPlaylist(entries),
           ),
         ],
-        if (widget.mode != LibraryTracksFolderMode.wishlist)
-          desktopLinkTransferTrackActions(context, ref, [
-            for (final entry in entries)
-              if (selectedIds.contains(entry.key)) entry.track,
-          ], onDone: exitSelectionMode),
         [
           ContextMenuAction(
             icon: Icons.remove_circle_outline,
@@ -823,19 +759,9 @@ class _LibraryTracksFolderScreenState
                   ? context.l10n.collectionRemoveFromPlaylist
                   : context.l10n.collectionRemoveFromFolder,
             ),
-            if (isDesktopPlatform && localCount > 0)
-              SelectionActionButton(
-                icon: Icons.delete_outline,
-                label: deleteLabel,
-                colorScheme: colorScheme,
-                destructive: true,
-                onPressed: _trackActionInProgress
-                    ? null
-                    : () => _deleteSelectedFiles(files),
-              ),
           ],
         ),
-        if (!isDesktopPlatform && localCount > 0) ...[
+        if (localCount > 0) ...[
           const SizedBox(height: 8),
           DestructiveSelectionButton(
             count: _trackActionInProgress ? 0 : localCount,
@@ -925,11 +851,6 @@ class _LibraryTracksFolderScreenState
     final hasCoverUrl = coverUrl != null;
     // Desktop: Mornye Link transfers of the whole collection while a phone
     // is connected.
-    final linkTransfers =
-        widget.mode != LibraryTracksFolderMode.wishlist &&
-        entries.isNotEmpty &&
-        watchDesktopLinkPhones(ref);
-
     final dpr = MediaQuery.devicePixelRatioOf(context);
     final cacheWidth = (MediaQuery.sizeOf(context).width * dpr).round().clamp(
       320,
@@ -1054,15 +975,6 @@ class _LibraryTracksFolderScreenState
               tooltip: context.l10n.collectionExportM3u,
               onPressed: () => _exportAsM3u8(context, title, entries),
             ),
-          if (isPlaylistMode &&
-              !isSelectionMode &&
-              entries.isNotEmpty &&
-              ref.watch(linkPhoneClientProvider) != null) ...[
-            const SizedBox(width: 8),
-            LinkTrackTransferButton(
-              tracks: entries.map((e) => e.track).toList(growable: false),
-            ),
-          ],
           if (!isSelectionMode && entries.length > 1) ...[
             const SizedBox(width: 8),
             HeaderCircleButton(
@@ -1098,13 +1010,6 @@ class _LibraryTracksFolderScreenState
           ],
         ],
       ],
-      moreMenu: linkTransfers && !isSelectionMode && !_editingOrder
-          ? () => [
-              desktopLinkTransferTrackActions(context, ref, [
-                for (final entry in entries) entry.track,
-              ]),
-            ]
-          : null,
       // Centered so the tight leading slot cannot stretch it.
       leading: Center(
         child: HeaderCircleButton(
@@ -1203,35 +1108,6 @@ class _LibraryTracksFolderScreenState
 
   void _showCoverOptionsSheet(BuildContext context, bool hasCustomCover) {
     final colorScheme = Theme.of(context).colorScheme;
-    final menuPosition = isDesktopPlatform
-        ? contextMenuPositionBelow(context)
-        : null;
-    if (menuPosition != null) {
-      showContextMenu(
-        context,
-        position: menuPosition,
-        groups: [
-          [
-            ContextMenuAction(
-              icon: Icons.image_outlined,
-              label: context.l10n.collectionPlaylistChangeCover,
-              onSelected: _pickCoverImage,
-            ),
-          ],
-          if (hasCustomCover)
-            [
-              ContextMenuAction(
-                icon: Icons.delete_outline,
-                label: context.l10n.collectionPlaylistRemoveCover,
-                destructive: true,
-                onSelected: _removeCoverImage,
-              ),
-            ],
-        ],
-      );
-      return;
-    }
-
     showAppModalBottomSheet<void>(
       context: context,
       useRootNavigator: true,

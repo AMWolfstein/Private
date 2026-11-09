@@ -433,12 +433,7 @@ extension _QueueTabCollectionItemWidgets on _QueueTabState {
         ),
       ),
     );
-    return DesktopContextMenuRegion(
-      onContextMenu:
-          onContextMenu ??
-          (position) => _showOpenMenu(context, position, onTap),
-      child: card,
-    );
+    return card;
   }
 
   /// The desktop menu of a folder that offers nothing beyond opening it.
@@ -545,19 +540,14 @@ extension _QueueTabCollectionItemWidgets on _QueueTabState {
           ),
         );
 
-    return DesktopContextMenuRegion(
-      onContextMenu:
-          onContextMenu ??
-          (position) => _showOpenMenu(context, position, onTap),
-      child: _buildCollectionGridCell(
-        context: context,
-        colorScheme: colorScheme,
-        cover: cover,
-        title: title,
-        count: count,
-        onTap: onTap,
-        onLongPress: onLongPress,
-      ),
+    return _buildCollectionGridCell(
+      context: context,
+      colorScheme: colorScheme,
+      cover: cover,
+      title: title,
+      count: count,
+      onTap: onTap,
+      onLongPress: onLongPress,
     );
   }
 

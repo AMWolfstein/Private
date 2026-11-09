@@ -4,7 +4,6 @@ class _LibrarySourceSettingsItem extends StatelessWidget {
   final LocalLibrarySource source;
 
   /// Whether [source] is a paired computer or phone over Mornye Link.
-  final bool link;
 
   /// Files the last finished scan of [source] could not read.
   final LibraryScanFailures? failures;
@@ -22,7 +21,6 @@ class _LibrarySourceSettingsItem extends StatelessWidget {
 
   const _LibrarySourceSettingsItem({
     required this.source,
-    this.link = false,
     required this.failures,
     required this.isScanning,
     required this.isFinalizing,
@@ -196,9 +194,7 @@ class _LibrarySourceSettingsItem extends StatelessWidget {
     return Opacity(
       opacity: enabled ? 1 : 0.5,
       child: SettingsItem(
-        icon: link
-            ? Icons.computer
-            : source.path.startsWith('network://')
+        icon: source.path.startsWith('network://')
             ? Icons.dns_outlined
             : source.isRemovable
             ? Icons.usb_rounded

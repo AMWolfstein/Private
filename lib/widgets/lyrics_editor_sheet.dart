@@ -11,7 +11,6 @@ import 'package:mornye/providers/music_player_provider.dart';
 import 'package:mornye/services/network_storage_service.dart';
 import 'package:mornye/theme/app_tokens.dart';
 import 'package:mornye/theme/mornye_theme.dart';
-import 'package:mornye/utils/desktop_platform.dart';
 import 'package:mornye/utils/logger.dart';
 import 'package:mornye/utils/lyrics_draft.dart';
 import 'package:mornye/utils/string_utils.dart';
@@ -332,15 +331,15 @@ class _LyricsEditorSheetState extends ConsumerState<LyricsEditorSheet> {
     );
     // On phones the sheet takes most of the screen and rises with the
     // keyboard; the desktop dialog brings its own height cap.
-    if (!isDesktopPlatform) {
-      body = SizedBox(
-        height: media.size.height * 0.92,
-        child: Padding(
-          padding: EdgeInsets.only(bottom: media.viewInsets.bottom),
-          child: body,
-        ),
-      );
-    }
+
+    body = SizedBox(
+      height: media.size.height * 0.92,
+      child: Padding(
+        padding: EdgeInsets.only(bottom: media.viewInsets.bottom),
+        child: body,
+      ),
+    );
+
     return PopScope(
       canPop: !_dirty && !_saving,
       onPopInvokedWithResult: (didPop, _) {
@@ -697,60 +696,57 @@ class _LyricsEditorRow extends StatelessWidget {
       ),
     );
 
-    return DesktopContextMenuRegion(
-      onContextMenu: onMenu,
-      child: Material(
-        color: fill,
-        shape: RoundedRectangleBorder(borderRadius: radius),
-        clipBehavior: Clip.antiAlias,
-        child: InkWell(
-          onTap: onSelect,
-          child: Padding(
-            padding: const EdgeInsetsDirectional.fromSTEB(4, 2, 0, 2),
-            child: Row(
-              children: [
-                timeChip,
-                const SizedBox(width: 4),
-                Expanded(
-                  child: TextField(
-                    controller: line.text,
-                    focusNode: line.focus,
-                    minLines: 1,
-                    maxLines: null,
-                    // The field grows with its text, so it never needs to
-                    // scroll; a wheel or trackpad over a line then scrolls
-                    // the list instead of nudging the text inside its row.
-                    scrollPhysics: const NeverScrollableScrollPhysics(),
-                    textInputAction: TextInputAction.done,
-                    style: theme.textTheme.bodyLarge?.copyWith(color: onFill),
-                    decoration: InputDecoration(
-                      isDense: true,
-                      border: InputBorder.none,
-                      enabledBorder: InputBorder.none,
-                      focusedBorder: InputBorder.none,
-                      filled: false,
-                      hintText: l10n.lyricsEditLineHint,
-                      hintStyle: theme.textTheme.bodyLarge?.copyWith(
-                        color: onFill.withValues(alpha: 0.5),
-                      ),
-                      contentPadding: const EdgeInsets.symmetric(vertical: 12),
+    return Material(
+      color: fill,
+      shape: RoundedRectangleBorder(borderRadius: radius),
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: onSelect,
+        child: Padding(
+          padding: const EdgeInsetsDirectional.fromSTEB(4, 2, 0, 2),
+          child: Row(
+            children: [
+              timeChip,
+              const SizedBox(width: 4),
+              Expanded(
+                child: TextField(
+                  controller: line.text,
+                  focusNode: line.focus,
+                  minLines: 1,
+                  maxLines: null,
+                  // The field grows with its text, so it never needs to
+                  // scroll; a wheel or trackpad over a line then scrolls
+                  // the list instead of nudging the text inside its row.
+                  scrollPhysics: const NeverScrollableScrollPhysics(),
+                  textInputAction: TextInputAction.done,
+                  style: theme.textTheme.bodyLarge?.copyWith(color: onFill),
+                  decoration: InputDecoration(
+                    isDense: true,
+                    border: InputBorder.none,
+                    enabledBorder: InputBorder.none,
+                    focusedBorder: InputBorder.none,
+                    filled: false,
+                    hintText: l10n.lyricsEditLineHint,
+                    hintStyle: theme.textTheme.bodyLarge?.copyWith(
+                      color: onFill.withValues(alpha: 0.5),
                     ),
+                    contentPadding: const EdgeInsets.symmetric(vertical: 12),
                   ),
                 ),
-                Builder(
-                  builder: (buttonContext) => AppIconButton(
-                    tooltip: l10n.lyricsEditLineActions,
-                    color: onFill.withValues(alpha: 0.8),
-                    onPressed: () => onMenu(
-                      contextMenuPositionBelow(buttonContext) ?? Offset.zero,
-                    ),
-                    icon: AppIcon.adaptive(
-                      mornye ? CupertinoIcons.ellipsis : Icons.more_vert,
-                    ),
+              ),
+              Builder(
+                builder: (buttonContext) => AppIconButton(
+                  tooltip: l10n.lyricsEditLineActions,
+                  color: onFill.withValues(alpha: 0.8),
+                  onPressed: () => onMenu(
+                    contextMenuPositionBelow(buttonContext) ?? Offset.zero,
+                  ),
+                  icon: AppIcon.adaptive(
+                    mornye ? CupertinoIcons.ellipsis : Icons.more_vert,
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),

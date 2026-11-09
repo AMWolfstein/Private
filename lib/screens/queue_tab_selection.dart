@@ -417,9 +417,7 @@ extension _QueueTabSelectionActions on _QueueTabState {
               foregroundColor: selectedCount > 0
                   ? colorScheme.onPrimary
                   : colorScheme.onSurfaceVariant,
-              padding: EdgeInsets.symmetric(
-                vertical: isDesktopPlatform ? 8 : 16,
-              ),
+              padding: EdgeInsets.symmetric(vertical: 16),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16),
               ),
@@ -448,9 +446,7 @@ extension _QueueTabSelectionActions on _QueueTabState {
               foregroundColor: selectedCount > 0
                   ? colorScheme.onError
                   : colorScheme.onSurfaceVariant,
-              padding: EdgeInsets.symmetric(
-                vertical: isDesktopPlatform ? 8 : 16,
-              ),
+              padding: EdgeInsets.symmetric(vertical: 16),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16),
               ),

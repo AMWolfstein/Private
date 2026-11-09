@@ -200,15 +200,6 @@ extension _LocalLibrarySources on LocalLibraryNotifier {
       if (Platform.isAndroid && isContentUri(path)) {
         return await PlatformBridge.probeSafTreeReadAccess(path);
       }
-      if (Platform.isIOS && bookmark != null && bookmark.trim().isNotEmpty) {
-        final access = await PlatformBridge.startAccessingIosBookmark(bookmark);
-        if (access == null) return false;
-        try {
-          return await Directory(access.path).exists();
-        } finally {
-          await PlatformBridge.stopAccessingIosBookmark(access);
-        }
-      }
       return await Directory(path).exists();
     } catch (error) {
       // A busy provider or a filesystem exception cannot prove detachment.

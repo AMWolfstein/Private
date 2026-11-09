@@ -5,7 +5,6 @@ import 'package:mornye/theme/app_motion.dart';
 import 'package:mornye/theme/app_tokens.dart';
 import 'package:mornye/theme/material_expressive.dart';
 import 'package:mornye/theme/mornye_theme.dart';
-import 'package:mornye/utils/desktop_platform.dart';
 import 'package:mornye/widgets/app_bottom_sheet.dart';
 import 'package:mornye/widgets/app_icon.dart';
 import 'package:mornye/widgets/expressive_button.dart';
@@ -246,7 +245,7 @@ class AppAlertDialog extends StatelessWidget {
         // at the compact class, so a short question or a single field is
         // not squeezed to the minimum.
         constraints: BoxConstraints(
-          minWidth: isDesktopPlatform ? AppDialogSize.compact.width : 280,
+          minWidth: 280,
           maxWidth: appSheetDialogMaxWidth,
         ),
         backgroundColor: backgroundColor,

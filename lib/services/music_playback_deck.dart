@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
-import 'package:mornye/utils/desktop_platform.dart';
 import 'package:mornye/utils/logger.dart';
 import 'package:mornye/services/playback_deck.dart';
 import 'package:mornye/services/playback_equalizer.dart';
@@ -161,16 +160,8 @@ class AudioplayersPlaybackDeck implements PlaybackDeck {
     bool? equalizerAvailable,
   }) : _ordinary = AudioPlayer(playerId: playerId),
        // The Darwin fork's tap is shared source, so macOS has it as well.
-       // isDesktopPlatform keeps host-run tests on the mobile default.
-       _equalizerAvailable =
-           equalizerAvailable ??
-           (Platform.isAndroid ||
-               Platform.isIOS ||
-               (isDesktopPlatform && Platform.isMacOS)),
-       _platformChainsPlayers =
-           Platform.isAndroid ||
-           Platform.isIOS ||
-           (isDesktopPlatform && Platform.isMacOS),
+       _equalizerAvailable = equalizerAvailable ?? Platform.isAndroid,
+       _platformChainsPlayers = Platform.isAndroid,
        _nativeAvailable = nativeAvailable ?? Platform.isAndroid {
     playbackEqualizer.addListener(_equalizerChanged);
     playbackOutputVolume.addListener(_outputVolumeChanged);
@@ -230,12 +221,6 @@ class AudioplayersPlaybackDeck implements PlaybackDeck {
     if (!_equalizerAvailable) {
       // Windows and Linux get the equalizer with their own deck. Until then
       // the editor must not claim it is active.
-      if (isDesktopPlatform) {
-        reportEqualizerError(
-          _ordinary.playerId,
-          settings.enabled ? 'Equalizer is not available on this system' : null,
-        );
-      }
       return;
     }
     if (!settings.enabled && !_equalizerSent) {
@@ -339,7 +324,7 @@ class AudioplayersPlaybackDeck implements PlaybackDeck {
   Future<void> configureOutput() async {
     await _ordinary.setReleaseMode(ReleaseMode.stop);
     // audioplayers has no audio context outside Android and iOS.
-    if (Platform.isAndroid || Platform.isIOS) {
+    if (Platform.isAndroid) {
       await _ordinary.setAudioContext(_musicAudioContext);
     }
   }
@@ -372,11 +357,7 @@ class AudioplayersPlaybackDeck implements PlaybackDeck {
     _routeLost = false;
     _nativeStarted = false;
     await _setOrdinarySource(
-      UrlSource(
-        arriving && (Platform.isMacOS || Platform.isIOS)
-            ? darwinArrivingUrl(url)
-            : url,
-      ),
+      UrlSource(arriving && (Platform.isMacOS) ? darwinArrivingUrl(url) : url),
     );
   }
 

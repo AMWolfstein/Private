@@ -11,19 +11,17 @@ import 'package:mornye/models/library_database_models.dart';
 import 'package:mornye/providers/download_history_provider.dart';
 import 'package:mornye/providers/local_library_provider.dart';
 import 'package:mornye/providers/settings_provider.dart';
-import 'package:mornye/services/link/features/link_library_lookup.dart';
 import 'package:mornye/providers/deleted_library_files.dart';
 import 'package:mornye/services/network_storage_service.dart';
 import 'package:mornye/utils/file_access.dart' show deleteFile, fileExists;
 import 'package:mornye/widgets/app_alert_dialog.dart';
 import 'package:mornye/providers/network_offline_provider.dart';
+import 'package:mornye/services/library_item_lookup.dart';
 import 'package:mornye/services/network_offline_saver.dart';
 import 'package:mornye/widgets/album_detail_header.dart';
 import 'package:mornye/widgets/app_bottom_sheet.dart';
 import 'package:mornye/widgets/app_progress_indicator.dart';
 import 'package:mornye/widgets/app_icon.dart';
-import 'package:mornye/widgets/link/link_library_actions.dart';
-import 'package:mornye/services/link/link_library_jobs.dart';
 
 export 'package:mornye/services/network_offline_saver.dart'
     show canSaveNetworkOfflineSource;
@@ -120,15 +118,6 @@ Future<void> deleteOfflineServerCopies(
           }),
         ),
   ];
-  if (hasLinkLibrarySongs(container, originalItems)) {
-    await runLinkLibraryAction(
-      context,
-      container,
-      originalItems,
-      LinkLibraryAction.delete,
-    );
-    return;
-  }
   final storage = NetworkStorageService.instance;
   for (final origin in origins) {
     if (!await storage.canDeleteFile(origin)) {
@@ -300,7 +289,7 @@ class NetworkOfflineTracksButton extends ConsumerWidget {
     icon: Icons.download_for_offline_outlined,
     tooltip: context.l10n.offlineSave,
     onPressed: () async {
-      final items = await linkLibraryItemsFor(
+      final items = await libraryItemsFor(
         tracks,
         includeLocal: ref.read(settingsProvider).localLibraryEnabled,
       );

@@ -3,15 +3,12 @@ import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
 
-import 'package:ffmpeg_kit_flutter_new_audio/ffmpeg_kit_config.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:mornye/services/audio_analysis_jobs.dart';
 import 'package:mornye/services/ffmpeg_support.dart';
 import 'package:mornye/services/platform_bridge.dart';
 import 'package:mornye/services/song_features.dart';
-import 'package:mornye/utils/desktop_platform.dart';
-import 'package:mornye/utils/file_access.dart' show isContentUri;
 import 'package:mornye/utils/logger.dart';
 
 /// What analyzing one song found.
@@ -49,19 +46,6 @@ class SongFeatureAnalyzer {
     List<String> arguments,
   ) async {
     final inputIndex = arguments.indexOf('-i') + 1;
-    if (!isDesktopPlatform &&
-        inputIndex > 0 &&
-        isContentUri(arguments[inputIndex])) {
-      // As haptics does: FFmpegKit opens and closes its own descriptor of the
-      // document, so a Library sweep never copies the file.
-      final input = await FFmpegKitConfig.getSafParameterForRead(
-        arguments[inputIndex],
-      );
-      if (input == null || input.isEmpty) {
-        throw StateError('Unable to open the song for analysis');
-      }
-      arguments = List.of(arguments)..[inputIndex] = input;
-    }
     final session = await FFmpegExecution.start(arguments);
     final timeout = Timer(const Duration(seconds: 30), () {
       unawaited(FFmpegExecution.cancel(session.id));

@@ -20,23 +20,16 @@ import 'package:mornye/providers/playback_notification_provider.dart';
 import 'package:mornye/providers/repo_provider.dart';
 import 'package:mornye/providers/runtime_profile_provider.dart';
 import 'package:mornye/providers/track_provider.dart';
-import 'package:mornye/providers/user_profile_provider.dart';
 import 'package:mornye/providers/preview_player_provider.dart';
 import 'package:mornye/screens/home_tab.dart';
-import 'package:mornye/screens/library_directory_screen.dart';
-import 'package:mornye/screens/library_tracks_folder_screen.dart';
-import 'package:mornye/screens/mornye_library_screen.dart';
 import 'package:mornye/screens/repo_tab.dart';
 import 'package:mornye/screens/queue_tab.dart';
-import 'package:mornye/screens/settings/profile_settings_page.dart';
 import 'package:mornye/screens/settings/settings_tab.dart';
-import 'package:mornye/screens/whats_new_screen.dart';
 import 'package:mornye/services/platform_bridge.dart';
 import 'package:mornye/services/shell_navigation_service.dart';
 import 'package:mornye/services/share_intent_service.dart';
 import 'package:mornye/services/music_playback_deck.dart';
 import 'package:mornye/services/listening_statistics.dart';
-import 'package:mornye/services/discord_presence_service.dart';
 import 'package:mornye/services/notification_service.dart';
 import 'package:mornye/services/app_remote_config_service.dart';
 import 'package:mornye/services/update_checker.dart';
@@ -50,7 +43,6 @@ import 'package:mornye/widgets/settings_group.dart';
 import 'package:mornye/widgets/mini_player.dart';
 import 'package:mornye/widgets/tv_shell.dart';
 import 'package:mornye/widgets/lazy_tab_view.dart';
-import 'package:mornye/widgets/link/link_actions.dart';
 import 'package:mornye/widgets/expressive_navigation_bar.dart';
 import 'package:mornye/widgets/mornye_bottom_bar.dart';
 import 'package:mornye/widgets/app_icon.dart';
@@ -59,14 +51,9 @@ import 'package:mornye/widgets/mornye_chrome.dart';
 import 'package:mornye/theme/mornye_theme.dart';
 import 'package:mornye/theme/player_artwork_theme.dart';
 import 'package:mornye/widgets/selection_bottom_bar.dart';
-import 'package:mornye/widgets/desktop/desktop_commands.dart';
-import 'package:mornye/widgets/desktop/desktop_inspector.dart';
-import 'package:mornye/widgets/desktop/desktop_link_transfer_actions.dart';
-import 'package:mornye/widgets/desktop/desktop_navigation.dart';
 import 'package:mornye/utils/logger.dart';
 import 'package:mornye/utils/adaptive_layout.dart';
 import 'package:mornye/utils/android_tv.dart';
-import 'package:mornye/utils/desktop_platform.dart';
 import 'package:mornye/utils/saf_download_tree.dart';
 
 part 'main_shell_startup_prompts.dart';
@@ -167,12 +154,6 @@ class _MainShellState extends ConsumerState<MainShell>
   late final _PreviewStopNavigatorObserver _repoPreviewStopObserver;
   late final _PreviewStopNavigatorObserver _searchPreviewStopObserver;
 
-  /// Desktop: whether Library shows its root page, so the Mornye sidebar
-  /// returns to the Library root's link and the Material rail to Library.
-  late final _libraryDepthObserver = _PageDepthObserver(
-    onRoot: () => desktopSidebarLink.value = null,
-  );
-
   /// The style the current tab index was chosen under.
   bool? _indexStyleMornye;
 
@@ -197,7 +178,7 @@ class _MainShellState extends ConsumerState<MainShell>
           tab,
           mornye: mornye,
           showStore: showStore,
-          desktop: isDesktopPlatform || isAndroidTv,
+          desktop: isAndroidTv,
         ) ??
         0;
     if (index == _currentIndex) return;
@@ -234,11 +215,6 @@ class _MainShellState extends ConsumerState<MainShell>
     );
     final settings = ref.read(settingsProvider);
     playback.configure(settings);
-    unawaited(
-      DiscordPresenceService.instance.setEnabled(
-        settings.discordRichPresenceEnabled,
-      ),
-    );
     listeningRecorder.setEnabled(settings.listeningStatisticsEnabled);
     // Deezer & co. localize artist/genre names by IP unless told the app's
     // language (issue #480).
@@ -271,7 +247,6 @@ class _MainShellState extends ConsumerState<MainShell>
     ShellNavigationService.registerTabSelectionHandler(
       owner: this,
       handler: _onShellTabRequested,
-      libraryLinkHandler: _requestDesktopLibraryLink,
     );
     ShellNavigationService.syncState(
       currentTabIndex: _currentIndex,
@@ -289,8 +264,6 @@ class _MainShellState extends ConsumerState<MainShell>
       ref.read(networkUploadConnectionsProvider);
       _setupShareListener();
       await _checkSafMigration();
-      if (!mounted) return;
-      await maybeShowWhatsNewDialog(context, ref);
       if (!mounted) return;
       final updateDialogShown = await _checkForUpdates();
       if (!updateDialogShown) {
@@ -390,21 +363,9 @@ class _MainShellState extends ConsumerState<MainShell>
     if (!mounted) return;
     ref.read(settingsProvider.notifier).setHasSearchedBefore();
     if (mounted) {
-      final linkClient = ref.read(linkPhoneClientProvider);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(context.l10n.loadingSharedLink),
-          // A paired desktop can take the link instead.
-          action: linkClient == null
-              ? null
-              : SnackBarAction(
-                  label: context.l10n.linkSendToDesktop(
-                    linkDesktopName(linkClient),
-                  ),
-                  onPressed: () => showLinkSharedUrlSheet(context, ref, url),
-                ),
-        ),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(context.l10n.loadingSharedLink)));
     }
     await ref.read(trackProvider.notifier).fetchFromUrl(url);
     final trackState = ref.read(trackProvider);
@@ -446,7 +407,6 @@ class _MainShellState extends ConsumerState<MainShell>
     _tabJumpOpacity.dispose();
     _tabJumpTransitionController.dispose();
     _mornyeChrome.dispose();
-    _libraryDepthObserver.dispose();
     super.dispose();
   }
 
@@ -465,15 +425,13 @@ class _MainShellState extends ConsumerState<MainShell>
 
   /// Desktop and TV show Settings after Search in the content pane.
   /// Phones and tablets open it as a page instead.
-  bool get _mornyeSettingsTab =>
-      context.isMornye && (isDesktopPlatform || isAndroidTv);
+  bool get _mornyeSettingsTab => context.isMornye && (isAndroidTv);
 
   int _settingsIndex(bool showStore) =>
       context.isMornye ? (showStore ? 4 : 3) : (showStore ? 3 : 2);
 
   void _onShellTabRequested(ShellTab tab) {
     // Picking a destination returns from Now Playing to the content pane.
-    if (isDesktopPlatform) desktopNowPlayingOpen.value = false;
     if (tab == ShellTab.settings && context.isMornye && !_mornyeSettingsTab) {
       unawaited(_openProfileSettings());
       return;
@@ -581,7 +539,6 @@ class _MainShellState extends ConsumerState<MainShell>
 
   /// Whether scrolling may collapse the Mornye tab bar at [width].
   bool _canMinimizeChromeAt(double width, TextScaler textScaler) =>
-      !isDesktopPlatform &&
       context.isMornye &&
       !useNavigationRailForWidth(width) &&
       textScaler.scale(15) <= 20;
@@ -695,208 +652,6 @@ class _MainShellState extends ConsumerState<MainShell>
     return context.isMornye ? ShellTab.search : ShellTab.settings;
   }
 
-  List<DesktopDestination> _desktopDestinations({
-    required bool showStore,
-    required int queueCount,
-    required int repoUpdatesCount,
-  }) {
-    final l10n = context.l10n;
-    final mornye = context.isMornye;
-    return [
-      for (final tab in desktopDestinationTabs(
-        mornye: mornye,
-        showStore: showStore,
-      ))
-        switch (tab) {
-          ShellTab.home => DesktopDestination(
-            tab: tab,
-            icon: mornye ? CupertinoIcons.house : Icons.home_outlined,
-            selectedIcon: mornye ? CupertinoIcons.house_fill : Icons.home,
-            label: l10n.navHome,
-          ),
-          ShellTab.library => DesktopDestination(
-            tab: tab,
-            icon: mornye
-                ? CupertinoIcons.square_stack
-                : Icons.library_music_outlined,
-            selectedIcon: mornye
-                ? CupertinoIcons.square_stack_fill
-                : Icons.library_music,
-            label: l10n.navLibrary,
-            badgeCount: queueCount,
-          ),
-          ShellTab.repository => DesktopDestination(
-            tab: tab,
-            icon: mornye
-                ? CupertinoIcons.square_grid_2x2
-                : Icons.extension_outlined,
-            selectedIcon: mornye
-                ? CupertinoIcons.square_grid_2x2_fill
-                : Icons.extension,
-            label: l10n.navStore,
-            badgeCount: repoUpdatesCount,
-          ),
-          ShellTab.search => DesktopDestination(
-            tab: tab,
-            icon: CupertinoIcons.search,
-            selectedIcon: CupertinoIcons.search,
-            label: l10n.mornyeSearch,
-          ),
-          ShellTab.settings => DesktopDestination(
-            tab: tab,
-            icon: mornye ? CupertinoIcons.gear_alt : Icons.settings_outlined,
-            selectedIcon: mornye
-                ? CupertinoIcons.gear_alt_fill
-                : Icons.settings,
-            label: l10n.navSettings,
-          ),
-        },
-    ];
-  }
-
-  /// The pages under the Mornye desktop sidebar's Library heading.
-  /// Recently Added is the Library root.
-  List<DesktopSidebarLink> _desktopLibraryLinks({required int queueCount}) {
-    final l10n = context.l10n;
-    return [
-      DesktopSidebarLink(
-        id: 'recent',
-        icon: CupertinoIcons.clock,
-        label: l10n.libraryRecentlyAdded,
-      ),
-      DesktopSidebarLink(
-        id: 'artists',
-        icon: CupertinoIcons.music_mic,
-        label: l10n.searchArtists,
-      ),
-      DesktopSidebarLink(
-        id: 'albums',
-        icon: CupertinoIcons.square_stack,
-        label: l10n.searchAlbums,
-      ),
-      DesktopSidebarLink(
-        id: 'songs',
-        icon: CupertinoIcons.music_note,
-        label: l10n.searchSongs,
-      ),
-      DesktopSidebarLink(
-        id: 'folders',
-        icon: CupertinoIcons.folder,
-        label: l10n.libraryFolders,
-      ),
-      DesktopSidebarLink(
-        id: 'downloads',
-        icon: CupertinoIcons.arrow_down_circle,
-        label: l10n.libraryDownloads,
-        badgeCount: queueCount,
-      ),
-    ];
-  }
-
-  /// The page a desktop sidebar or rail link opens in the Library tab, or
-  /// null for the Library root.
-  Widget? _desktopLibraryPage(String id) {
-    const playlistPrefix = 'playlist:';
-    if (id.startsWith(playlistPrefix)) {
-      return LibraryTracksFolderScreen(
-        mode: LibraryTracksFolderMode.playlist,
-        playlistId: id.substring(playlistPrefix.length),
-      );
-    }
-    // Only the Library root links to sections from its own page.
-    return switch (id) {
-      'artists' => Scaffold(
-        body: MornyeLibraryScreen(
-          page: MornyeLibraryPage.artists,
-          onOpenSection: (_) {},
-        ),
-      ),
-      'albums' => Scaffold(
-        body: MornyeLibraryScreen(
-          page: MornyeLibraryPage.albums,
-          onOpenSection: (_) {},
-        ),
-      ),
-      'songs' => const Scaffold(body: QueueTab(librarySection: 'all')),
-      'folders' => const LibraryDirectoryScreen(),
-      'downloads' => const Scaffold(
-        body: QueueTab(librarySection: 'downloads'),
-      ),
-      DesktopSidebarLink.allPlaylistsId => const Scaffold(
-        body: QueueTab(librarySection: 'playlists'),
-      ),
-      _ => null,
-    };
-  }
-
-  /// Shows a Library page or playlist picked in the Mornye desktop sidebar,
-  /// or a playlist picked in the Material rail, in the Library tab, in place
-  /// of the page it showed.
-  void _openDesktopLibraryLink(String id) {
-    final page = _desktopLibraryPage(id);
-    // A link replaces the Library page at once, as in a source list, so the
-    // Library root never shows on the way from another tab.
-    void show(NavigatorState navigator) {
-      navigator.popUntil((route) => route.isFirst);
-      if (page != null) {
-        unawaited(
-          navigator.push(
-            PageRouteBuilder<void>(
-              transitionDuration: Duration.zero,
-              reverseTransitionDuration: Duration.zero,
-              pageBuilder: (_, _, _) => page,
-            ),
-          ),
-        );
-      }
-      desktopSidebarLink.value = page == null ? null : id;
-    }
-
-    final navigator = _libraryTabNavigatorKey.currentState;
-    if (navigator != null) show(navigator);
-    _onShellTabRequested(ShellTab.library);
-    if (navigator != null) return;
-    // The Library navigator mounts with the tab on its first visit.
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final navigator = _libraryTabNavigatorKey.currentState;
-      if (mounted && navigator != null) show(navigator);
-    });
-    WidgetsBinding.instance.ensureVisualUpdate();
-  }
-
-  /// Only the Mornye desktop sidebar has Library links; Material keeps a
-  /// plain Library tab request.
-  bool _requestDesktopLibraryLink(String id) {
-    if (!mounted || !isDesktopPlatform || !context.isMornye) return false;
-    _openDesktopLibraryLink(id);
-    return true;
-  }
-
-  /// Opens the profile from the Mornye desktop sidebar's account row: in
-  /// the Settings detail pane, or as a page when Settings shows only its
-  /// list.
-  void _openDesktopProfile() {
-    final profile = ref.read(userProfileProvider).value;
-    _onShellTabRequested(ShellTab.settings);
-    if (profile == null) return;
-    // Settings registers its detail pane once it has built.
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!mounted) return;
-      final navigator =
-          ShellNavigationService.activeBackNavigator() ?? Navigator.of(context);
-      unawaited(
-        navigator.push(
-          MaterialPageRoute<void>(
-            builder: (_) => MornyeSettingsTheme(
-              child: ProfileSettingsPage(profile: profile),
-            ),
-          ),
-        ),
-      );
-    });
-    WidgetsBinding.instance.ensureVisualUpdate();
-  }
-
   NavigatorState? _navigatorForTab(int index, bool showStore) {
     if (index == 0) return _homeTabNavigatorKey.currentState;
     if (index == 1) return _libraryTabNavigatorKey.currentState;
@@ -919,15 +674,6 @@ class _MainShellState extends ConsumerState<MainShell>
     );
     ref.listen(settingsProvider, (_, settings) {
       ref.read(musicPlayerRuntimeProvider).configure(settings);
-    });
-    ref.listen(activeRemotePlaybackProvider, (_, remote) {
-      unawaited(ref.read(musicPlayerRuntimeProvider).showRemote(remote));
-    });
-    ref.listen(settingsProvider.select((s) => s.discordRichPresenceEnabled), (
-      _,
-      enabled,
-    ) {
-      unawaited(DiscordPresenceService.instance.setEnabled(enabled));
     });
     ref.listen(
       settingsProvider.select((s) => s.listeningStatisticsEnabled),
@@ -960,10 +706,7 @@ class _MainShellState extends ConsumerState<MainShell>
       _TabNavigator(
         key: const ValueKey('tab-library'),
         navigatorKey: _libraryTabNavigatorKey,
-        observers: [
-          _libraryPreviewStopObserver,
-          if (isDesktopPlatform) _libraryDepthObserver,
-        ],
+        observers: [_libraryPreviewStopObserver],
         heroAnimationsEnabled: heroAnimationsEnabled,
         child: _LibraryTabRoot(isTabActive: _currentIndex == 1),
       ),
@@ -1078,43 +821,6 @@ class _MainShellState extends ConsumerState<MainShell>
                 onSelected: _onNavTap,
                 child: body!,
               ),
-            ),
-          ),
-        ),
-      );
-    }
-
-    if (isDesktopPlatform) {
-      // Desktop windows: a rail (Material) or source-list sidebar (Mornye)
-      // with a persistent player; no bottom tabs or touch gestures.
-      final mornye = context.isMornye;
-      final selectedTab = _tabForIndex(selectedDestination, showStore);
-      return DownloadQueueFeedback(
-        child: DesktopLinkTransferNotices(
-          child: Scaffold(
-            body: Consumer(
-              // The selection bar floats over the pages, not the sidebar.
-              child: SelectionOverlayHost(child: pageView),
-              builder: (context, ref, body) {
-                final queuedCount = _watchQueuedCount(ref);
-                return DesktopShellLayout(
-                  destinations: _desktopDestinations(
-                    showStore: showStore,
-                    // Mornye shows the queue on its Downloads link instead.
-                    queueCount: mornye ? 0 : queuedCount,
-                    repoUpdatesCount: _watchRepoUpdatesCount(ref),
-                  ),
-                  selected: selectedTab,
-                  onSelected: _onShellTabRequested,
-                  libraryLinks: mornye
-                      ? _desktopLibraryLinks(queueCount: queuedCount)
-                      : const [],
-                  // The Material rail opens playlists alone.
-                  onOpenLibraryLink: _openDesktopLibraryLink,
-                  onOpenProfile: mornye ? _openDesktopProfile : null,
-                  body: body!,
-                );
-              },
             ),
           ),
         ),
@@ -1442,7 +1148,6 @@ class _TabNavigatorState extends State<_TabNavigator> {
   // Hero widgets on routes pushed inside a tab never fly.
   final HeroController _heroController =
       MaterialApp.createMaterialHeroController();
-  final _nowPlayingCloser = DesktopNowPlayingCloser();
 
   @override
   void dispose() {
@@ -1461,7 +1166,6 @@ class _TabNavigatorState extends State<_TabNavigator> {
       observers: [
         _chromeObserver,
         if (widget.heroAnimationsEnabled) _heroController,
-        if (isDesktopPlatform) _nowPlayingCloser,
         ...widget.observers,
       ],
       onGenerateInitialRoutes: (_, _) => [
@@ -1491,56 +1195,6 @@ class _PreviewStopNavigatorObserver extends NavigatorObserver {
   void didPop(Route<dynamic> route, Route<dynamic>? previousRoute) {
     super.didPop(route, previousRoute);
     _onNavigate();
-  }
-}
-
-/// Counts the pages in a tab navigator for the desktop shell. Navigators
-/// push their first page while building, so [depth] and [onRoot] follow
-/// after the frame rather than marking the shell dirty mid-build.
-class _PageDepthObserver extends NavigatorObserver {
-  _PageDepthObserver({this.onRoot});
-
-  final VoidCallback? onRoot;
-  final depth = ValueNotifier<int>(0);
-  int _pages = 0;
-  bool _scheduled = false;
-  bool _disposed = false;
-
-  void _change(int delta) {
-    _pages += delta;
-    if (_scheduled) return;
-    _scheduled = true;
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _scheduled = false;
-      if (_disposed) return;
-      depth.value = _pages;
-      if (_pages <= 1) onRoot?.call();
-    });
-    WidgetsBinding.instance.ensureVisualUpdate();
-  }
-
-  static int _pageCount(Route<dynamic>? route) =>
-      route is PageRoute<dynamic> ? 1 : 0;
-
-  @override
-  void didPush(Route<dynamic> route, Route<dynamic>? previousRoute) =>
-      _change(_pageCount(route));
-
-  @override
-  void didPop(Route<dynamic> route, Route<dynamic>? previousRoute) =>
-      _change(-_pageCount(route));
-
-  @override
-  void didRemove(Route<dynamic> route, Route<dynamic>? previousRoute) =>
-      _change(-_pageCount(route));
-
-  @override
-  void didReplace({Route<dynamic>? newRoute, Route<dynamic>? oldRoute}) =>
-      _change(_pageCount(newRoute) - _pageCount(oldRoute));
-
-  void dispose() {
-    _disposed = true;
-    depth.dispose();
   }
 }
 

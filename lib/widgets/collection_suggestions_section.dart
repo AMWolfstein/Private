@@ -7,17 +7,14 @@ import 'package:mornye/providers/library_collections_provider.dart';
 import 'package:mornye/services/collection_suggestions.dart';
 import 'package:mornye/theme/app_tokens.dart';
 import 'package:mornye/utils/adaptive_layout.dart';
-import 'package:mornye/utils/desktop_platform.dart';
 import 'package:mornye/widgets/app_icon.dart';
 import 'package:mornye/widgets/app_icon_button.dart';
 import 'package:mornye/widgets/cached_cover_image.dart';
-import 'package:mornye/widgets/desktop/track_list_table.dart';
 import 'package:mornye/widgets/playlist_picker_sheet.dart';
 import 'package:mornye/widgets/preview_button.dart';
 import 'package:mornye/widgets/track_card.dart';
 import 'package:mornye/widgets/track_collection_quick_actions.dart';
 import 'package:mornye/widgets/track_detail_actions.dart';
-import 'package:mornye/widgets/track_list_tile.dart';
 
 /// Songs like an album's, single's or playlist's under it, each with a
 /// preview, an add button and a tap that downloads it. Phones list them as
@@ -142,50 +139,6 @@ class _CollectionSuggestionsSliverState
     final addTooltip = playlistId != null
         ? context.l10n.collectionSuggestionsAddHere
         : context.l10n.collectionAddToPlaylist;
-    if (isDesktopPlatform) {
-      final ids = [
-        for (final (i, track) in tracks.indexed)
-          'suggestion:$i:${track.source}:${track.id}',
-      ];
-      return SliverMainAxisGroup(
-        slivers: [
-          SliverPadding(
-            padding: EdgeInsets.fromLTRB(inset, 32, inset, 8),
-            sliver: SliverToBoxAdapter(child: header),
-          ),
-          TrackListTable(
-            tracks: tracks,
-            ids: ids,
-            isInHistory: List.filled(tracks.length, false),
-            selectedIds: _selectedIds,
-            onSelect: (id, _, _) => setState(() => _selectedIds = {id}),
-            onActivate: (index) => TrackListTile.activate(
-              context,
-              ref,
-              tracks[index],
-              isInHistory: false,
-              onDownload: ({bool forceQualityPicker = false}) => _download(
-                tracks[index],
-                forceQualityPicker: forceQualityPicker,
-              ),
-            ),
-            showArtwork: true,
-            showAlbum: true,
-            showPreview: true,
-            rowAction: (index) => AppIconButton(
-              icon: const AppIcon.adaptive(Icons.add_circle_outline, size: 20),
-              tooltip: addTooltip,
-              onPressed: () => _add(tracks[index]),
-              padding: EdgeInsets.zero,
-              constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
-              style: IconButton.styleFrom(
-                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-              ),
-            ),
-          ),
-        ],
-      );
-    }
     return SliverPadding(
       padding: EdgeInsets.fromLTRB(inset, 24, inset, 0),
       sliver: SliverList.list(

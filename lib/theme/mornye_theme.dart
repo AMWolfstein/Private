@@ -270,9 +270,7 @@ class MornyeTheme extends ThemeExtension<MornyeTheme> {
         );
     // Cupertino's font proxies resolve to SF on Apple and the platform fallback
     // elsewhere. Inter remains the default on other platforms unless opted out.
-    final apple =
-        defaultTargetPlatform == TargetPlatform.iOS ||
-        defaultTargetPlatform == TargetPlatform.macOS;
+    final apple = defaultTargetPlatform == TargetPlatform.iOS;
     final type = CupertinoThemeData(brightness: brightness).textTheme;
     final text = type.textStyle.copyWith(
       inherit: true,

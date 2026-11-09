@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:mornye/theme/mornye_theme.dart';
-import 'package:mornye/utils/desktop_platform.dart';
 import 'package:mornye/utils/android_tv.dart';
 
 /// Keeps touch-first tablets on the bottom navigation used by phones. A rail
@@ -22,24 +21,15 @@ bool useMaterialNavigationRailForWidth(double width) =>
     width >= expandedLayoutBreakpoint;
 
 /// Explicit horizontal safe spacing for controls drawn in full-bleed detail
-/// headers. iOS reports no left/right safe-area inset in portrait, so toolbar
-/// buttons otherwise land only a few pixels from the device edge. Filled
-/// expressive circles need the same breathing room on Android.
-double detailHeaderEdgeInset(BuildContext context) {
-  final platform = Theme.of(context).platform;
-  return platform == TargetPlatform.iOS || platform == TargetPlatform.macOS
-      ? 12
-      : 8;
-}
+/// headers. Filled expressive circles need breathing room from the device edge.
+double detailHeaderEdgeInset(BuildContext context) => 8;
 
 /// Visual scale for touch-first tablet surfaces. Large iPads have enough
 /// pixels to make an unscaled phone density feel miniature, especially when
 /// Simulator shrinks the whole device to fit a desktop display. Desktop
 /// windows keep native density at every size.
 double adaptiveUiScaleForSize(Size size) {
-  if (isDesktopPlatform ||
-      size.shortestSide < 600 ||
-      size.width >= navigationRailBreakpoint) {
+  if (size.shortestSide < 600 || size.width >= navigationRailBreakpoint) {
     return 1;
   }
   return size.shortestSide >= 800 ? 1.2 : 1.1;
@@ -121,21 +111,14 @@ double wideInsetForWidth(
 double wideListInset(BuildContext context, {double? contentMaxWidth}) =>
     wideInsetForWidth(
       MediaQuery.sizeOf(context).width,
-      contentMaxWidth:
-          contentMaxWidth ??
-          (isDesktopPlatform
-              ? (context.isMornye
-                    ? desktopContentMaxWidth
-                    : desktopMaterialContentMaxWidth)
-              : defaultWideContentMaxWidth),
+      contentMaxWidth: contentMaxWidth ?? (defaultWideContentMaxWidth),
     );
 
 /// The Home tab's extra side inset. Material desktop runs Home across the
 /// whole pane, as M3 panes do, with the 24dp margin of expanded and larger
 /// windows (the 16dp phone edge plus 8), so its cover shelves reach the
 /// edge; elsewhere Home centers with [wideListInset].
-double homeContentInset(BuildContext context) =>
-    isDesktopPlatform && !context.isMornye ? 8 : wideListInset(context);
+double homeContentInset(BuildContext context) => wideListInset(context);
 
 const double desktopContentMaxWidth = 1600;
 

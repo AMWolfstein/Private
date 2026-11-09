@@ -102,22 +102,12 @@ class AppSettings {
     echo: autoMixEcho,
     lowPass: autoMixLowPass,
   );
-  final bool discordRichPresenceEnabled;
   final bool usbBitPerfect;
   final bool usbDirect;
   final bool usbDsdOverPcm;
   final bool usbAllowFixedVolume;
   final bool dapExclusive;
 
-  /// Desktop: take the output device for the music player alone, bypassing
-  /// the system mixer (WASAPI exclusive on Windows, hog mode on macOS, an
-  /// ALSA `hw:` device on Linux). AutoMix and previews stay off while it is
-  /// on.
-  final bool exclusiveOutput;
-
-  /// Linux: the ALSA device [exclusiveOutput] opens, as an mpv device name
-  /// (`alsa/hw:CARD=…,DEV=…`). Empty picks the first card.
-  final String exclusiveOutputDevice;
   final bool autoplay;
   final bool autoplayPersonalization;
 
@@ -311,14 +301,11 @@ class AppSettings {
     this.autoMixPitch = 0,
     this.autoMixEcho = false,
     this.autoMixLowPass = false,
-    this.discordRichPresenceEnabled = false,
     this.usbBitPerfect = false,
     this.usbDirect = false,
     this.usbDsdOverPcm = false,
     this.usbAllowFixedVolume = false,
     this.dapExclusive = false,
-    this.exclusiveOutput = false,
-    this.exclusiveOutputDevice = '',
     this.autoplay = false,
     this.autoplayPersonalization = true,
     this.songAnalysis = false,
@@ -464,14 +451,11 @@ class AppSettings {
     double? autoMixPitch,
     bool? autoMixEcho,
     bool? autoMixLowPass,
-    bool? discordRichPresenceEnabled,
     bool? usbBitPerfect,
     bool? usbDirect,
     bool? usbDsdOverPcm,
     bool? usbAllowFixedVolume,
     bool? dapExclusive,
-    bool? exclusiveOutput,
-    String? exclusiveOutputDevice,
     bool? autoplay,
     bool? autoplayPersonalization,
     bool? songAnalysis,
@@ -602,16 +586,11 @@ class AppSettings {
       autoMixPitch: autoMixPitch ?? this.autoMixPitch,
       autoMixEcho: autoMixEcho ?? this.autoMixEcho,
       autoMixLowPass: autoMixLowPass ?? this.autoMixLowPass,
-      discordRichPresenceEnabled:
-          discordRichPresenceEnabled ?? this.discordRichPresenceEnabled,
       usbBitPerfect: usbBitPerfect ?? this.usbBitPerfect,
       usbDirect: usbDirect ?? this.usbDirect,
       usbDsdOverPcm: usbDsdOverPcm ?? this.usbDsdOverPcm,
       usbAllowFixedVolume: usbAllowFixedVolume ?? this.usbAllowFixedVolume,
       dapExclusive: dapExclusive ?? this.dapExclusive,
-      exclusiveOutput: exclusiveOutput ?? this.exclusiveOutput,
-      exclusiveOutputDevice:
-          exclusiveOutputDevice ?? this.exclusiveOutputDevice,
       autoplay: autoplay ?? this.autoplay,
       autoplayPersonalization:
           autoplayPersonalization ?? this.autoplayPersonalization,

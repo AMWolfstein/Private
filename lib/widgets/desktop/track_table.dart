@@ -807,12 +807,9 @@ class _TrackTableRowViewState extends State<_TrackTableRowView> {
     return Semantics(
       selected: selected,
       label: [row.title, ?row.artist].join(', '),
-      child: DesktopContextMenuRegion(
-        onContextMenu: onContextMenu,
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: tokens.gapXs, vertical: 1),
-          child: body,
-        ),
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: tokens.gapXs, vertical: 1),
+        child: body,
       ),
     );
   }
@@ -954,69 +951,66 @@ class _AlbumRowViewState extends State<_AlbumRowView> {
     return Semantics(
       selected: widget.selected,
       label: [row.title, ?widget.artist].join(', '),
-      child: DesktopContextMenuRegion(
-        onContextMenu: onContextMenu,
-        child: Material(
-          color: widget.selected || _hovered
-              ? (widget.selected
-                    ? selectedFill
-                    : scheme.onSurface.withValues(alpha: 0.05))
-              : Colors.transparent,
-          borderRadius: BorderRadius.circular(6),
-          clipBehavior: Clip.antiAlias,
-          child: InkWell(
-            onTap: widget.onTap,
-            onHover: (hovered) => setState(() => _hovered = hovered),
-            hoverColor: Colors.transparent,
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(
-                minHeight: TrackTableLayout.albumRowHeight,
-              ),
-              child: Padding(
-                padding: EdgeInsetsDirectional.only(start: tokens.gapXs),
-                child: Row(
-                  children: [
-                    number,
-                    const SizedBox(width: TrackTableLayout.albumTitleGap),
-                    // Align the separator with the title column.
-                    Expanded(
-                      child: DecoratedBox(
-                        decoration: BoxDecoration(
-                          border: widget.last
-                              ? null
-                              : Border(
-                                  bottom: BorderSide(
-                                    color: scheme.outlineVariant.withValues(
-                                      alpha: 0.6,
-                                    ),
-                                    width: 0.5,
+      child: Material(
+        color: widget.selected || _hovered
+            ? (widget.selected
+                  ? selectedFill
+                  : scheme.onSurface.withValues(alpha: 0.05))
+            : Colors.transparent,
+        borderRadius: BorderRadius.circular(6),
+        clipBehavior: Clip.antiAlias,
+        child: InkWell(
+          onTap: widget.onTap,
+          onHover: (hovered) => setState(() => _hovered = hovered),
+          hoverColor: Colors.transparent,
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(
+              minHeight: TrackTableLayout.albumRowHeight,
+            ),
+            child: Padding(
+              padding: EdgeInsetsDirectional.only(start: tokens.gapXs),
+              child: Row(
+                children: [
+                  number,
+                  const SizedBox(width: TrackTableLayout.albumTitleGap),
+                  // Align the separator with the title column.
+                  Expanded(
+                    child: DecoratedBox(
+                      decoration: BoxDecoration(
+                        border: widget.last
+                            ? null
+                            : Border(
+                                bottom: BorderSide(
+                                  color: scheme.outlineVariant.withValues(
+                                    alpha: 0.6,
                                   ),
+                                  width: 0.5,
                                 ),
-                        ),
-                        child: ConstrainedBox(
-                          constraints: const BoxConstraints(
-                            minHeight: TrackTableLayout.albumRowHeight,
-                          ),
-                          child: Row(
-                            children: [
-                              Expanded(child: title),
-                              const SizedBox(width: 12),
-                              Text(
-                                row.duration == null
-                                    ? ''
-                                    : _formatDuration(row.duration!),
-                                style: secondary,
                               ),
-                              const SizedBox(width: 8),
-                              more,
-                              SizedBox(width: tokens.gapXs),
-                            ],
-                          ),
+                      ),
+                      child: ConstrainedBox(
+                        constraints: const BoxConstraints(
+                          minHeight: TrackTableLayout.albumRowHeight,
+                        ),
+                        child: Row(
+                          children: [
+                            Expanded(child: title),
+                            const SizedBox(width: 12),
+                            Text(
+                              row.duration == null
+                                  ? ''
+                                  : _formatDuration(row.duration!),
+                              style: secondary,
+                            ),
+                            const SizedBox(width: 8),
+                            more,
+                            SizedBox(width: tokens.gapXs),
+                          ],
                         ),
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           ),

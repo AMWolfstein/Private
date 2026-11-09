@@ -64,7 +64,6 @@ import 'package:mornye/widgets/desktop/context_menu.dart';
 import 'package:mornye/widgets/desktop/desktop_scroll_arrows.dart';
 import 'package:mornye/widgets/desktop/desktop_selection.dart';
 import 'package:mornye/widgets/desktop/detail_header.dart';
-import 'package:mornye/utils/desktop_platform.dart';
 import 'package:mornye/theme/app_motion.dart';
 import 'package:mornye/theme/material_expressive.dart';
 
@@ -676,18 +675,13 @@ class _ArtistScreenState extends ConsumerState<ArtistScreen>
                   ),
                   // Desktop keeps the sections in the header's column.
                   SliverPadding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: isDesktopPlatform
-                          ? wideListInset(context)
-                          : 0,
-                    ),
+                    padding: EdgeInsets.symmetric(horizontal: 0),
                     sliver: SliverMainAxisGroup(
                       slivers: [
                         if (_isLoadingDiscography)
                           SliverToBoxAdapter(
                             child: ArtistScreenSkeleton(
                               showCoverHeader:
-                                  !isDesktopPlatform &&
                                   !context.isMornye &&
                                   (_headerImageUrl ??
                                           widget.headerImageUrl ??
@@ -711,19 +705,7 @@ class _ArtistScreenState extends ConsumerState<ArtistScreen>
                             ),
                           ),
                         if (!_isLoadingDiscography && _error == null) ...[
-                          if (isDesktopPlatform && context.isMornye)
-                            if (albums.isNotEmpty ||
-                                (_topTracks?.isNotEmpty ?? false))
-                              SliverToBoxAdapter(
-                                child: _buildMornyeDesktopHighlights(
-                                  context,
-                                  colorScheme,
-                                  isSelectionMode ? null : albums.firstOrNull,
-                                ),
-                              )
-                            else
-                              const SliverToBoxAdapter()
-                          else ...[
+                          ...[
                             if (context.isMornye &&
                                 albums.isNotEmpty &&
                                 !isSelectionMode)
@@ -809,13 +791,7 @@ class _ArtistScreenState extends ConsumerState<ArtistScreen>
                     ),
                   ),
                   SliverToBoxAdapter(
-                    child: SizedBox(
-                      height: isSelectionMode
-                          ? 120
-                          : isDesktopPlatform
-                          ? desktopDetailBottomInset
-                          : 32,
-                    ),
+                    child: SizedBox(height: isSelectionMode ? 120 : 32),
                   ),
                   const NavBarSliverSpacer(),
                 ],

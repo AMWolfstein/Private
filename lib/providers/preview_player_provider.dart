@@ -83,16 +83,7 @@ class PreviewPlayerController extends Notifier<PreviewPlayerState> {
     _lifecycleListener = AppLifecycleListener(
       onStateChange: _handleAppLifecycleState,
     );
-    final runtime = ref.read(musicPlayerRuntimeProvider);
-    Future<void> stopPreview() async {
-      if (state.isActive) await stop();
-    }
-
-    runtime.exclusiveAudioHook = stopPreview;
     ref.onDispose(() {
-      if (identical(runtime.exclusiveAudioHook, stopPreview)) {
-        runtime.exclusiveAudioHook = null;
-      }
       _disposePlayer();
     });
     return const PreviewPlayerState();
@@ -201,8 +192,7 @@ class PreviewPlayerController extends Notifier<PreviewPlayerState> {
 
   Future<void> play(String url) async {
     final trimmed = url.trim();
-    // The main player holds the device in exclusive mode.
-    if (trimmed.isEmpty || playbackExclusiveOutput.value) return;
+    if (trimmed.isEmpty) return;
 
     try {
       await ref.read(musicPlayerRuntimeProvider).handler?.pause();

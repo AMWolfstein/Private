@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart';
 import 'package:mornye/services/platform_bridge.dart';
-import 'package:mornye/utils/desktop_platform.dart';
 import 'package:mornye/utils/logger.dart';
 
 final _log = AppLogger('DownloadKeepAwake');
@@ -19,7 +18,7 @@ class BackendDownloadKeepAwake implements DownloadKeepAwake {
 
   @override
   Future<void> begin() async {
-    if (!isDesktopPlatform) return;
+    return;
     try {
       if (!await PlatformBridge.beginKeepAwake()) {
         _log.w('The system did not grant a sleep inhibitor for downloads');
@@ -31,7 +30,7 @@ class BackendDownloadKeepAwake implements DownloadKeepAwake {
 
   @override
   Future<void> end() async {
-    if (!isDesktopPlatform) return;
+    return;
     try {
       await PlatformBridge.endKeepAwake();
     } catch (e) {

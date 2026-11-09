@@ -73,16 +73,6 @@ class CoverDownloadService {
       }
 
       var outputDirectory = settings.downloadDirectory.trim();
-      if (Platform.isIOS && settings.downloadDirectoryBookmark.isNotEmpty) {
-        iosBookmarkAccess = await PlatformBridge.startAccessingIosBookmark(
-          settings.downloadDirectoryBookmark,
-        );
-        final resolved = iosBookmarkAccess?.path;
-        if (resolved == null || resolved.trim().isEmpty) {
-          throw const FileSystemException('No storage access');
-        }
-        outputDirectory = resolved.trim();
-      }
       if (outputDirectory.isEmpty) {
         final documents = await getApplicationDocumentsDirectory();
         outputDirectory = p.join(documents.path, 'Mornye');
@@ -97,9 +87,6 @@ class CoverDownloadService {
       await tempFile.copy(outputPath);
       return SavedCoverResult(fileName: p.basename(outputPath));
     } finally {
-      if (iosBookmarkAccess != null) {
-        await PlatformBridge.stopAccessingIosBookmark(iosBookmarkAccess);
-      }
       try {
         final tempFile = File(tempPath);
         if (await tempFile.exists()) await tempFile.delete();

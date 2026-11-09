@@ -326,7 +326,7 @@ extension DownloadQueueLibraryReorganization on DownloadQueueNotifier {
     final trimmed = path.trim();
     if (safMode || isContentUri(trimmed)) return trimmed;
     final normalized = p.normalize(plainWindowsPath(trimmed));
-    return Platform.isWindows ? normalized.toLowerCase() : normalized;
+    return normalized;
   }
 
   /// Where [item] currently lives relative to the download folder, or null

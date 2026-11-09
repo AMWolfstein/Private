@@ -158,9 +158,7 @@ class MediaSessionFilter extends AudioServicePlatform {
 void installMediaSessionFilter() {
   final platform = AudioServicePlatform.instance;
   if (platform is MediaSessionFilter) return;
-  if (defaultTargetPlatform == TargetPlatform.android ||
-      defaultTargetPlatform == TargetPlatform.iOS ||
-      defaultTargetPlatform == TargetPlatform.macOS) {
+  if (defaultTargetPlatform == TargetPlatform.android) {
     AudioServicePlatform.instance = MediaSessionFilter(platform);
   }
 }

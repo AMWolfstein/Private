@@ -4,9 +4,7 @@ import 'package:flutter/cupertino.dart'
 import 'package:mornye/theme/app_motion.dart';
 import 'package:mornye/theme/app_tokens.dart';
 import 'package:mornye/theme/mornye_theme.dart';
-import 'package:mornye/utils/desktop_platform.dart';
 import 'package:mornye/widgets/app_icon.dart';
-import 'package:mornye/widgets/app_icon_button.dart';
 import 'package:mornye/widgets/mornye_chrome.dart';
 import 'package:mornye/theme/mornye_icons.dart';
 
@@ -27,7 +25,6 @@ class AppSheetHandle extends StatelessWidget {
   Widget build(BuildContext context) {
     final tokens = context.tokens;
     // Desktop shows sheets as dialogs, which nothing drags.
-    if (isDesktopPlatform) return SizedBox(height: tokens.gapMd);
     return ExcludeSemantics(
       child: Center(
         child: Container(
@@ -84,9 +81,7 @@ class AppBottomSheet extends StatelessWidget {
     final theme = Theme.of(context);
     // Material desktop dialogs end their header with a close button for the
     // pointer; Esc and a click outside close them too.
-    final closes =
-        titleTrailing == null && isDesktopPlatform && !context.isMornye;
-    final trailing = closes ? const _SheetDialogCloseButton() : titleTrailing;
+    final trailing = titleTrailing;
 
     Widget content = Column(
       mainAxisSize: MainAxisSize.min,
@@ -95,12 +90,10 @@ class AppBottomSheet extends StatelessWidget {
         if (showHandle) const AppSheetHandle(),
         if (title != null)
           Padding(
-            // The close button's touch target is taller than the title, so
-            // its row starts higher to keep the title where it sat before.
             padding: EdgeInsetsDirectional.fromSTEB(
               tokens.gapXl,
-              closes ? tokens.gapXs : tokens.gapLg,
-              closes ? tokens.gapMd : tokens.gapXl,
+              tokens.gapLg,
+              tokens.gapXl,
               subtitle == null ? tokens.gapSm : tokens.gapXs,
             ),
             child: Row(
@@ -158,17 +151,6 @@ class AppBottomSheet extends StatelessWidget {
       child: SafeArea(top: false, child: content),
     );
   }
-}
-
-class _SheetDialogCloseButton extends StatelessWidget {
-  const _SheetDialogCloseButton();
-
-  @override
-  Widget build(BuildContext context) => AppIconButton(
-    icon: const AppIcon(Icons.close_rounded),
-    tooltip: MaterialLocalizations.of(context).closeButtonTooltip,
-    onPressed: () => Navigator.of(context).maybePop(),
-  );
 }
 
 /// Opens a modal bottom sheet wrapped in [AppBottomSheet].
@@ -395,18 +377,6 @@ Future<T?> showAppModalBottomSheet<T>({
   Color? backgroundColor,
   AppDialogSize dialogSize = AppDialogSize.medium,
 }) {
-  if (isDesktopPlatform) {
-    return showAppSheetDialog<T>(
-      context: context,
-      builder: builder,
-      isScrollControlled: isScrollControlled,
-      isDismissible: isDismissible,
-      topInset: showDragHandle == true,
-      mornyeGlass: mornyeGlass,
-      backgroundColor: backgroundColor,
-      dialogSize: dialogSize,
-    );
-  }
   final mornye = context.isMornye;
   return showModalBottomSheet<T>(
     context: context,

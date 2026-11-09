@@ -6,7 +6,6 @@ import 'package:flutter/scheduler.dart';
 import 'package:mornye/theme/app_motion.dart';
 import 'package:mornye/theme/app_tokens.dart';
 import 'package:mornye/theme/mornye_theme.dart';
-import 'package:mornye/utils/desktop_platform.dart';
 import 'package:mornye/widgets/desktop/detail_header.dart'
     show desktopDetailBottomInset;
 import 'package:mornye/widgets/mornye_chrome.dart';
@@ -302,16 +301,15 @@ class SelectionBottomBar extends StatelessWidget {
                 ),
                 // The tap hint describes touch selection; desktop rows select
                 // with the pointer and modifiers, and the toolbar stays short.
-                if (!isDesktopPlatform)
-                  Text(
-                    allSelected
-                        ? allSelectedLabel ?? context.l10n.selectionAllSelected
-                        : tapToSelectLabel ??
-                              context.l10n.downloadedAlbumTapToSelect,
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: colorScheme.onSurfaceVariant,
-                    ),
+                Text(
+                  allSelected
+                      ? allSelectedLabel ?? context.l10n.selectionAllSelected
+                      : tapToSelectLabel ??
+                            context.l10n.downloadedAlbumTapToSelect,
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: colorScheme.onSurfaceVariant,
                   ),
+                ),
               ],
             ),
           ),
@@ -371,14 +369,6 @@ class SelectionBottomBar extends StatelessWidget {
           child: content,
         ),
       );
-      if (isDesktopPlatform) {
-        // No navigation bar sits under a desktop page, so the toolbar
-        // floats on its own without the backdrop.
-        return Padding(
-          padding: const EdgeInsets.all(floatingMargin),
-          child: toolbar,
-        );
-      }
       // Expressive floating toolbar: detached from the screen edges and
       // fully rounded. The faded backdrop hides and blocks the navigation
       // bar underneath, so a tap beside the toolbar cannot switch tabs.
@@ -407,16 +397,15 @@ class SelectionBottomBar extends StatelessWidget {
       );
     }
 
-    if (!isDesktopPlatform) {
-      return _SelectionPanelDrag(
-        onClose: onClose,
-        header: header,
-        bottomPadding: bottomPadding,
-        floatingMargin: context.isMornye ? 0 : floatingMargin,
-        surfaceBuilder: surface,
-        children: children,
-      );
-    }
+    return _SelectionPanelDrag(
+      onClose: onClose,
+      header: header,
+      bottomPadding: bottomPadding,
+      floatingMargin: context.isMornye ? 0 : floatingMargin,
+      surfaceBuilder: surface,
+      children: children,
+    );
+
     // Desktop: a bounded toolbar over the page, clear of Mornye's floating
     // player, rather than a sheet across the whole pane. There is no drag
     // handle, since pointer input has no gesture to tuck the actions away;

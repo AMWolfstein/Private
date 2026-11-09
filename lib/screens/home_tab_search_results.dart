@@ -885,12 +885,10 @@ extension _HomeTabSearchResultsUI on _HomeTabState {
     final chipRow = LiquidGlassBatch(
       // A mouse cannot swipe a clipped row, so desktop windows wrap every
       // filter onto view.
-      child: isDesktopPlatform
-          ? Wrap(spacing: 8, runSpacing: 8, children: chips)
-          : SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(spacing: 8, children: chips),
-            ),
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(spacing: 8, children: chips),
+      ),
     );
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16 + homeContentInset(context)),
@@ -1036,56 +1034,35 @@ extension _HomeTabSearchResultsUI on _HomeTabState {
         widget.mode == HomeTabMode.search ||
         _searchFocusNode.hasFocus;
 
-    final searchingLibrary = _searchingLibrary;
-    final compact = _compactSearchField;
     return AppSearchField(
       controller: _urlController,
-      compact: compact,
       samplesBackdrop: false,
       focusNode: _searchFocusNode,
-      hintText: searchingLibrary
-          ? context.l10n.librarySearchHint
-          : _getSearchHint(),
+      hintText: _getSearchHint(),
       clearTooltip: context.l10n.dialogClear,
       onClear: _clearAndRefresh,
-      // Filtering the library needs neither the provider picker nor the
-      // import actions.
-      prefixIcon: searchingLibrary
-          ? null
-          : _SearchProviderDropdown(
-              onProviderChanged: () {
-                _lastSearchQuery = null;
-                ref.read(trackProvider.notifier).setSearchFilter(null);
-                setState(() {});
-                final text = _urlController.text.trim();
-                if (text.isNotEmpty &&
-                    text.length >= _HomeTabState._minLiveSearchChars) {
-                  _performSearch(text);
-                }
-              },
-            ),
+      prefixIcon: _SearchProviderDropdown(
+        onProviderChanged: () {
+          _lastSearchQuery = null;
+          ref.read(trackProvider.notifier).setSearchFilter(null);
+          setState(() {});
+          final text = _urlController.text.trim();
+          if (text.isNotEmpty &&
+              text.length >= _HomeTabState._minLiveSearchChars) {
+            _performSearch(text);
+          }
+        },
+      ),
       suffixIcon: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           if (hasText)
-            compact
-                ? IconButton(
-                    icon: const Icon(CupertinoIcons.clear_circled_solid),
-                    iconSize: 17,
-                    padding: EdgeInsets.zero,
-                    constraints: const BoxConstraints.tightFor(
-                      width: 30,
-                      height: 30,
-                    ),
-                    onPressed: _clearAndRefresh,
-                    tooltip: context.l10n.dialogClear,
-                  )
-                : AppIconButton(
-                    icon: const Icon(Icons.clear),
-                    onPressed: _clearAndRefresh,
-                    tooltip: context.l10n.dialogClear,
-                  )
-          else if (showInputActions && !searchingLibrary) ...[
+            AppIconButton(
+              icon: const Icon(Icons.clear),
+              onPressed: _clearAndRefresh,
+              tooltip: context.l10n.dialogClear,
+            )
+          else if (showInputActions) ...[
             AppIconButton(
               icon: const Icon(Icons.file_upload_outlined),
               onPressed: _isCsvImporting
@@ -1121,11 +1098,7 @@ extension _HomeTabSearchResultsUI on _HomeTabState {
     if (!mounted || query == null || query.trim().isEmpty) return;
     _urlController.text = query;
     // The song is not in the library, so the search goes online.
-    if (_searchesLibrary) {
-      _setSearchScope(library: false);
-    } else {
-      _onSearchSubmitted();
-    }
+    _onSearchSubmitted();
   }
 
   void _onSearchSubmitted() {
@@ -1134,13 +1107,6 @@ extension _HomeTabSearchResultsUI on _HomeTabState {
 
     final text = _urlController.text.trim();
     if (text.isEmpty) return;
-
-    if (_searchingLibrary) {
-      _libraryQueryDebounce?.cancel();
-      setState(() => _libraryQuery = text);
-      _searchFocusNode.unfocus();
-      return;
-    }
 
     if (looksLikeUrlOrSpotifyUri(text)) {
       _fetchMetadata();

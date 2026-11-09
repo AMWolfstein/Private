@@ -10,7 +10,6 @@ import 'package:mornye/services/platform_bridge.dart';
 import 'package:mornye/utils/logger.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:record/record.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 final _log = AppLogger('MusicRecognition');
 
@@ -250,9 +249,7 @@ class RecordMicrophone implements RecognitionMicrophone {
       }
       if (await _active.hasPermission()) return MicrophoneAccess.granted;
       // Apple platforms prompt once; afterwards only Settings can allow it.
-      return Platform.isIOS || Platform.isMacOS
-          ? MicrophoneAccess.blocked
-          : MicrophoneAccess.denied;
+      return MicrophoneAccess.denied;
     } on Object catch (error) {
       _log.w('Microphone permission check failed (${error.runtimeType})');
       return MicrophoneAccess.denied;
@@ -286,25 +283,13 @@ class RecordMicrophone implements RecognitionMicrophone {
   }
 
   @override
-  bool get canOpenSettings =>
-      Platform.isAndroid ||
-      Platform.isIOS ||
-      Platform.isMacOS ||
-      Platform.isWindows;
+  bool get canOpenSettings => Platform.isAndroid;
 
   @override
   Future<void> openSettings() async {
     try {
-      if (Platform.isAndroid || Platform.isIOS) {
+      if (Platform.isAndroid) {
         await openAppSettings();
-      } else if (Platform.isMacOS) {
-        await launchUrl(
-          Uri.parse(
-            'x-apple.systempreferences:com.apple.preference.security?Privacy_Microphone',
-          ),
-        );
-      } else if (Platform.isWindows) {
-        await launchUrl(Uri.parse('ms-settings:privacy-microphone'));
       }
     } on Object catch (error) {
       _log.w('Could not open microphone settings (${error.runtimeType})');

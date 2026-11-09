@@ -1,11 +1,8 @@
-import 'dart:math' as math;
 
 import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter/material.dart';
 import 'package:mornye/l10n/l10n.dart';
 import 'package:mornye/theme/mornye_theme.dart';
-import 'package:mornye/utils/desktop_platform.dart';
-import 'package:mornye/widgets/desktop/desktop_inspector.dart';
 import 'package:mornye/widgets/mornye_chrome.dart';
 import 'package:mornye/widgets/mornye_glass_press.dart';
 
@@ -62,7 +59,7 @@ class _DesktopScrollArrowsState extends State<DesktopScrollArrows> {
   @override
   Widget build(BuildContext context) {
     final list = widget.builder(context, _controller);
-    if (!isDesktopPlatform) return list;
+    return list;
     return MouseRegion(
       onEnter: (_) => _hovered.value = true,
       onExit: (_) => _hovered.value = false,
@@ -99,18 +96,6 @@ class _DesktopScrollArrowsState extends State<DesktopScrollArrows> {
     },
   );
 
-  /// How far Mornye's glass inspector reaches over this shelf, so the forward
-  /// paddle stays beside it instead of beneath it.
-  double _glassCover(BuildContext context) {
-    if (desktopInspectorPanel.value == null) return 0;
-    final box = context.findRenderObject();
-    if (box is! RenderBox || !box.hasSize) return 0;
-    final windowWidth = MediaQuery.sizeOf(context).width;
-    if (!desktopInspectorOverlays(windowWidth, mornye: true)) return 0;
-    final shelfEnd = box.localToGlobal(Offset(box.size.width, 0)).dx;
-    return math.max(0, shelfEnd - (windowWidth - mornyeGlassInspectorWidth));
-  }
-
   Widget _arrow(BuildContext context, {required bool forward}) {
     final l10n = context.l10n;
     final mornye = context.isMornye;
@@ -122,7 +107,7 @@ class _DesktopScrollArrowsState extends State<DesktopScrollArrows> {
       // A tall glass paddle stays close to the edge of the shelf.
       return PositionedDirectional(
         start: forward ? null : 6,
-        end: forward ? 6 + _glassCover(context) : null,
+        end: forward ? 6 : null,
         top: 0,
         bottom: 0,
         child: Center(

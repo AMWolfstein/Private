@@ -5,7 +5,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mornye/l10n/l10n.dart';
 import 'package:mornye/providers/music_player_provider.dart';
 import 'package:mornye/providers/settings_provider.dart';
-import 'package:mornye/utils/desktop_platform.dart';
 import 'package:mornye/widgets/player_queue_artwork.dart';
 import 'package:mornye/widgets/player_queue_dismissible.dart';
 
@@ -100,94 +99,11 @@ class MornyePlayerQueue extends ConsumerWidget {
       key: const PageStorageKey('mornye-player-queue'),
       slivers: [
         SliverPadding(
-          padding: EdgeInsets.symmetric(
-            horizontal: isDesktopPlatform ? 16 : 28,
-          ),
+          padding: EdgeInsets.symmetric(horizontal: 28),
           sliver: SliverToBoxAdapter(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                if (isDesktopPlatform)
-                  Row(
-                    children: [
-                      desktopModeButton(
-                        icon: CupertinoIcons.infinite,
-                        label: context.l10n.queueAutoplay,
-                        stateLabel: autoplay
-                            ? context.l10n.autoplayOn
-                            : context.l10n.autoplayOff,
-                        selected: autoplay,
-                        onPressed: () => ref
-                            .read(settingsProvider.notifier)
-                            .setAutoplay(!autoplay),
-                      ),
-                      const SizedBox(width: 12),
-                      desktopModeButton(
-                        icon: CupertinoIcons.arrow_merge,
-                        label: context.l10n.queueAutoMix,
-                        stateLabel: autoMix
-                            ? context.l10n.autoMixOn
-                            : context.l10n.autoMixOff,
-                        selected: autoMix,
-                        onPressed: () => ref
-                            .read(settingsProvider.notifier)
-                            .setAutoMix(!autoMix),
-                      ),
-                    ],
-                  )
-                else
-                  Row(
-                    children: [
-                      modeButton(
-                        icon: CupertinoIcons.arrow_merge,
-                        label: autoMix
-                            ? context.l10n.autoMixOn
-                            : context.l10n.autoMixOff,
-                        selected: autoMix,
-                        onPressed: () => ref
-                            .read(settingsProvider.notifier)
-                            .setAutoMix(!autoMix),
-                      ),
-                      const SizedBox(width: 12),
-                      modeButton(
-                        icon: CupertinoIcons.shuffle,
-                        label: playback.shuffle
-                            ? context.l10n.nowPlayingShuffleOn
-                            : context.l10n.nowPlayingPlayInOrder,
-                        selected: playback.shuffle,
-                        onPressed: () =>
-                            controller.setShuffle(!playback.shuffle),
-                      ),
-                      const SizedBox(width: 12),
-                      modeButton(
-                        icon: playback.repeat == AudioServiceRepeatMode.one
-                            ? CupertinoIcons.repeat_1
-                            : CupertinoIcons.repeat,
-                        label: repeatLabel,
-                        selected:
-                            playback.repeat != AudioServiceRepeatMode.none,
-                        onPressed: () =>
-                            controller.setRepeatMode(switch (playback.repeat) {
-                              AudioServiceRepeatMode.none =>
-                                AudioServiceRepeatMode.all,
-                              AudioServiceRepeatMode.all =>
-                                AudioServiceRepeatMode.one,
-                              _ => AudioServiceRepeatMode.none,
-                            }),
-                      ),
-                      const SizedBox(width: 12),
-                      modeButton(
-                        icon: CupertinoIcons.infinite,
-                        label: autoplay
-                            ? context.l10n.autoplayOn
-                            : context.l10n.autoplayOff,
-                        selected: autoplay,
-                        onPressed: () => ref
-                            .read(settingsProvider.notifier)
-                            .setAutoplay(!autoplay),
-                      ),
-                    ],
-                  ),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 12),
                   child: Column(
