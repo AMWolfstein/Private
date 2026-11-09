@@ -932,12 +932,12 @@
   "@permissionNearbyDevices": {
     "description": "Nearby devices permission type label; use Android's name for this permission"
   },
-  "whatsNewLinkNearbyAllow": "Дозволити пристрої поблизу",
-  "@whatsNewLinkNearbyAllow": {
+  "whatsNewNearbyAllow": "Дозволити пристрої поблизу",
+  "@whatsNewNearbyAllow": {
     "description": "Main button on the Nearby devices page of the What's New tour that asks for Android's Nearby devices permission"
   },
-  "whatsNewLinkNearbyGranted": "Пристрої поблизу дозволено",
-  "@whatsNewLinkNearbyGranted": {
+  "whatsNewNearbyGranted": "Пристрої поблизу дозволено",
+  "@whatsNewNearbyGranted": {
     "description": "Shown on the Nearby devices page of the What's New tour after the Nearby devices permission is granted"
   },
   "whatsNewNearbyTitle": "Пристрої поблизу",
@@ -948,8 +948,6 @@
   "@whatsNewNearbyDesc": {
     "description": "Description on the Nearby devices page of the What's New tour, followed by a list of uses"
   },
-  "whatsNewNearbyLinkTitle": "Пошук вашого комп’ютера",
-  "whatsNewNearbyLinkBody": "Mornye Link шукає ваш комп’ютер у тій самій мережі Wi-Fi та підтримує постійний зв’язок із ним.",
   "whatsNewNearbyStorageTitle": "Мережеве сховище",
   "@whatsNewNearbyStorageTitle": {
     "description": "Use of the Nearby devices permission: SMB and WebDAV servers at home"
@@ -966,7 +964,7 @@
   "@whatsNewNearbyPrivateBody": {
     "description": "Explains that the Nearby devices permission is not used for location"
   },
-  "whatsNewNearbyRefused": "Доступ заборонено. Mornye Link та мережеве сховище залишатимуться вимкненими, доки ви не дозволите доступ до пристроїв поблизу для Mornye в налаштуваннях Android.",
+  "whatsNewNearbyRefused": "Доступ заборонено. мережеве сховище залишатимуться вимкненими, доки ви не дозволите доступ до пристроїв поблизу для Mornye в налаштуваннях Android.",
   "@whatsNewNearbyRefused": {
     "description": "Shown on the Nearby devices page of the What's New tour after the permission is refused"
   },
@@ -3341,14 +3339,6 @@
     }
   },
   "whatsNewIntroDesc": "Наше найбільше оновлення! Ось короткий огляд того, що нового.",
-  "whatsNewLinkTitle": "Mornye Link",
-  "whatsNewLinkDesc": "Під'єднайте телефон і комп'ютер до однієї мережі. Mornye Link перебуває на стадії бета-тестування.",
-  "whatsNewLinkPlayTitle": "Слухайте на різних пристроях",
-  "whatsNewLinkPlayBody": "Переглядайте бібліотеку комп'ютера з телефона, керуйте відтворенням та переходьте з пристрою на пристрій без втрати поточної позиції.",
-  "whatsNewLinkTransferTitle": "Двостороннє перенесення пісень",
-  "whatsNewLinkTransferBody": "Надсилайте пісні на комп'ютер або зберігайте їх на телефон прямо з меню пісні.",
-  "whatsNewLinkSyncTitle": "Завжди в синхроні",
-  "whatsNewLinkSyncBody": "Колекції та історія прослуховування залишаються однаковими на підключених пристроях.",
   "whatsNewHomeTitle": "Головна Сторінка, що вчиться",
   "whatsNewHomeDesc": "Мікси та автовідтворення тепер підлаштовуються під те, як ви насправді слухаєте музику.",
   "whatsNewHomeMixesTitle": "Мікси з вашої бібліотеки",

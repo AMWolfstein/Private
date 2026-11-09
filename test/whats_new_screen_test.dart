@@ -177,8 +177,6 @@ void main() {
     await _openNearbyTour(tester, allow: true);
     await tester.tap(find.text('Continue'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Continue'));
-    await tester.pumpAndSettle();
 
     await tester.tap(find.text('Allow nearby devices'));
     await tester.pumpAndSettle();
@@ -244,7 +242,6 @@ void main() {
       expect(find.text('Mornye ${AppInfo.whatsNewRelease} is here'), findsOne);
       expect(find.text('Skip for now'), findsOne);
       for (final title in [
-        'Mornye Link',
         'A Home that learns',
         'Player and lyrics',
         'Library and search',
@@ -284,7 +281,7 @@ void main() {
       addTearDown(tester.view.resetPhysicalSize);
       addTearDown(tester.view.resetDevicePixelRatio);
       final container = await openTour(tester, textScale: 1.6);
-      for (var page = 0; page < 5; page++) {
+      for (var page = 0; page < 4; page++) {
         expect(tester.takeException(), isNull);
         await tester.tap(find.text('Continue'));
         await tester.pumpAndSettle();

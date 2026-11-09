@@ -932,12 +932,12 @@
   "@permissionNearbyDevices": {
     "description": "Nearby devices permission type label; use Android's name for this permission"
   },
-  "whatsNewLinkNearbyAllow": "Cho phép thiết bị lân cận",
-  "@whatsNewLinkNearbyAllow": {
+  "whatsNewNearbyAllow": "Cho phép thiết bị lân cận",
+  "@whatsNewNearbyAllow": {
     "description": "Main button on the Nearby devices page of the What's New tour that asks for Android's Nearby devices permission"
   },
-  "whatsNewLinkNearbyGranted": "Cho phép các thiết bị lân cận",
-  "@whatsNewLinkNearbyGranted": {
+  "whatsNewNearbyGranted": "Cho phép các thiết bị lân cận",
+  "@whatsNewNearbyGranted": {
     "description": "Shown on the Nearby devices page of the What's New tour after the Nearby devices permission is granted"
   },
   "whatsNewNearbyTitle": "Các thiết bị lân cận",
@@ -948,8 +948,6 @@
   "@whatsNewNearbyDesc": {
     "description": "Description on the Nearby devices page of the What's New tour, followed by a list of uses"
   },
-  "whatsNewNearbyLinkTitle": "Tìm máy tính của bạn",
-  "whatsNewNearbyLinkBody": "Mornye Link tìm kiếm máy tính của bạn trên cùng mạng Wi-Fi và duy trì kết nối với máy tính đó.",
   "whatsNewNearbyStorageTitle": "Lưu trữ mạng",
   "@whatsNewNearbyStorageTitle": {
     "description": "Use of the Nearby devices permission: SMB and WebDAV servers at home"
@@ -966,7 +964,7 @@
   "@whatsNewNearbyPrivateBody": {
     "description": "Explains that the Nearby devices permission is not used for location"
   },
-  "whatsNewNearbyRefused": "Không được phép. Mornye Link và tính năng lưu trữ mạng vẫn tắt cho đến khi bạn cho phép thiết bị lân cận cho Mornye trong cài đặt Android.",
+  "whatsNewNearbyRefused": "Không được phép. tính năng lưu trữ mạng vẫn tắt cho đến khi bạn cho phép thiết bị lân cận cho Mornye trong cài đặt Android.",
   "@whatsNewNearbyRefused": {
     "description": "Shown on the Nearby devices page of the What's New tour after the permission is refused"
   },
@@ -3341,14 +3339,6 @@
     }
   },
   "whatsNewIntroDesc": "Bản cập nhật lớn nhất từ trước đến nay của chúng tôi. Dưới đây là cái nhìn nhanh về những điểm mới.",
-  "whatsNewLinkTitle": "Mornye Link",
-  "whatsNewLinkDesc": "Ghép đôi điện thoại và máy tính của bạn trên cùng một mạng. Mornye Link đang trong giai đoạn thử nghiệm.",
-  "whatsNewLinkPlayTitle": "Phát nhạc trên các thiết bị",
-  "whatsNewLinkPlayBody": "Duyệt qua thư viện của máy tính trên điện thoại, điều khiển nội dung đang phát và chuyển đổi quá trình phát mà không bị mất vị trí.",
-  "whatsNewLinkTransferTitle": "Chuyển bài hát theo cả hai hướng",
-  "whatsNewLinkTransferBody": "Gửi bài hát đến máy tính của bạn hoặc lưu về điện thoại, ngay từ menu bài hát.",
-  "whatsNewLinkSyncTitle": "Đồng bộ liên tục",
-  "whatsNewLinkSyncBody": "Bộ sưu tập và lịch sử nghe nhạc luôn đồng bộ trên các thiết bị đã ghép đôi.",
   "whatsNewHomeTitle": "Trang chủ tự học hỏi theo thói quen",
   "whatsNewHomeDesc": "Các bản hòa âm và tính năng tự động phát giờ đây sẽ tuân theo cách bạn thực sự nghe nhạc.",
   "whatsNewHomeMixesTitle": "Bản hòa âm từ Thư viện của bạn",

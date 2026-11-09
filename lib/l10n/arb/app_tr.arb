@@ -932,12 +932,12 @@
   "@permissionNearbyDevices": {
     "description": "Nearby devices permission type label; use Android's name for this permission"
   },
-  "whatsNewLinkNearbyAllow": "Yakındaki cihazlara izin ver",
-  "@whatsNewLinkNearbyAllow": {
+  "whatsNewNearbyAllow": "Yakındaki cihazlara izin ver",
+  "@whatsNewNearbyAllow": {
     "description": "Main button on the Nearby devices page of the What's New tour that asks for Android's Nearby devices permission"
   },
-  "whatsNewLinkNearbyGranted": "Yakındaki cihazlara izin verildi",
-  "@whatsNewLinkNearbyGranted": {
+  "whatsNewNearbyGranted": "Yakındaki cihazlara izin verildi",
+  "@whatsNewNearbyGranted": {
     "description": "Shown on the Nearby devices page of the What's New tour after the Nearby devices permission is granted"
   },
   "whatsNewNearbyTitle": "Yakındaki cihazlar",
@@ -948,8 +948,6 @@
   "@whatsNewNearbyDesc": {
     "description": "Description on the Nearby devices page of the What's New tour, followed by a list of uses"
   },
-  "whatsNewNearbyLinkTitle": "Bilgisayarınızı bulma",
-  "whatsNewNearbyLinkBody": "Mornye Link, bilgisayarınızı aynı Wi-Fi'de arar ve bağlantıyı sürdürür.",
   "whatsNewNearbyStorageTitle": "Ağ depolaması",
   "@whatsNewNearbyStorageTitle": {
     "description": "Use of the Nearby devices permission: SMB and WebDAV servers at home"
@@ -966,7 +964,7 @@
   "@whatsNewNearbyPrivateBody": {
     "description": "Explains that the Nearby devices permission is not used for location"
   },
-  "whatsNewNearbyRefused": "İzin verilmedi. Android ayarlarından Mornye için Yakındaki cihazlar iznini verene kadar Mornye Link ve ağ depolaması kapalı kalır.",
+  "whatsNewNearbyRefused": "İzin verilmedi. Android ayarlarından Mornye için Yakındaki cihazlar iznini verene kadar ağ depolaması kapalı kalır.",
   "@whatsNewNearbyRefused": {
     "description": "Shown on the Nearby devices page of the What's New tour after the permission is refused"
   },
@@ -3341,14 +3339,6 @@
     }
   },
   "whatsNewIntroDesc": "Şimdiye kadarki en büyük güncellememiz. Yeniliklerimize hızlıca bir göz atın.",
-  "whatsNewLinkTitle": "Mornye Link",
-  "whatsNewLinkDesc": "Telefonunuzu ve bilgisayarınızı aynı ağda eşleştirin. Mornye Link beta aşamasındadır.",
-  "whatsNewLinkPlayTitle": "Cihazlar arasında çalın",
-  "whatsNewLinkPlayBody": "Bilgisayarınızın kitaplığına telefonunuzdan göz atın, ne çaldığını denetleyin ve kaldığınız yeri kaybetmeden oynatmayı devredin.",
-  "whatsNewLinkTransferTitle": "Şarkıları iki yönde taşıyın",
-  "whatsNewLinkTransferBody": "Şarkı menüsünden doğrudan bilgisayarınıza şarkı gönderin veya telefonunuza kaydedin.",
-  "whatsNewLinkSyncTitle": "Senkron kalın",
-  "whatsNewLinkSyncBody": "Koleksiyonlar ve dinleme geçmişi eşleştirilmiş cihazlarda aynı kalır.",
   "whatsNewHomeTitle": "Öğrenen bir Ana sayfa",
   "whatsNewHomeDesc": "Mix'ler ve otomatik oynatma artık gerçekte nasıl dinlediğinizi izliyor.",
   "whatsNewHomeMixesTitle": "Kitaplığınızdan mix'ler",

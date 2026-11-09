@@ -86,8 +86,8 @@ class _WhatsNewScreenState extends ConsumerState<WhatsNewScreen> {
     if (_page > 0) _goTo(_page - 1);
   }
 
-  /// Skip never passes an unanswered Nearby devices page: Link cannot find a
-  /// computer on Android 17 without it.
+  /// Skip never passes an unanswered Nearby devices page: network storage
+  /// cannot find servers on Android 17 without it.
   void _skip(int nearbyPage) {
     if (nearbyPage > _page && _nearbyAllowed == null) {
       _goTo(nearbyPage);
@@ -248,7 +248,7 @@ class _WhatsNewScreenState extends ConsumerState<WhatsNewScreen> {
                         ),
                         child: Text(
                           gated
-                              ? l10n.whatsNewLinkNearbyAllow
+                              ? l10n.whatsNewNearbyAllow
                               : last
                               ? l10n.whatsNewDone
                               : l10n.upgradeIntroContinue,
@@ -525,7 +525,7 @@ class WhatsNewHighlight {
   final List<WhatsNewFeature> features;
 
   /// The page that asks for Android's Nearby devices permission, which
-  /// Mornye Link and network storage need from Android 17.
+  /// network storage needs from Android 17.
   final bool nearbyDevices;
 }
 
@@ -542,7 +542,7 @@ class WhatsNewFeature {
 
 /// The tour for [AppInfo.whatsNewRelease]: an overview, then one page per
 /// area. Android Auto and exclusive output appear only where they exist;
-/// [nearbyDevices] adds the Nearby devices page right after Mornye Link.
+/// [nearbyDevices] adds the Nearby devices page right after the overview.
 @visibleForTesting
 List<WhatsNewHighlight> whatsNewHighlights(
   AppLocalizations l10n, {
@@ -551,28 +551,6 @@ List<WhatsNewHighlight> whatsNewHighlights(
 }) {
   final showAndroidAuto = androidPhone ?? (Platform.isAndroid && !isAndroidTv);
   final sections = [
-    WhatsNewHighlight(
-      icon: Icons.computer,
-      title: l10n.whatsNewLinkTitle,
-      description: l10n.whatsNewLinkDesc,
-      features: [
-        WhatsNewFeature(
-          Icons.play_circle,
-          l10n.whatsNewLinkPlayTitle,
-          l10n.whatsNewLinkPlayBody,
-        ),
-        WhatsNewFeature(
-          Icons.swap_horiz,
-          l10n.whatsNewLinkTransferTitle,
-          l10n.whatsNewLinkTransferBody,
-        ),
-        WhatsNewFeature(
-          Icons.sync,
-          l10n.whatsNewLinkSyncTitle,
-          l10n.whatsNewLinkSyncBody,
-        ),
-      ],
-    ),
     WhatsNewHighlight(
       icon: Icons.auto_awesome,
       title: l10n.whatsNewHomeTitle,
@@ -688,7 +666,6 @@ List<WhatsNewHighlight> whatsNewHighlights(
           WhatsNewFeature(section.icon, section.title),
       ],
     ),
-    sections.first,
     // A setup step rather than a highlight, so the overview leaves it out.
     if (nearbyDevices)
       WhatsNewHighlight(
@@ -697,11 +674,6 @@ List<WhatsNewHighlight> whatsNewHighlights(
         description: l10n.whatsNewNearbyDesc,
         nearbyDevices: true,
         features: [
-          WhatsNewFeature(
-            Icons.computer,
-            l10n.whatsNewNearbyLinkTitle,
-            l10n.whatsNewNearbyLinkBody,
-          ),
           WhatsNewFeature(
             Icons.dns,
             l10n.whatsNewNearbyStorageTitle,
@@ -714,7 +686,7 @@ List<WhatsNewHighlight> whatsNewHighlights(
           ),
         ],
       ),
-    ...sections.skip(1),
+    ...sections,
   ];
 }
 
@@ -860,7 +832,7 @@ class _NearbyStatus extends StatelessWidget {
           Expanded(
             child: Text(
               allowed
-                  ? l10n.whatsNewLinkNearbyGranted
+                  ? l10n.whatsNewNearbyGranted
                   : l10n.whatsNewNearbyRefused,
               style: theme.textTheme.titleSmall?.copyWith(color: color),
             ),
