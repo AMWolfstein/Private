@@ -144,7 +144,7 @@ extension _LocalLibraryScan on LocalLibraryNotifier {
       final result = await _db.replaceSourceScanFile(
         sourceId,
         scanFile,
-        requestId: _nativeLibraryRequestId ?? 'desktop-library-scan',
+        requestId: _nativeLibraryRequestId ?? 'library-scan',
         isCancelled: () => _scanCancelRequested || !ref.mounted,
       );
       _log.i(

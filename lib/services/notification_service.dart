@@ -77,14 +77,14 @@ class NotificationService {
 
   /// Each upload owns its lease, so finishing one cannot stop another.
   Future<Future<void> Function()> acquireLinkTransferWork(
-    String desktopName,
+    String deviceName,
   ) async {
     final kind = 'link_transfer_${_linkTransferSequence++}';
     await beginBackgroundWork(
       kind,
       title:
-          _l10n?.linkHandoffSending(desktopName) ??
-          'Sending this song to $desktopName...',
+          _l10n?.linkHandoffSending(deviceName) ??
+          'Sending this song to $deviceName...',
     );
     var released = false;
     return () async {
@@ -157,26 +157,9 @@ class NotificationService {
     const androidSettings = AndroidInitializationSettings(
       '@drawable/ic_notification_mornye',
     );
-    const iosSettings = DarwinInitializationSettings(
-      requestAlertPermission: false,
-      requestBadgePermission: false,
-      requestSoundPermission: false,
-    );
-    const linuxSettings = LinuxInitializationSettings(
-      defaultActionName: 'Open',
-    );
-    const windowsSettings = WindowsInitializationSettings(
-      appName: AppInfo.appName,
-      appUserModelId: windowsAppUserModelId,
-      guid: windowsNotificationGuid,
-    );
 
     const initSettings = InitializationSettings(
       android: androidSettings,
-      iOS: iosSettings,
-      macOS: iosSettings,
-      linux: linuxSettings,
-      windows: windowsSettings,
     );
 
     await _notifications.initialize(
@@ -299,16 +282,6 @@ class NotificationService {
         enableVibration: !inProgress,
         onlyAlertOnce: inProgress,
         icon: '@drawable/ic_notification_mornye',
-      ),
-      iOS: DarwinNotificationDetails(
-        presentAlert: !inProgress,
-        presentBadge: presentBadge,
-        presentSound: presentSound,
-      ),
-      macOS: DarwinNotificationDetails(
-        presentAlert: !inProgress,
-        presentBadge: presentBadge,
-        presentSound: presentSound,
       ),
     );
   }

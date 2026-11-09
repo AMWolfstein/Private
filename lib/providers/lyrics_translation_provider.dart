@@ -30,7 +30,6 @@ class SecureLyricsAiKeyStore implements LyricsAiKeyStore {
 
   static const _storage = FlutterSecureStorage(
     aOptions: secureStorageAndroidOptions,
-    mOptions: secureStorageMacOsOptions,
   );
 
   static String _key(String provider) => 'lyrics_ai_api_key_$provider';

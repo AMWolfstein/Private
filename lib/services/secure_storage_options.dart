@@ -10,8 +10,3 @@ const secureStorageAndroidOptions = AndroidOptions(
   storageCipherAlgorithm: StorageCipherAlgorithm.AES_GCM_NoPadding,
 );
 
-// The data protection keychain needs a signed keychain-access-groups
-// entitlement; the login keychain works for Developer ID and local builds.
-const secureStorageMacOsOptions = MacOsOptions(
-  usesDataProtectionKeychain: false,
-);

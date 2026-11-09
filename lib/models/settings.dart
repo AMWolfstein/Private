@@ -209,7 +209,7 @@ class AppSettings {
   final bool localLibraryEnabled;
   final String localLibraryPath;
   final String
-  localLibraryBookmark; // Base64-encoded iOS security-scoped bookmark
+  localLibraryBookmark; // Base64-encoded bookmark of the library folder
   final bool localLibraryShowDuplicates;
   final String
   localLibraryAutoScan; // Auto-scan mode: 'off', 'on_open', 'daily', 'weekly'

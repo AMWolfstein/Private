@@ -224,7 +224,7 @@ Future<int> _pruneUnreferencedLibraryCovers(
   }
   if (privateSnapshotPath != null) {
     throw StateError(
-      'The desktop cache adapter requires explicit cover references',
+      'The cache adapter requires explicit cover references',
     );
   }
   final path = directory.path;

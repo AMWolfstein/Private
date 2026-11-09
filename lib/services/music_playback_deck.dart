@@ -10,11 +10,6 @@ import 'package:mornye/services/playback_equalizer.dart';
 
 final _log = AppLogger('AudioOutput');
 
-/// The fork then prepares it without indexing its timing first, which would
-/// read to the end of a file still being written and time out (see
-@visibleForTesting
-String darwinArrivingUrl(String url) => '$url#mornye-arriving';
-
 /// Only verified native playback reports active. File metadata alone never does.
 final usbAudioStatus = ValueNotifier<UsbAudioStatus>(const UsbAudioStatus());
 
