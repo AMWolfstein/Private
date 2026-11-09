@@ -920,7 +920,7 @@
   "@setupNearbyEnable": {
     "description": "Setup step title and button for the Android Nearby devices permission; Nearby devices is the Android permission name"
   },
-  "setupNearbyDescription": "Mornye Link uses it to find your computer on the same network, and network storage needs it to reach a server at home.",
+  "setupNearbyDescription": "Network storage needs it to reach a server at home.",
   "@setupNearbyDescription": {
     "description": "Setup step explaining why Android's Nearby devices permission is needed"
   },

@@ -904,7 +904,7 @@
     "description": "Skip button text"
   },
   "setupNearbyEnable": "Izinkan Perangkat di Sekitar",
-  "setupNearbyDescription": "Mornye Link memakainya untuk menemukan komputermu di jaringan yang sama, dan penyimpanan jaringan memerlukannya untuk menjangkau server di rumah.",
+  "setupNearbyDescription": "Penyimpanan jaringan memerlukannya untuk menjangkau server di rumah.",
   "setupNearbyGranted": "Perangkat di Sekitar Diizinkan!",
   "permissionNearbyDevices": "Perangkat di sekitar",
   "whatsNewNearbyAllow": "Izinkan perangkat di sekitar",

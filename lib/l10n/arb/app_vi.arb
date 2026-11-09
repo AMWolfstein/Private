@@ -920,7 +920,7 @@
   "@setupNearbyEnable": {
     "description": "Setup step title and button for the Android Nearby devices permission; Nearby devices is the Android permission name"
   },
-  "setupNearbyDescription": "Mornye Link dùng tính năng này để tìm máy tính của bạn trên cùng mạng, và lưu trữ mạng cần nó để kết nối tới máy chủ tại nhà.",
+  "setupNearbyDescription": "Lưu trữ mạng cần nó để kết nối tới máy chủ tại nhà.",
   "@setupNearbyDescription": {
     "description": "Setup step explaining why Android's Nearby devices permission is needed"
   },

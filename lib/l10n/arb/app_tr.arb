@@ -920,7 +920,7 @@
   "@setupNearbyEnable": {
     "description": "Setup step title and button for the Android Nearby devices permission; Nearby devices is the Android permission name"
   },
-  "setupNearbyDescription": "Mornye Link bunu aynı ağdaki bilgisayarınızı bulmak için, ağ depolaması ise evdeki bir sunucuya ulaşmak için kullanır.",
+  "setupNearbyDescription": "Ağ depolaması ise evdeki bir sunucuya ulaşmak için kullanır.",
   "@setupNearbyDescription": {
     "description": "Setup step explaining why Android's Nearby devices permission is needed"
   },
