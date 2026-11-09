@@ -156,9 +156,8 @@ android {
 
     splits {
         abi {
-            isEnable = true
+            isEnable = false
             reset()
-            include(*rustAndroidAbis.toTypedArray())
         }
     }
 }
