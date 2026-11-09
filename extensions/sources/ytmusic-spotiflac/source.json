@@ -1,0 +1,359 @@
+{
+  "id": "ytmusic-spotiflac",
+  "upstream_version": "2.4.6",
+  "upstream_repository": "https://github.com/mornyeapp/Mornye-Extension",
+  "upstream_commit": "12530ceda46dc78a10f9258b7d65a71452dfcf50",
+  "upstream_path": "sources/ytmusic-spotiflac/index.js",
+  "upstream_sha256": "e75810e141dcf3eb1ad337e444a9173dd5cc60ff3d7e8f42091e5c8fc4bfb336",
+  "extracted_sha256": "5db33ec0c1a7703ea8eea22e57aca740d2f7a9313548a6aca339934116ab4e7b",
+  "capabilities": [
+    "artist_artwork"
+  ],
+  "exported_methods": [
+    "cleanup",
+    "getArtistArtwork",
+    "initialize"
+  ],
+  "retained_declarations": [
+    {
+      "names": [
+        "CONFIG"
+      ],
+      "upstream_start_line": 1,
+      "upstream_end_line": 29
+    },
+    {
+      "names": [
+        "USER_AGENTS"
+      ],
+      "upstream_start_line": 31,
+      "upstream_end_line": 42
+    },
+    {
+      "names": [
+        "getRandomUserAgent"
+      ],
+      "upstream_start_line": 44,
+      "upstream_end_line": 46
+    },
+    {
+      "names": [
+        "readSetting"
+      ],
+      "upstream_start_line": 62,
+      "upstream_end_line": 67
+    },
+    {
+      "names": [
+        "LOG_LEVELS"
+      ],
+      "upstream_start_line": 69,
+      "upstream_end_line": 69
+    },
+    {
+      "names": [
+        "normalizeLogLevel"
+      ],
+      "upstream_start_line": 71,
+      "upstream_end_line": 78
+    },
+    {
+      "names": [
+        "L"
+      ],
+      "upstream_start_line": 80,
+      "upstream_end_line": 91
+    },
+    {
+      "names": [
+        "now"
+      ],
+      "upstream_start_line": 93,
+      "upstream_end_line": 95
+    },
+    {
+      "names": [
+        "_cache"
+      ],
+      "upstream_start_line": 97,
+      "upstream_end_line": 97
+    },
+    {
+      "names": [
+        "cacheSet"
+      ],
+      "upstream_start_line": 110,
+      "upstream_end_line": 117
+    },
+    {
+      "names": [
+        "_poTokenCache"
+      ],
+      "upstream_start_line": 119,
+      "upstream_end_line": 119
+    },
+    {
+      "names": [
+        "_inflight"
+      ],
+      "upstream_start_line": 148,
+      "upstream_end_line": 148
+    },
+    {
+      "names": [
+        "isString"
+      ],
+      "upstream_start_line": 203,
+      "upstream_end_line": 205
+    },
+    {
+      "names": [
+        "normalizeUrl"
+      ],
+      "upstream_start_line": 207,
+      "upstream_end_line": 229
+    },
+    {
+      "names": [
+        "normalizePoTokenProviderURL"
+      ],
+      "upstream_start_line": 537,
+      "upstream_end_line": 549
+    },
+    {
+      "names": [
+        "makeSquareThumb"
+      ],
+      "upstream_start_line": 1744,
+      "upstream_end_line": 1758
+    },
+    {
+      "names": [
+        "parseDurationText"
+      ],
+      "upstream_start_line": 1760,
+      "upstream_end_line": 1776
+    },
+    {
+      "names": [
+        "extractVideoIdFromEndpoint"
+      ],
+      "upstream_start_line": 1778,
+      "upstream_end_line": 1799
+    },
+    {
+      "names": [
+        "extractBrowseInfoFromEndpoint"
+      ],
+      "upstream_start_line": 1801,
+      "upstream_end_line": 1822
+    },
+    {
+      "names": [
+        "normalizeCandidate"
+      ],
+      "upstream_start_line": 1824,
+      "upstream_end_line": 1835
+    },
+    {
+      "names": [
+        "pickLastThumbnailUrl"
+      ],
+      "upstream_start_line": 1837,
+      "upstream_end_line": 1857
+    },
+    {
+      "names": [
+        "runsText"
+      ],
+      "upstream_start_line": 1859,
+      "upstream_end_line": 1867
+    },
+    {
+      "names": [
+        "uniqueStrings"
+      ],
+      "upstream_start_line": 1869,
+      "upstream_end_line": 1880
+    },
+    {
+      "names": [
+        "browsePageType"
+      ],
+      "upstream_start_line": 1911,
+      "upstream_end_line": 1920
+    },
+    {
+      "names": [
+        "collectTrackReferences"
+      ],
+      "upstream_start_line": 1922,
+      "upstream_end_line": 1982
+    },
+    {
+      "names": [
+        "hasExplicitBadge"
+      ],
+      "upstream_start_line": 1984,
+      "upstream_end_line": 2011
+    },
+    {
+      "names": [
+        "parseItemExtended"
+      ],
+      "upstream_start_line": 2013,
+      "upstream_end_line": 2451
+    },
+    {
+      "names": [
+        "parseCollectionItem"
+      ],
+      "upstream_start_line": 2453,
+      "upstream_end_line": 2624
+    },
+    {
+      "names": [
+        "COLLECT_ITEMS_MAX"
+      ],
+      "upstream_start_line": 2731,
+      "upstream_end_line": 2731
+    },
+    {
+      "names": [
+        "collectItemsFromNode"
+      ],
+      "upstream_start_line": 2733,
+      "upstream_end_line": 2769
+    },
+    {
+      "names": [
+        "sanitizeTrackBeforeReturn"
+      ],
+      "upstream_start_line": 3043,
+      "upstream_end_line": 3100
+    },
+    {
+      "names": [
+        "sanitizeCollectionBeforeReturn"
+      ],
+      "upstream_start_line": 3150,
+      "upstream_end_line": 3180
+    },
+    {
+      "names": [
+        "getArtist"
+      ],
+      "upstream_start_line": 4936,
+      "upstream_end_line": 5167
+    },
+    {
+      "names": [
+        "findSectionList"
+      ],
+      "upstream_start_line": 5169,
+      "upstream_end_line": 5200
+    }
+  ],
+  "referenced_globals": [
+    "Array",
+    "Date",
+    "JSON",
+    "Map",
+    "Math",
+    "Number",
+    "Object",
+    "String",
+    "URL",
+    "fetch",
+    "isNaN",
+    "log",
+    "parseFloat",
+    "parseInt",
+    "undefined"
+  ],
+  "upstream_permissions": {
+    "network": [
+      "music.youtube.com",
+      "*.youtube.com",
+      "www.youtube.com",
+      "i.ytimg.com",
+      "*.googlevideo.com",
+      "*.pictube.app",
+      "api.zarz.moe",
+      "127.0.0.1",
+      "localhost",
+      "api.deezer.com",
+      "yt1d.io"
+    ],
+    "allowHttp": true,
+    "storage": true,
+    "file": true
+  },
+  "upstream_settings": [
+    {
+      "key": "homeCountry",
+      "label": "Home feed country",
+      "type": "select",
+      "default": "ID",
+      "options": [
+        "US",
+        "GB",
+        "JP",
+        "ID",
+        "KR",
+        "FR",
+        "DE",
+        "IT",
+        "ES",
+        "IN",
+        "BR",
+        "MX",
+        "AU",
+        "CA"
+      ],
+      "description": "Country used for Home recommendations. No VPN is required."
+    },
+    {
+      "key": "poTokenMode",
+      "label": "PO Token Mode",
+      "type": "select",
+      "default": "off",
+      "options": [
+        "off",
+        "auto",
+        "external",
+        "manual"
+      ],
+      "description": "Optional GVS PO Token support. Keep off unless direct YouTube downloads start returning 403."
+    },
+    {
+      "key": "poTokenProviderUrl",
+      "label": "PO Token Provider URL",
+      "type": "string",
+      "default": "",
+      "description": "Optional BgUtils-compatible provider base URL or /get_pot endpoint. Used for fresh GVS PO tokens when direct YouTube downloads need them."
+    },
+    {
+      "key": "manualGvsPoToken",
+      "label": "Manual GVS PO Token",
+      "type": "string",
+      "default": "",
+      "secret": true,
+      "description": "Optional raw token or CLIENT.gvs+TOKEN. Manual tokens may expire or be video-bound."
+    },
+    {
+      "key": "logLevel",
+      "label": "Log Level",
+      "type": "select",
+      "default": "warn",
+      "options": [
+        "error",
+        "warn",
+        "info",
+        "debug"
+      ],
+      "description": "Controls extension logging verbosity. Use debug only while diagnosing YouTube Music issues."
+    }
+  ],
+  "integration_status": "source-only; not installed or loaded by the app"
+}

@@ -1,0 +1,10 @@
+{
+  "name": "mornye-internal-source-import-tools",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Development-only parser tools for reviewing upstream source imports",
+  "devDependencies": {
+    "acorn": "8.15.0",
+    "eslint-scope": "8.4.0"
+  }
+}

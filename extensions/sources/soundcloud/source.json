@@ -1,0 +1,179 @@
+{
+  "id": "soundcloud",
+  "upstream_version": "1.0.14",
+  "upstream_repository": "https://github.com/mornyeapp/Mornye-Extension",
+  "upstream_commit": "12530ceda46dc78a10f9258b7d65a71452dfcf50",
+  "upstream_path": "sources/soundcloud/index.js",
+  "upstream_sha256": "aad22a7718d88bbc07fd7dcf6c812898eb63ebb8a824372675795f2041dc2d85",
+  "extracted_sha256": "001adb18147ed3a113a4438436411783538316d06b44948ca72a41b67fd7fd12",
+  "capabilities": [
+    "artist_artwork"
+  ],
+  "exported_methods": [
+    "cleanup",
+    "getArtistArtwork",
+    "initialize"
+  ],
+  "retained_declarations": [
+    {
+      "names": [
+        "SC_API"
+      ],
+      "upstream_start_line": 11,
+      "upstream_end_line": 11
+    },
+    {
+      "names": [
+        "TRACK_CACHE"
+      ],
+      "upstream_start_line": 14,
+      "upstream_end_line": 14
+    },
+    {
+      "names": [
+        "state"
+      ],
+      "upstream_start_line": 16,
+      "upstream_end_line": 20
+    },
+    {
+      "names": [
+        "initialize"
+      ],
+      "upstream_start_line": 26,
+      "upstream_end_line": 45
+    },
+    {
+      "names": [
+        "cleanup"
+      ],
+      "upstream_start_line": 47,
+      "upstream_end_line": 50
+    },
+    {
+      "names": [
+        "persistSoundCloudState"
+      ],
+      "upstream_start_line": 52,
+      "upstream_end_line": 60
+    },
+    {
+      "names": [
+        "soundCloudResponseError"
+      ],
+      "upstream_start_line": 97,
+      "upstream_end_line": 101
+    },
+    {
+      "names": [
+        "soundCloudGet"
+      ],
+      "upstream_start_line": 103,
+      "upstream_end_line": 120
+    },
+    {
+      "names": [
+        "fetchClientId"
+      ],
+      "upstream_start_line": 122,
+      "upstream_end_line": 224
+    },
+    {
+      "names": [
+        "ensureClientId"
+      ],
+      "upstream_start_line": 226,
+      "upstream_end_line": 230
+    },
+    {
+      "names": [
+        "scGet"
+      ],
+      "upstream_start_line": 236,
+      "upstream_end_line": 278
+    },
+    {
+      "names": [
+        "hiResArtwork"
+      ],
+      "upstream_start_line": 290,
+      "upstream_end_line": 293
+    },
+    {
+      "names": [
+        "originalArtwork"
+      ],
+      "upstream_start_line": 295,
+      "upstream_end_line": 298
+    },
+    {
+      "names": [
+        "formatTrack"
+      ],
+      "upstream_start_line": 304,
+      "upstream_end_line": 341
+    },
+    {
+      "names": [
+        "formatPlaylistOrAlbum"
+      ],
+      "upstream_start_line": 343,
+      "upstream_end_line": 374
+    },
+    {
+      "names": [
+        "formatUser"
+      ],
+      "upstream_start_line": 376,
+      "upstream_end_line": 391
+    },
+    {
+      "names": [
+        "formatDate"
+      ],
+      "upstream_start_line": 393,
+      "upstream_end_line": 396
+    },
+    {
+      "names": [
+        "fetchArtist"
+      ],
+      "upstream_start_line": 477,
+      "upstream_end_line": 538
+    },
+    {
+      "names": [
+        "getArtist"
+      ],
+      "upstream_start_line": 1351,
+      "upstream_end_line": 1359
+    }
+  ],
+  "referenced_globals": [
+    "Array",
+    "Date",
+    "Error",
+    "JSON",
+    "Map",
+    "Math",
+    "String",
+    "http",
+    "log",
+    "storage",
+    "utils"
+  ],
+  "upstream_permissions": {
+    "network": [
+      "soundcloud.com",
+      "api-v2.soundcloud.com",
+      "*.sndcdn.com",
+      "*.media-streaming.soundcloud.cloud",
+      "on.soundcloud.com",
+      "m.soundcloud.com"
+    ],
+    "storage": true,
+    "file": true
+  },
+  "upstream_settings": [],
+  "integration_status": "source-only; not installed or loaded by the app"
+}

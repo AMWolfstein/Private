@@ -1,0 +1,695 @@
+{
+  "id": "apple-music",
+  "upstream_version": "1.4.17",
+  "upstream_repository": "https://github.com/mornyeapp/Mornye-Extension",
+  "upstream_commit": "12530ceda46dc78a10f9258b7d65a71452dfcf50",
+  "upstream_path": "sources/apple-music/index.js",
+  "upstream_sha256": "236968c299035b1cc95e9ba488d773a577d4c5bf90654595155ec4bc97c72948",
+  "extracted_sha256": "18e5c466939c1ba49d439114246c97ee35b1b767bbf0ad468a1fbcf8104c9c1e",
+  "capabilities": [
+    "artist_artwork",
+    "motion_artwork",
+    "lyrics"
+  ],
+  "exported_methods": [
+    "cleanup",
+    "fetchLyrics",
+    "getAlbumArtwork",
+    "getArtistArtwork",
+    "initialize"
+  ],
+  "retained_declarations": [
+    {
+      "names": [
+        "API_BASE"
+      ],
+      "upstream_start_line": 16,
+      "upstream_end_line": 16
+    },
+    {
+      "names": [
+        "CACHE_MAX_ENTRIES"
+      ],
+      "upstream_start_line": 17,
+      "upstream_end_line": 17
+    },
+    {
+      "names": [
+        "METADATA_CACHE_TTL_MS"
+      ],
+      "upstream_start_line": 18,
+      "upstream_end_line": 18
+    },
+    {
+      "names": [
+        "SEARCH_CACHE_TTL_MS"
+      ],
+      "upstream_start_line": 19,
+      "upstream_end_line": 19
+    },
+    {
+      "names": [
+        "LYRICS_CACHE_TTL_MS"
+      ],
+      "upstream_start_line": 20,
+      "upstream_end_line": 20
+    },
+    {
+      "names": [
+        "NEGATIVE_CACHE_TTL_MS"
+      ],
+      "upstream_start_line": 21,
+      "upstream_end_line": 21
+    },
+    {
+      "names": [
+        "API_MAX_ATTEMPTS"
+      ],
+      "upstream_start_line": 22,
+      "upstream_end_line": 22
+    },
+    {
+      "names": [
+        "RETRY_BASE_DELAY_MS"
+      ],
+      "upstream_start_line": 23,
+      "upstream_end_line": 23
+    },
+    {
+      "names": [
+        "RETRY_MAX_DELAY_MS"
+      ],
+      "upstream_start_line": 24,
+      "upstream_end_line": 24
+    },
+    {
+      "names": [
+        "RETRY_MAX_SERVER_DELAY_MS"
+      ],
+      "upstream_start_line": 25,
+      "upstream_end_line": 25
+    },
+    {
+      "names": [
+        "MIN_TRACK_MATCH_SCORE"
+      ],
+      "upstream_start_line": 26,
+      "upstream_end_line": 26
+    },
+    {
+      "names": [
+        "CACHE_MISS"
+      ],
+      "upstream_start_line": 30,
+      "upstream_end_line": 30
+    },
+    {
+      "names": [
+        "MEMORY_CACHE"
+      ],
+      "upstream_start_line": 31,
+      "upstream_end_line": 31
+    },
+    {
+      "names": [
+        "state"
+      ],
+      "upstream_start_line": 33,
+      "upstream_end_line": 40
+    },
+    {
+      "names": [
+        "initialize"
+      ],
+      "upstream_start_line": 42,
+      "upstream_end_line": 72
+    },
+    {
+      "names": [
+        "persistState"
+      ],
+      "upstream_start_line": 74,
+      "upstream_end_line": 84
+    },
+    {
+      "names": [
+        "cleanup"
+      ],
+      "upstream_start_line": 86,
+      "upstream_end_line": 90
+    },
+    {
+      "names": [
+        "scopedCacheKey"
+      ],
+      "upstream_start_line": 92,
+      "upstream_end_line": 94
+    },
+    {
+      "names": [
+        "cacheGet"
+      ],
+      "upstream_start_line": 96,
+      "upstream_end_line": 106
+    },
+    {
+      "names": [
+        "cacheSet"
+      ],
+      "upstream_start_line": 108,
+      "upstream_end_line": 119
+    },
+    {
+      "names": [
+        "rememberCacheMiss"
+      ],
+      "upstream_start_line": 121,
+      "upstream_end_line": 124
+    },
+    {
+      "names": [
+        "operationCancelled"
+      ],
+      "upstream_start_line": 126,
+      "upstream_end_line": 135
+    },
+    {
+      "names": [
+        "cancellableSleep"
+      ],
+      "upstream_start_line": 137,
+      "upstream_end_line": 149
+    },
+    {
+      "names": [
+        "responseHeader"
+      ],
+      "upstream_start_line": 151,
+      "upstream_end_line": 160
+    },
+    {
+      "names": [
+        "retryAfterMilliseconds"
+      ],
+      "upstream_start_line": 162,
+      "upstream_end_line": 170
+    },
+    {
+      "names": [
+        "retryableStatus"
+      ],
+      "upstream_start_line": 172,
+      "upstream_end_line": 174
+    },
+    {
+      "names": [
+        "retryableNetworkError"
+      ],
+      "upstream_start_line": 176,
+      "upstream_end_line": 184
+    },
+    {
+      "names": [
+        "waitBeforeRetry"
+      ],
+      "upstream_start_line": 186,
+      "upstream_end_line": 195
+    },
+    {
+      "names": [
+        "httpGetWithRetry"
+      ],
+      "upstream_start_line": 197,
+      "upstream_end_line": 230
+    },
+    {
+      "names": [
+        "fetchToken"
+      ],
+      "upstream_start_line": 236,
+      "upstream_end_line": 302
+    },
+    {
+      "names": [
+        "extractJWTFromString"
+      ],
+      "upstream_start_line": 308,
+      "upstream_end_line": 339
+    },
+    {
+      "names": [
+        "parseTokenExpiry"
+      ],
+      "upstream_start_line": 341,
+      "upstream_end_line": 358
+    },
+    {
+      "names": [
+        "ensureToken"
+      ],
+      "upstream_start_line": 360,
+      "upstream_end_line": 364
+    },
+    {
+      "names": [
+        "apiGet"
+      ],
+      "upstream_start_line": 370,
+      "upstream_end_line": 435
+    },
+    {
+      "names": [
+        "apiGetWithUserToken"
+      ],
+      "upstream_start_line": 442,
+      "upstream_end_line": 518
+    },
+    {
+      "names": [
+        "artworkURL"
+      ],
+      "upstream_start_line": 520,
+      "upstream_end_line": 525
+    },
+    {
+      "names": [
+        "previewURL"
+      ],
+      "upstream_start_line": 527,
+      "upstream_end_line": 531
+    },
+    {
+      "names": [
+        "MOTION_VIDEO_KEYS"
+      ],
+      "upstream_start_line": 558,
+      "upstream_end_line": 570
+    },
+    {
+      "names": [
+        "motionArtworkIsTallKey"
+      ],
+      "upstream_start_line": 572,
+      "upstream_end_line": 574
+    },
+    {
+      "names": [
+        "motionArtworkVideoURL"
+      ],
+      "upstream_start_line": 578,
+      "upstream_end_line": 587
+    },
+    {
+      "names": [
+        "motionArtworkPreviewHeight"
+      ],
+      "upstream_start_line": 589,
+      "upstream_end_line": 608
+    },
+    {
+      "names": [
+        "motionArtworkPreviewURL"
+      ],
+      "upstream_start_line": 612,
+      "upstream_end_line": 626
+    },
+    {
+      "names": [
+        "artistHeaderArtwork"
+      ],
+      "upstream_start_line": 631,
+      "upstream_end_line": 639
+    },
+    {
+      "names": [
+        "artistNameArtworkURL"
+      ],
+      "upstream_start_line": 641,
+      "upstream_end_line": 653
+    },
+    {
+      "names": [
+        "uniqueValues"
+      ],
+      "upstream_start_line": 704,
+      "upstream_end_line": 716
+    },
+    {
+      "names": [
+        "appleGenres"
+      ],
+      "upstream_start_line": 718,
+      "upstream_end_line": 723
+    },
+    {
+      "names": [
+        "appleAlbumType"
+      ],
+      "upstream_start_line": 725,
+      "upstream_end_line": 730
+    },
+    {
+      "names": [
+        "appleAudioQuality"
+      ],
+      "upstream_start_line": 732,
+      "upstream_end_line": 741
+    },
+    {
+      "names": [
+        "appleAudioModes"
+      ],
+      "upstream_start_line": 743,
+      "upstream_end_line": 749
+    },
+    {
+      "names": [
+        "firstRelationshipItem"
+      ],
+      "upstream_start_line": 751,
+      "upstream_end_line": 755
+    },
+    {
+      "names": [
+        "appleArtistURL"
+      ],
+      "upstream_start_line": 757,
+      "upstream_end_line": 759
+    },
+    {
+      "names": [
+        "appleAlbumURL"
+      ],
+      "upstream_start_line": 761,
+      "upstream_end_line": 767
+    },
+    {
+      "names": [
+        "totalDiscsFromSongs"
+      ],
+      "upstream_start_line": 769,
+      "upstream_end_line": 777
+    },
+    {
+      "names": [
+        "albumIDFromSong"
+      ],
+      "upstream_start_line": 779,
+      "upstream_end_line": 785
+    },
+    {
+      "names": [
+        "formatSong"
+      ],
+      "upstream_start_line": 787,
+      "upstream_end_line": 859
+    },
+    {
+      "names": [
+        "formatAlbumInfo"
+      ],
+      "upstream_start_line": 861,
+      "upstream_end_line": 905
+    },
+    {
+      "names": [
+        "collectRelationshipItems"
+      ],
+      "upstream_start_line": 911,
+      "upstream_end_line": 929
+    },
+    {
+      "names": [
+        "hydrateAlbumsForSongs"
+      ],
+      "upstream_start_line": 931,
+      "upstream_end_line": 972
+    },
+    {
+      "names": [
+        "fetchAlbum"
+      ],
+      "upstream_start_line": 1035,
+      "upstream_end_line": 1083
+    },
+    {
+      "names": [
+        "fetchArtist"
+      ],
+      "upstream_start_line": 1146,
+      "upstream_end_line": 1225
+    },
+    {
+      "names": [
+        "artistAlbumsNext"
+      ],
+      "upstream_start_line": 1227,
+      "upstream_end_line": 1231
+    },
+    {
+      "names": [
+        "parseArtistConcerts"
+      ],
+      "upstream_start_line": 1233,
+      "upstream_end_line": 1275
+    },
+    {
+      "names": [
+        "fetchArtistConcerts"
+      ],
+      "upstream_start_line": 1277,
+      "upstream_end_line": 1292
+    },
+    {
+      "names": [
+        "sortAlbumsNewestFirst"
+      ],
+      "upstream_start_line": 1374,
+      "upstream_end_line": 1386
+    },
+    {
+      "names": [
+        "formatArtistAlbums"
+      ],
+      "upstream_start_line": 1388,
+      "upstream_end_line": 1405
+    },
+    {
+      "names": [
+        "searchAppleSongs"
+      ],
+      "upstream_start_line": 1578,
+      "upstream_end_line": 1594
+    },
+    {
+      "names": [
+        "scoreAppleSongMatch"
+      ],
+      "upstream_start_line": 1596,
+      "upstream_end_line": 1626
+    },
+    {
+      "names": [
+        "findBestMatch"
+      ],
+      "upstream_start_line": 1628,
+      "upstream_end_line": 1651
+    },
+    {
+      "names": [
+        "normalizeText"
+      ],
+      "upstream_start_line": 1693,
+      "upstream_end_line": 1699
+    },
+    {
+      "names": [
+        "getAlbum"
+      ],
+      "upstream_start_line": 2009,
+      "upstream_end_line": 2046
+    },
+    {
+      "names": [
+        "getArtist"
+      ],
+      "upstream_start_line": 2048,
+      "upstream_end_line": 2056
+    },
+    {
+      "names": [
+        "decodeBase64URL"
+      ],
+      "upstream_start_line": 2093,
+      "upstream_end_line": 2099
+    },
+    {
+      "names": [
+        "atob"
+      ],
+      "upstream_start_line": 2101,
+      "upstream_end_line": 2124
+    },
+    {
+      "names": [
+        "parseTTMLTime"
+      ],
+      "upstream_start_line": 2134,
+      "upstream_end_line": 2161
+    },
+    {
+      "names": [
+        "msToInlineLRC"
+      ],
+      "upstream_start_line": 2166,
+      "upstream_end_line": 2174
+    },
+    {
+      "names": [
+        "extractAttr"
+      ],
+      "upstream_start_line": 2180,
+      "upstream_end_line": 2191
+    },
+    {
+      "names": [
+        "decodeXMLEntities"
+      ],
+      "upstream_start_line": 2196,
+      "upstream_end_line": 2210
+    },
+    {
+      "names": [
+        "stripXMLTags"
+      ],
+      "upstream_start_line": 2215,
+      "upstream_end_line": 2217
+    },
+    {
+      "names": [
+        "extractNestedSpan"
+      ],
+      "upstream_start_line": 2224,
+      "upstream_end_line": 2270
+    },
+    {
+      "names": [
+        "collectRoleSpans"
+      ],
+      "upstream_start_line": 2277,
+      "upstream_end_line": 2292
+    },
+    {
+      "names": [
+        "removeRoleSpans"
+      ],
+      "upstream_start_line": 2299,
+      "upstream_end_line": 2301
+    },
+    {
+      "names": [
+        "parseTTML"
+      ],
+      "upstream_start_line": 2315,
+      "upstream_end_line": 2563
+    },
+    {
+      "names": [
+        "ttmlToLyricsResult"
+      ],
+      "upstream_start_line": 2569,
+      "upstream_end_line": 2694
+    },
+    {
+      "names": [
+        "fetchLyrics"
+      ],
+      "upstream_start_line": 2708,
+      "upstream_end_line": 2765
+    },
+    {
+      "names": [
+        "findTrackId"
+      ],
+      "upstream_start_line": 2770,
+      "upstream_end_line": 2789
+    }
+  ],
+  "referenced_globals": [
+    "Array",
+    "Date",
+    "Error",
+    "JSON",
+    "Map",
+    "Math",
+    "Number",
+    "Object",
+    "RegExp",
+    "String",
+    "encodeURIComponent",
+    "http",
+    "isNaN",
+    "log",
+    "matching",
+    "parseFloat",
+    "parseInt",
+    "storage",
+    "undefined",
+    "utils"
+  ],
+  "upstream_permissions": {
+    "network": [
+      "music.apple.com",
+      "amp-api.music.apple.com",
+      "*.mzstatic.com"
+    ],
+    "storage": true
+  },
+  "upstream_settings": [
+    {
+      "key": "storefront",
+      "label": "Storefront / Region",
+      "type": "string",
+      "default": "us",
+      "options": [
+        "us",
+        "gb",
+        "jp",
+        "id",
+        "kr",
+        "fr",
+        "de",
+        "it",
+        "es",
+        "in",
+        "br",
+        "mx",
+        "au",
+        "ca"
+      ],
+      "description": "Country used for Home recommendations, search, and catalog availability. No VPN is required."
+    },
+    {
+      "key": "mediaUserToken",
+      "label": "Media User Token",
+      "type": "string",
+      "default": "",
+      "description": "Required for lyrics. Get it from browser console on music.apple.com: MusicKit.getInstance().musicUserToken. Needs an active Apple Music subscription."
+    },
+    {
+      "key": "lyricsTranslation",
+      "label": "Lyrics Translation Language",
+      "type": "string",
+      "default": "",
+      "description": "Language code for translated lyrics (e.g. en, zh-Hans, ja, ko, id). Leave empty to disable. Uses Apple Music's built-in translations."
+    },
+    {
+      "key": "lyricsPronunciation",
+      "label": "Lyrics Pronunciation Language",
+      "type": "string",
+      "default": "",
+      "description": "Language code for romanized pronunciation (e.g. ja-Latn for romaji, ko-Latn for Korean). Leave empty to disable."
+    }
+  ],
+  "integration_status": "source-only; not installed or loaded by the app"
+}

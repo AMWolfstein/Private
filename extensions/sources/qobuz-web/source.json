@@ -1,0 +1,445 @@
+{
+  "id": "qobuz-web",
+  "upstream_version": "1.2.27",
+  "upstream_repository": "https://github.com/mornyeapp/Mornye-Extension",
+  "upstream_commit": "12530ceda46dc78a10f9258b7d65a71452dfcf50",
+  "upstream_path": "sources/qobuz-web/index.js",
+  "upstream_sha256": "7edf0d6fe9c29975d963a6eee562d75025c03343f98f51091545043760cd3001",
+  "extracted_sha256": "142576227794a94c0fbba7c3dcd08ec0e511805800e1fcc04384625bcf8242c1",
+  "capabilities": [
+    "artist_artwork"
+  ],
+  "exported_methods": [
+    "cleanup",
+    "getArtistArtwork",
+    "initialize"
+  ],
+  "retained_declarations": [
+    {
+      "names": [
+        "CONFIG"
+      ],
+      "upstream_start_line": 1,
+      "upstream_end_line": 29
+    },
+    {
+      "names": [
+        "DEFAULT_DOWNLOAD_PROVIDERS"
+      ],
+      "upstream_start_line": 31,
+      "upstream_end_line": 31
+    },
+    {
+      "names": [
+        "IMAGE_SIZE_REGEX"
+      ],
+      "upstream_start_line": 35,
+      "upstream_end_line": 35
+    },
+    {
+      "names": [
+        "METADATA_CACHE"
+      ],
+      "upstream_start_line": 36,
+      "upstream_end_line": 36
+    },
+    {
+      "names": [
+        "initialize"
+      ],
+      "upstream_start_line": 402,
+      "upstream_end_line": 425
+    },
+    {
+      "names": [
+        "normalizeCustomEndpoint"
+      ],
+      "upstream_start_line": 429,
+      "upstream_end_line": 433
+    },
+    {
+      "names": [
+        "cleanup"
+      ],
+      "upstream_start_line": 466,
+      "upstream_end_line": 469
+    },
+    {
+      "names": [
+        "firstNonEmpty"
+      ],
+      "upstream_start_line": 480,
+      "upstream_end_line": 486
+    },
+    {
+      "names": [
+        "uniquePush"
+      ],
+      "upstream_start_line": 505,
+      "upstream_end_line": 512
+    },
+    {
+      "names": [
+        "getHeaderValue"
+      ],
+      "upstream_start_line": 556,
+      "upstream_end_line": 566
+    },
+    {
+      "names": [
+        "summarizeErrorBody"
+      ],
+      "upstream_start_line": 595,
+      "upstream_end_line": 611
+    },
+    {
+      "names": [
+        "throwIfVerificationRequired"
+      ],
+      "upstream_start_line": 626,
+      "upstream_end_line": 633
+    },
+    {
+      "names": [
+        "signedJSON"
+      ],
+      "upstream_start_line": 635,
+      "upstream_end_line": 659
+    },
+    {
+      "names": [
+        "retryAfterMilliseconds"
+      ],
+      "upstream_start_line": 661,
+      "upstream_end_line": 670
+    },
+    {
+      "names": [
+        "waitBeforeRetry"
+      ],
+      "upstream_start_line": 672,
+      "upstream_end_line": 681
+    },
+    {
+      "names": [
+        "isVerificationRequiredError"
+      ],
+      "upstream_start_line": 697,
+      "upstream_end_line": 700
+    },
+    {
+      "names": [
+        "withPrefix"
+      ],
+      "upstream_start_line": 720,
+      "upstream_end_line": 724
+    },
+    {
+      "names": [
+        "parseNumericID"
+      ],
+      "upstream_start_line": 730,
+      "upstream_end_line": 745
+    },
+    {
+      "names": [
+        "parseArtistID"
+      ],
+      "upstream_start_line": 766,
+      "upstream_end_line": 768
+    },
+    {
+      "names": [
+        "normalizeDate"
+      ],
+      "upstream_start_line": 861,
+      "upstream_end_line": 866
+    },
+    {
+      "names": [
+        "upscaleImageURL"
+      ],
+      "upstream_start_line": 868,
+      "upstream_end_line": 872
+    },
+    {
+      "names": [
+        "ensureNotCancelled"
+      ],
+      "upstream_start_line": 1190,
+      "upstream_end_line": 1192
+    },
+    {
+      "names": [
+        "metadataURL"
+      ],
+      "upstream_start_line": 1194,
+      "upstream_end_line": 1211
+    },
+    {
+      "names": [
+        "previewTrackID"
+      ],
+      "upstream_start_line": 1265,
+      "upstream_end_line": 1271
+    },
+    {
+      "names": [
+        "deferredPreviewURL"
+      ],
+      "upstream_start_line": 1302,
+      "upstream_end_line": 1305
+    },
+    {
+      "names": [
+        "shouldRetryMetadataError"
+      ],
+      "upstream_start_line": 1312,
+      "upstream_end_line": 1318
+    },
+    {
+      "names": [
+        "getMetadataJSON"
+      ],
+      "upstream_start_line": 1320,
+      "upstream_end_line": 1345
+    },
+    {
+      "names": [
+        "trackDisplayTitle"
+      ],
+      "upstream_start_line": 1347,
+      "upstream_end_line": 1354
+    },
+    {
+      "names": [
+        "albumDisplayTitle"
+      ],
+      "upstream_start_line": 1356,
+      "upstream_end_line": 1363
+    },
+    {
+      "names": [
+        "qobuzAlbumURL"
+      ],
+      "upstream_start_line": 1365,
+      "upstream_end_line": 1368
+    },
+    {
+      "names": [
+        "qobuzTrackURL"
+      ],
+      "upstream_start_line": 1370,
+      "upstream_end_line": 1372
+    },
+    {
+      "names": [
+        "qobuzArtistURL"
+      ],
+      "upstream_start_line": 1374,
+      "upstream_end_line": 1376
+    },
+    {
+      "names": [
+        "releaseDateForAlbum"
+      ],
+      "upstream_start_line": 1382,
+      "upstream_end_line": 1390
+    },
+    {
+      "names": [
+        "creditNamesForRoles"
+      ],
+      "upstream_start_line": 1392,
+      "upstream_end_line": 1404
+    },
+    {
+      "names": [
+        "trackComposerNames"
+      ],
+      "upstream_start_line": 1406,
+      "upstream_end_line": 1416
+    },
+    {
+      "names": [
+        "genreDisplayName"
+      ],
+      "upstream_start_line": 1509,
+      "upstream_end_line": 1511
+    },
+    {
+      "names": [
+        "joinArtistNames"
+      ],
+      "upstream_start_line": 1513,
+      "upstream_end_line": 1522
+    },
+    {
+      "names": [
+        "trackArtistName"
+      ],
+      "upstream_start_line": 1524,
+      "upstream_end_line": 1550
+    },
+    {
+      "names": [
+        "trackAlbumArtist"
+      ],
+      "upstream_start_line": 1552,
+      "upstream_end_line": 1555
+    },
+    {
+      "names": [
+        "albumTypeFromRelease"
+      ],
+      "upstream_start_line": 1557,
+      "upstream_end_line": 1570
+    },
+    {
+      "names": [
+        "trackAlbumImage"
+      ],
+      "upstream_start_line": 1572,
+      "upstream_end_line": 1579
+    },
+    {
+      "names": [
+        "albumImage"
+      ],
+      "upstream_start_line": 1581,
+      "upstream_end_line": 1588
+    },
+    {
+      "names": [
+        "artistImage"
+      ],
+      "upstream_start_line": 1590,
+      "upstream_end_line": 1597
+    },
+    {
+      "names": [
+        "qobuzAudioQualityLabel"
+      ],
+      "upstream_start_line": 1609,
+      "upstream_end_line": 1615
+    },
+    {
+      "names": [
+        "formatTrack"
+      ],
+      "upstream_start_line": 1617,
+      "upstream_end_line": 1679
+    },
+    {
+      "names": [
+        "qobuzCollectionItems"
+      ],
+      "upstream_start_line": 1744,
+      "upstream_end_line": 1748
+    },
+    {
+      "names": [
+        "artistTopTrackItems"
+      ],
+      "upstream_start_line": 1750,
+      "upstream_end_line": 1758
+    },
+    {
+      "names": [
+        "formatArtistAlbum"
+      ],
+      "upstream_start_line": 1760,
+      "upstream_end_line": 1778
+    },
+    {
+      "names": [
+        "formatArtist"
+      ],
+      "upstream_start_line": 1780,
+      "upstream_end_line": 1810
+    },
+    {
+      "names": [
+        "fetchArtistAlbums"
+      ],
+      "upstream_start_line": 2050,
+      "upstream_end_line": 2079
+    },
+    {
+      "names": [
+        "getArtist"
+      ],
+      "upstream_start_line": 2128,
+      "upstream_end_line": 2131
+    },
+    {
+      "names": [
+        "isTerminalLookupError"
+      ],
+      "upstream_start_line": 2348,
+      "upstream_end_line": 2351
+    }
+  ],
+  "referenced_globals": [
+    "Array",
+    "Date",
+    "Error",
+    "JSON",
+    "Map",
+    "Math",
+    "Number",
+    "RegExp",
+    "String",
+    "encodeURIComponent",
+    "isNaN",
+    "log",
+    "session",
+    "undefined",
+    "utils"
+  ],
+  "upstream_permissions": {
+    "network": [
+      "api.zarz.moe",
+      "www.qobuz.com",
+      "qobuz.com",
+      "play.qobuz.com",
+      "open.qobuz.com",
+      "static.qobuz.com",
+      "streaming-qobuz-std.akamaized.net",
+      "streaming.qobuz.com"
+    ],
+    "storage": true,
+    "file": true
+  },
+  "upstream_settings": [
+    {
+      "key": "appId",
+      "label": "Qobuz App ID",
+      "type": "string",
+      "default": "798273057",
+      "description": "App ID sent to the primary metadata API."
+    },
+    {
+      "key": "countryCode",
+      "label": "Country Code",
+      "type": "string",
+      "default": "US",
+      "description": "Country code used for provider requests that require it."
+    },
+    {
+      "key": "customEndpoint",
+      "label": "Custom download endpoint",
+      "type": "string",
+      "grantsNetwork": true,
+      "description": "Optional. Base URL of your own qobuz-rest-api compatible server (https://github.com/BartolomeoRusso9/qobuz-rest-api), e.g. http://192.168.1.10:8000. It is tried before the default download API. A server on your home network also needs Allow Local Network Access turned on in the download settings."
+    },
+    {
+      "key": "customEndpointApiKey",
+      "label": "Custom endpoint API key",
+      "type": "string",
+      "secret": true,
+      "description": "Optional. Sent as the X-API-Key header to the custom download endpoint."
+    }
+  ],
+  "integration_status": "source-only; not installed or loaded by the app"
+}

@@ -1,0 +1,398 @@
+{
+  "id": "jiosaavn",
+  "upstream_version": "1.0.10",
+  "upstream_repository": "https://github.com/mornyeapp/Mornye-Extension",
+  "upstream_commit": "12530ceda46dc78a10f9258b7d65a71452dfcf50",
+  "upstream_path": "sources/jiosaavn/index.js",
+  "upstream_sha256": "03f78db344c30dff6b094984f6687590fc7f96b8a8f01c9ec7f3f31bbd514a97",
+  "extracted_sha256": "e5769f08b206ceb50b711edc6c0920a8b5563be2ad521658832759d02f063ef7",
+  "capabilities": [
+    "artist_artwork"
+  ],
+  "exported_methods": [
+    "cleanup",
+    "getArtistArtwork",
+    "initialize"
+  ],
+  "retained_declarations": [
+    {
+      "names": [
+        "EXT_ID"
+      ],
+      "upstream_start_line": 6,
+      "upstream_end_line": 6
+    },
+    {
+      "names": [
+        "API_HOST"
+      ],
+      "upstream_start_line": 8,
+      "upstream_end_line": 8
+    },
+    {
+      "names": [
+        "API_BASE"
+      ],
+      "upstream_start_line": 9,
+      "upstream_end_line": 9
+    },
+    {
+      "names": [
+        "REFERER"
+      ],
+      "upstream_start_line": 10,
+      "upstream_end_line": 10
+    },
+    {
+      "names": [
+        "UA"
+      ],
+      "upstream_start_line": 12,
+      "upstream_end_line": 12
+    },
+    {
+      "names": [
+        "COOKIE_BASE"
+      ],
+      "upstream_start_line": 13,
+      "upstream_end_line": 13
+    },
+    {
+      "names": [
+        "DEFAULT_HEADERS"
+      ],
+      "upstream_start_line": 16,
+      "upstream_end_line": 22
+    },
+    {
+      "names": [
+        "API_DEFAULTS"
+      ],
+      "upstream_start_line": 25,
+      "upstream_end_line": 30
+    },
+    {
+      "names": [
+        "fetchAPI"
+      ],
+      "upstream_start_line": 34,
+      "upstream_end_line": 70
+    },
+    {
+      "names": [
+        "callAPI"
+      ],
+      "upstream_start_line": 73,
+      "upstream_end_line": 102
+    },
+    {
+      "names": [
+        "getArtistById"
+      ],
+      "upstream_start_line": 244,
+      "upstream_end_line": 262
+    },
+    {
+      "names": [
+        "getArtist"
+      ],
+      "upstream_start_line": 264,
+      "upstream_end_line": 292
+    },
+    {
+      "names": [
+        "S1"
+      ],
+      "upstream_start_line": 329,
+      "upstream_end_line": 337
+    },
+    {
+      "names": [
+        "S2"
+      ],
+      "upstream_start_line": 338,
+      "upstream_end_line": 347
+    },
+    {
+      "names": [
+        "S3"
+      ],
+      "upstream_start_line": 348,
+      "upstream_end_line": 356
+    },
+    {
+      "names": [
+        "S4"
+      ],
+      "upstream_start_line": 357,
+      "upstream_end_line": 364
+    },
+    {
+      "names": [
+        "S5"
+      ],
+      "upstream_start_line": 365,
+      "upstream_end_line": 374
+    },
+    {
+      "names": [
+        "S6"
+      ],
+      "upstream_start_line": 375,
+      "upstream_end_line": 384
+    },
+    {
+      "names": [
+        "S7"
+      ],
+      "upstream_start_line": 385,
+      "upstream_end_line": 393
+    },
+    {
+      "names": [
+        "S8"
+      ],
+      "upstream_start_line": 394,
+      "upstream_end_line": 403
+    },
+    {
+      "names": [
+        "desBlock"
+      ],
+      "upstream_start_line": 405,
+      "upstream_end_line": 477
+    },
+    {
+      "names": [
+        "desDecrypt"
+      ],
+      "upstream_start_line": 479,
+      "upstream_end_line": 481
+    },
+    {
+      "names": [
+        "DES_KEY"
+      ],
+      "upstream_start_line": 485,
+      "upstream_end_line": 490
+    },
+    {
+      "names": [
+        "base64ToBinaryString"
+      ],
+      "upstream_start_line": 492,
+      "upstream_end_line": 510
+    },
+    {
+      "names": [
+        "decryptMediaUrl"
+      ],
+      "upstream_start_line": 512,
+      "upstream_end_line": 521
+    },
+    {
+      "names": [
+        "TRACKING_KEY"
+      ],
+      "upstream_start_line": 524,
+      "upstream_end_line": 524
+    },
+    {
+      "names": [
+        "getCache"
+      ],
+      "upstream_start_line": 526,
+      "upstream_end_line": 533
+    },
+    {
+      "names": [
+        "setCache"
+      ],
+      "upstream_start_line": 535,
+      "upstream_end_line": 549
+    },
+    {
+      "names": [
+        "clearCache"
+      ],
+      "upstream_start_line": 570,
+      "upstream_end_line": 586
+    },
+    {
+      "names": [
+        "cleanup"
+      ],
+      "upstream_start_line": 588,
+      "upstream_end_line": 612
+    },
+    {
+      "names": [
+        "initialize"
+      ],
+      "upstream_start_line": 614,
+      "upstream_end_line": 622
+    },
+    {
+      "names": [
+        "enc"
+      ],
+      "upstream_start_line": 631,
+      "upstream_end_line": 633
+    },
+    {
+      "names": [
+        "decodeEntities"
+      ],
+      "upstream_start_line": 635,
+      "upstream_end_line": 648
+    },
+    {
+      "names": [
+        "extractToken"
+      ],
+      "upstream_start_line": 650,
+      "upstream_end_line": 654
+    },
+    {
+      "names": [
+        "catalogReference"
+      ],
+      "upstream_start_line": 656,
+      "upstream_end_line": 660
+    },
+    {
+      "names": [
+        "mediaUrl"
+      ],
+      "upstream_start_line": 662,
+      "upstream_end_line": 665
+    },
+    {
+      "names": [
+        "recordingIsrc"
+      ],
+      "upstream_start_line": 667,
+      "upstream_end_line": 670
+    },
+    {
+      "names": [
+        "getHighResImageUrl"
+      ],
+      "upstream_start_line": 672,
+      "upstream_end_line": 675
+    },
+    {
+      "names": [
+        "extractArtistNames"
+      ],
+      "upstream_start_line": 677,
+      "upstream_end_line": 686
+    },
+    {
+      "names": [
+        "positiveInt"
+      ],
+      "upstream_start_line": 688,
+      "upstream_end_line": 691
+    },
+    {
+      "names": [
+        "formatSong"
+      ],
+      "upstream_start_line": 693,
+      "upstream_end_line": 752
+    },
+    {
+      "names": [
+        "formatCollection"
+      ],
+      "upstream_start_line": 755,
+      "upstream_end_line": 800
+    },
+    {
+      "names": [
+        "processArtistSongs"
+      ],
+      "upstream_start_line": 803,
+      "upstream_end_line": 808
+    },
+    {
+      "names": [
+        "processArtistAlbums"
+      ],
+      "upstream_start_line": 810,
+      "upstream_end_line": 815
+    },
+    {
+      "names": [
+        "processArtistSingles"
+      ],
+      "upstream_start_line": 817,
+      "upstream_end_line": 829
+    },
+    {
+      "names": [
+        "processCompilations"
+      ],
+      "upstream_start_line": 831,
+      "upstream_end_line": 845
+    },
+    {
+      "names": [
+        "formatArtist"
+      ],
+      "upstream_start_line": 848,
+      "upstream_end_line": 883
+    },
+    {
+      "names": [
+        "getArtistService"
+      ],
+      "upstream_start_line": 1027,
+      "upstream_end_line": 1069
+    }
+  ],
+  "referenced_globals": [
+    "Array",
+    "Boolean",
+    "Date",
+    "Error",
+    "Int32Array",
+    "JSON",
+    "Math",
+    "Number",
+    "String",
+    "Uint32Array",
+    "encodeURIComponent",
+    "http",
+    "log",
+    "parseInt",
+    "storage",
+    "undefined"
+  ],
+  "upstream_permissions": {
+    "network": [
+      "www.jiosaavn.com",
+      "aac.saavncdn.com"
+    ],
+    "storage": true,
+    "file": true
+  },
+  "upstream_settings": [
+    {
+      "key": "lang",
+      "label": "Languages",
+      "type": "string",
+      "default": "english",
+      "description": "Comma-separated languages"
+    },
+    {
+      "key": "clear_cache",
+      "label": "Clear Cache",
+      "type": "button",
+      "description": "Remove all cached data",
+      "action": "forceCleanup"
+    }
+  ],
+  "integration_status": "source-only; not installed or loaded by the app"
+}

@@ -1,0 +1,284 @@
+{
+  "id": "genie-music",
+  "upstream_version": "2.0.7",
+  "upstream_repository": "https://github.com/mornyeapp/Mornye-Extension",
+  "upstream_commit": "12530ceda46dc78a10f9258b7d65a71452dfcf50",
+  "upstream_path": "sources/genie-music/index.js",
+  "upstream_sha256": "5e280d9b6d2ee20a90de9fe9a6989200d2e00970a59a70b2e47ab41b1732a7f5",
+  "extracted_sha256": "6724ac6d094f06376ef16ac1945e03bd3d4dba04c3fd7617187a5516fb8f4ca1",
+  "capabilities": [
+    "artist_artwork"
+  ],
+  "exported_methods": [
+    "cleanup",
+    "getArtistArtwork",
+    "initialize"
+  ],
+  "retained_declarations": [
+    {
+      "names": [
+        "PROVIDER_ID"
+      ],
+      "upstream_start_line": 1,
+      "upstream_end_line": 1
+    },
+    {
+      "names": [
+        "TOP200_CACHE"
+      ],
+      "upstream_start_line": 2,
+      "upstream_end_line": 2
+    },
+    {
+      "names": [
+        "TOP200_CACHE_TIME"
+      ],
+      "upstream_start_line": 3,
+      "upstream_end_line": 3
+    },
+    {
+      "names": [
+        "ALBUM_CACHE"
+      ],
+      "upstream_start_line": 4,
+      "upstream_end_line": 4
+    },
+    {
+      "names": [
+        "ARTIST_CACHE"
+      ],
+      "upstream_start_line": 5,
+      "upstream_end_line": 5
+    },
+    {
+      "names": [
+        "TRACK_CACHE"
+      ],
+      "upstream_start_line": 6,
+      "upstream_end_line": 6
+    },
+    {
+      "names": [
+        "FEED_CACHE"
+      ],
+      "upstream_start_line": 7,
+      "upstream_end_line": 7
+    },
+    {
+      "names": [
+        "CHART_CACHE"
+      ],
+      "upstream_start_line": 8,
+      "upstream_end_line": 8
+    },
+    {
+      "names": [
+        "DJ_CACHE"
+      ],
+      "upstream_start_line": 9,
+      "upstream_end_line": 9
+    },
+    {
+      "names": [
+        "CACHE_TTL_MS"
+      ],
+      "upstream_start_line": 10,
+      "upstream_end_line": 10
+    },
+    {
+      "names": [
+        "initialize"
+      ],
+      "upstream_start_line": 14,
+      "upstream_end_line": 18
+    },
+    {
+      "names": [
+        "cleanup"
+      ],
+      "upstream_start_line": 20,
+      "upstream_end_line": 32
+    },
+    {
+      "names": [
+        "cleanText"
+      ],
+      "upstream_start_line": 34,
+      "upstream_end_line": 55
+    },
+    {
+      "names": [
+        "absoluteUrl"
+      ],
+      "upstream_start_line": 57,
+      "upstream_end_line": 82
+    },
+    {
+      "names": [
+        "firstMatch"
+      ],
+      "upstream_start_line": 84,
+      "upstream_end_line": 94
+    },
+    {
+      "names": [
+        "getTrackId"
+      ],
+      "upstream_start_line": 96,
+      "upstream_end_line": 98
+    },
+    {
+      "names": [
+        "getTrackName"
+      ],
+      "upstream_start_line": 100,
+      "upstream_end_line": 105
+    },
+    {
+      "names": [
+        "getArtistName"
+      ],
+      "upstream_start_line": 107,
+      "upstream_end_line": 110
+    },
+    {
+      "names": [
+        "getAlbumId"
+      ],
+      "upstream_start_line": 112,
+      "upstream_end_line": 127
+    },
+    {
+      "names": [
+        "getAlbumName"
+      ],
+      "upstream_start_line": 129,
+      "upstream_end_line": 136
+    },
+    {
+      "names": [
+        "normalizeCoverUrl"
+      ],
+      "upstream_start_line": 139,
+      "upstream_end_line": 146
+    },
+    {
+      "names": [
+        "getCoverUrl"
+      ],
+      "upstream_start_line": 148,
+      "upstream_end_line": 162
+    },
+    {
+      "names": [
+        "getDurationMs"
+      ],
+      "upstream_start_line": 164,
+      "upstream_end_line": 181
+    },
+    {
+      "names": [
+        "getArtistId"
+      ],
+      "upstream_start_line": 183,
+      "upstream_end_line": 189
+    },
+    {
+      "names": [
+        "getIsrc"
+      ],
+      "upstream_start_line": 191,
+      "upstream_end_line": 196
+    },
+    {
+      "names": [
+        "parseTrackRow"
+      ],
+      "upstream_start_line": 198,
+      "upstream_end_line": 224
+    },
+    {
+      "names": [
+        "parseTracks"
+      ],
+      "upstream_start_line": 226,
+      "upstream_end_line": 254
+    },
+    {
+      "names": [
+        "makeTrackResult"
+      ],
+      "upstream_start_line": 256,
+      "upstream_end_line": 281
+    },
+    {
+      "names": [
+        "fetchHtml"
+      ],
+      "upstream_start_line": 309,
+      "upstream_end_line": 321
+    },
+    {
+      "names": [
+        "mainInfo"
+      ],
+      "upstream_start_line": 349,
+      "upstream_end_line": 355
+    },
+    {
+      "names": [
+        "primaryTrackTable"
+      ],
+      "upstream_start_line": 361,
+      "upstream_end_line": 364
+    },
+    {
+      "names": [
+        "detailName"
+      ],
+      "upstream_start_line": 366,
+      "upstream_end_line": 368
+    },
+    {
+      "names": [
+        "cacheStore"
+      ],
+      "upstream_start_line": 397,
+      "upstream_end_line": 408
+    },
+    {
+      "names": [
+        "parseArtistAlbums"
+      ],
+      "upstream_start_line": 655,
+      "upstream_end_line": 681
+    },
+    {
+      "names": [
+        "getArtist"
+      ],
+      "upstream_start_line": 683,
+      "upstream_end_line": 715
+    }
+  ],
+  "referenced_globals": [
+    "Date",
+    "Error",
+    "Number",
+    "Object",
+    "RegExp",
+    "String",
+    "http",
+    "parseInt"
+  ],
+  "upstream_permissions": {
+    "network": [
+      "www.genie.co.kr",
+      "genie.co.kr"
+    ],
+    "storage": false,
+    "file": false
+  },
+  "upstream_settings": [],
+  "integration_status": "source-only; not installed or loaded by the app"
+}

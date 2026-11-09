@@ -1,0 +1,118 @@
+{
+  "id": "beatport",
+  "upstream_version": "1.0.1",
+  "upstream_repository": "https://github.com/mornyeapp/Mornye-Extension",
+  "upstream_commit": "12530ceda46dc78a10f9258b7d65a71452dfcf50",
+  "upstream_path": "sources/beatport/index.js",
+  "upstream_sha256": "7ec09945f2efdbde5aa3af01c2822c65beaabd79b0d30e5031bc8d57ec9b18c5",
+  "extracted_sha256": "ca799625cc59752d049d99c256d812fe1a1a94c9cc6897a54ef1b2c7de73f002",
+  "capabilities": [
+    "artist_artwork"
+  ],
+  "exported_methods": [
+    "cleanup",
+    "getArtistArtwork",
+    "initialize"
+  ],
+  "retained_declarations": [
+    {
+      "names": [
+        "PROVIDER",
+        "resolved"
+      ],
+      "upstream_start_line": 4,
+      "upstream_end_line": 4
+    },
+    {
+      "names": [
+        "id"
+      ],
+      "upstream_start_line": 5,
+      "upstream_end_line": 9
+    },
+    {
+      "names": [
+        "pref"
+      ],
+      "upstream_start_line": 10,
+      "upstream_end_line": 10
+    },
+    {
+      "names": [
+        "names"
+      ],
+      "upstream_start_line": 11,
+      "upstream_end_line": 11
+    },
+    {
+      "names": [
+        "fail"
+      ],
+      "upstream_start_line": 12,
+      "upstream_end_line": 22
+    },
+    {
+      "names": [
+        "request"
+      ],
+      "upstream_start_line": 23,
+      "upstream_end_line": 28
+    },
+    {
+      "names": [
+        "get"
+      ],
+      "upstream_start_line": 29,
+      "upstream_end_line": 42
+    },
+    {
+      "names": [
+        "track"
+      ],
+      "upstream_start_line": 43,
+      "upstream_end_line": 55
+    },
+    {
+      "names": [
+        "album"
+      ],
+      "upstream_start_line": 56,
+      "upstream_end_line": 67
+    },
+    {
+      "names": [
+        "artist"
+      ],
+      "upstream_start_line": 68,
+      "upstream_end_line": 71
+    },
+    {
+      "names": [
+        "getArtist"
+      ],
+      "upstream_start_line": 84,
+      "upstream_end_line": 93
+    }
+  ],
+  "referenced_globals": [
+    "Boolean",
+    "Error",
+    "JSON",
+    "Math",
+    "Number",
+    "String",
+    "decodeURIComponent",
+    "session"
+  ],
+  "upstream_permissions": {
+    "network": [
+      "api.zarz.moe",
+      "geo-media.beatport.com",
+      "geo-samples.beatport.com"
+    ],
+    "storage": true,
+    "file": true
+  },
+  "upstream_settings": [],
+  "integration_status": "source-only; not installed or loaded by the app"
+}

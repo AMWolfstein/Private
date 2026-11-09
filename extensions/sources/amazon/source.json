@@ -1,0 +1,592 @@
+{
+  "id": "amazon",
+  "upstream_version": "2.3.19",
+  "upstream_repository": "https://github.com/mornyeapp/Mornye-Extension",
+  "upstream_commit": "12530ceda46dc78a10f9258b7d65a71452dfcf50",
+  "upstream_path": "sources/amazon/index.js",
+  "upstream_sha256": "a526dcac985989cc3b3ac02463cb15a6f0f55c880d38083215ec6c384f9da03c",
+  "extracted_sha256": "eec016a831a6b79759b2c672f9bb54ad7d4bcc9450b42ab84a56a902836e43d5",
+  "capabilities": [
+    "artist_artwork"
+  ],
+  "exported_methods": [
+    "cleanup",
+    "getArtistArtwork",
+    "initialize"
+  ],
+  "retained_declarations": [
+    {
+      "names": [
+        "CONFIG"
+      ],
+      "upstream_start_line": 5,
+      "upstream_end_line": 20
+    },
+    {
+      "names": [
+        "EXTENSION_VERSION"
+      ],
+      "upstream_start_line": 24,
+      "upstream_end_line": 24
+    },
+    {
+      "names": [
+        "USER_AGENTS"
+      ],
+      "upstream_start_line": 26,
+      "upstream_end_line": 30
+    },
+    {
+      "names": [
+        "getRandomUA"
+      ],
+      "upstream_start_line": 32,
+      "upstream_end_line": 38
+    },
+    {
+      "names": [
+        "L"
+      ],
+      "upstream_start_line": 47,
+      "upstream_end_line": 54
+    },
+    {
+      "names": [
+        "sleep"
+      ],
+      "upstream_start_line": 56,
+      "upstream_end_line": 63
+    },
+    {
+      "names": [
+        "_cache"
+      ],
+      "upstream_start_line": 67,
+      "upstream_end_line": 67
+    },
+    {
+      "names": [
+        "cacheGet"
+      ],
+      "upstream_start_line": 69,
+      "upstream_end_line": 79
+    },
+    {
+      "names": [
+        "cacheSet"
+      ],
+      "upstream_start_line": 81,
+      "upstream_end_line": 88
+    },
+    {
+      "names": [
+        "isAmazonUnavailable"
+      ],
+      "upstream_start_line": 92,
+      "upstream_end_line": 98
+    },
+    {
+      "names": [
+        "amazonCancelledError"
+      ],
+      "upstream_start_line": 100,
+      "upstream_end_line": 104
+    },
+    {
+      "names": [
+        "requireAmazonResolutionBudget"
+      ],
+      "upstream_start_line": 106,
+      "upstream_end_line": 114
+    },
+    {
+      "names": [
+        "fetchWithRetry"
+      ],
+      "upstream_start_line": 116,
+      "upstream_end_line": 163
+    },
+    {
+      "names": [
+        "ASIN_REGEX"
+      ],
+      "upstream_start_line": 167,
+      "upstream_end_line": 167
+    },
+    {
+      "names": [
+        "AMAZON_MUSIC_HOST_REGEX"
+      ],
+      "upstream_start_line": 169,
+      "upstream_end_line": 169
+    },
+    {
+      "names": [
+        "normalizeASIN"
+      ],
+      "upstream_start_line": 171,
+      "upstream_end_line": 181
+    },
+    {
+      "names": [
+        "_session"
+      ],
+      "upstream_start_line": 297,
+      "upstream_end_line": 308
+    },
+    {
+      "names": [
+        "_currentContext"
+      ],
+      "upstream_start_line": 310,
+      "upstream_end_line": 314
+    },
+    {
+      "names": [
+        "_resourceContexts"
+      ],
+      "upstream_start_line": 316,
+      "upstream_end_line": 316
+    },
+    {
+      "names": [
+        "_resourceHints"
+      ],
+      "upstream_start_line": 317,
+      "upstream_end_line": 317
+    },
+    {
+      "names": [
+        "_homeCountry"
+      ],
+      "upstream_start_line": 318,
+      "upstream_end_line": 318
+    },
+    {
+      "names": [
+        "boundedMapGet"
+      ],
+      "upstream_start_line": 334,
+      "upstream_end_line": 344
+    },
+    {
+      "names": [
+        "boundedMapSet"
+      ],
+      "upstream_start_line": 346,
+      "upstream_end_line": 356
+    },
+    {
+      "names": [
+        "guessTimeZone"
+      ],
+      "upstream_start_line": 358,
+      "upstream_end_line": 365
+    },
+    {
+      "names": [
+        "defaultCurrencyForHost"
+      ],
+      "upstream_start_line": 367,
+      "upstream_end_line": 377
+    },
+    {
+      "names": [
+        "createAmazonContext"
+      ],
+      "upstream_start_line": 379,
+      "upstream_end_line": 414
+    },
+    {
+      "names": [
+        "contextKey"
+      ],
+      "upstream_start_line": 416,
+      "upstream_end_line": 418
+    },
+    {
+      "names": [
+        "rememberResourceContext"
+      ],
+      "upstream_start_line": 420,
+      "upstream_end_line": 428
+    },
+    {
+      "names": [
+        "rememberResourceHint"
+      ],
+      "upstream_start_line": 430,
+      "upstream_end_line": 441
+    },
+    {
+      "names": [
+        "getResourceContext"
+      ],
+      "upstream_start_line": 443,
+      "upstream_end_line": 448
+    },
+    {
+      "names": [
+        "getResourceHint"
+      ],
+      "upstream_start_line": 450,
+      "upstream_end_line": 453
+    },
+    {
+      "names": [
+        "slugToName"
+      ],
+      "upstream_start_line": 455,
+      "upstream_end_line": 460
+    },
+    {
+      "names": [
+        "looksLikeURL"
+      ],
+      "upstream_start_line": 462,
+      "upstream_end_line": 466
+    },
+    {
+      "names": [
+        "sanitizeDisplayText"
+      ],
+      "upstream_start_line": 468,
+      "upstream_end_line": 473
+    },
+    {
+      "names": [
+        "initSession"
+      ],
+      "upstream_start_line": 475,
+      "upstream_end_line": 532
+    },
+    {
+      "names": [
+        "refreshSession"
+      ],
+      "upstream_start_line": 534,
+      "upstream_end_line": 548
+    },
+    {
+      "names": [
+        "buildHeaders"
+      ],
+      "upstream_start_line": 550,
+      "upstream_end_line": 590
+    },
+    {
+      "names": [
+        "_doShowHome"
+      ],
+      "upstream_start_line": 594,
+      "upstream_end_line": 625
+    },
+    {
+      "names": [
+        "callShowHome"
+      ],
+      "upstream_start_line": 627,
+      "upstream_end_line": 655
+    },
+    {
+      "names": [
+        "callShowCatalogArtist"
+      ],
+      "upstream_start_line": 730,
+      "upstream_end_line": 781
+    },
+    {
+      "names": [
+        "_doShowSearch"
+      ],
+      "upstream_start_line": 833,
+      "upstream_end_line": 866
+    },
+    {
+      "names": [
+        "SEARCH_SERVICE_ERROR"
+      ],
+      "upstream_start_line": 871,
+      "upstream_end_line": 871
+    },
+    {
+      "names": [
+        "isServiceErrorDialog"
+      ],
+      "upstream_start_line": 873,
+      "upstream_end_line": 884
+    },
+    {
+      "names": [
+        "callShowSearch"
+      ],
+      "upstream_start_line": 886,
+      "upstream_end_line": 931
+    },
+    {
+      "names": [
+        "deepStringify"
+      ],
+      "upstream_start_line": 935,
+      "upstream_end_line": 937
+    },
+    {
+      "names": [
+        "findAllByInterface"
+      ],
+      "upstream_start_line": 958,
+      "upstream_end_line": 977
+    },
+    {
+      "names": [
+        "findFirst"
+      ],
+      "upstream_start_line": 1004,
+      "upstream_end_line": 1020
+    },
+    {
+      "names": [
+        "amazonItemIsExplicit"
+      ],
+      "upstream_start_line": 1022,
+      "upstream_end_line": 1038
+    },
+    {
+      "names": [
+        "textValue"
+      ],
+      "upstream_start_line": 1040,
+      "upstream_end_line": 1056
+    },
+    {
+      "names": [
+        "extractAmazonDeeplinkInfo"
+      ],
+      "upstream_start_line": 1058,
+      "upstream_end_line": 1081
+    },
+    {
+      "names": [
+        "extractDeeplinkId"
+      ],
+      "upstream_start_line": 1083,
+      "upstream_end_line": 1086
+    },
+    {
+      "names": [
+        "fixImageUrl"
+      ],
+      "upstream_start_line": 1094,
+      "upstream_end_line": 1100
+    },
+    {
+      "names": [
+        "ensureHighResCoverUrl"
+      ],
+      "upstream_start_line": 1102,
+      "upstream_end_line": 1104
+    },
+    {
+      "names": [
+        "normalizeAmazonDate"
+      ],
+      "upstream_start_line": 1106,
+      "upstream_end_line": 1111
+    },
+    {
+      "names": [
+        "amazonAlbumURL"
+      ],
+      "upstream_start_line": 1113,
+      "upstream_end_line": 1116
+    },
+    {
+      "names": [
+        "amazonTrackURL"
+      ],
+      "upstream_start_line": 1118,
+      "upstream_end_line": 1121
+    },
+    {
+      "names": [
+        "amazonArtistURL"
+      ],
+      "upstream_start_line": 1123,
+      "upstream_end_line": 1126
+    },
+    {
+      "names": [
+        "parseDurationMMSS"
+      ],
+      "upstream_start_line": 1164,
+      "upstream_end_line": 1176
+    },
+    {
+      "names": [
+        "_extractSchemaAtPosition"
+      ],
+      "upstream_start_line": 1180,
+      "upstream_end_line": 1205
+    },
+    {
+      "names": [
+        "extractSchemaOrg"
+      ],
+      "upstream_start_line": 1207,
+      "upstream_end_line": 1231
+    },
+    {
+      "names": [
+        "parseDescriptiveRows"
+      ],
+      "upstream_start_line": 1235,
+      "upstream_end_line": 1299
+    },
+    {
+      "names": [
+        "amazonTrackAudioModes"
+      ],
+      "upstream_start_line": 1742,
+      "upstream_end_line": 1768
+    },
+    {
+      "names": [
+        "formatAmazonTrackMetadata"
+      ],
+      "upstream_start_line": 1770,
+      "upstream_end_line": 1816
+    },
+    {
+      "names": [
+        "parseArtistCollectionItem"
+      ],
+      "upstream_start_line": 1872,
+      "upstream_end_line": 1914
+    },
+    {
+      "names": [
+        "pushUniqueArtistCollection"
+      ],
+      "upstream_start_line": 1916,
+      "upstream_end_line": 1922
+    },
+    {
+      "names": [
+        "parseArtistFromResponse"
+      ],
+      "upstream_start_line": 1924,
+      "upstream_end_line": 2102
+    },
+    {
+      "names": [
+        "buildArtistFromSearch"
+      ],
+      "upstream_start_line": 2202,
+      "upstream_end_line": 2291
+    },
+    {
+      "names": [
+        "mergeArtistFallbackData"
+      ],
+      "upstream_start_line": 2293,
+      "upstream_end_line": 2307
+    },
+    {
+      "names": [
+        "getArtist"
+      ],
+      "upstream_start_line": 2686,
+      "upstream_end_line": 2802
+    },
+    {
+      "names": [
+        "parseSearchResults"
+      ],
+      "upstream_start_line": 2858,
+      "upstream_end_line": 3089
+    },
+    {
+      "names": [
+        "customSearchSync"
+      ],
+      "upstream_start_line": 3091,
+      "upstream_end_line": 3118
+    }
+  ],
+  "referenced_globals": [
+    "Array",
+    "Date",
+    "Error",
+    "Intl",
+    "JSON",
+    "Map",
+    "Math",
+    "Number",
+    "Object",
+    "String",
+    "URL",
+    "decodeURIComponent",
+    "encodeURIComponent",
+    "fetch",
+    "http",
+    "log",
+    "parseInt",
+    "undefined",
+    "utils"
+  ],
+  "upstream_permissions": {
+    "network": [
+      "na.mesk.skill.music.a2z.com",
+      "na.web.skill.music.a2z.com",
+      "music.amazon.com",
+      "music.amazon.co",
+      "music.amazon.de",
+      "music.amazon.co.uk",
+      "music.amazon.co.jp",
+      "music.amazon.fr",
+      "music.amazon.it",
+      "music.amazon.es",
+      "music.amazon.in",
+      "music.amazon.com.br",
+      "music.amazon.com.mx",
+      "music.amazon.com.au",
+      "m.media-amazon.com",
+      "api.zarz.moe",
+      "song.link",
+      "album.link",
+      "artist.link",
+      "odesli.co",
+      "www.odesli.co",
+      "odesli.io",
+      "api.deezer.com",
+      "open.spotify.com",
+      "songstats.com",
+      "*.cloudfront.net"
+    ],
+    "storage": true,
+    "file": true
+  },
+  "upstream_settings": [
+    {
+      "key": "homeCountry",
+      "label": "Home feed country",
+      "type": "select",
+      "default": "US",
+      "options": [
+        "US",
+        "GB",
+        "JP",
+        "DE",
+        "FR",
+        "IT",
+        "ES",
+        "IN",
+        "BR",
+        "MX",
+        "AU"
+      ],
+      "description": "Country used for Home recommendations. Search and downloads keep their existing catalog. No VPN is required."
+    }
+  ],
+  "integration_status": "source-only; not installed or loaded by the app"
+}

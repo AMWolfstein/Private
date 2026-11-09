@@ -1,0 +1,258 @@
+{
+  "id": "melon-music",
+  "upstream_version": "2.0.7",
+  "upstream_repository": "https://github.com/mornyeapp/Mornye-Extension",
+  "upstream_commit": "12530ceda46dc78a10f9258b7d65a71452dfcf50",
+  "upstream_path": "sources/melon-music/index.js",
+  "upstream_sha256": "2b668f6a0587d4c282580e6c1a8c8f019bc8349d9ba1729083f0d99cabe051fa",
+  "extracted_sha256": "8e08c37343e23488204ec55368b088b5a26553796134609d22b887e209346659",
+  "capabilities": [
+    "artist_artwork"
+  ],
+  "exported_methods": [
+    "cleanup",
+    "getArtistArtwork",
+    "initialize"
+  ],
+  "retained_declarations": [
+    {
+      "names": [
+        "BASE_URL"
+      ],
+      "upstream_start_line": 1,
+      "upstream_end_line": 1
+    },
+    {
+      "names": [
+        "MOBILE_WEB_URL"
+      ],
+      "upstream_start_line": 3,
+      "upstream_end_line": 3
+    },
+    {
+      "names": [
+        "MOBILE_USER_AGENT"
+      ],
+      "upstream_start_line": 4,
+      "upstream_end_line": 4
+    },
+    {
+      "names": [
+        "PROVIDER_ID"
+      ],
+      "upstream_start_line": 5,
+      "upstream_end_line": 5
+    },
+    {
+      "names": [
+        "FEED_CACHE"
+      ],
+      "upstream_start_line": 6,
+      "upstream_end_line": 6
+    },
+    {
+      "names": [
+        "TRACK_CACHE"
+      ],
+      "upstream_start_line": 7,
+      "upstream_end_line": 7
+    },
+    {
+      "names": [
+        "ALBUM_CACHE"
+      ],
+      "upstream_start_line": 8,
+      "upstream_end_line": 8
+    },
+    {
+      "names": [
+        "initialize"
+      ],
+      "upstream_start_line": 11,
+      "upstream_end_line": 15
+    },
+    {
+      "names": [
+        "cleanup"
+      ],
+      "upstream_start_line": 17,
+      "upstream_end_line": 24
+    },
+    {
+      "names": [
+        "cleanText"
+      ],
+      "upstream_start_line": 26,
+      "upstream_end_line": 45
+    },
+    {
+      "names": [
+        "absoluteUrl"
+      ],
+      "upstream_start_line": 47,
+      "upstream_end_line": 72
+    },
+    {
+      "names": [
+        "firstMatch"
+      ],
+      "upstream_start_line": 74,
+      "upstream_end_line": 84
+    },
+    {
+      "names": [
+        "getTrackId"
+      ],
+      "upstream_start_line": 86,
+      "upstream_end_line": 88
+    },
+    {
+      "names": [
+        "getTrackName"
+      ],
+      "upstream_start_line": 90,
+      "upstream_end_line": 96
+    },
+    {
+      "names": [
+        "getArtistName"
+      ],
+      "upstream_start_line": 98,
+      "upstream_end_line": 100
+    },
+    {
+      "names": [
+        "artistInfo"
+      ],
+      "upstream_start_line": 102,
+      "upstream_end_line": 114
+    },
+    {
+      "names": [
+        "pageMeta"
+      ],
+      "upstream_start_line": 147,
+      "upstream_end_line": 149
+    },
+    {
+      "names": [
+        "resourceId"
+      ],
+      "upstream_start_line": 159,
+      "upstream_end_line": 163
+    },
+    {
+      "names": [
+        "getAlbumId"
+      ],
+      "upstream_start_line": 165,
+      "upstream_end_line": 176
+    },
+    {
+      "names": [
+        "getAlbumName"
+      ],
+      "upstream_start_line": 178,
+      "upstream_end_line": 185
+    },
+    {
+      "names": [
+        "normalizeCoverUrl"
+      ],
+      "upstream_start_line": 187,
+      "upstream_end_line": 192
+    },
+    {
+      "names": [
+        "getCoverUrl"
+      ],
+      "upstream_start_line": 194,
+      "upstream_end_line": 235
+    },
+    {
+      "names": [
+        "getDurationMs"
+      ],
+      "upstream_start_line": 237,
+      "upstream_end_line": 245
+    },
+    {
+      "names": [
+        "getIsrc"
+      ],
+      "upstream_start_line": 252,
+      "upstream_end_line": 257
+    },
+    {
+      "names": [
+        "parseTrackRow"
+      ],
+      "upstream_start_line": 259,
+      "upstream_end_line": 285
+    },
+    {
+      "names": [
+        "parseTracks"
+      ],
+      "upstream_start_line": 287,
+      "upstream_end_line": 357
+    },
+    {
+      "names": [
+        "makeTrackResult"
+      ],
+      "upstream_start_line": 359,
+      "upstream_end_line": 399
+    },
+    {
+      "names": [
+        "fetchHtml"
+      ],
+      "upstream_start_line": 427,
+      "upstream_end_line": 436
+    },
+    {
+      "names": [
+        "safeTracks"
+      ],
+      "upstream_start_line": 438,
+      "upstream_end_line": 443
+    },
+    {
+      "names": [
+        "fillSearchCovers"
+      ],
+      "upstream_start_line": 474,
+      "upstream_end_line": 496
+    },
+    {
+      "names": [
+        "getArtist"
+      ],
+      "upstream_start_line": 771,
+      "upstream_end_line": 799
+    }
+  ],
+  "referenced_globals": [
+    "Error",
+    "Number",
+    "RegExp",
+    "String",
+    "encodeURIComponent",
+    "http",
+    "log",
+    "parseInt"
+  ],
+  "upstream_permissions": {
+    "network": [
+      "www.melon.com",
+      "melon.com",
+      "m2.melon.com",
+      "m.app.melon.com"
+    ],
+    "storage": false,
+    "file": false
+  },
+  "upstream_settings": [],
+  "integration_status": "source-only; not installed or loaded by the app"
+}

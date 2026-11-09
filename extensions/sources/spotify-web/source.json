@@ -1,0 +1,387 @@
+{
+  "id": "spotify-web",
+  "upstream_version": "1.10.6",
+  "upstream_repository": "https://github.com/mornyeapp/Mornye-Extension",
+  "upstream_commit": "12530ceda46dc78a10f9258b7d65a71452dfcf50",
+  "upstream_path": "sources/spotify-web/index.js",
+  "upstream_sha256": "383abdbe4b04c2b564cbb7283d21e3e84f0e2ccf6230876e53e1d26064574c3e",
+  "extracted_sha256": "abdd6d33292737389162319260f1c03b87a0b4e1e8fcd2ce3adb78900d216a2e",
+  "capabilities": [
+    "artist_artwork"
+  ],
+  "exported_methods": [
+    "cleanup",
+    "getArtistArtwork",
+    "initialize"
+  ],
+  "retained_declarations": [
+    {
+      "names": [
+        "TOTP_SECRETS"
+      ],
+      "upstream_start_line": 13,
+      "upstream_end_line": 26
+    },
+    {
+      "names": [
+        "TOTP_VERSION"
+      ],
+      "upstream_start_line": 28,
+      "upstream_end_line": 28
+    },
+    {
+      "names": [
+        "TOKEN_EXPIRY_SKEW_MS"
+      ],
+      "upstream_start_line": 29,
+      "upstream_end_line": 29
+    },
+    {
+      "names": [
+        "clientState"
+      ],
+      "upstream_start_line": 31,
+      "upstream_end_line": 41
+    },
+    {
+      "names": [
+        "SPOTIFY_COVER_SIZE_300"
+      ],
+      "upstream_start_line": 47,
+      "upstream_end_line": 47
+    },
+    {
+      "names": [
+        "SPOTIFY_COVER_SIZE_640"
+      ],
+      "upstream_start_line": 48,
+      "upstream_end_line": 48
+    },
+    {
+      "names": [
+        "SPOTIFY_COVER_SIZE_MAX"
+      ],
+      "upstream_start_line": 49,
+      "upstream_end_line": 49
+    },
+    {
+      "names": [
+        "nativeTrackMetadataCache"
+      ],
+      "upstream_start_line": 50,
+      "upstream_end_line": 50
+    },
+    {
+      "names": [
+        "nativeAlbumMetadataCache"
+      ],
+      "upstream_start_line": 51,
+      "upstream_end_line": 51
+    },
+    {
+      "names": [
+        "deezerTrackMetadataCache"
+      ],
+      "upstream_start_line": 52,
+      "upstream_end_line": 52
+    },
+    {
+      "names": [
+        "deezerAlbumMetadataCache"
+      ],
+      "upstream_start_line": 53,
+      "upstream_end_line": 53
+    },
+    {
+      "names": [
+        "spotifyRadioPlaylistCache"
+      ],
+      "upstream_start_line": 57,
+      "upstream_end_line": 57
+    },
+    {
+      "names": [
+        "initialize"
+      ],
+      "upstream_start_line": 88,
+      "upstream_end_line": 125
+    },
+    {
+      "names": [
+        "persistClientState"
+      ],
+      "upstream_start_line": 127,
+      "upstream_end_line": 134
+    },
+    {
+      "names": [
+        "cleanup"
+      ],
+      "upstream_start_line": 136,
+      "upstream_end_line": 143
+    },
+    {
+      "names": [
+        "tokenIsUsable"
+      ],
+      "upstream_start_line": 145,
+      "upstream_end_line": 151
+    },
+    {
+      "names": [
+        "absoluteExpiryMs"
+      ],
+      "upstream_start_line": 153,
+      "upstream_end_line": 159
+    },
+    {
+      "names": [
+        "relativeExpiryMs"
+      ],
+      "upstream_start_line": 161,
+      "upstream_end_line": 165
+    },
+    {
+      "names": [
+        "generateTOTP"
+      ],
+      "upstream_start_line": 167,
+      "upstream_end_line": 196
+    },
+    {
+      "names": [
+        "base32Encode"
+      ],
+      "upstream_start_line": 198,
+      "upstream_end_line": 219
+    },
+    {
+      "names": [
+        "generateTOTPCode"
+      ],
+      "upstream_start_line": 221,
+      "upstream_end_line": 242
+    },
+    {
+      "names": [
+        "base32Decode"
+      ],
+      "upstream_start_line": 244,
+      "upstream_end_line": 266
+    },
+    {
+      "names": [
+        "extractCookies"
+      ],
+      "upstream_start_line": 268,
+      "upstream_end_line": 297
+    },
+    {
+      "names": [
+        "buildCookieHeader"
+      ],
+      "upstream_start_line": 299,
+      "upstream_end_line": 307
+    },
+    {
+      "names": [
+        "spotifyResponseError"
+      ],
+      "upstream_start_line": 309,
+      "upstream_end_line": 315
+    },
+    {
+      "names": [
+        "spotifyRequest"
+      ],
+      "upstream_start_line": 317,
+      "upstream_end_line": 346
+    },
+    {
+      "names": [
+        "ensureDeviceID"
+      ],
+      "upstream_start_line": 348,
+      "upstream_end_line": 356
+    },
+    {
+      "names": [
+        "getSessionInfo"
+      ],
+      "upstream_start_line": 358,
+      "upstream_end_line": 399
+    },
+    {
+      "names": [
+        "getAccessToken"
+      ],
+      "upstream_start_line": 401,
+      "upstream_end_line": 446
+    },
+    {
+      "names": [
+        "getClientToken"
+      ],
+      "upstream_start_line": 448,
+      "upstream_end_line": 509
+    },
+    {
+      "names": [
+        "generateDeviceID"
+      ],
+      "upstream_start_line": 511,
+      "upstream_end_line": 518
+    },
+    {
+      "names": [
+        "ensureInitialized"
+      ],
+      "upstream_start_line": 520,
+      "upstream_end_line": 549
+    },
+    {
+      "names": [
+        "resetAuthState"
+      ],
+      "upstream_start_line": 551,
+      "upstream_end_line": 558
+    },
+    {
+      "names": [
+        "query"
+      ],
+      "upstream_start_line": 560,
+      "upstream_end_line": 592
+    },
+    {
+      "names": [
+        "fetchArtist"
+      ],
+      "upstream_start_line": 1147,
+      "upstream_end_line": 1335
+    },
+    {
+      "names": [
+        "getNestedValue"
+      ],
+      "upstream_start_line": 1337,
+      "upstream_end_line": 1363
+    },
+    {
+      "names": [
+        "spotifyIDFromURI"
+      ],
+      "upstream_start_line": 1365,
+      "upstream_end_line": 1370
+    },
+    {
+      "names": [
+        "normalizeSpotifyDate"
+      ],
+      "upstream_start_line": 1372,
+      "upstream_end_line": 1390
+    },
+    {
+      "names": [
+        "uniqueMetadataValues"
+      ],
+      "upstream_start_line": 1392,
+      "upstream_end_line": 1404
+    },
+    {
+      "names": [
+        "spotifyArtistEntries"
+      ],
+      "upstream_start_line": 1406,
+      "upstream_end_line": 1425
+    },
+    {
+      "names": [
+        "spotifyArtistNames"
+      ],
+      "upstream_start_line": 1427,
+      "upstream_end_line": 1433
+    },
+    {
+      "names": [
+        "spotifyBestImage"
+      ],
+      "upstream_start_line": 1435,
+      "upstream_end_line": 1456
+    },
+    {
+      "names": [
+        "spotifyMaxCoverURL"
+      ],
+      "upstream_start_line": 1458,
+      "upstream_end_line": 1468
+    },
+    {
+      "names": [
+        "spotifyCopyrightText"
+      ],
+      "upstream_start_line": 1470,
+      "upstream_end_line": 1479
+    },
+    {
+      "names": [
+        "normalizeSpotifyAlbumType"
+      ],
+      "upstream_start_line": 1481,
+      "upstream_end_line": 1491
+    },
+    {
+      "names": [
+        "isExplicitSpotify"
+      ],
+      "upstream_start_line": 1566,
+      "upstream_end_line": 1574
+    },
+    {
+      "names": [
+        "atob"
+      ],
+      "upstream_start_line": 2319,
+      "upstream_end_line": 2343
+    },
+    {
+      "names": [
+        "getArtist"
+      ],
+      "upstream_start_line": 2801,
+      "upstream_end_line": 2809
+    }
+  ],
+  "referenced_globals": [
+    "Array",
+    "Date",
+    "Error",
+    "JSON",
+    "Map",
+    "Math",
+    "Number",
+    "String",
+    "http",
+    "isFinite",
+    "log",
+    "parseInt",
+    "storage",
+    "undefined",
+    "utils"
+  ],
+  "upstream_permissions": {
+    "network": [
+      "open.spotify.com",
+      "*.spotify.com",
+      "api-partner.spotify.com",
+      "clienttoken.spotify.com",
+      "i.scdn.co",
+      "*.scdn.co",
+      "api.deezer.com"
+    ],
+    "storage": true,
+    "file": false
+  },
+  "upstream_settings": [],
+  "integration_status": "source-only; not installed or loaded by the app"
+}
