@@ -103,12 +103,6 @@ impl OpenOptionsPortableExt for std::fs::OpenOptions {
                 (rustix::fs::OFlags::NOFOLLOW | rustix::fs::OFlags::NONBLOCK).bits() as i32,
             );
         }
-        #[cfg(windows)]
-        {
-            use std::os::windows::fs::OpenOptionsExt;
-            use windows_sys::Win32::Storage::FileSystem::FILE_FLAG_OPEN_REPARSE_POINT;
-            self.custom_flags(FILE_FLAG_OPEN_REPARSE_POINT);
-        }
         self
     }
 
@@ -127,8 +121,6 @@ impl OpenOptionsPortableExt for std::fs::OpenOptions {
             use std::os::unix::fs::OpenOptionsExt;
             self.mode(mode);
         }
-        #[cfg(not(unix))]
-        let _ = mode;
         self
     }
 }
@@ -147,8 +139,6 @@ impl DirBuilderPortableExt for std::fs::DirBuilder {
             use std::os::unix::fs::DirBuilderExt;
             self.mode(mode);
         }
-        #[cfg(not(unix))]
-        let _ = mode;
         self
     }
 }

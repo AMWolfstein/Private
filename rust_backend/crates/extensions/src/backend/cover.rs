@@ -43,7 +43,7 @@ pub fn library_cover_stem(key: &str) -> String {
 /// links on desktop and iOS; every song keeps its own name. Android uses
 /// content names. Windows keeps copies because a reader's sharing mode
 /// covers every name of a file.
-const LINK_THUMBNAILS: bool = cfg!(any(target_vendor = "apple", target_os = "linux"));
+const LINK_THUMBNAILS: bool = cfg!(target_os = "linux");
 
 /// Whether a thumbnail written at `modified` may be reused after the
 /// directory's regenerate marker was touched at `regenerate`.
@@ -1002,7 +1002,7 @@ pub(super) mod tests {
     }
 
     /// Desktop and iOS link identical thumbnails; Android keeps copies.
-    const LINKED: bool = cfg!(any(target_vendor = "apple", target_os = "linux"));
+    const LINKED: bool = cfg!(target_os = "linux");
 
     #[cfg(unix)]
     #[test]

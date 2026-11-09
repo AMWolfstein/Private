@@ -237,12 +237,6 @@ fn clean_path(name: &[u8]) -> Result<PathBuf, PackageError> {
     }
     // Extraction joins this onto the staging directory with `std::fs`, so a
     // drive prefix, stream name or device name would escape it on Windows.
-    #[cfg(not(unix))]
-    {
-        let joined = String::from_utf8(parts.join(&b'/')).map_err(|_| unsafe_path())?;
-        crate::windows_path::check_relative(&joined).map_err(|_| unsafe_path())?;
-        Ok(PathBuf::from(joined))
-    }
 }
 
 fn number16(bytes: &[u8], offset: usize) -> u64 {
