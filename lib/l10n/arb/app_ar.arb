@@ -7138,14 +7138,6 @@
   "@nowPlayingNoMetadata": {
     "description": "Empty state when track metadata cannot be loaded"
   },
-  "linkHandoffSending": "Sending this song to {name}...",
-  "@linkHandoffSending": {
-    "placeholders": {
-      "name": {
-        "type": "String"
-      }
-    }
-  },
   "linkSaveToPhoneCancelled": "Saving stopped",
   "announcementUnableToOpenLink": "Unable to open link. Please try again.",
   "trackConvertLosslessOutputWithCap": "Lossless output with {quality} cap",

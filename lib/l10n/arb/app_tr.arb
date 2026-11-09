@@ -7138,14 +7138,6 @@
   "@nowPlayingNoMetadata": {
     "description": "Empty state when track metadata cannot be loaded"
   },
-  "linkHandoffSending": "Bu şarkı {name} cihazına gönderiliyor...",
-  "@linkHandoffSending": {
-    "placeholders": {
-      "name": {
-        "type": "String"
-      }
-    }
-  },
   "linkSaveToPhoneCancelled": "Kaydetme durduruldu",
   "announcementUnableToOpenLink": "Bağlantı açılamadı. Lütfen tekrar deneyin.",
   "trackConvertLosslessOutputWithCap": "{quality} sınırıyla kayıpsız çıktı",

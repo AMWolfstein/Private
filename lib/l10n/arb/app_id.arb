@@ -6781,7 +6781,6 @@
   "@nowPlayingNoMetadata": {
     "description": "Empty state when track metadata cannot be loaded"
   },
-  "linkHandoffSending": "Mengirim lagu ini ke {name}...",
   "linkSaveToPhoneCancelled": "Penyimpanan dihentikan",
   "announcementUnableToOpenLink": "Tidak dapat membuka link. Coba lagi.",
   "trackConvertLosslessOutputWithCap": "Output loseless dengan batas {quality}",

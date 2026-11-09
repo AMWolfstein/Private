@@ -7138,14 +7138,6 @@
   "@nowPlayingNoMetadata": {
     "description": "Empty state when track metadata cannot be loaded"
   },
-  "linkHandoffSending": "이 노래를 '{name}'에게 전송 중...",
-  "@linkHandoffSending": {
-    "placeholders": {
-      "name": {
-        "type": "String"
-      }
-    }
-  },
   "linkSaveToPhoneCancelled": "Saving stopped",
   "announcementUnableToOpenLink": "링크를 열 수 없습니다. 다시 시도해 주세요",
   "trackConvertLosslessOutputWithCap": "{quality} 제한이 있는 무손실 출력",
