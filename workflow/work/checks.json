@@ -25,7 +25,7 @@
       "timeout": 2400
     },
     "rust": {
-      "run": ["cargo", "+1.99.1", "test", "--manifest-path", "rust_backend/Cargo.toml", "--workspace"],
+      "run": ["cargo", "+1.99.1", "test", "--manifest-path", "rust_backend/Cargo.toml", "--workspace", "--locked"],
       "requires": ["rust_backend/Cargo.toml"],
       "timeout": 2400
     },
