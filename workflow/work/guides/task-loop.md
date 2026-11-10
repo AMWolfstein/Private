@@ -10,12 +10,14 @@ It replaces the phase gates for that change. The owner decides when planning is 
    test or analyzer for the code it touched.
 3. Review the task in a fresh read-only context: does the diff do what the task says,
    with nothing extra? Record the result in `log.md` under the task ID.
-4. If the review and the check pass: tick the task (`- [x] T###`), add the evidence after it,
-   and commit. The commit holds the task's doc changes and the code it changed, with the
-   task ID in the message.
-5. If something is wrong: fix it in a new commit that names the task and the problem,
-   then go back to step 3. Do not amend or rewrite earlier commits.
+4. Fix every problem the check or review finds inside this same task, before committing.
+   Repeat steps 2 and 3 until the task is complete.
+5. Only when the task is complete: tick it (`- [x] T###`), add the evidence after it, and make
+   one commit. That commit holds the code this task changed and its doc changes (spec, plan,
+   tasks, log), with the task ID in the message. Nothing else goes in it.
 6. Move to the next task. Repeat until no `- [ ]` task remains.
+
+A task never gets a commit while it is incomplete.
 
 ## After the last task
 
@@ -23,8 +25,9 @@ It replaces the phase gates for that change. The owner decides when planning is 
   to HEAD (`git log` from the planning base, and `git diff <base>..HEAD`). It checks that the tasks
   together do what the spec asks, that nothing from one task breaks another, and that no leftovers or
   unplanned changes remain. Record the result and the reviewed commit hash in `log.md`.
-- If the full review finds problems: fix them in new commits, one per problem, and review those
-  commits. Then re-run the full review on the final HEAD, because a fix can break something else.
+- If the full review finds problems: fix all of them in one new commit, with the doc changes it needs.
+  If the fixes are too many for one commit, add a mandatory task `Last review` to `tasks.md` and put
+  the fixes in its own commit. After any fix, re-check the affected tasks' `check:` commands.
 - Build the APK (`scripts/build_android.sh`) from the final commit and audit it
   (`scripts/check_backend_apk.py`). Record the sha256 in `log.md`.
 - The owner tests the APK on the device and reports problems. Each reported problem is
