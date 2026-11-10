@@ -8,3 +8,5 @@
 - Lessons: none.
 
 - 2026-11-10: Two consecutive independent clean design review rounds completed. Planning artifacts are committed together once. Bootstrap T000/T001 will use the accepted task protocol while the new CLI is implemented.
+
+- T000: map refreshed and independently reviewed CLEAN by loop_t000_review. Coverage: 1769 indexed, 95 resource-indexed, 5 shell-indexed; workflow sources are deliberately outside graph corpus, so T001 uses explicit direct-source fallback. Context refreshed; no runtime claims. No source checks required for map-only task.

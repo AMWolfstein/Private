@@ -54,6 +54,35 @@
   },
   "execution": {
     "active": null,
-    "tasks": {}
+    "tasks": {
+      "T000": {
+        "status": "done",
+        "head": "f26235e405cc994b4d31b78e66777b9bbe07dfe1",
+        "base": "f26235e405cc994b4d31b78e66777b9bbe07dfe1",
+        "declaration": "T000 [MAP] Refresh repository map and context \u2014 check: map status",
+        "cycle": 1,
+        "reviews": [
+          {
+            "cycle": 1,
+            "round": 1,
+            "result": "clean",
+            "reviewer": "loop_t000_review",
+            "fingerprint": "cec4823ee0538f11b22aa77b6916b2d2631dc73c",
+            "map": {
+              "digest": "e2049c3eabbcff4a506334df48f680ec2996d1a0a6a977e1f5d89b081a8973a5",
+              "corpus": "b2dba06d592d63f2c4c3401ace9c0c52e09e5ed26c997219fbbd3d3dfb493e75",
+              "structure": "codegraph"
+            }
+          }
+        ],
+        "checks": {
+          "status": "NOT_REQUIRED",
+          "fingerprint": "cec4823ee0538f11b22aa77b6916b2d2631dc73c",
+          "ids": []
+        },
+        "commit_parent": "f26235e405cc994b4d31b78e66777b9bbe07dfe1",
+        "transaction": "fe85adeebcbc4a61a4d9f6fd4cbd828b"
+      }
+    }
   }
 }
