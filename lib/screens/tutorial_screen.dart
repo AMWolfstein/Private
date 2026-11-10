@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart' show LogicalKeyboardKey;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mornye/providers/settings_provider.dart';
 import 'package:mornye/l10n/l10n.dart';
 import 'package:mornye/theme/app_tokens.dart';
 import 'package:mornye/utils/adaptive_layout.dart';
-import 'package:mornye/utils/desktop_platform.dart';
 import 'package:mornye/widgets/scroll_edge_fade.dart';
 import 'package:mornye/widgets/app_icon_button.dart';
 import 'package:mornye/widgets/app_loading_indicator.dart';
@@ -79,8 +77,7 @@ class _TutorialScreenState extends ConsumerState<TutorialScreen> {
     final scaffold = Scaffold(
       backgroundColor: colorScheme.surface,
       body: SafeArea(
-        child: _desktopColumn(
-          Column(
+        child: Column(
             children: [
               Padding(
                 padding: EdgeInsets.symmetric(
@@ -274,29 +271,11 @@ class _TutorialScreenState extends ConsumerState<TutorialScreen> {
               ),
             ],
           ),
-        ),
       ),
     );
-    if (!isDesktopPlatform) return scaffold;
-    // Enter moves on, as the default button of a desktop window would.
-    return CallbackShortcuts(
-      bindings: {
-        const SingleActivator(LogicalKeyboardKey.enter): _nextPage,
-        const SingleActivator(LogicalKeyboardKey.numpadEnter): _nextPage,
-      },
-      child: Focus(autofocus: true, child: scaffold),
-    );
+    return scaffold;
   }
 
-  /// Desktop windows keep the tour in one centered column.
-  Widget _desktopColumn(Widget child) => isDesktopPlatform
-      ? Center(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 560),
-            child: child,
-          ),
-        )
-      : child;
 
   Widget _buildFeatureList(
     BuildContext context,

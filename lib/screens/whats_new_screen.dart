@@ -15,22 +15,18 @@ import 'package:material_3_expressive/material_3_expressive.dart'
 import 'package:mornye/constants/app_info.dart';
 import 'package:mornye/l10n/l10n.dart';
 import 'package:mornye/providers/settings_provider.dart';
-import 'package:mornye/services/link/client/link_client_controller.dart';
 import 'package:mornye/services/local_network_access.dart';
 import 'package:mornye/theme/app_tokens.dart';
 import 'package:mornye/theme/mornye_icons.dart';
 import 'package:mornye/theme/mornye_theme.dart';
 import 'package:mornye/utils/android_tv.dart';
-import 'package:mornye/utils/desktop_platform.dart';
 import 'package:mornye/widgets/app_bottom_sheet.dart';
 import 'package:mornye/widgets/app_icon_button.dart';
 import 'package:mornye/widgets/app_shape.dart';
 import 'package:mornye/widgets/expressive_button.dart';
 
 /// The highlights of [AppInfo.whatsNewRelease] on phones and tablets, shown
-/// once after an update and again from About. It keeps the look of the
-/// 5.2 rebrand tour; pages list only what this device can use. Desktop uses
-/// [showWhatsNewDialog] instead.
+/// once after an update and again from About.
 class WhatsNewScreen extends ConsumerStatefulWidget {
   const WhatsNewScreen({super.key, this.localNetworkAccess});
 
@@ -89,8 +85,8 @@ class _WhatsNewScreenState extends ConsumerState<WhatsNewScreen> {
     if (_page > 0) _goTo(_page - 1);
   }
 
-  /// Skip never passes an unanswered Nearby devices page: Link cannot find a
-  /// computer on Android 17 without it.
+  /// Skip never passes an unanswered Nearby devices page: network storage
+  /// cannot find servers on Android 17 without it.
   void _skip(int nearbyPage) {
     if (nearbyPage > _page && _nearbyAllowed == null) {
       _goTo(nearbyPage);
@@ -104,12 +100,6 @@ class _WhatsNewScreenState extends ConsumerState<WhatsNewScreen> {
     try {
       await _localNetwork.ensureGranted();
       // Discovery that found nothing without it starts over.
-      if (ref.read(linkClientSupportedProvider)) {
-        ref
-            .read(linkClientControllerProvider.notifier)
-            .requestLocalNetworkAccess()
-            .ignore();
-      }
       if (mounted) setState(() => _nearbyAllowed = true);
     } on LocalNetworkPermissionException {
       if (mounted) setState(() => _nearbyAllowed = false);
@@ -257,7 +247,7 @@ class _WhatsNewScreenState extends ConsumerState<WhatsNewScreen> {
                         ),
                         child: Text(
                           gated
-                              ? l10n.whatsNewLinkNearbyAllow
+                              ? l10n.whatsNewNearbyAllow
                               : last
                               ? l10n.whatsNewDone
                               : l10n.upgradeIntroContinue,
@@ -275,31 +265,6 @@ class _WhatsNewScreenState extends ConsumerState<WhatsNewScreen> {
   }
 }
 
-/// Desktop shows the tour once over the app, as the dialog of
-/// [showWhatsNewDialog], instead of the phone's full-screen pages.
-Future<void> maybeShowWhatsNewDialog(BuildContext context, WidgetRef ref) {
-  if (!isDesktopPlatform ||
-      ref.read(settingsProvider).whatsNewSeen == AppInfo.whatsNewRelease) {
-    return Future.value();
-  }
-  return showWhatsNewDialog(context);
-}
-
-/// The tour as a desktop dialog: the sections listed beside the selected
-/// one, Skip and Continue in the footer. Closing it any way marks it seen.
-Future<void> showWhatsNewDialog(BuildContext context) async {
-  final settings = ProviderScope.containerOf(
-    context,
-    listen: false,
-  ).read(settingsProvider.notifier);
-  await showAppSheetDialog<void>(
-    context: context,
-    isScrollControlled: true,
-    dialogSize: AppDialogSize.wide,
-    builder: (_) => const _WhatsNewDialog(),
-  );
-  settings.setWhatsNewSeen();
-}
 
 class _WhatsNewDialog extends StatefulWidget {
   const _WhatsNewDialog();
@@ -545,7 +510,7 @@ class WhatsNewHighlight {
   final List<WhatsNewFeature> features;
 
   /// The page that asks for Android's Nearby devices permission, which
-  /// Mornye Link and network storage need from Android 17.
+  /// network storage needs from Android 17.
   final bool nearbyDevices;
 }
 
@@ -562,39 +527,14 @@ class WhatsNewFeature {
 
 /// The tour for [AppInfo.whatsNewRelease]: an overview, then one page per
 /// area. Android Auto and exclusive output appear only where they exist;
-/// [nearbyDevices] adds the Nearby devices page right after Mornye Link.
+/// [nearbyDevices] adds the Nearby devices page right after the overview.
 @visibleForTesting
 List<WhatsNewHighlight> whatsNewHighlights(
   AppLocalizations l10n, {
-  bool? androidPhone,
-  bool? desktop,
   bool nearbyDevices = false,
 }) {
-  final showAndroidAuto = androidPhone ?? (Platform.isAndroid && !isAndroidTv);
-  final showExclusiveOutput = desktop ?? isDesktopPlatform;
+  final showAndroidAuto = Platform.isAndroid && !isAndroidTv;
   final sections = [
-    WhatsNewHighlight(
-      icon: Icons.computer,
-      title: l10n.whatsNewLinkTitle,
-      description: l10n.whatsNewLinkDesc,
-      features: [
-        WhatsNewFeature(
-          Icons.play_circle,
-          l10n.whatsNewLinkPlayTitle,
-          l10n.whatsNewLinkPlayBody,
-        ),
-        WhatsNewFeature(
-          Icons.swap_horiz,
-          l10n.whatsNewLinkTransferTitle,
-          l10n.whatsNewLinkTransferBody,
-        ),
-        WhatsNewFeature(
-          Icons.sync,
-          l10n.whatsNewLinkSyncTitle,
-          l10n.whatsNewLinkSyncBody,
-        ),
-      ],
-    ),
     WhatsNewHighlight(
       icon: Icons.auto_awesome,
       title: l10n.whatsNewHomeTitle,
@@ -642,12 +582,6 @@ List<WhatsNewHighlight> whatsNewHighlights(
             Icons.directions_car,
             l10n.whatsNewPlayerAutoTitle,
             l10n.whatsNewPlayerAutoBody,
-          ),
-        if (showExclusiveOutput)
-          WhatsNewFeature(
-            Icons.high_quality,
-            l10n.whatsNewPlayerExclusiveTitle,
-            l10n.whatsNewPlayerExclusiveBody,
           ),
       ],
     ),
@@ -716,7 +650,6 @@ List<WhatsNewHighlight> whatsNewHighlights(
           WhatsNewFeature(section.icon, section.title),
       ],
     ),
-    sections.first,
     // A setup step rather than a highlight, so the overview leaves it out.
     if (nearbyDevices)
       WhatsNewHighlight(
@@ -725,11 +658,6 @@ List<WhatsNewHighlight> whatsNewHighlights(
         description: l10n.whatsNewNearbyDesc,
         nearbyDevices: true,
         features: [
-          WhatsNewFeature(
-            Icons.computer,
-            l10n.whatsNewNearbyLinkTitle,
-            l10n.whatsNewNearbyLinkBody,
-          ),
           WhatsNewFeature(
             Icons.dns,
             l10n.whatsNewNearbyStorageTitle,
@@ -742,7 +670,7 @@ List<WhatsNewHighlight> whatsNewHighlights(
           ),
         ],
       ),
-    ...sections.skip(1),
+    ...sections,
   ];
 }
 
@@ -888,7 +816,7 @@ class _NearbyStatus extends StatelessWidget {
           Expanded(
             child: Text(
               allowed
-                  ? l10n.whatsNewLinkNearbyGranted
+                  ? l10n.whatsNewNearbyGranted
                   : l10n.whatsNewNearbyRefused,
               style: theme.textTheme.titleSmall?.copyWith(color: color),
             ),

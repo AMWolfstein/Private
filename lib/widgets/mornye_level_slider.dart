@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mornye/utils/android_tv.dart';
 
-/// An iOS-style slider: a thin rounded track and a white shadowed knob.
 ///
 /// Unlike [CupertinoSlider], the active track can grow from an [origin]
 /// inside the range (gain, balance) and the slider can stand [vertical], with
