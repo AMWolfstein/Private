@@ -22,6 +22,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+import workaudit  # noqa: E402  (optional cleanup audit)
 import workflow_env
 import workmap  # noqa: E402  (map and context retrieval)
 import worktasks  # noqa: E402
@@ -827,6 +828,12 @@ def main(argv: list[str] | None = None) -> int:
     s = sub.add_parser('packet'); s.add_argument('--base', default='HEAD'); s.add_argument('--goal')
     s.add_argument('--change'); s.add_argument('--out', default='.work/review/packet.md')
     sub.add_parser('hook-bash')
+    s = sub.add_parser('audit', help='optional: dead code and cleanup candidates for a language, path or change')
+    s.add_argument('--lang', action='append', default=[], help='dart, kotlin, rust or cpp (repeatable)')
+    s.add_argument('--path', action='append', default=[], help='file or directory (repeatable)')
+    s.add_argument('--base', help='only files changed since this revision')
+    s.add_argument('--change', help='only files changed by this change record')
+    s.add_argument('--out', help='report path (default .work/audit/<scope>.md)')
     s = sub.add_parser('setup', help='provision Linux project-local Python and CodeGraph tools')
     s.add_argument('--offline', action='store_true', help='validate/reuse only; never download')
     sub.add_parser('doctor', help='read-only tool/version/parser diagnostics')
@@ -917,6 +924,15 @@ def main(argv: list[str] | None = None) -> int:
             else:
                 print(packet_now['text'], end='')
             return 0
+        elif args.action == 'audit':
+            base, label = args.base, None
+            if args.change:
+                if base:
+                    raise Blocked('use --base or --change, not both')
+                folder = find_change(root, args.change)
+                base = read_state(folder)['base']
+                label = '-'.join(['change', folder.name, *args.lang])
+            result = workaudit.audit(root, args.lang, args.path, base, args.out, is_record, label)
         elif args.action == 'prove':
             command = args.cmd[1:] if args.cmd[:1] == ['--'] else args.cmd
             result = prove(root, command, args.timeout, expected_failure=args.expect_failure)
@@ -926,7 +942,7 @@ def main(argv: list[str] | None = None) -> int:
         print(json.dumps({'status': 'BLOCKED', 'reason': str(error)}, ensure_ascii=False, indent=2))
         return 2
     print(json.dumps(result, indent=2, ensure_ascii=False))
-    return 0 if result.get('status') in ('PASS', 'NO_CHANGES', 'READY_TO_COMMIT') else 2 if result.get('status') == 'BLOCKED' else 1
+    return 0 if result.get('status') in ('PASS', 'NO_CHANGES', 'NO_FILES', 'READY_TO_COMMIT') else 2 if result.get('status') == 'BLOCKED' else 1
 
 
 if __name__ == '__main__':

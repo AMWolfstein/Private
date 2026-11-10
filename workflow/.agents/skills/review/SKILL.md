@@ -27,6 +27,6 @@ Review is part of each task, including TOR### and the last cumulative [FINAL] ta
 Final [FINAL] review covers all implemented tasks together, their interactions, original
 requirements and cumulative diff. Final fixes use the same loop and one task commit.
 
-Read-only audits requested by the owner produce findings only. Design review in plan/SKILL.md
+Read-only audits requested by the owner produce findings only (cleanup audits: audit skill). Design review in plan/SKILL.md
 remains unchanged. Real checks do not prove semantic correctness, reviewer independence or
 physical-device behavior; state any limitation. See guides/quality.md and relevant contracts.

@@ -21,7 +21,7 @@ TASK = re.compile(r'^- \[([ xX])\] ((?:T\d{3}|TOR\d{3}))\b([^\n]*)$', re.M)
 
 def rows(folder: Path) -> list[dict]:
     return [{'id': m[2], 'done': m[1].lower() == 'x', 'text': (m[2] + m[3]).strip(),
-             'kind': 'final' if '[FINAL]' in m[3] else 'work'}
+             'kind': 'final' if '[FINAL]' in m[3] else 'audit' if '[AUDIT]' in m[3] else 'work'}
             for m in TASK.finditer((folder / 'tasks.md').read_text())]
 
 
@@ -98,6 +98,9 @@ class TaskLoop:
         pending_finals = [r for r in self.queue if r['kind'] == 'final' and not r['done']]
         if pending_finals and (len(pending_finals) != 1 or pending_finals[0] != self.queue[-1]):
             raise Blocked('only the last task may be an unfinished final review')
+        pending_audits = [i for i, r in enumerate(self.queue) if r['kind'] == 'audit' and not r['done']]
+        if pending_audits and pending_audits != [len(self.queue) - 2]:
+            raise Blocked('an unfinished [AUDIT] task is optional, single, and directly before the [FINAL] task')
         missing = set(self.items) - {row["id"] for row in self.queue}
         if missing:
             raise Blocked(f"recorded tasks cannot be removed from tasks.md: {', '.join(sorted(missing))}")
@@ -283,7 +286,15 @@ class TaskLoop:
         self.execution['active'] = ident
         self.save()
         atomic_write(pointer, json.dumps({'change': self.folder.name, 'task': ident}))
-        return {'status': 'PASS', 'task': ident, 'context': str(path.relative_to(self.root))}
+        result = {'status': 'PASS', 'task': ident, 'context': str(path.relative_to(self.root))}
+        if pending['kind'] == 'audit':  # scope: everything this change touched, not the whole repository
+            try:
+                report = self.c.workaudit.audit(self.root, base=self.state['base'], is_record=self.c.is_record,
+                                                label=f'{self.folder.name}-{ident}')
+                result['audit'] = {key: report[key] for key in ('report', 'files', 'proven', 'gaps')}
+            except Blocked as error:
+                result['audit_blocked'] = str(error)
+        return result
 
     def check(self, ident: str, checks=(), **_):
         row, item = self._current(ident)
@@ -435,6 +446,8 @@ class TaskLoop:
         active = self.execution['active']
         if active and self._row(active)['kind'] == 'final':
             raise Blocked('finish the active final task first; a later request reopens a fresh final review')
+        if active and self._row(active)['kind'] == 'audit':
+            raise Blocked('finish the active audit task first; the request then queues before the final review')
         number = max((int(r['id'][3:]) for r in self.queue if r['id'].startswith('TOR')), default=0) + 1
         if number > 999:
             raise Blocked('TOR numbering exhausted; start a new change')

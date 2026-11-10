@@ -31,6 +31,8 @@ reusable/offline after initial provisioning, and normal CLI commands discover it
 ## Choose and execute
 
 - Questions/audits: read-only unless implementation is requested.
+- Cleanup (dead code, simpler or better-written code) for a language, path or change: audit skill.
+  Optional; only on the owner's request or an [AUDIT] task. Never start it on your own.
 - Small bounded behavior: fix skill, `new --size small`, no planning stage. Contracts, data
   formats, architectural choices or multiple independent units require feature/architecture
   planning. File/line counts and high-risk path hints alone do not determine size.

@@ -1,0 +1,62 @@
+{
+  "version": 1,
+  "notes": [
+    "Used only by the optional 'work.py audit' command and [AUDIT] tasks. Nothing else reads it.",
+    "A finding is 'proven' only when the language tool reports one of the 'proven' codes inside the scope. Everything else is a candidate.",
+    "A language with no tool, or whose tool is not installed, is an explicit coverage gap in the report.",
+    "A tool runs from 'cwd' (default: repository root) so a directory-local toolchain file applies; its relative paths are resolved from there.",
+    "'protected' paths (fnmatch, '*' crosses '/') are never audited: vendored and generated code.",
+    "'keep' records what the owner decided to leave: {\"path\": glob, \"reason\": text, optional \"code\", optional \"contains\"}. The audit stops reporting it."
+  ],
+  "languages": {
+    "dart": {
+      "extensions": [".dart"],
+      "tool": {
+        "run": ["dart", "analyze", "--format=machine"],
+        "parser": "dart-machine",
+        "requires": ["pubspec.yaml"],
+        "accepts_paths": true,
+        "max_paths": 40,
+        "nonzero_ok": true,
+        "timeout": 1800
+      },
+      "proven": [
+        "unused_import", "unused_shown_name", "duplicate_import", "unnecessary_import",
+        "unused_element", "unused_element_parameter", "unused_field", "unused_local_variable",
+        "unused_catch_clause", "unused_catch_stack", "unused_label",
+        "dead_code", "dead_code_catch_following_catch", "dead_code_on_catch_subtype"
+      ]
+    },
+    "rust": {
+      "extensions": [".rs"],
+      "tool": {
+        "run": ["cargo", "check", "--workspace", "--all-targets", "--locked", "--message-format=json"],
+        "parser": "cargo-json",
+        "cwd": "rust_backend",
+        "requires": ["rust_backend/Cargo.toml"],
+        "timeout": 2400
+      },
+      "proven": [
+        "dead_code", "unused_imports", "unused_variables", "unused_mut", "unused_assignments",
+        "unused_macros", "unreachable_code", "unreachable_patterns"
+      ]
+    },
+    "kotlin": {
+      "extensions": [".kt", ".kts"],
+      "tool": null
+    },
+    "cpp": {
+      "extensions": [".cpp", ".cc", ".c", ".h", ".hpp"],
+      "tool": null
+    }
+  },
+  "protected": [
+    "third_party/*",
+    "rust_backend/vendor/*",
+    "rust_backend/target/*",
+    "*.g.dart",
+    "*.freezed.dart",
+    "lib/l10n/app_localizations*.dart"
+  ],
+  "keep": []
+}

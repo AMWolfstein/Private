@@ -26,6 +26,24 @@ bundle ONE time before execution. `planning-commit` prepares records; it does no
 
 No separate execution build/review/ship progression and no code-then-records commits.
 
+## Optional audit
+
+Off unless asked for. `work.py audit` reads a named scope and reports dead code a language tool
+proves, plus the files for a read-only code-auditor to propose simplification and rewrite candidates:
+
+```sh
+python3 workflow/scripts/work/work.py audit --lang rust
+python3 workflow/scripts/work/work.py audit --path lib/services/cast --path lib/widgets
+python3 workflow/scripts/work/work.py audit --change NNN
+python3 workflow/scripts/work/work.py audit --base COMMIT --lang dart
+```
+
+Languages: dart, rust (tool-backed), kotlin, cpp (no tool: candidates only, reported as a gap).
+Tool-proven findings are applied directly; candidates are the owner's choice. To audit a change as
+part of its plan, put one `[AUDIT]` task directly before [FINAL]; it uses the same task loop and
+its report covers the files the change touched. Settings, protected paths and the keep list are in
+`workflow/work/audit.json`. See the audit skill.
+
 ## Agent commands
 
 ```sh

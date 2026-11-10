@@ -44,6 +44,12 @@ all task outcomes and declared assurance/device requirements. Fix all final find
 that task, review until clean (same three-round stop), then one final task commit.
 No separate project-wide build/review/ship transitions or post-commit records commit.
 
+## Optional audit task
+
+A plan may carry one `[AUDIT]` task directly before [FINAL]. It is optional: add it only when the
+owner wants the change audited. `task start` then writes the audit report for the files the change
+touched; follow the audit skill inside the same loop. Without that line nothing audits.
+
 ## Ports
 
 Source/target bridge
