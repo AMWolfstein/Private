@@ -94,6 +94,9 @@ class TaskLoop:
         pending_finals = [r for r in self.queue if r['kind'] == 'final' and not r['done']]
         if pending_finals and (len(pending_finals) != 1 or pending_finals[0] != self.queue[-1]):
             raise Blocked('only the last task may be an unfinished final review')
+        missing = set(self.items) - {row["id"] for row in self.queue}
+        if missing:
+            raise Blocked(f"recorded tasks cannot be removed from tasks.md: {', '.join(sorted(missing))}")
         self.pending_commit = []
         for row in self.queue:
             item = self.items.get(row['id'], {})
@@ -291,6 +294,11 @@ class TaskLoop:
     def packet(self, ident: str, **_):
         row, item = self._current(ident)
         if len(self._cycles(item)) >= REVIEW_LIMIT:
+            last = item['reviews'][-1]
+            if (last.get('fingerprint') != self.c.fingerprint(self.root)
+                    or last.get('identity') != self._identity(row)):
+                item['status'] = 'blocked'
+                self.save()
             raise Blocked('three reviews reached; commit the unchanged clean task or report to the owner')
         self._evidence(row, item)
         self.c.workmap.ensure_current(self.root)
@@ -469,6 +477,6 @@ class TaskLoop:
 
     def _record_hashes(self, overrides=None):
         content = {path.relative_to(self.folder).as_posix(): path.read_bytes()
-                   for path in self.folder.rglob('*') if path.is_file() and path.name != 'state.json'}
+                   for path in self.folder.rglob('*') if path.is_file() and path != self.folder / 'state.json'}
         content.update(overrides or {})
         return {name: hashlib.sha256(data).hexdigest() for name, data in content.items()}

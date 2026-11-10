@@ -823,19 +823,23 @@ def hook_bash(stdin: str) -> tuple[int, str]:
 def status(root: Path, brief: bool) -> str:
     lines = []
     active = []
+    head = git(root, 'rev-parse', 'HEAD', check=False).strip()
     if changes_dir(root).is_dir():
         for folder in sorted(changes_dir(root).iterdir()):
             if (folder / 'state.json').is_file():
                 state = read_state(folder)
-                if state['phase'] != 'done':
+                state['_waiting_commits'] = [key for key, item in state.get('execution', {}).get('tasks', {}).items()
+                                             if item.get('status') == 'done' and item.get('commit_parent') == head]
+                if state['phase'] != 'done' or state['_waiting_commits']:
                     active.append(state)
     if active:
         for state in active:
             if state.get('workflow_version') == 2:
-                task = state['execution']['active']
+                task = state['execution']['active'] or next(iter(state['_waiting_commits']), None)
                 item = state['execution']['tasks'].get(task, {})
+                label = 'waiting_commit' if task in state['_waiting_commits'] else item.get('status', '')
                 lines.append(f'Change {state["id"]}: {"planning" if not state.get("planning") and state["size"] != "small" else "task loop"}; '
-                             f'{task or "ready for next task"} {item.get("status", "")}')
+                             f'{task or "ready for next task"} {label}')
                 continue
             problems = lint_change(root, find_change(root, state['id']))
             lines.append(f'Change {state["id"]} ({state["size"]}): phase {state["phase"]}'

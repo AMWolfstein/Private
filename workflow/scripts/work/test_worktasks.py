@@ -114,6 +114,7 @@ class TaskLoopTests(Repo):
         self.initial_map(); self.act('start', 'T001'); self.write('lib/app.dart', 'changed')
         self.ready('T001'); self.act('complete', 'T001')
         self.assertEqual(self.act('status')['waiting_for_git_commit'], ['T001'])
+        self.assertIn('waiting_commit', work.status(self.root, True))
         with self.assertRaises(work.Blocked): self.act('start', 'T002')
         self.commit('commit completed before process interruption')
         self.assertEqual(self.act('status')['waiting_for_git_commit'], [])
@@ -203,3 +204,42 @@ class TaskLoopTests(Repo):
         work.git(self.root, 'add', '--', 'lib/app.dart', str(self.folder.relative_to(self.root)), other)
         work.git(self.root, 'commit', '-m', 'unexpected unrelated records')
         with self.assertRaises(work.Blocked): self.act('status')
+
+    def test_changed_code_after_third_clean_review_stops_until_owner_resumes(self):
+        self.initial_map(); self.act('start', 'T001'); self.write('lib/app.dart', 'first')
+        self.ready('T001', 'dirty'); self.ready('T001', 'dirty'); self.ready('T001', 'clean')
+        self.write('lib/app.dart', 'late change')
+        with self.assertRaises(work.Blocked): self.act('packet', 'T001')
+        self.assertEqual(self.act('status')['status'], 'BLOCKED')
+        self.act('resume', 'T001', owner_instruction='Owner authorized review of the late change')
+        self.ready('T001'); self.finish('T001')
+
+    def test_nested_state_artifact_is_required_in_the_task_commit(self):
+        self.initial_map(); self.act('start', 'T001'); self.write('lib/app.dart', 'changed')
+        nested = self.folder / 'evidence/state.json'; nested.parent.mkdir(); nested.write_text('{"result":"checked"}')
+        self.ready('T001'); self.act('complete', 'T001')
+        work.git(self.root, 'add', '--', 'lib/app.dart', *[str((self.folder / name).relative_to(self.root)) for name in ['state.json', 'tasks.md', 'log.md']])
+        work.git(self.root, 'commit', '-m', 'missing nested evidence')
+        with self.assertRaises(work.Blocked): self.act('status')
+
+    def test_completed_task_rows_cannot_be_deleted(self):
+        for committed in (False, True):
+            with self.subTest(committed=committed):
+                # Each case uses its own disposable repository and task ledger.
+                if committed:
+                    self.tearDown()
+                    self.setUp()
+                self.initial_map(); self.act('start', 'T001')
+                self.write('lib/app.dart', 'changed'); self.ready('T001')
+                if committed:
+                    self.finish('T001')
+                else:
+                    self.act('complete', 'T001')
+                tasks = self.folder / 'tasks.md'
+                tasks.write_text('\n'.join(line for line in tasks.read_text().splitlines()
+                                           if not line.startswith('- [x] T001 ')) + '\n')
+                if not committed:
+                    work.git(self.root, 'add', '--', 'lib/app.dart')
+                    work.git(self.root, 'commit', '-m', 'source without completion records')
+                with self.assertRaisesRegex(work.Blocked, 'recorded tasks cannot be removed'):
+                    self.act('start', 'T002')
