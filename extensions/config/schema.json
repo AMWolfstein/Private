@@ -1,0 +1,122 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:mornye:provider-config:1",
+  "title": "Native lyrics origin configuration, runtime v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "runtime_version",
+    "revision",
+    "lyrics_origins"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "runtime_version": {
+      "const": 1
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 18446744073709551615
+    },
+    "lyrics_origins": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "https://lrclib.net",
+        "https://lyrics.paxsenix.org",
+        "https://lyricsplus.prjktla.my.id",
+        "https://lyricsplus.binimum.org",
+        "https://beta.music.apple.com",
+        "https://amp-api.music.apple.com",
+        "https://api.zarz.moe",
+        "https://c.y.qq.com",
+        "https://lyrics.kugou.com",
+        "https://genius.com",
+        "https://lrc.red",
+        "https://lyrics-api.boidu.dev"
+      ],
+      "properties": {
+        "https://lrclib.net": {
+          "type": "string",
+          "enum": [
+            "https://lrclib.net"
+          ]
+        },
+        "https://lyrics.paxsenix.org": {
+          "type": "string",
+          "enum": [
+            "https://lyrics.paxsenix.org",
+            "https://api.zarz.moe"
+          ]
+        },
+        "https://lyricsplus.prjktla.my.id": {
+          "type": "string",
+          "enum": [
+            "https://lyricsplus.prjktla.my.id",
+            "https://lyricsplus.binimum.org"
+          ]
+        },
+        "https://lyricsplus.binimum.org": {
+          "type": "string",
+          "enum": [
+            "https://lyricsplus.prjktla.my.id",
+            "https://lyricsplus.binimum.org"
+          ]
+        },
+        "https://beta.music.apple.com": {
+          "type": "string",
+          "enum": [
+            "https://beta.music.apple.com"
+          ]
+        },
+        "https://amp-api.music.apple.com": {
+          "type": "string",
+          "enum": [
+            "https://amp-api.music.apple.com"
+          ]
+        },
+        "https://api.zarz.moe": {
+          "type": "string",
+          "enum": [
+            "https://lyrics.paxsenix.org",
+            "https://api.zarz.moe"
+          ]
+        },
+        "https://c.y.qq.com": {
+          "type": "string",
+          "enum": [
+            "https://c.y.qq.com"
+          ]
+        },
+        "https://lyrics.kugou.com": {
+          "type": "string",
+          "enum": [
+            "https://lyrics.kugou.com"
+          ]
+        },
+        "https://genius.com": {
+          "type": "string",
+          "enum": [
+            "https://genius.com"
+          ]
+        },
+        "https://lrc.red": {
+          "type": "string",
+          "enum": [
+            "https://lrc.red"
+          ]
+        },
+        "https://lyrics-api.boidu.dev": {
+          "type": "string",
+          "enum": [
+            "https://lyrics-api.boidu.dev"
+          ]
+        }
+      }
+    }
+  }
+}

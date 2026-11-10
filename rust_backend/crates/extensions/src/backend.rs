@@ -12,6 +12,9 @@ mod reenrich;
 mod share;
 mod tags;
 
+#[cfg(test)]
+mod configuration_tests;
+
 pub use cover::{LIBRARY_COVER_REGENERATE_MARKER, library_cover_is_current, library_cover_stem};
 pub use lyrics::LyricsRequest;
 pub use metadata::MetadataOptions;
@@ -21,6 +24,7 @@ use crate::environment::ExtensionEnvironment;
 use crate::lyrics::InstalledLyricsFetcher;
 use crate::manager::{ExtensionManager, ManagerError};
 use mornye_core::lyrics::config::{self, FetchOptions};
+use mornye_providers::configuration::{ConfigCache, ConfigError, ProviderConfig, TrustedKeys};
 use mornye_providers::deezer::DeezerClient;
 use mornye_providers::lyrics::{LyricsService, builtin::BuiltinLyricsClient};
 use mornye_providers::musicbrainz::MusicBrainzClient;
@@ -48,10 +52,37 @@ pub struct Backend {
     operations: Mutex<usize>,
     idle: Condvar,
     lyrics_settings: Mutex<()>,
+    provider_config_cache: Mutex<ConfigCache>,
+    provider_config: ProviderConfig,
+    provider_config_fallback: Option<String>,
     shutdown: Mutex<Option<Result<(), String>>>,
 }
 
 impl Backend {
+    /// Native-only installation boundary. No JavaScript or downloaded manifest
+    /// can install keys or bypass signature verification. Activation is deferred
+    /// until a fresh Backend owns the configuration and its cache generation.
+    pub fn install_provider_configuration(&self, envelope: &[u8]) -> Result<u64, ConfigError> {
+        let _operation = self.enter().map_err(ConfigError::BackendUnavailable)?;
+        self.provider_config_cache
+            .lock()
+            .map_err(|_| ConfigError::BackendUnavailable("installation lock poisoned".into()))?
+            .install(envelope)
+            .map(|configuration| configuration.revision())
+    }
+
+    pub fn provider_configuration_status_json(&self) -> Result<String, String> {
+        let _operation = self.enter()?;
+        serde_json::to_string(&serde_json::json!({
+            "active_revision": self.provider_config.revision(),
+            "activation": "next_backend_initialization",
+            "trusted_signers_configured": !TrustedKeys::bundled().is_empty(),
+            "automatic_updates_enabled": false,
+            "fallback_reason": self.provider_config_fallback,
+        }))
+        .map_err(|error| error.to_string())
+    }
+
     pub fn new(
         sources: &Path,
         data: &Path,
@@ -89,6 +120,7 @@ impl Backend {
             MetadataOptions::default(),
             &providers,
             options,
+            TrustedKeys::bundled(),
         )
     }
 
@@ -107,6 +139,7 @@ impl Backend {
             options,
             &[],
             FetchOptions::default(),
+            TrustedKeys::bundled(),
         )
     }
 
@@ -117,6 +150,7 @@ impl Backend {
         options: MetadataOptions,
         lyrics_providers: &[String],
         lyrics_options: FetchOptions,
+        provider_keys: TrustedKeys,
     ) -> Result<Self, ManagerError> {
         let manager = Arc::new(ExtensionManager::with_environment(
             sources,
@@ -136,20 +170,29 @@ impl Backend {
         let resolver = PlatformResolverChain::with_options(&network, options.resolver)
             .map_err(|error| ManagerError(error.to_string()))?;
         let availability = Arc::new(AvailabilityService::new(Arc::new(resolver), deezer.clone()));
+        let provider_config_cache = ConfigCache::new(environment.data_directory(), provider_keys);
+        let loaded_config = provider_config_cache.load();
+        let provider_config = loaded_config.config;
         let lyrics = Arc::new(LyricsService::new(Arc::new(InstalledLyricsFetcher::new(
             &manager,
-            BuiltinLyricsClient::new(
+            BuiltinLyricsClient::with_endpoints(
                 &network,
                 environment.shared_app_version(),
                 availability.clone(),
-            ),
+                provider_config.lyrics_endpoints(),
+            )
+            .map_err(|error| ManagerError(error.to_string()))?,
         ))));
         lyrics
             .set_providers(lyrics_providers)
             .and_then(|()| lyrics.set_options(lyrics_options))
             .map_err(|error| ManagerError(error.to_string()))?;
         lyrics
-            .set_persistence_path(&environment.data_directory().join(".lyrics_cache.json"))
+            .set_persistence_path(
+                &environment
+                    .data_directory()
+                    .join(provider_config.lyrics_cache_name()),
+            )
             .map_err(|error| ManagerError(error.to_string()))?;
         environment.attach_lyrics(&lyrics);
         let cover = cover::Cover::new(&network, environment.shared_app_version());
@@ -173,6 +216,9 @@ impl Backend {
             operations: Mutex::new(0),
             idle: Condvar::new(),
             lyrics_settings: Mutex::new(()),
+            provider_config_cache: Mutex::new(provider_config_cache),
+            provider_config,
+            provider_config_fallback: loaded_config.fallback_reason,
             shutdown: Mutex::new(None),
         })
     }

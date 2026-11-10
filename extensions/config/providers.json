@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "runtime_version": 1,
+  "revision": 1,
+  "lyrics_origins": {
+    "https://lrclib.net": "https://lrclib.net",
+    "https://lyrics.paxsenix.org": "https://lyrics.paxsenix.org",
+    "https://lyricsplus.prjktla.my.id": "https://lyricsplus.prjktla.my.id",
+    "https://lyricsplus.binimum.org": "https://lyricsplus.binimum.org",
+    "https://beta.music.apple.com": "https://beta.music.apple.com",
+    "https://amp-api.music.apple.com": "https://amp-api.music.apple.com",
+    "https://api.zarz.moe": "https://api.zarz.moe",
+    "https://c.y.qq.com": "https://c.y.qq.com",
+    "https://lyrics.kugou.com": "https://lyrics.kugou.com",
+    "https://genius.com": "https://genius.com",
+    "https://lrc.red": "https://lrc.red",
+    "https://lyrics-api.boidu.dev": "https://lyrics-api.boidu.dev"
+  }
+}

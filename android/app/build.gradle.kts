@@ -175,6 +175,8 @@ val buildRustBackend = tasks.register<Exec>("buildRustBackend") {
         include("**/*.rs", "**/*.toml", "**/*.lock", "**/*.js", "**/*.tsv", "**/*.pem")
         exclude("target/**", "smoke/**")
     })
+    // These JSON assets are embedded in mornye-providers with include_bytes!.
+    inputs.dir(rootProject.file("../extensions/config"))
     inputs.property("MORNYE_RUST_ANDROID_ABIS", rustAndroidAbis.joinToString(","))
     inputs.file(rootProject.file("../scripts/build_rust_backend.sh"))
     outputs.dir(rustBackendDir.resolve("target/bindings/kotlin"))
