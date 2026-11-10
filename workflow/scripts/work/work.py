@@ -841,7 +841,7 @@ def status(root: Path, brief: bool) -> str:
             lines.append(f'Change {state["id"]} ({state["size"]}): phase {state["phase"]}'
                          f'{"; " + str(len(problems)) + " open issue(s), run work.py lint" if problems else ""}')
     else:
-        lines.append('No active change record. Small fixes need none.')
+        lines.append('No active change record. Bounded changes use new --size small without planning.')
     report = latest_report(root)
     if report:
         fresh = report['fingerprint'] == fingerprint(root)

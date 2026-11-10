@@ -29,36 +29,25 @@ reusable/offline after initial provisioning, and normal CLI commands discover it
 4. Read only the guidance the packet lists under "Guidance to read" plus the skill for the chosen path. The
    packet's facts are leads with provenance; a claim about the code still needs the code itself.
 
-## Choose the path
+## Choose and execute
 
-| Request | Path | Records |
-|---|---|---|
-| Question, explanation, "what do you think" about code | Answer from the code with `file:line`. No edits. | none |
-| Discussion or planning ("let's plan", "عاوز نعمل خطة", a design question) | `spec` skill, then `plan`. Documents only; no code until the owner says to build. | change folder |
-| Bug or small change: one behaviour, a few files, no contract, schema or format change | `fix` skill | none: test + commit + report |
-| Feature: new behaviour or several files | `work.py new "<title>" --size feature`, then the skills `spec` → `plan` → `implement` (tasks and code; the record's phases are tasks and build) → `review` → `ship` | change folder |
-| Architecture: a migration batch, a Dart ↔ Kotlin ↔ Rust contract, playback engine, database, backup or file format | `work.py new "<title>" --size architecture`: as feature, plus fresh-context design review | change folder |
-| Review or audit ("راجع", "افحص") | `review` skill, read-only. Findings only unless the owner asks for fixes. | findings |
-| Commit, push, APK, release | `ship` skill. Push and APK only when asked now. | none |
-
-Size by consequence, not by effort. After the first edits run `python3 workflow/scripts/work/work.py scope`: if it lists
-`high_risk` paths or a domain you did not expect, move up a size and say so. Never move down to skip a gate.
-
-## Throughout
-
-- Ask only when the answer changes what you build and no reasonable default exists. Routine choices: decide, and
-  mention the choice in the report. Product or architecture trade-offs: give up to three options with mechanism,
-  trade-offs and failure conditions, without ranking them, and wait.
-- Keep the owner posted at milestones in one or two lines (found the cause; tests pass; waiting on the suite).
-- Long-running checks run in the background; report honestly while they run. A stalled or timed-out check is
-  reported as that, with what you did about it.
-- Never start work the owner did not ask for (no push, APK, refactor or cleanup on your own initiative). Note it
-  as a suggestion instead.
-- After compaction or in a new session: `work.py status`, the change's `log.md` and `git log -5` tell you where
-  you are. Re-run the last recorded check before trusting it.
-- After each completed batch of edits, before the next graph-dependent step: `work.py map update` (or a
-  `work.py check` run, which refreshes it). Renames, deletions and channel or contract changes count. Edits made
-  outside the workflow are detected at the next workflow command, not when they happen.
+- Questions/audits: read-only unless implementation is requested.
+- Small bounded behavior: fix skill, `new --size small`, no planning stage. Contracts, data
+  formats, architectural choices or multiple independent units require feature/architecture
+  planning. File/line counts and high-risk path hints alone do not determine size.
+- Larger changes: spec and plan skills unchanged, then ONE planning commit containing the
+  complete accepted planning bundle. Owner authorization persists; do not ask again routinely.
+- Execution: implement skill. T000 map; then one task at a time: map/context, implement,
+  appropriate checks, independent review/fixes, ONE Git commit for code/tests/fixes/records.
+  Do not complete a task before clean review or start the next before the actual commit.
+- Three reviews maximum per task cycle. Third dirty: stop/report, no fourth automatic round.
+  Explicit owner instructions are required for resume; preserve the full history.
+- New owner work outside the queue becomes TOR### with the same loop. The last [FINAL] task
+  checks/reviews the cumulative result. No separate execution build/review/ship transitions.
+- Fingerprints are automatic. Reports/progress do not stale code checks; changed code or
+  requirements do. Missing checks/maps are explicit, not invented PASS evidence.
+- Never silently fix unrelated failures, restore unrelated edits or publish/build APK unless
+  requested. Keep progress concise. Current owner constraints override generic guidance.
 
 ## Report format
 

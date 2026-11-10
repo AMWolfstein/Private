@@ -159,7 +159,7 @@ inventory code and parser capabilities, reviewed declarations and engine availab
 The source tree is checked again after extraction before publication.
 
 After every completed edit batch, run `map update` before using more graph context. Checks, packets and clean
-code-review recording also refresh; review/ship/done gates demand a current map. Edits made outside the
+task start and task packets refresh when needed; clean task reviews require a current map. Edits made outside the
 workflow are noticed at the next command; Markdown instructions cannot observe every external keystroke.
 Current freshness is separate from coverage and test results. Unresolved high-risk behavior still needs review.
 

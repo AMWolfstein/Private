@@ -8,11 +8,11 @@ block build and later phases. Completed historical records are not automatically
 add its prerequisite list to `assurance.json` once so the dependency graph can be validated. This metadata
 migration does not rerun the historical change; inspect its actual dependencies rather than assuming a leaf.
 
-Before build, `lint` / `advance` validate the declaration, check IDs, component dispositions, prerequisites and
-contract fields. Before review, each named check needs PASS evidence for the current source fingerprint,
-written by `work.py check <IDs>`; manually writing PASS in this declaration is insufficient. Before ship,
+During planning validation, `lint` / `advance` validate the declaration, check IDs, component dispositions, prerequisites and
+contract fields. Before task review, each named check needs PASS evidence for the current source fingerprint,
+written by `work.py check <IDs>`; manually writing PASS in this declaration is insufficient. Before final task completion,
 declared device checks must be passed with a recorded owner/device evidence reference. Pending device checks
-may enter review but cannot ship. Checks may be added to `workflow/work/checks.json` using argv commands and requirements.
+may enter task review but cannot complete the final task. Checks may be added to `workflow/work/checks.json` using argv commands and requirements.
 
 Example for a port that changes a bridge (replace all examples with actual facts):
 

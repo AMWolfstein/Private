@@ -5,59 +5,27 @@ description: "Independent code review in a fresh, read-only context, and owner-r
 
 # Review
 
-## When
+Review is part of each task, including TOR### and the last cumulative [FINAL] task.
 
-- Required before shipping a feature or architecture change.
-- For a fix that touches a `high_risk` path in `workflow/work/checks.json`.
-- When the owner asks for a review or audit: read-only, findings only, unless the owner asks for fixes.
+1. The task's relevant checks must be current before preparing its packet. Use `task packet
+   CHANGE TASK`; it refreshes map context and binds code, requirements and real check evidence.
+2. Start a fresh read-only code-reviewer with the packet path. For application bridge/data
+   changes, add a second focused reviewer. Give no author opinion or expected verdict.
+3. Record findings in findings.md with Severity, Status, Evidence and `- Task: T###` where
+   scoped. Fix or contest with evidence; only nits may be declined. Never hide a failing test,
+   unavailable tool or unresolved native boundary behind a clean verdict.
+4. Record the actual verdict using `task review`. Dirty findings stay in this task: fix,
+   rerun affected checks and generate a current packet for another independent review.
+5. At most THREE reviews per owner-authorized cycle. Third dirty means STOP and tell the
+   owner what remains and what was tried; no fourth review, commit or next task. An explicit
+   owner instruction may authorize `task resume --owner-instruction "actual instruction"`;
+   retain all earlier review history. Never self-authorize a new cycle.
+6. Clean permits task complete followed by ONE Git commit for the entire task, including
+   review fixes and records. Any subsequent source/requirement change needs fresh checks/review.
 
-## 1. Mechanical first
+Final [FINAL] review covers all implemented tasks together, their interactions, original
+requirements and cumulative diff. Final fixes use the same loop and one task commit.
 
-`python3 workflow/scripts/work/work.py check auto` and `python3 workflow/scripts/work/work.py lint <NNN>`. Tool output is
-evidence, kept separate from the reviewers' judgment. Fix mechanical failures before asking a reviewer. The
-check run refreshes the code map; the packet then carries map facts for the changed files (both channel sides,
-declared ownership, contracts, linked tests) as leads for the reviewer, not as findings or proof.
-
-## 2. Convergence
-
-Check every `[x]` task and every FR against the code, not against the tick: a completion mark is not evidence.
-A gap becomes a new task under "## Convergence" in `tasks.md` with the next ID (missing, partial, contradicts the
-spec, or unrequested code). Never rewrite finished tasks.
-
-## 3. Fresh-context review
-
-1. `python3 workflow/scripts/work/work.py packet --base <base> --change <NNN> --out .work/review/<NNN>-code-r<N>.md`.
-   The base is the commit before the change (`HEAD` for uncommitted work). For a fix without a change record,
-   use `--goal` with a short file stating the bug and the intended behaviour.
-2. Start `code-reviewer` with only: "Review the packet at <path>." No conversation, no opinion, no target.
-   When the change crosses Dart, Kotlin and Rust or touches stored data, start a second `code-reviewer` with one
-   extra line naming that focus. Never more than two.
-3. A reviewer that fails or times out has not run. Retry once; it is never a clean round.
-
-## 4. Resolve every finding
-
-Record each as `### F-NNN [code rN, reviewer] title` in `findings.md`, with Severity (blocker, major, nit) and
-Status, then:
-- fix it, with a regression test when it is a behaviour bug, and Evidence naming the test and commit;
-- contest it only with evidence the reviewer could check;
-- escalate what needs the owner's knowledge or decision;
-- decline nits, or record wontfix or false_positive with the reason as Evidence.
-A finding that a later round does not repeat stays open until its Evidence says why it is resolved.
-
-For an audit the owner asked for, stop here and present the findings by severity.
-
-## 5. Rounds
-
-`python3 workflow/scripts/work/work.py round <NNN> code clean|dirty --reviewer code-reviewer` (a clean round needs a current
-code map and records it). After fixes, the next packet
-covers the changed code and the open findings, not the whole project again. At most 4 rounds; then list what is
-open and ask the owner. `work.py advance <NNN> ship` requires the last round to be clean on the current tree,
-so any edit after a clean round needs one more round.
-
-## Review coverage
-
-Use `workflow/work/guides/quality.md` for cohesion, cross-module dependencies, API coherence and initialization, as well as safety and correctness. For bridge/data changes use `workflow/work/guides/contracts/`; inspect actual callers and guards. No cosmetic file splitting or line quotas.
-
-## Executable assurance
-
-The packet includes `assurance.json`. Verify applicability, source provenance, inventory completeness and that check IDs test the actual contracts on both sides. Structural validation cannot establish semantic parity.
+Read-only audits requested by the owner produce findings only. Design review in plan/SKILL.md
+remains unchanged. Real checks do not prove semantic correctness, reviewer independence or
+physical-device behavior; state any limitation. See guides/quality.md and relevant contracts.

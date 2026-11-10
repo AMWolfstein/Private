@@ -60,7 +60,7 @@ A feature-size plan can be short: "unchanged" and "none" are fine answers.
 ## Gate
 
 Show the owner the plan summary and open choices. When the owner accepts, record it in `log.md` and run
-`python3 workflow/scripts/work/work.py advance <NNN> tasks`. The gate refuses unfilled sections, unticked constitution
+`python3 workflow/scripts/work/work.py advance <NNN> tasks`. Then `planning-commit <NNN>` prepares the checkpoint: stage all planning artifacts and make ONE ordinary Git commit before T000. It does not create the commit itself. The gate refuses unfilled sections, unticked constitution
 items, and, for architecture, a plan changed after its last clean review round.
 
 ## Project guidance

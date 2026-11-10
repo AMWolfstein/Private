@@ -29,4 +29,4 @@ Priorities: P1 data loss/security/major unavailable function; P2 functional corr
 
 Completion requires the goal, relevant checks, review outcomes and current evidence; a green command alone is not enough. Use COMPLETE, IMPLEMENTED_PENDING_VERIFICATION or BLOCKED. Repeated verified mistakes become a structural/type rule, lint or behavioral regression test when feasible. Judgment-only lessons belong in a short decision. Avoid accumulating rules for isolated guesses.
 
-After the same failed approach twice, inspect the shared assumption and change the investigation. Allow at most four review/fix rounds for a scoped issue; unresolved disagreement is reported, not accepted as approval. Never drop tests, hide failures or broaden exclusions to satisfy the workflow.
+After the same failed approach twice, inspect the shared assumption and change the investigation. Allow at most three task review/fix rounds per explicit owner-authorized cycle (design review keeps its separate planning policy); unresolved disagreement is reported, not accepted as approval. Never drop tests, hide failures or broaden exclusions to satisfy the workflow.

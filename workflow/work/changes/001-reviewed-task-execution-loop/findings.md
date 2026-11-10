@@ -42,3 +42,15 @@
 - Severity: major
 - Status: fixed
 - Evidence: completion preparation and committed-tree verification reject records outside this change; regression test covers staging after task start and after completion preparation.
+
+### F-009 [code T002 r1, loop_t002_review] Small-record governance conflict
+- Task: T002
+- Severity: major
+- Status: fixed
+- Evidence: constitution IX now requires minimal task/state/log records for small changes while exempting planning.
+
+### F-010 [code T002 r1, loop_t002_review] Old four-round guidance
+- Task: T002
+- Severity: major
+- Status: fixed
+- Evidence: quality guide now caps task reviews at three per explicit owner-authorized cycle; design-review policy remains separate.

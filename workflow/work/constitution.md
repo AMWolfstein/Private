@@ -1,6 +1,6 @@
 # Sistrum engineering constitution
 
-Version 1.0.0 (draft until the owner ratifies it). Every change, plan and review is checked against these
+Version 2.0.0 (owner-approved task execution revision; other provisions retain their existing status). Every change, plan and review is checked against these
 articles. A plan that cannot meet one records the deviation in its Complexity tracking table with the reason and
 the simpler option it rejected; it never weakens the article.
 
@@ -79,9 +79,8 @@ every change.
 
 ## IX. Simplicity over ceremony
 
-- No scores, line quotas or file splits for their own sake. Small fixes stay small: no records beyond the test,
-  the commit and the report.
-- Bounded loops: at most 5 attempts on one failing check, at most 4 review rounds. The same failure twice means
+- No scores, line quotas or file splits for their own sake. Small fixes skip planning but retain minimal task/state/log records, map/context, checks and independent review; no spec/plan bundle is required.
+- Bounded loops: at most 5 attempts on one failing check, at most 3 task-review rounds per owner-authorized cycle (design review remains as planned). The same failure twice means
   the shared assumption is wrong; name it and change approach.
 - A mistake seen twice becomes a check (structure, type, lint, test or hook), proved to fail on the bad case.
   Prose rules are the last resort.
@@ -89,8 +88,7 @@ every change.
 ## X. Git and releases
 
 - Stage explicit paths. No force push, no skipped hooks, no history rewrite on shared branches.
-- Commit only after the change's checks pass on the final tree. Code and process records go in separate commits:
-  code (source, tests, config) first, then records (`workflow/work/`, docs).
+- Commit the complete accepted planning bundle once. Then each task gets one commit after current checks and clean independent review, including its implementation, tests, all review fixes and records. The last task reviews the cumulative result. No separate code/records commits or empty commits.
 - Commit messages say what changed, why, the evidence and what is not verified. No model names.
 - Push, build an APK or release only when the owner asks for it in the current conversation. Flutter tests and
   APK builds never run at the same time.

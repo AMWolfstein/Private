@@ -5,49 +5,46 @@ description: "Turns an accepted plan into tasks.md and implements it one verifie
 
 # Implement
 
-## Tasks
+Planning is unchanged. Commit the complete accepted planning bundle once before execution.
+Small requests use `new "title" --size small`: minimal task records, no spec/plan stage.
+Classify by behavior, contracts/data impact and independent work units, not line/file counts.
 
-1. Fill `tasks.md`: phases (foundation, then one per story, by priority), each line
-   `- [ ] T001 [P] [US1] what, in which file (FR-00n) — check: <command or observable result>`.
-2. Tests that pin behaviour come before the code that changes it. Every FR appears in at least one task.
-3. `[P]` only for tasks on different files with no dependency. Checks still run one at a time: Flutter tests and
-   Gradle builds never overlap.
-4. `python3 workflow/scripts/work/work.py advance <NNN> build` refuses tasks without a check, unfilled markers, or a
-   requirement with no task.
+## One task loop
 
-## Each task
+1. T000 is map refresh. Every later `task start CHANGE T###` verifies the previous task's
+   actual commit, refreshes map/context and captures a clean task baseline. Read the emitted
+   context and relevant source; map inference/coverage limitations remain explicit.
+2. Execute the task as one complete behavior. Preserve unrelated work. Tests should establish
+   behavior and failure handling; cosmetic reversible edits do not need artificial tests.
+3. `task check CHANGE T###` runs the configured relevant checks. Check identity includes
+   code and requirements; changed source/requirements needs fresh evidence. Manual observations
+   and device results must be identified honestly. NO_CHANGES is never a test PASS.
+4. `task packet CHANGE T###` prepares the exact current review target. Use the review skill
+   for an independent reviewer. Record its result with `task review CHANGE T### --result
+   clean|dirty --reviewer NAME --note "findings/evidence"`.
+5. Dirty: record findings, correct them, rerun affected checks and review again inside this
+   same task. Maximum THREE reviews per cycle. Third dirty: stop, report remaining findings
+   and attempts, and do not commit or start the next task. Never invoke `task resume` on your
+   own; only an explicit new owner instruction authorizes another preserved cycle.
+6. Clean: `task complete CHANGE T###` prepares completion records and returns READY_TO_COMMIT.
+   Stage explicit task paths plus this change's records and make ONE ordinary Git commit
+   containing implementation, tests, all review fixes and records. The tool never stages or
+   creates commits. `task status CHANGE` verifies the committed source/artifacts before the
+   next task may start. A failed/interrupted commit remains waiting_commit; preserve edits.
 
-1. Run the task's check before editing, to see the starting state. Get the task's context with
-   `python3 workflow/scripts/work/work.py context "<task>" --file <files the task names>`: callers, both channel
-   sides, declared ownership and contracts, linked tests. Read those files, not the whole area.
-2. Choose the change: not needed; already in the codebase; Flutter, Android or Media3 provides it; an installed
-   dependency; the least new code. Complete it: callers, tests, fixtures, all arb files, settings, backup keys.
-3. Rerun the exact check and read the whole output. Root cause in one sentence for every failure.
-4. At most 5 attempts per task. The same failure after two different fixes: write down the assumption they
-   shared, test it, and change approach. Still stuck: stop and tell the owner what you tried and what you need.
-5. Never weaken, skip or delete a test, assertion or lint to pass. Never mock away the thing under test.
-6. Mark `[x]` only after the check passed, and append one line to `log.md`: date, task, command, result.
-7. After the task's edits (including renames, deletions and bridge/contract changes) run
-   `python3 workflow/scripts/work/work.py map update` before the next task asks for context.
+## Owner requests and final review
 
-## Boundaries
+An extra owner request outside the queue becomes `task add CHANGE --request "owner request"`.
+It receives TOR### and the same loop, queued before pending planned work/final review. Never
+silently expand another task or rewrite completed tasks.
 
-- A Dart ↔ Kotlin channel change is tested on both sides with the same cases; a mocked channel test does not
-  prove the Kotlin side. `work.py context --expand bridge:<channel>` lists every command with both endpoints;
-  commands reported as unresolved or "no handler found" need reading, not trust.
-- Kotlin, C++ or Rust changes run their checks (`work.py check auto` selects them by path).
-- Behaviour that must survive the app closing is tested on the Android side, and listed for device checks.
-- Shortcuts carry `shortcut: <limit>, <when to upgrade>` and are listed in the report.
+The last task has [FINAL]. It checks/reviews the cumulative change from the original base,
+all task outcomes and declared assurance/device requirements. Fix all final findings inside
+that task, review until clean (same three-round stop), then one final task commit.
+No separate project-wide build/review/ship transitions or post-commit records commit.
 
-## Finish
+## Compatibility and ports
 
-`python3 workflow/scripts/work/work.py check auto`, then `python3 workflow/scripts/work/work.py advance <NNN> review`, which
-requires every task done and passing evidence that matches the current tree.
-
-## Ports
-
-Follow `workflow/work/guides/port.md`. Record a disposition per component: reuse, adapt, restructure or exclude, with evidence. Reorganize only for responsibility and dependency boundaries; a tested module may remain intact. Preserve source device-test evidence separately from new integration validation.
-
-## Executable assurance
-
-Run all check IDs named in `assurance.json` via `work.py check <IDs>`. Build validates declarations; review requires fresh runner evidence, including checks outside automatic path selection.
+Legacy records keep their legacy protocol; new records use schema 2. Source/target bridge
+checks and provenance/parity requirements remain in guides/port.md and guides/assurance.md.
+Do not delete working implementations without verified replacements. Push/APK only on request.
