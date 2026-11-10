@@ -19,6 +19,12 @@ It replaces the phase gates for that change. The owner decides when planning is 
 
 ## After the last task
 
+- Full review of the whole change: one fresh read-only review of every commit from the first task
+  to HEAD (`git log` from the planning base, and `git diff <base>..HEAD`). It checks that the tasks
+  together do what the spec asks, that nothing from one task breaks another, and that no leftovers or
+  unplanned changes remain. Record the result and the reviewed commit hash in `log.md`.
+- If the full review finds problems: fix them in new commits, one per problem, and review those
+  commits. Then re-run the full review on the final HEAD, because a fix can break something else.
 - Build the APK (`scripts/build_android.sh`) from the final commit and audit it
   (`scripts/check_backend_apk.py`). Record the sha256 in `log.md`.
 - The owner tests the APK on the device and reports problems. Each reported problem is
