@@ -16,7 +16,8 @@ Execution finishes through the last [FINAL] task, not separate build/review/ship
 - Planning artifacts are ONE planning commit. Each reviewed task is ONE commit containing
   code, tests, fixes and records. Never split a task into code and records commits; never
   create empty Git commits or rewrite unrelated history. Stage explicit paths.
-- task complete prepares records; ordinary Git makes the commit; task status verifies it.
+- A clean task review prepares records; ordinary Git makes the commit; the next task start
+  (or task status) verifies it.
   If Git fails, preserve edits and retry/reconcile. Never mark waiting_commit as done.
 - Report behavior changed, checks/counts, unavailable/skipped verification, commits and
   remaining limitations. Do not claim device testing without actual evidence.

@@ -11,26 +11,27 @@ Classify by behavior, contracts/data impact and independent work units, not line
 
 ## One task loop
 
-1. T000 is map refresh. Every later `task start CHANGE T###` verifies the previous task's
-   actual commit, refreshes map/context and captures a clean task baseline. Read the emitted
+1. `task start CHANGE T###` verifies the previous task's actual commit, refreshes
+   map/context and captures a clean task baseline. There is no separate map task. Read the emitted
    context and relevant source; map inference/coverage limitations remain explicit.
 2. Execute the task as one complete behavior. Preserve unrelated work. Tests should establish
    behavior and failure handling; cosmetic reversible edits do not need artificial tests.
 3. `task check CHANGE T###` runs the configured relevant checks. Check identity includes
    code and requirements; changed source/requirements needs fresh evidence. Manual observations
    and device results must be identified honestly. NO_CHANGES is never a test PASS.
-4. `task packet CHANGE T###` prepares the exact current review target. Use the review skill
-   for an independent reviewer. Record its result with `task review CHANGE T### --result
+4. A passing `task check` also writes the review packet for the exact current code (its
+   path is in the result). Use the review skill for an independent reviewer. Record its result with `task review CHANGE T### --result
    clean|dirty --reviewer NAME --note "findings/evidence"`.
 5. Dirty: record findings, correct them, rerun affected checks and review again inside this
    same task. Maximum THREE reviews per cycle. Third dirty: stop, report remaining findings
    and attempts, and do not commit or start the next task. Never invoke `task resume` on your
    own; only an explicit new owner instruction authorizes another preserved cycle.
-6. Clean: `task complete CHANGE T###` prepares completion records and returns READY_TO_COMMIT.
+6. Clean: recording the clean review prepares completion records and returns READY_TO_COMMIT.
+   Do not edit records after that; if you must, run `task complete` again before committing.
    Stage explicit task paths plus this change's records and make ONE ordinary Git commit
    containing implementation, tests, all review fixes and records. The tool never stages or
-   creates commits. `task status CHANGE` verifies the committed source/artifacts before the
-   next task may start. A failed/interrupted commit remains waiting_commit; preserve edits.
+   creates commits. The next `task start` verifies the committed source/artifacts before the
+   task may begin. A failed/interrupted commit remains waiting_commit; preserve edits.
 
 ## Owner requests and final review
 

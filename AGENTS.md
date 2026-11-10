@@ -14,7 +14,7 @@ Authority, highest first: the owner's current instructions; `workflow/work/const
 `workflow/work/changes/`; `docs/AUDIO_ENGINE_MIGRATION.md` when present; the existing code.
 
 The tool is `python3 workflow/scripts/work/work.py`. Read status at the start. Planning is unchanged,
-with one planning commit. New execution follows the implement skill: T000 map, then map/context →
+with one planning commit. New execution follows the implement skill: task start (map/context) →
 implementation/checks → independent review/fixes → one task commit. Three reviews maximum; stop after
 a third dirty result. Owner extras become TOR###. The last task reviews the cumulative change.
 Fingerprints/check freshness are internal; no manual fresh or project-wide build/review/ship steps.

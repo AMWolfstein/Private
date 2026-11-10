@@ -19,3 +19,5 @@
 
 - Owner override: finish directly without executing the workflow or additional review loops. The final independent review identified deletion of completed task rows as a bypass; fixed with a ledger-membership guard and regression coverage for prepared and committed completions. Prior final packet/check evidence predates this fix and is not presented as current independent approval.
 - Direct final validation: Python unittest discovery (test_work*.py) ran 170 tests: 167 passed, 3 skipped, 0 failures. This is a direct test invocation, not the complete configured workflow check. No application code, APK build or remote push. Final task is completed outside the task CLI under the explicit owner override.
+
+- 2026-11-10: Change closed in state.json (`closed`): T003 [FINAL] was finished outside the task CLI under the owner override above, which left it active and blocked every other change. Untracked-file listings from the authoring machine were removed from state.json; another clone could not verify T001/T002 with them.

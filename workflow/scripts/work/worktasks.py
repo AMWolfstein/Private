@@ -31,7 +31,7 @@ def active_base(root: Path) -> str | None:
     head = git(root, 'rev-parse', 'HEAD').strip()
     for path in (root / 'workflow/work/changes').glob('*/state.json'):
         state = json.loads(path.read_text())
-        if state.get('workflow_version') != 2:
+        if state.get('workflow_version') != 2 or state.get('closed'):
             continue
         execution = state.get('execution', {})
         ident = execution.get('active')
@@ -60,6 +60,10 @@ class TaskLoop:
             self.state = self.c.read_state(self.folder)
             if self.state.get('workflow_version') != 2:
                 raise Blocked('legacy change: retain its original protocol; create new work for the task loop')
+            if self.state.get('closed'):
+                if operation == 'status':
+                    return {'status': 'CLOSED', 'change': self.folder.name, 'closed': self.state['closed']}
+                raise Blocked('this change was closed outside the task loop; its records are read-only')
             self.execution = self.state.setdefault('execution', {'active': None, 'tasks': {}})
             self.items = self.execution['tasks']
             self.queue = rows(self.folder)
@@ -85,8 +89,8 @@ class TaskLoop:
         return found[0]
 
     def _validate(self):
-        if not self.queue or self.queue[0]['id'] != 'T000':
-            raise Blocked('tasks.md must begin with T000 map refresh')
+        if not self.queue:
+            raise Blocked('tasks.md has no tasks')
         if len({r['id'] for r in self.queue}) != len(self.queue):
             raise Blocked('duplicate task IDs')
         if self.queue[-1]['kind'] != 'final':
@@ -126,7 +130,7 @@ class TaskLoop:
         prefix = self.folder.relative_to(self.root).as_posix() + '/'
         if any(self.c.is_record(p) and not p.startswith(prefix) for p in changed):
             raise Blocked(f'{ident}: unrelated records were included in the task commit')
-        if set(changed) & set(item.get('protected', {})):
+        if set(changed) & set(self._protected(ident, item)):
             raise Blocked(f'{ident}: unrelated pre-existing files were included in the commit')
         if (stored.get('transaction') != item.get('transaction') or stored.get('status') != 'done'
                 or stored.get('declaration') != item.get('declaration')):
@@ -146,8 +150,13 @@ class TaskLoop:
             if any(not self.c.is_record(p) for p in paths):
                 raise Blocked('T000 committed unexpected source changes')
         else:
-            actual = committed_fingerprint(self.root, descendants[0], self.c.RECORD_DIRS, stored.get('protected', {}))
-            if actual != stored['reviews'][-1]['fingerprint']:
+            last = stored['reviews'][-1]
+            if 'commit_fingerprint' in last:  # reviewed code without machine-local untracked files
+                actual, expected = committed_fingerprint(self.root, descendants[0], self.c.RECORD_DIRS, {}), last['commit_fingerprint']
+            else:  # records written before untracked files moved to .work/
+                actual = committed_fingerprint(self.root, descendants[0], self.c.RECORD_DIRS, stored.get('protected', {}))
+                expected = last['fingerprint']
+            if actual != expected:
                 raise Blocked(f'{ident}: committed code differs from the clean review')
         return True
 
@@ -174,7 +183,33 @@ class TaskLoop:
         if not paths or any(not p.startswith(prefix) for p in paths):
             raise Blocked('planning checkpoint must contain only its planning artifacts')
 
+    def _protected_path(self, ident: str) -> Path:
+        return self.root / '.work/tasks' / self.folder.name / f'{ident}-protected.json'
+
+    def _protected(self, ident: str, item: dict) -> dict:
+        """Untracked files present before the task. Machine-local, so kept under ignored .work/."""
+        path = self._protected_path(ident)
+        return json.loads(path.read_text()) if path.is_file() else item.get('protected', {})
+
+    def _code_fingerprint(self, ident: str, item: dict) -> str:
+        return snapshot(self.root, drop=self.c.RECORD_DIRS, exclude=tuple(self._protected(ident, item)))[0]
+
+    def _reopen(self, ident: str):
+        """A reviewed task that is not committed yet returns to the loop when it is touched again."""
+        item = self.items[ident]
+        last = item['reviews'][-1] if item['reviews'] else {}
+        unchanged = last.get('result') == 'clean' and last.get('fingerprint') == self.c.fingerprint(self.root)
+        item['status'] = 'reviewed' if unchanged else 'fixing'
+        self.execution['active'] = ident
+        self.pending_commit.remove(ident)
+        path = self.folder / 'tasks.md'
+        atomic_write(path, re.sub(r'^- \[[xX]\] ' + re.escape(ident) + r'\b', '- [ ] ' + ident, path.read_text(), flags=re.M))
+        self.queue = rows(self.folder)
+        self.save()
+
     def _current(self, ident: str | None) -> tuple[dict, dict]:
+        if ident in self.pending_commit and not self.execution['active']:
+            self._reopen(ident)
         if ident is None or self.execution['active'] != ident:
             raise Blocked('the requested task is not the active task')
         row, item = self._row(ident), self.items[ident]
@@ -182,18 +217,20 @@ class TaskLoop:
             raise Blocked('task stopped after three reviews; report findings and wait for explicit owner instructions')
         if git(self.root, 'rev-parse', 'HEAD').strip() != item['head']:
             raise Blocked('HEAD changed during the task; preserve work and reconcile before continuing')
-        self._protect(item)
+        self._protect(ident, item)
         return row, item
 
-    def _protect(self, item: dict):
-        if item.get('protected'):
+    def _protect(self, ident: str, item: dict):
+        protected = self._protected(ident, item)
+        if protected:
             _, listing = snapshot(self.root, drop=self.c.RECORD_DIRS, listing=True)
-            for path, original in item['protected'].items():
+            for path, original in protected.items():
                 if list(listing.get(path, ())) != original:
                     raise Blocked(f'protected pre-existing file changed: {path}')
 
-    def _paths(self, base: str, item: dict) -> list[str]:
-        return [p for p in self.c.changed_paths(self.root, base) if p not in item.get('protected', {})]
+    def _paths(self, base: str, item: dict, ident: str) -> list[str]:
+        protected = self._protected(ident, item)
+        return [p for p in self.c.changed_paths(self.root, base) if p not in protected]
 
     def _identity(self, row: dict) -> str:
         declaration = '\n'.join(r['text'] for r in self.queue) if row['kind'] == 'final' else row['text']
@@ -201,7 +238,7 @@ class TaskLoop:
 
     def _required(self, row: dict, item: dict, extra=()) -> list[str]:
         config = self.c.load_config(self.root)
-        paths = self._paths(item['base'], item)
+        paths = self._paths(item['base'], item, row['id'])
         if row['kind'] == 'map' and paths:
             raise Blocked('T000 is map-only; source changes belong in an implementation task')
         domains = domains_for(config, paths)
@@ -253,8 +290,8 @@ class TaskLoop:
         head = git(self.root, 'rev-parse', 'HEAD').strip()
         self.items[ident] = {'status': 'active', 'head': head,
                             'base': self.state['base'] if pending['kind'] == 'final' else head,
-                            'declaration': pending['text'], 'protected': {p: list(listing[p]) for p in untracked},
-                            'cycle': 1, 'reviews': [], 'checks': None, 'context': str(path.relative_to(self.root))}
+                            'declaration': pending['text'], 'cycle': 1, 'reviews': [], 'checks': None}
+        atomic_write(self._protected_path(ident), json.dumps({p: list(listing[p]) for p in untracked}))
         self.execution['active'] = ident
         self.save()
         atomic_write(pointer, json.dumps({'change': self.folder.name, 'task': ident}))
@@ -273,9 +310,15 @@ class TaskLoop:
         good = result['status'] in ('PASS', 'NOT_REQUIRED') and unchanged
         item['checks']['status'] = result['status'] if good else 'INCOMPLETE'
         self.save()
-        return {'status': 'PASS' if good else 'INCOMPLETE', 'task': ident,
-                'checks_status': item['checks']['status'], 'checks': required,
-                'requirements_changed': identity != self._identity(self._row(ident))}
+        result = {'status': 'PASS' if good else 'INCOMPLETE', 'task': ident,
+                  'checks_status': item['checks']['status'], 'checks': required,
+                  'requirements_changed': identity != self._identity(self._row(ident))}
+        if good and len(self._cycles(item)) < REVIEW_LIMIT:
+            try:  # passing checks hand the reviewer its packet in the same step
+                result['packet'] = self.packet(ident)['packet']
+            except Blocked as error:
+                result['packet_blocked'] = str(error)
+        return result
 
     def _evidence(self, row: dict, item: dict):
         evidence = item.get('checks') or {}
@@ -304,7 +347,7 @@ class TaskLoop:
         self.c.workmap.ensure_current(self.root)
         path = f'.work/review/{self.folder.name}-{ident}-r{len(item["reviews"]) + 1}.md'
         result = self.c.packet(self.root, item['base'], None, self.folder.name, path,
-                               exclude_paths=set(item.get('protected', {})))
+                               exclude_paths=set(self._protected(ident, item)))
         target = self.root / path
         with target.open('a') as output:
             output.write('\n## Active task\n\n' + row['text'] + '\n\nTask checks: ' + json.dumps(item['checks']) + '\n')
@@ -359,10 +402,21 @@ class TaskLoop:
             if packet.get('map', {}).get('corpus') != self.c.current_map_corpus(self.root):
                 raise Blocked('map changed after the packet; prepare the review against current code')
             self._findings(ident, row['kind'] == 'final')
-        item['reviews'].append({'cycle': item['cycle'], 'round': len(rounds) + 1, 'result': result,
-                                'reviewer': reviewer, 'note': note, **packet, 'at': now()})
+        record = {'cycle': item['cycle'], 'round': len(rounds) + 1, 'result': result, 'reviewer': reviewer,
+                  'note': note, 'path': packet['path'], 'fingerprint': packet['fingerprint'],
+                  'identity': packet['identity'], 'at': now()}
+        if result == 'clean':
+            record['commit_fingerprint'] = self._code_fingerprint(ident, item)
+        item['reviews'].append(record)
         item['status'] = 'reviewed' if result == 'clean' else 'blocked' if len(rounds) + 1 == REVIEW_LIMIT else 'fixing'
         self.save()
+        if result == 'clean':  # a clean review prepares the task commit in the same step
+            summary = {'task': ident, 'result': result, 'round': len(rounds) + 1, 'cycle': item['cycle']}
+            try:
+                return {**summary, **self.complete(ident)}
+            except Blocked as error:
+                return {**summary, 'status': 'PASS',
+                        'note': f'clean review recorded; run task complete after resolving: {error}'}
         return {'status': 'BLOCKED' if item['status'] == 'blocked' else 'PASS', 'task': ident,
                 'result': result, 'round': len(rounds) + 1, 'cycle': item['cycle'],
                 'remaining_findings': [f for f in self.c.parse_findings((self.folder / 'findings.md').read_text()) if f.get('status') in ('open', 'escalated')] if (self.folder / 'findings.md').is_file() else [],
@@ -377,7 +431,7 @@ class TaskLoop:
         item = self.items[ident]
         if git(self.root, 'rev-parse', 'HEAD').strip() != item['head']:
             raise Blocked('HEAD changed; reconcile preserved work before resuming')
-        self._protect(item)
+        self._protect(ident, item)
         item.setdefault('resumptions', []).append({'instruction': owner_instruction, 'at': now(), 'after_cycle': item['cycle']})
         item['cycle'] += 1; item['status'] = 'fixing'
         item.pop('packet', None)
@@ -423,10 +477,14 @@ class TaskLoop:
 
     def complete(self, ident: str, **_):
         self._staged_records()
-        if ident in self.pending_commit:
-            row, item = self._row(ident), self.items[ident]
-            item['status'] = 'reviewed'
-            self.execution['active'] = ident
+        if ident in self.pending_commit:  # already prepared: say so again without rewriting records
+            last = self.items[ident]['reviews'][-1] if self.items[ident]['reviews'] else {}
+            if last.get('fingerprint') != self.c.fingerprint(self.root):
+                raise Blocked('code changed after the clean review; run task check to reopen the task')
+            self.items[ident]['record_hashes'] = self._record_hashes()  # records edited since are part of the commit
+            self.save()
+            return {'status': 'READY_TO_COMMIT', 'task': ident,
+                    'note': 'Stage explicit task paths and records, then commit once; the next task start verifies it.'}
         row, item = self._current(ident)
         self._evidence(row, item)
         last = item['reviews'][-1] if item['reviews'] else {}
@@ -442,6 +500,8 @@ class TaskLoop:
         item['status'] = 'done'; item['declaration'] = row['text']
         item['commit_parent'] = item['head']; item.setdefault('transaction', uuid.uuid4().hex)
         self.execution['active'] = None
+        for transient in ('packet', 'context', 'protected'):
+            item.pop(transient, None)
         if row['kind'] == 'final':
             self.state['phase'] = 'done'
         text = (self.folder / 'tasks.md').read_text()
@@ -452,7 +512,7 @@ class TaskLoop:
         atomic_write(self.folder / 'tasks.md', tasks)
         atomic_write(self.folder / 'log.md', log)
         return {'status': 'READY_TO_COMMIT', 'task': ident,
-                'note': 'Stage explicit task paths and records, commit once, then task status verifies the committed code.'}
+                'note': 'Stage explicit task paths and records, then commit once; the next task start verifies it.'}
 
     def planning_commit(self, ident=None, message=None, **_):
         self._staged_records()

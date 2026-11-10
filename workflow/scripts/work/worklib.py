@@ -86,7 +86,8 @@ def atomic_write(path: Path, data: str | bytes) -> None:
         raise
 
 
-def snapshot(root: Path, drop: tuple[str, ...] = (), listing: bool = False) -> tuple[str, dict[str, tuple[str, str]]]:
+def snapshot(root: Path, drop: tuple[str, ...] = (), listing: bool = False,
+             exclude: tuple[str, ...] = ()) -> tuple[str, dict[str, tuple[str, str]]]:
     """Stage every non-ignored file into a temporary index; never touches the real index.
 
     Returns git's tree id of that content (minus `drop` paths) and, with `listing`, each
@@ -104,6 +105,12 @@ def snapshot(root: Path, drop: tuple[str, ...] = (), listing: bool = False) -> t
             commands.append(['git', 'rm', '-r', '--cached', '-q', '--ignore-unmatch', '--', *drop])
         for argv in commands:
             done = subprocess.run(argv, cwd=root, env=env, capture_output=True)
+            if done.returncode != 0:
+                raise Blocked(f'fingerprint failed: {done.stderr.decode(errors="replace").strip()}')
+        if exclude:  # exact paths on stdin: no pathspec magic and no argument-length limit
+            done = subprocess.run(['git', 'update-index', '--force-remove', '-z', '--stdin'], cwd=root, env=env,
+                                  input='\0'.join(exclude).encode('utf-8', errors='surrogateescape'),
+                                  capture_output=True)
             if done.returncode != 0:
                 raise Blocked(f'fingerprint failed: {done.stderr.decode(errors="replace").strip()}')
         tree = subprocess.run(['git', 'write-tree'], cwd=root, env=env, capture_output=True,

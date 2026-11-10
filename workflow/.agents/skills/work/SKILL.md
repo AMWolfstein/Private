@@ -37,7 +37,7 @@ reusable/offline after initial provisioning, and normal CLI commands discover it
   planning. File/line counts and high-risk path hints alone do not determine size.
 - Larger changes: spec and plan skills unchanged, then ONE planning commit containing the
   complete accepted planning bundle. Owner authorization persists; do not ask again routinely.
-- Execution: implement skill. T000 map; then one task at a time: map/context, implement,
+- Execution: implement skill. One task at a time: map/context, implement,
   appropriate checks, independent review/fixes, ONE Git commit for code/tests/fixes/records.
   Do not complete a task before clean review or start the next before the actual commit.
 - Three reviews maximum per task cycle. Third dirty: stop/report, no fourth automatic round.

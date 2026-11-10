@@ -139,8 +139,7 @@ def new_change(root: Path, title: str, size: str, *, legacy: bool = False) -> Pa
     if size != 'small':
         shutil.copy2(templates / 'assurance.json', folder / 'assurance.json')
     if size == 'small':
-        (folder / 'tasks.md').write_text('# Tasks\n\n- [ ] T000 [MAP] Refresh map — check: map status\n'
-                                       f'- [ ] T001 [FINAL] {" ".join(title.split())} — check: auto\n')
+        (folder / 'tasks.md').write_text(f'# Tasks\n\n- [ ] T001 [FINAL] {" ".join(title.split())} — check: auto\n')
     base = git(root, 'rev-parse', 'HEAD', check=False).strip() or None
     phase = 'tasks' if size == 'small' else 'spec'
     state = {'id': folder.name, 'title': title, 'size': size, 'phase': phase, 'base': base,
@@ -830,7 +829,7 @@ def status(root: Path, brief: bool) -> str:
                 state = read_state(folder)
                 state['_waiting_commits'] = [key for key, item in state.get('execution', {}).get('tasks', {}).items()
                                              if item.get('status') == 'done' and item.get('commit_parent') == head]
-                if state['phase'] != 'done' or state['_waiting_commits']:
+                if not state.get('closed') and (state['phase'] != 'done' or state['_waiting_commits']):
                     active.append(state)
     if active:
         for state in active:

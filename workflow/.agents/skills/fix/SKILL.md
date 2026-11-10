@@ -10,8 +10,8 @@ contract, data schema/format migration or multi-part implementation. Size is imp
 If the scope grows, explain why and enter planning before expanding it.
 
 1. Use `new "title" --size small`. This creates minimal tasks/state/log records, no spec/plan
-   stage or planning commit. T000 refreshes the map; T001 implements and reviews the complete
-   small change as the final task. Follow the same task loop in implement/SKILL.md.
+   stage or planning commit. T001 implements and reviews the complete
+   small change as the final task; task start refreshes the map. Follow the same task loop in implement/SKILL.md.
 2. Read task context and actual callers/guards. State the bug's cause before changing it.
 3. Make the smallest complete change. Preserve validation, files, accessibility and contracts.
    A bug needs meaningful regression coverage; use `prove --expect-failure` when establishing

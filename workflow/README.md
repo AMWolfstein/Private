@@ -13,12 +13,13 @@ bundle ONE time before execution. `planning-commit` prepares records; it does no
 
 ## Execution
 
-1. T000 refreshes the map. Start every following task with current map/context.
+1. `task start` refreshes the map and emits the task's context. There is no separate map task.
 2. Implement one complete task, then run appropriate checks and independent review.
 3. Dirty review: fix and recheck/review inside the same task. At most THREE reviews per cycle.
    Third dirty: stop/report. Only a new explicit owner instruction permits a recorded resume.
-4. Clean review: prepare completion and make ONE ordinary Git commit containing implementation,
-   tests, review fixes and task records. The tool verifies committed contents before the next task.
+4. Clean review: recording it prepares the completion records. Make ONE ordinary Git commit
+   containing implementation, tests, review fixes and task records. The next `task start`
+   verifies the committed contents.
 5. Extra owner requests become TOR001, TOR002, etc. They use the same loop.
 6. Last pending task has [FINAL]: check/review the cumulative result and completed tasks. Its
    fixes/records get one reviewed commit. Never make an empty Git commit.
@@ -37,16 +38,20 @@ python3 workflow/scripts/work/work.py advance NNN tasks
 python3 workflow/scripts/work/work.py planning-commit NNN
 # Stage the complete planning folder explicitly; make its one Git commit.
 
-python3 workflow/scripts/work/work.py task start NNN T000
-python3 workflow/scripts/work/work.py task check NNN T000
-python3 workflow/scripts/work/work.py task packet NNN T000
+python3 workflow/scripts/work/work.py task start NNN T001    # verifies the previous commit, map, context
+python3 workflow/scripts/work/work.py task check NNN T001    # checks; on PASS also writes the review packet
 # Independent reviewer reads packet/source; record its actual verdict:
-python3 workflow/scripts/work/work.py task review NNN T000 --result clean --reviewer NAME
-python3 workflow/scripts/work/work.py task complete NNN T000
+python3 workflow/scripts/work/work.py task review NNN T001 --result clean --reviewer NAME
+# A clean verdict prepares the records (READY_TO_COMMIT).
 # Stage explicit task paths plus this change's records; one ordinary Git commit.
-python3 workflow/scripts/work/work.py task status NNN
-# Repeat for T001, TOR### and the last [FINAL] task.
+# Repeat for the next task, TOR### and the last [FINAL] task.
 ```
+
+Four steps per task. `task packet`, `task complete` and `task status` still exist for
+recovery: a packet after an interrupted check, re-preparing records edited after the clean
+review (run `task complete` again BEFORE committing), and inspecting the queue. Untracked
+files that existed before a task are remembered under ignored `.work/`, never in the
+committed records, so another clone can verify the same commits.
 
 `READY_TO_COMMIT` is not completion. Failed/interrupted Git leaves `waiting_commit`; source/index
 edits are preserved. Partial planning/task commits, omitted evidence, changed reviewed code and
@@ -72,7 +77,7 @@ can invalidate task review even without a source change. Do not put runtime inpu
 
 ## Map, setup and limits
 
-T000/task start uses the current CodeGraph map and emits context. A task packet refreshes stale
+Task start uses the current CodeGraph map and emits context. A task packet refreshes stale
 map state before review. See [map guide](work/guides/map.md) for pinned installation, provenance,
 coverage and unresolved links. A map is not runtime proof; excluded/unindexed source requires
 explicit direct inspection and compiler/test evidence.

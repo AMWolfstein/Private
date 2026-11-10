@@ -7,8 +7,9 @@ description: "Independent code review in a fresh, read-only context, and owner-r
 
 Review is part of each task, including TOR### and the last cumulative [FINAL] task.
 
-1. The task's relevant checks must be current before preparing its packet. Use `task packet
-   CHANGE TASK`; it refreshes map context and binds code, requirements and real check evidence.
+1. `task check CHANGE TASK` runs the relevant checks and, when they pass, writes the packet:
+   it refreshes map context and binds code, requirements and real check evidence. `task packet`
+   remains for regenerating one without rerunning checks.
 2. Start a fresh read-only code-reviewer with the packet path. For application bridge/data
    changes, add a second focused reviewer. Give no author opinion or expected verdict.
 3. Record findings in findings.md with Severity, Status, Evidence and `- Task: T###` where
@@ -20,8 +21,8 @@ Review is part of each task, including TOR### and the last cumulative [FINAL] ta
    owner what remains and what was tried; no fourth review, commit or next task. An explicit
    owner instruction may authorize `task resume --owner-instruction "actual instruction"`;
    retain all earlier review history. Never self-authorize a new cycle.
-6. Clean permits task complete followed by ONE Git commit for the entire task, including
-   review fixes and records. Any subsequent source/requirement change needs fresh checks/review.
+6. Recording a clean verdict prepares completion (READY_TO_COMMIT); then ONE Git commit for
+   the entire task, including review fixes and records. Any subsequent source/requirement change needs fresh checks/review.
 
 Final [FINAL] review covers all implemented tasks together, their interactions, original
 requirements and cumulative diff. Final fixes use the same loop and one task commit.

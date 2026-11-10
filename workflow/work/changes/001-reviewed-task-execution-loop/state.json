@@ -53,7 +53,7 @@
     "parent": "2b7fbb4e955b38dddf3889eaa0fc59ffed0294c5"
   },
   "execution": {
-    "active": "T003",
+    "active": null,
     "tasks": {
       "T000": {
         "status": "done",
@@ -67,12 +67,7 @@
             "round": 1,
             "result": "clean",
             "reviewer": "loop_t000_review",
-            "fingerprint": "cec4823ee0538f11b22aa77b6916b2d2631dc73c",
-            "map": {
-              "digest": "e2049c3eabbcff4a506334df48f680ec2996d1a0a6a977e1f5d89b081a8973a5",
-              "corpus": "b2dba06d592d63f2c4c3401ace9c0c52e09e5ed26c997219fbbd3d3dfb493e75",
-              "structure": "codegraph"
-            }
+            "fingerprint": "cec4823ee0538f11b22aa77b6916b2d2631dc73c"
           }
         ],
         "checks": {
@@ -88,156 +83,6 @@
         "head": "7d44d5857796952a7c651e8aacd81a1f28ef507e",
         "base": "7d44d5857796952a7c651e8aacd81a1f28ef507e",
         "declaration": "T001 Implement and test the task execution engine and CLI (FR-001, FR-002, FR-003, FR-004, FR-005, FR-006, FR-007, FR-008, FR-009, FR-010) — check: workflow",
-        "protected": {
-          "extensions/tools/node_modules/.bin/acorn": [
-            "120000",
-            "cf76760386200fb3e0ff9c6827bef9c9fc0305b5"
-          ],
-          "extensions/tools/node_modules/.package-lock.json": [
-            "100644",
-            "67a922c5e4d5b9174129b0be7b6e8dd73da95522"
-          ],
-          "extensions/tools/node_modules/acorn/CHANGELOG.md": [
-            "100644",
-            "c86068cd71ab475f37cbd8f373fa2de08e19338f"
-          ],
-          "extensions/tools/node_modules/acorn/LICENSE": [
-            "100644",
-            "9d71cc63a35e7d878787e5159b5b163739486220"
-          ],
-          "extensions/tools/node_modules/acorn/README.md": [
-            "100644",
-            "f7ff9662419308536f984c7c7d97499cc1d86cb6"
-          ],
-          "extensions/tools/node_modules/acorn/bin/acorn": [
-            "100755",
-            "3ef3c124b08bd4fb0f27cd13301dfeeae4a6464c"
-          ],
-          "extensions/tools/node_modules/acorn/dist/acorn.d.mts": [
-            "100644",
-            "f2ec5243bcb2625afcc11f4296b4250ca858c431"
-          ],
-          "extensions/tools/node_modules/acorn/dist/acorn.d.ts": [
-            "100644",
-            "f2ec5243bcb2625afcc11f4296b4250ca858c431"
-          ],
-          "extensions/tools/node_modules/acorn/dist/acorn.js": [
-            "100644",
-            "cb5628bf83cf0bcb63514b797a38e0442c383ea8"
-          ],
-          "extensions/tools/node_modules/acorn/dist/acorn.mjs": [
-            "100644",
-            "74d5fc431be2b5062245e72937ef2032164b51cd"
-          ],
-          "extensions/tools/node_modules/acorn/dist/bin.js": [
-            "100644",
-            "c7d9b9f8ed88fe31b242cc3b443bc8c1759a183a"
-          ],
-          "extensions/tools/node_modules/acorn/package.json": [
-            "100644",
-            "6f63ddbf620a19599bd29ffd341fe345d5785b83"
-          ],
-          "extensions/tools/node_modules/eslint-scope/LICENSE": [
-            "100644",
-            "d36a526f7ed5d10c43c68f34622efba7e62fc8a7"
-          ],
-          "extensions/tools/node_modules/eslint-scope/README.md": [
-            "100644",
-            "e5b6a24a3d80270d82685c388007497e71eef066"
-          ],
-          "extensions/tools/node_modules/eslint-scope/dist/eslint-scope.cjs": [
-            "100644",
-            "abb88e5908461aca0ee0c6df5740d17c4d969e6b"
-          ],
-          "extensions/tools/node_modules/eslint-scope/lib/assert.js": [
-            "100644",
-            "6300bce7e85d91b2bd2a75a15dcbfa25a53e0d4f"
-          ],
-          "extensions/tools/node_modules/eslint-scope/lib/definition.js": [
-            "100644",
-            "9744ef48b8f096b85f0d1924ffe3ade0febb2307"
-          ],
-          "extensions/tools/node_modules/eslint-scope/lib/index.js": [
-            "100644",
-            "85f8b510f0ade4bccdcce7335e1aa30ff223d14b"
-          ],
-          "extensions/tools/node_modules/eslint-scope/lib/pattern-visitor.js": [
-            "100644",
-            "367a3773cf4ec36f007d9a5987b7e171f7e6b1b9"
-          ],
-          "extensions/tools/node_modules/eslint-scope/lib/reference.js": [
-            "100644",
-            "e657d628649cc9ea13bc7f8b6c6195e12c0f4344"
-          ],
-          "extensions/tools/node_modules/eslint-scope/lib/referencer.js": [
-            "100644",
-            "ad88ea20de184889c5de33ec63f3d6dd665ce7d0"
-          ],
-          "extensions/tools/node_modules/eslint-scope/lib/scope-manager.js": [
-            "100644",
-            "b012b646d18df5acee98fdc4f093556710c237be"
-          ],
-          "extensions/tools/node_modules/eslint-scope/lib/scope.js": [
-            "100644",
-            "46eeb7719505ddca5b5d6a77869e17874d3d8288"
-          ],
-          "extensions/tools/node_modules/eslint-scope/lib/variable.js": [
-            "100644",
-            "286202f72a4abacbe3e941f9e3a461ae5775a7ec"
-          ],
-          "extensions/tools/node_modules/eslint-scope/lib/version.js": [
-            "100644",
-            "fc36b2b888b111cc0e3c6b87df4b144cb890cdc3"
-          ],
-          "extensions/tools/node_modules/eslint-scope/package.json": [
-            "100644",
-            "e634e45bb9f88a30b678699d9a2742da67df3a58"
-          ],
-          "extensions/tools/node_modules/esrecurse/.babelrc": [
-            "100644",
-            "a0765e185d3b6a76f50929c6e2482e3aa4526343"
-          ],
-          "extensions/tools/node_modules/esrecurse/README.md": [
-            "100644",
-            "ffea6b434a4a633020ae0c35c729772069be0f16"
-          ],
-          "extensions/tools/node_modules/esrecurse/esrecurse.js": [
-            "100644",
-            "15d57dfd0218f66036a7cb5c5fe8e18c26d82267"
-          ],
-          "extensions/tools/node_modules/esrecurse/gulpfile.babel.js": [
-            "100644",
-            "aa881c9c3eaae5fac04467363abaac9e856bffde"
-          ],
-          "extensions/tools/node_modules/esrecurse/package.json": [
-            "100755",
-            "dec5b1bc1fd3ac43e74d7a575cc6bb98b453b2e3"
-          ],
-          "extensions/tools/node_modules/estraverse/.jshintrc": [
-            "100644",
-            "f642dae7683b8155bd800db2aa3bfd574c2f7b64"
-          ],
-          "extensions/tools/node_modules/estraverse/LICENSE.BSD": [
-            "100644",
-            "3e580c355a96e5ab8c4fb2ea4ada2d62287de41f"
-          ],
-          "extensions/tools/node_modules/estraverse/README.md": [
-            "100644",
-            "ccd3377f3e9449547787f8f8f969def96e3f6d23"
-          ],
-          "extensions/tools/node_modules/estraverse/estraverse.js": [
-            "100644",
-            "f0d9af9b46bfebb6cda551de17beeb659c7a2f69"
-          ],
-          "extensions/tools/node_modules/estraverse/gulpfile.js": [
-            "100644",
-            "8772bbcca542a8dc43f1e08f55126ae24426f983"
-          ],
-          "extensions/tools/node_modules/estraverse/package.json": [
-            "100644",
-            "a86321850b4ec93883754e4de7b03227e1a9a379"
-          ]
-        },
         "cycle": 1,
         "reviews": [
           {
@@ -249,11 +94,6 @@
             "path": ".work/review/001-reviewed-task-execution-loop-T001-r1.md",
             "fingerprint": "795cf90acddfa62704347903beb52bc0bc608ccf",
             "identity": "bea75fac5c77844d8c90b6d8a34e671938f5017b52b4c89617a1745d0800fd47",
-            "map": {
-              "digest": "4b7155984ca2b6b5fc12a51a7c1dfd147a89ffb58c5135bddcf10dd5164ebe25",
-              "corpus": "b2dba06d592d63f2c4c3401ace9c0c52e09e5ed26c997219fbbd3d3dfb493e75",
-              "structure": "codegraph"
-            },
             "at": "2026-11-10T18:36:03+00:00"
           },
           {
@@ -265,11 +105,6 @@
             "path": ".work/review/001-reviewed-task-execution-loop-T001-r2.md",
             "fingerprint": "e4e5ec98dce51858006e45e11c3e1a97f576ecd4",
             "identity": "bea75fac5c77844d8c90b6d8a34e671938f5017b52b4c89617a1745d0800fd47",
-            "map": {
-              "digest": "4b7155984ca2b6b5fc12a51a7c1dfd147a89ffb58c5135bddcf10dd5164ebe25",
-              "corpus": "b2dba06d592d63f2c4c3401ace9c0c52e09e5ed26c997219fbbd3d3dfb493e75",
-              "structure": "codegraph"
-            },
             "at": "2026-11-10T18:40:33+00:00"
           },
           {
@@ -281,11 +116,6 @@
             "path": ".work/review/001-reviewed-task-execution-loop-T001-r3.md",
             "fingerprint": "5fd5f29412572ec146df1835ab045fdd97031e5b",
             "identity": "bea75fac5c77844d8c90b6d8a34e671938f5017b52b4c89617a1745d0800fd47",
-            "map": {
-              "digest": "4b7155984ca2b6b5fc12a51a7c1dfd147a89ffb58c5135bddcf10dd5164ebe25",
-              "corpus": "b2dba06d592d63f2c4c3401ace9c0c52e09e5ed26c997219fbbd3d3dfb493e75",
-              "structure": "codegraph"
-            },
             "at": "2026-11-10T18:43:08+00:00"
           }
         ],
@@ -297,17 +127,6 @@
             "workflow"
           ],
           "extra": []
-        },
-        "context": ".work/task-loop-T000-context.md",
-        "packet": {
-          "path": ".work/review/001-reviewed-task-execution-loop-T001-r3.md",
-          "fingerprint": "5fd5f29412572ec146df1835ab045fdd97031e5b",
-          "identity": "bea75fac5c77844d8c90b6d8a34e671938f5017b52b4c89617a1745d0800fd47",
-          "map": {
-            "digest": "4b7155984ca2b6b5fc12a51a7c1dfd147a89ffb58c5135bddcf10dd5164ebe25",
-            "corpus": "b2dba06d592d63f2c4c3401ace9c0c52e09e5ed26c997219fbbd3d3dfb493e75",
-            "structure": "codegraph"
-          }
         },
         "commit_parent": "7d44d5857796952a7c651e8aacd81a1f28ef507e",
         "transaction": "113848d99129417dad9faa8ad1430e5a",
@@ -325,156 +144,6 @@
         "head": "2f4fc5e718a3d43cdce3f87376ff43d48ea59f18",
         "base": "2f4fc5e718a3d43cdce3f87376ff43d48ea59f18",
         "declaration": "T002 Align constitution, skills, templates and reviewer guidance with the task loop (FR-001, FR-002, FR-003, FR-004, FR-005, FR-006, FR-007, FR-008, FR-009, FR-010) — check: workflow",
-        "protected": {
-          "extensions/tools/node_modules/.bin/acorn": [
-            "120000",
-            "cf76760386200fb3e0ff9c6827bef9c9fc0305b5"
-          ],
-          "extensions/tools/node_modules/.package-lock.json": [
-            "100644",
-            "67a922c5e4d5b9174129b0be7b6e8dd73da95522"
-          ],
-          "extensions/tools/node_modules/acorn/CHANGELOG.md": [
-            "100644",
-            "c86068cd71ab475f37cbd8f373fa2de08e19338f"
-          ],
-          "extensions/tools/node_modules/acorn/LICENSE": [
-            "100644",
-            "9d71cc63a35e7d878787e5159b5b163739486220"
-          ],
-          "extensions/tools/node_modules/acorn/README.md": [
-            "100644",
-            "f7ff9662419308536f984c7c7d97499cc1d86cb6"
-          ],
-          "extensions/tools/node_modules/acorn/bin/acorn": [
-            "100755",
-            "3ef3c124b08bd4fb0f27cd13301dfeeae4a6464c"
-          ],
-          "extensions/tools/node_modules/acorn/dist/acorn.d.mts": [
-            "100644",
-            "f2ec5243bcb2625afcc11f4296b4250ca858c431"
-          ],
-          "extensions/tools/node_modules/acorn/dist/acorn.d.ts": [
-            "100644",
-            "f2ec5243bcb2625afcc11f4296b4250ca858c431"
-          ],
-          "extensions/tools/node_modules/acorn/dist/acorn.js": [
-            "100644",
-            "cb5628bf83cf0bcb63514b797a38e0442c383ea8"
-          ],
-          "extensions/tools/node_modules/acorn/dist/acorn.mjs": [
-            "100644",
-            "74d5fc431be2b5062245e72937ef2032164b51cd"
-          ],
-          "extensions/tools/node_modules/acorn/dist/bin.js": [
-            "100644",
-            "c7d9b9f8ed88fe31b242cc3b443bc8c1759a183a"
-          ],
-          "extensions/tools/node_modules/acorn/package.json": [
-            "100644",
-            "6f63ddbf620a19599bd29ffd341fe345d5785b83"
-          ],
-          "extensions/tools/node_modules/eslint-scope/LICENSE": [
-            "100644",
-            "d36a526f7ed5d10c43c68f34622efba7e62fc8a7"
-          ],
-          "extensions/tools/node_modules/eslint-scope/README.md": [
-            "100644",
-            "e5b6a24a3d80270d82685c388007497e71eef066"
-          ],
-          "extensions/tools/node_modules/eslint-scope/dist/eslint-scope.cjs": [
-            "100644",
-            "abb88e5908461aca0ee0c6df5740d17c4d969e6b"
-          ],
-          "extensions/tools/node_modules/eslint-scope/lib/assert.js": [
-            "100644",
-            "6300bce7e85d91b2bd2a75a15dcbfa25a53e0d4f"
-          ],
-          "extensions/tools/node_modules/eslint-scope/lib/definition.js": [
-            "100644",
-            "9744ef48b8f096b85f0d1924ffe3ade0febb2307"
-          ],
-          "extensions/tools/node_modules/eslint-scope/lib/index.js": [
-            "100644",
-            "85f8b510f0ade4bccdcce7335e1aa30ff223d14b"
-          ],
-          "extensions/tools/node_modules/eslint-scope/lib/pattern-visitor.js": [
-            "100644",
-            "367a3773cf4ec36f007d9a5987b7e171f7e6b1b9"
-          ],
-          "extensions/tools/node_modules/eslint-scope/lib/reference.js": [
-            "100644",
-            "e657d628649cc9ea13bc7f8b6c6195e12c0f4344"
-          ],
-          "extensions/tools/node_modules/eslint-scope/lib/referencer.js": [
-            "100644",
-            "ad88ea20de184889c5de33ec63f3d6dd665ce7d0"
-          ],
-          "extensions/tools/node_modules/eslint-scope/lib/scope-manager.js": [
-            "100644",
-            "b012b646d18df5acee98fdc4f093556710c237be"
-          ],
-          "extensions/tools/node_modules/eslint-scope/lib/scope.js": [
-            "100644",
-            "46eeb7719505ddca5b5d6a77869e17874d3d8288"
-          ],
-          "extensions/tools/node_modules/eslint-scope/lib/variable.js": [
-            "100644",
-            "286202f72a4abacbe3e941f9e3a461ae5775a7ec"
-          ],
-          "extensions/tools/node_modules/eslint-scope/lib/version.js": [
-            "100644",
-            "fc36b2b888b111cc0e3c6b87df4b144cb890cdc3"
-          ],
-          "extensions/tools/node_modules/eslint-scope/package.json": [
-            "100644",
-            "e634e45bb9f88a30b678699d9a2742da67df3a58"
-          ],
-          "extensions/tools/node_modules/esrecurse/.babelrc": [
-            "100644",
-            "a0765e185d3b6a76f50929c6e2482e3aa4526343"
-          ],
-          "extensions/tools/node_modules/esrecurse/README.md": [
-            "100644",
-            "ffea6b434a4a633020ae0c35c729772069be0f16"
-          ],
-          "extensions/tools/node_modules/esrecurse/esrecurse.js": [
-            "100644",
-            "15d57dfd0218f66036a7cb5c5fe8e18c26d82267"
-          ],
-          "extensions/tools/node_modules/esrecurse/gulpfile.babel.js": [
-            "100644",
-            "aa881c9c3eaae5fac04467363abaac9e856bffde"
-          ],
-          "extensions/tools/node_modules/esrecurse/package.json": [
-            "100755",
-            "dec5b1bc1fd3ac43e74d7a575cc6bb98b453b2e3"
-          ],
-          "extensions/tools/node_modules/estraverse/.jshintrc": [
-            "100644",
-            "f642dae7683b8155bd800db2aa3bfd574c2f7b64"
-          ],
-          "extensions/tools/node_modules/estraverse/LICENSE.BSD": [
-            "100644",
-            "3e580c355a96e5ab8c4fb2ea4ada2d62287de41f"
-          ],
-          "extensions/tools/node_modules/estraverse/README.md": [
-            "100644",
-            "ccd3377f3e9449547787f8f8f969def96e3f6d23"
-          ],
-          "extensions/tools/node_modules/estraverse/estraverse.js": [
-            "100644",
-            "f0d9af9b46bfebb6cda551de17beeb659c7a2f69"
-          ],
-          "extensions/tools/node_modules/estraverse/gulpfile.js": [
-            "100644",
-            "8772bbcca542a8dc43f1e08f55126ae24426f983"
-          ],
-          "extensions/tools/node_modules/estraverse/package.json": [
-            "100644",
-            "a86321850b4ec93883754e4de7b03227e1a9a379"
-          ]
-        },
         "cycle": 1,
         "reviews": [
           {
@@ -486,11 +155,6 @@
             "path": ".work/review/001-reviewed-task-execution-loop-T002-r1.md",
             "fingerprint": "7f70670cfb954722909b9817320219cd027a5489",
             "identity": "0b39c974716daa0444e701fe68edde69ecb51bf8fa53575690bacc626c2b14e1",
-            "map": {
-              "digest": "4b7155984ca2b6b5fc12a51a7c1dfd147a89ffb58c5135bddcf10dd5164ebe25",
-              "corpus": "b2dba06d592d63f2c4c3401ace9c0c52e09e5ed26c997219fbbd3d3dfb493e75",
-              "structure": "codegraph"
-            },
             "at": "2026-11-10T18:51:18+00:00"
           },
           {
@@ -502,11 +166,6 @@
             "path": ".work/review/001-reviewed-task-execution-loop-T002-r2.md",
             "fingerprint": "e483a5d538ae98d314e42065e15005e6fcccc694",
             "identity": "0b39c974716daa0444e701fe68edde69ecb51bf8fa53575690bacc626c2b14e1",
-            "map": {
-              "digest": "4b7155984ca2b6b5fc12a51a7c1dfd147a89ffb58c5135bddcf10dd5164ebe25",
-              "corpus": "b2dba06d592d63f2c4c3401ace9c0c52e09e5ed26c997219fbbd3d3dfb493e75",
-              "structure": "codegraph"
-            },
             "at": "2026-11-10T18:55:23+00:00"
           }
         ],
@@ -518,17 +177,6 @@
             "workflow"
           ],
           "extra": []
-        },
-        "context": ".work/tasks/001-reviewed-task-execution-loop/T002-context.md",
-        "packet": {
-          "path": ".work/review/001-reviewed-task-execution-loop-T002-r2.md",
-          "fingerprint": "e483a5d538ae98d314e42065e15005e6fcccc694",
-          "identity": "0b39c974716daa0444e701fe68edde69ecb51bf8fa53575690bacc626c2b14e1",
-          "map": {
-            "digest": "4b7155984ca2b6b5fc12a51a7c1dfd147a89ffb58c5135bddcf10dd5164ebe25",
-            "corpus": "b2dba06d592d63f2c4c3401ace9c0c52e09e5ed26c997219fbbd3d3dfb493e75",
-            "structure": "codegraph"
-          }
         },
         "commit_parent": "2f4fc5e718a3d43cdce3f87376ff43d48ea59f18",
         "transaction": "26dfef2af85d4e82895a5a2d36fb5cb0",
@@ -546,156 +194,6 @@
         "head": "26fad39700c138ef9d24684655ece626e3ff811d",
         "base": "2b7fbb4e955b38dddf3889eaa0fc59ffed0294c5",
         "declaration": "T003 [FINAL] Review the cumulative workflow changes and completed tasks; fix findings in one commit (FR-001, FR-002, FR-003, FR-004, FR-005, FR-006, FR-007, FR-008, FR-009, FR-010) — check: workflow",
-        "protected": {
-          "extensions/tools/node_modules/.bin/acorn": [
-            "120000",
-            "cf76760386200fb3e0ff9c6827bef9c9fc0305b5"
-          ],
-          "extensions/tools/node_modules/.package-lock.json": [
-            "100644",
-            "67a922c5e4d5b9174129b0be7b6e8dd73da95522"
-          ],
-          "extensions/tools/node_modules/acorn/CHANGELOG.md": [
-            "100644",
-            "c86068cd71ab475f37cbd8f373fa2de08e19338f"
-          ],
-          "extensions/tools/node_modules/acorn/LICENSE": [
-            "100644",
-            "9d71cc63a35e7d878787e5159b5b163739486220"
-          ],
-          "extensions/tools/node_modules/acorn/README.md": [
-            "100644",
-            "f7ff9662419308536f984c7c7d97499cc1d86cb6"
-          ],
-          "extensions/tools/node_modules/acorn/bin/acorn": [
-            "100755",
-            "3ef3c124b08bd4fb0f27cd13301dfeeae4a6464c"
-          ],
-          "extensions/tools/node_modules/acorn/dist/acorn.d.mts": [
-            "100644",
-            "f2ec5243bcb2625afcc11f4296b4250ca858c431"
-          ],
-          "extensions/tools/node_modules/acorn/dist/acorn.d.ts": [
-            "100644",
-            "f2ec5243bcb2625afcc11f4296b4250ca858c431"
-          ],
-          "extensions/tools/node_modules/acorn/dist/acorn.js": [
-            "100644",
-            "cb5628bf83cf0bcb63514b797a38e0442c383ea8"
-          ],
-          "extensions/tools/node_modules/acorn/dist/acorn.mjs": [
-            "100644",
-            "74d5fc431be2b5062245e72937ef2032164b51cd"
-          ],
-          "extensions/tools/node_modules/acorn/dist/bin.js": [
-            "100644",
-            "c7d9b9f8ed88fe31b242cc3b443bc8c1759a183a"
-          ],
-          "extensions/tools/node_modules/acorn/package.json": [
-            "100644",
-            "6f63ddbf620a19599bd29ffd341fe345d5785b83"
-          ],
-          "extensions/tools/node_modules/eslint-scope/LICENSE": [
-            "100644",
-            "d36a526f7ed5d10c43c68f34622efba7e62fc8a7"
-          ],
-          "extensions/tools/node_modules/eslint-scope/README.md": [
-            "100644",
-            "e5b6a24a3d80270d82685c388007497e71eef066"
-          ],
-          "extensions/tools/node_modules/eslint-scope/dist/eslint-scope.cjs": [
-            "100644",
-            "abb88e5908461aca0ee0c6df5740d17c4d969e6b"
-          ],
-          "extensions/tools/node_modules/eslint-scope/lib/assert.js": [
-            "100644",
-            "6300bce7e85d91b2bd2a75a15dcbfa25a53e0d4f"
-          ],
-          "extensions/tools/node_modules/eslint-scope/lib/definition.js": [
-            "100644",
-            "9744ef48b8f096b85f0d1924ffe3ade0febb2307"
-          ],
-          "extensions/tools/node_modules/eslint-scope/lib/index.js": [
-            "100644",
-            "85f8b510f0ade4bccdcce7335e1aa30ff223d14b"
-          ],
-          "extensions/tools/node_modules/eslint-scope/lib/pattern-visitor.js": [
-            "100644",
-            "367a3773cf4ec36f007d9a5987b7e171f7e6b1b9"
-          ],
-          "extensions/tools/node_modules/eslint-scope/lib/reference.js": [
-            "100644",
-            "e657d628649cc9ea13bc7f8b6c6195e12c0f4344"
-          ],
-          "extensions/tools/node_modules/eslint-scope/lib/referencer.js": [
-            "100644",
-            "ad88ea20de184889c5de33ec63f3d6dd665ce7d0"
-          ],
-          "extensions/tools/node_modules/eslint-scope/lib/scope-manager.js": [
-            "100644",
-            "b012b646d18df5acee98fdc4f093556710c237be"
-          ],
-          "extensions/tools/node_modules/eslint-scope/lib/scope.js": [
-            "100644",
-            "46eeb7719505ddca5b5d6a77869e17874d3d8288"
-          ],
-          "extensions/tools/node_modules/eslint-scope/lib/variable.js": [
-            "100644",
-            "286202f72a4abacbe3e941f9e3a461ae5775a7ec"
-          ],
-          "extensions/tools/node_modules/eslint-scope/lib/version.js": [
-            "100644",
-            "fc36b2b888b111cc0e3c6b87df4b144cb890cdc3"
-          ],
-          "extensions/tools/node_modules/eslint-scope/package.json": [
-            "100644",
-            "e634e45bb9f88a30b678699d9a2742da67df3a58"
-          ],
-          "extensions/tools/node_modules/esrecurse/.babelrc": [
-            "100644",
-            "a0765e185d3b6a76f50929c6e2482e3aa4526343"
-          ],
-          "extensions/tools/node_modules/esrecurse/README.md": [
-            "100644",
-            "ffea6b434a4a633020ae0c35c729772069be0f16"
-          ],
-          "extensions/tools/node_modules/esrecurse/esrecurse.js": [
-            "100644",
-            "15d57dfd0218f66036a7cb5c5fe8e18c26d82267"
-          ],
-          "extensions/tools/node_modules/esrecurse/gulpfile.babel.js": [
-            "100644",
-            "aa881c9c3eaae5fac04467363abaac9e856bffde"
-          ],
-          "extensions/tools/node_modules/esrecurse/package.json": [
-            "100755",
-            "dec5b1bc1fd3ac43e74d7a575cc6bb98b453b2e3"
-          ],
-          "extensions/tools/node_modules/estraverse/.jshintrc": [
-            "100644",
-            "f642dae7683b8155bd800db2aa3bfd574c2f7b64"
-          ],
-          "extensions/tools/node_modules/estraverse/LICENSE.BSD": [
-            "100644",
-            "3e580c355a96e5ab8c4fb2ea4ada2d62287de41f"
-          ],
-          "extensions/tools/node_modules/estraverse/README.md": [
-            "100644",
-            "ccd3377f3e9449547787f8f8f969def96e3f6d23"
-          ],
-          "extensions/tools/node_modules/estraverse/estraverse.js": [
-            "100644",
-            "f0d9af9b46bfebb6cda551de17beeb659c7a2f69"
-          ],
-          "extensions/tools/node_modules/estraverse/gulpfile.js": [
-            "100644",
-            "8772bbcca542a8dc43f1e08f55126ae24426f983"
-          ],
-          "extensions/tools/node_modules/estraverse/package.json": [
-            "100644",
-            "a86321850b4ec93883754e4de7b03227e1a9a379"
-          ]
-        },
         "cycle": 1,
         "reviews": [],
         "checks": {
@@ -706,19 +204,12 @@
             "workflow"
           ],
           "extra": []
-        },
-        "context": ".work/tasks/001-reviewed-task-execution-loop/T003-context.md",
-        "packet": {
-          "path": ".work/review/001-reviewed-task-execution-loop-T003-r1.md",
-          "fingerprint": "2c467e8446160bc60f29a9eac03d9089eae7423c",
-          "identity": "b8231b2b6f4976bbdad8176a54bbe500060d9373401655f2db49a6ca060b92b1",
-          "map": {
-            "digest": "4b7155984ca2b6b5fc12a51a7c1dfd147a89ffb58c5135bddcf10dd5164ebe25",
-            "corpus": "b2dba06d592d63f2c4c3401ace9c0c52e09e5ed26c997219fbbd3d3dfb493e75",
-            "structure": "codegraph"
-          }
         }
       }
     }
+  },
+  "closed": {
+    "at": "2026-11-10",
+    "reason": "T003 [FINAL] was finished outside the task CLI under an explicit owner override (see log.md). Records are read-only; machine-local untracked-file listings were removed."
   }
 }
