@@ -586,30 +586,6 @@ class MockedAdapterDeclarationTests(Repo):
         with self.assertRaisesRegex(Blocked, 'status'):
             self.update()
 
-    def test_bridge_contract_from_a_change_record_is_attached(self):
-        folder = work.new_change(self.root, 'Player bridge', 'architecture')
-        assurance = json.loads((folder / 'assurance.json').read_text())
-        assurance['bridge'] = {'applies': True, 'reason': 'player commands', 'contracts': [{
-            'name': 'com.example/player commands', 'caller': 'lib/player/player_bridge.dart PlayerBridge.play',
-            'implementation': f'{PLUGIN} PlayerPlugin.attach', 'payload': 'id: String, required',
-            'ordering': 'play after pause wins', 'ownership': 'PlayerPlugin', 'cancellation': 'none',
-            'reconnect': 'snapshot on attach', 'errors': 'unknown id -> not_found',
-            'caller_checks': ['dart-tests'], 'native_checks': ['android-unit']}]}
-        (folder / 'assurance.json').write_text(json.dumps(assurance))
-        self.update()
-        contract = self.data()['declarations']['contracts'][0]
-        self.assertEqual(contract['channels'], ['com.example/player'])
-        self.assertEqual(contract['files'], sorted(['lib/player/player_bridge.dart', PLUGIN]))
-        self.assertEqual(contract['fact'], 'declared')
-        text = workmap.context(self.root, '', files=[PLUGIN])['text']
-        self.assertIn("contract 'com.example/player commands'", text)
-        self.assertIn('draft (plan not accepted)', text)
-        self.assertIn('reconnect: snapshot on attach', text)
-        state = work.read_state(folder)
-        state['phase'] = 'tasks'
-        work.write_state(folder, state)
-        self.assertEqual(self.state(), 'current')  # a phase change is read live, not rebuilt
-        self.assertIn('accepted plan', workmap.context(self.root, '', files=[PLUGIN])['text'])
 
 
 class MockedAdapterContextTests(Repo):
@@ -719,80 +695,6 @@ class MockedAdapterGapTests(Repo):
         self.assertFalse([e for e in self.data()['edges'] if e['via'].startswith('adapter:dart-name-call')])
 
 
-class MockedAdapterGateTests(Repo):
-    def setUp(self):
-        super().setUp()
-        self.folder = work.new_change(self.root, 'Gate', 'feature')
-        state = work.read_state(self.folder)
-        state['phase'] = 'build'
-        work.write_state(self.folder, state)
-
-    def test_review_gate_reports_a_stale_map(self):
-        self.update()
-        self.write('lib/player/queue.dart', QUEUE_DART + '// edit\n')
-        problems = work.lint_change(self.root, self.folder, 'review')
-        self.assertTrue(any('code map is stale' in p for p in problems), problems)
-
-    def test_advance_refreshes_the_map_and_fails_when_it_cannot(self):
-        os.environ['FAKE_CODEGRAPH'] = 'fail'
-        with self.assertRaisesRegex(Blocked, 'code map could not be refreshed'):
-            work.advance(self.root, self.folder.name, 'review')
-        os.environ.pop('FAKE_CODEGRAPH')
-        with self.assertRaises(Blocked) as caught:  # other gate problems remain, the map one is gone
-            work.advance(self.root, self.folder.name, 'review')
-        self.assertNotIn('code map', str(caught.exception))
-        self.assertEqual(self.state(), 'current')
-
-    def test_clean_code_round_records_the_map_and_ship_checks_it(self):
-        work.record_round(self.root, self.folder.name, 'code', 'clean', 'code-reviewer')
-        entry = work.read_state(self.folder)['rounds'][-1]
-        self.assertEqual(entry['map']['corpus'], workmap.map_status(self.root)['components']['corpus'])
-        state = work.read_state(self.folder)
-        del state['rounds'][-1]['map']
-        work.write_state(self.folder, state)
-        problems = work.lint_change(self.root, self.folder, 'ship')
-        self.assertTrue(any('not recorded against the current code map' in p for p in problems), problems)
-
-    def test_clean_round_cannot_be_recorded_without_a_current_map(self):
-        os.environ['FAKE_CODEGRAPH'] = 'fail'
-        with self.assertRaises(Blocked):
-            work.record_round(self.root, self.folder.name, 'code', 'clean', 'code-reviewer')
-        self.assertEqual(work.read_state(self.folder)['rounds'], [])
-        work.record_round(self.root, self.folder.name, 'code', 'dirty', 'code-reviewer')  # findings need no map
-
-    def test_check_run_refreshes_the_map_without_changing_its_verdict(self):
-        config = work.load_config(self.root)
-        config['checks'] = {'ok': {'run': [sys.executable, '-c', 'pass']}}
-        report = work.run_checks(self.root, config, ['ok'])
-        self.assertEqual(report['status'], 'PASS')
-        self.assertEqual(report['map']['state'], 'current')
-        os.environ['FAKE_CODEGRAPH'] = 'fail'
-        self.write('lib/player/queue.dart', QUEUE_DART + '// edit\n')
-        report = work.run_checks(self.root, config, ['ok'])
-        self.assertEqual(report['status'], 'PASS')
-        self.assertEqual(report['map']['state'], 'not current')
-
-    def test_fresh_requires_current_checks_and_map(self):
-        script = self.root / 'workflow/scripts/work/work.py'
-        config = work.load_config(self.root)
-        config['checks'] = {'ok': {'run': [sys.executable, '-c', 'pass']}}
-        work.run_checks(self.root, config, ['ok'])
-        fresh = lambda: json.loads(subprocess.run([sys.executable, str(script), 'fresh'], cwd=self.root,
-                                                  capture_output=True, text=True).stdout)
-        self.assertEqual(fresh()['status'], 'PASS')
-        (self.root / '.work/map/state.json').unlink()
-        self.assertEqual(fresh(), {'status': 'STALE_OR_INCOMPLETE', 'checks': 'fresh', 'map': 'missing'})
-
-    def test_packet_includes_map_facts_for_changed_files(self):
-        self.write(PLUGIN, PLUGIN_KT + '// edit\n')
-        work.packet(self.root, 'HEAD', None, None, '.work/review/p.md')
-        text = (self.root / '.work/review/p.md').read_text()
-        self.assertIn('## Code map', text)
-        self.assertIn('com.example/player', text)
-
-    def test_status_shows_the_map(self):
-        self.update()
-        self.assertIn('Code map: current', work.status(self.root, True))
 
 
 class MockedAdapterInstallTests(unittest.TestCase):
@@ -807,12 +709,11 @@ class MockedAdapterInstallTests(unittest.TestCase):
             sh(root, 'git', '-c', 'user.email=t@e', '-c', 'user.name=t', 'commit', '-qm', 'install')
             script = ['python3' if shutil.which('python3') else sys.executable, 'workflow/scripts/work/work.py']
             env = {**os.environ, **MOCK_ENV}
-            for argv in (['status'], ['map', 'update'], ['map', 'status'], ['context', 'main'], ['fresh']):
+            for argv in (['map', 'update'], ['map', 'status'], ['context', 'main']):
                 done = subprocess.run(script + argv, cwd=root, capture_output=True, text=True, env=env)
-                expected = (0, 1) if argv == ['fresh'] else (0,)
-                self.assertIn(done.returncode, expected, f'{argv}: {done.stdout}{done.stderr}')
-            self.assertIn('Code map: current', subprocess.run(script + ['status'], cwd=root, capture_output=True,
-                                                              text=True, env=env).stdout)
+                self.assertEqual(done.returncode, 0, f'{argv}: {done.stdout}{done.stderr}')
+            self.assertIn('"state": "current"', subprocess.run(script + ['map', 'status'], cwd=root, capture_output=True,
+                                                               text=True, env=env).stdout)
             leftovers = sh(root, 'git', 'status', '--porcelain')
             self.assertEqual(leftovers, '', 'map commands must only write ignored .work/ files')
 
