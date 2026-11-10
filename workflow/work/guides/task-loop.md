@@ -3,6 +3,12 @@
 Use this for a change whose plan is written and split into tasks in `tasks.md`.
 It replaces the phase gates for that change. The owner decides when planning is done.
 
+## Before the first task
+
+- Read `workflow/work/constitution.md`. A task that breaks a rule in it stops until the rule is met.
+- One fresh read-only design review of the spec and plan. Record the result in `log.md`. Fix any
+  problem in the spec or plan before the first task starts.
+
 ## The loop, one task at a time
 
 1. Take the first open task (`- [ ] T###`) in `tasks.md`, in order.
@@ -17,6 +23,10 @@ It replaces the phase gates for that change. The owner decides when planning is 
    tasks, log), with the task ID in the message. Nothing else goes in it.
 6. Move to the next task. Repeat until no `- [ ]` task remains.
 
+Before each review, run `work.py map update` so the reviewer sees the current code map.
+The task's `check:` command must pass before the commit.
+
+
 A task never gets a commit while it is incomplete.
 
 ## Final review task (always last)
@@ -24,6 +34,8 @@ A task never gets a commit while it is incomplete.
 - When the planned tasks are done, add one mandatory task at the end of `tasks.md`:
   `- [ ] T### Final review: review every change from the first task to HEAD (spec met, tasks
   work together, no leftovers) — check: the review is recorded in log.md with the reviewed hash`.
+- Run `work.py check auto` in full (all five checks), and write the Close section in `log.md`:
+  Drift, Not verified, Lessons.
 - Run it through the same loop as any task: review in a fresh read-only context, fix every
   problem inside this task before committing, then tick it and make one commit with the code and
   docs it changed. Its check is the recorded review.
@@ -39,9 +51,8 @@ A task never gets a commit while it is incomplete.
 
 ## Not required by this loop
 
-- No phase advance (`work.py advance`), no design or code review rounds, no map gate.
-  `work.py check auto` and `work.py lint` still run when you want them, but they do not block a task.
-- The Close section in `log.md` is optional. Write it only when the owner asks for a summary.
+- No phase advance (`work.py advance`), no review-round counter, and no fingerprint gate.
+  The rest of the workflow tools still exist.
 
 ## Rules that stay
 
