@@ -23,6 +23,15 @@ if [[ -n "${MORNYE_RUST_ANDROID_ABIS-}" && "${MORNYE_RUST_ANDROID_ABIS}" != "arm
 fi
 export MORNYE_RUST_ANDROID_ABIS="arm64-v8a"
 
+# Without android/key.properties the release build is signed with the debug key.
+# That is only allowed when the caller says so (CI, or a release job that
+# re-signs the APK with its own keystore).
+if [[ ! -f "$PROJECT_DIR/android/key.properties" && "${MORNYE_ALLOW_DEBUG_SIGNING:-}" != "1" ]]; then
+  echo "Error: no android/key.properties, so the APK would be signed with the debug key." >&2
+  echo "Add key.properties, or set MORNYE_ALLOW_DEBUG_SIGNING=1 for CI tests or a job that re-signs the APK." >&2
+  exit 1
+fi
+
 cd "$PROJECT_DIR"
 if [[ -x "$PROJECT_DIR/.fvm/flutter_sdk/bin/flutter" ]]; then
   FLUTTER_COMMAND=("$PROJECT_DIR/.fvm/flutter_sdk/bin/flutter")

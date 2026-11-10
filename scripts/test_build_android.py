@@ -49,6 +49,8 @@ class AndroidBuildScriptTest(unittest.TestCase):
         self.tools.mkdir()
         self.log = self.project / "calls.jsonl"
         self.env = os.environ.copy()
+        # The fixture project has no key.properties; the build is a debug-signed test build.
+        self.env["MORNYE_ALLOW_DEBUG_SIGNING"] = "1"
         self.env.pop("MORNYE_RUST_ANDROID_ABIS", None)
         self.env.update(PATH=str(self.tools) + os.pathsep + os.defpath, BUILD_TEST_LOG=str(self.log))
         self.tool(self.tools / "python3", PYTHON_STUB)
@@ -93,6 +95,12 @@ class AndroidBuildScriptTest(unittest.TestCase):
                 self.assertNotEqual(result.returncode, 0)
                 self.assertIn("must be arm64-v8a", result.stderr)
         self.assertFalse(self.calls())
+
+    def test_refuses_debug_signing_unless_allowed(self):
+        self.env.pop("MORNYE_ALLOW_DEBUG_SIGNING", None)
+        result = self.run_build()
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("no android/key.properties", result.stderr)
 
     def test_rejects_target_platform_arguments(self):
         result = self.run_build("--target-platform", "android-arm")

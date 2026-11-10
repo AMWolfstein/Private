@@ -158,9 +158,7 @@ extension _LocalLibrarySources on LocalLibraryNotifier {
       } catch (_) {}
       return 'Music';
     }
-    final normalized = path
-        .replaceAll('\\', '/')
-        .replaceAll(RegExp(r'/+$'), '');
+    final normalized = path.replaceAll(RegExp(r'/+$'), '');
     final name = normalized.split('/').last;
     return name.isEmpty ? path : name;
   }
@@ -174,7 +172,7 @@ extension _LocalLibrarySources on LocalLibraryNotifier {
         return false;
       }
     }
-    final normalized = path.replaceAll('\\', '/').toLowerCase();
+    final normalized = path.toLowerCase();
     return normalized.startsWith('/storage/') &&
         !normalized.startsWith('/storage/emulated/');
   }

@@ -376,6 +376,13 @@ class MainActivity: FlutterFragmentActivity() {
                             file.name.startsWith("ms_"))
                     if (stale) file.delete()
                 }
+                // Files opened from other apps are copied into open_audio/<id>/. A day
+                // is long enough for the open session; a queue restored after that may
+                // need the file to be opened again.
+                val openCutoff = System.currentTimeMillis() - 24 * 60 * 60 * 1000L
+                File(cacheDir, "open_audio").listFiles()?.forEach { dir ->
+                    if (dir.isDirectory && dir.lastModified() < openCutoff) dir.deleteRecursively()
+                }
             } catch (_: Exception) {}
         }
     }

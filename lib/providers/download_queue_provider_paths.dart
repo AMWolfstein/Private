@@ -45,8 +45,7 @@ extension _DownloadQueuePaths on DownloadQueueNotifier {
   }
 
   bool _pathIsInside(String path, String directory) {
-    String normalize(String value) =>
-        value.replaceAll('\\', '/').replaceAll(RegExp(r'/+$'), '');
+    String normalize(String value) => value.replaceAll(RegExp(r'/+$'), '');
     final normalizedPath = normalize(path);
     final normalizedDirectory = normalize(directory);
     return normalizedPath == normalizedDirectory ||

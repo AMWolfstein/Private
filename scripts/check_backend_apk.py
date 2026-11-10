@@ -99,27 +99,22 @@ def check_backend_markers(
     backend: str,
 ) -> None:
     names = [info.filename for info in infos]
-    if backend == "rust":
-        if any(name.rsplit("/", 1)[-1] == "libgojni.so" for name in names):
-            raise AuditError("Rust APK contains forbidden libgojni.so")
-        go_resource = next(
-            (name for name in names if name.startswith(("gobackend/", "go/"))), None
+    if any(name.rsplit("/", 1)[-1] == "libgojni.so" for name in names):
+        raise AuditError("APK contains forbidden libgojni.so")
+    go_resource = next(
+        (name for name in names if name.startswith(("gobackend/", "go/"))), None
+    )
+    if go_resource is not None:
+        raise AuditError(f"APK contains forbidden Go resource: {go_resource}")
+    for info in infos:
+        if info.is_dir() or not info.filename.endswith(".dex"):
+            continue
+        data = zf.read(info)
+        marker = next(
+            (marker for marker in (b"Lgobackend/", b"Lgo/") if marker in data), None
         )
-        if go_resource is not None:
-            raise AuditError(f"Rust APK contains forbidden Go resource: {go_resource}")
-        for info in infos:
-            if info.is_dir() or not info.filename.endswith(".dex"):
-                continue
-            data = zf.read(info)
-            marker = next(
-                (marker for marker in (b"Lgobackend/", b"Lgo/") if marker in data), None
-            )
-            if marker is not None:
-                raise AuditError(f"Rust APK DEX {info.filename} contains {marker.decode()}")
-    elif any(
-        name.rsplit("/", 1)[-1] == "libmornye_mobile.so" for name in names
-    ):
-        raise AuditError("Go APK contains forbidden libmornye_mobile.so")
+        if marker is not None:
+            raise AuditError(f"APK DEX {info.filename} contains {marker.decode()}")
 
 
 def audit(path: Path, backend: str, abis: Sequence[str]) -> str:
@@ -155,7 +150,7 @@ def audit(path: Path, backend: str, abis: Sequence[str]) -> str:
 def make_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("apk", type=Path, help="release APK to audit")
-    parser.add_argument("--backend", choices=("rust", "go"), required=True)
+    parser.add_argument("--backend", choices=("rust",), required=True)
     parser.add_argument("--abis", required=True, metavar="ABI[,ABI...]", help="expected APK ABIs")
     return parser
 

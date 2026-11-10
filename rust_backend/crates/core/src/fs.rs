@@ -66,6 +66,13 @@ pub fn write_atomic(
     let mut file = tempfile::Builder::new()
         .prefix(prefix)
         .tempfile_in(directory)?;
+    // The staged file starts as 0600. An existing target keeps its mode.
+    #[cfg(unix)]
+    if let Ok(metadata) = std::fs::metadata(path) {
+        use std::os::unix::fs::PermissionsExt;
+        file.as_file()
+            .set_permissions(std::fs::Permissions::from_mode(metadata.permissions().mode()))?;
+    }
     write(file.as_file_mut())?;
     file.as_file().sync_all()?;
     check()?;
@@ -235,6 +242,24 @@ mod tests {
         let name = file.path().file_name().unwrap().to_string_lossy();
         assert!(name.starts_with(DEFAULT_TEMP_PREFIX), "{name}");
         assert_eq!(name.len(), DEFAULT_TEMP_PREFIX.len() + 6);
+    }
+
+    #[cfg(unix)]
+    #[test]
+    fn write_atomic_keeps_the_mode_of_an_existing_target() {
+        use std::os::unix::fs::PermissionsExt;
+        let directory = tempfile::tempdir().unwrap();
+        let path = directory.path().join("value.json");
+        std::fs::write(&path, b"old").unwrap();
+        std::fs::set_permissions(&path, std::fs::Permissions::from_mode(0o644)).unwrap();
+        write_atomic(directory.path(), &path, ".mornye-", |file| {
+            use std::io::Write;
+            file.write_all(b"new")
+        }, || Ok(()), false)
+        .unwrap();
+        assert_eq!(std::fs::read(&path).unwrap(), b"new");
+        let mode = std::fs::metadata(&path).unwrap().permissions().mode() & 0o777;
+        assert_eq!(mode, 0o644);
     }
 
     #[test]
