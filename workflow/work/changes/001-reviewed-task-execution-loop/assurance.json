@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "port": {
+    "applies": false,
+    "reason": "Refactor existing repository workflow, no external component port"
+  },
+  "bridge": {
+    "applies": false,
+    "reason": "No application cross-language contract changes"
+  },
+  "prerequisites": [],
+  "device_checks": []
+}

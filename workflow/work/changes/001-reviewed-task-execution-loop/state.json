@@ -1,0 +1,59 @@
+{
+  "id": "001-reviewed-task-execution-loop",
+  "title": "Reviewed task execution loop",
+  "size": "architecture",
+  "phase": "tasks",
+  "base": "2b7fbb4e955b38dddf3889eaa0fc59ffed0294c5",
+  "created": "2026-11-10T17:51:14+00:00",
+  "rounds": [
+    {
+      "stage": "design",
+      "round": 1,
+      "result": "dirty",
+      "reviewer": "goldfish-reader+design-critic",
+      "fingerprint": "e7d18ccad83526203252f592c1f8ce4233c8c6b1a5eef99e3cdacd27dbe61da3",
+      "assurance": "e7d18ccad83526203252f592c1f8ce4233c8c6b1a5eef99e3cdacd27dbe61da3",
+      "at": "2026-11-10T17:57:36+00:00"
+    },
+    {
+      "stage": "design",
+      "round": 2,
+      "result": "clean",
+      "reviewer": "goldfish-reader+design-critic",
+      "fingerprint": "e7d18ccad83526203252f592c1f8ce4233c8c6b1a5eef99e3cdacd27dbe61da3",
+      "assurance": "e7d18ccad83526203252f592c1f8ce4233c8c6b1a5eef99e3cdacd27dbe61da3",
+      "at": "2026-11-10T17:59:19+00:00"
+    },
+    {
+      "stage": "design",
+      "round": 3,
+      "result": "clean",
+      "reviewer": "goldfish-reader+design-critic",
+      "fingerprint": "e7d18ccad83526203252f592c1f8ce4233c8c6b1a5eef99e3cdacd27dbe61da3",
+      "assurance": "e7d18ccad83526203252f592c1f8ce4233c8c6b1a5eef99e3cdacd27dbe61da3",
+      "at": "2026-11-10T18:00:34+00:00"
+    }
+  ],
+  "history": [
+    {
+      "phase": "spec",
+      "at": "2026-11-10T17:51:14+00:00"
+    },
+    {
+      "phase": "plan",
+      "at": "2026-11-10T17:52:18+00:00"
+    },
+    {
+      "phase": "tasks",
+      "at": "2026-11-10T18:00:34+00:00"
+    }
+  ],
+  "workflow_version": 2,
+  "planning": {
+    "parent": "2b7fbb4e955b38dddf3889eaa0fc59ffed0294c5"
+  },
+  "execution": {
+    "active": null,
+    "tasks": {}
+  }
+}
