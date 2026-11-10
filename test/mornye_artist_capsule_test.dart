@@ -10,7 +10,6 @@ import 'package:mornye/widgets/mornye_artist_header.dart';
 import 'package:mornye/widgets/mornye_chrome.dart';
 
 void main() {
-
   Future<void> pumpHeader(
     WidgetTester tester, {
     required List<String> log,
@@ -82,13 +81,21 @@ void main() {
       // Level with the round back button.
       final back = tester.getRect(find.byTooltip('Back'));
       expect(bounds.center.dy, back.center.dy);
-      expect(bounds.height, 44);
+      // Material keeps a 48 dp touch target inside the shared glass capsule.
+      expect(bounds.height, kMinInteractiveDimension);
       final share = tester.getRect(find.byTooltip('Share'));
       final more = tester.getRect(
         find.byTooltip(
           MaterialLocalizations.of(tester.element(capsule)).showMenuTooltip,
         ),
       );
+      for (final button in tester.widgetList<IconButton>(
+        find.descendant(of: capsule, matching: find.byType(IconButton)),
+      )) {
+        final target = tester.getRect(find.byWidget(button));
+        expect(target.width, greaterThanOrEqualTo(kMinInteractiveDimension));
+        expect(target.height, greaterThanOrEqualTo(kMinInteractiveDimension));
+      }
       expect(share.right, lessThanOrEqualTo(more.left));
 
       await tester.tap(find.byTooltip('Share'));
