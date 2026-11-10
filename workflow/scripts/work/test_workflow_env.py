@@ -20,7 +20,7 @@ class EnvironmentTests(unittest.TestCase):
     def setUp(self):
         temporary = tempfile.TemporaryDirectory(prefix='env test ')
         self.addCleanup(temporary.cleanup);self.root = Path(temporary.name)
-        shutil.copytree(PACKAGE / 'workflow', self.root / 'workflow', ignore=shutil.ignore_patterns('__pycache__'))
+        shutil.copytree(PACKAGE / 'workflow', self.root / 'workflow', ignore=shutil.ignore_patterns('__pycache__', 'changes'))
         (self.root / '.gitignore').write_text('.work/\n__pycache__/\n')
         for argv in [['git', 'init', '-q'], ['git', 'config', 'user.name', 'Test'],
                      ['git', 'config', 'user.email', 'test@example.invalid'], ['git', 'add', '.'],

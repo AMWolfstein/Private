@@ -180,7 +180,7 @@ def install(target: Path):
     shutil.copy2(PACKAGE / 'AGENTS.md', target / 'AGENTS.md')
     shutil.copy2(PACKAGE / '.gitignore', target / '.gitignore')
     shutil.copytree(PACKAGE / 'workflow', target / 'workflow',
-                    ignore=shutil.ignore_patterns('__pycache__', '.work'))
+                    ignore=shutil.ignore_patterns('__pycache__', '.work', 'changes'))
 
 
 class Repo(unittest.TestCase):

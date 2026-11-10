@@ -33,7 +33,8 @@ class Repo(unittest.TestCase):
         sh(self.root, 'git', 'init', '-q')
         sh(self.root, 'git', 'config', 'user.email', 't@example.com')
         sh(self.root, 'git', 'config', 'user.name', 't')
-        shutil.copytree(PACKAGE / 'work', self.root / 'workflow/work')
+        shutil.copytree(PACKAGE / 'work', self.root / 'workflow/work',
+                        ignore=shutil.ignore_patterns('changes'))
         (self.root / '.gitignore').write_text('build/\n.work/\n')
         (self.root / 'lib').mkdir()
         (self.root / 'lib/app.dart').write_text('original\n')

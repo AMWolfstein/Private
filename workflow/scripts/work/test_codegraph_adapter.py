@@ -158,7 +158,7 @@ class RealCodeGraphRegressions(unittest.TestCase):
         with tempfile.TemporaryDirectory(prefix='codegraph workflow ') as temporary:
             root = Path(temporary)
             package = Path(__file__).resolve().parents[3]
-            shutil.copytree(package / 'workflow', root / 'workflow', ignore=shutil.ignore_patterns('__pycache__'))
+            shutil.copytree(package / 'workflow', root / 'workflow', ignore=shutil.ignore_patterns('__pycache__', 'changes'))
             shutil.copy2(package / 'AGENTS.md', root / 'AGENTS.md')
             (root / '.gitignore').write_text('.work/\n__pycache__/\n')
             for name in ['py/main.py', 'py/helper.py']:
