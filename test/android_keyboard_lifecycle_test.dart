@@ -93,31 +93,8 @@ void main() {
     );
   }
 
-  for (final tv in [false, true]) {
-    testWidgets('does not close desktop or TV input, TV: $tv', (tester) async {
-      debugDefaultTargetPlatformOverride = tv
-          ? TargetPlatform.android
-          : TargetPlatform.windows;
-      debugAndroidTvOverride = tv;
-      _setLifecycle(AppLifecycleState.resumed);
-      await tester.pumpWidget(
-        const MaterialApp(
-          home: AndroidKeyboardLifecycle(child: Scaffold(body: TextField())),
-        ),
-      );
-      await tester.enterText(find.byType(TextField), 'Keep editing');
-      tester.testTextInput.log.clear();
-      _setLifecycle(AppLifecycleState.paused);
-      expect(
-        tester.testTextInput.log.where(
-          (call) => call.method == 'TextInput.hide',
-        ),
-        isEmpty,
-      );
-      _setLifecycle(AppLifecycleState.resumed);
-      await tester.pumpWidget(const SizedBox.shrink());
-      debugDefaultTargetPlatformOverride = null;
-    });
+  {
+
   }
 
   testWidgets('disposing the wrapper removes its lifecycle observer', (

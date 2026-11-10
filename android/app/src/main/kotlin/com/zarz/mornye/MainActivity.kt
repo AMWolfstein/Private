@@ -148,8 +148,6 @@ class MainActivity: FlutterFragmentActivity() {
         "startBackgroundWork",
         "updateBackgroundWork",
         "stopBackgroundWork",
-        "startLinkConnectionService",
-        "stopLinkConnectionService",
         "startNativeDownloadWorker",
         "appendNativeDownloadWorkerRequests",
         "finishNativeDownloadWorkerPreparation",
@@ -378,6 +376,13 @@ class MainActivity: FlutterFragmentActivity() {
                             file.name.startsWith("ms_"))
                     if (stale) file.delete()
                 }
+                // Files opened from other apps are copied into open_audio/<id>/. A day
+                // is long enough for the open session; a queue restored after that may
+                // need the file to be opened again.
+                val openCutoff = System.currentTimeMillis() - 24 * 60 * 60 * 1000L
+                File(cacheDir, "open_audio").listFiles()?.forEach { dir ->
+                    if (dir.isDirectory && dir.lastModified() < openCutoff) dir.deleteRecursively()
+                }
             } catch (_: Exception) {}
         }
     }
@@ -588,18 +593,6 @@ class MainActivity: FlutterFragmentActivity() {
                             result.success(DownloadService.isServiceRunning())
                         }
                         "startBackgroundWork" -> handleStartBackgroundWork(call, result)
-                        "startLinkConnectionService" -> {
-                            result.success(
-                                LinkConnectionService.start(
-                                    this@MainActivity,
-                                    call.argument<String>("name") ?: "Mornye",
-                                ),
-                            )
-                        }
-                        "stopLinkConnectionService" -> {
-                            LinkConnectionService.stop(this@MainActivity)
-                            result.success(null)
-                        }
                         "updateBackgroundWork" -> handleUpdateBackgroundWork(call, result)
                         "stopBackgroundWork" -> {
                             BackgroundWorkService.stop(call.argument<String>("kind") ?: "")
