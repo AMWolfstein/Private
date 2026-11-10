@@ -6,34 +6,40 @@ It replaces the phase gates for that change. The owner decides when planning is 
 ## Before the first task
 
 - Read `workflow/work/constitution.md`. A task that breaks a rule in it stops until the rule is met.
-- One fresh read-only design review of the spec and plan. Record the result in `log.md`. Fix any
+- One fresh read-only design review of the spec and plan, run by a read-only subagent that has not
+  seen the planning conversation (for example the reviewer prompts in `workflow/.agents/reviewers/`). Record the result in `log.md`. Fix any
   problem in the spec or plan before the first task starts.
 
 ## The loop, one task at a time
 
-1. Take the first open task (`- [ ] T###`) in `tasks.md`, in order.
+1. Run `work.py map update`, so the code map matches the tree before the task starts.
+   Take the first open task (`- [ ] T###`) in `tasks.md`, in order.
 2. Make the change for that task only. Run the task's `check:` command, and the nearest
    test or analyzer for the code it touched.
-3. Review the task in a fresh read-only context: does the diff do what the task says,
-   with nothing extra? Record the result in `log.md` under the task ID.
+3. Review the task in a fresh read-only context (a subagent that has not seen the work, using the reviewer prompts in `workflow/.agents/reviewers/`). In that context, check: does the diff do what the task says, with nothing extra? Record the result in `log.md` under the task ID.
 4. Fix every problem the check or review finds inside this same task, before committing.
    Repeat steps 2 and 3 until the task is complete.
 5. Only when the task is complete: tick it (`- [x] T###`), add the evidence after it, and make
    one commit. That commit holds the code this task changed and its doc changes (spec, plan,
-   tasks, log), with the task ID in the message. Nothing else goes in it.
+   tasks, log), with the task ID in the message. Nothing else goes in it. The task's `check:`
+   command must have passed before this commit.
 6. Move to the next task. Repeat until no `- [ ]` task remains.
 
-Before each review, run `work.py map update` so the reviewer sees the current code map.
-The task's `check:` command must pass before the commit.
+A task is never committed while it is incomplete.
 
+## Escalation
 
-A task never gets a commit while it is incomplete.
+If a review finds a problem that needs the owner's decision (a choice between two designs, a
+behaviour the spec does not cover, or a rule that conflicts with the task), stop the task, write the
+question in `log.md` under the task ID, and ask the owner. Do not guess.
 
 ## Final review task (always last)
 
 - When the planned tasks are done, add one mandatory task at the end of `tasks.md`:
   `- [ ] T### Final review: review every change from the first task to HEAD (spec met, tasks
-  work together, no leftovers) — check: the review is recorded in log.md with the reviewed hash`.
+  work together, no leftovers) — check: the review is recorded in log.md with the hash of the
+  commit it reviewed`. That hash is the commit just before the final review's own commit, because
+  the review's commit changes HEAD.
 - Run `work.py check auto` in full (all five checks), and write the Close section in `log.md`:
   Drift, Not verified, Lessons.
 - Run it through the same loop as any task: review in a fresh read-only context, fix every
