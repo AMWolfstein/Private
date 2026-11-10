@@ -30,7 +30,8 @@ A task is never committed while it is incomplete.
 ## Owner asks for something new
 
 - If the owner asks for a change that is not in the current task, add a new task to `tasks.md`
-  at the end, before the Final review task. Give it the next T### number and its `check:` command.
+  at the end, before the Final review task. Its ID is `TOR###` (owner request), numbered from TOR001,
+  with its own `check:` command. Planned tasks keep `T###`, so the two never mix.
 - Run it through the same loop: change, check, review, fix inside the task, then tick it and make
   one commit with the code and docs it changed. That commit holds only this new task.
 - The Final review task stays last.
