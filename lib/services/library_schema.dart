@@ -268,8 +268,8 @@ abstract final class LibrarySchema {
   }
 
   static Future<void> _createVisibleView(DatabaseExecutor db) async {
-    // Keep alias records addressable by old playlist IDs. Only suppress a
-    // it. The dedicated keys keep converted formats and CUE tracks distinct.
+    // Keep alias records addressable by old playlist IDs. The dedicated keys
+    // keep converted formats and CUE tracks distinct.
     await db.execute('DROP VIEW IF EXISTS $visibleView');
     await db.execute('''
       CREATE VIEW $visibleView AS

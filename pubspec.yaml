@@ -90,7 +90,7 @@ dependencies:
   audio_session: ^0.2.4
   app_links: ^7.2.2
 
-  audio_service_platform_interface: any
+  audio_service_platform_interface: ^0.1.3
 dependency_overrides:
   # Preserve Android proxy descriptors supplied by network document providers.
   audioplayers_android:
@@ -117,8 +117,8 @@ dev_dependencies:
   path_provider_platform_interface: 2.1.3
   video_player_platform_interface: 6.9.0
 
-  sqflite_common: any
-  shared_preferences_platform_interface: any
+  sqflite_common: ^2.5.14
+  shared_preferences_platform_interface: ^2.4.2
 flutter_launcher_icons:
   android: true
   image_path: "icon.png"

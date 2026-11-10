@@ -35,7 +35,7 @@ jobs:
           filters: |
             dart:
               - 'third_party/audio_service/**'
-                      - 'lib/**'
+              - 'lib/**'
               - 'test/**'
               - 'integration_test/**'
               - 'android/app/src/test/resources/**'
@@ -58,7 +58,7 @@ jobs:
               - '.github/workflows/ci.yml'
             android:
               - 'third_party/audio_service/**'
-                      - 'android/**'
+              - 'android/**'
               - 'rust_backend/**'
               - 'scripts/build_android.sh'
               - 'scripts/prepare_flutter_sdk.dart'

@@ -120,7 +120,6 @@ class HistoryDatabase {
           _searchFtsAvailable = await HistorySchema.create(db, version);
         },
         onUpgrade: HistorySchema.upgrade,
-        onOpen: (db) async {},
       );
       // onCreate normally initializes this derived index. Retry once after
       // opening an existing database in case an earlier setup was
@@ -643,7 +642,8 @@ class HistoryDatabase {
         'saf_file_name',
         'downloaded_at',
       ],
-      // A double-quoted "" is an identifier in SQLite; builds without the
+      // A double-quoted "" is an identifier in SQLite, so the empty string
+      // is written with single quotes.
       where: "file_path IS NOT NULL AND file_path != ''",
       orderBy: 'sort_added DESC, id DESC',
       limit: limit,

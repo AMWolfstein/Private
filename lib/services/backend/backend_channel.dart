@@ -6,7 +6,6 @@ import 'package:mornye/services/backend/method_channel_backend.dart';
 typedef BackendCallHandler = Future<dynamic> Function(MethodCall call);
 
 /// Transport between Dart and the Rust backend.
-///
 abstract class BackendChannel {
   const BackendChannel();
 

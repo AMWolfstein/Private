@@ -1,6 +1,3 @@
-import 'dart:io' show Platform;
-
-String nativePlatformName() {
-  if (Platform.isAndroid) return 'android';
-  return 'android';
-}
+/// The platform name sent with backups and the library adapter. Mornye ships
+/// on Android only.
+String nativePlatformName() => 'android';

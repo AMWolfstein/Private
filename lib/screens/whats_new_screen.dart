@@ -531,10 +531,9 @@ class WhatsNewFeature {
 @visibleForTesting
 List<WhatsNewHighlight> whatsNewHighlights(
   AppLocalizations l10n, {
-  bool? androidPhone,
   bool nearbyDevices = false,
 }) {
-  final showAndroidAuto = androidPhone ?? (Platform.isAndroid && !isAndroidTv);
+  final showAndroidAuto = Platform.isAndroid && !isAndroidTv;
   final sections = [
     WhatsNewHighlight(
       icon: Icons.auto_awesome,

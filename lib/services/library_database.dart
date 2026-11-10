@@ -105,6 +105,7 @@ class LibraryDatabase {
   ) => _ingestion.readNetworkScanRows(sourceId, paths);
 
   /// Keeps native scan output native through parsing, indexing and the atomic
+  /// source swap.
   Future<({int inserted, int skipped})> replaceSourceScanFile(
     String sourceId,
     LibraryScanNDJSONFile scan, {
