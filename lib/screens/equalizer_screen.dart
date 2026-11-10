@@ -310,7 +310,6 @@ class _EqualizerScreenState extends ConsumerState<EqualizerScreen> {
             section(
               _PresetBar(
                 busy: _busy,
-                onApply: notifier.applyPreset,
                 onSave: _savePreset,
                 onReset: _reset,
                 onAction: (action) => switch (action) {

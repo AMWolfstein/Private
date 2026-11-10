@@ -175,10 +175,6 @@ class CastOutput extends ChangeNotifier {
               .timeout(const Duration(seconds: 25))
           as T?;
 
-  Future<Duration> position() async => Duration(
-    milliseconds: (await _transport.invoke('position') as num?)?.toInt() ?? 0,
-  );
-
   @override
   void dispose() {
     _disposed = true;

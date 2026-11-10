@@ -97,8 +97,6 @@ import 'package:mornye/widgets/selection_bottom_bar.dart';
 import 'package:mornye/widgets/smoothed_progress.dart';
 import 'package:mornye/widgets/two_finger_pinch_listener.dart';
 import 'package:mornye/widgets/track_lists/context_menu.dart';
-import 'package:mornye/widgets/track_lists/list_selection.dart';
-import 'package:mornye/widgets/track_lists/library_track_menu.dart';
 
 part 'queue_tab_helpers.dart';
 part 'queue_tab_widgets.dart';
@@ -154,7 +152,6 @@ class _QueueTabState extends ConsumerState<QueueTab> {
 
   /// A right-click selected a song for its menu only. The selection toolbar
   /// stays hidden until the menu and its chosen action have run.
-  bool _contextMenuSelection = false;
 
   bool _isPlaylistSelectionMode = false;
   final Set<String> _selectedPlaylistIds = {};

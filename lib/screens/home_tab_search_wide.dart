@@ -145,14 +145,12 @@ extension _HomeTabSearchWideUI on _HomeTabState {
               item: albums[index],
               kindLabel: context.l10n.recentTypeAlbum,
               onTap: () => _navigateToExtensionAlbum(albums[index]),
-              onSaveCover: () => _saveSearchResultCover(albums[index]),
             ),
             _ => _SearchTopCollectionCard(
               key: ValueKey('top-playlist-${playlists[index].id}'),
               item: playlists[index],
               kindLabel: context.l10n.recentTypePlaylist,
               onTap: () => _navigateToExtensionPlaylist(playlists[index]),
-              onSaveCover: () => _saveSearchResultCover(playlists[index]),
             ),
           },
       ];
@@ -380,7 +378,6 @@ class _SearchTopResultCard extends StatelessWidget {
     required this.trailing,
     required this.onTap,
     this.onLongPress,
-    required this.onContextMenu,
   });
 
   static const _artwork = 42.0;
@@ -394,7 +391,6 @@ class _SearchTopResultCard extends StatelessWidget {
   final Widget trailing;
   final VoidCallback onTap;
   final VoidCallback? onLongPress;
-  final ValueChanged<Offset> onContextMenu;
 
   @override
   Widget build(BuildContext context) {
@@ -532,7 +528,6 @@ class _SearchTopSongCard extends ConsumerWidget {
         onDownload: onDownload,
       ),
       onLongPress: showOptions,
-      onContextMenu: (position) => showOptions(position: position),
       trailing: IconButton(
         tooltip: MaterialLocalizations.of(context).moreButtonTooltip,
         iconSize: 18,
@@ -550,18 +545,14 @@ class _SearchTopCollectionCard extends StatelessWidget {
     required this.item,
     required this.kindLabel,
     required this.onTap,
-    required this.onSaveCover,
   });
 
   final Track item;
   final String kindLabel;
   final VoidCallback onTap;
-  final VoidCallback onSaveCover;
 
   @override
   Widget build(BuildContext context) {
-    final l10n = context.l10n;
-    final hasCover = item.coverUrl?.isNotEmpty == true;
     return _SearchTopResultCard(
       coverUrl: item.coverUrl,
       placeholderIcon: item.isPlaylistItem ? Icons.playlist_play : Icons.album,
@@ -570,25 +561,6 @@ class _SearchTopCollectionCard extends StatelessWidget {
       artistName: item.artistName,
       explicit: item.explicit == true,
       onTap: onTap,
-      onContextMenu: (position) => showContextMenu(
-        context,
-        position: position,
-        groups: [
-          [
-            ContextMenuAction(
-              icon: Icons.open_in_new,
-              label: l10n.menuOpen,
-              onSelected: onTap,
-            ),
-            if (hasCover)
-              ContextMenuAction(
-                icon: Icons.image_outlined,
-                label: l10n.trackSaveCoverArt,
-                onSelected: onSaveCover,
-              ),
-          ],
-        ],
-      ),
       trailing: Padding(
         padding: const EdgeInsetsDirectional.only(end: 12),
         child: Icon(

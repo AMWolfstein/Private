@@ -101,7 +101,6 @@ class TrackCard extends StatelessWidget {
     this.isSelected = false,
     this.onTap,
     this.onLongPress,
-    this.onContextMenu,
     this.margin,
     this.isCurrent = false,
     this.isPlaying = false,
@@ -137,9 +136,6 @@ class TrackCard extends StatelessWidget {
   final bool isSelected;
   final VoidCallback? onTap;
   final VoidCallback? onLongPress;
-
-  /// [ContextMenuRegion].
-  final ValueChanged<Offset>? onContextMenu;
 
   /// Overrides the default outer margin. Prefer the default so track lists stay
   /// aligned with each other.
@@ -487,7 +483,6 @@ class TrackGridCard extends StatelessWidget {
     this.overlays = const [],
     this.onTap,
     this.onLongPress,
-    this.onContextMenu,
     this.isSelected = false,
     this.semanticLabel,
   });
@@ -507,7 +502,6 @@ class TrackGridCard extends StatelessWidget {
   final VoidCallback? onTap;
   final VoidCallback? onLongPress;
 
-  final ValueChanged<Offset>? onContextMenu;
   final bool isSelected;
   final String? semanticLabel;
 

@@ -31,8 +31,6 @@ import 'package:mornye/screens/track_metadata_screen.dart';
 import 'package:mornye/widgets/cached_cover_image.dart';
 import 'package:mornye/widgets/collection_scaffold.dart';
 import 'package:mornye/widgets/collection_suggestions_section.dart';
-import 'package:mornye/widgets/track_lists/library_track_menu.dart';
-import 'package:mornye/widgets/playlist_picker_sheet.dart';
 import 'package:mornye/widgets/expressive_button.dart';
 import 'package:mornye/widgets/album_track_tile.dart';
 import 'package:mornye/widgets/animation_utils.dart';
@@ -285,9 +283,7 @@ class _LocalAlbumScreenState extends ConsumerState<LocalAlbumScreen>
           )
         else if (_loadingTracks)
           const SliverToBoxAdapter(
-            child: RepaintBoundary(
-              child: AlbumTrackListSkeleton(itemCount: 8, showQuality: true),
-            ),
+            child: RepaintBoundary(child: AlbumTrackListSkeleton(itemCount: 8)),
           )
         else ...[
           _buildTrackList(context, colorScheme, tracks),
@@ -429,19 +425,8 @@ class _LocalAlbumScreenState extends ConsumerState<LocalAlbumScreen>
                       .togglePlayPause(isPlaying)
                 : _playAll,
             onShuffle: _shuffleAll,
-            onAddToPlaylist: () => showAddTracksToPlaylistSheet(
-              Navigator.of(context, rootNavigator: true).context,
-              ref,
-              [for (final item in _albumItems()) item.toTrack()],
-            ),
           );
         },
-      ),
-      moreMenu: () => libraryTrackMenuGroups(
-        context,
-        ref,
-        items: _albumItems(),
-        onPlay: _playAll,
       ),
     );
   }

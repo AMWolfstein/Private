@@ -55,10 +55,7 @@ class AlbumDetailHeader extends StatelessWidget {
     this.backgroundColor,
     this.immersive = false,
     this.squareArtwork = true,
-    this.moreMenu,
   });
-
-  final List<List<ContextMenuAction>> Function()? moreMenu;
 
   final String title;
   final double expandedHeight;
@@ -674,7 +671,6 @@ class AlbumPlayActions extends StatelessWidget {
     required this.onPlay,
     required this.onShuffle,
     this.isPlaying = false,
-    this.onAddToPlaylist,
     this.onDownload,
   });
 
@@ -684,7 +680,6 @@ class AlbumPlayActions extends StatelessWidget {
   final VoidCallback onShuffle;
   final bool isPlaying;
 
-  final VoidCallback? onAddToPlaylist;
   final VoidCallback? onDownload;
 
   @override
@@ -755,7 +750,6 @@ class AlbumPlayActions extends StatelessWidget {
       ],
     );
   }
-
 }
 
 /// Primary action pill in a detail header (download all, play all). Reads its
@@ -859,27 +853,27 @@ class HeaderCircleButton extends ConsumerWidget {
             dimension: math.max(buttonSize ?? 44, 48),
             child: Center(
               child: SizedBox.square(
-            dimension: buttonSize ?? 44,
-            child: MornyeGlassPress(
-              radius: (buttonSize ?? 44) / 2,
-              enabled: onPressed != null,
-              child: CupertinoButton(
-                padding: EdgeInsets.zero,
-                minimumSize: Size.square(buttonSize ?? 44),
-                borderRadius: BorderRadius.circular((buttonSize ?? 48) / 2),
-                color: scheme.onSurface.withValues(
-                  alpha: scheme.brightness == Brightness.dark ? 0.10 : 0.06,
+                dimension: buttonSize ?? 44,
+                child: MornyeGlassPress(
+                  radius: (buttonSize ?? 44) / 2,
+                  enabled: onPressed != null,
+                  child: CupertinoButton(
+                    padding: EdgeInsets.zero,
+                    minimumSize: Size.square(buttonSize ?? 44),
+                    borderRadius: BorderRadius.circular((buttonSize ?? 48) / 2),
+                    color: scheme.onSurface.withValues(
+                      alpha: scheme.brightness == Brightness.dark ? 0.10 : 0.06,
+                    ),
+                    onPressed: onPressed,
+                    child: AppIcon(
+                      mornyeIconFor(icon),
+                      size: iconSize,
+                      color: onPressed == null
+                          ? scheme.onSurfaceVariant
+                          : iconColor ?? scheme.primary,
+                    ),
+                  ),
                 ),
-                onPressed: onPressed,
-                child: AppIcon(
-                  mornyeIconFor(icon),
-                  size: iconSize,
-                  color: onPressed == null
-                      ? scheme.onSurfaceVariant
-                      : iconColor ?? scheme.primary,
-                ),
-              ),
-            ),
               ),
             ),
           ),

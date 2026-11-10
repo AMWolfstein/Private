@@ -164,35 +164,4 @@ class TrackListTile extends ConsumerWidget {
 
     onDownload();
   }
-
-  /// quality, plays the local copy, or downloads [track].
-  static Future<void> activate(
-    BuildContext context,
-    WidgetRef ref,
-    Track track, {
-    required bool isInHistory,
-    required void Function({bool forceQualityPicker}) onDownload,
-  }) async {
-    if (ref.read(downloadQueueLookupProvider).byTrackId.containsKey(track.id)) {
-      return;
-    }
-    final settings = ref.read(settingsProvider);
-    final isInLocalLibrary =
-        settings.localLibraryEnabled &&
-        settings.localLibraryShowDuplicates &&
-        ref
-            .read(localLibraryProvider)
-            .existsInLibrary(
-              isrc: track.isrc,
-              trackName: track.name,
-              artistName: track.artistName,
-            );
-    if (settings.allowQualityVariants && (isInHistory || isInLocalLibrary)) {
-      onDownload(forceQualityPicker: true);
-      return;
-    }
-    if (await playLocalIfAvailable(context, ref, track)) return;
-    onDownload();
-  }
 }
-

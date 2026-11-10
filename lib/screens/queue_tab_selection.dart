@@ -70,68 +70,6 @@ extension _QueueTabSelectionActions on _QueueTabState {
     });
   }
 
-  /// songs in the order shown.
-  void _applySelectionClick(
-    String itemId,
-    RowClick kind,
-    List<String> orderedIds,
-  ) {
-    var shouldHideOverlay = false;
-    _setState(() {
-      _isPlaylistSelectionMode = false;
-      _selectedPlaylistIds.clear();
-      _selectionAnchorId = applySelectionClickTo(
-        _selectedIds,
-        target: itemId,
-        kind: kind,
-        orderedIds: orderedIds,
-        anchor: _selectionAnchorId,
-      );
-      _isSelectionMode = _selectedIds.isNotEmpty;
-      shouldHideOverlay = !_isSelectionMode;
-    });
-    _hidePlaylistSelectionOverlay();
-    if (shouldHideOverlay) _hideSelectionOverlay();
-  }
-
-  /// becomes the selection for this menu only, so the menu acts on the song
-  /// clicked: the selection toolbar does not open under the menu, and the
-  /// selection ends if the menu closes without a choice.
-  Future<void> _showLibraryItemMenu(
-    BuildContext context,
-    UnifiedLibraryItem item,
-    List<UnifiedLibraryItem> libraryItems,
-    Offset position, {
-    VoidCallback? onOpenDetails,
-  }) async {
-    final forMenu = !_selectedIds.contains(item.id);
-    if (forMenu) {
-      _contextMenuSelection = true;
-      _applySelectionClick(item.id, RowClick.replace, const []);
-      _hideSelectionOverlay();
-    }
-    final chosen = await showContextMenu(
-      context,
-      position: position,
-      groups: libraryTrackMenuGroups(
-        context,
-        ref,
-        items: _selectedItemsFromAll(libraryItems),
-        onPlay: () => _playLibraryItem(item, libraryItems),
-        onOpenDetails: onOpenDetails,
-        onDone: _exitSelectionMode,
-        onReEnrich: () => _reEnrichSelectedFromQueue(libraryItems),
-        onConvert: () => _showBatchConvertSheet(this.context, libraryItems),
-        onDelete: () => _deleteSelected(libraryItems),
-      ),
-    );
-    if (!forMenu || !mounted) return;
-    // A bulk action (re-enrich, convert, delete) kept the selection and
-    // shows the toolbar again.
-    _setState(() => _contextMenuSelection = false);
-    if (!chosen) _exitSelectionMode();
-  }
-
   void _selectRangeTo(String itemId, List<UnifiedLibraryItem> visibleItems) {
     HapticFeedback.selectionClick();
     _setState(() {
@@ -157,7 +95,6 @@ extension _QueueTabSelectionActions on _QueueTabState {
   }) {
     if (!mounted) return;
     if (_suppressSelectionOverlay ||
-        _contextMenuSelection ||
         _isDraggingLibraryTrack ||
         !_isSelectionMode ||
         _isPlaylistSelectionMode) {

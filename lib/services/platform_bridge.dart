@@ -234,14 +234,6 @@ class PlatformBridge {
 
   // method, and the session and device list as events.
 
-  static Future<Object?> castCall(
-    String method, [
-    Map<String, Object?>? arguments,
-  ]) => _channel.invokeMethod<Object?>('castCall', {
-    'method': method,
-    'args': ?arguments,
-  });
-
   static void _ensureBackendEventHandler() {
     if (_backendEventHandlerInstalled) return;
     _backendEventHandlerInstalled = true;

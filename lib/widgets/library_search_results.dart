@@ -465,7 +465,6 @@ class _LibrarySearchResultsState extends ConsumerState<LibrarySearchResults> {
           ? () => _toggleSelection(hit)
           : null,
       onLongPress: song ? () => _toggleSelection(hit) : null,
-      onContextMenu: (position) => _showHitMenu(hit, position),
     );
     if (!song || context.isMornye) return card();
     // Material song rows follow the file they play, so a track change

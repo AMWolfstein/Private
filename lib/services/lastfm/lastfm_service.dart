@@ -75,7 +75,6 @@ class LastfmService extends ChangeNotifier {
   String Function() _unknownArtist = () => 'Unknown artist';
 
   bool get configured => _api.credentials.configured;
-  bool get initialized => _initialized;
   bool get connected => _session != null;
   String? get username => _session?.username;
   bool get enabled => _enabled;

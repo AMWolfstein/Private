@@ -5,20 +5,9 @@ import 'package:flutter/foundation.dart';
 /// Transport state reported by a [PlaybackDeck].
 enum PlaybackDeckState { stopped, playing, paused, completed, disposed }
 
-/// The engine behind `PlaybackDependencies.createDeck`.
-enum PlaybackEngine {
-  /// equalizer tap and Android's USB output.
-  audioplayers,
-
-  mediaKit,
-}
-
-
-
 /// In-app output gain from 0 to 1 for platforms where the app must not change
 /// (normalization, AutoMix fades) by this value. Mobile keeps it at 1.
 final playbackOutputVolume = ValueNotifier<double>(1);
-
 
 /// A deck that can append a source to its existing output without opening a
 /// second device. The start callback replaces the ordinary completion handoff.

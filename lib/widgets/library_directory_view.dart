@@ -33,14 +33,11 @@ import 'package:mornye/widgets/app_refresh_indicator.dart';
 import 'package:mornye/widgets/app_sliver_header.dart';
 import 'package:mornye/widgets/app_snack_bar.dart';
 import 'package:mornye/widgets/cached_cover_image.dart';
-import 'package:mornye/widgets/track_lists/context_menu.dart';
-import 'package:mornye/widgets/track_lists/library_track_menu.dart';
 import 'package:mornye/widgets/error_card.dart';
 import 'package:mornye/widgets/expressive_button.dart';
 import 'package:mornye/widgets/library_selection_playback_actions.dart';
 import 'package:mornye/widgets/network_offline_actions.dart';
 import 'package:mornye/widgets/library_track_selection_bar.dart';
-import 'package:mornye/widgets/playlist_picker_sheet.dart';
 import 'package:mornye/widgets/selection_bottom_bar.dart';
 import 'package:mornye/widgets/track_card.dart';
 
@@ -260,65 +257,10 @@ class _LibraryDirectoryViewState extends ConsumerState<LibraryDirectoryView>
     }
   }
 
-  /// Adds every song under [folder] to a playlist the user picks.
-  Future<void> _addFolderToPlaylist(LibraryDirectory folder) async {
-    try {
-      final items = await ref.read(libraryDirectoryItemsLoaderProvider)(
-        folder.allTracks,
-      );
-      if (!mounted || items.isEmpty) return;
-      await showAddTracksToPlaylistSheet(
-        Navigator.of(context, rootNavigator: true).context,
-        ref,
-        [for (final item in items) item.toTrack()],
-      );
-    } catch (error) {
-      if (mounted) showCannotOpenFileSnackBar(context, error);
-    }
-  }
-
   void _openFolder(LibraryDirectory folder) {
     pushPage<void>(
       context,
       (_) => LibraryDirectoryScreen(folderKey: folder.key),
-    );
-  }
-
-  Future<void> _showFolderMenu(LibraryDirectory folder, Offset position) async {
-    final items = await ref.read(libraryDirectoryItemsLoaderProvider)(
-      folder.allTracks,
-    );
-    if (!mounted) return;
-    final l10n = context.l10n;
-    final groups = libraryTrackMenuGroups(
-      context,
-      ref,
-      items: items,
-      onPlay: () => _play(items),
-    );
-    if (groups.isNotEmpty) {
-      groups.first.insert(
-        1,
-        ContextMenuAction(
-          icon: Icons.shuffle,
-          label: l10n.actionShuffle,
-          onSelected: () => _play(items, shuffle: true),
-        ),
-      );
-    }
-    await showContextMenu(
-      context,
-      position: position,
-      groups: [
-        [
-          ContextMenuAction(
-            icon: Icons.folder_open_outlined,
-            label: l10n.menuOpen,
-            onSelected: () => _openFolder(folder),
-          ),
-        ],
-        ...groups,
-      ],
     );
   }
 
@@ -407,12 +349,12 @@ class _LibraryDirectoryViewState extends ConsumerState<LibraryDirectoryView>
         if (!didPop && isSelectionMode) exitSelectionMode();
       },
       child: AppRefreshIndicator(
-          onRefresh: () async {
-            ref.invalidate(libraryDirectoryIndexProvider);
-            await ref.read(libraryDirectoryIndexProvider.future);
-          },
-          child: scrollView,
-        ),
+        onRefresh: () async {
+          ref.invalidate(libraryDirectoryIndexProvider);
+          await ref.read(libraryDirectoryIndexProvider.future);
+        },
+        child: scrollView,
+      ),
     );
   }
 
@@ -422,7 +364,6 @@ class _LibraryDirectoryViewState extends ConsumerState<LibraryDirectoryView>
     shuffleTooltip: context.l10n.actionShuffle,
     onPlay: () => _playFolder(folder),
     onShuffle: () => _playFolder(folder, shuffle: true),
-    onAddToPlaylist: () => _addFolderToPlaylist(folder),
     onDownload: !folder.key.startsWith('network://')
         ? null
         : () async {
@@ -572,30 +513,6 @@ class _LibraryDirectoryViewState extends ConsumerState<LibraryDirectoryView>
     );
   }
 
-  Future<bool> _showSongMenu(UnifiedLibraryItem item, Offset position) {
-    final items = _selectedItems;
-    return showContextMenu(
-      context,
-      position: position,
-      groups: libraryTrackMenuGroups(
-        context,
-        ref,
-        items: items,
-        onPlay: () => _play(_items, start: item),
-        onOpenDetails: () => _openDetails(item),
-        onDone: exitSelectionMode,
-        onReEnrich: () => _reEnrich(items),
-        onConvert: () => showBatchConvertSheet(
-          context,
-          ref,
-          items,
-          onExitSelectionMode: _finishSelectionAction,
-        ),
-        onDelete: () => _delete(items),
-      ),
-    );
-  }
-
   Widget _songRow(
     BuildContext context,
     List<UnifiedLibraryItem> items,
@@ -646,8 +563,6 @@ class _LibraryDirectoryViewState extends ConsumerState<LibraryDirectoryView>
           onLongPress: isSelectionMode
               ? () => toggleSelection(item.id)
               : () => enterSelectionMode(item.id),
-          onContextMenu: (position) =>
-              showSelectionMenu(item.id, () => _showSongMenu(item, position)),
         );
       },
     );
@@ -667,7 +582,6 @@ class _LibraryDirectoryViewState extends ConsumerState<LibraryDirectoryView>
       ),
       trailing: const AppIcon.adaptive(Icons.chevron_right),
       onTap: isSelectionMode ? null : () => _openFolder(folder),
-      onContextMenu: (position) => _showFolderMenu(folder, position),
     );
   }
 
@@ -678,7 +592,6 @@ class _LibraryDirectoryViewState extends ConsumerState<LibraryDirectoryView>
     _itemIds = (items, ids);
     return ids;
   }
-
 }
 
 /// The cover of the folder's first song, or a folder glyph for a folder

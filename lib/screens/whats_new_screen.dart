@@ -3,7 +3,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart' show HapticFeedback, LogicalKeyboardKey;
+import 'package:flutter/services.dart' show HapticFeedback;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_3_expressive/material_3_expressive.dart'
@@ -16,11 +16,9 @@ import 'package:mornye/constants/app_info.dart';
 import 'package:mornye/l10n/l10n.dart';
 import 'package:mornye/providers/settings_provider.dart';
 import 'package:mornye/services/local_network_access.dart';
-import 'package:mornye/theme/app_tokens.dart';
 import 'package:mornye/theme/mornye_icons.dart';
 import 'package:mornye/theme/mornye_theme.dart';
 import 'package:mornye/utils/android_tv.dart';
-import 'package:mornye/widgets/app_bottom_sheet.dart';
 import 'package:mornye/widgets/app_icon_button.dart';
 import 'package:mornye/widgets/app_shape.dart';
 import 'package:mornye/widgets/expressive_button.dart';
@@ -256,234 +254,6 @@ class _WhatsNewScreenState extends ConsumerState<WhatsNewScreen> {
                     ),
                   ),
                 ],
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-
-class _WhatsNewDialog extends StatefulWidget {
-  const _WhatsNewDialog();
-
-  @override
-  State<_WhatsNewDialog> createState() => _WhatsNewDialogState();
-}
-
-class _WhatsNewDialogState extends State<_WhatsNewDialog> {
-  int _selected = 0;
-
-  void _select(int index, int count) {
-    if (index < 0 || index >= count) return;
-    setState(() => _selected = index);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = context.l10n;
-    final tokens = context.tokens;
-    final theme = Theme.of(context);
-    final scheme = theme.colorScheme;
-    // The header already says what the opening page would.
-    final sections = whatsNewHighlights(l10n).skip(1).toList();
-    final section = sections[_selected];
-    final isLast = _selected == sections.length - 1;
-    void close() => Navigator.of(context).pop();
-    void forward() =>
-        isLast ? close() : _select(_selected + 1, sections.length);
-
-    final body = Row(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        SizedBox(
-          width: 220,
-          child: ListView(
-            padding: EdgeInsetsDirectional.fromSTEB(
-              tokens.gapMd,
-              tokens.gapSm,
-              0,
-              tokens.gapMd,
-            ),
-            children: [
-              for (var i = 0; i < sections.length; i++)
-                _SectionTab(
-                  highlight: sections[i],
-                  selected: i == _selected,
-                  onTap: () => _select(i, sections.length),
-                ),
-            ],
-          ),
-        ),
-        Expanded(
-          child: SingleChildScrollView(
-            padding: EdgeInsetsDirectional.fromSTEB(
-              tokens.gapXl,
-              tokens.gapSm,
-              tokens.gapXl,
-              tokens.gapLg,
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    AppShapeBadge(
-                      // Sections keep the hero shape they have on phones.
-                      kind: _heroShapes[_selected + 1].$1,
-                      size: 56,
-                      color: scheme.primaryContainer,
-                      child: Icon(
-                        context.adaptiveIcon(section.icon),
-                        size: 28,
-                        color: scheme.onPrimaryContainer,
-                      ),
-                    ),
-                    SizedBox(width: tokens.gapLg),
-                    Expanded(
-                      child: Text(
-                        section.title,
-                        style: theme.textTheme.headlineSmall?.copyWith(
-                          fontWeight: context.isMornye
-                              ? FontWeight.w700
-                              : FontWeight.w500,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: tokens.gapMd),
-                Text(
-                  section.description,
-                  style: theme.textTheme.bodyLarge?.copyWith(
-                    height: 1.4,
-                    color: scheme.onSurfaceVariant,
-                  ),
-                ),
-                SizedBox(height: tokens.gapXl),
-                _FeatureList(features: section.features),
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
-
-    return CallbackShortcuts(
-      bindings: {
-        const SingleActivator(LogicalKeyboardKey.enter): forward,
-        const SingleActivator(LogicalKeyboardKey.numpadEnter): forward,
-        const SingleActivator(LogicalKeyboardKey.arrowDown): () =>
-            _select(_selected + 1, sections.length),
-        const SingleActivator(LogicalKeyboardKey.arrowUp): () =>
-            _select(_selected - 1, sections.length),
-      },
-      child: Focus(
-        autofocus: true,
-        child: AppBottomSheet(
-          title: l10n.whatsNewIntroTitle(AppInfo.whatsNewRelease),
-          subtitle: l10n.whatsNewIntroDesc,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // One height for every section, so the dialog does not jump.
-              Flexible(child: SizedBox(height: 500, child: body)),
-              Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(
-                  tokens.gapXl,
-                  tokens.gapMd,
-                  tokens.gapXl,
-                  tokens.gapXl,
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    if (!isLast) ...[
-                      ExpressiveButton(
-                        text: true,
-                        onPressed: close,
-                        child: Text(l10n.setupSkip),
-                      ),
-                      SizedBox(width: tokens.gapSm),
-                    ],
-                    ExpressiveButton(
-                      onPressed: forward,
-                      child: Text(
-                        isLast ? l10n.whatsNewDone : l10n.upgradeIntroContinue,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-/// A section in the dialog's list, filled while it is shown.
-class _SectionTab extends StatelessWidget {
-  const _SectionTab({
-    required this.highlight,
-    required this.selected,
-    required this.onTap,
-  });
-
-  final WhatsNewHighlight highlight;
-  final bool selected;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final scheme = theme.colorScheme;
-    final tokens = context.tokens;
-    final foreground = selected
-        ? scheme.onSecondaryContainer
-        : scheme.onSurfaceVariant;
-    return Padding(
-      padding: EdgeInsets.only(bottom: tokens.gapXs),
-      child: Semantics(
-        selected: selected,
-        button: true,
-        child: Material(
-          color: selected ? scheme.secondaryContainer : Colors.transparent,
-          borderRadius: BorderRadius.circular(tokens.radiusControl),
-          clipBehavior: Clip.antiAlias,
-          child: InkWell(
-            onTap: onTap,
-            child: ConstrainedBox(
-              constraints: BoxConstraints(minHeight: tokens.minTouchTarget),
-              child: Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: tokens.gapMd,
-                  vertical: tokens.gapSm,
-                ),
-                child: Row(
-                  children: [
-                    Icon(
-                      context.adaptiveIcon(highlight.icon),
-                      size: 20,
-                      color: foreground,
-                    ),
-                    SizedBox(width: tokens.gapMd),
-                    Expanded(
-                      child: Text(
-                        highlight.title,
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          color: selected ? foreground : scheme.onSurface,
-                          fontWeight: selected
-                              ? FontWeight.w600
-                              : FontWeight.w500,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
               ),
             ),
           ),
@@ -815,9 +585,7 @@ class _NearbyStatus extends StatelessWidget {
           const SizedBox(width: 12),
           Expanded(
             child: Text(
-              allowed
-                  ? l10n.whatsNewNearbyGranted
-                  : l10n.whatsNewNearbyRefused,
+              allowed ? l10n.whatsNewNearbyGranted : l10n.whatsNewNearbyRefused,
               style: theme.textTheme.titleSmall?.copyWith(color: color),
             ),
           ),

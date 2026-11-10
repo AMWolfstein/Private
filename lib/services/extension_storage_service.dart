@@ -9,22 +9,6 @@ import 'package:mornye/services/secure_storage_options.dart';
 
 const _extensionMasterKeyName = 'extension_storage_master_key_v2';
 
-enum ExtensionStorageModeFailure { keyringRequired, conflictingKeys }
-
-class ExtensionStorageModeException implements Exception {
-  const ExtensionStorageModeException(this.reason);
-
-  final ExtensionStorageModeFailure reason;
-
-  @override
-  String toString() => switch (reason) {
-    ExtensionStorageModeFailure.keyringRequired =>
-      'Unlock the keyring once to move existing encrypted extension data.',
-    ExtensionStorageModeFailure.conflictingKeys =>
-      'The local and keyring extension keys differ. Both have been preserved.',
-  };
-}
-
 class ExtensionStoragePaths {
   const ExtensionStoragePaths({
     required this.extensionsDir,
@@ -44,7 +28,6 @@ class ExtensionStorageService {
     aOptions: secureStorageAndroidOptions,
   );
   static Future<ExtensionStoragePaths>? _preparing;
-
 
   static Future<ExtensionStoragePaths> prepare() {
     return _preparing ??= _prepare().catchError((

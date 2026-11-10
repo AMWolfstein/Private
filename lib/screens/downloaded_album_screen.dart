@@ -31,8 +31,6 @@ import 'package:mornye/screens/track_metadata_screen.dart';
 import 'package:mornye/services/downloaded_embedded_cover_resolver.dart';
 import 'package:mornye/widgets/collection_scaffold.dart';
 import 'package:mornye/widgets/collection_suggestions_section.dart';
-import 'package:mornye/widgets/track_lists/library_track_menu.dart';
-import 'package:mornye/widgets/playlist_picker_sheet.dart';
 import 'package:mornye/widgets/cached_cover_image.dart';
 import 'package:mornye/widgets/app_snack_bar.dart';
 import 'package:mornye/widgets/album_track_tile.dart';
@@ -283,33 +281,33 @@ class _DownloadedAlbumScreenState extends ConsumerState<DownloadedAlbumScreen>
         : 0.0;
 
     return CollectionScaffold(
-        scrollController: scrollController,
-        isSelectionMode: showsSelectionBar,
-        onExitSelectionMode: exitSelectionMode,
-        appBar: _buildAppBar(context, colorScheme, tracks, qualityLabelMode),
-        slivers: [
-          _buildTrackList(context, colorScheme, order),
-          if (!showsSelectionBar)
-            CollectionSuggestionsSliver(
-              collectionKey:
-                  'downloaded-album:${widget.artistName}:${widget.albumName}',
-              tracks: [
-                for (final item in tracks)
-                  // No source: history IDs are not provider IDs, so the
-                  // extension looks the songs up.
-                  Track(
-                    id: item.spotifyId ?? item.id,
-                    name: item.trackName,
-                    artistName: item.artistName,
-                    albumName: item.albumName,
-                    duration: item.duration ?? 0,
-                    isrc: item.isrc,
-                  ),
-              ],
-            ),
-        ],
-        selectionBar: _buildSelectionBottomBar(tracks, bottomPadding),
-      );
+      scrollController: scrollController,
+      isSelectionMode: showsSelectionBar,
+      onExitSelectionMode: exitSelectionMode,
+      appBar: _buildAppBar(context, colorScheme, tracks, qualityLabelMode),
+      slivers: [
+        _buildTrackList(context, colorScheme, order),
+        if (!showsSelectionBar)
+          CollectionSuggestionsSliver(
+            collectionKey:
+                'downloaded-album:${widget.artistName}:${widget.albumName}',
+            tracks: [
+              for (final item in tracks)
+                // No source: history IDs are not provider IDs, so the
+                // extension looks the songs up.
+                Track(
+                  id: item.spotifyId ?? item.id,
+                  name: item.trackName,
+                  artistName: item.artistName,
+                  albumName: item.albumName,
+                  duration: item.duration ?? 0,
+                  isrc: item.isrc,
+                ),
+            ],
+          ),
+      ],
+      selectionBar: _buildSelectionBottomBar(tracks, bottomPadding),
+    );
   }
 
   String? _resolveAlbumEmbeddedCoverPath(List<DownloadHistoryItem> tracks) {
@@ -438,27 +436,8 @@ class _DownloadedAlbumScreenState extends ConsumerState<DownloadedAlbumScreen>
               shuffleTooltip: context.l10n.actionShuffle,
               onPlay: () => _playAll(tracks),
               onShuffle: () => _shuffleAll(tracks),
-              onAddToPlaylist: () => showAddTracksToPlaylistSheet(
-                Navigator.of(context, rootNavigator: true).context,
-                ref,
-                [
-                  for (final track in tracks)
-                    UnifiedLibraryItem.fromDownloadHistory(track).toTrack(),
-                ],
-              ),
             )
           : null,
-      moreMenu: tracks.isEmpty
-          ? null
-          : () => libraryTrackMenuGroups(
-              context,
-              ref,
-              items: [
-                for (final track in tracks)
-                  UnifiedLibraryItem.fromDownloadHistory(track),
-              ],
-              onPlay: () => _playAll(tracks),
-            ),
     );
   }
 

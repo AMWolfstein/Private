@@ -57,7 +57,6 @@ extension _ArtistScreenSections on _ArtistScreenState {
       ),
     );
 
-
     if (context.isMornye) {
       final artwork = hasValidImage
           ? DownloadableCover(
@@ -79,7 +78,6 @@ extension _ArtistScreenSections on _ArtistScreenState {
         badge: _concerts.isEmpty || isSelectionMode ? null : _concertsButton(),
         listeners: listenersText,
         showTitle: false,
-        showTitleListenable: _showTitleInAppBar,
         artwork: hasMotionBanner
             ? MotionHeaderBanner(videoUrl: headerVideoUrl, fallback: artwork)
             : artwork,
@@ -892,25 +890,25 @@ extension _ArtistScreenSections on _ArtistScreenState {
           child: SizedBox(
             height: sectionHeight,
             child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  padding: EdgeInsets.symmetric(horizontal: listPadding),
-                  itemCount: albums.length,
-                  itemBuilder: (context, index) {
-                    final album = albums[index];
-                    return KeyedSubtree(
-                      key: ValueKey(album.id),
-                      child: _buildAlbumCard(
-                        context,
-                        album,
-                        colorScheme,
-                        sectionAlbums: albums,
-                        tileSize: tileSize,
-                        sectionHeight: sectionHeight,
-                        showTypeBadge: showTypeBadge,
-                      ),
-                    );
-                  },
-                ),
+              scrollDirection: Axis.horizontal,
+              padding: EdgeInsets.symmetric(horizontal: listPadding),
+              itemCount: albums.length,
+              itemBuilder: (context, index) {
+                final album = albums[index];
+                return KeyedSubtree(
+                  key: ValueKey(album.id),
+                  child: _buildAlbumCard(
+                    context,
+                    album,
+                    colorScheme,
+                    sectionAlbums: albums,
+                    tileSize: tileSize,
+                    sectionHeight: sectionHeight,
+                    showTypeBadge: showTypeBadge,
+                  ),
+                );
+              },
+            ),
           ),
         ),
       ],

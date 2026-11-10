@@ -1,4 +1,3 @@
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:mornye/widgets/mornye_glass_lens_fade.dart';
@@ -192,7 +191,6 @@ class MornyeArtistHeader extends StatelessWidget {
     required this.actions,
     required this.showTitle,
     this.toolbarActions = const [],
-    this.showTitleListenable,
     this.listeners,
     this.logoUrl,
     this.badge,
@@ -206,8 +204,6 @@ class MornyeArtistHeader extends StatelessWidget {
   final List<Widget> toolbarActions;
   final bool showTitle;
 
-  /// Replaces [showTitle] when set; see [headerToolbarTitle].
-  final ValueListenable<bool>? showTitleListenable;
   final String? listeners;
   final String? logoUrl;
   final Widget? badge;

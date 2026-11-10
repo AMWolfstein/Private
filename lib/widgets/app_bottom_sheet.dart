@@ -414,44 +414,7 @@ enum AppDialogSize {
   final double width;
 }
 
-/// with every sheet that is not an action menu. The dialog takes the width
-/// of [dialogSize] and a height cap (85% of the window for scroll-controlled
-/// sheets, 60% otherwise), so content built for a sheet, including a
-/// [DraggableScrollableSheet], lays out unchanged: its header stays put and
-/// its body scrolls.
-///
-/// Mornye draws the dialog on overlay glass unless [mornyeGlass] is false
-/// for content that brings its own; Material uses `surfaceContainerHigh`.
-/// [topInset] replaces the space of a drag handle the sheet would show.
-Future<T?> showAppSheetDialog<T>({
-  required BuildContext context,
-  required WidgetBuilder builder,
-  bool isScrollControlled = false,
-  bool isDismissible = true,
-  bool topInset = false,
-  bool mornyeGlass = true,
-  Color? backgroundColor,
-  AppDialogSize dialogSize = AppDialogSize.medium,
-}) {
-  final mornye = context.isMornye;
-  return showDialog<T>(
-    context: context,
-    barrierDismissible: isDismissible,
-    barrierColor: mornye
-        ? CupertinoDynamicColor.resolve(kCupertinoModalBarrierColor, context)
-        : null,
-    builder: (dialogContext) => AppSheetDialog(
-      isScrollControlled: isScrollControlled,
-      topInset: topInset,
-      mornyeGlass: mornyeGlass,
-      backgroundColor: backgroundColor,
-      dialogSize: dialogSize,
-      child: Builder(builder: builder),
-    ),
-  );
-}
-
-/// The dialog surface of [showAppSheetDialog].
+/// A dialog surface that lays out sheet content within a bounded window.
 class AppSheetDialog extends StatelessWidget {
   const AppSheetDialog({
     super.key,

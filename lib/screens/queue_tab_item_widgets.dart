@@ -982,13 +982,6 @@ extension _QueueTabItemWidgets on _QueueTabState {
       isPlaying: playing,
       leadingArtwork: true,
       onTap: _isSelectionMode ? () => _toggleSelection(item.id) : open,
-      onContextMenu: (position) => _showLibraryItemMenu(
-        context,
-        item,
-        libraryItems,
-        position,
-        onOpenDetails: open,
-      ),
       onLongPress: playlistDragEnabled
           ? null
           : _isSelectionMode
@@ -1052,13 +1045,6 @@ extension _QueueTabItemWidgets on _QueueTabState {
         item.artistName,
       ),
       onTap: _isSelectionMode ? () => _toggleSelection(item.id) : open,
-      onContextMenu: (position) => _showLibraryItemMenu(
-        context,
-        item,
-        libraryItems,
-        position,
-        onOpenDetails: open,
-      ),
       onLongPress: playlistDragEnabled
           ? null
           : _isSelectionMode

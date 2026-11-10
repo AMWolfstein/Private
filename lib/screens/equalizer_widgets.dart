@@ -237,14 +237,12 @@ class _EqualizerOverview extends ConsumerWidget {
 class _PresetBar extends ConsumerWidget {
   const _PresetBar({
     required this.busy,
-    required this.onApply,
     required this.onSave,
     required this.onReset,
     required this.onAction,
   });
 
   final bool busy;
-  final ValueChanged<EqualizerPreset> onApply;
   final VoidCallback onSave;
   final VoidCallback onReset;
   final ValueChanged<_PresetAction> onAction;

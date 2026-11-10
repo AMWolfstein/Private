@@ -106,7 +106,6 @@ class AudioRouteDevice {
     this.floatOutput = false,
     this.mixerSampleRate,
     this.mixerBitDepth,
-    this.mixerBitPerfect,
   });
 
   factory AudioRouteDevice.fromMap(Map<dynamic, dynamic> map) {
@@ -119,7 +118,6 @@ class AudioRouteDevice {
       floatOutput: map['float'] == true,
       mixerSampleRate: mixer is Map ? _int(mixer['sampleRate']) : null,
       mixerBitDepth: mixer is Map ? _int(mixer['bitDepth']) : null,
-      mixerBitPerfect: mixer is Map ? mixer['bitPerfect'] as bool? : null,
     );
   }
 
@@ -136,7 +134,6 @@ class AudioRouteDevice {
   final bool floatOutput;
   final int? mixerSampleRate;
   final int? mixerBitDepth;
-  final bool? mixerBitPerfect;
 }
 
 class AudioRouteStream {

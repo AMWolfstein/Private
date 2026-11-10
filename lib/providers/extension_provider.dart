@@ -736,10 +736,7 @@ class ExtensionNotifier extends Notifier<ExtensionState> {
         .map((e) => e.id.toLowerCase())
         .toSet();
 
-    var installedCount = 0;
-    var alreadyPresent = 0;
     var failed = 0;
-    final failedIds = <String>[];
 
     for (final item in items) {
       final id = item['id'] as String?;
@@ -750,7 +747,6 @@ class ExtensionNotifier extends Notifier<ExtensionState> {
       if (!present) {
         if (destDir == null) {
           failed++;
-          failedIds.add(id);
           continue;
         }
         try {
@@ -760,19 +756,14 @@ class ExtensionNotifier extends Notifier<ExtensionState> {
           );
           final ok = await installExtension(path);
           if (ok) {
-            installedCount++;
             present = true;
           } else {
             failed++;
-            failedIds.add(id);
           }
         } catch (e) {
           _log.w('Restore: failed to install extension $id: $e');
           failed++;
-          failedIds.add(id);
         }
-      } else {
-        alreadyPresent++;
       }
 
       if (!present) continue;
@@ -801,12 +792,7 @@ class ExtensionNotifier extends Notifier<ExtensionState> {
     // be applied in full instead of defaults winning.
     await restoreProviderPriorityBackup(data);
 
-    return ExtensionRestoreResult(
-      installed: installedCount,
-      alreadyPresent: alreadyPresent,
-      failed: failed,
-      failedIds: failedIds,
-    );
+    return ExtensionRestoreResult(failed: failed);
   }
 }
 

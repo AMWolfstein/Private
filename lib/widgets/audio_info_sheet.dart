@@ -181,7 +181,6 @@ class _AudioInfoSheetState extends State<_AudioInfoSheet>
         equalizer: playbackEqualizer.value,
         processing: musicPlayerRuntime.handler?.processing,
         settings: musicPlayerRuntime.settings,
-        softwareVolume: playbackOutputVolume.value,
       );
       final sections = facts.sections();
       final path = widget.metadata.filePath;
@@ -412,7 +411,6 @@ class _AudioFacts {
     required this.equalizer,
     required this.processing,
     required this.settings,
-    required this.softwareVolume,
   });
 
   final AppLocalizations l10n;
@@ -425,7 +423,6 @@ class _AudioFacts {
   final EqualizerSettings equalizer;
   final PlaybackProcessing? processing;
   final AppSettings settings;
-  final double softwareVolume;
 
   late final String format = (metadata['format'] ?? '').toString().trim();
   late final String codec = (metadata['audio_codec'] ?? '').toString().trim();

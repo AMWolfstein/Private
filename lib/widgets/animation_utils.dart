@@ -383,7 +383,6 @@ class _MaterialTrackSkeleton extends StatelessWidget {
 /// (track number + title + artist + trailing icon, no cover art thumbnail).
 class AlbumTrackListSkeleton extends StatelessWidget {
   final int itemCount;
-  final bool showQuality;
 
   /// Mornye only; Material loading screens show the real header.
   final bool showCoverHeader;
@@ -392,7 +391,6 @@ class AlbumTrackListSkeleton extends StatelessWidget {
     super.key,
     this.itemCount = 10,
     this.showCoverHeader = false,
-    this.showQuality = false,
   });
 
   @override

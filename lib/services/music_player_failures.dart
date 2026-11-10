@@ -125,19 +125,4 @@ class _MusicFailures {
     }
     _failures++;
   }
-
-
-  void playNext() {
-    final next = handler._index + 1 < handler._media.length
-        ? handler._index + 1
-        : handler._beginRepeatPass(handler._repeatPassStart());
-    // Finish the failed source change before opening the next song.
-    final playing = handler._playIndex(next);
-    _skipGeneration = handler._playRequestGeneration;
-    unawaited(
-      playing.catchError((Object error) {
-        _log.w('Could not play the next song: $error');
-      }),
-    );
-  }
 }

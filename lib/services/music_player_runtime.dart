@@ -7,7 +7,6 @@ import 'package:mornye/l10n/supported_locales.dart';
 import 'package:mornye/models/settings.dart';
 import 'package:mornye/services/app_state_database.dart';
 import 'package:mornye/services/file_access_check.dart';
-import 'package:mornye/services/ffmpeg_support.dart' show FFmpegExecution;
 import 'package:mornye/services/autoplay_personalization.dart';
 import 'package:mornye/services/autoplay_ranker.dart';
 import 'package:mornye/services/autoplay_taste.dart';
@@ -20,7 +19,6 @@ import 'package:mornye/services/download_file_recovery.dart';
 import 'package:mornye/services/library_collections_database.dart';
 import 'package:mornye/services/library_database.dart';
 import 'package:mornye/services/listening_statistics.dart';
-import 'package:mornye/services/lastfm/lastfm_service.dart';
 import 'package:mornye/services/media_library_browser.dart';
 import 'package:mornye/services/media_session_art_cache.dart';
 import 'package:mornye/services/media_session_filter.dart';
@@ -69,8 +67,6 @@ class PlaybackDependencies {
     this.createTaste = AutoplayTaste.new,
     this.createRanker = AutoplayRanker.new,
     this.createSongAnalysis = _createSongAnalysis,
-    this.convertAudio = _convertAudio,
-    this.playbackCopies,
     AppStateDatabase? sessionDatabase,
     LibraryDatabase? libraryDatabase,
     HistoryDatabase? historyDatabase,
@@ -135,13 +131,6 @@ class PlaybackDependencies {
   /// Analysis of how the Library's songs sound, reading songs from it.
   final SongAnalysis Function(LibraryDatabase library) createSongAnalysis;
 
-  /// Runs FFmpeg with these arguments; true when it succeeded. Makes the
-  /// FLAC copies AVPlayer plays in place of formats it cannot open.
-  final Future<bool> Function(List<String> arguments) convertAudio;
-
-  /// Where those copies go, emptied before the first; a folder in the
-  /// system temporary directory when null.
-  final Directory? playbackCopies;
   final AppStateDatabase? _sessionDatabase;
   final LibraryDatabase? _libraryDatabase;
   final HistoryDatabase? _historyDatabase;
@@ -171,7 +160,6 @@ class PlaybackDependencies {
       _volumeChanges ?? SystemVolumeService.instance.changes;
   bool get isAndroid => _isAndroid ?? Platform.isAndroid;
 
-  // AVPlayer and moves to libmpv for exclusive output (hog mode).
   static PlaybackDeck _createDeck(String playerId) {
     return AudioplayersPlaybackDeck(playerId: playerId);
   }
@@ -185,8 +173,6 @@ class PlaybackDependencies {
   static PlaybackDeck _createPreviewDeck(String playerId) =>
       AudioplayersPlaybackDeck(playerId: playerId, equalizerAvailable: false);
   static Future<AudioSession> _getAudioSession() => AudioSession.instance;
-  static Future<bool> _convertAudio(List<String> arguments) async =>
-      (await FFmpegExecution.arguments(arguments)).success;
   static SongAnalysis _createSongAnalysis(LibraryDatabase library) =>
       SongAnalysis(library: library);
   static Future<Map<String, dynamic>> _readNetworkMetadata(String source) =>
@@ -260,8 +246,6 @@ class MusicPlayerRuntime {
   }) : _settings = settings;
 
   final PlaybackDependencies dependencies;
-  LastfmService? _lastfm;
-  LastfmService get lastfm => _lastfm ??= LastfmService();
   AutoplayPersonalization? _personalization;
   // What learning observes also teaches [taste] what plays together and
   // [ranker] how much each part of a score counts.
@@ -452,7 +436,6 @@ class MusicPlayerRuntime {
 
   void detach(MusicPlayerHandler handler) {
     if (!identical(_handler, handler)) return;
-    _lastfm?.bind(null);
     _unsubscribeSourceDeletion?.call();
     _unsubscribeSourceDeletion = null;
     _unsubscribeSourceMetadata?.call();
@@ -550,7 +533,6 @@ class MusicPlayerRuntime {
     unawaited(_backgroundFavorites?.cancel());
     _backgroundFavorites = null;
     await _handler?.dispose();
-    await _lastfm?.close();
     try {
       await _initFuture;
     } catch (_) {
