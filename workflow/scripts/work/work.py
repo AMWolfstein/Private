@@ -24,16 +24,17 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import workflow_env
 import workmap  # noqa: E402  (map and context retrieval)
+import worktasks  # noqa: E402
 from worklib import Blocked, atomic_write, domains_for, git, is_test, now, snapshot  # noqa: E402,F401
 
 PHASES = ('spec', 'plan', 'tasks', 'build', 'review', 'ship', 'done')
-SIZES = ('feature', 'architecture')
+SIZES = ('small', 'feature', 'architecture')
 CLOSED = {'fixed', 'contested', 'escalated', 'declined', 'false_positive', 'wontfix'}
 STATUSES = CLOSED | {'open'}
 SEVERITIES = {'blocker', 'major', 'nit'}
 REVIEW_ROUND_CAP = 4
 # Only progress/evidence records are excluded. Checks and policy affect evidence.
-RECORD_DIRS = ('workflow/work/changes', '.work')
+RECORD_DIRS = ('workflow/work/changes', '.work', 'reports')
 RECORD_PREFIXES = tuple(d + '/' for d in RECORD_DIRS)
 
 
@@ -113,7 +114,7 @@ def read_state(folder: Path) -> dict:
 
 
 def write_state(folder: Path, state: dict) -> None:
-    (folder / 'state.json').write_text(json.dumps(state, indent=2, ensure_ascii=False) + '\n')
+    atomic_write(folder / 'state.json', json.dumps(state, indent=2, ensure_ascii=False) + '\n')
 
 
 def slugify(title: str) -> str:
@@ -121,7 +122,7 @@ def slugify(title: str) -> str:
     return slug[:48].strip('-') or 'change'
 
 
-def new_change(root: Path, title: str, size: str) -> Path:
+def new_change(root: Path, title: str, size: str, *, legacy: bool = False) -> Path:
     if size not in SIZES:
         raise Blocked(f'size must be one of {SIZES}')
     base = changes_dir(root)
@@ -130,14 +131,23 @@ def new_change(root: Path, title: str, size: str) -> Path:
     folder = base / f'{max(numbers, default=0) + 1:03d}-{slugify(title)}'
     folder.mkdir()
     templates = root / 'workflow/work/templates'
-    for name in ('spec.md', 'plan.md', 'tasks.md', 'findings.md', 'log.md'):
+    names = ('tasks.md', 'log.md') if size == 'small' else ('spec.md', 'plan.md', 'tasks.md', 'findings.md', 'log.md')
+    for name in names:
         text = (templates / name).read_text().replace('{{TITLE}}', title).replace(
             '{{ID}}', folder.name).replace('{{DATE}}', now()[:10])
         (folder / name).write_text(text)
-    shutil.copy2(templates / 'assurance.json', folder / 'assurance.json')
+    if size != 'small':
+        shutil.copy2(templates / 'assurance.json', folder / 'assurance.json')
+    if size == 'small':
+        (folder / 'tasks.md').write_text('# Tasks\n\n- [ ] T000 [MAP] Refresh map — check: map status\n'
+                                       f'- [ ] T001 [FINAL] {" ".join(title.split())} — check: auto\n')
     base = git(root, 'rev-parse', 'HEAD', check=False).strip() or None
-    write_state(folder, {'id': folder.name, 'title': title, 'size': size, 'phase': 'spec', 'base': base,
-                         'created': now(), 'rounds': [], 'history': [{'phase': 'spec', 'at': now()}]})
+    phase = 'tasks' if size == 'small' else 'spec'
+    state = {'id': folder.name, 'title': title, 'size': size, 'phase': phase, 'base': base,
+             'created': now(), 'rounds': [], 'history': [{'phase': phase, 'at': now()}]}
+    if not legacy:
+        state.update(workflow_version=2, execution={'active': None, 'tasks': {}})
+    write_state(folder, state)
     return folder
 
 
@@ -163,7 +173,7 @@ def placeholders(text: str) -> list[str]:
 
 def task_lines(text: str) -> list[tuple[bool, str]]:
     return [(mark.lower() == 'x', rest) for mark, rest in
-            re.findall(r'^- \[( |x|X)\] (T\d{3}.*)$', text, re.M)]
+            re.findall(r'^- \[( |x|X)\] ((?:T\d{3}|TOR\d{3})\b.*)$', text, re.M)]
 
 
 def requirement_ids(text: str) -> set[str]:
@@ -276,7 +286,7 @@ def assurance_problems(root: Path, folder: Path, target: str) -> list[str]:
     return problems
 
 
-def lint_change(root: Path, folder: Path, target: str | None = None) -> list[str]:
+def _legacy_lint_change(root: Path, folder: Path, target: str | None = None) -> list[str]:
     """Cross-artifact problems; with target, only those that gate that phase."""
     state = read_state(folder)
     order = PHASES.index(target) if target else len(PHASES) - 1
@@ -354,6 +364,19 @@ def lint_change(root: Path, folder: Path, target: str | None = None) -> list[str
     return problems
 
 
+def lint_change(root: Path, folder: Path, target: str | None = None) -> list[str]:
+    state = read_state(folder)
+    if state.get('workflow_version') != 2:
+        return _legacy_lint_change(root, folder, target)
+    if target in ('plan', 'tasks') and not state.get('planning') and state['size'] != 'small':
+        return _legacy_lint_change(root, folder, 'build' if target == 'tasks' else target)
+    try:
+        result = worktasks.TaskLoop(root, globals()).execute('status', folder.name)
+        return ['task is stopped pending owner instructions'] if result['status'] == 'BLOCKED' else []
+    except Blocked as error:
+        return [str(error)]
+
+
 def current_map_corpus(root: Path) -> str | None:
     try:
         return workmap.map_status(root)['components']['corpus']
@@ -364,6 +387,11 @@ def current_map_corpus(root: Path) -> str | None:
 def advance(root: Path, ident: str, target: str) -> dict:
     folder = find_change(root, ident)
     state = read_state(folder)
+    if state.get('workflow_version') == 2:
+        if target not in ('spec', 'plan', 'tasks'):
+            raise Blocked('new changes use the task loop; final task commit completes the change')
+        if state.get('planning') and target != state['phase']:
+            raise Blocked('planning is committed; use task commands instead of project execution phases')
     if target not in PHASES:
         raise Blocked(f'phase must be one of {PHASES}')
     current, wanted = PHASES.index(state['phase']), PHASES.index(target)
@@ -390,6 +418,8 @@ def record_round(root: Path, ident: str, stage: str, result: str, reviewer: str)
         raise Blocked('usage: round <change> design|code clean|dirty --reviewer NAME')
     folder = find_change(root, ident)
     state = read_state(folder)
+    if state.get('workflow_version') == 2 and stage == 'code':
+        raise Blocked('use task review: each task has its own three-round limit')
     rounds = [r for r in state['rounds'] if r['stage'] == stage]
     if len(rounds) >= REVIEW_ROUND_CAP and result == 'dirty':
         note = f'{stage} review reached {REVIEW_ROUND_CAP} rounds: report the open findings to the owner'
@@ -732,7 +762,8 @@ def _prove_in_worktree(root: Path, command: list[str], timeout: int,
 
 # ------------------------------------------------------------------- packet
 
-def packet(root: Path, base: str, goal_file: str | None, ident: str | None, out: str) -> dict:
+def packet(root: Path, base: str, goal_file: str | None, ident: str | None, out: str,
+           exclude_paths=()) -> dict:
     parts = ['# Review packet', '',
              'Read this packet and the repository. You have no conversation history; '
              'do not assume anything the packet or the code does not show.', '']
@@ -743,7 +774,7 @@ def packet(root: Path, base: str, goal_file: str | None, ident: str | None, out:
                 parts += [f'## {name} ({folder.name})', '', (folder / name).read_text(), '']
     if goal_file:
         parts += ['## Goal', '', (root / goal_file).read_text(), '']
-    paths = changed_paths(root, base)
+    paths = [p for p in changed_paths(root, base) if p not in exclude_paths]
     parts += [f'## Changed files (against {base})', ''] + [f'- {p}' for p in paths] + ['']
     diff = git(root, 'diff', base, '--', *paths, check=False) if paths else ''
     parts += ['## Diff', '', '```diff', diff.rstrip(), '```', '']
@@ -800,6 +831,12 @@ def status(root: Path, brief: bool) -> str:
                     active.append(state)
     if active:
         for state in active:
+            if state.get('workflow_version') == 2:
+                task = state['execution']['active']
+                item = state['execution']['tasks'].get(task, {})
+                lines.append(f'Change {state["id"]}: {"planning" if not state.get("planning") and state["size"] != "small" else "task loop"}; '
+                             f'{task or "ready for next task"} {item.get("status", "")}')
+                continue
             problems = lint_change(root, find_change(root, state['id']))
             lines.append(f'Change {state["id"]} ({state["size"]}): phase {state["phase"]}'
                          f'{"; " + str(len(problems)) + " open issue(s), run work.py lint" if problems else ""}')
@@ -833,7 +870,14 @@ def main(argv: list[str] | None = None) -> int:
     s = sub.add_parser('round'); s.add_argument('change'); s.add_argument('stage'); s.add_argument('result')
     s.add_argument('--reviewer', required=True)
     s = sub.add_parser('scope'); s.add_argument('--base', default='HEAD')
-    s = sub.add_parser('check'); s.add_argument('names', nargs='+'); s.add_argument('--base', default='HEAD')
+    s = sub.add_parser('check'); s.add_argument('names', nargs='*', default=['auto']); s.add_argument('--base')
+    s.add_argument('--full', action='store_true', help='run all configured checks')
+    s = sub.add_parser('planning-commit'); s.add_argument('change'); s.add_argument('-m', '--message')
+    s = sub.add_parser('task'); s.add_argument('operation', choices=('start', 'check', 'packet', 'review', 'complete', 'add', 'resume', 'status'))
+    s.add_argument('change'); s.add_argument('task', nargs='?')
+    s.add_argument('--result', choices=('clean', 'dirty')); s.add_argument('--reviewer'); s.add_argument('--note', default='')
+    s.add_argument('--check', action='append', default=[], dest='checks')
+    s.add_argument('-m', '--message'); s.add_argument('--request'); s.add_argument('--owner-instruction')
     sub.add_parser('fresh')
     s = sub.add_parser('prove'); s.add_argument('--timeout', type=int, default=900)
     s.add_argument('--expect-failure', help='literal regression assertion diagnostic, not a test name or compiler error')
@@ -882,6 +926,11 @@ def main(argv: list[str] | None = None) -> int:
             result = workflow_env.doctor(root)
         elif args.action == 'new':
             result = {'status': 'PASS', 'folder': new_change(root, args.title, args.size).relative_to(root).as_posix()}
+        elif args.action == 'planning-commit':
+            result = worktasks.TaskLoop(root, globals()).execute('planning-commit', args.change, message=args.message)
+        elif args.action == 'task':
+            options = {key: getattr(args, key) for key in ('result', 'reviewer', 'note', 'checks', 'message', 'request', 'owner_instruction')}
+            result = worktasks.TaskLoop(root, globals()).execute(args.operation, args.change, args.task, **options)
         elif args.action == 'advance':
             result = advance(root, args.change, args.phase)
         elif args.action == 'lint':
@@ -903,7 +952,13 @@ def main(argv: list[str] | None = None) -> int:
                       'tests_changed': [p for p in paths if is_test(p)]}
         elif args.action == 'check':
             config = load_config(root)
-            result = run_checks(root, config, select_checks(root, config, args.names, args.base))
+            try:
+                keys = list(config['checks']) if args.full else select_checks(
+                    root, config, args.names or ['auto'], args.base or worktasks.active_base(root) or 'HEAD')
+                result = run_checks(root, config, keys)
+            except NoChecksSelected:
+                result = {'status': 'NO_CHANGES', 'checks': [],
+                          'reason': 'No changes select a configured check; use check --full for the complete suite.'}
         elif args.action == 'fresh':
             report = latest_report(root)
             ok = bool(report) and report['status'] == 'PASS' and report['fingerprint'] == fingerprint(root)
@@ -938,7 +993,7 @@ def main(argv: list[str] | None = None) -> int:
         print(json.dumps({'status': 'BLOCKED', 'reason': str(error)}, ensure_ascii=False, indent=2))
         return 2
     print(json.dumps(result, indent=2, ensure_ascii=False))
-    return 0 if result.get('status') == 'PASS' else 1
+    return 0 if result.get('status') in ('PASS', 'NO_CHANGES', 'READY_TO_COMMIT') else 2 if result.get('status') == 'BLOCKED' else 1
 
 
 if __name__ == '__main__':

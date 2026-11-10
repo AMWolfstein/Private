@@ -6,6 +6,8 @@ import os
 import shutil
 import subprocess
 import tempfile
+import time
+from contextlib import contextmanager
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -15,6 +17,40 @@ TEST_SUFFIXES = ('_test.dart', 'Test.kt', 'Tests.kt', '_test.py', '_test.rs')
 
 class Blocked(Exception):
     """A gate, guard or configuration problem the caller must resolve."""
+
+
+@contextmanager
+def file_lock(path: Path, timeout: float = 0):
+    """OS-released advisory lock; interrupted commands cannot leave a stale lock."""
+    path.parent.mkdir(parents=True, exist_ok=True)
+    try:
+        import fcntl
+        windows = None
+    except ImportError:
+        import msvcrt as windows
+        fcntl = None
+    with path.open('a+') as handle:
+        deadline = time.monotonic() + timeout
+        while True:
+            try:
+                if fcntl:
+                    fcntl.flock(handle, fcntl.LOCK_EX | fcntl.LOCK_NB)
+                else:
+                    handle.seek(0)
+                    windows.locking(handle.fileno(), windows.LK_NBLCK, 1)
+                break
+            except OSError as error:
+                if time.monotonic() >= deadline:
+                    raise Blocked(f'another workflow operation holds {path.name}; retry when it finishes') from error
+                time.sleep(0.1)
+        try:
+            yield
+        finally:
+            if fcntl:
+                fcntl.flock(handle, fcntl.LOCK_UN)
+            else:
+                handle.seek(0)
+                windows.locking(handle.fileno(), windows.LK_UNLCK, 1)
 
 
 def now() -> str:
@@ -80,6 +116,21 @@ def snapshot(root: Path, drop: tuple[str, ...] = (), listing: bool = False) -> t
                     mode, blob, _stage = meta.split(' ')
                     files[path] = (mode, blob)
         return tree, files
+
+
+def committed_fingerprint(root: Path, commit: str, drop: tuple[str, ...], protected: dict) -> str:
+    """Check a committed task against reviewed code without touching the real index."""
+    with tempfile.TemporaryDirectory(prefix='work-commit-fp-') as folder:
+        env = {**os.environ, 'GIT_INDEX_FILE': str(Path(folder) / 'index')}
+        git(root, 'read-tree', commit, env=env)
+        if protected:
+            entries = ''.join(f'{mode} {blob}\t{path}\0' for path, (mode, blob) in protected.items())
+            result = subprocess.run(['git', 'update-index', '-z', '--index-info'], cwd=root, env=env,
+                                    input=entries.encode('utf-8', errors='surrogateescape'), capture_output=True)
+            if result.returncode:
+                raise Blocked('cannot reconstruct protected baseline for committed-task verification')
+        git(root, 'rm', '-r', '-f', '--cached', '-q', '--ignore-unmatch', '--', *drop, env=env)
+        return git(root, 'write-tree', env=env).strip()
 
 
 def domains_for(config: dict, paths: list[str]) -> dict[str, list[str]]:

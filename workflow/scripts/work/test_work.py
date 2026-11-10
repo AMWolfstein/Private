@@ -33,7 +33,7 @@ class Repo(unittest.TestCase):
         sh(self.root, 'git', 'init', '-q')
         sh(self.root, 'git', 'config', 'user.email', 't@example.com')
         sh(self.root, 'git', 'config', 'user.name', 't')
-        shutil.copytree(PACKAGE / 'work', self.root / 'workflow/work')
+        shutil.copytree(PACKAGE / 'work', self.root / 'workflow/work', ignore=shutil.ignore_patterns('changes'))
         (self.root / '.gitignore').write_text('build/\n.work/\n')
         (self.root / 'lib').mkdir()
         (self.root / 'lib/app.dart').write_text('original\n')
@@ -339,7 +339,7 @@ class PythonCountTests(Repo):
 class GateTests(Repo):
     def setUp(self):
         super().setUp()
-        self.folder = work.new_change(self.root, 'Play CUE tracks', 'feature')
+        self.folder = work.new_change(self.root, 'Play CUE tracks', 'feature', legacy=True)
         self.id = self.folder.name[:3]
 
     def fill(self, name, text):
@@ -483,7 +483,7 @@ class GateTests(Repo):
         self.assertEqual(work.parse_findings((self.folder / 'findings.md').read_text()), [])
 
     def test_architecture_needs_two_clean_design_rounds(self):
-        folder = work.new_change(self.root, 'Kotlin playback service', 'architecture')
+        folder = work.new_change(self.root, 'Kotlin playback service', 'architecture', legacy=True)
         ident = folder.name[:3]
         (folder / 'spec.md').write_text('- FR-001: MUST.\nGiven a, When b, Then c\n')
         (folder / 'plan.md').write_text('## Constitution check\n- [x] ok\n')
@@ -504,7 +504,7 @@ class GateTests(Repo):
 class AssuranceTests(Repo):
     def setUp(self):
         super().setUp()
-        self.folder = work.new_change(self.root, 'Boundary migration', 'architecture')
+        self.folder = work.new_change(self.root, 'Boundary migration', 'architecture', legacy=True)
         self.data = {'version': 1, 'port': {'applies': False, 'reason': 'Not a port'},
                      'bridge': {'applies': False, 'reason': 'No boundary changes'},
                      'prerequisites': [], 'device_checks': []}
@@ -589,7 +589,7 @@ class AssuranceTests(Repo):
         self.assertTrue(self.problems())
         self.data['prerequisites'] = [self.folder.name]
         self.assertTrue(any('cyclic' in p for p in self.problems()))
-        other = work.new_change(self.root, 'Previous batch', 'architecture')
+        other = work.new_change(self.root, 'Previous batch', 'architecture', legacy=True)
         self.data['prerequisites'] = [other.name]
         self.assertTrue(any('not done' in p for p in self.problems()))
         state = work.read_state(other); state['phase'] = 'done'; work.write_state(other, state)
@@ -597,7 +597,7 @@ class AssuranceTests(Repo):
         self.assertEqual(self.problems(), [])
 
     def test_malformed_nested_prerequisites_block_instead_of_crashing(self):
-        other = work.new_change(self.root, 'Dependency', 'architecture')
+        other = work.new_change(self.root, 'Dependency', 'architecture', legacy=True)
         state = work.read_state(other); state['phase'] = 'done'; work.write_state(other, state)
         self.data['prerequisites'] = [other.name]
         for malformed in ([], {'prerequisites': [7]}, {'prerequisites': '001'}):

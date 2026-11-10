@@ -587,7 +587,7 @@ class MockedAdapterDeclarationTests(Repo):
             self.update()
 
     def test_bridge_contract_from_a_change_record_is_attached(self):
-        folder = work.new_change(self.root, 'Player bridge', 'architecture')
+        folder = work.new_change(self.root, 'Player bridge', 'architecture', legacy=True)
         assurance = json.loads((folder / 'assurance.json').read_text())
         assurance['bridge'] = {'applies': True, 'reason': 'player commands', 'contracts': [{
             'name': 'com.example/player commands', 'caller': 'lib/player/player_bridge.dart PlayerBridge.play',
@@ -722,7 +722,7 @@ class MockedAdapterGapTests(Repo):
 class MockedAdapterGateTests(Repo):
     def setUp(self):
         super().setUp()
-        self.folder = work.new_change(self.root, 'Gate', 'feature')
+        self.folder = work.new_change(self.root, 'Gate', 'feature', legacy=True)
         state = work.read_state(self.folder)
         state['phase'] = 'build'
         work.write_state(self.folder, state)

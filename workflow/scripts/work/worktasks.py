@@ -1,0 +1,474 @@
+"""Reviewed task execution. Checks/review are evidence, never semantic proof.
+
+The CLI supplies the existing runner/map API. No application dependency or shell
+evaluation is introduced. Progress is excluded from code fingerprints; task
+requirements have a separate identity so editing records cannot reuse checks.
+"""
+from __future__ import annotations
+
+import hashlib
+import json
+import re
+import uuid
+from pathlib import Path
+from types import SimpleNamespace
+
+from worklib import Blocked, atomic_write, committed_fingerprint, domains_for, file_lock, git, now, snapshot
+
+REVIEW_LIMIT = 3
+TASK = re.compile(r'^- \[([ xX])\] ((?:T\d{3}|TOR\d{3}))\b([^\n]*)$', re.M)
+
+
+def rows(folder: Path) -> list[dict]:
+    return [{'id': m[2], 'done': m[1].lower() == 'x', 'text': (m[2] + m[3]).strip(),
+             'kind': 'map' if m[2] == 'T000' else 'final' if '[FINAL]' in m[3] else 'work'}
+            for m in TASK.finditer((folder / 'tasks.md').read_text())]
+
+
+def active_base(root: Path) -> str | None:
+    """Read durable task records; a missing cache must not admit another owner."""
+    active = []
+    head = git(root, 'rev-parse', 'HEAD').strip()
+    for path in (root / 'workflow/work/changes').glob('*/state.json'):
+        state = json.loads(path.read_text())
+        if state.get('workflow_version') != 2:
+            continue
+        execution = state.get('execution', {})
+        ident = execution.get('active')
+        if not ident:
+            ident = next((key for key, item in execution.get('tasks', {}).items()
+                          if item.get('status') == 'done' and item.get('commit_parent') == head), None)
+        if ident:
+            base = execution['tasks'][ident]['base']
+            if not re.fullmatch(r'[0-9a-f]{40}', base):
+                raise Blocked('active task has an invalid baseline')
+            active.append(base)
+    if len(active) > 1:
+        raise Blocked('multiple active tasks; preserve work and reconcile ownership')
+    return active[0] if active else None
+
+
+class TaskLoop:
+    def __init__(self, root: Path, api: dict):
+        self.root, self.c = root, SimpleNamespace(**api)
+
+    def execute(self, operation: str, change: str, task: str | None = None, **options) -> dict:
+        with file_lock(self.root / '.work/tasks/operation.lock'):
+            self.folder = self.c.find_change(self.root, change)
+            if not self.folder.resolve().is_relative_to(self.root.resolve()):
+                raise Blocked('change records must stay inside this repository')
+            self.state = self.c.read_state(self.folder)
+            if self.state.get('workflow_version') != 2:
+                raise Blocked('legacy change: retain its original protocol; create new work for the task loop')
+            self.execution = self.state.setdefault('execution', {'active': None, 'tasks': {}})
+            self.items = self.execution['tasks']
+            self.queue = rows(self.folder)
+            self._validate()
+            operations = {'start': self.start, 'check': self.check, 'packet': self.packet,
+                          'review': self.review, 'complete': self.complete, 'add': self.add,
+                          'resume': self.resume, 'status': self.status, 'planning-commit': self.planning_commit}
+            if operation not in operations:
+                raise Blocked('unknown task operation')
+            return operations[operation](task, **options)
+
+    def save(self):
+        atomic_write(self.folder / 'state.json', json.dumps(self.state, indent=2, ensure_ascii=False) + '\n')
+
+    def log(self, message: str):
+        path = self.folder / 'log.md'
+        atomic_write(path, path.read_text() + f'\n- {now()}: {message}\n')
+
+    def _row(self, ident: str) -> dict:
+        found = [r for r in self.queue if r['id'] == ident]
+        if len(found) != 1:
+            raise Blocked(f'no unique task {ident}')
+        return found[0]
+
+    def _validate(self):
+        if not self.queue or self.queue[0]['id'] != 'T000':
+            raise Blocked('tasks.md must begin with T000 map refresh')
+        if len({r['id'] for r in self.queue}) != len(self.queue):
+            raise Blocked('duplicate task IDs')
+        if self.queue[-1]['kind'] != 'final':
+            raise Blocked('the last task must have [FINAL] cumulative review')
+        pending_finals = [r for r in self.queue if r['kind'] == 'final' and not r['done']]
+        if pending_finals and (len(pending_finals) != 1 or pending_finals[0] != self.queue[-1]):
+            raise Blocked('only the last task may be an unfinished final review')
+        self.pending_commit = []
+        for row in self.queue:
+            item = self.items.get(row['id'], {})
+            preparing = item.get('status') == 'done' and git(self.root, 'rev-parse', 'HEAD').strip() == item.get('commit_parent')
+            if row['done'] != (item.get('status') == 'done') and not preparing:
+                raise Blocked(f'{row["id"]}: completion must be recorded by task commit, not a manual checkbox')
+            if item.get('status') == 'done' and item.get('declaration') != row['text']:
+                raise Blocked(f'{row["id"]}: a completed task declaration was edited; add a TOR request')
+            if item.get('status') == 'done':
+                if not self._committed(item, row['id']):
+                    self.pending_commit.append(row['id'])
+
+    def _committed(self, item: dict, ident: str):
+        parent = item.get('commit_parent')
+        if not parent or not re.fullmatch(r'[0-9a-f]{40}', parent) or not item.get('transaction'):
+            raise Blocked(f'{ident}: completion has no committed checkpoint')
+        descendants = git(self.root, 'rev-list', '--reverse', '--ancestry-path', f'{parent}..HEAD').splitlines()
+        if not descendants:
+            return False
+        path = (self.folder / 'state.json').relative_to(self.root).as_posix()
+        try:
+            record = json.loads(git(self.root, 'show', f'{descendants[0]}:{path}'))
+            stored = record['execution']['tasks'][ident]
+        except (Blocked, KeyError, ValueError) as error:
+            raise Blocked(f'{ident}: cannot prove committed completion') from error
+        changed = git(self.root, 'diff', '--name-only', parent, descendants[0]).splitlines()
+        prefix = self.folder.relative_to(self.root).as_posix() + '/'
+        if any(self.c.is_record(p) and not p.startswith(prefix) for p in changed):
+            raise Blocked(f'{ident}: unrelated records were included in the task commit')
+        if set(changed) & set(item.get('protected', {})):
+            raise Blocked(f'{ident}: unrelated pre-existing files were included in the commit')
+        if (stored.get('transaction') != item.get('transaction') or stored.get('status') != 'done'
+                or stored.get('declaration') != item.get('declaration')):
+            raise Blocked(f'{ident}: completion does not match its Git checkpoint')
+        expected_records = stored.get('record_hashes', {})
+        if not expected_records and ident != 'T000':
+            raise Blocked(f'{ident}: completion record manifest is missing')
+        for name, expected in expected_records.items():
+            data = git(self.root, 'show', f'{descendants[0]}:{self.folder.relative_to(self.root).as_posix()}/{name}')
+            if hashlib.sha256(data.encode('utf-8', errors='surrogateescape')).hexdigest() != expected:
+                raise Blocked(f'{ident}: task records were omitted or changed in its commit: {name}')
+        committed_tasks = git(self.root, 'show', f'{descendants[0]}:{self.folder.relative_to(self.root).as_posix()}/tasks.md')
+        if not re.search(r'^- \[x\] ' + re.escape(ident) + r'\b', committed_tasks, re.M):
+            raise Blocked(f'{ident}: task checkbox is not committed')
+        if ident == 'T000':
+            paths = git(self.root, 'diff', '--name-only', parent, descendants[0]).splitlines()
+            if any(not self.c.is_record(p) for p in paths):
+                raise Blocked('T000 committed unexpected source changes')
+        else:
+            actual = committed_fingerprint(self.root, descendants[0], self.c.RECORD_DIRS, stored.get('protected', {}))
+            if actual != stored['reviews'][-1]['fingerprint']:
+                raise Blocked(f'{ident}: committed code differs from the clean review')
+        return True
+
+    def _planning_committed(self):
+        if self.state['size'] == 'small':
+            return
+        parent = self.state.get('planning', {}).get('parent')
+        if not parent:
+            raise Blocked('commit planning once before starting tasks: planning-commit')
+        commits = git(self.root, 'rev-list', '--reverse', '--ancestry-path', f'{parent}..HEAD').splitlines()
+        if not commits:
+            raise Blocked('planning is not committed')
+        prefix = self.folder.relative_to(self.root).as_posix() + '/'
+        checkpoint = json.loads(git(self.root, 'show', f'{commits[0]}:{prefix}state.json'))
+        if checkpoint.get('planning') != self.state['planning']:
+            raise Blocked('the prepared planning checkpoint was not committed')
+        required = ('spec.md', 'plan.md', 'tasks.md', 'findings.md', 'log.md', 'assurance.json')
+        for name in required:
+            content = git(self.root, 'show', f'{commits[0]}:{prefix}{name}')
+            expected = checkpoint['planning'].get('record_hashes', {}).get(name)
+            if expected and hashlib.sha256(content.encode('utf-8', errors='surrogateescape')).hexdigest() != expected:
+                raise Blocked('planning artifact differs from its checkpoint: ' + name)
+        paths = git(self.root, 'diff', '--name-only', parent, commits[0]).splitlines()
+        if not paths or any(not p.startswith(prefix) for p in paths):
+            raise Blocked('planning checkpoint must contain only its planning artifacts')
+
+    def _current(self, ident: str | None) -> tuple[dict, dict]:
+        if ident is None or self.execution['active'] != ident:
+            raise Blocked('the requested task is not the active task')
+        row, item = self._row(ident), self.items[ident]
+        if item['status'] == 'blocked':
+            raise Blocked('task stopped after three reviews; report findings and wait for explicit owner instructions')
+        if git(self.root, 'rev-parse', 'HEAD').strip() != item['head']:
+            raise Blocked('HEAD changed during the task; preserve work and reconcile before continuing')
+        self._protect(item)
+        return row, item
+
+    def _protect(self, item: dict):
+        if item.get('protected'):
+            _, listing = snapshot(self.root, drop=self.c.RECORD_DIRS, listing=True)
+            for path, original in item['protected'].items():
+                if list(listing.get(path, ())) != original:
+                    raise Blocked(f'protected pre-existing file changed: {path}')
+
+    def _paths(self, base: str, item: dict) -> list[str]:
+        return [p for p in self.c.changed_paths(self.root, base) if p not in item.get('protected', {})]
+
+    def _identity(self, row: dict) -> str:
+        declaration = '\n'.join(r['text'] for r in self.queue) if row['kind'] == 'final' else row['text']
+        return hashlib.sha256((self.c.docs_fingerprint(self.folder) + declaration).encode()).hexdigest()
+
+    def _required(self, row: dict, item: dict, extra=()) -> list[str]:
+        config = self.c.load_config(self.root)
+        paths = self._paths(item['base'], item)
+        if row['kind'] == 'map' and paths:
+            raise Blocked('T000 is map-only; source changes belong in an implementation task')
+        domains = domains_for(config, paths)
+        required = {key for domain in domains for key in config['domain_checks'].get(domain, [])}
+        declaration = row['text'].split('check:', 1)[-1]
+        required.update(k for k in config['checks'] if re.search(r'(?<![\w-])' + re.escape(k) + r'(?![\w-])', declaration))
+        for key in extra:
+            if key not in config['checks']:
+                raise Blocked(f'unknown additional check {key}')
+            required.add(key)
+        if row['kind'] == 'final' and (self.folder / 'assurance.json').is_file():
+            # Preserve the declared port/bridge checks for the cumulative result.
+            assurance = json.loads((self.folder / 'assurance.json').read_text())
+            for component in assurance.get('port', {}).get('components', []):
+                required.update(component.get('checks', []))
+            for contract in assurance.get('bridge', {}).get('contracts', []):
+                required.update(contract.get('caller_checks', []) + contract.get('native_checks', []))
+        if required - config['checks'].keys():
+            raise Blocked('a declared check is missing from checks.json')
+        return [k for k in config['checks'] if k in required]
+
+    def start(self, ident: str, **_):
+        self._planning_committed()
+        if self.pending_commit:
+            raise Blocked('commit the reviewed task with ordinary Git before starting another')
+        if self.execution['active']:
+            raise Blocked('finish and commit the active task before starting another')
+        pointer = self.root / '.work/active-task.json'
+        if active_base(self.root) is not None:
+            raise Blocked('another change has an active task')
+        pending = next((r for r in self.queue if not r['done']), None)
+        if pending is None or pending['id'] != ident:
+            raise Blocked('tasks must execute in queue order')
+        tracked = [p for p in git(self.root, 'diff', '--name-only', 'HEAD').splitlines() if not self.c.is_record(p)]
+        if tracked:
+            raise Blocked('preserve unrelated tracked changes before starting: ' + ', '.join(tracked))
+        prefix = self.folder.relative_to(self.root).as_posix() + '/'
+        if any(not p.startswith(prefix) for p in git(self.root, 'diff', '--cached', '--name-only').splitlines()):
+            raise Blocked('preserve unrelated staged files before starting')
+        untracked = [p for p in git(self.root, 'ls-files', '--others', '--exclude-standard', '-z').split('\0')
+                     if p and not self.c.is_record(p)]
+        if domains_for(self.c.load_config(self.root), untracked):
+            raise Blocked('preserve pre-existing untracked source files before starting')
+        _, listing = snapshot(self.root, drop=self.c.RECORD_DIRS, listing=True)
+        self.c.workmap.ensure_current(self.root)
+        context = self.c.workmap.context(self.root, pending['text'], refresh=False)['text']
+        path = self.root / '.work/tasks' / self.folder.name / f'{ident}-context.md'
+        atomic_write(path, context)
+        head = git(self.root, 'rev-parse', 'HEAD').strip()
+        self.items[ident] = {'status': 'active', 'head': head,
+                            'base': self.state['base'] if pending['kind'] == 'final' else head,
+                            'declaration': pending['text'], 'protected': {p: list(listing[p]) for p in untracked},
+                            'cycle': 1, 'reviews': [], 'checks': None, 'context': str(path.relative_to(self.root))}
+        self.execution['active'] = ident
+        self.save()
+        atomic_write(pointer, json.dumps({'change': self.folder.name, 'task': ident}))
+        return {'status': 'PASS', 'task': ident, 'context': str(path.relative_to(self.root))}
+
+    def check(self, ident: str, checks=(), **_):
+        row, item = self._current(ident)
+        required = self._required(row, item, checks)
+        identity, fp = self._identity(row), self.c.fingerprint(self.root)
+        item['checks'] = {'status': 'RUNNING', 'identity': identity, 'fingerprint': fp, 'ids': required, 'extra': list(checks)}
+        self.save()
+        result = self.c.run_checks(self.root, self.c.load_config(self.root), required) if required else {'status': 'NOT_REQUIRED'}
+        # Requirements live in excluded progress directories, so bind them too.
+        self.queue = rows(self.folder)
+        unchanged = fp == self.c.fingerprint(self.root) and identity == self._identity(self._row(ident))
+        good = result['status'] in ('PASS', 'NOT_REQUIRED') and unchanged
+        item['checks']['status'] = result['status'] if good else 'INCOMPLETE'
+        self.save()
+        return {'status': 'PASS' if good else 'INCOMPLETE', 'task': ident,
+                'checks_status': item['checks']['status'], 'checks': required,
+                'requirements_changed': identity != self._identity(self._row(ident))}
+
+    def _evidence(self, row: dict, item: dict):
+        evidence = item.get('checks') or {}
+        required = self._required(row, item, evidence.get('extra', []))
+        if (evidence.get('status') != ('PASS' if required else 'NOT_REQUIRED')
+                or evidence.get('identity') != self._identity(row)
+                or evidence.get('fingerprint') != self.c.fingerprint(self.root)
+                or evidence.get('ids') != required):
+            raise Blocked('task checks are missing or stale; run task check after the latest changes')
+        if required:
+            current = self.c.check_evidence(self.root)
+            if any(current.get(k, {}).get('status') != 'PASS'
+                   or current.get(k, {}).get('fingerprint') != evidence['fingerprint'] for k in required):
+                raise Blocked('runner evidence is missing or stale')
+
+    def packet(self, ident: str, **_):
+        row, item = self._current(ident)
+        if len(self._cycles(item)) >= REVIEW_LIMIT:
+            raise Blocked('three reviews reached; commit the unchanged clean task or report to the owner')
+        self._evidence(row, item)
+        self.c.workmap.ensure_current(self.root)
+        path = f'.work/review/{self.folder.name}-{ident}-r{len(item["reviews"]) + 1}.md'
+        result = self.c.packet(self.root, item['base'], None, self.folder.name, path,
+                               exclude_paths=set(item.get('protected', {})))
+        target = self.root / path
+        with target.open('a') as output:
+            output.write('\n## Active task\n\n' + row['text'] + '\n\nTask checks: ' + json.dumps(item['checks']) + '\n')
+            if row['kind'] == 'final':
+                output.write('\n## Cumulative task outcomes\n\n' + json.dumps(self.items, indent=2) + '\n')
+        item['packet'] = {'path': path, 'fingerprint': self.c.fingerprint(self.root),
+                          'identity': self._identity(row), 'map': self.c.workmap.round_record(self.root)}
+        self.save()
+        return result
+
+    def status(self, ident=None, **_):
+        return {'status': 'BLOCKED' if any(i.get('status') == 'blocked' for i in self.items.values()) else 'PASS',
+                'change': self.folder.name, 'active': self.execution['active'], 'waiting_for_git_commit': self.pending_commit,
+                'tasks': [{'id': r['id'], 'status': 'waiting_commit' if r['id'] in self.pending_commit else self.items.get(r['id'], {}).get('status', 'pending'),
+                           'cycle': self.items.get(r['id'], {}).get('cycle', 1)} for r in self.queue]}
+
+    def _findings(self, ident: str, cumulative: bool):
+        path = self.folder / 'findings.md'
+        findings = self.c.parse_findings(path.read_text()) if path.is_file() else []
+        for finding in findings:
+            if not cumulative and finding.get('task') not in (None, ident):
+                continue
+            if finding.get('severity') not in self.c.SEVERITIES or finding.get('status') not in self.c.STATUSES:
+                raise Blocked('review finding has invalid severity/status: ' + finding['id'])
+            if finding['status'] in ('open', 'escalated'):
+                raise Blocked('unresolved review finding: ' + finding['id'])
+            if not finding.get('evidence'):
+                raise Blocked('resolved finding needs evidence: ' + finding['id'])
+            if finding['status'] == 'declined' and finding['severity'] != 'nit':
+                raise Blocked('only nits may be declined: ' + finding['id'])
+
+    def _cycles(self, item):
+        return [r for r in item['reviews'] if r.get('cycle', 1) == item['cycle']]
+
+    def review(self, ident: str, result=None, reviewer=None, note='', **_):
+        row, item = self._current(ident)
+        if result not in ('clean', 'dirty') or not reviewer or not reviewer.strip():
+            raise Blocked('review requires clean/dirty and an independent reviewer name')
+        rounds = self._cycles(item)
+        if len(rounds) >= REVIEW_LIMIT:
+            item['status'] = 'blocked'; self.save()
+            raise Blocked('three reviews reached; report to the owner instead of starting a fourth')
+        packet = item.get('packet', {})
+        if not packet:
+            raise Blocked('prepare a task packet before independent review')
+        if result == 'clean':
+            self._evidence(row, item)
+            if (packet.get('fingerprint') != self.c.fingerprint(self.root)
+                    or packet.get('identity') != self._identity(row)):
+                raise Blocked('prepare a current task packet before independent review')
+            self.c.workmap.ensure_current(self.root)
+            if packet.get('map', {}).get('corpus') != self.c.current_map_corpus(self.root):
+                raise Blocked('map changed after the packet; prepare the review against current code')
+            self._findings(ident, row['kind'] == 'final')
+        item['reviews'].append({'cycle': item['cycle'], 'round': len(rounds) + 1, 'result': result,
+                                'reviewer': reviewer, 'note': note, **packet, 'at': now()})
+        item['status'] = 'reviewed' if result == 'clean' else 'blocked' if len(rounds) + 1 == REVIEW_LIMIT else 'fixing'
+        self.save()
+        return {'status': 'BLOCKED' if item['status'] == 'blocked' else 'PASS', 'task': ident,
+                'result': result, 'round': len(rounds) + 1, 'cycle': item['cycle'],
+                'remaining_findings': [f for f in self.c.parse_findings((self.folder / 'findings.md').read_text()) if f.get('status') in ('open', 'escalated')] if (self.folder / 'findings.md').is_file() else [],
+                'note': 'Stop and report remaining findings to the owner; no commit or next task.'
+                        if item['status'] == 'blocked' else note}
+
+    def resume(self, ident: str, owner_instruction=None, **_):
+        if not owner_instruction or not owner_instruction.strip():
+            raise Blocked('resume requires the explicit owner instruction; never invoke it automatically')
+        if self.execution['active'] != ident or self.items[ident]['status'] != 'blocked':
+            raise Blocked('only the active blocked task can resume')
+        item = self.items[ident]
+        if git(self.root, 'rev-parse', 'HEAD').strip() != item['head']:
+            raise Blocked('HEAD changed; reconcile preserved work before resuming')
+        self._protect(item)
+        item.setdefault('resumptions', []).append({'instruction': owner_instruction, 'at': now(), 'after_cycle': item['cycle']})
+        item['cycle'] += 1; item['status'] = 'fixing'
+        item.pop('packet', None)
+        self.save()
+        self.log(f'{ident} resumed only on owner instruction: {owner_instruction}')
+        return {'status': 'PASS', 'task': ident, 'cycle': item['cycle']}
+
+    def add(self, ident=None, request=None, **_):
+        if not request or not request.strip():
+            raise Blocked('TOR requires the owner request text')
+        if any(i.get('status') == 'blocked' for i in self.items.values()):
+            raise Blocked('resolve the stopped task with the owner before adding work')
+        active = self.execution['active']
+        if active and self._row(active)['kind'] == 'final':
+            raise Blocked('finish the active final task first; a later request reopens a fresh final review')
+        number = max((int(r['id'][3:]) for r in self.queue if r['id'].startswith('TOR')), default=0) + 1
+        if number > 999:
+            raise Blocked('TOR numbering exhausted; start a new change')
+        task = f'TOR{number:03d}'
+        title = ' '.join(request.split())
+        lines = (self.folder / 'tasks.md').read_text().splitlines()
+        if self.state['phase'] == 'done':
+            final_number = max(int(r['id'][1:]) for r in self.queue if not r['id'].startswith('TOR')) + 1
+            if final_number > 999:
+                raise Blocked('task numbering exhausted; start a new change')
+            lines += [f'- [ ] {task} {title} — check: auto',
+                      f'- [ ] T{final_number:03d} [FINAL] Review the cumulative result — check: auto']
+            self.state['phase'] = 'tasks'
+        else:
+            following = next(r['id'] for r in self.queue
+                             if not r['done'] and not r['id'].startswith('TOR') and r['id'] not in (self.execution['active'], 'T000'))
+            at = next(i for i, line in enumerate(lines) if re.match(r'^- \[ \] ' + following + r'\b', line))
+            lines.insert(at, f'- [ ] {task} {title} — check: auto')
+        atomic_write(self.folder / 'tasks.md', '\n'.join(lines) + '\n')
+        self.save(); self.log(f'{task}: owner request: {title}')
+        return {'status': 'PASS', 'task': task, 'request': title}
+
+    def _staged_records(self):
+        prefix = self.folder.relative_to(self.root).as_posix() + '/'
+        staged = git(self.root, 'diff', '--cached', '--name-only').splitlines()
+        if any(self.c.is_record(p) and not p.startswith(prefix) for p in staged):
+            raise Blocked('preserve unrelated staged records before completing this task')
+
+    def complete(self, ident: str, **_):
+        self._staged_records()
+        if ident in self.pending_commit:
+            row, item = self._row(ident), self.items[ident]
+            item['status'] = 'reviewed'
+            self.execution['active'] = ident
+        row, item = self._current(ident)
+        self._evidence(row, item)
+        last = item['reviews'][-1] if item['reviews'] else {}
+        if (item['status'] != 'reviewed' or last.get('result') != 'clean'
+                or last.get('fingerprint') != self.c.fingerprint(self.root)
+                or last.get('identity') != self._identity(row)):
+            raise Blocked('a clean review of the current task/code is required before commit')
+        self._findings(ident, row['kind'] == 'final')
+        if row['kind'] == 'final' and self.state['size'] != 'small':
+            problems = self.c.assurance_problems(self.root, self.folder, 'ship')
+            if problems:
+                raise Blocked('\n'.join(problems))
+        item['status'] = 'done'; item['declaration'] = row['text']
+        item['commit_parent'] = item['head']; item.setdefault('transaction', uuid.uuid4().hex)
+        self.execution['active'] = None
+        if row['kind'] == 'final':
+            self.state['phase'] = 'done'
+        text = (self.folder / 'tasks.md').read_text()
+        tasks = re.sub(r'^- \[ \] ' + re.escape(ident) + r'\b', '- [x] ' + ident, text, flags=re.M)
+        log = (self.folder / 'log.md').read_text() + f'\n- {now()}: {ident} reviewed and ready; implementation, fixes and records belong in one Git commit.\n'
+        item['record_hashes'] = self._record_hashes({'tasks.md': tasks.encode(), 'log.md': log.encode()})
+        self.save()
+        atomic_write(self.folder / 'tasks.md', tasks)
+        atomic_write(self.folder / 'log.md', log)
+        return {'status': 'READY_TO_COMMIT', 'task': ident,
+                'note': 'Stage explicit task paths and records, commit once, then task status verifies the committed code.'}
+
+    def planning_commit(self, ident=None, message=None, **_):
+        self._staged_records()
+        if self.state['size'] == 'small' or self.state.get('planning'):
+            raise Blocked('planning is absent or already checkpointed')
+        if self.state['phase'] not in ('plan', 'tasks'):
+            raise Blocked('finish planning before its single commit')
+        problems = self.c._legacy_lint_change(self.root, self.folder, 'build')
+        if problems:
+            raise Blocked('\n'.join(problems))
+        tracked = [p for p in self.c.changed_paths(self.root) if not self.c.is_record(p)]
+        if domains_for(self.c.load_config(self.root), tracked) or any(
+                not self.c.is_record(p) for p in git(self.root, 'diff', '--name-only', 'HEAD').splitlines()):
+            raise Blocked('planning commit must not absorb source changes')
+        nonce = uuid.uuid4().hex
+        self.state['planning'] = {'parent': git(self.root, 'rev-parse', 'HEAD').strip(), 'transaction': nonce,
+                                  'record_hashes': self._record_hashes()}
+        self.state['phase'] = 'tasks'
+        self.save()
+        return {'status': 'READY_TO_COMMIT', 'note': 'Commit all planning artifacts together once using ordinary Git.'}
+
+
+    def _record_hashes(self, overrides=None):
+        content = {path.relative_to(self.folder).as_posix(): path.read_bytes()
+                   for path in self.folder.rglob('*') if path.is_file() and path.name != 'state.json'}
+        content.update(overrides or {})
+        return {name: hashlib.sha256(data).hexdigest() for name, data in content.items()}
