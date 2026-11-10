@@ -19,19 +19,23 @@ It replaces the phase gates for that change. The owner decides when planning is 
 
 A task never gets a commit while it is incomplete.
 
-## After the last task
+## Final review task (always last)
 
-- Full review of the whole change: one fresh read-only review of every commit from the first task
-  to HEAD (`git log` from the planning base, and `git diff <base>..HEAD`). It checks that the tasks
-  together do what the spec asks, that nothing from one task breaks another, and that no leftovers or
-  unplanned changes remain. Record the result and the reviewed commit hash in `log.md`.
-- If the full review finds problems: fix all of them in one new commit, with the doc changes it needs.
-  If the fixes are too many for one commit, add a mandatory task `Last review` to `tasks.md` and put
-  the fixes in its own commit. After any fix, re-check the affected tasks' `check:` commands.
-- Build the APK (`scripts/build_android.sh`) from the final commit and audit it
+- When the planned tasks are done, add one mandatory task at the end of `tasks.md`:
+  `- [ ] T### Final review: review every change from the first task to HEAD (spec met, tasks
+  work together, no leftovers) — check: the review is recorded in log.md with the reviewed hash`.
+- Run it through the same loop as any task: review in a fresh read-only context, fix every
+  problem inside this task before committing, then tick it and make one commit with the code and
+  docs it changed. Its check is the recorded review.
+- If a fix needs a change to an earlier task's area, make that change inside this final task.
+  Do not reopen earlier commits.
+
+## After the final review
+
+- Build the APK (`scripts/build_android.sh`) from that final commit and audit it
   (`scripts/check_backend_apk.py`). Record the sha256 in `log.md`.
 - The owner tests the APK on the device and reports problems. Each reported problem is
-  a new task, handled by the same loop.
+  a new task, handled by the same loop, and it gets its own final review task.
 
 ## Not required by this loop
 
