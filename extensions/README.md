@@ -5,6 +5,14 @@ from Mornye-Extension. **The application does not load these files.** Its existi
 extension settings, store, network features, native lyrics providers and player
 are unchanged. This import neither installs an updater nor publishes packages.
 
+## Native Rust + JSON migration
+
+`config/` now contains the bounded native lyrics configuration and schema. The
+Backend reads bundled defaults and can load verified cached settings on restart.
+Artwork ports, production trust provisioning and an in-app updater are **not yet
+complete**; see [config/README.md](config/README.md) for exact limits. The JavaScript
+source subsets below remain inactive reference code.
+
 ## Included code
 
 - Artist-artwork dependency subsets from Amazon, Apple Music, Beatport, Bugs Music,

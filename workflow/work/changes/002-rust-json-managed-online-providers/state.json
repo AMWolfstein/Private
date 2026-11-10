@@ -1,0 +1,69 @@
+{
+  "id": "002-rust-json-managed-online-providers",
+  "title": "Rust JSON managed online providers",
+  "size": "architecture",
+  "phase": "build",
+  "base": "933e0bd6fbc00899372a815a74ab6fffc3a5fe73",
+  "created": "2026-11-10T12:52:49+00:00",
+  "rounds": [
+    {
+      "stage": "design",
+      "round": 1,
+      "result": "dirty",
+      "reviewer": "goldfish-reader+design-critic",
+      "fingerprint": "23b06984ab57d4972f53801dee823fd109f9197d6c6e1e0516059368a0b7622a",
+      "assurance": "23b06984ab57d4972f53801dee823fd109f9197d6c6e1e0516059368a0b7622a",
+      "at": "2026-11-10T12:59:49+00:00"
+    },
+    {
+      "stage": "design",
+      "round": 2,
+      "result": "clean",
+      "reviewer": "goldfish-reader+design-critic",
+      "fingerprint": "23b06984ab57d4972f53801dee823fd109f9197d6c6e1e0516059368a0b7622a",
+      "assurance": "23b06984ab57d4972f53801dee823fd109f9197d6c6e1e0516059368a0b7622a",
+      "at": "2026-11-10T12:59:49+00:00"
+    },
+    {
+      "stage": "design",
+      "round": 3,
+      "result": "clean",
+      "reviewer": "goldfish-reader+design-critic",
+      "fingerprint": "ab7f939b28b59ecb3eebf774ab01f886c319ba2d718a640b367b77a626d1930f",
+      "assurance": "ab7f939b28b59ecb3eebf774ab01f886c319ba2d718a640b367b77a626d1930f",
+      "at": "2026-11-10T13:01:24+00:00"
+    },
+    {
+      "stage": "code",
+      "round": 1,
+      "result": "clean",
+      "reviewer": "code-reviewer+storage-reviewer",
+      "fingerprint": "a20ac43ceaf9e90da6c9ce8376b8af861cd93143",
+      "assurance": "cc9cdb12730a71d55c27417fbe48f05f49181687c449637cd8b9b0f0b7db46fa",
+      "at": "2026-11-10T13:34:03+00:00",
+      "map": {
+        "digest": "8a8a837c1d78172cb658638d5919470212d27eff1d10034199c0b265f73b03af",
+        "corpus": "3c42abcae0d6dae1a9b4874b73718fab23bfc8577248335e4723462a005ee55f",
+        "structure": "codegraph"
+      }
+    }
+  ],
+  "history": [
+    {
+      "phase": "spec",
+      "at": "2026-11-10T12:52:49+00:00"
+    },
+    {
+      "phase": "plan",
+      "at": "2026-11-10T12:55:29+00:00"
+    },
+    {
+      "phase": "tasks",
+      "at": "2026-11-10T13:02:39+00:00"
+    },
+    {
+      "phase": "build",
+      "at": "2026-11-10T13:02:39+00:00"
+    }
+  ]
+}

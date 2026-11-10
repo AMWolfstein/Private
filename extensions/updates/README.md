@@ -20,9 +20,9 @@ this addition stay inside `extensions/`, so no launcher was installed outside it
 - Opens a **draft PR** targeting `extension-system`. It leaves an existing open
   upstream-review PR alone and does not rewrite or reopen an existing proposal branch.
 
-**It does not modify the provider implementations.** Rust changes still need manual
-porting to JavaScript, and extracted JavaScript changes still need dependency and
-permission review. No downloaded upstream code or tests are executed. Merging a
+**It does not modify the provider implementations.** Rust changes still need native review and adaptation to the supported JSON schema;
+upstream JavaScript changes must be manually ported to Rust with fixture tests.
+Extracted JavaScript references still need dependency and permission review. No downloaded upstream code or tests are executed. Merging a
 report-only PR acknowledges reviewed upstream versions, not completed source updates;
 apply and validate relevant changes in the PR before merging, or close it to keep the
 old baseline. No imported source pins or native-port origin locks are advanced by
