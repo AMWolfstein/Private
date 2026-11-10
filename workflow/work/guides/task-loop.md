@@ -27,6 +27,14 @@ It replaces the phase gates for that change. The owner decides when planning is 
 
 A task is never committed while it is incomplete.
 
+## Owner asks for something new
+
+- If the owner asks for a change that is not in the current task, add a new task to `tasks.md`
+  at the end, before the Final review task. Give it the next T### number and its `check:` command.
+- Run it through the same loop: change, check, review, fix inside the task, then tick it and make
+  one commit with the code and docs it changed. That commit holds only this new task.
+- The Final review task stays last.
+
 ## Escalation
 
 If a review finds a problem that needs the owner's decision (a choice between two designs, a
