@@ -37,3 +37,5 @@ independent-review gate open. Markdown prompts do not themselves restrict tools 
 
 Optional hook integration is agent-specific (see workflow/README.md); the workflow requires no provider configuration.
 Do not run commands rejected by `work.py hook-bash`. Hooks only enforce this if explicitly integrated.
+
+Owner override for planned changes: when a change's plan is written and its tasks are listed in `tasks.md`, follow `workflow/work/guides/task-loop.md` instead of the phase gates. One task at a time: change, check, review, one commit per task, fix problems in a new commit, then the APK after the last task.
