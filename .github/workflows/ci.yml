@@ -35,6 +35,8 @@ jobs:
           filters: |
             dart:
               - 'third_party/audio_service/**'
+              - 'third_party/audioplayers_android/**'
+              - 'third_party/ffmpeg_kit_flutter_new_audio/**'
               - 'lib/**'
               - 'test/**'
               - 'integration_test/**'
@@ -58,6 +60,8 @@ jobs:
               - '.github/workflows/ci.yml'
             android:
               - 'third_party/audio_service/**'
+              - 'third_party/audioplayers_android/**'
+              - 'third_party/ffmpeg_kit_flutter_new_audio/**'
               - 'android/**'
               - 'rust_backend/**'
               - 'scripts/build_android.sh'

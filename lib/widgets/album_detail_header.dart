@@ -847,7 +847,6 @@ class HeaderCircleButton extends ConsumerWidget {
         icon: AppIcon(mornyeIconFor(icon), size: iconSize),
         style: IconButton.styleFrom(
           minimumSize: Size.square(buttonSize ?? 44),
-          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
           foregroundColor: iconColor ?? scheme.onSurface,
         ),
       );
@@ -857,6 +856,9 @@ class HeaderCircleButton extends ConsumerWidget {
         return Tooltip(
           message: tooltip,
           child: SizedBox.square(
+            dimension: math.max(buttonSize ?? 44, 48),
+            child: Center(
+              child: SizedBox.square(
             dimension: buttonSize ?? 44,
             child: MornyeGlassPress(
               radius: (buttonSize ?? 44) / 2,
@@ -876,6 +878,8 @@ class HeaderCircleButton extends ConsumerWidget {
                       ? scheme.onSurfaceVariant
                       : iconColor ?? scheme.primary,
                 ),
+              ),
+            ),
               ),
             ),
           ),

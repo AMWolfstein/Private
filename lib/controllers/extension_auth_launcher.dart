@@ -505,8 +505,8 @@ Future<void> _completeSessionGrantFromClipboard(
 }
 
 /// Opens an extension auth/verification page using the browser preference.
-/// the mornye:// callback even when the app's URL scheme is not registered
-/// with the OS (sideload containers like LiveContainer).
+/// The page returns through the mornye:// callback, which the app's URL scheme
+/// handles on Android.
 Future<bool> launchExtensionAuthUrl(Uri uri, {required String browserMode}) {
   return _launchVerificationUrl(uri, browserMode);
 }
@@ -520,8 +520,8 @@ Future<bool> _launchVerificationUrl(
   if (cancellationSignal != null) {
     unawaited(cancellationSignal.then((_) => cancelled = true));
   }
-  // opens the page and returns through the registered mornye:// scheme
-  // (the deep-link handler hands the callback to the backend).
+  // The page returns through the mornye:// scheme. The deep-link handler hands
+  // the callback to the backend.
 
   final preferInApp = browserMode.trim().toLowerCase() == 'in_app_first';
   final firstMode = preferInApp

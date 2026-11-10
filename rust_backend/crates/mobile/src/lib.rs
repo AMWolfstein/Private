@@ -1,5 +1,4 @@
-//! UniFFI mobile API. This crate is the only backend and routes the app on
-//! Android.
+//! UniFFI mobile API. This crate is the only backend and routes the app on Android.
 //!
 //! Comments that mention "Go" describe the retired Go backend, whose observable
 //! behavior (wire formats, parsing quirks, file layouts) remains a compatibility

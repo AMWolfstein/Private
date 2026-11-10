@@ -530,7 +530,10 @@ impl Session {
             .chain(self.feedback_slot.iter())
             .any(|s| s.pending)
         {
-            let _ = self.events();
+            // Back off while libusb keeps reporting errors, instead of spinning.
+            if self.events().is_err() {
+                std::thread::sleep(std::time::Duration::from_millis(5));
+            }
         }
     }
     fn run(&mut self, shared: &Shared) -> Result<(), String> {

@@ -26,13 +26,10 @@ class TrackCollectionQuickActions extends ConsumerWidget {
   final Track track;
   final bool hasLocalPlaybackCandidate;
 
-  final bool dense;
-
   const TrackCollectionQuickActions({
     super.key,
     required this.track,
     this.hasLocalPlaybackCandidate = false,
-    this.dense = false,
   });
 
   /// Track options: a bottom sheet (Material) or popover (Mornye) on phones
@@ -84,14 +81,7 @@ class TrackCollectionQuickActions extends ConsumerWidget {
         position: contextMenuPositionBelow(context),
       ),
       padding: EdgeInsets.zero,
-      constraints: dense
-          ? const BoxConstraints(minWidth: 32, minHeight: 32)
-          : const BoxConstraints(minWidth: 48, minHeight: 48),
-      style: dense
-          ? IconButton.styleFrom(
-              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-            )
-          : null,
+      constraints: const BoxConstraints(minWidth: 48, minHeight: 48),
     );
   }
 }

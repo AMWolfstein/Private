@@ -639,11 +639,9 @@ impl StagedFile {
     }
 
     /// Publishes a file of a cache that can be regenerated and leaves the
-    /// folder flush to `batch`. On Apple, `sync_all` is F_FULLFSYNC, which
-    /// drains the drive cache for every file. fsync(2) still hands the whole
-    /// file to the drive before its name appears, and the batch's single
-    /// F_FULLFSYNC makes everything before it as durable as `publish`. Other
-    /// platforms publish as `publish` does.
+    /// folder flush to `batch`. Each file is synced before its name appears,
+    /// and the batch's final folder sync makes everything before it as durable
+    /// as `publish`.
     pub fn publish_batched(
         self,
         batch: &SyncBatch,

@@ -6822,10 +6822,6 @@
   "@nowPlayingNoLyricsOnline": {
     "description": "Empty state after an online lyrics search for the playing track found nothing"
   },
-  "nowPlayingTranslateLyrics": "Translate Lyrics",
-  "@nowPlayingTranslateLyrics": {
-    "description": "Player lyrics menu action that translates the current lyrics with the user's AI provider"
-  },
   "nowPlayingCancelTranslation": "Cancel Translation",
   "@nowPlayingCancelTranslation": {
     "description": "Player lyrics menu action that stops an AI lyrics translation in progress"

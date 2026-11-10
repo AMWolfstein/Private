@@ -272,7 +272,8 @@ class _MainShellState extends ConsumerState<MainShell>
     });
   }
 
-  /// Restores the last session, then its song's cover from the file once
+  /// Restores the last session, then its song's cover from the file once it is
+  /// available.
   Future<void> _restorePlayback() async {
     final runtime = ref.read(musicPlayerRuntimeProvider);
     try {

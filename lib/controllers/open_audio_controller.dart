@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -57,18 +56,13 @@ class OpenAudioController extends Notifier<bool> {
   }
 
   Future<void> pickFolder() async {
-    if (Platform.isAndroid) {
-      final folder = await PlatformBridge.pickSafTree();
-      if (!ref.mounted || folder == null) return;
-      final uri = folder['tree_uri'];
-      if (uri is! String) return;
-      final files = await PlatformBridge.listSafAudioFiles(uri);
-      if (!ref.mounted) return;
-      await open(files.map(OpenAudioFile.parse).whereType<OpenAudioFile>());
-      return;
-    }
-    final path = await FilePicker.getDirectoryPath();
-    if (ref.mounted && path != null) await open([OpenAudioFile(path)]);
+    final folder = await PlatformBridge.pickSafTree();
+    if (!ref.mounted || folder == null) return;
+    final uri = folder['tree_uri'];
+    if (uri is! String) return;
+    final files = await PlatformBridge.listSafAudioFiles(uri);
+    if (!ref.mounted) return;
+    await open(files.map(OpenAudioFile.parse).whereType<OpenAudioFile>());
   }
 
   Future<void> open(Iterable<OpenAudioFile> inputs) async {

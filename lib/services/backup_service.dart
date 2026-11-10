@@ -299,7 +299,8 @@ class BackupService {
       } else {
         await _encodeArchiveInBackground(partFile.path, archiveFiles);
       }
-      if (await output.exists()) await output.delete();
+      // rename replaces an existing backup atomically on Android, so the old
+      // file survives until the new one is complete.
       await partFile.rename(output.path);
       _log.i('Streaming backup written to ${output.path}');
       return output;

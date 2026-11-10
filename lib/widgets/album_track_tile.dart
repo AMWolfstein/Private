@@ -75,13 +75,10 @@ class AlbumTrackPlayButton extends StatelessWidget {
     super.key,
     required this.isPlaying,
     required this.onPlay,
-    this.dense = false,
   });
 
   final bool isPlaying;
   final VoidCallback? onPlay;
-
-  final bool dense;
 
   @override
   Widget build(BuildContext context) {
@@ -98,12 +95,9 @@ class AlbumTrackPlayButton extends StatelessWidget {
         color: context.isMornye
             ? colorScheme.primary
             : colorScheme.onSecondaryContainer,
-        size: dense ? 18 : null,
       ),
       style: IconButton.styleFrom(
-        minimumSize: Size.square(dense ? 32 : context.tokens.minTouchTarget),
-        padding: dense ? EdgeInsets.zero : null,
-        tapTargetSize: dense ? MaterialTapTargetSize.shrinkWrap : null,
+        minimumSize: Size.square(context.tokens.minTouchTarget),
         backgroundColor: context.isMornye
             ? Colors.transparent
             : colorScheme.secondaryContainer,
