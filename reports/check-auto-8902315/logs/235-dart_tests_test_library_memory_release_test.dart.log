@@ -1,0 +1,4 @@
+00:00 +0: loading /workspace/Private/test/library_memory_release_test.dart
+00:00 +0: Library pages and old filter results are collectible after closing
+  Skip: Requires flutter test --enable-vmservice
+00:00 +0 ~1: All tests skipped.

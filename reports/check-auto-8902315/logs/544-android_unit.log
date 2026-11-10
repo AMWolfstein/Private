@@ -1,0 +1,1039 @@
+Picked up JAVA_TOOL_OPTIONS:  -Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts -Dhttps.proxyHost=proxy -Dhttps.proxyPort=8080 -Dhttp.proxyHost=proxy -Dhttp.proxyPort=8080 -Dhttp.nonProxyHosts=localhost|127.*|[::1]
+WARNING: A restricted method in java.lang.System has been called
+WARNING: java.lang.System::load has been called by net.rubygrapefruit.platform.internal.NativeLibraryLoader in an unnamed module (file:/workspace/.toolchains/gradle/wrapper/dists/gradle-9.8.2-all/5xecsnx1v1ypz0za8yyzm2yym/gradle-9.8.2/lib/native-platform-0.22-milestone-29.jar)
+WARNING: Use --enable-native-access=ALL-UNNAMED to avoid a warning for callers in this module
+WARNING: Restricted methods will be blocked in a future release unless native access is enabled
+
+Starting a Gradle Daemon (subsequent builds will be faster)
+> Task :gradle:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :gradle:compileKotlin UP-TO-DATE
+> Task :gradle:compileJava NO-SOURCE
+> Task :gradle:compileGroovy NO-SOURCE
+> Task :gradle:pluginDescriptors UP-TO-DATE
+> Task :gradle:processResources UP-TO-DATE
+> Task :gradle:classes UP-TO-DATE
+> Task :gradle:jar UP-TO-DATE
+
+> Configure project :app
+WARNING: The option setting 'android.builtInKotlin=false' is deprecated.
+The current default is 'true'.
+It will be removed in version 10.0 of the Android Gradle plugin.
+Add android.sync.suppressAgpWarnings=UNSUPPORTED_PROJECT_OPTION_USE to the gradle.properties file to suppress this warning.
+WARNING: The option setting 'android.newDsl=false' is deprecated.
+The current default is 'true'.
+It will be removed in version 10.0 of the Android Gradle plugin.
+Add android.sync.suppressAgpWarnings=UNSUPPORTED_PROJECT_OPTION_USE to the gradle.properties file to suppress this warning.
+WARNING: API 'applicationVariants' is obsolete and has been replaced with 'AndroidComponentsExtension'.
+It will be removed in version 10.0 of the Android Gradle plugin.
+The legacy variant API is disabled by default in AGP 9.0, but can be re-enabled by adding 
+    android.newDsl=false
+to this project's gradle.properties file.
+For more information, see http://developer.android.com/build/r/new-dsl.
+
+To determine what is calling applicationVariants, use -Pandroid.debug.obsoleteApi=true on the command line to display more information.
+Add android.sync.suppressAgpWarnings=DEPRECATED_DSL to the gradle.properties file to suppress this warning.
+WARNING: API 'testVariants' is obsolete and has been replaced with 'AndroidComponentsExtension'.
+It will be removed in version 10.0 of the Android Gradle plugin.
+The legacy variant API is disabled by default in AGP 9.0, but can be re-enabled by adding 
+    android.newDsl=false
+to this project's gradle.properties file.
+For more information, see http://developer.android.com/build/r/new-dsl.
+
+To determine what is calling testVariants, use -Pandroid.debug.obsoleteApi=true on the command line to display more information.
+Add android.sync.suppressAgpWarnings=DEPRECATED_DSL to the gradle.properties file to suppress this warning.
+WARNING: API 'unitTestVariants' is obsolete and has been replaced with 'AndroidComponentsExtension'.
+It will be removed in version 10.0 of the Android Gradle plugin.
+The legacy variant API is disabled by default in AGP 9.0, but can be re-enabled by adding 
+    android.newDsl=false
+to this project's gradle.properties file.
+For more information, see http://developer.android.com/build/r/new-dsl.
+
+To determine what is calling unitTestVariants, use -Pandroid.debug.obsoleteApi=true on the command line to display more information.
+Add android.sync.suppressAgpWarnings=DEPRECATED_DSL to the gradle.properties file to suppress this warning.
+w: [33m[1m⚠️ Deprecated 'org.jetbrains.kotlin.android' plugin usage[0m[0m
+The 'org.jetbrains.kotlin.android' plugin in project ':app' is no longer required for Kotlin support since AGP 9.0.
+[32m[1mSolution:[0m[0m
+[32m[3mRemove both `android.builtInKotlin=true` and `android.newDsl=false` from `gradle.properties`, then migrate to built-in Kotlin.[0m[0m
+[36mSee [0m[34mhttps://kotl.in/gradle/agp-built-in-kotlin[0m[36m for more details.[0m
+
+
+> Configure project :android_file_picker
+WARNING: API 'libraryVariants' is obsolete and has been replaced with 'AndroidComponentsExtension'.
+It will be removed in version 10.0 of the Android Gradle plugin.
+The legacy variant API is disabled by default in AGP 9.0, but can be re-enabled by adding 
+    android.newDsl=false
+to this project's gradle.properties file.
+For more information, see http://developer.android.com/build/r/new-dsl.
+
+To determine what is calling libraryVariants, use -Pandroid.debug.obsoleteApi=true on the command line to display more information.
+Add android.sync.suppressAgpWarnings=DEPRECATED_DSL to the gradle.properties file to suppress this warning.
+w: [33m[1m⚠️ Deprecated 'org.jetbrains.kotlin.android' plugin usage[0m[0m
+The 'org.jetbrains.kotlin.android' plugin in project ':android_file_picker' is no longer required for Kotlin support since AGP 9.0.
+[32m[1mSolution:[0m[0m
+[32m[3mRemove both `android.builtInKotlin=true` and `android.newDsl=false` from `gradle.properties`, then migrate to built-in Kotlin.[0m[0m
+[36mSee [0m[34mhttps://kotl.in/gradle/agp-built-in-kotlin[0m[36m for more details.[0m
+
+
+> Configure project :app_links
+w: [33m[1m⚠️ Deprecated 'org.jetbrains.kotlin.android' plugin usage[0m[0m
+The 'org.jetbrains.kotlin.android' plugin in project ':app_links' is no longer required for Kotlin support since AGP 9.0.
+[32m[1mSolution:[0m[0m
+[32m[3mRemove both `android.builtInKotlin=true` and `android.newDsl=false` from `gradle.properties`, then migrate to built-in Kotlin.[0m[0m
+[36mSee [0m[34mhttps://kotl.in/gradle/agp-built-in-kotlin[0m[36m for more details.[0m
+
+
+> Configure project :audio_service
+w: [33m[1m⚠️ Deprecated 'org.jetbrains.kotlin.android' plugin usage[0m[0m
+The 'org.jetbrains.kotlin.android' plugin in project ':audio_service' is no longer required for Kotlin support since AGP 9.0.
+[32m[1mSolution:[0m[0m
+[32m[3mRemove both `android.builtInKotlin=true` and `android.newDsl=false` from `gradle.properties`, then migrate to built-in Kotlin.[0m[0m
+[36mSee [0m[34mhttps://kotl.in/gradle/agp-built-in-kotlin[0m[36m for more details.[0m
+
+
+> Configure project :audio_session
+w: [33m[1m⚠️ Deprecated 'org.jetbrains.kotlin.android' plugin usage[0m[0m
+The 'org.jetbrains.kotlin.android' plugin in project ':audio_session' is no longer required for Kotlin support since AGP 9.0.
+[32m[1mSolution:[0m[0m
+[32m[3mRemove both `android.builtInKotlin=true` and `android.newDsl=false` from `gradle.properties`, then migrate to built-in Kotlin.[0m[0m
+[36mSee [0m[34mhttps://kotl.in/gradle/agp-built-in-kotlin[0m[36m for more details.[0m
+
+
+> Configure project :audioplayers_android
+w: [33m[1m⚠️ Deprecated 'org.jetbrains.kotlin.android' plugin usage[0m[0m
+The 'org.jetbrains.kotlin.android' plugin in project ':audioplayers_android' is no longer required for Kotlin support since AGP 9.0.
+[32m[1mSolution:[0m[0m
+[32m[3mRemove both `android.builtInKotlin=true` and `android.newDsl=false` from `gradle.properties`, then migrate to built-in Kotlin.[0m[0m
+[36mSee [0m[34mhttps://kotl.in/gradle/agp-built-in-kotlin[0m[36m for more details.[0m
+
+
+> Configure project :connectivity_plus
+w: [33m[1m⚠️ Deprecated 'org.jetbrains.kotlin.android' plugin usage[0m[0m
+The 'org.jetbrains.kotlin.android' plugin in project ':connectivity_plus' is no longer required for Kotlin support since AGP 9.0.
+[32m[1mSolution:[0m[0m
+[32m[3mRemove both `android.builtInKotlin=true` and `android.newDsl=false` from `gradle.properties`, then migrate to built-in Kotlin.[0m[0m
+[36mSee [0m[34mhttps://kotl.in/gradle/agp-built-in-kotlin[0m[36m for more details.[0m
+
+
+> Configure project :device_info_plus
+w: [33m[1m⚠️ Deprecated 'org.jetbrains.kotlin.android' plugin usage[0m[0m
+The 'org.jetbrains.kotlin.android' plugin in project ':device_info_plus' is no longer required for Kotlin support since AGP 9.0.
+[32m[1mSolution:[0m[0m
+[32m[3mRemove both `android.builtInKotlin=true` and `android.newDsl=false` from `gradle.properties`, then migrate to built-in Kotlin.[0m[0m
+[36mSee [0m[34mhttps://kotl.in/gradle/agp-built-in-kotlin[0m[36m for more details.[0m
+
+
+> Configure project :dynamic_color
+w: [33m[1m⚠️ Deprecated 'org.jetbrains.kotlin.android' plugin usage[0m[0m
+The 'org.jetbrains.kotlin.android' plugin in project ':dynamic_color' is no longer required for Kotlin support since AGP 9.0.
+[32m[1mSolution:[0m[0m
+[32m[3mRemove both `android.builtInKotlin=true` and `android.newDsl=false` from `gradle.properties`, then migrate to built-in Kotlin.[0m[0m
+[36mSee [0m[34mhttps://kotl.in/gradle/agp-built-in-kotlin[0m[36m for more details.[0m
+
+
+> Configure project :ffmpeg_kit_flutter_new_audio
+w: [33m[1m⚠️ Deprecated 'org.jetbrains.kotlin.android' plugin usage[0m[0m
+The 'org.jetbrains.kotlin.android' plugin in project ':ffmpeg_kit_flutter_new_audio' is no longer required for Kotlin support since AGP 9.0.
+[32m[1mSolution:[0m[0m
+[32m[3mRemove both `android.builtInKotlin=true` and `android.newDsl=false` from `gradle.properties`, then migrate to built-in Kotlin.[0m[0m
+[36mSee [0m[34mhttps://kotl.in/gradle/agp-built-in-kotlin[0m[36m for more details.[0m
+
+
+> Configure project :flutter_local_notifications
+w: [33m[1m⚠️ Deprecated 'org.jetbrains.kotlin.android' plugin usage[0m[0m
+The 'org.jetbrains.kotlin.android' plugin in project ':flutter_local_notifications' is no longer required for Kotlin support since AGP 9.0.
+[32m[1mSolution:[0m[0m
+[32m[3mRemove both `android.builtInKotlin=true` and `android.newDsl=false` from `gradle.properties`, then migrate to built-in Kotlin.[0m[0m
+[36mSee [0m[34mhttps://kotl.in/gradle/agp-built-in-kotlin[0m[36m for more details.[0m
+
+
+> Configure project :flutter_secure_storage
+w: [33m[1m⚠️ Deprecated 'org.jetbrains.kotlin.android' plugin usage[0m[0m
+The 'org.jetbrains.kotlin.android' plugin in project ':flutter_secure_storage' is no longer required for Kotlin support since AGP 9.0.
+[32m[1mSolution:[0m[0m
+[32m[3mRemove both `android.builtInKotlin=true` and `android.newDsl=false` from `gradle.properties`, then migrate to built-in Kotlin.[0m[0m
+[36mSee [0m[34mhttps://kotl.in/gradle/agp-built-in-kotlin[0m[36m for more details.[0m
+
+
+> Configure project :integration_test
+w: [33m[1m⚠️ Deprecated 'org.jetbrains.kotlin.android' plugin usage[0m[0m
+The 'org.jetbrains.kotlin.android' plugin in project ':integration_test' is no longer required for Kotlin support since AGP 9.0.
+[32m[1mSolution:[0m[0m
+[32m[3mRemove both `android.builtInKotlin=true` and `android.newDsl=false` from `gradle.properties`, then migrate to built-in Kotlin.[0m[0m
+[36mSee [0m[34mhttps://kotl.in/gradle/agp-built-in-kotlin[0m[36m for more details.[0m
+
+
+> Configure project :jni
+w: [33m[1m⚠️ Deprecated 'org.jetbrains.kotlin.android' plugin usage[0m[0m
+The 'org.jetbrains.kotlin.android' plugin in project ':jni' is no longer required for Kotlin support since AGP 9.0.
+[32m[1mSolution:[0m[0m
+[32m[3mRemove both `android.builtInKotlin=true` and `android.newDsl=false` from `gradle.properties`, then migrate to built-in Kotlin.[0m[0m
+[36mSee [0m[34mhttps://kotl.in/gradle/agp-built-in-kotlin[0m[36m for more details.[0m
+
+
+> Configure project :jni_flutter
+w: [33m[1m⚠️ Deprecated 'org.jetbrains.kotlin.android' plugin usage[0m[0m
+The 'org.jetbrains.kotlin.android' plugin in project ':jni_flutter' is no longer required for Kotlin support since AGP 9.0.
+[32m[1mSolution:[0m[0m
+[32m[3mRemove both `android.builtInKotlin=true` and `android.newDsl=false` from `gradle.properties`, then migrate to built-in Kotlin.[0m[0m
+[36mSee [0m[34mhttps://kotl.in/gradle/agp-built-in-kotlin[0m[36m for more details.[0m
+
+
+> Configure project :open_filex
+w: [33m[1m⚠️ Deprecated 'org.jetbrains.kotlin.android' plugin usage[0m[0m
+The 'org.jetbrains.kotlin.android' plugin in project ':open_filex' is no longer required for Kotlin support since AGP 9.0.
+[32m[1mSolution:[0m[0m
+[32m[3mRemove both `android.builtInKotlin=true` and `android.newDsl=false` from `gradle.properties`, then migrate to built-in Kotlin.[0m[0m
+[36mSee [0m[34mhttps://kotl.in/gradle/agp-built-in-kotlin[0m[36m for more details.[0m
+
+
+> Configure project :permission_handler_android
+w: [33m[1m⚠️ Deprecated 'org.jetbrains.kotlin.android' plugin usage[0m[0m
+The 'org.jetbrains.kotlin.android' plugin in project ':permission_handler_android' is no longer required for Kotlin support since AGP 9.0.
+[32m[1mSolution:[0m[0m
+[32m[3mRemove both `android.builtInKotlin=true` and `android.newDsl=false` from `gradle.properties`, then migrate to built-in Kotlin.[0m[0m
+[36mSee [0m[34mhttps://kotl.in/gradle/agp-built-in-kotlin[0m[36m for more details.[0m
+
+
+> Configure project :receive_sharing_intent
+w: [33m[1m⚠️ Deprecated 'org.jetbrains.kotlin.android' plugin usage[0m[0m
+The 'org.jetbrains.kotlin.android' plugin in project ':receive_sharing_intent' is no longer required for Kotlin support since AGP 9.0.
+[32m[1mSolution:[0m[0m
+[32m[3mRemove both `android.builtInKotlin=true` and `android.newDsl=false` from `gradle.properties`, then migrate to built-in Kotlin.[0m[0m
+[36mSee [0m[34mhttps://kotl.in/gradle/agp-built-in-kotlin[0m[36m for more details.[0m
+
+
+> Configure project :record_android
+w: [33m[1m⚠️ Deprecated 'org.jetbrains.kotlin.android' plugin usage[0m[0m
+The 'org.jetbrains.kotlin.android' plugin in project ':record_android' is no longer required for Kotlin support since AGP 9.0.
+[32m[1mSolution:[0m[0m
+[32m[3mRemove both `android.builtInKotlin=true` and `android.newDsl=false` from `gradle.properties`, then migrate to built-in Kotlin.[0m[0m
+[36mSee [0m[34mhttps://kotl.in/gradle/agp-built-in-kotlin[0m[36m for more details.[0m
+
+
+> Configure project :share_plus
+w: [33m[1m⚠️ Deprecated 'org.jetbrains.kotlin.android' plugin usage[0m[0m
+The 'org.jetbrains.kotlin.android' plugin in project ':share_plus' is no longer required for Kotlin support since AGP 9.0.
+[32m[1mSolution:[0m[0m
+[32m[3mRemove both `android.builtInKotlin=true` and `android.newDsl=false` from `gradle.properties`, then migrate to built-in Kotlin.[0m[0m
+[36mSee [0m[34mhttps://kotl.in/gradle/agp-built-in-kotlin[0m[36m for more details.[0m
+
+
+> Configure project :shared_preferences_android
+w: [33m[1m⚠️ Deprecated 'org.jetbrains.kotlin.android' plugin usage[0m[0m
+The 'org.jetbrains.kotlin.android' plugin in project ':shared_preferences_android' is no longer required for Kotlin support since AGP 9.0.
+[32m[1mSolution:[0m[0m
+[32m[3mRemove both `android.builtInKotlin=true` and `android.newDsl=false` from `gradle.properties`, then migrate to built-in Kotlin.[0m[0m
+[36mSee [0m[34mhttps://kotl.in/gradle/agp-built-in-kotlin[0m[36m for more details.[0m
+
+
+> Configure project :sqflite_android
+w: [33m[1m⚠️ Deprecated 'org.jetbrains.kotlin.android' plugin usage[0m[0m
+The 'org.jetbrains.kotlin.android' plugin in project ':sqflite_android' is no longer required for Kotlin support since AGP 9.0.
+[32m[1mSolution:[0m[0m
+[32m[3mRemove both `android.builtInKotlin=true` and `android.newDsl=false` from `gradle.properties`, then migrate to built-in Kotlin.[0m[0m
+[36mSee [0m[34mhttps://kotl.in/gradle/agp-built-in-kotlin[0m[36m for more details.[0m
+
+
+> Configure project :url_launcher_android
+w: [33m[1m⚠️ Deprecated 'org.jetbrains.kotlin.android' plugin usage[0m[0m
+The 'org.jetbrains.kotlin.android' plugin in project ':url_launcher_android' is no longer required for Kotlin support since AGP 9.0.
+[32m[1mSolution:[0m[0m
+[32m[3mRemove both `android.builtInKotlin=true` and `android.newDsl=false` from `gradle.properties`, then migrate to built-in Kotlin.[0m[0m
+[36mSee [0m[34mhttps://kotl.in/gradle/agp-built-in-kotlin[0m[36m for more details.[0m
+
+
+> Configure project :video_player_android
+w: [33m[1m⚠️ Deprecated 'org.jetbrains.kotlin.android' plugin usage[0m[0m
+The 'org.jetbrains.kotlin.android' plugin in project ':video_player_android' is no longer required for Kotlin support since AGP 9.0.
+[32m[1mSolution:[0m[0m
+[32m[3mRemove both `android.builtInKotlin=true` and `android.newDsl=false` from `gradle.properties`, then migrate to built-in Kotlin.[0m[0m
+[36mSee [0m[34mhttps://kotl.in/gradle/agp-built-in-kotlin[0m[36m for more details.[0m
+
+
+> Configure project :volume_controller
+w: [33m[1m⚠️ Deprecated 'org.jetbrains.kotlin.android' plugin usage[0m[0m
+The 'org.jetbrains.kotlin.android' plugin in project ':volume_controller' is no longer required for Kotlin support since AGP 9.0.
+[32m[1mSolution:[0m[0m
+[32m[3mRemove both `android.builtInKotlin=true` and `android.newDsl=false` from `gradle.properties`, then migrate to built-in Kotlin.[0m[0m
+[36mSee [0m[34mhttps://kotl.in/gradle/agp-built-in-kotlin[0m[36m for more details.[0m
+
+WARNING: Your Android app project: app located at: /workspace/Private/android/app/build.gradle.kts
+applies the Kotlin Gradle Plugin, which will cause build failures in future versions of Flutter.
+Please migrate your app to Built-in Kotlin using this guide: https://docs.flutter.dev/release/breaking-changes/migrate-to-built-in-kotlin/for-app-developers
+
+
+> Task :android_file_picker:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :android_file_picker:preBuild UP-TO-DATE
+> Task :android_file_picker:preDebugBuild UP-TO-DATE
+> Task :android_file_picker:generateDebugResources UP-TO-DATE
+> Task :android_file_picker:packageDebugResources UP-TO-DATE
+> Task :android_file_picker:processDebugNavigationResources UP-TO-DATE
+> Task :android_file_picker:parseDebugLocalResources UP-TO-DATE
+> Task :android_file_picker:generateDebugRFile UP-TO-DATE
+> Task :android_file_picker:compileDebugKotlin UP-TO-DATE
+> Task :android_file_picker:javaPreCompileDebug UP-TO-DATE
+> Task :android_file_picker:compileDebugJavaWithJavac NO-SOURCE
+> Task :android_file_picker:bundleLibRuntimeToJarDebug UP-TO-DATE
+> Task :android_file_picker:compressDebugJavaRes UP-TO-DATE
+> Task :android_file_picker:bundleLibCompileToJarDebug UP-TO-DATE
+> Task :app:checkKotlinGradlePluginConfigurationErrors SKIPPED
+
+> Task :app:buildRustBackend
+    Updating crates.io index
+ Downloading crates ...
+  Downloaded cap-primitives v4.0.3
+   Compiling cap-primitives v4.0.3
+   Compiling mornye-core v0.1.0 (/workspace/Private/rust_backend/crates/core)
+   Compiling cap-std v4.0.3
+   Compiling mornye-providers v0.1.0 (/workspace/Private/rust_backend/crates/providers)
+   Compiling mornye-extensions v0.1.0 (/workspace/Private/rust_backend/crates/extensions)
+   Compiling mornye-mobile v0.1.0 (/workspace/Private/rust_backend/crates/mobile)
+    Finished `release` profile [optimized] target(s) in 1m 05s
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.10s
+     Running `target/debug/mornye-bindgen generate --library /workspace/Private/rust_backend/target/release/libmornye_mobile.so --language kotlin --out-dir /workspace/Private/rust_backend/target/bindings/kotlin --no-format`
+info: component rust-std for target aarch64-linux-android is up to date
+   Compiling cap-primitives v4.0.3
+   Compiling mornye-core v0.1.0 (/workspace/Private/rust_backend/crates/core)
+   Compiling cap-std v4.0.3
+   Compiling mornye-providers v0.1.0 (/workspace/Private/rust_backend/crates/providers)
+   Compiling mornye-extensions v0.1.0 (/workspace/Private/rust_backend/crates/extensions)
+   Compiling mornye-mobile v0.1.0 (/workspace/Private/rust_backend/crates/mobile)
+    Finished `release` profile [optimized] target(s) in 1m 09s
+Rust android artifacts are staged in /workspace/Private/rust_backend/target.
+
+> Task :app:validateCompileSdkVersion
+> Task :app:preBuild
+> Task :app:preDebugBuild
+> Task :app:generateDebugBuildConfig UP-TO-DATE
+> Task :app:cleanMergeDebugAssets
+
+> Task :app:compileFlutterBuildDebug
+[app_ar.arb:dialogDeleteSelectedMessage] ICU Syntax Warning: The plural part specified below is overridden by a later plural part.
+    حذف {count} {count, plural, zero {} one {المسارات} two {أغنيتين} few {أغانٍ} many {أغنية}=1{أغنية} other{الأغاني}} من التاريخ؟
+
+سيؤدي هذا أيضا إلى حذف الملفات من وحدة التخزين.
+                                        ^
+[app_ar.arb:snackbarDeletedTracks] ICU Syntax Warning: The plural part specified below is overridden by a later plural part.
+    تم حذف {count} {count, plural, zero {} one {أغنيتين} two {أغنيتين} few {أغانٍ} many {أغنية}=1{أغنية} other{أغانٍ}}
+                                           ^
+[app_ar.arb:tracksCount] ICU Syntax Warning: The plural part specified below is overridden by a later plural part.
+    {count, plural, zero {لا توجد أغاني محددة} one {{count} مسارات} two {أغنيتين} few {{count} أغانٍ} many {{count} أغانٍ}=1{أغنية واحدة} other{{count} أغانٍ}}
+                                               ^
+[app_ar.arb:downloadedAlbumDeleteMessage] ICU Syntax Warning: The plural part specified below is overridden by a later plural part.
+    حذف {count} {count, plural, zero {} one {المسارات} two {أغنيتين} few {أغانٍ} many {أغنية}=1{أغنية} other{الأغاني}} من التاريخ؟
+
+سيؤدي هذا أيضا إلى حذف الملفات من وحدة التخزين.
+                                        ^
+[app_ar.arb:downloadedAlbumDeleteCount] ICU Syntax Warning: The plural part specified below is overridden by a later plural part.
+    تم حذف {count} {count, plural, zero {} one {أغنيتين} two {أغنيتين} few {أغانٍ} many {أغنية}=1{أغنية} other{أغانٍ}}
+                                           ^
+[app_ar.arb:libraryTracksUnit] ICU Syntax Warning: The plural part specified below is overridden by a later plural part.
+    {count, plural, zero {لا توجد أغاني محددة} one {{count} مسارات} two {أغنيتين} few {{count} أغانٍ} many {{count} أغانٍ}=1{أغنية واحدة} other{{count} أغانٍ}}
+                                               ^
+[app_ar.arb:libraryFilesUnit] ICU Syntax Warning: The plural part specified below is overridden by a later plural part.
+    {count, plural, zero {} one {ملفات} two {ملفات} few {ملفات} many {ملفات}=1{ملف} other{ملفات}}
+                            ^
+[app_ar.arb:collectionPlaylistTracks] ICU Syntax Warning: The plural part specified below is overridden by a later plural part.
+    {count, plural, zero {لا توجد أغاني محددة} one {{count} مسارات} two {أغنيتين} few {{count} أغانٍ} many {{count} أغانٍ}=1{أغنية واحدة} other{{count} أغانٍ}}
+                                               ^
+[app_ar.arb:queueTrackCount] ICU Syntax Warning: The plural part specified below is overridden by a later plural part.
+    {count, plural, zero {لا توجد أغاني محددة} one {{count} مسارات} two {أغنيتين} few {{count} أغانٍ} many {{count} أغانٍ}=1{أغنية واحدة} other{{count} أغانٍ}}
+                                               ^
+[app_ar.arb:selectionDeleteTracksCount] ICU Syntax Warning: The plural part specified below is overridden by a later plural part.
+    تم حذف {count} {count, plural, zero {} one {أغنيتين} two {أغنيتين} few {أغانٍ} many {أغنية}=1{أغنية} other{أغانٍ}}
+                                           ^
+[app_fr.arb:backupContentsHistory] ICU Syntax Warning: The plural part specified below is overridden by a later plural part.
+    {count} historique {count, plural, one {}=1{élément} other{éléments}}
+                                       ^
+[app_fr.arb:backupContentsLiked] ICU Syntax Warning: The plural part specified below is overridden by a later plural part.
+    {count} favoris {count, plural, one {}=1{titre} other{titres}}
+                                    ^
+[app_fr.arb:backupContentsWishlist] ICU Syntax Warning: The plural part specified below is overridden by a later plural part.
+    {count} liste de souhaits {count, plural, one {}=1{titre} other{titres}}
+                                              ^
+[app_fr.arb:backupContentsArtists] ICU Syntax Warning: The plural part specified below is overridden by a later plural part.
+    {count, plural, one {}=1{1 artiste préféré} other{{count} artistes préférés}}
+                    ^
+[app_fr.arb:playlistsCount] ICU Syntax Warning: The plural part specified below is overridden by a later plural part.
+    {count, plural, one {}=1{1 playlist} other{{count} playlists}}
+                    ^
+[app_fr.arb:editMetadataAutoFillDoneFromSource] ICU Syntax Warning: The plural part specified below is overridden by a later plural part.
+    Rempli {count} {count, plural, one {}=1{champ} other{champs}} ont été renseignés à partir de {source}
+                                   ^
+[app_fr.arb:queueAlbumCount] ICU Syntax Warning: The plural part specified below is overridden by a later plural part.
+    {count, plural, one {}=1{1 album} other{{count} albums}}
+                    ^
+[app_fr.arb:storeExtensionsCount] ICU Syntax Warning: The plural part specified below is overridden by a later plural part.
+    {count} {count, plural, one {}=1{extension} other{extensions}}
+                            ^
+[app_fr.arb:nowPlayingSleepTimerMinutes] ICU Syntax Warning: The plural part specified below is overridden by a later plural part.
+    {minutes, plural, one {}=1{1 minute} other{{minutes} minutes}}
+                      ^
+[app_fr.arb:selectionDeletePlaylistsCount] ICU Syntax Warning: The plural part specified below is overridden by a later plural part.
+    Supprimer {count} {count, plural, one {}=1{playlist} other{playlists}}
+                                      ^
+[app_it.arb:dialogDeleteSelectedMessage] ICU Syntax Warning: The plural part specified below is overridden by a later plural part.
+    Elimina {count} {count, plural, one {}=1{traccia} other{tracce}} dalla cronologia?
+
+Eliminerà anche i file dalla memoria.
+                                    ^
+[app_it.arb:snackbarDeletedTracks] ICU Syntax Warning: The plural part specified below is overridden by a later plural part.
+    Eliminate {count} {count, plural, one {}=1{traccia} other{tracce}}
+                                      ^
+[app_it.arb:tracksCount] ICU Syntax Warning: The plural part specified below is overridden by a later plural part.
+    {count, plural, one {}=1{1 traccia} other{{count} tracce}}
+                    ^
+[app_it.arb:collectionPlaylistTracks] ICU Syntax Warning: The plural part specified below is overridden by a later plural part.
+    {count, plural, one {}=1{1 traccia} other{{count} tracce}}
+                    ^
+[app_it.arb:queueTrackCount] ICU Syntax Warning: The plural part specified below is overridden by a later plural part.
+    {count, plural, one {}=1{1 traccia} other{{count} tracce}}
+                    ^
+[app_pt_PT.arb:queueAlbumCount] ICU Syntax Warning: The plural part specified below is overridden by a later plural part.
+    {count, plural, one {}=1{1 álbum} other{{count} álbuns}}
+                    ^
+[app_ru.arb:dialogDeleteSelectedMessage] ICU Syntax Warning: The plural part specified below is overridden by a later plural part.
+    Удалить {count} {count, plural, one {трек} few {трека} many {треков} =1{трек} other{треков}} из истории?
+
+Это также удалит файлы из хранилища.
+                                    ^
+[app_ru.arb:snackbarDeletedTracks] ICU Syntax Warning: The plural part specified below is overridden by a later plural part.
+    Удалено {count} {count, plural, one {трек} few {трека} many {треков} =1{трек} other{треков}}
+                                    ^
+[app_ru.arb:tracksCount] ICU Syntax Warning: The plural part specified below is overridden by a later plural part.
+    {count, plural, one {{count} трек} few {{count} трека} many {{count} треков} =1 {1 трек} other {{count} треков}}
+                    ^
+[app_ru.arb:timeMinutesAgo] ICU Syntax Warning: The plural part specified below is overridden by a later plural part.
+    {count, plural, =1{1 минуту назад} one{{count} минуту назад} few{{count} минуты назад} other{{count} минут назад}}
+                    ^
+[app_ru.arb:timeHoursAgo] ICU Syntax Warning: The plural part specified below is overridden by a later plural part.
+    {count, plural, =1{1 час назад} one{{count} час назад} few{{count} часа назад} other{{count} часов назад}}
+                    ^
+[app_ru.arb:collectionPlaylistTracks] ICU Syntax Warning: The plural part specified below is overridden by a later plural part.
+    {count, plural, =1{1 трек} one{{count} трек} few{{count} трека} other{{count} треков}}
+                    ^
+[app_ru.arb:collectionArtistCount] ICU Syntax Warning: The plural part specified below is overridden by a later plural part.
+    {count, plural, =1{1 исполнитель} one{{count} исполнитель} few{{count} исполнителя} other{{count} исполнителей}}
+                    ^
+[app_ru.arb:selectionConvertCount] ICU Syntax Warning: The plural part specified below is overridden by a later plural part.
+    Конвертировать {count} {count, plural, one {трек} few {трека} many {треков} =1{трек} other{треков}}
+                                           ^
+[app_ru.arb:selectionBatchConvertConfirmKeepOriginal] ICU Syntax Warning: The plural part specified below is overridden by a later plural part.
+    Конвертировать {count} {count, plural, one {трек} few {трека} many {треков} =1{трек} other{треков}} в {format}?
+
+Оригинальные файлы будут храниться и преобразовываться как отдельные элементы медиатеки.
+                                           ^
+[app_ru.arb:backupContentsPlaylists] ICU Syntax Warning: The plural part specified below is overridden by a later plural part.
+    {count, plural, =1{1 плейлист} one{{count} плейлист} few{{count} плейлиста} other{{count} плейлистов}}
+                    ^
+[app_ru.arb:backupContentsArtists] ICU Syntax Warning: The plural part specified below is overridden by a later plural part.
+    {count, plural, =1{1 любимый исполнитель} one{{count} любимый исполнитель} few{{count} любимых исполнителя} other{{count} любимых исполнителей}}
+                    ^
+[app_ru.arb:backupContentsExtensions] ICU Syntax Warning: The plural part specified below is overridden by a later plural part.
+    {count, plural, =1{1 расширение} one{{count} расширение} few{{count} расширения} other{{count} расширений}}
+                    ^
+[app_ru.arb:playlistsCount] ICU Syntax Warning: The plural part specified below is overridden by a later plural part.
+    {count, plural, =1{1 плейлист} one{{count} плейлист} few{{count} плейлиста} other{{count} плейлистов}}
+                    ^
+[app_ru.arb:queueTrackCount] ICU Syntax Warning: The plural part specified below is overridden by a later plural part.
+    {count, plural, =1{1 трек} one{{count} трек} few{{count} трека} other{{count} треков}}
+                    ^
+[app_ru.arb:queueAlbumCount] ICU Syntax Warning: The plural part specified below is overridden by a later plural part.
+    {count, plural, =1{1 альбом} one{{count} альбом} few{{count} альбома} other{{count} альбомов}}
+                    ^
+[app_ru.arb:queuePlaylistCount] ICU Syntax Warning: The plural part specified below is overridden by a later plural part.
+    {count, plural, =1{1 плейлист} one{{count} плейлист} few{{count} плейлиста} other{{count} плейлистов}}
+                    ^
+[app_ru.arb:notifTracksDownloadedSuccess] ICU Syntax Warning: The plural part specified below is overridden by a later plural part.
+    {count, plural, =1{1 трек успешно скачан} one{{count} трек успешно скачан} few{{count} трека успешно скачано} other{{count} треков успешно скачано}}
+                    ^
+[app_ru.arb:notifDownloadsFinishedBody] ICU Syntax Warning: The plural part specified below is overridden by a later plural part.
+    {completed, plural, =1{1 трек скачан} one{{completed} трек скачан} few{{completed} трека скачано} other{{completed} треков скачано}}, {failed, plural, =1{1 с ошибкой} one{{failed} с ошибкой} few{{failed} с ошибками} other{{failed} с ошибками}}
+                        ^
+[app_ru.arb:notifDownloadsFinishedBody] ICU Syntax Warning: The plural part specified below is overridden by a later plural part.
+    {completed, plural, =1{1 трек скачан} one{{completed} трек скачан} few{{completed} трека скачано} other{{completed} треков скачано}}, {failed, plural, =1{1 с ошибкой} one{{failed} с ошибкой} few{{failed} с ошибками} other{{failed} с ошибками}}
+                                                                                          ^
+[app_ru.arb:notifDownloadsCanceledBody] ICU Syntax Warning: The plural part specified below is overridden by a later plural part.
+    {count, plural, =1{1 загрузка отменена пользователем} one{{count} загрузка отменена пользователем} few{{count} загрузки отменены пользователем} other{{count} загрузок отменены пользователем}}
+                    ^
+[app_ru.arb:nowPlayingSleepTimerMinutes] ICU Syntax Warning: The plural part specified below is overridden by a later plural part.
+    {minutes, plural, =1{1 минута} one{{minutes} минута} few{{minutes} минуты} other{{minutes} минут}}
+                      ^
+[app_uk.arb:libraryFolderCount] ICU Syntax Warning: The plural part specified below is overridden by a later plural part.
+    {count, plural, =1{1 тека} one{{count} тека} few{{count} теки} many{{count} тек} other{{count} тек}}
+                    ^
+[app_uk.arb:snackbarDeleteTracksFailed] ICU Syntax Warning: The plural part specified below is overridden by a later plural part.
+    Не вдалося видалити {count} {count, plural, =1{трек} one{трек} few{треки} other{треків}}. Перевірте доступ до сховища та спробуйте ще раз.
+                                                ^
+[app_uk.arb:lyricsTranslatePartial] ICU Syntax Warning: The plural part specified below is overridden by a later plural part.
+    {count, plural, =1{1 рядок не вдалося перекласти} one{{count} рядок не вдалося перекласти} few{{count} рядки не вдалося перекласти} many{{count} рядків не вдалося перекласти} other{{count} рядків не вдалося перекласти}}
+                    ^
+[app_uk.arb:listeningRewindMinutesUnit] ICU Syntax Warning: The plural part specified below is overridden by a later plural part.
+    {minutes, plural, =1 {хвилина} one {# хвилина} few {# хвилини} many {# хвилин} other {# хвилини}}
+                      ^
+"ar": 111 untranslated message(s).
+"de": 111 untranslated message(s).
+"es": 1387 untranslated message(s).
+"es_ES": 111 untranslated message(s).
+"fr": 111 untranslated message(s).
+"hi": 111 untranslated message(s).
+"id": 209 untranslated message(s).
+"it": 111 untranslated message(s).
+"ja": 111 untranslated message(s).
+"ko": 111 untranslated message(s).
+"nl": 111 untranslated message(s).
+"pt": 1387 untranslated message(s).
+"pt_PT": 111 untranslated message(s).
+"ru": 111 untranslated message(s).
+"tr": 111 untranslated message(s).
+"uk": 111 untranslated message(s).
+"vi": 111 untranslated message(s).
+"zh": 959 untranslated message(s).
+"zh_CN": 111 untranslated message(s).
+"zh_TW": 111 untranslated message(s).
+To see a detailed report, use the untranslated-messages-file 
+option in the l10n.yaml file:
+untranslated-messages-file: desiredFileName.txt
+<other option>: <other selection> 
+
+
+This will generate a JSON format file containing all messages that 
+need to be translated.
+
+> Task :android_file_picker:generateDebugAssets UP-TO-DATE
+> Task :android_file_picker:mergeDebugAssets UP-TO-DATE
+> Task :app:generateDebugAssets UP-TO-DATE
+> Task :app_links:generateDebugAssets UP-TO-DATE
+> Task :app_links:preBuild UP-TO-DATE
+> Task :app_links:preDebugBuild UP-TO-DATE
+> Task :app_links:mergeDebugAssets UP-TO-DATE
+> Task :audio_service:generateDebugAssets UP-TO-DATE
+> Task :audio_service:preBuild UP-TO-DATE
+> Task :audio_service:preDebugBuild UP-TO-DATE
+> Task :audio_service:mergeDebugAssets UP-TO-DATE
+> Task :audio_session:generateDebugAssets UP-TO-DATE
+> Task :audio_session:preBuild UP-TO-DATE
+> Task :audio_session:preDebugBuild UP-TO-DATE
+> Task :audio_session:mergeDebugAssets UP-TO-DATE
+> Task :audioplayers_android:generateDebugAssets UP-TO-DATE
+> Task :audioplayers_android:preBuild UP-TO-DATE
+> Task :audioplayers_android:preDebugBuild UP-TO-DATE
+> Task :audioplayers_android:mergeDebugAssets UP-TO-DATE
+> Task :connectivity_plus:generateDebugAssets UP-TO-DATE
+> Task :connectivity_plus:preBuild UP-TO-DATE
+> Task :connectivity_plus:preDebugBuild UP-TO-DATE
+> Task :connectivity_plus:mergeDebugAssets UP-TO-DATE
+> Task :device_info_plus:generateDebugAssets UP-TO-DATE
+> Task :device_info_plus:preBuild UP-TO-DATE
+> Task :device_info_plus:preDebugBuild UP-TO-DATE
+> Task :device_info_plus:mergeDebugAssets UP-TO-DATE
+> Task :dynamic_color:generateDebugAssets UP-TO-DATE
+> Task :dynamic_color:preBuild UP-TO-DATE
+> Task :dynamic_color:preDebugBuild UP-TO-DATE
+> Task :dynamic_color:mergeDebugAssets UP-TO-DATE
+> Task :ffmpeg_kit_flutter_new_audio:generateDebugAssets UP-TO-DATE
+> Task :ffmpeg_kit_flutter_new_audio:preBuild UP-TO-DATE
+> Task :ffmpeg_kit_flutter_new_audio:preDebugBuild UP-TO-DATE
+> Task :ffmpeg_kit_flutter_new_audio:mergeDebugAssets UP-TO-DATE
+> Task :flutter_local_notifications:generateDebugAssets UP-TO-DATE
+> Task :flutter_local_notifications:preBuild UP-TO-DATE
+> Task :flutter_local_notifications:preDebugBuild UP-TO-DATE
+> Task :flutter_local_notifications:mergeDebugAssets UP-TO-DATE
+> Task :flutter_secure_storage:generateDebugAssets UP-TO-DATE
+> Task :flutter_secure_storage:preBuild UP-TO-DATE
+> Task :flutter_secure_storage:preDebugBuild UP-TO-DATE
+> Task :flutter_secure_storage:mergeDebugAssets UP-TO-DATE
+> Task :integration_test:generateDebugAssets UP-TO-DATE
+> Task :integration_test:preBuild UP-TO-DATE
+> Task :integration_test:preDebugBuild UP-TO-DATE
+> Task :integration_test:mergeDebugAssets UP-TO-DATE
+> Task :jni:generateDebugAssets UP-TO-DATE
+> Task :jni:preBuild UP-TO-DATE
+> Task :jni:preDebugBuild UP-TO-DATE
+> Task :jni:mergeDebugAssets UP-TO-DATE
+> Task :jni_flutter:generateDebugAssets UP-TO-DATE
+> Task :jni_flutter:preBuild UP-TO-DATE
+> Task :jni_flutter:preDebugBuild UP-TO-DATE
+> Task :jni_flutter:mergeDebugAssets UP-TO-DATE
+> Task :open_filex:generateDebugAssets UP-TO-DATE
+> Task :open_filex:preBuild UP-TO-DATE
+> Task :open_filex:preDebugBuild UP-TO-DATE
+> Task :open_filex:mergeDebugAssets UP-TO-DATE
+> Task :permission_handler_android:generateDebugAssets UP-TO-DATE
+> Task :permission_handler_android:preBuild UP-TO-DATE
+> Task :permission_handler_android:preDebugBuild UP-TO-DATE
+> Task :permission_handler_android:mergeDebugAssets UP-TO-DATE
+> Task :receive_sharing_intent:generateDebugAssets UP-TO-DATE
+> Task :receive_sharing_intent:preBuild UP-TO-DATE
+> Task :receive_sharing_intent:preDebugBuild UP-TO-DATE
+> Task :receive_sharing_intent:mergeDebugAssets UP-TO-DATE
+> Task :record_android:generateDebugAssets UP-TO-DATE
+> Task :record_android:preBuild UP-TO-DATE
+> Task :record_android:preDebugBuild UP-TO-DATE
+> Task :record_android:mergeDebugAssets UP-TO-DATE
+> Task :share_plus:generateDebugAssets UP-TO-DATE
+> Task :share_plus:preBuild UP-TO-DATE
+> Task :share_plus:preDebugBuild UP-TO-DATE
+> Task :share_plus:mergeDebugAssets UP-TO-DATE
+> Task :shared_preferences_android:generateDebugAssets UP-TO-DATE
+> Task :shared_preferences_android:preBuild UP-TO-DATE
+> Task :shared_preferences_android:preDebugBuild UP-TO-DATE
+> Task :shared_preferences_android:mergeDebugAssets UP-TO-DATE
+> Task :sqflite_android:generateDebugAssets UP-TO-DATE
+> Task :sqflite_android:preBuild UP-TO-DATE
+> Task :sqflite_android:preDebugBuild UP-TO-DATE
+> Task :sqflite_android:mergeDebugAssets UP-TO-DATE
+> Task :url_launcher_android:generateDebugAssets UP-TO-DATE
+> Task :url_launcher_android:preBuild UP-TO-DATE
+> Task :url_launcher_android:preDebugBuild UP-TO-DATE
+> Task :url_launcher_android:mergeDebugAssets UP-TO-DATE
+> Task :video_player_android:generateDebugAssets UP-TO-DATE
+> Task :video_player_android:preBuild UP-TO-DATE
+> Task :video_player_android:preDebugBuild UP-TO-DATE
+> Task :video_player_android:mergeDebugAssets UP-TO-DATE
+> Task :volume_controller:generateDebugAssets UP-TO-DATE
+> Task :volume_controller:preBuild UP-TO-DATE
+> Task :volume_controller:preDebugBuild UP-TO-DATE
+> Task :volume_controller:mergeDebugAssets UP-TO-DATE
+> Task :app:mergeDebugAssets
+> Task :app:copyFlutterAssetsDebug
+> Task :app:generateDebugResources UP-TO-DATE
+> Task :app:packageDebugResources UP-TO-DATE
+> Task :app_links:processDebugNavigationResources UP-TO-DATE
+> Task :audio_service:processDebugNavigationResources UP-TO-DATE
+> Task :audio_session:processDebugNavigationResources UP-TO-DATE
+> Task :audioplayers_android:processDebugNavigationResources UP-TO-DATE
+> Task :connectivity_plus:processDebugNavigationResources UP-TO-DATE
+> Task :device_info_plus:processDebugNavigationResources UP-TO-DATE
+> Task :dynamic_color:processDebugNavigationResources UP-TO-DATE
+> Task :ffmpeg_kit_flutter_new_audio:processDebugNavigationResources UP-TO-DATE
+> Task :flutter_local_notifications:processDebugNavigationResources UP-TO-DATE
+> Task :flutter_secure_storage:processDebugNavigationResources UP-TO-DATE
+> Task :integration_test:processDebugNavigationResources UP-TO-DATE
+> Task :jni:processDebugNavigationResources UP-TO-DATE
+> Task :jni_flutter:processDebugNavigationResources UP-TO-DATE
+> Task :open_filex:processDebugNavigationResources UP-TO-DATE
+> Task :permission_handler_android:processDebugNavigationResources UP-TO-DATE
+> Task :receive_sharing_intent:processDebugNavigationResources UP-TO-DATE
+> Task :record_android:processDebugNavigationResources UP-TO-DATE
+> Task :share_plus:processDebugNavigationResources UP-TO-DATE
+> Task :shared_preferences_android:processDebugNavigationResources UP-TO-DATE
+> Task :sqflite_android:processDebugNavigationResources UP-TO-DATE
+> Task :url_launcher_android:processDebugNavigationResources UP-TO-DATE
+> Task :video_player_android:processDebugNavigationResources UP-TO-DATE
+> Task :volume_controller:processDebugNavigationResources UP-TO-DATE
+> Task :app:processDebugNavigationResources UP-TO-DATE
+> Task :app:parseDebugLocalResources UP-TO-DATE
+> Task :app:generateDebugRFile UP-TO-DATE
+> Task :app_links:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :app_links:generateDebugResources UP-TO-DATE
+> Task :app_links:packageDebugResources UP-TO-DATE
+> Task :app_links:parseDebugLocalResources UP-TO-DATE
+> Task :app_links:generateDebugRFile UP-TO-DATE
+> Task :app_links:compileDebugKotlin NO-SOURCE
+> Task :app_links:javaPreCompileDebug UP-TO-DATE
+> Task :app_links:compileDebugJavaWithJavac UP-TO-DATE
+> Task :app_links:bundleLibCompileToJarDebug UP-TO-DATE
+> Task :audio_service:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :audio_service:generateDebugResources UP-TO-DATE
+> Task :audio_service:packageDebugResources UP-TO-DATE
+> Task :audio_service:parseDebugLocalResources UP-TO-DATE
+> Task :audio_service:generateDebugRFile UP-TO-DATE
+> Task :audio_session:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :audio_session:generateDebugResources UP-TO-DATE
+> Task :audio_session:packageDebugResources UP-TO-DATE
+> Task :audio_session:parseDebugLocalResources UP-TO-DATE
+> Task :audio_session:generateDebugRFile UP-TO-DATE
+> Task :audio_session:compileDebugKotlin UP-TO-DATE
+> Task :audio_session:javaPreCompileDebug UP-TO-DATE
+> Task :audio_session:compileDebugJavaWithJavac NO-SOURCE
+> Task :audio_session:bundleLibCompileToJarDebug UP-TO-DATE
+> Task :audio_service:compileDebugKotlin NO-SOURCE
+> Task :audio_service:javaPreCompileDebug UP-TO-DATE
+> Task :audio_service:compileDebugJavaWithJavac UP-TO-DATE
+> Task :audio_service:bundleLibCompileToJarDebug UP-TO-DATE
+> Task :audioplayers_android:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :audioplayers_android:generateDebugResources UP-TO-DATE
+> Task :audioplayers_android:packageDebugResources UP-TO-DATE
+> Task :audioplayers_android:parseDebugLocalResources UP-TO-DATE
+> Task :audioplayers_android:generateDebugRFile UP-TO-DATE
+> Task :audioplayers_android:compileDebugKotlin UP-TO-DATE
+> Task :audioplayers_android:javaPreCompileDebug UP-TO-DATE
+> Task :audioplayers_android:compileDebugJavaWithJavac NO-SOURCE
+> Task :audioplayers_android:bundleLibCompileToJarDebug UP-TO-DATE
+> Task :connectivity_plus:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :connectivity_plus:generateDebugResources UP-TO-DATE
+> Task :connectivity_plus:packageDebugResources UP-TO-DATE
+> Task :connectivity_plus:parseDebugLocalResources UP-TO-DATE
+> Task :connectivity_plus:generateDebugRFile UP-TO-DATE
+> Task :connectivity_plus:compileDebugKotlin NO-SOURCE
+> Task :connectivity_plus:javaPreCompileDebug UP-TO-DATE
+> Task :connectivity_plus:compileDebugJavaWithJavac UP-TO-DATE
+> Task :connectivity_plus:bundleLibCompileToJarDebug UP-TO-DATE
+> Task :device_info_plus:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :device_info_plus:generateDebugResources UP-TO-DATE
+> Task :device_info_plus:packageDebugResources UP-TO-DATE
+> Task :device_info_plus:parseDebugLocalResources UP-TO-DATE
+> Task :device_info_plus:generateDebugRFile UP-TO-DATE
+> Task :device_info_plus:compileDebugKotlin UP-TO-DATE
+> Task :device_info_plus:javaPreCompileDebug UP-TO-DATE
+> Task :device_info_plus:compileDebugJavaWithJavac NO-SOURCE
+> Task :device_info_plus:bundleLibCompileToJarDebug UP-TO-DATE
+> Task :dynamic_color:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :dynamic_color:generateDebugResources UP-TO-DATE
+> Task :dynamic_color:packageDebugResources UP-TO-DATE
+> Task :dynamic_color:parseDebugLocalResources UP-TO-DATE
+> Task :dynamic_color:generateDebugRFile UP-TO-DATE
+> Task :dynamic_color:compileDebugKotlin UP-TO-DATE
+> Task :dynamic_color:javaPreCompileDebug UP-TO-DATE
+> Task :dynamic_color:compileDebugJavaWithJavac NO-SOURCE
+> Task :dynamic_color:bundleLibCompileToJarDebug UP-TO-DATE
+> Task :ffmpeg_kit_flutter_new_audio:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :ffmpeg_kit_flutter_new_audio:generateDebugResources UP-TO-DATE
+> Task :ffmpeg_kit_flutter_new_audio:packageDebugResources UP-TO-DATE
+> Task :ffmpeg_kit_flutter_new_audio:parseDebugLocalResources UP-TO-DATE
+> Task :ffmpeg_kit_flutter_new_audio:generateDebugRFile UP-TO-DATE
+> Task :ffmpeg_kit_flutter_new_audio:compileDebugKotlin NO-SOURCE
+> Task :ffmpeg_kit_flutter_new_audio:javaPreCompileDebug UP-TO-DATE
+> Task :ffmpeg_kit_flutter_new_audio:compileDebugJavaWithJavac UP-TO-DATE
+> Task :ffmpeg_kit_flutter_new_audio:bundleLibCompileToJarDebug UP-TO-DATE
+> Task :flutter_local_notifications:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :flutter_local_notifications:generateDebugResources UP-TO-DATE
+> Task :flutter_local_notifications:packageDebugResources UP-TO-DATE
+> Task :flutter_local_notifications:parseDebugLocalResources UP-TO-DATE
+> Task :flutter_local_notifications:generateDebugRFile UP-TO-DATE
+> Task :flutter_local_notifications:compileDebugKotlin NO-SOURCE
+> Task :flutter_local_notifications:javaPreCompileDebug UP-TO-DATE
+> Task :flutter_local_notifications:compileDebugJavaWithJavac UP-TO-DATE
+> Task :flutter_local_notifications:bundleLibCompileToJarDebug UP-TO-DATE
+> Task :flutter_secure_storage:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :flutter_secure_storage:generateDebugBuildConfig UP-TO-DATE
+> Task :flutter_secure_storage:generateDebugResources UP-TO-DATE
+> Task :flutter_secure_storage:packageDebugResources UP-TO-DATE
+> Task :flutter_secure_storage:parseDebugLocalResources UP-TO-DATE
+> Task :flutter_secure_storage:generateDebugRFile UP-TO-DATE
+> Task :flutter_secure_storage:compileDebugKotlin NO-SOURCE
+> Task :flutter_secure_storage:javaPreCompileDebug UP-TO-DATE
+> Task :flutter_secure_storage:compileDebugJavaWithJavac UP-TO-DATE
+> Task :flutter_secure_storage:bundleLibCompileToJarDebug UP-TO-DATE
+> Task :integration_test:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :integration_test:generateDebugResources UP-TO-DATE
+> Task :integration_test:packageDebugResources UP-TO-DATE
+> Task :integration_test:parseDebugLocalResources UP-TO-DATE
+> Task :integration_test:generateDebugRFile UP-TO-DATE
+> Task :integration_test:compileDebugKotlin NO-SOURCE
+> Task :integration_test:javaPreCompileDebug UP-TO-DATE
+> Task :integration_test:compileDebugJavaWithJavac UP-TO-DATE
+> Task :integration_test:bundleLibCompileToJarDebug UP-TO-DATE
+> Task :jni:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :jni:generateDebugResources UP-TO-DATE
+> Task :jni:packageDebugResources UP-TO-DATE
+> Task :jni:parseDebugLocalResources UP-TO-DATE
+> Task :jni:generateDebugRFile UP-TO-DATE
+> Task :jni:compileDebugKotlin NO-SOURCE
+> Task :jni:javaPreCompileDebug UP-TO-DATE
+> Task :jni:compileDebugJavaWithJavac UP-TO-DATE
+> Task :jni:bundleLibCompileToJarDebug UP-TO-DATE
+> Task :jni_flutter:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :jni_flutter:generateDebugResources UP-TO-DATE
+> Task :jni_flutter:packageDebugResources UP-TO-DATE
+> Task :jni_flutter:parseDebugLocalResources UP-TO-DATE
+> Task :jni_flutter:generateDebugRFile UP-TO-DATE
+> Task :jni_flutter:compileDebugKotlin NO-SOURCE
+> Task :jni_flutter:javaPreCompileDebug UP-TO-DATE
+> Task :jni_flutter:compileDebugJavaWithJavac UP-TO-DATE
+> Task :jni_flutter:bundleLibCompileToJarDebug UP-TO-DATE
+> Task :open_filex:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :open_filex:generateDebugResources UP-TO-DATE
+> Task :open_filex:packageDebugResources UP-TO-DATE
+> Task :open_filex:parseDebugLocalResources UP-TO-DATE
+> Task :open_filex:generateDebugRFile UP-TO-DATE
+> Task :open_filex:compileDebugKotlin NO-SOURCE
+> Task :open_filex:javaPreCompileDebug UP-TO-DATE
+> Task :open_filex:compileDebugJavaWithJavac UP-TO-DATE
+> Task :open_filex:bundleLibCompileToJarDebug UP-TO-DATE
+> Task :permission_handler_android:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :permission_handler_android:generateDebugResources UP-TO-DATE
+> Task :permission_handler_android:packageDebugResources UP-TO-DATE
+> Task :permission_handler_android:parseDebugLocalResources UP-TO-DATE
+> Task :permission_handler_android:generateDebugRFile UP-TO-DATE
+> Task :permission_handler_android:compileDebugKotlin NO-SOURCE
+> Task :permission_handler_android:javaPreCompileDebug UP-TO-DATE
+> Task :permission_handler_android:compileDebugJavaWithJavac UP-TO-DATE
+> Task :permission_handler_android:bundleLibCompileToJarDebug UP-TO-DATE
+> Task :receive_sharing_intent:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :receive_sharing_intent:generateDebugResources UP-TO-DATE
+> Task :receive_sharing_intent:packageDebugResources UP-TO-DATE
+> Task :receive_sharing_intent:parseDebugLocalResources UP-TO-DATE
+> Task :receive_sharing_intent:generateDebugRFile UP-TO-DATE
+> Task :receive_sharing_intent:compileDebugKotlin UP-TO-DATE
+> Task :receive_sharing_intent:javaPreCompileDebug UP-TO-DATE
+> Task :receive_sharing_intent:compileDebugJavaWithJavac NO-SOURCE
+> Task :receive_sharing_intent:bundleLibCompileToJarDebug UP-TO-DATE
+> Task :record_android:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :record_android:generateDebugResources UP-TO-DATE
+> Task :record_android:packageDebugResources UP-TO-DATE
+> Task :record_android:parseDebugLocalResources UP-TO-DATE
+> Task :record_android:generateDebugRFile UP-TO-DATE
+> Task :record_android:compileDebugKotlin UP-TO-DATE
+> Task :record_android:javaPreCompileDebug UP-TO-DATE
+> Task :record_android:compileDebugJavaWithJavac NO-SOURCE
+> Task :record_android:bundleLibCompileToJarDebug UP-TO-DATE
+> Task :share_plus:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :share_plus:generateDebugResources UP-TO-DATE
+> Task :share_plus:packageDebugResources UP-TO-DATE
+> Task :share_plus:parseDebugLocalResources UP-TO-DATE
+> Task :share_plus:generateDebugRFile UP-TO-DATE
+> Task :share_plus:compileDebugKotlin UP-TO-DATE
+> Task :share_plus:javaPreCompileDebug UP-TO-DATE
+> Task :share_plus:compileDebugJavaWithJavac NO-SOURCE
+> Task :share_plus:bundleLibCompileToJarDebug UP-TO-DATE
+> Task :shared_preferences_android:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :shared_preferences_android:generateDebugResources UP-TO-DATE
+> Task :shared_preferences_android:packageDebugResources UP-TO-DATE
+> Task :shared_preferences_android:parseDebugLocalResources UP-TO-DATE
+> Task :shared_preferences_android:generateDebugRFile UP-TO-DATE
+> Task :shared_preferences_android:compileDebugKotlin UP-TO-DATE
+> Task :shared_preferences_android:javaPreCompileDebug UP-TO-DATE
+> Task :shared_preferences_android:compileDebugJavaWithJavac NO-SOURCE
+> Task :shared_preferences_android:bundleLibCompileToJarDebug UP-TO-DATE
+> Task :sqflite_android:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :sqflite_android:generateDebugResources UP-TO-DATE
+> Task :sqflite_android:packageDebugResources UP-TO-DATE
+> Task :sqflite_android:parseDebugLocalResources UP-TO-DATE
+> Task :sqflite_android:generateDebugRFile UP-TO-DATE
+> Task :sqflite_android:compileDebugKotlin NO-SOURCE
+> Task :sqflite_android:javaPreCompileDebug UP-TO-DATE
+> Task :sqflite_android:compileDebugJavaWithJavac UP-TO-DATE
+> Task :sqflite_android:bundleLibCompileToJarDebug UP-TO-DATE
+> Task :url_launcher_android:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :url_launcher_android:generateDebugBuildConfig UP-TO-DATE
+> Task :url_launcher_android:generateDebugResources UP-TO-DATE
+> Task :url_launcher_android:packageDebugResources UP-TO-DATE
+> Task :url_launcher_android:parseDebugLocalResources UP-TO-DATE
+> Task :url_launcher_android:generateDebugRFile UP-TO-DATE
+> Task :url_launcher_android:compileDebugKotlin UP-TO-DATE
+> Task :url_launcher_android:javaPreCompileDebug UP-TO-DATE
+> Task :url_launcher_android:compileDebugJavaWithJavac UP-TO-DATE
+> Task :url_launcher_android:bundleLibCompileToJarDebug UP-TO-DATE
+> Task :video_player_android:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :video_player_android:generateDebugResources UP-TO-DATE
+> Task :video_player_android:packageDebugResources UP-TO-DATE
+> Task :video_player_android:parseDebugLocalResources UP-TO-DATE
+> Task :video_player_android:generateDebugRFile UP-TO-DATE
+> Task :video_player_android:compileDebugKotlin UP-TO-DATE
+> Task :video_player_android:javaPreCompileDebug UP-TO-DATE
+> Task :video_player_android:compileDebugJavaWithJavac UP-TO-DATE
+> Task :video_player_android:bundleLibCompileToJarDebug UP-TO-DATE
+> Task :volume_controller:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :volume_controller:generateDebugResources UP-TO-DATE
+> Task :volume_controller:packageDebugResources UP-TO-DATE
+> Task :volume_controller:parseDebugLocalResources UP-TO-DATE
+> Task :volume_controller:generateDebugRFile UP-TO-DATE
+> Task :volume_controller:compileDebugKotlin UP-TO-DATE
+> Task :volume_controller:javaPreCompileDebug UP-TO-DATE
+> Task :volume_controller:compileDebugJavaWithJavac NO-SOURCE
+> Task :volume_controller:bundleLibCompileToJarDebug UP-TO-DATE
+> Task :app:compileDebugKotlin
+> Task :app:javaPreCompileDebug UP-TO-DATE
+> Task :android_file_picker:mapDebugSourceSetPaths UP-TO-DATE
+> Task :android_file_picker:compileDebugLibraryResources UP-TO-DATE
+> Task :android_file_picker:writeDebugAarMetadata UP-TO-DATE
+> Task :app_links:writeDebugAarMetadata UP-TO-DATE
+> Task :audio_service:writeDebugAarMetadata UP-TO-DATE
+> Task :audio_session:writeDebugAarMetadata UP-TO-DATE
+> Task :audioplayers_android:writeDebugAarMetadata UP-TO-DATE
+> Task :connectivity_plus:writeDebugAarMetadata UP-TO-DATE
+> Task :device_info_plus:writeDebugAarMetadata UP-TO-DATE
+> Task :dynamic_color:writeDebugAarMetadata UP-TO-DATE
+> Task :ffmpeg_kit_flutter_new_audio:writeDebugAarMetadata UP-TO-DATE
+> Task :flutter_local_notifications:writeDebugAarMetadata UP-TO-DATE
+> Task :flutter_secure_storage:writeDebugAarMetadata UP-TO-DATE
+> Task :integration_test:writeDebugAarMetadata UP-TO-DATE
+> Task :jni:writeDebugAarMetadata UP-TO-DATE
+> Task :jni_flutter:writeDebugAarMetadata UP-TO-DATE
+> Task :open_filex:writeDebugAarMetadata UP-TO-DATE
+> Task :permission_handler_android:writeDebugAarMetadata UP-TO-DATE
+> Task :receive_sharing_intent:writeDebugAarMetadata UP-TO-DATE
+> Task :record_android:writeDebugAarMetadata UP-TO-DATE
+> Task :share_plus:writeDebugAarMetadata UP-TO-DATE
+> Task :shared_preferences_android:writeDebugAarMetadata UP-TO-DATE
+> Task :sqflite_android:writeDebugAarMetadata UP-TO-DATE
+> Task :url_launcher_android:writeDebugAarMetadata UP-TO-DATE
+> Task :video_player_android:writeDebugAarMetadata UP-TO-DATE
+> Task :volume_controller:writeDebugAarMetadata UP-TO-DATE
+> Task :app:checkDebugAarMetadata UP-TO-DATE
+> Task :app:mapDebugSourceSetPaths UP-TO-DATE
+> Task :app:compileDebugNavigationResources UP-TO-DATE
+> Task :app:mergeDebugResources UP-TO-DATE
+> Task :app:createDebugCompatibleScreenManifests UP-TO-DATE
+> Task :android_file_picker:extractDeepLinksDebug UP-TO-DATE
+> Task :android_file_picker:processDebugManifest UP-TO-DATE
+> Task :app:extractDeepLinksDebug UP-TO-DATE
+> Task :app_links:extractDeepLinksDebug UP-TO-DATE
+> Task :app_links:processDebugManifest UP-TO-DATE
+> Task :audio_service:extractDeepLinksDebug UP-TO-DATE
+> Task :audio_service:processDebugManifest UP-TO-DATE
+> Task :audio_session:extractDeepLinksDebug UP-TO-DATE
+> Task :audio_session:processDebugManifest UP-TO-DATE
+> Task :audioplayers_android:extractDeepLinksDebug UP-TO-DATE
+> Task :audioplayers_android:processDebugManifest UP-TO-DATE
+> Task :connectivity_plus:extractDeepLinksDebug UP-TO-DATE
+> Task :connectivity_plus:processDebugManifest UP-TO-DATE
+> Task :device_info_plus:extractDeepLinksDebug UP-TO-DATE
+> Task :device_info_plus:processDebugManifest UP-TO-DATE
+> Task :dynamic_color:extractDeepLinksDebug UP-TO-DATE
+> Task :dynamic_color:processDebugManifest UP-TO-DATE
+> Task :ffmpeg_kit_flutter_new_audio:extractDeepLinksDebug UP-TO-DATE
+> Task :ffmpeg_kit_flutter_new_audio:processDebugManifest UP-TO-DATE
+> Task :flutter_local_notifications:extractDeepLinksDebug UP-TO-DATE
+> Task :flutter_local_notifications:processDebugManifest UP-TO-DATE
+> Task :flutter_secure_storage:extractDeepLinksDebug UP-TO-DATE
+> Task :flutter_secure_storage:processDebugManifest UP-TO-DATE
+> Task :integration_test:extractDeepLinksDebug UP-TO-DATE
+> Task :integration_test:processDebugManifest UP-TO-DATE
+> Task :jni:extractDeepLinksDebug UP-TO-DATE
+> Task :jni:processDebugManifest UP-TO-DATE
+> Task :jni_flutter:extractDeepLinksDebug UP-TO-DATE
+> Task :jni_flutter:processDebugManifest UP-TO-DATE
+> Task :open_filex:extractDeepLinksDebug UP-TO-DATE
+> Task :open_filex:processDebugManifest UP-TO-DATE
+> Task :permission_handler_android:extractDeepLinksDebug UP-TO-DATE
+> Task :permission_handler_android:processDebugManifest UP-TO-DATE
+> Task :receive_sharing_intent:extractDeepLinksDebug UP-TO-DATE
+> Task :receive_sharing_intent:processDebugManifest UP-TO-DATE
+> Task :record_android:extractDeepLinksDebug UP-TO-DATE
+> Task :record_android:processDebugManifest UP-TO-DATE
+> Task :share_plus:extractDeepLinksDebug UP-TO-DATE
+> Task :share_plus:processDebugManifest UP-TO-DATE
+> Task :shared_preferences_android:extractDeepLinksDebug UP-TO-DATE
+> Task :shared_preferences_android:processDebugManifest UP-TO-DATE
+> Task :sqflite_android:extractDeepLinksDebug UP-TO-DATE
+> Task :sqflite_android:processDebugManifest UP-TO-DATE
+> Task :url_launcher_android:extractDeepLinksDebug UP-TO-DATE
+> Task :url_launcher_android:processDebugManifest UP-TO-DATE
+> Task :video_player_android:extractDeepLinksDebug UP-TO-DATE
+> Task :video_player_android:processDebugManifest UP-TO-DATE
+> Task :volume_controller:extractDeepLinksDebug UP-TO-DATE
+> Task :volume_controller:processDebugManifest UP-TO-DATE
+> Task :app:processDebugMainManifest UP-TO-DATE
+> Task :app:outputDebugAppLinkSettings UP-TO-DATE
+> Task :app:processDebugManifest UP-TO-DATE
+> Task :app:processDebugManifestForPackage UP-TO-DATE
+> Task :app_links:mapDebugSourceSetPaths UP-TO-DATE
+> Task :app_links:compileDebugLibraryResources UP-TO-DATE
+> Task :audio_service:mapDebugSourceSetPaths UP-TO-DATE
+> Task :audio_service:compileDebugLibraryResources UP-TO-DATE
+> Task :audio_session:mapDebugSourceSetPaths UP-TO-DATE
+> Task :audio_session:compileDebugLibraryResources UP-TO-DATE
+> Task :audioplayers_android:mapDebugSourceSetPaths UP-TO-DATE
+> Task :audioplayers_android:compileDebugLibraryResources UP-TO-DATE
+> Task :connectivity_plus:mapDebugSourceSetPaths UP-TO-DATE
+> Task :connectivity_plus:compileDebugLibraryResources UP-TO-DATE
+> Task :device_info_plus:mapDebugSourceSetPaths UP-TO-DATE
+> Task :device_info_plus:compileDebugLibraryResources UP-TO-DATE
+> Task :dynamic_color:mapDebugSourceSetPaths UP-TO-DATE
+> Task :dynamic_color:compileDebugLibraryResources UP-TO-DATE
+> Task :ffmpeg_kit_flutter_new_audio:mapDebugSourceSetPaths UP-TO-DATE
+> Task :ffmpeg_kit_flutter_new_audio:compileDebugLibraryResources UP-TO-DATE
+> Task :flutter_local_notifications:mapDebugSourceSetPaths UP-TO-DATE
+> Task :flutter_local_notifications:compileDebugLibraryResources UP-TO-DATE
+> Task :flutter_secure_storage:mapDebugSourceSetPaths UP-TO-DATE
+> Task :flutter_secure_storage:compileDebugLibraryResources UP-TO-DATE
+> Task :integration_test:mapDebugSourceSetPaths UP-TO-DATE
+> Task :integration_test:compileDebugLibraryResources UP-TO-DATE
+> Task :jni:mapDebugSourceSetPaths UP-TO-DATE
+> Task :jni:compileDebugLibraryResources UP-TO-DATE
+> Task :jni_flutter:mapDebugSourceSetPaths UP-TO-DATE
+> Task :jni_flutter:compileDebugLibraryResources UP-TO-DATE
+> Task :open_filex:mapDebugSourceSetPaths UP-TO-DATE
+> Task :open_filex:compileDebugLibraryResources UP-TO-DATE
+> Task :permission_handler_android:mapDebugSourceSetPaths UP-TO-DATE
+> Task :permission_handler_android:compileDebugLibraryResources UP-TO-DATE
+> Task :receive_sharing_intent:mapDebugSourceSetPaths UP-TO-DATE
+> Task :receive_sharing_intent:compileDebugLibraryResources UP-TO-DATE
+> Task :record_android:mapDebugSourceSetPaths UP-TO-DATE
+> Task :record_android:compileDebugLibraryResources UP-TO-DATE
+> Task :share_plus:mapDebugSourceSetPaths UP-TO-DATE
+> Task :share_plus:compileDebugLibraryResources UP-TO-DATE
+> Task :shared_preferences_android:mapDebugSourceSetPaths UP-TO-DATE
+> Task :shared_preferences_android:compileDebugLibraryResources UP-TO-DATE
+> Task :sqflite_android:mapDebugSourceSetPaths UP-TO-DATE
+> Task :sqflite_android:compileDebugLibraryResources UP-TO-DATE
+> Task :url_launcher_android:mapDebugSourceSetPaths UP-TO-DATE
+> Task :url_launcher_android:compileDebugLibraryResources UP-TO-DATE
+> Task :video_player_android:mapDebugSourceSetPaths UP-TO-DATE
+> Task :video_player_android:compileDebugLibraryResources UP-TO-DATE
+> Task :volume_controller:mapDebugSourceSetPaths UP-TO-DATE
+> Task :volume_controller:compileDebugLibraryResources UP-TO-DATE
+> Task :app:processDebugResources UP-TO-DATE
+> Task :app:preDebugUnitTestBuild
+> Task :app:javaPreCompileDebugUnitTest UP-TO-DATE
+> Task :app_links:bundleLibRuntimeToJarDebug UP-TO-DATE
+> Task :app_links:compressDebugJavaRes NO-SOURCE
+> Task :audio_service:bundleLibRuntimeToJarDebug UP-TO-DATE
+> Task :audio_service:compressDebugJavaRes NO-SOURCE
+> Task :audio_session:bundleLibRuntimeToJarDebug UP-TO-DATE
+> Task :audio_session:compressDebugJavaRes UP-TO-DATE
+> Task :audioplayers_android:bundleLibRuntimeToJarDebug UP-TO-DATE
+> Task :audioplayers_android:compressDebugJavaRes UP-TO-DATE
+> Task :connectivity_plus:bundleLibRuntimeToJarDebug UP-TO-DATE
+> Task :connectivity_plus:compressDebugJavaRes NO-SOURCE
+> Task :device_info_plus:bundleLibRuntimeToJarDebug UP-TO-DATE
+> Task :device_info_plus:compressDebugJavaRes UP-TO-DATE
+> Task :dynamic_color:bundleLibRuntimeToJarDebug UP-TO-DATE
+> Task :dynamic_color:compressDebugJavaRes UP-TO-DATE
+> Task :ffmpeg_kit_flutter_new_audio:bundleLibRuntimeToJarDebug UP-TO-DATE
+> Task :ffmpeg_kit_flutter_new_audio:compressDebugJavaRes NO-SOURCE
+> Task :flutter_local_notifications:bundleLibRuntimeToJarDebug UP-TO-DATE
+> Task :flutter_local_notifications:compressDebugJavaRes NO-SOURCE
+> Task :flutter_secure_storage:bundleLibRuntimeToJarDebug UP-TO-DATE
+> Task :flutter_secure_storage:compressDebugJavaRes NO-SOURCE
+> Task :integration_test:bundleLibRuntimeToJarDebug UP-TO-DATE
+> Task :integration_test:compressDebugJavaRes NO-SOURCE
+> Task :jni:bundleLibRuntimeToJarDebug UP-TO-DATE
+> Task :jni:compressDebugJavaRes NO-SOURCE
+> Task :jni_flutter:bundleLibRuntimeToJarDebug UP-TO-DATE
+> Task :jni_flutter:compressDebugJavaRes NO-SOURCE
+> Task :open_filex:bundleLibRuntimeToJarDebug UP-TO-DATE
+> Task :open_filex:compressDebugJavaRes NO-SOURCE
+> Task :permission_handler_android:bundleLibRuntimeToJarDebug UP-TO-DATE
+> Task :permission_handler_android:compressDebugJavaRes NO-SOURCE
+> Task :receive_sharing_intent:bundleLibRuntimeToJarDebug UP-TO-DATE
+> Task :receive_sharing_intent:compressDebugJavaRes UP-TO-DATE
+> Task :record_android:bundleLibRuntimeToJarDebug UP-TO-DATE
+> Task :record_android:compressDebugJavaRes UP-TO-DATE
+> Task :share_plus:bundleLibRuntimeToJarDebug UP-TO-DATE
+> Task :share_plus:compressDebugJavaRes UP-TO-DATE
+> Task :shared_preferences_android:bundleLibRuntimeToJarDebug UP-TO-DATE
+> Task :shared_preferences_android:compressDebugJavaRes UP-TO-DATE
+> Task :sqflite_android:bundleLibRuntimeToJarDebug UP-TO-DATE
+> Task :sqflite_android:compressDebugJavaRes NO-SOURCE
+> Task :url_launcher_android:bundleLibRuntimeToJarDebug UP-TO-DATE
+> Task :url_launcher_android:compressDebugJavaRes UP-TO-DATE
+> Task :video_player_android:bundleLibRuntimeToJarDebug UP-TO-DATE
+> Task :video_player_android:compressDebugJavaRes UP-TO-DATE
+> Task :volume_controller:bundleLibRuntimeToJarDebug UP-TO-DATE
+> Task :volume_controller:compressDebugJavaRes UP-TO-DATE
+> Task :app:compileDebugJavaWithJavac UP-TO-DATE
+> Task :app:compressDebugJavaRes UP-TO-DATE
+> Task :app:bundleDebugClassesToCompileJar
+> Task :app:bundleDebugClassesToRuntimeJar
+> Task :app:compileDebugUnitTestKotlin
+> Task :app:compileDebugUnitTestJavaWithJavac NO-SOURCE
+> Task :app:compressDebugUnitTestJavaRes UP-TO-DATE
+> Task :app:extractDebugUnitTestJavaRes UP-TO-DATE
+
+> Task :app:testDebugUnitTest
+Picked up JAVA_TOOL_OPTIONS:  -Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts -Dhttps.proxyHost=proxy -Dhttps.proxyPort=8080 -Dhttp.proxyHost=proxy -Dhttp.proxyPort=8080 -Dhttp.nonProxyHosts=localhost|127.*|[::1]
+
+[Incubating] Problems report is available at: file:///workspace/Private/build/reports/problems/problems-report.html
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 10.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/9.8.2/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD SUCCESSFUL in 4m 6s
+414 actionable tasks: 11 executed, 403 up-to-date

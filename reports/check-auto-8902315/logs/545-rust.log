@@ -1,0 +1,738 @@
+   Compiling mornye-core v0.1.0 (/workspace/Private/rust_backend/crates/core)
+   Compiling cap-primitives v4.0.3
+   Compiling cap-std v4.0.3
+   Compiling mornye-providers v0.1.0 (/workspace/Private/rust_backend/crates/providers)
+   Compiling mornye-extensions v0.1.0 (/workspace/Private/rust_backend/crates/extensions)
+   Compiling mornye-mobile v0.1.0 (/workspace/Private/rust_backend/crates/mobile)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 22.98s
+     Running unittests src/main.rs (rust_backend/target/debug/deps/mornye_bindgen-47472a275f462f6f)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (rust_backend/target/debug/deps/mornye_cast-9be88f862f72220f)
+
+running 10 tests
+test media::tests::ranges_follow_rfc_9110_single_ranges ... ok
+test media::tests::file_urls_decode_to_paths ... ok
+test proto::tests::frames_round_trip_and_match_the_reference_encoding ... ok
+test proto::tests::long_payloads_use_multi_byte_lengths ... ok
+test proto::tests::unknown_fields_are_skipped_and_truncation_fails ... ok
+test sender::tests::a_partial_status_keeps_the_items_token_until_the_session_changes ... ok
+test sender::tests::disconnected_snapshots_carry_only_the_revision ... ok
+test sender::tests::snapshots_use_the_android_status_shape ... ok
+test sender_tests::an_unreachable_receiver_fails_without_a_session ... ok
+test sender_tests::a_session_launches_loads_plays_and_stops_the_receiver ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.19s
+
+     Running tests/media_server.rs (rust_backend/target/debug/deps/media_server-2bba9567f501aab6)
+
+running 1 test
+test files_stream_whole_or_by_range_and_relays_pass_ranges_through ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+     Running unittests src/lib.rs (rust_backend/target/debug/deps/mornye_core-9768701247ca24c2)
+
+running 148 tests
+test cancellation::tests::closed_registry_rejects_batch_including_empty_input ... ok
+test cancellation::tests::batch_reset_preserves_active_leases_and_unselected_cancellation ... ok
+test cancellation::tests::timeout_bounds_do_not_overflow ... ok
+test cancellation::tests::external_waker_observes_changes_without_holding_the_registry_lock ... ok
+test cover::library::tests::android_content_names_use_the_complete_sha256 ... ok
+test cancellation::tests::batch_reset_matches_individual_resets ... ok
+test app_version::tests::shared_updates_are_atomic_trimmed_and_cannot_outlive_the_owner ... ok
+test cover::library::tests::cache_has_fixed_byte_and_entry_bounds ... ok
+test cover::tests::rgb_and_opaque_rgba_produce_identical_resized_pngs ... ok
+test cover::tests::webp_is_preserved_when_small_and_resized_to_jpeg_with_alpha_composited ... ok
+test cue::tests::parse_cue_semantics_and_bounds ... ok
+test fs::tests::clean_matches_previous_isrc_copy_and_go_results ... ok
+test fs::tests::default_temp_prefix_matches_named_temp_file ... ok
+test fs::tests::write_atomic_persist_errors_keep_tempfile_message_and_io_cause ... ok
+test fs::tests::write_atomic_stages_with_prefix_syncs_checks_then_replaces ... ok
+test isrc::cache::tests::cache_bounds_directories_bytes_and_dead_builder_keys ... ok
+test isrc::cache::tests::cancelled_rebuild_never_replaces_previous_snapshot ... ok
+test isrc::cache::tests::invalidation_and_clear_preserve_active_builder_and_reject_its_stale_publish ... ok
+test isrc::cache::tests::rebuild_shares_unchanged_entries_and_keeps_changed_duplicate_walk_order ... ok
+test isrc::tests::incomplete_block_and_malformed_field_lengths_remain_empty ... ok
+test isrc::tests::irrelevant_large_fields_are_skipped_and_reads_observe_cancellation ... ok
+test isrc::tests::streaming_comments_preserve_first_isrc_alias_and_utf8_contracts ... ok
+test json::tests::field_name_folds_go_special_letters ... ok
+test json::tests::key_seed_borrows_canonical_keys_and_owns_escaped_keys ... ok
+test lyrics::config::tests::legacy_lyrics_provider_id_resolves_to_current_id_without_duplicates ... ok
+test lyrics::json::tests::field_folding_preserves_special_letters_and_null_duplicates ... ok
+test lyrics::lrc::tests::first_party_lyrics_do_not_credit_paxsenix ... ok
+test lyrics::lrc::tests::genuine_zero_start_retains_line_and_word_timing ... ok
+test lyrics::lrc::tests::invalid_sync_flag_preserves_a_plain_text_fallback ... ok
+test lyrics::lrc::tests::optional_text_is_safe_metadata_not_lyric_content ... ok
+test lyrics::lrc::tests::optional_timings_cannot_promote_plain_lyrics_to_synced ... ok
+test lyrics::lrc::tests::timed_writer_credit_is_not_lyric_timing ... ok
+test lyrics::lrc::tests::usability_matches_the_app_and_native_finalizer ... ok
+test lyrics::lrc::tests::writer_validates_provider_flags_and_ignores_synthetic_end_times ... ok
+test lyrics::lrc::tests::writing_timestamps_never_discards_milliseconds ... ok
+test lyrics::lrc::tests::zero_placeholders_are_plain_lyrics_without_losing_source_or_text ... ok
+test lyrics::matching::tests::simplify_and_primary_artist_keep_go_order_and_offsets ... ok
+test lyrics::payloads::tests::absent_or_invalid_metadata_preserves_original_lyrics ... ok
+test lyrics::payloads::tests::apple_agents_restore_vocal_sides_without_reformatting_word_times ... ok
+test lyrics::payloads::tests::apple_content_fallback_honors_agents_only_when_multi_person_is_enabled ... ok
+test lyrics::payloads::tests::apple_v3_does_not_depend_on_agent_order_or_group_metadata ... ok
+test lyrics::payloads::tests::apple_voice_correction_preserves_unknown_or_ambiguous_lines ... ok
+test lyrics::payloads::tests::invalid_romanization_timing_falls_back_to_readable_text ... ok
+test lyrics::payloads::tests::language_selection_prefers_song_language_and_usable_groups ... ok
+test lyrics::payloads::tests::malformed_optional_lines_do_not_hide_other_supplements ... ok
+test lyrics::payloads::tests::nearest_matching_is_bounded_and_exact_matches_win ... ok
+test lyrics::payloads::tests::romanization_spans_keep_syllables_spaces_and_original_word_times ... ok
+test lyrics::payloads::tests::supplements_follow_output_timestamps_in_both_apple_modes ... ok
+test lyrics::payloads::tests::zarz_lrc_apple_handles_line_only_unsynced_and_invalid_responses ... ok
+test lyrics::payloads::tests::zarz_lrc_apple_preserves_syllables_and_separate_background_groups ... ok
+test lyrics::payloads::ttml::tests::clock_values_and_invalid_documents ... ok
+test lyrics::payloads::ttml::tests::duet_sides_and_background_groups_follow_apple_formatting ... ok
+test lyrics::payloads::ttml::tests::line_timed_documents_and_head_translations ... ok
+test lyrics::payloads::ttml::tests::syllables_join_inside_words_and_keep_word_times ... ok
+test media::hires::evidence::streaming::tests::circular_stft_matches_buffered_reference_exactly ... ok
+test cover::library::tests::repeated_artwork_reuses_pixels_and_checks_cancellation_on_hits ... ok
+test cover::library::tests::oversized_original_still_returns_a_resized_thumbnail ... ok
+test cover::library::tests::hits_on_the_same_artwork_share_where_it_is_stored ... ok
+test media::hires::tests::a_24_bit_master_made_at_44k_has_limited_bandwidth ... ok
+test media::hires::tests::a_96k_master_filtered_at_27k_is_not_evidence_of_upsampling ... ok
+test media::hires::tests::a_cd_file_claims_nothing ... ok
+test media::hires::tests::a_cancelled_check_stops ... ok
+test media::hires::tests::a_16bit_noise_floor_in_one_channel_does_not_hide_quieter_detail_in_another ... ok
+test media::hires::tests::a_full_resolution_channel_prevents_a_false_padding_or_pattern_verdict ... ok
+test media::hires::evidence::streaming::tests::integer_histograms_match_every_ratio_phase_padding_and_violation_boundary ... ok
+test media::hires::tests::a_padded_24_bit_cd_master_is_certain ... ok
+test media::hires::tests::a_real_24_bit_cd_rate_file_is_not_flagged ... ok
+test media::hires::tests::a_gradual_mastering_roll_off_is_not_flagged_as_fake ... ok
+test media::hires::tests::a_lower_noise_floor_still_measures ... ok
+test media::hires::tests::antiphase_channels_do_not_cancel_spectral_evidence ... ok
+test media::hires::tests::cropped_segment_edges_do_not_create_ultrasonic_energy ... ok
+test media::hires::tests::errors_and_unsupported_formats ... ok
+test media::hires::tests::flac_frame_numbers_use_the_utf8_like_coding ... ok
+test media::hires::tests::full_bandwidth_is_measured_relative_to_each_sample_rate ... ok
+test media::hires::tests::an_upsampled_16_bit_master_is_likely ... ok
+test media::hires::tests::bandwidth_alone_cannot_identify_an_upsampled_cd ... ok
+test media::hires::tests::genuine_hires_is_not_flagged ... ok
+test media::hires::tests::one_flac_decode_pass_serves_all_eight_channels_with_exact_window_evidence ... ok
+test media::hires::tests::music_is_told_apart_from_ultrasonic_noise ... ok
+test media::hires::tests::radix2_fft_matches_a_direct_dft ... ok
+test media::hires::tests::padded_depth_does_not_make_high_rate_content_safe_to_replace_with_cd ... ok
+test media::hires::tests::replacement_checks_every_channel ... ok
+test media::hires::tests::replacement_comparison_is_cancellable ... ok
+test media::hires::tests::replacement_rejects_changed_master_rate_duration_and_truncation ... ok
+test media::hires::tests::replacement_rejects_real_precision_outside_the_sampled_window ... ok
+test media::hires::tests::replacement_verifies_padding_and_sample_repetition_across_every_frame ... ok
+test media::hires::tests::integer_patterns_are_certain_but_spectral_imaging_is_likely ... ok
+test media::hires::tests::rate_upsampling_does_not_make_real_24_bit_depth_safe_to_replace_with_cd ... ok
+test media::hires::tests::streaming_wav_matches_all_integer_and_float_sample_encodings ... ok
+test media::hires::tests::streaming_wav_preserves_independent_antiphase_channels_and_partial_windows ... ok
+test media::hires::tests::silence_is_inconclusive ... ok
+test media::hires::tests::wav_rejects_oversized_and_truncated_chunks_without_allocating_them ... ok
+test media::hires::tests::wav_skips_extra_format_bytes_and_odd_chunk_padding ... ok
+test metadata::musicbrainz::casing::tests::sigma_context_does_not_depend_on_transform_buffer_boundaries ... ok
+test music_signature::tests::cancellation_stops_the_fingerprint ... ok
+test music_signature::tests::crc32_matches_zlib ... ok
+test music_signature::tests::data_uri_carries_the_encoded_container ... ok
+test music_signature::tests::header_and_bands_follow_the_container_layout ... ok
+test music_signature::tests::large_pass_gaps_are_escaped_with_the_absolute_pass ... ok
+test music_signature::tests::level_is_reported_in_dbfs ... ok
+test media::hires::tests::sixteen_bit_makes_no_depth_claim ... ok
+test media::hires::tests::wav_is_checked_too ... ok
+test music_signature::tests::silence_steady_tones_and_out_of_band_tones_have_no_peaks ... ok
+test native_audio_analysis::tests::automix_keeps_quiet_beats_in_changing_dynamics ... ok
+test native_audio_analysis::tests::automix_matches_shared_dart_drum_vectors ... ok
+test music_signature::tests::tone_bursts_land_in_their_band_at_their_frequency ... ok
+test native_audio_analysis::tests::automix_silence_short_and_partial_frames_remain_unknown ... ok
+test native_audio_analysis::tests::spectral_silence_full_band_and_invalid_inputs ... ok
+test native_audio_analysis::tests::worker_cancels_inside_analysis_without_deleting_owned_input ... ok
+test native_audio_analysis::tests::automix_noise_does_not_invent_a_reliable_beat ... ok
+test music_signature::tests::signatures_are_deterministic_and_capped_at_twelve_seconds ... ok
+test media::hires::tests::a_long_stereo_flac_is_read_from_the_middle ... ok
+test native_audio_features::tests::click_track_gives_its_tempo_and_onsets ... ok
+test native_audio_features::tests::silence_and_short_windows_describe_nothing ... ok
+test native_audio_features::tests::the_job_is_bounded_and_cancelable ... ok
+test native_audio_features::tests::windows_that_disagree_on_tempo_lower_its_confidence ... ok
+test native_audio_features::tests::a_tone_and_noise_differ_in_brightness_and_flatness ... ok
+test native_palette::tests::solid_pixels_and_invalid_or_cancelled_requests ... ok
+test progress::batch_tests::batch_removal_preserves_revisions_tombstones_and_cached_survivors ... ok
+test progress::batch_tests::batch_wakes_subscribers_and_closed_registry_rejects_empty_batch ... ok
+test progress::batch_tests::pruning_resets_old_cursors_and_retains_newer_removals ... ok
+test progress::reporter::tests::coalescing_flushes_threshold_interval_total_changes_and_rollbacks ... ok
+test resolver::tests::contributor_annotations_keep_the_recording_identity ... ok
+test resolver::tests::repeated_maps_merge_but_null_resets_and_nested_structs_retain_fields ... ok
+test tags::library::tests::direct_tag_mapping_matches_serialized_mapping ... ok
+test tags::tests::library_scan_preserves_replaygain_values_written_to_flac ... ok
+test tags::tests::opus_in_mp4_reads_tags_cover_and_library_quality ... ok
+test tags::tests::sniff_container_reads_the_bytes_instead_of_the_name ... ok
+test tags::write::id3::tests::syncsafe_size_matches_previous_decoder_across_bit_boundaries ... ok
+test tags::write::tests::changed_flac_tags_match_full_rewrite_and_preserve_audio ... ok
+test tags::write::tests::discarded_flac_picture_preserves_eof_and_cancellation ... ok
+test tags::write::tests::discarded_flac_pictures_still_count_toward_metadata_limit ... ok
+test tags::write::tests::id3_prefixed_flac_observes_cancellation_after_reading_prefix_header ... ok
+test tags::write::tests::id3_prefixed_flac_writers_preserve_prefix_audio_and_unedited_metadata ... ok
+test tags::write::tests::invalid_id3_prefixed_flac_never_writes_output ... ok
+test tags::write::tests::oversized_flac_cover_reencodes_or_omits_invalid_image ... ok
+test tags::write::tests::primary_artist_uses_the_shared_separator_set ... ok
+test tags::write::tests::replacement_flac_artwork_preserves_other_blocks_and_audio ... ok
+test tags::write::tests::split_artist_credits_recognize_variants_without_splitting_band_words ... ok
+test tags::write::tests::unchanged_flac_still_validates_frames_and_observes_cancellation ... ok
+test tags::write::tests::unchanged_flac_tags_do_not_copy_audio_or_write_output ... ok
+test tags::write::tests::unchanged_id3_prefixed_flac_skips_large_prefix_and_audio ... ok
+test text::tests::lower_hex_matches_per_byte_format_for_every_byte ... ok
+test xml::tests::bounds_actual_element_nesting_and_ignores_self_closing_nodes ... ok
+test xml::tests::quoted_attributes_and_opaque_sections_are_not_element_depth ... ok
+test native_palette::tests::ordered_populations_match_pinned_material_dart_vectors ... ok
+test native_audio_features::tests::quiet_and_loud_differ_in_loudness ... ok
+test native_audio_features::tests::triads_give_their_keys ... ok
+
+test result: ok. 148 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 9.86s
+
+     Running tests/artist_tag_mode.rs (rust_backend/target/debug/deps/artist_tag_mode-8dbfae4b490c151b)
+
+running 6 tests
+test primary_mode_applies_to_flac_download_embedding ... ok
+test download_embed_honors_separators_and_primary_artist_mode ... ok
+test separator_preferences_decode_without_changing_download_names ... ok
+test custom_separators_round_trip_all_tag_writers_without_touching_audio ... ok
+test primary_mode_keeps_only_the_first_artist_in_every_native_writer ... ok
+test high_resolution_artwork_replaces_embedded_thumbnails_without_changing_audio ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.22s
+
+     Running tests/id3_cover.rs (rust_backend/target/debug/deps/id3_cover-384e3f1c65e4b32b)
+
+running 2 tests
+test does_not_strip_arbitrary_bytes_or_unrecognized_image_data ... ok
+test extracts_decodable_id3_pictures_with_padding_and_aligned_utf16_descriptions ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/library_scan_formats.rs (rust_backend/target/debug/deps/library_scan_formats-1bb2879d1987c05d)
+
+running 13 tests
+test flac_behind_an_id3_tag_keeps_its_vorbis_comments ... ok
+test adts_aac_behind_an_id3_tag_keeps_its_tags ... ok
+test opus_invalid_r128_does_not_hide_valid_legacy_gain ... ok
+test opus_prefers_r128_over_legacy_gains_in_either_comment_order ... ok
+test opus_r128_is_additional_to_the_decoder_header_gain ... ok
+test interrupted_and_short_reads_give_the_same_result ... ok
+test opus_comments_after_a_large_cover_on_small_pages_are_read ... ok
+test opus_without_title_or_artist_keeps_its_other_tags ... ok
+test unreadable_streams_are_still_rejected ... ok
+test untagged_adts_aac_is_read_from_its_frames ... ok
+test opus_replaygain_after_many_comments_is_read_by_scan_and_playback ... ok
+test manual_opus_cover_replacement_remains_readable ... ok
+test opus_with_high_resolution_artwork_remains_readable ... ok
+
+test result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.04s
+
+     Running tests/library_tagless_audio.rs (rust_backend/target/debug/deps/library_tagless_audio-ae1f58ddbe9ffe71)
+
+running 5 tests
+test io_failure_and_cancellation_never_become_tagless_success ... ok
+test invalid_audio_remains_rejected_and_exposes_the_parser_failure ... ok
+test m4a_with_only_genre_keeps_its_tags_without_requiring_a_title ... ok
+test mp3_with_only_album_keeps_its_tags_without_requiring_title_or_artist ... ok
+test readable_untagged_audio_uses_the_display_name_without_workspace_guesses ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/optimization_tags.rs (rust_backend/target/debug/deps/optimization_tags-0498fd12ac0fac8c)
+
+running 4 tests
+test flac_combined_handles_bad_cover_metadata_eof_and_cancel ... ok
+test flac_combined_metadata_and_cover_match_separate_reads_with_less_io ... ok
+test dense_mp4_reuses_buffered_reads_across_metadata_seeks ... ok
+test dense_mp4_supports_a_descriptor_position_and_rejects_malformed_eof_and_cancel ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/reenrich_motion_artwork.rs (rust_backend/target/debug/deps/reenrich_motion_artwork-346e46fcb92b542e)
+
+running 2 tests
+test cover_motion_survives_preview_and_apply_without_becoming_an_audio_tag ... ok
+test another_release_and_unselected_cover_cannot_supply_motion ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/replaygain_removal.rs (rust_backend/target/debug/deps/replaygain_removal-fa4723ebf81a3d59)
+
+running 4 tests
+test removal_can_clear_the_last_ape_tags ... ok
+test riff_removal_preserves_unrecognized_id3_frames ... ok
+test partial_empty_m4a_updates_do_not_remove_existing_gain ... ok
+test removal_preserves_audio_artwork_and_other_metadata_in_native_containers ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/wav_metadata.rs (rust_backend/target/debug/deps/wav_metadata-035f62ab0bcb11a8)
+
+running 7 tests
+test wav_clear_removes_stale_info_and_partial_edits_preserve_other_fields ... ok
+test wav_edits_update_info_and_id3_without_changing_audio_or_other_lists ... ok
+test wav_edit_preserves_private_id3_frames_and_existing_artwork ... ok
+test wav_edit_rejects_truncated_info_before_writing_output ... ok
+test wav_replaygain_removal_leaves_info_unchanged ... ok
+test wav_updates_all_duplicate_info_values_and_repeated_writes_stay_aligned ... ok
+test wav_partial_track_edit_uses_the_existing_number_in_both_tags ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (rust_backend/target/debug/deps/mornye_extensions-63cf3b4248e344e2)
+
+running 121 tests
+test auth::tests::failed_journal_write_does_not_publish_an_unsaved_challenge ... ok
+test auth::tests::corrupt_or_changed_key_journal_never_restores_callback_ownership ... ok
+test auth::tests::verification_requires_own_nonempty_challenge_between_zero_and_180_seconds_old ... ok
+test auth::tests::encrypted_challenge_and_pkce_survive_restart_but_consumption_does_not_replay ... ok
+test auth::tests::shared_scope_callbacks_remain_one_time_after_restart ... ok
+test auth::tests::restart_rejects_expired_future_replaced_and_cleared_challenges ... ok
+test backend::cover::tests::a_forced_rescan_regenerates_thumbnails_under_the_same_name ... ok
+test backend::cover::tests::an_empty_thumbnail_is_extracted_again ... ok
+test backend::cover::tests::android_names_share_one_file_per_picture_and_keep_legacy_references ... ok
+test backend::cover::tests::cache_coalesces_and_a_cancelled_caller_does_not_cancel_its_peer ... ok
+test backend::cover::tests::keys_that_collided_under_the_old_hash_get_separate_thumbnails ... ok
+test backend::cover::tests::cache_expires_evicts_by_byte_budget_and_does_not_retain_failures ... ok
+test backend::cover::tests::padded_id3_cache_is_replaced_without_changing_the_audio ... ok
+test backend::cover::tests::a_new_thumbnail_keeps_fresh_file_permissions ... ok
+test backend::cover::tests::a_thumbnail_older_than_the_regenerate_marker_is_not_linked ... ok
+test backend::downloads::container_tests::a_flac_label_on_unrecognized_bytes_fails_without_publishing ... ok
+test backend::downloads::container_tests::provider_format_fields_and_returned_path_override_the_planned_extension ... ok
+test backend::downloads::tests::availability_metadata_preserves_the_catalog_owner ... ok
+test backend::downloads::tests::contributor_annotations_allow_verified_cross_catalog_durations ... ok
+test backend::downloads::tests::download_preserves_source_artist_credits_in_response_and_embedded_tags ... ok
+test backend::downloads::account_tests::personal_account_failures_never_attempt_another_download_provider ... ok
+test backend::downloads::tests::extended_metadata_cancellation_joins_both_blocked_requests ... ok
+test backend::downloads::tests::extended_metadata_overlaps_requests_preserves_fields_and_reuses_genre_fallback ... ok
+test backend::downloads::tests::source_enrichment_upgrades_artwork_without_supplemental_artwork_overrides ... ok
+test backend::downloads::tests::unavailable_catalog_match_reports_the_provider_reason ... ok
+test backend::cover::tests::songs_with_the_same_picture_link_one_file_that_still_holds_it ... ok
+test backend::health::tests::health_ordering_recovers_stale_offline_coalesces_and_joins_refresh ... ok
+test backend::library::scan::tests::cancel_releases_a_paused_scan ... ok
+test backend::library::scan::tests::finished_scan_lists_each_unreadable_file_with_its_reason ... ok
+test backend::downloads::container_tests::downloads_publish_the_actual_container_for_regular_and_explicit_working_paths ... ok
+test backend::downloads::tests::reenrich_cover_and_lyrics_overlap_preserve_best_effort_results_and_cancel ... ok
+test backend::library::scan::tests::incremental_delta_matches_the_json_the_scan_always_returned ... ok
+test backend::library::scan::tests::scan_timing_with_many_thumbnails ... ignored, manual scan timing with many thumbnails
+test backend::library::scan::tests::walk_keeps_order_size_and_time_with_one_stat_per_child ... ok
+test backend::library::scan::tests::walk_still_rejects_nested_symlinks ... ok
+test backend::library::tests::cue_json_checks_cancellation_while_mapping_tracks ... ok
+test backend::library::tests::cue_library_mapping_checks_cancellation_per_track ... ok
+test backend::library::tests::resolved_cue_audio_is_opaque_and_matches_legacy_tracks_without_audio ... ok
+test backend::library::tests::resolved_cue_metadata_scans_without_materializing_audio ... ok
+test backend::metadata::tests::an_unplayable_isrc_match_gives_way_to_a_playable_release ... ok
+test backend::library::scan::tests::paused_scan_holds_its_position_until_resumed ... ok
+test backend::metadata::tests::isrc_http_cancellation_does_not_cancel_another_item ... ok
+test backend::provider_metadata::tests::metadata_provider_work_releases_lease_and_joins_cancelled_worker ... ok
+test backend::metadata::tests::shutdown_cancels_metadata_and_keeps_directory_ownership_until_work_releases ... ok
+test backend::provider_metadata::tests::metadata_provider_work_reports_worker_panic ... ok
+test backend::provider_metadata::tests::metadata_provider_work_returns_immediate_json ... ok
+test backend::provider_metadata::tests::metadata_provider_work_waits_for_delayed_worker_completion ... ok
+test backend::provider_metadata::value_tests::album_editorial_notes_survive_metadata_and_url_routes ... ok
+test backend::provider_metadata::value_tests::artist_concerts_survive_metadata_and_url_routes_without_provider_special_cases ... ok
+test backend::provider_metadata::value_tests::artist_metadata_preserves_logo_separately_from_portrait ... ok
+test backend::provider_metadata::value_tests::concert_details_preserve_generic_actions_and_set_list ... ok
+test backend::provider_metadata::value_tests::metadata_value_bridge_preserves_provider_errors_and_cancelled_leases ... ok
+test backend::provider_metadata::value_tests::metadata_value_worker_joins_cancellation_and_reports_panic ... ok
+test backend::provider_metadata::value_tests::related_tracks_pass_seeds_and_limit_and_need_the_capability ... ok
+test backend::provider_metadata::value_tests::response_envelopes_preserve_json_and_cancellation ... ok
+test backend::provider_metadata::value_tests::search_value_routes_preserve_public_json_dedup_limits_and_cancellation ... ok
+test backend::reenrich::tests::cover_preview_resolves_album_motion_without_replacing_the_still_image ... ok
+test backend::reenrich::tests::missing_album_id_uses_provider_track_details ... ok
+test backend::reenrich::tests::optional_failures_and_different_releases_do_not_supply_video ... ok
+test backend::share::tests::collection_share_cache_is_bounded_fifo_and_revisions_are_distinct ... ok
+test backend::provider_metadata::value_tests::metadata_value_bridge_preserves_album_playlist_and_public_json ... ok
+test crypto::tests::block_cipher_upgrade_preserves_known_ciphertexts_and_inverse ... ok
+test environment::tests::deferred_preview_extensions_require_this_app_build ... ok
+test files::tests::batched_publication_keeps_each_folder_once_until_the_flush ... ok
+test files::tests::capability_directory_operations_preserve_downloads_and_leave_no_staging_files ... ok
+test files::tests::exclusive_publication_preserves_racing_output_and_cleans_cancelled_stage ... ok
+test files::tests::native_reads_reject_links_at_every_component_and_never_write_or_wait_on_special_files ... ok
+test files::tests::stage_from_copies_open_source_after_path_becomes_symlink ... ok
+test files::tests::stage_from_copies_open_source_after_path_replacement ... ok
+test files::tests::stage_from_links_same_filesystem_source_and_survives_source_cleanup ... ok
+test files::tests::stage_from_preserves_existing_destination_and_cleans_cancelled_stage ... ok
+test files::unix::tests::fallback_preserves_destinations_created_during_exclusive_rename ... ok
+test files::unix::tests::fallback_uses_the_open_parent_after_its_directory_is_renamed ... ok
+test files::unix::tests::publication_does_not_hide_other_rename_errors ... ok
+test files::unix::tests::unsupported_exclusive_rename_publishes_complete_audio_without_copying ... ok
+test host::tests::benchmark_owned_text_memory ... ignored, manual release-process peak-memory measurement
+test host::tests::digest_upgrade_preserves_extension_hash_and_hmac_encodings ... ok
+test host::tests::owned_text_reuses_large_buffers_and_preserves_invalid_byte_decoding ... ok
+[Example] password=[REDACTED];
+[Example] password=[REDACTED];
+test logging::tests::disabled_messages_skip_conversion_but_errors_and_closed_state_are_preserved ... ok
+[Extension:example:WARN] password=[REDACTED]; éééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééé...[truncated]
+[Extension:example] failure: failed password=[REDACTED];
+test logging::tests::extension_redaction_precedes_level_inference_and_preserves_raw_byte_truncation ... ok
+test manager::downloads::tests::account_download_mode_is_declared_and_selected_by_settings ... ok
+test manager::downloads::tests::returning_a_borrow_after_uninstall_cannot_recreate_extension_data ... ok
+test manager::postprocess::tests::extension_uses_go_filename_rules_before_path_cleaning ... ok
+test manager::tests::invalid_installations_remain_disabled_after_restart ... ok
+test binary::tests::base64_preserves_newlines_trailing_bits_and_error_offsets ... ok
+test manager::tests::manager_and_isolated_vm_share_one_retained_source_allocation ... ok
+test manager::tests::new_installations_are_usable_and_remain_enabled_after_restart ... ok
+test manager::tests::shutdown_unlocks_inherited_descriptors_without_unlocking_reopened_owner ... ok
+test manager::tests::unreadable_settings_keep_installed_packages_visible_and_preserve_data ... ok
+test manifest::tests::any_domain_wildcard_covers_listed_hosts ... ok
+test network_host::tests::text_response_preserves_status_headers_unicode_and_invalid_bytes ... ok
+test package::branding_tests::current_and_legacy_package_extensions_remain_supported ... ok
+test redact::tests::redaction_preserves_unicode_and_invalid_bytes_around_secret_values ... ok
+test repository::model::tests::field_matching_with_core_folding_equals_previous_matcher ... ok
+test repository::tests::cache_registry_clone_shares_arc_and_round_trips_disk_shape ... ok
+test repository::tests::downloaded_packages_use_current_brand_and_keep_sflx_extension ... ok
+test resolution::tests::charges_override_nested_pauses_and_exhaustion_is_terminal ... ok
+test runtime::json_input::tests::benchmark_shape_validation ... ignored, manual release benchmark: JSON validation only, not device latency
+test runtime::json_input::tests::validation_matches_value_for_truncated_and_mutated_payloads ... ok
+test runtime::json_input::tests::validation_matches_value_shapes_numbers_unicode_and_errors ... ok
+test runtime::tests::argument_validation_rejects_before_execution_and_keeps_runtime_usable ... ok
+test runtime::tests::cached_source_still_obeys_each_vms_memory_and_stack_limits ... ok
+test runtime::tests::compiled_source_reuses_bytecode_but_isolates_state_settings_and_new_source ... ok
+test manager::tests::upgrades_preserve_enabled_and_disabled_choices_after_restart ... ok
+test runtime::tests::idle_gc_reclaims_unreachable_cycles_without_changing_live_state ... ok
+[Extension::INFO] entered
+test runtime::tests::interrupted_worker_is_closed_before_publishing_its_reply ... ok
+test runtime::tests::queued_lease_interruption_returns_without_retiring_the_busy_worker ... ok
+test runtime::tests::queued_timeout_returns_before_busy_worker_is_released ... ok
+test runtime::tests::ffmpeg_waits_for_completion_cancellation_or_deadline_without_polling ... ok
+test signed_session::fetch::signed_session_mint_tests::mint_failure_becomes_verification_required ... ok
+test signed_session::fetch::signed_session_mint_tests::mint_failure_propagates_cancellation ... ok
+test signed_session::fetch::signed_session_mint_tests::signed_fetch_does_not_turn_in_flight_cancellation_into_verification ... ok
+test signed_session::fetch::signed_session_mint_tests::signed_fetch_preserves_verification_for_missing_expired_and_blocked_sessions ... ok
+test storage::tests::aes_gcm_upgrade_reads_existing_wire_format_and_rejects_tampering ... ok
+test storage::tests::encrypted_snapshots_are_scoped_to_master_key ... ok
+test storage::tests::retired_store_cannot_read_or_overwrite_a_reinstalled_extension ... ok
+test url_host::tests::url_and_query_objects_preserve_legacy_constructor_contracts ... ok
+test url_host::tests::url_globals_resolve_track_paths_and_album_query_ids ... ok
+test backend::library::scan::tests::a_scan_stores_one_thumbnail_file_per_picture_under_every_song_name ... ok
+test backend::library::scan::tests::scan_thumbnails_are_whole_files_even_when_the_scan_stops ... ok
+test runtime::tests::worker_collects_once_after_idle_burst_and_preserves_live_state ... ok
+
+test result: ok. 118 passed; 0 failed; 3 ignored; 0 measured; 0 filtered out; finished in 5.54s
+
+     Running tests/optimization_chunked.rs (rust_backend/target/debug/deps/optimization_chunked-5357568dc5177d68)
+
+running 2 tests
+test chunked_probe_and_ranges_share_one_keep_alive_connection ... ok
+test small_retryable_error_body_keeps_connection_for_retry ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.57s
+
+     Running tests/optimization_fetch.rs (rust_backend/target/debug/deps/optimization_fetch-9e15ad027943fb59)
+
+running 2 tests
+test fetch_json_preserves_go_numbers_normalization_and_fresh_objects ... ok
+test direct_http_arguments_preserve_body_bytes_getters_headers_and_content_type ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+     Running tests/optimization_redirects.rs (rust_backend/target/debug/deps/optimization_redirects-7ad8e1d5c780d023)
+
+running 2 tests
+test cancellation_interrupts_redirect_body_or_followup_without_waiting_for_eof ... ok
+test redirect_bodies_report_connection_reuse_without_waiting_for_unbounded_bodies ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.08s
+
+     Running tests/optimization_segments.rs (rust_backend/target/debug/deps/optimization_segments-1d4223dc211e6789)
+
+running 2 tests
+test cancellation_of_stalled_segment_window_joins_workers_and_preserves_output ... ok
+test stalled_first_segment_bounds_files_and_requests_then_assembles_in_order ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.98s
+
+     Running tests/signed_session_verification.rs (rust_backend/target/debug/deps/signed_session_verification-98dbff44401e28ea)
+
+running 1 test
+test bootstrap_failure_reaches_the_extension_as_a_retryable_verification_result ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+     Running unittests src/lib.rs (rust_backend/target/debug/deps/mornye_mobile-25a9d98e95bb7ee7)
+
+running 143 tests
+test data_jobs::tests::hashes_streamed_files_and_obeys_cancellation ... ok
+test hires::tests::unsupported_formats_are_not_errors_and_bad_options_are ... ok
+test library_metadata::tests::descriptor_remains_open_and_audio_does_not_need_a_path_grant ... ok
+test hires::tests::replacement_verification_is_exposed_and_fails_closed ... ok
+test library_metadata::tests::original_artwork_is_copied_without_decoding_or_changing_the_source ... ok
+test library_metadata::tests::document_scan_thumbnails_share_names_and_regeneration_with_the_rust_scan ... ok
+test native_autoplay_taste::tests::cancellation_stops_training ... ok
+test native_autoplay_taste::tests::empty_history_preserves_empty_model ... ok
+test native_autoplay_taste::tests::seeded_rng_matches_pinned_dart_vm ... ok
+test native_autoplay_taste::tests::endorsements_are_not_counted_as_listens ... ok
+test native_backup::archive::tests::cancelled_extraction_discards_the_entire_staging_directory ... ok
+test native_backup::archive::tests::cancelled_write_removes_only_its_partial_output ... ok
+test native_backup::archive::tests::corrupt_compressed_payload_is_rejected_and_cleaned_up ... ok
+test native_backup::archive::tests::cover_manifest_order_and_extension_match_flutter ... ok
+test native_backup::archive::tests::invalid_profile_or_missing_photo_leaves_no_staging ... ok
+test native_backup::archive::tests::oversize_declared_history_is_rejected_before_extraction ... ok
+test native_backup::archive::tests::unreferenced_and_foreign_entries_are_never_extracted ... ok
+test native_backup::archive::tests::unsafe_or_missing_write_entry_cannot_publish_partial_archive ... ok
+test native_backup::archive::tests::native_archive_round_trip_preserves_payloads_and_selective_categories ... ok
+test native_backup::collections::tests::dart_codec_duplicates_dates_artwork_and_cascades_survive_native_restore ... ok
+test library_metadata::tests::document_scan_reuses_the_thumbnail_the_rust_scan_wrote ... ok
+test native_backup::collections::tests::empty_restore_clears_categories_and_wrong_schema_is_rejected ... ok
+test native_backup::collections::tests::staging_does_not_hold_main_wal_writer_and_publication_is_atomic ... ok
+test native_backup::tests::actual_complete_dart_history_codec_and_path_identity_parity ... ok
+test native_backup::tests::backup_replace_round_trip_preserves_flags_dates_keys_order_and_fts ... ok
+test native_backup::collections::tests::truncated_malformed_unknown_and_orphaned_commands_never_wipe_live_rows ... ok
+test native_backup::tests::cancelling_restore_after_swap_keeps_old_rows_and_path_keys ... ok
+test native_backup::tests::legacy_duplicate_history_uses_last_field_and_invalid_backup_cleans_output ... ok
+test native_backup::tests::legacy_split_accepts_current_app_marker ... ok
+test native_backup::tests::legacy_split_streams_history_and_retains_category_semantics ... ok
+test native_backup::tests::merge_replaces_ids_without_clearing_unrelated_downloads ... ok
+test native_cache::unix::tests::a_referenced_subsonic_cover_keeps_the_pointer_to_its_refreshed_file ... ok
+test native_cache::unix::tests::benchmark_5000_payloads ... ignored, manual realistic native cache worker timing
+test native_cache::unix::tests::cancellation_after_eviction_reports_partial_committed_result ... ok
+test native_cache::unix::tests::cancellation_never_deletes_before_complete_reference_lookup_and_listing ... ok
+test native_cache::unix::tests::database_retains_all_sources_and_blocks_concurrent_reference_writers ... ok
+test native_cache::unix::tests::directory_replacement_never_redirects_deletion_outside_cache ... ok
+test native_cache::unix::tests::hard_linked_covers_lose_only_their_own_name ... ok
+test native_cache::unix::tests::invalid_budget_paths_and_schema_fail_before_any_deletion ... ok
+test native_cache::unix::tests::keeps_references_through_root_aliases_and_linked_reference_paths ... ok
+test native_cache::unix::tests::missing_directory_is_empty_and_recent_unreferenced_covers_survive ... ok
+test native_cache::unix::tests::preserves_changed_payloads_between_listing_and_eviction ... ok
+test native_cache::unix::tests::trims_oldest_payloads_but_keeps_metadata_links_and_recent_writes ... ok
+test native_collections::tests::all_queries_share_one_stable_wal_read_snapshot ... ok
+test native_backup::tests::corrupt_count_cancel_and_invalid_rows_keep_history_and_keys ... ok
+test native_collections::tests::playlist_projection_is_bound_and_retains_ascending_date_rowid_order ... ok
+test native_collections::tests::schema_missing_database_and_existing_output_never_publish_or_overwrite ... ok
+test native_collections::tests::snapshot_preserves_nulls_previews_unicode_and_all_five_query_orders ... ok
+test native_directory_stats::tests::a_file_removed_before_size_lookup_preserves_partial_counts ... ok
+test native_directory_stats::tests::counts_nested_unicode_files_including_empty_files ... ok
+test native_directory_stats::tests::links_follow_requested_policy_and_cycles_do_not_hide_aliases ... ok
+test native_directory_stats::tests::malformed_requests_and_cancellation_are_not_partial_successes ... ok
+test native_directory_stats::tests::missing_directories_and_file_roots_have_zero_stats ... ok
+test native_backup::collections::tests::cancellation_at_every_precommit_checkpoint_preserves_live_collections ... ok
+test native_id3::tests::cancellation_during_audio_copy_leaves_original_and_no_staging ... ok
+test native_id3::tests::lyric_replacement_preserves_other_frames_and_audio_tail ... ok
+test native_id3::tests::uslt_bytes_preserve_utf16_bom_language_and_surrogate_pairs ... ok
+test native_library::path_keys::tests::android_storage_and_converted_paths_share_keys ... ok
+test native_collections::tests::cancellation_every_checkpoint_removes_staging_and_preserves_database ... ok
+test native_library::path_keys::tests::saf_document_aliases_keep_opaque_case_and_escape_identity ... ok
+test native_library::tests::cancellation_during_atomic_swap_rolls_back_rows_keys_and_fts ... ok
+test native_library::tests::concurrent_source_edit_aborts_native_swap_without_overwriting_other_writer ... ok
+test native_library::path_keys::tests::dart_whitespace_equals_previous_lyrics_set_for_every_scalar ... ok
+test native_id3::tests::artwork_block_has_exact_mime_header_and_preserves_large_payloads ... ok
+test native_library::tests::full_import_persists_network_file_versions_and_cached_flags ... ok
+test native_library::tests::full_swap_excludes_downloads_and_preserves_other_source_and_fts ... ok
+test native_library::tests::incremental_deletes_only_its_source_and_reconciles_existing_downloads ... ok
+test native_library::tests::invalid_private_removal_manifest_rolls_back_rows_and_manifest ... ok
+test native_library::tests::invalid_rows_are_skipped_and_reported_without_dropping_the_scan ... ok
+test native_library::tests::mapper_preserves_null_artist_flags_and_replaygain_contract ... ok
+test native_library::tests::external_wal_writer_can_publish_while_native_scan_stages_temp_rows ... ok
+test native_library::tests::platform_rows_without_scan_time_are_stamped_instead_of_rejected ... ok
+test native_library::tests::partial_scan_preserves_unreadable_rows_and_empty_success_clears_only_source ... ok
+test native_library::tests::production_dart_row_and_path_codec_parity ... ok
+test native_library::tests::private_incremental_manifest_retains_selected_paths_and_order ... ok
+test native_library::tests::count_mismatch_and_cancel_never_replace_existing_index ... ok
+test native_listing::tests::dav_only_accepts_successful_properties_and_immediate_children ... ok
+test native_listing::tests::dav_retains_successful_validators_and_tolerates_invalid_dates ... ok
+test native_listing::tests::deeply_nested_dav_response_is_rejected_before_xml_tokenization ... ok
+test native_listing::tests::encoded_slash_and_credentials_do_not_escape_the_root ... ok
+test native_listing::tests::html_children_entities_unicode_and_origin_are_preserved ... ok
+test native_listing::tests::non_dav_documents_are_not_empty_dav_directories ... ok
+test native_listing::tests::shared_dart_listing_fixtures_match_native_output ... ok
+test native_lyrics::tests::cancellation_stops_before_result_publication ... ok
+test native_library::tests::spilled_incremental_json_is_consumed_without_deleting_adapter_file ... ok
+test native_lyrics::tests::depth_guard_ignores_opaque_markup_and_quoted_tag_boundaries ... ok
+test native_lyrics::tests::deeply_nested_vocals_preserve_timing_and_document_order ... ok
+test native_lyrics::tests::pathological_ttml_depth_is_rejected_before_recursive_tokenization ... ok
+test native_lyrics::tests::malformed_structural_ttml_remains_an_error ... ok
+test native_lyrics_translation::tests::accepts_reply_wrappers_and_string_ids ... ok
+test native_library::tests::snapshot_keeps_legacy_sentinel_and_backfills_only_current_missing_timestamps ... ok
+test native_lyrics_translation::tests::bytes_take_precedence_and_invalid_utf8_is_an_error ... ok
+test native_lyrics_translation::tests::cancellation_interrupts_validation_without_a_partial_result ... ok
+test native_lyrics_translation::tests::alignment_limits_count_utf16_units_and_chunks ... ok
+test native_lyrics_translation::tests::deeply_nested_unknown_fields_do_not_discard_usable_lines ... ok
+test native_lyrics_translation::tests::drops_invalid_unknown_blank_and_duplicate_lines ... ok
+test native_lyrics_translation::tests::first_non_null_named_list_precedes_insertion_order_fallback ... ok
+test native_lyrics_translation::tests::invalid_documents_return_typed_bad_response ... ok
+test native_lyrics_translation::tests::invalid_alignment_preserves_translated_text ... ok
+test native_lyrics_translation::tests::preserves_response_order_and_numeric_id_semantics ... ok
+test native_lyrics_translation::tests::preserves_valid_phrase_and_romanization_alignment ... ok
+test native_lyrics_translation::tests::trims_dart_whitespace_including_bom_and_next_line_control ... ok
+test native_lyrics_translation::tests::shared_dart_fixtures_match_native_contract ... ok
+test native_lyrics::tests::shared_dart_parser_goldens ... ok
+test native_playlist_write::tests::never_replaces_an_existing_destination_or_opens_the_live_database ... ok
+test native_playlists::tests::cancelled_export_keeps_existing_file_and_removes_unique_staging ... ok
+test native_playlists::tests::concurrent_exports_do_not_share_staging_files ... ok
+test native_playlists::tests::csv_preserves_aliases_quotes_ids_empty_values_and_line_indices ... ok
+test native_playlists::tests::m3u_export_streams_exact_lines_to_file ... ok
+test native_playlists::tests::m3u_retains_extinf_pending_state_and_posix_fallback ... ok
+test native_playlists::tests::shared_dart_playlist_fixtures_match_native_output ... ok
+test native_playlist_write::tests::stages_ordered_unicode_rows_and_preserves_raw_track_json ... ok
+test native_recognition::tests::audio_that_cannot_match_is_answered_without_a_request ... ok
+test network_tags::tests::cache_artwork_is_atomic_content_addressed_and_bounded ... ok
+test network_tags::tests::cached_artwork_with_the_same_bytes_is_kept_and_renewed ... ok
+test network_tags::tests::file_type_hints_preserve_proxy_url_restrictions ... ok
+test network_tags::tests::accepts_proxy_routes_with_or_without_file_type_hints ... ok
+test native_playlist_write::tests::rejects_invalid_duplicate_truncated_and_cancelled_batches_without_publication ... ok
+test data_jobs::tests::describes_decoded_windows_and_rejects_bad_requests ... ok
+test network_tags::tests::rejects_non_proxy_urls_and_large_servers_without_ranges ... ok
+test network_tags::tests::streamed_upload_recovery_compares_content_and_checks_cancellation ... ok
+test progress::tests::cancel_batch_keeps_best_effort_cleanup_when_one_registry_is_closed ... ok
+test progress::tests::cancel_batch_keeps_other_attempts_and_clears_selected_progress ... ok
+test progress::tests::reset_batch_uses_the_same_download_owner_and_keeps_active_cancelled ... ok
+test usb_audio::descriptors::tests::fractional_rates_do_not_drift ... ok
+test usb_audio::descriptors::tests::invalid_feedback_cannot_overrun_endpoint ... ok
+test usb_audio::descriptors::tests::native_requires_exact_firmware_and_altsetting ... ok
+test usb_audio::descriptors::tests::parses_uac1_fixed_rate_headset_without_clock_controls ... ok
+test usb_audio::descriptors::tests::resolves_uac2_terminal_clock_and_explicit_feedback ... ok
+test usb_audio::descriptors::tests::unknown_dsd_device_requires_explicit_dop ... ok
+test usb_audio::descriptors::tests::untrusted_descriptors_are_bounded ... ok
+test usb_audio::framing::tests::dop32_padding_and_channel_markers_match ... ok
+test usb_audio::framing::tests::dop_markers_alternate_across_transfers_and_underruns ... ok
+test usb_audio::framing::tests::native_dsd_and_pcm_keep_original_data_and_use_different_silence ... ok
+test usb_audio::volume::tests::failed_readback_cannot_report_safe_volume ... ok
+test usb_audio::volume::tests::startup_attenuates_without_raising_and_rounds_down ... ok
+test usb_audio::volume::tests::startup_keeps_independent_channels_at_or_below_their_old_levels ... ok
+test usb_audio::volume::tests::startup_preserves_silent_channels ... ok
+test usb_audio::volume::tests::topology_selects_playback_not_capture ... ok
+test usb_audio::volume::tests::uac1_control_uses_min_max_resolution_and_verified_current ... ok
+test network_tags::tests::seeks_past_audio_to_mp4_tail_tags ... ok
+test network_tags::tests::reads_flac_tags_lyrics_cover_without_audio_download ... ok
+test network_tags::tests::fixture_does_not_respond_to_abandoned_connections ... ok
+
+test result: ok. 142 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 2.49s
+
+     Running unittests src/lib.rs (rust_backend/target/debug/deps/mornye_network-f4a0a6dee2e95621)
+
+running 10 tests
+test client::tests::direct_media_keeps_manifest_permissions_and_https_requirement ... ok
+test cookies::tests::paths_domains_expiry_quoting_and_clear_are_session_local ... ok
+test policy::tests::any_domain_wildcard_keeps_scheme_and_private_checks ... ok
+test policy::tests::deny_by_default_and_validate_redirects_and_actual_literal ... ok
+test policy::tests::private_ranges_match_go_and_mapped_addresses ... ok
+test query::tests::query_keeps_bytes_duplicates_and_go_escaping ... ok
+test url::tests::raw_requests_and_relative_redirect_paths_keep_go_semantics ... ok
+test client::tests::direct_media_does_not_send_metadata_cookies_or_follow_redirects ... ok
+test client::tests::read_limited_matches_the_bounded_read_loops_it_replaced ... ok
+test client::tests::cancellation_after_operation_is_pending_drops_it_before_return ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s
+
+     Running unittests src/lib.rs (rust_backend/target/debug/deps/mornye_providers-82b8fd9136153859)
+
+running 79 tests
+test coalescer::tests::closed_owner_is_reported_before_cancellation ... ok
+test coalescer::tests::abandoned_flights_are_not_joined_and_stale_finish_keeps_replacement ... ok
+test coalescer::tests::last_waiter_can_leave_while_the_service_lock_is_held ... ok
+test coalescer::tests::running_flights_are_bounded ... ok
+test coalescer::tests::one_flight_serves_every_waiter_and_finish_caches ... ok
+test deezer::cache::tests::cache_budgets_expiry_and_empty_isrc_follow_the_metadata_contract ... ok
+test coalescer::tests::finish_wakes_shutdown_waiting_for_idle ... ok
+test coalescer::tests::last_waiter_leaving_cancels_the_worker ... ok
+test deezer::cache::tests::distinct_pending_metadata_flights_are_bounded_and_release_their_slots ... ok
+test deezer::cache::tests::cancelled_leaders_release_live_waiters_and_panics_leave_no_stuck_flight ... ok
+test deezer::tests::retry_after_preserves_integer_overflow_dates_and_two_minute_cap ... ok
+test lyrics::builtin::apple::tests::live_zarz_lrc_lyrics_works_without_paxsenix ... ignored, requires live Apple catalog and Zarz-LRC access
+test deezer::extended::tests::known_album_skips_track_lookup_and_invalid_album_uses_existing_fallback ... ok
+test lyrics::builtin::apple::tests::zarz_lrc_lyrics_credit_never_names_the_proxy ... ok
+test lyrics::builtin::direct::tests::base64_keeps_go_padding_bits_linebreaks_and_raw_fallback ... ok
+test deezer::cache::tests::metadata_flights_coalesce_and_a_cancelled_waiter_does_not_cancel_the_leader ... ok
+test lyrics::builtin::direct::tests::live_qqmusic_matches_by_suggestion_and_checks_length ... ignored, requires live QQ Music access
+test lyrics::builtin::ttml::tests::live_lrc_red_keeps_the_collaboration_recording ... ignored, requires live lrc.red access
+test lyrics::builtin::ttml::tests::live_ttml_providers_return_synced_apple_lyrics ... ignored, requires live lrc.red and BetterLyrics access
+test lyrics::builtin::ttml::tests::only_isrcs_reach_the_document_path ... ok
+test lyrics::builtin::ttml::tests::recording_selection_accepts_artist_separators_and_prefers_the_closer_length ... ok
+test lyrics::builtin::ttml::tests::recording_selection_preserves_collaborators_and_versions ... ok
+test deezer::browse::tests::parallel_metadata_work_overlaps_without_exceeding_ten_workers_or_reordering_output ... ok
+test lyrics::cache::tests::current_snapshot_restores_supplementary_text ... ok
+test lyrics::cache::tests::legacy_recording_cache_refetches_lrc_red_without_discarding_current_apple ... ok
+test lyrics::calls::tests::rejects_cycles_and_keeps_shared_edges_until_the_last_waiter_leaves ... ok
+test lyrics::cache::tests::legacy_snapshot_refetches_apple_but_preserves_other_providers ... ok
+test lyrics::builtin::apple::tests::waiting_for_another_token_refresh_remains_cancellable ... ok
+test lyrics::builtin::direct::tests::html_parsing_observes_cancellation_and_bounds_nodes_and_bytes ... ok
+test lyrics::service::tests::abandoning_all_waiters_cancels_work_without_negative_caching ... ok
+test lyrics::service::tests::at_most_three_providers_run_and_shutdown_joins_cancelled_calls ... ok
+test lyrics::service::tests::cancelling_recovery_does_not_start_a_second_provider_attempt ... ok
+test lyrics::service::tests::config_changes_prevent_late_results_from_repopulating_current_cache ... ok
+test lyrics::service::tests::confirmed_missing_lyrics_are_cached_with_a_bounded_expiry ... ok
+test lyrics::service::tests::eight_callers_share_work_and_cancelled_waiter_does_not_cancel_others ... ok
+test lyrics::service::tests::a_cooling_provider_cannot_turn_another_providers_miss_into_a_cached_miss ... ok
+test lyrics::service::tests::fetch_from_asks_only_the_chosen_provider_and_bypasses_the_cache ... ok
+test lyrics::service::tests::fetch_from_rejects_disabled_providers_and_honours_cancellation ... ok
+test lyrics::service::tests::a_transient_outage_recovers_before_flac_lyrics_embedding ... ok
+test lyrics::service::tests::a_later_missing_result_cannot_hide_another_providers_error ... ok
+test lyrics::service::tests::exhausted_recovery_does_not_cache_an_outage_as_missing_lyrics ... ok
+test lyrics::service::tests::rejecting_recursive_joins_releases_their_waiter_registrations ... ok
+test lyrics::service::tests::selected_extension_gets_a_chance_before_builtin_cache_and_has_cached_fallback ... ok
+test lyrics::service::tests::shutdown_flushes_cache_and_rejects_retained_mutations ... ok
+test lyrics::service::tests::transport_policy_cancellation_is_not_cached_as_missing_lyrics ... ok
+test lyrics::service::tests::instrumental_heuristic_skips_network_and_provider_panics_release_workers ... ok
+test musicbrainz::tests::abandoned_flight_cannot_publish_over_its_replacement ... ok
+test musicbrainz::tests::cache_ttls_expiry_and_capacity_follow_go_snapshot_outcomes ... ok
+test musicbrainz::tests::fetch_failures_and_empty_recordings_are_cached_before_derived_getter_errors ... ok
+test musicbrainz::tests::genre_and_album_artist_share_a_flight_without_cancelling_other_callers ... ok
+test musicbrainz::tests::shutdown_joins_workers_and_rejects_retained_cached_calls ... ok
+test recognition::tests::a_match_reads_the_song_and_its_details ... ok
+test recognition::tests::answers_and_client_errors_do_not_retry ... ok
+test recognition::tests::cancelling_during_the_backoff_stops_without_another_request ... ok
+test recognition::tests::ids_are_random_version_four_uuids ... ok
+test recognition::tests::locale_falls_back_to_english_united_states ... ok
+test lyrics::service::tests::recovery_respects_a_providers_rate_limit ... ok
+test recognition::tests::localized_details_fall_back_to_their_order ... ok
+test recognition::tests::optional_fields_fall_back_and_reject_non_web_links ... ok
+test recognition::tests::request_uses_locale_ids_and_no_location ... ok
+test recognition::tests::rate_limits_server_errors_and_quick_failures_retry_once ... ok
+test recognition::tests::slow_network_failures_are_not_repeated ... ok
+test recognition::tests::statuses_and_bodies_map_to_outcomes ... ok
+test recognition::tests::timezone_must_look_like_a_zone_name ... ok
+test resolver::availability::cache::tests::cache_clear_and_expiry_keep_stale_and_cancelled_results_out ... ok
+test resolver::availability::cache::tests::independent_cache_limits_region_keys_and_lookup_limit_are_enforced ... ok
+test resolver::availability::cache::tests::shared_requests_cancel_independently_and_return_owned_cached_responses ... ok
+test resolver::availability::cache::tests::shutdown_cancels_isrc_and_uncached_calls_and_rejects_retained_apis ... ok
+test resolver::client::tests::chain_deadline_keeps_source_but_cancellation_discards_partial_links ... ok
+test resolver::client::tests::chain_keeps_web_links_when_a_later_resolver_times_out ... ok
+test recognition::tests::short_and_quiet_audio_is_not_sent ... ok
+test lyrics::service::tests::unclassified_provider_errors_can_recover_in_the_same_lookup ... ok
+test resolver::service::tests::cache_expiry_failures_and_generation_changes_preserve_fresh_state ... ok
+test resolver::service::tests::coalesced_waiters_cancel_independently_and_cache_by_region ... ok
+test resolver::service::tests::distinct_lookup_and_cache_counts_are_bounded ... ok
+test resolver::rate::tests::concurrent_waiters_reserve_distinct_slots_and_can_cancel ... ok
+test resolver::service::tests::last_waiter_and_shutdown_cancel_workers_and_reject_retained_handles ... ok
+test resolver::client::tests::html_parsing_is_cancellable_and_bounds_bytes_and_nodes ... ok
+test lyrics::service::tests::provider_priority_waits_within_grace_then_cancels_slow_workers ... ok
+
+test result: ok. 75 passed; 0 failed; 4 ignored; 0 measured; 0 filtered out; finished in 7.18s
+
+   Doc-tests mornye_cast
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests mornye_core
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests mornye_extensions
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests mornye_mobile
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests mornye_network
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests mornye_providers
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

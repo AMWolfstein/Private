@@ -1,0 +1,4 @@
+00:00 +0: loading /workspace/Private/test/network_smb_memory_test.dart
+00:00 +0: 12 native SMB scans share one worker and release handles and streams
+  Skip: Requires TEST_SMB_ADDRESS and --enable-vmservice
+00:00 +0 ~1: All tests skipped.

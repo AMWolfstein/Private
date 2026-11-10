@@ -1,0 +1,63 @@
+....ssssss......................................................................................................................................................................sss
+----------------------------------------------------------------------
+Ran 179 tests in 28.033s
+
+OK (skipped=9)
+{
+  "status": "PASS",
+  "checks": "fresh",
+  "map": "current"
+}
+{
+  "status": "STALE_OR_INCOMPLETE",
+  "checks": "stale or incomplete",
+  "map": "stale"
+}
+{
+  "status": "BLOCKED",
+  "reason": "check analyze: \"requires\" must be a list of paths"
+}
+{
+  "status": "PASS",
+  "packet": ".work/p.md",
+  "files": 2
+}
+No active change record. Small fixes need none.
+Code map: missing: no map has been built: run work.py map update
+Workflow active (work skill, constitution). No active change record. Small fixes need none. | Code map: missing: no map has been built: run work.py map update
+{
+  "status": "PASS",
+  "meaning": "the same command passed with/restored fix and failed without it with the expected diagnostic; review the logs to confirm the cause",
+  "reverted": [
+    "lib/app.dart"
+  ],
+  "command": [
+    "/workspace/Private/.work/python/bin/python",
+    "test/app_test.py"
+  ],
+  "expected_failure": "REGRESSION: expected fixed playback",
+  "fingerprint": "b93879b961377f1d1db2c0988e0c628fce4fd633",
+  "phases": {
+    "with_fix": {
+      "status": "PASS",
+      "exit_code": 0,
+      "seconds": 0.2,
+      "log": ".work/proofs/20261110T104838699942Z/with_fix.log"
+    },
+    "without_fix": {
+      "status": "FAIL",
+      "exit_code": 1,
+      "seconds": 0.2,
+      "log": ".work/proofs/20261110T104838699942Z/without_fix.log"
+    },
+    "restored_fix": {
+      "status": "PASS",
+      "exit_code": 0,
+      "seconds": 0.2,
+      "log": ".work/proofs/20261110T104838699942Z/restored_fix.log"
+    }
+  },
+  "output_tail": "Traceback (most recent call last):\n  File \"/tmp/work-proof-zp2zz6b_/tree/test/app_test.py\", line 1, in <module>\n    assert \"fixed\" in open(\"lib/app.dart\").read(), 'REGRESSION: expected fixed playback'\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: REGRESSION: expected fixed playback\n",
+  "scope": "Command transitions and literal diagnostic only; inspect failure cause.",
+  "isolation": "disposable Git worktree; ignored dependencies are not copied"
+}
