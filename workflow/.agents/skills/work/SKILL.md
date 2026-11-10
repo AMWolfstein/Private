@@ -19,11 +19,12 @@ Read `AGENTS.md`, then `workflow/work/constitution.md`.
 
 ## Tools
 
-`python3 workflow/scripts/work/work.py` has six commands:
+`python3 workflow/scripts/work/work.py` has seven commands:
 - `setup` and `doctor`: install and check the local tools.
 - `check <names>`: run checks from `workflow/work/checks.json`. `check auto` picks the ones for changed paths; pass `--base` to compare against a commit.
 - `map build|update|status|coverage`: the code map.
 - `context "<task>"`: a bounded context packet from the code map.
+- `prove -- <test command>`: proves a regression test. It must pass with the fix, fail without it (with `--expect-failure` for the expected assertion text), and pass again after the fix is restored.
 - `hook-bash`: the guard for dangerous shell commands.
 
 ## Throughout

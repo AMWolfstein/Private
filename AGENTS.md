@@ -6,8 +6,8 @@ This repository carries its own workflow, in `workflow/`. Start every request by
 Authority, highest first: the owner's current instructions; `workflow/work/constitution.md`; the change
 records in `workflow/work/changes/`; the existing code.
 
-The tool is `python3 workflow/scripts/work/work.py` with six commands: `setup`, `doctor`, `check`, `map`,
-`context` and `hook-bash`. On first use run `doctor`; if tools are missing, run `setup`. Do not claim setup
+The tool is `python3 workflow/scripts/work/work.py` with seven commands: `setup`, `doctor`, `check`, `map`,
+`context`, `prove` and `hook-bash`. On first use run `doctor`; if tools are missing, run `setup`. Do not claim setup
 success when `doctor` reports a blocker.
 
 Planned changes follow `workflow/work/guides/task-loop.md`: one task at a time, a check and a review for each,

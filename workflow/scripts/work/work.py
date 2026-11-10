@@ -7,12 +7,15 @@ does not review code, approve work or replace a person's decision.
 from __future__ import annotations
 
 import argparse
+import fnmatch
 import json
 import os
 import re
+import shutil
 import signal
 import subprocess
 import sys
+import tempfile
 import time
 from datetime import datetime, timezone
 from pathlib import Path
@@ -20,7 +23,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import workflow_env
 import workmap  # noqa: E402  (map and context retrieval)
-from worklib import Blocked, domains_for, git, now, snapshot  # noqa: E402,F401
+from worklib import Blocked, domains_for, git, is_test, now, snapshot  # noqa: E402,F401
 
 PHASES = ('spec', 'plan', 'tasks', 'build', 'review', 'ship', 'done')
 SIZES = ('feature', 'architecture')
@@ -304,6 +307,157 @@ GUARDS = [
 ]
 
 
+def worktree_changes(root: Path) -> list[tuple[str, str]]:
+    """(status, path) for every changed or untracked path, renames split into both sides."""
+    out = git(root, 'status', '--porcelain=v1', '-z', '--untracked-files=all').split('\0')
+    items, index = [], 0
+    while index < len(out):
+        entry = out[index]
+        index += 1
+        if not entry:
+            continue
+        status, path = entry[:2], entry[3:]
+        items.append((status, path))
+        if 'R' in status or 'C' in status:
+            items.append(('D ', out[index]))  # rename source must come back too
+            index += 1
+    return items
+
+def prove(root: Path, command: list[str], timeout: int,
+          expected_failure: str | None = None) -> dict:
+    """Run proof in a disposable worktree; never revert the owner's files."""
+    before = fingerprint(root)
+    with tempfile.TemporaryDirectory(prefix='work-proof-') as temporary:
+        isolated = Path(temporary) / 'tree'
+        git(root, 'worktree', 'add', '--detach', str(isolated), 'HEAD')
+        try:
+            paths = git(root, 'ls-files', '-z', '--cached', '--others', '--exclude-standard').split('\0')
+            for path in filter(None, paths):
+                if is_record(path):
+                    continue
+                source, target = root / path, isolated / path
+                if target.is_symlink() or target.is_file():
+                    target.unlink()
+                if source.is_symlink() or source.is_file():
+                    target.parent.mkdir(parents=True, exist_ok=True)
+                    shutil.copy2(source, target, follow_symlinks=False)
+            # Ignored dependencies/build caches are deliberately not copied.
+            result = _prove_in_worktree(isolated, command, timeout, expected_failure)
+            proofs = isolated / '.work/proofs'
+            if proofs.exists():
+                shutil.copytree(proofs, root / '.work/proofs', dirs_exist_ok=True)
+            if fingerprint(root) != before:
+                result['status'] = 'INCONCLUSIVE'
+                result['meaning'] = 'source tree changed while proof was running; rerun on stable inputs'
+            result['isolation'] = 'disposable Git worktree; ignored dependencies are not copied'
+            return result
+        finally:
+            git(root, 'worktree', 'remove', '--force', str(isolated))
+
+def _prove_in_worktree(root: Path, command: list[str], timeout: int,
+          expected_failure: str | None = None) -> dict:
+    """Green/red/green command evidence with an explicit regression signature.
+
+    Changes are restored even on errors/Ctrl-C. The signature is a literal assertion
+    diagnostic selected by the caller, not automatic proof of semantic causality.
+    """
+    if not command:
+        raise Blocked('usage: prove --expect-failure <assertion text> -- <test command>')
+    domains = {d: pats for d, pats in load_config(root)['domains'].items() if d != 'workflow'}
+
+    def is_code(path: str) -> bool:
+        if path.startswith('workflow/scripts/work/'):
+            return False
+        return any(fnmatch.fnmatchcase(path, pat) for pats in domains.values() for pat in pats)
+
+    targets = sorted({p for _, p in worktree_changes(root)
+                      if not is_test(p) and not is_record(p) and is_code(p)})
+    if not targets:
+        raise Blocked('no non-test code change to revert; prove needs a fix in the working tree')
+    directory = root / '.work/proofs' / datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%S%fZ')
+    directory.mkdir(parents=True)
+    before = fingerprint(root)
+    phases = {}
+
+    def execute(phase):
+        log = directory / (phase + '.log')
+        result = run_one(command, root, log, timeout, None)
+        result['log'] = log.relative_to(root).as_posix()
+        phases[phase] = result
+        return result, log.read_text(errors='replace')
+
+    def report(status, meaning, reverted, output=''):
+        result = {'status': status, 'meaning': meaning, 'reverted': reverted,
+                  'command': command, 'expected_failure': expected_failure,
+                  'fingerprint': before, 'phases': phases,
+                  'output_tail': output[-4000:],
+                  'scope': 'Command transitions and literal diagnostic only; inspect failure cause.'}
+        (directory / 'report.json').write_text(json.dumps(result, indent=2) + '\n')
+        return result
+
+    baseline, output = execute('with_fix')
+    if baseline['status'] != 'PASS':
+        return report('INCONCLUSIVE', 'the command must pass with the fix before testing the old code', [], output)
+    if fingerprint(root) != before:
+        return report('INCONCLUSIVE', 'the baseline command changed tracked or untracked inputs', [], output)
+    if not expected_failure or not expected_failure.strip():
+        return report('INCONCLUSIVE', 'provide --expect-failure with the specific regression assertion diagnostic', [])
+    if expected_failure in output:
+        return report('INCONCLUSIVE', 'failure diagnostic also appears in the passing run; choose a specific assertion', [], output)
+
+    backup = Path(tempfile.mkdtemp(prefix='work-prove-'))
+    saved: list[tuple[str, bool]] = []
+
+    def interrupted(*_):
+        raise KeyboardInterrupt
+
+    previous = signal.signal(signal.SIGTERM, interrupted)
+    try:
+        for path in targets:
+            full = root / path
+            exists = full.exists() or full.is_symlink()
+            if exists:
+                (backup / path).parent.mkdir(parents=True, exist_ok=True)
+                shutil.copy2(full, backup / path, follow_symlinks=False)
+            saved.append((path, exists))
+            head = subprocess.run(['git', 'show', f'HEAD:{path}'], cwd=root, capture_output=True)
+            if head.returncode == 0:
+                # Never follow a changed symlink while writing the temporary old file.
+                if full.is_symlink():
+                    full.unlink()
+                full.parent.mkdir(parents=True, exist_ok=True)
+                full.write_bytes(head.stdout)
+            elif exists:
+                full.unlink()
+        negative, output = execute('without_fix')
+    finally:
+        for path, existed in saved:
+            full = root / path
+            if full.is_symlink():
+                full.unlink()
+            if existed:
+                full.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copy2(backup / path, full, follow_symlinks=False)
+            elif full.exists():
+                full.unlink()
+        signal.signal(signal.SIGTERM, previous)
+        shutil.rmtree(backup, ignore_errors=True)
+
+    if fingerprint(root) != before:
+        return report('INCONCLUSIVE', 'inputs changed during the negative run; inspect the tree', targets, output)
+    restored, restored_output = execute('restored_fix')
+    if restored['status'] != 'PASS' or fingerprint(root) != before:
+        return report('INCONCLUSIVE', 'the restored fix did not pass unchanged', targets, restored_output)
+    if expected_failure in restored_output:
+        return report('INCONCLUSIVE', 'failure diagnostic appears in the restored passing run', targets, restored_output)
+    if negative['status'] == 'PASS':
+        return report('FAIL', 'the same command also passes without the fix', targets, output)
+    if (negative['status'] != 'FAIL' or (negative.get('exit_code') or 0) <= 0
+            or expected_failure not in output):
+        return report('INCONCLUSIVE', 'old-code failure was not the expected regression assertion', targets, output)
+    return report('PASS', 'the same command passed with/restored fix and failed without it with the expected diagnostic; review the logs to confirm the cause', targets, output)
+
+
 def hook_bash(stdin: str) -> tuple[int, str]:
     try:
         command = json.loads(stdin).get('tool_input', {}).get('command', '')
@@ -323,6 +477,10 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--root', type=Path)
     sub = parser.add_subparsers(dest='action', required=True)
+    s = sub.add_parser('prove', help='prove a regression test: it fails without the fix and passes with it')
+    s.add_argument('--timeout', type=int, default=900)
+    s.add_argument('--expect-failure', help='literal regression assertion diagnostic, not a test name or compiler error')
+    s.add_argument('cmd', nargs=argparse.REMAINDER)
     sub.add_parser('hook-bash')
     s = sub.add_parser('setup', help='provision Linux project-local Python and CodeGraph tools')
     s.add_argument('--offline', action='store_true', help='validate/reuse only; never download')
@@ -354,6 +512,9 @@ def main(argv: list[str] | None = None) -> int:
             result = workflow_env.setup(root, args.offline)
         elif args.action == 'doctor':
             result = workflow_env.doctor(root)
+        elif args.action == 'prove':
+            command = args.cmd[1:] if args.cmd[:1] == ['--'] else args.cmd
+            result = prove(root, command, args.timeout, expected_failure=args.expect_failure)
         elif args.action == 'check':
             config = load_config(root)
             result = run_checks(root, config, select_checks(root, config, args.names, args.base))

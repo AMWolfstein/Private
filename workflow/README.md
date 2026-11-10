@@ -16,6 +16,7 @@ A small engineering workflow for coding agents in this repository.
 | `check <names>` | run the checks in `work/checks.json`; `check auto --base <commit>` picks the ones for the changed paths |
 | `map build\|update\|status\|coverage` | the code map, built from CodeGraph (or the fallback scan) |
 | `context "<task>"` | a bounded context packet from the code map |
+| `prove -- <test>` | proves a regression test fails without the fix and passes with it |
 | `hook-bash` | a guard that blocks dangerous shell commands |
 
 Checks, the map and the guard run from the repository root. The map lives in `.work/`, which Git ignores.

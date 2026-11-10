@@ -187,6 +187,113 @@ class CheckTests(Repo):
 
 
 
+class ProveTests(Repo):
+    def setUp(self):
+        super().setUp()
+        # The "test" fails unless lib/app.dart contains "fixed".
+        self.failure = 'REGRESSION: expected fixed playback'
+        self.write('test/app_test.py',
+                   'assert "fixed" in open("lib/app.dart").read(), ' + repr(self.failure) + '\n')
+        self.command = [PY, 'test/app_test.py']
+
+    def test_prove_passes_when_test_fails_without_fix(self):
+        self.write('lib/app.dart', 'fixed\n')
+        self.write('lib/helper.dart', 'new file\n')
+        result = work.prove(self.root, self.command, 30, expected_failure=self.failure)
+        self.assertEqual(result['status'], 'PASS')
+        self.assertEqual(result['reverted'], ['lib/app.dart', 'lib/helper.dart'])
+        self.assertEqual((self.root / 'lib/app.dart').read_text(), 'fixed\n')
+        self.assertEqual((self.root / 'lib/helper.dart').read_text(), 'new file\n')
+
+    def test_prove_fails_when_test_does_not_detect_bug(self):
+        self.write('lib/app.dart', 'fixed\n')
+        result = work.prove(self.root, [PY, '-c', 'pass'], 30, expected_failure=self.failure)
+        self.assertEqual(result['status'], 'FAIL')
+        self.assertEqual((self.root / 'lib/app.dart').read_text(), 'fixed\n')
+
+    def test_prove_restores_deleted_files(self):
+        self.write('lib/old.dart', 'old\n')
+        self.commit('add old')
+        (self.root / 'lib/old.dart').unlink()
+        self.write('lib/app.dart', 'fixed\n')
+        work.prove(self.root, self.command, 30, expected_failure=self.failure)
+        self.assertFalse((self.root / 'lib/old.dart').exists())
+
+    def test_prove_leaves_tool_and_non_code_files_alone(self):
+        self.write('lib/app.dart', 'fixed\n')
+        self.write('workflow/scripts/work/work.py', 'the running tool\n')
+        self.write('notes.txt', 'owner notes\n')
+        seen = 'import os; print(os.path.exists("workflow/scripts/work/work.py"), os.path.exists("notes.txt"))'
+        result = work.prove(self.root, [PY, '-c', seen + '; exec(open("test/app_test.py").read())'], 30,
+                            expected_failure=self.failure)
+        self.assertEqual(result['reverted'], ['lib/app.dart'])
+        self.assertIn('True True', result['output_tail'])
+
+    def test_prove_timeout_is_inconclusive(self):
+        self.write('lib/app.dart', 'fixed\n')
+        result = work.prove(self.root, [PY, '-c', 'import time; time.sleep(30)'], 1)
+        self.assertEqual(result['status'], 'INCONCLUSIVE')
+        self.assertEqual((self.root / 'lib/app.dart').read_text(), 'fixed\n')
+
+    def test_prove_needs_a_non_test_change(self):
+        with self.assertRaises(work.Blocked):
+            work.prove(self.root, self.command, 30)
+
+    def test_always_failing_command_cannot_prove_a_fix(self):
+        self.write('lib/app.dart', 'fixed\n')
+        result = work.prove(self.root, [PY, '-c', 'raise SystemExit(7)'], 30)
+        self.assertNotEqual(result['status'], 'PASS')
+        self.assertEqual((self.root / 'lib/app.dart').read_text(), 'fixed\n')
+
+    def test_prove_requires_recognized_regression_failure(self):
+        self.write('lib/app.dart', 'fixed\n')
+        result = work.prove(self.root, self.command, 30, expected_failure='EXPECTED ASSERTION')
+        self.assertEqual(result['status'], 'INCONCLUSIVE')
+        self.assertEqual((self.root / 'lib/app.dart').read_text(), 'fixed\n')
+
+    def test_prove_without_failure_signature_is_inconclusive(self):
+        self.write('lib/app.dart', 'fixed\n')
+        result = work.prove(self.root, self.command, 30)
+        self.assertEqual(result['status'], 'INCONCLUSIVE')
+
+    def test_prove_requires_restored_run_to_pass(self):
+        self.write('lib/app.dart', 'fixed\n')
+        self.write('test/app_test.py',
+                   'from pathlib import Path\n'
+                   'counter = Path(".work/run-count")\n'
+                   'n = int(counter.read_text()) + 1 if counter.exists() else 1\n'
+                   'counter.write_text(str(n))\n'
+                   'assert n != 3, "restored run failed"\n'
+                   'assert "fixed" in Path("lib/app.dart").read_text(), ' + repr(self.failure) + '\n')
+        result = work.prove(self.root, self.command, 30, expected_failure=self.failure)
+        self.assertEqual(result['status'], 'INCONCLUSIVE')
+        self.assertEqual(result['phases']['restored_fix']['status'], 'FAIL')
+        self.assertEqual((self.root / 'lib/app.dart').read_text(), 'fixed\n')
+
+    def test_prove_cli_and_persistent_phase_logs(self):
+        self.write('lib/app.dart', 'fixed\n')
+        self.assertEqual(work.main(['--root', str(self.root), 'prove',
+                                   '--expect-failure', self.failure, '--', *self.command]), 0)
+        reports = list((self.root / '.work/proofs').glob('*/report.json'))
+        self.assertEqual(len(reports), 1)
+        report = json.loads(reports[0].read_text())
+        self.assertEqual(report['status'], 'PASS')
+        self.assertEqual(list(report['phases']), ['with_fix', 'without_fix', 'restored_fix'])
+        for phase in report['phases'].values():
+            self.assertTrue((self.root / phase['log']).is_file())
+
+    def test_prove_never_reverts_original_worktree(self):
+        self.write('lib/app.dart', 'fixed\n')
+        original = str(self.root / 'lib/app.dart')
+        self.write('test/app_test.py',
+                   'from pathlib import Path\n'
+                   'assert Path(' + repr(original) + ').read_text() == "fixed\\n", "owner file changed"\n'
+                   'assert "fixed" in Path("lib/app.dart").read_text(), ' + repr(self.failure) + '\n')
+        result = work.prove(self.root, self.command, 30, expected_failure=self.failure)
+        self.assertEqual(result['status'], 'PASS')
+        self.assertIn('disposable', result['isolation'])
+        self.assertEqual((self.root / 'lib/app.dart').read_text(), 'fixed\n')
+
 class GuardTests(unittest.TestCase):
     def check(self, command):
         return work.hook_bash(json.dumps({'tool_name': 'Bash', 'tool_input': {'command': command}}))[0]
