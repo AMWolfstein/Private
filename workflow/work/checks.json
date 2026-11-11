@@ -6,6 +6,7 @@
     "Change paths (fnmatch, '*' crosses '/') decide which checks 'work.py check auto' runs. 'high_risk' paths make a change at least feature size with independent review.",
     "Edit this file when the repository's commands change; a missing 'requires' path makes the check BLOCKED, not skipped.",
     "'cwd' runs a check from that directory (the Rust checks use rust_backend so its pinned toolchain applies).",
+    "'android-unit' runs the app's and the vendored third_party plugins' JVM tests. Pub-cache plugins' own suites are not this repository's tests and are left out: flutter_local_notifications' Robolectric cannot read the Java 25 class files the pinned JDK produces. CI runs :app only.",
     "'on_request' checks are left out of 'check --full' and 'auto': they run when named ('check apk') or declared by a task. 'apk' is the [APK] task's check: a local verification build, signed with the debug key when android/key.properties is absent, never published."
   ],
   "checks": {
@@ -22,7 +23,7 @@
       "stall": 600
     },
     "android-unit": {
-      "run": ["bash", "android/gradlew", "-p", "android", "testDebugUnitTest"],
+      "run": ["bash", "android/gradlew", "-p", "android", ":app:testDebugUnitTest", ":audio_service:testDebugUnitTest", ":audioplayers_android:testDebugUnitTest", ":ffmpeg_kit_flutter_new_audio:testDebugUnitTest"],
       "requires": ["android/gradlew"],
       "timeout": 2400
     },
