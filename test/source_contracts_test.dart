@@ -1,4 +1,4 @@
-// These tests read production files across Dart, Kotlin and Swift by path and
+// These tests read production files across Dart and Kotlin by path and
 // pin literal source text on purpose. When a refactor moves code, update the
 // path or the assertion here in the same commit; never delete the check.
 

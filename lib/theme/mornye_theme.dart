@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:mornye/models/theme_settings.dart';
 import 'package:mornye/theme/app_tokens.dart';
 
-/// from AccentColor.colorset, Components.swift, PlayerViews.swift and Motion.md
-/// in the Mornye project; keep this palette independent of wallpaper colors.
+/// Mornye's own accent, surface and motion tokens; keep this palette
+/// independent of wallpaper colors.
 @immutable
 class MornyeTheme extends ThemeExtension<MornyeTheme> {
   const MornyeTheme({
