@@ -60,8 +60,6 @@ MORNYE_PERFORMANCE_REPORT=build/perf/mornye.json \
 - SMB suites need a fixture server on the host:
   `python3 scripts/smb3_fixture_server.py` (Samba 4, port 1445 by default) or
   `scripts/smb2_fixture_server.py` (impacket). See `NETWORK_STORAGE.md`.
-- `discord_sdk_test.dart` needs the staged Discord Social SDK
-  (`third_party/mornye_discord/README.md`).
 - `download_queue_access_failure_test.dart` uses SAF storage.
 
 ## Build-Time Defines
@@ -107,7 +105,6 @@ Suites:
 | `automix_analysis_test.dart` | Native decoding for AutoMix beats; Auto and crossfade playback |
 | `automix_effects_test.dart` | Bundled FFmpeg supports every AutoMix transition effect |
 | `collection_remove_batch_test.dart` | Removing 2000 tracks from a collection; rollback and retry |
-| `discord_sdk_test.dart` | Native Discord SDK initialize, stop and restart |
 | `download_cancel_dispatch_test.dart` | Native cancel and clear of queued IDs; invalid batches |
 | `download_lossless_container_test.dart` | Foreground queue finalizes lossless M4A without provider hints |
 | `download_output_container_test.dart` | Foreground queue handles each returned container and extension |

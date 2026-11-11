@@ -80,27 +80,18 @@ footer shows only the copyright.
 
 ### Android APKs
 
-For production releases, stage the official Discord Social SDK with
-`bash scripts/setup_discord_sdk.sh /path/to/discord_social_sdk`, then build:
+Build the arm64 release APK with:
 
 ```bash
-bash scripts/build_android.sh --production
+bash scripts/build_android.sh
 ```
 
-Production mode requires the staged SDK and rejects `--lite`. Release CI uses
-this mode and requires Discord. Fresh hosted runners
-must prepare the SDK before the release checks can pass. See
-[Discord build setup](third_party/mornye_discord/README.md#build-setup) for
-local staging and the CI decryption secret. Unencrypted SDK files are not
-committed to the repository.
-
-For development release APKs, use `bash scripts/build_android.sh`. Full builds
-remain the default; add `--lite` to omit the optional Discord SDK while keeping
-playback and downloads. Debug builds can also run without the SDK.
-
-To build only ARM64, set `MORNYE_RUST_ANDROID_ABIS=arm64-v8a`. The script uses
-the Flutter version in `.fvmrc` and audits the selected split APKs and universal
-APK. Android Gradle builds the Rust native artifacts automatically.
+The script uses the Flutter version in `.fvmrc`, always targets
+`android-arm64`, and audits the APK's Rust backend. It signs with
+`android/key.properties`; without that file it stops, unless
+`MORNYE_ALLOW_DEBUG_SIGNING=1` allows the debug key (CI, or a job that
+re-signs the APK). Android Gradle builds the Rust native artifacts
+automatically.
 
 ### Android Crash Symbols
 
@@ -152,8 +143,8 @@ rust_backend/ Production backend, native bindings, and unit tests
 android/      Android platform bridge and foreground worker
 test/         Flutter unit and widget tests
 integration_test/ Device and emulator tests (including performance drivers)
-third_party/  Vendored and patched packages (audio_service, audioplayers forks,
-              Discord bridge and encrypted SDK)
+third_party/  Vendored and patched packages (audio_service, audioplayers_android
+              and ffmpeg_kit forks)
 assets/       Images, fonts, and bundled resources
 docs/         Local documentation and migration archives (gitignored)
 scripts/      Reproducible project build helpers
