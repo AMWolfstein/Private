@@ -1,0 +1,660 @@
+{
+  "source_revision": "12530ceda46dc78a10f9258b7d65a71452dfcf50",
+  "cases": [
+    {
+      "name": "artist portrait",
+      "provider": "apple-music",
+      "kind": "artist",
+      "id": "42",
+      "response": {
+        "data": [
+          {
+            "id": "42",
+            "attributes": {
+              "name": "Artist",
+              "artwork": {
+                "url": "https://images.example.test/portrait/{w}x{h}.jpg"
+              }
+            }
+          }
+        ]
+      },
+      "expected": {
+        "id": "42",
+        "name": "Artist",
+        "image_url": "https://images.example.test/portrait/3000x3000.jpg",
+        "header_image": "https://images.example.test/portrait/3000x3000.jpg",
+        "header_video": "",
+        "header_logo": ""
+      }
+    },
+    {
+      "name": "artist no image is valid",
+      "provider": "apple-music",
+      "kind": "artist",
+      "id": "42",
+      "response": {
+        "data": [
+          {
+            "id": "42",
+            "attributes": {
+              "name": "Artist"
+            }
+          }
+        ]
+      },
+      "expected": {
+        "id": "42",
+        "name": "Artist",
+        "image_url": "",
+        "header_image": "",
+        "header_video": "",
+        "header_logo": ""
+      }
+    },
+    {
+      "name": "artist square motion before wide",
+      "provider": "apple-music",
+      "kind": "artist",
+      "id": "42",
+      "response": {
+        "data": [
+          {
+            "id": "42",
+            "attributes": {
+              "name": "Artist",
+              "artwork": {
+                "url": "https://images.example.test/portrait/{w}x{h}.jpg"
+              },
+              "editorialVideo": {
+                "motionArtistSquare1x1": {
+                  "video": "https://images.example.test/square.m3u8",
+                  "previewFrame": {
+                    "url": "https://images.example.test/square/{w}x{h}.jpg",
+                    "width": 3840,
+                    "height": 3840
+                  }
+                },
+                "motionArtistFullscreen16x9": {
+                  "video": "https://images.example.test/wide.m3u8",
+                  "previewFrame": {
+                    "url": "https://images.example.test/wide/{w}x{h}.jpg",
+                    "width": 3840,
+                    "height": 2160
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      "expected": {
+        "id": "42",
+        "name": "Artist",
+        "image_url": "https://images.example.test/portrait/3000x3000.jpg",
+        "header_image": "https://images.example.test/portrait/3000x3000.jpg",
+        "header_video": "https://images.example.test/square.m3u8",
+        "header_logo": ""
+      }
+    },
+    {
+      "name": "artist widescreen fallback",
+      "provider": "apple-music",
+      "kind": "artist",
+      "id": "42",
+      "response": {
+        "data": [
+          {
+            "id": "42",
+            "attributes": {
+              "name": "Artist",
+              "artwork": {
+                "url": "https://images.example.test/portrait/{w}x{h}.jpg"
+              },
+              "editorialVideo": {
+                "motionArtistWide16x9": {
+                  "video": "https://images.example.test/wide.m3u8",
+                  "previewFrame": {
+                    "url": "https://images.example.test/wide/{w}x{h}.jpg",
+                    "width": 3840,
+                    "height": 2160
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      "expected": {
+        "id": "42",
+        "name": "Artist",
+        "image_url": "https://images.example.test/portrait/3000x3000.jpg",
+        "header_image": "https://images.example.test/portrait/3000x3000.jpg",
+        "header_video": "https://images.example.test/wide.m3u8",
+        "header_logo": ""
+      }
+    },
+    {
+      "name": "artist editorial still before preview",
+      "provider": "apple-music",
+      "kind": "artist",
+      "id": "42",
+      "response": {
+        "data": [
+          {
+            "id": "42",
+            "attributes": {
+              "name": "Artist",
+              "artwork": {
+                "url": "https://images.example.test/portrait/{w}x{h}.jpg"
+              },
+              "editorialArtwork": {
+                "vipSquare": {
+                  "url": "https://images.example.test/editorial/{w}x{h}.jpg"
+                }
+              },
+              "editorialVideo": {
+                "motionArtistWide16x9": {
+                  "video": "https://images.example.test/wide.m3u8",
+                  "previewFrame": {
+                    "url": "https://images.example.test/wide/{w}x{h}.jpg",
+                    "width": 3840,
+                    "height": 2160
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      "expected": {
+        "id": "42",
+        "name": "Artist",
+        "image_url": "https://images.example.test/portrait/3000x3000.jpg",
+        "header_image": "https://images.example.test/editorial/3000x3000.jpg",
+        "header_video": "https://images.example.test/wide.m3u8",
+        "header_logo": ""
+      }
+    },
+    {
+      "name": "artist preview only keeps aspect",
+      "provider": "apple-music",
+      "kind": "artist",
+      "id": "42",
+      "response": {
+        "data": [
+          {
+            "id": "42",
+            "attributes": {
+              "name": "Artist",
+              "editorialVideo": {
+                "motionArtistFullscreen16x9": {
+                  "video": "https://images.example.test/wide.m3u8",
+                  "previewFrame": {
+                    "url": "https://images.example.test/wide/{w}x{h}.jpg",
+                    "width": 3840,
+                    "height": 2160
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      "expected": {
+        "id": "42",
+        "name": "Artist",
+        "image_url": "",
+        "header_image": "https://images.example.test/wide/1080x608.jpg",
+        "header_video": "https://images.example.test/wide.m3u8",
+        "header_logo": ""
+      }
+    },
+    {
+      "name": "preview prefers explicit dimensions over aliases",
+      "provider": "apple-music",
+      "kind": "artist",
+      "id": "42",
+      "response": {
+        "data": [
+          {
+            "id": "42",
+            "attributes": {
+              "name": "Artist",
+              "editorialVideo": {
+                "motionArtistWide16x9": {
+                  "video": "https://images.example.test/wide.m3u8",
+                  "previewFrame": {
+                    "url": "https://images.example.test/wide/{w}x{h}.jpg",
+                    "width": 600,
+                    "height": 300,
+                    "w": 3000,
+                    "h": 4000
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      "expected": {
+        "id": "42",
+        "name": "Artist",
+        "image_url": "",
+        "header_image": "https://images.example.test/wide/1080x540.jpg",
+        "header_video": "https://images.example.test/wide.m3u8",
+        "header_logo": ""
+      }
+    },
+    {
+      "name": "artist logo remains transparent",
+      "provider": "apple-music",
+      "kind": "artist",
+      "id": "42",
+      "response": {
+        "data": [
+          {
+            "id": "42",
+            "attributes": {
+              "name": "Artist",
+              "artwork": {
+                "url": "https://images.example.test/portrait/{w}x{h}.jpg"
+              },
+              "editorialArtwork": {
+                "musicContentColorLogoTrimmed": {
+                  "url": "https://images.example.test/logo/{w}x{h}bb.jpg?x=1",
+                  "width": 2400,
+                  "height": 600
+                }
+              }
+            }
+          }
+        ]
+      },
+      "expected": {
+        "id": "42",
+        "name": "Artist",
+        "image_url": "https://images.example.test/portrait/3000x3000.jpg",
+        "header_image": "https://images.example.test/portrait/3000x3000.jpg",
+        "header_video": "",
+        "header_logo": "https://images.example.test/logo/1200x300bb.png?x=1"
+      }
+    },
+    {
+      "name": "artist invalid logo dimensions",
+      "provider": "apple-music",
+      "kind": "artist",
+      "id": "42",
+      "response": {
+        "data": [
+          {
+            "id": "42",
+            "attributes": {
+              "name": "Artist",
+              "editorialArtwork": {
+                "musicContentColorLogoTrimmed": {
+                  "url": "https://images.example.test/logo.jpg",
+                  "width": 0,
+                  "height": 600
+                }
+              }
+            }
+          }
+        ]
+      },
+      "expected": {
+        "id": "42",
+        "name": "Artist",
+        "image_url": "",
+        "header_image": "",
+        "header_video": "",
+        "header_logo": ""
+      }
+    },
+    {
+      "name": "artwork size clamped",
+      "provider": "apple-music",
+      "kind": "artist",
+      "id": "42",
+      "response": {
+        "data": [
+          {
+            "id": "42",
+            "attributes": {
+              "name": "Artist",
+              "artwork": {
+                "url": "https://images.example.test/portrait/{w}x{h}.jpg",
+                "width": 10000,
+                "height": 10000
+              }
+            }
+          }
+        ]
+      },
+      "expected": {
+        "id": "42",
+        "name": "Artist",
+        "image_url": "https://images.example.test/portrait/6000x6000.jpg",
+        "header_image": "https://images.example.test/portrait/6000x6000.jpg",
+        "header_video": "",
+        "header_logo": ""
+      }
+    },
+    {
+      "name": "album tall motion and square cover",
+      "provider": "apple-music",
+      "kind": "album",
+      "id": "42",
+      "response": {
+        "data": [
+          {
+            "id": "42",
+            "attributes": {
+              "name": "Artist",
+              "artwork": {
+                "url": "https://images.example.test/portrait/{w}x{h}.jpg"
+              },
+              "editorialVideo": {
+                "motionDetailTall": {
+                  "video": "https://images.example.test/tall.m3u8",
+                  "previewFrame": {
+                    "url": "https://images.example.test/tall/{w}x{h}.jpg",
+                    "width": 3000,
+                    "height": 4000
+                  }
+                },
+                "motionDetailSquare": {
+                  "video": "https://images.example.test/square.m3u8",
+                  "previewFrame": {
+                    "url": "https://images.example.test/square/{w}x{h}.jpg",
+                    "width": 3840,
+                    "height": 3840
+                  }
+                }
+              },
+              "genreNames": [
+                "Music",
+                "Pop",
+                "pop",
+                "Arabic"
+              ],
+              "releaseDate": "2025-07-03",
+              "recordLabel": "Label",
+              "copyright": "Copyright",
+              "editorialNotes": {
+                "standard": "Album description"
+              }
+            }
+          }
+        ]
+      },
+      "expected": {
+        "id": "42",
+        "name": "Artist",
+        "images": "https://images.example.test/portrait/3000x3000.jpg",
+        "cover_url": "https://images.example.test/portrait/3000x3000.jpg",
+        "header_image": "https://images.example.test/tall/1080x1440.jpg",
+        "header_video": "https://images.example.test/tall.m3u8"
+      },
+      "expected_metadata": {
+        "editorial_notes": {
+          "standard": "Album description"
+        },
+        "genre": "Pop; Arabic",
+        "release_date": "2025-07-03",
+        "label": "Label",
+        "copyright": "Copyright"
+      }
+    },
+    {
+      "name": "album square motion excluded from video",
+      "provider": "apple-music",
+      "kind": "album",
+      "id": "42",
+      "response": {
+        "data": [
+          {
+            "id": "42",
+            "attributes": {
+              "name": "Artist",
+              "artwork": {
+                "url": "https://images.example.test/portrait/{w}x{h}.jpg"
+              },
+              "editorialVideo": {
+                "motionDetailSquare": {
+                  "video": "https://images.example.test/square.m3u8",
+                  "previewFrame": {
+                    "url": "https://images.example.test/square/{w}x{h}.jpg",
+                    "width": 3840,
+                    "height": 3840
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      "expected": {
+        "id": "42",
+        "name": "Artist",
+        "images": "https://images.example.test/portrait/3000x3000.jpg",
+        "cover_url": "https://images.example.test/portrait/3000x3000.jpg",
+        "header_image": "https://images.example.test/square/1080x1080.jpg",
+        "header_video": ""
+      },
+      "expected_metadata": {
+        "editorial_notes": null,
+        "genre": "",
+        "release_date": "",
+        "label": "",
+        "copyright": ""
+      }
+    },
+    {
+      "name": "album wide preview without wide video",
+      "provider": "apple-music",
+      "kind": "album",
+      "id": "42",
+      "response": {
+        "data": [
+          {
+            "id": "42",
+            "attributes": {
+              "name": "Artist",
+              "artwork": {
+                "url": "https://images.example.test/portrait/{w}x{h}.jpg"
+              },
+              "editorialVideo": {
+                "motionDetailWide": {
+                  "video": "https://images.example.test/wide.m3u8",
+                  "previewFrame": {
+                    "url": "https://images.example.test/wide/{w}x{h}.jpg",
+                    "width": 3840,
+                    "height": 2160
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      "expected": {
+        "id": "42",
+        "name": "Artist",
+        "images": "https://images.example.test/portrait/3000x3000.jpg",
+        "cover_url": "https://images.example.test/portrait/3000x3000.jpg",
+        "header_image": "https://images.example.test/wide/1080x608.jpg",
+        "header_video": ""
+      },
+      "expected_metadata": {
+        "editorial_notes": null,
+        "genre": "",
+        "release_date": "",
+        "label": "",
+        "copyright": ""
+      }
+    },
+    {
+      "name": "album plain cover",
+      "provider": "apple-music",
+      "kind": "album",
+      "id": "42",
+      "response": {
+        "data": [
+          {
+            "id": "42",
+            "attributes": {
+              "name": "Artist",
+              "artwork": {
+                "url": "https://images.example.test/portrait/{w}x{h}.jpg"
+              }
+            }
+          }
+        ]
+      },
+      "expected": {
+        "id": "42",
+        "name": "Artist",
+        "images": "https://images.example.test/portrait/3000x3000.jpg",
+        "cover_url": "https://images.example.test/portrait/3000x3000.jpg",
+        "header_image": "https://images.example.test/portrait/3000x3000.jpg",
+        "header_video": ""
+      },
+      "expected_metadata": {
+        "editorial_notes": null,
+        "genre": "",
+        "release_date": "",
+        "label": "",
+        "copyright": ""
+      }
+    },
+    {
+      "name": "album logo never becomes cover",
+      "provider": "apple-music",
+      "kind": "album",
+      "id": "42",
+      "response": {
+        "data": [
+          {
+            "id": "42",
+            "attributes": {
+              "name": "Artist",
+              "editorialArtwork": {
+                "musicContentColorLogoTrimmed": {
+                  "url": "https://images.example.test/portrait/{w}x{h}.jpg",
+                  "width": 100,
+                  "height": 20
+                }
+              }
+            }
+          }
+        ]
+      },
+      "expected": {
+        "id": "42",
+        "name": "Artist",
+        "images": "",
+        "cover_url": "",
+        "header_image": "",
+        "header_video": ""
+      },
+      "expected_metadata": {
+        "editorial_notes": null,
+        "genre": "",
+        "release_date": "",
+        "label": "",
+        "copyright": ""
+      }
+    },
+    {
+      "name": "artist picture precedence",
+      "provider": "deezer",
+      "kind": "artist",
+      "id": "42",
+      "response": {
+        "id": 42,
+        "name": "Artist",
+        "picture_xl": "https://images.example.test/large.jpg",
+        "picture": "https://images.example.test/small.jpg"
+      },
+      "expected": {
+        "id": "deezer:42",
+        "name": "Artist",
+        "image_url": "https://images.example.test/large.jpg",
+        "images": "https://images.example.test/large.jpg",
+        "header_image": "https://images.example.test/large.jpg"
+      }
+    },
+    {
+      "name": "artist picture resize",
+      "provider": "deezer",
+      "kind": "artist",
+      "id": "42",
+      "response": {
+        "id": 42,
+        "name": "Artist",
+        "picture": "https://e-cdns-images.dzcdn.net/images/artist/abc/250x250-000000-80-0-0.jpg"
+      },
+      "expected": {
+        "id": "deezer:42",
+        "name": "Artist",
+        "image_url": "https://e-cdns-images.dzcdn.net/images/artist/abc/1400x1400-000000-80-0-0.jpg",
+        "images": "https://e-cdns-images.dzcdn.net/images/artist/abc/1400x1400-000000-80-0-0.jpg",
+        "header_image": "https://e-cdns-images.dzcdn.net/images/artist/abc/1400x1400-000000-80-0-0.jpg"
+      }
+    },
+    {
+      "name": "artist large picture retained",
+      "provider": "deezer",
+      "kind": "artist",
+      "id": "42",
+      "response": {
+        "id": "42",
+        "name": "Artist",
+        "picture_xl": "https://e-cdns-images.dzcdn.net/images/artist/abc/1600x1600-000000-80-0-0.jpg"
+      },
+      "expected": {
+        "id": "deezer:42",
+        "name": "Artist",
+        "image_url": "https://e-cdns-images.dzcdn.net/images/artist/abc/1600x1600-000000-80-0-0.jpg",
+        "images": "https://e-cdns-images.dzcdn.net/images/artist/abc/1600x1600-000000-80-0-0.jpg",
+        "header_image": "https://e-cdns-images.dzcdn.net/images/artist/abc/1600x1600-000000-80-0-0.jpg"
+      }
+    },
+    {
+      "name": "artist cover fallback",
+      "provider": "deezer",
+      "kind": "artist",
+      "id": "42",
+      "response": {
+        "id": 42,
+        "name": "Artist",
+        "cover_big": "https://images.example.test/fallback.jpg"
+      },
+      "expected": {
+        "id": "deezer:42",
+        "name": "Artist",
+        "image_url": "https://images.example.test/fallback.jpg",
+        "images": "https://images.example.test/fallback.jpg",
+        "header_image": "https://images.example.test/fallback.jpg"
+      }
+    },
+    {
+      "name": "artist missing image",
+      "provider": "deezer",
+      "kind": "artist",
+      "id": "42",
+      "response": {
+        "id": 42,
+        "name": "Artist"
+      },
+      "expected": {
+        "id": "deezer:42",
+        "name": "Artist",
+        "image_url": "",
+        "images": "",
+        "header_image": ""
+      }
+    }
+  ]
+}
