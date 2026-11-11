@@ -90,3 +90,36 @@ integration and T006 final upstream-tooling review remain unfinished. Schema v1
 updates origin settings only; it cannot replace provider parsers/paths/headers.
 
 - 2026-11-11: Final `work.py check auto --base 933e0bd6` PASS (Android root unit tests and Rust PASS; source_changed_during_run=false). App-qualified unit XML totals: 179 passed, 2 skipped, no failures/errors. Java25 test-tool compatibility settings remained outside the repository. No APK built.
+
+## 2026-11-11: inactive native artwork foundation
+
+Code commit: `f08bac0f`. This is a partial T004 implementation, not completion
+of the artwork migration. Native Apple artist/album and Deezer artist codecs and
+on-demand HTTP clients now exist in `providers/src/artwork/`. Application callers
+and artwork JSON settings are still pending. All 13 end-to-end source migrations
+remain incomplete; the existing metadata path and all 14 lyric implementations
+are unchanged. See `extensions/artwork/README.md` for the precise boundary.
+
+Verification on the final code tree:
+
+- Offline pinned-reference oracle: 20 cases matched.
+- `cargo +1.99.1 test --manifest-path rust_backend/Cargo.toml -p mornye-providers artwork --locked`: 12 passed.
+- Provider Clippy, all targets, locked, `-D warnings`: passed.
+- `work.py check auto`, run `20261111T082335913882Z`: PASS;
+  Android unit checks PASS, Rust workspace 589 passed / 0 failed / 8 ignored;
+  `source_changed_during_run=false`. The legacy automatic Rust command is
+  `cargo test --manifest-path rust_backend/Cargo.toml --workspace`, with
+  `RUSTUP_TOOLCHAIN=1.99.1`; it does not add `--locked`.
+- Android app unit XML: 181 tests, 179 passed / 0 failed / 0 errors / 2 skipped,
+  on Java 25. Root Gradle plugin tests also completed successfully.
+- Fresh independent code review: CLEAN in round 3, after fixing two error
+  classifications. Both new regressions failed before their fixes: Deezer quota
+  errors are not resource misses; malformed Apple catalog envelopes are invalid
+  rather than missing. The regression tests are retained in the code commit.
+
+The first resumed automatic run was INCOMPLETE because the shell had no selected
+Rust toolchain; Android passed. Explicitly selecting 1.99.1 resolved that environment
+issue. No source or test changes were made to suppress it.
+
+No live HTTP integration or physical-device behavior was verified. Retry/token
+cache parity and app/JSON integration are pending. No APK was built.
