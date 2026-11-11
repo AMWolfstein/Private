@@ -84,6 +84,14 @@ impl ExtensionManager {
         })
     }
 
+    /// Scheduling-only readiness boundary; the Kotlin owner calls this after
+    /// network/runtime policy configuration, never from a constructor.
+    pub fn start_provider_configuration_updates(&self) -> Result<(), ExtensionManagerError> {
+        self.inner
+            .start_provider_configuration_updates()
+            .map_err(|error| ExtensionManagerError::Operation(error.to_string()))
+    }
+
     pub fn install(&self, package_path: String) -> Result<String, ExtensionManagerError> {
         self.inner
             .install(Path::new(&package_path))

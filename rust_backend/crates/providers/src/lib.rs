@@ -10,3 +10,7 @@ pub mod lyrics;
 pub mod musicbrainz;
 pub mod recognition;
 pub mod resolver;
+
+pub mod configuration;
+
+pub mod artwork;

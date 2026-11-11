@@ -1760,6 +1760,7 @@ dependencies = [
  "mornye-core",
  "mornye-network",
  "regex",
+ "ring",
  "scraper",
  "serde",
  "serde_json",

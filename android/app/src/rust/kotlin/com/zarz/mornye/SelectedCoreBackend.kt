@@ -211,7 +211,7 @@ internal object RustCoreBackend : CoreBackend {
             arguments["lyrics_providers_json"] as? String ?: "[]",
             arguments["lyrics_options_json"] as? String ?: "{}",
         )
-        try {
+        configureBackendAndStartUpdates(created, configure = { created ->
             created.environment().use { environment ->
                 environment.setAllowedDownloadDirectories(allowedDirectories.distinct())
                 environment.setAllowPrivateNetwork(allowPrivateNetwork)
@@ -220,11 +220,13 @@ internal object RustCoreBackend : CoreBackend {
                 preparedRuntime?.let { environment.setRuntimeState(it.second) }
             }
             created.setFallbackProviders(fallbackProviders)
-        } catch (error: Exception) {
-            created.shutdown()
-            created.close()
-            throw error
-        }
+        }, startUpdates = { it.startProviderConfigurationUpdates() }, updateFailure = { created, error ->
+            created.environment().use { environment ->
+                environment.logBuffer().use { it.add("WARN", "ProviderUpdates", error.message ?: "Update worker unavailable") }
+            }
+        }, dispose = { created ->
+            try { created.shutdown() } finally { created.close() }
+        })
         identity = requested
         manager = created
     }
