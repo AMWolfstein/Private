@@ -7,6 +7,8 @@ description: "Bug fixes and small changes: one behaviour, a few files, no contra
 
 Choose this path for one bounded behavior with no new architectural decision, cross-language
 contract, data schema/format migration or multi-part implementation. Size is impact, not lines.
+Text-only edits (docs, translations, comments) and config values or small local edits outside
+high-risk paths take the lighter quick skill instead.
 If the scope grows, explain why and enter planning before expanding it.
 
 1. Use `new "title" --size small`. This creates minimal tasks/state/log records, no spec/plan

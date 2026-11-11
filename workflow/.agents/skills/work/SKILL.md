@@ -34,6 +34,9 @@ reusable/offline after initial provisioning, and normal CLI commands discover it
 - Audit of a language, path or change (dead or simpler code, redundant tests, missing tests, leaks,
   security): audit skill. Code, tests and gaps also run in a plan's [AUDIT] task; leaks and security
   run only when the owner asks. Never start an audit outside those two cases.
+- Quick change (text only in any path: docs, translations, comments; or a config value or small
+  local edit outside high-risk paths; no contract or stored data): quick skill. Edit, fast checks for what changed, one diff review, commit and
+  push straight away. No change record, task loop, context packet or full suite; `rg` is enough.
 - Small bounded behavior: fix skill, `new --size small`, no planning stage. Contracts, data
   formats, architectural choices or multiple independent units require feature/architecture
   planning. File/line counts and high-risk path hints alone do not determine size.
@@ -60,4 +63,5 @@ End every piece of work with, in the owner's language:
 3. Evidence: the checks that ran, with counts (for example "11 setup tests, `flutter analyze` clean, suite 2,281
    passed"), and the proof that a regression test fails without the fix.
 4. Not verified: device checks, stalled chunks, anything skipped.
-5. Commits and branch, if any, and what you did not do because it needs the owner (push, APK).
+5. Commits and branch, if any, and what you did not do because it needs the owner (APK; push,
+   except for quick changes, which push themselves).

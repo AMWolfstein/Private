@@ -6,6 +6,11 @@ contracts remain in the constitution, accepted plans and guides.
 
 ## Planning
 
+Quick changes (text only in any path: docs, translations, comments; or a config value or small
+local edit outside high-risk paths; no contract or stored-data change) skip the workflow: edit, run the fast checks for
+what changed, review the diff once, then commit and push straight away (quick skill). No change
+record, task loop or full suite.
+
 Small bounded changes skip planning (`new "title" --size small`). Decide by behavioral impact,
 contracts/data formats and architectural decisions, not file or line counts. Escalate if scope
 grows. Larger changes keep spec/plan/design review. Commit the complete accepted planning

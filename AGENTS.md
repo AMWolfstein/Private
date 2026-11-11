@@ -18,6 +18,9 @@ with one planning commit. New execution follows the implement skill: task start 
 implementation/checks → independent review/fixes → one task commit. Three reviews maximum; stop after
 a third dirty result. Owner extras become TOR###. The last task reviews the cumulative change.
 Fingerprints and check freshness are internal; there are no project-wide build/review/ship steps.
+Quick changes (text only in any path: docs, translations, comments; or a config value or small local
+edit outside high-risk paths; no contract or stored-data change) skip all of that: follow `workflow/.agents/skills/quick/SKILL.md`
+(edit, fast checks for what changed, one diff review, commit and push straight away).
 
 On first use in a Linux cloud/Fedora checkout, run `python3 workflow/scripts/work/work.py doctor`. If tools are
 missing, run `python3 workflow/scripts/work/work.py setup`; project-local dependency provisioning is part of the

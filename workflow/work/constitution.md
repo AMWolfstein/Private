@@ -1,6 +1,6 @@
 # Sistrum engineering constitution
 
-Version 2.0.0 (owner-approved task execution revision; other provisions retain their existing status). Every change, plan and review is checked against these
+Version 2.1.0 (owner-approved quick-change path added to VIII, IX and X; other provisions retain their existing status). Every change, plan and review is checked against these
 articles. A plan that cannot meet one records the deviation in its Complexity tracking table with the reason and
 the simpler option it rejected; it never weakens the article.
 
@@ -72,6 +72,8 @@ every change.
 
 - A change of feature size or larger, or one touching a high-risk path (`workflow/work/checks.json`), gets a review from
   a fresh, read-only context that receives a packet, not the author's conversation.
+- A quick change (IX) gets one review of its diff, by a fresh read-only reviewer where one can be started, otherwise
+  a self-review that says so. No packet is required.
 - The author answers each finding: fix it, contest it with checkable evidence, escalate it to the owner, or
   decline a nit. A finding that disappears is not fixed until its evidence says why.
 - Review the final code. Code changed after the last clean round is reviewed again.
@@ -79,6 +81,9 @@ every change.
 ## IX. Simplicity over ceremony
 
 - No scores, line quotas or file splits for their own sake. Small fixes skip planning but retain minimal task/state/log records, map/context, checks and independent review; no spec/plan bundle is required.
+- Quick changes (text only in any path: docs, licence text, translations, comments; or a config value or small local
+  edit outside high-risk paths; never a contract or stored-data change) skip the change record and task loop: edit, run the fast checks for what changed, review the diff once,
+  commit and push. When unsure, a change is not quick; one that grows past these limits moves to the small-fix path.
 - Bounded loops: at most 5 attempts on one failing check, at most 3 task-review rounds per owner-authorized cycle (design review remains as planned). The same failure twice means
   the shared assumption is wrong; name it and change approach.
 - A mistake seen twice becomes a check (structure, type, lint, test or hook), proved to fail on the bad case.
@@ -89,8 +94,10 @@ every change.
 - Stage explicit paths. No force push, no skipped hooks, no history rewrite on shared branches.
 - Commit the complete accepted planning bundle once. Then each task gets one commit after current checks and clean independent review, including its implementation, tests, all review fixes and records. The last task reviews the cumulative result. No separate code/records commits or empty commits.
 - Commit messages say what changed, why, the evidence and what is not verified. No model names.
-- Push, build an APK or release only when the owner asks for it in the current conversation. The one standing
-  exception is a plan's [APK] task: after the final review it builds a local APK to prove the release build
+- A quick change is one commit with its fast-check evidence, pushed to the current branch straight away: the owner's
+  standing authorization.
+- Push, build an APK or release only when the owner asks for it in the current conversation. The standing
+  exceptions are quick changes (above) and a plan's [APK] task: after the final review it builds a local APK to prove the release build
   works. That APK is not published, uploaded or committed. Flutter tests and APK builds never run at the same time.
 
 ## Governance
