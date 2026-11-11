@@ -89,8 +89,9 @@ every change.
 - Stage explicit paths. No force push, no skipped hooks, no history rewrite on shared branches.
 - Commit the complete accepted planning bundle once. Then each task gets one commit after current checks and clean independent review, including its implementation, tests, all review fixes and records. The last task reviews the cumulative result. No separate code/records commits or empty commits.
 - Commit messages say what changed, why, the evidence and what is not verified. No model names.
-- Push, build an APK or release only when the owner asks for it in the current conversation. Flutter tests and
-  APK builds never run at the same time.
+- Push, build an APK or release only when the owner asks for it in the current conversation. The one standing
+  exception is a plan's [APK] task: after the final review it builds a local APK to prove the release build
+  works. That APK is not published, uploaded or committed. Flutter tests and APK builds never run at the same time.
 
 ## Governance
 

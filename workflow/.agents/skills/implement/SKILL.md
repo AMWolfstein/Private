@@ -52,6 +52,15 @@ skill inside the same loop: fix what a tool proves, verify the rest before fixin
 not a problem, and do not wait for the owner. Leaks and security are never part of it. The owner may
 delete the line to skip the audit.
 
+## APK task
+
+A plan's last task, after [FINAL], is `[APK] … — check: apk`. `task check` runs
+`scripts/build_android.sh` (arm64 release; debug-signed when `android/key.properties` is absent) and
+verifies the built APK. It proves the release build works; it is not a device test. A failed build is
+fixed inside this task with the same review loop. The APK stays in `build/`: never commit, upload or
+publish it unless the owner asks. A request arriving before the build finishes waits for it. Small
+changes have no [APK] task.
+
 ## Ports
 
 Source/target bridge

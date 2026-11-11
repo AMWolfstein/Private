@@ -496,10 +496,11 @@ def run_checks(root: Path, config: dict, keys: list[str]) -> dict:
             label = key if target is None else f'{key}:{target}'
             log = directory / f'{len(results):02d}-{re.sub(r"[^A-Za-z0-9.]+", "_", label)}.log'
             command = argv + ([target] if target else [])
-            item = run_one(command, root, log, timeout, stall)
+            where = root / check.get('cwd', '.')
+            item = run_one(command, where, log, timeout, stall)
             if item['status'] == 'STALLED':
                 # A stalled runner is retried once; a second stall is reported, never passed.
-                item = run_one(command, root, log, timeout, stall)
+                item = run_one(command, where, log, timeout, stall)
                 item['retried_after_stall'] = True
             results.append({'id': label, 'command': command, 'log': log.relative_to(root).as_posix(), **item})
     after = fingerprint(root)
@@ -900,7 +901,7 @@ def main(argv: list[str] | None = None) -> int:
         elif args.action == 'check':
             config = load_config(root)
             try:
-                keys = list(config['checks']) if args.full else select_checks(
+                keys = [k for k, c in config['checks'].items() if not c.get('on_request')] if args.full else select_checks(
                     root, config, args.names or ['auto'], args.base or worktasks.active_base(root) or 'HEAD')
                 result = run_checks(root, config, keys)
             except NoChecksSelected:

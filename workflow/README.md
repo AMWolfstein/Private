@@ -21,8 +21,10 @@ bundle ONE time before execution. `planning-commit` prepares records; it does no
    containing implementation, tests, review fixes and task records. The next `task start`
    verifies the committed contents.
 5. Extra owner requests become TOR001, TOR002, etc. They use the same loop.
-6. Last pending task has [FINAL]: check/review the cumulative result and completed tasks. Its
-   fixes/records get one reviewed commit. Never make an empty Git commit.
+6. [FINAL] checks/reviews the cumulative result and completed tasks. Its fixes/records get one
+   reviewed commit. Never make an empty Git commit.
+7. A plan ends with [APK] after [FINAL]: `check: apk` builds the arm64 release APK locally to prove
+   the release build works. Nothing is published. `check --full` does not build it; `check apk` does.
 
 No separate execution build/review/ship progression and no code-then-records commits.
 

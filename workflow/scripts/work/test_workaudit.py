@@ -176,8 +176,12 @@ class AuditTaskTests(Repo):
     def setUp(self):
         super().setUp()
         command = "print('Ran 1 test in 0.01s\\nOK')"
+        build = "import os; open('built.txt', 'w').write(os.getcwd()); print('built')"
         self.write('workflow/work/checks.json', json.dumps(self.config(
-            {'unit': {'run': [PY, '-c', command], 'timeout': 5}}, {'app': ['lib/*']}, {'app': ['unit']})))
+            {'unit': {'run': [PY, '-c', command], 'timeout': 5},
+             'apk': {'run': [PY, '-c', build], 'cwd': 'out', 'on_request': True, 'timeout': 5}},
+            {'app': ['lib/*']}, {'app': ['unit']})))
+        self.write('.gitignore', 'build/\n.work/\nout/\n'); self.write('out/keep', '')
         self.commit('fixture checks')
         self.folder = work.new_change(self.root, 'Audited', 'small')
         self.ident = self.folder.name
@@ -228,3 +232,31 @@ class AuditTaskTests(Repo):
         self.assertEqual(self.act('check', 'T001')['checks_status'], 'NOT_REQUIRED')
         self.assertEqual(self.act('review', 'T001', result='clean', reviewer='independent-test-reviewer')['status'],
                          'READY_TO_COMMIT')
+
+    def test_apk_task_is_only_the_last_task_after_the_final_review(self):
+        self.tasks('- [ ] T001 [APK] Build — check: apk\n- [ ] T002 [FINAL] Review — check: auto\n')
+        with self.assertRaises(work.Blocked): self.act('status')
+        self.tasks('- [ ] T001 Work — check: unit\n- [ ] T002 [APK] Build — check: apk\n')
+        with self.assertRaises(work.Blocked): self.act('status')
+        self.tasks('- [ ] T001 [FINAL] Review — check: auto\n- [ ] T002 [APK] Build — check: apk\n')
+        self.assertEqual(self.act('status')['status'], 'PASS')
+
+    def test_apk_task_builds_after_the_final_review_and_closes_the_change(self):
+        self.tasks('- [ ] T001 [FINAL] Review — check: auto\n- [ ] T002 [APK] Build the APK — check: apk\n')
+        self.act('start', 'T001'); self.write('lib/app.dart', 'final\n'); self.done('T001')
+        self.assertFalse((self.root / 'out/built.txt').exists())  # the final review does not build
+        with self.assertRaises(work.Blocked): self.act('add', request='Extra before the build')
+        self.act('start', 'T002')
+        self.assertEqual(work.read_state(self.folder)['phase'], 'tasks')
+        checked = self.act('check', 'T002')
+        self.assertEqual((checked['status'], checked['checks']), ('PASS', ['apk']))
+        self.assertEqual((self.root / 'out/built.txt').read_text(), str((self.root / 'out').resolve()))  # ran in cwd
+        self.assertEqual(self.act('review', 'T002', result='clean', reviewer='independent-test-reviewer')['status'],
+                         'READY_TO_COMMIT')
+        self.assertEqual(work.read_state(self.folder)['phase'], 'done')
+
+    def test_full_check_leaves_on_request_checks_out(self):
+        self.assertEqual(work.main(['--root', str(self.root), 'check', '--full']), 0)
+        self.assertFalse((self.root / 'out/built.txt').exists())
+        self.assertEqual(work.main(['--root', str(self.root), 'check', 'apk']), 0)
+        self.assertTrue((self.root / 'out/built.txt').exists())

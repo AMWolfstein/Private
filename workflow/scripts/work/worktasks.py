@@ -21,7 +21,8 @@ TASK = re.compile(r'^- \[([ xX])\] ((?:T\d{3}|TOR\d{3}))\b([^\n]*)$', re.M)
 
 def rows(folder: Path) -> list[dict]:
     return [{'id': m[2], 'done': m[1].lower() == 'x', 'text': (m[2] + m[3]).strip(),
-             'kind': 'final' if '[FINAL]' in m[3] else 'audit' if '[AUDIT]' in m[3] else 'work'}
+             'kind': next((kind for kind, mark in (('final', '[FINAL]'), ('audit', '[AUDIT]'), ('apk', '[APK]'))
+                           if mark in m[3]), 'work')}
             for m in TASK.finditer((folder / 'tasks.md').read_text())]
 
 
@@ -93,13 +94,17 @@ class TaskLoop:
             raise Blocked('tasks.md has no tasks')
         if len({r['id'] for r in self.queue}) != len(self.queue):
             raise Blocked('duplicate task IDs')
-        if self.queue[-1]['kind'] != 'final':
-            raise Blocked('the last task must have [FINAL] cumulative review')
-        pending_finals = [r for r in self.queue if r['kind'] == 'final' and not r['done']]
-        if pending_finals and (len(pending_finals) != 1 or pending_finals[0] != self.queue[-1]):
+        pending_apks = [i for i, r in enumerate(self.queue) if r['kind'] == 'apk' and not r['done']]
+        if pending_apks and pending_apks != [len(self.queue) - 1]:
+            raise Blocked('an unfinished [APK] task is optional, single, and the very last task')
+        final_at = len(self.queue) - (2 if self.queue[-1]['kind'] == 'apk' else 1)
+        if final_at < 0 or self.queue[final_at]['kind'] != 'final':
+            raise Blocked('the last task must have [FINAL] cumulative review (only an [APK] build may follow it)')
+        pending_finals = [i for i, r in enumerate(self.queue) if r['kind'] == 'final' and not r['done']]
+        if pending_finals and pending_finals != [final_at]:
             raise Blocked('only the last task may be an unfinished final review')
         pending_audits = [i for i, r in enumerate(self.queue) if r['kind'] == 'audit' and not r['done']]
-        if pending_audits and pending_audits != [len(self.queue) - 2]:
+        if pending_audits and pending_audits != [final_at - 1]:
             raise Blocked('an unfinished [AUDIT] task is optional, single, and directly before the [FINAL] task')
         missing = set(self.items) - {row["id"] for row in self.queue}
         if missing:
@@ -450,6 +455,8 @@ class TaskLoop:
         active = self.execution['active']
         if active and self._row(active)['kind'] == 'final':
             raise Blocked('finish the active final task first; a later request reopens a fresh final review')
+        if self.queue[-1]['kind'] == 'apk' and not self.queue[-1]['done'] and self.queue[-2]['done']:
+            raise Blocked('finish the [APK] task first; a later request then gets a fresh final review')
         if active and self._row(active)['kind'] == 'audit':
             raise Blocked('finish the active audit task first; the request then queues before the final review')
         number = max((int(r['id'][3:]) for r in self.queue if r['id'].startswith('TOR')), default=0) + 1
@@ -507,7 +514,7 @@ class TaskLoop:
         self.execution['active'] = None
         for transient in ('packet', 'context'):
             item.pop(transient, None)
-        if row['kind'] == 'final':
+        if row is self.queue[-1]:  # the final review, or the [APK] build that follows it
             self.state['phase'] = 'done'
         text = (self.folder / 'tasks.md').read_text()
         tasks = re.sub(r'^- \[ \] ' + re.escape(ident) + r'\b', '- [x] ' + ident, text, flags=re.M)
