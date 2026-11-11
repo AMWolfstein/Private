@@ -1,0 +1,55 @@
+{
+  "version": 1,
+  "port": {
+    "applies": true,
+    "reason": "Promote the existing visual implementation to a sole canonical app theme and preserve its interaction/storage behavior",
+    "source": "https://github.com/AMWolfstein/Private",
+    "revision": "20ff0a7c6c4c7466748e16bef1256940790a8707",
+    "components": [
+      {
+        "name": "current Mornye theme and components",
+        "destination": "lib/theme, lib/widgets, lib/screens and lib/controllers",
+        "disposition": "restructure",
+        "rationale": "Neutral identifiers, same retained visuals/actions and render ownership",
+        "provenance": "current mornye_theme.dart, mornye_ components and associated tests at baseline20ff0a7c",
+        "checks": [
+          "analyze",
+          "dart-tests"
+        ]
+      },
+      {
+        "name": "theme preferences and notification presentation",
+        "destination": "lib/models/theme_settings.dart, lib/providers/theme_provider.dart and lib/services/playback_notification.dart",
+        "disposition": "adapt",
+        "rationale": "One-design bootstrap with old key/value compatibility and unchanged action identifiers",
+        "provenance": "theme_provider_persistence_test and existing notification action/drawable code",
+        "checks": [
+          "dart-tests",
+          "android-unit"
+        ]
+      },
+      {
+        "name": "alternative Material visual design",
+        "destination": "lib/theme/app_theme.dart, lib/theme/material_expressive.dart and style-only widget branches",
+        "disposition": "exclude",
+        "rationale": "Explicit owner removal; Flutter framework/shared dependencies are outside this exclusion",
+        "provenance": "current AppThemeStyle.material builder/callers plus per-item disposition in inventory.md",
+        "checks": [
+          "analyze",
+          "dart-tests"
+        ]
+      }
+    ]
+  },
+  "bridge": {
+    "applies": false,
+    "reason": "Theme/style flags identified in PlaybackNotification are internal Dart presentation. Keep existing media controls/action IDs/drawable IDs and all Dart/Kotlin/Rust channel names, payloads, units and errors unchanged; no native bridge migration is planned."
+  },
+  "prerequisites": [],
+  "device_checks": [
+    {
+      "case": "Android visual smoke: cold start, light/dark, glass levels/shader, RTL and notification controls match retained design on device",
+      "status": "pending"
+    }
+  ]
+}
