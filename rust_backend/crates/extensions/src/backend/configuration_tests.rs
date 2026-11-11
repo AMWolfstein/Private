@@ -52,6 +52,12 @@ fn signed_installation_is_pending_until_restart_and_does_not_mutate_the_old_owne
         serde_json::from_str(&restarted.provider_configuration_status_json().unwrap()).unwrap();
     assert_eq!(status["active_revision"], json!(2));
     assert_eq!(status["automatic_updates_enabled"], json!(false));
+    assert_eq!(status["update"]["state"], "not_started");
+    std::fs::write(root.path().join("data/.provider_config.json"), b"corrupt").unwrap();
+    assert!(matches!(
+        restarted.install_provider_configuration(SIGNED),
+        Err(ConfigError::Revision)
+    ));
     restarted.shutdown_checked().unwrap();
 }
 

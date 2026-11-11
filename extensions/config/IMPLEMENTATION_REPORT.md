@@ -67,3 +67,26 @@ ship/done. Ordinary restart and atomic replacement are tested; parent-directory
 power-loss durability is explicitly not claimed.
 
 Native implementation commit: `0363d733aec85ea12e251ba1b4b18e8b219b149f`. Documentation/process records are committed separately.
+
+## Resumed updater batch — 2026-11-11
+
+The historical first-batch results/limitations above describe that earlier commit.
+The signed native updater and Android readiness caller are now implemented. The
+initial release public key and signed bundled revision1 are provisioned; only the
+private signing key remains outside Git. A 24-hour completed-HTTP poll/15-minute
+offline retry worker is explicitly started after policy setup, cancelled/joined by
+its Backend, and installs only authenticated higher revisions for next initialization.
+Repeated checks preserve pending_restart until the revision is active.
+
+Fresh verification: 9 worker tests, 8 configuration tests; full Rust workspace
+577 passed/0 failed/8 ignored; affected-crate Clippy all-targets with warnings denied
+PASS. Qualified Android app unit check PASS including the readiness tests and actual
+regenerated UniFFI bindings on JDK25. Signing CLI verifies bundled revision1; the
+own-repository raw configuration endpoint returned HTTP200 anonymously. Fresh
+independent code review CLEAN. No APK or physical-device test for this batch.
+
+T005 is complete. This is still not the whole migration: T004 artwork/identity/app
+integration and T006 final upstream-tooling review remain unfinished. Schema v1
+updates origin settings only; it cannot replace provider parsers/paths/headers.
+
+- 2026-11-11: Final `work.py check auto --base 933e0bd6` PASS (Android root unit tests and Rust PASS; source_changed_during_run=false). App-qualified unit XML totals: 179 passed, 2 skipped, no failures/errors. Java25 test-tool compatibility settings remained outside the repository. No APK built.

@@ -277,6 +277,14 @@ pub struct LoadedConfig {
 }
 
 impl ConfigCache {
+    pub fn has_trusted_keys(&self) -> bool {
+        !self.keys.is_empty()
+    }
+
+    pub fn authenticate(&self, envelope: &[u8]) -> Result<ProviderConfig, ConfigError> {
+        self.keys.verify(envelope)
+    }
+
     pub fn new(data_directory: &Path, keys: TrustedKeys) -> Self {
         Self {
             path: data_directory.join(".provider_config.json"),

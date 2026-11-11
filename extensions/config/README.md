@@ -1,4 +1,4 @@
-# Native Rust provider configuration (first migration batch)
+# Native Rust provider configuration and independent updates
 
 The application now constructs its existing 14 native lyrics providers using the
 bundled `providers.json`. All values initially preserve the current endpoints.
@@ -30,9 +30,10 @@ rejects duplicate keys. No JSON expression is evaluated or downloaded code run.
 ## Authentication and storage
 
 `trusted-keys.json` is the app-bundled map from key ID to a base64 raw 32-byte
-Ed25519 public key. It is intentionally empty: **no production signing identity
-has been provisioned**. The fixture key under `tests/` is never trusted by the
-application and its private key is not retained.
+Ed25519 public key. It now contains the initial `release-1` application trust root. Its private
+Ed25519 signing key was generated once and remains outside the repository, with
+owner-only permissions. Keep a secure operator backup: future configuration
+releases require it. The fixture key under `tests/` is never trusted by the app.
 
 An envelope contains exactly `format: 1`, `key_id`, `payload` and `signature`.
 Payload and signature use standard base64. The signature covers the bytes
@@ -83,10 +84,40 @@ GitHub reported this repository as public during this task, despite its name, so
 it can host app-readable files. If it becomes private, raw files cannot serve
 unauthenticated updates; do not embed a GitHub token in the APK.
 
-There is no automatic downloader or Dart/Kotlin installation caller in this batch.
-The Rust installation API is prepared and tested, but the complete in-app updater,
-production key provisioning and an app-readable distribution endpoint remain
-required before independent updates work for users.
+## Automatic updates
+
+After Android has configured allowed directories, network/runtime policy and fallback
+providers, its Kotlin owner explicitly starts the backend-owned update worker through
+UniFFI. Constructing a Backend alone never starts network requests. Scheduling an
+optional update failure cannot prevent local playback.
+
+The only download endpoint is:
+`https://raw.githubusercontent.com/AMWolfstein/Private/extension-system/extensions/config/providers.signed.json`.
+The repository endpoint was checked anonymously over HTTPS. A private or unavailable
+repository cannot serve updates; no GitHub token is embedded in the application.
+
+The worker bounds the envelope to 96 KiB and a 15-second deadline, authenticates it
+against the bundled public key, then validates and atomically persists it. Completed
+HTTP attempts consume a persisted 24-hour interval. Unavailable-network failures
+retry after 15 minutes without waiting for an application restart. Backend shutdown
+cancels requests and wakes/joins the owned worker.
+
+The installed revision is **pending restart** until a new Backend initializes.
+Rechecking the same stored update preserves that state while the old revision is
+active; only the new owner reports it up-to-date. Status JSON retains active_revision,
+activation and fallback_reason and adds update.state, candidate_revision and a typed
+error. Bad signatures, unsupported settings, failed writes and offline startup keep
+bundled/last usable settings. There is no downloaded executable code or hot swap.
+
+To publish a configuration update: increment its revision, validate the complete JSON,
+sign it with the private operator key outside Git, verify it against trusted-keys.json,
+then review/commit only the JSON/envelope. Never auto-sign or auto-merge unreviewed
+upstream changes. A new signing trust root needs an application update.
+
+This completes the independent downloader for schema v1. It still updates **only the
+listed lyrics origins**. Native artwork ports, identity resolution/app integration and
+a reviewed richer schema remain separate unfinished work; this updater does not make
+those JavaScript reference sources active.
 
 All 13 artwork JavaScript references remain inactive and preserved in `../sources/`.
 Their native implementations, identity resolution, authentication and parity tests

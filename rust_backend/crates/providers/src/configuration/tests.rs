@@ -36,8 +36,16 @@ fn bundled_settings_preserve_all_native_request_origins() {
     assert_eq!(bundled.lyrics_endpoints().len(), 12);
     assert!(bundled.lyrics_endpoints().iter().all(|(a, b)| a == b));
     assert!(
-        TrustedKeys::bundled().is_empty(),
-        "no pretend production signing key"
+        !TrustedKeys::bundled().is_empty(),
+        "release signer must be provisioned"
+    );
+    assert!(
+        TrustedKeys::bundled()
+            .verify(include_bytes!(
+                "../../../../../extensions/config/tests/signed-test-config.json"
+            ))
+            .is_err(),
+        "fixture signer must never be trusted by production"
     );
 }
 

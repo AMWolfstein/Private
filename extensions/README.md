@@ -3,14 +3,15 @@
 This directory stages source code for artist portraits, motion artwork and lyrics
 from Mornye-Extension. **The application does not load these files.** Its existing
 extension settings, store, network features, native lyrics providers and player
-are unchanged. This import neither installs an updater nor publishes packages.
+are unchanged. The JavaScript import itself neither installs executable packages nor activates those sources.
 
 ## Native Rust + JSON migration
 
 `config/` now contains the bounded native lyrics configuration and schema. The
 Backend reads bundled defaults and can load verified cached settings on restart.
-Artwork ports, production trust provisioning and an in-app updater are **not yet
-complete**; see [config/README.md](config/README.md) for exact limits. The JavaScript
+A backend-owned signed-JSON updater and the initial application public signing key
+are now integrated through Android readiness. Native artwork and local identity
+integration are **not yet complete**; see [config/README.md](config/README.md) for exact limits. The JavaScript
 source subsets below remain inactive reference code.
 
 ## Included code

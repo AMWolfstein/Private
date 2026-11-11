@@ -8,6 +8,7 @@ mod lyrics;
 mod metadata;
 mod musicbrainz;
 mod provider_metadata;
+mod provider_updates;
 mod reenrich;
 mod share;
 mod tags;
@@ -52,21 +53,43 @@ pub struct Backend {
     operations: Mutex<usize>,
     idle: Condvar,
     lyrics_settings: Mutex<()>,
-    provider_config_cache: Mutex<ConfigCache>,
+    provider_config_cache: Arc<Mutex<ConfigCache>>,
+    provider_updates: provider_updates::ProviderUpdates,
     provider_config: ProviderConfig,
     provider_config_fallback: Option<String>,
     shutdown: Mutex<Option<Result<(), String>>>,
 }
 
 impl Backend {
+    /// Called only after the mobile owner has applied its network/runtime policy.
+    /// Construction itself performs no update requests.
+    pub fn start_provider_configuration_updates(&self) -> Result<(), ConfigError> {
+        let _operation = self.enter().map_err(ConfigError::BackendUnavailable)?;
+        let environment = self.manager.environment();
+        let network = environment
+            .network_service()
+            .map_err(|error| ConfigError::BackendUnavailable(error.to_string()))?;
+        self.provider_updates.start(
+            &network,
+            environment.shared_app_version(),
+            self.provider_config_cache.clone(),
+            self.provider_config.clone(),
+            environment.data_directory(),
+        )
+    }
     /// Native-only installation boundary. No JavaScript or downloaded manifest
     /// can install keys or bypass signature verification. Activation is deferred
     /// until a fresh Backend owns the configuration and its cache generation.
     pub fn install_provider_configuration(&self, envelope: &[u8]) -> Result<u64, ConfigError> {
         let _operation = self.enter().map_err(ConfigError::BackendUnavailable)?;
-        self.provider_config_cache
+        let cache = self
+            .provider_config_cache
             .lock()
-            .map_err(|_| ConfigError::BackendUnavailable("installation lock poisoned".into()))?
+            .map_err(|_| ConfigError::BackendUnavailable("installation lock poisoned".into()))?;
+        if cache.authenticate(envelope)?.revision() <= self.provider_config.revision() {
+            return Err(ConfigError::Revision);
+        }
+        cache
             .install(envelope)
             .map(|configuration| configuration.revision())
     }
@@ -77,7 +100,8 @@ impl Backend {
             "active_revision": self.provider_config.revision(),
             "activation": "next_backend_initialization",
             "trusted_signers_configured": !TrustedKeys::bundled().is_empty(),
-            "automatic_updates_enabled": false,
+            "automatic_updates_enabled": self.provider_updates.enabled(),
+            "update": self.provider_updates.status(),
             "fallback_reason": self.provider_config_fallback,
         }))
         .map_err(|error| error.to_string())
@@ -216,7 +240,8 @@ impl Backend {
             operations: Mutex::new(0),
             idle: Condvar::new(),
             lyrics_settings: Mutex::new(()),
-            provider_config_cache: Mutex::new(provider_config_cache),
+            provider_config_cache: Arc::new(Mutex::new(provider_config_cache)),
+            provider_updates: provider_updates::ProviderUpdates::default(),
             provider_config,
             provider_config_fallback: loaded_config.fallback_reason,
             shutdown: Mutex::new(None),
@@ -291,6 +316,7 @@ impl Backend {
             return result.clone();
         }
         self.closed.store(true, Ordering::Release);
+        self.provider_updates.shutdown();
         self.health.shutdown();
         self.musicbrainz.shutdown();
         self.manager.environment().shared_app_version().close();
