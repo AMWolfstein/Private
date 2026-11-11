@@ -829,6 +829,7 @@ def main(argv: list[str] | None = None) -> int:
     s.add_argument('--change'); s.add_argument('--out', default='.work/review/packet.md')
     sub.add_parser('hook-bash')
     s = sub.add_parser('audit', help='optional: dead code and cleanup candidates for a language, path or change')
+    s.add_argument('--kind', default='code', help='code (default), tests, gaps, leaks or security')
     s.add_argument('--lang', action='append', default=[], help='dart, kotlin, rust or cpp (repeatable)')
     s.add_argument('--path', action='append', default=[], help='file or directory (repeatable)')
     s.add_argument('--base', help='only files changed since this revision')
@@ -932,7 +933,8 @@ def main(argv: list[str] | None = None) -> int:
                 folder = find_change(root, args.change)
                 base = read_state(folder)['base']
                 label = '-'.join(['change', folder.name, *args.lang])
-            result = workaudit.audit(root, args.lang, args.path, base, args.out, is_record, label)
+            result = workaudit.audit(root, args.lang, args.path, base, args.out, is_record, label, args.kind,
+                                     load_config(root).get('high_risk', []))
         elif args.action == 'prove':
             command = args.cmd[1:] if args.cmd[:1] == ['--'] else args.cmd
             result = prove(root, command, args.timeout, expected_failure=args.expect_failure)

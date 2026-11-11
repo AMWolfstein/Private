@@ -26,23 +26,35 @@ bundle ONE time before execution. `planning-commit` prepares records; it does no
 
 No separate execution build/review/ship progression and no code-then-records commits.
 
-## Optional audit
+## Audit
 
-Off unless asked for. `work.py audit` reads a named scope and reports dead code a language tool
-proves, plus the files for a read-only code-auditor to propose simplification and rewrite candidates:
+`work.py audit` reads a named scope and reports what a language tool proves, mechanical leads to
+verify, and the files for a read-only code-auditor:
 
 ```sh
-python3 workflow/scripts/work/work.py audit --lang rust
-python3 workflow/scripts/work/work.py audit --path lib/services/cast --path lib/widgets
-python3 workflow/scripts/work/work.py audit --change NNN
-python3 workflow/scripts/work/work.py audit --base COMMIT --lang dart
+python3 workflow/scripts/work/work.py audit --kind code --lang rust
+python3 workflow/scripts/work/work.py audit --kind tests --path test/playback
+python3 workflow/scripts/work/work.py audit --kind gaps --change NNN
+python3 workflow/scripts/work/work.py audit --kind leaks --path lib/services/playback
+python3 workflow/scripts/work/work.py audit --kind security --path android --path pubspec.lock
 ```
 
-Languages: dart, rust (tool-backed), kotlin, cpp (no tool: candidates only, reported as a gap).
-Tool-proven findings are applied directly; candidates are the owner's choice. To audit a change as
-part of its plan, put one `[AUDIT]` task directly before [FINAL]; it uses the same task loop and
-its report covers the files the change touched. Settings, protected paths and the keep list are in
-`workflow/work/audit.json`. See the audit skill.
+| Kind | Finds | Runs |
+|---|---|---|
+| code | dead code; simpler or better-written code | [AUDIT] task, or on request |
+| tests | tests that repeat another or assert nothing | [AUDIT] task, or on request |
+| gaps | code no test covers, ranked by risk | [AUDIT] task, or on request |
+| leaks | subscriptions, controllers, handles never released | on request only |
+| security | secrets, vulnerable locked dependencies | on request only, report only |
+
+A plan's tasks.md carries one `[AUDIT]` task directly before [FINAL]. It uses the normal task loop on
+the files the change touched: tool-proven findings are fixed, the rest is verified before it is fixed,
+what is not a problem is left, and nothing waits for the owner. Delete the line to skip it.
+
+Tools: dart analyze and cargo check (code, leaks), detect-secrets (installed by `work.py setup`) and
+the OSV database (security). Kotlin and C++ have no tool, Rust and Kotlin coverage is not set up, and
+Git history and Gradle dependencies are not scanned: the report names every such gap. Settings,
+protected paths and the keep list are in `workflow/work/audit.json`. See the audit skill.
 
 ## Agent commands
 

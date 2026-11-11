@@ -289,9 +289,13 @@ class TaskLoop:
         result = {'status': 'PASS', 'task': ident, 'context': str(path.relative_to(self.root))}
         if pending['kind'] == 'audit':  # scope: everything this change touched, not the whole repository
             try:
-                report = self.c.workaudit.audit(self.root, base=self.state['base'], is_record=self.c.is_record,
-                                                label=f'{self.folder.name}-{ident}')
-                result['audit'] = {key: report[key] for key in ('report', 'files', 'proven', 'gaps')}
+                kinds = self.c.workaudit.load_config(self.root).get('task_kinds', ['code'])
+                reports = [self.c.workaudit.audit(
+                    self.root, base=self.state['base'], is_record=self.c.is_record, kind=kind,
+                    label=f'{self.folder.name}-{ident}', high_risk=self.c.load_config(self.root).get('high_risk', []))
+                    for kind in kinds]
+                result['audit'] = [{key: report[key] for key in ('kind', 'report', 'files', 'proven', 'leads', 'gaps')}
+                                   for report in reports]
             except Blocked as error:
                 result['audit_blocked'] = str(error)
         return result

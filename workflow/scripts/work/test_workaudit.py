@@ -19,12 +19,20 @@ class AuditTests(Repo):
 
     def configure(self, dart_output='', exit_code=0, keep=(), tool=True):
         script = f'import sys; sys.stdout.write({dart_output!r}); sys.exit({exit_code})'
-        config = {'languages': {
-            'dart': {'extensions': ['.dart'], 'proven': ['unused_import', 'dead_code'],
-                     'tool': {'run': [PY, '-c', script], 'parser': 'dart-machine', 'nonzero_ok': True} if tool else None},
-            'kotlin': {'extensions': ['.kt'], 'tool': None},
-            'rust': {'extensions': ['.rs'], 'proven': ['dead_code'],
-                     'tool': {'run': ['definitely-not-installed-tool'], 'parser': 'cargo-json'}}},
+        dart = {'run': [PY, '-c', script], 'parser': 'dart-machine', 'nonzero_ok': True,
+                'proven': ['unused_import', 'dead_code']} if tool else None
+        config = {'task_kinds': ['code', 'tests', 'gaps'], 'languages': {
+            'dart': {'extensions': ['.dart'], 'tests': ['test/*']},
+            'kotlin': {'extensions': ['.kt'], 'tests': ['*/src/test/*']},
+            'rust': {'extensions': ['.rs'], 'tests': []}},
+            'kinds': {
+                'code': {'files': 'source', 'tools': {'dart': dart, 'kotlin': None, 'rust': {
+                    'run': ['definitely-not-installed-tool'], 'parser': 'cargo-json', 'proven': ['dead_code']}}},
+                'tests': {'files': 'tests', 'detectors': ['tests']},
+                'gaps': {'files': 'source', 'detectors': ['untested', 'lcov'],
+                         'coverage': {'dart': {'lcov': 'coverage/lcov.info', 'produce': 'flutter test --coverage'}}},
+                'security': {'files': 'all', 'apply': 'report', 'detectors': ['dependencies'],
+                             'lockfiles': ['pubspec.lock']}},
             'protected': ['third_party/*', '*.g.dart'], 'keep': list(keep)}
         self.write('workflow/work/audit.json', json.dumps(config))
 
@@ -79,7 +87,7 @@ class AuditTests(Repo):
         result = self.run_audit(languages=['dart'])
         self.assertEqual((result['proven'], result['kept']), (0, 1))
         self.assertIn('owner keeps it', (self.root / result['report']).read_text())
-        self.write('workflow/work/audit.json', json.dumps({'languages': {}, 'keep': [{'path': 'lib/*'}]}))
+        self.write('workflow/work/audit.json', json.dumps({'languages': {}, 'kinds': {}, 'keep': [{'path': 'lib/*'}]}))
         with self.assertRaises(work.Blocked): self.run_audit(languages=['dart'])
 
     def test_missing_or_failing_tools_are_gaps_never_clean_results(self):
@@ -91,7 +99,7 @@ class AuditTests(Repo):
         self.assertIn('Coverage gap', (self.root / result['report']).read_text())
         script = 'import sys; sys.exit(2)'
         config = json.loads((self.root / 'workflow/work/audit.json').read_text())
-        config['languages']['dart']['tool'] = {'run': [PY, '-c', script], 'parser': 'dart-machine'}
+        config['kinds']['code']['tools']['dart'] = {'run': [PY, '-c', script], 'parser': 'dart-machine'}
         self.write('workflow/work/audit.json', json.dumps(config))
         self.assertEqual(self.run_audit(languages=['dart'])['tools']['dart']['status'], 'FAILED')
 
@@ -109,10 +117,59 @@ class AuditTests(Repo):
         folder = work.new_change(self.root, 'Audited change', 'small')
         self.write('lib/app.dart', 'changed\n')
         self.assertEqual(work.main(['--root', str(self.root), 'audit', '--change', folder.name]), 0)
-        report = json.loads((self.root / '.work/audit').glob('*.json').__next__().read_text())
+        report = json.loads((self.root / '.work/audit').glob('*-code.json').__next__().read_text())
         self.assertEqual(report['file_list'], ['lib/app.dart'])
         self.assertEqual(work.main(['--root', str(self.root), 'audit', '--change', folder.name, '--base', 'HEAD']), 2)
         self.assertEqual(work.main(['--root', str(self.root), 'audit']), 2)
+        self.assertEqual(work.main(['--root', str(self.root), 'audit', '--kind', 'nope', '--lang', 'dart']), 2)
+
+    def leads(self, result):
+        return json.loads((self.root / result['report']).with_suffix('.json').read_text())['lead_list']
+
+    def test_tests_kind_reads_only_tests_and_reports_leads_not_proof(self):
+        self.configure()
+        body = "final list = [1, 2, 3]; list.add(4); expect(list.length, 4); expect(list.last, 4);"
+        self.write('test/a_test.dart', "void main() {\n  test('first', () { " + body + " });\n"
+                   "  test('copy', () { " + body + " });\n  test('smoke', () { runApp(); });\n}\n")
+        self.write('android/app/src/test/ATest.kt', '@Test(expected = Error::class)\nfun throws() { boom() }\n'
+                   '@Test\nfun empty() { boom() }\n')
+        result = self.run_audit(kind='tests', paths=['test', 'android'])
+        self.assertEqual(self.files(result), ['android/app/src/test/ATest.kt', 'test/a_test.dart'])
+        self.assertEqual(result['proven'], 0)
+        found = sorted((l['path'], l['line'], l['code']) for l in self.leads(result))
+        self.assertEqual(found, [('android/app/src/test/ATest.kt', 3, 'assertion_free'),
+                                 ('test/a_test.dart', 3, 'same_body'), ('test/a_test.dart', 4, 'assertion_free')])
+
+    def test_gaps_kind_ranks_unnamed_files_and_reads_existing_coverage(self):
+        self.configure()
+        self.write('test/used_test.dart', "import 'package:app/used.dart';\n")
+        result = self.run_audit(kind='gaps', languages=['dart'], high_risk=['lib/app.dart'])
+        self.assertEqual([(l['path'], l['code'], l['risk']) for l in self.leads(result)],
+                         [('lib/app.dart', 'no_direct_test', 'high risk')])
+        self.assertEqual(result['gaps'], ['lcov'])  # no coverage file: a gap, not full coverage
+        self.write('coverage/lcov.info', 'SF:lib/used.dart\nDA:1,3\nDA:2,0\nDA:5,0\nend_of_record\n')
+        result = self.run_audit(kind='gaps', languages=['dart'])
+        codes = {(l['path'], l['code']) for l in self.leads(result)}
+        self.assertIn(('lib/used.dart', 'uncovered_lines'), codes)
+        self.assertIn(('lib/app.dart', 'not_in_coverage'), codes)
+        self.assertEqual(result['gaps'], [])
+
+    def test_security_kind_reports_and_never_marks_findings_for_automatic_fixes(self):
+        self.configure()
+        self.write('pubspec.lock', 'packages:\n  http:\n    source: hosted\n    version: "0.13.0"\n'
+                   '  local:\n    source: path\n    version: "1.0.0"\n')
+        self.assertEqual(audit.locked_packages(self.root, 'pubspec.lock'), [('Pub', 'http', '0.13.0')])
+        self.write('Cargo.lock', '[[package]]\nname = "time"\nversion = "0.1.43"\n'
+                   'source = "registry+https://github.com/rust-lang/crates.io-index"\n\n'
+                   '[[package]]\nname = "mine"\nversion = "0.1.0"\n')
+        self.assertEqual(audit.locked_packages(self.root, 'Cargo.lock'), [('crates.io', 'time', '0.1.43')])
+        result = audit.audit(self.root, paths=['pubspec.lock'], kind='security', is_record=work.is_record)
+        report = (self.root / result['report']).read_text()
+        self.assertNotIn('Apply these without asking', report)
+        if result['tools']['dependencies']['status'] == 'RAN':  # needs the OSV service; a gap otherwise
+            self.assertEqual(result['tools']['dependencies']['packages_checked'], 1)
+        else:
+            self.assertEqual(result['gaps'], ['dependencies'])
 
 
 class AuditTaskTests(Repo):
@@ -154,8 +211,9 @@ class AuditTaskTests(Repo):
         self.act('start', 'T001'); self.write('lib/app.dart', 'one\n'); self.write('lib/added.dart', 'new\n')
         self.done('T001')
         started = self.act('start', 'T002')
-        self.assertEqual(started['audit']['files'], 2)  # both files of the change, not the repository
-        report = json.loads((self.root / started['audit']['report']).with_suffix('.json').read_text())
+        self.assertEqual([a['kind'] for a in started['audit']], ['code', 'tests', 'gaps'])  # never leaks/security
+        self.assertEqual(started['audit'][0]['files'], 2)  # both files of the change, not the repository
+        report = json.loads((self.root / started['audit'][0]['report']).with_suffix('.json').read_text())
         self.assertEqual(report['file_list'], ['lib/added.dart', 'lib/app.dart'])
         with self.assertRaises(work.Blocked): self.act('add', request='Extra while auditing')
         self.write('lib/app.dart', 'one, cleaned\n')
@@ -166,7 +224,7 @@ class AuditTaskTests(Repo):
 
     def test_audit_task_with_nothing_to_change_still_completes(self):
         self.tasks('- [ ] T001 [AUDIT] Audit the change — check: auto\n- [ ] T002 [FINAL] Review — check: auto\n')
-        self.assertEqual(self.act('start', 'T001')['audit']['files'], 0)
+        self.assertEqual([a['files'] for a in self.act('start', 'T001')['audit']], [0, 0, 0])
         self.assertEqual(self.act('check', 'T001')['checks_status'], 'NOT_REQUIRED')
         self.assertEqual(self.act('review', 'T001', result='clean', reviewer='independent-test-reviewer')['status'],
                          'READY_TO_COMMIT')
