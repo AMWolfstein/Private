@@ -140,6 +140,20 @@ class AuditTests(Repo):
         self.assertEqual(found, [('android/app/src/test/ATest.kt', 3, 'assertion_free'),
                                  ('test/a_test.dart', 3, 'same_body'), ('test/a_test.dart', 4, 'assertion_free')])
 
+    def test_test_bodies_survive_brackets_inside_strings_and_comments(self):
+        self.configure()
+        self.write('test/b_test.dart', "void main() {\n  test('regex', () {\n    final m = RegExp(r'a\\(([^)]*)\\)');\n"
+                   "    // a ) in a comment\n    expect(m, isNotNull);\n  });\n}\n")
+        self.write('android/app/src/test/BTest.kt', '@Test\nfun braces() {\n  val s = "}"\n  val c = \'{\'\n  assertTrue(s.isNotEmpty())\n}\n')
+        self.write('rust_backend/crates/core/tests/b.rs', '#[test]\nfn braces() {\n  let c = \'}\';\n  let r: &\'static str = "{";\n  assert!(!r.is_empty() && c == \'}\');\n}\n')
+        self.configure()
+        config = json.loads((self.root / 'workflow/work/audit.json').read_text())
+        config['languages']['rust']['tests'] = ['*/tests/*']
+        self.write('workflow/work/audit.json', json.dumps(config))
+        result = self.run_audit(kind='tests', paths=['test/b_test.dart', 'android/app/src/test/BTest.kt',
+                                                     'rust_backend/crates/core/tests/b.rs'])
+        self.assertEqual((result['files'], result['leads']), (3, 0))
+
     def test_gaps_kind_ranks_unnamed_files_and_reads_existing_coverage(self):
         self.configure()
         self.write('test/used_test.dart', "import 'package:app/used.dart';\n")

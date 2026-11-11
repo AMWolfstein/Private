@@ -178,18 +178,54 @@ TEST_START = {
     'kotlin': re.compile(r'@Test\b[^\n]*\n(?:[ \t]*@[^\n]*\n)*[ \t]*(?:suspend\s+)?fun\s+(?P<name>`[^`\n]+`|\w+)\s*\(', re.M),
     'rust': re.compile(r'#\[(?:tokio::)?test[^\]]*\]\s*(?:#\[[^\]]*\]\s*)*(?:async\s+)?fn\s+(?P<name>\w+)\s*\(', re.M),
 }
-ASSERTS = re.compile(r'\b(?:expect\w*|verify\w*|assert\w*|fail|throws\w*|panic|should_panic|unreachable|check\w*)\b')
+ASSERTS = re.compile(r'(?<![A-Za-z0-9])_*(?:expect|verify|assert|throws|check|must|ensure)\w*|\b(?:fail|panic|unreachable)\b', re.I)
 
 
-def balanced_end(text: str, start: int, opening: str, closing: str) -> int | None:
-    depth = 0
-    for index in range(start, len(text)):
-        if text[index] == opening:
+def balanced_end(text: str, start: int, opening: str, closing: str, language: str = 'dart') -> int | None:
+    """Index after the bracket that closes the one at `start`, ignoring strings, characters and comments."""
+    depth, index, size = 0, start, len(text)
+    quotes = '\'"' if language in ('dart', 'kotlin') else '"'
+    while index < size:
+        char = text[index]
+        if text.startswith('//', index):
+            index = text.find('\n', index)
+            index = size if index == -1 else index
+            continue
+        if text.startswith('/*', index):
+            index = text.find('*/', index + 2)
+            index = size if index == -1 else index + 2
+            continue
+        if char == "'" and language == 'rust':  # a character literal, otherwise a lifetime
+            if text[index + 1:index + 2] == '\\':
+                index = text.find("'", index + 2) + 1 or size
+            elif text[index + 2:index + 3] == "'":
+                index += 3
+            else:
+                index += 1
+            continue
+        if char == "'" and language == 'kotlin':
+            index = text.find("'", index + (3 if text[index + 1:index + 2] == '\\' else 2)) + 1 or size
+            continue
+        if char in quotes:
+            raw = language == 'dart' and text[index - 1:index] == 'r' or language == 'rust' and text[index - 1:index] in ('r', '#')
+            triple = text.startswith(char * 3, index) and language != 'rust'
+            index += 3 if triple else 1
+            while index < size:
+                if not raw and text[index] == '\\':
+                    index += 2
+                    continue
+                if text.startswith(char * 3, index) if triple else text[index] == char:
+                    index += 3 if triple else 1
+                    break
+                index += 1
+            continue
+        if char == opening:
             depth += 1
-        elif text[index] == closing:
+        elif char == closing:
             depth -= 1
             if depth == 0:
                 return index + 1
+        index += 1
     return None
 
 
@@ -199,11 +235,11 @@ def test_blocks(config: dict, path: str, text: str) -> list[dict]:
     blocks = []
     for found in pattern.finditer(text) if pattern else ():
         if language == 'dart':
-            end = balanced_end(text, text.index('(', found.start()), '(', ')')
+            end = balanced_end(text, text.index('(', found.start()), '(', ')', language)
             body_from = found.end()
         else:
             brace = text.find('{', found.end())
-            end = balanced_end(text, brace, '{', '}') if brace != -1 else None
+            end = balanced_end(text, brace, '{', '}', language) if brace != -1 else None
             body_from = brace
         if end is None:
             continue
