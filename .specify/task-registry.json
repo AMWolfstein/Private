@@ -1,0 +1,116 @@
+{
+  "missions": {
+    "M001": {
+      "next_task": 4,
+      "nonce": "13ff5f018444487c87eceef96e6b46b3",
+      "path": "specs/001-native-audit-runners",
+      "title": "native-language audit runners"
+    },
+    "M002": {
+      "next_task": 4,
+      "nonce": "ca7d58f7d20846b9b5524488fb471448",
+      "path": "specs/002-workflow-lifecycle",
+      "title": "M002 — Workflow lifecycle tasks"
+    }
+  },
+  "next_completion": 6,
+  "next_mission": 3,
+  "next_tor": 2,
+  "tasks": {
+    "M001-T001": {
+      "completion": 1,
+      "evidence": {
+        "imported": true,
+        "source": "specs/001-native-audit-runners/tasks.md"
+      },
+      "final": false,
+      "kind": "T",
+      "mission": "M001",
+      "nonce": "987511c4486f4703b72a5da29b7c0604",
+      "record": "specs/001-native-audit-runners/tasks.md",
+      "status": "complete",
+      "title": "Implement native diagnostic adapters and focused tests."
+    },
+    "M001-T002": {
+      "completion": 2,
+      "evidence": {
+        "imported": true,
+        "source": "specs/001-native-audit-runners/tasks.md"
+      },
+      "final": false,
+      "kind": "T",
+      "mission": "M001",
+      "nonce": "0e46727185924026a6400c3b82f807f0",
+      "record": "specs/001-native-audit-runners/tasks.md",
+      "status": "complete",
+      "title": "Connect runners/categories/reporting and document usage/limits."
+    },
+    "M001-T003": {
+      "completion": 3,
+      "evidence": {
+        "imported": true,
+        "source": "specs/001-native-audit-runners/tasks.md"
+      },
+      "final": true,
+      "kind": "T",
+      "mission": "M001",
+      "nonce": "26f945cc769143f189e543b93b047dfa",
+      "record": "specs/001-native-audit-runners/tasks.md",
+      "status": "complete",
+      "title": "Review the cumulative native-audit change and resolve findings."
+    },
+    "M002-T001": {
+      "completion": 5,
+      "evidence": {
+        "checks": "16 registry tests PASS; real migration and validate PASS; independent review PASS",
+        "result": "PASS",
+        "reviewer": "lifecycle_registry_review",
+        "round": 2
+      },
+      "final": false,
+      "kind": "T",
+      "mission": "M002",
+      "nonce": "7cf6542505ab49c8aa612020dc48db0f",
+      "record": "specs/002-workflow-lifecycle/tasks.md",
+      "status": "complete",
+      "title": "Implement registry, allocator, completion history and integrity tests."
+    },
+    "M002-T002": {
+      "completion": null,
+      "evidence": {},
+      "final": false,
+      "kind": "T",
+      "mission": "M002",
+      "nonce": "21d20b890f2f4a2f8492845947f525c9",
+      "record": "specs/002-workflow-lifecycle/tasks.md",
+      "status": "reserved",
+      "title": "Restore environment lifecycle and integrate portable instructions/CI."
+    },
+    "M002-T003": {
+      "completion": null,
+      "evidence": {},
+      "final": true,
+      "kind": "T",
+      "mission": "M002",
+      "nonce": "acd484b3007840e9babd1f6d06cb6146",
+      "record": "specs/002-workflow-lifecycle/tasks.md",
+      "status": "reserved",
+      "title": "Verify all lifecycle, identity and history changes cumulatively."
+    },
+    "TOR001": {
+      "completion": 4,
+      "evidence": {
+        "imported": true,
+        "source": ".specify/quick-tasks/TOR001.md"
+      },
+      "final": false,
+      "kind": "TOR",
+      "mission": null,
+      "nonce": "5b4f4b486011403e9b41e07502e20a5c",
+      "record": ".specify/quick-tasks/TOR001.md",
+      "status": "complete",
+      "title": "Direct TOR loop for small modifications"
+    }
+  },
+  "version": 1
+}

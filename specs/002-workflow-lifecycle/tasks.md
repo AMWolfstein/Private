@@ -3,7 +3,7 @@
 All tasks: map refresh first, Ponytail, checks → independent review/fixes (max three
 results) → one completion commit. No APK/application code edits.
 
-- [ ] M002-T001 Implement registry, allocator, completion history and integrity tests.
+- [x] M002-T001 Implement registry, allocator, completion history and integrity tests.
   - Paths: tools/workflow registry/CLI/tests; .specify/task-registry.json;
     TASK_HISTORY.md; normalize existing native task IDs; feature records.
   - Acceptance: global TOR counter across standalone/mission tasks, unique M/T IDs,
