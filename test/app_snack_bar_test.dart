@@ -108,50 +108,47 @@ void main() {
     });
   }
 
-  testWidgets(
-    'new messages replace old ones and still dismiss (Mornye: true)',
-    (tester) async {
-      late BuildContext messageContext;
-      await tester.pumpWidget(
-        ProviderScope(
-          child: MaterialApp(
-            theme: AppTheme.build(Brightness.dark),
-            builder: (_, child) => AppScaffoldMessenger(child: child!),
-            home: Builder(
-              builder: (context) {
-                messageContext = context;
-                return const Scaffold(body: SizedBox.expand());
-              },
-            ),
-          ),
-        ),
-      );
-      final first = showAppSnackBar(
-        messageContext,
-        content: const Text('First'),
-        duration: const Duration(seconds: 1),
-      );
-      await tester.pumpAndSettle();
-      expect(find.text('First'), findsOneWidget);
-      final second = showAppSnackBar(
-        messageContext,
-        content: const Text('Second'),
-      );
-      await tester.pumpAndSettle();
-      expect(await first.closed, SnackBarClosedReason.remove);
-      expect(find.text('First'), findsNothing);
-      expect(find.text('Second'), findsOneWidget);
-      await tester.drag(find.text('Second'), const Offset(0, 300));
-      await tester.pumpAndSettle();
-      expect(await second.closed, SnackBarClosedReason.swipe);
-      expect(find.text('Second'), findsNothing);
-      expect(tester.takeException(), isNull);
-    },
-  );
-
-  testWidgets('View Queue times out and has a close button (true)', (
+  testWidgets('new messages replace old ones and still dismiss', (
     tester,
   ) async {
+    late BuildContext messageContext;
+    await tester.pumpWidget(
+      ProviderScope(
+        child: MaterialApp(
+          theme: AppTheme.build(Brightness.dark),
+          builder: (_, child) => AppScaffoldMessenger(child: child!),
+          home: Builder(
+            builder: (context) {
+              messageContext = context;
+              return const Scaffold(body: SizedBox.expand());
+            },
+          ),
+        ),
+      ),
+    );
+    final first = showAppSnackBar(
+      messageContext,
+      content: const Text('First'),
+      duration: const Duration(seconds: 1),
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('First'), findsOneWidget);
+    final second = showAppSnackBar(
+      messageContext,
+      content: const Text('Second'),
+    );
+    await tester.pumpAndSettle();
+    expect(await first.closed, SnackBarClosedReason.remove);
+    expect(find.text('First'), findsNothing);
+    expect(find.text('Second'), findsOneWidget);
+    await tester.drag(find.text('Second'), const Offset(0, 300));
+    await tester.pumpAndSettle();
+    expect(await second.closed, SnackBarClosedReason.swipe);
+    expect(find.text('Second'), findsNothing);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('View Queue times out and has a close button', (tester) async {
     late BuildContext messageContext;
     await tester.pumpWidget(
       ProviderScope(
@@ -186,9 +183,7 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('queue confirmation keeps its View action (true)', (
-    tester,
-  ) async {
+  testWidgets('queue confirmation keeps its View action', (tester) async {
     tester.view.physicalSize = const Size(320, 780);
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.reset);

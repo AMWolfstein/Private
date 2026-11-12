@@ -41,10 +41,10 @@ class AppLandscapePlayer extends StatefulWidget {
   final Widget? lyricsOptions;
 
   @override
-  State<AppLandscapePlayer> createState() => _MornyeLandscapePlayerState();
+  State<AppLandscapePlayer> createState() => _LandscapePlayerState();
 }
 
-class _MornyeLandscapePlayerState extends State<AppLandscapePlayer> {
+class _LandscapePlayerState extends State<AppLandscapePlayer> {
   Timer? _hideTimer;
   bool _actionsVisible = true;
   bool _audioOutputOpen = false;

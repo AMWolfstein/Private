@@ -377,7 +377,7 @@ void main() {
     );
   });
 
-  testWidgets('Rewind story steps through highlights (true)', (tester) async {
+  testWidgets('Rewind story steps through highlights', (tester) async {
     tester.view.physicalSize = const Size(1080, 2400);
     tester.view.devicePixelRatio = 2.5;
     addTearDown(tester.view.reset);
@@ -549,9 +549,7 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('yearly slides fit landscape with large text (true)', (
-    tester,
-  ) async {
+  testWidgets('yearly slides fit landscape with large text', (tester) async {
     tester.view.physicalSize = const Size(780, 360);
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.reset);

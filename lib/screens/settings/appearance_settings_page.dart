@@ -45,19 +45,17 @@ class AppearanceSettingsPage extends ConsumerWidget {
             ...settingsSectionSlivers(
               title: context.l10n.sectionColor,
               children: [
-                _MornyeAccentPicker(
-                  selected: themeSettings.mornyeAccent,
-                  onChanged: ref.read(themeProvider.notifier).setMornyeAccent,
+                _AccentPicker(
+                  selected: themeSettings.accent,
+                  onChanged: ref.read(themeProvider.notifier).setAccent,
                 ),
                 SettingsSwitchItem(
                   key: const ValueKey('mornye-glass-outlines'),
                   icon: Icons.rounded_corner,
                   title: context.l10n.appearanceGlassOutlines,
                   subtitle: context.l10n.appearanceGlassOutlinesSubtitle,
-                  value: themeSettings.mornyeGlassOutlines,
-                  onChanged: ref
-                      .read(themeProvider.notifier)
-                      .setMornyeGlassOutlines,
+                  value: themeSettings.glassOutlines,
+                  onChanged: ref.read(themeProvider.notifier).setGlassOutlines,
                   showDivider: false,
                 ),
               ],

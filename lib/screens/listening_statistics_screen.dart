@@ -192,7 +192,7 @@ class _ListeningStatisticsScreenState
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: AppContentCard(
-              mornyeSurface: false,
+              controlFill: false,
               color: null,
               child: Padding(
                 padding: EdgeInsets.all(20),
@@ -298,7 +298,7 @@ class _ListeningStatisticsScreenState
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: AppContentCard(
-            mornyeSurface: false,
+            controlFill: false,
             // Material leads with the total as an emphasized hero figure.
             color: null,
             child: Padding(

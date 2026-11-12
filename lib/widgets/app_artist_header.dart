@@ -27,10 +27,10 @@ class AppArtistSurface extends StatefulWidget {
   final bool neutralActions;
 
   @override
-  State<AppArtistSurface> createState() => _MornyeArtistSurfaceState();
+  State<AppArtistSurface> createState() => _ArtistSurfaceState();
 }
 
-class _MornyeArtistSurfaceState extends State<AppArtistSurface> {
+class _ArtistSurfaceState extends State<AppArtistSurface> {
   // Page rebuilds reuse the derived themes while their inputs are unchanged.
   ThemeData? _baseTheme;
   TargetPlatform? _basePlatform;
@@ -178,7 +178,7 @@ class _MornyeArtistSurfaceState extends State<AppArtistSurface> {
   }
 }
 
-/// Portrait and centered identity from Mornye's MobileArtistView. Actions stay
+/// Portrait and centered identity from the design's MobileArtistView. Actions stay
 /// supplied by the screen so remote artists retain download/favorite behavior.
 class AppArtistHeader extends StatelessWidget {
   const AppArtistHeader({

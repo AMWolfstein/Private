@@ -137,7 +137,7 @@ class _MonthlyDonationGoalCard extends StatelessWidget {
 
     return AppContentCard(
       elevation: 0,
-      mornyeSurface: false,
+      controlFill: false,
       color: cardColor,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       child: Padding(
@@ -264,7 +264,7 @@ class _DonateLinksCard extends StatelessWidget {
 
     return AppContentCard(
       elevation: 0,
-      mornyeSurface: false,
+      controlFill: false,
       color: cardColor,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       clipBehavior: Clip.antiAlias,
@@ -330,7 +330,7 @@ class _RecentSupportersCard extends StatelessWidget {
 
     return AppContentCard(
       elevation: 0,
-      mornyeSurface: false,
+      controlFill: false,
       color: _donateCardColor(context),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       child: Padding(
@@ -424,7 +424,7 @@ class _DonateNoticeCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return AppContentCard(
       elevation: 0,
-      mornyeSurface: false,
+      controlFill: false,
       color: colorScheme.secondaryContainer.withValues(alpha: 0.3),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       child: Padding(

@@ -7505,8 +7505,8 @@
   "@metadataCopyField": {
     "description": "Metadata menu action that copies the selected key and value"
   },
-  "mornyeSearch": "Tìm kiếm",
-  "mornyeContinuePlaying": "Tiếp tục phát",
+  "search": "Tìm kiếm",
+  "continuePlaying": "Tiếp tục phát",
   "metadataCopyAll": "Sao chép toàn bộ metadata",
   "@metadataCopyAll": {
     "description": "Metadata menu action that copies every visible key and value"
@@ -7519,13 +7519,13 @@
   "@optionsEmbeddedCoverSizeDescription": {
     "description": "Description shown in the embedded cover size picker"
   },
-  "mornyeFavorite": "Yêu thích",
-  "mornyeGoToArtist": "Đi tới Nghệ sĩ",
-  "@mornyeFavorite": {
+  "favorite": "Yêu thích",
+  "goToArtist": "Đi tới Nghệ sĩ",
+  "@favorite": {
     "description": "Compact context menu action that adds a track to Loved"
   },
-  "mornyeFavorited": "Đã yêu thích",
-  "@mornyeFavorited": {
+  "favorited": "Đã yêu thích",
+  "@favorited": {
     "description": "Selected state of the compact favorite action"
   },
   "autoMixDescription": "Chuyển bài mượt mà bằng cách đồng bộ nhịp và điều chỉnh tốc độ giữ nguyên cao độ. Tự động chuyển sang Crossfade nếu không khớp được nhịp.",

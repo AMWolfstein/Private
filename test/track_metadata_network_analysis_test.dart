@@ -37,9 +37,7 @@ void main() {
     await storage.dispose();
   });
   for (final protocol in NetworkProtocol.values) {
-    testWidgets('network delete capability: $protocol (Mornye=true)', (
-      tester,
-    ) async {
+    testWidgets('network delete capability: $protocol', (tester) async {
       final item = LocalLibraryItem(
         id: 'network://delete-${protocol.name}/track.flac',
         filePath: 'network://delete-${protocol.name}/track.flac',
@@ -97,9 +95,7 @@ void main() {
     });
   }
   for (final format in ['flac', 'wav', 'mp3']) {
-    testWidgets('network $format exposes supported analysers (Mornye=true)', (
-      tester,
-    ) async {
+    testWidgets('network $format exposes supported analysers', (tester) async {
       final item = LocalLibraryItem(
         id: 'network://fixture/track.$format',
         filePath: 'network://fixture/track.$format',

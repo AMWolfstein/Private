@@ -71,7 +71,7 @@ void main() {
               builder: (context) => Center(
                 child: TextButton(
                   onPressed: () async {
-                    final result = await showMornyeContextMenu<String>(
+                    final result = await showAppContextMenu<String>(
                       context: context,
                       anchor: anchor,
                       preferAbove: preferAbove,

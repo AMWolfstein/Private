@@ -299,108 +299,106 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   setUp(() => SharedPreferences.setMockInitialValues({}));
 
-  testWidgets(
-    'playlist file deletion confirms and cleans both indexes (true)',
-    (tester) async {
-      tester.view.physicalSize = const Size(390, 844);
-      tester.view.devicePixelRatio = 1;
-      addTearDown(tester.view.reset);
-      final folder = Directory.systemTemp.createTempSync('playlist-delete-');
-      addTearDown(() => folder.delete(recursive: true));
-      final files = [
-        File('${folder.path}/first.flac'),
-        File('${folder.path}/selected.flac'),
-      ];
-      for (final file in files) {
-        file.writeAsBytesSync([1]);
-      }
-      final playback = _Playback()
-        ..paths.addAll({
-          'First': files.first.path,
-          'Selected': files.last.path,
-          'Last': 'network://example/song.flac',
-        });
-      final library = _Library();
-      final history = _History();
-      await tester.pumpWidget(
-        _selectionApp(
-          mornye: true,
-          player: _Player(),
-          playback: playback,
-          library: library,
-          history: history,
-        ),
-      );
-      await _selectAllTracks(tester);
-      // Phones end the selection bar with the full-width delete button.
-      final delete = find.widgetWithText(
-        DestructiveSelectionButton,
-        'Delete 2 tracks',
-      );
-      await tester.ensureVisible(delete);
-      await tester.tap(delete);
-      await tester.pumpAndSettle();
-      expect(find.text('Delete'), findsOneWidget);
-      expect(
-        find.textContaining('Permanently delete 2 audio files'),
-        findsOneWidget,
-      );
-      expect(files.every((file) => file.existsSync()), isTrue);
-      await tester.tap(find.text('Cancel'));
-      await tester.pumpAndSettle();
-      expect(library.removedFiles, isEmpty);
-      expect(history.removedFiles, isEmpty);
+  testWidgets('playlist file deletion confirms and cleans both indexes', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(390, 844);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    final folder = Directory.systemTemp.createTempSync('playlist-delete-');
+    addTearDown(() => folder.delete(recursive: true));
+    final files = [
+      File('${folder.path}/first.flac'),
+      File('${folder.path}/selected.flac'),
+    ];
+    for (final file in files) {
+      file.writeAsBytesSync([1]);
+    }
+    final playback = _Playback()
+      ..paths.addAll({
+        'First': files.first.path,
+        'Selected': files.last.path,
+        'Last': 'network://example/song.flac',
+      });
+    final library = _Library();
+    final history = _History();
+    await tester.pumpWidget(
+      _selectionApp(
+        mornye: true,
+        player: _Player(),
+        playback: playback,
+        library: library,
+        history: history,
+      ),
+    );
+    await _selectAllTracks(tester);
+    // Phones end the selection bar with the full-width delete button.
+    final delete = find.widgetWithText(
+      DestructiveSelectionButton,
+      'Delete 2 tracks',
+    );
+    await tester.ensureVisible(delete);
+    await tester.tap(delete);
+    await tester.pumpAndSettle();
+    expect(find.text('Delete'), findsOneWidget);
+    expect(
+      find.textContaining('Permanently delete 2 audio files'),
+      findsOneWidget,
+    );
+    expect(files.every((file) => file.existsSync()), isTrue);
+    await tester.tap(find.text('Cancel'));
+    await tester.pumpAndSettle();
+    expect(library.removedFiles, isEmpty);
+    expect(history.removedFiles, isEmpty);
 
-      await tester.tap(delete);
-      await tester.pumpAndSettle();
-      await tester.tap(find.text('Delete'));
-      await tester.pumpAndSettle();
-      for (
-        var attempt = 0;
-        attempt < 100 && !history.deletionCompleted.isCompleted;
-        attempt++
-      ) {
-        await tester.runAsync(
-          () => Future<void>.delayed(const Duration(milliseconds: 10)),
-        );
-        await tester.pump(const Duration(milliseconds: 16));
-      }
-      await tester.pumpAndSettle();
-      expect(history.deletionCompleted.isCompleted, isTrue);
-      expect(files.any((file) => file.existsSync()), isFalse);
-      expect(library.removedFiles, files.map((file) => file.path));
-      expect(history.removedFiles, files.map((file) => file.path));
-      expect(find.byType(SelectionBottomBar), findsNothing);
-      expect(tester.takeException(), isNull);
-    },
-  );
+    await tester.tap(delete);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Delete'));
+    await tester.pumpAndSettle();
+    for (
+      var attempt = 0;
+      attempt < 100 && !history.deletionCompleted.isCompleted;
+      attempt++
+    ) {
+      await tester.runAsync(
+        () => Future<void>.delayed(const Duration(milliseconds: 10)),
+      );
+      await tester.pump(const Duration(milliseconds: 16));
+    }
+    await tester.pumpAndSettle();
+    expect(history.deletionCompleted.isCompleted, isTrue);
+    expect(files.any((file) => file.existsSync()), isFalse);
+    expect(library.removedFiles, files.map((file) => file.path));
+    expect(history.removedFiles, files.map((file) => file.path));
+    expect(find.byType(SelectionBottomBar), findsNothing);
+    expect(tester.takeException(), isNull);
+  });
 
-  testWidgets(
-    'playlist leaves unavailable and CUE files out of actions (true)',
-    (tester) async {
-      tester.view.physicalSize = const Size(390, 844);
-      tester.view.devicePixelRatio = 1;
-      addTearDown(tester.view.reset);
-      final playback = _Playback()..paths.clear();
-      playback.paths['First'] = '/album.cue#track01';
-      await tester.pumpWidget(
-        _selectionApp(mornye: true, player: _Player(), playback: playback),
-      );
-      await _selectAllTracks(tester);
-      expect(
-        find.widgetWithText(SelectionActionButton, 'Remove from playlist (4)'),
-        findsOneWidget,
-      );
-      expect(find.textContaining('Delete '), findsNothing);
-      final next = tester.widget<SelectionActionButton>(
-        find.widgetWithText(SelectionActionButton, 'Play next'),
-      );
-      expect(next.onPressed, isNull);
-      expect(tester.takeException(), isNull);
-    },
-  );
+  testWidgets('playlist leaves unavailable and CUE files out of actions', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(390, 844);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    final playback = _Playback()..paths.clear();
+    playback.paths['First'] = '/album.cue#track01';
+    await tester.pumpWidget(
+      _selectionApp(mornye: true, player: _Player(), playback: playback),
+    );
+    await _selectAllTracks(tester);
+    expect(
+      find.widgetWithText(SelectionActionButton, 'Remove from playlist (4)'),
+      findsOneWidget,
+    );
+    expect(find.textContaining('Delete '), findsNothing);
+    final next = tester.widget<SelectionActionButton>(
+      find.widgetWithText(SelectionActionButton, 'Play next'),
+    );
+    expect(next.onPressed, isNull);
+    expect(tester.takeException(), isNull);
+  });
 
-  testWidgets('external player hides collection queue controls (true)', (
+  testWidgets('external player hides collection queue controls', (
     tester,
   ) async {
     tester.view.physicalSize = const Size(390, 844);
@@ -421,9 +419,7 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('large local playlist renders and scrolls (true)', (
-    tester,
-  ) async {
+  testWidgets('large local playlist renders and scrolls', (tester) async {
     tester.view.physicalSize = const Size(400, 850);
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.reset);
@@ -465,7 +461,7 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('Wishlist enqueues one selection (Mornye: true)', (tester) async {
+  testWidgets('Wishlist enqueues one selection', (tester) async {
     tester.view.physicalSize = const Size(800, 1100);
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.reset);
@@ -528,80 +524,76 @@ void main() {
   });
 
   for (final mode in LibraryTracksFolderMode.values) {
-    testWidgets(
-      'selection dispatches one ${mode.name} removal (Mornye: true)',
-      (tester) async {
-        tester.view.physicalSize = const Size(400, 850);
-        tester.view.devicePixelRatio = 1;
-        addTearDown(tester.view.reset);
-        final calls = <(String, List<String>)>[];
-        await tester.pumpWidget(
-          ProviderScope(
-            overrides: [
-              settingsProvider.overrideWith(_Settings.new),
-              musicPlayerControllerProvider.overrideWithValue(_Player()),
-              playbackProvider.overrideWith(_Playback.new),
-              libraryCollectionsProvider.overrideWith(
-                () => _RemovalCollections(
-                  (kind, keys) => calls.add((kind, keys)),
-                ),
-              ),
-              localLibraryProvider.overrideWith(_Library.new),
-              downloadHistoryProvider.overrideWith(_History.new),
-              downloadHistoryVisibleBatchExistsProvider.overrideWith(
-                (ref, request) => const {},
-              ),
-              localLibraryCoverProvider.overrideWith(
-                (ref, request) async => null,
-              ),
-              localLibraryFirstCoverProvider.overrideWith(
-                (ref, request) async => null,
-              ),
-            ],
-            child: MaterialApp(
-              theme: AppTheme.build(Brightness.dark),
-              localizationsDelegates: AppLocalizations.localizationsDelegates,
-              supportedLocales: AppLocalizations.supportedLocales,
-              home: LibraryTracksFolderScreen(
-                mode: mode,
-                playlistId: mode == LibraryTracksFolderMode.playlist
-                    ? 'playlist'
-                    : null,
-              ),
+    testWidgets('selection dispatches one ${mode.name} removal', (
+      tester,
+    ) async {
+      tester.view.physicalSize = const Size(400, 850);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.reset);
+      final calls = <(String, List<String>)>[];
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            settingsProvider.overrideWith(_Settings.new),
+            musicPlayerControllerProvider.overrideWithValue(_Player()),
+            playbackProvider.overrideWith(_Playback.new),
+            libraryCollectionsProvider.overrideWith(
+              () =>
+                  _RemovalCollections((kind, keys) => calls.add((kind, keys))),
+            ),
+            localLibraryProvider.overrideWith(_Library.new),
+            downloadHistoryProvider.overrideWith(_History.new),
+            downloadHistoryVisibleBatchExistsProvider.overrideWith(
+              (ref, request) => const {},
+            ),
+            localLibraryCoverProvider.overrideWith(
+              (ref, request) async => null,
+            ),
+            localLibraryFirstCoverProvider.overrideWith(
+              (ref, request) async => null,
+            ),
+          ],
+          child: MaterialApp(
+            theme: AppTheme.build(Brightness.dark),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: LibraryTracksFolderScreen(
+              mode: mode,
+              playlistId: mode == LibraryTracksFolderMode.playlist
+                  ? 'playlist'
+                  : null,
             ),
           ),
-        );
-        await tester.pumpAndSettle();
-        await tester.ensureVisible(find.text('First'));
-        await tester.longPress(find.text('First'));
-        await tester.pumpAndSettle();
-        await Scrollable.ensureVisible(
-          tester.element(find.text('Unavailable')),
-          alignment: 0.15,
-        );
-        await tester.pumpAndSettle();
-        await tester.tap(find.text('Unavailable'));
-        await tester.pumpAndSettle();
-        await tester.tap(findAppIcon(Icons.remove_circle_outline));
-        await tester.pumpAndSettle();
-        expect(calls, hasLength(1));
-        expect(calls.single.$1, mode.name);
-        expect(calls.single.$2, ['First', 'Unavailable']);
-        expect(find.text('First'), findsNothing);
-        expect(find.text('Unavailable'), findsNothing);
-        expect(findAppIcon(Icons.remove_circle_outline), findsNothing);
-        final l10n = AppLocalizations.of(
-          tester.element(find.byType(LibraryTracksFolderScreen)),
-        );
-        expect(find.text(l10n.selectionSelected(2)), findsOneWidget);
-        expect(tester.takeException(), isNull);
-      },
-    );
+        ),
+      );
+      await tester.pumpAndSettle();
+      await tester.ensureVisible(find.text('First'));
+      await tester.longPress(find.text('First'));
+      await tester.pumpAndSettle();
+      await Scrollable.ensureVisible(
+        tester.element(find.text('Unavailable')),
+        alignment: 0.15,
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Unavailable'));
+      await tester.pumpAndSettle();
+      await tester.tap(findAppIcon(Icons.remove_circle_outline));
+      await tester.pumpAndSettle();
+      expect(calls, hasLength(1));
+      expect(calls.single.$1, mode.name);
+      expect(calls.single.$2, ['First', 'Unavailable']);
+      expect(find.text('First'), findsNothing);
+      expect(find.text('Unavailable'), findsNothing);
+      expect(findAppIcon(Icons.remove_circle_outline), findsNothing);
+      final l10n = AppLocalizations.of(
+        tester.element(find.byType(LibraryTracksFolderScreen)),
+      );
+      expect(find.text(l10n.selectionSelected(2)), findsOneWidget);
+      expect(tester.takeException(), isNull);
+    });
   }
 
-  testWidgets('playlist row queues its neighbors (Mornye: true)', (
-    tester,
-  ) async {
+  testWidgets('playlist row queues its neighbors', (tester) async {
     final player = _Player();
     await tester.pumpWidget(
       ProviderScope(
@@ -654,9 +646,7 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('playlist header shuffles every song (Mornye: true)', (
-    tester,
-  ) async {
+  testWidgets('playlist header shuffles every song', (tester) async {
     // A narrow phone, so Play, Shuffle and Download all must share it.
     tester.view.physicalSize = const Size(360, 780);
     tester.view.devicePixelRatio = 1;
@@ -702,9 +692,7 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('playlist header mirrors in Arabic (Mornye: true)', (
-    tester,
-  ) async {
+  testWidgets('playlist header mirrors in Arabic', (tester) async {
     tester.view.physicalSize = const Size(360, 780);
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.reset);

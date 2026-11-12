@@ -350,9 +350,7 @@ void main() {
     await tester.pumpWidget(const SizedBox.shrink());
   });
 
-  testWidgets('settings save the key and test the connection (true)', (
-    tester,
-  ) async {
+  testWidgets('settings save the key and test the connection', (tester) async {
     tester.view.physicalSize = const Size(420, 1400);
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.reset);

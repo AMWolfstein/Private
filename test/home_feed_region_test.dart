@@ -290,7 +290,7 @@ void main() {
     },
   );
 
-  testWidgets('country picker saves a country with either theme (true)', (
+  testWidgets('country picker saves a country with either theme', (
     tester,
   ) async {
     await tester.pumpWidget(

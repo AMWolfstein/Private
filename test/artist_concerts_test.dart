@@ -98,7 +98,7 @@ void main() {
   });
 
   testWidgets(
-    'concert badge opens a generic schedule and back restores artist (true)',
+    'concert badge opens a generic schedule and back restores artist',
     (tester) async {
       final concerts = ArtistConcert.parseList([event()]);
       await tester.pumpWidget(

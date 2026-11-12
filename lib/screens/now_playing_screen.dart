@@ -273,7 +273,7 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
             : null);
     final squareArtwork =
         motionArtwork == null || (motionRatio != null && motionRatio >= 0.95);
-    // Motion artwork is always full-bleed in Mornye; still covers follow the
+    // Motion artwork is always full-bleed in the app; still covers follow the
     // cover style setting through the same layout, as a square video would.
     final fullBleed = motionArtwork != null || fullScreenCover;
     final screen = MediaQuery.sizeOf(context);
@@ -352,7 +352,7 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
     }
     final contentOpacity = kAlwaysCompleteAnimation;
 
-    final double mornyeToolbarHeight =
+    final double toolbarHeight =
         MediaQuery.orientationOf(context) == Orientation.landscape ? 0 : 36;
     final player = Scaffold(
       extendBodyBehindAppBar: false,
@@ -365,7 +365,7 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
           foregroundColor: colorScheme.onSurface,
           surfaceTintColor: Colors.transparent,
           systemOverlayStyle: SystemUiOverlayStyle.light,
-          toolbarHeight: mornyeToolbarHeight,
+          toolbarHeight: toolbarHeight,
           automaticallyImplyLeading: false,
           title: (MediaQuery.orientationOf(context) == Orientation.landscape
               ? null
@@ -421,7 +421,7 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
                       showOptions: showOptions,
                     ),
                     lyricsOptions: _lyricsOptionsButton(colorScheme),
-                    onPageChanged: _setMornyePage,
+                    onPageChanged: _setPage,
                     onTrackNavigation: _showTrackNavigationMenu,
                     onMoreActions: (buttonContext, item, anchor) =>
                         _showMoreActions(
@@ -460,7 +460,7 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
                                 icon: const AppIcon(
                                   CupertinoIcons.quote_bubble,
                                 ),
-                                onPressed: _toggleMornyeLyrics,
+                                onPressed: _toggleLyrics,
                               ),
                               AudioOutputButton(
                                 color: Colors.white,
@@ -483,7 +483,7 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
                                 ),
                                 icon: const AppIcon(CupertinoIcons.list_bullet),
                                 onPressed: () =>
-                                    _setMornyePage(_currentPage == 2 ? 0 : 2),
+                                    _setPage(_currentPage == 2 ? 0 : 2),
                               ),
                             ],
                           ),
@@ -565,11 +565,11 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
     child: child,
   );
 
-  void _toggleMornyeLyrics() {
-    _setMornyePage(_currentPage == 1 ? 0 : 1);
+  void _toggleLyrics() {
+    _setPage(_currentPage == 1 ? 0 : 1);
   }
 
-  void _setMornyePage(int page) {
+  void _setPage(int page) {
     setState(() {
       _currentPage = page;
       _lyricsControlsHidden = false;
@@ -757,7 +757,7 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
     BuildContext titleContext,
     MediaItem mediaItem,
   ) async {
-    final action = await showMornyeContextMenu<String>(
+    final action = await showAppContextMenu<String>(
       context: titleContext,
       preferAbove: true,
       maxWidth: 280,
@@ -821,7 +821,7 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
           );
     final volumeShown = ref.read(settingsProvider).playerShowVolume;
     if (!mounted || !context.mounted) return;
-    final action = await showMornyeContextMenu<String>(
+    final action = await showAppContextMenu<String>(
       context: context,
       anchor: anchor,
       preferAbove: true,
@@ -957,7 +957,7 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
   /// Opens Up Next. The Material sheet captures the theme of [context], the
   /// player's artwork scope.
   void _showQueueSheet(BuildContext context, ColorScheme colorScheme) {
-    _setMornyePage(2);
+    _setPage(2);
     return;
   }
 }

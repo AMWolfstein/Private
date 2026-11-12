@@ -216,7 +216,7 @@ void main() {
       ),
     ];
 
-    testWidgets('Mornye rows show no current-track state', (tester) async {
+    testWidgets('Rows show no current-track state', (tester) async {
       await tester.pumpWidget(
         _app(
           results(),

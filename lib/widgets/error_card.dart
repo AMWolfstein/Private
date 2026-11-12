@@ -46,7 +46,7 @@ class ErrorCard extends StatelessWidget {
     return AppContentCard(
       elevation: 0,
       color: background,
-      mornyeSurface: false,
+      controlFill: false,
       shape: RoundedRectangleBorder(borderRadius: tokens.borderRadiusCard),
       child: Padding(
         padding: EdgeInsets.all(tokens.gapLg),

@@ -269,7 +269,7 @@ class _LyricsOptionsButtonState extends ConsumerState<LyricsOptionsButton> {
     _setOpen(true);
     String? action;
     try {
-      final anchor = mornyeMenuAnchor(buttonContext);
+      final anchor = menuAnchor(buttonContext);
       var menuWidth = 240.0;
       for (final (_, label, _) in actions) {
         final painter = TextPainter(
@@ -285,7 +285,7 @@ class _LyricsOptionsButtonState extends ConsumerState<LyricsOptionsButton> {
         if (painter.width + 80 > menuWidth) menuWidth = painter.width + 80;
         painter.dispose();
       }
-      action = await showMornyeContextMenu<String>(
+      action = await showAppContextMenu<String>(
         context: buttonContext,
         anchor: anchor,
         preferAbove: true,

@@ -280,59 +280,56 @@ void main() {
   });
 
   for (final liquid in [false, true]) {
-    testWidgets(
-      'Mornye mini player prepares the motion cover only with liquid glass '
-      '(liquid: $liquid)',
-      (tester) async {
-        final prepared = <String>[];
-        await tester.pumpWidget(
-          ProviderScope(
-            overrides: [
-              currentMediaItemProvider.overrideWithBuild(
-                (ref, notifier) => Stream.value(
-                  const MediaItem(
-                    id: 'track',
-                    title: 'Song',
-                    album: 'Album',
-                    artist: 'Artist',
-                  ),
+    testWidgets('Mini player prepares the motion cover only with liquid glass'
+        '(liquid: $liquid)', (tester) async {
+      final prepared = <String>[];
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            currentMediaItemProvider.overrideWithBuild(
+              (ref, notifier) => Stream.value(
+                const MediaItem(
+                  id: 'track',
+                  title: 'Song',
+                  album: 'Album',
+                  artist: 'Artist',
                 ),
               ),
-              playbackStateProvider.overrideWith((ref) => const Stream.empty()),
-              deviceSupportsLiquidGlassProvider.overrideWithValue(liquid),
-              backdropBlurEnabledProvider.overrideWithValue(false),
-              playerMotionArtworkProvider.overrideWith(
-                (ref, album) async =>
-                    const MotionArtwork('file:///cover.mp4', aspectRatio: 1),
-              ),
-              playerArtworkVideoProvider.overrideWith((ref, source) {
-                prepared.add(source);
-                return Completer<VideoPlayerController>().future;
-              }),
-            ],
-            child: MaterialApp(
-              theme: AppTheme.build(Brightness.dark),
-              localizationsDelegates: AppLocalizations.localizationsDelegates,
-              supportedLocales: AppLocalizations.supportedLocales,
-              home: const Scaffold(
-                body: Center(child: SizedBox(width: 320, child: MiniPlayer())),
-              ),
+            ),
+            playbackStateProvider.overrideWith((ref) => const Stream.empty()),
+            deviceSupportsLiquidGlassProvider.overrideWithValue(liquid),
+            backdropBlurEnabledProvider.overrideWithValue(false),
+            playerMotionArtworkProvider.overrideWith(
+              (ref, album) async =>
+                  const MotionArtwork('file:///cover.mp4', aspectRatio: 1),
+            ),
+            playerArtworkVideoProvider.overrideWith((ref, source) {
+              prepared.add(source);
+              return Completer<VideoPlayerController>().future;
+            }),
+          ],
+          child: MaterialApp(
+            theme: AppTheme.build(Brightness.dark),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: const Scaffold(
+              body: Center(child: SizedBox(width: 320, child: MiniPlayer())),
             ),
           ),
-        );
-        for (var i = 0; i < 4; i++) {
-          await tester.pump();
-        }
-        expect(find.text('Song'), findsWidgets);
-        expect(prepared, liquid ? ['file:///cover.mp4'] : isEmpty);
-        expect(tester.takeException(), isNull);
-        await tester.pumpWidget(const SizedBox.shrink());
-      },
-    );
+        ),
+      );
+      for (var i = 0; i < 4; i++) {
+        await tester.pump();
+      }
+      expect(find.text('Song'), findsWidgets);
+      expect(prepared, liquid ? ['file:///cover.mp4'] : isEmpty);
+      expect(tester.takeException(), isNull);
+      await tester.pumpWidget(const SizedBox.shrink());
+    });
   }
 
   for (final liquid in [false, true]) {
-    testWidgets('Mornye mini player rests title and artist after two passes '
+    testWidgets('Mini player rests title and artist after two passes'
         '(liquid: $liquid)', (tester) async {
       await tester.pumpWidget(
         ProviderScope(
@@ -404,61 +401,58 @@ void main() {
   }
 
   for (final compact in [false, true]) {
-    testWidgets(
-      'mini player scrolls title and artist (Mornye: true, compact: $compact)',
-      (tester) async {
-        await tester.pumpWidget(
-          ProviderScope(
-            overrides: [
-              currentMediaItemProvider.overrideWithBuild(
-                (ref, notifier) => Stream.value(
-                  const MediaItem(
-                    id: 'long-track',
-                    title: longTitle,
-                    artist: 'First artist, second artist and another artist',
-                    extras: {'explicit': true},
-                  ),
+    testWidgets('mini player scrolls title and artist', (tester) async {
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            currentMediaItemProvider.overrideWithBuild(
+              (ref, notifier) => Stream.value(
+                const MediaItem(
+                  id: 'long-track',
+                  title: longTitle,
+                  artist: 'First artist, second artist and another artist',
+                  extras: {'explicit': true},
                 ),
               ),
-              playbackStateProvider.overrideWith((ref) => const Stream.empty()),
-              lowEndDeviceProvider.overrideWithValue(true),
-              backdropBlurEnabledProvider.overrideWithValue(false),
-            ],
-            child: MaterialApp(
-              theme: AppTheme.build(Brightness.light),
-              localizationsDelegates: AppLocalizations.localizationsDelegates,
-              supportedLocales: AppLocalizations.supportedLocales,
-              home: Scaffold(
-                body: Center(
-                  child: SizedBox(
-                    width: 320,
-                    child: MiniPlayer(compact: compact),
-                  ),
+            ),
+            playbackStateProvider.overrideWith((ref) => const Stream.empty()),
+            lowEndDeviceProvider.overrideWithValue(true),
+            backdropBlurEnabledProvider.overrideWithValue(false),
+          ],
+          child: MaterialApp(
+            theme: AppTheme.build(Brightness.light),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: Scaffold(
+              body: Center(
+                child: SizedBox(
+                  width: 320,
+                  child: MiniPlayer(compact: compact),
                 ),
               ),
             ),
           ),
-        );
-        await tester.pump();
-        await tester.pump();
-        await tester.pump();
-        await tester.pump();
-        await startScrolling(tester);
-        final scrollViews = tester.widgetList<SingleChildScrollView>(
-          find.descendant(
-            of: find.byType(MiniPlayer),
-            matching: find.byType(SingleChildScrollView),
-          ),
-        );
-        expect(scrollViews, hasLength(2));
-        for (final view in scrollViews) {
-          expect(view.controller!.offset, greaterThan(0));
-        }
-        expect(find.byType(ExplicitBadge), findsNWidgets(2));
-        expect(tester.takeException(), isNull);
-        await tester.pumpWidget(const SizedBox.shrink());
-      },
-    );
+        ),
+      );
+      await tester.pump();
+      await tester.pump();
+      await tester.pump();
+      await tester.pump();
+      await startScrolling(tester);
+      final scrollViews = tester.widgetList<SingleChildScrollView>(
+        find.descendant(
+          of: find.byType(MiniPlayer),
+          matching: find.byType(SingleChildScrollView),
+        ),
+      );
+      expect(scrollViews, hasLength(2));
+      for (final view in scrollViews) {
+        expect(view.controller!.offset, greaterThan(0));
+      }
+      expect(find.byType(ExplicitBadge), findsNWidgets(2));
+      expect(tester.takeException(), isNull);
+      await tester.pumpWidget(const SizedBox.shrink());
+    });
   }
 }
 

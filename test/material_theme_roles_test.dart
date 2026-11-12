@@ -38,7 +38,7 @@ Future<Color> _groupColor(WidgetTester tester, ThemeData theme) async {
 
 void main() {
   group('settingsGroupColor', () {
-    testWidgets('Mornye keeps its grouped surface', (tester) async {
+    testWidgets('Keeps its grouped surface', (tester) async {
       final theme = AppTheme.build(Brightness.light);
       expect(
         await _groupColor(tester, theme),
@@ -68,7 +68,7 @@ void main() {
       return (box.decoration as BoxDecoration).color;
     }
 
-    testWidgets('Mornye info cards keep their soft fills', (tester) async {
+    testWidgets('Info cards keep their soft fills', (tester) async {
       final theme = AppTheme.build(Brightness.light);
       final scheme = theme.colorScheme;
       await tester.pumpWidget(_host(fills(), theme: theme));

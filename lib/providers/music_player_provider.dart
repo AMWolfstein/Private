@@ -23,7 +23,7 @@ final musicPlayerRuntimeProvider = Provider<MusicPlayerRuntime>(
 );
 
 /// External apps own local-file playback. Network files still need
-/// the in-app controls when they use a Mornye player.
+/// the in-app controls when they use a player.
 final playerUiEnabledProvider = Provider<bool>((ref) {
   if (ref.watch(settingsProvider.select((s) => s.playerMode == 'internal'))) {
     return true;

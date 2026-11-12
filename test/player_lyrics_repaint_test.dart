@@ -136,7 +136,7 @@ void main() {
   }
 
   testWidgets(
-    'playing lyrics retain their painter and refresh stopped highlights (true)',
+    'playing lyrics retain their painter and refresh stopped highlights',
     (tester) async {
       final playback = StreamController<PlaybackState>.broadcast();
       final preview = ValueNotifier<Duration?>(null);
@@ -255,9 +255,7 @@ void main() {
     },
   );
 
-  testWidgets('word sweep follows the AutoMix playback rate (true)', (
-    tester,
-  ) async {
+  testWidgets('word sweep follows the AutoMix playback rate', (tester) async {
     final playback = StreamController<PlaybackState>.broadcast();
     final preview = ValueNotifier<Duration?>(null);
     addTearDown(playback.close);
@@ -314,9 +312,7 @@ void main() {
     await tester.pumpWidget(const SizedBox.shrink());
   });
 
-  testWidgets('sung words rise in both styles, glow only in Mornye (true)', (
-    tester,
-  ) async {
+  testWidgets('sung words rise in both styles, glow only in', (tester) async {
     final playback = StreamController<PlaybackState>.broadcast();
     final preview = ValueNotifier<Duration?>(null);
     addTearDown(playback.close);

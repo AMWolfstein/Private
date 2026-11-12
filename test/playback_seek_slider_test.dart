@@ -113,7 +113,7 @@ void main() {
     expect(sharedPreview.value, isNull);
   });
 
-  testWidgets('removing a Mornye slider releases its pending preview safely', (
+  testWidgets('removing a slider releases its pending preview safely', (
     tester,
   ) async {
     final preview = PlaybackSeekPreview();

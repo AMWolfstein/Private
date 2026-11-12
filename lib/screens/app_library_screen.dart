@@ -41,10 +41,10 @@ class AppLibraryScreen extends ConsumerStatefulWidget {
   final String? artist;
 
   @override
-  ConsumerState<AppLibraryScreen> createState() => _MornyeLibraryScreenState();
+  ConsumerState<AppLibraryScreen> createState() => _LibraryScreenState();
 }
 
-class _MornyeLibraryScreenState extends ConsumerState<AppLibraryScreen> {
+class _LibraryScreenState extends ConsumerState<AppLibraryScreen> {
   final _scroll = ScrollController();
   final _search = TextEditingController();
   Timer? _debounce;

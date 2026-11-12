@@ -221,7 +221,7 @@ void main() {
     },
   );
 
-  testWidgets('blank album cover keeps the scanned track cover (true)', (
+  testWidgets('blank album cover keeps the scanned track cover', (
     tester,
   ) async {
     tester.view.physicalSize = const Size(430, 1200);
@@ -310,7 +310,7 @@ void main() {
     });
   }
 
-  testWidgets('Mornye album grid replaces a stale scan path', (tester) async {
+  testWidgets('Album grid replaces a stale scan path', (tester) async {
     final preview = await playerPreview(tester);
     await tester.runAsync(() async {
       await tester.pumpWidget(

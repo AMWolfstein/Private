@@ -49,7 +49,7 @@ void main() {
           ),
         ],
         child: MaterialApp(
-          // The Mornye glass slider, which reports drag start itself.
+          // The glass slider, which reports drag start itself.
           theme: AppTheme.build(Brightness.dark),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,

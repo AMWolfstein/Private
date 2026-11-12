@@ -205,7 +205,7 @@ void main() {
     expect(find.text('This folder is no longer in your Library'), findsOne);
   });
 
-  testWidgets('Mornye lists folders and songs as flat rows', (tester) async {
+  testWidgets('Lists folders and songs as flat rows', (tester) async {
     await _pump(tester, mornye: true);
 
     final rows = tester.widgetList<TrackCard>(find.byType(TrackCard));

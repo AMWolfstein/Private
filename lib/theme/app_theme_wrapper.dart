@@ -19,9 +19,9 @@ class AppThemeWrapper extends ConsumerWidget {
       themeProvider.select(
         (s) => (
           themeMode: s.themeMode,
-          mornyeAccent: s.mornyeAccent,
+          accent: s.accent,
           useSystemFont: s.useSystemFont,
-          mornyeGlassOutlines: s.mornyeGlassOutlines,
+          glassOutlines: s.glassOutlines,
         ),
       ),
     );
@@ -33,17 +33,17 @@ class AppThemeWrapper extends ConsumerWidget {
     return builder(
       AppTheme.build(
         Brightness.light,
-        accent: themeSettings.mornyeAccent,
+        accent: themeSettings.accent,
         useSystemFont: themeSettings.useSystemFont,
         fontFamily: fontFamily,
-        glassOutlines: themeSettings.mornyeGlassOutlines,
+        glassOutlines: themeSettings.glassOutlines,
       ),
       AppTheme.build(
         Brightness.dark,
-        accent: themeSettings.mornyeAccent,
+        accent: themeSettings.accent,
         useSystemFont: themeSettings.useSystemFont,
         fontFamily: fontFamily,
-        glassOutlines: themeSettings.mornyeGlassOutlines,
+        glassOutlines: themeSettings.glassOutlines,
       ),
       themeSettings.themeMode,
     );

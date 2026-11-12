@@ -260,7 +260,7 @@ void main() {
     return frames;
   }
 
-  testWidgets('Mornye timestamps advance between native position reports', (
+  testWidgets('Timestamps advance between native position reports', (
     tester,
   ) async {
     final states = StreamController<PlaybackState>();
@@ -296,52 +296,51 @@ void main() {
     });
   });
 
-  testWidgets(
-    'late duration refreshes the open player without reopening (true)',
-    (tester) async {
-      await pumpNowPlaying(
-        tester,
-        theme: AppTheme.build(Brightness.dark),
-        playback: PlaybackState(
-          processingState: AudioProcessingState.ready,
-          updatePosition: const Duration(seconds: 30),
-        ),
-        wrapPlayer: (player) => Column(
-          children: [
-            Expanded(child: player),
-            const HeroMode(enabled: false, child: MiniPlayer()),
-          ],
-        ),
-      );
-      final initial = item('first').copyWith(duration: Duration.zero);
-      mediaItems.add(initial);
-      await settlePlayer(tester);
-      final originalState = tester.state(find.byType(NowPlayingScreen));
-      expect(
-        tester
-            .widget<PlaybackSeekSlider>(find.byType(PlaybackSeekSlider))
-            .duration,
-        Duration.zero,
-      );
+  testWidgets('late duration refreshes the open player without reopening', (
+    tester,
+  ) async {
+    await pumpNowPlaying(
+      tester,
+      theme: AppTheme.build(Brightness.dark),
+      playback: PlaybackState(
+        processingState: AudioProcessingState.ready,
+        updatePosition: const Duration(seconds: 30),
+      ),
+      wrapPlayer: (player) => Column(
+        children: [
+          Expanded(child: player),
+          const HeroMode(enabled: false, child: MiniPlayer()),
+        ],
+      ),
+    );
+    final initial = item('first').copyWith(duration: Duration.zero);
+    mediaItems.add(initial);
+    await settlePlayer(tester);
+    final originalState = tester.state(find.byType(NowPlayingScreen));
+    expect(
+      tester
+          .widget<PlaybackSeekSlider>(find.byType(PlaybackSeekSlider))
+          .duration,
+      Duration.zero,
+    );
 
-      final readsBefore = metadataReads.length;
+    final readsBefore = metadataReads.length;
 
-      mediaItems.add(initial.copyWith(duration: const Duration(minutes: 3)));
-      await settlePlayer(tester);
-      expect(tester.state(find.byType(NowPlayingScreen)), same(originalState));
-      expect(
-        tester
-            .widget<PlaybackSeekSlider>(find.byType(PlaybackSeekSlider))
-            .duration,
-        const Duration(minutes: 3),
-      );
+    mediaItems.add(initial.copyWith(duration: const Duration(minutes: 3)));
+    await settlePlayer(tester);
+    expect(tester.state(find.byType(NowPlayingScreen)), same(originalState));
+    expect(
+      tester
+          .widget<PlaybackSeekSlider>(find.byType(PlaybackSeekSlider))
+          .duration,
+      const Duration(minutes: 3),
+    );
 
-      expect(metadataReads.length, readsBefore);
-      expect(tester.takeException(), isNull);
-    },
-  );
+    expect(metadataReads.length, readsBefore);
+    expect(tester.takeException(), isNull);
+  });
 
-  testWidgets('cover style switches live and survives rotation (true)', (
+  testWidgets('cover style switches live and survives rotation', (
     tester,
   ) async {
     await pumpNowPlaying(
@@ -381,9 +380,7 @@ void main() {
   });
 
   for (final page in ['player', 'lyrics', 'queue']) {
-    testWidgets('cover swipe changes the track in the Mornye $page', (
-      tester,
-    ) async {
+    testWidgets('cover swipe changes the track in the $page', (tester) async {
       final queue = [item('first'), item('second')];
       final controller = _QueueController(
         (index) => mediaItems.add(queue[index]),
@@ -660,7 +657,7 @@ void main() {
     await tester.pumpWidget(const SizedBox());
   });
 
-  testWidgets('Mornye lyrics keep wrapped, first and last lines at upper focus', (
+  testWidgets('Lyrics keep wrapped, first and last lines at upper focus', (
     tester,
   ) async {
     final lyrics = List.generate(100, (index) {
@@ -714,7 +711,7 @@ void main() {
   });
 
   for (final width in [393.0, 768.0]) {
-    testWidgets('Mornye lyrics fit the timeline without rewrapping ($width)', (
+    testWidgets('Lyrics fit the timeline without rewrapping ($width)', (
       tester,
     ) async {
       const original =
@@ -1009,7 +1006,7 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('Mornye landscape has no top handle or reserved toolbar height', (
+  testWidgets('Landscape has no top handle or reserved toolbar height', (
     tester,
   ) async {
     await pumpNowPlaying(
@@ -1398,7 +1395,7 @@ void main() {
     },
   );
 
-  testWidgets('Mornye player background does not reveal the page below', (
+  testWidgets('Player background does not reveal the page below', (
     tester,
   ) async {
     final background = ValueNotifier<Color>(Colors.white);
@@ -1447,91 +1444,89 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets(
-    'Mornye player menu floats above its button and retains dark colors',
-    (tester) async {
-      await pumpNowPlaying(
-        tester,
-        theme: AppTheme.build(Brightness.light),
-        size: const Size(393, 780),
-      );
-      mediaItems.add(item('first'));
-      await settlePlayer(tester);
-      final moreButton = findAppIcon(CupertinoIcons.ellipsis).hitTestable();
-      final anchor = tester.getRect(moreButton);
-      await tester.tap(moreButton);
-      await tester.pump();
-      await tester.pump(const Duration(milliseconds: 40));
-      final panel = find.byType(AppPlayerActionsSheet);
-      final enteringWidth = tester.getSize(panel).width;
-      await settlePlayer(tester);
-      expect(tester.getSize(panel).width, enteringWidth);
-      expect(tester.getRect(panel).bottom, lessThan(anchor.top));
-      expect(tester.getRect(panel).width, 280);
-      expect(find.byType(BottomSheet), findsNothing);
-      expect(Theme.of(tester.element(panel)).brightness, Brightness.dark);
-      expect(
-        tester.widget<Text>(find.text('Go to Album')).style?.color,
-        Colors.white,
-      );
-      expect(findAppIcon(CupertinoIcons.square_stack), findsOneWidget);
-      expect(findAppIcon(CupertinoIcons.moon_zzz), findsOneWidget);
-      expect(findAppIcon(CupertinoIcons.gear_alt), findsNothing);
-      expect(
-        find.text(
-          AppLocalizations.of(tester.element(panel)).collectionAddToPlaylist,
-        ),
-        findsOneWidget,
-      );
-      expect(find.text('Go to Artist'), findsOneWidget);
-      expect(find.text('Favorite'), findsOneWidget);
-      expect(find.text('Share'), findsOneWidget);
-      expect(tester.widget<Text>(find.text('Go to Album')).style?.fontSize, 16);
-      await tester.ensureVisible(find.text('Sleep timer'));
-      await tester.tap(find.text('Sleep timer'));
-      await settlePlayer(tester);
-      expect(
-        Theme.of(tester.element(find.text('15 minutes'))).brightness,
-        Brightness.dark,
-      );
-      expect(tester.takeException(), isNull);
-    },
-  );
+  testWidgets('Player menu floats above its button and retains dark colors', (
+    tester,
+  ) async {
+    await pumpNowPlaying(
+      tester,
+      theme: AppTheme.build(Brightness.light),
+      size: const Size(393, 780),
+    );
+    mediaItems.add(item('first'));
+    await settlePlayer(tester);
+    final moreButton = findAppIcon(CupertinoIcons.ellipsis).hitTestable();
+    final anchor = tester.getRect(moreButton);
+    await tester.tap(moreButton);
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 40));
+    final panel = find.byType(AppPlayerActionsSheet);
+    final enteringWidth = tester.getSize(panel).width;
+    await settlePlayer(tester);
+    expect(tester.getSize(panel).width, enteringWidth);
+    expect(tester.getRect(panel).bottom, lessThan(anchor.top));
+    expect(tester.getRect(panel).width, 280);
+    expect(find.byType(BottomSheet), findsNothing);
+    expect(Theme.of(tester.element(panel)).brightness, Brightness.dark);
+    expect(
+      tester.widget<Text>(find.text('Go to Album')).style?.color,
+      Colors.white,
+    );
+    expect(findAppIcon(CupertinoIcons.square_stack), findsOneWidget);
+    expect(findAppIcon(CupertinoIcons.moon_zzz), findsOneWidget);
+    expect(findAppIcon(CupertinoIcons.gear_alt), findsNothing);
+    expect(
+      find.text(
+        AppLocalizations.of(tester.element(panel)).collectionAddToPlaylist,
+      ),
+      findsOneWidget,
+    );
+    expect(find.text('Go to Artist'), findsOneWidget);
+    expect(find.text('Favorite'), findsOneWidget);
+    expect(find.text('Share'), findsOneWidget);
+    expect(tester.widget<Text>(find.text('Go to Album')).style?.fontSize, 16);
+    await tester.ensureVisible(find.text('Sleep timer'));
+    await tester.tap(find.text('Sleep timer'));
+    await settlePlayer(tester);
+    expect(
+      Theme.of(tester.element(find.text('15 minutes'))).brightness,
+      Brightness.dark,
+    );
+    expect(tester.takeException(), isNull);
+  });
 
-  testWidgets(
-    'Mornye title opens artist and album destinations with subtitles',
-    (tester) async {
-      await pumpNowPlaying(
-        tester,
-        theme: AppTheme.build(Brightness.dark),
-        size: const Size(393, 780),
-      );
-      mediaItems.add(item('first'));
-      await settlePlayer(tester);
-      await tester.tap(find.text('First').hitTestable());
-      await settlePlayer(tester);
-      expect(find.text('Go to Artist'), findsOneWidget);
-      expect(find.text('Go to Album'), findsOneWidget);
-      expect(
-        find.descendant(
-          of: find.byType(AppPlayerNavigationMenu),
-          matching: find.text('Artist'),
-        ),
-        findsOneWidget,
-      );
-      expect(
-        find.descendant(
-          of: find.byType(AppPlayerNavigationMenu),
-          matching: find.text('Album'),
-        ),
-        findsOneWidget,
-      );
-      await tester.tapAt(const Offset(5, 770));
-      await settlePlayer(tester);
-      expect(find.byType(AppPlayerNavigationMenu), findsNothing);
-      expect(tester.takeException(), isNull);
-    },
-  );
+  testWidgets('Title opens artist and album destinations with subtitles', (
+    tester,
+  ) async {
+    await pumpNowPlaying(
+      tester,
+      theme: AppTheme.build(Brightness.dark),
+      size: const Size(393, 780),
+    );
+    mediaItems.add(item('first'));
+    await settlePlayer(tester);
+    await tester.tap(find.text('First').hitTestable());
+    await settlePlayer(tester);
+    expect(find.text('Go to Artist'), findsOneWidget);
+    expect(find.text('Go to Album'), findsOneWidget);
+    expect(
+      find.descendant(
+        of: find.byType(AppPlayerNavigationMenu),
+        matching: find.text('Artist'),
+      ),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(
+        of: find.byType(AppPlayerNavigationMenu),
+        matching: find.text('Album'),
+      ),
+      findsOneWidget,
+    );
+    await tester.tapAt(const Offset(5, 770));
+    await settlePlayer(tester);
+    expect(find.byType(AppPlayerNavigationMenu), findsNothing);
+    expect(tester.takeException(), isNull);
+  });
 
   testWidgets('Android Details reads full tags from a restored content URI', (
     tester,
@@ -1579,7 +1574,7 @@ void main() {
   });
 
   testWidgets(
-    'Mornye Details keeps long values readable and Done visible while scrolling',
+    'Details keeps long values readable and Done visible while scrolling',
     (tester) async {
       final rights = List.filled(10, 'A long copyright value').join(' ');
       metadataOverrides = {
@@ -1645,7 +1640,7 @@ void main() {
   );
 
   testWidgets(
-    'Mornye star shares Library favorites across tracks and compact headers',
+    'Star shares Library favorites across tracks and compact headers',
     (tester) async {
       await pumpNowPlaying(
         tester,
@@ -1720,9 +1715,7 @@ void main() {
 
   for (final _ in ['material', 'portrait', 'landscape']) {}
 
-  testWidgets('Mornye lyrics stay blurred until playback starts', (
-    tester,
-  ) async {
+  testWidgets('Lyrics stay blurred until playback starts', (tester) async {
     final playback = StreamController<PlaybackState>();
     addTearDown(playback.close);
     await pumpNowPlaying(
@@ -1808,7 +1801,7 @@ void main() {
   });
 
   testWidgets(
-    'Mornye lyrics keep the active line sharp with bold leading-aligned text',
+    'Lyrics keep the active line sharp with bold leading-aligned text',
     (tester) async {
       tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
       await pumpNowPlaying(
@@ -1854,7 +1847,7 @@ void main() {
   );
 
   testWidgets(
-    'Mornye queue replaces artwork while volume and playback stay in place',
+    'Queue replaces artwork while volume and playback stay in place',
     (tester) async {
       await pumpNowPlaying(
         tester,
@@ -1951,9 +1944,7 @@ void main() {
 
   for (final _ in [320.0, 430.0]) {}
 
-  testWidgets('Mornye player renders Apple-style transport controls', (
-    tester,
-  ) async {
+  testWidgets('Player renders Apple-style transport controls', (tester) async {
     await pumpNowPlaying(tester, theme: AppTheme.build(Brightness.light));
     mediaItems.add(item('first'));
     await settlePlayer(tester);
@@ -1974,7 +1965,7 @@ void main() {
     expect(tester.state(nextButton), same(nextState));
   });
 
-  testWidgets('Mornye elapsed and remaining times roll on the same second', (
+  testWidgets('Elapsed and remaining times roll on the same second', (
     tester,
   ) async {
     final playbackEvents = StreamController<PlaybackState>();
@@ -2059,7 +2050,7 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('Mornye position ticks and lyric control fades stay local', (
+  testWidgets('Position ticks and lyric control fades stay local', (
     tester,
   ) async {
     metadataOverrides['lyrics'] = List.generate(
@@ -2137,7 +2128,7 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('Mornye volume stays above the bottom actions on a phone', (
+  testWidgets('Volume stays above the bottom actions on a phone', (
     tester,
   ) async {
     await pumpNowPlaying(
@@ -2169,7 +2160,7 @@ void main() {
   });
 
   testWidgets(
-    'Mornye landscape opens the player and reveals hidden lyric actions on a bottom tap',
+    'Landscape opens the player and reveals hidden lyric actions on a bottom tap',
     (tester) async {
       await pumpNowPlaying(
         tester,
@@ -2280,78 +2271,77 @@ void main() {
     },
   );
 
-  testWidgets(
-    'Mornye motion cover stays attached throughout opening and closing',
-    (tester) async {
-      tester.view.padding = FakeViewPadding(top: 59, bottom: 34);
-      tester.view.viewPadding = FakeViewPadding(top: 59, bottom: 34);
-      addTearDown(tester.view.resetPadding);
-      addTearDown(tester.view.resetViewPadding);
-      await pumpNowPlaying(
-        tester,
-        theme: AppTheme.build(Brightness.dark),
-        size: const Size(393, 852),
-        motionArtwork: const MotionArtwork('file:///cover.mp4', aspectRatio: 1),
-        wrapPlayer: (_) => Consumer(
-          builder: (context, ref, _) {
-            ref.watch(currentMediaItemProvider);
-            return Scaffold(
-              body: Align(
-                alignment: Alignment.bottomLeft,
-                child: TextButton(
-                  onPressed: () => Navigator.of(
-                    context,
-                  ).push(NowPlayingRoute(child: playerScreen())),
-                  child: const Hero(
-                    tag: kNowPlayingArtworkHeroTag,
-                    child: SizedBox.square(dimension: 38, child: Text('Open')),
-                  ),
+  testWidgets('Motion cover stays attached throughout opening and closing', (
+    tester,
+  ) async {
+    tester.view.padding = FakeViewPadding(top: 59, bottom: 34);
+    tester.view.viewPadding = FakeViewPadding(top: 59, bottom: 34);
+    addTearDown(tester.view.resetPadding);
+    addTearDown(tester.view.resetViewPadding);
+    await pumpNowPlaying(
+      tester,
+      theme: AppTheme.build(Brightness.dark),
+      size: const Size(393, 852),
+      motionArtwork: const MotionArtwork('file:///cover.mp4', aspectRatio: 1),
+      wrapPlayer: (_) => Consumer(
+        builder: (context, ref, _) {
+          ref.watch(currentMediaItemProvider);
+          return Scaffold(
+            body: Align(
+              alignment: Alignment.bottomLeft,
+              child: TextButton(
+                onPressed: () => Navigator.of(
+                  context,
+                ).push(NowPlayingRoute(child: playerScreen())),
+                child: const Hero(
+                  tag: kNowPlayingArtworkHeroTag,
+                  child: SizedBox.square(dimension: 38, child: Text('Open')),
                 ),
               ),
-            );
-          },
+            ),
+          );
+        },
+      ),
+    );
+    mediaItems.add(item('first'));
+    await settlePlayer(tester);
+    await tester.tap(find.text('Open'));
+    await tester.pump();
+
+    void expectAttached() {
+      final panel = tester.getRect(find.byType(AppPlayerBackground));
+      final artwork = tester.getRect(
+        find.descendant(
+          of: find.byType(AppPlayerBackground),
+          matching: find.byType(AppPlayerArtwork),
         ),
       );
-      mediaItems.add(item('first'));
-      await settlePlayer(tester);
-      await tester.tap(find.text('Open'));
-      await tester.pump();
+      expect(artwork.left, closeTo(panel.left, 0.01));
+      expect(artwork.top, closeTo(panel.top, 0.01));
+      expect(artwork.width, closeTo(393, 0.01));
+      expect(artwork.height, closeTo(393, 0.01));
+    }
 
-      void expectAttached() {
-        final panel = tester.getRect(find.byType(AppPlayerBackground));
-        final artwork = tester.getRect(
-          find.descendant(
-            of: find.byType(AppPlayerBackground),
-            matching: find.byType(AppPlayerArtwork),
-          ),
-        );
-        expect(artwork.left, closeTo(panel.left, 0.01));
-        expect(artwork.top, closeTo(panel.top, 0.01));
-        expect(artwork.width, closeTo(393, 0.01));
-        expect(artwork.height, closeTo(393, 0.01));
-      }
-
-      for (var frame = 0; frame < 8; frame++) {
-        await tester.pump(const Duration(milliseconds: 40));
-        expectAttached();
-      }
-      await settlePlayer(tester);
+    for (var frame = 0; frame < 8; frame++) {
+      await tester.pump(const Duration(milliseconds: 40));
       expectAttached();
-      Navigator.of(tester.element(find.byType(NowPlayingScreen))).pop();
-      await tester.pump();
-      for (var frame = 0; frame < 5; frame++) {
-        await tester.pump(const Duration(milliseconds: 40));
-        expectAttached();
-        expect(
-          tester.getTopLeft(find.byType(AppPlayerBackground)).dy,
-          greaterThan(0),
-        );
-      }
-      await settlePlayer(tester);
-      expect(find.byType(NowPlayingScreen), findsNothing);
-      expect(tester.takeException(), isNull);
-    },
-  );
+    }
+    await settlePlayer(tester);
+    expectAttached();
+    Navigator.of(tester.element(find.byType(NowPlayingScreen))).pop();
+    await tester.pump();
+    for (var frame = 0; frame < 5; frame++) {
+      await tester.pump(const Duration(milliseconds: 40));
+      expectAttached();
+      expect(
+        tester.getTopLeft(find.byType(AppPlayerBackground)).dy,
+        greaterThan(0),
+      );
+    }
+    await settlePlayer(tester);
+    expect(find.byType(NowPlayingScreen), findsNothing);
+    expect(tester.takeException(), isNull);
+  });
 
   testWidgets('swiping up the mini player opens the player '
       '(Mornye: true)', (tester) async {
@@ -2873,7 +2863,7 @@ void main() {
     );
   }
 
-  testWidgets('TTML V3 without group metadata keeps the primary side (true)', (
+  testWidgets('TTML V3 without group metadata keeps the primary side', (
     tester,
   ) async {
     metadataOverrides['lyrics'] = '''
@@ -2916,7 +2906,7 @@ void main() {
 
   for (final ttml in [false, true]) {
     testWidgets(
-      'backing vocals stay smaller under the lead with independent timing (Mornye: true, TTML: $ttml)',
+      'backing vocals stay smaller under the lead with independent timing',
       (tester) async {
         metadataOverrides['lyrics'] = ttml
             ? '''
@@ -3023,7 +3013,7 @@ void main() {
     );
   }
 
-  testWidgets('simultaneous wrapped lyrics stay inside the viewport (true)', (
+  testWidgets('simultaneous wrapped lyrics stay inside the viewport', (
     tester,
   ) async {
     const lead =
@@ -3072,116 +3062,115 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets(
-    'singers keep their side before and during overlapping vocals (true)',
-    (tester) async {
-      metadataOverrides['lyrics'] =
-          '[x-romaji:2000:${base64.encode(utf8.encode('Guest reading'))}]\n'
-          '[x-translation:2000:${base64.encode(utf8.encode('Guest translation'))}]\n'
-          '[00:01.00]v1:<00:01.00>Lead<00:08.00>\n'
-          '[00:02.00]v2:<00:02.00>Guest<00:06.00>';
-      final playback = StreamController<PlaybackState>.broadcast();
-      addTearDown(playback.close);
-      await pumpNowPlaying(
-        tester,
-        theme: AppTheme.build(Brightness.dark),
-        size: const Size(390, 1100),
-        playbackEvents: playback.stream,
-      );
-      mediaItems.add(item('first'));
-      await settlePlayer(tester);
-      await tester.tap(findAppIcon(CupertinoIcons.quote_bubble));
-      await settlePlayer(tester);
-      expect(tester.widget<Text>(find.text('Lead')).textAlign, TextAlign.start);
-      for (final text in ['Guest', 'Guest reading', 'Guest translation']) {
-        expect(tester.widget<Text>(find.text(text)).textAlign, TextAlign.end);
-      }
-      expect(find.textContaining('v1:'), findsNothing);
-      expect(find.textContaining('v2:'), findsNothing);
+  testWidgets('singers keep their side before and during overlapping vocals', (
+    tester,
+  ) async {
+    metadataOverrides['lyrics'] =
+        '[x-romaji:2000:${base64.encode(utf8.encode('Guest reading'))}]\n'
+        '[x-translation:2000:${base64.encode(utf8.encode('Guest translation'))}]\n'
+        '[00:01.00]v1:<00:01.00>Lead<00:08.00>\n'
+        '[00:02.00]v2:<00:02.00>Guest<00:06.00>';
+    final playback = StreamController<PlaybackState>.broadcast();
+    addTearDown(playback.close);
+    await pumpNowPlaying(
+      tester,
+      theme: AppTheme.build(Brightness.dark),
+      size: const Size(390, 1100),
+      playbackEvents: playback.stream,
+    );
+    mediaItems.add(item('first'));
+    await settlePlayer(tester);
+    await tester.tap(findAppIcon(CupertinoIcons.quote_bubble));
+    await settlePlayer(tester);
+    expect(tester.widget<Text>(find.text('Lead')).textAlign, TextAlign.start);
+    for (final text in ['Guest', 'Guest reading', 'Guest translation']) {
+      expect(tester.widget<Text>(find.text(text)).textAlign, TextAlign.end);
+    }
+    expect(find.textContaining('v1:'), findsNothing);
+    expect(find.textContaining('v2:'), findsNothing);
 
-      Finder timed(String text) => find.descendant(
-        of: find.byWidgetPredicate(
-          (widget) => widget is Semantics && widget.properties.label == text,
-        ),
-        matching: find.byType(CustomPaint),
+    Finder timed(String text) => find.descendant(
+      of: find.byWidgetPredicate(
+        (widget) => widget is Semantics && widget.properties.label == text,
+      ),
+      matching: find.byType(CustomPaint),
+    );
+    playback.add(
+      PlaybackState(
+        processingState: AudioProcessingState.ready,
+        playing: false,
+        updatePosition: const Duration(seconds: 3),
+      ),
+    );
+    await settlePlayer(tester);
+    for (final text in ['Lead', 'Guest']) {
+      final paint = timed(text);
+      expect(
+        paint,
+        findsOneWidget,
+        reason: 'Both overlapping parts stay highlighted',
       );
-      playback.add(
-        PlaybackState(
-          processingState: AudioProcessingState.ready,
-          playing: false,
-          updatePosition: const Duration(seconds: 3),
-        ),
-      );
-      await settlePlayer(tester);
-      for (final text in ['Lead', 'Guest']) {
-        final paint = timed(text);
-        expect(
-          paint,
-          findsOneWidget,
-          reason: 'Both overlapping parts stay highlighted',
+      final painter = tester.widget<CustomPaint>(paint).painter!;
+      final size = tester.getSize(paint);
+      final bounds = await tester.runAsync(() async {
+        final recorder = ui.PictureRecorder();
+        painter.paint(Canvas(recorder), size);
+        final picture = recorder.endRecording();
+        final image = await picture.toImage(
+          size.width.ceil(),
+          size.height.ceil(),
         );
-        final painter = tester.widget<CustomPaint>(paint).painter!;
-        final size = tester.getSize(paint);
-        final bounds = await tester.runAsync(() async {
-          final recorder = ui.PictureRecorder();
-          painter.paint(Canvas(recorder), size);
-          final picture = recorder.endRecording();
-          final image = await picture.toImage(
-            size.width.ceil(),
-            size.height.ceil(),
-          );
-          final bytes = (await image.toByteData(
-            format: ui.ImageByteFormat.rawRgba,
-          ))!;
-          var left = image.width;
-          var right = 0;
-          for (var y = 0; y < image.height; y++) {
-            for (var x = 0; x < image.width; x++) {
-              if (bytes.getUint8((y * image.width + x) * 4 + 3) > 10) {
-                if (x < left) left = x;
-                if (x > right) right = x;
-              }
+        final bytes = (await image.toByteData(
+          format: ui.ImageByteFormat.rawRgba,
+        ))!;
+        var left = image.width;
+        var right = 0;
+        for (var y = 0; y < image.height; y++) {
+          for (var x = 0; x < image.width; x++) {
+            if (bytes.getUint8((y * image.width + x) * 4 + 3) > 10) {
+              if (x < left) left = x;
+              if (x > right) right = x;
             }
           }
-          image.dispose();
-          picture.dispose();
-          return (left, right);
-        });
-        if (text == 'Lead') {
-          expect(bounds!.$1, lessThan(5));
-        } else {
-          expect(bounds!.$2, greaterThan(size.width - 5));
         }
+        image.dispose();
+        picture.dispose();
+        return (left, right);
+      });
+      if (text == 'Lead') {
+        expect(bounds!.$1, lessThan(5));
+      } else {
+        expect(bounds!.$2, greaterThan(size.width - 5));
       }
-      expect(
-        tester.widget<Text>(find.text('Guest translation')).textAlign,
-        TextAlign.end,
-      );
-      playback.add(
-        PlaybackState(
-          processingState: AudioProcessingState.ready,
-          playing: false,
-          updatePosition: const Duration(seconds: 7),
-        ),
-      );
-      await settlePlayer(tester);
-      expect(timed('Guest'), findsOneWidget);
-      expect(find.text('Lead'), findsNothing);
-      playback.add(
-        PlaybackState(
-          processingState: AudioProcessingState.ready,
-          playing: false,
-          updatePosition: const Duration(seconds: 9),
-        ),
-      );
-      await settlePlayer(tester);
-      expect(find.text('Lead'), findsOneWidget);
-      expect(timed('Guest'), findsOneWidget);
-      expect(tester.takeException(), isNull);
-    },
-  );
+    }
+    expect(
+      tester.widget<Text>(find.text('Guest translation')).textAlign,
+      TextAlign.end,
+    );
+    playback.add(
+      PlaybackState(
+        processingState: AudioProcessingState.ready,
+        playing: false,
+        updatePosition: const Duration(seconds: 7),
+      ),
+    );
+    await settlePlayer(tester);
+    expect(timed('Guest'), findsOneWidget);
+    expect(find.text('Lead'), findsNothing);
+    playback.add(
+      PlaybackState(
+        processingState: AudioProcessingState.ready,
+        playing: false,
+        updatePosition: const Duration(seconds: 9),
+      ),
+    );
+    await settlePlayer(tester);
+    expect(find.text('Lead'), findsOneWidget);
+    expect(timed('Guest'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
 
-  testWidgets('player shows original, romanization and English (true)', (
+  testWidgets('player shows original, romanization and English', (
     tester,
   ) async {
     metadataOverrides['lyrics'] =
@@ -3216,7 +3205,7 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('finished lyric stays bright until the next lead (true)', (
+  testWidgets('finished lyric stays bright until the next lead', (
     tester,
   ) async {
     metadataOverrides['lyrics'] =
@@ -3313,121 +3302,117 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets(
-    'original and romanization follow word timing and pauses (true)',
-    (tester) async {
-      final romanizationWords = base64.encode(
-        utf8.encode(
-          jsonEncode([
-            {'text': 'Firsu ', 'startTimeMs': 1009, 'endTimeMs': 1307},
-            {'text': 'secondu', 'startTimeMs': 2003, 'endTimeMs': 2497},
-          ]),
+  testWidgets('original and romanization follow word timing and pauses', (
+    tester,
+  ) async {
+    final romanizationWords = base64.encode(
+      utf8.encode(
+        jsonEncode([
+          {'text': 'Firsu ', 'startTimeMs': 1009, 'endTimeMs': 1307},
+          {'text': 'secondu', 'startTimeMs': 2003, 'endTimeMs': 2497},
+        ]),
+      ),
+    );
+    metadataOverrides['lyrics'] =
+        '[x-romaji:1009:${base64.encode(utf8.encode('Firsu secondu'))}]\n'
+        '[x-romaji-words:1009:$romanizationWords]\n'
+        '[00:01.009]<00:01.009>First <00:01.307>'
+        '<00:02.003>second<00:02.497>';
+    final playback = StreamController<PlaybackState>.broadcast();
+    addTearDown(playback.close);
+    await pumpNowPlaying(
+      tester,
+      theme: AppTheme.build(Brightness.dark),
+      size: const Size(390, 844),
+      playbackEvents: playback.stream,
+    );
+    mediaItems.add(item('first'));
+    await settlePlayer(tester);
+    await tester.tap(findAppIcon(CupertinoIcons.quote_bubble));
+    await settlePlayer(tester);
+
+    Future<List<int>> pixelsAt(int milliseconds, String text) async {
+      playback.add(
+        PlaybackState(
+          processingState: AudioProcessingState.ready,
+          playing: false,
+          updatePosition: Duration(milliseconds: milliseconds),
         ),
       );
-      metadataOverrides['lyrics'] =
-          '[x-romaji:1009:${base64.encode(utf8.encode('Firsu secondu'))}]\n'
-          '[x-romaji-words:1009:$romanizationWords]\n'
-          '[00:01.009]<00:01.009>First <00:01.307>'
-          '<00:02.003>second<00:02.497>';
-      final playback = StreamController<PlaybackState>.broadcast();
-      addTearDown(playback.close);
-      await pumpNowPlaying(
-        tester,
-        theme: AppTheme.build(Brightness.dark),
-        size: const Size(390, 844),
-        playbackEvents: playback.stream,
-      );
-      mediaItems.add(item('first'));
       await settlePlayer(tester);
-      await tester.tap(findAppIcon(CupertinoIcons.quote_bubble));
-      await settlePlayer(tester);
-
-      Future<List<int>> pixelsAt(int milliseconds, String text) async {
-        playback.add(
-          PlaybackState(
-            processingState: AudioProcessingState.ready,
-            playing: false,
-            updatePosition: Duration(milliseconds: milliseconds),
+      final pixels = <int>[];
+      for (final phrase in text.split(' ')) {
+        final paint = find.descendant(
+          of: find.byWidgetPredicate(
+            (widget) =>
+                widget is Semantics && widget.properties.label == phrase,
           ),
+          matching: find.byType(CustomPaint),
         );
-        await settlePlayer(tester);
-        final pixels = <int>[];
-        for (final phrase in text.split(' ')) {
-          final paint = find.descendant(
-            of: find.byWidgetPredicate(
-              (widget) =>
-                  widget is Semantics && widget.properties.label == phrase,
-            ),
-            matching: find.byType(CustomPaint),
-          );
-          expect(paint, findsOneWidget, reason: '$phrase at $milliseconds ms');
-          final painter = tester.widget<CustomPaint>(paint).painter!;
-          final size = tester.getSize(paint);
-          pixels.addAll(
-            (await tester.runAsync(() async {
-              final recorder = ui.PictureRecorder();
-              painter.paint(Canvas(recorder), size);
-              final picture = recorder.endRecording();
-              final image = await picture.toImage(
-                size.width.ceil(),
-                size.height.ceil(),
-              );
-              final bytes = (await image.toByteData(
-                format: ui.ImageByteFormat.rawRgba,
-              ))!;
-              final result = bytes.buffer.asUint8List().toList();
-              image.dispose();
-              picture.dispose();
-              return result;
-            }))!,
-          );
-        }
-        return pixels;
+        expect(paint, findsOneWidget, reason: '$phrase at $milliseconds ms');
+        final painter = tester.widget<CustomPaint>(paint).painter!;
+        final size = tester.getSize(paint);
+        pixels.addAll(
+          (await tester.runAsync(() async {
+            final recorder = ui.PictureRecorder();
+            painter.paint(Canvas(recorder), size);
+            final picture = recorder.endRecording();
+            final image = await picture.toImage(
+              size.width.ceil(),
+              size.height.ceil(),
+            );
+            final bytes = (await image.toByteData(
+              format: ui.ImageByteFormat.rawRgba,
+            ))!;
+            final result = bytes.buffer.asUint8List().toList();
+            image.dispose();
+            picture.dispose();
+            return result;
+          }))!,
+        );
       }
+      return pixels;
+    }
 
-      for (final text in ['First second', 'Firsu secondu']) {
-        final singingFirst = await pixelsAt(1100, text);
-        final moves = text == 'First second';
-        final firstEnded = await pixelsAt(moves ? 1800 : 1307, text);
-        expect(firstEnded, isNot(orderedEquals(singingFirst)));
-        if (moves) {
-          expect(
-            await pixelsAt(1307, text),
-            isNot(orderedEquals(firstEnded)),
-            reason: 'Movement trails the finished color sweep',
-          );
-        }
-        expect(await pixelsAt(1820, text), orderedEquals(firstEnded));
-        final singingLast = await pixelsAt(2150, text);
-        final lastEnded = await pixelsAt(moves ? 3100 : 2497, text);
-        expect(lastEnded, isNot(orderedEquals(singingLast)));
-        expect(await pixelsAt(3400, text), orderedEquals(lastEnded));
-        expect(await pixelsAt(1100, text), orderedEquals(singingFirst));
+    for (final text in ['First second', 'Firsu secondu']) {
+      final singingFirst = await pixelsAt(1100, text);
+      final moves = text == 'First second';
+      final firstEnded = await pixelsAt(moves ? 1800 : 1307, text);
+      expect(firstEnded, isNot(orderedEquals(singingFirst)));
+      if (moves) {
+        expect(
+          await pixelsAt(1307, text),
+          isNot(orderedEquals(firstEnded)),
+          reason: 'Movement trails the finished color sweep',
+        );
       }
-      final originalPixels = await pixelsAt(1100, 'First second');
-      final options = find.byKey(const ValueKey('lyrics-language-options'));
-      if (options.hitTestable().evaluate().isEmpty) {
-        final bounds = tester.getRect(find.byType(ListView));
-        await tester.tapAt(Offset(bounds.right - 6, bounds.top + 10));
-        await settlePlayer(tester);
-      }
-      await tester.tap(options);
+      expect(await pixelsAt(1820, text), orderedEquals(firstEnded));
+      final singingLast = await pixelsAt(2150, text);
+      final lastEnded = await pixelsAt(moves ? 3100 : 2497, text);
+      expect(lastEnded, isNot(orderedEquals(singingLast)));
+      expect(await pixelsAt(3400, text), orderedEquals(lastEnded));
+      expect(await pixelsAt(1100, text), orderedEquals(singingFirst));
+    }
+    final originalPixels = await pixelsAt(1100, 'First second');
+    final options = find.byKey(const ValueKey('lyrics-language-options'));
+    if (options.hitTestable().evaluate().isEmpty) {
+      final bounds = tester.getRect(find.byType(ListView));
+      await tester.tapAt(Offset(bounds.right - 6, bounds.top + 10));
       await settlePlayer(tester);
-      await tester.tap(find.text('Hide Pronunciation'));
-      await settlePlayer(tester);
-      expect(find.bySemanticsLabel('Firsu secondu'), findsNothing);
-      expect(
-        await pixelsAt(1100, 'First second'),
-        orderedEquals(originalPixels),
-      );
-      await tester.tap(options);
-      await settlePlayer(tester);
-      await tester.tap(find.text('Show Pronunciation'));
-      await settlePlayer(tester);
-      await pixelsAt(2150, 'Firsu secondu');
-      expect(tester.takeException(), isNull);
-    },
-  );
+    }
+    await tester.tap(options);
+    await settlePlayer(tester);
+    await tester.tap(find.text('Hide Pronunciation'));
+    await settlePlayer(tester);
+    expect(find.bySemanticsLabel('Firsu secondu'), findsNothing);
+    expect(await pixelsAt(1100, 'First second'), orderedEquals(originalPixels));
+    await tester.tap(options);
+    await settlePlayer(tester);
+    await tester.tap(find.text('Show Pronunciation'));
+    await settlePlayer(tester);
+    await pixelsAt(2150, 'Firsu secondu');
+    expect(tester.takeException(), isNull);
+  });
 
   for (final reducedMotion in [false, true]) {
     testWidgets(
@@ -3626,7 +3611,7 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('Mornye player menu hides the volume in both orientations', (
+  testWidgets('Player menu hides the volume in both orientations', (
     tester,
   ) async {
     await pumpNowPlaying(
@@ -3821,7 +3806,7 @@ void main() {
     // Lines start-align at the player's lyrics inset.
     final lyric = find.bySemanticsLabel('Short');
     expect(lyric, findsOneWidget);
-    expect(tester.getRect(lyric).left, closeTo(mornyeLyricsContentInset, 1));
+    expect(tester.getRect(lyric).left, closeTo(lyricsContentInset, 1));
   });
 }
 

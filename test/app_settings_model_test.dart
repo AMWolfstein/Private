@@ -209,7 +209,7 @@ void main() {
     test('serializes, deserializes, copies, and compares values', () {
       const settings = ThemeSettings(
         themeMode: ThemeMode.dark,
-        mornyeAccent: AppAccent.blue,
+        accent: AppAccent.blue,
         useSystemFont: true,
       );
 
@@ -219,18 +219,18 @@ void main() {
       expect(decoded, settings);
       expect(decoded.hashCode, settings.hashCode);
       expect(copied.themeMode, ThemeMode.light);
-      expect(decoded.mornyeAccent, AppAccent.blue);
-      expect(copied.mornyeAccent, AppAccent.blue);
+      expect(decoded.accent, AppAccent.blue);
+      expect(copied.accent, AppAccent.blue);
       expect(decoded.useSystemFont, isTrue);
       expect(copied.useSystemFont, isTrue);
       expect(ThemeSettings.fromJson({}).useSystemFont, isFalse);
-      expect(ThemeSettings.fromJson({}).mornyeAccent, AppAccent.blue);
+      expect(ThemeSettings.fromJson({}).accent, AppAccent.blue);
       expect(
-        ThemeSettings.fromJson({kMornyeAccentKey: 'unknown'}).mornyeAccent,
+        ThemeSettings.fromJson({kAccentKey: 'unknown'}).accent,
         AppAccent.blue,
       );
       expect(
-        ThemeSettings.fromJson({kMornyeAccentKey: 'red'}).mornyeAccent,
+        ThemeSettings.fromJson({kAccentKey: 'red'}).accent,
         AppAccent.red,
         reason: 'a saved choice stays',
       );

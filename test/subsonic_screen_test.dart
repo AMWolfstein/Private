@@ -35,7 +35,7 @@ void main() {
   for (final platform in [TargetPlatform.android]) {
     for (final largeText in [false, true]) {
       testWidgets(
-        'Subsonic form and browsing on $platform Mornye=true largeText=$largeText',
+        'Subsonic form and browsing on $platform =true largeText=$largeText',
         (tester) async {
           tester.view.physicalSize = const Size(360, 800);
           tester.view.devicePixelRatio = 1;

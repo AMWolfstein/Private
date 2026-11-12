@@ -24,9 +24,9 @@ import 'package:mornye/widgets/playback_source_label.dart';
 import 'package:mornye/widgets/player_playback_controls.dart';
 import 'package:mornye/widgets/player_track_swipe.dart';
 
-const _mornyeContentInset = mornyeLyricsContentInset;
-const _mornyeHeaderButtonSize = 48.0;
-const _mornyeCompactIconSize = 28.0;
+const _contentInset = lyricsContentInset;
+const _headerButtonSize = 48.0;
+const _compactIconSize = 28.0;
 
 /// Keys stay owned by the surface that measures contrast and route dismissal.
 typedef AppPlayerArtworkKeys = ({
@@ -211,7 +211,7 @@ class AppPlayerLayout extends ConsumerWidget {
                                 key: ValueKey(page),
                                 child: showQueue
                                     ? AppPlayerQueue(colorScheme: colorScheme)
-                                    : _mornyeLyricsViewport(
+                                    : _lyricsViewport(
                                         context,
                                         lyricsBuilder(false),
                                         visibleHeight:
@@ -251,7 +251,7 @@ class AppPlayerLayout extends ConsumerWidget {
                               fullBleed ? motionHeight : artHeight * scale,
                             ),
                             const Rect.fromLTWH(
-                              _mornyeContentInset,
+                              _contentInset,
                               8,
                               compactCoverSize,
                               compactCoverSize,
@@ -418,7 +418,7 @@ class AppPlayerLayout extends ConsumerWidget {
             delegate: _PlayerHeaderLayout(
               progress: progress,
               compactHeight: compactHeaderHeight,
-              compactLeft: _mornyeContentInset + compactCoverSize + 12,
+              compactLeft: _contentInset + compactCoverSize + 12,
               expandLyrics: showLyrics,
             ),
             children: [
@@ -500,8 +500,8 @@ class AppPlayerLayout extends ConsumerWidget {
     final actionSize = compactProgress == null
         ? page == 0
               ? 24.0
-              : _mornyeCompactIconSize
-        : 24 + (_mornyeCompactIconSize - 24) * progress;
+              : _compactIconSize
+        : 24 + (_compactIconSize - 24) * progress;
     return Builder(
       builder: (context) => Row(
         children: [
@@ -567,7 +567,7 @@ class AppPlayerLayout extends ConsumerWidget {
           ),
           Builder(
             builder: (buttonContext) => SizedBox.square(
-              dimension: _mornyeHeaderButtonSize,
+              dimension: _headerButtonSize,
               child: IconButton(
                 tooltip: MaterialLocalizations.of(context).moreButtonTooltip,
                 color: colorScheme.onSurface,
@@ -576,7 +576,7 @@ class AppPlayerLayout extends ConsumerWidget {
                 onPressed: () => onMoreActions(
                   buttonContext,
                   mediaItem,
-                  mornyeMenuAnchor(buttonContext),
+                  menuAnchor(buttonContext),
                 ),
               ),
             ),
@@ -586,7 +586,7 @@ class AppPlayerLayout extends ConsumerWidget {
     );
   }
 
-  Widget _mornyeLyricsViewport(
+  Widget _lyricsViewport(
     BuildContext context,
     Widget child, {
     required double visibleHeight,
@@ -664,8 +664,7 @@ class _PlayerHeaderLayout extends MultiChildLayoutDelegate {
     // Align the visible ellipsis with the timeline while leaving its touch
     // target wider than the glyph and interpolating the same live header.
     const compactRight =
-        _mornyeContentInset -
-        (_mornyeHeaderButtonSize - _mornyeCompactIconSize) / 2;
+        _contentInset - (_headerButtonSize - _compactIconSize) / 2;
     final right = 28 + (compactRight - 28) * progress;
     final header = layoutChild(
       _PlayerHeaderSlot.header,
@@ -705,7 +704,7 @@ class _PlayerHeaderLayout extends MultiChildLayoutDelegate {
       );
       positionChild(
         _PlayerHeaderSlot.lyricsOptions,
-        Offset(_mornyeContentInset, contentHeight - options.height - 8),
+        Offset(_contentInset, contentHeight - options.height - 8),
       );
     }
   }

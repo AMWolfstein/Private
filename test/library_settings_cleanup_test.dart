@@ -119,9 +119,7 @@ Future<void> _mount(
 }
 
 void main() {
-  testWidgets('source shows the scan failure reason (Mornye: true)', (
-    tester,
-  ) async {
+  testWidgets('source shows the scan failure reason', (tester) async {
     const error =
         'The previous library scan was interrupted. Scan again to continue.';
     final library = _Library(
@@ -154,7 +152,7 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('failed load shows saved folder and offers retry (true)', (
+  testWidgets('failed load shows saved folder and offers retry', (
     tester,
   ) async {
     final library = _RetryLibrary();
@@ -176,7 +174,7 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('cleanup works for download-only Library (true)', (tester) async {
+  testWidgets('cleanup works for download-only Library', (tester) async {
     final localDone = Completer<int>();
     final downloadsDone = Completer<int>();
     var localCalls = 0;
@@ -218,7 +216,7 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('cleanup reports errors and can retry (true)', (tester) async {
+  testWidgets('cleanup reports errors and can retry', (tester) async {
     var calls = 0;
     var downloadCalls = 0;
     await _mount(
@@ -250,9 +248,7 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('Find Moved Downloads relinks without removing (true)', (
-    tester,
-  ) async {
+  testWidgets('Find Moved Downloads relinks without removing', (tester) async {
     final done = Completer<({int relinked, int missing})>();
     var findCalls = 0;
     var cleanupCalls = 0;
@@ -304,7 +300,7 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('Find Moved Downloads reports errors (true)', (tester) async {
+  testWidgets('Find Moved Downloads reports errors', (tester) async {
     await _mount(
       tester,
       mornye: true,
@@ -324,7 +320,7 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('Find Moved Downloads needs downloads (true)', (tester) async {
+  testWidgets('Find Moved Downloads needs downloads', (tester) async {
     await _mount(
       tester,
       mornye: true,
@@ -337,9 +333,7 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('cleanup stays available for hidden source rows (true)', (
-    tester,
-  ) async {
+  testWidgets('cleanup stays available for hidden source rows', (tester) async {
     await _mount(
       tester,
       mornye: true,
@@ -367,7 +361,7 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('cleanup cannot race an active scan (true)', (tester) async {
+  testWidgets('cleanup cannot race an active scan', (tester) async {
     var localCalls = 0;
     var downloadCalls = 0;
     final library = _Library(LocalLibraryState(totalCount: 1), () async {

@@ -29,7 +29,7 @@ report on the host, run the suite through
 MORNYE_PERFORMANCE_REPORT=build/perf/mornye.json \
   flutter drive --profile --keep-app-running -d emulator-5554 \
   --driver=integration_test/performance_driver.dart \
-  --target=integration_test/mornye_performance_test.dart
+  --target=integration_test/app_performance_test.dart
 ```
 
 - `MORNYE_PERFORMANCE_REPORT` (host environment variable) selects the
@@ -70,14 +70,14 @@ MORNYE_PERFORMANCE_REPORT=build/perf/mornye.json \
 | `SMB_TEST_URL` | `network_audio_analysis_test.dart` | Analyse a file on SMB; when empty, a local FFmpeg-made FLAC is used |
 | `TEST_SMB_ADDRESS` | `network_smb_file_actions_test.dart` | SMB address of `smb2_fixture_server.py --deletion`; skipped when empty |
 | `REPLAYGAIN_COMPLETION_BASELINE` | `album_replaygain_completion_test.dart` | Records a baseline run and skips the album-gain assertions |
-| `GLASS_PREVIEW` | `mornye_liquid_glass_test.dart` | Holds the Home screen for 25 s for manual viewing |
-| `MORNYE_GLASS_FOCUS` | `mornye_rendering_performance_test.dart` | Measures only clarity 0.6 and 1.0 |
-| `MORNYE_GLASS_FLAT_BACKDROP` | `mornye_glass_visual_test.dart` | Flat surfaces instead of the generated stripes and grid |
-| `DOWNLOAD_GLASS_LEVEL` | `mornye_download_picker_test.dart` | Forces `flat`, `frosted` or `liquid` |
-| `DOWNLOAD_BRIGHTNESS` | `mornye_download_picker_test.dart` | Runs only `light` or `dark` |
-| `DOWNLOAD_QUALITY_COUNT` | `mornye_download_picker_test.dart` | Number of fixture quality options (default 16) |
-| `DOWNLOAD_PRELOAD_GLASS`, `DOWNLOAD_WARMUP_GLASS` (default true), `DOWNLOAD_SHELL_GLASS` | `mornye_download_picker_test.dart` | Glass preload, warm-up and shell glass toggles |
-| `DOWNLOAD_TRACE_FIRST_OPEN`, `DOWNLOAD_FIRST_OPEN_ONLY` | `mornye_download_picker_test.dart` | Trace the first opening; stop after it |
+| `GLASS_PREVIEW` | `app_liquid_glass_test.dart` | Holds the Home screen for 25 s for manual viewing |
+| `MORNYE_GLASS_FOCUS` | `app_rendering_performance_test.dart` | Measures only clarity 0.6 and 1.0 |
+| `MORNYE_GLASS_FLAT_BACKDROP` | `app_glass_visual_test.dart` | Flat surfaces instead of the generated stripes and grid |
+| `DOWNLOAD_GLASS_LEVEL` | `app_download_picker_test.dart` | Forces `flat`, `frosted` or `liquid` |
+| `DOWNLOAD_BRIGHTNESS` | `app_download_picker_test.dart` | Runs only `light` or `dark` |
+| `DOWNLOAD_QUALITY_COUNT` | `app_download_picker_test.dart` | Number of fixture quality options (default 16) |
+| `DOWNLOAD_PRELOAD_GLASS`, `DOWNLOAD_WARMUP_GLASS` (default true), `DOWNLOAD_SHELL_GLASS` | `app_download_picker_test.dart` | Glass preload, warm-up and shell glass toggles |
+| `DOWNLOAD_TRACE_FIRST_OPEN`, `DOWNLOAD_FIRST_OPEN_ONLY` | `app_download_picker_test.dart` | Trace the first opening; stop after it |
 
 ## Suite Index
 
@@ -86,7 +86,7 @@ Aggregates (each runs other suites as groups):
 | File | Runs |
 | --- | --- |
 | `collection_batch_write_test.dart` | `playlist_batch_write_test.dart`, `loved_batch_write_test.dart` |
-| `mornye_performance_test.dart` | The rendering, screens, artwork and lyrics Mornye performance suites; driver target |
+| `app_performance_test.dart` | The rendering, screens, artwork and lyrics Mornye performance suites; driver target |
 | `material_performance_test.dart` | Material lyrics/artwork and shared seek scenarios in both styles; driver target |
 | `player_performance_test.dart` | Shared lyrics, artwork and seek scenarios for Material and Mornye; driver target |
 | `pipeline_performance_test.dart` | Library, foreground download, native playback and both lyrics styles with isolated fixtures; profile driver target |
@@ -123,14 +123,14 @@ Suites:
 | `loved_batch_write_test.dart` | Love All add and remove on real SQLite |
 | `lyrics_file_access_test.dart` | Embedding, sidecar and export of lyrics outside Downloads |
 | `lyrics_timing_test.dart` | Native lyrics parser timing cases |
-| `mornye_artwork_performance_test.dart` | Mornye player panel transitions and artwork cache (performance) |
-| `mornye_download_picker_test.dart` | Mornye download picker glass and queue feedback (performance) |
-| `mornye_glass_visual_test.dart` | Native Mornye glass poses and layers, with screenshots |
-| `mornye_liquid_glass_test.dart` | Liquid glass lens and drag behavior |
-| `mornye_lyrics_performance_test.dart` | Word-synced lyrics and manual scrolling (performance) |
-| `mornye_menu_presentation_test.dart` | Anchored glass menu presentation (performance) |
-| `mornye_rendering_performance_test.dart` | Mornye rendering at several glass clarities (performance) |
-| `mornye_screens_performance_test.dart` | Mornye screens with 2000-track data (performance) |
+| `app_artwork_performance_test.dart` | Mornye player panel transitions and artwork cache (performance) |
+| `app_download_picker_test.dart` | Mornye download picker glass and queue feedback (performance) |
+| `app_glass_visual_test.dart` | Native Mornye glass poses and layers, with screenshots |
+| `app_liquid_glass_test.dart` | Liquid glass lens and drag behavior |
+| `app_lyrics_performance_test.dart` | Word-synced lyrics and manual scrolling (performance) |
+| `app_menu_presentation_test.dart` | Anchored glass menu presentation (performance) |
+| `app_rendering_performance_test.dart` | Mornye rendering at several glass clarities (performance) |
+| `app_screens_performance_test.dart` | Mornye screens with 2000-track data (performance) |
 | `native_backup_archive_test.dart` | Native ZIP backup routes, old archive formats, compression parity |
 | `native_cache_maintenance_test.dart` | Native cover cache budget, pruning and sweep |
 | `native_collection_restore_test.dart` | Native collection restore, exact rows, atomic rejection |

@@ -276,7 +276,7 @@ void main() {
     },
   );
 
-  test('Mornye notification icons do not disable widget transport', () async {
+  test('Notification icons do not disable widget transport', () async {
     final media = item('one');
     player.mediaItem.add(media);
     player.playbackState.add(

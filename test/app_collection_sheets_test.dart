@@ -129,9 +129,7 @@ void main() {
         .load();
   });
 
-  testWidgets('track menu copies the service link (Mornye: true)', (
-    tester,
-  ) async {
+  testWidgets('track menu copies the service link', (tester) async {
     String? copied;
     tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
       SystemChannels.platform,
@@ -239,7 +237,7 @@ void main() {
     });
   }
 
-  testWidgets('picker submits and closes once (Mornye: true)', (tester) async {
+  testWidgets('picker submits and closes once', (tester) async {
     final addition = Completer<void>();
     final collections = _Collections()
       .._summaries = [_playlist('Road trip')]
@@ -284,9 +282,7 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('picker retains selections after failure (Mornye: true)', (
-    tester,
-  ) async {
+  testWidgets('picker retains selections after failure', (tester) async {
     final firstAddition = Completer<void>()..complete();
     final secondAddition = Completer<void>();
     final collections = _Collections()
@@ -333,7 +329,7 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('picker adds only new selections (Mornye: true)', (tester) async {
+  testWidgets('picker adds only new selections', (tester) async {
     final collections = _Collections()
       .._summaries = [
         _playlist('Already included', contains: true),

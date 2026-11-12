@@ -13,7 +13,7 @@ import 'package:mornye/widgets/app_bottom_sheet.dart';
 import 'package:mornye/widgets/app_slider.dart';
 
 void main() {
-  testWidgets('effect picker follows app theme and saves selection (true)', (
+  testWidgets('effect picker follows app theme and saves selection', (
     tester,
   ) async {
     SharedPreferences.setMockInitialValues({});

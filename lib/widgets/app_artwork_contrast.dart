@@ -52,17 +52,17 @@ class AppArtworkContrast extends StatefulWidget {
 
   @visibleForTesting
   static int debugReadbackCount(GlobalKey key) =>
-      (key.currentState! as _MornyeArtworkContrastState)._readbacks;
+      (key.currentState! as _ArtworkContrastState)._readbacks;
 
   @visibleForTesting
   static Future<ui.Image> Function(RenderRepaintBoundary, double)?
   debugReadback;
 
   @override
-  State<AppArtworkContrast> createState() => _MornyeArtworkContrastState();
+  State<AppArtworkContrast> createState() => _ArtworkContrastState();
 }
 
-class _MornyeArtworkContrastState extends State<AppArtworkContrast>
+class _ArtworkContrastState extends State<AppArtworkContrast>
     with WidgetsBindingObserver {
   final _background = GlobalKey();
   Timer? _timer;

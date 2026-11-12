@@ -28,7 +28,7 @@ import 'package:mornye/utils/adaptive_layout.dart';
 /// Identifies a song playing nearby through the microphone.
 ///
 /// Pops with the words to search for when the person asks to find a song
-/// that is not in Mornye.
+/// that is not in the app.
 class MusicRecognitionScreen extends ConsumerStatefulWidget {
   const MusicRecognitionScreen({super.key, this.listenOnOpen = true});
 
@@ -53,7 +53,7 @@ class _MusicRecognitionScreenState
   }
 
   Future<void> _listen() async {
-    // The microphone would only hear Mornye's own song.
+    // The microphone would only hear the app's own song.
     if (ref.read(playbackPlayingProvider)) {
       unawaited(ref.read(musicPlayerControllerProvider).togglePlayPause(true));
     }

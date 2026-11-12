@@ -202,9 +202,7 @@ void main() {
     }
   }
 
-  testWidgets('Mornye keeps Cupertino actions and its own surfaces', (
-    tester,
-  ) async {
+  testWidgets('Keeps Cupertino actions and its own surfaces', (tester) async {
     await tester.pumpWidget(
       _host(
         Column(

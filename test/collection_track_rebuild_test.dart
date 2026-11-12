@@ -148,7 +148,7 @@ void main() {
     },
   );
 
-  testWidgets('Love All action keeps its add/remove feedback in Mornye=true', (
+  testWidgets('Love All action keeps its add/remove feedback in =true', (
     tester,
   ) async {
     final collections = _Collections();
@@ -188,9 +188,7 @@ void main() {
   });
 
   for (final album in [false, true]) {
-    testWidgets('Love All isolates the $album page in Mornye=true', (
-      tester,
-    ) async {
+    testWidgets('Love All isolates the $album page in =true', (tester) async {
       tester.view.physicalSize = const Size(430, 1000);
       tester.view.devicePixelRatio = 1;
       addTearDown(tester.view.reset);

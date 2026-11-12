@@ -273,7 +273,7 @@ void main() {
     });
   }
 
-  testWidgets('Mornye keeps its filter button', (tester) async {
+  testWidgets('Keeps its filter button', (tester) async {
     await pumpLibrary(tester, mornye: true);
     final l10n = l10nOf(tester);
 

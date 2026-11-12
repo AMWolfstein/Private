@@ -238,7 +238,7 @@ void main() {
     );
   }
 
-  testWidgets('Mornye cards honor explicit margins and press callbacks', (
+  testWidgets('Cards honor explicit margins and press callbacks', (
     tester,
   ) async {
     var taps = 0;

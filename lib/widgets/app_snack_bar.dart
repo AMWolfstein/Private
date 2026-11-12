@@ -82,7 +82,7 @@ void showCannotOpenFileSnackBar(BuildContext context, Object error) {
   );
 }
 
-/// Transient messages use the same glass as confirmation dialogs in Mornye.
+/// Transient messages use the same glass as confirmation dialogs in the app.
 ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showAppSnackBar(
   BuildContext context, {
   required Widget content,
@@ -94,7 +94,7 @@ ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showAppSnackBar(
 
   final theme = Theme.of(context);
   final reduceMotion = MediaQuery.disableAnimationsOf(context);
-  final snackBar = _MornyeSnackBar(
+  final snackBar = _SnackBar(
     duration: duration,
     reduceMotion: reduceMotion,
     content: Theme(
@@ -151,8 +151,8 @@ ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showAppSnackBar(
   return messenger.showSnackBar(snackBar);
 }
 
-class _MornyeSnackBar extends SnackBar {
-  const _MornyeSnackBar({
+class _SnackBar extends SnackBar {
+  const _SnackBar({
     required super.content,
     required super.duration,
     required this.reduceMotion,

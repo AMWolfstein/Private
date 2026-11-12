@@ -487,13 +487,13 @@ class _RewindBackdropState extends State<_RewindBackdrop> {
           final to = math.min(from + 1, last);
           final blend = page - from;
           final t = _ambient.value * 2 * math.pi;
-          return _mornye(from, to, blend, t);
+          return _buildSlide(from, to, blend, t);
         },
       ),
     ),
   );
 
-  Widget _mornye(int from, int to, double blend, double t) {
+  Widget _buildSlide(int from, int to, double blend, double t) {
     Widget artwork(String? uri, double opacity) => uri == null || opacity <= 0
         ? const SizedBox.shrink()
         : Opacity(

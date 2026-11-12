@@ -147,7 +147,7 @@ void main() {
     });
   }
 
-  testWidgets('large text stays readable (true)', (tester) async {
+  testWidgets('large text stays readable', (tester) async {
     await openCard(tester, mornye: true, textScale: 2);
     await tester.tap(find.text('Check'));
     await tester.pumpAndSettle();

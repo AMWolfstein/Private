@@ -57,7 +57,7 @@ void main() {
 
   {}
 
-  testWidgets('Mornye decodes the cover at its thumbnail size', (tester) async {
+  testWidgets('Decodes the cover at its thumbnail size', (tester) async {
     await open(
       tester,
       mornye: true,

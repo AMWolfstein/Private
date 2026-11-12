@@ -67,7 +67,7 @@ extension _TrackMetadataMenu on _TrackMetadataScreenState {
         ),
       _MetadataOption(
         icon: Icons.person_outline,
-        label: l10n.mornyeGoToArtist,
+        label: l10n.goToArtist,
         onTap: () =>
             navigateToArtistCredits(screenContext, artistNames: artistName),
       ),
@@ -220,7 +220,7 @@ extension _TrackMetadataMenu on _TrackMetadataScreenState {
       );
     }
 
-    showMornyeContextMenu<void>(
+    showAppContextMenu<void>(
       context: screenContext,
       anchor: anchor,
       builder: buildMenu,

@@ -30,10 +30,10 @@ class AppGlassLensFade extends StatefulWidget {
   }
 
   @override
-  State<AppGlassLensFade> createState() => _MornyeGlassLensFadeState();
+  State<AppGlassLensFade> createState() => _GlassLensFadeState();
 }
 
-class _MornyeGlassLensFadeState extends State<AppGlassLensFade> {
+class _GlassLensFadeState extends State<AppGlassLensFade> {
   ScrollPosition? _position;
   double _opacity = 1;
 

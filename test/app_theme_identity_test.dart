@@ -20,7 +20,7 @@ class _ThemeReader extends StatelessWidget {
 }
 
 void main() {
-  test('Mornye preferences compare by value', () {
+  test('Preferences compare by value', () {
     const a = AppTheme(
       chromeSurface: Color(0xff336699),
       accent: AppAccent.blue,
@@ -127,7 +127,7 @@ void main() {
   testWidgets('only theme settings rebuild the app theme', (tester) async {
     SharedPreferences.setMockInitialValues({
       kThemeModeKey: ThemeMode.light.name,
-      kMornyeGlassOutlinesKey: false,
+      kGlassOutlinesKey: false,
     });
     final prefs = await SharedPreferences.getInstance();
     final container = ProviderContainer(
@@ -165,7 +165,7 @@ void main() {
     expect(container.read(themeProvider).lyricsTextScale, 1.2);
     expect(themes, hasLength(initialBuilds));
 
-    await notifier.setMornyeGlassOutlines(true);
+    await notifier.setGlassOutlines(true);
     await tester.pumpAndSettle();
     expect(themes, hasLength(initialBuilds + 1));
     expect(themes.last.extension<AppTheme>()!.glassOutlines, isTrue);

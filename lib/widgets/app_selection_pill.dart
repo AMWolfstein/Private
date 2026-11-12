@@ -55,10 +55,10 @@ class AppSelectionPill extends StatefulWidget {
   interactionBuilder;
 
   @override
-  State<AppSelectionPill> createState() => _MornyeSelectionPillState();
+  State<AppSelectionPill> createState() => _SelectionPillState();
 }
 
-class _MornyeSelectionPillState extends State<AppSelectionPill>
+class _SelectionPillState extends State<AppSelectionPill>
     with SingleTickerProviderStateMixin {
   int? _dragIndex;
   bool _dragCancelled = false;
@@ -477,11 +477,10 @@ class AppSelectionForeground extends StatefulWidget {
   final Widget child;
 
   @override
-  State<AppSelectionForeground> createState() =>
-      _MornyeSelectionForegroundState();
+  State<AppSelectionForeground> createState() => _SelectionForegroundState();
 }
 
-class _MornyeSelectionForegroundState extends State<AppSelectionForeground> {
+class _SelectionForegroundState extends State<AppSelectionForeground> {
   ui.FragmentProgram? _program;
   ui.FragmentShader? _shader;
 

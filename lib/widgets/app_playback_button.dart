@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 /// How far the pointer press disc grows: from 32 to 38 on the capsule.
 const _pressDiscGrowth = 6 / 32;
 
-/// The press response and advancing skip glyphs used by Mornye's transport.
+/// The press response and advancing skip glyphs used by the design's transport.
 class AppPlaybackButton extends StatefulWidget {
   const AppPlaybackButton({
     super.key,
@@ -30,10 +30,10 @@ class AppPlaybackButton extends StatefulWidget {
   final bool pointerPress;
 
   @override
-  State<AppPlaybackButton> createState() => _MornyePlaybackButtonState();
+  State<AppPlaybackButton> createState() => _PlaybackButtonState();
 }
 
-class _MornyePlaybackButtonState extends State<AppPlaybackButton>
+class _PlaybackButtonState extends State<AppPlaybackButton>
     with TickerProviderStateMixin {
   final _states = WidgetStatesController();
   late final _press = AnimationController(

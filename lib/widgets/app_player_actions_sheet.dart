@@ -18,7 +18,7 @@ class AppPlayerNavigationMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _MornyePlayerMenuSurface(
+    return _PlayerMenuSurface(
       mediaItem: mediaItem,
       child: AppContextMenu(
         inheritSurface: true,
@@ -28,7 +28,7 @@ class AppPlayerNavigationMenu extends StatelessWidget {
             if ((mediaItem.artist ?? '').trim().isNotEmpty)
               AppMenuAction(
                 icon: CupertinoIcons.mic,
-                label: context.l10n.mornyeGoToArtist,
+                label: context.l10n.goToArtist,
                 subtitle: mediaItem.artist,
                 onPressed: () => Navigator.of(context).pop('artist'),
               ),
@@ -69,7 +69,7 @@ class AppPlayerActionsSheet extends ConsumerWidget {
         (state) => track != null && state.isLoved(track),
       ),
     );
-    return _MornyePlayerMenuSurface(
+    return _PlayerMenuSurface(
       mediaItem: mediaItem,
       child: AppContextMenu(
         inheritSurface: true,
@@ -78,7 +78,7 @@ class AppPlayerActionsSheet extends ConsumerWidget {
           _action(
             context,
             'favorite',
-            loved ? context.l10n.mornyeFavorited : context.l10n.mornyeFavorite,
+            loved ? context.l10n.favorited : context.l10n.favorite,
             CupertinoIcons.star_fill,
             selected: loved,
           ),
@@ -111,7 +111,7 @@ class AppPlayerActionsSheet extends ConsumerWidget {
               _action(
                 context,
                 'artist',
-                context.l10n.mornyeGoToArtist,
+                context.l10n.goToArtist,
                 CupertinoIcons.mic,
                 subtitle: mediaItem.artist,
               ),
@@ -190,11 +190,8 @@ class AppPlayerActionsSheet extends ConsumerWidget {
 }
 
 /// Reuse the cached cover palette; no per-frame background capture is needed.
-class _MornyePlayerMenuSurface extends StatelessWidget {
-  const _MornyePlayerMenuSurface({
-    required this.mediaItem,
-    required this.child,
-  });
+class _PlayerMenuSurface extends StatelessWidget {
+  const _PlayerMenuSurface({required this.mediaItem, required this.child});
 
   final MediaItem mediaItem;
   final Widget child;

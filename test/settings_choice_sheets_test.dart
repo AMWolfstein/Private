@@ -101,9 +101,7 @@ void main() {
   ]) {
     final (row, values, icons, setting) = sheet;
     final current = setting(_settings);
-    testWidgets('${page.runtimeType} $current sheet (Mornye: true)', (
-      tester,
-    ) async {
+    testWidgets('${page.runtimeType} $current sheet', (tester) async {
       SharedPreferences.setMockInitialValues({});
       tester.view.physicalSize = const Size(430, 1000);
       tester.view.devicePixelRatio = 1;

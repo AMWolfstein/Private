@@ -66,9 +66,7 @@ void main() {
     });
   }
 
-  testWidgets('selection grid retains conditional actions (true)', (
-    tester,
-  ) async {
+  testWidgets('selection grid retains conditional actions', (tester) async {
     var queued = false;
     var converted = false;
     for (final (selectedCount, eligibleCount, canQueue) in [

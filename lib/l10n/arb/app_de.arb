@@ -7505,8 +7505,8 @@
   "@metadataCopyField": {
     "description": "Metadata menu action that copies the selected key and value"
   },
-  "mornyeSearch": "Suche",
-  "mornyeContinuePlaying": "Continue Playing",
+  "search": "Suche",
+  "continuePlaying": "Continue Playing",
   "metadataCopyAll": "Copy all metadata",
   "@metadataCopyAll": {
     "description": "Metadata menu action that copies every visible key and value"
@@ -7519,13 +7519,13 @@
   "@optionsEmbeddedCoverSizeDescription": {
     "description": "Description shown in the embedded cover size picker"
   },
-  "mornyeFavorite": "Favorit",
-  "mornyeGoToArtist": "Zum Künstler",
-  "@mornyeFavorite": {
+  "favorite": "Favorit",
+  "goToArtist": "Zum Künstler",
+  "@favorite": {
     "description": "Compact context menu action that adds a track to Loved"
   },
-  "mornyeFavorited": "Favorisiert",
-  "@mornyeFavorited": {
+  "favorited": "Favorisiert",
+  "@favorited": {
     "description": "Selected state of the compact favorite action"
   },
   "autoMixDescription": "Blend songs with beat matching and pitch-preserving tempo adjustment. Uses crossfade when beats cannot be matched.",

@@ -17,10 +17,10 @@ const IconData appArrowForward = IconData(
 IconData appIconFor(IconData icon) {
   if (icon.fontFamily == CupertinoIcons.iconFont) return icon;
   // The switch compares each pattern in turn; rows look icons up per build.
-  return _mornyeIcons[icon] ??= _cupertinoFor(icon);
+  return _icons[icon] ??= _cupertinoFor(icon);
 }
 
-final _mornyeIcons = <IconData, IconData>{};
+final _icons = <IconData, IconData>{};
 
 IconData _cupertinoFor(IconData icon) {
   return switch (icon) {

@@ -129,7 +129,7 @@ class AppPlayerQueue extends ConsumerWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        context.l10n.mornyeContinuePlaying,
+                        context.l10n.continuePlaying,
                         style: type.titleLarge?.copyWith(color: Colors.white),
                       ),
                       if (autoplay &&

@@ -9,7 +9,7 @@ import 'package:mornye/widgets/app_chrome.dart';
 import 'package:mornye/widgets/app_metadata_row.dart';
 import 'package:mornye/widgets/player_artwork.dart';
 
-/// Uses Mornye's TrackInfoView layout: artwork header, then selectable values
+/// Uses the design's TrackInfoView layout: artwork header, then selectable values
 /// below small labels, separated by thin dividers on one glass surface.
 class AppPlayerDetailsSheet extends ConsumerWidget {
   const AppPlayerDetailsSheet({

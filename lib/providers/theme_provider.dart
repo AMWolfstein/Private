@@ -12,14 +12,14 @@ final initialThemeSettingsProvider = Provider<ThemeSettings>(
 /// The accent to load, moving an install off the old default once. Every
 /// theme save wrote the accent, so a stored red usually only means red was
 /// the default. Red picked after this stays.
-AppAccent _loadMornyeAccent(SharedPreferences prefs) {
-  final stored = prefs.getString(kMornyeAccentKey);
-  if (prefs.getBool(kMornyeAccentMovedToBlueKey) ?? false) {
+AppAccent _loadAccent(SharedPreferences prefs) {
+  final stored = prefs.getString(kAccentKey);
+  if (prefs.getBool(kAccentMovedToBlueKey) ?? false) {
     return appAccentFromString(stored);
   }
-  unawaited(prefs.setBool(kMornyeAccentMovedToBlueKey, true));
+  unawaited(prefs.setBool(kAccentMovedToBlueKey, true));
   if (stored == AppAccent.red.name) {
-    unawaited(prefs.setString(kMornyeAccentKey, AppAccent.blue.name));
+    unawaited(prefs.setString(kAccentKey, AppAccent.blue.name));
     return AppAccent.blue;
   }
   return appAccentFromString(stored);
@@ -35,7 +35,7 @@ ThemeSettings loadBootstrapThemeSettings(SharedPreferences prefs) {
   }
   return ThemeSettings(
     themeMode: themeModeFromString(prefs.getString(kThemeModeKey)),
-    mornyeAccent: _loadMornyeAccent(prefs),
+    accent: _loadAccent(prefs),
     useSystemFont: prefs.getBool(kUseSystemFontKey) ?? false,
     customFontId: prefs.getString(kCustomFontIdKey) ?? '',
     customFontName: prefs.getString(kCustomFontNameKey) ?? '',
@@ -44,7 +44,7 @@ ThemeSettings loadBootstrapThemeSettings(SharedPreferences prefs) {
     ),
     lyricsBlur: normalizeLyricsBlur(prefs.getDouble(kLyricsBlurKey)),
     lyricsOffsetMs: normalizeLyricsOffsetMs(prefs.getInt(kLyricsOffsetKey)),
-    mornyeGlassOutlines: prefs.getBool(kMornyeGlassOutlinesKey) ?? true,
+    glassOutlines: prefs.getBool(kGlassOutlinesKey) ?? true,
   );
 }
 
@@ -96,17 +96,14 @@ class ThemeNotifier extends Notifier<ThemeSettings> {
       if (!ref.mounted) return;
       final snapshot = state;
       await prefs.setString(kThemeModeKey, snapshot.themeMode.name);
-      await prefs.setString(kMornyeAccentKey, snapshot.mornyeAccent.name);
+      await prefs.setString(kAccentKey, snapshot.accent.name);
       await prefs.setBool(kUseSystemFontKey, snapshot.useSystemFont);
       await prefs.setString(kCustomFontIdKey, snapshot.customFontId);
       await prefs.setString(kCustomFontNameKey, snapshot.customFontName);
       await prefs.setDouble(kLyricsTextScaleKey, snapshot.lyricsTextScale);
       await prefs.setDouble(kLyricsBlurKey, snapshot.lyricsBlur);
       await prefs.setInt(kLyricsOffsetKey, snapshot.lyricsOffsetMs);
-      await prefs.setBool(
-        kMornyeGlassOutlinesKey,
-        snapshot.mornyeGlassOutlines,
-      );
+      await prefs.setBool(kGlassOutlinesKey, snapshot.glassOutlines);
     } catch (e) {
       debugPrint('Error saving theme settings: $e');
     }
@@ -117,8 +114,8 @@ class ThemeNotifier extends Notifier<ThemeSettings> {
     await _saveToStorage();
   }
 
-  Future<void> setMornyeAccent(AppAccent accent) async {
-    _editState((current) => current.copyWith(mornyeAccent: accent));
+  Future<void> setAccent(AppAccent accent) async {
+    _editState((current) => current.copyWith(accent: accent));
     await _saveToStorage();
   }
 
@@ -149,8 +146,8 @@ class ThemeNotifier extends Notifier<ThemeSettings> {
     if (persist) await _saveToStorage();
   }
 
-  Future<void> setMornyeGlassOutlines(bool value) async {
-    _editState((current) => current.copyWith(mornyeGlassOutlines: value));
+  Future<void> setGlassOutlines(bool value) async {
+    _editState((current) => current.copyWith(glassOutlines: value));
     await _saveToStorage();
   }
 }

@@ -155,9 +155,7 @@ void main() {
     });
   }
 
-  testWidgets('Library shows every result type and paginates (true)', (
-    tester,
-  ) async {
+  testWidgets('Library shows every result type and paginates', (tester) async {
     final requests = <LibrarySearchRequest>[];
     final artists = <String>[];
     await tester.pumpWidget(
@@ -251,7 +249,7 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('long-press selects songs for Library batch actions (true)', (
+  testWidgets('long-press selects songs for Library batch actions', (
     tester,
   ) async {
     SharedPreferences.setMockInitialValues({});
@@ -354,7 +352,7 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('wide Library search offers covers, songs included (true)', (
+  testWidgets('wide Library search offers covers, songs included', (
     tester,
   ) async {
     SharedPreferences.setMockInitialValues({});

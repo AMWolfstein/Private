@@ -394,7 +394,7 @@ extension _QueueTabItemWidgets on _QueueTabState {
           children: [
             SettingsItem(
               icon: Icons.skip_next,
-              showIconInMornye: true,
+              showTopLevelIcon: true,
               title: context.l10n.queueDownloadNext,
               onTap: () {
                 Navigator.of(ctx).pop();
@@ -403,7 +403,7 @@ extension _QueueTabItemWidgets on _QueueTabState {
             ),
             SettingsItem(
               icon: Icons.arrow_upward,
-              showIconInMornye: true,
+              showTopLevelIcon: true,
               title: context.l10n.queueMoveUp,
               onTap: () {
                 Navigator.of(ctx).pop();
@@ -412,7 +412,7 @@ extension _QueueTabItemWidgets on _QueueTabState {
             ),
             SettingsItem(
               icon: Icons.arrow_downward,
-              showIconInMornye: true,
+              showTopLevelIcon: true,
               title: context.l10n.queueMoveDown,
               showDivider: false,
               onTap: () {

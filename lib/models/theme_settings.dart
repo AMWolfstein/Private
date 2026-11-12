@@ -7,8 +7,8 @@ const String kUseAmoledKey = 'use_amoled';
 // Legacy inputs from the removed alternative design. They are read as inert
 // and never written again; old values may remain in preferences.
 const String kThemeStyleKey = 'theme_style';
-const String kMornyeAccentKey = 'mornye_accent';
-const String kMornyeAccentMovedToBlueKey = 'mornye_accent_moved_to_blue';
+const String kAccentKey = 'mornye_accent';
+const String kAccentMovedToBlueKey = 'mornye_accent_moved_to_blue';
 const String kUseSystemFontKey = 'use_system_font';
 const String kCustomFontIdKey = 'custom_font_id';
 const String kCustomFontNameKey = 'custom_font_name';
@@ -31,7 +31,7 @@ const int kMaxLyricsOffsetMs = 2000;
 int normalizeLyricsOffsetMs(num? value) => value != null && value.isFinite
     ? value.round().clamp(-kMaxLyricsOffsetMs, kMaxLyricsOffsetMs)
     : 0;
-const String kMornyeGlassOutlinesKey = 'mornye_glass_outlines';
+const String kGlassOutlinesKey = 'mornye_glass_outlines';
 
 enum AppAccent { red, orange, green, teal, blue, purple, pink }
 
@@ -42,41 +42,41 @@ AppAccent appAccentFromString(String? value) => AppAccent.values.firstWhere(
 
 class ThemeSettings {
   final ThemeMode themeMode;
-  final AppAccent mornyeAccent;
+  final AppAccent accent;
   final bool useSystemFont;
   final String customFontId;
   final String customFontName;
   final double lyricsTextScale;
   final double lyricsBlur;
   final int lyricsOffsetMs;
-  final bool mornyeGlassOutlines;
+  final bool glassOutlines;
 
   const ThemeSettings({
     this.themeMode = ThemeMode.system,
-    this.mornyeAccent = AppAccent.blue,
+    this.accent = AppAccent.blue,
     this.useSystemFont = false,
     this.customFontId = '',
     this.customFontName = '',
     this.lyricsTextScale = 1,
     this.lyricsBlur = 1,
     this.lyricsOffsetMs = 0,
-    this.mornyeGlassOutlines = true,
+    this.glassOutlines = true,
   });
 
   ThemeSettings copyWith({
     ThemeMode? themeMode,
-    AppAccent? mornyeAccent,
+    AppAccent? accent,
     bool? useSystemFont,
     String? customFontId,
     String? customFontName,
     double? lyricsTextScale,
     double? lyricsBlur,
     int? lyricsOffsetMs,
-    bool? mornyeGlassOutlines,
+    bool? glassOutlines,
   }) {
     return ThemeSettings(
       themeMode: themeMode ?? this.themeMode,
-      mornyeAccent: mornyeAccent ?? this.mornyeAccent,
+      accent: accent ?? this.accent,
       useSystemFont: useSystemFont ?? this.useSystemFont,
       customFontId: customFontId ?? this.customFontId,
       customFontName: customFontName ?? this.customFontName,
@@ -87,26 +87,26 @@ class ThemeSettings {
       lyricsOffsetMs: normalizeLyricsOffsetMs(
         lyricsOffsetMs ?? this.lyricsOffsetMs,
       ),
-      mornyeGlassOutlines: mornyeGlassOutlines ?? this.mornyeGlassOutlines,
+      glassOutlines: glassOutlines ?? this.glassOutlines,
     );
   }
 
   Map<String, dynamic> toJson() => {
     kThemeModeKey: themeMode.name,
-    kMornyeAccentKey: mornyeAccent.name,
+    kAccentKey: accent.name,
     kUseSystemFontKey: useSystemFont,
     kCustomFontIdKey: customFontId,
     kCustomFontNameKey: customFontName,
     kLyricsTextScaleKey: lyricsTextScale,
     kLyricsBlurKey: lyricsBlur,
     kLyricsOffsetKey: lyricsOffsetMs,
-    kMornyeGlassOutlinesKey: mornyeGlassOutlines,
+    kGlassOutlinesKey: glassOutlines,
   };
 
   factory ThemeSettings.fromJson(Map<String, dynamic> json) {
     return ThemeSettings(
       themeMode: themeModeFromString(json[kThemeModeKey] as String?),
-      mornyeAccent: appAccentFromString(json[kMornyeAccentKey] as String?),
+      accent: appAccentFromString(json[kAccentKey] as String?),
       useSystemFont: json[kUseSystemFontKey] as bool? ?? false,
       customFontId: json[kCustomFontIdKey] as String? ?? '',
       customFontName: json[kCustomFontNameKey] as String? ?? '',
@@ -115,7 +115,7 @@ class ThemeSettings {
       ),
       lyricsBlur: normalizeLyricsBlur(json[kLyricsBlurKey] as num?),
       lyricsOffsetMs: normalizeLyricsOffsetMs(json[kLyricsOffsetKey] as num?),
-      mornyeGlassOutlines: json[kMornyeGlassOutlinesKey] as bool? ?? true,
+      glassOutlines: json[kGlassOutlinesKey] as bool? ?? true,
     );
   }
 
@@ -124,27 +124,27 @@ class ThemeSettings {
     if (identical(this, other)) return true;
     return other is ThemeSettings &&
         other.themeMode == themeMode &&
-        other.mornyeAccent == mornyeAccent &&
+        other.accent == accent &&
         other.useSystemFont == useSystemFont &&
         other.customFontId == customFontId &&
         other.customFontName == customFontName &&
         other.lyricsTextScale == lyricsTextScale &&
         other.lyricsBlur == lyricsBlur &&
         other.lyricsOffsetMs == lyricsOffsetMs &&
-        other.mornyeGlassOutlines == mornyeGlassOutlines;
+        other.glassOutlines == glassOutlines;
   }
 
   @override
   int get hashCode =>
       themeMode.hashCode ^
-      mornyeAccent.hashCode ^
+      accent.hashCode ^
       useSystemFont.hashCode ^
       customFontId.hashCode ^
       customFontName.hashCode ^
       lyricsTextScale.hashCode ^
       lyricsBlur.hashCode ^
       lyricsOffsetMs.hashCode ^
-      mornyeGlassOutlines.hashCode;
+      glassOutlines.hashCode;
 }
 
 ThemeMode themeModeFromString(String? value) {

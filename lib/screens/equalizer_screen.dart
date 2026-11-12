@@ -186,7 +186,7 @@ class _EqualizerScreenState extends ConsumerState<EqualizerScreen> {
   @override
   Widget build(BuildContext context) => AppSettingsTheme(
     // Reached from Playback and Now Playing alike, so the page brings its own
-    // inset grouped surfaces in Mornye.
+    // inset grouped surfaces in the app.
     child: Builder(builder: _buildPage),
   );
 

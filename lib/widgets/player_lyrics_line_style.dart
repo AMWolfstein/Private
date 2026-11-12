@@ -26,7 +26,7 @@ Iterable<(String, TextStyle, List<LyricWord>, bool)> _lyricSupplements(
 TextStyle _primaryLyricStyle(BuildContext context, {bool background = false}) =>
     DefaultTextStyle.of(context).style.merge(
       (Theme.of(context).textTheme.headlineSmall ?? const TextStyle()).copyWith(
-        fontSize: (_mornyeLyricFontSize * (background ? 0.68 : 1)),
+        fontSize: (_lyricFontSize * (background ? 0.68 : 1)),
         height: context.tokens.lyricsLineHeight,
         fontWeight: FontWeight.bold,
       ),

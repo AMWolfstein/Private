@@ -30,7 +30,7 @@ class _TrackFacts {
 const _untaggedArtist = 'unknown artist';
 
 /// Re-applies the Files settings (folder organization and filename format)
-/// to tracks already on disk, not only to new downloads: Mornye's downloads
+/// to tracks already on disk, not only to new downloads: the design's downloads
 /// and the files the Local Library scan found inside the download folder.
 extension DownloadQueueLibraryReorganization on DownloadQueueNotifier {
   /// Moving files while the queue writes into the same folders could race

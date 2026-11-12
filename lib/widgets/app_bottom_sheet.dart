@@ -356,7 +356,7 @@ Future<void> showAppChoiceSheet<T>({
 /// Adaptive surface for sheets which already supply their own header/layout.
 ///
 /// ([showAppSheetDialog]) of [dialogSize]; there is no edge to slide from or
-/// drag to. Mornye draws the sheet on overlay glass unless [mornyeGlass] is
+/// drag to. Mornye draws the sheet on overlay glass unless [glass] is
 /// false for content that brings its own.
 Future<T?> showAppModalBottomSheet<T>({
   required BuildContext context,
@@ -367,7 +367,7 @@ Future<T?> showAppModalBottomSheet<T>({
   bool useRootNavigator = false,
   bool useSafeArea = false,
   bool? showDragHandle,
-  bool mornyeGlass = true,
+  bool glass = true,
   BoxConstraints? constraints,
   Color? backgroundColor,
   AppDialogSize dialogSize = AppDialogSize.medium,
@@ -388,7 +388,7 @@ Future<T?> showAppModalBottomSheet<T>({
       context,
     )),
     elevation: 0,
-    builder: (context) => mornyeGlass
+    builder: (context) => glass
         ? AppGlassPanel.overlay(child: Builder(builder: builder))
         : builder(context),
   );
@@ -420,7 +420,7 @@ class AppSheetDialog extends StatelessWidget {
     required this.child,
     this.isScrollControlled = false,
     this.topInset = false,
-    this.mornyeGlass = true,
+    this.glass = true,
     this.backgroundColor,
     this.dialogSize = AppDialogSize.medium,
   });
@@ -428,17 +428,17 @@ class AppSheetDialog extends StatelessWidget {
   final Widget child;
   final bool isScrollControlled;
   final bool topInset;
-  final bool mornyeGlass;
+  final bool glass;
   final Color? backgroundColor;
   final AppDialogSize dialogSize;
 
   /// the corner they have always had.
-  static const double _mornyeRadius = 28;
+  static const double _radius = 28;
   static const double _margin = 24;
 
   @override
   Widget build(BuildContext context) {
-    final radius = _mornyeRadius;
+    final radius = _radius;
     final window = MediaQuery.sizeOf(context);
     final width = (window.width - _margin * 2).clamp(0.0, dialogSize.width);
     final maxHeight =
@@ -452,7 +452,7 @@ class AppSheetDialog extends StatelessWidget {
         child: child,
       ),
     );
-    if (mornyeGlass) {
+    if (glass) {
       content = AppGlassPanel.overlay(radius: radius, child: content);
     }
     return Dialog(

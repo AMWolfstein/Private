@@ -65,7 +65,7 @@ Future<void> showListeningRewind(BuildContext context) async {
           for (final period in ListeningRewindPeriod.values)
             SettingsItem(
               icon: icons[period],
-              showIconInMornye: true,
+              showTopLevelIcon: true,
               title: listeningRewindPeriodLabel(sheetContext, period),
               showDivider: period != ListeningRewindPeriod.values.last,
               onTap: () => Navigator.pop(sheetContext, period),
@@ -99,7 +99,7 @@ class ListeningRewindEntry extends StatelessWidget {
     children: [
       SettingsItem(
         icon: Icons.auto_awesome,
-        showIconInMornye: true,
+        showTopLevelIcon: true,
         title: context.l10n.listeningRewind,
         subtitle: context.l10n.listeningRewindDescription,
         showDivider: false,

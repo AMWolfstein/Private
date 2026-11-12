@@ -38,4 +38,29 @@ void main() {
     }
     expect(hits, isEmpty);
   });
+
+  test('no source names the design after the product', () {
+    // Product, brand and wire names that legitimately contain the product name.
+    const allowed = {
+      'MornyeApp',
+      'mornyeLockupAsset',
+      'mornyeBannerSeed',
+      'mornyeBannerSeeds',
+      'mornyeBannerTitleSize',
+      'mornyeRaw',
+    };
+    final identifier = RegExp(r'\b_?k?[Mm]ornye[A-Z][A-Za-z0-9]*');
+    final hits = <String>{};
+    for (final root in ['lib', 'test', 'integration_test']) {
+      for (final entity in Directory(root).listSync(recursive: true)) {
+        if (entity is! File || !entity.path.endsWith('.dart')) continue;
+        if (entity.path.endsWith('theme_residual_test.dart')) continue;
+        for (final m in identifier.allMatches(entity.readAsStringSync())) {
+          final name = m.group(0)!;
+          if (!allowed.contains(name)) hits.add('${entity.path}: $name');
+        }
+      }
+    }
+    expect(hits, isEmpty);
+  });
 }

@@ -244,7 +244,7 @@ void main() {
       image.dispose();
       picture.dispose();
       await cover.writeAsBytes(bytes!.buffer.asUint8List());
-      // The Mornye player resolves only the source colour, never a scheme.
+      // The player resolves only the source colour, never a scheme.
       return CoverPalette.resolveSourceColor(cover.path);
     });
     expect(CoverPalette.peek(cover.path, Brightness.dark), isNull);

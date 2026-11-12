@@ -9,9 +9,7 @@ import 'package:mornye/theme/app_theme.dart';
 void main() {
   setUp(() => SharedPreferences.setMockInitialValues({}));
 
-  testWidgets('artist picker offers each featured credit (true)', (
-    tester,
-  ) async {
+  testWidgets('artist picker offers each featured credit', (tester) async {
     await tester.pumpWidget(
       ProviderScope(
         child: MaterialApp(

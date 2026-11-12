@@ -540,9 +540,7 @@ void main() {
     });
   }
 
-  testWidgets('announcement keeps explicit dismissal (Mornye: true)', (
-    tester,
-  ) async {
+  testWidgets('announcement keeps explicit dismissal', (tester) async {
     var dismissals = 0;
     await tester.pumpWidget(
       _app(

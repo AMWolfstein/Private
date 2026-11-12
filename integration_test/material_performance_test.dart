@@ -3,8 +3,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/playback_seek_slider.dart';
 
-import 'mornye_artwork_performance_test.dart' as artwork;
-import 'mornye_lyrics_performance_test.dart' as lyrics;
+import 'app_artwork_performance_test.dart' as artwork;
+import 'app_lyrics_performance_test.dart' as lyrics;
 import 'performance_probe.dart';
 
 void main() {

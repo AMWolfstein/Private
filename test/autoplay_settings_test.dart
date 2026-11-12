@@ -22,7 +22,7 @@ import 'package:mornye/widgets/settings_group.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 void main() {
-  testWidgets('personalization switch persists and is searchable (true)', (
+  testWidgets('personalization switch persists and is searchable', (
     tester,
   ) async {
     SharedPreferences.setMockInitialValues({});
@@ -105,9 +105,7 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('reset learning tells how well ranking learned (true)', (
-    tester,
-  ) async {
+  testWidgets('reset learning tells how well ranking learned', (tester) async {
     SharedPreferences.setMockInitialValues({});
     tester.view.physicalSize = const Size(390, 844);
     tester.view.devicePixelRatio = 1;
@@ -179,9 +177,7 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('song analysis shows its progress and clears (true)', (
-    tester,
-  ) async {
+  testWidgets('song analysis shows its progress and clears', (tester) async {
     SharedPreferences.setMockInitialValues({});
     tester.view.physicalSize = const Size(390, 844);
     tester.view.devicePixelRatio = 1;

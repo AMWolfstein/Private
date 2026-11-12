@@ -233,7 +233,7 @@ class NowPlayingRoute extends PageRoute<void> {
         ],
       );
     }
-    // Mornye's full-bleed artwork travels with its panel. Material keeps the
+    // the design's full-bleed artwork travels with its panel. Material keeps the
     // independent cover flight back to the mini-player on button/back pop.
     final slide = _interactiveTransition
         ? animation

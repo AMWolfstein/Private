@@ -7505,8 +7505,8 @@
   "@metadataCopyField": {
     "description": "Metadata menu action that copies the selected key and value"
   },
-  "mornyeSearch": "Rechercher",
-  "mornyeContinuePlaying": "Continuer à lire",
+  "search": "Rechercher",
+  "continuePlaying": "Continuer à lire",
   "metadataCopyAll": "Copier toutes les métadonnées",
   "@metadataCopyAll": {
     "description": "Metadata menu action that copies every visible key and value"
@@ -7519,13 +7519,13 @@
   "@optionsEmbeddedCoverSizeDescription": {
     "description": "Description shown in the embedded cover size picker"
   },
-  "mornyeFavorite": "Favoris",
-  "mornyeGoToArtist": "Aller à la page de l'artiste",
-  "@mornyeFavorite": {
+  "favorite": "Favoris",
+  "goToArtist": "Aller à la page de l'artiste",
+  "@favorite": {
     "description": "Compact context menu action that adds a track to Loved"
   },
-  "mornyeFavorited": "Ajouté aux favoris",
-  "@mornyeFavorited": {
+  "favorited": "Ajouté aux favoris",
+  "@favorited": {
     "description": "Selected state of the compact favorite action"
   },
   "autoMixDescription": "Mélangez des morceaux grâce à la synchronisation des rythmes et à l'ajustement du tempo tout en conservant la hauteur tonale. Utilise un fondu enchaîné lorsque les rythmes ne peuvent pas être synchronisés.",

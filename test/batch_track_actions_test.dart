@@ -11,7 +11,7 @@ import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/app_action_button.dart';
 
 void main() {
-  testWidgets('mixed batch retains the 48 kHz option (true)', (tester) async {
+  testWidgets('mixed batch retains the 48 kHz option', (tester) async {
     final items = [
       for (final (depth, rate) in [(16, 44100), (24, 96000)])
         UnifiedLibraryItem.fromLocalLibrary(

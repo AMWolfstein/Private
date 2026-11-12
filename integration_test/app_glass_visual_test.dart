@@ -28,9 +28,7 @@ class _Settings extends SettingsNotifier {
 
 void main() {
   final binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized();
-  testWidgets('native Mornye glass visual poses and attached layers', (
-    tester,
-  ) async {
+  testWidgets('native glass visual poses and attached layers', (tester) async {
     expect(Platform.isAndroid, isTrue);
     expect(ui.ImageFilter.isShaderFilterSupported, isTrue);
     binding.framePolicy = LiveTestWidgetsFlutterBindingFramePolicy.fullyLive;

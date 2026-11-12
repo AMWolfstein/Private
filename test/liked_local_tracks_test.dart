@@ -61,9 +61,7 @@ class _History extends DownloadHistoryNotifier {
 }
 
 void main() {
-  testWidgets('Liked Songs reopens with local artwork (Mornye: true)', (
-    tester,
-  ) async {
+  testWidgets('Liked Songs reopens with local artwork', (tester) async {
     SharedPreferences.setMockInitialValues({});
     tester.view.physicalSize = const Size(430, 1000);
     tester.view.devicePixelRatio = 1;

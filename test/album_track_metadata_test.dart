@@ -111,9 +111,7 @@ void main() {
   }
 
   for (final discs in [1, 2]) {
-    testWidgets('online album disc groups (Mornye: true, discs: $discs)', (
-      tester,
-    ) async {
+    testWidgets('online album disc groups', (tester) async {
       await tester.binding.setSurfaceSize(const Size(430, 1200));
       addTearDown(() => tester.binding.setSurfaceSize(null));
       backendMessenger.setMockMethodCallHandler(backendChannel, (call) async {

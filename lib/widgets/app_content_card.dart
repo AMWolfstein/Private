@@ -14,7 +14,7 @@ class AppContentCard extends StatelessWidget {
     this.margin,
     this.onTap,
     this.onLongPress,
-    this.mornyeSurface = true,
+    this.controlFill = true,
   });
 
   final Widget child;
@@ -31,13 +31,13 @@ class AppContentCard extends StatelessWidget {
   final VoidCallback? onTap;
   final VoidCallback? onLongPress;
 
-  /// False keeps a plain [Card] under Mornye for surfaces that carry their
-  /// own tinted color (errors, notices) rather than the Mornye control fill.
-  final bool mornyeSurface;
+  /// False keeps a plain [Card] for surfaces that carry their own tinted
+  /// color (errors, notices) rather than the control fill.
+  final bool controlFill;
 
   @override
   Widget build(BuildContext context) {
-    if (!mornyeSurface) {
+    if (!controlFill) {
       final interactive = onTap != null || onLongPress != null;
       return Card(
         color: color,

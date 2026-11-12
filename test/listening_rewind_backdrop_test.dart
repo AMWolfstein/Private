@@ -196,7 +196,7 @@ void main() {
       .firstWhere((widget) => widget.heightFactor == 1)
       .widthFactor!;
 
-  testWidgets('Mornye blurs each slide cover once while it zooms and swipes', (
+  testWidgets('Blurs each slide cover once while it zooms and swipes', (
     tester,
   ) async {
     await open(tester, mornye: true);
@@ -247,7 +247,7 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('the backdrop drift moves at 30 Hz on the same clock (true)', (
+  testWidgets('the backdrop drift moves at 30 Hz on the same clock', (
     tester,
   ) async {
     await open(tester, mornye: true);

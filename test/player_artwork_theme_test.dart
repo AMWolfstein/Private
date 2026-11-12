@@ -192,7 +192,7 @@ void main() {
     for (final (name, home) in [
       ('mini player', const Scaffold(bottomNavigationBar: MiniPlayer())),
     ]) {
-      testWidgets('the Mornye $name keeps its own theme', (tester) async {
+      testWidgets('the $name keeps its own theme', (tester) async {
         palette.cached[_coverA] = cover;
         await tester.pumpWidget(app(home, mornye: true));
         await tester.pumpAndSettle();

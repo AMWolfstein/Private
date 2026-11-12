@@ -28,7 +28,7 @@ class ContextMenuAction {
   final bool checked;
 }
 
-const double _mornyeMenuWidth = 280;
+const double _menuWidth = 280;
 
 /// Shows [groups] as a context menu at [position], in global coordinates.
 ///
@@ -47,12 +47,12 @@ Future<bool> showContextMenu(
       if (group.isNotEmpty) group,
   ];
   if (visible.isEmpty) return false;
-  final chosen = await showMornyeContextMenu<ContextMenuAction>(
+  final chosen = await showAppContextMenu<ContextMenuAction>(
     context: context,
     // The layout aligns the menu's trailing edge with the anchor's, so a
     // menu-wide anchor puts its leading edge at the pointer.
-    anchor: Rect.fromLTWH(position.dx, position.dy - 8, _mornyeMenuWidth, 0),
-    maxWidth: _mornyeMenuWidth,
+    anchor: Rect.fromLTWH(position.dx, position.dy - 8, _menuWidth, 0),
+    maxWidth: _menuWidth,
     builder: (menuContext) => AppContextMenu(
       dense: true,
       groups: [

@@ -99,53 +99,52 @@ void main() {
     expect(loadBootstrapThemeSettings(prefs).useSystemFont, isTrue);
   });
 
-  testWidgets(
-    'custom typography survives Mornye local surface reconstruction',
-    (tester) async {
-      final theme = AppTheme.build(
+  testWidgets('custom typography survives local surface reconstruction', (
+    tester,
+  ) async {
+    final theme = AppTheme.build(
+      Brightness.dark,
+      fontFamily: 'ImportedFont_test',
+    );
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: theme,
+        home: Builder(
+          builder: (context) {
+            final surface = AppTheme.fromContext(
+              context,
+              chromeSurface: Colors.red,
+            );
+            expect(
+              surface.textTheme.bodyLarge!.fontFamily,
+              'ImportedFont_test',
+            );
+            expect(
+              surface.textTheme.headlineSmall!.fontFamily,
+              'ImportedFont_test',
+            );
+            return const SizedBox();
+          },
+        ),
+      ),
+    );
+    expect(
+      AppTheme.build(
+        Brightness.light,
+        fontFamily: 'ImportedFont_test',
+      ).textTheme.bodyMedium!.fontFamily,
+      'ImportedFont_test',
+    );
+    expect(
+      AppTheme.build(
         Brightness.dark,
         fontFamily: 'ImportedFont_test',
-      );
-      await tester.pumpWidget(
-        MaterialApp(
-          theme: theme,
-          home: Builder(
-            builder: (context) {
-              final surface = AppTheme.fromContext(
-                context,
-                chromeSurface: Colors.red,
-              );
-              expect(
-                surface.textTheme.bodyLarge!.fontFamily,
-                'ImportedFont_test',
-              );
-              expect(
-                surface.textTheme.headlineSmall!.fontFamily,
-                'ImportedFont_test',
-              );
-              return const SizedBox();
-            },
-          ),
-        ),
-      );
-      expect(
-        AppTheme.build(
-          Brightness.light,
-          fontFamily: 'ImportedFont_test',
-        ).textTheme.bodyMedium!.fontFamily,
-        'ImportedFont_test',
-      );
-      expect(
-        AppTheme.build(
-          Brightness.dark,
-          fontFamily: 'ImportedFont_test',
-        ).textTheme.bodyMedium!.fontFamily,
-        'ImportedFont_test',
-      );
-      expect(
-        AppTheme.build(Brightness.dark).textTheme.bodyLarge!.fontFamily,
-        isNot('ImportedFont_test'),
-      );
-    },
-  );
+      ).textTheme.bodyMedium!.fontFamily,
+      'ImportedFont_test',
+    );
+    expect(
+      AppTheme.build(Brightness.dark).textTheme.bodyLarge!.fontFamily,
+      isNot('ImportedFont_test'),
+    );
+  });
 }

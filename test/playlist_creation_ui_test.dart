@@ -89,9 +89,7 @@ void main() {
         .load();
   });
 
-  testWidgets('create playlist offers three sources (Mornye: true)', (
-    tester,
-  ) async {
+  testWidgets('create playlist offers three sources', (tester) async {
     final collections = _Collections();
     await tester.pumpWidget(
       _app(

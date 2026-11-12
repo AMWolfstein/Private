@@ -15,10 +15,10 @@ class AppPlaybackTime extends StatefulWidget {
   final bool remaining;
 
   @override
-  State<AppPlaybackTime> createState() => _MornyePlaybackTimeState();
+  State<AppPlaybackTime> createState() => _PlaybackTimeState();
 }
 
-class _MornyePlaybackTimeState extends State<AppPlaybackTime> {
+class _PlaybackTimeState extends State<AppPlaybackTime> {
   bool _increasing = true;
 
   @override

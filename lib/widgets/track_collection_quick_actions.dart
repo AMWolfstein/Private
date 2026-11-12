@@ -37,7 +37,7 @@ class TrackCollectionQuickActions extends ConsumerWidget {
     bool hasLocalPlaybackCandidate = false,
     Offset? position,
   }) {
-    showMornyeContextMenu<void>(
+    showAppContextMenu<void>(
       context: context,
       builder: (_) => _TrackOptionsSheet(
         track: track,
@@ -112,7 +112,7 @@ class _TrackOptionsSheet extends ConsumerWidget {
         ),
         AppMenuAction(
           icon: CupertinoIcons.star_fill,
-          label: isLoved ? l10n.mornyeFavorited : l10n.mornyeFavorite,
+          label: isLoved ? l10n.favorited : l10n.favorite,
           selected: isLoved,
           onPressed: () => _toggleCollection(context, ref, wishlist: false),
         ),
@@ -121,7 +121,7 @@ class _TrackOptionsSheet extends ConsumerWidget {
           label: l10n.trackMetadataShare,
           onPressed: () {
             final origin =
-                mornyeMenuAnchor(context) ??
+                menuAnchor(context) ??
                 Rect.fromCenter(
                   center: MediaQuery.sizeOf(context).center(Offset.zero),
                   width: 1,

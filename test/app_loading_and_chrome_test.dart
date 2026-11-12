@@ -7,7 +7,7 @@ import 'package:mornye/widgets/app_artist_header.dart';
 
 void main() {
   for (final brightness in Brightness.values) {
-    testWidgets('Mornye loading layouts fit a narrow screen in $brightness', (
+    testWidgets('Loading layouts fit a narrow screen in $brightness', (
       tester,
     ) async {
       tester.view.physicalSize = const Size(320, 640);

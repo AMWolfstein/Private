@@ -62,7 +62,7 @@ void main() {
     },
   };
 
-  testWidgets('support row updates cached progress after refresh (true)', (
+  testWidgets('support row updates cached progress after refresh', (
     tester,
   ) async {
     SharedPreferences.setMockInitialValues({
@@ -139,7 +139,7 @@ void main() {
     );
   });
 
-  testWidgets('broad search builds only visible grouped results (true)', (
+  testWidgets('broad search builds only visible grouped results', (
     tester,
   ) async {
     await pumpSettings(tester, theme: AppTheme.build(Brightness.dark));

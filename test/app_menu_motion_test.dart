@@ -47,7 +47,7 @@ void main() {
             body: Builder(
               builder: (context) => Center(
                 child: TextButton(
-                  onPressed: () => showMornyeContextMenu<void>(
+                  onPressed: () => showAppContextMenu<void>(
                     context: context,
                     anchor: anchor,
                     builder: (context) => AppContextMenu(

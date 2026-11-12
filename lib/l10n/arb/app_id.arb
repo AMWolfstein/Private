@@ -7152,8 +7152,8 @@
   "@metadataCopyField": {
     "description": "Metadata menu action that copies the selected key and value"
   },
-  "mornyeSearch": "Telusuri",
-  "mornyeContinuePlaying": "Lanjut Memutar",
+  "search": "Telusuri",
+  "continuePlaying": "Lanjut Memutar",
   "metadataCopyAll": "Salin semua metadata",
   "@metadataCopyAll": {
     "description": "Metadata menu action that copies every visible key and value"
@@ -7166,13 +7166,13 @@
   "@optionsEmbeddedCoverSizeDescription": {
     "description": "Description shown in the embedded cover size picker"
   },
-  "mornyeFavorite": "Favorit",
-  "mornyeGoToArtist": "Buka Artis",
-  "@mornyeFavorite": {
+  "favorite": "Favorit",
+  "goToArtist": "Buka Artis",
+  "@favorite": {
     "description": "Compact context menu action that adds a track to Loved"
   },
-  "mornyeFavorited": "Terfavorit",
-  "@mornyeFavorited": {
+  "favorited": "Terfavorit",
+  "@favorited": {
     "description": "Selected state of the compact favorite action"
   },
   "autoMixDescription": "Padukan musik dengan pencocokan bit dan penyesuaian tempo. Menggunakan crossfade bila beat tidak dapat dicocokkan.",

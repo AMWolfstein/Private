@@ -65,7 +65,7 @@ void main() {
     expect(ready(), isTrue);
   }
 
-  testWidgets('queued phone files recover covers before playback (true)', (
+  testWidgets('queued phone files recover covers before playback', (
     tester,
   ) async {
     tester.view.physicalSize = const Size(600, 1000);

@@ -11,22 +11,22 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   test('a stored red moves to blue once, and red picked later stays', () async {
-    SharedPreferences.setMockInitialValues({kMornyeAccentKey: 'red'});
+    SharedPreferences.setMockInitialValues({kAccentKey: 'red'});
     final prefs = await SharedPreferences.getInstance();
-    expect(loadBootstrapThemeSettings(prefs).mornyeAccent, AppAccent.blue);
-    expect(prefs.getString(kMornyeAccentKey), 'blue');
+    expect(loadBootstrapThemeSettings(prefs).accent, AppAccent.blue);
+    expect(prefs.getString(kAccentKey), 'blue');
 
-    await prefs.setString(kMornyeAccentKey, 'red');
-    expect(loadBootstrapThemeSettings(prefs).mornyeAccent, AppAccent.red);
-    expect(prefs.getString(kMornyeAccentKey), 'red');
+    await prefs.setString(kAccentKey, 'red');
+    expect(loadBootstrapThemeSettings(prefs).accent, AppAccent.red);
+    expect(prefs.getString(kAccentKey), 'red');
   });
 
   test('the move leaves any other accent alone', () async {
-    SharedPreferences.setMockInitialValues({kMornyeAccentKey: 'pink'});
+    SharedPreferences.setMockInitialValues({kAccentKey: 'pink'});
     final prefs = await SharedPreferences.getInstance();
-    expect(loadBootstrapThemeSettings(prefs).mornyeAccent, AppAccent.pink);
-    expect(prefs.getString(kMornyeAccentKey), 'pink');
-    expect(prefs.getBool(kMornyeAccentMovedToBlueKey), isTrue);
+    expect(loadBootstrapThemeSettings(prefs).accent, AppAccent.pink);
+    expect(prefs.getString(kAccentKey), 'pink');
+    expect(prefs.getBool(kAccentMovedToBlueKey), isTrue);
   });
 
   test(
@@ -35,7 +35,7 @@ void main() {
       SharedPreferences.setMockInitialValues({
         kThemeModeKey: 'dark',
         kUseSystemFontKey: true,
-        kMornyeAccentKey: 'blue',
+        kAccentKey: 'blue',
         kLyricsTextScaleKey: 0.9,
       });
       final prefs = await SharedPreferences.getInstance();
@@ -51,7 +51,7 @@ void main() {
       final notifier = container.read(themeProvider.notifier);
       // An explicit edit equal to the bootstrap default still owns this field.
       final savingMode = notifier.setThemeMode(ThemeMode.system);
-      final savingAccent = notifier.setMornyeAccent(AppAccent.red);
+      final savingAccent = notifier.setAccent(AppAccent.red);
       await notifier.setLyricsTextScale(1.2, persist: false);
       var saved = false;
       unawaited(savingAccent.then((_) => saved = true));
@@ -64,7 +64,7 @@ void main() {
       await Future.wait([savingMode, savingAccent]);
       final state = container.read(themeProvider);
       expect(state.themeMode, ThemeMode.system);
-      expect(state.mornyeAccent, AppAccent.red);
+      expect(state.accent, AppAccent.red);
       expect(state.lyricsTextScale, 1.2);
       expect(state.useSystemFont, isTrue);
       expect(loadBootstrapThemeSettings(prefs), state);
@@ -74,7 +74,7 @@ void main() {
   test('early preview remains immediate without writing preferences', () async {
     SharedPreferences.setMockInitialValues({
       kLyricsTextScaleKey: 0.9,
-      kMornyeAccentKey: 'blue',
+      kAccentKey: 'blue',
     });
     final prefs = await SharedPreferences.getInstance();
     final releaseLoad = Completer<SharedPreferences>();
@@ -88,7 +88,7 @@ void main() {
     );
     addTearDown(container.dispose);
     container.listen(themeProvider, (_, next) {
-      if (next.mornyeAccent == AppAccent.blue) loaded.complete();
+      if (next.accent == AppAccent.blue) loaded.complete();
     });
     await container
         .read(themeProvider.notifier)

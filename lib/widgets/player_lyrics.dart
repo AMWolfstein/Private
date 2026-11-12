@@ -28,9 +28,9 @@ import 'package:mornye/utils/lyrics_parser.dart';
 part 'player_lyrics_line_style.dart';
 part 'player_lyrics_word_sweep.dart';
 
-const _mornyeLyricFontSize = 34.0;
+const _lyricFontSize = 34.0;
 
-const mornyeLyricsContentInset = 28.0 + AppPlayerSlider.horizontalInset;
+const lyricsContentInset = 28.0 + AppPlayerSlider.horizontalInset;
 
 /// How much of the lyrics area's bottom the player's controls cover. The
 /// Mornye phone player lays lyrics out under its controls so they can grow
@@ -556,7 +556,7 @@ class _SyncedLyricsViewState extends ConsumerState<SyncedLyricsView>
     super.dispose();
   }
 
-  void _measureMornyeLines(BuildContext context, double width) {
+  void _measureLines(BuildContext context, double width) {
     final style = _primaryLyricStyle(context);
     final scaler = MediaQuery.textScalerOf(context);
     final direction = Directionality.of(context);
@@ -926,7 +926,7 @@ class _SyncedLyricsViewState extends ConsumerState<SyncedLyricsView>
       },
       child: LayoutBuilder(
         builder: (context, constraints) {
-          final inset = mornyeLyricsContentInset;
+          final inset = lyricsContentInset;
           final contentWidth = (constraints.maxWidth - inset * 2).clamp(
             0.0,
             double.infinity,
@@ -951,7 +951,7 @@ class _SyncedLyricsViewState extends ConsumerState<SyncedLyricsView>
               previousExtents?.offsetForRow(previousScrollAnchor) ?? 0;
           final previousFocusOffset =
               previousExtents?.offsetForRow(focusAnchor) ?? 0;
-          _measureMornyeLines(context, layoutWidth);
+          _measureLines(context, layoutWidth);
           // Reuse text measurements; only interpolate row heights as the
           // supplements fade. Scrolling follows the same animation clock.
           final geometryKey = (

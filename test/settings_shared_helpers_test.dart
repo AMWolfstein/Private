@@ -486,7 +486,7 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('Mornye glass groups skip the backdrop pass', (tester) async {
+  testWidgets('Glass groups skip the backdrop pass', (tester) async {
     await tester.pumpWidget(
       ProviderScope(
         child: MaterialApp(

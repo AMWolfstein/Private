@@ -15,10 +15,10 @@ void main() {
   test(
     'old themes retain outlines and new themes serialize the preference',
     () {
-      expect(ThemeSettings.fromJson({}).mornyeGlassOutlines, isTrue);
-      const settings = ThemeSettings(mornyeGlassOutlines: false);
+      expect(ThemeSettings.fromJson({}).glassOutlines, isTrue);
+      const settings = ThemeSettings(glassOutlines: false);
       expect(ThemeSettings.fromJson(settings.toJson()), settings);
-      expect(settings.copyWith().mornyeGlassOutlines, isFalse);
+      expect(settings.copyWith().glassOutlines, isFalse);
       expect(settings, isNot(const ThemeSettings()));
     },
   );
@@ -104,7 +104,7 @@ void main() {
         await tester.pumpAndSettle();
         await tester.tap(find.text('Glass outlines'));
         await tester.pumpAndSettle();
-        expect(prefs.getBool(kMornyeGlassOutlinesKey), isFalse);
+        expect(prefs.getBool(kGlassOutlinesKey), isFalse);
         final context = tester.element(toggle);
         expect(AppTheme.glassOutlinesOf(context), isFalse);
         final local = AppTheme.fromContext(
@@ -119,7 +119,7 @@ void main() {
         await tester.pumpAndSettle();
         await tester.tap(find.text('Glass outlines'));
         await tester.pumpAndSettle();
-        expect(prefs.getBool(kMornyeGlassOutlinesKey), isTrue);
+        expect(prefs.getBool(kGlassOutlinesKey), isTrue);
         final picker = find.byType(AppSegmentedControl);
         await tester.scrollUntilVisible(
           picker,
@@ -148,13 +148,13 @@ void main() {
       expect(tester.takeException(), isNull);
     });
 
-    testWidgets('Mornye accent updates live and survives restart ($mode)', (
+    testWidgets('Accent updates live and survives restart ($mode)', (
       tester,
     ) async {
       SharedPreferences.setMockInitialValues({
         kThemeModeKey: mode.name,
-        kMornyeAccentKey: 'red',
-        kMornyeAccentMovedToBlueKey: true,
+        kAccentKey: 'red',
+        kAccentMovedToBlueKey: true,
       });
       final prefs = await SharedPreferences.getInstance();
       await openSettings(tester, prefs);
@@ -174,7 +174,7 @@ void main() {
         theme.colorScheme.primary,
         AppTheme.accentColor(AppAccent.blue, theme.brightness),
       );
-      expect(prefs.getString(kMornyeAccentKey), 'blue');
+      expect(prefs.getString(kAccentKey), 'blue');
       final overlay = AppTheme.fromContext(
         tester.element(page),
         brightness: Brightness.dark,
@@ -206,7 +206,7 @@ void main() {
     testWidgets('system font persists and restores the default', (
       tester,
     ) async {
-      SharedPreferences.setMockInitialValues({kMornyeAccentKey: 'blue'});
+      SharedPreferences.setMockInitialValues({kAccentKey: 'blue'});
       final prefs = await SharedPreferences.getInstance();
       await openSettings(tester, prefs);
       final page = find.byType(AppearanceSettingsPage);

@@ -29,10 +29,10 @@ class AppGlassPress extends StatefulWidget {
   final bool enabled;
 
   @override
-  State<AppGlassPress> createState() => _MornyeGlassPressState();
+  State<AppGlassPress> createState() => _GlassPressState();
 }
 
-class _MornyeGlassPressState extends State<AppGlassPress>
+class _GlassPressState extends State<AppGlassPress>
     with SingleTickerProviderStateMixin {
   // Underdamped, so a release overshoots a little and settles.
   static const _spring = SpringDescription(

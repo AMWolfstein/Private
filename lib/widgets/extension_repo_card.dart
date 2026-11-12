@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mornye/providers/runtime_profile_provider.dart';
 import 'package:mornye/widgets/app_chrome.dart';
 
-/// Repo cards share the Mornye glass material, including their detail pages.
+/// Repo cards share the glass material, including their detail pages.
 class ExtensionRepoCard extends ConsumerWidget {
   const ExtensionRepoCard({
     super.key,

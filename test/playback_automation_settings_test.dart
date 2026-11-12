@@ -14,9 +14,7 @@ import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/settings_group.dart';
 
 void main() {
-  testWidgets('automatic controls persist in both themes (true)', (
-    tester,
-  ) async {
+  testWidgets('automatic controls persist in both themes', (tester) async {
     SharedPreferences.setMockInitialValues({});
     tester.view.physicalSize = const Size(390, 844);
     tester.view.devicePixelRatio = 1;
@@ -96,7 +94,7 @@ void main() {
     );
   });
 
-  testWidgets('Gapless playback yields to AutoMix (true)', (tester) async {
+  testWidgets('Gapless playback yields to AutoMix', (tester) async {
     SharedPreferences.setMockInitialValues({});
     tester.view.physicalSize = const Size(390, 844);
     tester.view.devicePixelRatio = 1;

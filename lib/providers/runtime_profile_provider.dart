@@ -31,7 +31,7 @@ final appGlassContrastBlockedProvider = Provider.family<bool, bool>(
       !ref.watch(settingsProvider.select((s) => s.forceBackdropBlur)),
 );
 
-/// How much of Mornye's glass the device renders.
+/// How much of the glass the device renders.
 enum AppGlassLevel {
   /// Opaque surfaces; no backdrop sampling.
   flat,
@@ -53,7 +53,7 @@ final appGlassLevelProvider = Provider<AppGlassLevel>((ref) {
   return lowEnd ? AppGlassLevel.flat : AppGlassLevel.frosted;
 });
 
-/// Backdrop blur for Mornye surfaces (frosted or liquid).
+/// Backdrop blur for surfaces (frosted or liquid).
 final appBlurEnabledProvider = Provider<bool>(
   (ref) => ref.watch(appGlassLevelProvider) != AppGlassLevel.flat,
 );

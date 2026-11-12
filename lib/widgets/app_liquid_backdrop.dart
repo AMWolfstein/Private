@@ -6,7 +6,7 @@ import 'package:liquid_glass_easy/liquid_glass_easy.dart';
 import 'package:mornye/providers/runtime_profile_provider.dart';
 import 'package:mornye/theme/app_theme.dart';
 
-/// The one place that decides how Mornye glass renders. Glass is fixed at the
+/// The one place that decides how glass renders. Glass is fixed at the
 /// Clear end of the retired Glass Quality slider, so every surface reads the
 /// same blur budget and every eligible surface samples its backdrop.
 abstract final class AppGlassRules {

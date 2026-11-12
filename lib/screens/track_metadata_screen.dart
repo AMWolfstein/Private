@@ -757,7 +757,7 @@ class _TrackMetadataScreenState extends ConsumerState<TrackMetadataScreen>
 
   @override
   Widget build(BuildContext context) {
-    return _buildMornyePage(context);
+    return _buildAppPage(context);
   }
 
   Future<void> _enqueueThis(WidgetRef ref, {required bool playNext}) async {

@@ -237,11 +237,7 @@ class TrackListSkeleton extends StatelessWidget {
             if (showCoverHeader)
               const _CollectionHeaderSkeleton(showSubtitle: false),
             for (var index = 0; index < itemCount; index++)
-              _MornyeTrackSkeleton(
-                numbered: false,
-                index: index,
-                showPreview: true,
-              ),
+              _TrackSkeleton(numbered: false, index: index, showPreview: true),
           ],
         ),
       ),
@@ -271,11 +267,7 @@ class AlbumTrackListSkeleton extends StatelessWidget {
           children: [
             if (showCoverHeader) const _CollectionHeaderSkeleton(),
             for (var index = 0; index < itemCount; index++)
-              _MornyeTrackSkeleton(
-                numbered: true,
-                index: index,
-                showPreview: true,
-              ),
+              _TrackSkeleton(numbered: true, index: index, showPreview: true),
           ],
         ),
       ),
@@ -283,7 +275,7 @@ class AlbumTrackListSkeleton extends StatelessWidget {
   }
 }
 
-/// Mirrors Mornye's collection header: full-width square artwork and a
+/// Mirrors the design's collection header: full-width square artwork and a
 /// compact primary action between two circular controls. Material loading
 /// screens show the real [AlbumDetailHeader] instead.
 class _CollectionHeaderSkeleton extends StatelessWidget {
@@ -551,7 +543,7 @@ class ArtistScreenSkeleton extends StatelessWidget {
                 child: SkeletonBox(width: 110, height: 24, borderRadius: 4),
               ),
               for (var index = 0; index < _popularCount; index++)
-                _MornyeTrackSkeleton(numbered: false, index: index),
+                _TrackSkeleton(numbered: false, index: index),
             ],
             const Padding(
               padding: EdgeInsets.fromLTRB(20, 24, 20, 12),
@@ -609,8 +601,8 @@ class _ArtistAlbumShelfSkeleton extends StatelessWidget {
   }
 }
 
-class _MornyeTrackSkeleton extends StatelessWidget {
-  const _MornyeTrackSkeleton({
+class _TrackSkeleton extends StatelessWidget {
+  const _TrackSkeleton({
     required this.numbered,
     required this.index,
     this.showPreview = false,
@@ -803,7 +795,7 @@ class HomeSearchSkeleton extends StatelessWidget {
         ),
       );
     });
-    // Material uses the result groups' own container tier; Mornye's glass
+    // Material uses the result groups' own container tier; the glass
     // results keep a faint neutral wash.
     final groupColor = colorScheme.surfaceContainerHighest.withValues(
       alpha: 0.3,
@@ -968,7 +960,7 @@ class _CoverShelfSkeleton extends StatelessWidget {
   }
 }
 
-/// Mornye's mixed result preview cards while the search loads.
+/// the design's mixed result preview cards while the search loads.
 class _TopResultsSkeleton extends StatelessWidget {
   const _TopResultsSkeleton();
 

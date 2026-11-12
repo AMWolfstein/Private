@@ -44,9 +44,7 @@ void main() {
     );
   }
 
-  testWidgets('empty cancel action allows account setup (true)', (
-    tester,
-  ) async {
+  testWidgets('empty cancel action allows account setup', (tester) async {
     final actions = <String>[];
     final inputs = <Map<String, dynamic>>[];
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger

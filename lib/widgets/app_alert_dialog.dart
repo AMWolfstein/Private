@@ -15,7 +15,7 @@ Future<T?> showAppDialog<T>({
   final navigator = Navigator.of(context, rootNavigator: useRootNavigator);
   final themes = InheritedTheme.capture(from: context, to: navigator.context);
   return navigator.push<T>(
-    _MornyeDialogRoute<T>(
+    _DialogRoute<T>(
       context: context,
       builder: (context) => themes.wrap(Builder(builder: builder)),
       barrierDismissible: barrierDismissible,
@@ -115,8 +115,8 @@ class AppDialogSurface extends StatelessWidget {
   }
 }
 
-class _MornyeDialogRoute<T> extends RawDialogRoute<T> {
-  _MornyeDialogRoute({
+class _DialogRoute<T> extends RawDialogRoute<T> {
+  _DialogRoute({
     required BuildContext context,
     required WidgetBuilder builder,
     required super.barrierDismissible,

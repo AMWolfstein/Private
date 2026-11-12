@@ -86,9 +86,9 @@ void main() {
                       builder: (context) => IconButton(
                         key: button,
                         icon: const Icon(Icons.more_horiz),
-                        onPressed: () => showMornyeContextMenu<void>(
+                        onPressed: () => showAppContextMenu<void>(
                           context: context,
-                          anchor: mornyeMenuAnchor(button.currentContext!),
+                          anchor: menuAnchor(button.currentContext!),
                           builder: (menuContext) => AppContextMenu(
                             quickActions: [
                               AppMenuAction(

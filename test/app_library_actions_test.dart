@@ -78,7 +78,7 @@ void main() {
     FlutterSecureStorage.setMockInitialValues({});
   });
 
-  testWidgets('Mornye selection actions remain accessible on narrow screens', (
+  testWidgets('Selection actions remain accessible on narrow screens', (
     tester,
   ) async {
     await tester.binding.setSurfaceSize(const Size(320, 780));
@@ -127,7 +127,7 @@ void main() {
   });
 
   for (final brightness in Brightness.values) {
-    testWidgets('Mornye conversion preserves selected options ($brightness)', (
+    testWidgets('Conversion preserves selected options ($brightness)', (
       tester,
     ) async {
       await tester.binding.setSurfaceSize(const Size(390, 844));
@@ -166,78 +166,73 @@ void main() {
     });
   }
 
-  testWidgets(
-    'Mornye Re-enrich retains field choices and disables empty review',
-    (tester) async {
-      await tester.binding.setSurfaceSize(const Size(390, 844));
-      addTearDown(() => tester.binding.setSurfaceSize(null));
-      ReEnrichFieldSelection? result;
-      await tester.pumpWidget(
-        _app(
-          Builder(
-            builder: (context) => CupertinoButton(
-              onPressed: () async {
-                result = await showReEnrichFieldDialog(
-                  context,
-                  selectedCount: 2,
-                );
-              },
-              child: const Text('Open'),
-            ),
+  testWidgets('Re-enrich retains field choices and disables empty review', (
+    tester,
+  ) async {
+    await tester.binding.setSurfaceSize(const Size(390, 844));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+    ReEnrichFieldSelection? result;
+    await tester.pumpWidget(
+      _app(
+        Builder(
+          builder: (context) => CupertinoButton(
+            onPressed: () async {
+              result = await showReEnrichFieldDialog(context, selectedCount: 2);
+            },
+            child: const Text('Open'),
           ),
         ),
-      );
-      await _tapVisible(tester, find.text('Open'));
-      await _tapVisible(tester, find.text('Update selected tags'));
-      await _tapVisible(tester, find.text('Select All'));
-      final review = find.widgetWithText(AppActionButton, 'Review changes');
-      expect(tester.widget<AppActionButton>(review).onPressed, isNull);
-      await _tapVisible(tester, find.text('Cover Art'));
-      await _tapVisible(tester, find.text('Review changes'));
-      expect(result?.mode, ReEnrichBatchMode.selectedFields);
-      expect(result?.fields, [ReEnrichFields.cover]);
-      expect(tester.takeException(), isNull);
-    },
-  );
+      ),
+    );
+    await _tapVisible(tester, find.text('Open'));
+    await _tapVisible(tester, find.text('Update selected tags'));
+    await _tapVisible(tester, find.text('Select All'));
+    final review = find.widgetWithText(AppActionButton, 'Review changes');
+    expect(tester.widget<AppActionButton>(review).onPressed, isNull);
+    await _tapVisible(tester, find.text('Cover Art'));
+    await _tapVisible(tester, find.text('Review changes'));
+    expect(result?.mode, ReEnrichBatchMode.selectedFields);
+    expect(result?.fields, [ReEnrichFields.cover]);
+    expect(tester.takeException(), isNull);
+  });
 
-  testWidgets(
-    'Mornye ReplayGain cancellation restores selection without analysis',
-    (tester) async {
-      bool? confirmed;
-      var exitedSelection = false;
-      await tester.pumpWidget(
-        _app(
-          Builder(
-            builder: (context) => CupertinoButton(
-              onPressed: () => runBatchReplayGain(
-                context,
-                [
-                  UnifiedLibraryItem(
-                    id: 'track',
-                    trackName: 'Track',
-                    artistName: 'Artist',
-                    albumName: 'Album',
-                    filePath: '/missing/track.flac',
-                    addedAt: DateTime(2026),
-                    source: LibraryItemSource.local,
-                  ),
-                ],
-                onExitSelectionMode: () => exitedSelection = true,
-                onConfirmClosed: (value) async => confirmed = value,
-              ),
-              child: const Text('Open'),
+  testWidgets('ReplayGain cancellation restores selection without analysis', (
+    tester,
+  ) async {
+    bool? confirmed;
+    var exitedSelection = false;
+    await tester.pumpWidget(
+      _app(
+        Builder(
+          builder: (context) => CupertinoButton(
+            onPressed: () => runBatchReplayGain(
+              context,
+              [
+                UnifiedLibraryItem(
+                  id: 'track',
+                  trackName: 'Track',
+                  artistName: 'Artist',
+                  albumName: 'Album',
+                  filePath: '/missing/track.flac',
+                  addedAt: DateTime(2026),
+                  source: LibraryItemSource.local,
+                ),
+              ],
+              onExitSelectionMode: () => exitedSelection = true,
+              onConfirmClosed: (value) async => confirmed = value,
             ),
+            child: const Text('Open'),
           ),
         ),
-      );
-      await _tapVisible(tester, find.text('Open'));
-      expect(find.byType(AppAlertDialog), findsOneWidget);
-      await _tapVisible(tester, find.text('Cancel'));
-      expect(confirmed, isFalse);
-      expect(exitedSelection, isFalse);
-      expect(tester.takeException(), isNull);
-    },
-  );
+      ),
+    );
+    await _tapVisible(tester, find.text('Open'));
+    expect(find.byType(AppAlertDialog), findsOneWidget);
+    await _tapVisible(tester, find.text('Cancel'));
+    expect(confirmed, isFalse);
+    expect(exitedSelection, isFalse);
+    expect(tester.takeException(), isNull);
+  });
 
   for (final platform in [TargetPlatform.android]) {
     testWidgets('Metadata menu scroll reaches the last action ($platform)', (
@@ -298,7 +293,7 @@ void main() {
     });
   }
 
-  testWidgets('Mornye metadata editor keeps edited text and Save available', (
+  testWidgets('Metadata editor keeps edited text and Save available', (
     tester,
   ) async {
     await tester.binding.setSurfaceSize(const Size(390, 844));

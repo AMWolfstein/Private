@@ -212,9 +212,7 @@ void main() {
     addTearDown(() => messenger.setMockMethodCallHandler(sqlite, null));
   });
 
-  testWidgets('playlist download confirms one grouped enqueue (Mornye: true)', (
-    tester,
-  ) async {
+  testWidgets('playlist download confirms one grouped enqueue', (tester) async {
     tester.view.physicalSize = const Size(800, 1200);
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.reset);
@@ -287,9 +285,7 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('playlist selection confirms one deletion (Mornye: true)', (
-    tester,
-  ) async {
+  testWidgets('playlist selection confirms one deletion', (tester) async {
     tester.view.physicalSize = const Size(800, 1200);
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.reset);

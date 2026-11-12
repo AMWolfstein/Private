@@ -104,7 +104,7 @@ extension _ArtistScreenDiscography on _ArtistScreenState {
       useRootNavigator: true,
       isScrollControlled: true,
       // The sheet forces the dark theme on its own glass.
-      mornyeGlass: false,
+      glass: false,
       builder: (sheetContext) => Theme(
         data: AppTheme.fromContext(sheetContext, brightness: Brightness.dark),
         child: AppGlassPanel(

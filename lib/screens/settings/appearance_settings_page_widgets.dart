@@ -62,8 +62,8 @@ class _ThemePreviewCard extends StatelessWidget {
   }
 }
 
-class _MornyeAccentPicker extends StatelessWidget {
-  const _MornyeAccentPicker({required this.selected, required this.onChanged});
+class _AccentPicker extends StatelessWidget {
+  const _AccentPicker({required this.selected, required this.onChanged});
 
   final AppAccent selected;
   final ValueChanged<AppAccent> onChanged;

@@ -11,7 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'support/fixed_settings.dart';
 
 void main() {
-  testWidgets('Files scrolls its last row above floating chrome (true)', (
+  testWidgets('Files scrolls its last row above floating chrome', (
     tester,
   ) async {
     SharedPreferences.setMockInitialValues({});

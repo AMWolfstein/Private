@@ -112,7 +112,7 @@ void main() {
     }
   });
 
-  testWidgets('account settings work at narrow width and large text (true)', (
+  testWidgets('account settings work at narrow width and large text', (
     tester,
   ) async {
     tester.view.physicalSize = const Size(320, 800);

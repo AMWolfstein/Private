@@ -325,7 +325,7 @@ class AppGlass extends ConsumerWidget {
         // The optical lens already draws its own rim. Avoid a second dark
         // contact stroke on top, particularly visible against light pages.
         foregroundPainter: outlines && (!useLens || highlightBorder)
-            ? _MornyeGlassRim(
+            ? _GlassRim(
                 shape: shape,
                 firstInGroup: firstInGroup,
                 lastInGroup: lastInGroup,
@@ -352,8 +352,8 @@ class _GlassBackdropScope extends InheritedWidget {
 }
 
 /// Subtle edge definition without another offscreen layer or backdrop read.
-class _MornyeGlassRim extends CustomPainter {
-  const _MornyeGlassRim({
+class _GlassRim extends CustomPainter {
+  const _GlassRim({
     required this.shape,
     required this.firstInGroup,
     required this.lastInGroup,
@@ -442,7 +442,7 @@ class _MornyeGlassRim extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant _MornyeGlassRim oldDelegate) =>
+  bool shouldRepaint(covariant _GlassRim oldDelegate) =>
       shape != oldDelegate.shape ||
       firstInGroup != oldDelegate.firstInGroup ||
       lastInGroup != oldDelegate.lastInGroup ||

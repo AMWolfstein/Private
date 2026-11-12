@@ -57,7 +57,7 @@ void main() {
   for (final _ in [false, true]) {}
 
   testWidgets(
-    'downloaded album re-enrich restores selection on cancel and updates only selected files (true)',
+    'downloaded album re-enrich restores selection on cancel and updates only selected files',
     (tester) async {
       SharedPreferences.setMockInitialValues({});
       final cache = Directory.systemTemp.createTempSync('album_reenrich_');

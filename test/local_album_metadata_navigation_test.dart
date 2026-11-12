@@ -28,7 +28,7 @@ class _Playback extends PlaybackController {
 }
 
 void main() {
-  testWidgets('downloaded album order survives empty and reload (true)', (
+  testWidgets('downloaded album order survives empty and reload', (
     tester,
   ) async {
     SharedPreferences.setMockInitialValues({});
@@ -101,7 +101,7 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('album row opens metadata, Play plays (true)', (tester) async {
+  testWidgets('album row opens metadata, Play plays', (tester) async {
     SharedPreferences.setMockInitialValues({});
     tester.view.physicalSize = const Size(430, 1200);
     tester.view.devicePixelRatio = 1;

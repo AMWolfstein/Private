@@ -78,7 +78,7 @@ void main() {
       reselect: false,
     ),
   ]) {
-    testWidgets('${failure.name} (Mornye: true)', (tester) async {
+    testWidgets(failure.name, (tester) async {
       tester.view.physicalSize = const Size(430, 1000);
       tester.view.devicePixelRatio = 1;
       addTearDown(tester.view.reset);

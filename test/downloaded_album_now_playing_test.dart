@@ -27,9 +27,7 @@ class _History extends DownloadHistoryNotifier {
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('downloaded album rows follow playback (mornye: true)', (
-    tester,
-  ) async {
+  testWidgets('downloaded album rows follow playback', (tester) async {
     SharedPreferences.setMockInitialValues({});
     tester.view.physicalSize = const Size(430, 1200);
     tester.view.devicePixelRatio = 1;

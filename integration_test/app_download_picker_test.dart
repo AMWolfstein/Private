@@ -262,7 +262,7 @@ void main() {
         await probe.measure('context_menu_to_picker', () async {
           // The production flow pops the options menu and pushes the picker
           // immediately. Both glass routes overlap during their transitions.
-          showMornyeContextMenu<void>(
+          showAppContextMenu<void>(
             context: homeContext,
             builder: (menuContext) => AppContextMenu(
               quickActions: [

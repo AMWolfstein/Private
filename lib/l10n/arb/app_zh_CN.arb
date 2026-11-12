@@ -7505,8 +7505,8 @@
   "@metadataCopyField": {
     "description": "Metadata menu action that copies the selected key and value"
   },
-  "mornyeSearch": "搜索",
-  "mornyeContinuePlaying": "继续播放",
+  "search": "搜索",
+  "continuePlaying": "继续播放",
   "metadataCopyAll": "复制所有元数据",
   "@metadataCopyAll": {
     "description": "Metadata menu action that copies every visible key and value"
@@ -7519,13 +7519,13 @@
   "@optionsEmbeddedCoverSizeDescription": {
     "description": "Description shown in the embedded cover size picker"
   },
-  "mornyeFavorite": "收藏",
-  "mornyeGoToArtist": "前往艺术家",
-  "@mornyeFavorite": {
+  "favorite": "收藏",
+  "goToArtist": "前往艺术家",
+  "@favorite": {
     "description": "Compact context menu action that adds a track to Loved"
   },
-  "mornyeFavorited": "已收藏",
-  "@mornyeFavorited": {
+  "favorited": "已收藏",
+  "@favorited": {
     "description": "Selected state of the compact favorite action"
   },
   "autoMixDescription": "通过节拍匹配和保持音高的速度调整混合歌曲。使用交叉淡入淡出、回声、低通和音高效果。",

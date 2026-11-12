@@ -63,7 +63,7 @@ void main() {
     await tester.pumpAndSettle();
   }
 
-  testWidgets('songs on this device offer the upload (true)', (tester) async {
+  testWidgets('songs on this device offer the upload', (tester) async {
     await pump(
       tester,
       items: [song('/music/a.flac'), song('network://nas/b.flac')],
@@ -91,9 +91,7 @@ void main() {
     expect(find.byTooltip(label), findsNothing);
   });
 
-  testWidgets('the folder browser returns the chosen folder (true)', (
-    tester,
-  ) async {
+  testWidgets('the folder browser returns the chosen folder', (tester) async {
     final service = _Folders();
     String? picked;
     await tester.pumpWidget(

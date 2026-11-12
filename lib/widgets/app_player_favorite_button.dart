@@ -25,10 +25,10 @@ class AppPlayerFavoriteButton extends ConsumerStatefulWidget {
 
   @override
   ConsumerState<AppPlayerFavoriteButton> createState() =>
-      _MornyePlayerFavoriteButtonState();
+      _PlayerFavoriteButtonState();
 }
 
-class _MornyePlayerFavoriteButtonState
+class _PlayerFavoriteButtonState
     extends ConsumerState<AppPlayerFavoriteButton> {
   bool _saving = false;
 

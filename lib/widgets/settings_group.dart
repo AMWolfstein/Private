@@ -344,8 +344,8 @@ class SettingsItem extends StatelessWidget {
   final IconData? icon;
   final Color? iconColor;
 
-  /// Show category icons in Mornye's top-level settings and search results.
-  final bool showIconInMornye;
+  /// Show category icons in top-level settings and search results.
+  final bool showTopLevelIcon;
   final String title;
   final Widget? titleTrailing;
   final String? subtitle;
@@ -362,7 +362,7 @@ class SettingsItem extends StatelessWidget {
     super.key,
     this.icon,
     this.iconColor,
-    this.showIconInMornye = false,
+    this.showTopLevelIcon = false,
     required this.title,
     this.titleTrailing,
     this.subtitle,
@@ -376,7 +376,7 @@ class SettingsItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final showIcon = icon != null && (showIconInMornye);
+    final showIcon = icon != null && (showTopLevelIcon);
 
     final content = Column(
       mainAxisSize: MainAxisSize.min,
@@ -664,7 +664,7 @@ class SettingsChoiceChip extends StatelessWidget {
       overflow: TextOverflow.ellipsis,
       style: theme.textTheme.bodyMedium?.copyWith(
         fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
-        // on Mornye's grey fill falls below readable contrast.
+        // on the design's grey fill falls below readable contrast.
         color: isSelected ? colorScheme.onSurface : foreground,
       ),
     );
@@ -827,7 +827,7 @@ class SettingsInfoCard extends StatelessWidget {
 
   final EdgeInsetsGeometry? margin;
 
-  /// Uses the shared glass surface in Mornye without changing Material cards.
+  /// Uses the shared glass surface in the app without changing Material cards.
   final bool glass;
 
   @override

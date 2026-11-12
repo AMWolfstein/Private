@@ -79,79 +79,78 @@ void main() {
     }
   });
 
-  testWidgets(
-    'large review builds nearby tracks and keeps Apply visible (true)',
-    (tester) async {
-      tester.view.physicalSize = const Size(400, 900);
-      tester.view.devicePixelRatio = 1;
-      addTearDown(tester.view.reset);
-      Future<bool>? result;
-      await tester.pumpWidget(
-        ProviderScope(
-          child: MaterialApp(
-            theme: AppTheme.build(Brightness.light),
-            localizationsDelegates: AppLocalizations.localizationsDelegates,
-            supportedLocales: AppLocalizations.supportedLocales,
-            home: Scaffold(
-              body: Builder(
-                builder: (context) => TextButton(
-                  onPressed: () {
-                    result = showReEnrichReviewSheet(
-                      context,
-                      previews: [
-                        for (var index = 0; index < 300; index++)
-                          BatchReEnrichPreview(
-                            item: LocalLibraryItem(
-                              id: 'fixture-$index',
-                              trackName: 'Fixture song $index',
-                              artistName: 'Artist',
-                              albumName: 'Album',
-                              filePath: '/music/song-$index.flac',
-                              scannedAt: DateTime(2026),
-                            ),
-                            updateFields: const ['genre'],
-                            enrichedMetadata: const {},
-                            changes: const [
-                              ReEnrichMetadataChange(
-                                field: 'genre',
-                                oldValue: '',
-                                newValue: 'Rock',
-                              ),
-                            ],
+  testWidgets('large review builds nearby tracks and keeps Apply visible', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(400, 900);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    Future<bool>? result;
+    await tester.pumpWidget(
+      ProviderScope(
+        child: MaterialApp(
+          theme: AppTheme.build(Brightness.light),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: Scaffold(
+            body: Builder(
+              builder: (context) => TextButton(
+                onPressed: () {
+                  result = showReEnrichReviewSheet(
+                    context,
+                    previews: [
+                      for (var index = 0; index < 300; index++)
+                        BatchReEnrichPreview(
+                          item: LocalLibraryItem(
+                            id: 'fixture-$index',
+                            trackName: 'Fixture song $index',
+                            artistName: 'Artist',
+                            albumName: 'Album',
+                            filePath: '/music/song-$index.flac',
+                            scannedAt: DateTime(2026),
                           ),
-                      ],
-                    );
-                  },
-                  child: const Text('Review'),
-                ),
+                          updateFields: const ['genre'],
+                          enrichedMetadata: const {},
+                          changes: const [
+                            ReEnrichMetadataChange(
+                              field: 'genre',
+                              oldValue: '',
+                              newValue: 'Rock',
+                            ),
+                          ],
+                        ),
+                    ],
+                  );
+                },
+                child: const Text('Review'),
               ),
             ),
           ),
         ),
-      );
-      await tester.tap(find.text('Review'));
-      await tester.pumpAndSettle();
-      expect(find.byType(ListTile).evaluate().length, lessThan(20));
-      expect(find.text('Fixture song 0').hitTestable(), findsOneWidget);
-      expect(find.text('Fixture song 299'), findsNothing);
-      expect(find.text('Apply changes').hitTestable(), findsOneWidget);
+      ),
+    );
+    await tester.tap(find.text('Review'));
+    await tester.pumpAndSettle();
+    expect(find.byType(ListTile).evaluate().length, lessThan(20));
+    expect(find.text('Fixture song 0').hitTestable(), findsOneWidget);
+    expect(find.text('Fixture song 299'), findsNothing);
+    expect(find.text('Apply changes').hitTestable(), findsOneWidget);
 
-      await tester.scrollUntilVisible(
-        find.text('Fixture song 299'),
-        600,
-        maxScrolls: 150,
-      );
-      await tester.pumpAndSettle();
-      expect(find.text('Fixture song 299').hitTestable(), findsOneWidget);
-      expect(find.text('Apply changes').hitTestable(), findsOneWidget);
-      await tester.tap(find.text('Apply changes'));
-      await tester.pumpAndSettle();
-      expect(await result, isTrue);
-      expect(tester.takeException(), isNull);
-    },
-  );
+    await tester.scrollUntilVisible(
+      find.text('Fixture song 299'),
+      600,
+      maxScrolls: 150,
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('Fixture song 299').hitTestable(), findsOneWidget);
+    expect(find.text('Apply changes').hitTestable(), findsOneWidget);
+    await tester.tap(find.text('Apply changes'));
+    await tester.pumpAndSettle();
+    expect(await result, isTrue);
+    expect(tester.takeException(), isNull);
+  });
 
-  testWidgets('result is readable above an open metadata sheet (true)', (
+  testWidgets('result is readable above an open metadata sheet', (
     tester,
   ) async {
     await tester.pumpWidget(

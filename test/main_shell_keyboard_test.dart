@@ -110,7 +110,7 @@ void main() {
   bool collapsed(WidgetTester tester) =>
       tester.widget<AppBottomBar>(find.byType(AppBottomBar)).collapsed;
 
-  testWidgets('external mode hides Home playback and mini player (true)', (
+  testWidgets('external mode hides Home playback and mini player', (
     tester,
   ) async {
     await pumpShell(tester, mornye: true, externalPlayer: true);

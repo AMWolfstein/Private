@@ -24,9 +24,7 @@ void main() {
   for (final width in [320.0, 1024.0]) {
     for (final _ in Brightness.values) {}
 
-    testWidgets('store skeleton fits at $width with Mornye=true', (
-      tester,
-    ) async {
+    testWidgets('store skeleton fits at $width with =true', (tester) async {
       tester.view.physicalSize = Size(width, 1200);
       tester.view.devicePixelRatio = 1;
       addTearDown(tester.view.reset);

@@ -344,7 +344,7 @@ void main() {
     },
   );
 
-  testWidgets('freshly discovered release opens the update dialog (true)', (
+  testWidgets('freshly discovered release opens the update dialog', (
     tester,
   ) async {
     tester.view.physicalSize = const Size(390, 844);

@@ -10,7 +10,7 @@ import 'support/lastfm_fakes.dart';
 
 void main() {
   testWidgets(
-    'Last.fm account and playback controls follow the selected style (true)',
+    'Last.fm account and playback controls follow the selected style',
     (tester) async {
       final store = MemoryLastfmStore()..session = null;
       final api = FakeLastfmApi();

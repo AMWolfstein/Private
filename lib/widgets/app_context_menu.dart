@@ -8,14 +8,14 @@ import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/app_chrome.dart';
 
 /// Bounds of the tapped control or row, in the root overlay's coordinates.
-Rect? mornyeMenuAnchor(BuildContext context) {
+Rect? menuAnchor(BuildContext context) {
   final box = context.findRenderObject();
   if (box is! RenderBox || !box.hasSize) return null;
   if (box.size.height > MediaQuery.sizeOf(context).height * 0.65) return null;
   return box.localToGlobal(Offset.zero) & box.size;
 }
 
-Future<T?> showMornyeContextMenu<T>({
+Future<T?> showAppContextMenu<T>({
   required BuildContext context,
   required WidgetBuilder builder,
   Rect? anchor,
@@ -24,7 +24,7 @@ Future<T?> showMornyeContextMenu<T>({
 }) {
   final navigator = Navigator.of(context, rootNavigator: true);
   final themes = InheritedTheme.capture(from: context, to: navigator.context);
-  final target = anchor ?? mornyeMenuAnchor(context);
+  final target = anchor ?? menuAnchor(context);
   return navigator.push<T>(
     _MenuRoute<T>(
       barrierColor: Colors.black.withValues(alpha: 0.12),

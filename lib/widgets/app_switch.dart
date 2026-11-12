@@ -19,7 +19,7 @@ class AppSwitch extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _MornyeSwitch(
+    return _Switch(
       value: value,
       onChanged: onChanged,
       semanticLabel: semanticLabel,
@@ -27,8 +27,8 @@ class AppSwitch extends StatelessWidget {
   }
 }
 
-class _MornyeSwitch extends StatefulWidget {
-  const _MornyeSwitch({
+class _Switch extends StatefulWidget {
+  const _Switch({
     required this.value,
     required this.onChanged,
     required this.semanticLabel,
@@ -39,10 +39,10 @@ class _MornyeSwitch extends StatefulWidget {
   final String? semanticLabel;
 
   @override
-  State<_MornyeSwitch> createState() => _MornyeSwitchState();
+  State<_Switch> createState() => _SwitchState();
 }
 
-class _MornyeSwitchState extends State<_MornyeSwitch> {
+class _SwitchState extends State<_Switch> {
   double? _dragPosition;
   bool _dragCancelled = false;
 

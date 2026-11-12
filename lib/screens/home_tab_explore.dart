@@ -365,7 +365,7 @@ extension _HomeTabExploreUI on _HomeTabState {
     final anchor = box is RenderBox && box.hasSize
         ? box.localToGlobal(Offset.zero) & box.size
         : null;
-    showMornyeContextMenu<void>(
+    showAppContextMenu<void>(
       context: itemContext,
       // Featured cards can exceed the menu helper's page-size heuristic.
       anchor: anchor,

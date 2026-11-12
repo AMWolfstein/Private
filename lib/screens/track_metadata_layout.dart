@@ -1,7 +1,7 @@
 part of 'track_metadata_screen.dart';
 
-extension _TrackMetadataMornye on _TrackMetadataScreenState {
-  Widget _buildMornyePage(BuildContext context) {
+extension _TrackMetadataLayout on _TrackMetadataScreenState {
+  Widget _buildAppPage(BuildContext context) {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
     final artwork = resolveMetadataArtworkSource(
@@ -41,7 +41,7 @@ extension _TrackMetadataMornye on _TrackMetadataScreenState {
                       context,
                       ref,
                       scheme,
-                      anchor: mornyeMenuAnchor(buttonContext),
+                      anchor: menuAnchor(buttonContext),
                     ),
                   ),
                 ),

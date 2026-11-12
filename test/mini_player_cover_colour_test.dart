@@ -89,7 +89,7 @@ void main() {
 
   for (final _ in ['default', 'fullscreen']) {}
 
-  testWidgets('Mornye mini player resolves the cover colour on track change', (
+  testWidgets('Mini player resolves the cover colour on track change', (
     tester,
   ) async {
     final teal = await _writeCover(tester, Colors.teal);
@@ -112,7 +112,7 @@ void main() {
     await tester.pumpWidget(const SizedBox.shrink());
   });
 
-  testWidgets('Mornye mini player resolves the cover colour of the track it '
+  testWidgets('Mini player resolves the cover colour of the track it'
       'mounts with', (tester) async {
     final cover = await _writeCover(tester, Colors.teal);
     final shown = ValueNotifier(false);

@@ -97,7 +97,7 @@ class MainShell extends ConsumerStatefulWidget {
 class _MainShellState extends ConsumerState<MainShell>
     with SingleTickerProviderStateMixin, WidgetsBindingObserver {
   int _currentIndex = 0;
-  final _mornyeChrome = AppChromeController();
+  final _chrome = AppChromeController();
   // Preserves the tab view element (and its kept-alive tabs) when the body
   // structure swaps between rail and bottom-bar layouts on rotation.
   final GlobalKey _pageViewKey = GlobalKey();
@@ -344,7 +344,7 @@ class _MainShellState extends ConsumerState<MainShell>
     _pageController.dispose();
     _tabJumpOpacity.dispose();
     _tabJumpTransitionController.dispose();
-    _mornyeChrome.dispose();
+    _chrome.dispose();
     super.dispose();
   }
 
@@ -404,7 +404,7 @@ class _MainShellState extends ConsumerState<MainShell>
     final showStore = ref.read(
       settingsProvider.select((s) => s.showExtensionStore),
     );
-    _mornyeChrome.expand();
+    _chrome.expand();
     if (index == 0 && resetHome) {
       _resetHomeToMain();
     }
@@ -629,7 +629,7 @@ class _MainShellState extends ConsumerState<MainShell>
             if (_canMinimizeChrome &&
                 index == _currentIndex &&
                 !_keyboardVisible) {
-              return _mornyeChrome.handleScroll(notification);
+              return _chrome.handleScroll(notification);
             }
             return false;
           },
@@ -732,7 +732,7 @@ class _MainShellState extends ConsumerState<MainShell>
 
       NavigationDestination(
         icon: const Icon(CupertinoIcons.search),
-        label: l10n.mornyeSearch,
+        label: l10n.search,
       ),
     ];
   }
@@ -751,7 +751,7 @@ class _MainShellState extends ConsumerState<MainShell>
     // rail, portrait tablets keep the bottom bar. Mornye keeps a bottom tab
     // bar on tablets, compact and centered once the window is expanded, and
     final useNavigationRail = useNavigationRailForWidth(screenSize.width);
-    final compactMornyeChrome = screenSize.width >= expandedLayoutBreakpoint;
+    final compactChrome = screenSize.width >= expandedLayoutBreakpoint;
     final canMinimizeChrome = _canMinimizeChromeAt(
       screenSize.width,
       MediaQuery.textScalerOf(context),
@@ -826,12 +826,12 @@ class _MainShellState extends ConsumerState<MainShell>
                 heightFactor: 1,
                 child: ConstrainedBox(
                   constraints: BoxConstraints(
-                    maxWidth: compactMornyeChrome ? 600 : double.infinity,
+                    maxWidth: compactChrome ? 600 : double.infinity,
                   ),
                   child: useNavigationRail
                       ? const MiniPlayer()
                       : ValueListenableBuilder<bool>(
-                          valueListenable: _mornyeChrome,
+                          valueListenable: _chrome,
                           builder: (context, collapsed, _) => AppBottomBar(
                             collapsed:
                                 canMinimizeChrome &&

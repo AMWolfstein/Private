@@ -57,7 +57,7 @@ void main() {
         as ShapeDecoration;
   }
 
-  testWidgets('Mornye shows the value as detail text', (tester) async {
+  testWidgets('Shows the value as detail text', (tester) async {
     await pump(
       tester,
       const SliderValueHeader(title: 'Strength', value: '40%'),
@@ -67,9 +67,7 @@ void main() {
     expect(pill(tester, '40%'), isNull);
   });
 
-  testWidgets('Mornye settings sliders keep their inline labels', (
-    tester,
-  ) async {
+  testWidgets('Settings sliders keep their inline labels', (tester) async {
     await pump(
       tester,
       const Column(

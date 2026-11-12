@@ -954,7 +954,7 @@ class _HomeTabState extends ConsumerState<HomeTab>
       alignToContent: true,
       contentInset: homeContentInset(context),
       title: widget.mode == HomeTabMode.search
-          ? context.l10n.mornyeSearch
+          ? context.l10n.search
           : context.l10n.homeTitle,
       actions: _showsHome ? const [HomeProfileButton()] : null,
     );
@@ -1295,7 +1295,7 @@ class _HomeTabState extends ConsumerState<HomeTab>
       );
     }
 
-    // The Mornye style uses the navigation title as the page identity. Keep
+    // The the design uses the navigation title as the page identity. Keep
     // the search surface directly beneath it instead of repeating app branding
     // in the content area.
     return const SizedBox.shrink();

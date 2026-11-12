@@ -1,5 +1,5 @@
 import 'library_pipeline_performance_test.dart' as library_pipeline;
-import 'mornye_lyrics_performance_test.dart' as lyrics;
+import 'app_lyrics_performance_test.dart' as lyrics;
 import 'performance_probe.dart';
 
 void main() {

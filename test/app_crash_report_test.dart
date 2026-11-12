@@ -287,7 +287,7 @@ void main() {
     },
   );
 
-  testWidgets('Home crash card copies full report and dismisses (true)', (
+  testWidgets('Home crash card copies full report and dismisses', (
     tester,
   ) async {
     await tester.pumpWidget(

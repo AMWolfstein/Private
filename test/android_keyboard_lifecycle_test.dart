@@ -30,9 +30,7 @@ void main() {
     debugDefaultTargetPlatformOverride = null;
   });
 
-  testWidgets('background ends editing without losing text, Mornye: true', (
-    tester,
-  ) async {
+  testWidgets('background ends editing without losing text', (tester) async {
     debugDefaultTargetPlatformOverride = TargetPlatform.android;
     final focus = FocusNode();
     final controller = TextEditingController();

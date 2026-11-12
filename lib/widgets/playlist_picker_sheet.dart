@@ -42,7 +42,7 @@ Future<void> showAddTracksToPlaylistSheet(
     showDragHandle: false,
     isScrollControlled: true,
     // The picker keeps its lighter glass tint.
-    mornyeGlass: false,
+    glass: false,
     builder: (sheetContext) {
       final content = _PlaylistPickerSheetContent(
         tracks: tracks,

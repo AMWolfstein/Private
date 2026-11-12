@@ -35,7 +35,7 @@ void main() {
   });
   tearDownAll(() async => cache.delete(recursive: true));
 
-  testWidgets('open details refresh after an edit and deletion (Mornye=true)', (
+  testWidgets('open details refresh after an edit and deletion', (
     tester,
   ) async {
     SharedPreferences.setMockInitialValues({});

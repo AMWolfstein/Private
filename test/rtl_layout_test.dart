@@ -4,7 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mornye/theme/app_icons.dart';
 
 void main() {
-  test('Mornye directional icons mirror in right-to-left layouts', () {
+  test('Directional icons mirror in right-to-left layouts', () {
     for (final icon in [
       appIconFor(Icons.arrow_back),
       appIconFor(Icons.chevron_left),

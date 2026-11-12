@@ -77,7 +77,7 @@ void main() {
   }
 
   for (final result in ['nothing played', 'load error']) {
-    testWidgets('Mornye Home holds the card until Recently Played settles '
+    testWidgets('Home holds the card until Recently Played settles'
         '($result)', (tester) async {
       tester.view.physicalSize = const Size(430, 932);
       tester.view.devicePixelRatio = 1;
@@ -186,9 +186,7 @@ void main() {
       ])
         (mornye, result),
   ]) {
-    testWidgets('Home leaves startup loading after $result (Mornye=$mornye)', (
-      tester,
-    ) async {
+    testWidgets('Home leaves startup loading after $result', (tester) async {
       final extensions = _StartupExtensions();
       final explore = _StartupExplore();
       await _pumpStartupHome(tester, extensions, explore, mornye: mornye);
@@ -228,21 +226,20 @@ void main() {
     });
   }
 
-  testWidgets(
-    'Home with its feed disabled skips startup loading (Mornye=true)',
-    (tester) async {
-      await _pumpStartupHome(
-        tester,
-        _StartupExtensions(),
-        _StartupExplore(),
-        mornye: true,
-        feedDisabled: true,
-      );
-      expect(find.text('Shortcuts'), findsNothing);
-      expect(find.byType(ShimmerLoading), findsNothing);
-      expect(tester.takeException(), isNull);
-    },
-  );
+  testWidgets('Home with its feed disabled skips startup loading', (
+    tester,
+  ) async {
+    await _pumpStartupHome(
+      tester,
+      _StartupExtensions(),
+      _StartupExplore(),
+      mornye: true,
+      feedDisabled: true,
+    );
+    expect(find.text('Shortcuts'), findsNothing);
+    expect(find.byType(ShimmerLoading), findsNothing);
+    expect(tester.takeException(), isNull);
+  });
 
   testWidgets('Home can show restored feed content before extensions finish', (
     tester,
@@ -669,7 +666,7 @@ void main() {
   });
 
   for (final withSearchExtension in [false, true]) {
-    testWidgets('Mornye Home without a feed still shows local playback '
+    testWidgets('Home without a feed still shows local playback'
         '(search extension: $withSearchExtension)', (tester) async {
       tester.view.physicalSize = const Size(430, 932);
       tester.view.devicePixelRatio = 1;

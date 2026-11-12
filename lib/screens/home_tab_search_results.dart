@@ -67,7 +67,7 @@ extension _HomeTabSearchResultsUI on _HomeTabState {
     if (isUrlNotRecognized) {
       return AppContentCard(
         elevation: 0,
-        mornyeSurface: false,
+        controlFill: false,
         // Matches ErrorCard: a solid container with its paired on-color.
         color: colorScheme.errorContainer,
         shape: RoundedRectangleBorder(
@@ -936,7 +936,7 @@ extension _HomeTabSearchResultsUI on _HomeTabState {
     );
   }
 
-  /// Identifies a song nearby; searches for it when it is not in Mornye.
+  /// Identifies a song nearby; searches for it when it is not in the app.
   Future<void> _openMusicRecognition() async {
     _searchFocusNode.unfocus();
     final query = await pushPage<String>(

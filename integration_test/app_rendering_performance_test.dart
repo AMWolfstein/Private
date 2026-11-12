@@ -27,7 +27,7 @@ void main() {
   final binding = PerformanceTestBinding.ensureInitialized();
   const focused = bool.fromEnvironment('MORNYE_GLASS_FOCUS');
   {
-    testWidgets('Mornye real rendering at fixed Clear glass', (tester) async {
+    testWidgets('Real rendering at fixed Clear glass', (tester) async {
       final probe = PerformanceProbe(
         binding,
         tester,

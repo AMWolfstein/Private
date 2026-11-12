@@ -7505,8 +7505,8 @@
   "@metadataCopyField": {
     "description": "Metadata menu action that copies the selected key and value"
   },
-  "mornyeSearch": "Ara",
-  "mornyeContinuePlaying": "Çalmaya devam et",
+  "search": "Ara",
+  "continuePlaying": "Çalmaya devam et",
   "metadataCopyAll": "Tüm meta verileri kopyala",
   "@metadataCopyAll": {
     "description": "Metadata menu action that copies every visible key and value"
@@ -7519,13 +7519,13 @@
   "@optionsEmbeddedCoverSizeDescription": {
     "description": "Description shown in the embedded cover size picker"
   },
-  "mornyeFavorite": "Favorilere ekle",
-  "mornyeGoToArtist": "Sanatçıya git",
-  "@mornyeFavorite": {
+  "favorite": "Favorilere ekle",
+  "goToArtist": "Sanatçıya git",
+  "@favorite": {
     "description": "Compact context menu action that adds a track to Loved"
   },
-  "mornyeFavorited": "Favorilerde",
-  "@mornyeFavorited": {
+  "favorited": "Favorilerde",
+  "@favorited": {
     "description": "Selected state of the compact favorite action"
   },
   "autoMixDescription": "Şarkıları vuruş eşleştirme ve perdeyi koruyan tempo ayarıyla birbirine karıştırır. Vuruşlar eşleştirilemediğinde çapraz geçiş kullanır.",

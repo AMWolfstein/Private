@@ -93,10 +93,10 @@ class AppBottomBar extends ConsumerStatefulWidget {
   final bool blurEnabled;
 
   @override
-  ConsumerState<AppBottomBar> createState() => _MornyeBottomBarState();
+  ConsumerState<AppBottomBar> createState() => _BottomBarState();
 }
 
-class _MornyeBottomBarState extends ConsumerState<AppBottomBar>
+class _BottomBarState extends ConsumerState<AppBottomBar>
     with SingleTickerProviderStateMixin {
   // A spring keeps its velocity when a scroll reverses the fold mid-flight, and
   // being slightly underdamped lets the glass run past its size and settle.
@@ -323,7 +323,7 @@ class _MornyeBottomBarState extends ConsumerState<AppBottomBar>
                             ),
                             tooltip: leading
                                 ? destinations[leadingIndex].label
-                                : context.l10n.mornyeSearch,
+                                : context.l10n.search,
                             iconSize: 25,
                             constraints: BoxConstraints.tightFor(
                               width: size,

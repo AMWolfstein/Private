@@ -140,7 +140,7 @@ class AlbumDetailHeader extends StatelessWidget {
       screenSize.width.clamp(0.0, 440.0),
       math.max(240.0, screenSize.height * 0.55),
     );
-    final details = _buildMornyeDetails(context);
+    final details = _buildDetails(context);
     // Built once, so toolbar rebuilds keep the same glass button element.
     final back = Padding(
       padding: EdgeInsetsDirectional.only(start: edgeInset),
@@ -259,7 +259,7 @@ class AlbumDetailHeader extends StatelessWidget {
     ];
   }
 
-  Widget _buildMornyeDetails(BuildContext context) => Padding(
+  Widget _buildDetails(BuildContext context) => Padding(
     padding: EdgeInsets.fromLTRB(20, immersive ? 0 : 20, 20, 28),
     child: Column(
       children: [
@@ -673,7 +673,7 @@ class AlbumPlayActions extends StatelessWidget {
         ),
         const SizedBox(width: 12),
         Expanded(
-          child: _MornyeHeaderButton(
+          child: _HeaderButton(
             icon: CupertinoIcons.shuffle,
             label: shuffleTooltip,
             onPressed: onShuffle,
@@ -702,7 +702,7 @@ class HeaderFilledButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _MornyeHeaderButton(
+    return _HeaderButton(
       icon: appIconFor(icon),
       label: label,
       onPressed: onPressed,
@@ -846,8 +846,8 @@ class HeaderMoreButton extends StatelessWidget {
   );
 }
 
-class _MornyeHeaderButton extends StatelessWidget {
-  const _MornyeHeaderButton({
+class _HeaderButton extends StatelessWidget {
+  const _HeaderButton({
     required this.icon,
     required this.label,
     required this.onPressed,

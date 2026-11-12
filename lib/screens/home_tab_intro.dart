@@ -2,7 +2,7 @@ part of 'home_tab.dart';
 
 const _homeShelfLimit = 10;
 const _homeShelfCoverSize = 120.0;
-const _homeMornyeShelfGap = 16.0;
+const _homeShelfGap = 16.0;
 
 double _homeShelfCoverSizeOf(BuildContext context) => _homeShelfCoverSize;
 
@@ -776,7 +776,7 @@ class _HomeShelf extends StatelessWidget {
         scrollDirection: Axis.horizontal,
         padding: EdgeInsets.symmetric(horizontal: inset),
         itemCount: itemCount,
-        separatorBuilder: (_, _) => SizedBox(width: _homeMornyeShelfGap),
+        separatorBuilder: (_, _) => SizedBox(width: _homeShelfGap),
         itemBuilder: itemBuilder,
       ),
     );
@@ -1137,7 +1137,7 @@ void _homePlayRepeatTracks(
         ),
 ], initialIndex: index);
 
-/// Mornye's first shelf: the day's mixes as tall banners, a little over three
+/// the design's first shelf: the day's mixes as tall banners, a little over three
 class _HomeTopPicksShelf extends StatelessWidget {
   const _HomeTopPicksShelf({
     required this.mixes,
@@ -1152,7 +1152,7 @@ class _HomeTopPicksShelf extends StatelessWidget {
   final double inset;
 
   /// One card: mixes and playlists share the banner, so the whole shelf reads
-  /// as Mornye's own whichever service a playlist came from.
+  /// as the app's own whichever service a playlist came from.
   Widget _card({
     required int seed,
     required String title,
@@ -1248,7 +1248,7 @@ class _HomeTopPicksShelf extends StatelessWidget {
   }
 }
 
-/// Mornye's first section: the day's mixes, then random extension playlists.
+/// the design's first section: the day's mixes, then random extension playlists.
 class _HomeTopPicksSection extends ConsumerWidget {
   const _HomeTopPicksSection({required this.inset});
 

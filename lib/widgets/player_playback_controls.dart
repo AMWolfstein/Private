@@ -21,7 +21,7 @@ import 'package:mornye/widgets/expressive_button_group.dart';
 import 'package:mornye/widgets/playback_seek_slider.dart';
 import 'package:mornye/widgets/playback_time_builder.dart';
 
-const _mornyeTimelinePadding = 28.0;
+const _timelinePadding = 28.0;
 
 class PlayerPlaybackControls extends ConsumerWidget {
   final String mediaId;
@@ -59,10 +59,10 @@ class PlayerPlaybackControls extends ConsumerWidget {
     final isPlaying = ref.watch(playbackPlayingProvider);
     final isLoading = ref.watch(playbackLoadingProvider);
     // and repeat at the timeline's ends; its phone player has them in the queue.
-    final wideMornye = edgeAligned;
+    final wide = edgeAligned;
     final showModes = showPlaybackModes && (edgeAligned);
-    final skipSize = wideMornye ? 30.0 : 40.0;
-    final playPauseSize = wideMornye
+    final skipSize = wide ? 30.0 : 40.0;
+    final playPauseSize = wide
         ? isPlaying
               ? 34.0
               : 32.0
@@ -93,7 +93,7 @@ class PlayerPlaybackControls extends ConsumerWidget {
                   final playback = ref.watch(playbackStateProvider).value;
                   return Padding(
                     padding: EdgeInsets.symmetric(
-                      horizontal: edgeAligned ? 0 : _mornyeTimelinePadding,
+                      horizontal: edgeAligned ? 0 : _timelinePadding,
                     ),
                     child: Column(
                       children: [
