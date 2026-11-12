@@ -27,7 +27,9 @@ invented tests. Smaller code alone is not proof of better code or deadness.
 Before completion, use the
 [Ponytail review checklist](../../.agents/skills/ponytail-review/SKILL.md) on the diff
 and connected code. Incorporate it into the existing planned task review, not a
-new review round or separate commit. Direct small edits use a labeled self-review.
+new review round or separate commit. Small modifications use direct TOR records with the same independent review and
+three-result/one-commit rules; a self-review does not replace independent PASS.
+They skip spec/plan generation and have no separate final task.
 All Spec Kit map-first, three-round and one-commit rules remain in force.
 
 ## Scope and limits
@@ -47,6 +49,6 @@ never by replacing the repository's whole AGENTS.md.
 ## Verification
 
 Upstream file identity, instruction links, portable entrypoints, Spec Kit/reviewer
-integration and application-source boundaries were checked. This skill/documentation
-change was self-reviewed using the installed checklist. No application behavior
+integration and application-source boundaries were checked. Subsequent modification-specific checks/reviews are recorded in the relevant
+feature or standalone TOR record. No application behavior
 changed; no APK, feature test suite or unnecessary new tests were run.

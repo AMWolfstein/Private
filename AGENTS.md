@@ -16,8 +16,8 @@ with a meaningful targeted test; trivial edits need appropriate lightweight chec
 Before finishing any edit, apply the [Ponytail review](.agents/skills/ponytail-review/SKILL.md)
 checklist to the actual diff and connected code. For planned tasks this is part of
 the existing review round, not an extra reviewer/commit/gate; the three-round limit
-and one-commit rule remain. Small direct edits use an accurately labeled self-review,
-not a fabricated independent review. Explain actual unchecked areas/material risks
+and one-commit rule remain. Small modifications use the direct TOR loop below,
+including independent review; self-review cannot substitute for its PASS. Explain actual unchecked areas/material risks
 briefly. The same root instructions apply regardless of agent or machine.
 Installation details and limitations: [tools/ponytail](tools/ponytail/README.md).
 
@@ -58,7 +58,11 @@ The policy governs planned work: one planning commit; sequential tasks from T001
 map refresh first in every task, including TOR and final review; implement/check/review/fix,
 three review rounds maximum; one commit per completed task; TOR### extras; final
 cumulative review/fixes in one final-task commit. Independent task reviews follow
-[task-reviewer](.agents/reviewers/task-reviewer.md). Small low-risk edits may remain
-direct. Planning-only requests never start implementation. Existing audit/navigation
+[task-reviewer](.agents/reviewers/task-reviewer.md). For a small low-risk modification,
+use [quick-task](.agents/skills/quick-task/SKILL.md): TOR### immediately, no spec/plan,
+map refresh first, targeted checks, independent review/fixes (max three rounds),
+and one commit containing edits and completion record. Standalone records live in
+`.specify/quick-tasks/`; no separate final task. High-risk/growing work uses full
+planning. Read-only requests and Git-only pushes do not create TOR records. Planning-only requests never start implementation. Existing audit/navigation
 skills stay independent. See [.specify/README.md](.specify/README.md) for provenance,
 local adaptations and validation; no old work.py state machine is restored.

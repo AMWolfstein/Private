@@ -7,7 +7,7 @@ Read the constitution and the applicable official `speckit-*` skill. Skill names
 `.agents/skills/<name>/SKILL.md`; any agent can read and follow them directly.
 Host-specific slash/dollar commands are optional aliases, never prerequisites.
 
-Ponytail full mode applies before every modification on both the planned and direct
+Ponytail full mode applies before every modification on both the planned and direct-TOR
 paths, including planning documents and small config/text edits. Read
 `.agents/skills/ponytail/SKILL.md`; incorporate
 `.agents/skills/ponytail-review/SKILL.md` into the same existing review round.
@@ -16,13 +16,38 @@ one-commit task loop, and creates no extra task, review round or commit.
 
 ## When to plan
 
-Small, isolated, low-risk edits may use direct implementation, targeted checks and
-one commit. Documentation, translations, comments and a local header/button edit
+Small, isolated, low-risk edits use a direct **TOR### task**, not the former
+untracked direct-edit/self-review path. Follow `.agents/skills/quick-task/SKILL.md`:
+no spec/plan or planning commit, but the same first-action map refresh,
+implementation/checks/independent-review/fix loop, three-result maximum and one
+commit after PASS. A standalone TOR needs no separate final-review task. Documentation, translations, comments and a local header/button edit
 usually qualify when no stored-data/API/runtime boundary is affected. Do not judge
 by line count alone. Multi-domain changes, removals of features, architecture,
 playback, native bindings, migrations and substantial theme changes use Spec Kit.
 Always plan when explicitly requested. If scope grows, stop the quick path and
 prepare a coherent plan before continuing implementation.
+
+## Standalone TOR records
+
+Store independent small tasks in `.specify/quick-tasks/TOR###.md`, outside feature
+specs, using `.specify/templates/quick-task-template.md`. Include the request,
+baseline, expected paths, acceptance/checks, map result, review rounds and completion
+in that single short record. Choose the next unused TOR number after checking
+standalone records and actual feature-task checkboxes; examples are not allocated
+IDs. Never overwrite a record or restart review counting by creating another ID.
+
+No plan/spec, feature pointer or task-creation commit is needed. Commit the record
+and task changes together only after checks/independent review pass. Missing review
+capability is a blocker, not self-review permission. The existing three-round cap
+applies. There is no additional final task or completion-only commit for one
+standalone TOR; its review checks the entire small change.
+
+Extras during an active authorized feature still use that feature's TOR task/log
+and precede its cumulative final task. A completed plan or ignored pointer alone
+does not make a new request part of that feature. If a small task grows or touches
+a high-risk boundary, retain the record/evidence and prepare full Spec Kit planning
+before expanding. Read-only questions/audits/navigation and Git-only operations
+such as push/fetch do not create modification tasks.
 
 ## Map-first planning
 

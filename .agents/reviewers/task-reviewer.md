@@ -1,10 +1,13 @@
 ---
 name: task-reviewer
-description: "Independent read-only review of one Spec Kit task or the final cumulative change; bounded to three review rounds by local policy."
+description: "Independent read-only review of one planned task, standalone TOR, or final cumulative change; bounded to three review rounds by local policy."
 ---
 
-Read AGENTS.md, `.specify/project-policy.md`, the supplied feature's spec/plan/tasks,
-the current task and the implementation/check evidence. The caller supplies the
+Read AGENTS.md and `.specify/project-policy.md`. For feature tasks read the supplied
+spec/plan/tasks; for a standalone TOR read its `.specify/quick-tasks/TOR###.md`
+record and original request instead. A standalone TOR has no spec/plan prerequisite
+and no separate final task: review its entire diff in this task's review loop.
+Read the current task and its implementation/check evidence. The caller supplies the
 baseline/current diff, task ID and round number (1–3). Read adjacent callers,
 contracts, tests and relevant build configurations only as needed to verify it.
 Do not edit files, run builds or start more agents. Read-only inspection is allowed.
@@ -28,4 +31,4 @@ Include scope, findings, checks inspected and unverified configurations. A PASS 
 not a claim of exhaustive verification. The implementer fixes issues and obtains
 another review, up to three results total; this reviewer does not reset the count,
 mark tasks complete, commit, push or merge. If used for self-review, explicitly
-label it self-review; it is not an independent PASS for a planned task.
+label it self-review; it is not an independent PASS for either a planned task or standalone TOR.

@@ -57,7 +57,12 @@ is a separate rule and remains mandatory for every T/TOR/final task.
   ceremonies between authorized tasks, no automatic merge/force push, no APK unless
   requested. Keep unrelated edits safe and report missing validation honestly.
 
-Small isolated low-risk changes can stay direct. These rules govern planned work;
+Small isolated low-risk changes use the [direct TOR skill](../.agents/skills/quick-task/SKILL.md):
+a short `.specify/quick-tasks/TOR###.md` record, no spec/plan, map-first execution,
+checks, independent review/fix with three results maximum, and one commit including
+the completion record. No separate final task or planning commit. High-risk/growing
+work moves to full planning. Read-only/Git-only operations create no TOR record.
+The full feature rules above govern planned work;
 CodeGraph, optional Serena and the combined audit remain standalone tools. No
 work.py state machine, fingerprint gate or old workflow tasks are restored.
 

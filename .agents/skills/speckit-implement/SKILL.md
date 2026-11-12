@@ -37,6 +37,11 @@ This does not replace the mandatory map refresh at the start of every task.
 
 ## User input and prerequisites
 
+For a small standalone modification without an explicitly requested plan, use
+`.agents/skills/quick-task/SKILL.md` instead of feature prerequisites below. It
+creates a direct TOR record, not a fake feature/spec/plan. Existing feature extras
+continue as TOR tasks in their authorized feature.
+
 Consider the user's current instructions, especially planning-only requests.
 Run `.specify/scripts/bash/check-prerequisites.sh --json --require-tasks --include-tasks`
 from the repository root; read the feature spec.md, plan.md, tasks.md and relevant

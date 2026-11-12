@@ -10,7 +10,7 @@ the basis of missing static references. Keep generated/vendor code protected.
 ## II. Plan substantial work
 
 Use GitHub Spec Kit spec → plan → tasks for substantial/high-risk changes or when
-requested. Small isolated low-risk edits may take the direct path. Planning-only
+requested. Small isolated low-risk edits use standalone TOR tasks without spec/plan generation. Planning-only
 requests stop at the plan. Before repository investigation/technical planning,
 refresh and inspect the map, use its queries and read the relevant source/build
 boundaries. Record repository evidence/limitations in plan.md; reuse the map while
@@ -25,7 +25,9 @@ action of every task (including TOR and final review) is map refresh, followed b
 sequential implementation/check/review/fix
 loops and one commit after each task passes. After three unsuccessful review
 rounds stop and report. Extras are TOR###. The final task reviews the cumulative
-change and contains all its fixes in one commit.
+change and contains all its fixes in one commit. A standalone small TOR follows
+the same map/check/independent-review/three-result/one-commit loop using a short
+record in `.specify/quick-tasks/`, with no separate final task or planning commit.
 
 ## IV. Honest verification
 
@@ -37,7 +39,7 @@ Do not build APKs unless requested. No new app dependencies solely for analysis.
 
 ## V. Simple tooling and Git safety
 
-Apply Ponytail full mode to every modification, including direct small edits and
+Apply Ponytail full mode to every modification, including standalone small TOR tasks and
 Spec Kit documents/tasks. Reuse before adding code; keep the smallest complete
 behavior-preserving change and meaningful checks. Incorporate its review checklist
 within existing review rounds, never as an additional loop.
@@ -52,4 +54,4 @@ Owner instructions override this constitution; it and project-policy.md override
 conflicting upstream examples, parallel markers and converge defaults. Amend
 policy only for an actual agreed change, not to evade a failed check/review.
 
-**Version**: 1.0.3 | **Ratified**: 2026-11-12 | **Last amended**: 2026-11-12
+**Version**: 1.0.4 | **Ratified**: 2026-11-12 | **Last amended**: 2026-11-12
