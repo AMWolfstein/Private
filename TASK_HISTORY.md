@@ -9,3 +9,4 @@
 - M002-T003 — Verify all lifecycle, identity and history changes cumulatively.
 - M003-T001 — Consolidate workflow tools and update canonical paths
 - M003-T002 — Install portable workflow resources and preserve existing history
+- M003-T003 — Verify portable setup and cumulative changes

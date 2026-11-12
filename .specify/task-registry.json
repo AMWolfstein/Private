@@ -19,7 +19,7 @@
       "title": "Portable workflow and safe setup history"
     }
   },
-  "next_completion": 10,
+  "next_completion": 11,
   "next_mission": 4,
   "next_tor": 2,
   "tasks": {
@@ -146,13 +146,19 @@
       "title": "Install portable workflow resources and preserve existing history"
     },
     "M003-T003": {
-      "completion": null,
+      "completion": 10,
+      "evidence": {
+        "checks": "37 helper +64 analysis tests PASS; real isolated transfer setup/reuse/history-preservation/scaffold/allocator and local CI PASS; cumulative review PASS",
+        "result": "PASS",
+        "reviewer": "portable_final_review",
+        "round": 1
+      },
       "final": true,
       "kind": "T",
       "mission": "M003",
       "nonce": "703ccc1bd83243788e8843656db64d23",
       "record": "specs/003-portable-workflow/tasks.md",
-      "status": "reserved",
+      "status": "complete",
       "title": "Verify portable setup and cumulative changes"
     },
     "TOR001": {

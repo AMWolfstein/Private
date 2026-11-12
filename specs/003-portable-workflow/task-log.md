@@ -58,3 +58,32 @@ exclusive creation/preservation, registry guard, asset boundaries, core setup an
 is empty and default files match installed versions except generic constitution.
 Unverified: remote CI, Windows/optional Serena/app/device/ABI or adversarial races.
 Complete via helper; all bootstrap/assets/docs/check/history changes form one commit.
+
+## M003-T003 [FINAL] — cumulative verification (review pending)
+
+First action: full map refresh PASS (.work/M003-T003-map.log), 1,789 indexed sources,
+36,850 symbols and 128,608 relationships; no partial/unindexed graph records.
+Reviewed all changes from c5c8781b; application/native/build/pubs unchanged.
+Reused 37 helper and 64 analysis tests after the final code change (101 PASS).
+Copied-folder online install/reuse and source-project history byte/mtime checks
+passed. On the installed target, actual Spec Kit feature/plan/task-template scripts
+and real new-target mission/task allocation validated (1 reserved/0 completed;
+source Mornye tasks never imported), evidence M003-T003-transfer-scaffold.json.
+Exact relocated identity CI shell passed locally; baseline validation, active
+source/target links, data-copy exclusions and whitespace checks passed.
+
+No APK/app/device/other-ABI checks or global host configuration. Optional Serena
+installation and native Windows provisioning not tested. Source registry/history
+stay project-local; unknown existing history remains preserved/incomplete rather
+than reset. Same-checkout locks do not coordinate disconnected copies; README
+states required Git reconciliation and branch-protection limitations. Owner has
+not requested publication for this new feature; do not claim push/remote CI success.
+
+M003-T003 independent cumulative review round 1: portable_final_review PASS, no
+remaining actionable findings. Reviewed entire relocation/bootstrap/resources,
+101 tests and actual transferred setup/reuse/scaffold/allocator/CI evidence.
+Target history remains empty (its own task is reserved, not completed). Final
+completion via helper follows this PASS; no separate final fixes were required.
+No push was requested for this feature. Prior commits: planning 1f7f2ead,
+M003-T001 4e05b4bd and M003-T002 16318894. Unknown-history/data/platform and remote
+CI limitations remain explicit in workflow/README.md.

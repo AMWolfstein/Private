@@ -4,7 +4,7 @@
 
 - [x] M003-T002 Install portable workflow resources and preserve existing history
 
-- [ ] M003-T003 [FINAL] Verify portable setup and cumulative changes
+- [x] M003-T003 [FINAL] Verify portable setup and cumulative changes
 
 All tasks refresh the map first, then Ponytail/check/review/fix with at most three
 review results, and helper-driven completion/history in the same task commit.
