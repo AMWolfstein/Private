@@ -113,5 +113,10 @@
       "assurance.json": "47dc1090568c5944004f6aa259fc3c66b8ff99e5cabd66179ffeaac9314a0594",
       "plan.md": "428ad039f0b1df779987a90b0add6bdddcaef9b7f267202737f61bde4b43bb41"
     }
+  },
+  "closed": {
+    "reason": "owner override: T002 committed as 8d88631d on owner instruction without a completed full dart-tests run or independent review; remaining tasks T003-T008 proceed under owner instruction with a commit and push per task",
+    "at": "2026-11-12T08:05:06.425395+00:00",
+    "by": "owner"
   }
 }
