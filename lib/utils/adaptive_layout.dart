@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:mornye/theme/mornye_theme.dart';
-import 'package:mornye/utils/android_tv.dart';
 
 /// Keeps touch-first tablets on the bottom navigation used by phones. A rail
 const double navigationRailBreakpoint = 1440;
@@ -49,7 +48,7 @@ class AdaptiveUiScaler extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
-    final scale = isAndroidTv ? 1.15 : adaptiveUiScaleForSize(mediaQuery.size);
+    final scale = adaptiveUiScaleForSize(mediaQuery.size);
     if (scale == 1) return child;
 
     final scaledSize = Size(
@@ -109,7 +108,6 @@ double wideListInset(BuildContext context, {double? contentMaxWidth}) =>
 /// whole pane, as M3 panes do, with the 24dp margin of expanded and larger
 /// edge; elsewhere Home centers with [wideListInset].
 double homeContentInset(BuildContext context) => wideListInset(context);
-
 
 /// The M3 large window class starts at 1200dp; the extra 80dp leaves room
 /// for the navigation rail, since the inset is measured on the window width.

@@ -38,7 +38,6 @@ import 'package:mornye/services/music_player_service.dart';
 import 'package:mornye/services/playback_notification.dart';
 import 'package:mornye/services/player_widget_service.dart';
 import 'package:mornye/screens/now_playing_screen.dart';
-import 'package:mornye/utils/android_tv.dart';
 import 'package:mornye/utils/local_library_scan_prefs.dart';
 import 'package:mornye/utils/logger.dart';
 
@@ -338,15 +337,11 @@ Future<void> _startBackgroundPlayback() async {
   }
 }
 
-/// Resolves Android TV, then the orientation, alongside the other startup
-/// calls.
+/// Orientation on startup. MainActivity.onCreate already asks phones for
+/// portrait and lets tablets follow the device, as the request below would,
+/// and the router observer repeats it on the first page.
 Future<void> _initializeOrientation() async {
-  await initializeAndroidTv();
-  // MainActivity.onCreate already asks phones for portrait and lets tablets
-  // follow the device, as the request below would, and the router observer
-  // repeats it on the first page. TV gets fixed landscape there and the user
-  // landscape here.
-  if (Platform.isAndroid && !isAndroidTv) return;
+  if (Platform.isAndroid) return;
   await setAppOrientation();
 }
 

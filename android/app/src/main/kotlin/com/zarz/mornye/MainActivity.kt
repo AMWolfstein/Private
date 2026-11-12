@@ -5,8 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.ActivityInfo
-import android.content.pm.PackageManager
-import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.OnBackPressedCallback
@@ -77,7 +75,6 @@ class MainActivity: FlutterFragmentActivity() {
     internal var concertCalendarChannel: MethodChannel? = null
     internal val coreBackend: CoreBackend by lazy { createCoreBackend(applicationContext) }
     private val nativeBackendMethods = setOf(
-        "isAndroidTv",
         "getAndroidSdkVersion",
         "setScreenAwake",
         "isCharging",
@@ -350,7 +347,7 @@ class MainActivity: FlutterFragmentActivity() {
 
         fun abandon() {
             try { writer.close() } catch (_: Exception) {}
-            try { file.delete() } catch (_: Exception) {}
+            file.deleteBestEffort()
         }
     }
 
@@ -392,7 +389,6 @@ class MainActivity: FlutterFragmentActivity() {
         // Phones start in portrait and tablets follow the device until
         // setAppOrientation in app_orientation.dart applies its own rule.
         requestedOrientation = when {
-            isTelevisionDevice() -> ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
             resources.configuration.smallestScreenWidthDp >= 600 ->
                 ActivityInfo.SCREEN_ORIENTATION_FULL_USER
             else -> ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
@@ -406,13 +402,8 @@ class MainActivity: FlutterFragmentActivity() {
         PlayerWidgetBridge.handleIntent(intent)
     }
 
-    private fun isTelevisionDevice(): Boolean =
-        resources.configuration.uiMode and Configuration.UI_MODE_TYPE_MASK == Configuration.UI_MODE_TYPE_TELEVISION ||
-            packageManager.hasSystemFeature(PackageManager.FEATURE_LEANBACK) ||
-            packageManager.hasSystemFeature(PackageManager.FEATURE_TELEVISION)
-
     override fun onStop() {
-        keyboardDismissalPending = !isTelevisionDevice()
+        keyboardDismissalPending = true
         super.onStop()
     }
 
@@ -528,7 +519,6 @@ class MainActivity: FlutterFragmentActivity() {
                         return@launch
                     }
                     when (call.method) {
-                        "isAndroidTv" -> result.success(isTelevisionDevice())
                         "getAndroidSdkVersion" -> result.success(Build.VERSION.SDK_INT)
                         "processPendingExtensionCallbacks" -> {
                             processPendingExtensionCallbacks()

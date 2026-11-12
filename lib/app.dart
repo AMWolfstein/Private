@@ -16,12 +16,10 @@ import 'package:mornye/theme/dynamic_color_wrapper.dart';
 import 'package:mornye/l10n/app_localizations.dart';
 import 'package:mornye/l10n/supported_locales.dart';
 import 'package:mornye/utils/adaptive_layout.dart';
-import 'package:mornye/utils/android_tv.dart';
 import 'package:mornye/widgets/android_keyboard_lifecycle.dart';
 import 'package:mornye/widgets/app_snack_bar.dart';
 import 'package:mornye/widgets/mornye_glass_preparation.dart';
 import 'package:mornye/widgets/playback_feedback.dart';
-import 'package:mornye/widgets/tv_navigation.dart';
 
 String initialLocationForAppState({
   required bool isFirstLaunch,
@@ -184,17 +182,6 @@ Widget buildAppContent(
   if (!heroAnimationsEnabled) {
     appContent = HeroControllerScope.none(child: appContent);
   }
-  // Now Playing, dialogs and pushed pages. It stays outside every conditional
-  // first is gone.
-  if (isAndroidTv) {
-    appContent = ColoredBox(
-      color: Theme.of(context).scaffoldBackgroundColor,
-      child: SafeArea(
-        minimum: const EdgeInsets.symmetric(horizontal: 40, vertical: 24),
-        child: TvNavigation(child: appContent),
-      ),
-    );
-  }
   return AndroidKeyboardLifecycle(child: _AppMediaQuery(child: appContent));
 }
 
@@ -211,12 +198,7 @@ class _AppMediaQuery extends StatelessWidget {
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
     return MediaQuery(
-      data: mediaQuery.copyWith(
-        displayFeatures: const [],
-        navigationMode: isAndroidTv
-            ? NavigationMode.directional
-            : mediaQuery.navigationMode,
-      ),
+      data: mediaQuery.copyWith(displayFeatures: const []),
       child: MornyeGlassPreparation(child: AdaptiveUiScaler(child: child)),
     );
   }
