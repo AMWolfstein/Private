@@ -9,8 +9,14 @@ metadata:
 
 ## Repository execution policy (local adaptation)
 
+Portable entrypoint: read and follow this file in any agent. References to skill
+names or slash/dollar commands below identify other local SKILL.md files; invoke
+them using the host's facilities, or read them directly. No specific host is required.
+
 Before using this skill, read `.specify/project-policy.md` and
 `.specify/memory/constitution.md`. The owner's current instructions take priority.
+Before writing or editing any artifact/code, apply `.agents/skills/ponytail/SKILL.md`
+in full mode; include its review checklist within existing rounds, not an extra loop.
 The local policy overrides conflicting upstream defaults: one planning commit,
 map refresh first in every task, sequential task/review/fix loops, at most three review rounds,
 one commit per completed task, TOR### extras and one final cumulative-review task.

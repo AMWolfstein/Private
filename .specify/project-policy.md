@@ -3,7 +3,16 @@
 GitHub Spec Kit provides specify → clarify (when needed) → plan → tasks →
 implement. This document supplies the owner's local execution and Git rules;
 these rules are not upstream Spec Kit defaults. Current owner instructions win.
-Read the constitution and the applicable official `speckit-*` skill.
+Read the constitution and the applicable official `speckit-*` skill. Skill names refer to the files in
+`.agents/skills/<name>/SKILL.md`; any agent can read and follow them directly.
+Host-specific slash/dollar commands are optional aliases, never prerequisites.
+
+Ponytail full mode applies before every modification on both the planned and direct
+paths, including planning documents and small config/text edits. Read
+`.agents/skills/ponytail/SKILL.md`; incorporate
+`.agents/skills/ponytail-review/SKILL.md` into the same existing review round.
+It does not replace map-first planning/task starts, required checks or the bounded
+one-commit task loop, and creates no extra task, review round or commit.
 
 ## When to plan
 
@@ -52,7 +61,7 @@ and reports a failed task-start refresh before proceeding with that task.
 
 ## One planning commit
 
-Use `$speckit-specify`, `$speckit-plan` and `$speckit-tasks`, optionally clarify or
+Use `speckit-specify`, `speckit-plan` and `speckit-tasks`, optionally clarify or
 analyze as needed. Keep spec.md, plan.md, tasks.md, any necessary research,
 contracts/data-model and the initial task log in `specs/<number>-<feature>/`.
 Do not commit specify, clarification, design and task generation separately.
@@ -124,7 +133,7 @@ one final-task commit. If no code fixes are required, commit its completion/evid
 once. Do not silently leave actionable final findings or create an unbounded series
 of additional final tasks.
 
-Upstream `$speckit-converge` is optional inspection only in this repository.
+Upstream `speckit-converge` is optional inspection only in this repository.
 Use its observations in the current final-task review loop; do not follow its
 upstream auto-append/implement/reconverge cycle or bypass the three-round limit.
 

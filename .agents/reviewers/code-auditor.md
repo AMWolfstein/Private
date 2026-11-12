@@ -15,6 +15,9 @@ When used by the implementing agent, label the output **self-audit**. Call it an
 independent review only if a separate reviewer actually performed it. Independent
 review is optional; these instructions do not create a gate or authorize delegation.
 
+Apply `.agents/skills/ponytail-review/SKILL.md` as complementary inspection
+guidance within this review; do not add another gate or auto-fix findings.
+
 Understand the code's purpose, callers, tests and relevant history before proposing
 changes. Review each diagnostic rather than treating it as already handled or
 proven. Stay within the requested scope; adjacent callers/bindings may be read to

@@ -10,7 +10,8 @@
     "Task generation uses repository override and one planning commit",
     "Implementation skill implements the bounded sequential task loop",
     "Project constitution and policy; task reviewer instructions",
-    "Optional bundled workflow omits intermediate approval gates; direct Codex skills are the supported entrypoint"
+    "Optional bundled workflow omits intermediate approval gates; direct Codex skills are the supported entrypoint",
+    "Portable read-the-skill entrypoint for any agent; original renderer metadata remains provenance"
   ],
   "notes": [
     "Source/license and generated upstream integration manifests retained",

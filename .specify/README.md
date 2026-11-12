@@ -2,25 +2,25 @@
 
 Generated with the official [github/spec-kit](https://github.com/github/spec-kit)
 Specify CLI **v1.4.0**, commit `0019fa14d12f45edabc2cc3176c9168a68bd0f97`,
-using the Codex skills integration and Bash scripts. See [provenance](upstream.json)
+using the official skill renderer and Bash scripts. See [provenance](upstream.json)
 and the [upstream MIT license](LICENSE.spec-kit). This is an adaptation of official
 Spec Kit, not a restoration of the previous custom `workflow/` implementation.
 
 ## Usage
 
 Read [project policy](project-policy.md) and [constitution](memory/constitution.md).
-Codex skill invocation:
+Agent-neutral entrypoints (read each file and follow its instructions):
 
-```text
-$speckit-specify <feature requirements>
-$speckit-plan <technical constraints>
-$speckit-tasks
-$speckit-implement
-```
+1. `.agents/skills/speckit-specify/SKILL.md` — feature requirements.
+2. `.agents/skills/speckit-plan/SKILL.md` — technical planning.
+3. `.agents/skills/speckit-tasks/SKILL.md` — task generation.
+4. `.agents/skills/speckit-implement/SKILL.md` — authorized implementation.
 
 Clarify/analyze/checklist/constitution skills are also installed. Skills are prompts
 for the agent, not shell executables or enforcement by themselves. AGENTS.md links
-the policy explicitly for agents without automatic skill discovery.
+the policy explicitly for agents without automatic skill discovery. Any agent on any machine can follow the same files;
+slash/dollar command registration is optional. Rendering metadata in upstream.json
+records how the official assets were generated, not a restriction on who can use them.
 
 Planning uses normal Spec Kit artifacts under `specs/<number>-<feature>/`:
 `spec.md`, `plan.md`, `tasks.md`, optional research/data-model/contracts, and the
@@ -73,16 +73,15 @@ Android repository. A read-only [task reviewer](../.agents/reviewers/task-review
 supports both ordinary and cumulative reviews.
 
 The bundled YAML workflow's two intermediate approval gates are removed; use direct
-Codex skills here. The upstream generic workflow runner's declared integration
-support does not include Codex, so running that optional runner is not claimed
-supported. `$speckit-converge` may inspect the final task; its upstream automatic
+skills directly here. The optional upstream executable workflow runner has host-specific integration
+requirements and is not the portable entrypoint; no support for every host is claimed. `speckit-converge` may inspect the final task; its upstream automatic
 append/implement/reconverge cycle is superseded by the local bounded loop.
 
 Generated integration manifests retain hashes of the original upstream assets;
 local edits are intentional. These are install provenance, not freshness/approval
 gates. Do not run `specify init --force` or a blind update over this repository:
 compare against pinned upstream, preserve these adaptations, and review the diff.
-No Spec Kit extension, global Codex config or application dependency was installed.
+No Spec Kit extension, global agent configuration or application dependency was installed.
 
 ## Tool availability
 

@@ -37,6 +37,11 @@ Do not build APKs unless requested. No new app dependencies solely for analysis.
 
 ## V. Simple tooling and Git safety
 
+Apply Ponytail full mode to every modification, including direct small edits and
+Spec Kit documents/tasks. Reuse before adding code; keep the smallest complete
+behavior-preserving change and meaningful checks. Incorporate its review checklist
+within existing review rounds, never as an additional loop.
+
 Keep CodeGraph/adapters/Serena and the combined audit independent. No legacy
 work.py/task-state/fingerprint gates. Preserve unrelated changes. No speculative
 cleanup, automatic merging or history rewriting. Publishing follows authorization.
@@ -47,4 +52,4 @@ Owner instructions override this constitution; it and project-policy.md override
 conflicting upstream examples, parallel markers and converge defaults. Amend
 policy only for an actual agreed change, not to evade a failed check/review.
 
-**Version**: 1.0.2 | **Ratified**: 2026-11-12 | **Last amended**: 2026-11-12
+**Version**: 1.0.3 | **Ratified**: 2026-11-12 | **Last amended**: 2026-11-12

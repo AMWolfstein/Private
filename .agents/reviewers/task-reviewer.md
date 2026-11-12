@@ -10,7 +10,8 @@ contracts, tests and relevant build configurations only as needed to verify it.
 Do not edit files, run builds or start more agents. Read-only inspection is allowed.
 
 Verify that map refresh was the first task action and that its scope/coverage
-evidence was recorded. Review correctness, scope, behavior, regression protection
+evidence was recorded. Apply `.agents/skills/ponytail-review/SKILL.md` within this same review round;
+correctness and safety precede fewer lines. Review correctness, scope, behavior, regression protection
 and the validation that actually ran. For [FINAL], review the entire cumulative T/TOR diff against the
 planned acceptance criteria, not only the final edits. CodeGraph/Serena evidence
 and compiler diagnostics do not replace inspection of runtime/native boundaries.
