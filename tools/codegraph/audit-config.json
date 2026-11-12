@@ -34,7 +34,8 @@
         ".cc",
         ".c",
         ".h",
-        ".hpp"
+        ".hpp",
+        ".cxx"
       ],
       "tests": [
         "tests/*",
@@ -89,6 +90,22 @@
         "unused_macros",
         "unreachable_code",
         "unreachable_patterns"
+      ],
+      "kotlin": [
+        "ObsoleteSdkInt",
+        "UnusedResources",
+        "UnusedIds"
+      ],
+      "java": [
+        "ObsoleteSdkInt",
+        "UnusedResources",
+        "UnusedIds"
+      ],
+      "cpp": [
+        "clang-diagnostic-unused-*",
+        "clang-diagnostic-unreachable-code*",
+        "clang-analyzer-deadcode.*",
+        "misc-unused-*"
       ]
     },
     "optimization": {
@@ -102,6 +119,19 @@
         "clippy::slow_vector_initialization",
         "clippy::manual_memcpy",
         "clippy::vec_init_then_push"
+      ],
+      "kotlin": [
+        "DrawAllocation",
+        "UseSparseArrays",
+        "UseValueOf"
+      ],
+      "java": [
+        "DrawAllocation",
+        "UseSparseArrays",
+        "UseValueOf"
+      ],
+      "cpp": [
+        "performance-*"
       ]
     },
     "simplifier": {
@@ -127,6 +157,22 @@
         "clippy::unnecessary_lazy_evaluations",
         "clippy::manual_unwrap_or_default",
         "clippy::unnecessary_map_or"
+      ],
+      "kotlin": [
+        "ObsoleteSdkInt",
+        "UseKtx",
+        "ReplaceStringBuilder"
+      ],
+      "java": [
+        "ObsoleteSdkInt",
+        "UseKtx",
+        "ReplaceStringBuilder"
+      ],
+      "cpp": [
+        "readability-redundant-*",
+        "readability-container-size-empty",
+        "modernize-use-nullptr",
+        "modernize-use-equals-default"
       ]
     }
   },
@@ -155,14 +201,49 @@
       "cwd": "rust_backend",
       "timeout": 2400
     },
-    "kotlin": null,
-    "cpp": null,
-    "java": null
+    "kotlin": {
+      "runner": "android-lint",
+      "cwd": "android",
+      "variant": "Debug",
+      "timeout": 1800,
+      "source_roots": [
+        "android/app/src/main/",
+        "android/app/src/debug/",
+        "android/app/src/test/",
+        "android/app/src/androidTest/",
+        "android/app/src/testDebug/",
+        "android/app/src/androidTestDebug/",
+        "android/app/src/rust/kotlin/"
+      ]
+    },
+    "cpp": {
+      "runner": "clang-tidy",
+      "timeout": 300,
+      "database_globs": [
+        "android/app/.cxx/Debug/*/arm64-v8a/compile_commands.json",
+        "build/.cxx/debug/*/arm64-v8a/compile_commands.json"
+      ]
+    },
+    "java": {
+      "runner": "android-lint",
+      "cwd": "android",
+      "variant": "Debug",
+      "timeout": 1800,
+      "source_roots": [
+        "android/app/src/main/",
+        "android/app/src/debug/",
+        "android/app/src/test/",
+        "android/app/src/androidTest/",
+        "android/app/src/testDebug/",
+        "android/app/src/androidTestDebug/",
+        "android/app/src/rust/kotlin/"
+      ]
+    }
   },
   "notes": [
     "Curated diagnostic allowlists, not exhaustive proof of dead code or performance gains.",
     "Optimization hints require measurement; simplifications require behavior verification.",
-    "Generated and vendored paths are protected. Kotlin/C++ have no configured diagnostic runner."
+    "Generated/vendored paths are protected. Android Lint covers configured app variant/source roots, not general unused public declarations. C++ uses only the selected compilation database/configuration; missing TU/header commands remain gaps."
   ],
   "coverage": {
     "dart": {

@@ -7,11 +7,13 @@ gradle.afterProject { project ->
             abortOnError = false
             checkAllWarnings = true
             checkDependencies = false
+            checkTestSources = true
             xmlReport = true
             xmlOutput = new File(reportPath)
             absolutePaths = true
             htmlReport = false
             textReport = false
         }
+        println("MORNYE_AUDIT_LINT checkTestSources=${project.android.lint.checkTestSources}")
     }
 }

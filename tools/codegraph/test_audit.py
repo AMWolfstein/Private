@@ -68,3 +68,39 @@ class AuditTests(unittest.TestCase):
 
     def test_requires_scope(self):
         with self.assertRaises(ValueError):audit.scan(self.root)
+
+    def test_jvm_languages_share_one_lint_run_and_filter_selected_files(self):
+        self.write('android/app/src/main/kotlin/Main.kt','class Main')
+        self.write('android/app/src/main/java/Other.java','class Other {}')
+        output=[{'path':'android/app/src/main/kotlin/Main.kt','line':1,'code':'ObsoleteSdkInt','message':'obsolete'},
+                {'path':'android/app/src/main/java/Other.java','line':1,'code':'UseValueOf','message':'boxing'},
+                {'path':'outside.java','line':1,'code':'UseValueOf','message':'ignored'}]
+        with mock.patch('native_audit.run_android',return_value=(output,{'status':'RAN'})) as run:
+            result,_=audit.scan(self.root,kind='code',languages=['kotlin','java'])
+        run.assert_called_once();self.assertEqual(result['status'],'FINDINGS')
+        self.assertEqual(len(result['findings']),2)
+        self.assertEqual(result['tools']['java']['shared_languages'],['java','kotlin'])
+
+    def test_jvm_outside_variant_roots_is_not_silently_cleared(self):
+        self.write('other/Main.kt','class Main')
+        with mock.patch('native_audit.run_android') as run:
+            result,_=audit.scan(self.root,kind='code',languages=['kotlin'])
+        run.assert_not_called();self.assertEqual(result['status'],'INCOMPLETE')
+        self.assertEqual(result['tools']['kotlin']['uncovered_files'],['other/Main.kt'])
+
+    def test_jvm_mixed_scope_remains_partial_even_when_lint_passes(self):
+        self.write('android/app/src/main/kotlin/Main.kt','class Main')
+        self.write('android/build.gradle.kts','plugins {}')
+        with mock.patch('native_audit.run_android',return_value=([],{'status':'RAN'})):
+            result,_=audit.scan(self.root,kind='code',languages=['kotlin'])
+        self.assertEqual(result['status'],'INCOMPLETE')
+        self.assertEqual(result['tools']['kotlin']['status'],'PARTIAL')
+        self.assertEqual(result['tools']['kotlin']['uncovered_files'],['android/build.gradle.kts'])
+
+    def test_cpp_dispatch_and_wildcard_categories(self):
+        diagnostic={'path':'main.cpp','line':1,'code':'performance-unnecessary-copy-initialization','message':'copy'}
+        found=audit.classify([diagnostic],self.config['categories'],'optimization','cpp')
+        self.assertEqual(len(found),1)
+        with mock.patch('native_audit.run_cpp',return_value=([diagnostic],{'status':'PARTIAL'})) as run:
+            _,status=audit.run_tool(self.root,'cpp',self.config['tools']['cpp'],['main.cpp'],'code',self.root/'cpp.log')
+        run.assert_called_once();self.assertEqual(status['status'],'PARTIAL')

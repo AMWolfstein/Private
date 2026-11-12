@@ -30,13 +30,20 @@ Read `.work/audit/<kind>/report.json`, `report.md` and the relevant runner logs.
 Same-kind scans overwrite earlier reports: save evidence locally if comparing runs.
 Exit 0 means no selected allowlisted diagnostics, 1 means candidates, and 2 means
 incomplete coverage/no matching files/invalid invocation. An unavailable tool or
-compiler failure is a limitation, not a clean scan. Kotlin/Java/C++ currently have
-no configured diagnostic runner. Dart depends on enabled lints; Cargo checks only
-the invoked features/targets. The allowlists are not exhaustive.
+compiler failure is a limitation, not a clean scan. Kotlin/Java share one Android
+Lint run for the configured variant/source roots; Gradle scripts/other source sets
+remain uncovered. C++ uses clang-tidy and an actual compilation database; missing
+commands/headers/toolchains are explicit gaps. Dart depends on enabled lints;
+Cargo checks only the invoked features/targets. The allowlists are not exhaustive.
 
 See [tool documentation](../../../tools/codegraph/README.md) and
 [audit configuration](../../../tools/codegraph/audit-config.json). These commands
-write reports/build caches, do not fix sources, and may run Cargo build scripts.
+write reports/build caches, do not fix sources, and may run Cargo/Gradle build
+scripts or compile dependencies. Android Lint requests no APK task. Activate JDK 25
+and the repository Android/NDK toolchains. C++ configuration may be selected with
+`AUDIT_CPP_COMPILATION_DATABASE` (directory or canonical compile_commands.json) and
+`AUDIT_CLANG_TIDY` (executable). Never substitute synthetic compiler flags or a host
+build for unverified Android coverage.
 No security or leak CLI was restored; do not invent one.
 
 ## Verify the evidence

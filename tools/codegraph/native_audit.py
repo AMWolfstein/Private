@@ -53,11 +53,11 @@ def run_android(root,tool,log):
                  '--init-script',str(Path(__file__).with_name('android-audit.init.gradle').resolve()),
                  f'-Dmornye.audit.report={report}']
         try:
-            done=subprocess.run(command,cwd=android,capture_output=True,text=True,errors='replace',
-                                stdin=subprocess.DEVNULL,timeout=tool.get('timeout',1800))
+            with log.open('w') as output:
+                done=subprocess.run(command,cwd=android,stdout=output,stderr=subprocess.STDOUT,text=True,errors='replace',
+                                    stdin=subprocess.DEVNULL,timeout=tool.get('timeout',1800))
         except (OSError,subprocess.TimeoutExpired) as error:
-            return [],{'status':'INCOMPLETE','reason':str(error),'command':command,'variant':variant}
-        log.write_text(done.stdout+'\n--- stderr ---\n'+done.stderr)
+            return [],{'status':'INCOMPLETE','reason':str(error),'command':command,'variant':variant,'log':str(log)}
         status={'status':'RAN','command':command,'exit_code':done.returncode,'log':str(log),'variant':variant,
                 'runner':'Android Lint (shared Kotlin/Java)','limitations':[
                     'Only this Android variant; not general whole-program unused-public-symbol detection',
@@ -68,7 +68,9 @@ def run_android(root,tool,log):
         try:found,internal=parse_lint(report,root)
         except (ValueError,OSError,ET.ParseError) as error:
             return [],{**status,'status':'INCOMPLETE','reason':f'Invalid fresh Lint report: {error}'}
-        status.update(diagnostics=len(found),internal_errors=internal)
+        checked_tests='MORNYE_AUDIT_LINT checkTestSources=true' in log.read_text(errors='replace').splitlines()
+        status.update(diagnostics=len(found),internal_errors=internal,test_sources_checked=checked_tests)
+        if not checked_tests:status.update(status='INCOMPLETE',reason='Effective Lint test-source analysis was not confirmed')
         if done.returncode or internal:status.update(status='INCOMPLETE',reason='Gradle/Lint execution failed or analysis had internal errors')
         return found,status
 

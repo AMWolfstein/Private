@@ -11,7 +11,7 @@ uses checks → independent review/fix (three results maximum) → one commit. N
   - Checks: focused adapter tests, syntax checks, tool CLI compatibility/live
     smoke commands where feasible; independent task review.
   - Depends: planning commit.
-- [ ] T002 Connect runners/categories/reporting and document usage/limits.
+- [x] T002 Connect runners/categories/reporting and document usage/limits.
   - Paths: tools/codegraph/audit.py, audit-config.json, test_audit.py, README.md,
     VALIDATION.md, .agents/skills/audit/SKILL.md, task log and this checkbox.
   - Acceptance: Kotlin/Java execute once together; C++ reaches adapter; scoped

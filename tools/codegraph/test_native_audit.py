@@ -34,6 +34,7 @@ class NativeAuditTests(unittest.TestCase):
 
     def test_fresh_android_report_handles_code_findings_without_automatic_fixes(self):
         def process(argv,**kwargs):
+            kwargs['stdout'].write('MORNYE_AUDIT_LINT checkTestSources=true\n')
             report=Path(next(a.split('=',1)[1] for a in argv if a.startswith('-Dmornye.audit.report=')))
             report.write_text(self.xml(severity='Error'))
             self.assertEqual(kwargs['cwd'],self.root/'android')
@@ -104,3 +105,13 @@ class NativeAuditTests(unittest.TestCase):
             _,status=native.run_cpp(self.root,{'database':str(alternate)},['main.cpp'],self.log)
         self.assertEqual(status['status'],'INCOMPLETE');run.assert_not_called()
         self.assertIn('compile_commands.json',status['reason'])
+
+    def test_android_test_source_coverage_requires_effective_configuration_evidence(self):
+        def process(argv,**kwargs):
+            report=Path(next(a.split('=',1)[1] for a in argv if a.startswith('-Dmornye.audit.report=')))
+            report.write_text(self.xml(path='android/app/src/test/java/MainTest.java'))
+            kwargs['stdout'].write('MORNYE_AUDIT_LINT checkTestSources=false\n')
+            return subprocess.CompletedProcess(argv,0,'','')
+        with mock.patch.object(native.subprocess,'run',side_effect=process):
+            _,status=native.run_android(self.root,{},self.log)
+        self.assertEqual(status['status'],'INCOMPLETE');self.assertFalse(status['test_sources_checked'])

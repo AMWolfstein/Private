@@ -59,3 +59,34 @@ independent agent review was run for this change.
 - No live full-repository audit, Cargo run or new coverage generation was performed.
   Missing coverage and partially recognized test syntax remain explicit limitations;
   existing LCOV never establishes current full behavioral coverage by itself.
+
+## Kotlin/Java/C++ audit integration
+
+- New native adapter and dispatch tests bring the suite to 64 passing tests.
+  Tests cover fresh/malformed/internal-error Lint XML, containment, shared JVM
+  invocation, non-variant source gaps, compilation-database validation, clang
+  failures and wildcard categories. Review corrected the alternate-database-name
+  case before the adapter commit.
+- Real Android Lint on this project: Debug variant, JDK 25 / SDK 37, successful
+  Gradle completion and fresh XML with 396 raw diagnostics. Java and Kotlin share
+  that one analysis; absence of Java-specific diagnostics is not proof of deadness.
+- Real NDK clang-tidy 21.0.0 used Android Debug arm64 compilation commands for both
+  application translation units, completed without compiler/tool errors, and
+  emitted 50 raw diagnostics. No native/source fixes were applied.
+- Initial combined audit of android/app/src (before the test-source review correction): Java 6, Kotlin 142, C++ 4 selected files;
+  INCOMPLETE, with 121 candidates (62 simplifier, 59 gap hints). JVM execution RAN;
+  C++ was PARTIAL for flac_pcm_source.h and the host-only test lacking compile
+  commands. Existing test-syntax limits and missing Kotlin/C++ LCOV remained gaps.
+- No APK/device/all-ABI verification, application test execution, speculative
+  deletion, native linker edits or application runtime dependencies were added.
+
+T002 review correction: test-source roots are now analyzed with explicit
+checkTestSources=true, and the effective setting must be confirmed in the Gradle
+log. Missing/false confirmation yields INCOMPLETE; a regression covers that case.
+The corrected live run confirmed test-source checks for both JVM languages and
+produced 146 candidates (87 simplifier, 59 gap hints), still INCOMPLETE for the
+known compilation/coverage/test-syntax gaps. Java had 36 selected diagnostics
+(outside the current category allowlists), Kotlin had 282 (87 classified), and C++
+had zero selected-file diagnostics. The 50 raw clang diagnostics came from included
+dependency headers and were correctly excluded from selected application findings.
+Full suite after this correction: 64 passed, 0 failed/skipped.

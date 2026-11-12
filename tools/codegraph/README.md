@@ -161,8 +161,9 @@ paths; the combined default includes them and Rust inline tests. Suggestions
 are **review candidates**, not safe automatic deletions or measured speedups.
 Dart suggestions depend on enabled analyzer lints; the allowlists are not an
 exhaustive optimizer/simplifier. Native runtime references and alternate Cargo
-features still require separate verification. Kotlin/Java/C++ diagnostic runners
-are currently unconfigured and yield explicit coverage gaps when selected.
+features still require separate verification. Kotlin/Java use shared Android Lint; C++ uses clang-tidy with actual compilation
+commands. These provide configuration-specific diagnostics, not exhaustive unused
+public-symbol/reachability detection.
 
 Exit status: `0` means no selected diagnostics or heuristic findings were emitted; `1` means candidates were found; `2` means incomplete coverage,
 no matching files, or invalid invocation. Findings do not make an incomplete scan
@@ -198,3 +199,51 @@ malformed or older coverage produces INCOMPLETE/PARTIAL evidence. Repeated LCOV
 records aggregate hits; a run's exclusions and source revision are not verified.
 Indirect tests and assertions must be inspected manually before adding tests or
 claiming a behavioral gap. Other languages have explicit missing coverage inputs.
+
+
+### Android JVM and C++ runners
+
+```sh
+python3 tools/codegraph/code_tools.py audit --lang kotlin java cpp
+python3 tools/codegraph/code_tools.py audit --kind code --lang kotlin java --path android/app/src/main
+python3 tools/codegraph/code_tools.py audit --kind optimization --lang cpp --path android/app/src/main/cpp
+```
+
+Activate the project's JDK 25, Flutter, Android SDK and NDK environment first.
+Kotlin/Java share one `:app:lintDebug` Gradle invocation, using a checked-in init
+script to configure all warnings, enable test-source checking and write fresh
+absolute XML output in memory. The effective test-source setting is logged and
+verified; missing/false confirmation makes coverage INCOMPLETE. App
+Gradle sources are unchanged. A private per-run report path prevents stale-report
+reuse; logs stream to `.work/audit/<kind>/android.log`. First use can compile Rust,
+Flutter and Android dependencies. No assemble/APK task, test execution or auto-fix
+is requested. Missing wrapper/toolchain, Gradle failure or Lint internal errors are
+INCOMPLETE. Ordinary Lint code findings are candidates, not analyzer crashes.
+
+The default variant/source roots in audit-config.json match this repository's
+Debug main/debug/test/androidTest/rust wrapper sources. Other source sets and
+Gradle `.kts` scripts are uncovered rather than silently cleared. Both JVM language
+configurations must agree to share a run. Existing suppressions/baselines can limit
+emitted diagnostics. Lint is useful for Android API/performance/simplification
+patterns; it does not prove that arbitrary unused public Kotlin/Java declarations
+are dead. Raw XML/logs retain diagnostics outside the curated categories; tool
+metadata counts those as `unclassified_diagnostics`.
+
+C++ default discovery selects the most recent existing Android Debug arm64
+`compile_commands.json` from the configured `.cxx` locations. Other variants/ABIs
+are unverified. To select another real configuration or executable:
+
+```sh
+export AUDIT_CPP_COMPILATION_DATABASE=/absolute/path/to/compile_commands.json
+export AUDIT_CLANG_TIDY=/absolute/path/to/clang-tidy
+```
+
+A database directory is accepted too; alternate filenames are rejected because
+clang-tidy reads the canonical filename. No database is fabricated or configured
+automatically. `clang-tidy` comes from the override, PATH or activated NDK; there
+is no runtime download. Selected translation units use the database's actual flags;
+missing compile commands (including standalone headers/test targets) are explicit
+PARTIAL/INCOMPLETE coverage. Headers are inspected as included, without claiming
+that every header was reached. Stale build directories, absent generated headers,
+compiler errors and timeouts stay incomplete. Only diagnostics in selected files
+are classified; no fixes or native linkage changes are applied.

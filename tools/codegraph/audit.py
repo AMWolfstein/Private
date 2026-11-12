@@ -89,13 +89,19 @@ def classify(found, categories, kind, language):
     kinds = list(categories) if kind=='code' else [kind]
     result=[]
     for finding in found:
-        matches=[name for name in kinds if finding['code'] in categories[name].get(language,[])]
+        matches=[name for name in kinds if any(fnmatch.fnmatchcase(finding['code'],pattern) for pattern in categories[name].get(language,[]))]
         if matches: result.append({**finding,'categories':matches,'evidence':'tool-diagnostic','confidence':'REVIEW_REQUIRED'})
     return result
 
 
 def run_tool(root, language, tool, members, kind, log):
     if not tool: return [], {'status':'UNAVAILABLE','reason':'No diagnostic runner configured for this language'}
+    if tool.get('runner')=='clang-tidy':
+        import native_audit
+        return native_audit.run_cpp(root,tool,members,log)
+    if tool.get('runner')=='android-lint':
+        import native_audit
+        return native_audit.run_android(root,tool,log)
     argv=list(tool['run'])
     if language=='dart' and len(members)==1: argv.append(members[0])
     if language=='rust' and kind!='dead-code':
@@ -132,10 +138,39 @@ def scan(root, kind='all', languages=(), paths=(), base=None):
     directory=root/'.work/audit'/kind;directory.mkdir(parents=True,exist_ok=True)
     findings=[];tools={}
     if kind not in ('tests','gaps'):
+        # Android Lint is a whole variant analysis: share one run across JVM languages.
+        jvm={language:members for language,members in files.items()
+             if (config['tools'].get(language) or {}).get('runner')=='android-lint'}
+        jvm_results={}
+        if jvm:
+            import native_audit
+            first=next(iter(jvm));tool=config['tools'][first]
+            compatible=all(config['tools'][language]==tool for language in jvm)
+            if not compatible:
+                found=[];shared={'status':'INCOMPLETE','reason':'Selected JVM languages configure different Android analyses; cannot share safely'}
+            else:
+                eligible=any(Path(path).suffix in ('.kt','.java') and any(path.startswith(prefix) for prefix in tool.get('source_roots',[]))
+                             for members in jvm.values() for path in members)
+                if eligible: found,shared=native_audit.run_android(root,tool,directory/'android.log')
+                else: found=[];shared={'status':'INCOMPLETE','reason':'No selected JVM file belongs to configured Android variant source roots'}
+            for language,members in jvm.items():
+                uncovered=[path for path in members if Path(path).suffix not in ('.kt','.java') or
+                           not any(path.startswith(prefix) for prefix in config['tools'][language].get('source_roots',[]))]
+                status={**shared,'shared_languages':sorted(jvm),'uncovered_files':uncovered,
+                        'source_roots':tool.get('source_roots',[])}
+                if uncovered and status['status']=='RAN': status['status']='PARTIAL'
+                selected=set(members)-set(uncovered)
+                jvm_results[language]=([f for f in found if f['path'] in selected],status)
         for language,members in files.items():
-            found,tools[language]=run_tool(root,language,config['tools'].get(language),members,'code' if kind=='all' else kind,directory/f'{language}.log')
+            found,tools[language]=jvm_results[language] if language in jvm_results else run_tool(
+                root,language,config['tools'].get(language),members,'code' if kind=='all' else kind,directory/f'{language}.log')
             selected=set(members)
-            findings.extend(classify([f for f in found if f['path'] in selected],config['categories'],'code' if kind=='all' else kind,language))
+            scoped=[f for f in found if f['path'] in selected]
+            accepted=classify(scoped,config['categories'],'code' if kind=='all' else kind,language)
+            tools[language]['selected_diagnostics']=len(scoped)
+            tools[language]['classified_findings']=len(accepted)
+            tools[language]['unclassified_diagnostics']=len(scoped)-len(accepted)
+            findings.extend(accepted)
     if kind in ('all','tests','gaps'):
         import test_checks
         if kind in ('all','tests'):
