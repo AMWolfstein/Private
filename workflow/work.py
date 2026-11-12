@@ -9,7 +9,7 @@ import registry
 
 
 def parser():
-    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--root',type=Path,default=Path(__file__).resolve().parents[2])
+    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--root',type=Path,default=Path(__file__).resolve().parents[1])
     sub=p.add_subparsers(dest='command',required=True)
     init=sub.add_parser('init');init.add_argument('--migrate',action='store_true')
     mission=sub.add_parser('mission');m=mission.add_subparsers(dest='action',required=True).add_parser('new')

@@ -101,7 +101,7 @@ def main():
     if args.operation == 'version':
         print(json.dumps(info));return 0 if info['available'] else 1
     if not info['available']:
-        print(json.dumps({'error':'Install tools/codegraph/requirements-serena.txt in a separate venv', **info}));return 1
+        print(json.dumps({'error':'Install workflow/codegraph/requirements-serena.txt in a separate venv', **info}));return 1
     if args.timeout <= 0: parser.error('--timeout must be positive')
     try:
         result = asyncio.run(asyncio.wait_for(run(args), timeout=args.timeout))

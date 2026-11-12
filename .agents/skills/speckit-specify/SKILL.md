@@ -375,8 +375,8 @@ Success criteria must be:
 ## Local mission identity
 
 After the feature directory is chosen, reserve its mission once with
-`python3 tools/workflow/work.py mission new --title "Feature name" --path specs/<feature>`.
+`python3 workflow/work.py mission new --title "Feature name" --path specs/<feature>`.
 Reuse an existing mission for the same path; do not allocate another ID when
 resuming. Record the actual M### in the spec/plan. This is part of the single
 planning commit, not a separate reservation commit. Folder numbering is not the
-mission allocator. Refer to tools/workflow/README.md for global identities.
+mission allocator. Refer to workflow/README.md for global identities.

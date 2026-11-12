@@ -1,7 +1,7 @@
 # [ALLOCATED_ID] — [reserved title]
 
 - Status: IN_PROGRESS
-- Identity: obtained from tools/workflow/work.py task reserve; never hand-assigned.
+- Identity: obtained from workflow/work.py task reserve; never hand-assigned.
 - Request: [concrete owner request]
 - Baseline: [actual starting Git commit]
 - Paths: [expected source/test/config/documentation files]

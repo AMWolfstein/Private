@@ -105,7 +105,7 @@ executed just by installing this setup.
 
 ## Preparation, identities and root history
 
-[Workflow helpers](../tools/workflow/README.md) provide status, doctor and setup
+[Workflow helpers](../workflow/README.md) provide status, doctor and setup
 for current tools. Use the allocator for every mission/task ID; no handwritten
 numbers. Ordinary IDs are M###-T###; M###-TOR### and standalone TOR### share one
 global TOR counter. The tracked registry preserves unfinished reservations too.

@@ -9,9 +9,9 @@ Use when tracing code, callers, native boundaries or resources. Start with the
 known file/symbol and widen only as needed. Run from the repository root:
 
 ```sh
-python3 tools/codegraph/code_tools.py update
-python3 tools/codegraph/code_tools.py query --file lib/theme/mornye_theme.dart
-python3 tools/codegraph/code_tools.py query --symbol MornyeTheme --limit 30
+python3 workflow/codegraph/code_tools.py update
+python3 workflow/codegraph/code_tools.py query --file lib/theme/mornye_theme.dart
+python3 workflow/codegraph/code_tools.py query --symbol MornyeTheme --limit 30
 ```
 
 Refresh the ignored `.work/codegraph/map.json` if missing or after edits. It is a
@@ -30,13 +30,13 @@ formats remain coverage gaps. Missing references do not prove dead code.
 For optional semantic verification of the indexed snapshot:
 
 ```sh
-python3 tools/codegraph/code_tools.py serena symbols --file lib/theme/mornye_theme.dart
-python3 tools/codegraph/code_tools.py serena definition --file lib/theme/mornye_theme.dart --symbol MornyeTheme
-python3 tools/codegraph/code_tools.py serena references --file lib/theme/mornye_theme.dart --symbol MornyeTheme
+python3 workflow/codegraph/code_tools.py serena symbols --file lib/theme/mornye_theme.dart
+python3 workflow/codegraph/code_tools.py serena definition --file lib/theme/mornye_theme.dart --symbol MornyeTheme
+python3 workflow/codegraph/code_tools.py serena references --file lib/theme/mornye_theme.dart --symbol MornyeTheme
 ```
 
 Configure `SERENA_PYTHON` and the isolated language-server settings as documented
-in [the README](../../../tools/codegraph/README.md). Do not update the mirror while
+in [the README](../../../workflow/codegraph/README.md). Do not update the mirror while
 a Serena query is running. Results reference a private snapshot; map those paths
 back to the checkout. Missing SDKs, incomplete snapshot dependencies, timeouts and
 unsupported language servers must be reported explicitly. Only Dart semantic

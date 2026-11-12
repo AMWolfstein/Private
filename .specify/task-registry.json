@@ -19,7 +19,7 @@
       "title": "Portable workflow and safe setup history"
     }
   },
-  "next_completion": 8,
+  "next_completion": 9,
   "next_mission": 4,
   "next_tor": 2,
   "tasks": {
@@ -114,13 +114,19 @@
       "title": "Verify all lifecycle, identity and history changes cumulatively."
     },
     "M003-T001": {
-      "completion": null,
+      "completion": 8,
+      "evidence": {
+        "checks": "26 helper and 64 analysis tests PASS; new-path status/doctor/base validation and active links PASS; review PASS",
+        "result": "PASS",
+        "reviewer": "portable_relocation_review",
+        "round": 1
+      },
       "final": false,
       "kind": "T",
       "mission": "M003",
       "nonce": "4bacbb15b402424ab2eaf30d4974a5f2",
       "record": "specs/003-portable-workflow/tasks.md",
-      "status": "reserved",
+      "status": "complete",
       "title": "Consolidate workflow tools and update canonical paths"
     },
     "M003-T002": {

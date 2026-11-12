@@ -7,3 +7,4 @@
 - M002-T001 — Implement registry, allocator, completion history and integrity tests.
 - M002-T002 — Restore environment lifecycle and integrate portable instructions/CI.
 - M002-T003 — Verify all lifecycle, identity and history changes cumulatively.
+- M003-T001 — Consolidate workflow tools and update canonical paths

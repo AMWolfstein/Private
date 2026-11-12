@@ -16,7 +16,7 @@ def version():
         try: packages[name] = metadata.version(name)
         except metadata.PackageNotFoundError: packages[name] = None
     return {'available': packages == PINS, 'packages': packages,
-            'reason': '' if packages == PINS else 'Install tools/codegraph/requirements.txt in the parser Python environment'}
+            'reason': '' if packages == PINS else 'Install workflow/codegraph/requirements.txt in the parser Python environment'}
 
 
 def literal(node):

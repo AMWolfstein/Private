@@ -13,10 +13,10 @@ plan, tasks, review gate or automatic commit/push requirement.
 Run from the repository root with its Flutter/Rust toolchains available:
 
 ```sh
-python3 tools/codegraph/code_tools.py audit --lang dart
-python3 tools/codegraph/code_tools.py audit --kind dead-code --lang rust
-python3 tools/codegraph/code_tools.py audit --kind optimization --path lib/services
-python3 tools/codegraph/code_tools.py audit --kind simplifier --lang dart --base HEAD~1
+python3 workflow/codegraph/code_tools.py audit --lang dart
+python3 workflow/codegraph/code_tools.py audit --kind dead-code --lang rust
+python3 workflow/codegraph/code_tools.py audit --kind optimization --path lib/services
+python3 workflow/codegraph/code_tools.py audit --kind simplifier --lang dart --base HEAD~1
 ```
 
 `audit` defaults to `--kind all`: code diagnostics, test quality and coverage-gap
@@ -36,8 +36,8 @@ remain uncovered. C++ uses clang-tidy and an actual compilation database; missin
 commands/headers/toolchains are explicit gaps. Dart depends on enabled lints;
 Cargo checks only the invoked features/targets. The allowlists are not exhaustive.
 
-See [tool documentation](../../../tools/codegraph/README.md) and
-[audit configuration](../../../tools/codegraph/audit-config.json). These commands
+See [tool documentation](../../../workflow/codegraph/README.md) and
+[audit configuration](../../../workflow/codegraph/audit-config.json). These commands
 write reports/build caches, do not fix sources, and may run Cargo/Gradle build
 scripts or compile dependencies. Android Lint requests no APK task. Activate JDK 25
 and the repository Android/NDK toolchains. C++ configuration may be selected with

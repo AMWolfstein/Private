@@ -10,19 +10,19 @@ Node/npm and Python 3.10+ are required for the graph adapter. Python 3.11+
 is recommended; Serena 2.1.0 requires Python 3.11+.
 
 ```sh
-npm ci --prefix tools/codegraph --ignore-scripts --no-audit --no-fund
+npm ci --prefix workflow/codegraph --ignore-scripts --no-audit --no-fund
 python3 -m venv .work/code-tools-python
-.work/code-tools-python/bin/python -m pip install -r tools/codegraph/requirements.txt
-python3 tools/codegraph/codegraph_adapter.py version
+.work/code-tools-python/bin/python -m pip install -r workflow/codegraph/requirements.txt
+python3 workflow/codegraph/codegraph_adapter.py version
 ```
 
 Optional semantic verifier, in a separate environment:
 
 ```sh
 python3 -m venv .work/serena-python
-.work/serena-python/bin/python -m pip install -r tools/codegraph/requirements-serena.txt
+.work/serena-python/bin/python -m pip install -r workflow/codegraph/requirements-serena.txt
 export SERENA_PYTHON="$PWD/.work/serena-python/bin/python"
-python3 tools/codegraph/code_tools.py serena version
+python3 workflow/codegraph/code_tools.py serena version
 ```
 
 Dependencies never download during an ordinary graph update. Serena language
@@ -40,7 +40,7 @@ call graph and do not replace compiler checks.
 
 ```sh
 export CODEGRAPH_SHELL_PYTHON="$PWD/.work/code-tools-python/bin/python"
-python3 tools/codegraph/code_tools.py update
+python3 workflow/codegraph/code_tools.py update
 ```
 
 One command collects CodeGraph symbols/relationships, structured resource links,
@@ -58,7 +58,7 @@ tracked generated sources are included. A deleted tracked file is ignored.
 For a limited region (replaces, rather than merges with, the saved map):
 
 ```sh
-python3 tools/codegraph/code_tools.py update --paths \
+python3 workflow/codegraph/code_tools.py update --paths \
   lib/models/theme_settings.dart lib/theme/mornye_theme.dart rust_backend/Cargo.toml
 ```
 
@@ -71,8 +71,8 @@ No generic Dart-to-Rust call is invented from matching names.
 ## Ask about a file or symbol
 
 ```sh
-python3 tools/codegraph/code_tools.py query --file lib/theme/mornye_theme.dart
-python3 tools/codegraph/code_tools.py query --symbol MornyeTheme --limit 30
+python3 workflow/codegraph/code_tools.py query --file lib/theme/mornye_theme.dart
+python3 workflow/codegraph/code_tools.py query --symbol MornyeTheme --limit 30
 ```
 
 Returns symbols, incoming/outgoing relationships, resource/native/channel evidence,
@@ -84,9 +84,9 @@ freshness gate exists. Low coverage or absent references never proves dead code.
 Optional language-server verification of the same indexed snapshot:
 
 ```sh
-python3 tools/codegraph/code_tools.py serena symbols --file lib/theme/mornye_theme.dart
-python3 tools/codegraph/code_tools.py serena definition --file lib/theme/mornye_theme.dart --symbol MornyeTheme
-python3 tools/codegraph/code_tools.py serena references --file lib/theme/mornye_theme.dart --symbol MornyeTheme
+python3 workflow/codegraph/code_tools.py serena symbols --file lib/theme/mornye_theme.dart
+python3 workflow/codegraph/code_tools.py serena definition --file lib/theme/mornye_theme.dart --symbol MornyeTheme
+python3 workflow/codegraph/code_tools.py serena references --file lib/theme/mornye_theme.dart --symbol MornyeTheme
 ```
 
 Only those read operations are exposed. Serena uses a read-only project on the
@@ -109,7 +109,7 @@ labels; ABI signatures and runtime behavior are never claimed verified.
 
 ```sh
 CODEGRAPH_SHELL_PYTHON="$PWD/.work/code-tools-python/bin/python" \
-  python3 -m unittest discover -s tools/codegraph -p 'test_*.py' -v
+  python3 -m unittest discover -s workflow/codegraph -p 'test_*.py' -v
 ```
 
 Tests include real CodeGraph parsing/incremental synchronization, resource/Bash
@@ -123,17 +123,17 @@ The default audit combines code, test quality and coverage gaps in one report,
 without workflow tasks, automatic fixes or test execution:
 
 ```sh
-python3 tools/codegraph/code_tools.py audit
-python3 tools/codegraph/code_tools.py audit --lang dart
+python3 workflow/codegraph/code_tools.py audit
+python3 workflow/codegraph/code_tools.py audit --lang dart
 ```
 
 Specific scans remain available:
 
 ```sh
-python3 tools/codegraph/code_tools.py audit --kind code --lang dart
-python3 tools/codegraph/code_tools.py audit --kind dead-code --lang dart rust
-python3 tools/codegraph/code_tools.py audit --kind optimization --lang dart
-python3 tools/codegraph/code_tools.py audit --kind simplifier --lang dart
+python3 workflow/codegraph/code_tools.py audit --kind code --lang dart
+python3 workflow/codegraph/code_tools.py audit --kind dead-code --lang dart rust
+python3 workflow/codegraph/code_tools.py audit --kind optimization --lang dart
+python3 workflow/codegraph/code_tools.py audit --kind simplifier --lang dart
 ```
 
 Default `--kind all` combines all five categories. `--kind code` selects the three
@@ -144,7 +144,7 @@ explicitly selects the checkout scope; it is distinct from `--kind all`.
 Filters intersect. Reports and full runner logs go under ignored
 `.work/audit/<kind>/report.md` and `report.json`; another scan of the same kind
 replaces those files. Do not run the same kind concurrently in one checkout.
-Standalone equivalent: `python3 tools/codegraph/audit.py` with the same options.
+Standalone equivalent: `python3 workflow/codegraph/audit.py` with the same options.
 
 Dart uses `dart analyze --format=machine`. Rust uses explicit `cargo +1.99.1`
 from `rust_backend`, with `--workspace --all-targets --locked`; dead-code scans
@@ -204,9 +204,9 @@ claiming a behavioral gap. Other languages have explicit missing coverage inputs
 ### Android JVM and C++ runners
 
 ```sh
-python3 tools/codegraph/code_tools.py audit --lang kotlin java cpp
-python3 tools/codegraph/code_tools.py audit --kind code --lang kotlin java --path android/app/src/main
-python3 tools/codegraph/code_tools.py audit --kind optimization --lang cpp --path android/app/src/main/cpp
+python3 workflow/codegraph/code_tools.py audit --lang kotlin java cpp
+python3 workflow/codegraph/code_tools.py audit --kind code --lang kotlin java --path android/app/src/main
+python3 workflow/codegraph/code_tools.py audit --kind optimization --lang cpp --path android/app/src/main/cpp
 ```
 
 Activate the project's JDK 25, Flutter, Android SDK and NDK environment first.

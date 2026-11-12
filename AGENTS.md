@@ -19,15 +19,15 @@ the existing review round, not an extra reviewer/commit/gate; the three-round li
 and one-commit rule remain. Small modifications use the direct TOR loop below,
 including independent review; self-review cannot substitute for its PASS. Explain actual unchecked areas/material risks
 briefly. The same root instructions apply regardless of agent or machine.
-Installation details and limitations: [tools/ponytail](tools/ponytail/README.md).
+Installation details and limitations: [workflow/ponytail](workflow/ponytail/README.md).
 
 # Workflow preparation and identity
 
-At session start run `python3 tools/workflow/work.py status`. On a new/unprepared
+At session start run `python3 workflow/work.py status`. On a new/unprepared
 machine run `doctor`; use `setup` for missing local analysis packages (optional
 `--with-serena`). `doctor --full` checks app tool availability. Activate SDK/JDK/
 Rust separately; setup never changes application dependencies or builds APKs.
-See [workflow helpers](tools/workflow/README.md). No source fingerprints are used.
+See [workflow helpers](workflow/README.md). No source fingerprints are used.
 
 Reserve all mission/task IDs with that helper, never by hand. Missions are M###;
 regular tasks M###-T###. Standalone TOR### and nested M###-TOR### share one global
@@ -40,8 +40,8 @@ inconsistent/reassigned reservations; do not bypass them.
 
 # Repository tools
 
-Standalone code-navigation tools live in [tools/codegraph/README.md](tools/codegraph/README.md).
-Use `python3 tools/codegraph/code_tools.py update` to refresh the source map, then
+Standalone code-navigation tools live in [workflow/codegraph/README.md](workflow/codegraph/README.md).
+Use `python3 workflow/codegraph/code_tools.py update` to refresh the source map, then
 `query --file PATH` or `query --symbol NAME` to navigate it. Serena can optionally
 verify definitions/references. `audit` combines code diagnostics, test-quality inspection and coverage-gap
 hints in one report; `--kind` can narrow it. It does not fix sources or run tests. Coverage gaps and inferred relationships are not

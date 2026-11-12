@@ -12,7 +12,7 @@ areas instead of inventing repository facts.
 
 Sequential tasks, using allocated M###-T### IDs; no parallel markers. One planning commit
 contains this list. The **first action in every task**, including the first task, nested/standalone TOR and
-[FINAL], is `python3 tools/codegraph/code_tools.py update`. Inspect its scope and
+[FINAL], is `python3 workflow/codegraph/code_tools.py update`. Inspect its scope and
 coverage before task analysis or edits; stop/report if refresh fails. There is no
 dedicated map task or map-only commit. Keep `.work/` ignored and record concise
 refresh evidence in `task-log.md` within the task's single commit.
@@ -22,7 +22,7 @@ pass. Add owner extras as TOR### before [FINAL]. The last task reviews all T/TOR
 
 ## Implementation
 
-[Reserve the first task with tools/workflow/work.py task reserve --mission
+[Reserve the first task with workflow/work.py task reserve --mission
 ACTUAL_MISSION --title "Concrete outcome"; use its actual checkbox/ID here.
 Do not commit example IDs as real tasks.]
   - Start: refresh the map first, inspect coverage and relevant boundaries.

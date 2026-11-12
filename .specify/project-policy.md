@@ -16,7 +16,7 @@ one-commit task loop, and creates no extra task, review round or commit.
 
 ## Preparation, identity and completion history
 
-Use `python3 tools/workflow/work.py status` at session start; `doctor` checks
+Use `python3 workflow/work.py status` at session start; `doctor` checks
 required workflow tools and optional app capabilities. `setup` installs pinned
 local analysis dependencies; app SDK/JDK/Cargo/NDK setup stays explicit. No legacy
 fingerprint or task-execution engine is reinstated.
@@ -37,7 +37,7 @@ same task's code. History contains names/full IDs only; never manually append or
 fabricate completed tasks. Completion records declarations, not proof a reviewer ran.
 Validation/CI checks uniqueness, canonical records, history and base preservation;
 make the GitHub check required externally to prohibit merges, not merely report it.
-See tools/workflow/README.md for CLI details, crash recovery and distributed limits.
+See workflow/README.md for CLI details, crash recovery and distributed limits.
 
 ## When to plan
 
@@ -77,7 +77,7 @@ such as push/fetch do not create modification tasks.
 
 At the start of a planning session, after reading the owner's request and these
 instructions but **before repository investigation or drafting the technical
-plan/tasks**, run `python3 tools/codegraph/code_tools.py update`. Inspect the
+plan/tasks**, run `python3 workflow/codegraph/code_tools.py update`. Inspect the
 recorded input scope, exclusions and source/resource/native coverage. Do not use a
 limited `update --paths` snapshot as evidence of complete project coverage.
 
@@ -131,7 +131,7 @@ validation commands and dependencies. Do not use `[P]` parallel markers.
 
 1. Reserve regular task IDs as **M###-T###** using the helper. There is no dedicated map task.
    At the start of **every task**, including the first M###-T001, any TOR and [FINAL], the first
-   action is `python3 tools/codegraph/code_tools.py update`, before task analysis,
+   action is `python3 workflow/codegraph/code_tools.py update`, before task analysis,
    implementation edits, validation or review.
 2. Inspect refresh scope/coverage and the relevant entry points, affected files
    and native/runtime boundaries. Use the refreshed map to guide that task.

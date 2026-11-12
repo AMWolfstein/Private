@@ -28,7 +28,7 @@ rounds stop and report. Feature extras are M###-TOR###; their numeric TOR pool i
 change and contains all its fixes in one commit. A standalone small TOR follows
 the same map/check/independent-review/three-result/one-commit loop using a short
 record in `.specify/quick-tasks/`, with no separate final task or planning commit.
-Reserve identities through tools/workflow/work.py, never by hand. After real
+Reserve identities through workflow/work.py, never by hand. After real
 checks/review PASS use its completion helper to update registry/record and root
 TASK_HISTORY.md together in the task commit. Reserved IDs are never reused.
 

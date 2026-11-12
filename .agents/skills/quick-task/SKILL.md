@@ -10,11 +10,11 @@ isolated modification when no planning was requested and no high-risk boundary i
 affected. No new feature spec.md, plan.md, feature pointer or planning commit.
 Read-only questions/audits/navigation and Git-only fetch/push do not create tasks.
 
-1. **First action:** run `python3 tools/codegraph/code_tools.py update` and inspect
+1. **First action:** run `python3 workflow/codegraph/code_tools.py update` and inspect
    scope/coverage before task analysis or edits. A failed refresh stops this task;
    record/report the limitation rather than substituting an old map. Keep caches
    ignored. Reuse the map for unchanged-code inspection during this task.
-2. Use `python3 tools/workflow/work.py task reserve --title "Concrete task name"`
+2. Use `python3 workflow/work.py task reserve --title "Concrete task name"`
    for a standalone task. For an active-feature extra add `--mission M### --tor`.
    Use its returned ID/path: the shared TOR pool forbids reusing a number across
    standalone and nested IDs. Never assign an ID by hand. Reconcile latest Git
@@ -36,7 +36,7 @@ Read-only questions/audits/navigation and Git-only fetch/push do not create task
    3 remains NEEDS_FIXES/BLOCKED stop and report remaining issues/uncommitted state.
    Do not begin round 4, reset the count or claim self-review is independent PASS.
    If essential review/tooling is unavailable, report the blocker; do not mark done.
-7. After acceptance/checks/independent review pass, run `python3 tools/workflow/work.py
+7. After acceptance/checks/independent review pass, run `python3 workflow/work.py
    task complete ACTUAL_ID --reviewer NAME --round N --checks "actual results"`,
    then `validate`. Commit edits, record, registry and TASK_HISTORY.md together once. No separate task-creation, map-update,
    WIP, fix, review or final-review commit. Do not guess the commit's own hash in

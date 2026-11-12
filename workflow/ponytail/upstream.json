@@ -8,7 +8,7 @@
   "unmodified_upstream_files": [
     ".agents/skills/ponytail/SKILL.md",
     ".agents/skills/ponytail-review/SKILL.md",
-    "tools/ponytail/LICENSE"
+    "workflow/ponytail/LICENSE"
   ],
   "local_policy": "AGENTS.md and .specify/project-policy.md",
   "not_installed": [

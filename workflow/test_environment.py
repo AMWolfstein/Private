@@ -13,7 +13,7 @@ class EnvironmentTests(unittest.TestCase):
         self.tmp=tempfile.TemporaryDirectory();self.addCleanup(self.tmp.cleanup);self.root=Path(self.tmp.name)
         subprocess.run(['git','init','-q',str(self.root)],check=True)
         (self.root/'.gitignore').write_text('.work/\n')
-        (self.root/'tools/codegraph').mkdir(parents=True)
+        (self.root/'workflow/codegraph').mkdir(parents=True)
 
     def test_prerequisites_refuse_unignored_or_escaped_managed_paths(self):
         self.assertIn('verified',e.prerequisites(self.root))

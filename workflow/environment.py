@@ -30,7 +30,7 @@ def prerequisites(root):
     done=subprocess.run(['git','check-ignore','-q','.work/workflow-probe'],cwd=root)
     if done.returncode:raise ValueError('.work/ must be Git-ignored before provisioning')
     if subprocess.check_output(['git','ls-files','-z','--','.work'],cwd=root):raise ValueError('Tracked .work files are not allowed')
-    for path in ['.work','.work/code-tools-python','.work/serena-python','tools/codegraph','tools/codegraph/node_modules']:
+    for path in ['.work','.work/code-tools-python','.work/serena-python','workflow/codegraph','workflow/codegraph/node_modules']:
         registry.safe(root,path)
     return 'Git root, Python and ignored/confined managed paths verified'
 
@@ -52,7 +52,7 @@ def doctor(root,full=False,serena=False):
     check('node',lambda:run(['node','--version'],root))
     check('npm',lambda:run(['npm','--version'],root))
     def graph():
-        info=json.loads(run([sys.executable,str(root/'tools/codegraph/codegraph_adapter.py'),'version'],root))
+        info=json.loads(run([sys.executable,str(root/'workflow/codegraph/codegraph_adapter.py'),'version'],root))
         if not info.get('available') or info.get('version')!='1.6.2':raise ValueError('Pinned CodeGraph 1.6.2 unavailable; run setup')
         return info
     check('codegraph',graph)
@@ -62,20 +62,20 @@ def doctor(root,full=False,serena=False):
         if not selected:raise ValueError('Empty parser interpreter override')
         if not os.environ.get('CODEGRAPH_SHELL_PYTHON') and not python.is_file():raise ValueError('Managed parser environment missing; run setup')
         if not os.environ.get('CODEGRAPH_SHELL_PYTHON'):verify_venv(root,python)
-        info=json.loads(run([*selected,str(root/'tools/codegraph/shell_adapter.py'),'version'],root))
+        info=json.loads(run([*selected,str(root/'workflow/codegraph/shell_adapter.py'),'version'],root))
         if not info.get('available'):raise ValueError('Pinned Bash parser versions missing; run setup')
         # Real parse capability, not just a package-version declaration.
         with tempfile.TemporaryDirectory(prefix='workflow-doctor-') as tmp:
             source=Path(tmp)/'probe.sh';source.write_text('probe() { :; }\nprobe\n')
             request=Path(tmp)/'request.json';request.write_text(json.dumps([{'file':'probe.sh','path':str(source)}]))
-            data=json.loads(run([*selected,str(root/'tools/codegraph/shell_adapter.py'),'extract','--request',str(request)],root))
+            data=json.loads(run([*selected,str(root/'workflow/codegraph/shell_adapter.py'),'extract','--request',str(request)],root))
             if not data or data[0]['errors'] or not data[0]['functions']:raise ValueError('Real Bash parse failed')
         run([*selected,'-c',"import sys; exec('import tomllib' if sys.version_info >= (3,11) else 'import tomli as tomllib'); assert tomllib.loads('[probe]\\nok=true')['probe']['ok']"],root)
         return {'python':selected,'packages':info['packages'],'real_parse':'PASS'}
     check('parsers',parsers)
     def semantic():
         executable=os.environ.get('SERENA_PYTHON') or str(interpreter(root,'serena-python'))
-        info=json.loads(run([executable,str(root/'tools/codegraph/serena_adapter.py'),'version','--project',str(root/'.work/codegraph/index/source')],root))
+        info=json.loads(run([executable,str(root/'workflow/codegraph/serena_adapter.py'),'version','--project',str(root/'.work/codegraph/index/source')],root))
         if not info.get('available'):raise ValueError('Pinned optional Serena dependencies unavailable')
         return info
     check('serena',semantic,required=serena)
@@ -97,13 +97,13 @@ def doctor(root,full=False,serena=False):
         return {'sdk':sdk,'wrapper':'present','note':'Build compatibility/variant coverage not verified by doctor'}
     check('android',android,required=full)
     def cpp():
-        sys.path.insert(0,str(root/'tools/codegraph'))
+        sys.path.insert(0,str(root/'workflow/codegraph'))
         try:
             import native_audit
             executable=native_audit.clang_tidy()
             if not executable:raise ValueError('Activate clang-tidy/NDK or AUDIT_CLANG_TIDY')
             version=run([executable,'--version'],root)
-            config=json.loads((root/'tools/codegraph/audit-config.json').read_text(encoding='utf-8'))['tools']['cpp']
+            config=json.loads((root/'workflow/codegraph/audit-config.json').read_text(encoding='utf-8'))['tools']['cpp']
             database=native_audit.compilation_database(root,config)
             if database is None or not database.is_file():raise ValueError('C++ compilation database absent; configure actual CMake target')
             return {'version':version,'database':str(database),'note':'Compiler/header/ABI coverage is checked by audit, not doctor'}
@@ -127,7 +127,7 @@ def setup(root,serena=False,offline=False):
             if done.returncode:raise ValueError(f'Provisioning failed ({Path(str(argv[0])).name}); inspect {log}')
         if next(item for item in before['checks'] if item['name']=='codegraph')['status']!='PASS':
             if not shutil.which('npm'):raise ValueError('Node/npm must be installed before setup')
-            install(['npm','ci','--prefix','tools/codegraph','--ignore-scripts','--no-audit','--no-fund']);changed=True
+            install(['npm','ci','--prefix','workflow/codegraph','--ignore-scripts','--no-audit','--no-fund']);changed=True
         for name,requirements,needed in [('code-tools-python','requirements.txt',True),('serena-python','requirements-serena.txt',serena)]:
             if not needed:continue
             python=interpreter(root,name)
@@ -136,7 +136,7 @@ def setup(root,serena=False,offline=False):
             if ready:continue
             if not python.is_file():install([sys.executable,'-m','venv',str(python.parent.parent)])
             verify_venv(root,python)
-            install([str(python),'-m','pip','install','--disable-pip-version-check','-r',str(root/'tools/codegraph'/requirements)]);changed=True
+            install([str(python),'-m','pip','install','--disable-pip-version-check','-r',str(root/'workflow/codegraph'/requirements)]);changed=True
     return {**doctor(root,serena=serena),'reused':not changed,'log':str(log)}
 
 

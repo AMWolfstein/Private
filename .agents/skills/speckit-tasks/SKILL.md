@@ -261,7 +261,7 @@ a planning-only request. Actual source changes await implementation authorizatio
 
 ## Canonical task reservation and history
 
-Reserve every task through `python3 tools/workflow/work.py task reserve --mission
+Reserve every task through `python3 workflow/work.py task reserve --mission
 ACTUAL_MISSION --title "Concrete outcome"` and use the generated M###-T### checkbox.
 Use --final for the last cumulative review. Do not copy unqualified T001 or M###
 examples as real IDs. Preserve the reserved title and fill paths/checks/details
