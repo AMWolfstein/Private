@@ -10,7 +10,7 @@ import 'package:mornye/providers/settings_provider.dart';
 import 'package:mornye/theme/app_motion.dart';
 import 'package:mornye/theme/app_tokens.dart';
 import 'package:mornye/theme/material_expressive.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/utils/playback_seek_preview.dart';
 import 'package:mornye/utils/string_utils.dart';
 import 'package:mornye/widgets/app_icon.dart';

@@ -16,7 +16,7 @@ import 'package:mornye/screens/downloaded_album_screen.dart';
 import 'package:mornye/screens/local_album_screen.dart';
 import 'package:mornye/services/library_database.dart';
 import 'package:mornye/services/motion_artwork_store.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/mornye_player_artwork.dart';
 import 'package:mornye/widgets/motion_header_banner.dart';
 import 'package:video_player_platform_interface/video_player_platform_interface.dart';
@@ -245,7 +245,7 @@ void main() {
                 ),
               ],
               child: MaterialApp(
-                theme: MornyeTheme.build(Brightness.light),
+                theme: AppTheme.build(Brightness.light),
                 localizationsDelegates: AppLocalizations.localizationsDelegates,
                 supportedLocales: AppLocalizations.supportedLocales,
                 builder: (context, child) => MediaQuery(

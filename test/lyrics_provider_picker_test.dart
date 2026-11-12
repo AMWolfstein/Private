@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mornye/l10n/app_localizations.dart';
 import 'package:mornye/providers/extension_provider.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/lyrics_provider_picker.dart';
 
 class _NoExtensions extends ExtensionNotifier {
@@ -65,7 +65,7 @@ void main() {
         ProviderScope(
           overrides: [extensionProvider.overrideWith(_NoExtensions.new)],
           child: MaterialApp(
-            theme: mornye ? MornyeTheme.build(Brightness.dark) : ThemeData(),
+            theme: mornye ? AppTheme.build(Brightness.dark) : ThemeData(),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             home: Builder(

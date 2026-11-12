@@ -13,18 +13,18 @@ void main() {
   test('a stored red moves to blue once, and red picked later stays', () async {
     SharedPreferences.setMockInitialValues({kMornyeAccentKey: 'red'});
     final prefs = await SharedPreferences.getInstance();
-    expect(loadBootstrapThemeSettings(prefs).mornyeAccent, MornyeAccent.blue);
+    expect(loadBootstrapThemeSettings(prefs).mornyeAccent, AppAccent.blue);
     expect(prefs.getString(kMornyeAccentKey), 'blue');
 
     await prefs.setString(kMornyeAccentKey, 'red');
-    expect(loadBootstrapThemeSettings(prefs).mornyeAccent, MornyeAccent.red);
+    expect(loadBootstrapThemeSettings(prefs).mornyeAccent, AppAccent.red);
     expect(prefs.getString(kMornyeAccentKey), 'red');
   });
 
   test('the move leaves any other accent alone', () async {
     SharedPreferences.setMockInitialValues({kMornyeAccentKey: 'pink'});
     final prefs = await SharedPreferences.getInstance();
-    expect(loadBootstrapThemeSettings(prefs).mornyeAccent, MornyeAccent.pink);
+    expect(loadBootstrapThemeSettings(prefs).mornyeAccent, AppAccent.pink);
     expect(prefs.getString(kMornyeAccentKey), 'pink');
     expect(prefs.getBool(kMornyeAccentMovedToBlueKey), isTrue);
   });
@@ -55,7 +55,7 @@ void main() {
       final notifier = container.read(themeProvider.notifier);
       // An explicit edit equal to the bootstrap default still owns this field.
       final savingMode = notifier.setThemeMode(ThemeMode.system);
-      final savingAccent = notifier.setMornyeAccent(MornyeAccent.red);
+      final savingAccent = notifier.setMornyeAccent(AppAccent.red);
       await notifier.setLyricsTextScale(1.2, persist: false);
       var saved = false;
       unawaited(savingAccent.then((_) => saved = true));
@@ -68,7 +68,7 @@ void main() {
       await Future.wait([savingMode, savingAccent]);
       final state = container.read(themeProvider);
       expect(state.themeMode, ThemeMode.system);
-      expect(state.mornyeAccent, MornyeAccent.red);
+      expect(state.mornyeAccent, AppAccent.red);
       expect(state.lyricsTextScale, 1.2);
       expect(state.style, AppThemeStyle.mornye);
       expect(state.seedColorValue, 0xff123456);
@@ -96,7 +96,7 @@ void main() {
     );
     addTearDown(container.dispose);
     container.listen(themeProvider, (_, next) {
-      if (next.mornyeAccent == MornyeAccent.blue) loaded.complete();
+      if (next.mornyeAccent == AppAccent.blue) loaded.complete();
     });
     await container
         .read(themeProvider.notifier)

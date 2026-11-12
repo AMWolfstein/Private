@@ -13,7 +13,7 @@ import 'package:mornye/services/local_network_access.dart';
 import 'package:mornye/services/network_certificate.dart';
 import 'package:mornye/services/network_storage_service.dart';
 import 'package:mornye/services/playable_media.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/app_action_button.dart';
 
 void main() {
@@ -161,7 +161,7 @@ void main() {
             ProviderScope(
               child: MaterialApp(
                 theme: mornye
-                    ? MornyeTheme.build(Brightness.dark)
+                    ? AppTheme.build(Brightness.dark)
                     : ThemeData(useMaterial3: true),
                 localizationsDelegates: AppLocalizations.localizationsDelegates,
                 supportedLocales: AppLocalizations.supportedLocales,
@@ -211,7 +211,7 @@ void main() {
         ProviderScope(
           child: MaterialApp(
             theme: mornye
-                ? MornyeTheme.build(Brightness.dark)
+                ? AppTheme.build(Brightness.dark)
                 : ThemeData(useMaterial3: true),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
@@ -252,7 +252,7 @@ void main() {
           ProviderScope(
             child: MaterialApp(
               theme: mornye
-                  ? MornyeTheme.build(Brightness.dark)
+                  ? AppTheme.build(Brightness.dark)
                   : ThemeData(useMaterial3: true),
               localizationsDelegates: AppLocalizations.localizationsDelegates,
               supportedLocales: AppLocalizations.supportedLocales,
@@ -322,7 +322,7 @@ void main() {
           ProviderScope(
             child: MaterialApp(
               theme: mornye
-                  ? MornyeTheme.build(Brightness.dark)
+                  ? AppTheme.build(Brightness.dark)
                   : ThemeData(useMaterial3: true),
               localizationsDelegates: AppLocalizations.localizationsDelegates,
               supportedLocales: AppLocalizations.supportedLocales,
@@ -366,7 +366,7 @@ void main() {
           ProviderScope(
             child: MaterialApp(
               theme: mornye
-                  ? MornyeTheme.build(Brightness.light)
+                  ? AppTheme.build(Brightness.light)
                   : ThemeData(useMaterial3: true),
               localizationsDelegates: AppLocalizations.localizationsDelegates,
               supportedLocales: AppLocalizations.supportedLocales,

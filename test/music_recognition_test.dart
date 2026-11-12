@@ -11,7 +11,7 @@ import 'package:mornye/providers/music_recognition_provider.dart';
 import 'package:mornye/screens/music_recognition_screen.dart';
 import 'package:mornye/services/music_recognition.dart';
 import 'package:mornye/services/music_recognition_library.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 RecognizedSong song({
@@ -585,7 +585,7 @@ void main() {
             ],
             child: MaterialApp(
               theme: style == 'mornye'
-                  ? MornyeTheme.build(Brightness.light)
+                  ? AppTheme.build(Brightness.light)
                   : ThemeData(),
               localizationsDelegates: AppLocalizations.localizationsDelegates,
               supportedLocales: AppLocalizations.supportedLocales,

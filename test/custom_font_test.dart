@@ -10,8 +10,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mornye/models/theme_settings.dart';
 import 'package:mornye/providers/theme_provider.dart';
 import 'package:mornye/services/custom_font_service.dart';
+import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/theme/app_theme.dart';
-import 'package:mornye/theme/mornye_theme.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -103,7 +103,7 @@ void main() {
   testWidgets(
     'custom typography survives Mornye local surface reconstruction',
     (tester) async {
-      final theme = MornyeTheme.build(
+      final theme = AppTheme.build(
         Brightness.dark,
         fontFamily: 'ImportedFont_test',
       );
@@ -112,7 +112,7 @@ void main() {
           theme: theme,
           home: Builder(
             builder: (context) {
-              final surface = MornyeTheme.fromContext(
+              final surface = AppTheme.fromContext(
                 context,
                 chromeSurface: Colors.red,
               );
@@ -130,19 +130,19 @@ void main() {
         ),
       );
       expect(
-        AppTheme.light(
+        LegacyMaterialTheme.light(
           fontFamily: 'ImportedFont_test',
         ).textTheme.bodyMedium!.fontFamily,
         'ImportedFont_test',
       );
       expect(
-        AppTheme.dark(
+        LegacyMaterialTheme.dark(
           fontFamily: 'ImportedFont_test',
         ).textTheme.bodyMedium!.fontFamily,
         'ImportedFont_test',
       );
       expect(
-        MornyeTheme.build(Brightness.dark).textTheme.bodyLarge!.fontFamily,
+        AppTheme.build(Brightness.dark).textTheme.bodyLarge!.fontFamily,
         isNot('ImportedFont_test'),
       );
     },

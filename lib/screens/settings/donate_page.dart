@@ -5,7 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:mornye/services/app_remote_config_service.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/utils/adaptive_layout.dart';
 import 'package:mornye/widgets/app_content_card.dart';
 import 'package:mornye/widgets/app_icon.dart';

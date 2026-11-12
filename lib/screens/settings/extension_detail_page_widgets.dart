@@ -38,7 +38,7 @@ class _ExtensionDivider extends StatelessWidget {
           indent: indent,
           endIndent: 16,
           color: context.isMornye
-              ? MornyeTheme.metadataDividerColor(context)
+              ? AppTheme.metadataDividerColor(context)
               : Theme.of(
                   context,
                 ).colorScheme.outlineVariant.withValues(alpha: 0.3),

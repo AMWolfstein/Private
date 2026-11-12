@@ -11,7 +11,7 @@ import 'package:mornye/providers/library_search_provider.dart';
 import 'package:mornye/providers/settings_provider.dart';
 import 'package:mornye/screens/mornye_library_screen.dart';
 import 'package:mornye/services/album_completeness.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/app_search_field.dart';
 
 class _Settings extends SettingsNotifier {
@@ -73,7 +73,7 @@ void main() {
             }),
           ],
           child: MaterialApp(
-            theme: MornyeTheme.build(Brightness.dark),
+            theme: AppTheme.build(Brightness.dark),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             home: Scaffold(
@@ -160,7 +160,7 @@ void main() {
             }),
           ],
           child: MaterialApp(
-            theme: MornyeTheme.build(brightness),
+            theme: AppTheme.build(brightness),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             home: Scaffold(
@@ -230,7 +230,7 @@ void main() {
           }),
         ],
         child: MaterialApp(
-          theme: MornyeTheme.build(Brightness.dark),
+          theme: AppTheme.build(Brightness.dark),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: Scaffold(

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/theme/app_theme.dart';
-import 'package:mornye/theme/mornye_theme.dart';
 
-const _rounded = [FontVariation('ROND', AppTheme.brandRoundness)];
+const _rounded = [FontVariation('ROND', LegacyMaterialTheme.brandRoundness)];
 
 Map<String, TextStyle?> _roles(TextTheme t) => {
   'displayLarge': t.displayLarge,
@@ -60,11 +60,11 @@ void main() {
   group('Material type', () {
     final plain = ThemeData(
       useMaterial3: true,
-      fontFamily: AppTheme.bundledFontFamily,
+      fontFamily: LegacyMaterialTheme.bundledFontFamily,
     );
 
     test('brand roles are rounded and keep their weight', () {
-      for (final theme in [AppTheme.light(), AppTheme.dark()]) {
+      for (final theme in [LegacyMaterialTheme.light(), LegacyMaterialTheme.dark()]) {
         for (final (text, base) in [
           (theme.textTheme, plain.textTheme),
           (theme.primaryTextTheme, plain.primaryTextTheme),
@@ -74,7 +74,7 @@ void main() {
             text,
           ).entries) {
             final reason = '${theme.brightness} $role';
-            expect(style!.fontFamily, AppTheme.bundledFontFamily);
+            expect(style!.fontFamily, LegacyMaterialTheme.bundledFontFamily);
             expect(style.fontWeight, baseRoles[role]!.fontWeight);
             expect(style.fontSize, baseRoles[role]!.fontSize);
             if (_isBrandRole(role)) {
@@ -89,7 +89,7 @@ void main() {
     });
 
     test('a weight override keeps the rounded terminals', () {
-      final title = AppTheme.light().textTheme.titleMedium!.copyWith(
+      final title = LegacyMaterialTheme.light().textTheme.titleMedium!.copyWith(
         fontWeight: FontWeight.w700,
       );
       expect(title.fontWeight, FontWeight.w700);
@@ -98,8 +98,8 @@ void main() {
 
     test('system and imported fonts get no axes', () {
       for (final theme in [
-        AppTheme.light(useSystemFont: true),
-        AppTheme.dark(fontFamily: 'ImportedFont_test'),
+        LegacyMaterialTheme.light(useSystemFont: true),
+        LegacyMaterialTheme.dark(fontFamily: 'ImportedFont_test'),
       ]) {
         for (final style in _roles(theme.textTheme).values) {
           expect(style!.fontVariations, isNull);
@@ -111,10 +111,10 @@ void main() {
   test('Mornye type does not change', () {
     for (final brightness in Brightness.values) {
       for (final style in _roles(
-        MornyeTheme.build(brightness).textTheme,
+        AppTheme.build(brightness).textTheme,
       ).values) {
         expect(style!.fontVariations, isNull);
-        expect(style.fontFamily, isNot(AppTheme.bundledFontFamily));
+        expect(style.fontFamily, isNot(LegacyMaterialTheme.bundledFontFamily));
       }
     }
   });
@@ -125,7 +125,7 @@ void main() {
     setUpAll(() async {
       font = await rootBundle.load('assets/fonts/GoogleSansFlex.ttf');
       await (FontLoader(
-        AppTheme.bundledFontFamily,
+        LegacyMaterialTheme.bundledFontFamily,
       )..addFont(Future.value(font))).load();
     });
 
@@ -143,7 +143,7 @@ void main() {
           text: TextSpan(
             text: 'Expressive 0123456789',
             style: TextStyle(
-              fontFamily: AppTheme.bundledFontFamily,
+              fontFamily: LegacyMaterialTheme.bundledFontFamily,
               fontSize: 20,
               fontWeight: weight,
               fontVariations: axes,

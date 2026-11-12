@@ -2,8 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/theme/app_theme.dart';
-import 'package:mornye/theme/mornye_theme.dart';
 import 'package:mornye/widgets/android_keyboard_lifecycle.dart';
 
 void _setLifecycle(AppLifecycleState state) {
@@ -44,8 +44,8 @@ void main() {
         await tester.pumpWidget(
           MaterialApp(
             theme: mornye
-                ? MornyeTheme.build(Brightness.light)
-                : AppTheme.light(),
+                ? AppTheme.build(Brightness.light)
+                : LegacyMaterialTheme.light(),
             builder: (_, child) => AndroidKeyboardLifecycle(child: child!),
             home: Scaffold(
               body: TextField(focusNode: focus, controller: controller),

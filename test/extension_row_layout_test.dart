@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mornye/theme/app_theme.dart';
+import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/widgets/extension_row.dart';
 
 const _buttonKey = ValueKey('extension-row-button');
@@ -11,7 +11,7 @@ Widget _row({
   bool measured = true,
   double textScale = 1,
 }) => MaterialApp(
-  theme: AppTheme.light(),
+  theme: LegacyMaterialTheme.light(),
   builder: (context, child) => MediaQuery(
     data: MediaQuery.of(
       context,

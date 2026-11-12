@@ -10,7 +10,7 @@ import 'package:mornye/models/track.dart';
 import 'package:mornye/screens/album_screen.dart';
 import 'package:mornye/screens/home_tab.dart';
 import 'package:mornye/services/platform_bridge.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/album_description.dart';
 import 'package:mornye/widgets/album_detail_header.dart';
 import 'package:mornye/widgets/audio_quality_badges.dart';
@@ -81,7 +81,7 @@ void main() {
           await tester.pumpWidget(
             ProviderScope(
               child: MaterialApp(
-                theme: MornyeTheme.build(Brightness.light),
+                theme: AppTheme.build(Brightness.light),
                 localizationsDelegates: AppLocalizations.localizationsDelegates,
                 supportedLocales: AppLocalizations.supportedLocales,
                 home: const ExtensionAlbumScreen(
@@ -138,7 +138,7 @@ void main() {
         await tester.pumpWidget(
           ProviderScope(
             child: MaterialApp(
-              theme: mornye ? MornyeTheme.build(Brightness.dark) : ThemeData(),
+              theme: mornye ? AppTheme.build(Brightness.dark) : ThemeData(),
               localizationsDelegates: AppLocalizations.localizationsDelegates,
               supportedLocales: AppLocalizations.supportedLocales,
               home: ExtensionAlbumScreen(
@@ -392,7 +392,7 @@ void main() {
 
     final page = ProviderScope(
       child: MaterialApp(
-        theme: MornyeTheme.build(Brightness.light),
+        theme: AppTheme.build(Brightness.light),
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         home: const AlbumScreen(

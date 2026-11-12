@@ -5,8 +5,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mornye/controllers/player_metadata_controller.dart';
 import 'package:mornye/l10n/l10n.dart';
+import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/theme/app_theme.dart';
-import 'package:mornye/theme/mornye_theme.dart';
 import 'package:mornye/widgets/app_bottom_sheet.dart';
 import 'package:mornye/widgets/mornye_player_details_sheet.dart';
 import 'package:mornye/widgets/player_details_sheet.dart';
@@ -35,8 +35,8 @@ void main() {
       ProviderScope(
         child: MaterialApp(
           theme: mornye
-              ? MornyeTheme.build(Brightness.light)
-              : AppTheme.light(),
+              ? AppTheme.build(Brightness.light)
+              : LegacyMaterialTheme.light(),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: Builder(

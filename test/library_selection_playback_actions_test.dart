@@ -5,7 +5,7 @@ import 'package:mornye/l10n/l10n.dart';
 import 'package:mornye/models/unified_library_item.dart';
 import 'package:mornye/providers/music_player_provider.dart';
 import 'package:mornye/services/library_database.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/library_selection_playback_actions.dart';
 import 'package:mornye/widgets/library_track_selection_bar.dart';
 
@@ -78,7 +78,7 @@ void main() {
               musicPlayerControllerProvider.overrideWithValue(controller),
             ],
             child: MaterialApp(
-              theme: mornye ? MornyeTheme.build(Brightness.dark) : ThemeData(),
+              theme: mornye ? AppTheme.build(Brightness.dark) : ThemeData(),
               localizationsDelegates: AppLocalizations.localizationsDelegates,
               supportedLocales: AppLocalizations.supportedLocales,
               home: Scaffold(

@@ -10,7 +10,7 @@ import 'package:mornye/providers/player_artwork_video_provider.dart';
 import 'package:mornye/providers/player_motion_artwork_provider.dart';
 import 'package:mornye/providers/runtime_profile_provider.dart';
 import 'package:mornye/services/motion_artwork_store.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/audio_quality_badges.dart';
 import 'package:mornye/widgets/mini_player.dart';
 import 'package:mornye/widgets/overflow_marquee.dart';
@@ -311,7 +311,7 @@ void main() {
               }),
             ],
             child: MaterialApp(
-              theme: MornyeTheme.build(Brightness.dark),
+              theme: AppTheme.build(Brightness.dark),
               localizationsDelegates: AppLocalizations.localizationsDelegates,
               supportedLocales: AppLocalizations.supportedLocales,
               home: const Scaffold(
@@ -352,7 +352,7 @@ void main() {
             backdropBlurEnabledProvider.overrideWithValue(false),
           ],
           child: MaterialApp(
-            theme: MornyeTheme.build(Brightness.dark),
+            theme: AppTheme.build(Brightness.dark),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             home: const Scaffold(
@@ -429,7 +429,7 @@ void main() {
               ],
               child: MaterialApp(
                 theme: mornye
-                    ? MornyeTheme.build(Brightness.light)
+                    ? AppTheme.build(Brightness.light)
                     : ThemeData(),
                 localizationsDelegates: AppLocalizations.localizationsDelegates,
                 supportedLocales: AppLocalizations.supportedLocales,

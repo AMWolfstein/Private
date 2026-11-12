@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mornye/models/theme_settings.dart';
 import 'package:mornye/providers/theme_provider.dart';
 import 'package:mornye/theme/dynamic_color_wrapper.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 
 class _ThemeReader extends StatelessWidget {
   const _ThemeReader(this.builds);
@@ -21,9 +21,9 @@ class _ThemeReader extends StatelessWidget {
 
 void main() {
   test('Mornye preferences compare by value', () {
-    const a = MornyeTheme(
+    const a = AppTheme(
       chromeSurface: Color(0xff336699),
-      accent: MornyeAccent.blue,
+      accent: AppAccent.blue,
       useSystemFont: true,
       fontFamily: 'Custom',
       glassOutlines: false,
@@ -32,26 +32,26 @@ void main() {
     expect(b, a);
     expect(b.hashCode, a.hashCode);
     expect(a.copyWith(glassOutlines: true), isNot(a));
-    expect(a.copyWith(accent: MornyeAccent.red), isNot(a));
+    expect(a.copyWith(accent: AppAccent.red), isNot(a));
     expect(a.lerp(b, 0.5), a);
   });
 
   test('custom glass preferences reuse the same theme', () {
     for (final brightness in Brightness.values) {
-      ThemeData build() => MornyeTheme.build(
+      ThemeData build() => AppTheme.build(
         brightness,
-        accent: MornyeAccent.teal,
+        accent: AppAccent.teal,
         glassOutlines: false,
       );
       final first = build();
       expect(identical(build(), first), isTrue);
-      final preferences = first.extension<MornyeTheme>()!;
+      final preferences = first.extension<AppTheme>()!;
       expect(preferences.glassOutlines, isFalse);
       expect(
-        MornyeTheme.build(
+        AppTheme.build(
           brightness,
-          accent: MornyeAccent.teal,
-        ).extension<MornyeTheme>()!.glassOutlines,
+          accent: AppAccent.teal,
+        ).extension<AppTheme>()!.glassOutlines,
         isTrue,
       );
     }
@@ -65,17 +65,17 @@ void main() {
         Color(0xff7a1f3d),
         Color(0x80204060),
       ]) {
-        final base = MornyeTheme.build(brightness, accent: MornyeAccent.green);
-        final chrome = MornyeTheme.build(
+        final base = AppTheme.build(brightness, accent: AppAccent.green);
+        final chrome = AppTheme.build(
           brightness,
-          accent: MornyeAccent.green,
+          accent: AppAccent.green,
           chromeSurface: color,
         );
         final high = Color.lerp(color, Colors.black, 0.16);
         expect(chrome.colorScheme.surfaceContainerHigh, high);
         expect(chrome.snackBarTheme.backgroundColor, high);
         expect(chrome.buttonTheme.colorScheme, chrome.colorScheme);
-        expect(chrome.extension<MornyeTheme>()!.chromeSurface, color);
+        expect(chrome.extension<AppTheme>()!.chromeSurface, color);
         expect(
           chrome.copyWith(
             colorScheme: base.colorScheme,
@@ -87,9 +87,9 @@ void main() {
         );
         expect(
           identical(
-            MornyeTheme.build(
+            AppTheme.build(
               brightness,
-              accent: MornyeAccent.green,
+              accent: AppAccent.green,
               chromeSurface: color,
             ),
             chrome,
@@ -108,7 +108,7 @@ void main() {
     final reader = _ThemeReader(builds);
     await tester.pumpWidget(
       MaterialApp(
-        theme: MornyeTheme.build(Brightness.light),
+        theme: AppTheme.build(Brightness.light),
         home: StatefulBuilder(
           builder: (context, setState) {
             rebuild = setState;
@@ -157,7 +157,7 @@ void main() {
       ),
     );
     await tester.pumpAndSettle();
-    expect(themes.last.extension<MornyeTheme>()!.glassOutlines, isFalse);
+    expect(themes.last.extension<AppTheme>()!.glassOutlines, isFalse);
     final initialBuilds = themes.length;
     final notifier = container.read(themeProvider.notifier);
 
@@ -169,6 +169,6 @@ void main() {
     await notifier.setMornyeGlassOutlines(true);
     await tester.pumpAndSettle();
     expect(themes, hasLength(initialBuilds + 1));
-    expect(themes.last.extension<MornyeTheme>()!.glassOutlines, isTrue);
+    expect(themes.last.extension<AppTheme>()!.glassOutlines, isTrue);
   });
 }

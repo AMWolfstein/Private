@@ -16,7 +16,7 @@ import 'package:mornye/screens/settings/download_fallback_extensions_page.dart';
 import 'package:mornye/screens/settings/extension_detail_page.dart';
 import 'package:mornye/screens/settings/metadata_provider_priority_page.dart';
 import 'package:mornye/screens/settings/provider_priority_page.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/utils/adaptive_layout.dart';
 import 'package:mornye/widgets/app_action_button.dart';
 import 'package:mornye/widgets/app_bottom_sheet.dart';

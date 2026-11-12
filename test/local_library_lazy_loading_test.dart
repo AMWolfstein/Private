@@ -19,8 +19,8 @@ import 'package:mornye/screens/queue_tab.dart';
 import 'package:mornye/services/history_database.dart';
 import 'package:mornye/services/library_database.dart';
 import 'package:mornye/services/library_search.dart';
+import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/theme/app_theme.dart';
-import 'package:mornye/theme/mornye_theme.dart';
 
 class _Settings extends SettingsNotifier {
   @override
@@ -242,8 +242,8 @@ void main() {
             ],
             child: MaterialApp(
               theme: mornye
-                  ? MornyeTheme.build(Brightness.dark)
-                  : AppTheme.light(),
+                  ? AppTheme.build(Brightness.dark)
+                  : LegacyMaterialTheme.light(),
               localizationsDelegates: AppLocalizations.localizationsDelegates,
               supportedLocales: AppLocalizations.supportedLocales,
               home: const Scaffold(body: QueueTab(librarySection: 'playlists')),
@@ -312,8 +312,8 @@ void main() {
           ],
           child: MaterialApp(
             theme: mornye
-                ? MornyeTheme.build(Brightness.dark)
-                : AppTheme.light(),
+                ? AppTheme.build(Brightness.dark)
+                : LegacyMaterialTheme.light(),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             home: const Scaffold(body: QueueTab(librarySection: 'playlists')),
@@ -439,7 +439,7 @@ void main() {
             downloadQueueLookupProvider.overrideWithValue(queue),
           ],
           child: MaterialApp(
-            theme: AppTheme.light(),
+            theme: LegacyMaterialTheme.light(),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             home: Scaffold(body: QueueTab(librarySection: section)),

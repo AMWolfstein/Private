@@ -15,7 +15,7 @@ import 'package:mornye/providers/music_player_provider.dart';
 import 'package:mornye/providers/runtime_profile_provider.dart';
 import 'package:mornye/providers/settings_provider.dart';
 import 'package:mornye/services/music_player_runtime.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/mini_player.dart';
 import 'package:mornye/widgets/mornye_bottom_bar.dart';
 import 'package:mornye/widgets/mornye_chrome.dart';
@@ -184,7 +184,7 @@ void main() {
             mornyeGlassLevelProvider.overrideWithValue(MornyeGlassLevel.liquid),
           ],
           child: MaterialApp(
-            theme: MornyeTheme.build(brightness, glassOutlines: outlines),
+            theme: AppTheme.build(brightness, glassOutlines: outlines),
             locale: const Locale('en'),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,

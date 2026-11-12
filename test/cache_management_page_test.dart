@@ -8,8 +8,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mornye/l10n/l10n.dart';
 import 'package:mornye/screens/settings/cache_management_page.dart';
 import 'package:mornye/services/explore_cache_store.dart';
+import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/theme/app_theme.dart';
-import 'package:mornye/theme/mornye_theme.dart';
 import 'package:mornye/utils/string_utils.dart';
 import 'package:mornye/widgets/app_alert_dialog.dart';
 import 'package:mornye/widgets/expressive_button.dart';
@@ -63,8 +63,8 @@ void main() {
           ProviderScope(
             child: MaterialApp(
               theme: mornye
-                  ? MornyeTheme.build(Brightness.dark)
-                  : AppTheme.light(),
+                  ? AppTheme.build(Brightness.dark)
+                  : LegacyMaterialTheme.light(),
               localizationsDelegates: AppLocalizations.localizationsDelegates,
               supportedLocales: AppLocalizations.supportedLocales,
               home: const CacheManagementPage(),

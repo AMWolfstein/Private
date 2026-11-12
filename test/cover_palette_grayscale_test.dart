@@ -4,9 +4,9 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_color_utilities/hct/hct.dart';
-import 'package:mornye/theme/app_theme.dart';
+import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/theme/cover_palette.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 
 double _chroma(Color color) => Hct.fromInt(color.toARGB32()).chroma;
 
@@ -105,8 +105,8 @@ void main() {
 
     // Material headers opt in; Mornye headers keep the tonal scheme.
     for (final (theme, expected) in [
-      (AppTheme.dark(), neutral),
-      (MornyeTheme.build(Brightness.dark), tonal),
+      (LegacyMaterialTheme.dark(), neutral),
+      (AppTheme.build(Brightness.dark), tonal),
     ]) {
       ColorScheme? built;
       await tester.pumpWidget(

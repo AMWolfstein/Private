@@ -4,13 +4,13 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:material_3_expressive/material_3_expressive.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:mornye/theme/material_symbols.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/app_icon.dart';
 import 'package:mornye/widgets/app_icon_button.dart';
 
 Widget _host(Widget child, {bool mornye = false, bool reduceMotion = false}) {
   return MaterialApp(
-    theme: ThemeData(extensions: [if (mornye) const MornyeTheme()]),
+    theme: ThemeData(extensions: [if (mornye) const AppTheme()]),
     home: MediaQuery(
       data: MediaQueryData(disableAnimations: reduceMotion),
       child: Scaffold(body: Center(child: child)),

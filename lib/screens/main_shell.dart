@@ -47,7 +47,7 @@ import 'package:mornye/widgets/mornye_bottom_bar.dart';
 import 'package:mornye/widgets/app_icon.dart';
 import 'package:mornye/widgets/app_loading_indicator.dart';
 import 'package:mornye/widgets/mornye_chrome.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/theme/player_artwork_theme.dart';
 import 'package:mornye/widgets/selection_bottom_bar.dart';
 import 'package:mornye/utils/logger.dart';
@@ -952,7 +952,7 @@ class _MainShellState extends ConsumerState<MainShell>
               builder: (context, child) => Theme(
                 data: ShellNavigationService.chromeBrightness.value == null
                     ? Theme.of(context)
-                    : MornyeTheme.fromContext(
+                    : AppTheme.fromContext(
                         context,
                         brightness:
                             ShellNavigationService.chromeBrightness.value!,

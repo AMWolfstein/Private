@@ -4,7 +4,7 @@ import 'package:mornye/l10n/l10n.dart';
 import 'package:mornye/models/artist_concert.dart';
 import 'package:mornye/screens/concert_detail_screen.dart';
 import 'package:mornye/services/shell_navigation_service.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/utils/adaptive_layout.dart';
 import 'package:mornye/utils/nav_bar_inset.dart';
 import 'package:mornye/widgets/album_detail_header.dart';

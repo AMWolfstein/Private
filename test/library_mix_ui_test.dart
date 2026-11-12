@@ -14,8 +14,8 @@ import 'package:mornye/providers/settings_provider.dart';
 import 'package:mornye/screens/home_tab.dart';
 import 'package:mornye/screens/library_mix_screen.dart';
 import 'package:mornye/services/library_mixes.dart';
+import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/theme/app_theme.dart';
-import 'package:mornye/theme/mornye_theme.dart';
 import 'package:mornye/widgets/library_mix_cover.dart';
 import 'package:mornye/widgets/library_track_selection_bar.dart';
 import 'package:mornye/widgets/mornye_mix_banner.dart';
@@ -313,7 +313,7 @@ Future<void> _pumpMix(WidgetTester tester, {required bool mornye}) async {
         downloadHistoryProvider.overrideWith(_History.new),
       ],
       child: MaterialApp(
-        theme: mornye ? MornyeTheme.build(Brightness.dark) : AppTheme.dark(),
+        theme: mornye ? AppTheme.build(Brightness.dark) : LegacyMaterialTheme.dark(),
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         home: LibraryMixScreen(view: _mix),
@@ -357,7 +357,7 @@ Future<void> _pumpHome(
           return child!;
         },
         child: MaterialApp(
-          theme: mornye ? MornyeTheme.build(Brightness.dark) : AppTheme.dark(),
+          theme: mornye ? AppTheme.build(Brightness.dark) : LegacyMaterialTheme.dark(),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: HomeTab(

@@ -5,7 +5,7 @@ import 'package:mornye/services/hires_check_service.dart';
 import 'package:mornye/services/audio_analysis_jobs.dart';
 import 'package:mornye/services/network_audio_analysis_input.dart';
 import 'package:mornye/theme/mornye_icons.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/app_action_button.dart';
 import 'package:mornye/widgets/app_content_card.dart';
 import 'package:mornye/widgets/settings_group.dart';

@@ -21,7 +21,7 @@ import 'package:mornye/services/library_directory_index.dart';
 import 'package:mornye/services/local_track_redownload_service.dart';
 import 'package:mornye/services/playable_media.dart';
 import 'package:mornye/theme/app_tokens.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/utils/adaptive_layout.dart';
 import 'package:mornye/utils/file_access.dart';
 import 'package:mornye/utils/nav_bar_inset.dart';

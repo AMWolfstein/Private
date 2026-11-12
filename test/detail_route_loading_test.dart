@@ -10,7 +10,7 @@ import 'package:mornye/l10n/l10n.dart';
 import 'package:mornye/screens/local_album_screen.dart';
 import 'package:mornye/screens/track_metadata_screen.dart';
 import 'package:mornye/services/library_database.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/animation_utils.dart';
 
 LocalLibraryItem _track(int number) => LocalLibraryItem(
@@ -34,7 +34,7 @@ void main() {
       ProviderScope(
         child: MaterialApp(
           navigatorKey: navigator,
-          theme: MornyeTheme.build(Brightness.light),
+          theme: AppTheme.build(Brightness.light),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: const Scaffold(body: Text('Library')),

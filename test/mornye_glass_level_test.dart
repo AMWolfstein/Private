@@ -7,7 +7,7 @@ import 'package:liquid_glass_easy/liquid_glass_easy.dart';
 import 'package:mornye/models/settings.dart';
 import 'package:mornye/providers/runtime_profile_provider.dart';
 import 'package:mornye/providers/settings_provider.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/app_switch.dart';
 import 'package:mornye/widgets/extension_repo_card.dart';
 import 'package:mornye/widgets/mornye_chrome.dart';
@@ -63,7 +63,7 @@ void main() {
                 deviceSupportsBackdropBlurProvider.overrideWithValue(true),
               ],
               child: MaterialApp(
-                theme: MornyeTheme.build(brightness),
+                theme: AppTheme.build(brightness),
                 home: Scaffold(
                   body: Column(
                     children: [
@@ -181,7 +181,7 @@ void main() {
           backdropBlurEnabledProvider.overrideWithValue(false),
         ],
         child: MaterialApp(
-          theme: MornyeTheme.build(Brightness.dark),
+          theme: AppTheme.build(Brightness.dark),
           home: Scaffold(
             body: Column(
               children: [
@@ -242,7 +242,7 @@ void main() {
               ),
             ],
             child: MaterialApp(
-              theme: MornyeTheme.build(Brightness.light),
+              theme: AppTheme.build(Brightness.light),
               home: const MornyeGlass.navigation(
                 blurEnabled: true,
                 child: SizedBox(width: 200, height: 50),
@@ -269,7 +269,7 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           child: MaterialApp(
-            theme: MornyeTheme.build(Brightness.dark),
+            theme: AppTheme.build(Brightness.dark),
             home: Scaffold(
               body: Builder(
                 builder: (builderContext) {
@@ -342,7 +342,7 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         child: MaterialApp(
-          theme: MornyeTheme.build(Brightness.dark),
+          theme: AppTheme.build(Brightness.dark),
           home: Scaffold(
             body: Column(
               children: [
@@ -413,7 +413,7 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         child: MaterialApp(
-          theme: MornyeTheme.build(Brightness.dark),
+          theme: AppTheme.build(Brightness.dark),
           home: Scaffold(
             body: Column(
               children: [
@@ -458,7 +458,7 @@ void main() {
           mornyeGlassLevelProvider.overrideWithValue(MornyeGlassLevel.liquid),
         ],
         child: MaterialApp(
-          theme: MornyeTheme.build(Brightness.dark),
+          theme: AppTheme.build(Brightness.dark),
           home: Scaffold(
             body: Column(
               children: [
@@ -524,7 +524,7 @@ void main() {
             mornyeGlassLevelProvider.overrideWithValue(MornyeGlassLevel.liquid),
           ],
           child: MaterialApp(
-            theme: MornyeTheme.build(Brightness.dark),
+            theme: AppTheme.build(Brightness.dark),
             home: Scaffold(
               body: MornyeGlassPanel.overlay(child: const SizedBox(height: 40)),
             ),

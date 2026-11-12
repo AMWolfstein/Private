@@ -7,8 +7,8 @@ import 'package:mornye/l10n/l10n.dart';
 import 'package:mornye/providers/settings_provider.dart';
 import 'package:mornye/services/batch_metadata_re_enrich.dart';
 import 'package:mornye/services/library_database.dart';
+import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/theme/app_theme.dart';
-import 'package:mornye/theme/mornye_theme.dart';
 import 'package:mornye/widgets/app_bottom_sheet.dart';
 import 'package:mornye/widgets/re_enrich_review_sheet.dart';
 import 'package:mornye/widgets/selection_bottom_bar.dart';
@@ -23,7 +23,7 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         child: MaterialApp(
-          theme: AppTheme.light(),
+          theme: LegacyMaterialTheme.light(),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: Builder(
@@ -92,8 +92,8 @@ void main() {
           ProviderScope(
             child: MaterialApp(
               theme: mornye
-                  ? MornyeTheme.build(Brightness.light)
-                  : AppTheme.light(),
+                  ? AppTheme.build(Brightness.light)
+                  : LegacyMaterialTheme.light(),
               localizationsDelegates: AppLocalizations.localizationsDelegates,
               supportedLocales: AppLocalizations.supportedLocales,
               home: Scaffold(
@@ -161,7 +161,7 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           child: MaterialApp(
-            theme: mornye ? MornyeTheme.build(Brightness.dark) : ThemeData(),
+            theme: mornye ? AppTheme.build(Brightness.dark) : ThemeData(),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             home: Scaffold(
@@ -230,7 +230,7 @@ void main() {
               ],
               child: MaterialApp(
                 theme: mornye
-                    ? MornyeTheme.build(Brightness.dark)
+                    ? AppTheme.build(Brightness.dark)
                     : ThemeData(),
                 localizationsDelegates: AppLocalizations.localizationsDelegates,
                 supportedLocales: AppLocalizations.supportedLocales,

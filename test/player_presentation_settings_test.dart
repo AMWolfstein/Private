@@ -10,8 +10,8 @@ import 'package:mornye/l10n/l10n.dart';
 import 'package:mornye/models/settings.dart';
 import 'package:mornye/providers/settings_provider.dart';
 import 'package:mornye/screens/settings/playback_settings_page.dart';
+import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/theme/app_theme.dart';
-import 'package:mornye/theme/mornye_theme.dart';
 import 'package:mornye/utils/settings_search_catalog.dart';
 import 'package:mornye/widgets/material_player_backdrop.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -83,7 +83,7 @@ void main() {
       UncontrolledProviderScope(
         container: container,
         child: MaterialApp(
-          theme: AppTheme.light(),
+          theme: LegacyMaterialTheme.light(),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: const PlaybackSettingsPage(),
@@ -136,8 +136,8 @@ void main() {
             container: container,
             child: MaterialApp(
               theme: mornye
-                  ? MornyeTheme.build(Brightness.dark)
-                  : AppTheme.light(),
+                  ? AppTheme.build(Brightness.dark)
+                  : LegacyMaterialTheme.light(),
               localizationsDelegates: AppLocalizations.localizationsDelegates,
               supportedLocales: AppLocalizations.supportedLocales,
               home: const PlaybackSettingsPage(),

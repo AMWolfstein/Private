@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/library_fast_scroller.dart';
 
 void main() {
@@ -11,7 +11,7 @@ void main() {
     int itemCount = 400,
     bool mornye = false,
   }) => MaterialApp(
-    theme: mornye ? MornyeTheme.build(Brightness.light) : null,
+    theme: mornye ? AppTheme.build(Brightness.light) : null,
     home: Scaffold(
       body: LibraryFastScroller(
         labelAt: (fraction) =>

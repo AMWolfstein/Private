@@ -5,8 +5,8 @@ import 'package:mornye/l10n/l10n.dart';
 import 'package:mornye/providers/local_library_provider.dart';
 import 'package:mornye/providers/settings_provider.dart';
 import 'package:mornye/services/library_database.dart';
+import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/theme/app_theme.dart';
-import 'package:mornye/theme/mornye_theme.dart';
 import 'package:mornye/widgets/duplicate_review_sheet.dart';
 
 import 'support/fixed_settings.dart';
@@ -37,7 +37,7 @@ void main() {
             }),
           ],
           child: MaterialApp(
-            theme: AppTheme.dark().copyWith(platform: platform),
+            theme: LegacyMaterialTheme.dark().copyWith(platform: platform),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             home: const Scaffold(body: DuplicateReviewSheet()),
@@ -67,10 +67,10 @@ void main() {
             tester.view.devicePixelRatio = 1;
             addTearDown(tester.view.reset);
             final theme = mornye
-                ? MornyeTheme.build(brightness)
+                ? AppTheme.build(brightness)
                 : brightness == Brightness.dark
-                ? AppTheme.dark()
-                : AppTheme.light();
+                ? LegacyMaterialTheme.dark()
+                : LegacyMaterialTheme.light();
             final count = brightness == Brightness.dark ? 10 : 24;
             await tester.pumpWidget(
               ProviderScope(

@@ -5,7 +5,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mornye/l10n/l10n.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/app_snack_bar.dart';
 import 'package:mornye/widgets/mornye_chrome.dart';
 import 'package:mornye/widgets/view_queue_snackbar_action.dart';
@@ -25,7 +25,7 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           child: MaterialApp(
-            theme: MornyeTheme.build(brightness),
+            theme: AppTheme.build(brightness),
             builder: (_, child) => RepaintBoundary(
               key: capture,
               child: AppScaffoldMessenger(child: child!),
@@ -92,7 +92,7 @@ void main() {
         // backdrop hues must remain visibly distinct throughout the transition.
         expect(colors![0].b - colors[0].r, greaterThan(0.16));
         expect(colors[1].r - colors[1].b, greaterThan(0.16));
-        final foreground = MornyeTheme.build(brightness).colorScheme.onSurface;
+        final foreground = AppTheme.build(brightness).colorScheme.onSurface;
         for (final background in colors) {
           final luminances = [
             foreground.computeLuminance(),
@@ -116,7 +116,7 @@ void main() {
         await tester.pumpWidget(
           ProviderScope(
             child: MaterialApp(
-              theme: mornye ? MornyeTheme.build(Brightness.dark) : ThemeData(),
+              theme: mornye ? AppTheme.build(Brightness.dark) : ThemeData(),
               builder: (_, child) => AppScaffoldMessenger(child: child!),
               home: Builder(
                 builder: (context) {
@@ -157,7 +157,7 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           child: MaterialApp(
-            theme: mornye ? MornyeTheme.build(Brightness.dark) : ThemeData(),
+            theme: mornye ? AppTheme.build(Brightness.dark) : ThemeData(),
             builder: (_, child) => AppScaffoldMessenger(child: child!),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
@@ -209,7 +209,7 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           child: MaterialApp(
-            theme: mornye ? MornyeTheme.build(Brightness.light) : ThemeData(),
+            theme: mornye ? AppTheme.build(Brightness.light) : ThemeData(),
             builder: (context, child) => MediaQuery(
               data: MediaQuery.of(
                 context,

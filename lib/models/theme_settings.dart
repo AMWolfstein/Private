@@ -33,12 +33,12 @@ const String kMornyeGlassOutlinesKey = 'mornye_glass_outlines';
 
 enum AppThemeStyle { material, mornye }
 
-enum MornyeAccent { red, orange, green, teal, blue, purple, pink }
+enum AppAccent { red, orange, green, teal, blue, purple, pink }
 
-MornyeAccent mornyeAccentFromString(String? value) =>
-    MornyeAccent.values.firstWhere(
+AppAccent appAccentFromString(String? value) =>
+    AppAccent.values.firstWhere(
       (accent) => accent.name == value,
-      orElse: () => MornyeAccent.blue,
+      orElse: () => AppAccent.blue,
     );
 
 /// Style used until the person picks one: Material on Android.
@@ -56,7 +56,7 @@ class ThemeSettings {
   final int seedColorValue;
   final bool useAmoled;
   final AppThemeStyle style;
-  final MornyeAccent mornyeAccent;
+  final AppAccent mornyeAccent;
   final bool useSystemFont;
   final String customFontId;
   final String customFontName;
@@ -71,7 +71,7 @@ class ThemeSettings {
     this.seedColorValue = kDefaultSeedColor,
     this.useAmoled = false,
     this.style = AppThemeStyle.material,
-    this.mornyeAccent = MornyeAccent.blue,
+    this.mornyeAccent = AppAccent.blue,
     this.useSystemFont = false,
     this.customFontId = '',
     this.customFontName = '',
@@ -89,7 +89,7 @@ class ThemeSettings {
     int? seedColorValue,
     bool? useAmoled,
     AppThemeStyle? style,
-    MornyeAccent? mornyeAccent,
+    AppAccent? mornyeAccent,
     bool? useSystemFont,
     String? customFontId,
     String? customFontName,
@@ -142,7 +142,7 @@ class ThemeSettings {
       seedColorValue: json[kSeedColorKey] as int? ?? kDefaultSeedColor,
       useAmoled: json[kUseAmoledKey] as bool? ?? false,
       style: themeStyleFromString(json[kThemeStyleKey] as String?),
-      mornyeAccent: mornyeAccentFromString(json[kMornyeAccentKey] as String?),
+      mornyeAccent: appAccentFromString(json[kMornyeAccentKey] as String?),
       useSystemFont: json[kUseSystemFontKey] as bool? ?? false,
       customFontId: json[kCustomFontIdKey] as String? ?? '',
       customFontName: json[kCustomFontNameKey] as String? ?? '',

@@ -18,8 +18,8 @@ import 'package:mornye/routes/now_playing_route.dart';
 import 'package:mornye/screens/home_tab.dart';
 import 'package:mornye/screens/main_shell.dart';
 import 'package:mornye/services/playable_media.dart';
-import 'package:mornye/theme/mornye_theme.dart';
 import 'package:mornye/theme/app_theme.dart';
+import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/widgets/expressive_navigation_bar.dart';
 import 'package:mornye/widgets/mornye_bottom_bar.dart';
 import 'package:mornye/widgets/mini_player.dart';
@@ -97,8 +97,8 @@ void main() {
           valueListenable: locale,
           builder: (context, value, _) => MaterialApp.router(
             theme: mornye
-                ? MornyeTheme.build(Brightness.dark)
-                : AppTheme.dark(),
+                ? AppTheme.build(Brightness.dark)
+                : LegacyMaterialTheme.dark(),
             locale: value,
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,

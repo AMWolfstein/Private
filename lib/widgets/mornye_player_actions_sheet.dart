@@ -6,7 +6,7 @@ import 'package:mornye/l10n/l10n.dart';
 import 'package:mornye/providers/library_collections_provider.dart';
 import 'package:mornye/providers/music_player_provider.dart';
 import 'package:mornye/theme/cover_palette.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/mornye_context_menu.dart';
 import 'package:mornye/services/network_offline_saver.dart';
 
@@ -210,7 +210,7 @@ class _MornyePlayerMenuSurface extends StatelessWidget {
             .withLightness(0.28)
             .toColor();
         return Theme(
-          data: MornyeTheme.fromContext(
+          data: AppTheme.fromContext(
             context,
             brightness: Brightness.dark,
             chromeSurface: surface,

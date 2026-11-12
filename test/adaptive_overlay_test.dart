@@ -9,7 +9,7 @@ import 'package:mornye/providers/settings_provider.dart';
 import 'package:mornye/screens/settings/download_settings_page.dart';
 import 'package:mornye/services/app_remote_config_service.dart';
 import 'package:mornye/services/update_checker.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/theme/material_symbols.dart';
 import 'package:mornye/theme/mornye_icons.dart';
 import 'package:mornye/widgets/app_alert_dialog.dart';
@@ -38,7 +38,7 @@ void main() {
   for (final mornye in [false, true]) {
     for (final brightness in Brightness.values) {
       final theme = mornye
-          ? MornyeTheme.build(brightness)
+          ? AppTheme.build(brightness)
           : ThemeData(brightness: brightness);
       final variant = 'Mornye: $mornye, $brightness';
 
@@ -570,7 +570,7 @@ void main() {
       var dismissals = 0;
       await tester.pumpWidget(
         _app(
-          mornye ? MornyeTheme.build(Brightness.dark) : ThemeData(),
+          mornye ? AppTheme.build(Brightness.dark) : ThemeData(),
           Builder(
             builder: (context) => Scaffold(
               body: TextButton(

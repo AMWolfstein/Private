@@ -5,7 +5,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/app_switch.dart';
 import 'package:mornye/widgets/mornye_chrome.dart';
 import 'package:mornye/widgets/mornye_selection_pill.dart';
@@ -295,7 +295,7 @@ void main() {
       var selected = -1;
       final changes = <int>[];
       final capture = GlobalKey();
-      final theme = MornyeTheme.build(Brightness.dark);
+      final theme = AppTheme.build(Brightness.dark);
       await tester.pumpWidget(
         ProviderScope(
           child: MaterialApp(
@@ -428,7 +428,7 @@ void main() {
       final changes = <bool>[];
       await tester.pumpWidget(
         MaterialApp(
-          theme: MornyeTheme.build(Brightness.dark),
+          theme: AppTheme.build(Brightness.dark),
           home: Directionality(
             textDirection: direction,
             child: Scaffold(
@@ -468,7 +468,7 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         child: MaterialApp(
-          theme: MornyeTheme.build(Brightness.dark),
+          theme: AppTheme.build(Brightness.dark),
           home: MediaQuery(
             data: const MediaQueryData(textScaler: TextScaler.linear(3)),
             child: Scaffold(

@@ -5,7 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:mornye/theme/app_motion.dart';
 import 'package:mornye/theme/app_tokens.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/mornye_chrome.dart';
 import 'package:mornye/widgets/app_bottom_sheet.dart';
 import 'package:mornye/widgets/expressive_button.dart';
@@ -266,7 +266,7 @@ class SelectionBottomBar extends StatelessWidget {
             Tooltip(
               message: MaterialLocalizations.of(context).closeButtonTooltip,
               child: CupertinoButton(
-                color: MornyeTheme.controlFill(context),
+                color: AppTheme.controlFill(context),
                 borderRadius: BorderRadius.circular(28),
                 padding: const EdgeInsets.all(12),
                 onPressed: onClose,

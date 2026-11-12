@@ -5,8 +5,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mornye/l10n/l10n.dart';
 import 'package:mornye/models/settings.dart';
 import 'package:mornye/providers/settings_provider.dart';
+import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/theme/app_theme.dart';
-import 'package:mornye/theme/mornye_theme.dart';
 import 'package:mornye/widgets/app_slider.dart';
 import 'package:mornye/widgets/automix_settings.dart';
 import 'package:mornye/widgets/music_haptics_settings.dart';
@@ -39,8 +39,8 @@ void main() {
         container: container,
         child: MaterialApp(
           theme: mornye
-              ? MornyeTheme.build(Brightness.light)
-              : AppTheme.light(),
+              ? AppTheme.build(Brightness.light)
+              : LegacyMaterialTheme.light(),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: Scaffold(body: SingleChildScrollView(child: child)),

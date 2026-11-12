@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mornye/services/shell_navigation_service.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/animation_utils.dart';
 import 'package:mornye/widgets/mornye_artist_header.dart';
 
@@ -20,7 +20,7 @@ void main() {
       ]) {
         await tester.pumpWidget(
           MaterialApp(
-            theme: MornyeTheme.build(brightness),
+            theme: AppTheme.build(brightness),
             home: Scaffold(body: skeleton),
           ),
         );
@@ -46,7 +46,7 @@ void main() {
       addTearDown(observer.detach);
       await tester.pumpWidget(
         MaterialApp(
-          theme: MornyeTheme.build(Brightness.light),
+          theme: AppTheme.build(Brightness.light),
           home: Navigator(
             key: key,
             observers: [observer],

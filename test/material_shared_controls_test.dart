@@ -3,8 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_3_expressive/material_3_expressive.dart';
 import 'package:mornye/l10n/l10n.dart';
+import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/theme/app_theme.dart';
-import 'package:mornye/theme/mornye_theme.dart';
 import 'package:mornye/widgets/app_alert_dialog.dart';
 import 'package:mornye/widgets/app_checkbox.dart';
 import 'package:mornye/widgets/app_content_card.dart';
@@ -14,7 +14,7 @@ import 'package:mornye/widgets/app_text_field.dart';
 Widget _host(Widget child, {ThemeData? theme, bool reduceMotion = false}) =>
     ProviderScope(
       child: MaterialApp(
-        theme: theme ?? AppTheme.light(),
+        theme: theme ?? LegacyMaterialTheme.light(),
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         builder: (context, child) => MediaQuery(
@@ -68,8 +68,8 @@ void main() {
   testWidgets('popup retains the anchor theme above a nested navigator', (
     tester,
   ) async {
-    final localTheme = AppTheme.dark().copyWith(
-      colorScheme: AppTheme.dark().colorScheme.copyWith(
+    final localTheme = LegacyMaterialTheme.dark().copyWith(
+      colorScheme: LegacyMaterialTheme.dark().colorScheme.copyWith(
         primary: const Color(0xff95ed72),
       ),
     );
@@ -278,7 +278,7 @@ void main() {
               ),
             ),
             theme: variant == 'mornye'
-                ? MornyeTheme.build(Brightness.dark)
+                ? AppTheme.build(Brightness.dark)
                 : null,
             reduceMotion: variant == 'reduced',
           ),
@@ -311,7 +311,7 @@ void main() {
           onLongPress: () => longPresses++,
           child: const SizedBox(height: 60, child: Text('Press card')),
         ),
-        theme: MornyeTheme.build(Brightness.dark),
+        theme: AppTheme.build(Brightness.dark),
       ),
     );
     expect(tester.getSize(find.byType(AppContentCard)).height, 84);

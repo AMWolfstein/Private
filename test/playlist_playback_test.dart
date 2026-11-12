@@ -18,8 +18,8 @@ import 'package:mornye/providers/playback_provider.dart';
 import 'package:mornye/providers/settings_provider.dart';
 import 'package:mornye/screens/library_tracks_folder_screen.dart';
 import 'package:mornye/services/music_player_service.dart';
+import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/theme/app_theme.dart';
-import 'package:mornye/theme/mornye_theme.dart';
 import 'package:mornye/widgets/album_detail_header.dart';
 import 'package:mornye/widgets/track_card.dart';
 import 'package:mornye/widgets/selection_action_button.dart';
@@ -243,7 +243,7 @@ Widget _selectionApp({
     localLibraryFirstCoverProvider.overrideWith((ref, request) async => null),
   ],
   child: MaterialApp(
-    theme: mornye ? MornyeTheme.build(Brightness.dark) : AppTheme.light(),
+    theme: mornye ? AppTheme.build(Brightness.dark) : LegacyMaterialTheme.light(),
     localizationsDelegates: AppLocalizations.localizationsDelegates,
     supportedLocales: AppLocalizations.supportedLocales,
     home: const SelectionOverlayHost(
@@ -455,8 +455,8 @@ void main() {
           ],
           child: MaterialApp(
             theme: mornye
-                ? MornyeTheme.build(Brightness.dark)
-                : AppTheme.light(),
+                ? AppTheme.build(Brightness.dark)
+                : LegacyMaterialTheme.light(),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             home: const LibraryTracksFolderScreen(
@@ -514,8 +514,8 @@ void main() {
           ],
           child: MaterialApp(
             theme: mornye
-                ? MornyeTheme.build(Brightness.dark)
-                : AppTheme.light(),
+                ? AppTheme.build(Brightness.dark)
+                : LegacyMaterialTheme.light(),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             home: const LibraryTracksFolderScreen(
@@ -581,8 +581,8 @@ void main() {
               ],
               child: MaterialApp(
                 theme: mornye
-                    ? MornyeTheme.build(Brightness.dark)
-                    : AppTheme.light(),
+                    ? AppTheme.build(Brightness.dark)
+                    : LegacyMaterialTheme.light(),
                 localizationsDelegates: AppLocalizations.localizationsDelegates,
                 supportedLocales: AppLocalizations.supportedLocales,
                 home: LibraryTracksFolderScreen(
@@ -652,8 +652,8 @@ void main() {
           ],
           child: MaterialApp(
             theme: mornye
-                ? MornyeTheme.build(Brightness.dark)
-                : AppTheme.light(),
+                ? AppTheme.build(Brightness.dark)
+                : LegacyMaterialTheme.light(),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             home: const LibraryTracksFolderScreen(
@@ -709,8 +709,8 @@ void main() {
           ],
           child: MaterialApp(
             theme: mornye
-                ? MornyeTheme.build(Brightness.dark)
-                : AppTheme.light(),
+                ? AppTheme.build(Brightness.dark)
+                : LegacyMaterialTheme.light(),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             home: const LibraryTracksFolderScreen(
@@ -760,8 +760,8 @@ void main() {
           child: MaterialApp(
             locale: const Locale('ar'),
             theme: mornye
-                ? MornyeTheme.build(Brightness.dark)
-                : AppTheme.light(),
+                ? AppTheme.build(Brightness.dark)
+                : LegacyMaterialTheme.light(),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             home: const LibraryTracksFolderScreen(

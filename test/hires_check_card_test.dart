@@ -9,8 +9,8 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mornye/l10n/l10n.dart';
+import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/theme/app_theme.dart';
-import 'package:mornye/theme/mornye_theme.dart';
 import 'package:mornye/widgets/expressive_button.dart';
 import 'package:mornye/widgets/hires_check_card.dart';
 
@@ -72,10 +72,10 @@ void main() {
     await tester.pumpWidget(
       MaterialApp(
         theme: mornye
-            ? MornyeTheme.build(brightness)
+            ? AppTheme.build(brightness)
             : brightness == Brightness.light
-            ? AppTheme.light()
-            : AppTheme.dark(),
+            ? LegacyMaterialTheme.light()
+            : LegacyMaterialTheme.dark(),
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         locale: const Locale('en'),

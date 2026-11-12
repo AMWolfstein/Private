@@ -31,7 +31,7 @@ void main() {
 
   test('a saved snapshot writes exactly the retained keys', () {
     final json = const ThemeSettings(
-      mornyeAccent: MornyeAccent.teal,
+      mornyeAccent: AppAccent.teal,
       mornyeGlassOutlines: false,
       lyricsOffsetMs: 250,
     ).toJson();
@@ -70,7 +70,7 @@ void main() {
       kMornyeGlassOutlinesKey: false,
     });
 
-    expect(settings.mornyeAccent, MornyeAccent.purple);
+    expect(settings.mornyeAccent, AppAccent.purple);
     expect(settings.lyricsBlur, 0.5);
     expect(settings.mornyeGlassOutlines, isFalse);
   });
@@ -82,7 +82,7 @@ void main() {
       kThemeModeKey: 'sideways',
     });
 
-    expect(settings.mornyeAccent, MornyeAccent.blue);
+    expect(settings.mornyeAccent, AppAccent.blue);
     expect(settings.themeMode, ThemeMode.system);
     expect(settings.mornyeGlassOutlines, isTrue);
     expect(settings.lyricsTextScale, 1);
@@ -95,7 +95,7 @@ void main() {
     final settings = loadBootstrapThemeSettings(prefs);
 
     expect(settings.themeMode, ThemeMode.system);
-    expect(settings.mornyeAccent, MornyeAccent.blue);
+    expect(settings.mornyeAccent, AppAccent.blue);
     expect(settings.useSystemFont, isFalse);
     expect(settings.mornyeGlassOutlines, isTrue);
     expect(settings.lyricsTextScale, 1);
@@ -107,11 +107,11 @@ void main() {
     SharedPreferences.setMockInitialValues({kMornyeAccentKey: 'red'});
     final prefs = await SharedPreferences.getInstance();
 
-    expect(loadBootstrapThemeSettings(prefs).mornyeAccent, MornyeAccent.blue);
+    expect(loadBootstrapThemeSettings(prefs).mornyeAccent, AppAccent.blue);
     expect(prefs.getBool(kMornyeAccentMovedToBlueKey), isTrue);
 
     await prefs.setString(kMornyeAccentKey, 'red');
-    expect(loadBootstrapThemeSettings(prefs).mornyeAccent, MornyeAccent.red);
+    expect(loadBootstrapThemeSettings(prefs).mornyeAccent, AppAccent.red);
   });
 
   test('a stored accent is kept once the move marker is set', () async {
@@ -121,7 +121,7 @@ void main() {
     });
     final prefs = await SharedPreferences.getInstance();
 
-    expect(loadBootstrapThemeSettings(prefs).mornyeAccent, MornyeAccent.red);
+    expect(loadBootstrapThemeSettings(prefs).mornyeAccent, AppAccent.red);
   });
 
   test('a missing or invalid stored accent loads the blue fallback', () async {
@@ -131,7 +131,7 @@ void main() {
     });
     final prefs = await SharedPreferences.getInstance();
 
-    expect(loadBootstrapThemeSettings(prefs).mornyeAccent, MornyeAccent.blue);
+    expect(loadBootstrapThemeSettings(prefs).mornyeAccent, AppAccent.blue);
   });
 
   test('legacy theme style and colour preferences are read without changing', () async {
@@ -146,7 +146,7 @@ void main() {
     final prefs = await SharedPreferences.getInstance();
 
     final settings = loadBootstrapThemeSettings(prefs);
-    expect(settings.mornyeAccent, MornyeAccent.green);
+    expect(settings.mornyeAccent, AppAccent.green);
     expect(prefs.getString(kThemeStyleKey), 'material');
     expect(prefs.getBool(kUseAmoledKey), isTrue);
   });

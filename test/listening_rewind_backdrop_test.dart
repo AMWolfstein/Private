@@ -12,7 +12,7 @@ import 'package:mornye/l10n/l10n.dart';
 import 'package:mornye/screens/listening_rewind_screen.dart';
 import 'package:mornye/services/listening_rewind.dart';
 import 'package:mornye/services/listening_statistics.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/app_shape.dart';
 import 'package:mornye/widgets/cached_cover_image.dart';
 import 'package:mornye/widgets/decorative_phase.dart';
@@ -161,7 +161,7 @@ void main() {
           listeningRewindProvider.overrideWith((ref, period) async => rewind),
         ],
         child: MaterialApp(
-          theme: mornye ? MornyeTheme.build(Brightness.dark) : ThemeData(),
+          theme: mornye ? AppTheme.build(Brightness.dark) : ThemeData(),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           builder: (context, child) => ListenableBuilder(

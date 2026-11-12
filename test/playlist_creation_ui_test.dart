@@ -8,7 +8,7 @@ import 'package:mornye/models/settings.dart';
 import 'package:mornye/models/track.dart';
 import 'package:mornye/providers/library_collections_provider.dart';
 import 'package:mornye/providers/settings_provider.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/create_playlist_sheet.dart';
 
 class _Settings extends SettingsNotifier {
@@ -73,7 +73,7 @@ Widget _app(Widget home, _Collections collections, {required bool mornye}) =>
         libraryCollectionsProvider.overrideWith(() => collections),
       ],
       child: MaterialApp(
-        theme: mornye ? MornyeTheme.build(Brightness.light) : ThemeData(),
+        theme: mornye ? AppTheme.build(Brightness.light) : ThemeData(),
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         home: home,

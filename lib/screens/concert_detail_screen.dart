@@ -11,7 +11,7 @@ import 'package:mornye/services/concert_calendar_service.dart';
 import 'package:mornye/services/platform_bridge.dart';
 import 'package:mornye/services/shell_navigation_service.dart';
 import 'package:mornye/theme/cover_palette.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/utils/nav_bar_inset.dart';
 import 'package:mornye/widgets/album_detail_header.dart';
 import 'package:mornye/widgets/animation_utils.dart';
@@ -99,7 +99,7 @@ class _ConcertDetailScreenState extends State<ConcertDetailScreen> {
         ),
       );
     }
-    final base = MornyeTheme.fromContext(context, brightness: Brightness.dark);
+    final base = AppTheme.fromContext(context, brightness: Brightness.dark);
     return Theme(
       data: base,
       child: CoverPaletteBuilder(

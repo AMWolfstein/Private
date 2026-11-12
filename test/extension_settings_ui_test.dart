@@ -11,7 +11,7 @@ import 'package:mornye/providers/extension_provider.dart';
 import 'package:mornye/providers/settings_provider.dart';
 import 'package:mornye/screens/settings/extension_detail_page.dart';
 import 'package:mornye/screens/settings/extensions_page.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/mornye_chrome.dart';
 import 'package:mornye/widgets/settings_group.dart';
 import 'package:mornye/widgets/extension_icon_image.dart';
@@ -160,7 +160,7 @@ void main() {
               extensionProvider.overrideWith(_Extensions.new),
             ],
             child: MaterialApp(
-              theme: mornye ? MornyeTheme.build(Brightness.dark) : ThemeData(),
+              theme: mornye ? AppTheme.build(Brightness.dark) : ThemeData(),
               localizationsDelegates: AppLocalizations.localizationsDelegates,
               supportedLocales: AppLocalizations.supportedLocales,
               builder: (context, child) => MediaQuery(
@@ -241,7 +241,7 @@ void main() {
             extensionProvider.overrideWith(_Extensions.new),
           ],
           child: MaterialApp(
-            theme: MornyeTheme.build(Brightness.dark),
+            theme: AppTheme.build(Brightness.dark),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             home: page,

@@ -5,9 +5,9 @@ import 'package:material_3_expressive/material_3_expressive.dart';
 import 'package:mornye/l10n/app_localizations.dart';
 import 'package:mornye/models/theme_settings.dart';
 import 'package:mornye/providers/theme_provider.dart';
-import 'package:mornye/theme/app_theme.dart';
+import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/theme/dynamic_color_wrapper.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/settings_group.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -20,7 +20,7 @@ double _contrast(Color first, Color second) {
 
 Widget _host(Widget child, {ThemeData? theme, bool reduceMotion = false}) {
   return MaterialApp(
-    theme: theme ?? AppTheme.light(),
+    theme: theme ?? LegacyMaterialTheme.light(),
     localizationsDelegates: AppLocalizations.localizationsDelegates,
     supportedLocales: AppLocalizations.supportedLocales,
     builder: (context, child) => MediaQuery(
@@ -56,7 +56,7 @@ BorderRadius? _radiusOf(ShapeBorder? shape) =>
 void main() {
   group('settingsGroupColor', () {
     testWidgets('Material groups keep the 5.2.1 neutral fill', (tester) async {
-      for (final theme in [AppTheme.light(), AppTheme.dark()]) {
+      for (final theme in [LegacyMaterialTheme.light(), LegacyMaterialTheme.dark()]) {
         final scheme = theme.colorScheme;
         final color = await _groupColor(tester, theme);
         final expected = Color.alphaBlend(
@@ -71,7 +71,7 @@ void main() {
     });
 
     testWidgets('Mornye keeps its grouped surface', (tester) async {
-      final theme = MornyeTheme.build(Brightness.light);
+      final theme = AppTheme.build(Brightness.light);
       expect(
         await _groupColor(tester, theme),
         theme.colorScheme.surfaceContainer,
@@ -171,7 +171,7 @@ void main() {
           reduceMotion: true,
         ),
       );
-      final scheme = AppTheme.light().colorScheme;
+      final scheme = LegacyMaterialTheme.light().colorScheme;
       final card = tester.widget<Container>(
         find
             .descendant(
@@ -198,7 +198,7 @@ void main() {
   group('menus', () {
     test('theme menus share the M3 Expressive standard menu skin', () {
       const expressive = M3EMenuTheme.defaults;
-      for (final theme in [AppTheme.light(), AppTheme.dark()]) {
+      for (final theme in [LegacyMaterialTheme.light(), LegacyMaterialTheme.dark()]) {
         final scheme = theme.colorScheme;
         final container = BorderRadius.circular(expressive.containerRadius);
 
@@ -245,7 +245,7 @@ void main() {
     testWidgets('Material info cards and chips use solid container tiers', (
       tester,
     ) async {
-      for (final theme in [AppTheme.light(), AppTheme.dark()]) {
+      for (final theme in [LegacyMaterialTheme.light(), LegacyMaterialTheme.dark()]) {
         final scheme = theme.colorScheme;
         await tester.pumpWidget(_host(fills(), theme: theme));
         await tester.pumpAndSettle();
@@ -273,7 +273,7 @@ void main() {
     });
 
     testWidgets('Mornye info cards keep their soft fills', (tester) async {
-      final theme = MornyeTheme.build(Brightness.light);
+      final theme = AppTheme.build(Brightness.light);
       final scheme = theme.colorScheme;
       await tester.pumpWidget(_host(fills(), theme: theme));
 

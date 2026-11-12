@@ -7,7 +7,7 @@ import 'package:mornye/l10n/l10n.dart';
 import 'package:mornye/providers/music_player_provider.dart';
 import 'package:mornye/models/settings.dart';
 import 'package:mornye/providers/settings_provider.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/mornye_player_queue.dart';
 
 class _Player extends MusicPlayerController {
@@ -48,7 +48,7 @@ void main() {
         for (final name in ['Previous', 'Current', 'Next', 'Last'])
           MediaItem(id: name, title: name, artist: 'Artist'),
       ];
-      final theme = MornyeTheme.build(Brightness.dark);
+      final theme = AppTheme.build(Brightness.dark);
       await tester.pumpWidget(
         ProviderScope(
           overrides: [

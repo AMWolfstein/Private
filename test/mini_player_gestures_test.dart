@@ -7,8 +7,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mornye/l10n/l10n.dart';
 import 'package:mornye/providers/music_player_provider.dart';
 import 'package:mornye/providers/runtime_profile_provider.dart';
+import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/theme/app_theme.dart';
-import 'package:mornye/theme/mornye_theme.dart';
 import 'package:mornye/widgets/mini_player.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -79,8 +79,8 @@ void main() {
           ],
           child: MaterialApp(
             theme: configuration.mornye
-                ? MornyeTheme.build(Brightness.light)
-                : AppTheme.light(),
+                ? AppTheme.build(Brightness.light)
+                : LegacyMaterialTheme.light(),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             home: Scaffold(

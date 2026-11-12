@@ -4,8 +4,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mornye/l10n/l10n.dart';
 import 'package:mornye/providers/app_crash_provider.dart';
 import 'package:mornye/screens/settings/log_screen.dart';
+import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/theme/app_theme.dart';
-import 'package:mornye/theme/mornye_theme.dart';
 import 'package:mornye/utils/logger.dart';
 import 'package:mornye/widgets/settings_group.dart';
 import 'package:path_provider/path_provider.dart';
@@ -42,8 +42,8 @@ void main() {
           overrides: [latestAppCrashProvider.overrideWith((ref) async => null)],
           child: MaterialApp(
             theme: mornye
-                ? MornyeTheme.build(Brightness.light)
-                : AppTheme.light(),
+                ? AppTheme.build(Brightness.light)
+                : LegacyMaterialTheme.light(),
             locale: const Locale('en'),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,

@@ -7,7 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mornye/l10n/l10n.dart';
 import 'package:mornye/providers/runtime_profile_provider.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/mornye_landscape_player.dart';
 
 void main() {
@@ -38,7 +38,7 @@ void main() {
             ).copyWith(accessibleNavigation: accessibleNavigation),
             child: Directionality(textDirection: direction, child: child!),
           ),
-          theme: MornyeTheme.build(Brightness.dark),
+          theme: AppTheme.build(Brightness.dark),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: Scaffold(

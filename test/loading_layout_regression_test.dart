@@ -5,8 +5,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mornye/l10n/l10n.dart';
 import 'package:mornye/providers/repo_provider.dart';
 import 'package:mornye/screens/repo_tab.dart';
+import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/theme/app_theme.dart';
-import 'package:mornye/theme/mornye_theme.dart';
 import 'package:mornye/widgets/animation_utils.dart';
 import 'package:mornye/widgets/extension_row.dart';
 
@@ -39,8 +39,8 @@ void main() {
           await tester.pumpWidget(
             MaterialApp(
               theme: brightness == Brightness.light
-                  ? AppTheme.light()
-                  : AppTheme.dark(),
+                  ? LegacyMaterialTheme.light()
+                  : LegacyMaterialTheme.dark(),
               home: Scaffold(body: skeleton),
             ),
           );
@@ -71,8 +71,8 @@ void main() {
             overrides: [repoProvider.overrideWith(_LoadingRepo.new)],
             child: MaterialApp(
               theme: mornye
-                  ? MornyeTheme.build(Brightness.dark)
-                  : AppTheme.light(),
+                  ? AppTheme.build(Brightness.dark)
+                  : LegacyMaterialTheme.light(),
               localizationsDelegates: AppLocalizations.localizationsDelegates,
               supportedLocales: AppLocalizations.supportedLocales,
               home: const RepoTab(),

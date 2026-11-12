@@ -17,7 +17,7 @@ import 'package:mornye/providers/settings_provider.dart';
 import 'package:mornye/routes/now_playing_route.dart';
 import 'package:mornye/screens/equalizer_screen.dart';
 import 'package:mornye/screens/lyrics_share_screen.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/theme/player_artwork_theme.dart';
 import 'package:mornye/utils/file_access.dart';
 import 'package:mornye/utils/lyrics_parser.dart';
@@ -255,7 +255,7 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
   }) {
     final mornye = context.isMornye;
     final colorScheme = mornye
-        ? MornyeTheme.fromContext(
+        ? AppTheme.fromContext(
             context,
             brightness: Brightness.dark,
           ).colorScheme
@@ -368,7 +368,7 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
           ),
           fullBleed: key == _motionArtworkKey,
           child: Theme(
-            data: MornyeTheme.fromContext(context, brightness: Brightness.dark),
+            data: AppTheme.fromContext(context, brightness: Brightness.dark),
             child: key == _compactArtworkKey
                 ? PlayerArtwork(
                     artUri: mediaItem.artUri?.toString(),
@@ -672,7 +672,7 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
       // exposing a detached rectangle. Keep Mornye artwork inside its panel.
       enabled: false,
       child: Theme(
-        data: MornyeTheme.fromContext(context, brightness: Brightness.dark),
+        data: AppTheme.fromContext(context, brightness: Brightness.dark),
         child: Stack(
           fit: StackFit.expand,
           children: [

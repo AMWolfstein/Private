@@ -10,8 +10,8 @@ import 'package:mornye/models/equalizer_settings.dart';
 import 'package:mornye/providers/equalizer_provider.dart';
 import 'package:mornye/screens/equalizer_screen.dart';
 import 'package:mornye/services/playback_equalizer.dart';
+import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/theme/app_theme.dart';
-import 'package:mornye/theme/mornye_theme.dart';
 import 'package:mornye/widgets/app_slider.dart';
 import 'package:mornye/widgets/mornye_chrome.dart';
 import 'package:mornye/widgets/mornye_level_slider.dart';
@@ -85,8 +85,8 @@ void main() {
             container: container,
             child: MaterialApp(
               theme: mornye
-                  ? MornyeTheme.build(Brightness.dark)
-                  : AppTheme.light(),
+                  ? AppTheme.build(Brightness.dark)
+                  : LegacyMaterialTheme.light(),
               localizationsDelegates: AppLocalizations.localizationsDelegates,
               supportedLocales: AppLocalizations.supportedLocales,
               home: const EqualizerScreen(),
@@ -357,8 +357,8 @@ void main() {
             container: container,
             child: MaterialApp(
               theme: mornye
-                  ? MornyeTheme.build(Brightness.dark)
-                  : AppTheme.light(),
+                  ? AppTheme.build(Brightness.dark)
+                  : LegacyMaterialTheme.light(),
               localizationsDelegates: AppLocalizations.localizationsDelegates,
               supportedLocales: AppLocalizations.supportedLocales,
               builder: (context, child) => MediaQuery(

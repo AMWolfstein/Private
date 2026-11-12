@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mornye/l10n/l10n.dart';
 import 'package:mornye/services/platform_bridge.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/app_alert_dialog.dart';
 import 'package:mornye/widgets/app_bottom_sheet.dart';
 
@@ -259,7 +259,7 @@ class _AccountFormDialogState extends State<_AccountFormDialog> {
       input = mornye
           ? CupertinoButton(
               onPressed: () => _chooseOption(field),
-              color: MornyeTheme.controlFill(context),
+              color: AppTheme.controlFill(context),
               borderRadius: BorderRadius.circular(12),
               padding: const EdgeInsets.all(12),
               child: Row(
@@ -314,7 +314,7 @@ class _AccountFormDialogState extends State<_AccountFormDialog> {
               controller: _controllers[key],
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: MornyeTheme.controlFill(context),
+                color: AppTheme.controlFill(context),
                 borderRadius: BorderRadius.circular(12),
               ),
               style: theme.textTheme.bodyLarge,

@@ -5,7 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mornye/l10n/app_localizations.dart';
 import 'package:mornye/providers/extension_provider.dart';
 import 'package:mornye/providers/settings_provider.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/download_service_picker.dart';
 
 import 'support/fixed_settings.dart';
@@ -100,7 +100,7 @@ void main() {
             ],
             child: MaterialApp(
               theme: mornye
-                  ? MornyeTheme.build(Brightness.dark)
+                  ? AppTheme.build(Brightness.dark)
                   : ThemeData(platform: TargetPlatform.android),
               localizationsDelegates: AppLocalizations.localizationsDelegates,
               supportedLocales: AppLocalizations.supportedLocales,
@@ -179,7 +179,7 @@ void main() {
               settingsProvider.overrideWith(FixedSettingsNotifier.new),
             ],
             child: MaterialApp(
-              theme: MornyeTheme.build(brightness),
+              theme: AppTheme.build(brightness),
               localizationsDelegates: AppLocalizations.localizationsDelegates,
               supportedLocales: AppLocalizations.supportedLocales,
               home: Scaffold(

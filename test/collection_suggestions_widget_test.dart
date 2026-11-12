@@ -8,8 +8,8 @@ import 'package:mornye/providers/library_collections_provider.dart';
 import 'package:mornye/providers/music_player_provider.dart';
 import 'package:mornye/providers/settings_provider.dart';
 import 'package:mornye/services/collection_suggestions.dart';
+import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/theme/app_theme.dart';
-import 'package:mornye/theme/mornye_theme.dart';
 import 'package:mornye/widgets/collection_suggestions_section.dart';
 
 import 'support/fixed_settings.dart';
@@ -52,7 +52,7 @@ Widget _app(
 }) => UncontrolledProviderScope(
   container: container,
   child: MaterialApp(
-    theme: mornye ? MornyeTheme.build(Brightness.light) : AppTheme.light(),
+    theme: mornye ? AppTheme.build(Brightness.light) : LegacyMaterialTheme.light(),
     localizationsDelegates: AppLocalizations.localizationsDelegates,
     supportedLocales: AppLocalizations.supportedLocales,
     home: Scaffold(body: child),

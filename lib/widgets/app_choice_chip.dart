@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:material_3_expressive/material_3_expressive.dart';
 import 'package:mornye/theme/material_expressive.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/app_icon.dart';
 
 /// A single tonal selection inside a sheet, without a second glass layer.
@@ -75,8 +75,8 @@ class AppChoiceChip extends StatelessWidget {
         borderRadius: BorderRadius.circular(24),
         color: selected
             ? scheme.primary.withValues(alpha: 0.12)
-            : MornyeTheme.controlFill(context),
-        disabledColor: MornyeTheme.controlFill(context, enabled: false),
+            : AppTheme.controlFill(context),
+        disabledColor: AppTheme.controlFill(context, enabled: false),
         onPressed: onSelected == null ? null : () => onSelected!(!selected),
         child: DefaultTextStyle(
           style: Theme.of(context).textTheme.bodyMedium!.copyWith(

@@ -6,7 +6,7 @@ import 'package:mornye/l10n/l10n.dart';
 import 'package:mornye/models/theme_settings.dart';
 import 'package:mornye/providers/runtime_profile_provider.dart';
 import 'package:mornye/providers/theme_provider.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/utils/lyrics_parser.dart';
 import 'package:mornye/widgets/app_slider.dart';
 import 'package:mornye/widgets/lyric_blur.dart';
@@ -75,7 +75,7 @@ void main() {
       UncontrolledProviderScope(
         container: container,
         child: MaterialApp(
-          theme: MornyeTheme.build(Brightness.dark),
+          theme: AppTheme.build(Brightness.dark),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: const Scaffold(body: LyricsBlurSetting()),
@@ -145,7 +145,7 @@ void main() {
     addTearDown(preview.dispose);
     final container = ProviderContainer();
     addTearDown(container.dispose);
-    final theme = MornyeTheme.build(Brightness.dark);
+    final theme = AppTheme.build(Brightness.dark);
     await tester.pumpWidget(
       UncontrolledProviderScope(
         container: container,
@@ -201,7 +201,7 @@ void main() {
       SharedPreferences.setMockInitialValues({kLyricsBlurKey: strength});
       final preview = ValueNotifier<Duration?>(const Duration(seconds: 1));
       addTearDown(preview.dispose);
-      final theme = MornyeTheme.build(Brightness.dark);
+      final theme = AppTheme.build(Brightness.dark);
       await tester.pumpWidget(
         ProviderScope(
           overrides: [mornyeLiquidGlassProvider.overrideWithValue(true)],
@@ -246,7 +246,7 @@ void main() {
       (tester) async {
         final preview = ValueNotifier<Duration?>(const Duration(seconds: 1));
         addTearDown(preview.dispose);
-        final theme = MornyeTheme.build(Brightness.dark);
+        final theme = AppTheme.build(Brightness.dark);
         await tester.pumpWidget(
           ProviderScope(
             child: MaterialApp(

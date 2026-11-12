@@ -6,7 +6,7 @@ import 'package:mornye/providers/library_collections_provider.dart';
 import 'package:mornye/screens/artist_screen.dart';
 import 'package:mornye/screens/weekly_releases_screen.dart';
 import 'package:mornye/services/cover_cache_manager.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/utils/adaptive_layout.dart';
 import 'package:mornye/utils/nav_bar_inset.dart';
 import 'package:mornye/widgets/animation_utils.dart';

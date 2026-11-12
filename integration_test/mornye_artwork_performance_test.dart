@@ -13,8 +13,8 @@ import 'package:mornye/models/track.dart';
 import 'package:mornye/providers/library_collections_provider.dart';
 import 'package:mornye/providers/music_player_provider.dart';
 import 'package:mornye/providers/settings_provider.dart';
+import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/theme/app_theme.dart';
-import 'package:mornye/theme/mornye_theme.dart';
 import 'package:mornye/utils/playback_seek_preview.dart';
 import 'package:mornye/widgets/mornye_player_artwork.dart';
 import 'package:mornye/widgets/mornye_player_layout.dart';
@@ -76,7 +76,7 @@ void runArtworkPerformanceTests({required bool mornye}) {
       duration: const Duration(minutes: 4),
       artUri: cover.uri,
     );
-    final theme = mornye ? MornyeTheme.build(Brightness.dark) : AppTheme.dark();
+    final theme = mornye ? AppTheme.build(Brightness.dark) : LegacyMaterialTheme.dark();
     final page = ValueNotifier(0);
     final metadata = PlayerMetadataController();
     final seek = PlaybackSeekPreview();

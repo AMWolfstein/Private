@@ -6,7 +6,7 @@ import 'package:mornye/constants/app_info.dart';
 import 'package:mornye/l10n/l10n.dart';
 import 'package:mornye/screens/whats_new_screen.dart';
 import 'package:mornye/theme/mornye_icons.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/utils/adaptive_layout.dart';
 import 'package:mornye/utils/nav_bar_inset.dart';
 import 'package:mornye/widgets/animation_utils.dart';

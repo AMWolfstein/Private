@@ -8,8 +8,8 @@ import 'package:mornye/providers/download_history_provider.dart';
 import 'package:mornye/screens/downloaded_album_screen.dart';
 import 'package:mornye/screens/local_album_screen.dart';
 import 'package:mornye/services/library_database.dart';
+import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/theme/app_theme.dart';
-import 'package:mornye/theme/mornye_theme.dart';
 import 'package:mornye/widgets/app_alert_dialog.dart';
 import 'package:mornye/widgets/selection_bottom_bar.dart';
 
@@ -58,8 +58,8 @@ void main() {
                 ],
                 child: MaterialApp(
                   theme: mornye
-                      ? MornyeTheme.build(Brightness.light)
-                      : AppTheme.light(),
+                      ? AppTheme.build(Brightness.light)
+                      : LegacyMaterialTheme.light(),
                   localizationsDelegates:
                       AppLocalizations.localizationsDelegates,
                   supportedLocales: AppLocalizations.supportedLocales,

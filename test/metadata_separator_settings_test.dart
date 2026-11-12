@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mornye/l10n/app_localizations.dart';
 import 'package:mornye/providers/settings_provider.dart';
 import 'package:mornye/screens/settings/metadata_separator_settings_page.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/app_bottom_sheet.dart';
 import 'package:mornye/widgets/settings_group.dart';
 
@@ -31,7 +31,7 @@ void main() {
             UncontrolledProviderScope(
               container: container,
               child: MaterialApp(
-                theme: ThemeData(extensions: [if (mornye) const MornyeTheme()]),
+                theme: ThemeData(extensions: [if (mornye) const AppTheme()]),
                 localizationsDelegates: AppLocalizations.localizationsDelegates,
                 supportedLocales: AppLocalizations.supportedLocales,
                 home: const MetadataSeparatorSettingsPage(),

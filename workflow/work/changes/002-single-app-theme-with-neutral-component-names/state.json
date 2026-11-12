@@ -37,7 +37,7 @@
   ],
   "workflow_version": 2,
   "execution": {
-    "active": null,
+    "active": "T002",
     "tasks": {
       "T001": {
         "status": "done",
@@ -79,6 +79,24 @@
           "plan.md": "428ad039f0b1df779987a90b0add6bdddcaef9b7f267202737f61bde4b43bb41",
           "log.md": "49aea81962ae818448f4ee87e93050e34c4ae10c21555ff31acbadef23b09454",
           "inventory.md": "78bf58bc03d14a044d4a3254f0b0e4e3df6bb106c34b84618c45623f03c031ac"
+        }
+      },
+      "T002": {
+        "status": "active",
+        "head": "65c00c18dd9db4002973c2f285e70bd88197e6bd",
+        "base": "65c00c18dd9db4002973c2f285e70bd88197e6bd",
+        "declaration": "T002 Promote MornyeTheme to canonical AppTheme with explicit temporary legacy-builder collision handling; neutral core types/imports, no output change (FR-002, FR-003) — check: auto",
+        "cycle": 1,
+        "reviews": [],
+        "checks": {
+          "status": "RUNNING",
+          "identity": "6271953933d14bf490fc55f4b7482b96f1b171fd4608c3559b5faa00d54c55ec",
+          "fingerprint": "9bf98a3ec318e09c8d62155a80fe19be9d62ec1a",
+          "ids": [
+            "analyze",
+            "dart-tests"
+          ],
+          "extra": []
         }
       }
     }

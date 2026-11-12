@@ -5,7 +5,7 @@ import 'package:liquid_glass_easy/liquid_glass_easy.dart';
 import 'package:mornye/models/settings.dart';
 import 'package:mornye/providers/runtime_profile_provider.dart';
 import 'package:mornye/providers/settings_provider.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/mornye_chrome.dart';
 import 'package:mornye/widgets/mornye_liquid_backdrop.dart';
 import 'package:mornye/widgets/mornye_selection_pill.dart';
@@ -24,7 +24,7 @@ Future<void> _pumpGlass(WidgetTester tester) async {
         deviceSupportsLiquidGlassProvider.overrideWithValue(true),
       ],
       child: MaterialApp(
-        theme: MornyeTheme.build(Brightness.light),
+        theme: AppTheme.build(Brightness.light),
         home: const Scaffold(
           body: MornyeGlass.navigation(
             blurEnabled: true,
@@ -62,7 +62,7 @@ void main() {
       ProviderScope(
         overrides: [settingsProvider.overrideWith(_Settings.new)],
         child: MaterialApp(
-          theme: MornyeTheme.build(Brightness.light),
+          theme: AppTheme.build(Brightness.light),
           home: Center(
             child: SizedBox(
               width: 300,

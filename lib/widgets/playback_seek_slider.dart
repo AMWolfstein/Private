@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/utils/playback_seek_preview.dart';
 import 'package:mornye/widgets/expressive_seek_track.dart';
 import 'package:mornye/widgets/mornye_player_slider.dart';

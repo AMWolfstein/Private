@@ -10,7 +10,7 @@ import 'package:mornye/providers/download_queue_provider.dart';
 import 'package:mornye/providers/settings_provider.dart';
 import 'package:mornye/screens/network_storage_screen.dart';
 import 'package:mornye/services/network_storage_service.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/app_action_button.dart';
 
 class _Storage extends NetworkStorageService {
@@ -100,7 +100,7 @@ void main() {
               ],
               child: MaterialApp(
                 theme: mornye
-                    ? MornyeTheme.build(Brightness.dark)
+                    ? AppTheme.build(Brightness.dark)
                     : ThemeData(),
                 localizationsDelegates: AppLocalizations.localizationsDelegates,
                 supportedLocales: AppLocalizations.supportedLocales,

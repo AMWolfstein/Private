@@ -9,8 +9,8 @@ import 'package:mornye/models/track.dart';
 import 'package:mornye/providers/download_queue_provider.dart';
 import 'package:mornye/providers/settings_provider.dart';
 import 'package:mornye/screens/queue_tab.dart';
+import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/theme/app_theme.dart';
-import 'package:mornye/theme/mornye_theme.dart';
 import 'package:mornye/widgets/app_alert_dialog.dart';
 
 import 'support/fixed_settings.dart';
@@ -116,8 +116,8 @@ void main() {
             child: MaterialApp(
               locale: const Locale('es', 'ES'),
               theme: mornye
-                  ? MornyeTheme.build(Brightness.dark)
-                  : AppTheme.dark(),
+                  ? AppTheme.build(Brightness.dark)
+                  : LegacyMaterialTheme.dark(),
               localizationsDelegates: AppLocalizations.localizationsDelegates,
               supportedLocales: AppLocalizations.supportedLocales,
               home: const Scaffold(body: QueueTab(librarySection: 'downloads')),

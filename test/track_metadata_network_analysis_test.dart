@@ -6,7 +6,7 @@ import 'package:mornye/l10n/l10n.dart';
 import 'package:mornye/screens/track_metadata_screen.dart';
 import 'package:mornye/services/library_database.dart';
 import 'package:mornye/services/network_storage_service.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/audio_analysis_widget.dart';
 import 'package:mornye/widgets/hires_check_card.dart';
 
@@ -53,7 +53,7 @@ void main() {
           ProviderScope(
             child: MaterialApp(
               theme: mornye
-                  ? MornyeTheme.build(Brightness.dark)
+                  ? AppTheme.build(Brightness.dark)
                   : ThemeData.dark(useMaterial3: true),
               localizationsDelegates: AppLocalizations.localizationsDelegates,
               supportedLocales: AppLocalizations.supportedLocales,
@@ -115,7 +115,7 @@ void main() {
             ProviderScope(
               child: MaterialApp(
                 theme: mornye
-                    ? MornyeTheme.build(Brightness.dark)
+                    ? AppTheme.build(Brightness.dark)
                     : ThemeData.dark(useMaterial3: true),
                 localizationsDelegates: AppLocalizations.localizationsDelegates,
                 supportedLocales: AppLocalizations.supportedLocales,

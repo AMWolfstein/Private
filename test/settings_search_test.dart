@@ -11,8 +11,8 @@ import 'package:mornye/l10n/app_localizations.dart';
 import 'package:mornye/screens/settings/about_page.dart';
 import 'package:mornye/screens/settings/settings_tab.dart';
 import 'package:mornye/services/app_remote_config_service.dart';
+import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/theme/app_theme.dart';
-import 'package:mornye/theme/mornye_theme.dart';
 import 'package:mornye/widgets/app_progress_indicator.dart';
 import 'package:mornye/widgets/settings_group.dart';
 
@@ -29,7 +29,7 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         child: MaterialApp(
-          theme: theme ?? AppTheme.light(),
+          theme: theme ?? LegacyMaterialTheme.light(),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: Scaffold(
@@ -77,7 +77,7 @@ void main() {
       await pumpSettings(
         tester,
         service: service,
-        theme: mornye ? MornyeTheme.build(Brightness.dark) : AppTheme.light(),
+        theme: mornye ? AppTheme.build(Brightness.dark) : LegacyMaterialTheme.light(),
       );
       final support = find.byWidgetPredicate(
         (widget) =>
@@ -148,7 +148,7 @@ void main() {
     ) async {
       await pumpSettings(
         tester,
-        theme: mornye ? MornyeTheme.build(Brightness.dark) : AppTheme.light(),
+        theme: mornye ? AppTheme.build(Brightness.dark) : LegacyMaterialTheme.light(),
       );
       await tester.enterText(find.byType(TextField), 'a');
       await tester.pump();
@@ -217,7 +217,7 @@ void main() {
 
     await tester.pumpWidget(
       MaterialApp(
-        theme: AppTheme.light(),
+        theme: LegacyMaterialTheme.light(),
         home: SettingsSearchHighlightScope(
           targetLabel: 'Target setting',
           child: Scaffold(

@@ -68,7 +68,7 @@ import 'package:mornye/utils/nav_bar_inset.dart';
 import 'package:mornye/utils/re_enrich_release_policy.dart';
 import 'package:mornye/utils/saf_display_path.dart';
 import 'package:mornye/theme/cover_palette.dart' show HeaderPalette;
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/theme/mornye_icons.dart';
 import 'package:mornye/widgets/album_detail_header.dart'
     show HeaderMetaRow, HeaderMetaItem, HeaderCircleButton, HeaderFilledButton;

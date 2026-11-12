@@ -8,7 +8,7 @@ import 'package:mornye/screens/listening_statistics_screen.dart';
 import 'package:mornye/screens/weekly_releases_screen.dart';
 import 'package:mornye/services/listening_statistics.dart';
 import 'package:mornye/services/weekly_releases.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/player_artwork.dart';
 
 import 'support/fixed_settings.dart';
@@ -16,7 +16,7 @@ import 'support/fixed_settings.dart';
 void main() {
   for (final mornye in [false, true]) {
     Widget app(Widget page) => MaterialApp(
-      theme: mornye ? MornyeTheme.build(Brightness.dark) : ThemeData(),
+      theme: mornye ? AppTheme.build(Brightness.dark) : ThemeData(),
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       home: page,

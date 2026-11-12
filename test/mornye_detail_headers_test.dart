@@ -6,7 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/theme/cover_palette.dart';
 import 'package:mornye/services/cover_cache_manager.dart';
 import 'package:mornye/widgets/album_detail_header.dart';
@@ -24,7 +24,7 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         child: MaterialApp(
-          theme: MornyeTheme.build(Brightness.dark),
+          theme: AppTheme.build(Brightness.dark),
           builder: (context, child) => MediaQuery(
             data: MediaQuery.of(
               context,
@@ -110,7 +110,7 @@ void main() {
       ]) {
         await tester.pumpWidget(
           MaterialApp(
-            theme: MornyeTheme.build(brightness),
+            theme: AppTheme.build(brightness),
             home: MornyeArtistSurface(
               imageSource: cover.path,
               logoSource: logo?.path,
@@ -164,7 +164,7 @@ void main() {
         await tester.pumpWidget(
           ProviderScope(
             child: MaterialApp(
-              theme: MornyeTheme.build(Brightness.light),
+              theme: AppTheme.build(Brightness.light),
               home: MornyeArtistSurface(
                 imageSource: cover.path,
                 neutralActions: true,
@@ -257,7 +257,7 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         child: MaterialApp(
-          theme: MornyeTheme.build(Brightness.light),
+          theme: AppTheme.build(Brightness.light),
           home: MornyeArtistSurface(
             imageSource: cover.path,
             neutralActions: true,
@@ -283,7 +283,7 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         child: MaterialApp(
-          theme: MornyeTheme.build(Brightness.dark),
+          theme: AppTheme.build(Brightness.dark),
           home: Scaffold(
             body: CustomScrollView(
               slivers: const [
@@ -334,7 +334,7 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           child: MaterialApp(
-            theme: MornyeTheme.build(Brightness.dark),
+            theme: AppTheme.build(Brightness.dark),
             home: Scaffold(
               body: CustomScrollView(
                 controller: controller,
@@ -399,7 +399,7 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         child: MaterialApp(
-          theme: MornyeTheme.build(Brightness.dark),
+          theme: AppTheme.build(Brightness.dark),
           home: Scaffold(
             body: CustomScrollView(
               physics: const BouncingScrollPhysics(
@@ -465,7 +465,7 @@ void main() {
           await tester.pumpWidget(
             ProviderScope(
               child: MaterialApp(
-                theme: MornyeTheme.build(Brightness.dark),
+                theme: AppTheme.build(Brightness.dark),
                 scrollBehavior: const MaterialScrollBehavior().copyWith(
                   physics: const BouncingScrollPhysics(
                     parent: AlwaysScrollableScrollPhysics(),
@@ -566,7 +566,7 @@ void main() {
           await tester.pumpWidget(
             ProviderScope(
               child: MaterialApp(
-                theme: MornyeTheme.build(brightness),
+                theme: AppTheme.build(brightness),
                 builder: (context, child) => MediaQuery(
                   data: MediaQuery.of(
                     context,
@@ -657,7 +657,7 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         child: MaterialApp(
-          theme: MornyeTheme.build(Brightness.dark),
+          theme: AppTheme.build(Brightness.dark),
           home: CollectionScaffold(
             scrollController: controller,
             isSelectionMode: false,
@@ -717,7 +717,7 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           child: MaterialApp(
-            theme: MornyeTheme.build(Brightness.dark),
+            theme: AppTheme.build(Brightness.dark),
             builder: (context, child) => MediaQuery(
               data: MediaQuery.of(
                 context,

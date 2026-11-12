@@ -177,13 +177,13 @@ extension _TrackMetadataMornye on _TrackMetadataScreenState {
   }) {
     if (context.isMornye) {
       return Material(
-        color: MornyeTheme.controlFill(context),
+        color: AppTheme.controlFill(context),
         borderRadius: BorderRadius.circular(28),
         clipBehavior: Clip.antiAlias,
         child: DividerTheme(
           data: DividerTheme.of(
             context,
-          ).copyWith(color: MornyeTheme.metadataDividerColor(context)),
+          ).copyWith(color: AppTheme.metadataDividerColor(context)),
           child: child,
         ),
       );

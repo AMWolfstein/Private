@@ -7,7 +7,7 @@ import 'package:liquid_glass_easy/liquid_glass_easy.dart';
 import 'package:mornye/l10n/l10n.dart';
 import 'package:mornye/providers/music_player_provider.dart';
 import 'package:mornye/providers/runtime_profile_provider.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/mini_player.dart';
 import 'package:mornye/widgets/mornye_chrome.dart';
 
@@ -188,7 +188,7 @@ class _MornyeBottomBarState extends ConsumerState<MornyeBottomBar>
       child: MornyeGlass.navigation(
         blurEnabled: blurEnabled,
         strongTint: true,
-        tintOpacity: MornyeTheme.navigationOpacity(context),
+        tintOpacity: AppTheme.navigationOpacity(context),
         radius: 26,
         child: const SizedBox.expand(),
       ),

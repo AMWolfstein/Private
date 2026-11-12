@@ -4,7 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mornye/l10n/l10n.dart';
 import 'package:mornye/screens/network_storage_screen.dart';
 import 'package:mornye/services/network_storage_service.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/app_action_button.dart';
 import 'package:mornye/widgets/settings_group.dart';
 
@@ -46,7 +46,7 @@ void main() {
             addTearDown(service.dispose);
             final theme =
                 (mornye
-                        ? MornyeTheme.build(Brightness.dark)
+                        ? AppTheme.build(Brightness.dark)
                         : ThemeData.dark(useMaterial3: true))
                     .copyWith(platform: platform);
             await tester.pumpWidget(

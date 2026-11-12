@@ -12,7 +12,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mornye/services/update_checker.dart';
 import 'package:mornye/l10n/l10n.dart';
 import 'package:mornye/providers/runtime_profile_provider.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/utils/logger.dart';
 import 'package:mornye/widgets/update_dialog.dart';
 
@@ -362,7 +362,7 @@ void main() {
           ProviderScope(
             overrides: [lowEndDeviceProvider.overrideWithValue(false)],
             child: MaterialApp(
-              theme: mornye ? MornyeTheme.build(Brightness.dark) : null,
+              theme: mornye ? AppTheme.build(Brightness.dark) : null,
               localizationsDelegates: AppLocalizations.localizationsDelegates,
               supportedLocales: AppLocalizations.supportedLocales,
               home: Scaffold(

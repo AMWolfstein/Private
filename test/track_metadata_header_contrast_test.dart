@@ -11,7 +11,7 @@ import 'package:mornye/screens/track_metadata_screen.dart';
 import 'package:mornye/services/library_database.dart';
 import 'package:mornye/widgets/album_detail_header.dart';
 import 'package:mornye/widgets/audio_quality_badges.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/mornye_chrome.dart';
 import 'package:mornye/widgets/mornye_metadata_row.dart';
 
@@ -49,7 +49,7 @@ void main() {
         await tester.pumpWidget(
           ProviderScope(
             child: MaterialApp(
-              theme: MornyeTheme.build(Brightness.dark),
+              theme: AppTheme.build(Brightness.dark),
               localizationsDelegates: AppLocalizations.localizationsDelegates,
               supportedLocales: AppLocalizations.supportedLocales,
               home: TrackMetadataScreen(localItem: item),
@@ -98,7 +98,7 @@ void main() {
         await tester.pumpWidget(
           ProviderScope(
             child: MaterialApp(
-              theme: MornyeTheme.build(brightness),
+              theme: AppTheme.build(brightness),
               localizationsDelegates: AppLocalizations.localizationsDelegates,
               supportedLocales: AppLocalizations.supportedLocales,
               builder: (context, child) => MediaQuery(
@@ -126,7 +126,7 @@ void main() {
             matching: find.byWidgetPredicate(
               (widget) =>
                   widget is Material &&
-                  widget.color == MornyeTheme.controlFill(tester.element(row)),
+                  widget.color == AppTheme.controlFill(tester.element(row)),
             ),
           ),
           findsOneWidget,
@@ -141,7 +141,7 @@ void main() {
         );
         expect(
           tester.widget<Text>(value).style?.color,
-          MornyeTheme.build(brightness).colorScheme.onSurface,
+          AppTheme.build(brightness).colorScheme.onSurface,
         );
         await tester.tap(find.byIcon(CupertinoIcons.ellipsis));
         await tester.pumpAndSettle();

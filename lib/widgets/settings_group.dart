@@ -9,7 +9,7 @@ import 'package:mornye/theme/material_expressive.dart';
 import 'package:mornye/widgets/app_icon.dart';
 import 'package:mornye/widgets/app_switch.dart';
 import 'package:mornye/theme/app_tokens.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/theme/mornye_icons.dart';
 import 'package:mornye/widgets/mornye_chrome.dart';
 import 'package:mornye/utils/adaptive_layout.dart';

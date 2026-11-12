@@ -20,7 +20,7 @@ import 'package:mornye/services/library_collections_database.dart';
 import 'package:mornye/services/library_database.dart';
 import 'package:mornye/services/library_search.dart';
 import 'package:mornye/services/platform_bridge.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 
 import '../test/support/library_native_fixture.dart';
 import '../test/support/library_paging_fixture.dart';
@@ -356,7 +356,7 @@ void main() {
           UncontrolledProviderScope(
             container: container!,
             child: MaterialApp(
-              theme: MornyeTheme.build(Brightness.dark),
+              theme: AppTheme.build(Brightness.dark),
               locale: const Locale('en'),
               localizationsDelegates: AppLocalizations.localizationsDelegates,
               supportedLocales: AppLocalizations.supportedLocales,

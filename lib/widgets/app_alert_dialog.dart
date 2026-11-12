@@ -4,7 +4,7 @@ import 'package:mornye/l10n/l10n.dart';
 import 'package:mornye/theme/app_motion.dart';
 import 'package:mornye/theme/app_tokens.dart';
 import 'package:mornye/theme/material_expressive.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/app_bottom_sheet.dart';
 import 'package:mornye/widgets/app_icon.dart';
 import 'package:mornye/widgets/expressive_button.dart';
@@ -363,8 +363,8 @@ class AppDialogAction extends StatelessWidget {
           : scheme.onSurface;
       return CupertinoButton(
         onPressed: onPressed,
-        color: MornyeTheme.controlFill(context),
-        disabledColor: MornyeTheme.controlFill(context, enabled: false),
+        color: AppTheme.controlFill(context),
+        disabledColor: AppTheme.controlFill(context, enabled: false),
         borderRadius: BorderRadius.circular(28),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         child: DefaultTextStyle(

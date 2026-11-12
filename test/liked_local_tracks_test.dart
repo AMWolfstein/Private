@@ -15,8 +15,8 @@ import 'package:mornye/providers/settings_provider.dart';
 import 'package:mornye/screens/library_tracks_folder_screen.dart';
 import 'package:mornye/services/library_collections_database.dart';
 import 'package:mornye/services/library_database.dart';
+import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/theme/app_theme.dart';
-import 'package:mornye/theme/mornye_theme.dart';
 import 'package:mornye/widgets/track_card.dart';
 
 import 'support/fixed_settings.dart';
@@ -133,8 +133,8 @@ void main() {
             container: container,
             child: MaterialApp(
               theme: mornye
-                  ? MornyeTheme.build(Brightness.light)
-                  : AppTheme.light(),
+                  ? AppTheme.build(Brightness.light)
+                  : LegacyMaterialTheme.light(),
               localizationsDelegates: AppLocalizations.localizationsDelegates,
               supportedLocales: AppLocalizations.supportedLocales,
               home: Scaffold(

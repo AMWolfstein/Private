@@ -15,8 +15,8 @@ import 'package:mornye/providers/settings_provider.dart';
 import 'package:mornye/screens/downloaded_album_screen.dart';
 import 'package:mornye/services/downloaded_embedded_cover_resolver.dart';
 import 'package:mornye/services/library_database.dart';
+import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/theme/app_theme.dart';
-import 'package:mornye/theme/mornye_theme.dart';
 import 'package:mornye/widgets/selection_bottom_bar.dart';
 
 import 'support/re_enrich_settings.dart';
@@ -284,8 +284,8 @@ void main() {
             child: MaterialApp(
               navigatorKey: navigator,
               theme: mornye
-                  ? MornyeTheme.build(Brightness.light)
-                  : AppTheme.light(),
+                  ? AppTheme.build(Brightness.light)
+                  : LegacyMaterialTheme.light(),
               localizationsDelegates: AppLocalizations.localizationsDelegates,
               supportedLocales: AppLocalizations.supportedLocales,
               home: const SelectionOverlayHost(

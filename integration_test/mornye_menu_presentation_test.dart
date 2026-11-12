@@ -9,7 +9,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:mornye/providers/runtime_profile_provider.dart';
 import 'package:mornye/services/custom_font_service.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/mornye_chrome.dart';
 import 'package:mornye/widgets/mornye_context_menu.dart';
 import 'package:mornye/widgets/mornye_glass_preparation.dart';
@@ -47,7 +47,7 @@ void main() {
             mornyeBlurEnabledProvider.overrideWithValue(true),
           ],
           child: MaterialApp(
-            theme: MornyeTheme.build(brightness, fontFamily: family),
+            theme: AppTheme.build(brightness, fontFamily: family),
             builder: (_, child) => RepaintBoundary(
               key: capture,
               child: MornyeGlassPreparation(child: child!),

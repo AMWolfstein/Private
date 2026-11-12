@@ -8,7 +8,7 @@ import 'package:mornye/providers/runtime_profile_provider.dart';
 import 'package:mornye/providers/theme_provider.dart';
 import 'package:mornye/screens/settings/appearance_settings_page.dart';
 import 'package:mornye/theme/dynamic_color_wrapper.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/mornye_chrome.dart';
 
 void main() {
@@ -39,8 +39,8 @@ void main() {
       final cell = brightness == Brightness.dark
           ? const Color(0xff1c1c1e)
           : Colors.white;
-      for (final accent in MornyeAccent.values) {
-        final scheme = MornyeTheme.build(
+      for (final accent in AppAccent.values) {
+        final scheme = AppTheme.build(
           brightness,
           accent: accent,
         ).colorScheme;
@@ -147,15 +147,15 @@ void main() {
         await tester.pumpAndSettle();
         expect(prefs.getBool(kMornyeGlassOutlinesKey), isFalse);
         final context = tester.element(toggle);
-        expect(MornyeTheme.glassOutlinesOf(context), isFalse);
-        final local = MornyeTheme.fromContext(
+        expect(AppTheme.glassOutlinesOf(context), isFalse);
+        final local = AppTheme.fromContext(
           context,
           brightness: Brightness.dark,
         );
-        expect(local.extension<MornyeTheme>()!.glassOutlines, isFalse);
+        expect(local.extension<AppTheme>()!.glassOutlines, isFalse);
         await tester.pumpWidget(const SizedBox());
         await openSettings(tester, prefs);
-        expect(MornyeTheme.glassOutlinesOf(tester.element(toggle)), isFalse);
+        expect(AppTheme.glassOutlinesOf(tester.element(toggle)), isFalse);
         await tester.ensureVisible(toggle);
         await tester.pumpAndSettle();
         await tester.tap(find.text('Glass outlines'));
@@ -208,7 +208,7 @@ void main() {
       final initial = Theme.of(tester.element(page));
       expect(
         initial.colorScheme.primary,
-        MornyeTheme.accentColor(MornyeAccent.red, initial.brightness),
+        AppTheme.accentColor(AppAccent.red, initial.brightness),
       );
 
       final blue = find.byTooltip('Blue');
@@ -218,18 +218,18 @@ void main() {
       final theme = Theme.of(tester.element(page));
       expect(
         theme.colorScheme.primary,
-        MornyeTheme.accentColor(MornyeAccent.blue, theme.brightness),
+        AppTheme.accentColor(AppAccent.blue, theme.brightness),
       );
       expect(prefs.getString(kMornyeAccentKey), 'blue');
       expect(prefs.getInt(kSeedColorKey), 0xff123456);
-      final overlay = MornyeTheme.fromContext(
+      final overlay = AppTheme.fromContext(
         tester.element(page),
         brightness: Brightness.dark,
       );
-      expect(overlay.extension<MornyeTheme>()!.accent, MornyeAccent.blue);
+      expect(overlay.extension<AppTheme>()!.accent, AppAccent.blue);
       expect(
         overlay.colorScheme.primary,
-        MornyeTheme.accentColor(MornyeAccent.blue, Brightness.dark),
+        AppTheme.accentColor(AppAccent.blue, Brightness.dark),
       );
 
       await tester.pumpWidget(const SizedBox());
@@ -279,12 +279,12 @@ void main() {
         expect(systemFamily, isNot('Google Sans Flex'));
         expect(prefs.getBool(kUseSystemFontKey), isTrue);
         if (style == AppThemeStyle.mornye) {
-          final overlay = MornyeTheme.fromContext(
+          final overlay = AppTheme.fromContext(
             tester.element(page),
             brightness: Brightness.dark,
           );
-          expect(overlay.extension<MornyeTheme>()!.useSystemFont, isTrue);
-          expect(overlay.extension<MornyeTheme>()!.accent, MornyeAccent.blue);
+          expect(overlay.extension<AppTheme>()!.useSystemFont, isTrue);
+          expect(overlay.extension<AppTheme>()!.accent, AppAccent.blue);
           expect(overlay.textTheme.bodyLarge!.fontFamily, systemFamily);
         }
         await tester.pumpWidget(const SizedBox());

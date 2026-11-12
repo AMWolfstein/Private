@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/utils/playback_seek_preview.dart';
 import 'package:mornye/widgets/playback_seek_slider.dart';
 
@@ -113,7 +113,7 @@ void main() {
     final completion = Completer<void>();
     await tester.pumpWidget(
       MaterialApp(
-        theme: MornyeTheme.build(Brightness.dark),
+        theme: AppTheme.build(Brightness.dark),
         home: Scaffold(
           body: PlaybackSeekSlider(
             preview: preview,

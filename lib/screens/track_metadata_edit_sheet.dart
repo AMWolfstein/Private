@@ -17,7 +17,7 @@ import 'package:mornye/services/metadata_cover_resources.dart';
 import 'package:mornye/services/metadata_autofill_service.dart';
 import 'package:mornye/services/metadata_persistence_service.dart';
 import 'package:mornye/services/platform_bridge.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/theme/mornye_icons.dart';
 import 'package:mornye/utils/artist_utils.dart';
 import 'package:mornye/utils/logger.dart';

@@ -9,7 +9,7 @@ import 'package:mornye/l10n/app_localizations.dart';
 import 'package:mornye/models/artist_concert.dart';
 import 'package:mornye/screens/artist_concerts_screen.dart';
 import 'package:mornye/screens/concert_detail_screen.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/animation_utils.dart';
 
 void main() {
@@ -35,7 +35,7 @@ void main() {
   Widget app(Widget home, {Brightness brightness = Brightness.light}) =>
       ProviderScope(
         child: MaterialApp(
-          theme: MornyeTheme.build(brightness),
+          theme: AppTheme.build(brightness),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: home,

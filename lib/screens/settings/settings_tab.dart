@@ -26,7 +26,7 @@ import 'package:mornye/screens/settings/playback_settings_page.dart';
 import 'package:mornye/utils/settings_search_catalog.dart';
 import 'package:mornye/services/app_remote_config_service.dart';
 import 'package:mornye/theme/app_tokens.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/utils/adaptive_layout.dart';
 import 'package:mornye/utils/nav_bar_inset.dart';
 import 'package:mornye/widgets/animation_utils.dart';

@@ -15,7 +15,7 @@ import 'package:mornye/models/settings.dart';
 import 'package:mornye/providers/music_player_provider.dart';
 import 'package:mornye/providers/runtime_profile_provider.dart';
 import 'package:mornye/providers/settings_provider.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/mini_player.dart';
 import 'package:mornye/widgets/mornye_bottom_bar.dart';
 import 'package:mornye/widgets/mornye_chrome.dart';
@@ -238,7 +238,7 @@ class _Fixture {
       mornyeGlassLevelProvider.overrideWithValue(MornyeGlassLevel.liquid),
     ],
     child: MaterialApp(
-      theme: MornyeTheme.build(Brightness.dark),
+      theme: AppTheme.build(Brightness.dark),
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       home: Scaffold(

@@ -6,7 +6,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mornye/l10n/l10n.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mornye/theme/app_theme.dart';
+import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/widgets/album_detail_header.dart';
 import 'package:mornye/widgets/settled_blur.dart';
 
@@ -21,7 +21,7 @@ Widget _collection(
   ThemeData? theme,
   bool playing = false,
 }) => MaterialApp(
-  theme: theme ?? AppTheme.light(),
+  theme: theme ?? LegacyMaterialTheme.light(),
   home: RepaintBoundary(
     key: _page,
     child: Scaffold(
@@ -107,7 +107,7 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         child: MaterialApp(
-          theme: AppTheme.light(),
+          theme: LegacyMaterialTheme.light(),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: Scaffold(
@@ -201,7 +201,7 @@ void main() {
       landscape.height,
     ), isNot((portrait.width, portrait.height)));
 
-    await tester.pumpWidget(_collection(controller, theme: AppTheme.dark()));
+    await tester.pumpWidget(_collection(controller, theme: LegacyMaterialTheme.dark()));
     await tester.pump();
     expect(landscape.debugDisposed, isTrue);
     await settle();

@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter/material.dart';
 import 'package:html/dom.dart' as dom;
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/utils/editorial_notes.dart';
 import 'package:mornye/widgets/album_detail_header.dart';
 import 'package:mornye/widgets/app_bottom_sheet.dart';

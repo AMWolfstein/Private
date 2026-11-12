@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mornye/l10n/app_localizations.dart';
 import 'package:mornye/providers/music_player_provider.dart';
-import 'package:mornye/theme/app_theme.dart';
+import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/utils/playback_seek_preview.dart';
 import 'package:mornye/widgets/playback_seek_slider.dart';
 import 'package:mornye/widgets/player_compact_bar.dart';
@@ -31,7 +31,7 @@ void main() {
     final seekPreview = PlaybackSeekPreview();
     addTearDown(seekPreview.dispose);
     var queueOpened = 0;
-    final theme = AppTheme.light();
+    final theme = LegacyMaterialTheme.light();
     await tester.pumpWidget(
       ProviderScope(
         overrides: [

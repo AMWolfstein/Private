@@ -6,7 +6,7 @@ import 'package:mornye/l10n/app_localizations.dart';
 import 'package:mornye/models/unified_library_item.dart';
 import 'package:mornye/models/library_database_models.dart';
 import 'package:mornye/services/batch_track_actions.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/app_action_button.dart';
 
 void main() {
@@ -33,7 +33,7 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           child: MaterialApp(
-            theme: mornye ? MornyeTheme.build(Brightness.light) : ThemeData(),
+            theme: mornye ? AppTheme.build(Brightness.light) : ThemeData(),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             home: _BatchConvertHarness(items: items),

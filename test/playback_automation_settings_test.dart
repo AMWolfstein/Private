@@ -10,8 +10,8 @@ import 'package:mornye/models/theme_settings.dart';
 import 'package:mornye/providers/settings_provider.dart';
 import 'package:mornye/screens/settings/playback_settings_page.dart';
 import 'package:mornye/utils/settings_search_catalog.dart';
+import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/theme/app_theme.dart';
-import 'package:mornye/theme/mornye_theme.dart';
 import 'package:mornye/widgets/settings_group.dart';
 
 void main() {
@@ -36,8 +36,8 @@ void main() {
           container: container,
           child: MaterialApp(
             theme: mornye
-                ? MornyeTheme.build(Brightness.dark, accent: MornyeAccent.blue)
-                : AppTheme.light(),
+                ? AppTheme.build(Brightness.dark, accent: AppAccent.blue)
+                : LegacyMaterialTheme.light(),
             locale: const Locale('en'),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
@@ -119,8 +119,8 @@ void main() {
           container: container,
           child: MaterialApp(
             theme: mornye
-                ? MornyeTheme.build(Brightness.dark, accent: MornyeAccent.blue)
-                : AppTheme.light(),
+                ? AppTheme.build(Brightness.dark, accent: AppAccent.blue)
+                : LegacyMaterialTheme.light(),
             locale: const Locale('en'),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
@@ -183,8 +183,8 @@ void main() {
           container: container,
           child: MaterialApp(
             theme: mornye
-                ? MornyeTheme.build(Brightness.dark, accent: MornyeAccent.blue)
-                : AppTheme.light(),
+                ? AppTheme.build(Brightness.dark, accent: AppAccent.blue)
+                : LegacyMaterialTheme.light(),
             locale: const Locale('en'),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,

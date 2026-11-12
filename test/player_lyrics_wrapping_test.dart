@@ -5,8 +5,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mornye/providers/music_player_provider.dart';
+import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/theme/app_theme.dart';
-import 'package:mornye/theme/mornye_theme.dart';
 import 'package:mornye/utils/lyrics_parser.dart';
 import 'package:mornye/widgets/player_lyrics.dart';
 
@@ -36,8 +36,8 @@ void main() {
         final preview = ValueNotifier<Duration?>(const Duration(seconds: 1));
         addTearDown(preview.dispose);
         final theme = mornye
-            ? MornyeTheme.build(Brightness.dark)
-            : AppTheme.dark();
+            ? AppTheme.build(Brightness.dark)
+            : LegacyMaterialTheme.dark();
         final lyrics = ParsedLyrics(
           synced: true,
           wordSynced: timed,

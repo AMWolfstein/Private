@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mornye/theme/mornye_icons.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/app_content_card.dart';
 import 'package:mornye/widgets/app_switch.dart';
 import 'package:mornye/widgets/expressive_button.dart';
@@ -20,7 +20,7 @@ class MetadataEditorOptions extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Material(
-        color: MornyeTheme.controlFill(context),
+        color: AppTheme.controlFill(context),
         borderRadius: BorderRadius.circular(28),
         clipBehavior: Clip.antiAlias,
         child: Column(mainAxisSize: MainAxisSize.min, children: children),
@@ -336,13 +336,13 @@ class MetadataEditorSectionCard extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 12),
       child: context.isMornye
           ? Material(
-              color: MornyeTheme.controlFill(context),
+              color: AppTheme.controlFill(context),
               borderRadius: BorderRadius.circular(28),
               clipBehavior: Clip.antiAlias,
               child: DividerTheme(
                 data: DividerTheme.of(
                   context,
-                ).copyWith(color: MornyeTheme.metadataDividerColor(context)),
+                ).copyWith(color: AppTheme.metadataDividerColor(context)),
                 child: content,
               ),
             )

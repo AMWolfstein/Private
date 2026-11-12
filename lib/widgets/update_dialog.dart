@@ -11,7 +11,7 @@ import 'package:mornye/widgets/app_alert_dialog.dart';
 import 'package:mornye/widgets/app_action_button.dart';
 import 'package:mornye/widgets/app_loading_indicator.dart';
 import 'package:mornye/widgets/app_progress_indicator.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 
 class UpdateDialog extends StatefulWidget {
   final UpdateInfo updateInfo;
@@ -227,7 +227,7 @@ class _UpdateDialogState extends State<UpdateDialog> {
                   // the row is not boxed a second time.
                   decoration: context.isMornye
                       ? BoxDecoration(
-                          color: MornyeTheme.controlFill(context),
+                          color: AppTheme.controlFill(context),
                           borderRadius: BorderRadius.circular(16),
                         )
                       : null,
@@ -268,7 +268,7 @@ class _UpdateDialogState extends State<UpdateDialog> {
                         : EdgeInsets.zero,
                     decoration: context.isMornye
                         ? BoxDecoration(
-                            color: MornyeTheme.controlFill(context),
+                            color: AppTheme.controlFill(context),
                             borderRadius: BorderRadius.circular(16),
                           )
                         : null,
@@ -344,7 +344,7 @@ class _UpdateDialogState extends State<UpdateDialog> {
                     // dialog surface.
                     decoration: BoxDecoration(
                       color: context.isMornye
-                          ? MornyeTheme.controlFill(context)
+                          ? AppTheme.controlFill(context)
                           : colorScheme.surfaceContainerHighest,
                       borderRadius: BorderRadius.circular(16),
                     ),

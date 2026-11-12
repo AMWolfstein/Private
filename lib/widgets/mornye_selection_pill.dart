@@ -5,7 +5,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:liquid_glass_easy/liquid_glass_easy.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/mornye_liquid_backdrop.dart';
 
 Future<ui.FragmentProgram>? _selectionMaskProgram;
@@ -274,7 +274,7 @@ class _MornyeSelectionPillState extends State<MornyeSelectionPill>
                                 borderRadius: BorderRadius.circular(
                                   _pillRadius,
                                 ),
-                                border: MornyeTheme.glassOutlinesOf(context)
+                                border: AppTheme.glassOutlinesOf(context)
                                     ? Border.all(
                                         color: scheme.onSurface.withValues(
                                           alpha: 0.05 * restingOpacity,
@@ -448,7 +448,7 @@ class _MornyeSelectionPillState extends State<MornyeSelectionPill>
                                 ? 0.24
                                 : 0.08),
                       ),
-                      border: MornyeTheme.glassOutlinesOf(context)
+                      border: AppTheme.glassOutlinesOf(context)
                           ? Border.all(
                               color: Colors.white.withValues(
                                 alpha: 0.6 * progress,

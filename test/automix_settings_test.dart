@@ -8,8 +8,8 @@ import 'package:mornye/models/settings.dart';
 import 'package:mornye/models/theme_settings.dart';
 import 'package:mornye/providers/settings_provider.dart';
 import 'package:mornye/widgets/automix_settings.dart';
+import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/theme/app_theme.dart';
-import 'package:mornye/theme/mornye_theme.dart';
 import 'package:mornye/widgets/app_bottom_sheet.dart';
 import 'package:mornye/widgets/app_slider.dart';
 
@@ -85,11 +85,11 @@ void main() {
             container: container,
             child: MaterialApp(
               theme: mornye
-                  ? MornyeTheme.build(
+                  ? AppTheme.build(
                       Brightness.dark,
-                      accent: MornyeAccent.blue,
+                      accent: AppAccent.blue,
                     )
-                  : AppTheme.light(seedColor: Colors.blue),
+                  : LegacyMaterialTheme.light(seedColor: Colors.blue),
               localizationsDelegates: AppLocalizations.localizationsDelegates,
               supportedLocales: AppLocalizations.supportedLocales,
               home: const MornyeSettingsTheme(

@@ -4,7 +4,7 @@ import 'dart:ui' show lerpDouble;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/mornye_chrome.dart';
 
 /// Bounds of the tapped control or row, in the root overlay's coordinates.
@@ -542,7 +542,7 @@ class _MenuSurface extends StatelessWidget {
       smoothCorners: true,
       highlightBorder: true,
       highlightIntensity: 0.4,
-      tintColor: theme.extension<MornyeTheme>()?.chromeSurface != null
+      tintColor: theme.extension<AppTheme>()?.chromeSurface != null
           ? null
           : dark
           ? const Color(0xff414141)
@@ -600,7 +600,7 @@ class MornyeContextMenu extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = inheritSurface
         ? Theme.of(context)
-        : MornyeTheme.fromContext(context);
+        : AppTheme.fromContext(context);
     final dark = theme.brightness == Brightness.dark;
     final visibleGroups = groups.where((group) => group.isNotEmpty).toList();
     final shortcuts = quickActions.isEmpty

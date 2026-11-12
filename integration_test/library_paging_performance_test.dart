@@ -14,7 +14,7 @@ import 'package:mornye/providers/library_browse_provider.dart';
 import 'package:mornye/providers/local_library_provider.dart';
 import 'package:mornye/providers/settings_provider.dart';
 import 'package:mornye/screens/mornye_library_screen.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 
 import '../test/support/fixed_settings.dart';
 import '../test/support/library_paging_fixture.dart';
@@ -207,7 +207,7 @@ void main() {
                   ),
               ],
               child: MaterialApp(
-                theme: MornyeTheme.build(brightness),
+                theme: AppTheme.build(brightness),
                 locale: const Locale('en'),
                 localizationsDelegates: AppLocalizations.localizationsDelegates,
                 supportedLocales: AppLocalizations.supportedLocales,

@@ -233,20 +233,20 @@ class _ThemePreviewCard extends StatelessWidget {
 class _MornyeAccentPicker extends StatelessWidget {
   const _MornyeAccentPicker({required this.selected, required this.onChanged});
 
-  final MornyeAccent selected;
-  final ValueChanged<MornyeAccent> onChanged;
+  final AppAccent selected;
+  final ValueChanged<AppAccent> onChanged;
 
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final labels = {
-      MornyeAccent.red: l10n.appearanceAccentRed,
-      MornyeAccent.orange: l10n.appearanceAccentOrange,
-      MornyeAccent.green: l10n.appearanceAccentGreen,
-      MornyeAccent.teal: l10n.appearanceAccentTeal,
-      MornyeAccent.blue: l10n.appearanceAccentBlue,
-      MornyeAccent.purple: l10n.appearanceAccentPurple,
-      MornyeAccent.pink: l10n.appearanceAccentPink,
+      AppAccent.red: l10n.appearanceAccentRed,
+      AppAccent.orange: l10n.appearanceAccentOrange,
+      AppAccent.green: l10n.appearanceAccentGreen,
+      AppAccent.teal: l10n.appearanceAccentTeal,
+      AppAccent.blue: l10n.appearanceAccentBlue,
+      AppAccent.purple: l10n.appearanceAccentPurple,
+      AppAccent.pink: l10n.appearanceAccentPink,
     };
     return Padding(
       padding: const EdgeInsets.all(16),
@@ -254,10 +254,10 @@ class _MornyeAccentPicker extends StatelessWidget {
         spacing: 8,
         runSpacing: 8,
         children: [
-          for (final accent in MornyeAccent.values)
+          for (final accent in AppAccent.values)
             Builder(
               builder: (context) {
-                final color = MornyeTheme.accentColor(
+                final color = AppTheme.accentColor(
                   accent,
                   Theme.of(context).brightness,
                 );

@@ -13,8 +13,8 @@ import 'package:mornye/providers/settings_provider.dart';
 import 'package:mornye/screens/track_metadata_screen.dart';
 import 'package:mornye/services/library_database.dart';
 import 'package:mornye/services/music_player_service.dart';
+import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/theme/app_theme.dart';
-import 'package:mornye/theme/mornye_theme.dart';
 import 'package:mornye/widgets/mornye_context_menu.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -114,8 +114,8 @@ void main() {
                 ],
                 child: MaterialApp(
                   theme: mornye
-                      ? MornyeTheme.build(Brightness.dark)
-                      : AppTheme.dark(),
+                      ? AppTheme.build(Brightness.dark)
+                      : LegacyMaterialTheme.dark(),
                   localizationsDelegates:
                       AppLocalizations.localizationsDelegates,
                   supportedLocales: AppLocalizations.supportedLocales,

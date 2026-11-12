@@ -6,7 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:mornye/widgets/app_snack_bar.dart';
 import 'package:mornye/theme/app_tokens.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/app_switch.dart';
 import 'package:mornye/widgets/app_checkbox.dart';
 import 'package:mornye/widgets/app_content_card.dart';

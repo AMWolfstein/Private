@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:material_3_expressive/material_3_expressive.dart';
 import 'package:mornye/theme/material_expressive.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 
 /// One inline surface, matching the metadata groups and dialog controls.
 class AppContentCard extends StatelessWidget {
@@ -90,11 +90,11 @@ class AppContentCard extends StatelessWidget {
     final content = DividerTheme(
       data: DividerTheme.of(
         context,
-      ).copyWith(color: MornyeTheme.metadataDividerColor(context)),
+      ).copyWith(color: AppTheme.metadataDividerColor(context)),
       child: child,
     );
     final surface = Material(
-      color: preserveColor ? color : MornyeTheme.controlFill(context),
+      color: preserveColor ? color : AppTheme.controlFill(context),
       borderRadius: BorderRadius.circular(28),
       clipBehavior: Clip.antiAlias,
       child: onTap != null || onLongPress != null

@@ -14,7 +14,7 @@ import 'package:mornye/providers/download_history_provider.dart';
 import 'package:mornye/screens/track_metadata_screen.dart';
 import 'package:mornye/services/batch_metadata_re_enrich.dart';
 import 'package:mornye/services/batch_track_actions.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/app_action_button.dart';
 import 'package:mornye/widgets/app_alert_dialog.dart';
 import 'package:mornye/widgets/app_switch.dart';
@@ -32,7 +32,7 @@ Widget _app(
   TargetPlatform? platform,
 }) => ProviderScope(
   child: MaterialApp(
-    theme: MornyeTheme.build(brightness).copyWith(platform: platform),
+    theme: AppTheme.build(brightness).copyWith(platform: platform),
     localizationsDelegates: AppLocalizations.localizationsDelegates,
     supportedLocales: AppLocalizations.supportedLocales,
     home: Scaffold(body: child),

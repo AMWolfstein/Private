@@ -17,7 +17,7 @@ import 'package:mornye/l10n/l10n.dart';
 import 'package:mornye/providers/settings_provider.dart';
 import 'package:mornye/services/local_network_access.dart';
 import 'package:mornye/theme/mornye_icons.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/app_icon_button.dart';
 import 'package:mornye/widgets/app_shape.dart';
 import 'package:mornye/widgets/expressive_button.dart';

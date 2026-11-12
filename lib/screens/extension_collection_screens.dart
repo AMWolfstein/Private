@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/error_card.dart';
 import 'package:mornye/widgets/mornye_artist_header.dart';
 import 'package:mornye/widgets/album_detail_header.dart';

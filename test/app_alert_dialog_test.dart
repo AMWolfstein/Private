@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/app_alert_dialog.dart';
 import 'package:mornye/widgets/mornye_chrome.dart';
 
@@ -15,7 +15,7 @@ void main() {
           await tester.pumpWidget(
             ProviderScope(
               child: MaterialApp(
-                theme: MornyeTheme.build(brightness),
+                theme: AppTheme.build(brightness),
                 builder: (context, child) => MediaQuery(
                   data: MediaQuery.of(
                     context,
@@ -94,7 +94,7 @@ void main() {
         await tester.pumpWidget(
           ProviderScope(
             child: MaterialApp(
-              theme: mornye ? MornyeTheme.build(Brightness.dark) : ThemeData(),
+              theme: mornye ? AppTheme.build(Brightness.dark) : ThemeData(),
               home: Builder(
                 builder: (context) => Scaffold(
                   body: TextButton(
@@ -150,7 +150,7 @@ void main() {
             DefaultTextStyle.of(
               tester.element(find.text('Remove')),
             ).style.color,
-            MornyeTheme.build(Brightness.dark).colorScheme.primary,
+            AppTheme.build(Brightness.dark).colorScheme.primary,
           );
           expect(find.byType(CupertinoAlertDialog), findsNothing);
           expect(find.byType(FilledButton), findsNothing);
@@ -185,7 +185,7 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         child: MaterialApp(
-          theme: MornyeTheme.build(Brightness.light),
+          theme: AppTheme.build(Brightness.light),
           home: MediaQuery(
             data: const MediaQueryData(textScaler: TextScaler.linear(1.5)),
             child: AppAlertDialog(

@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart' show CupertinoIcons, CupertinoTextField;
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/theme/mornye_icons.dart';
 import 'package:mornye/widgets/app_alert_dialog.dart';
 import 'package:mornye/widgets/app_bottom_sheet.dart';
@@ -129,7 +129,7 @@ class _ExtensionDetailPageState extends ConsumerState<ExtensionDetailPage> {
                               height: 56,
                               decoration: BoxDecoration(
                                 color: context.isMornye
-                                    ? MornyeTheme.controlFill(context)
+                                    ? AppTheme.controlFill(context)
                                     : hasError
                                     ? colorScheme.errorContainer
                                     : colorScheme.primaryContainer,
@@ -241,7 +241,7 @@ class _ExtensionDetailPageState extends ConsumerState<ExtensionDetailPage> {
                         const SizedBox(height: 16),
                         if (context.isMornye)
                           Divider(
-                            color: MornyeTheme.metadataDividerColor(context),
+                            color: AppTheme.metadataDividerColor(context),
                           ),
                         _InfoRow(
                           label: context.l10n.extensionId,

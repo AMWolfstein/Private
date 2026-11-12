@@ -79,17 +79,17 @@ class DynamicColors {
 /// The accent to load, moving an install off the old default once. Every
 /// theme save wrote the accent, so a stored red usually only means red was
 /// the default. Red picked after this stays.
-MornyeAccent _loadMornyeAccent(SharedPreferences prefs) {
+AppAccent _loadMornyeAccent(SharedPreferences prefs) {
   final stored = prefs.getString(kMornyeAccentKey);
   if (prefs.getBool(kMornyeAccentMovedToBlueKey) ?? false) {
-    return mornyeAccentFromString(stored);
+    return appAccentFromString(stored);
   }
   unawaited(prefs.setBool(kMornyeAccentMovedToBlueKey, true));
-  if (stored == MornyeAccent.red.name) {
-    unawaited(prefs.setString(kMornyeAccentKey, MornyeAccent.blue.name));
-    return MornyeAccent.blue;
+  if (stored == AppAccent.red.name) {
+    unawaited(prefs.setString(kMornyeAccentKey, AppAccent.blue.name));
+    return AppAccent.blue;
   }
-  return mornyeAccentFromString(stored);
+  return appAccentFromString(stored);
 }
 
 /// The retired Glass Quality slider's stored value. Glass is fixed at Clear, so
@@ -212,7 +212,7 @@ class ThemeNotifier extends Notifier<ThemeSettings> {
     await _saveToStorage();
   }
 
-  Future<void> setMornyeAccent(MornyeAccent accent) async {
+  Future<void> setMornyeAccent(AppAccent accent) async {
     _editState((current) => current.copyWith(mornyeAccent: accent));
     await _saveToStorage();
   }

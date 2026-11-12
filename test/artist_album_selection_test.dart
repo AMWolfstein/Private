@@ -6,8 +6,8 @@ import 'package:mornye/l10n/l10n.dart';
 import 'package:mornye/models/track.dart';
 import 'package:mornye/providers/track_provider.dart';
 import 'package:mornye/screens/artist_screen.dart';
+import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/theme/app_theme.dart';
-import 'package:mornye/theme/mornye_theme.dart';
 import 'package:mornye/widgets/animation_utils.dart';
 import 'package:mornye/widgets/selection_bottom_bar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -41,7 +41,7 @@ Future<void> _pumpArtist(
   await tester.pumpWidget(
     ProviderScope(
       child: MaterialApp(
-        theme: mornye ? MornyeTheme.build(Brightness.light) : AppTheme.light(),
+        theme: mornye ? AppTheme.build(Brightness.light) : LegacyMaterialTheme.light(),
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         home: ArtistScreen(

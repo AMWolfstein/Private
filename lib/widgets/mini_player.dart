@@ -21,7 +21,7 @@ import 'package:mornye/theme/app_motion.dart';
 import 'package:mornye/theme/app_tokens.dart';
 import 'package:mornye/theme/cover_palette.dart';
 import 'package:mornye/theme/material_expressive.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/theme/player_artwork_theme.dart';
 import 'package:mornye/screens/now_playing_screen.dart';
 import 'package:mornye/utils/string_utils.dart';
@@ -428,7 +428,7 @@ class _MiniPlayerBodyState extends ConsumerState<_MiniPlayerBody> {
               radius: 32,
               child: MornyeGlass.navigation(
                 strongTint: true,
-                tintOpacity: MornyeTheme.chromeOpacity(context),
+                tintOpacity: AppTheme.chromeOpacity(context),
                 blurEnabled: ref.watch(mornyeBlurEnabledProvider),
                 child: swipeable,
               ),

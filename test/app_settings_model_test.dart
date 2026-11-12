@@ -213,7 +213,7 @@ void main() {
         seedColorValue: 0xff123456,
         useAmoled: true,
         style: AppThemeStyle.mornye,
-        mornyeAccent: MornyeAccent.blue,
+        mornyeAccent: AppAccent.blue,
         useSystemFont: true,
       );
 
@@ -226,19 +226,19 @@ void main() {
       expect(copied.themeMode, ThemeMode.light);
       expect(copied.useAmoled, isTrue);
       expect(decoded.style, AppThemeStyle.mornye);
-      expect(decoded.mornyeAccent, MornyeAccent.blue);
-      expect(copied.mornyeAccent, MornyeAccent.blue);
+      expect(decoded.mornyeAccent, AppAccent.blue);
+      expect(copied.mornyeAccent, AppAccent.blue);
       expect(decoded.useSystemFont, isTrue);
       expect(copied.useSystemFont, isTrue);
       expect(ThemeSettings.fromJson({}).useSystemFont, isFalse);
-      expect(ThemeSettings.fromJson({}).mornyeAccent, MornyeAccent.blue);
+      expect(ThemeSettings.fromJson({}).mornyeAccent, AppAccent.blue);
       expect(
         ThemeSettings.fromJson({kMornyeAccentKey: 'unknown'}).mornyeAccent,
-        MornyeAccent.blue,
+        AppAccent.blue,
       );
       expect(
         ThemeSettings.fromJson({kMornyeAccentKey: 'red'}).mornyeAccent,
-        MornyeAccent.red,
+        AppAccent.red,
         reason: 'a saved choice stays',
       );
       expect(

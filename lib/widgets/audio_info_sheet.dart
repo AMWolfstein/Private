@@ -16,7 +16,7 @@ import 'package:mornye/services/music_player_service.dart';
 import 'package:mornye/services/platform_bridge.dart';
 import 'package:mornye/services/playback_equalizer.dart';
 import 'package:mornye/theme/app_tokens.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/utils/int_utils.dart';
 import 'package:mornye/utils/string_utils.dart';
 import 'package:mornye/utils/usb_output_status_label.dart';
@@ -288,7 +288,7 @@ class _FactGroup extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       child: Material(
-        color: MornyeTheme.controlFill(context),
+        color: AppTheme.controlFill(context),
         borderRadius: BorderRadius.circular(28),
         clipBehavior: Clip.antiAlias,
         child: Column(mainAxisSize: MainAxisSize.min, children: children),
@@ -370,7 +370,7 @@ class _FactRow extends StatelessWidget {
               indent: inset,
               endIndent: mornye ? 0 : inset,
               color: mornye
-                  ? MornyeTheme.metadataDividerColor(context)
+                  ? AppTheme.metadataDividerColor(context)
                   : colors.outlineVariant.withValues(alpha: 0.3),
             ),
         ],

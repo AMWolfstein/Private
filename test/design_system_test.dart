@@ -10,9 +10,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mornye/l10n/app_localizations.dart';
 import 'package:mornye/models/theme_settings.dart';
-import 'package:mornye/theme/app_theme.dart';
+import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/theme/app_tokens.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/theme/cover_palette.dart';
 import 'package:mornye/widgets/app_bottom_sheet.dart';
 import 'package:mornye/widgets/app_content_card.dart';
@@ -72,7 +72,7 @@ class _IconButtonTooltipVisitor extends RecursiveAstVisitor<void> {
 
 Widget _hostSliver(Widget sliver) {
   return MaterialApp(
-    theme: AppTheme.light(),
+    theme: LegacyMaterialTheme.light(),
     home: Scaffold(body: CustomScrollView(slivers: [sliver])),
   );
 }
@@ -80,19 +80,19 @@ Widget _hostSliver(Widget sliver) {
 void main() {
   group('AppTokens', () {
     test('is registered on both themes', () {
-      expect(AppTheme.light().extension<AppTokens>(), AppTokens.standard);
-      expect(AppTheme.dark().extension<AppTokens>(), AppTokens.standard);
+      expect(LegacyMaterialTheme.light().extension<AppTokens>(), AppTokens.standard);
+      expect(LegacyMaterialTheme.dark().extension<AppTokens>(), AppTokens.standard);
       expect(
-        AppTheme.dark(isAmoled: true).extension<AppTokens>(),
+        LegacyMaterialTheme.dark(isAmoled: true).extension<AppTokens>(),
         AppTokens.standard,
       );
       expect(
-        MornyeTheme.build(Brightness.light).extension<AppTokens>(),
-        MornyeTheme.tokens,
+        AppTheme.build(Brightness.light).extension<AppTokens>(),
+        AppTheme.tokens,
       );
       expect(
-        MornyeTheme.build(Brightness.dark).colorScheme.primary,
-        MornyeTheme.accentColor(MornyeAccent.blue, Brightness.dark),
+        AppTheme.build(Brightness.dark).colorScheme.primary,
+        AppTheme.accentColor(AppAccent.blue, Brightness.dark),
       );
     });
 
@@ -169,14 +169,14 @@ void main() {
       try {
         await tester.pumpWidget(
           MaterialApp(
-            theme: AppTheme.light(),
+            theme: LegacyMaterialTheme.light(),
             home: Scaffold(
               body: Center(
                 child: SelectionActionButton(
                   icon: Icons.delete,
                   label: 'Delete selected tracks',
                   onPressed: null,
-                  colorScheme: AppTheme.light().colorScheme,
+                  colorScheme: LegacyMaterialTheme.light().colorScheme,
                 ),
               ),
             ),
@@ -211,7 +211,7 @@ void main() {
           await tester.pumpWidget(
             ProviderScope(
               child: MaterialApp(
-                theme: MornyeTheme.build(Brightness.light),
+                theme: AppTheme.build(Brightness.light),
                 home: Scaffold(
                   body: Directionality(
                     textDirection: direction,
@@ -250,7 +250,7 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           child: MaterialApp(
-            theme: MornyeTheme.build(Brightness.dark),
+            theme: AppTheme.build(Brightness.dark),
             home: MediaQuery(
               data: const MediaQueryData(disableAnimations: true),
               child: Scaffold(
@@ -293,7 +293,7 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           child: MaterialApp(
-            theme: MornyeTheme.build(Brightness.dark),
+            theme: AppTheme.build(Brightness.dark),
             home: Scaffold(
               body: AppSearchField(
                 controller: controller,
@@ -331,7 +331,7 @@ void main() {
 
       await tester.pumpWidget(
         MaterialApp(
-          theme: AppTheme.light(),
+          theme: LegacyMaterialTheme.light(),
           home: Scaffold(
             body: AppSearchField(
               controller: controller,
@@ -422,7 +422,7 @@ void main() {
     ) async {
       await tester.pumpWidget(
         MaterialApp(
-          theme: AppTheme.light(),
+          theme: LegacyMaterialTheme.light(),
           home: Scaffold(
             body: Builder(
               builder: (context) => ElevatedButton(
@@ -484,7 +484,7 @@ void main() {
     testWidgets('supplies one handle plus the title block', (tester) async {
       await tester.pumpWidget(
         MaterialApp(
-          theme: AppTheme.light(),
+          theme: LegacyMaterialTheme.light(),
           home: Scaffold(
             body: Builder(
               builder: (context) => ElevatedButton(
@@ -512,7 +512,7 @@ void main() {
 
     testWidgets('sheet shape comes from the token scale', (tester) async {
       final shape =
-          AppTheme.light().bottomSheetTheme.shape! as RoundedRectangleBorder;
+          LegacyMaterialTheme.light().bottomSheetTheme.shape! as RoundedRectangleBorder;
       final radius = shape.borderRadius.resolve(TextDirection.ltr).topLeft.x;
 
       expect(radius, AppTokens.standard.radiusSheet);
@@ -564,7 +564,7 @@ void main() {
 
   group('TrackCard', () {
     Widget host(Widget child) => MaterialApp(
-      theme: AppTheme.light(),
+      theme: LegacyMaterialTheme.light(),
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       home: Scaffold(body: child),
@@ -812,7 +812,7 @@ void main() {
       tester,
     ) async {
       Widget host({required bool selecting}) => MaterialApp(
-        theme: AppTheme.light(),
+        theme: LegacyMaterialTheme.light(),
         home: CollectionScaffold(
           scrollController: ScrollController(),
           isSelectionMode: selecting,
@@ -842,7 +842,7 @@ void main() {
     ) async {
       await tester.pumpWidget(
         MaterialApp(
-          theme: AppTheme.light(),
+          theme: LegacyMaterialTheme.light(),
           home: CollectionScaffold(
             scrollController: ScrollController(),
             isSelectionMode: true,
@@ -908,7 +908,7 @@ void main() {
     testWidgets('choice chip meets the minimum touch target', (tester) async {
       await tester.pumpWidget(
         MaterialApp(
-          theme: AppTheme.light(),
+          theme: LegacyMaterialTheme.light(),
           home: Scaffold(
             body: Row(
               children: [
@@ -934,7 +934,7 @@ void main() {
     testWidgets('info card renders title, message and action', (tester) async {
       await tester.pumpWidget(
         MaterialApp(
-          theme: AppTheme.light(),
+          theme: LegacyMaterialTheme.light(),
           home: Scaffold(
             body: SettingsInfoCard(
               icon: Icons.warning_amber_outlined,

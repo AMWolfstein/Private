@@ -11,7 +11,7 @@ import 'package:mornye/models/settings.dart';
 import 'package:mornye/models/track.dart';
 import 'package:mornye/providers/library_collections_provider.dart';
 import 'package:mornye/providers/settings_provider.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/app_action_button.dart';
 import 'package:mornye/widgets/app_alert_dialog.dart';
 import 'package:mornye/widgets/expressive_button.dart';
@@ -104,7 +104,7 @@ Widget _app(
   ],
   child: MaterialApp(
     navigatorObservers: navigatorObservers,
-    theme: mornye ? MornyeTheme.build(brightness) : ThemeData(),
+    theme: mornye ? AppTheme.build(brightness) : ThemeData(),
     localizationsDelegates: AppLocalizations.localizationsDelegates,
     supportedLocales: AppLocalizations.supportedLocales,
     builder: (context, child) => MediaQuery(

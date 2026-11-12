@@ -12,7 +12,7 @@ import 'package:mornye/l10n/l10n.dart';
 import 'package:mornye/providers/music_player_provider.dart';
 import 'package:mornye/providers/runtime_profile_provider.dart';
 import 'package:mornye/screens/settings/settings_tab.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/utils/nav_bar_inset.dart';
 import 'package:mornye/widgets/album_detail_header.dart';
 import 'package:mornye/widgets/collection_scaffold.dart';
@@ -72,7 +72,7 @@ void main() {
           mornyeLiquidGlassProvider.overrideWithValue(liquidGlass),
         ],
         child: MaterialApp(
-          theme: MornyeTheme.build(brightness, chromeSurface: chromeSurface),
+          theme: AppTheme.build(brightness, chromeSurface: chromeSurface),
           builder: (_, child) => RepaintBoundary(key: capture, child: child),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
@@ -336,7 +336,7 @@ void main() {
         activeTab: activeTab,
         brightness: Brightness.dark,
       );
-      final scheme = MornyeTheme.build(Brightness.dark).colorScheme;
+      final scheme = AppTheme.build(Brightness.dark).colorScheme;
       final primary = scheme.primary;
       Color? iconColor(String key, IconData data) {
         final icon = find.descendant(

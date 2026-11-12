@@ -7,7 +7,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mornye/l10n/app_localizations.dart';
 import 'package:mornye/providers/music_player_provider.dart';
 import 'package:mornye/services/music_player_runtime.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/app_snack_bar.dart';
 import 'package:mornye/widgets/mornye_chrome.dart';
 import 'package:mornye/widgets/playback_feedback.dart';
@@ -31,7 +31,7 @@ void main() {
           child: MaterialApp(
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
-            theme: mornye ? MornyeTheme.build(Brightness.dark) : ThemeData(),
+            theme: mornye ? AppTheme.build(Brightness.dark) : ThemeData(),
             builder: (_, child) =>
                 AppScaffoldMessenger(child: PlaybackFeedback(child: child!)),
             home: const Scaffold(body: SizedBox.expand()),
@@ -83,7 +83,7 @@ void main() {
             child: MaterialApp(
               localizationsDelegates: AppLocalizations.localizationsDelegates,
               supportedLocales: AppLocalizations.supportedLocales,
-              theme: mornye ? MornyeTheme.build(Brightness.dark) : ThemeData(),
+              theme: mornye ? AppTheme.build(Brightness.dark) : ThemeData(),
               builder: (_, child) =>
                   AppScaffoldMessenger(child: PlaybackFeedback(child: child!)),
               home: const Scaffold(body: SizedBox.expand()),
@@ -144,7 +144,7 @@ void main() {
             locale: Locale(mornye ? 'id' : 'en'),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
-            theme: mornye ? MornyeTheme.build(Brightness.dark) : ThemeData(),
+            theme: mornye ? AppTheme.build(Brightness.dark) : ThemeData(),
             builder: (_, child) =>
                 AppScaffoldMessenger(child: PlaybackFeedback(child: child!)),
             home: const Scaffold(body: SizedBox.expand()),

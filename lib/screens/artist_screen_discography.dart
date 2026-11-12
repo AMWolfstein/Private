@@ -113,7 +113,7 @@ extension _ArtistScreenDiscography on _ArtistScreenState {
       mornyeGlass: false,
       builder: (sheetContext) => sheetContext.isMornye
           ? Theme(
-              data: MornyeTheme.fromContext(
+              data: AppTheme.fromContext(
                 sheetContext,
                 brightness: Brightness.dark,
               ),

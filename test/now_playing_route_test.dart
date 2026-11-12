@@ -7,7 +7,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mornye/l10n/l10n.dart';
 import 'package:mornye/providers/music_player_provider.dart';
 import 'package:mornye/screens/now_playing_screen.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 
 const _sheet = Key('player-sheet');
 
@@ -96,7 +96,7 @@ void main() {
     await tester.pumpWidget(
       MaterialApp(
         navigatorKey: navigator,
-        theme: MornyeTheme.build(Brightness.dark),
+        theme: AppTheme.build(Brightness.dark),
         home: const SizedBox(),
       ),
     );
@@ -171,7 +171,7 @@ void main() {
     await tester.pumpWidget(
       MaterialApp(
         navigatorKey: navigator,
-        theme: MornyeTheme.build(Brightness.dark),
+        theme: AppTheme.build(Brightness.dark),
         home: const SizedBox(),
       ),
     );
@@ -209,7 +209,7 @@ void main() {
         final navigator = GlobalKey<NavigatorState>();
         final capture = GlobalKey();
         const background = Color(0xffff00ff);
-        final theme = MornyeTheme.build(brightness);
+        final theme = AppTheme.build(brightness);
         final playerBackground = theme.colorScheme.surface;
         await tester.pumpWidget(
           RepaintBoundary(

@@ -7,8 +7,8 @@ import 'package:integration_test/integration_test.dart';
 import 'package:mornye/l10n/l10n.dart';
 import 'package:mornye/models/settings.dart';
 import 'package:mornye/providers/settings_provider.dart';
+import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/theme/app_theme.dart';
-import 'package:mornye/theme/mornye_theme.dart';
 import 'package:mornye/widgets/android_keyboard_lifecycle.dart';
 import 'package:mornye/widgets/app_bottom_sheet.dart';
 
@@ -66,8 +66,8 @@ void main() {
           overrides: [settingsProvider.overrideWith(_Settings.new)],
           child: MaterialApp(
             theme: mornye
-                ? MornyeTheme.build(Brightness.light)
-                : AppTheme.light(),
+                ? AppTheme.build(Brightness.light)
+                : LegacyMaterialTheme.light(),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             builder: (_, child) => AndroidKeyboardLifecycle(child: child!),

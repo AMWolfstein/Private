@@ -6,7 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mornye/providers/music_player_provider.dart';
-import 'package:mornye/theme/app_theme.dart';
+import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/utils/lyrics_parser.dart';
 import 'package:mornye/widgets/player_lyrics.dart';
 
@@ -23,7 +23,7 @@ void main() {
     final seek = ValueNotifier<Duration?>(null);
     addTearDown(playback.close);
     addTearDown(seek.dispose);
-    final theme = AppTheme.dark();
+    final theme = LegacyMaterialTheme.dark();
     final lyrics = ParsedLyrics(
       synced: true,
       wordSynced: false,
@@ -93,7 +93,7 @@ void main() {
     final seek = ValueNotifier<Duration?>(null);
     addTearDown(playback.close);
     addTearDown(seek.dispose);
-    final theme = AppTheme.dark();
+    final theme = LegacyMaterialTheme.dark();
     final lyrics = ParsedLyrics(
       synced: true,
       wordSynced: true,

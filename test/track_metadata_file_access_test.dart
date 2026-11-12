@@ -10,7 +10,7 @@ import 'package:mornye/providers/download_history_provider.dart';
 import 'package:mornye/screens/track_metadata_screen.dart';
 import 'package:mornye/services/source_deletion_events.dart';
 import 'package:mornye/services/source_metadata_events.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> _settleFileIo(WidgetTester tester) async {
@@ -70,7 +70,7 @@ void main() {
           ProviderScope(
             child: MaterialApp(
               theme: mornye
-                  ? MornyeTheme.build(Brightness.dark)
+                  ? AppTheme.build(Brightness.dark)
                   : ThemeData.dark(useMaterial3: true),
               localizationsDelegates: AppLocalizations.localizationsDelegates,
               supportedLocales: AppLocalizations.supportedLocales,
@@ -123,7 +123,7 @@ void main() {
           ProviderScope(
             child: MaterialApp(
               theme: mornye
-                  ? MornyeTheme.build(Brightness.dark)
+                  ? AppTheme.build(Brightness.dark)
                   : ThemeData.dark(useMaterial3: true),
               localizationsDelegates: AppLocalizations.localizationsDelegates,
               supportedLocales: AppLocalizations.supportedLocales,

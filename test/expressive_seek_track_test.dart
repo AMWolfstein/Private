@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart' show RenderRepaintBoundary;
 import 'package:flutter/semantics.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/expressive_seek_track.dart';
 import 'package:mornye/widgets/playback_seek_slider.dart';
 
@@ -18,7 +18,7 @@ Widget _host({
   Duration duration = const Duration(seconds: 100),
   Future<void> Function(Duration)? onSeek,
 }) => MaterialApp(
-  theme: mornye ? MornyeTheme.build(Brightness.dark) : null,
+  theme: mornye ? AppTheme.build(Brightness.dark) : null,
   home: MediaQuery(
     data: MediaQueryData(disableAnimations: reduceMotion),
     child: Directionality(

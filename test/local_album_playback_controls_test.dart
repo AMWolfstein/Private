@@ -11,8 +11,8 @@ import 'package:mornye/providers/music_player_provider.dart';
 import 'package:mornye/providers/playback_provider.dart';
 import 'package:mornye/screens/local_album_screen.dart';
 import 'package:mornye/services/library_database.dart';
+import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/theme/app_theme.dart';
-import 'package:mornye/theme/mornye_theme.dart';
 import 'package:mornye/widgets/album_detail_header.dart';
 import 'package:mornye/widgets/album_track_tile.dart';
 
@@ -118,8 +118,8 @@ void main() {
             ],
             child: MaterialApp(
               theme: mornye
-                  ? MornyeTheme.build(Brightness.light)
-                  : AppTheme.light(),
+                  ? AppTheme.build(Brightness.light)
+                  : LegacyMaterialTheme.light(),
               localizationsDelegates: AppLocalizations.localizationsDelegates,
               supportedLocales: AppLocalizations.supportedLocales,
               home: LocalAlbumScreen(

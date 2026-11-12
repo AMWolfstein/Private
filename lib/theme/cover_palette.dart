@@ -10,7 +10,7 @@ import 'package:material_color_utilities/hct/hct.dart';
 import 'package:material_color_utilities/quantize/quantizer_celebi.dart';
 import 'package:material_color_utilities/score/score.dart';
 import 'package:mornye/services/platform_bridge.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/cached_cover_image.dart';
 
 Future<List<List<int>>> _quantizePaletteInIsolate(Uint8List bytes) async {

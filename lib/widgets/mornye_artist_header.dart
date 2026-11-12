@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:mornye/widgets/mornye_glass_lens_fade.dart';
 import 'package:mornye/theme/cover_palette.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/services/shell_navigation_service.dart';
 import 'package:mornye/widgets/album_detail_header.dart';
 import 'package:mornye/widgets/cached_cover_image.dart';
@@ -54,7 +54,7 @@ class _MornyeArtistSurfaceState extends State<MornyeArtistSurface> {
       _baseTheme = baseTheme;
       _basePlatform = defaultTargetPlatform;
       _innerKey = null;
-      _darkTheme = MornyeTheme.fromContext(
+      _darkTheme = AppTheme.fromContext(
         context,
         brightness: Brightness.dark,
       );

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mornye/theme/app_tokens.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/theme/cover_palette.dart';
 import 'package:mornye/widgets/collection_scaffold.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

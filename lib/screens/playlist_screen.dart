@@ -25,7 +25,7 @@ import 'package:mornye/controllers/collapsing_header_scroll_mixin.dart';
 import 'package:mornye/widgets/error_card.dart';
 import 'package:mornye/widgets/collection_suggestions_section.dart';
 import 'package:mornye/widgets/downloadable_cover.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/mornye_artist_header.dart';
 
 class PlaylistScreen extends ConsumerStatefulWidget {

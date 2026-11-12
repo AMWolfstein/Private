@@ -5,7 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mornye/l10n/app_localizations.dart';
 import 'package:mornye/models/artist_concert.dart';
 import 'package:mornye/screens/artist_concerts_screen.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/artist_concerts_button.dart';
 import 'package:mornye/widgets/mornye_artist_header.dart';
 
@@ -25,7 +25,7 @@ Map<String, dynamic> event({
 Widget app(Widget child, {bool mornye = true, String language = 'en'}) =>
     ProviderScope(
       child: MaterialApp(
-        theme: mornye ? MornyeTheme.build(Brightness.light) : ThemeData(),
+        theme: mornye ? AppTheme.build(Brightness.light) : ThemeData(),
         locale: Locale(language),
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,

@@ -16,8 +16,8 @@ import 'package:mornye/providers/track_provider.dart';
 import 'package:mornye/screens/home_tab.dart';
 import 'package:mornye/services/music_player_service.dart'
     show PlayableMedia, PlaybackResumePreview;
-import 'package:mornye/theme/mornye_theme.dart';
 import 'package:mornye/theme/app_theme.dart';
+import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/widgets/animation_utils.dart';
 import 'package:mornye/widgets/app_search_field.dart';
 import 'package:mornye/widgets/lazy_tab_view.dart';
@@ -421,7 +421,7 @@ void main() {
               trackProvider.overrideWith(_Search.new),
             ],
             child: MaterialApp(
-              theme: MornyeTheme.build(Brightness.dark),
+              theme: AppTheme.build(Brightness.dark),
               localizationsDelegates: AppLocalizations.localizationsDelegates,
               supportedLocales: AppLocalizations.supportedLocales,
               home: const HomeTab(mode: HomeTabMode.browse),
@@ -506,7 +506,7 @@ void main() {
             trackProvider.overrideWith(() => search),
           ],
           child: MaterialApp(
-            theme: MornyeTheme.build(Brightness.dark),
+            theme: AppTheme.build(Brightness.dark),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             home: const _Tabs(),
@@ -575,7 +575,7 @@ void main() {
           trackProvider.overrideWith(() => search),
         ],
         child: MaterialApp(
-          theme: MornyeTheme.build(Brightness.dark),
+          theme: AppTheme.build(Brightness.dark),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: const _Tabs(),
@@ -616,7 +616,7 @@ void main() {
           trackProvider.overrideWith(_CollectionSearch.new),
         ],
         child: MaterialApp(
-          theme: MornyeTheme.build(Brightness.dark),
+          theme: AppTheme.build(Brightness.dark),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: const Scaffold(body: HomeTab(mode: HomeTabMode.search)),
@@ -687,7 +687,7 @@ void main() {
               trackProvider.overrideWith(() => search),
             ],
             child: MaterialApp(
-              theme: MornyeTheme.build(brightness),
+              theme: AppTheme.build(brightness),
               localizationsDelegates: AppLocalizations.localizationsDelegates,
               supportedLocales: AppLocalizations.supportedLocales,
               home: const HomeTab(mode: HomeTabMode.search),
@@ -758,7 +758,7 @@ void main() {
           trackProvider.overrideWith(_Search.new),
         ],
         child: MaterialApp(
-          theme: MornyeTheme.build(Brightness.dark),
+          theme: AppTheme.build(Brightness.dark),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: const HomeTab(mode: HomeTabMode.search),
@@ -813,7 +813,7 @@ void main() {
             ),
           ],
           child: MaterialApp(
-            theme: MornyeTheme.build(Brightness.dark),
+            theme: AppTheme.build(Brightness.dark),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             home: const HomeTab(mode: HomeTabMode.browse),
@@ -931,7 +931,7 @@ Future<void> _pumpStartupHome(
         }),
     ],
     child: MaterialApp(
-      theme: mornye ? MornyeTheme.build(Brightness.dark) : AppTheme.dark(),
+      theme: mornye ? AppTheme.build(Brightness.dark) : LegacyMaterialTheme.dark(),
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       home: homeVisible == null

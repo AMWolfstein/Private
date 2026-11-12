@@ -9,7 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mornye/models/settings.dart';
 import 'package:mornye/providers/runtime_profile_provider.dart';
 import 'package:mornye/providers/settings_provider.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/mornye_context_menu.dart';
 
 class _Settings extends SettingsNotifier {
@@ -52,7 +52,7 @@ void main() {
           backdropBlurEnabledProvider.overrideWithValue(false),
         ],
         child: MaterialApp(
-          theme: MornyeTheme.build(brightness, chromeSurface: chromeSurface),
+          theme: AppTheme.build(brightness, chromeSurface: chromeSurface),
           builder: (context, child) => RepaintBoundary(
             key: capture,
             child: MediaQuery(
@@ -181,7 +181,7 @@ void main() {
                 for (final fraction in [0.25, 0.5, 0.75])
                   Offset(x, menu.top + menu.height * fraction),
             ]);
-            final foreground = MornyeTheme.build(
+            final foreground = AppTheme.build(
               brightness,
             ).colorScheme.onSurface;
             for (final inside in pixels) {
@@ -351,7 +351,7 @@ void main() {
       final pixels = await samplePixels(tester, capture, [
         Offset(rect.left + 8, rect.center.dy),
       ]);
-      final theme = MornyeTheme.build(Brightness.dark);
+      final theme = AppTheme.build(Brightness.dark);
       expect(pixels.single, theme.colorScheme.surfaceContainerHigh);
       expect(
         find.descendant(of: menu, matching: find.byType(BackdropFilter)),

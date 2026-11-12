@@ -7,7 +7,7 @@ import 'package:mornye/providers/lyrics_translation_provider.dart';
 import 'package:mornye/providers/settings_provider.dart';
 import 'package:mornye/services/lyrics_ai_client.dart';
 import 'package:mornye/services/lyrics_translation_languages.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/utils/nav_bar_inset.dart';
 import 'package:mornye/widgets/app_alert_dialog.dart';
 import 'package:mornye/widgets/app_bottom_sheet.dart';
@@ -486,7 +486,7 @@ class _TextSheetBodyState extends State<_TextSheetBody> {
             placeholder: widget.hint,
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: MornyeTheme.controlFill(context),
+              color: AppTheme.controlFill(context),
               borderRadius: BorderRadius.circular(12),
             ),
             style: theme.textTheme.bodyLarge,
@@ -680,7 +680,7 @@ class _ModelSheetState extends State<_ModelSheet> {
                     placeholder: widget.defaultModel ?? l10n.lyricsAiModelHint,
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: MornyeTheme.controlFill(context),
+                      color: AppTheme.controlFill(context),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     style: theme.textTheme.bodyLarge,

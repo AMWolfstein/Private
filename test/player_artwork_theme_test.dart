@@ -13,8 +13,8 @@ import 'package:mornye/providers/runtime_profile_provider.dart';
 import 'package:mornye/providers/settings_provider.dart';
 import 'package:mornye/providers/system_volume_provider.dart';
 import 'package:mornye/screens/now_playing_screen.dart';
+import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/theme/app_theme.dart';
-import 'package:mornye/theme/mornye_theme.dart';
 import 'package:mornye/theme/player_artwork_theme.dart';
 import 'package:mornye/widgets/cached_cover_image.dart';
 import 'package:mornye/widgets/mini_player.dart';
@@ -112,14 +112,14 @@ void main() {
       tester,
     ) async {
       palette.cached[_coverA] = red;
-      await tester.pumpWidget(host(_coverA, AppTheme.light()));
+      await tester.pumpWidget(host(_coverA, LegacyMaterialTheme.light()));
       expect(shown(tester), red);
       expect(palette.requests, [_coverA]);
     });
 
     testWidgets('keeps the previous scheme until the next cover resolves, '
         'then moves every role at once', (tester) async {
-      final theme = AppTheme.light();
+      final theme = LegacyMaterialTheme.light();
       palette.cached[_coverA] = red;
       await tester.pumpWidget(host(_coverA, theme));
       await tester.pumpWidget(host(_coverB, theme));
@@ -152,7 +152,7 @@ void main() {
     testWidgets('returns to the app scheme without readable artwork', (
       tester,
     ) async {
-      final theme = AppTheme.light();
+      final theme = LegacyMaterialTheme.light();
       palette.cached[_coverA] = red;
       await tester.pumpWidget(host(_coverA, theme));
       await tester.pumpWidget(host(null, theme));
@@ -170,7 +170,7 @@ void main() {
     });
 
     testWidgets('reduced motion swaps the scheme in one step', (tester) async {
-      final theme = AppTheme.light();
+      final theme = LegacyMaterialTheme.light();
       palette.cached[_coverA] = red;
       await tester.pumpWidget(host(_coverA, theme, reduceMotion: true));
       await tester.pumpWidget(host(_coverB, theme, reduceMotion: true));
@@ -188,7 +188,7 @@ void main() {
       final cover = _seeded(Colors.orange, Brightness.dark);
       palette.cached[_coverA] = cover;
       await tester.pumpWidget(
-        host(_coverA, AppTheme.dark(dynamicScheme: amoled, isAmoled: true)),
+        host(_coverA, LegacyMaterialTheme.dark(dynamicScheme: amoled, isAmoled: true)),
       );
       final theme = Theme.of(tester.element(find.byKey(probe)));
       expect(theme.colorScheme.surface, Colors.black);
@@ -236,7 +236,7 @@ void main() {
         playQueueProvider.overrideWith((ref) => Stream.value(const [])),
       ],
       child: MaterialApp(
-        theme: mornye ? MornyeTheme.build(Brightness.light) : AppTheme.light(),
+        theme: mornye ? AppTheme.build(Brightness.light) : LegacyMaterialTheme.light(),
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         home: home,

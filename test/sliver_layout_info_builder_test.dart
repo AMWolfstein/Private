@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/album_detail_header.dart';
 import 'package:mornye/widgets/mornye_artist_header.dart';
 import 'package:mornye/widgets/sliver_layout_info_builder.dart';
@@ -169,7 +169,7 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           child: MaterialApp(
-            theme: MornyeTheme.build(Brightness.dark),
+            theme: AppTheme.build(Brightness.dark),
             home: Scaffold(
               body: CustomScrollView(
                 controller: controller,
@@ -226,7 +226,7 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         child: MaterialApp(
-          theme: MornyeTheme.build(Brightness.dark),
+          theme: AppTheme.build(Brightness.dark),
           home: Scaffold(
             body: CustomScrollView(
               controller: controller,
@@ -278,7 +278,7 @@ void main() {
     const action = Text('Artist action');
     await tester.pumpWidget(
       MaterialApp(
-        theme: MornyeTheme.build(Brightness.light),
+        theme: AppTheme.build(Brightness.light),
         home: StatefulBuilder(
           builder: (context, setState) {
             rebuild = setState;

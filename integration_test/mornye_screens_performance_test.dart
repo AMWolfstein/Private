@@ -21,7 +21,7 @@ import 'package:mornye/screens/home_tab.dart';
 import 'package:mornye/screens/queue_tab.dart';
 import 'package:mornye/services/album_completeness.dart';
 import 'package:mornye/services/user_profile_store.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/app_search_field.dart';
 import 'package:mornye/widgets/lazy_tab_view.dart';
 import 'package:mornye/widgets/mornye_chrome.dart';
@@ -129,7 +129,7 @@ void main() {
           }),
         ],
         child: MaterialApp(
-          theme: MornyeTheme.build(Brightness.dark),
+          theme: AppTheme.build(Brightness.dark),
           locale: const Locale('en'),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,

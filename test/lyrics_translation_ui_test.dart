@@ -19,8 +19,8 @@ import 'package:mornye/providers/settings_provider.dart';
 import 'package:mornye/screens/settings/lyrics_ai_translation_page.dart';
 import 'package:mornye/services/lyrics_ai_client.dart';
 import 'package:mornye/services/lyrics_translation.dart';
+import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/theme/app_theme.dart';
-import 'package:mornye/theme/mornye_theme.dart';
 import 'package:mornye/utils/lyrics_parser.dart';
 import 'package:mornye/utils/playback_seek_preview.dart';
 import 'package:mornye/widgets/lyrics_options_button.dart';
@@ -114,8 +114,8 @@ Widget _app({
   overrides: overrides,
   child: MaterialApp(
     theme: mornye
-        ? MornyeTheme.build(Brightness.dark, accent: MornyeAccent.blue)
-        : AppTheme.dark(),
+        ? AppTheme.build(Brightness.dark, accent: AppAccent.blue)
+        : LegacyMaterialTheme.dark(),
     locale: const Locale('en'),
     localizationsDelegates: AppLocalizations.localizationsDelegates,
     supportedLocales: AppLocalizations.supportedLocales,

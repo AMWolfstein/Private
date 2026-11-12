@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:liquid_glass_easy/liquid_glass_easy.dart';
 import 'package:mornye/providers/runtime_profile_provider.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/mornye_glass_press.dart';
 import 'package:mornye/widgets/mornye_selection_pill.dart';
 import 'package:mornye/widgets/mornye_glass_lens_fade.dart';
@@ -212,7 +212,7 @@ class MornyeGlass extends ConsumerWidget {
           ),
         );
     final dark = scheme.brightness == Brightness.dark;
-    final outlines = MornyeTheme.glassOutlinesOf(context);
+    final outlines = AppTheme.glassOutlinesOf(context);
     final shape = BorderRadius.vertical(
       top: firstInGroup ? Radius.circular(radius) : Radius.zero,
       bottom: lastInGroup ? Radius.circular(radius) : Radius.zero,
@@ -221,7 +221,7 @@ class MornyeGlass extends ConsumerWidget {
     if (translucent) {
       final artworkTint = Theme.of(
         context,
-      ).extension<MornyeTheme>()?.chromeSurface;
+      ).extension<AppTheme>()?.chromeSurface;
       var tintSource =
           tintColor ?? (dark ? scheme.surfaceContainerHigh : Colors.white);
       var opacity = tintOpacity ?? (strongTint ? 0.80 : 0.60);
@@ -490,7 +490,7 @@ class MornyeFilterChip extends StatelessWidget {
             ? Colors.transparent
             : selected
             ? scheme.primary.withValues(alpha: 0.12)
-            : MornyeTheme.controlFill(context, enabled: onTap != null),
+            : AppTheme.controlFill(context, enabled: onTap != null),
         child: InkWell(
           onTap: onTap,
           child: Padding(
@@ -642,7 +642,7 @@ class MornyeTabBar extends ConsumerWidget {
                           child: MornyeGlass.navigation(
                             blurEnabled: blurEnabled,
                             strongTint: true,
-                            tintOpacity: MornyeTheme.navigationOpacity(context),
+                            tintOpacity: AppTheme.navigationOpacity(context),
                             refractionDepth: 0.45 + 0.15 * progress,
                             radius: lerpDouble(32, foldedSize / 2, amount)!,
                             child: const SizedBox.expand(),

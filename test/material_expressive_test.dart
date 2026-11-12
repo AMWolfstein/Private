@@ -9,9 +9,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:material_3_expressive/material_3_expressive.dart';
 import 'package:material_ui/material_ui.dart' as material_ui;
 import 'package:mornye/l10n/l10n.dart';
-import 'package:mornye/theme/app_theme.dart';
+import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/theme/material_expressive.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/app_action_button.dart';
 import 'package:mornye/widgets/app_choice_chip.dart';
 import 'package:mornye/widgets/app_content_card.dart';
@@ -34,7 +34,7 @@ Widget _host(
   Locale locale = const Locale('en'),
 }) => ProviderScope(
   child: MaterialApp(
-    theme: theme ?? AppTheme.light(),
+    theme: theme ?? LegacyMaterialTheme.light(),
     locale: locale,
     localizationsDelegates: AppLocalizations.localizationsDelegates,
     supportedLocales: AppLocalizations.supportedLocales,
@@ -58,7 +58,7 @@ void main() {
         seedColor: Colors.green,
         brightness: Brightness.dark,
       ).copyWith(primary: const Color(0xffc6f192));
-      final theme = AppTheme.dark(
+      final theme = LegacyMaterialTheme.dark(
         dynamicScheme: scheme,
         isAmoled: true,
         useSystemFont: systemFont,
@@ -241,7 +241,7 @@ void main() {
                       icon: Icons.music_note,
                       label: label,
                       onPressed: () {},
-                      colorScheme: AppTheme.light().colorScheme,
+                      colorScheme: LegacyMaterialTheme.light().colorScheme,
                     ),
                   ),
               ],
@@ -313,7 +313,7 @@ void main() {
           '(dark: $dark, reduced motion: $reduceMotion)', (tester) async {
         final capture = GlobalKey();
         const backdrop = Color(0xff725ca8);
-        final theme = dark ? AppTheme.dark() : AppTheme.light();
+        final theme = dark ? LegacyMaterialTheme.dark() : LegacyMaterialTheme.light();
         final tint = theme.colorScheme.surfaceContainer.withValues(alpha: 0.72);
         for (final bottomInset in [24.0, 48.0]) {
           await tester.pumpWidget(
@@ -447,7 +447,7 @@ void main() {
             AppSwitch(value: true, onChanged: (_) {}),
           ],
         ),
-        theme: MornyeTheme.build(Brightness.dark),
+        theme: AppTheme.build(Brightness.dark),
         reduceMotion: true,
       ),
     );
@@ -583,7 +583,7 @@ void main() {
     await tester.pumpWidget(
       _host(
         segment(first: true, last: true),
-        theme: MornyeTheme.build(Brightness.dark),
+        theme: AppTheme.build(Brightness.dark),
       ),
     );
     await tester.pumpAndSettle();

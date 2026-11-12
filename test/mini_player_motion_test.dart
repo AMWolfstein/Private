@@ -12,7 +12,7 @@ import 'package:material_3_expressive/material_3_expressive.dart';
 import 'package:mornye/l10n/l10n.dart';
 import 'package:mornye/providers/music_player_provider.dart';
 import 'package:mornye/providers/runtime_profile_provider.dart';
-import 'package:mornye/theme/app_theme.dart';
+import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/theme/material_expressive.dart';
 import 'package:mornye/widgets/decorative_phase.dart';
 import 'package:mornye/widgets/mini_player.dart';
@@ -77,7 +77,7 @@ Widget _player({
     backdropBlurEnabledProvider.overrideWithValue(false),
   ],
   child: MaterialApp(
-    theme: AppTheme.light(),
+    theme: LegacyMaterialTheme.light(),
     localizationsDelegates: AppLocalizations.localizationsDelegates,
     supportedLocales: AppLocalizations.supportedLocales,
     builder: (context, child) => MediaQuery(

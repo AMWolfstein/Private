@@ -4,7 +4,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:liquid_glass_easy/liquid_glass_easy.dart';
 import 'package:mornye/providers/runtime_profile_provider.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 
 /// The one place that decides how Mornye glass renders. Glass is fixed at the
 /// Clear end of the retired Glass Quality slider, so every surface reads the
@@ -80,7 +80,7 @@ class MornyeLiquidBackdrop extends StatelessWidget {
   Widget build(BuildContext context) {
     if (interaction && progress <= 0) return child;
     final effect = interaction ? progress : 1.0;
-    final outlines = MornyeTheme.glassOutlinesOf(context);
+    final outlines = AppTheme.glassOutlinesOf(context);
     final dark = Theme.of(context).brightness == Brightness.dark;
     // Match the old optical lens's edge displacement. Version 5 fixes travel
     // at 70 logical pixels and controls bending through the index alone.

@@ -12,7 +12,7 @@ import 'package:mornye/models/settings.dart';
 import 'package:mornye/providers/settings_provider.dart';
 import 'package:mornye/screens/whats_new_screen.dart';
 import 'package:mornye/services/local_network_access.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 
 class _Preferences implements SharedPreferences {
   final saved = <String, String>{};
@@ -205,7 +205,7 @@ void main() {
         UncontrolledProviderScope(
           container: container,
           child: MaterialApp(
-            theme: mornye ? MornyeTheme.build(Brightness.light) : ThemeData(),
+            theme: mornye ? AppTheme.build(Brightness.light) : ThemeData(),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             builder: (context, child) => MediaQuery(

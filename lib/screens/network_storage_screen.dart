@@ -15,7 +15,7 @@ import 'package:mornye/utils/logger.dart';
 import 'package:mornye/utils/nav_bar_inset.dart';
 import 'package:mornye/widgets/app_sliver_header.dart';
 import 'package:mornye/widgets/app_search_field.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/theme/app_tokens.dart';
 import 'package:mornye/widgets/app_action_button.dart';
 import 'package:mornye/widgets/app_icon.dart';
@@ -1190,7 +1190,7 @@ class _NetworkMessage extends StatelessWidget {
                 child: DecoratedBox(
                   decoration: BoxDecoration(
                     color: context.isMornye
-                        ? MornyeTheme.controlFill(context)
+                        ? AppTheme.controlFill(context)
                         : scheme.secondaryContainer,
                     borderRadius: BorderRadius.circular(
                       context.isMornye ? 16 : 24,

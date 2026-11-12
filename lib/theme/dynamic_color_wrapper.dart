@@ -3,9 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_ui/material_ui.dart' as material_ui;
 import 'package:mornye/providers/theme_provider.dart';
 import 'package:mornye/providers/custom_font_provider.dart';
-import 'package:mornye/theme/app_theme.dart';
+import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/models/theme_settings.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 
 class DynamicColorWrapper extends ConsumerWidget {
   final Widget Function(ThemeData light, ThemeData dark, ThemeMode mode)
@@ -42,14 +42,14 @@ class DynamicColorWrapper extends ConsumerWidget {
       builder: (lightDynamic, darkDynamic) {
         if (themeSettings.style == AppThemeStyle.mornye) {
           return builder(
-            MornyeTheme.build(
+            AppTheme.build(
               Brightness.light,
               accent: themeSettings.mornyeAccent,
               useSystemFont: themeSettings.useSystemFont,
               fontFamily: fontFamily,
               glassOutlines: themeSettings.mornyeGlassOutlines,
             ),
-            MornyeTheme.build(
+            AppTheme.build(
               Brightness.dark,
               accent: themeSettings.mornyeAccent,
               useSystemFont: themeSettings.useSystemFont,
@@ -84,12 +84,12 @@ class DynamicColorWrapper extends ConsumerWidget {
           darkScheme = _applyAmoledColors(darkScheme);
         }
 
-        final lightTheme = AppTheme.light(
+        final lightTheme = LegacyMaterialTheme.light(
           dynamicScheme: lightScheme,
           useSystemFont: themeSettings.useSystemFont,
           fontFamily: fontFamily,
         );
-        final darkTheme = AppTheme.dark(
+        final darkTheme = LegacyMaterialTheme.dark(
           dynamicScheme: darkScheme,
           isAmoled: themeSettings.useAmoled,
           useSystemFont: themeSettings.useSystemFont,

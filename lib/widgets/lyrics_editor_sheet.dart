@@ -10,7 +10,7 @@ import 'package:mornye/l10n/l10n.dart';
 import 'package:mornye/providers/music_player_provider.dart';
 import 'package:mornye/services/network_storage_service.dart';
 import 'package:mornye/theme/app_tokens.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/utils/logger.dart';
 import 'package:mornye/utils/lyrics_draft.dart';
 import 'package:mornye/utils/string_utils.dart';
@@ -641,7 +641,7 @@ class _LyricsEditorRow extends StatelessWidget {
     final fill = selected
         ? scheme.secondaryContainer
         : mornye
-        ? MornyeTheme.controlFill(context)
+        ? AppTheme.controlFill(context)
         : scheme.surfaceContainerHighest;
     final onFill = selected ? scheme.onSecondaryContainer : scheme.onSurface;
     final time = line.time;

@@ -6,7 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mornye/l10n/app_localizations.dart';
 import 'package:mornye/providers/settings_provider.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/controllers/extension_action_forms.dart';
 import 'package:mornye/widgets/app_bottom_sheet.dart';
 
@@ -28,7 +28,7 @@ void main() {
       ProviderScope(
         overrides: [settingsProvider.overrideWith(FixedSettingsNotifier.new)],
         child: MaterialApp(
-          theme: mornye ? MornyeTheme.build(Brightness.dark) : ThemeData(),
+          theme: mornye ? AppTheme.build(Brightness.dark) : ThemeData(),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: Scaffold(

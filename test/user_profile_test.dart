@@ -14,7 +14,7 @@ import 'package:mornye/screens/settings/settings_tab.dart';
 import 'package:mornye/services/backup_service.dart';
 import 'package:mornye/services/shell_navigation_service.dart';
 import 'package:mornye/services/user_profile_store.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/profile_avatar.dart';
 import 'package:mornye/widgets/settings_group.dart';
 
@@ -221,7 +221,7 @@ void main() {
         UncontrolledProviderScope(
           container: container,
           child: MaterialApp(
-            theme: MornyeTheme.build(Brightness.dark),
+            theme: AppTheme.build(Brightness.dark),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             home: const Scaffold(body: SettingsTab()),

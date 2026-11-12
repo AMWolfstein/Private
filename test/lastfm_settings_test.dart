@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mornye/l10n/l10n.dart';
 import 'package:mornye/services/lastfm/lastfm_service.dart';
+import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/theme/app_theme.dart';
-import 'package:mornye/theme/mornye_theme.dart';
 import 'package:mornye/widgets/lastfm_settings.dart';
 import 'package:mornye/widgets/settings_group.dart';
 
@@ -29,8 +29,8 @@ void main() {
           await tester.pumpWidget(
             MaterialApp(
               theme: mornye
-                  ? MornyeTheme.build(Brightness.dark)
-                  : AppTheme.dark(),
+                  ? AppTheme.build(Brightness.dark)
+                  : LegacyMaterialTheme.dark(),
               localizationsDelegates: AppLocalizations.localizationsDelegates,
               supportedLocales: AppLocalizations.supportedLocales,
               home: Scaffold(

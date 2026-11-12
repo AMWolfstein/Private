@@ -7,7 +7,7 @@ import 'package:mornye/models/unified_library_item.dart';
 import 'package:mornye/providers/network_upload_provider.dart';
 import 'package:mornye/screens/network_storage_screen.dart';
 import 'package:mornye/services/network_storage_service.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/library_selection_playback_actions.dart';
 import 'package:mornye/widgets/network_upload_actions.dart';
 
@@ -46,7 +46,7 @@ void main() {
           ),
         ],
         child: MaterialApp(
-          theme: mornye ? MornyeTheme.build(Brightness.dark) : ThemeData(),
+          theme: mornye ? AppTheme.build(Brightness.dark) : ThemeData(),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: Scaffold(
@@ -104,7 +104,7 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           child: MaterialApp(
-            theme: mornye ? MornyeTheme.build(Brightness.dark) : ThemeData(),
+            theme: mornye ? AppTheme.build(Brightness.dark) : ThemeData(),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             home: Builder(

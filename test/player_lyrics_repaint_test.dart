@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mornye/providers/music_player_provider.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/utils/lyrics_parser.dart';
 import 'package:mornye/widgets/player_lyrics.dart';
 
@@ -79,7 +79,7 @@ void main() {
           addTearDown(playback.close);
           addTearDown(preview.dispose);
           final theme = mornye
-              ? MornyeTheme.build(Brightness.dark)
+              ? AppTheme.build(Brightness.dark)
               : ThemeData.dark();
           final position = Duration(milliseconds: milliseconds);
           await tester.pumpWidget(
@@ -148,7 +148,7 @@ void main() {
         addTearDown(playback.close);
         addTearDown(preview.dispose);
         final theme = mornye
-            ? MornyeTheme.build(Brightness.dark)
+            ? AppTheme.build(Brightness.dark)
             : ThemeData.dark();
         await tester.pumpWidget(
           ProviderScope(
@@ -279,7 +279,7 @@ void main() {
       addTearDown(playback.close);
       addTearDown(preview.dispose);
       final theme = mornye
-          ? MornyeTheme.build(Brightness.dark)
+          ? AppTheme.build(Brightness.dark)
           : ThemeData.dark();
       await tester.pumpWidget(
         ProviderScope(
@@ -342,7 +342,7 @@ void main() {
         addTearDown(playback.close);
         addTearDown(preview.dispose);
         final theme = mornye
-            ? MornyeTheme.build(Brightness.dark)
+            ? AppTheme.build(Brightness.dark)
             : ThemeData.dark();
         await tester.pumpWidget(
           ProviderScope(
@@ -419,7 +419,7 @@ void main() {
         AppLifecycleState.resumed,
       ),
     );
-    final theme = MornyeTheme.build(Brightness.dark);
+    final theme = AppTheme.build(Brightness.dark);
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
@@ -501,7 +501,7 @@ void main() {
             ),
           ],
         );
-        final theme = MornyeTheme.build(Brightness.dark);
+        final theme = AppTheme.build(Brightness.dark);
         await tester.pumpWidget(
           ProviderScope(
             overrides: [
@@ -595,7 +595,7 @@ void main() {
       );
       final preview = ValueNotifier<Duration?>(const Duration(seconds: focus));
       addTearDown(preview.dispose);
-      final theme = MornyeTheme.build(Brightness.dark);
+      final theme = AppTheme.build(Brightness.dark);
       var width = 420.0;
       Future<void> pumpView() => tester.pumpWidget(
         ProviderScope(

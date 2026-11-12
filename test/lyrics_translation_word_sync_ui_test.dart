@@ -8,7 +8,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mornye/providers/music_player_provider.dart';
 import 'package:mornye/services/lyrics_translation.dart';
 import 'package:mornye/services/lyrics_translation_alignment.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/utils/lyrics_parser.dart';
 import 'package:mornye/widgets/player_lyrics.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -136,7 +136,7 @@ void main() {
           ],
         );
         final theme = mornye
-            ? MornyeTheme.build(Brightness.dark)
+            ? AppTheme.build(Brightness.dark)
             : ThemeData.dark();
         await tester.pumpWidget(
           ProviderScope(

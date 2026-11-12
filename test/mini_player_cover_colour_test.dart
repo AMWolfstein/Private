@@ -12,9 +12,9 @@ import 'package:mornye/models/settings.dart';
 import 'package:mornye/providers/music_player_provider.dart';
 import 'package:mornye/providers/runtime_profile_provider.dart';
 import 'package:mornye/providers/settings_provider.dart';
-import 'package:mornye/theme/app_theme.dart';
+import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/theme/cover_palette.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/theme/player_artwork_theme.dart';
 import 'package:mornye/widgets/cached_cover_image.dart';
 import 'package:mornye/widgets/mini_player.dart';
@@ -51,7 +51,7 @@ Widget _player(
     ),
   ],
   child: MaterialApp(
-    theme: mornye ? MornyeTheme.build(Brightness.dark) : AppTheme.light(),
+    theme: mornye ? AppTheme.build(Brightness.dark) : LegacyMaterialTheme.light(),
     localizationsDelegates: AppLocalizations.localizationsDelegates,
     supportedLocales: AppLocalizations.supportedLocales,
     home: Scaffold(
@@ -150,7 +150,7 @@ void main() {
           MaterialApp(
             home: MaterialPlayerBackdrop(
               mediaItem: item,
-              colorScheme: AppTheme.light().colorScheme,
+              colorScheme: LegacyMaterialTheme.light().colorScheme,
               showArtwork: true,
             ),
           ),
@@ -230,7 +230,7 @@ void main() {
 
     await tester.pumpWidget(
       MaterialApp(
-        theme: MornyeTheme.build(Brightness.dark),
+        theme: AppTheme.build(Brightness.dark),
         home: MornyePlayerBackground(artUri: artUri),
       ),
     );

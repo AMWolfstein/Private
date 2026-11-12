@@ -19,7 +19,7 @@ import 'package:mornye/services/playable_media.dart' show PlayableMedia;
 import 'package:mornye/theme/app_tokens.dart';
 import 'package:mornye/utils/adaptive_layout.dart';
 import 'package:mornye/theme/cover_palette.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/utils/file_access.dart';
 import 'package:mornye/widgets/album_detail_header.dart';
 import 'package:mornye/widgets/collection_scaffold.dart';

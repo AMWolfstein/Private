@@ -12,7 +12,7 @@ import 'package:mornye/providers/explore_provider.dart';
 import 'package:mornye/providers/extension_provider.dart';
 import 'package:mornye/providers/settings_provider.dart';
 import 'package:mornye/services/explore_cache_store.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/app_snack_bar.dart';
 import 'package:mornye/widgets/home_feed_region_setting.dart';
 import 'package:mornye/widgets/settings_group.dart';
@@ -304,7 +304,7 @@ void main() {
             locale: const Locale('en'),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
-            theme: mornye ? MornyeTheme.build(Brightness.dark) : ThemeData(),
+            theme: mornye ? AppTheme.build(Brightness.dark) : ThemeData(),
             builder: (_, child) => AppScaffoldMessenger(child: child!),
             home: const Scaffold(
               body: SettingsGroup(children: [HomeFeedRegionSetting()]),

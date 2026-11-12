@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mornye/l10n/l10n.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/player_queue_dismissible.dart';
 
 void main() {
@@ -14,7 +14,7 @@ void main() {
           var removals = 0;
           await tester.pumpWidget(
             MaterialApp(
-              theme: MornyeTheme.build(brightness),
+              theme: AppTheme.build(brightness),
               localizationsDelegates: AppLocalizations.localizationsDelegates,
               supportedLocales: AppLocalizations.supportedLocales,
               home: Directionality(

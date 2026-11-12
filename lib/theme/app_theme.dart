@@ -1,395 +1,512 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:mornye/models/theme_settings.dart';
 import 'package:mornye/theme/app_tokens.dart';
 
-class AppTheme {
-  static const Color defaultSeedColor = Color(kDefaultSeedColor);
+/// Mornye's own accent, surface and motion tokens; keep this palette
+/// independent of wallpaper colors.
+@immutable
+class AppTheme extends ThemeExtension<AppTheme> {
+  const AppTheme({
+    this.chromeSurface,
+    this.accent = AppAccent.blue,
+    this.useSystemFont = false,
+    this.fontFamily,
+    this.glassOutlines = true,
+  });
 
-  /// Shared surfaces use one radius scale; actions use round Material shapes.
-  static const AppTokens _tokens = AppTokens.standard;
+  final Color? chromeSurface;
+  final AppAccent accent;
+  final bool useSystemFont;
+  final String? fontFamily;
+  final bool glassOutlines;
 
-  /// The bundled variable face; its wght, wdth and ROND axes stay variable.
-  static const String bundledFontFamily = 'Google Sans Flex';
+  static bool glassOutlinesOf(BuildContext context) =>
+      Theme.of(context).extension<AppTheme>()?.glassOutlines ?? true;
 
-  /// Full ROND for the Expressive brand roles of [bundledFontFamily].
-  static const double brandRoundness = 100;
+  /// A single translucent fill for controls inside an existing glass surface.
+  static Color controlFill(BuildContext context, {bool enabled = true}) {
+    final theme = Theme.of(context);
+    return theme.colorScheme.onSurface.withValues(
+      alpha: !enabled
+          ? 0.04
+          : theme.brightness == Brightness.dark
+          ? 0.10
+          : 0.07,
+    );
+  }
 
-  // Override Flutter's default page transitions. Recent Flutter defaults the
-  // Android route transition to PredictiveBackPageTransitionsBuilder, whose
-  // gesture detector mis-routes the predictive-back gesture to a nested
-  // Navigator instead of the topmost route (flutter#152323). That pops the page
-  // *behind* a root modal/sheet/dialog instead of closing the modal first — a
-  // regression introduced by the Flutter upgrade. Forcing a non-predictive
-  // builder restores the correct back order (close modal, then pop page), at the
-  // cost of the predictive-back preview animation.
-  static const PageTransitionsTheme _pageTransitionsTheme =
-      PageTransitionsTheme(
-        builders: <TargetPlatform, PageTransitionsBuilder>{
+  /// Separators blend with their group, keeping definition on pages and sheets.
+  static Color metadataDividerColor(BuildContext context) {
+    final theme = Theme.of(context);
+    return theme.colorScheme.onSurface.withValues(
+      alpha: theme.brightness == Brightness.dark ? 0.14 : 0.17,
+    );
+  }
+
+  static double chromeOpacity(BuildContext context) {
+    final theme = Theme.of(context);
+    if (theme.extension<AppTheme>()?.chromeSurface != null) return 0.36;
+    // Light glass needs more fill to keep dark subtitles readable over black.
+    return theme.brightness == Brightness.dark ? 0.60 : 0.70;
+  }
+
+  static double navigationOpacity(BuildContext context) {
+    final theme = Theme.of(context);
+    if (theme.extension<AppTheme>()?.chromeSurface != null) return 0.24;
+    return theme.brightness == Brightness.dark ? 0.36 : 0.49;
+  }
+
+  static const lightAccent = Color.fromRGBO(204, 46, 51, 1);
+  static const darkAccent = Color.fromRGBO(255, 69, 58, 1);
+
+  static Color accentColor(AppAccent accent, Brightness brightness) {
+    final dark = brightness == Brightness.dark;
+    final color = switch (accent) {
+      AppAccent.red => const CupertinoDynamicColor.withBrightness(
+        color: lightAccent,
+        darkColor: darkAccent,
+      ),
+      AppAccent.orange => CupertinoColors.systemOrange,
+      AppAccent.green => CupertinoColors.systemGreen,
+      AppAccent.teal => CupertinoColors.systemTeal,
+      AppAccent.blue => CupertinoColors.systemBlue,
+      AppAccent.purple => CupertinoColors.systemPurple,
+      AppAccent.pink => CupertinoColors.systemPink,
+    };
+    // Accents also label links and small controls on white surfaces.
+    if (!dark && accent == AppAccent.green) return const Color(0xff24863d);
+    // The system high contrast blue reads navy; this one still clears 4.5:1.
+    if (!dark && accent == AppAccent.blue) return const Color(0xff0071e3);
+    return dark ? color.darkColor : color.highContrastColor;
+  }
+
+  static final tokens = AppTokens.standard.copyWith(
+    radiusBadge: 5,
+    radiusThumb: 6,
+    radiusCover: 10,
+    radiusControl: 12,
+    radiusCard: 12,
+    radiusSheet: 32,
+    coverMini: 38,
+    headerExpandedTitleSize: 34,
+    headerCollapsedTitleSize: 17,
+    motionFast: const Duration(milliseconds: 180),
+    motionMedium: const Duration(milliseconds: 220),
+    motionSlow: const Duration(milliseconds: 380),
+    rowPaddingH: 16,
+    rowPaddingV: 10,
+    rowPaddingVCompact: 8,
+    rowIconGap: 12,
+    rowIconDividerIndent: 52,
+    rowChevronSize: 18,
+    rowMinHeight: 28,
+    trackRowPaddingV: 12,
+    headerSubtitleSize: 20,
+    lyricsLineHeight: 1.3,
+    lyricsLinePaddingV: 16,
+    playerControlGap: 12,
+    dialogInsetH: 24,
+  );
+
+  // Theme construction includes seeded color generation and typography. Reuse
+  // identical themes across routes; bound artwork-derived variants so browsing
+  // many artists cannot grow the cache indefinitely. Platform is part of the
+  // key because it controls fonts and route transitions.
+  static final _themeCache =
+      <
+        (TargetPlatform, Brightness, Color?, AppAccent, bool, String?),
+        ThemeData
+      >{};
+  static final _glassVariants = Expando<ThemeData>();
+
+  static ThemeData build(
+    Brightness brightness, {
+    Color? chromeSurface,
+    AppAccent accent = AppAccent.blue,
+    bool useSystemFont = false,
+    String? fontFamily,
+    bool glassOutlines = true,
+  }) {
+    final key = (
+      defaultTargetPlatform,
+      brightness,
+      chromeSurface,
+      accent,
+      useSystemFont,
+      fontFamily,
+    );
+    var theme = _themeCache.remove(key);
+    // Artwork chrome only tints a few roles, so derive it from the base theme.
+    theme ??= chromeSurface == null
+        ? _build(
+            brightness,
+            selectedAccent: accent,
+            useSystemFont: useSystemFont,
+            fontFamily: fontFamily,
+          )
+        : _withChromeSurface(
+            build(
+              brightness,
+              accent: accent,
+              useSystemFont: useSystemFont,
+              fontFamily: fontFamily,
+            ),
+            chromeSurface,
+          );
+    if (_themeCache.length >= 16) {
+      _themeCache.remove(_themeCache.keys.first);
+    }
+    _themeCache[key] = theme;
+    return _withGlassPreferences(theme, glassOutlines);
+  }
+
+  static ThemeData _withChromeSurface(ThemeData theme, Color chromeSurface) {
+    final scheme = theme.colorScheme.copyWith(
+      surfaceContainerHigh: Color.lerp(chromeSurface, Colors.black, 0.16),
+    );
+    return theme.copyWith(
+      colorScheme: scheme,
+      buttonTheme: theme.buttonTheme.copyWith(colorScheme: scheme),
+      snackBarTheme: theme.snackBarTheme.copyWith(
+        backgroundColor: scheme.surfaceContainerHigh,
+      ),
+      extensions: [
+        for (final extension in theme.extensions.values)
+          if (extension is AppTheme)
+            extension.copyWith(chromeSurface: chromeSurface)
+          else
+            extension,
+      ],
+    );
+  }
+
+  // The outlines preference only changes the material, not typography or
+  // seeded colors. Keep the expensive base theme cached independently, and
+  // reuse the last variant so equal preferences keep the same theme identity.
+  static ThemeData _withGlassPreferences(ThemeData theme, bool outlines) {
+    bool matches(ThemeData? candidate) {
+      final preferences = candidate?.extension<AppTheme>();
+      return preferences?.glassOutlines == outlines;
+    }
+
+    if (matches(theme)) return theme;
+    final variant = _glassVariants[theme];
+    if (matches(variant)) return variant!;
+    return _glassVariants[theme] = theme.copyWith(
+      extensions: [
+        for (final extension in theme.extensions.values)
+          if (extension is AppTheme)
+            extension.copyWith(glassOutlines: outlines)
+          else
+            extension,
+      ],
+    );
+  }
+
+  /// Rebuild local surfaces without losing the user's Mornye preferences.
+  static ThemeData fromContext(
+    BuildContext context, {
+    Brightness? brightness,
+    Color? chromeSurface,
+  }) {
+    final theme = Theme.of(context);
+    final preferences = theme.extension<AppTheme>();
+    return build(
+      brightness ?? theme.brightness,
+      chromeSurface: chromeSurface,
+      accent: preferences?.accent ?? AppAccent.blue,
+      useSystemFont: preferences?.useSystemFont ?? false,
+      fontFamily: preferences?.fontFamily,
+      glassOutlines: preferences?.glassOutlines ?? true,
+    );
+  }
+
+  static ThemeData _build(
+    Brightness brightness, {
+    required AppAccent selectedAccent,
+    required bool useSystemFont,
+    String? fontFamily,
+  }) {
+    final dark = brightness == Brightness.dark;
+    final accent = accentColor(selectedAccent, brightness);
+    final foreground = dark ? Colors.white : Colors.black;
+    final surface = dark ? Colors.black : Colors.white;
+    final grouped = dark ? const Color(0xff1c1c1e) : const Color(0xfff2f2f7);
+    final secondary = dark ? const Color(0xff98989f) : const Color(0xff6c6c70);
+    final scheme =
+        ColorScheme.fromSeed(
+          seedColor: accent,
+          brightness: brightness,
+        ).copyWith(
+          primary: accent,
+          onPrimary: accent.computeLuminance() < 0.179
+              ? Colors.white
+              : Colors.black,
+          primaryContainer: grouped,
+          onPrimaryContainer: accent,
+          secondary: accent,
+          onSecondary: Colors.white,
+          secondaryContainer: grouped,
+          onSecondaryContainer: foreground,
+          surface: surface,
+          onSurface: foreground,
+          surfaceContainerLowest: surface,
+          surfaceContainerLow: grouped,
+          surfaceContainer: grouped,
+          surfaceContainerHigh: dark ? const Color(0xff2c2c2e) : grouped,
+          surfaceContainerHighest: dark
+              ? const Color(0xff3a3a3c)
+              : const Color(0xffe5e5ea),
+          onSurfaceVariant: secondary,
+          outline: secondary,
+          outlineVariant: dark
+              ? const Color(0xff38383a)
+              : const Color(0xffc6c6c8),
+          surfaceTint: Colors.transparent,
+        );
+    // Inter is the default font unless the user opts into the system font.
+    final type = CupertinoThemeData(brightness: brightness).textTheme;
+    final text = type.textStyle.copyWith(
+      inherit: true,
+      color: foreground,
+      fontFamily:
+          fontFamily ??
+          (useSystemFont ? type.textStyle.fontFamily : 'Inter'),
+    );
+    final display = type.navLargeTitleTextStyle.copyWith(
+      inherit: true,
+      color: foreground,
+      fontFamily:
+          fontFamily ??
+          (useSystemFont ? type.navLargeTitleTextStyle.fontFamily : 'Inter'),
+    );
+    // Supply complete styles: replacing a Material role with a bare TextStyle
+    // loses its system family and retains Material tracking in other roles.
+    final typography = TextTheme(
+      displayLarge: display.copyWith(fontSize: 57),
+      displayMedium: display.copyWith(fontSize: 45),
+      displaySmall: display.copyWith(fontSize: 36),
+      headlineLarge: display,
+      headlineMedium: display.copyWith(fontSize: 28, letterSpacing: 0.36),
+      headlineSmall: display.copyWith(fontSize: 22, letterSpacing: 0.35),
+      titleLarge: display.copyWith(
+        fontSize: 20,
+        fontWeight: FontWeight.w600,
+        letterSpacing: 0.38,
+      ),
+      titleMedium: text.copyWith(fontWeight: FontWeight.w500),
+      titleSmall: text.copyWith(
+        fontSize: 15,
+        fontWeight: FontWeight.w600,
+        letterSpacing: -0.23,
+      ),
+      bodyLarge: text,
+      bodyMedium: text.copyWith(fontSize: 15, letterSpacing: -0.23),
+      bodySmall: text.copyWith(
+        fontSize: 13,
+        letterSpacing: -0.08,
+        color: secondary,
+      ),
+      labelLarge: text.copyWith(fontWeight: FontWeight.w600),
+      labelMedium: text.copyWith(
+        fontSize: 13,
+        fontWeight: FontWeight.w500,
+        letterSpacing: -0.08,
+      ),
+      labelSmall: text.copyWith(
+        fontSize: 11,
+        fontWeight: FontWeight.w500,
+        letterSpacing: -0.24,
+        color: secondary,
+      ),
+    );
+    final base = ThemeData(
+      useMaterial3: true,
+      brightness: brightness,
+      colorScheme: scheme,
+      scaffoldBackgroundColor: surface,
+      fontFamily: text.fontFamily,
+      splashFactory: NoSplash.splashFactory,
+      extensions: <ThemeExtension<dynamic>>[
+        AppTheme(
+          accent: selectedAccent,
+          useSystemFont: useSystemFont,
+          fontFamily: fontFamily,
+        ),
+        tokens,
+      ],
+    );
+    final controlShape = RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(12),
+    );
+    return base.copyWith(
+      textTheme: typography,
+      primaryTextTheme: typography.apply(
+        bodyColor: scheme.onPrimary,
+        displayColor: scheme.onPrimary,
+      ),
+      pageTransitionsTheme: const PageTransitionsTheme(
+        builders: {
           TargetPlatform.android: FadeForwardsPageTransitionsBuilder(),
         },
-      );
-
-  static ThemeData light({
-    ColorScheme? dynamicScheme,
-    Color? seedColor,
-    bool useSystemFont = false,
-    String? fontFamily,
-  }) {
-    final scheme =
-        dynamicScheme ??
-        ColorScheme.fromSeed(
-          seedColor: seedColor ?? defaultSeedColor,
-          brightness: Brightness.light,
-        );
-    final family = fontFamily ?? (useSystemFont ? null : bundledFontFamily);
-    final textTheme = _expressiveTextTheme(family);
-
-    return ThemeData(
-      useMaterial3: true,
-      colorScheme: scheme,
-      pageTransitionsTheme: _pageTransitionsTheme,
-      appBarTheme: _appBarTheme(scheme),
-      cardTheme: _cardTheme(scheme),
-      elevatedButtonTheme: _elevatedButtonTheme(scheme),
-      filledButtonTheme: _filledButtonTheme(scheme),
-      outlinedButtonTheme: _outlinedButtonTheme(scheme),
-      textButtonTheme: _textButtonTheme(scheme),
-      floatingActionButtonTheme: _fabTheme(scheme),
-      inputDecorationTheme: _inputDecorationTheme(scheme),
-      listTileTheme: _listTileTheme(scheme),
-      dialogTheme: _dialogTheme(scheme),
-      bottomSheetTheme: _bottomSheetTheme,
-      navigationBarTheme: _navigationBarTheme(scheme),
-      snackBarTheme: _snackBarTheme(scheme),
-      progressIndicatorTheme: _progressIndicatorTheme(scheme),
-      switchTheme: _switchTheme(scheme),
-      chipTheme: _chipTheme(scheme),
-      popupMenuTheme: _popupMenuTheme(scheme),
-      menuTheme: _menuTheme(scheme),
-      menuButtonTheme: _menuButtonTheme,
-      tabBarTheme: _tabBarTheme(scheme),
-      dividerTheme: _dividerTheme(scheme),
-      extensions: <ThemeExtension<dynamic>>[AppTokens.standard],
-      fontFamily: family,
-      textTheme: textTheme,
-      primaryTextTheme: textTheme,
-    );
-  }
-
-  static ThemeData dark({
-    ColorScheme? dynamicScheme,
-    Color? seedColor,
-    bool isAmoled = false,
-    bool useSystemFont = false,
-    String? fontFamily,
-  }) {
-    final scheme =
-        dynamicScheme ??
-        ColorScheme.fromSeed(
-          seedColor: seedColor ?? defaultSeedColor,
-          brightness: Brightness.dark,
-        );
-    final family = fontFamily ?? (useSystemFont ? null : bundledFontFamily);
-    final textTheme = _expressiveTextTheme(family);
-
-    return ThemeData(
-      useMaterial3: true,
-      colorScheme: scheme,
-      pageTransitionsTheme: _pageTransitionsTheme,
-      scaffoldBackgroundColor: isAmoled ? Colors.black : null,
-      appBarTheme: _appBarTheme(scheme, isAmoled: isAmoled),
-      cardTheme: _cardTheme(scheme),
-      elevatedButtonTheme: _elevatedButtonTheme(scheme),
-      filledButtonTheme: _filledButtonTheme(scheme),
-      outlinedButtonTheme: _outlinedButtonTheme(scheme),
-      textButtonTheme: _textButtonTheme(scheme),
-      floatingActionButtonTheme: _fabTheme(scheme),
-      inputDecorationTheme: _inputDecorationTheme(scheme),
-      listTileTheme: _listTileTheme(scheme),
-      dialogTheme: _dialogTheme(scheme),
-      bottomSheetTheme: _bottomSheetTheme,
-      navigationBarTheme: _navigationBarTheme(scheme, isAmoled: isAmoled),
-      snackBarTheme: _snackBarTheme(scheme),
-      progressIndicatorTheme: _progressIndicatorTheme(scheme),
-      switchTheme: _switchTheme(scheme),
-      chipTheme: _chipTheme(scheme),
-      popupMenuTheme: _popupMenuTheme(scheme),
-      menuTheme: _menuTheme(scheme),
-      menuButtonTheme: _menuButtonTheme,
-      tabBarTheme: _tabBarTheme(scheme),
-      dividerTheme: _dividerTheme(scheme),
-      extensions: <ThemeExtension<dynamic>>[AppTokens.standard],
-      fontFamily: family,
-      textTheme: textTheme,
-      primaryTextTheme: textTheme,
-    );
-  }
-
-  // Display, headline and title roles are the Expressive brand roles, so they
-  // take Google Sans Flex's rounded terminals. Body and label roles carry long
-  // reading text and small UI labels, where the default cut terminals stay
-  // crisper; they keep ROND 0, the M3 Expressive brand and plain split.
-  // Only ROND is set: with no wght entry the engine still takes the weight
-  // from fontWeight, so a later copyWith(fontWeight: ...) keeps working.
-  // Imported and system fonts get no axes.
-  static TextTheme? _expressiveTextTheme(String? family) {
-    if (family != bundledFontFamily) return null;
-    const rounded = TextStyle(
-      fontVariations: [FontVariation('ROND', brandRoundness)],
-    );
-    return const TextTheme(
-      displayLarge: rounded,
-      displayMedium: rounded,
-      displaySmall: rounded,
-      headlineLarge: rounded,
-      headlineMedium: rounded,
-      headlineSmall: rounded,
-      titleLarge: rounded,
-      titleMedium: rounded,
-      titleSmall: rounded,
-    );
-  }
-
-  static AppBarTheme _appBarTheme(
-    ColorScheme scheme, {
-    bool isAmoled = false,
-  }) => AppBarTheme(
-    elevation: 0,
-    scrolledUnderElevation: isAmoled ? 0 : 3,
-    backgroundColor: isAmoled ? Colors.black : scheme.surface,
-    foregroundColor: scheme.onSurface,
-    surfaceTintColor: isAmoled ? Colors.transparent : scheme.surfaceTint,
-    centerTitle: true,
-    titleTextStyle: TextStyle(
-      color: scheme.onSurface,
-      fontSize: 22,
-      fontWeight: FontWeight.w500,
-    ),
-    systemOverlayStyle: SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
-      statusBarIconBrightness: scheme.brightness == Brightness.dark
-          ? Brightness.light
-          : Brightness.dark,
-      systemNavigationBarColor: isAmoled
-          ? Colors.black
-          : scheme.surfaceContainer,
-      systemNavigationBarIconBrightness: scheme.brightness == Brightness.dark
-          ? Brightness.light
-          : Brightness.dark,
-    ),
-  );
-
-  static CardThemeData _cardTheme(ColorScheme scheme) => CardThemeData(
-    elevation: 0,
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(_tokens.radiusCard),
-    ),
-    color: scheme.surfaceContainerLow,
-    surfaceTintColor: scheme.surfaceTint,
-  );
-
-  static ElevatedButtonThemeData _elevatedButtonTheme(ColorScheme scheme) =>
-      ElevatedButtonThemeData(
-        style: ElevatedButton.styleFrom(
-          elevation: 1,
-          shape: const StadiumBorder(),
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-        ),
-      );
-
-  static FilledButtonThemeData _filledButtonTheme(ColorScheme scheme) =>
-      FilledButtonThemeData(
-        style: FilledButton.styleFrom(
-          shape: const StadiumBorder(),
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-        ),
-      );
-
-  static OutlinedButtonThemeData _outlinedButtonTheme(ColorScheme scheme) =>
-      OutlinedButtonThemeData(
-        style: OutlinedButton.styleFrom(
-          shape: const StadiumBorder(),
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-        ),
-      );
-
-  static TextButtonThemeData _textButtonTheme(ColorScheme scheme) =>
-      TextButtonThemeData(
-        style: TextButton.styleFrom(
-          shape: const StadiumBorder(),
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        ),
-      );
-
-  static FloatingActionButtonThemeData _fabTheme(ColorScheme scheme) =>
-      FloatingActionButtonThemeData(
-        elevation: 3,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(_tokens.radiusControl),
-        ),
-        backgroundColor: scheme.primaryContainer,
-        foregroundColor: scheme.onPrimaryContainer,
-      );
-
-  static InputDecorationTheme _inputDecorationTheme(ColorScheme scheme) =>
-      InputDecorationTheme(
-        filled: true,
-        fillColor: scheme.surfaceContainerHigh,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(_tokens.radiusControl),
-          borderSide: BorderSide.none,
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(_tokens.radiusControl),
-          borderSide: BorderSide.none,
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(_tokens.radiusControl),
-          borderSide: BorderSide(color: scheme.primary, width: 2),
-        ),
-        errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(_tokens.radiusControl),
-          borderSide: BorderSide(color: scheme.error, width: 1),
-        ),
-        contentPadding: const EdgeInsets.symmetric(
-          horizontal: 20,
-          vertical: 16,
-        ),
-      );
-
-  static ListTileThemeData _listTileTheme(ColorScheme scheme) =>
-      ListTileThemeData(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(_tokens.radiusControl),
-        ),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-      );
-
-  // Caps modal sheet width on tablets/landscape (no effect on phones, whose
-  // screens are narrower); Flutter centers the sheet when narrower than the
-  // screen. The shape is set here so no call site has to repeat it — every
-  // sheet inherits the token radius.
-  static final BottomSheetThemeData _bottomSheetTheme = BottomSheetThemeData(
-    constraints: const BoxConstraints(maxWidth: 640),
-    shape: _tokens.sheetShape,
-  );
-
-  static DialogThemeData _dialogTheme(ColorScheme scheme) => DialogThemeData(
-    elevation: 6,
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(_tokens.radiusSheet),
-    ),
-    backgroundColor: scheme.surfaceContainerHigh,
-    surfaceTintColor: scheme.surfaceTint,
-  );
-
-  static NavigationBarThemeData _navigationBarTheme(
-    ColorScheme scheme, {
-    bool isAmoled = false,
-  }) => NavigationBarThemeData(
-    elevation: 0,
-    // Navigation keeps its container tier on AMOLED too, so the bar stays
-    // apart from the black page.
-    backgroundColor: scheme.surfaceContainer,
-    indicatorColor: scheme.secondaryContainer,
-    surfaceTintColor: isAmoled ? Colors.transparent : scheme.surfaceTint,
-    labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
-  );
-
-  static SnackBarThemeData _snackBarTheme(ColorScheme scheme) =>
-      SnackBarThemeData(
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(_tokens.radiusControl),
-        ),
-        backgroundColor: scheme.inverseSurface,
-        contentTextStyle: TextStyle(color: scheme.onInverseSurface),
-      );
-
-  static ProgressIndicatorThemeData _progressIndicatorTheme(
-    ColorScheme scheme,
-  ) => ProgressIndicatorThemeData(
-    color: scheme.primary,
-    linearTrackColor: scheme.surfaceContainerHighest,
-    circularTrackColor: scheme.surfaceContainerHighest,
-  );
-
-  static SwitchThemeData _switchTheme(ColorScheme scheme) => SwitchThemeData(
-    thumbColor: WidgetStateProperty.resolveWith((states) {
-      if (states.contains(WidgetState.selected)) {
-        return scheme.onPrimary;
-      }
-      return scheme.outline;
-    }),
-    trackColor: WidgetStateProperty.resolveWith((states) {
-      if (states.contains(WidgetState.selected)) {
-        return scheme.primary;
-      }
-      return scheme.surfaceContainerHighest;
-    }),
-    thumbIcon: WidgetStateProperty.resolveWith((states) {
-      if (states.contains(WidgetState.selected)) {
-        return Icon(Icons.check, color: scheme.primary);
-      }
-      return null;
-    }),
-  );
-
-  // Every menu wears the M3 Expressive standard menu skin, as M3EMenuPopup
-  // does: the low container tier, the control radius and a level 2 lift.
-  static PopupMenuThemeData _popupMenuTheme(ColorScheme scheme) =>
-      PopupMenuThemeData(
-        color: scheme.surfaceContainerLow,
+      ),
+      appBarTheme: AppBarTheme(
+        backgroundColor: surface,
+        foregroundColor: accent,
+        elevation: 0,
+        scrolledUnderElevation: 0,
         surfaceTintColor: Colors.transparent,
-        elevation: 3,
+        centerTitle: true,
+        titleTextStyle: text.copyWith(fontWeight: FontWeight.w600),
+      ),
+      cardTheme: CardThemeData(
+        color: grouped,
+        elevation: 0,
+        shape: controlShape,
+      ),
+      dividerTheme: DividerThemeData(
+        color: scheme.outlineVariant,
+        thickness: 0.5,
+        space: 0.5,
+      ),
+      listTileTheme: ListTileThemeData(
+        iconColor: accent,
+        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
+        shape: controlShape,
+      ),
+      filledButtonTheme: FilledButtonThemeData(
+        style: FilledButton.styleFrom(
+          shape: controlShape,
+          padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 12),
+        ),
+      ),
+      textButtonTheme: TextButtonThemeData(
+        style: TextButton.styleFrom(shape: controlShape),
+      ),
+      outlinedButtonTheme: OutlinedButtonThemeData(
+        style: OutlinedButton.styleFrom(shape: controlShape),
+      ),
+      inputDecorationTheme: InputDecorationTheme(
+        filled: true,
+        fillColor: grouped,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide.none,
+        ),
+      ),
+      bottomSheetTheme: BottomSheetThemeData(
+        backgroundColor: grouped,
+        surfaceTintColor: Colors.transparent,
+        constraints: const BoxConstraints(maxWidth: 640),
+        shape: tokens.sheetShape,
+      ),
+      dialogTheme: DialogThemeData(
+        backgroundColor: grouped,
+        shape: controlShape,
+      ),
+      snackBarTheme: SnackBarThemeData(
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: scheme.surfaceContainerHigh,
+        contentTextStyle: text.copyWith(fontSize: 15, color: foreground),
+        actionTextColor: accent,
+        disabledActionTextColor: secondary,
+        closeIconColor: foreground,
+        elevation: 0,
+        insetPadding: const EdgeInsets.fromLTRB(20, 8, 20, 12),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(_tokens.radiusControl),
-        ),
-        menuPadding: const EdgeInsets.symmetric(vertical: 8),
-      );
-
-  // Anchored menus share the popup skin; items sit 4dp in from the edge with
-  // rounded corners.
-  static MenuThemeData _menuTheme(ColorScheme scheme) => MenuThemeData(
-    style: MenuStyle(
-      backgroundColor: WidgetStatePropertyAll(scheme.surfaceContainerLow),
-      surfaceTintColor: const WidgetStatePropertyAll(Colors.transparent),
-      elevation: const WidgetStatePropertyAll(3),
-      padding: const WidgetStatePropertyAll(EdgeInsets.all(4)),
-      shape: WidgetStatePropertyAll(
-        RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(_tokens.radiusControl),
+          borderRadius: BorderRadius.circular(24),
+          side: BorderSide(color: scheme.outlineVariant.withValues(alpha: 0.5)),
         ),
       ),
-    ),
+    );
+  }
+
+  @override
+  AppTheme copyWith({
+    Color? chromeSurface,
+    AppAccent? accent,
+    bool? useSystemFont,
+    String? fontFamily,
+    bool? glassOutlines,
+  }) => AppTheme(
+    chromeSurface: chromeSurface ?? this.chromeSurface,
+    accent: accent ?? this.accent,
+    useSystemFont: useSystemFont ?? this.useSystemFont,
+    fontFamily: fontFamily ?? this.fontFamily,
+    glassOutlines: glassOutlines ?? this.glassOutlines,
   );
 
-  static final MenuButtonThemeData _menuButtonTheme = MenuButtonThemeData(
-    style: MenuItemButton.styleFrom(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(_tokens.radiusCover),
+  @override
+  AppTheme lerp(covariant AppTheme? other, double t) => AppTheme(
+    chromeSurface: Color.lerp(chromeSurface, other?.chromeSurface, t),
+    accent: t < 0.5 ? accent : other?.accent ?? accent,
+    fontFamily: t < 0.5 ? fontFamily : other?.fontFamily,
+    useSystemFont: t < 0.5
+        ? useSystemFont
+        : other?.useSystemFont ?? useSystemFont,
+    glassOutlines: t < 0.5
+        ? glassOutlines
+        : other?.glassOutlines ?? glassOutlines,
+  );
+
+  @override
+  bool operator ==(Object other) =>
+      other is AppTheme &&
+      other.chromeSurface == chromeSurface &&
+      other.accent == accent &&
+      other.useSystemFont == useSystemFont &&
+      other.fontFamily == fontFamily &&
+      other.glassOutlines == glassOutlines;
+
+  @override
+  int get hashCode => Object.hash(
+    chromeSurface,
+    accent,
+    useSystemFont,
+    fontFamily,
+    glassOutlines,
+  );
+}
+
+extension MornyeThemeContext on BuildContext {
+  bool get isMornye => Theme.of(this).extension<AppTheme>() != null;
+}
+
+/// its artwork-led, plain background.
+class MornyeSettingsTheme extends StatelessWidget {
+  const MornyeSettingsTheme({super.key, required this.child});
+
+  final Widget child;
+
+  // Reusing the derived theme keeps rebuilds from notifying the whole page.
+  static final _themes = Expando<ThemeData>();
+
+  @override
+  Widget build(BuildContext context) {
+    if (!context.isMornye) return child;
+    final theme = Theme.of(context);
+    final dark = theme.brightness == Brightness.dark;
+    final background = dark ? Colors.black : const Color(0xfff2f2f7);
+    final group = dark ? const Color(0xff1c1c1e) : Colors.white;
+    return Theme(
+      data: _themes[theme] ??= theme.copyWith(
+        scaffoldBackgroundColor: background,
+        extensions: [
+          for (final extension in theme.extensions.values)
+            if (extension is AppTokens)
+              extension.copyWith(radiusCard: 24)
+            else
+              extension,
+        ],
+        colorScheme: theme.colorScheme.copyWith(
+          surface: background,
+          surfaceContainer: group,
+        ),
+        appBarTheme: theme.appBarTheme.copyWith(backgroundColor: background),
       ),
-    ),
-  );
-
-  static TabBarThemeData _tabBarTheme(ColorScheme scheme) => TabBarThemeData(
-    indicatorSize: TabBarIndicatorSize.label,
-    indicator: UnderlineTabIndicator(
-      borderRadius: const BorderRadius.vertical(top: Radius.circular(3)),
-      borderSide: BorderSide(color: scheme.primary, width: 3),
-    ),
-    labelStyle: const TextStyle(fontWeight: FontWeight.w600),
-  );
-
-  static ChipThemeData _chipTheme(ColorScheme scheme) => ChipThemeData(
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(_tokens.radiusCard),
-    ),
-    backgroundColor: scheme.surfaceContainerLow,
-    selectedColor: scheme.secondaryContainer,
-  );
-
-  static DividerThemeData _dividerTheme(ColorScheme scheme) =>
-      DividerThemeData(color: scheme.outlineVariant, thickness: 1, space: 1);
+      child: ColoredBox(color: background, child: child),
+    );
+  }
 }

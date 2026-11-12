@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:mornye/theme/mornye_icons.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/app_action_button.dart';
 import 'package:mornye/widgets/app_checkbox.dart';
 import 'package:mornye/widgets/app_text_field.dart';
@@ -284,7 +284,7 @@ class _ReEnrichFieldSheetState extends State<_ReEnrichFieldSheet> {
                                     vertical: 12,
                                   ),
                                   decoration: BoxDecoration(
-                                    color: MornyeTheme.controlFill(context),
+                                    color: AppTheme.controlFill(context),
                                     borderRadius: BorderRadius.circular(16),
                                   ),
                                 ),
@@ -359,7 +359,7 @@ class _ReEnrichFieldSheetState extends State<_ReEnrichFieldSheet> {
       padding: EdgeInsets.symmetric(horizontal: grouped ? 16 : 4, vertical: 4),
       child: grouped
           ? Material(
-              color: MornyeTheme.controlFill(context),
+              color: AppTheme.controlFill(context),
               borderRadius: BorderRadius.circular(28),
               clipBehavior: Clip.antiAlias,
               child: content,

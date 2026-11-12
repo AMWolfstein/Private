@@ -15,7 +15,7 @@ import 'package:mornye/services/music_player_service.dart'
 import 'package:mornye/services/song_analysis.dart';
 import 'package:mornye/screens/listening_statistics_screen.dart';
 import 'package:mornye/screens/equalizer_screen.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/utils/nav_bar_inset.dart';
 import 'package:mornye/utils/usb_output_status_label.dart';
 import 'package:mornye/widgets/animation_utils.dart';

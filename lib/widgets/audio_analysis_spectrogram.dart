@@ -169,7 +169,7 @@ class _SpectrogramView extends StatelessWidget {
     // contrast even when the surrounding Mornye page uses the light theme.
     return context.isMornye
         ? Theme(
-            data: MornyeTheme.fromContext(context, brightness: Brightness.dark),
+            data: AppTheme.fromContext(context, brightness: Brightness.dark),
             child: card,
           )
         : card;

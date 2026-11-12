@@ -16,8 +16,8 @@ import 'package:mornye/screens/local_album_screen.dart';
 import 'package:mornye/screens/mornye_library_screen.dart';
 import 'package:mornye/services/downloaded_embedded_cover_resolver.dart';
 import 'package:mornye/services/library_database.dart';
+import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/theme/app_theme.dart';
-import 'package:mornye/theme/mornye_theme.dart';
 import 'package:mornye/widgets/album_detail_header.dart';
 import 'package:mornye/widgets/cached_cover_image.dart';
 import 'package:mornye/widgets/local_library_artwork_builder.dart';
@@ -84,7 +84,7 @@ void main() {
       ),
     ],
     child: MaterialApp(
-      theme: mornye ? MornyeTheme.build(Brightness.light) : AppTheme.light(),
+      theme: mornye ? AppTheme.build(Brightness.light) : LegacyMaterialTheme.light(),
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       home: home,
@@ -353,7 +353,7 @@ void main() {
             ),
           ],
           child: MaterialApp(
-            theme: MornyeTheme.build(Brightness.light),
+            theme: AppTheme.build(Brightness.light),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             home: Scaffold(

@@ -7,8 +7,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mornye/models/settings.dart';
 import 'package:mornye/providers/music_player_provider.dart';
 import 'package:mornye/providers/settings_provider.dart';
+import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/theme/app_theme.dart';
-import 'package:mornye/theme/mornye_theme.dart';
 import 'package:mornye/utils/lyrics_parser.dart';
 import 'package:mornye/widgets/player_lyrics.dart';
 
@@ -96,7 +96,7 @@ void runLyricsPerformanceTests({required bool mornye}) {
       active.dispose();
       fastPhrases.dispose();
     });
-    final theme = mornye ? MornyeTheme.build(Brightness.dark) : AppTheme.dark();
+    final theme = mornye ? AppTheme.build(Brightness.dark) : LegacyMaterialTheme.dark();
     await tester.pumpWidget(
       ProviderScope(
         overrides: [

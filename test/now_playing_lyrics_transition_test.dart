@@ -29,8 +29,8 @@ import 'package:mornye/services/network_storage_service.dart';
 import 'package:video_player/video_player.dart';
 import 'package:mornye/screens/now_playing_screen.dart';
 import 'package:mornye/screens/lyrics_share_screen.dart';
-import 'package:mornye/theme/mornye_theme.dart';
 import 'package:mornye/theme/app_theme.dart';
+import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/utils/lyrics_parser.dart';
 import 'package:mornye/widgets/expressive_icon_button.dart';
 import 'package:mornye/widgets/expressive_playback_transport.dart';
@@ -280,7 +280,7 @@ void main() {
     await withClock(Clock(tester.binding.clock.now), () async {
       await pumpNowPlaying(
         tester,
-        theme: MornyeTheme.build(Brightness.dark),
+        theme: AppTheme.build(Brightness.dark),
         playbackEvents: states.stream,
       );
       mediaItems.add(item('first'));
@@ -314,7 +314,7 @@ void main() {
       (tester) async {
         await pumpNowPlaying(
           tester,
-          theme: mornye ? MornyeTheme.build(Brightness.dark) : null,
+          theme: mornye ? AppTheme.build(Brightness.dark) : null,
           playback: PlaybackState(
             processingState: AudioProcessingState.ready,
             updatePosition: const Duration(seconds: 30),
@@ -417,7 +417,7 @@ void main() {
         'with text scale $textScale', (tester) async {
       await pumpNowPlaying(
         tester,
-        theme: AppTheme.light(),
+        theme: LegacyMaterialTheme.light(),
         size: size,
         wrapPlayer: (player) => Builder(
           builder: (context) => MediaQuery(
@@ -498,7 +498,7 @@ void main() {
       'unchanged', (tester) async {
     await pumpNowPlaying(
       tester,
-      theme: AppTheme.light(),
+      theme: LegacyMaterialTheme.light(),
       size: const Size(900, 1000),
     );
     mediaItems.add(item('first'));
@@ -524,7 +524,7 @@ void main() {
     ) async {
       await pumpNowPlaying(
         tester,
-        theme: mornye ? MornyeTheme.build(Brightness.dark) : AppTheme.light(),
+        theme: mornye ? AppTheme.build(Brightness.dark) : LegacyMaterialTheme.light(),
         size: const Size(390, 844),
       );
       mediaItems.add(item('first'));
@@ -666,7 +666,7 @@ void main() {
       );
       await pumpNowPlaying(
         tester,
-        theme: MornyeTheme.build(Brightness.dark),
+        theme: AppTheme.build(Brightness.dark),
         size: const Size(393, 852),
         queue: queue,
         controller: controller,
@@ -716,7 +716,7 @@ void main() {
       Future<(double, double)> positions(MotionArtwork? artwork) async {
         await pumpNowPlaying(
           tester,
-          theme: MornyeTheme.build(Brightness.dark),
+          theme: AppTheme.build(Brightness.dark),
           size: const Size(393, 852),
           motionArtwork: artwork,
         );
@@ -756,7 +756,7 @@ void main() {
       );
       await pumpNowPlaying(
         tester,
-        theme: MornyeTheme.build(Brightness.dark),
+        theme: AppTheme.build(Brightness.dark),
         size: const Size(852, 393),
         motionArtwork: MotionArtwork('file:///cover.mp4', aspectRatio: ratio),
         queue: queue,
@@ -825,7 +825,7 @@ void main() {
     addTearDown(playback.close);
     await pumpNowPlaying(
       tester,
-      theme: MornyeTheme.build(Brightness.dark),
+      theme: AppTheme.build(Brightness.dark),
       size: const Size(393, 852),
       playbackEvents: playback.stream,
     );
@@ -888,7 +888,7 @@ void main() {
   ) async {
     await pumpNowPlaying(
       tester,
-      theme: MornyeTheme.build(Brightness.dark),
+      theme: AppTheme.build(Brightness.dark),
       size: const Size(393, 852),
       motionArtwork: const MotionArtwork(
         'file:///cover.mp4',
@@ -953,7 +953,7 @@ void main() {
     addTearDown(playback.close);
     await pumpNowPlaying(
       tester,
-      theme: MornyeTheme.build(Brightness.dark),
+      theme: AppTheme.build(Brightness.dark),
       size: const Size(393, 780),
       playbackEvents: playback.stream,
     );
@@ -1006,7 +1006,7 @@ void main() {
           '[00:01.000]$original\n[00:15.000]Next line';
       await pumpNowPlaying(
         tester,
-        theme: MornyeTheme.build(Brightness.dark),
+        theme: AppTheme.build(Brightness.dark),
         size: Size(width, 1024),
         playback: PlaybackState(updatePosition: const Duration(seconds: 2)),
       );
@@ -1063,7 +1063,7 @@ void main() {
           final controller = _SeekController();
           await pumpNowPlaying(
             tester,
-            theme: MornyeTheme.build(Brightness.dark),
+            theme: AppTheme.build(Brightness.dark),
             size: size,
             playbackEvents: playback.stream,
             controller: controller,
@@ -1178,7 +1178,7 @@ void main() {
     final controller = _SeekController();
     await pumpNowPlaying(
       tester,
-      theme: MornyeTheme.build(Brightness.dark),
+      theme: AppTheme.build(Brightness.dark),
       size: const Size(393, 852),
       playbackEvents: playback.stream,
       controller: controller,
@@ -1292,7 +1292,7 @@ void main() {
   ) async {
     await pumpNowPlaying(
       tester,
-      theme: MornyeTheme.build(
+      theme: AppTheme.build(
         Brightness.dark,
       ).copyWith(platform: TargetPlatform.android),
       size: const Size(900, 420),
@@ -1317,13 +1317,13 @@ void main() {
         ).join('\n');
         await pumpNowPlaying(
           tester,
-          theme: MornyeTheme.build(Brightness.dark),
+          theme: AppTheme.build(Brightness.dark),
           size: Size(393, height),
           playback: PlaybackState(updatePosition: const Duration(seconds: 30)),
           wrapPlayer: (player) => ValueListenableBuilder<bool>(
             valueListenable: outlines,
             builder: (context, value, child) => Theme(
-              data: MornyeTheme.build(Brightness.dark, glassOutlines: value),
+              data: AppTheme.build(Brightness.dark, glassOutlines: value),
               child: child!,
             ),
             child: player,
@@ -1438,7 +1438,7 @@ void main() {
         metadataOverrides['lyrics'] = '[00:00.00]$lyric\n[01:00.00]Second line';
         await pumpNowPlaying(
           tester,
-          theme: MornyeTheme.build(Brightness.dark),
+          theme: AppTheme.build(Brightness.dark),
           size: const Size(393, 852),
           playback: PlaybackState(playing: true),
           wrapPlayer: (player) => Builder(
@@ -1539,7 +1539,7 @@ void main() {
         addTearDown(playback.close);
         await pumpNowPlaying(
           tester,
-          theme: MornyeTheme.build(Brightness.dark),
+          theme: AppTheme.build(Brightness.dark),
           size: landscape ? const Size(852, 393) : const Size(393, 852),
           playbackEvents: playback.stream,
         );
@@ -1600,7 +1600,7 @@ void main() {
         ).join('\n');
         await pumpNowPlaying(
           tester,
-          theme: mornye ? MornyeTheme.build(Brightness.dark) : AppTheme.light(),
+          theme: mornye ? AppTheme.build(Brightness.dark) : LegacyMaterialTheme.light(),
           size: landscape ? const Size(852, 393) : const Size(393, 852),
           playback: PlaybackState(playing: true),
         );
@@ -1653,7 +1653,7 @@ void main() {
             '[00:00.00]First lyric\n[01:00.00]Second line';
         await pumpNowPlaying(
           tester,
-          theme: AppTheme.light(),
+          theme: LegacyMaterialTheme.light(),
           size: landscape ? const Size(852, 393) : const Size(393, 852),
           playback: PlaybackState(playing: true),
         );
@@ -1718,7 +1718,7 @@ void main() {
             '[00:00.00]First lyric\n[01:00.00]Second line';
         await pumpNowPlaying(
           tester,
-          theme: AppTheme.light(),
+          theme: LegacyMaterialTheme.light(),
           size: size,
           playback: PlaybackState(playing: true),
           wrapPlayer: (player) => Builder(
@@ -1787,7 +1787,7 @@ void main() {
         '[00:00.00]First lyric\n[01:00.00]Second line';
     await pumpNowPlaying(
       tester,
-      theme: AppTheme.light(),
+      theme: LegacyMaterialTheme.light(),
       size: const Size(852, 393),
       playback: PlaybackState(playing: true),
     );
@@ -1824,7 +1824,7 @@ void main() {
     (tester) async {
       await pumpNowPlaying(
         tester,
-        theme: MornyeTheme.build(Brightness.dark),
+        theme: AppTheme.build(Brightness.dark),
         size: const Size(393, 852),
         playback: PlaybackState(playing: true),
         wrapPlayer: (player) => Builder(
@@ -1856,7 +1856,7 @@ void main() {
     final capture = GlobalKey();
     await pumpNowPlaying(
       tester,
-      theme: MornyeTheme.build(Brightness.light),
+      theme: AppTheme.build(Brightness.light),
       size: const Size(393, 780),
       wrapPlayer: (player) => RepaintBoundary(
         key: capture,
@@ -1902,7 +1902,7 @@ void main() {
     (tester) async {
       await pumpNowPlaying(
         tester,
-        theme: MornyeTheme.build(Brightness.light),
+        theme: AppTheme.build(Brightness.light),
         size: const Size(393, 780),
       );
       mediaItems.add(item('first'));
@@ -1953,7 +1953,7 @@ void main() {
     (tester) async {
       await pumpNowPlaying(
         tester,
-        theme: MornyeTheme.build(Brightness.dark),
+        theme: AppTheme.build(Brightness.dark),
         size: const Size(393, 780),
       );
       mediaItems.add(item('first'));
@@ -1995,7 +1995,7 @@ void main() {
     };
     await pumpNowPlaying(
       tester,
-      theme: MornyeTheme.build(
+      theme: AppTheme.build(
         Brightness.dark,
       ).copyWith(platform: TargetPlatform.android),
       size: const Size(393, 852),
@@ -2046,7 +2046,7 @@ void main() {
       };
       await pumpNowPlaying(
         tester,
-        theme: MornyeTheme.build(Brightness.light),
+        theme: AppTheme.build(Brightness.light),
         size: const Size(393, 780),
       );
       mediaItems.add(
@@ -2099,7 +2099,7 @@ void main() {
     (tester) async {
       await pumpNowPlaying(
         tester,
-        theme: MornyeTheme.build(Brightness.light),
+        theme: AppTheme.build(Brightness.light),
         size: const Size(393, 780),
       );
       mediaItems.add(item('first'));
@@ -2182,7 +2182,7 @@ void main() {
       addTearDown(playback.close);
       await pumpNowPlaying(
         tester,
-        theme: layout == 'material' ? null : MornyeTheme.build(Brightness.dark),
+        theme: layout == 'material' ? null : AppTheme.build(Brightness.dark),
         size: layout == 'landscape'
             ? const Size(852, 393)
             : const Size(393, 852),
@@ -2342,7 +2342,7 @@ void main() {
     addTearDown(playback.close);
     await pumpNowPlaying(
       tester,
-      theme: MornyeTheme.build(Brightness.dark),
+      theme: AppTheme.build(Brightness.dark),
       size: const Size(393, 780),
       playbackEvents: playback.stream,
     );
@@ -2428,7 +2428,7 @@ void main() {
       tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
       await pumpNowPlaying(
         tester,
-        theme: MornyeTheme.build(Brightness.light),
+        theme: AppTheme.build(Brightness.light),
         size: const Size(393, 780),
         playback: PlaybackState(updatePosition: const Duration(seconds: 2)),
       );
@@ -2473,7 +2473,7 @@ void main() {
     (tester) async {
       await pumpNowPlaying(
         tester,
-        theme: MornyeTheme.build(Brightness.light),
+        theme: AppTheme.build(Brightness.light),
         size: const Size(393, 780),
       );
       mediaItems.add(item('first'));
@@ -2509,7 +2509,7 @@ void main() {
         addTearDown(playback.close);
         await pumpNowPlaying(
           tester,
-          theme: MornyeTheme.build(Brightness.dark),
+          theme: AppTheme.build(Brightness.dark),
           size: landscape ? const Size(852, 393) : const Size(393, 852),
           playbackEvents: playback.stream,
         );
@@ -2560,7 +2560,7 @@ void main() {
     testWidgets('Material transport fits a $width dp phone', (tester) async {
       await pumpNowPlaying(
         tester,
-        theme: AppTheme.light(),
+        theme: LegacyMaterialTheme.light(),
         size: Size(width, 900),
       );
       mediaItems.add(item('first'));
@@ -2598,7 +2598,7 @@ void main() {
   ) async {
     await pumpNowPlaying(
       tester,
-      theme: AppTheme.light(),
+      theme: LegacyMaterialTheme.light(),
       playback: PlaybackState(shuffleMode: AudioServiceShuffleMode.all),
     );
     mediaItems.add(item('first'));
@@ -2641,7 +2641,7 @@ void main() {
   ) async {
     await pumpNowPlaying(
       tester,
-      theme: AppTheme.dark(),
+      theme: LegacyMaterialTheme.dark(),
       wrapPlayer: (player) => MediaQuery(
         data: const MediaQueryData(
           size: Size(1080, 1920),
@@ -2685,7 +2685,7 @@ void main() {
         });
         await pumpNowPlaying(
           tester,
-          theme: AppTheme.dark(),
+          theme: LegacyMaterialTheme.dark(),
           size: size,
           controller: controller,
           wrapPlayer: (player) => MediaQuery(
@@ -2759,7 +2759,7 @@ void main() {
       );
       await pumpNowPlaying(
         tester,
-        theme: AppTheme.dark(),
+        theme: LegacyMaterialTheme.dark(),
         size: Size(width, 852),
         queue: queue,
         controller: controller,
@@ -2814,7 +2814,7 @@ void main() {
   testWidgets('Mornye player renders Apple-style transport controls', (
     tester,
   ) async {
-    await pumpNowPlaying(tester, theme: MornyeTheme.build(Brightness.light));
+    await pumpNowPlaying(tester, theme: AppTheme.build(Brightness.light));
     mediaItems.add(item('first'));
     await settlePlayer(tester);
 
@@ -2841,7 +2841,7 @@ void main() {
     addTearDown(playbackEvents.close);
     await pumpNowPlaying(
       tester,
-      theme: MornyeTheme.build(Brightness.dark),
+      theme: AppTheme.build(Brightness.dark),
       size: const Size(393, 780),
       playbackEvents: playbackEvents.stream,
     );
@@ -2933,7 +2933,7 @@ void main() {
     addTearDown(playbackEvents.close);
     await pumpNowPlaying(
       tester,
-      theme: MornyeTheme.build(Brightness.dark),
+      theme: AppTheme.build(Brightness.dark),
       size: const Size(393, 780),
       playbackEvents: playbackEvents.stream,
     );
@@ -3005,7 +3005,7 @@ void main() {
   ) async {
     await pumpNowPlaying(
       tester,
-      theme: MornyeTheme.build(Brightness.dark),
+      theme: AppTheme.build(Brightness.dark),
       size: const Size(393, 700),
     );
     mediaItems.add(item('first'));
@@ -3036,7 +3036,7 @@ void main() {
     (tester) async {
       await pumpNowPlaying(
         tester,
-        theme: MornyeTheme.build(Brightness.dark),
+        theme: AppTheme.build(Brightness.dark),
         size: const Size(393, 852),
         playback: PlaybackState(playing: true),
       );
@@ -3152,7 +3152,7 @@ void main() {
       addTearDown(tester.view.resetViewPadding);
       await pumpNowPlaying(
         tester,
-        theme: MornyeTheme.build(Brightness.dark),
+        theme: AppTheme.build(Brightness.dark),
         size: const Size(393, 852),
         motionArtwork: const MotionArtwork('file:///cover.mp4', aspectRatio: 1),
         wrapPlayer: (_) => Consumer(
@@ -3221,7 +3221,7 @@ void main() {
         '(Mornye: $mornye)', (tester) async {
       await pumpNowPlaying(
         tester,
-        theme: mornye ? MornyeTheme.build(Brightness.dark) : ThemeData(),
+        theme: mornye ? AppTheme.build(Brightness.dark) : ThemeData(),
         size: const Size(393, 852),
         // Paused, so the Material progress bar lets the frames settle.
         wrapPlayer: (_) => const Scaffold(
@@ -3291,7 +3291,7 @@ void main() {
         addTearDown(tester.view.resetViewPadding);
         await pumpNowPlaying(
           tester,
-          theme: MornyeTheme.build(Brightness.dark),
+          theme: AppTheme.build(Brightness.dark),
           size: const Size(393, 852),
           motionArtwork: const MotionArtwork(
             'file:///cover.mp4',
@@ -3355,7 +3355,7 @@ void main() {
       (tester) async {
         await pumpNowPlaying(
           tester,
-          theme: MornyeTheme.build(Brightness.dark),
+          theme: AppTheme.build(Brightness.dark),
           size: const Size(393, 852),
         );
         mediaItems.add(item('first'));
@@ -3441,7 +3441,7 @@ void main() {
       (tester) async {
         await pumpNowPlaying(
           tester,
-          theme: MornyeTheme.build(Brightness.dark),
+          theme: AppTheme.build(Brightness.dark),
           size: const Size(393, 852),
           playback: PlaybackState(
             playing: playing,
@@ -3489,7 +3489,7 @@ void main() {
         ).join('\n');
         await pumpNowPlaying(
           tester,
-          theme: MornyeTheme.build(Brightness.dark),
+          theme: AppTheme.build(Brightness.dark),
           size: landscape ? const Size(852, 393) : const Size(393, 852),
           playback: PlaybackState(
             processingState: AudioProcessingState.ready,
@@ -3529,7 +3529,7 @@ void main() {
   ) async {
     await pumpNowPlaying(
       tester,
-      theme: MornyeTheme.build(Brightness.dark),
+      theme: AppTheme.build(Brightness.dark),
       size: const Size(393, 852),
     );
     mediaItems.add(item('first'));
@@ -3570,7 +3570,7 @@ void main() {
   ) async {
     await pumpNowPlaying(
       tester,
-      theme: MornyeTheme.build(Brightness.dark),
+      theme: AppTheme.build(Brightness.dark),
       size: const Size(393, 852),
       wrapPlayer: (player) => Builder(
         builder: (context) => MediaQuery(
@@ -3709,7 +3709,7 @@ void main() {
           '[by:SpotiFLAC-Mobile via Example Lyrics API (source: upstream)]\n[00:01]Last lyric';
       await pumpNowPlaying(
         tester,
-        theme: MornyeTheme.build(Brightness.dark),
+        theme: AppTheme.build(Brightness.dark),
         size: const Size(390, 844),
       );
       mediaItems.add(item('first'));
@@ -3745,7 +3745,7 @@ void main() {
     ].join('\n');
     await pumpNowPlaying(
       tester,
-      theme: MornyeTheme.build(Brightness.dark),
+      theme: AppTheme.build(Brightness.dark),
       size: const Size(390, 844),
       playback: PlaybackState(
         processingState: AudioProcessingState.ready,
@@ -3789,7 +3789,7 @@ void main() {
             '[00:01.009]Original';
         await pumpNowPlaying(
           tester,
-          theme: MornyeTheme.build(Brightness.dark),
+          theme: AppTheme.build(Brightness.dark),
           size: landscape ? const Size(844, 390) : const Size(390, 844),
           playback: PlaybackState(playing: true),
           wrapPlayer: (player) => Builder(
@@ -3850,7 +3850,7 @@ void main() {
         addTearDown(playback.close);
         await pumpNowPlaying(
           tester,
-          theme: mornye ? MornyeTheme.build(Brightness.dark) : null,
+          theme: mornye ? AppTheme.build(Brightness.dark) : null,
           size: const Size(390, 1100),
           playbackEvents: playback.stream,
         );
@@ -3905,7 +3905,7 @@ void main() {
           addTearDown(playback.close);
           await pumpNowPlaying(
             tester,
-            theme: mornye ? MornyeTheme.build(Brightness.dark) : null,
+            theme: mornye ? AppTheme.build(Brightness.dark) : null,
             size: const Size(390, 1100),
             playbackEvents: playback.stream,
           );
@@ -4019,7 +4019,7 @@ void main() {
         addTearDown(playback.close);
         await pumpNowPlaying(
           tester,
-          theme: mornye ? MornyeTheme.build(Brightness.dark) : null,
+          theme: mornye ? AppTheme.build(Brightness.dark) : null,
           size: const Size(390, 1100),
           playbackEvents: playback.stream,
         );
@@ -4073,7 +4073,7 @@ void main() {
         addTearDown(playback.close);
         await pumpNowPlaying(
           tester,
-          theme: mornye ? MornyeTheme.build(Brightness.dark) : null,
+          theme: mornye ? AppTheme.build(Brightness.dark) : null,
           size: const Size(390, 1100),
           playbackEvents: playback.stream,
         );
@@ -4188,7 +4188,7 @@ void main() {
           '[00:01.01]Original text';
       await pumpNowPlaying(
         tester,
-        theme: mornye ? MornyeTheme.build(Brightness.dark) : null,
+        theme: mornye ? AppTheme.build(Brightness.dark) : null,
         size: const Size(390, 844),
       );
       mediaItems.add(item('first'));
@@ -4231,7 +4231,7 @@ void main() {
       addTearDown(playback.close);
       await pumpNowPlaying(
         tester,
-        theme: mornye ? MornyeTheme.build(Brightness.dark) : null,
+        theme: mornye ? AppTheme.build(Brightness.dark) : null,
         size: const Size(390, 844),
         playbackEvents: playback.stream,
       );
@@ -4282,7 +4282,7 @@ void main() {
       addTearDown(playback.close);
       await pumpNowPlaying(
         tester,
-        theme: mornye ? MornyeTheme.build(Brightness.dark) : null,
+        theme: mornye ? AppTheme.build(Brightness.dark) : null,
         size: const Size(390, 844),
         playbackEvents: playback.stream,
       );
@@ -4346,7 +4346,7 @@ void main() {
         addTearDown(playback.close);
         await pumpNowPlaying(
           tester,
-          theme: mornye ? MornyeTheme.build(Brightness.dark) : null,
+          theme: mornye ? AppTheme.build(Brightness.dark) : null,
           size: const Size(390, 844),
           playbackEvents: playback.stream,
         );
@@ -4465,7 +4465,7 @@ void main() {
         addTearDown(playback.close);
         await pumpNowPlaying(
           tester,
-          theme: MornyeTheme.build(Brightness.dark),
+          theme: AppTheme.build(Brightness.dark),
           size: const Size(390, 844),
           playbackEvents: playback.stream,
           wrapPlayer: (player) => Builder(
@@ -4599,7 +4599,7 @@ void main() {
         '</p></div></body></tt>';
     await pumpNowPlaying(
       tester,
-      theme: MornyeTheme.build(Brightness.dark),
+      theme: AppTheme.build(Brightness.dark),
       size: const Size(320, 844),
       playback: PlaybackState(
         processingState: AudioProcessingState.ready,
@@ -4723,7 +4723,7 @@ void main() {
   ) async {
     await pumpNowPlaying(
       tester,
-      theme: MornyeTheme.build(Brightness.dark),
+      theme: AppTheme.build(Brightness.dark),
       size: const Size(393, 780),
     );
     mediaItems.add(item('first'));

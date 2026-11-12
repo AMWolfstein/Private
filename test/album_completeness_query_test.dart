@@ -18,7 +18,7 @@ import 'package:mornye/screens/queue_tab.dart';
 import 'package:mornye/services/album_completeness.dart';
 import 'package:mornye/services/history_database.dart';
 import 'package:mornye/services/library_database.dart';
-import 'package:mornye/theme/app_theme.dart';
+import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/widgets/app_bottom_sheet.dart';
 import 'package:mornye/widgets/app_choice_chip.dart';
 
@@ -310,7 +310,7 @@ void main() {
             ),
           ],
           child: MaterialApp(
-            theme: AppTheme.light(),
+            theme: LegacyMaterialTheme.light(),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             home: Scaffold(

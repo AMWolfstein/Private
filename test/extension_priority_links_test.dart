@@ -8,7 +8,7 @@ import 'package:mornye/screens/settings/download_fallback_extensions_page.dart';
 import 'package:mornye/screens/settings/extensions_page.dart';
 import 'package:mornye/screens/settings/metadata_provider_priority_page.dart';
 import 'package:mornye/screens/settings/provider_priority_page.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/settings_group.dart';
 
 import 'support/fixed_settings.dart';
@@ -79,7 +79,7 @@ void main() {
               ],
               child: MaterialApp(
                 theme: mornye
-                    ? MornyeTheme.build(Brightness.dark)
+                    ? AppTheme.build(Brightness.dark)
                     : ThemeData(),
                 localizationsDelegates: AppLocalizations.localizationsDelegates,
                 supportedLocales: AppLocalizations.supportedLocales,

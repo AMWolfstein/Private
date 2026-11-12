@@ -13,7 +13,7 @@ import 'package:mornye/models/settings.dart';
 import 'package:mornye/providers/extension_provider.dart';
 import 'package:mornye/providers/runtime_profile_provider.dart';
 import 'package:mornye/providers/settings_provider.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/app_snack_bar.dart';
 import 'package:mornye/widgets/download_service_picker.dart';
 import 'package:mornye/widgets/mornye_chrome.dart';
@@ -115,7 +115,7 @@ void main() {
                 ),
             ],
             child: MaterialApp(
-              theme: MornyeTheme.build(brightness),
+              theme: AppTheme.build(brightness),
               localizationsDelegates: AppLocalizations.localizationsDelegates,
               supportedLocales: AppLocalizations.supportedLocales,
               builder: (_, child) => RepaintBoundary(

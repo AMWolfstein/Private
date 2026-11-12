@@ -6,7 +6,7 @@ import 'package:mornye/l10n/app_localizations.dart';
 import 'package:mornye/models/app_crash_report.dart';
 import 'package:mornye/providers/app_crash_provider.dart';
 import 'package:mornye/services/app_crash_service.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/utils/logger.dart';
 import 'package:mornye/widgets/app_content_card.dart';
 import 'package:mornye/widgets/app_crash_banner.dart';
@@ -294,7 +294,7 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           child: MaterialApp(
-            theme: mornye ? MornyeTheme.build(Brightness.dark) : ThemeData(),
+            theme: mornye ? AppTheme.build(Brightness.dark) : ThemeData(),
             locale: const Locale('id'),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,

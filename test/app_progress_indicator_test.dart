@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mornye/theme/app_theme.dart';
+import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/widgets/app_progress_indicator.dart';
 
 void main() {
@@ -11,7 +11,7 @@ void main() {
       addTearDown(progress.dispose);
       await tester.pumpWidget(
         MaterialApp(
-          theme: AppTheme.light(),
+          theme: LegacyMaterialTheme.light(),
           home: Scaffold(
             body: Center(
               child: SizedBox(

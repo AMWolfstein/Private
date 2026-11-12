@@ -11,7 +11,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:mornye/widgets/mornye_liquid_backdrop.dart';
 import 'package:mornye/widgets/mornye_chrome.dart';
 import 'package:mornye/widgets/mornye_selection_pill.dart';
-import 'package:mornye/theme/mornye_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/providers/runtime_profile_provider.dart';
 
 void main() {
@@ -22,7 +22,7 @@ void main() {
     await tester.pumpWidget(
       MaterialApp(
         // Measure the foreground mask independently of the rim's lighting.
-        theme: MornyeTheme.build(Brightness.dark, glassOutlines: false),
+        theme: AppTheme.build(Brightness.dark, glassOutlines: false),
         home: Center(
           child: RepaintBoundary(
             key: capture,
@@ -228,7 +228,7 @@ void main() {
   ) async {
     var selected = 0;
     final changes = <int>[];
-    final theme = MornyeTheme.build(Brightness.dark);
+    final theme = AppTheme.build(Brightness.dark);
     final lens = find.byWidgetPredicate(
       (widget) => widget is MornyeLiquidBackdrop && widget.interaction,
     );

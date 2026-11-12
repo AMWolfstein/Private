@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_3_expressive/material_3_expressive.dart';
-import 'package:mornye/theme/app_theme.dart';
+import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/widgets/animation_utils.dart';
 import 'package:mornye/widgets/app_loading_indicator.dart';
 
@@ -14,7 +14,7 @@ void main() {
         late StateSetter update;
         await tester.pumpWidget(
           MaterialApp(
-            theme: AppTheme.light(),
+            theme: LegacyMaterialTheme.light(),
             home: StatefulBuilder(
               builder: (context, setState) {
                 update = setState;
