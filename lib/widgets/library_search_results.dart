@@ -18,8 +18,6 @@ import 'package:mornye/services/batch_track_actions.dart';
 import 'package:mornye/services/library_database.dart';
 import 'package:mornye/services/library_search.dart';
 import 'package:mornye/services/local_track_redownload_service.dart';
-import 'package:mornye/theme/app_theme.dart';
-import 'package:mornye/utils/adaptive_layout.dart';
 import 'package:mornye/widgets/app_choice_chip.dart';
 import 'package:mornye/widgets/app_icon.dart';
 import 'package:mornye/widgets/cached_cover_image.dart';
@@ -33,6 +31,7 @@ import 'package:mornye/widgets/track_card.dart';
 import 'package:mornye/widgets/app_icon_button.dart';
 import 'package:mornye/widgets/app_loading_indicator.dart';
 import 'package:mornye/widgets/expressive_button.dart';
+import 'package:mornye/utils/adaptive_layout.dart';
 
 /// Slivers shared by Material's Library and Mornye's Library/Songs screens.
 /// Only the current query's provider families are watched; late results from
@@ -418,9 +417,7 @@ class _LibrarySearchResultsState extends ConsumerState<LibrarySearchResults> {
     final key = ValueKey('${hit.kind.name}:${hit.source}:${hit.id}');
     Widget card({MediaPlaybackUi? playback}) => TrackCard(
       key: playback == null ? key : null,
-      style: hit.kind == LibrarySearchKind.songs && !context.isMornye
-          ? TrackCardStyle.filled
-          : TrackCardStyle.flat,
+      style: TrackCardStyle.flat,
       leading: ClipRRect(
         borderRadius: BorderRadius.circular(
           hit.kind == LibrarySearchKind.artists ? 28 : 8,
@@ -466,18 +463,7 @@ class _LibrarySearchResultsState extends ConsumerState<LibrarySearchResults> {
           : null,
       onLongPress: song ? () => _toggleSelection(hit) : null,
     );
-    if (!song || context.isMornye) return card();
-    // Material song rows follow the file they play, so a track change
-    // rebuilds only the rows involved. Mornye rows show no current-track
-    // state.
-    return Consumer(
-      key: key,
-      builder: (context, ref, _) => card(
-        playback: ref.watch(
-          mediaItemPlaybackUiProvider((id: hit.id, path: hit.samplePath)),
-        ),
-      ),
-    );
+    return card();
   }
 
   /// Switches wide results between rows and covers, as the extension

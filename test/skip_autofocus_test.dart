@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mornye/l10n/app_localizations.dart';
-import 'package:mornye/theme/legacy_material_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/settings_group.dart';
 
 /// A page with a connected group below an app-level idle focus node, as the
 Widget _page(FocusNode idle) => MaterialApp(
-  theme: LegacyMaterialTheme.light(),
+  theme: AppTheme.build(Brightness.light),
   localizationsDelegates: AppLocalizations.localizationsDelegates,
   supportedLocales: AppLocalizations.supportedLocales,
   builder: (context, child) =>

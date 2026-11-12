@@ -35,7 +35,7 @@ class _ChoiceSettings extends SettingsNotifier {
 }
 
 void main() {
-  for (final mornye in [false, true]) {
+  for (final mornye in [true]) {
     for (final brightness in Brightness.values) {
       final theme = mornye
           ? AppTheme.build(brightness)
@@ -143,9 +143,7 @@ void main() {
                 theme,
                 Theme(
                   data: pageTheme,
-                  child: const AppSettingsTheme(
-                    child: DownloadSettingsPage(),
-                  ),
+                  child: const AppSettingsTheme(child: DownloadSettingsPage()),
                 ),
               ),
             ),

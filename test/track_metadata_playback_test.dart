@@ -13,7 +13,6 @@ import 'package:mornye/providers/settings_provider.dart';
 import 'package:mornye/screens/track_metadata_screen.dart';
 import 'package:mornye/services/library_database.dart';
 import 'package:mornye/services/music_player_service.dart';
-import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/app_context_menu.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -56,7 +55,7 @@ void main() {
   });
   tearDown(() => messenger.setMockMethodCallHandler(channel, null));
 
-  for (final mornye in [false, true]) {
+  for (final mornye in [true]) {
     for (final local in [false, true]) {
       for (final format in ['flac', 'opus']) {
         for (final menu in [false, if (mornye) true]) {
@@ -113,9 +112,7 @@ void main() {
                   musicPlayerControllerProvider.overrideWithValue(player),
                 ],
                 child: MaterialApp(
-                  theme: mornye
-                      ? AppTheme.build(Brightness.dark)
-                      : LegacyMaterialTheme.dark(),
+                  theme: AppTheme.build(Brightness.dark),
                   localizationsDelegates:
                       AppLocalizations.localizationsDelegates,
                   supportedLocales: AppLocalizations.supportedLocales,

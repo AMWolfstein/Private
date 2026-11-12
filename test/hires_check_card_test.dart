@@ -9,7 +9,6 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mornye/l10n/l10n.dart';
-import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/expressive_button.dart';
 import 'package:mornye/widgets/hires_check_card.dart';
@@ -74,8 +73,8 @@ void main() {
         theme: mornye
             ? AppTheme.build(brightness)
             : brightness == Brightness.light
-            ? LegacyMaterialTheme.light()
-            : LegacyMaterialTheme.dark(),
+            ? AppTheme.build(Brightness.light)
+            : AppTheme.build(Brightness.dark),
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         locale: const Locale('en'),
@@ -110,7 +109,7 @@ void main() {
     });
   }
 
-  for (final mornye in [true, false]) {
+  for (final mornye in [true]) {
     for (final brightness in Brightness.values) {
       final name = '${mornye ? 'mornye' : 'material'}-${brightness.name}';
       testWidgets('centered action and neutral bandwidth result ($name)', (
@@ -153,7 +152,7 @@ void main() {
     }
   }
 
-  for (final mornye in [true, false]) {
+  for (final mornye in [true]) {
     testWidgets('large text stays readable ($mornye)', (tester) async {
       await openCard(tester, mornye: mornye, textScale: 2);
       await tester.tap(find.text('Check'));

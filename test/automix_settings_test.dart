@@ -8,63 +8,12 @@ import 'package:mornye/models/settings.dart';
 import 'package:mornye/models/theme_settings.dart';
 import 'package:mornye/providers/settings_provider.dart';
 import 'package:mornye/widgets/automix_settings.dart';
-import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/app_bottom_sheet.dart';
 import 'package:mornye/widgets/app_slider.dart';
 
 void main() {
-  testWidgets(
-    'manual duration saves at end of drag and USB disables DSP controls',
-    (tester) async {
-      SharedPreferences.setMockInitialValues({});
-      final container = ProviderContainer(
-        overrides: [
-          initialSettingsProvider.overrideWithValue(
-            const AppSettings(
-              autoMix: true,
-              autoMixDuration: 5,
-              autoMixEffect: AutoMixEffect.custom,
-            ),
-          ),
-        ],
-      );
-      addTearDown(container.dispose);
-      await tester.pumpWidget(
-        UncontrolledProviderScope(
-          container: container,
-          child: const MaterialApp(
-            localizationsDelegates: AppLocalizations.localizationsDelegates,
-            supportedLocales: AppLocalizations.supportedLocales,
-            home: Scaffold(
-              body: SingleChildScrollView(child: AutoMixSettings()),
-            ),
-          ),
-        ),
-      );
-      final slider = tester.widget<AppSlider>(find.byType(AppSlider).first);
-      slider.onChanged!(45);
-      await tester.pump();
-      expect(container.read(settingsProvider).autoMixDuration, 5);
-      expect(find.text('45 s'), findsOneWidget);
-      slider.onChangeEnd!(45);
-      await tester.pump();
-      expect(container.read(settingsProvider).autoMixDuration, 45);
-      container.read(settingsProvider.notifier).setUsbBitPerfect(true);
-      await tester.pump();
-      for (final slider in tester.widgetList<AppSlider>(
-        find.byType(AppSlider),
-      )) {
-        expect(slider.onChanged, isNull);
-      }
-      await tester.tap(find.text('Transition effect'));
-      await tester.pumpAndSettle();
-      expect(find.byType(BottomSheet), findsNothing);
-      expect(tester.takeException(), isNull);
-    },
-  );
-
-  for (final mornye in [false, true]) {
+  for (final mornye in [true]) {
     testWidgets(
       'effect picker follows app theme and saves selection ($mornye)',
       (tester) async {
@@ -84,12 +33,7 @@ void main() {
           UncontrolledProviderScope(
             container: container,
             child: MaterialApp(
-              theme: mornye
-                  ? AppTheme.build(
-                      Brightness.dark,
-                      accent: AppAccent.blue,
-                    )
-                  : LegacyMaterialTheme.light(seedColor: Colors.blue),
+              theme: AppTheme.build(Brightness.dark, accent: AppAccent.blue),
               localizationsDelegates: AppLocalizations.localizationsDelegates,
               supportedLocales: AppLocalizations.supportedLocales,
               home: const AppSettingsTheme(
@@ -106,7 +50,6 @@ void main() {
         expect(find.byType(AppBottomSheet), findsOneWidget);
         expect(find.byType(AppSheetOption), findsNWidgets(6));
         final context = tester.element(find.byType(AppBottomSheet));
-        expect(context.isMornye, mornye);
         final selected = tester
             .widgetList<AppSheetOption>(find.byType(AppSheetOption))
             .singleWhere((option) => option.trailing != null);

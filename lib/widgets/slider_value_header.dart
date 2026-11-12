@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:mornye/theme/app_tokens.dart';
-import 'package:mornye/theme/app_theme.dart';
 
 /// The title row above a settings slider, with the slider's current value.
 ///
@@ -67,36 +66,13 @@ class SliderValueHeader extends StatelessWidget {
           ),
         ),
         SizedBox(width: tokens.gapSm),
-        if (context.isMornye)
-          Text(
-            value,
-            style: theme.textTheme.bodyLarge?.copyWith(
-              color: enabled ? colors.onSurfaceVariant : disabled,
-              fontFeatures: _tabular,
-            ),
-          )
-        else
-          DecoratedBox(
-            decoration: ShapeDecoration(
-              color: enabled
-                  ? colors.secondaryContainer
-                  : colors.onSurface.withValues(alpha: 0.12),
-              shape: const StadiumBorder(),
-            ),
-            child: Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: tokens.gapMd,
-                vertical: tokens.gapXs,
-              ),
-              child: Text(
-                value,
-                style: theme.textTheme.labelLarge?.copyWith(
-                  color: enabled ? colors.onSecondaryContainer : disabled,
-                  fontFeatures: _tabular,
-                ),
-              ),
-            ),
+        Text(
+          value,
+          style: theme.textTheme.bodyLarge?.copyWith(
+            color: enabled ? colors.onSurfaceVariant : disabled,
+            fontFeatures: _tabular,
           ),
+        ),
         if (trailing != null) ...[SizedBox(width: tokens.gapXs), trailing!],
       ],
     );

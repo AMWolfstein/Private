@@ -104,9 +104,7 @@ void main() {
         final boundary = tester.renderObject<RenderRepaintBoundary>(
           find.byKey(capture),
         );
-        final menu = tester.renderObject<RenderBox>(
-          find.byType(AppGlassPanel),
-        );
+        final menu = tester.renderObject<RenderBox>(find.byType(AppGlassPanel));
         final point = boundary.globalToLocal(
           menu.localToGlobal(Offset(12, menu.size.height / 2)),
         );

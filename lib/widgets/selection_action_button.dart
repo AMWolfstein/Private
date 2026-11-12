@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mornye/theme/app_tokens.dart';
-import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/app_action_button.dart';
-import 'package:mornye/widgets/expressive_button.dart';
 
 /// Responsive rows shared by selection-mode action buttons.
 class SelectionActionGrid extends StatelessWidget {
@@ -53,40 +50,14 @@ class SelectionActionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (context.isMornye) {
-      return AppActionButton(
-        outlined: !destructive,
-        tonal: !destructive,
-        isDestructive: destructive,
-        onPressed: onPressed,
-        icon: Icon(icon),
-        label: Text(label, maxLines: 2, overflow: TextOverflow.ellipsis),
-        fontSize: 15,
-      );
-    }
-    return Semantics(
-      button: true,
-      enabled: onPressed != null,
-      label: label,
-      onTap: onPressed,
-      excludeSemantics: true,
-      child: ExpressiveButton(
-        tonal: !destructive,
-        onPressed: onPressed,
-        icon: Icon(icon, size: 18),
-        style: FilledButton.styleFrom(
-          backgroundColor: destructive
-              ? colorScheme.error
-              : colorScheme.secondaryContainer,
-          foregroundColor: destructive
-              ? colorScheme.onError
-              : colorScheme.onSecondaryContainer,
-          minimumSize: Size(48, context.tokens.minTouchTarget),
-          padding: const EdgeInsets.all(12),
-          textStyle: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
-        ),
-        child: Text(label, maxLines: 2, overflow: TextOverflow.ellipsis),
-      ),
+    return AppActionButton(
+      outlined: !destructive,
+      tonal: !destructive,
+      isDestructive: destructive,
+      onPressed: onPressed,
+      icon: Icon(icon),
+      label: Text(label, maxLines: 2, overflow: TextOverflow.ellipsis),
+      fontSize: 15,
     );
   }
 }

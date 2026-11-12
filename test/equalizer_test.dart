@@ -10,7 +10,6 @@ import 'package:mornye/models/equalizer_settings.dart';
 import 'package:mornye/providers/equalizer_provider.dart';
 import 'package:mornye/screens/equalizer_screen.dart';
 import 'package:mornye/services/playback_equalizer.dart';
-import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/app_slider.dart';
 import 'package:mornye/widgets/app_chrome.dart';
@@ -71,7 +70,7 @@ void main() {
     expect(savedPreamp(), -5);
   });
 
-  for (final mornye in [false, true]) {
+  for (final mornye in [true]) {
     testWidgets(
       'EQ drags retain unrelated controls and current edits ($mornye)',
       (tester) async {
@@ -84,9 +83,7 @@ void main() {
           UncontrolledProviderScope(
             container: container,
             child: MaterialApp(
-              theme: mornye
-                  ? AppTheme.build(Brightness.dark)
-                  : LegacyMaterialTheme.light(),
+              theme: AppTheme.build(Brightness.dark),
               localizationsDelegates: AppLocalizations.localizationsDelegates,
               supportedLocales: AppLocalizations.supportedLocales,
               home: const EqualizerScreen(),
@@ -343,7 +340,7 @@ void main() {
     expect(restored.read(equalizerProvider).presets.length, 3);
   });
 
-  for (final mornye in [false, true]) {
+  for (final mornye in [true]) {
     testWidgets(
       'EQ editing and dialogs fit a narrow screen with large text ($mornye)',
       (tester) async {
@@ -356,9 +353,7 @@ void main() {
           UncontrolledProviderScope(
             container: container,
             child: MaterialApp(
-              theme: mornye
-                  ? AppTheme.build(Brightness.dark)
-                  : LegacyMaterialTheme.light(),
+              theme: AppTheme.build(Brightness.dark),
               localizationsDelegates: AppLocalizations.localizationsDelegates,
               supportedLocales: AppLocalizations.supportedLocales,
               builder: (context, child) => MediaQuery(

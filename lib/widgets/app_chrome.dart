@@ -207,9 +207,7 @@ class AppGlass extends ConsumerWidget {
         blurEnabled &&
         level != AppGlassLevel.flat &&
         !ref.watch(
-          appGlassContrastBlockedProvider(
-            MediaQuery.highContrastOf(context),
-          ),
+          appGlassContrastBlockedProvider(MediaQuery.highContrastOf(context)),
         );
     final dark = scheme.brightness == Brightness.dark;
     final outlines = AppTheme.glassOutlinesOf(context);
@@ -321,10 +319,7 @@ class AppGlass extends ConsumerWidget {
         : surface;
     return DecoratedBox(
       decoration: squircle
-          ? ShapeDecoration(
-              shape: AppSquircleBorder(radius),
-              shadows: shadows,
-            )
+          ? ShapeDecoration(shape: AppSquircleBorder(radius), shadows: shadows)
           : BoxDecoration(borderRadius: shape, boxShadow: shadows),
       child: CustomPaint(
         // The optical lens already draws its own rim. Avoid a second dark
@@ -342,10 +337,7 @@ class AppGlass extends ConsumerWidget {
               )
             : null,
         child: squircle
-            ? ClipPath.shape(
-                shape: AppSquircleBorder(radius),
-                child: backdrop,
-              )
+            ? ClipPath.shape(shape: AppSquircleBorder(radius), child: backdrop)
             : ClipRRect(borderRadius: shape, child: backdrop),
       ),
     );

@@ -210,9 +210,7 @@ class AppPlayerLayout extends ConsumerWidget {
                             ? KeyedSubtree(
                                 key: ValueKey(page),
                                 child: showQueue
-                                    ? AppPlayerQueue(
-                                        colorScheme: colorScheme,
-                                      )
+                                    ? AppPlayerQueue(colorScheme: colorScheme)
                                     : _mornyeLyricsViewport(
                                         context,
                                         lyricsBuilder(false),

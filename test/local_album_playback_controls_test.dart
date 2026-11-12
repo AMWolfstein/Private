@@ -11,7 +11,6 @@ import 'package:mornye/providers/music_player_provider.dart';
 import 'package:mornye/providers/playback_provider.dart';
 import 'package:mornye/screens/local_album_screen.dart';
 import 'package:mornye/services/library_database.dart';
-import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/album_detail_header.dart';
 import 'package:mornye/widgets/album_track_tile.dart';
@@ -68,7 +67,7 @@ Future<void> _settle(WidgetTester tester) async {
 }
 
 void main() {
-  for (final mornye in [false, true]) {
+  for (final mornye in [true]) {
     testWidgets(
       'local album controls pause and resume without restarting ($mornye)',
       (tester) async {
@@ -117,9 +116,7 @@ void main() {
               playbackProvider.overrideWith(() => playback),
             ],
             child: MaterialApp(
-              theme: mornye
-                  ? AppTheme.build(Brightness.light)
-                  : LegacyMaterialTheme.light(),
+              theme: AppTheme.build(Brightness.light),
               localizationsDelegates: AppLocalizations.localizationsDelegates,
               supportedLocales: AppLocalizations.supportedLocales,
               home: LocalAlbumScreen(

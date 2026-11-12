@@ -1,29 +1,6 @@
 part of 'setup_screen.dart';
 
 extension _SetupScreenSteps on _SetupScreenState {
-  /// Expressive FABs keep their icon leading and show loading in its place.
-  Widget _buildExpressiveFab(ColorScheme colorScheme) {
-    final isLastStep = _currentStep >= _totalSteps - 1;
-    return MaterialExpressiveScope(
-      child: isLastStep
-          ? M3EExtendedFab(
-              label: context.l10n.setupGetStarted,
-              icon: _isLoading
-                  ? AppLoadingIndicator(size: 24, color: colorScheme.onPrimary)
-                  : const AppIcon(Icons.check),
-              color: M3EFabColor.primaryFilled,
-              onPressed: _isLoading ? null : _completeSetup,
-            )
-          : M3EExtendedFab(
-              label: context.l10n.setupNext,
-              icon: const AppIcon(Icons.arrow_forward),
-              onPressed: !_isLoading && _isStepCompleted(_currentStep)
-                  ? _nextPage
-                  : null,
-            ),
-    );
-  }
-
   Widget _buildWelcomeStep(ColorScheme colorScheme) {
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -196,9 +173,7 @@ extension _SetupScreenSteps on _SetupScreenState {
             duration: fillMotion.duration,
             curve: fillMotion.curve,
             builder: (context, fill, child) => TweenAnimationBuilder<double>(
-              tween: Tween(
-                end: isSelected && materialExpressiveEnabled(context) ? 28 : 16,
-              ),
+              tween: Tween(end: 16),
               duration: shapeMotion.duration,
               curve: shapeMotion.curve,
               builder: (context, radius, child) => Material(

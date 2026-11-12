@@ -64,11 +64,7 @@ class AppTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (!materialExpressiveEnabled(context) || !autocorrect) {
-      return _plainField();
-    }
-    if (validator != null) return _ExpressiveTextFormField(field: this);
-    return _expressiveField();
+    return _plainField();
   }
 
   Widget _expressiveField({

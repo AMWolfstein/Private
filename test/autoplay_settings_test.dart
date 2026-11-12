@@ -17,13 +17,12 @@ import 'package:mornye/services/song_analysis.dart';
 import 'package:mornye/services/song_analysis_store.dart';
 import 'package:mornye/services/song_features.dart';
 import 'package:mornye/utils/settings_search_catalog.dart';
-import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/settings_group.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 void main() {
-  for (final mornye in [false, true]) {
+  for (final mornye in [true]) {
     testWidgets('personalization switch persists and is searchable ($mornye)', (
       tester,
     ) async {
@@ -41,9 +40,7 @@ void main() {
         UncontrolledProviderScope(
           container: container,
           child: MaterialApp(
-            theme: mornye
-                ? AppTheme.build(Brightness.dark, accent: AppAccent.blue)
-                : LegacyMaterialTheme.light(),
+            theme: AppTheme.build(Brightness.dark, accent: AppAccent.blue),
             locale: const Locale('en'),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
@@ -146,9 +143,7 @@ void main() {
         UncontrolledProviderScope(
           container: container,
           child: MaterialApp(
-            theme: mornye
-                ? AppTheme.build(Brightness.dark, accent: AppAccent.blue)
-                : LegacyMaterialTheme.light(),
+            theme: AppTheme.build(Brightness.dark, accent: AppAccent.blue),
             locale: const Locale('en'),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
@@ -228,9 +223,7 @@ void main() {
         UncontrolledProviderScope(
           container: container,
           child: MaterialApp(
-            theme: mornye
-                ? AppTheme.build(Brightness.dark, accent: AppAccent.blue)
-                : LegacyMaterialTheme.light(),
+            theme: AppTheme.build(Brightness.dark, accent: AppAccent.blue),
             locale: const Locale('en'),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,

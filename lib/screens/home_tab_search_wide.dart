@@ -80,7 +80,7 @@ extension _HomeTabSearchWideUI on _HomeTabState {
     );
     // A compact preview of result types precedes the full shelves. The
     // provider does not supply a relevance ranking across different types.
-    final topResults = overview && context.isMornye;
+    final topResults = overview;
 
     // Songs are covers too, as the other kinds are.
     void addSongs() {
@@ -603,7 +603,6 @@ class _SearchSongCoverCell extends ConsumerWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final l10n = context.l10n;
-    final mornye = context.isMornye;
     final isQueued = ref.watch(
       downloadQueueLookupProvider.select(
         (lookup) => lookup.byTrackId.containsKey(track.id),
@@ -622,7 +621,7 @@ class _SearchSongCoverCell extends ConsumerWidget {
         );
     final hasCover = track.coverUrl?.isNotEmpty == true;
     // The Library grids' cover corners.
-    final radius = BorderRadius.circular(mornye ? 8 : 12);
+    final radius = BorderRadius.circular(8);
 
     void showOptions({Offset? position}) =>
         TrackCollectionQuickActions.showTrackOptionsSheet(
@@ -682,9 +681,7 @@ class _SearchSongCoverCell extends ConsumerWidget {
         borderRadius: radius,
         // The M3 hover state layer; a pointer press shows as a state
         // layer rather than a ripple.
-        hoverColor: mornye
-            ? null
-            : colorScheme.onSurface.withValues(alpha: 0.08),
+        hoverColor: null,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -757,11 +754,10 @@ class _SearchCoverCell extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final l10n = context.l10n;
-    final mornye = context.isMornye;
     final isArtist = item.isArtistItem;
     final hasCover = item.coverUrl?.isNotEmpty == true;
     // The Library grids' cover corners.
-    final radius = BorderRadius.circular(mornye ? 8 : 12);
+    final radius = BorderRadius.circular(8);
 
     final placeholder = Container(
       width: extent,
@@ -816,9 +812,7 @@ class _SearchCoverCell extends StatelessWidget {
         borderRadius: radius,
         // The M3 hover state layer; a pointer press shows as a state
         // layer rather than a ripple.
-        hoverColor: mornye
-            ? null
-            : colorScheme.onSurface.withValues(alpha: 0.08),
+        hoverColor: null,
         child: Column(
           crossAxisAlignment: isArtist
               ? CrossAxisAlignment.center
@@ -836,7 +830,7 @@ class _SearchCoverCell extends StatelessWidget {
               ),
             ),
             // Artist cards need no repeated artist-name subtitle.
-            if (!(mornye && isArtist)) ...[
+            if (!(isArtist)) ...[
               const SizedBox(height: 2),
               Text(
                 _CollectionItemWidget.subtitleOf(context, item),

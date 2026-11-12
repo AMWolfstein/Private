@@ -4,7 +4,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mornye/l10n/l10n.dart';
 import 'package:mornye/providers/settings_provider.dart';
 import 'package:mornye/screens/settings/files_settings_page.dart';
-import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/settings_group.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -12,7 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'support/fixed_settings.dart';
 
 void main() {
-  for (final mornye in [false, true]) {
+  for (final mornye in [true]) {
     testWidgets('Files scrolls its last row above floating chrome ($mornye)', (
       tester,
     ) async {
@@ -25,9 +24,7 @@ void main() {
         ProviderScope(
           overrides: [settingsProvider.overrideWith(FixedSettingsNotifier.new)],
           child: MaterialApp(
-            theme: mornye
-                ? AppTheme.build(Brightness.dark)
-                : LegacyMaterialTheme.dark(),
+            theme: AppTheme.build(Brightness.dark),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             home: Builder(

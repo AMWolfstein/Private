@@ -431,9 +431,7 @@ class DownloadFolderDestination implements OfflineRollbackDestination {
   Future<void> discard(OfflineStored stored) async {
     try {
       await deleteFile(stored.filePath);
-    } finally {
-      
-    }
+    } finally {}
   }
 
   @override
@@ -484,8 +482,6 @@ class DownloadFolderDestination implements OfflineRollbackDestination {
       );
       await file.copy(target);
       return OfflineStored(filePath: target, storageMode: 'app');
-    } finally {
-      
-    }
+    } finally {}
   }
 }

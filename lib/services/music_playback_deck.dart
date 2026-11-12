@@ -345,9 +345,7 @@ class AudioplayersPlaybackDeck implements PlaybackDeck {
     _source = null;
     _routeLost = false;
     _nativeStarted = false;
-    await _setOrdinarySource(
-      UrlSource(url),
-    );
+    await _setOrdinarySource(UrlSource(url));
   }
 
   @override

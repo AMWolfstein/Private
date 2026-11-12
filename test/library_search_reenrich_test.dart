@@ -12,7 +12,6 @@ import 'package:mornye/providers/local_library_provider.dart';
 import 'package:mornye/providers/settings_provider.dart';
 import 'package:mornye/services/library_database.dart';
 import 'package:mornye/services/library_search.dart';
-import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/library_search_results.dart';
 import 'package:mornye/widgets/selection_bottom_bar.dart';
@@ -31,7 +30,7 @@ class _Library extends LocalLibraryNotifier {
 }
 
 void main() {
-  for (final mornye in [false, true]) {
+  for (final mornye in [true]) {
     for (final hosted in [false, true]) {
       testWidgets(
         'search can re-enrich another song without leaving search ($mornye/$hosted)',
@@ -98,9 +97,7 @@ void main() {
                 ),
               ],
               child: MaterialApp(
-                theme: mornye
-                    ? AppTheme.build(Brightness.dark)
-                    : LegacyMaterialTheme.light(),
+                theme: AppTheme.build(Brightness.dark),
                 localizationsDelegates: AppLocalizations.localizationsDelegates,
                 supportedLocales: AppLocalizations.supportedLocales,
                 home: hosted

@@ -428,9 +428,7 @@ void main() {
                 backdropBlurEnabledProvider.overrideWithValue(false),
               ],
               child: MaterialApp(
-                theme: mornye
-                    ? AppTheme.build(Brightness.light)
-                    : ThemeData(),
+                theme: mornye ? AppTheme.build(Brightness.light) : ThemeData(),
                 localizationsDelegates: AppLocalizations.localizationsDelegates,
                 supportedLocales: AppLocalizations.supportedLocales,
                 home: Scaffold(

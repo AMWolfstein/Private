@@ -12,7 +12,6 @@ import 'package:mornye/providers/recent_access_provider.dart';
 import 'package:mornye/providers/settings_provider.dart';
 import 'package:mornye/providers/track_provider.dart';
 import 'package:mornye/screens/home_tab.dart';
-import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/theme/app_theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -197,8 +196,8 @@ Future<void> pumpSearchFixture(
         theme: mornye
             ? AppTheme.build(brightness)
             : (brightness == Brightness.dark
-                  ? LegacyMaterialTheme.dark()
-                  : LegacyMaterialTheme.light()),
+                  ? AppTheme.build(Brightness.dark)
+                  : AppTheme.build(Brightness.light)),
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         builder: (context, child) =>

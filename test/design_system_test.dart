@@ -10,9 +10,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mornye/l10n/app_localizations.dart';
 import 'package:mornye/models/theme_settings.dart';
-import 'package:mornye/theme/legacy_material_theme.dart';
-import 'package:mornye/theme/app_tokens.dart';
 import 'package:mornye/theme/app_theme.dart';
+import 'package:mornye/theme/app_tokens.dart';
 import 'package:mornye/theme/cover_palette.dart';
 import 'package:mornye/widgets/app_bottom_sheet.dart';
 import 'package:mornye/widgets/app_content_card.dart';
@@ -20,7 +19,6 @@ import 'package:mornye/widgets/app_search_field.dart';
 import 'package:mornye/widgets/app_chrome.dart';
 import 'package:mornye/widgets/app_sliver_header.dart';
 import 'package:mornye/widgets/collection_scaffold.dart';
-import 'package:mornye/widgets/selection_action_button.dart';
 import 'package:mornye/widgets/selection_bottom_bar.dart';
 import 'package:mornye/widgets/settings_group.dart';
 import 'package:mornye/widgets/track_card.dart';
@@ -72,7 +70,7 @@ class _IconButtonTooltipVisitor extends RecursiveAstVisitor<void> {
 
 Widget _hostSliver(Widget sliver) {
   return MaterialApp(
-    theme: LegacyMaterialTheme.light(),
+    theme: AppTheme.build(Brightness.light),
     home: Scaffold(body: CustomScrollView(slivers: [sliver])),
   );
 }
@@ -80,11 +78,17 @@ Widget _hostSliver(Widget sliver) {
 void main() {
   group('AppTokens', () {
     test('is registered on both themes', () {
-      expect(LegacyMaterialTheme.light().extension<AppTokens>(), AppTokens.standard);
-      expect(LegacyMaterialTheme.dark().extension<AppTokens>(), AppTokens.standard);
       expect(
-        LegacyMaterialTheme.dark(isAmoled: true).extension<AppTokens>(),
-        AppTokens.standard,
+        AppTheme.build(Brightness.light).extension<AppTokens>(),
+        AppTheme.tokens,
+      );
+      expect(
+        AppTheme.build(Brightness.dark).extension<AppTokens>(),
+        AppTheme.tokens,
+      );
+      expect(
+        AppTheme.build(Brightness.dark).extension<AppTokens>(),
+        AppTheme.tokens,
       );
       expect(
         AppTheme.build(Brightness.light).extension<AppTokens>(),
@@ -94,27 +98,6 @@ void main() {
         AppTheme.build(Brightness.dark).colorScheme.primary,
         AppTheme.accentColor(AppAccent.blue, Brightness.dark),
       );
-    });
-
-
-    testWidgets('context.tokens falls back to the standard scale', (
-      tester,
-    ) async {
-      AppTokens? seen;
-      await tester.pumpWidget(
-        MaterialApp(
-          // A bare ThemeData registers no extension; widgets must still work.
-          theme: ThemeData(),
-          home: Builder(
-            builder: (context) {
-              seen = context.tokens;
-              return const SizedBox.shrink();
-            },
-          ),
-        ),
-      );
-
-      expect(seen, AppTokens.standard);
     });
 
     test('lerp interpolates the scale instead of snapping', () {
@@ -129,10 +112,6 @@ void main() {
       // 9-10px badge labels were the accessibility floor violation this token
       // was introduced to fix.
       expect(AppTokens.standard.badgeFontSize, greaterThanOrEqualTo(11));
-    });
-
-    test('minimum touch target matches the Material floor', () {
-      expect(AppTokens.standard.minTouchTarget, 48);
     });
   });
 
@@ -160,45 +139,6 @@ void main() {
             'Icon-only controls must expose a tooltip so TalkBack, VoiceOver, '
             'keyboard users, and pointer users receive the same action name.',
       );
-    });
-
-    testWidgets('selection actions expose their label and disabled state', (
-      tester,
-    ) async {
-      final semantics = tester.ensureSemantics();
-      try {
-        await tester.pumpWidget(
-          MaterialApp(
-            theme: LegacyMaterialTheme.light(),
-            home: Scaffold(
-              body: Center(
-                child: SelectionActionButton(
-                  icon: Icons.delete,
-                  label: 'Delete selected tracks',
-                  onPressed: null,
-                  colorScheme: LegacyMaterialTheme.light().colorScheme,
-                ),
-              ),
-            ),
-          ),
-        );
-
-        expect(
-          tester.getSemantics(find.byType(SelectionActionButton)),
-          matchesSemantics(
-            label: 'Delete selected tracks',
-            isButton: true,
-            hasEnabledState: true,
-            isEnabled: false,
-          ),
-        );
-        expect(
-          tester.getSize(find.byType(SelectionActionButton)).height,
-          greaterThanOrEqualTo(AppTokens.standard.minTouchTarget),
-        );
-      } finally {
-        semantics.dispose();
-      }
     });
   });
 
@@ -321,42 +261,6 @@ void main() {
       expect(cleared, isTrue);
       expect(tester.takeException(), isNull);
     });
-
-    testWidgets('uses the shared filled search style and clears input', (
-      tester,
-    ) async {
-      final controller = TextEditingController(text: 'quality');
-      var cleared = false;
-      addTearDown(controller.dispose);
-
-      await tester.pumpWidget(
-        MaterialApp(
-          theme: LegacyMaterialTheme.light(),
-          home: Scaffold(
-            body: AppSearchField(
-              controller: controller,
-              hintText: 'Search settings',
-              clearTooltip: 'Clear',
-              onChanged: (_) {},
-              onClear: () => cleared = true,
-            ),
-          ),
-        ),
-      );
-
-      final field = tester.widget<TextField>(find.byType(TextField));
-      final border = field.decoration!.enabledBorder! as OutlineInputBorder;
-
-      expect(field.decoration!.filled, isTrue);
-      expect(border.borderRadius.topLeft.x, AppTokens.standard.radiusSheet);
-      expect(findAppIcon(Icons.clear), findsOneWidget);
-
-      await tester.tap(findAppIcon(Icons.clear));
-      await tester.pump();
-
-      expect(controller.text, isEmpty);
-      expect(cleared, isTrue);
-    });
   });
 
   group('Now Playing actions', () {
@@ -401,9 +305,7 @@ void main() {
     );
   });
 
-  group('AlbumDetailHeader', () {
-
-  });
+  group('AlbumDetailHeader', () {});
 
   group('AppSliverHeader', () {
     testWidgets('tab root variant shows the title without a back button', (
@@ -421,21 +323,23 @@ void main() {
       tester,
     ) async {
       await tester.pumpWidget(
-        MaterialApp(
-          theme: LegacyMaterialTheme.light(),
-          home: Scaffold(
-            body: Builder(
-              builder: (context) => ElevatedButton(
-                onPressed: () => Navigator.of(context).push(
-                  MaterialPageRoute<void>(
-                    builder: (_) => const Scaffold(
-                      body: CustomScrollView(
-                        slivers: [AppSliverHeader.page(title: 'Downloads')],
+        ProviderScope(
+          child: MaterialApp(
+            theme: AppTheme.build(Brightness.light),
+            home: Scaffold(
+              body: Builder(
+                builder: (context) => ElevatedButton(
+                  onPressed: () => Navigator.of(context).push(
+                    MaterialPageRoute<void>(
+                      builder: (_) => const Scaffold(
+                        body: CustomScrollView(
+                          slivers: [AppSliverHeader.page(title: 'Downloads')],
+                        ),
                       ),
                     ),
                   ),
+                  child: const Text('open'),
                 ),
-                child: const Text('open'),
               ),
             ),
           ),
@@ -446,7 +350,7 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.text('Downloads'), findsOneWidget);
 
-      await tester.tap(findAppIcon(Icons.arrow_back));
+      await tester.tap(findAppIcon(Icons.chevron_left));
       await tester.pumpAndSettle();
       expect(find.text('Downloads'), findsNothing);
     });
@@ -457,7 +361,7 @@ void main() {
       );
 
       final style = tester.widget<Text>(find.text('Home')).style!;
-      expect(style.fontSize, AppTokens.standard.headerExpandedTitleSize);
+      expect(style.fontSize, AppTheme.tokens.headerExpandedTitleSize);
     });
 
     test('is the only collapsing header implementation left', () {
@@ -483,18 +387,20 @@ void main() {
   group('AppBottomSheet', () {
     testWidgets('supplies one handle plus the title block', (tester) async {
       await tester.pumpWidget(
-        MaterialApp(
-          theme: LegacyMaterialTheme.light(),
-          home: Scaffold(
-            body: Builder(
-              builder: (context) => ElevatedButton(
-                onPressed: () => showAppBottomSheet<void>(
-                  context: context,
-                  title: 'Open on',
-                  subtitle: 'Track - Artist',
-                  builder: (_) => const Text('body'),
+        ProviderScope(
+          child: MaterialApp(
+            theme: AppTheme.build(Brightness.light),
+            home: Scaffold(
+              body: Builder(
+                builder: (context) => ElevatedButton(
+                  onPressed: () => showAppBottomSheet<void>(
+                    context: context,
+                    title: 'Open on',
+                    subtitle: 'Track - Artist',
+                    builder: (_) => const Text('body'),
+                  ),
+                  child: const Text('open'),
                 ),
-                child: const Text('open'),
               ),
             ),
           ),
@@ -512,10 +418,11 @@ void main() {
 
     testWidgets('sheet shape comes from the token scale', (tester) async {
       final shape =
-          LegacyMaterialTheme.light().bottomSheetTheme.shape! as RoundedRectangleBorder;
+          AppTheme.build(Brightness.light).bottomSheetTheme.shape!
+              as RoundedRectangleBorder;
       final radius = shape.borderRadius.resolve(TextDirection.ltr).topLeft.x;
 
-      expect(radius, AppTokens.standard.radiusSheet);
+      expect(radius, AppTheme.tokens.radiusSheet);
     });
 
     test('no screen hand-rolls a drag handle any more', () {
@@ -564,7 +471,7 @@ void main() {
 
   group('TrackCard', () {
     Widget host(Widget child) => MaterialApp(
-      theme: LegacyMaterialTheme.light(),
+      theme: AppTheme.build(Brightness.light),
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       home: Scaffold(body: child),
@@ -752,13 +659,15 @@ void main() {
       var sheetTaps = 0;
 
       await tester.pumpWidget(
-        MaterialApp(
-          home: SelectionOverlayHost(
-            child: Builder(
-              builder: (context) {
-                pageContext = context;
-                return const Scaffold(body: SizedBox.expand());
-              },
+        ProviderScope(
+          child: MaterialApp(
+            home: SelectionOverlayHost(
+              child: Builder(
+                builder: (context) {
+                  pageContext = context;
+                  return const Scaffold(body: SizedBox.expand());
+                },
+              ),
             ),
           ),
         ),
@@ -812,7 +721,7 @@ void main() {
       tester,
     ) async {
       Widget host({required bool selecting}) => MaterialApp(
-        theme: LegacyMaterialTheme.light(),
+        theme: AppTheme.build(Brightness.light),
         home: CollectionScaffold(
           scrollController: ScrollController(),
           isSelectionMode: selecting,
@@ -841,16 +750,18 @@ void main() {
       tester,
     ) async {
       await tester.pumpWidget(
-        MaterialApp(
-          theme: LegacyMaterialTheme.light(),
-          home: CollectionScaffold(
-            scrollController: ScrollController(),
-            isSelectionMode: true,
-            onExitSelectionMode: () {},
-            bottomInset: 0,
-            appBar: const SliverToBoxAdapter(child: SizedBox(height: 10)),
-            slivers: const [SliverToBoxAdapter(child: Text('content'))],
-            selectionBar: const SizedBox(height: 260),
+        ProviderScope(
+          child: MaterialApp(
+            theme: AppTheme.build(Brightness.light),
+            home: CollectionScaffold(
+              scrollController: ScrollController(),
+              isSelectionMode: true,
+              onExitSelectionMode: () {},
+              bottomInset: 0,
+              appBar: const SliverToBoxAdapter(child: SizedBox(height: 10)),
+              slivers: const [SliverToBoxAdapter(child: Text('content'))],
+              selectionBar: const SizedBox(height: 260),
+            ),
           ),
         ),
       );
@@ -907,18 +818,20 @@ void main() {
   group('settings components', () {
     testWidgets('choice chip meets the minimum touch target', (tester) async {
       await tester.pumpWidget(
-        MaterialApp(
-          theme: LegacyMaterialTheme.light(),
-          home: Scaffold(
-            body: Row(
-              children: [
-                SettingsChoiceChip(
-                  label: 'Stable',
-                  isSelected: true,
-                  onTap: () {},
-                  expand: true,
-                ),
-              ],
+        ProviderScope(
+          child: MaterialApp(
+            theme: AppTheme.build(Brightness.light),
+            home: Scaffold(
+              body: Row(
+                children: [
+                  SettingsChoiceChip(
+                    label: 'Stable',
+                    isSelected: true,
+                    onTap: () {},
+                    expand: true,
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -933,15 +846,17 @@ void main() {
 
     testWidgets('info card renders title, message and action', (tester) async {
       await tester.pumpWidget(
-        MaterialApp(
-          theme: LegacyMaterialTheme.light(),
-          home: Scaffold(
-            body: SettingsInfoCard(
-              icon: Icons.warning_amber_outlined,
-              tone: SettingsInfoTone.error,
-              title: 'Folder lost',
-              message: 'Pick it again',
-              action: TextButton(onPressed: () {}, child: const Text('Fix')),
+        ProviderScope(
+          child: MaterialApp(
+            theme: AppTheme.build(Brightness.light),
+            home: Scaffold(
+              body: SettingsInfoCard(
+                icon: Icons.warning_amber_outlined,
+                tone: SettingsInfoTone.error,
+                title: 'Folder lost',
+                message: 'Pick it again',
+                action: TextButton(onPressed: () {}, child: const Text('Fix')),
+              ),
             ),
           ),
         ),

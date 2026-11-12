@@ -6,13 +6,12 @@ import 'package:mornye/providers/library_collections_provider.dart';
 import 'package:mornye/screens/artist_screen.dart';
 import 'package:mornye/screens/weekly_releases_screen.dart';
 import 'package:mornye/services/cover_cache_manager.dart';
-import 'package:mornye/theme/app_theme.dart';
-import 'package:mornye/utils/adaptive_layout.dart';
 import 'package:mornye/utils/nav_bar_inset.dart';
 import 'package:mornye/widgets/animation_utils.dart';
 import 'package:mornye/widgets/app_icon_button.dart';
 import 'package:mornye/widgets/app_shape.dart';
 import 'package:mornye/widgets/app_sliver_header.dart';
+import 'package:mornye/utils/adaptive_layout.dart';
 
 class FavoriteArtistsScreen extends ConsumerWidget {
   const FavoriteArtistsScreen({super.key});
@@ -79,9 +78,7 @@ class FavoriteArtistsScreen extends ConsumerWidget {
               sliver: SliverList.separated(
                 itemCount: artists.length,
                 // Material lists separate rows by space; dividers are Mornye's.
-                separatorBuilder: (_, _) => context.isMornye
-                    ? const Divider(height: 1)
-                    : const SizedBox.shrink(),
+                separatorBuilder: (_, _) => (const Divider(height: 1)),
                 itemBuilder: (context, index) {
                   final artist = artists[index];
                   return ListTile(

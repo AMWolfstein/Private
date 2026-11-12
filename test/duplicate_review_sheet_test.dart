@@ -5,7 +5,6 @@ import 'package:mornye/l10n/l10n.dart';
 import 'package:mornye/providers/local_library_provider.dart';
 import 'package:mornye/providers/settings_provider.dart';
 import 'package:mornye/services/library_database.dart';
-import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/duplicate_review_sheet.dart';
 
@@ -37,7 +36,7 @@ void main() {
             }),
           ],
           child: MaterialApp(
-            theme: LegacyMaterialTheme.dark().copyWith(platform: platform),
+            theme: AppTheme.build(Brightness.dark).copyWith(platform: platform),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             home: const Scaffold(body: DuplicateReviewSheet()),
@@ -58,7 +57,7 @@ void main() {
       debugPrint = previousDebugPrint;
     });
 
-    for (final mornye in [false, true]) {
+    for (final mornye in [true]) {
       for (final brightness in Brightness.values) {
         testWidgets(
           'duplicate rows with percent paths render on $platform ($mornye, $brightness)',
@@ -69,8 +68,8 @@ void main() {
             final theme = mornye
                 ? AppTheme.build(brightness)
                 : brightness == Brightness.dark
-                ? LegacyMaterialTheme.dark()
-                : LegacyMaterialTheme.light();
+                ? AppTheme.build(Brightness.dark)
+                : AppTheme.build(Brightness.light);
             final count = brightness == Brightness.dark ? 10 : 24;
             await tester.pumpWidget(
               ProviderScope(

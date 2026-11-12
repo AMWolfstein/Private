@@ -15,8 +15,6 @@ import 'package:mornye/services/music_player_service.dart'
 import 'package:mornye/services/song_analysis.dart';
 import 'package:mornye/screens/listening_statistics_screen.dart';
 import 'package:mornye/screens/equalizer_screen.dart';
-import 'package:mornye/theme/app_theme.dart';
-import 'package:mornye/utils/nav_bar_inset.dart';
 import 'package:mornye/utils/usb_output_status_label.dart';
 import 'package:mornye/widgets/animation_utils.dart';
 import 'package:mornye/widgets/app_alert_dialog.dart';
@@ -29,6 +27,7 @@ import 'package:mornye/widgets/settings_group.dart';
 import 'package:mornye/widgets/automix_settings.dart';
 import 'package:mornye/widgets/music_haptics_settings.dart';
 import 'package:mornye/widgets/playback_normalization_settings.dart';
+import 'package:mornye/utils/nav_bar_inset.dart';
 
 class PlaybackSettingsPage extends ConsumerStatefulWidget {
   const PlaybackSettingsPage({super.key});
@@ -143,7 +142,7 @@ class _PlaybackSettingsPageState extends ConsumerState<PlaybackSettingsPage>
     final settings = ref.watch(settingsProvider);
     final autoMixActive = settings.autoMix;
     final colorScheme = Theme.of(context).colorScheme;
-    final coverStyle = settings.playerCoverStyleFor(mornye: context.isMornye);
+    final coverStyle = settings.playerCoverStyleFor();
     // The charging rule applies to Android's background sweep only.
     final chargingOption = settings.songAnalysis && Platform.isAndroid;
     final progress = _songAnalysis.progress.value;
@@ -396,7 +395,7 @@ class _PlaybackSettingsPageState extends ConsumerState<PlaybackSettingsPage>
                 title: context.l10n.landscapeLyricsArtwork,
                 subtitle: context.l10n.landscapeLyricsArtworkDescription,
                 value: settings.landscapeLyricsArtwork,
-                enabled: !context.isMornye,
+                enabled: false,
                 onChanged: (value) => ref
                     .read(settingsProvider.notifier)
                     .setLandscapeLyricsArtwork(value),
@@ -416,7 +415,7 @@ class _PlaybackSettingsPageState extends ConsumerState<PlaybackSettingsPage>
                 title: context.l10n.compactPlayer,
                 subtitle: context.l10n.compactPlayerDescription,
                 value: settings.compactPlayer,
-                enabled: !context.isMornye,
+                enabled: false,
                 onChanged: (value) =>
                     ref.read(settingsProvider.notifier).setCompactPlayer(value),
                 showDivider: false,

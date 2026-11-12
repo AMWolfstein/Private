@@ -225,12 +225,10 @@ class _UpdateDialogState extends State<UpdateDialog> {
                   ),
                   // Material's version chips carry their own containers, so
                   // the row is not boxed a second time.
-                  decoration: context.isMornye
-                      ? BoxDecoration(
-                          color: AppTheme.controlFill(context),
-                          borderRadius: BorderRadius.circular(16),
-                        )
-                      : null,
+                  decoration: (BoxDecoration(
+                    color: AppTheme.controlFill(context),
+                    borderRadius: BorderRadius.circular(16),
+                  )),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -263,15 +261,11 @@ class _UpdateDialogState extends State<UpdateDialog> {
 
                 if (_isDownloading) ...[
                   Container(
-                    padding: context.isMornye
-                        ? const EdgeInsets.all(16)
-                        : EdgeInsets.zero,
-                    decoration: context.isMornye
-                        ? BoxDecoration(
-                            color: AppTheme.controlFill(context),
-                            borderRadius: BorderRadius.circular(16),
-                          )
-                        : null,
+                    padding: (const EdgeInsets.all(16)),
+                    decoration: (BoxDecoration(
+                      color: AppTheme.controlFill(context),
+                      borderRadius: BorderRadius.circular(16),
+                    )),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -343,9 +337,7 @@ class _UpdateDialogState extends State<UpdateDialog> {
                     // The scroll well uses the next tonal step above the
                     // dialog surface.
                     decoration: BoxDecoration(
-                      color: context.isMornye
-                          ? AppTheme.controlFill(context)
-                          : colorScheme.surfaceContainerHighest,
+                      color: AppTheme.controlFill(context),
                       borderRadius: BorderRadius.circular(16),
                     ),
                     child: SingleChildScrollView(
@@ -557,18 +549,14 @@ class _VersionChip extends StatelessWidget {
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
           decoration: BoxDecoration(
-            color: context.isMornye
-                ? Colors.transparent
-                : isNew
-                ? colorScheme.primaryContainer
-                : colorScheme.surfaceContainerHighest,
+            color: Colors.transparent,
             borderRadius: BorderRadius.circular(20),
           ),
           child: Text(
             'v$version',
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.labelLarge?.copyWith(
-              color: context.isMornye && isNew
+              color: isNew
                   ? colorScheme.primary
                   : isNew
                   ? colorScheme.onPrimaryContainer

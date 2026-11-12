@@ -78,9 +78,7 @@ void main() {
                 ),
               ],
               child: MaterialApp(
-                theme: mornye
-                    ? AppTheme.build(Brightness.dark)
-                    : ThemeData(),
+                theme: mornye ? AppTheme.build(Brightness.dark) : ThemeData(),
                 localizationsDelegates: AppLocalizations.localizationsDelegates,
                 supportedLocales: AppLocalizations.supportedLocales,
                 home: SettingsSearchHighlightScope(

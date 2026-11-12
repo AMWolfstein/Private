@@ -9,7 +9,7 @@ import 'package:mornye/controllers/player_metadata_controller.dart';
 import 'package:mornye/l10n/app_localizations.dart';
 import 'package:mornye/providers/music_player_provider.dart';
 import 'package:mornye/services/source_metadata_events.dart';
-import 'package:mornye/theme/legacy_material_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/utils/lyrics_parser.dart';
 import 'package:mornye/widgets/lyrics_editor_sheet.dart';
 
@@ -76,7 +76,7 @@ void main() {
           musicPlayerControllerProvider.overrideWithValue(player),
         ],
         child: MaterialApp(
-          theme: LegacyMaterialTheme.dark(),
+          theme: AppTheme.build(Brightness.dark),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: Scaffold(

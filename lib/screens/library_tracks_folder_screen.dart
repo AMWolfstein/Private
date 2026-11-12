@@ -16,8 +16,6 @@ import 'package:mornye/widgets/expressive_button.dart';
 import 'package:mornye/widgets/expressive_button_group.dart';
 import 'package:mornye/widgets/app_bottom_sheet.dart';
 import 'package:mornye/widgets/app_snack_bar.dart';
-import 'package:mornye/theme/app_theme.dart';
-import 'package:mornye/theme/app_icons.dart';
 import 'package:share_plus/share_plus.dart' show ShareParams, SharePlus, XFile;
 import 'package:mornye/widgets/album_detail_header.dart';
 import 'package:mornye/widgets/cached_cover_image.dart';
@@ -50,6 +48,7 @@ import 'package:mornye/widgets/playlist_picker_sheet.dart';
 import 'package:mornye/widgets/collection_suggestions_section.dart';
 import 'package:mornye/widgets/track_detail_actions.dart';
 import 'package:mornye/services/playable_media.dart';
+import 'package:mornye/theme/app_icons.dart';
 
 export 'package:mornye/models/library_collections.dart'
     show LibraryTracksFolderMode;
@@ -1010,23 +1009,10 @@ class _LibraryTracksFolderScreenState
                 horizontal: 24,
                 vertical: 4,
               ),
-              leading: context.isMornye
-                  ? Icon(
-                      appIconFor(Icons.image_outlined),
-                      color: colorScheme.primary,
-                    )
-                  : Container(
-                      width: 40,
-                      height: 40,
-                      decoration: BoxDecoration(
-                        color: colorScheme.secondaryContainer,
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Icon(
-                        Icons.image_outlined,
-                        color: colorScheme.onSecondaryContainer,
-                      ),
-                    ),
+              leading: (Icon(
+                appIconFor(Icons.image_outlined),
+                color: colorScheme.primary,
+              )),
               title: Text(context.l10n.collectionPlaylistChangeCover),
               onTap: () {
                 Navigator.pop(sheetContext);
@@ -1039,23 +1025,10 @@ class _LibraryTracksFolderScreenState
                   horizontal: 24,
                   vertical: 4,
                 ),
-                leading: context.isMornye
-                    ? Icon(
-                        appIconFor(Icons.delete_outline),
-                        color: colorScheme.primary,
-                      )
-                    : Container(
-                        width: 40,
-                        height: 40,
-                        decoration: BoxDecoration(
-                          color: colorScheme.errorContainer,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Icon(
-                          Icons.delete_outline,
-                          color: colorScheme.onErrorContainer,
-                        ),
-                      ),
+                leading: (Icon(
+                  appIconFor(Icons.delete_outline),
+                  color: colorScheme.primary,
+                )),
                 title: Text(context.l10n.collectionPlaylistRemoveCover),
                 onTap: () {
                   Navigator.pop(sheetContext);
@@ -1214,20 +1187,14 @@ class _CollectionTrackTile extends ConsumerWidget {
     final heroTag = inMemoryHistoryItem != null
         ? 'cover_${inMemoryHistoryItem.id}'
         : null;
-    // Material rows mark the current track; Mornye rows show no
-    // current-track state.
-    final playback = context.isMornye
-        ? null
-        : ref.watch(catalogTrackPlaybackUiProvider(catalogTrackKey(track)));
-    final isCurrent = playback?.isCurrent ?? false;
-    final isPlaying = playback?.isPlaying ?? false;
+    // Mornye rows show no current-track state.
 
     return TrackCard(
       style: TrackCardStyle.flat,
       isSelectionMode: isSelectionMode,
       isSelected: isSelected,
-      isCurrent: isCurrent,
-      isPlaying: isPlaying,
+      isCurrent: false,
+      isPlaying: false,
       leadingArtwork: true,
       leading: HeroMode(
         enabled: heroTag != null,
@@ -1267,18 +1234,9 @@ class _CollectionTrackTile extends ConsumerWidget {
               builder: (context) {
                 final colorScheme = Theme.of(context).colorScheme;
                 return AppIconButton(
-                  tooltip: isPlaying
-                      ? context.l10n.actionPause
-                      : context.l10n.tooltipPlay,
-                  onPressed: isCurrent
-                      ? () => ref
-                            .read(musicPlayerControllerProvider)
-                            .togglePlayPause(isPlaying)
-                      : () => _playFromHere(context, ref),
-                  icon: Icon(
-                    isPlaying ? Icons.pause : Icons.play_arrow,
-                    color: colorScheme.primary,
-                  ),
+                  tooltip: context.l10n.tooltipPlay,
+                  onPressed: () => _playFromHere(context, ref),
+                  icon: Icon(Icons.play_arrow, color: colorScheme.primary),
                   style: IconButton.styleFrom(
                     minimumSize: Size.square(context.tokens.minTouchTarget),
                     backgroundColor: colorScheme.primaryContainer.withValues(

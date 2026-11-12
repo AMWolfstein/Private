@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mornye/l10n/l10n.dart';
 import 'package:mornye/services/lastfm/lastfm_service.dart';
-import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/lastfm_settings.dart';
 import 'package:mornye/widgets/settings_group.dart';
@@ -10,7 +9,7 @@ import 'package:mornye/widgets/settings_group.dart';
 import 'support/lastfm_fakes.dart';
 
 void main() {
-  for (final mornye in [false, true]) {
+  for (final mornye in [true]) {
     testWidgets(
       'Last.fm account and playback controls follow the selected style ($mornye)',
       (tester) async {
@@ -28,9 +27,7 @@ void main() {
         try {
           await tester.pumpWidget(
             MaterialApp(
-              theme: mornye
-                  ? AppTheme.build(Brightness.dark)
-                  : LegacyMaterialTheme.dark(),
+              theme: AppTheme.build(Brightness.dark),
               localizationsDelegates: AppLocalizations.localizationsDelegates,
               supportedLocales: AppLocalizations.supportedLocales,
               home: Scaffold(

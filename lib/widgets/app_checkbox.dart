@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:material_3_expressive/material_3_expressive.dart';
-import 'package:mornye/theme/material_expressive.dart';
 
 /// Checkbox row for Material dialogs and sheets. Expressive builds use the
 /// M3E checkbox; reduced motion falls back to the static Material tile.
@@ -29,31 +27,14 @@ class AppCheckboxListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (!materialExpressiveEnabled(context)) {
-      return CheckboxListTile(
-        value: value,
-        onChanged: onChanged,
-        title: title,
-        subtitle: subtitle,
-        secondary: secondary,
-        contentPadding: contentPadding,
-        controlAffinity: controlAffinity,
-      );
-    }
-    final checkbox = MaterialExpressiveScope(
-      child: M3ECheckbox(value: value, onChanged: onChanged),
-    );
-    final checkboxLeads = controlAffinity == ListTileControlAffinity.leading;
-    return MergeSemantics(
-      child: ListTile(
-        title: title,
-        subtitle: subtitle,
-        contentPadding: contentPadding,
-        enabled: onChanged != null,
-        onTap: onChanged == null ? null : () => onChanged!(!value),
-        leading: checkboxLeads ? checkbox : secondary,
-        trailing: checkboxLeads ? secondary : checkbox,
-      ),
+    return CheckboxListTile(
+      value: value,
+      onChanged: onChanged,
+      title: title,
+      subtitle: subtitle,
+      secondary: secondary,
+      contentPadding: contentPadding,
+      controlAffinity: controlAffinity,
     );
   }
 }

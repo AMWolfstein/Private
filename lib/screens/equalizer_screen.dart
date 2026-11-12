@@ -5,30 +5,23 @@ import 'dart:typed_data';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:material_3_expressive/material_3_expressive.dart';
-import 'package:share_plus/share_plus.dart';
 import 'package:mornye/l10n/l10n.dart';
 import 'package:mornye/models/equalizer_settings.dart';
 import 'package:mornye/providers/equalizer_provider.dart';
 import 'package:mornye/services/playback_equalizer.dart';
 import 'package:mornye/theme/app_tokens.dart';
-import 'package:mornye/theme/material_expressive.dart';
 import 'package:mornye/theme/app_theme.dart';
-import 'package:mornye/widgets/app_alert_dialog.dart';
 import 'package:mornye/widgets/app_bottom_sheet.dart';
 import 'package:mornye/widgets/app_icon.dart';
-import 'package:mornye/widgets/app_menu_button.dart';
-import 'package:mornye/widgets/app_slider.dart';
 import 'package:mornye/widgets/app_sliver_header.dart';
-import 'package:mornye/widgets/app_switch.dart';
-import 'package:mornye/widgets/app_text_field.dart';
 import 'package:mornye/widgets/beta_badge.dart';
-import 'package:mornye/widgets/expressive_button.dart';
-import 'package:mornye/widgets/expressive_icon_button.dart';
 import 'package:mornye/widgets/app_chrome.dart';
 import 'package:mornye/widgets/app_level_slider.dart';
 import 'package:mornye/widgets/settings_group.dart';
 import 'package:mornye/widgets/slider_value_header.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:mornye/widgets/app_alert_dialog.dart';
+import 'package:mornye/widgets/app_text_field.dart';
 
 part 'equalizer_widgets.dart';
 part 'equalizer_curve.dart';
@@ -39,8 +32,6 @@ class EqualizerScreen extends ConsumerStatefulWidget {
   @override
   ConsumerState<EqualizerScreen> createState() => _EqualizerScreenState();
 }
-
-enum _PresetAction { manage, import, export }
 
 final _selectedEqualizerPresetProvider = Provider<EqualizerPreset?>(
   (ref) => _matchingPreset(ref.watch(equalizerProvider)),
@@ -121,7 +112,6 @@ class _EqualizerScreenState extends ConsumerState<EqualizerScreen> {
       builder: (context, ref, _) {
         final state = ref.watch(equalizerProvider);
         final selected = _matchingPreset(state);
-        final mornye = context.isMornye;
         return SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -133,18 +123,13 @@ class _EqualizerScreenState extends ConsumerState<EqualizerScreen> {
                 AppSheetOption(
                   title: Text(preset.name),
                   selected: preset == selected,
-                  leading: mornye
-                      ? null
-                      : preset == selected
-                      ? const AppIcon(Icons.check)
-                      : const AppIcon(Icons.graphic_eq),
+                  leading: null,
                   trailing:
-                      (mornye && preset == selected) ||
-                          state.presets.contains(preset)
+                      ((preset == selected)) || state.presets.contains(preset)
                       ? Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            if (mornye && preset == selected)
+                            if ((preset == selected))
                               AppIcon(
                                 Icons.check,
                                 color: Theme.of(context).colorScheme.primary,
@@ -219,7 +204,6 @@ class _EqualizerScreenState extends ConsumerState<EqualizerScreen> {
     );
     final notifier = ref.read(equalizerProvider.notifier);
     final l10n = context.l10n;
-    final mornye = context.isMornye;
     void update(EqualizerSettings next) => notifier.update(next);
     void setEnabled(bool v) =>
         update(ref.read(equalizerProvider).settings.copyWith(enabled: v));
@@ -244,7 +228,7 @@ class _EqualizerScreenState extends ConsumerState<EqualizerScreen> {
       body: CustomScrollView(
         slivers: [
           AppSliverHeader.page(title: l10n.equalizerTitle),
-          if (mornye) ...[
+          ...[
             section(
               SettingsGroup(
                 children: [
@@ -291,32 +275,6 @@ class _EqualizerScreenState extends ConsumerState<EqualizerScreen> {
                     last: true,
                   ),
                 ],
-              ),
-            ),
-          ] else ...[
-            section(
-              SettingsGroup(
-                children: [_EqualizerOverview(onEnabledChanged: setEnabled)],
-              ),
-            ),
-            error,
-            section(
-              SettingsInfoCard(
-                message: l10n.equalizerBypass,
-                icon: Icons.info_outline,
-              ),
-            ),
-            section(SettingsSectionHeader(title: l10n.equalizerPresets)),
-            section(
-              _PresetBar(
-                busy: _busy,
-                onSave: _savePreset,
-                onReset: _reset,
-                onAction: (action) => switch (action) {
-                  _PresetAction.manage => _presets(),
-                  _PresetAction.import => _import(),
-                  _PresetAction.export => _export(),
-                },
               ),
             ),
           ],
@@ -454,7 +412,7 @@ class _EqualizerScreenState extends ConsumerState<EqualizerScreen> {
               ],
             ),
           ),
-          if (mornye) ...[
+          ...[
             const SliverToBoxAdapter(child: SizedBox(height: 28)),
             section(
               SettingsGroup(

@@ -6,10 +6,6 @@ import 'package:mornye/providers/listening_statistics_provider.dart';
 import 'package:mornye/providers/settings_provider.dart';
 import 'package:mornye/screens/listening_rewind_screen.dart';
 import 'package:mornye/services/listening_statistics.dart';
-import 'package:mornye/theme/app_motion.dart';
-import 'package:mornye/theme/material_expressive.dart';
-import 'package:mornye/theme/app_theme.dart';
-import 'package:mornye/utils/adaptive_layout.dart';
 import 'package:mornye/widgets/animation_utils.dart' show SkeletonBox;
 import 'package:mornye/widgets/app_alert_dialog.dart';
 import 'package:mornye/widgets/app_choice_chip.dart';
@@ -21,6 +17,7 @@ import 'package:mornye/widgets/expressive_button.dart';
 import 'package:mornye/widgets/app_sliver_header.dart';
 import 'package:mornye/widgets/player_artwork.dart';
 import 'package:mornye/widgets/settings_group.dart';
+import 'package:mornye/utils/adaptive_layout.dart';
 
 export 'package:mornye/providers/listening_statistics_provider.dart';
 
@@ -185,24 +182,10 @@ class _ListeningStatisticsScreenState
     required int count,
     required Widget child,
   }) {
-    if (context.isMornye) return child;
-    return Padding(
-      padding: EdgeInsets.fromLTRB(16, index == 0 ? 0 : 2, 16, 0),
-      child: Material(
-        color: settingsGroupColor(context),
-        clipBehavior: Clip.antiAlias,
-        borderRadius: connectedRowRadius(
-          context,
-          first: index == 0,
-          last: index == count - 1,
-        ),
-        child: child,
-      ),
-    );
+    return child;
   }
 
   Widget _summarySkeleton(BuildContext context) {
-    final mornye = context.isMornye;
     return ExcludeSemantics(
       child: Column(
         children: [
@@ -210,11 +193,9 @@ class _ListeningStatisticsScreenState
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: AppContentCard(
               mornyeSurface: false,
-              color: mornye
-                  ? null
-                  : Theme.of(context).colorScheme.primaryContainer,
+              color: null,
               child: Padding(
-                padding: EdgeInsets.all(mornye ? 20 : 24),
+                padding: EdgeInsets.all(20),
                 child: const Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -298,7 +279,6 @@ class _ListeningStatisticsScreenState
 
   List<Widget> _summarySlivers(BuildContext context, ListeningSummary data) {
     final colors = Theme.of(context).colorScheme;
-    final mornye = context.isMornye;
     final artists = data.artists.entries.toList()
       ..sort((a, b) => b.value.compareTo(a.value));
     final topArtists = artists.take(10).toList();
@@ -320,9 +300,9 @@ class _ListeningStatisticsScreenState
           child: AppContentCard(
             mornyeSurface: false,
             // Material leads with the total as an emphasized hero figure.
-            color: mornye ? null : colors.primaryContainer,
+            color: null,
             child: Padding(
-              padding: EdgeInsets.all(mornye ? 20 : 24),
+              padding: EdgeInsets.all(20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -330,12 +310,7 @@ class _ListeningStatisticsScreenState
                     context.l10n.listeningStatsMinutes(
                       (data.milliseconds / 60000).round(),
                     ),
-                    style: mornye
-                        ? textTheme.headlineMedium
-                        : textTheme.displaySmall?.copyWith(
-                            fontWeight: FontWeight.w700,
-                            color: colors.onPrimaryContainer,
-                          ),
+                    style: textTheme.headlineMedium,
                   ),
                   const SizedBox(height: 8),
                   Text(
@@ -344,11 +319,7 @@ class _ListeningStatisticsScreenState
                       data.tracks.length,
                       data.days.length,
                     ),
-                    style: mornye
-                        ? null
-                        : textTheme.bodyLarge?.copyWith(
-                            color: colors.onPrimaryContainer,
-                          ),
+                    style: null,
                   ),
                 ],
               ),
@@ -389,16 +360,11 @@ class _ListeningStatisticsScreenState
                         ),
                         const SizedBox(width: 8),
                         Expanded(
-                          child: materialExpressiveEnabled(context)
-                              ? _ActivityBar(
-                                  fraction: day.value / peakDay,
-                                  peak: day.value == peakDay,
-                                )
-                              : LinearProgressIndicator(
-                                  value: day.value / peakDay,
-                                  minHeight: 8,
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
+                          child: LinearProgressIndicator(
+                            value: day.value / peakDay,
+                            minHeight: 8,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
                         ),
                         const SizedBox(width: 12),
                         Text('${(day.value / 60000).round()}'),
@@ -505,47 +471,5 @@ class _ListeningStatisticsScreenState
         ],
       ),
     ];
-  }
-}
-
-/// One day of listening activity. The bar grows in on a spatial spring and the
-/// busiest day takes the primary color.
-class _ActivityBar extends StatelessWidget {
-  const _ActivityBar({required this.fraction, required this.peak});
-
-  final double fraction;
-  final bool peak;
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = Theme.of(context).colorScheme;
-    final motion = AppMotion.spatial(
-      context,
-      const AppMotionSpec(Duration.zero, Curves.linear),
-    );
-    return Container(
-      height: 12,
-      decoration: ShapeDecoration(
-        color: colors.surfaceContainerHighest,
-        shape: const StadiumBorder(),
-      ),
-      alignment: AlignmentDirectional.centerStart,
-      child: TweenAnimationBuilder<double>(
-        tween: Tween(begin: 0, end: fraction.clamp(0.0, 1.0)),
-        duration: motion.duration,
-        curve: motion.curve,
-        builder: (context, value, _) => FractionallySizedBox(
-          // The spring may overshoot; keep the fill inside its track.
-          widthFactor: value.clamp(0.0, 1.0),
-          heightFactor: 1,
-          child: DecoratedBox(
-            decoration: ShapeDecoration(
-              color: peak ? colors.primary : colors.secondary,
-              shape: const StadiumBorder(),
-            ),
-          ),
-        ),
-      ),
-    );
   }
 }

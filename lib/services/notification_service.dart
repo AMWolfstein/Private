@@ -120,8 +120,6 @@ class NotificationService {
   static const String libraryChannelDescription =
       'Shows local library scan progress';
 
-
-
   Future<void> initialize() {
     if (_isInitialized) return Future.value();
     return _initialization ??= _initialize().whenComplete(() {
@@ -135,9 +133,7 @@ class NotificationService {
       '@drawable/ic_notification_mornye',
     );
 
-    const initSettings = InitializationSettings(
-      android: androidSettings,
-    );
+    const initSettings = InitializationSettings(android: androidSettings);
 
     await _notifications.initialize(
       settings: initSettings,

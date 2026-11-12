@@ -67,7 +67,7 @@ Future<List<int>> _pixels(WidgetTester tester) async {
 }
 
 void main() {
-  for (final mornye in [false, true]) {
+  for (final mornye in [true]) {
     for (final reducedMotion in [false, true]) {
       for (final milliseconds in [200, 650]) {
         testWidgets('short final word completes its lift clock '
@@ -139,7 +139,7 @@ void main() {
     }
   }
 
-  for (final mornye in [false, true]) {
+  for (final mornye in [true]) {
     testWidgets(
       'playing lyrics retain their painter and refresh stopped highlights ($mornye)',
       (tester) async {
@@ -278,9 +278,7 @@ void main() {
       final preview = ValueNotifier<Duration?>(null);
       addTearDown(playback.close);
       addTearDown(preview.dispose);
-      final theme = mornye
-          ? AppTheme.build(Brightness.dark)
-          : ThemeData.dark();
+      final theme = mornye ? AppTheme.build(Brightness.dark) : ThemeData.dark();
       await tester.pumpWidget(
         ProviderScope(
           overrides: [
@@ -333,7 +331,7 @@ void main() {
     });
   }
 
-  for (final mornye in [false, true]) {
+  for (final mornye in [true]) {
     testWidgets(
       'sung words rise in both styles, glow only in Mornye ($mornye)',
       (tester) async {
@@ -648,146 +646,6 @@ void main() {
       width = 300;
       await pumpView();
       await stableAnchor();
-      await tester.pumpWidget(const SizedBox.shrink());
-    },
-  );
-
-  testWidgets(
-    'timed geometry survives rebuilds and tracks layout and boundaries',
-    (tester) async {
-      final preview = ValueNotifier<Duration?>(const Duration(seconds: 5));
-      addTearDown(preview.dispose);
-      final words = _lyrics.lines.single.words.toList();
-      final lyrics = ParsedLyrics(
-        synced: true,
-        wordSynced: true,
-        plainText: '',
-        lines: [
-          LyricLine(
-            time: Duration.zero,
-            end: const Duration(seconds: 20),
-            text: _text,
-            words: words,
-            translation: 'Translation',
-          ),
-        ],
-      );
-      var width = 620.0;
-      var fontSize = 28.0;
-      var scale = 1.0;
-      var direction = TextDirection.ltr;
-      var locale = const Locale('en');
-      var supplements = false;
-      var viewKey = 0;
-      Future<void> pump() async {
-        final theme = ThemeData.dark().copyWith(
-          textTheme: ThemeData.dark().textTheme.copyWith(
-            headlineSmall: TextStyle(fontSize: fontSize),
-          ),
-        );
-        await tester.pumpWidget(
-          ProviderScope(
-            child: MaterialApp(
-              theme: theme,
-              locale: locale,
-              supportedLocales: const [Locale('en'), Locale('en', 'US')],
-              home: Scaffold(
-                body: Directionality(
-                  textDirection: direction,
-                  child: MediaQuery(
-                    data: MediaQueryData(textScaler: TextScaler.linear(scale)),
-                    child: SizedBox(
-                      width: width,
-                      child: SyncedLyricsView(
-                        key: ValueKey(viewKey),
-                        lyrics: lyrics,
-                        seekPreview: preview,
-                        colorScheme: theme.colorScheme,
-                        isActive: true,
-                        showPronunciation: false,
-                        showTranslation: supplements,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-        );
-        await tester.pumpAndSettle();
-      }
-
-      Future<void> matchesFreshLayout() async {
-        final cached = await _pixels(tester);
-        viewKey++;
-        await pump();
-        expect(await _pixels(tester), orderedEquals(cached));
-      }
-
-      await pump();
-      var boxes = _segmentBoxes(tester);
-      final initial = await _pixels(tester);
-      await pump();
-      expect(_segmentBoxes(tester), same(boxes));
-      supplements = true;
-      await pump();
-      expect(_segmentBoxes(tester), same(boxes));
-      expect(await _pixels(tester), orderedEquals(initial));
-
-      // Timing-only edits must repaint even though the geometry is retained.
-      final oldPainter = tester.widget<CustomPaint>(_paint).painter!;
-      words[0] = const LyricWord(
-        time: Duration.zero,
-        end: Duration(seconds: 6),
-        text: 'AAAA ',
-      );
-      await pump();
-      expect(_segmentBoxes(tester), same(boxes));
-      expect(
-        tester.widget<CustomPaint>(_paint).painter!.shouldRepaint(oldPainter),
-        isTrue,
-      );
-      expect(await _pixels(tester), isNot(orderedEquals(initial)));
-
-      // The paragraph is unchanged, but the timed selections have new bounds.
-      words[0] = const LyricWord(
-        time: Duration.zero,
-        end: Duration(seconds: 10),
-        text: 'AA',
-      );
-      words[1] = const LyricWord(
-        time: Duration(seconds: 10),
-        end: Duration(seconds: 20),
-        text: 'AA BBBB',
-      );
-      await pump();
-      expect(_segmentBoxes(tester), isNot(same(boxes)));
-      expect(_segmentBoxes(tester), isNot(equals(boxes)));
-      await matchesFreshLayout();
-
-      for (final change in <VoidCallback>[
-        () => width = 180,
-        () => direction = TextDirection.rtl,
-        () => scale = 1.4,
-        () => fontSize = 32,
-        () => locale = const Locale('en', 'US'),
-        () => width = 620,
-      ]) {
-        boxes = _segmentBoxes(tester);
-        change();
-        await pump();
-        expect(_segmentBoxes(tester), isNot(same(boxes)));
-        if (width == 180) {
-          expect(
-            _segmentBoxes(
-              tester,
-            ).expand((boxes) => boxes).map((box) => box.top).toSet().length,
-            greaterThan(1),
-          );
-        }
-        await matchesFreshLayout();
-      }
-      expect(tester.takeException(), isNull);
       await tester.pumpWidget(const SizedBox.shrink());
     },
   );

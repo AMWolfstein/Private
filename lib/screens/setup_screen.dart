@@ -3,12 +3,9 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:material_3_expressive/material_3_expressive.dart';
 import 'package:mornye/theme/app_motion.dart';
-import 'package:mornye/theme/material_expressive.dart';
 import 'package:mornye/widgets/app_alert_dialog.dart';
 import 'package:mornye/widgets/app_content_card.dart';
-import 'package:mornye/widgets/app_icon.dart';
 import 'package:mornye/widgets/app_icon_button.dart';
 import 'package:mornye/widgets/app_loading_indicator.dart';
 import 'package:mornye/widgets/app_progress_indicator.dart';
@@ -551,9 +548,7 @@ class _SetupScreenState extends ConsumerState<SetupScreen>
     );
 
     final isLastStep = _currentStep >= _totalSteps - 1;
-    final nextButton = materialExpressiveEnabled(context)
-        ? _buildExpressiveFab(colorScheme)
-        : !isLastStep
+    final nextButton = !isLastStep
         ? FloatingActionButton.extended(
             onPressed: !_isLoading && _isStepCompleted(_currentStep)
                 ? _nextPage

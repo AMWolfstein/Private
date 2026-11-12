@@ -18,7 +18,6 @@ import 'package:mornye/providers/playback_provider.dart';
 import 'package:mornye/providers/settings_provider.dart';
 import 'package:mornye/screens/library_tracks_folder_screen.dart';
 import 'package:mornye/services/music_player_service.dart';
-import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/album_detail_header.dart';
 import 'package:mornye/widgets/track_card.dart';
@@ -243,7 +242,7 @@ Widget _selectionApp({
     localLibraryFirstCoverProvider.overrideWith((ref, request) async => null),
   ],
   child: MaterialApp(
-    theme: mornye ? AppTheme.build(Brightness.dark) : LegacyMaterialTheme.light(),
+    theme: AppTheme.build(Brightness.dark),
     localizationsDelegates: AppLocalizations.localizationsDelegates,
     supportedLocales: AppLocalizations.supportedLocales,
     home: const SelectionOverlayHost(
@@ -300,9 +299,7 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   setUp(() => SharedPreferences.setMockInitialValues({}));
 
-  for (final mornye in [false, true]) {
-
-
+  for (final mornye in [true]) {
     testWidgets(
       'playlist file deletion confirms and cleans both indexes ($mornye)',
       (tester) async {
@@ -429,7 +426,7 @@ void main() {
     });
   }
 
-  for (final mornye in [false, true]) {
+  for (final mornye in [true]) {
     testWidgets('large local playlist renders and scrolls ($mornye)', (
       tester,
     ) async {
@@ -454,9 +451,7 @@ void main() {
             ),
           ],
           child: MaterialApp(
-            theme: mornye
-                ? AppTheme.build(Brightness.dark)
-                : LegacyMaterialTheme.light(),
+            theme: AppTheme.build(Brightness.dark),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             home: const LibraryTracksFolderScreen(
@@ -513,9 +508,7 @@ void main() {
             ),
           ],
           child: MaterialApp(
-            theme: mornye
-                ? AppTheme.build(Brightness.dark)
-                : LegacyMaterialTheme.light(),
+            theme: AppTheme.build(Brightness.dark),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             home: const LibraryTracksFolderScreen(
@@ -548,7 +541,7 @@ void main() {
   }
 
   for (final mode in LibraryTracksFolderMode.values) {
-    for (final mornye in [false, true]) {
+    for (final mornye in [true]) {
       testWidgets(
         'selection dispatches one ${mode.name} removal (Mornye: $mornye)',
         (tester) async {
@@ -580,9 +573,7 @@ void main() {
                 ),
               ],
               child: MaterialApp(
-                theme: mornye
-                    ? AppTheme.build(Brightness.dark)
-                    : LegacyMaterialTheme.light(),
+                theme: AppTheme.build(Brightness.dark),
                 localizationsDelegates: AppLocalizations.localizationsDelegates,
                 supportedLocales: AppLocalizations.supportedLocales,
                 home: LibraryTracksFolderScreen(
@@ -623,7 +614,7 @@ void main() {
     }
   }
 
-  for (final mornye in [false, true]) {
+  for (final mornye in [true]) {
     testWidgets('playlist row queues its neighbors (Mornye: $mornye)', (
       tester,
     ) async {
@@ -651,9 +642,7 @@ void main() {
             ),
           ],
           child: MaterialApp(
-            theme: mornye
-                ? AppTheme.build(Brightness.dark)
-                : LegacyMaterialTheme.light(),
+            theme: AppTheme.build(Brightness.dark),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             home: const LibraryTracksFolderScreen(
@@ -708,9 +697,7 @@ void main() {
             ),
           ],
           child: MaterialApp(
-            theme: mornye
-                ? AppTheme.build(Brightness.dark)
-                : LegacyMaterialTheme.light(),
+            theme: AppTheme.build(Brightness.dark),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             home: const LibraryTracksFolderScreen(
@@ -759,9 +746,7 @@ void main() {
           ],
           child: MaterialApp(
             locale: const Locale('ar'),
-            theme: mornye
-                ? AppTheme.build(Brightness.dark)
-                : LegacyMaterialTheme.light(),
+            theme: AppTheme.build(Brightness.dark),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             home: const LibraryTracksFolderScreen(

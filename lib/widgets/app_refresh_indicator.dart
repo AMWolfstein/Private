@@ -18,8 +18,6 @@ class AppRefreshIndicator extends StatefulWidget {
   final ScrollNotificationPredicate notificationPredicate;
   final Widget child;
 
-
-
   @override
   State<AppRefreshIndicator> createState() => _AppRefreshIndicatorState();
 }
@@ -32,7 +30,6 @@ class _AppRefreshIndicatorState extends State<AppRefreshIndicator> {
   /// While a pull is under way: its status and how far it has pulled.
   M3ERefreshStatus? _status;
   double _pull = 0;
-
 
   /// A pull being pushed back shrinks the indicator first; the list only
   /// scrolls once the pull is gone.
@@ -49,7 +46,6 @@ class _AppRefreshIndicatorState extends State<AppRefreshIndicator> {
   void dispose() {
     super.dispose();
   }
-
 
   bool _trackPull(OverscrollNotification notification) {
     final delta = notification.dragDetails?.delta.dy;
@@ -69,7 +65,7 @@ class _AppRefreshIndicatorState extends State<AppRefreshIndicator> {
 
   @override
   Widget build(BuildContext context) {
-    _usesExpressive = materialExpressiveEnabled(context);
+    _usesExpressive = false;
     if (!_usesExpressive) {
       return RefreshIndicator(
         key: _materialKey,

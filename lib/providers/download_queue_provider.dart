@@ -1704,7 +1704,6 @@ class DownloadQueueNotifier extends Notifier<DownloadQueueState> {
       }
     }
 
-
     if (!isSafMode && state.outputDir.isEmpty) {
       _log.d('Output dir empty, initializing...');
       await _initOutputDir();
@@ -1720,9 +1719,7 @@ class DownloadQueueNotifier extends Notifier<DownloadQueueState> {
 
     try {
       await _runQueueLoop();
-    } finally {
-      
-    }
+    } finally {}
     final stoppedWhilePaused = state.isPaused;
     final keepConnectivityMonitoring =
         stoppedWhilePaused && _networkPausedByWifiOnly;
@@ -1741,7 +1738,6 @@ class DownloadQueueNotifier extends Notifier<DownloadQueueState> {
         _log.e('Failed to stop foreground service: $e');
       }
     }
-
 
     if (stoppedWhilePaused && _downloadCount > 0) {
       try {

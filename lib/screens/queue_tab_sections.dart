@@ -104,73 +104,6 @@ extension _QueueTabSections on _QueueTabState {
     return null;
   }
 
-  /// Splits [items] into runs that share a section label.
-  List<_LibrarySection> _trackSections(
-    BuildContext context,
-    List<UnifiedLibraryItem> items,
-  ) {
-    final locale = Localizations.localeOf(context).toLanguageTag();
-    if (identical(items, _sectionItems) &&
-        _sortMode == _sectionSort &&
-        locale == _sectionLocale) {
-      return _cachedTrackSections;
-    }
-    final sections = <_LibrarySection>[];
-    // Date labels name only the month, so each month is formatted once.
-    final monthLabels = _dateSorts.contains(_sortMode) ? <int, String>{} : null;
-    String? label;
-    var start = 0;
-    for (var i = 0; i < items.length; i++) {
-      final added = items[i].addedAt;
-      final next = monthLabels != null
-          ? monthLabels.putIfAbsent(
-              added.year * 12 + added.month,
-              () => _trackSectionLabel(context, items[i]) ?? '',
-            )
-          : _trackSectionLabel(context, items[i]) ?? '';
-      if (i == 0) {
-        label = next;
-      } else if (next != label) {
-        sections.add(_LibrarySection(label!, start, i));
-        label = next;
-        start = i;
-      }
-    }
-    if (items.isNotEmpty) {
-      sections.add(_LibrarySection(label!, start, items.length));
-    }
-    _sectionItems = items;
-    _sectionSort = _sortMode;
-    _sectionLocale = locale;
-    return _cachedTrackSections = sections;
-  }
-
-  /// Track rows grouped under pinned section headers. Each section is its own
-  /// connected run of rows.
-  Widget _buildSectionedTrackSlivers({
-    required BuildContext context,
-    required List<UnifiedLibraryItem> items,
-    required Widget Function(int index) rowBuilder,
-    required int leadCount,
-    required Widget Function(int index) leadBuilder,
-  }) {
-    final sections = _trackSections(context, items);
-    return SliverPadding(
-      padding: EdgeInsets.symmetric(horizontal: wideListInset(context)),
-      sliver: _LibrarySectionList(
-        sections: sections,
-        leadCount: leadCount,
-        leadBuilder: leadBuilder,
-        rowBuilder: (index, section) => TrackCardSegment.at(
-          key: ValueKey(items[index].id),
-          index: index - section.start,
-          count: section.length,
-          child: rowBuilder(index),
-        ),
-      ),
-    );
-  }
-
   /// Quick sort control beside a page's count.
   Widget _buildSortButton(BuildContext context) => Builder(
     builder: (context) => ExpressiveButton(
@@ -195,48 +128,10 @@ extension _QueueTabSections on _QueueTabState {
   /// with the labels and tooltips of the separate buttons, which Mornye and
   /// reduced motion keep.
   List<Widget> _buildLibraryTools(BuildContext context, {String? viewMode}) {
-    if (!materialExpressiveEnabled(context)) {
-      return [
-        _buildSortButton(context),
-        _buildFilterButton(context),
-        if (viewMode != null) _buildViewModeButton(context, viewMode),
-      ];
-    }
-    final l10n = context.l10n;
-    final filterCount = _activeFilterCount;
-    final grid = viewMode == 'grid';
     return [
-      ToolButtonGroup(
-        tools: [
-          ToolButton(
-            icon: const AppIcon(Icons.sort),
-            label: _sortLabel(context, _sortMode),
-            // The menu anchors below the button but opens from the page, so
-            // it does not inherit the button's text and icon styles.
-            onPressed: (_) => _showSortSheet(context),
-          ),
-          ToolButton(
-            icon: Badge(
-              isLabelVisible: filterCount > 0,
-              label: Text('$filterCount'),
-              child: const AppIcon(Icons.filter_list),
-            ),
-            label: l10n.libraryFilterTitle,
-            onPressed: (_) => _showFilterSheet(context),
-            onLongPress: filterCount > 0 ? _resetFilters : null,
-          ),
-          if (viewMode != null)
-            ToolButton(
-              icon: AppIcon(grid ? Icons.view_list : Icons.grid_view),
-              tooltip: grid
-                  ? l10n.appearanceHistoryViewList
-                  : l10n.appearanceHistoryViewGrid,
-              onPressed: (_) => ref
-                  .read(settingsProvider.notifier)
-                  .setHistoryViewMode(grid ? 'list' : 'grid'),
-            ),
-        ],
-      ),
+      _buildSortButton(context),
+      _buildFilterButton(context),
+      if (viewMode != null) _buildViewModeButton(context, viewMode),
     ];
   }
 
@@ -275,37 +170,18 @@ extension _QueueTabSections on _QueueTabState {
           child: SettingsGroup(
             children: [
               for (final mode in _availableLibrarySortModes)
-                if (sheetContext.isMornye)
-                  SettingsItem(
-                    title: _sortLabel(sheetContext, mode),
-                    selected: mode == _sortMode,
-                    trailing: mode == _sortMode
-                        ? AppIcon(
-                            Icons.check,
-                            color: Theme.of(sheetContext).colorScheme.primary,
-                          )
-                        : const SizedBox.shrink(),
-                    showDivider: mode != _availableLibrarySortModes.last,
-                    onTap: () => Navigator.pop(sheetContext, mode),
-                  )
-                else
-                  ListTile(
-                    dense: true,
-                    minTileHeight: sheetContext.tokens.minTouchTarget,
-                    contentPadding: EdgeInsets.symmetric(
-                      horizontal: sheetContext.tokens.rowPaddingH,
-                    ),
-                    titleTextStyle: Theme.of(sheetContext).textTheme.bodyLarge,
-                    title: Text(_sortLabel(sheetContext, mode)),
-                    selected: mode == _sortMode,
-                    trailing: mode == _sortMode
-                        ? AppIcon(
-                            Icons.check,
-                            color: Theme.of(sheetContext).colorScheme.primary,
-                          )
-                        : null,
-                    onTap: () => Navigator.pop(sheetContext, mode),
-                  ),
+                SettingsItem(
+                  title: _sortLabel(sheetContext, mode),
+                  selected: mode == _sortMode,
+                  trailing: mode == _sortMode
+                      ? AppIcon(
+                          Icons.check,
+                          color: Theme.of(sheetContext).colorScheme.primary,
+                        )
+                      : const SizedBox.shrink(),
+                  showDivider: mode != _availableLibrarySortModes.last,
+                  onTap: () => Navigator.pop(sheetContext, mode),
+                ),
             ],
           ),
         ),
@@ -320,36 +196,15 @@ extension _QueueTabSections on _QueueTabState {
     final labels = [l10n.historyFilterAlbums, l10n.historyFilterSingles];
     final selected = _albumsShowSingles ? 1 : 0;
     final Widget toggle;
-    if (materialExpressiveEnabled(context)) {
-      toggle = MaterialExpressiveScope(
-        skipAutofocus: true,
-        child: M3EButtonGroup(
-          type: M3EButtonGroupType.connected,
-          style: M3EButtonStyle.filled,
-          // Connected segments get no inflated target; keep 48 dp.
-          size: M3EButtonSize.sm.copyWith(height: 48),
-          selectedIndex: selected,
-          selectionRequired: true,
-          onSelectedIndexChanged: (index) {
-            if (index != null) _setAlbumsShowSingles(index == 1);
-          },
-          actions: [
-            for (final label in labels)
-              M3EButtonGroupAction(label: Text(label)),
-          ],
-        ),
-      );
-    } else {
-      toggle = SegmentedButton<int>(
-        showSelectedIcon: false,
-        segments: [
-          for (final (index, label) in labels.indexed)
-            ButtonSegment(value: index, label: Text(label)),
-        ],
-        selected: {selected},
-        onSelectionChanged: (value) => _setAlbumsShowSingles(value.first == 1),
-      );
-    }
+    toggle = SegmentedButton<int>(
+      showSelectedIcon: false,
+      segments: [
+        for (final (index, label) in labels.indexed)
+          ButtonSegment(value: index, label: Text(label)),
+      ],
+      selected: {selected},
+      onSelectionChanged: (value) => _setAlbumsShowSingles(value.first == 1),
+    );
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
       child: Align(alignment: AlignmentDirectional.centerStart, child: toggle),
@@ -478,23 +333,15 @@ extension _QueueTabSections on _QueueTabState {
 }
 
 class _LibrarySectionList extends StatelessWidget {
-  const _LibrarySectionList({
-    required this.sections,
-    required this.rowBuilder,
-    this.leadCount = 0,
-    this.leadBuilder,
-  });
+  const _LibrarySectionList({required this.sections, required this.rowBuilder});
 
   final List<_LibrarySection> sections;
   final Widget Function(int index, _LibrarySection section) rowBuilder;
-  final int leadCount;
-  final Widget Function(int index)? leadBuilder;
-
   @override
   Widget build(BuildContext context) {
     final starts = <int>[];
     final headers = <int>[];
-    var count = leadCount;
+    var count = 0;
     for (final section in sections) {
       starts.add(count);
       if (section.label.isNotEmpty) headers.add(count++);
@@ -503,7 +350,6 @@ class _LibrarySectionList extends StatelessWidget {
     return PinnedSectionSliverList(
       headerIndexes: headers,
       delegate: SliverChildBuilderDelegate((context, index) {
-        if (index < leadCount) return leadBuilder!(index);
         var low = 0;
         var high = starts.length;
         while (low < high) {

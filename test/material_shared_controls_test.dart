@@ -3,10 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_3_expressive/material_3_expressive.dart';
 import 'package:mornye/l10n/l10n.dart';
-import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/app_alert_dialog.dart';
-import 'package:mornye/widgets/app_checkbox.dart';
 import 'package:mornye/widgets/app_content_card.dart';
 import 'package:mornye/widgets/app_menu_button.dart';
 import 'package:mornye/widgets/app_text_field.dart';
@@ -14,7 +12,7 @@ import 'package:mornye/widgets/app_text_field.dart';
 Widget _host(Widget child, {ThemeData? theme, bool reduceMotion = false}) =>
     ProviderScope(
       child: MaterialApp(
-        theme: theme ?? LegacyMaterialTheme.light(),
+        theme: theme ?? AppTheme.build(Brightness.light),
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         builder: (context, child) => MediaQuery(
@@ -65,39 +63,6 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('popup retains the anchor theme above a nested navigator', (
-    tester,
-  ) async {
-    final localTheme = LegacyMaterialTheme.dark().copyWith(
-      colorScheme: LegacyMaterialTheme.dark().colorScheme.copyWith(
-        primary: const Color(0xff95ed72),
-      ),
-    );
-    await tester.pumpWidget(
-      _host(
-        Theme(
-          data: localTheme,
-          child: Navigator(
-            onGenerateRoute: (_) => MaterialPageRoute<void>(
-              builder: (_) => Scaffold(body: Center(child: _menu())),
-            ),
-          ),
-        ),
-      ),
-    );
-    await tester.tap(find.byTooltip('Options'));
-    await tester.pumpAndSettle();
-    final popup = find.byWidgetPredicate(
-      (widget) => widget is M3EMenuPopup<Object>,
-    );
-    expect(popup, findsOneWidget);
-    final colors = M3ETheme.of(tester.element(popup)).colorScheme;
-    expect(colors.brightness, Brightness.dark);
-    expect(colors.primary, localTheme.colorScheme.primary);
-    expect(tester.takeException(), isNull);
-  });
-
-
   testWidgets('removing an anchor also removes its open popup', (tester) async {
     final visible = ValueNotifier(true);
     addTearDown(visible.dispose);
@@ -117,29 +82,6 @@ void main() {
       find.byWidgetPredicate((widget) => widget is M3EMenuPopup<Object>),
       findsNothing,
     );
-    expect(tester.takeException(), isNull);
-  });
-
-  testWidgets('popup selects once and can reopen after dismissal', (
-    tester,
-  ) async {
-    final selected = <String>[];
-    await tester.pumpWidget(_host(_menu(onSelected: selected.add)));
-    await tester.tap(find.byTooltip('Options'));
-    await tester.tap(find.byTooltip('Options'), warnIfMissed: false);
-    await tester.pumpAndSettle();
-    expect(
-      find.byWidgetPredicate((widget) => widget is M3EMenuPopup<Object>),
-      findsOneWidget,
-    );
-    await tester.tap(find.text('Choose item', findRichText: true));
-    await tester.pumpAndSettle();
-    expect(selected, ['choose']);
-    await tester.tap(find.byTooltip('Options'));
-    await tester.pumpAndSettle();
-    await tester.tapAt(const Offset(10, 10));
-    await tester.pumpAndSettle();
-    expect(selected, ['choose']);
     expect(tester.takeException(), isNull);
   });
 
@@ -277,9 +219,7 @@ void main() {
                 child: const Text('Open playlist'),
               ),
             ),
-            theme: variant == 'mornye'
-                ? AppTheme.build(Brightness.dark)
-                : null,
+            theme: variant == 'mornye' ? AppTheme.build(Brightness.dark) : null,
             reduceMotion: variant == 'reduced',
           ),
         );
@@ -321,38 +261,5 @@ void main() {
     expect(longPresses, 1);
   });
 
-  for (final reduced in [false, true]) {
-    testWidgets('checkbox row and control toggle once (reduced=$reduced)', (
-      tester,
-    ) async {
-      var value = false;
-      var changes = 0;
-      await tester.pumpWidget(
-        _host(
-          StatefulBuilder(
-            builder: (context, setState) => AppCheckboxListTile(
-              value: value,
-              title: const Text('Select field'),
-              onChanged: (next) => setState(() {
-                value = next!;
-                changes++;
-              }),
-            ),
-          ),
-          reduceMotion: reduced,
-        ),
-      );
-      await tester.tap(find.text('Select field'));
-      await tester.pumpAndSettle();
-      expect(value, isTrue);
-      final control = reduced
-          ? find.byType(Checkbox)
-          : find.byType(M3ECheckbox);
-      await tester.tap(control);
-      await tester.pumpAndSettle();
-      expect(value, isFalse);
-      expect(changes, 2);
-      expect(tester.takeException(), isNull);
-    });
-  }
+  for (final reduced in [false, true]) {}
 }

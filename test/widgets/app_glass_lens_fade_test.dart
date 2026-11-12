@@ -51,9 +51,7 @@ void main() {
     await tester.pump();
     expect(seen, 1);
     expect(
-      AppGlassLensFade.opacityOf(
-        tester.element(find.byType(SizedBox).first),
-      ),
+      AppGlassLensFade.opacityOf(tester.element(find.byType(SizedBox).first)),
       1,
     );
   });

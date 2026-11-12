@@ -18,16 +18,14 @@ import 'package:mornye/services/local_track_redownload_service.dart';
 import 'package:mornye/services/playable_media.dart' show PlayableMedia;
 import 'package:mornye/theme/app_tokens.dart';
 import 'package:mornye/utils/adaptive_layout.dart';
-import 'package:mornye/theme/cover_palette.dart';
-import 'package:mornye/theme/app_theme.dart';
-import 'package:mornye/utils/file_access.dart';
-import 'package:mornye/widgets/album_detail_header.dart';
 import 'package:mornye/widgets/collection_scaffold.dart';
 import 'package:mornye/widgets/library_mix_cover.dart';
 import 'package:mornye/widgets/library_selection_playback_actions.dart';
 import 'package:mornye/widgets/library_track_selection_bar.dart';
 import 'package:mornye/widgets/app_artist_header.dart';
 import 'package:mornye/widgets/playlist_picker_sheet.dart';
+import 'package:mornye/utils/file_access.dart';
+import 'package:mornye/widgets/album_detail_header.dart';
 
 /// A mix's name: what it gathers, such as "Hip-Hop Mix".
 String libraryMixTitle(AppLocalizations l10n, LibraryMix mix) =>
@@ -120,14 +118,11 @@ class _LibraryMixScreenState extends ConsumerState<LibraryMixScreen>
 
   @override
   Widget build(BuildContext context) {
-    if (context.isMornye) {
-      return AppArtistSurface(
-        imageSource: _paletteSource,
-        neutralActions: true,
-        child: Builder(builder: _buildPage),
-      );
-    }
-    return _buildPage(context);
+    return AppArtistSurface(
+      imageSource: _paletteSource,
+      neutralActions: true,
+      child: Builder(builder: _buildPage),
+    );
   }
 
   Widget _buildTrackList(BuildContext context) {
@@ -145,9 +140,7 @@ class _LibraryMixScreenState extends ConsumerState<LibraryMixScreen>
                 mediaItemPlaybackUiProvider(_rowKey(item)),
               );
               return TrackCard(
-                style: context.isMornye
-                    ? TrackCardStyle.flat
-                    : TrackCardStyle.filled,
+                style: TrackCardStyle.flat,
                 leadingArtwork: true,
                 leading: ClipRRect(
                   borderRadius: BorderRadius.circular(tokens.radiusThumb),
@@ -305,7 +298,7 @@ class _LibraryMixScreenState extends ConsumerState<LibraryMixScreen>
     final cover = _paletteSource;
     return AlbumDetailHeader(
       title: title,
-      immersive: context.isMornye,
+      immersive: true,
       expandedHeight: calculateExpandedHeight(context),
       showTitleInAppBar: false,
       showTitleListenable: showTitleNotifier,
@@ -318,11 +311,9 @@ class _LibraryMixScreenState extends ConsumerState<LibraryMixScreen>
         builder: (header) => Text(
           libraryMixSubtitle(l10n, mix),
           style: TextStyle(
-            color: context.isMornye
-                ? colorScheme.primary
-                : HeaderPalette.of(header).onSurfaceVariant,
+            color: colorScheme.primary,
             fontSize: context.tokens.headerSubtitleSize,
-            fontWeight: context.isMornye ? FontWeight.w400 : FontWeight.w600,
+            fontWeight: FontWeight.w400,
           ),
           textAlign: TextAlign.center,
           maxLines: 2,

@@ -12,7 +12,6 @@ export 'package:mornye/services/library_shadow_sql.dart';
 
 final _log = AppLogger('AppSqlite');
 
-
 /// Directory that holds the app databases. Mobile keeps the documents
 /// user's Documents folder.
 Future<Directory> appDatabaseDirectory() async {

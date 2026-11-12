@@ -9,7 +9,6 @@ import 'package:mornye/providers/local_library_provider.dart';
 import 'package:mornye/providers/settings_provider.dart';
 import 'package:mornye/screens/settings/library_settings_page.dart';
 import 'package:mornye/screens/settings/lyrics_settings_page.dart';
-import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/app_bottom_sheet.dart';
 import 'package:mornye/widgets/app_icon.dart';
@@ -96,7 +95,7 @@ final _Sheet _lyrics = (
 );
 
 void main() {
-  for (final mornye in [false, true]) {
+  for (final mornye in [true]) {
     for (final (page, sheet) in [
       for (final sheet in _library) (const LibrarySettingsPage(), sheet),
       (const LyricsSettingsPage(), _lyrics),
@@ -120,9 +119,7 @@ void main() {
               extensionProvider.overrideWith(_Extensions.new),
             ],
             child: MaterialApp(
-              theme: mornye
-                  ? AppTheme.build(Brightness.dark)
-                  : LegacyMaterialTheme.light(),
+              theme: AppTheme.build(Brightness.dark),
               localizationsDelegates: AppLocalizations.localizationsDelegates,
               supportedLocales: AppLocalizations.supportedLocales,
               home: page,

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mornye/l10n/l10n.dart';
-import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/collection_scaffold.dart';
 import 'package:mornye/widgets/selection_bottom_bar.dart';
@@ -26,11 +25,9 @@ Widget _app(ThemeData theme, GlobalKey<NavigatorState> navigator) {
 }
 
 void main() {
-  for (final mornye in [false, true]) {
+  for (final mornye in [true]) {
     final name = mornye ? 'Mornye' : 'Material';
-    final theme = mornye
-        ? AppTheme.build(Brightness.light)
-        : LegacyMaterialTheme.light();
+    final theme = AppTheme.build(Brightness.light);
 
     testWidgets('$name: leaving a collection removes its selection bar', (
       tester,

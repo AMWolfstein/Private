@@ -3,10 +3,6 @@ import 'dart:math';
 import 'package:audio_service/audio_service.dart' show MediaItem;
 import 'package:flutter/material.dart';
 import 'package:mornye/theme/app_tokens.dart';
-import 'package:mornye/theme/app_theme.dart';
-import 'package:mornye/theme/cover_palette.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mornye/l10n/l10n.dart';
 import 'package:mornye/providers/settings_provider.dart';
 import 'package:mornye/utils/adaptive_layout.dart';
 import 'package:mornye/utils/audio_quality_badge_policy.dart';
@@ -44,6 +40,8 @@ import 'package:mornye/widgets/disc_separator_chip.dart';
 import 'package:mornye/widgets/album_detail_header.dart';
 import 'package:mornye/widgets/app_artist_header.dart';
 import 'package:mornye/widgets/motion_header_banner.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mornye/l10n/l10n.dart';
 
 class LocalAlbumScreen extends ConsumerStatefulWidget {
   final String albumName;
@@ -231,15 +229,11 @@ class _LocalAlbumScreenState extends ConsumerState<LocalAlbumScreen>
           ? albumCover
           : artworkTrack?.coverPath,
       filePath: artworkTrack?.filePath,
-      builder: (context, coverPath) => context.isMornye
-          ? AppArtistSurface(
-              imageSource: coverPath,
-              neutralActions: true,
-              child: Builder(
-                builder: (context) => _buildPage(context, coverPath),
-              ),
-            )
-          : _buildPage(context, coverPath),
+      builder: (context, coverPath) => (AppArtistSurface(
+        imageSource: coverPath,
+        neutralActions: true,
+        child: Builder(builder: (context) => _buildPage(context, coverPath)),
+      )),
     );
   }
 
@@ -317,7 +311,7 @@ class _LocalAlbumScreenState extends ConsumerState<LocalAlbumScreen>
     String? coverPath,
   ) {
     final expandedHeight = calculateExpandedHeight(context);
-    final motion = context.isMornye && !MediaQuery.disableAnimationsOf(context)
+    final motion = (!MediaQuery.disableAnimationsOf(context))
         ? ref
               .watch(
                 playerMotionArtworkProvider((
@@ -348,7 +342,7 @@ class _LocalAlbumScreenState extends ConsumerState<LocalAlbumScreen>
 
     return AlbumDetailHeader(
       title: widget.albumName,
-      immersive: context.isMornye,
+      immersive: true,
       squareArtwork: motion == null,
       expandedHeight: expandedHeight,
       showTitleInAppBar: false,
@@ -387,11 +381,9 @@ class _LocalAlbumScreenState extends ConsumerState<LocalAlbumScreen>
         builder: (header) => Text(
           widget.artistName,
           style: TextStyle(
-            color: context.isMornye
-                ? colorScheme.primary
-                : HeaderPalette.of(context).onSurfaceVariant,
+            color: colorScheme.primary,
             fontSize: context.tokens.headerSubtitleSize,
-            fontWeight: context.isMornye ? FontWeight.w400 : FontWeight.w600,
+            fontWeight: FontWeight.w400,
           ),
           textAlign: TextAlign.center,
           maxLines: 1,

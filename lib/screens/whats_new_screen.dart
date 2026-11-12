@@ -17,10 +17,9 @@ import 'package:mornye/l10n/l10n.dart';
 import 'package:mornye/providers/settings_provider.dart';
 import 'package:mornye/services/local_network_access.dart';
 import 'package:mornye/theme/app_icons.dart';
-import 'package:mornye/theme/app_theme.dart';
-import 'package:mornye/widgets/app_icon_button.dart';
 import 'package:mornye/widgets/app_shape.dart';
 import 'package:mornye/widgets/expressive_button.dart';
+import 'package:mornye/widgets/app_icon_button.dart';
 
 /// The highlights of [AppInfo.whatsNewRelease] on phones and tablets, shown
 /// once after an update and again from About.
@@ -120,7 +119,6 @@ class _WhatsNewScreenState extends ConsumerState<WhatsNewScreen> {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final scheme = Theme.of(context).colorScheme;
-    final mornye = context.isMornye;
     final pages = whatsNewHighlights(l10n, nearbyDevices: _asksNearby);
     final last = _page == pages.length - 1;
     final nearbyPage = pages.indexWhere((page) => page.nearbyDevices);
@@ -157,11 +155,7 @@ class _WhatsNewScreenState extends ConsumerState<WhatsNewScreen> {
                             ).backButtonTooltip,
                             onPressed: _previous,
                             color: scheme.primary,
-                            icon: Icon(
-                              mornye
-                                  ? CupertinoIcons.chevron_back
-                                  : Icons.arrow_back,
-                            ),
+                            icon: Icon(CupertinoIcons.chevron_back),
                           )
                         else
                           const SizedBox(width: 48, height: 48),
@@ -227,18 +221,12 @@ class _WhatsNewScreenState extends ConsumerState<WhatsNewScreen> {
                             ? Icon(context.adaptiveIcon(Icons.wifi))
                             : last
                             ? null
-                            : Icon(
-                                mornye
-                                    ? CupertinoIcons.arrow_right
-                                    : Icons.arrow_forward,
-                              ),
+                            : Icon(CupertinoIcons.arrow_right),
                         style: FilledButton.styleFrom(
                           minimumSize: const Size.fromHeight(56),
-                          shape: mornye
-                              ? RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(14),
-                                )
-                              : null,
+                          shape: (RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(14),
+                          )),
                           textStyle: Theme.of(context).textTheme.titleMedium,
                         ),
                         child: Text(
@@ -506,7 +494,6 @@ class _TourPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final mornye = context.isMornye;
     final (shape, accent) = _heroShapes[index % _heroShapes.length];
     return SingleChildScrollView(
       padding: const EdgeInsets.fromLTRB(24, 8, 24, 16),
@@ -524,18 +511,12 @@ class _TourPage extends StatelessWidget {
           const SizedBox(height: 24),
           Text(
             highlight.title,
-            style: mornye
-                ? theme.textTheme.headlineLarge?.copyWith(
-                    fontSize: 36,
-                    height: 1.08,
-                    letterSpacing: -1.2,
-                    fontWeight: FontWeight.w700,
-                  )
-                : theme.textTheme.displaySmall?.copyWith(
-                    height: 1.1,
-                    letterSpacing: -0.4,
-                    fontWeight: FontWeight.w500,
-                  ),
+            style: (theme.textTheme.headlineLarge?.copyWith(
+              fontSize: 36,
+              height: 1.08,
+              letterSpacing: -1.2,
+              fontWeight: FontWeight.w700,
+            )),
           ),
           const SizedBox(height: 12),
           Text(
@@ -614,18 +595,6 @@ class _TourHero extends StatefulWidget {
 }
 
 class _TourHeroState extends State<_TourHero> with TickerProviderStateMixin {
-  /// Shapes the hero morphs through, after the page's own shape.
-  static const _cycle = [
-    M3EShapeKind.cookie12Sided,
-    M3EShapeKind.flower,
-    M3EShapeKind.softBurst,
-    M3EShapeKind.cookie9Sided,
-    M3EShapeKind.puffy,
-    M3EShapeKind.clover8Leaf,
-    M3EShapeKind.sunny,
-    M3EShapeKind.cookie6Sided,
-  ];
-
   late final _entrance = AnimationController(
     vsync: this,
     duration: const Duration(milliseconds: 700),
@@ -635,9 +604,7 @@ class _TourHeroState extends State<_TourHero> with TickerProviderStateMixin {
     duration: const Duration(milliseconds: 650),
     value: 1,
   );
-  late M3EShapeKind _to = widget.shape;
-  Morph? _shapeMorph;
-  int _turns = 0;
+  final int _turns = 0;
   bool _started = false;
 
   @override
@@ -663,18 +630,12 @@ class _TourHeroState extends State<_TourHero> with TickerProviderStateMixin {
   }
 
   void _next() {
-    if (context.isMornye || MediaQuery.disableAnimationsOf(context)) return;
-    final from = _to;
-    _to = _cycle[(_cycle.indexOf(from) + 1) % _cycle.length];
-    _shapeMorph = Morph(from.polygon, _to.polygon);
-    _turns++;
-    _morph.forward(from: 0);
+    return;
   }
 
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
-    final mornye = context.isMornye;
     // The logo asset is the bare white mark, tinted like the icons.
     final glyph = widget.logo
         ? Image.asset(
@@ -714,8 +675,8 @@ class _TourHeroState extends State<_TourHero> with TickerProviderStateMixin {
                   dimension: 132,
                   child: CustomPaint(
                     painter: _MorphPainter(
-                      morph: mornye ? null : _shapeMorph,
-                      kind: mornye ? M3EShapeKind.circle : _to,
+                      morph: null,
+                      kind: M3EShapeKind.circle,
                       progress: morph,
                       color: scheme.primaryContainer,
                     ),
@@ -843,7 +804,7 @@ class _FeatureRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
-    final outer = Radius.circular(context.isMornye ? 18 : 24);
+    final outer = Radius.circular(18);
     const inner = Radius.circular(6);
     final body = feature.body;
     return Padding(

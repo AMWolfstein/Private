@@ -4,7 +4,6 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mornye/theme/app_motion.dart';
-import 'package:mornye/theme/app_theme.dart';
 
 /// A draggable scroll thumb for long library lists, with a bubble naming the
 /// section under the thumb (a letter or a month).
@@ -209,7 +208,6 @@ class _LibraryFastScrollerState extends State<LibraryFastScroller> {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
-    final mornye = context.isMornye;
     final reduced = MediaQuery.disableAnimationsOf(context);
     final motion = AppMotion.spatialFast(
       context,
@@ -288,9 +286,7 @@ class _LibraryFastScrollerState extends State<LibraryFastScroller> {
                                         color: _dragging
                                             ? colors.primary
                                             : colors.onSurfaceVariant
-                                                  .withValues(
-                                                    alpha: mornye ? 0.45 : 0.6,
-                                                  ),
+                                                  .withValues(alpha: 0.45),
                                         shape: const StadiumBorder(),
                                       ),
                                     ),
@@ -314,7 +310,7 @@ class _LibraryFastScrollerState extends State<LibraryFastScroller> {
                                 child: _Bubble(
                                   key: const ValueKey('library-scroll-bubble'),
                                   label: label,
-                                  mornye: mornye,
+                                  mornye: true,
                                   motion: motion,
                                 ),
                               ),

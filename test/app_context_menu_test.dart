@@ -181,9 +181,7 @@ void main() {
                 for (final fraction in [0.25, 0.5, 0.75])
                   Offset(x, menu.top + menu.height * fraction),
             ]);
-            final foreground = AppTheme.build(
-              brightness,
-            ).colorScheme.onSurface;
+            final foreground = AppTheme.build(brightness).colorScheme.onSurface;
             for (final inside in pixels) {
               // Busy lyrics and bright artwork must not wash out either label.
               for (final textColor in [
@@ -272,9 +270,7 @@ void main() {
       anchor: const Rect.fromLTWH(330, 144, 44, 44),
       onResult: (_) {},
     );
-    final originalHeight = tester
-        .getSize(find.byType(AppContextMenu))
-        .height;
+    final originalHeight = tester.getSize(find.byType(AppContextMenu)).height;
     await tester.pumpWidget(const SizedBox());
     await openMenu(
       tester,

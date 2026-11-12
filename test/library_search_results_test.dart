@@ -47,12 +47,10 @@ LibrarySearchHit _hit(
 
 void main() {
   {
-    {
-
-    }
+    {}
   }
 
-  for (final mornye in [false, true]) {
+  for (final mornye in [true]) {
     for (final local in [false, true]) {
       testWidgets(
         'search opens metadata; only Play starts audio ($mornye/$local)',
@@ -127,9 +125,7 @@ void main() {
                 }),
               ],
               child: MaterialApp(
-                theme: mornye
-                    ? AppTheme.build(Brightness.dark)
-                    : ThemeData(),
+                theme: mornye ? AppTheme.build(Brightness.dark) : ThemeData(),
                 localizationsDelegates: AppLocalizations.localizationsDelegates,
                 supportedLocales: AppLocalizations.supportedLocales,
                 home: Scaffold(
@@ -167,7 +163,7 @@ void main() {
     }
   }
 
-  for (final mornye in [false, true]) {
+  for (final mornye in [true]) {
     testWidgets('Library shows every result type and paginates ($mornye)', (
       tester,
     ) async {
@@ -268,7 +264,7 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  for (final mornye in [false, true]) {
+  for (final mornye in [true]) {
     testWidgets(
       'long-press selects songs for Library batch actions ($mornye)',
       (tester) async {
@@ -375,7 +371,7 @@ void main() {
     );
   }
 
-  for (final mornye in [false, true]) {
+  for (final mornye in [true]) {
     testWidgets('wide Library search offers covers, songs included ($mornye)', (
       tester,
     ) async {

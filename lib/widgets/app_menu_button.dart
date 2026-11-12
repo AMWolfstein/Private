@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:material_3_expressive/material_3_expressive.dart';
 import 'package:mornye/theme/app_motion.dart';
 import 'package:mornye/theme/material_expressive.dart';
-import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/app_icon_button.dart';
 
 /// One row of an [AppMenuButton].
@@ -51,17 +50,12 @@ class AppMenuButton<T extends Object> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (materialExpressiveEnabled(context)) {
-      return MaterialExpressiveScope(child: _ExpressiveMenuAnchor<T>(this));
-    }
     final colorScheme = Theme.of(context).colorScheme;
     return PopupMenuButton<T>(
       icon: icon,
       tooltip: tooltip,
       offset: offset,
-      shape: context.isMornye
-          ? RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))
-          : null,
+      shape: (RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
       popUpAnimationStyle: AppMotion.surfaceEntrance(context),
       onSelected: onSelected,
       itemBuilder: (context) => [

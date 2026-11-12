@@ -24,8 +24,7 @@ class AppPlayerArtwork extends ConsumerStatefulWidget {
   final bool resolvingVideo;
 
   @override
-  ConsumerState<AppPlayerArtwork> createState() =>
-      _MornyePlayerArtworkState();
+  ConsumerState<AppPlayerArtwork> createState() => _MornyePlayerArtworkState();
 }
 
 class _MornyePlayerArtworkState extends ConsumerState<AppPlayerArtwork> {

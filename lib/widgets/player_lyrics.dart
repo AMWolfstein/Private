@@ -14,8 +14,6 @@ import 'package:mornye/providers/music_player_provider.dart';
 import 'package:mornye/providers/runtime_profile_provider.dart';
 import 'package:mornye/providers/theme_provider.dart';
 import 'package:mornye/theme/app_tokens.dart';
-import 'package:mornye/theme/app_theme.dart';
-import 'package:mornye/utils/lyrics_parser.dart';
 import 'package:mornye/utils/lyrics_timeline.dart';
 import 'package:mornye/utils/synced_lyrics_scroll.dart';
 import 'package:mornye/widgets/aligned_lyric_pronunciation.dart';
@@ -25,15 +23,13 @@ import 'package:mornye/widgets/lyric_scroll_motion.dart';
 import 'package:mornye/widgets/lyric_gap_indicator.dart';
 import 'package:mornye/widgets/app_player_slider.dart';
 import 'package:mornye/widgets/lyrics_text_scale.dart';
+import 'package:mornye/utils/lyrics_parser.dart';
 
 part 'player_lyrics_line_style.dart';
 part 'player_lyrics_word_sweep.dart';
 
 const _mornyeLyricFontSize = 34.0;
 
-/// a phone. Null keeps the text theme's size (phones and tablets).
-double? get _materialLyricFontSize => null;
-double get _materialBackgroundLyricFontSize => 18;
 const mornyeLyricsContentInset = 28.0 + AppPlayerSlider.horizontalInset;
 
 /// How much of the lyrics area's bottom the player's controls cover. The
@@ -435,18 +431,16 @@ class _SyncedLyricsViewState extends ConsumerState<SyncedLyricsView>
     if (widget.seekPreview.value != null) {
       return LyricsParser.activeIndex(_lines, position);
     }
-    if (context.isMornye) {
-      // Read one transport snapshot: playing/loading derived providers can
-      // notify separately during the same playback event.
-      final playback = ref.read(playbackStateProvider).value;
-      if (playback?.processingState == AudioProcessingState.loading ||
-          playback?.processingState == AudioProcessingState.buffering) {
-        return -1;
-      }
-      _hasStarted =
-          _hasStarted || playback?.playing == true || position > Duration.zero;
-      if (!_hasStarted) return -1;
+    // Read one transport snapshot: playing/loading derived providers can
+    // notify separately during the same playback event.
+    final playback = ref.read(playbackStateProvider).value;
+    if (playback?.processingState == AudioProcessingState.loading ||
+        playback?.processingState == AudioProcessingState.buffering) {
+      return -1;
     }
+    _hasStarted =
+        _hasStarted || playback?.playing == true || position > Duration.zero;
+    if (!_hasStarted) return -1;
     return LyricsParser.activeIndex(_lines, position);
   }
 
@@ -784,7 +778,7 @@ class _SyncedLyricsViewState extends ConsumerState<SyncedLyricsView>
     final curve = seeking ? Curves.easeOutCubic : LyricScrollMotion.scrollCurve;
     if (duration == Duration.zero) _stopScrollMotion();
     final extents = _targetLineExtents;
-    if (context.isMornye && extents != null && row < extents.length) {
+    if ((extents != null) && row < extents.length) {
       final position = _scroll.position;
       final target = extents.offsetForRow(row);
       final offset = target.clamp(
@@ -887,14 +881,12 @@ class _SyncedLyricsViewState extends ConsumerState<SyncedLyricsView>
     final loading = _visible
         ? ref.watch(playbackLoadingProvider)
         : ref.read(playbackLoadingProvider);
-    final mornye = context.isMornye;
     final highContrast = MediaQuery.highContrastOf(context);
     final blurStrength = ref.watch(
       themeProvider.select((theme) => theme.lyricsBlur),
     );
     final blurLyrics =
-        mornye &&
-        !highContrast &&
+        (!highContrast) &&
         blurStrength > 0 &&
         // Defocused lines are filtered on every frame while their focus eases.
         ref.watch(appLiquidGlassProvider);
@@ -934,7 +926,7 @@ class _SyncedLyricsViewState extends ConsumerState<SyncedLyricsView>
       },
       child: LayoutBuilder(
         builder: (context, constraints) {
-          final inset = mornye ? mornyeLyricsContentInset : 24.0;
+          final inset = mornyeLyricsContentInset;
           final contentWidth = (constraints.maxWidth - inset * 2).clamp(
             0.0,
             double.infinity,
@@ -946,78 +938,74 @@ class _SyncedLyricsViewState extends ConsumerState<SyncedLyricsView>
             0.0,
             double.infinity,
           );
-          final lyricScale = mornye && layoutWidth > 0
+          final lyricScale = (layoutWidth > 0)
               ? contentWidth / layoutWidth
               : 1.0;
-          if (mornye) {
-            final previousExtents = _lineExtents;
-            final previousScrollAnchor =
-                previousExtents != null && _scroll.hasClients
-                ? _rowAtScrollOffset(previousExtents, _scroll.offset)
-                : 0;
-            final focusAnchor = _focus < 0
-                ? 0
-                : _displayLayout.rowForLine[_focus];
-            final previousScrollOffset =
-                previousExtents?.offsetForRow(previousScrollAnchor) ?? 0;
-            final previousFocusOffset =
-                previousExtents?.offsetForRow(focusAnchor) ?? 0;
-            _measureMornyeLines(context, layoutWidth);
-            // Reuse text measurements; only interpolate row heights as the
-            // supplements fade. Scrolling follows the same animation clock.
-            final geometryKey = (
+          final previousExtents = _lineExtents;
+          final previousScrollAnchor =
+              previousExtents != null && _scroll.hasClients
+              ? _rowAtScrollOffset(previousExtents, _scroll.offset)
+              : 0;
+          final focusAnchor = _focus < 0
+              ? 0
+              : _displayLayout.rowForLine[_focus];
+          final previousScrollOffset =
+              previousExtents?.offsetForRow(previousScrollAnchor) ?? 0;
+          final previousFocusOffset =
+              previousExtents?.offsetForRow(focusAnchor) ?? 0;
+          _measureMornyeLines(context, layoutWidth);
+          // Reuse text measurements; only interpolate row heights as the
+          // supplements fade. Scrolling follows the same animation clock.
+          final geometryKey = (
+            _lineMeasurements,
+            lyricScale,
+            _revealFrom,
+            _revealTo,
+          );
+          if (_extentGeometryKey != geometryKey) {
+            _extentGeometryKey = geometryKey;
+            _extentGeometry = _LyricExtentGeometry(
               _lineMeasurements,
-              lyricScale,
+              _displayLayout.lineOrder,
               _revealFrom,
               _revealTo,
+              (index) => _lines[index].text.isEmpty ? 1.0 : lyricScale,
+              (index) => _linePadding(index).vertical,
             );
-            if (_extentGeometryKey != geometryKey) {
-              _extentGeometryKey = geometryKey;
-              _extentGeometry = _LyricExtentGeometry(
-                _lineMeasurements,
-                _displayLayout.lineOrder,
-                _revealFrom,
-                _revealTo,
-                (index) => _lines[index].text.isEmpty ? 1.0 : lyricScale,
-                (index) => _linePadding(index).vertical,
-              );
-            } else {
-              for (final row in _changedMeasurementRows) {
-                _extentGeometry!.updateRow(row, _lineMeasurements[row]);
-              }
+          } else {
+            for (final row in _changedMeasurementRows) {
+              _extentGeometry!.updateRow(row, _lineMeasurements[row]);
             }
-            _changedMeasurementRows.clear();
-            _lineExtents = _LyricExtentSnapshot(
-              _extentGeometry!,
-              visibility,
-              Curves.easeInOutCubic.transform(_rowReveal.value),
-            );
-            _targetLineExtents = _LyricExtentSnapshot(
-              _extentGeometry!,
-              visibility,
-              1,
-            );
-            if (previousExtents != null &&
-                ((_layoutMeasurementRevision != _measurementRevision) ||
-                    (_layoutVisibility != null &&
-                        _layoutVisibility != visibility) ||
-                    (_preserveRevealAnchor &&
-                        previousExtents.progress != _lineExtents!.progress)) &&
-                previousExtents.length == _lineExtents!.length &&
-                _scroll.hasClients) {
-              final preserveScroll =
-                  _userScrolling ||
-                  _layoutMeasurementRevision != _measurementRevision;
-              final anchor = preserveScroll
-                  ? previousScrollAnchor
-                  : focusAnchor;
-              final correction =
-                  _lineExtents!.offsetForRow(anchor) -
-                  (preserveScroll ? previousScrollOffset : previousFocusOffset);
-              // Correct before the ListView lays out/paints. A post-frame
-              // jump leaves every painted frame one animation step behind.
-              if (correction != 0) _scroll.position.correctBy(correction);
-            }
+          }
+          _changedMeasurementRows.clear();
+          _lineExtents = _LyricExtentSnapshot(
+            _extentGeometry!,
+            visibility,
+            Curves.easeInOutCubic.transform(_rowReveal.value),
+          );
+          _targetLineExtents = _LyricExtentSnapshot(
+            _extentGeometry!,
+            visibility,
+            1,
+          );
+          if (previousExtents != null &&
+              ((_layoutMeasurementRevision != _measurementRevision) ||
+                  (_layoutVisibility != null &&
+                      _layoutVisibility != visibility) ||
+                  (_preserveRevealAnchor &&
+                      previousExtents.progress != _lineExtents!.progress)) &&
+              previousExtents.length == _lineExtents!.length &&
+              _scroll.hasClients) {
+            final preserveScroll =
+                _userScrolling ||
+                _layoutMeasurementRevision != _measurementRevision;
+            final anchor = preserveScroll ? previousScrollAnchor : focusAnchor;
+            final correction =
+                _lineExtents!.offsetForRow(anchor) -
+                (preserveScroll ? previousScrollOffset : previousFocusOffset);
+            // Correct before the ListView lays out/paints. A post-frame
+            // jump leaves every painted frame one animation step behind.
+            if (correction != 0) _scroll.position.correctBy(correction);
           }
           _layoutVisibility = visibility;
           _layoutMeasurementRevision = _measurementRevision;
@@ -1029,15 +1017,10 @@ class _SyncedLyricsViewState extends ConsumerState<SyncedLyricsView>
               }
             });
           }
-          final topPadding = mornye
-              ? _focusInset
-              : syncedLyricsCenterPadding(
-                  viewportDimension: constraints.maxHeight,
-                  estimatedLineExtent: _estimatedLyricExtent,
-                );
+          final topPadding = _focusInset;
           // Leave enough trailing space for the final line to reach the same
           // upper focus position as every other line.
-          final bottomPadding = mornye && _lineExtents!.isNotEmpty
+          final bottomPadding = (_lineExtents!.isNotEmpty)
               ? (constraints.maxHeight - _lineExtents!.last - topPadding).clamp(
                   topPadding,
                   double.infinity,
@@ -1045,11 +1028,9 @@ class _SyncedLyricsViewState extends ConsumerState<SyncedLyricsView>
               : topPadding;
           final list = ListView.builder(
             controller: _scroll,
-            itemExtentBuilder: mornye
-                ? (index, _) => index < lines.length
-                      ? _lineExtents![index]
-                      : widget.credits!.heightFor(context, contentWidth)
-                : null,
+            itemExtentBuilder: ((index, _) => index < lines.length
+                ? _lineExtents![index]
+                : widget.credits!.heightFor(context, contentWidth)),
             padding: EdgeInsets.fromLTRB(
               inset,
               topPadding,
@@ -1066,15 +1047,8 @@ class _SyncedLyricsViewState extends ConsumerState<SyncedLyricsView>
               final reveal = rowVisibility[index];
               if (reveal == 0) return SizedBox.shrink(key: _lineKeys[index]);
               final isActive = _activeLines.contains(index);
-              final isPast = index < active;
 
-              final color = mornye
-                  ? Colors.white
-                  : isActive
-                  ? widget.colorScheme.onSurface
-                  : isPast
-                  ? widget.colorScheme.onSurfaceVariant.withValues(alpha: 0.5)
-                  : widget.colorScheme.onSurfaceVariant.withValues(alpha: 0.8);
+              final color = Colors.white;
 
               if (line.text.isEmpty) {
                 return _revealRow(
@@ -1123,9 +1097,7 @@ class _SyncedLyricsViewState extends ConsumerState<SyncedLyricsView>
                   initialPosition: _activeTransitionPosition,
                   seekPreview: widget.seekPreview,
                   supplementVisibility: visibility,
-                  pronunciationLayout: mornye
-                      ? _pronunciationLayouts[index]
-                      : null,
+                  pronunciationLayout: _pronunciationLayouts[index],
                   textAlign: textAlign,
                 );
               } else {
@@ -1143,9 +1115,7 @@ class _SyncedLyricsViewState extends ConsumerState<SyncedLyricsView>
                   content,
                   color,
                   visibility: visibility,
-                  pronunciationLayout: mornye
-                      ? _pronunciationLayouts[index]
-                      : null,
+                  pronunciationLayout: _pronunciationLayouts[index],
                   textAlign: textAlign,
                 );
               }
@@ -1154,50 +1124,46 @@ class _SyncedLyricsViewState extends ConsumerState<SyncedLyricsView>
                 reverseDuration: const Duration(milliseconds: 260),
                 switchInCurve: Curves.easeOutCubic,
                 switchOutCurve: Curves.easeInCubic,
-                transitionBuilder: mornye
-                    ? LyricBlur.fadeTransition
-                    : AnimatedSwitcher.defaultTransitionBuilder,
+                transitionBuilder: LyricBlur.fadeTransition,
                 child: KeyedSubtree(
                   key: ValueKey(timed),
                   child: SizedBox(width: double.infinity, child: content),
                 ),
               );
-              if (mornye) {
-                final activeLead = active < 0 ? -1 : _focus;
-                final distance = activeLead < 0
-                    ? row + 1
-                    : (_displayLayout.rowForLine[leadIndex] -
-                              _displayLayout.rowForLine[activeLead])
-                          .abs();
-                // Nearby lines need visible defocus at the larger lyric size;
-                // progressively soften lines further from the current one.
-                final sigma = !blurLyrics || isActive || leadIndex == activeLead
-                    ? 0.0
-                    : blurStrength *
-                          (active < 0
-                              ? 4.8
-                              : distance == 1
-                              ? 2.4
-                              : distance == 2
-                              ? 3.6
-                              : 4.8);
-                content = TweenAnimationBuilder<double>(
-                  tween: Tween(end: sigma),
-                  duration: motion,
-                  curve: Curves.easeInOutCubic,
-                  child: content,
-                  builder: (context, value, child) => LyricBlur(
-                    sigma: value,
-                    settled: value == sigma,
-                    child: child!,
-                  ),
-                );
-                content = FittedBox(
-                  fit: BoxFit.scaleDown,
-                  alignment: AlignmentDirectional.topStart,
-                  child: SizedBox(width: layoutWidth, child: content),
-                );
-              }
+              final activeLead = active < 0 ? -1 : _focus;
+              final distance = activeLead < 0
+                  ? row + 1
+                  : (_displayLayout.rowForLine[leadIndex] -
+                            _displayLayout.rowForLine[activeLead])
+                        .abs();
+              // Nearby lines need visible defocus at the larger lyric size;
+              // progressively soften lines further from the current one.
+              final sigma = !blurLyrics || isActive || leadIndex == activeLead
+                  ? 0.0
+                  : blurStrength *
+                        (active < 0
+                            ? 4.8
+                            : distance == 1
+                            ? 2.4
+                            : distance == 2
+                            ? 3.6
+                            : 4.8);
+              content = TweenAnimationBuilder<double>(
+                tween: Tween(end: sigma),
+                duration: motion,
+                curve: Curves.easeInOutCubic,
+                child: content,
+                builder: (context, value, child) => LyricBlur(
+                  sigma: value,
+                  settled: value == sigma,
+                  child: child!,
+                ),
+              );
+              content = FittedBox(
+                fit: BoxFit.scaleDown,
+                alignment: AlignmentDirectional.topStart,
+                child: SizedBox(width: layoutWidth, child: content),
+              );
 
               content = LyricScrollMotion(
                 progress: _scrollMotion,
@@ -1240,9 +1206,7 @@ class _SyncedLyricsViewState extends ConsumerState<SyncedLyricsView>
                       duration: motion,
                       curve: Curves.easeOutCubic,
                       child: AnimatedOpacity(
-                        opacity: mornye
-                            ? (isActive || highContrast ? 1 : 0.48)
-                            : (isActive ? 1.0 : (isPast ? 0.55 : 0.85)),
+                        opacity: ((isActive || highContrast ? 1 : 0.48)),
                         duration: motion,
                         curve: Curves.easeInOutCubic,
                         child: content,
@@ -1509,7 +1473,7 @@ class LyricsCredits extends StatelessWidget {
 
   TextStyle _style(BuildContext context) =>
       Theme.of(context).textTheme.bodyMedium!.copyWith(
-        fontSize: context.isMornye ? 17 : 14,
+        fontSize: 17,
         fontWeight: FontWeight.w600,
         height: 1.4,
         color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.48),

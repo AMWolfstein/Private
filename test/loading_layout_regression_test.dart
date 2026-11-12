@@ -5,9 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mornye/l10n/l10n.dart';
 import 'package:mornye/providers/repo_provider.dart';
 import 'package:mornye/screens/repo_tab.dart';
-import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/theme/app_theme.dart';
-import 'package:mornye/widgets/animation_utils.dart';
 import 'package:mornye/widgets/extension_row.dart';
 
 class _LoadingRepo extends RepoNotifier {
@@ -24,34 +22,9 @@ class _LoadingRepo extends RepoNotifier {
 
 void main() {
   for (final width in [320.0, 1024.0]) {
-    for (final brightness in Brightness.values) {
-      testWidgets('Material loading rows fit at $width in $brightness', (
-        tester,
-      ) async {
-        tester.view.physicalSize = Size(width, 1200);
-        tester.view.devicePixelRatio = 1;
-        addTearDown(tester.view.reset);
-        for (final skeleton in const [
-          TrackListSkeleton(itemCount: 3),
-          AlbumTrackListSkeleton(itemCount: 3),
-          HomeSearchSkeleton(),
-        ]) {
-          await tester.pumpWidget(
-            MaterialApp(
-              theme: brightness == Brightness.light
-                  ? LegacyMaterialTheme.light()
-                  : LegacyMaterialTheme.dark(),
-              home: Scaffold(body: skeleton),
-            ),
-          );
-          await tester.pump(const Duration(milliseconds: 100));
-          expect(tester.takeException(), isNull);
-        }
-        await tester.pumpWidget(const SizedBox.shrink());
-      });
-    }
+    for (final brightness in Brightness.values) {}
 
-    for (final mornye in [false, true]) {
+    for (final mornye in [true]) {
       testWidgets('store skeleton fits at $width with Mornye=$mornye', (
         tester,
       ) async {
@@ -70,9 +43,7 @@ void main() {
           ProviderScope(
             overrides: [repoProvider.overrideWith(_LoadingRepo.new)],
             child: MaterialApp(
-              theme: mornye
-                  ? AppTheme.build(Brightness.dark)
-                  : LegacyMaterialTheme.light(),
+              theme: AppTheme.build(Brightness.dark),
               localizationsDelegates: AppLocalizations.localizationsDelegates,
               supportedLocales: AppLocalizations.supportedLocales,
               home: const RepoTab(),

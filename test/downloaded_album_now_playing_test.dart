@@ -11,7 +11,6 @@ import 'package:mornye/providers/music_player_provider.dart';
 import 'package:mornye/providers/settings_provider.dart';
 import 'package:mornye/screens/downloaded_album_screen.dart';
 import 'package:mornye/services/downloaded_embedded_cover_resolver.dart';
-import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/album_track_tile.dart';
 import 'package:mornye/widgets/now_playing_indicator.dart';
@@ -28,7 +27,7 @@ class _History extends DownloadHistoryNotifier {
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  for (final mornye in [false, true]) {
+  for (final mornye in [true]) {
     testWidgets('downloaded album rows follow playback (mornye: $mornye)', (
       tester,
     ) async {
@@ -85,9 +84,7 @@ void main() {
             playbackLoadingProvider.overrideWith((ref) => false),
           ],
           child: MaterialApp(
-            theme: mornye
-                ? AppTheme.build(Brightness.light)
-                : LegacyMaterialTheme.light(),
+            theme: AppTheme.build(Brightness.light),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             home: const DownloadedAlbumScreen(

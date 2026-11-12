@@ -3,16 +3,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mornye/models/track.dart';
 import 'package:mornye/providers/download_queue_provider.dart';
 import 'package:mornye/providers/local_library_provider.dart';
-import 'package:mornye/providers/music_player_provider.dart';
-import 'package:mornye/providers/settings_provider.dart';
-import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/controllers/clickable_metadata.dart';
-import 'package:mornye/controllers/local_playback.dart';
 import 'package:mornye/widgets/audio_quality_badges.dart';
 import 'package:mornye/widgets/track_card.dart';
 import 'package:mornye/widgets/in_library_badge.dart';
 import 'package:mornye/widgets/preview_button.dart';
 import 'package:mornye/widgets/track_collection_quick_actions.dart';
+import 'package:mornye/providers/settings_provider.dart';
+import 'package:mornye/controllers/local_playback.dart';
 
 /// Track row shared by the album and playlist screens. Tap offers another
 /// download when quality variants are enabled, otherwise it plays the local
@@ -52,11 +50,7 @@ class TrackListTile extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colorScheme = Theme.of(context).colorScheme;
-    // Material rows mark the current track; Mornye rows show no
-    // current-track state.
-    final playback = context.isMornye
-        ? null
-        : ref.watch(catalogTrackPlaybackUiProvider(catalogTrackKey(track)));
+    // Mornye rows show no current-track state.
 
     final isQueued = ref.watch(
       downloadQueueLookupProvider.select(
@@ -85,8 +79,8 @@ class TrackListTile extends ConsumerWidget {
       style: TrackCardStyle.flat,
       isSelectionMode: isSelectionMode,
       isSelected: isSelected,
-      isCurrent: playback?.isCurrent ?? false,
-      isPlaying: playback?.isPlaying ?? false,
+      isCurrent: false,
+      isPlaying: false,
       leadingArtwork: leadingArtwork,
       leading: leading,
       title: track.name,

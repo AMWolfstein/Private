@@ -219,7 +219,6 @@ extension _QueueTabFilterWidgets on _QueueTabState {
               .toList(growable: false)
         : const <_CollectionEntry>[];
     // Material lists group rows under pinned sections.
-    final sectioned = rootLibrary && !context.isMornye;
 
     // Indexes into collectionState.playlists, name-filtered by the search
     // query, for the 'playlists' view.
@@ -277,9 +276,7 @@ extension _QueueTabFilterWidgets on _QueueTabState {
     // run of rows.
     Widget leadListCell(int index) {
       // their own run.
-      final runLength = (rootLibrary && !context.isMornye)
-          ? leadCount
-          : leadCount + filteredUnifiedItems.length;
+      final runLength = leadCount + filteredUnifiedItems.length;
       if (index < activeDownloadIds.length) {
         final id = activeDownloadIds[index];
         return TrackCardSegment.at(
@@ -365,21 +362,6 @@ extension _QueueTabFilterWidgets on _QueueTabState {
       slivers: [
         if (rootLibrary && (filterMode == 'albums' || filterMode == 'singles'))
           SliverToBoxAdapter(child: _buildAlbumsModeToggle(context)),
-
-        // Rewind lives with the listening history it replays.
-        if (rootLibrary &&
-            filterMode == 'all' &&
-            _searchQuery.isEmpty &&
-            !context.isMornye &&
-            !_isSelectionMode &&
-            ref.watch(
-              settingsProvider.select((s) => s.listeningStatisticsEnabled),
-            ))
-          SliverToBoxAdapter(
-            child: ListeningRewindBanner(
-              margin: EdgeInsets.fromLTRB(edge, 8, edge, 4),
-            ),
-          ),
 
         if (totalTrackCount > 0 && filterMode == 'all') trackCountHeader(),
 
@@ -610,15 +592,6 @@ extension _QueueTabFilterWidgets on _QueueTabState {
                 ),
               ),
             )
-          else if (sectioned)
-            _buildSectionedTrackSlivers(
-              context: context,
-              items: filteredUnifiedItems,
-              leadCount: leadCount,
-              leadBuilder: leadListCell,
-              rowBuilder: (index) =>
-                  trackTile(filteredUnifiedItems[index], grid: false),
-            )
           else
             SliverPadding(
               padding: EdgeInsets.symmetric(horizontal: wideListInset(context)),
@@ -820,35 +793,17 @@ extension _QueueTabFilterWidgets on _QueueTabState {
         icon = Icons.history;
     }
 
-    if (context.isMornye) {
-      return EmptyState(
-        icon: icon,
-        title: message,
-        message: subtitle,
-        // Every empty branch here means "you have not downloaded anything of
-        // this kind yet", so the way forward is always search.
-        action: ExpressiveButton(
-          onPressed: () => ShellNavigationService.requestTab(ShellTab.home),
-          icon: const Icon(Icons.search),
-          child: Text(context.l10n.navHome),
-        ),
-      );
-    }
-
-    // Material names the next step in the copy. Home already sits in the
-    // navigation bar, so only creating the first playlist, which the empty
-    // Playlists page does not otherwise offer, gets a button.
     return EmptyState(
       icon: icon,
       title: message,
       message: subtitle,
-      action: filterMode == 'playlists'
-          ? ExpressiveButton(
-              onPressed: () => _showCreatePlaylistDialog(context),
-              icon: const Icon(Icons.add),
-              child: Text(context.l10n.collectionCreatePlaylist),
-            )
-          : null,
+      // Every empty branch here means "you have not downloaded anything of
+      // this kind yet", so the way forward is always search.
+      action: ExpressiveButton(
+        onPressed: () => ShellNavigationService.requestTab(ShellTab.home),
+        icon: const Icon(Icons.search),
+        child: Text(context.l10n.navHome),
+      ),
     );
   }
 

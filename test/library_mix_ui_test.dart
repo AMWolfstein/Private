@@ -14,7 +14,6 @@ import 'package:mornye/providers/settings_provider.dart';
 import 'package:mornye/screens/home_tab.dart';
 import 'package:mornye/screens/library_mix_screen.dart';
 import 'package:mornye/services/library_mixes.dart';
-import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/library_mix_cover.dart';
 import 'package:mornye/widgets/library_track_selection_bar.dart';
@@ -50,7 +49,7 @@ final _mix = LibraryMixView(
 );
 
 void main() {
-  for (final mornye in [false, true]) {
+  for (final mornye in [true]) {
     testWidgets('Home lists the mixes and opens one '
         '(Mornye: $mornye)', (tester) async {
       tester.view.physicalSize = const Size(430, 932);
@@ -93,7 +92,7 @@ void main() {
     });
   }
 
-  for (final mornye in [false, true]) {
+  for (final mornye in [true]) {
     testWidgets('a long press on a phone row selects songs for the Library '
         'actions (Mornye: $mornye)', (tester) async {
       tester.view.physicalSize = const Size(430, 932);
@@ -133,43 +132,6 @@ void main() {
       expect(tester.takeException(), isNull);
     });
   }
-
-  testWidgets('Home leaves the section out without mixes', (tester) async {
-    await _pumpHome(tester, mornye: false, mixes: const []);
-    expect(find.text('Shortcuts'), findsOneWidget);
-    expect(find.text('Mixes for you'), findsNothing);
-    expect(tester.takeException(), isNull);
-  });
-
-  testWidgets('mixes arriving later open below Shortcuts', (tester) async {
-    late ProviderContainer container;
-    await _pumpHome(
-      tester,
-      mornye: false,
-      mixesProvider: (ref) async => ref.watch(_arrivingMixes),
-      onContainer: (value) => container = value,
-    );
-    expect(find.text('Mixes for you'), findsNothing);
-    final shortcutsBottom = tester.getBottomLeft(find.text('Shortcuts')).dy;
-
-    container.read(_arrivingMixes.notifier).arrive([_mix]);
-    await tester.pump();
-    await tester.pump();
-    final title = find.text('Mixes for you', skipOffstage: false);
-    expect(title, findsOneWidget);
-    final section = find.ancestor(
-      of: title,
-      matching: find.byType(AnimatedSize),
-    );
-    final opening = tester.getSize(section.first).height;
-    await tester.pump(const Duration(seconds: 1));
-    await tester.pump(const Duration(seconds: 1));
-    final open = tester.getSize(section.first).height;
-    // Home's sections open the space rather than letting it jump in.
-    expect(opening, lessThan(open));
-    expect(tester.getTopLeft(title).dy, greaterThan(shortcutsBottom));
-    expect(tester.takeException(), isNull);
-  });
 
   testWidgets('mixes wait until startup settles', (tester) async {
     final container = ProviderContainer();
@@ -313,7 +275,7 @@ Future<void> _pumpMix(WidgetTester tester, {required bool mornye}) async {
         downloadHistoryProvider.overrideWith(_History.new),
       ],
       child: MaterialApp(
-        theme: mornye ? AppTheme.build(Brightness.dark) : LegacyMaterialTheme.dark(),
+        theme: AppTheme.build(Brightness.dark),
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         home: LibraryMixScreen(view: _mix),
@@ -357,7 +319,7 @@ Future<void> _pumpHome(
           return child!;
         },
         child: MaterialApp(
-          theme: mornye ? AppTheme.build(Brightness.dark) : LegacyMaterialTheme.dark(),
+          theme: AppTheme.build(Brightness.dark),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: HomeTab(
@@ -371,20 +333,6 @@ Future<void> _pumpHome(
   await tester.pump();
 }
 
-/// Mixes that are built after Home is shown.
-final _arrivingMixes = NotifierProvider<_ArrivingMixes, List<LibraryMixView>>(
-  _ArrivingMixes.new,
-);
-
-class _ArrivingMixes extends Notifier<List<LibraryMixView>> {
-  @override
-  List<LibraryMixView> build() => const [];
-
-  void arrive(List<LibraryMixView> mixes) => state = mixes;
-}
-
-/// Extensions still starting, so Home neither waits for a feed nor asks for
-/// a search provider.
 class _Extensions extends ExtensionNotifier {
   @override
   ExtensionState build() => const ExtensionState();

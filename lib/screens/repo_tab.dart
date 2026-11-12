@@ -13,19 +13,16 @@ import 'package:mornye/controllers/clickable_metadata.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:mornye/l10n/l10n.dart';
 import 'package:mornye/providers/repo_provider.dart';
-import 'package:mornye/widgets/settings_group.dart';
-import 'package:mornye/widgets/animation_utils.dart';
 import 'package:mornye/screens/repo/extension_details_screen.dart';
 import 'package:mornye/utils/adaptive_layout.dart';
 import 'package:mornye/utils/nav_bar_inset.dart';
 import 'package:mornye/providers/runtime_profile_provider.dart';
-import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/theme/app_icons.dart';
-import 'package:mornye/widgets/app_chrome.dart';
 import 'package:mornye/widgets/extension_repo_card.dart';
-import 'package:mornye/widgets/app_choice_chip.dart';
 import 'package:mornye/widgets/expressive_button.dart';
 import 'package:mornye/widgets/app_icon_button.dart';
+import 'package:mornye/widgets/animation_utils.dart';
+import 'package:mornye/widgets/app_chrome.dart';
 import 'package:mornye/widgets/app_loading_indicator.dart';
 
 class RepoTab extends ConsumerStatefulWidget {
@@ -112,9 +109,7 @@ class _RepoTabState extends ConsumerState<RepoTab> {
               actions: [
                 if (hasRegistryUrl)
                   AppIconButton(
-                    icon: Icon(
-                      context.isMornye ? CupertinoIcons.link : Icons.link,
-                    ),
+                    icon: Icon(CupertinoIcons.link),
                     tooltip: context.l10n.storeChangeRepoTooltip,
                     onPressed: () => _showChangeRepoDialog(registryUrl),
                   ),
@@ -200,36 +195,11 @@ class _RepoTabState extends ConsumerState<RepoTab> {
                   ),
                 ),
 
-                if (context.isMornye)
-                  SliverToBoxAdapter(
-                    child: ExtensionRepoCard(
-                      margin: EdgeInsets.symmetric(
-                        horizontal: edge,
-                        vertical: 4,
-                      ),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: filteredExtensions.asMap().entries.map((
-                          entry,
-                        ) {
-                          final index = entry.key;
-                          final ext = entry.value;
-                          return _ExtensionItem(
-                            extension: ext,
-                            showDivider: index < filteredExtensions.length - 1,
-                            isDownloading: downloadingId == ext.id,
-                            onInstall: () => _installExtension(ext),
-                            onUpdate: () => _updateExtension(ext),
-                            onTap: () => _showExtensionDetails(ext),
-                          );
-                        }).toList(),
-                      ),
-                    ),
-                  )
-                else
-                  SliverToBoxAdapter(
-                    child: SettingsGroup(
-                      connected: true,
+                SliverToBoxAdapter(
+                  child: ExtensionRepoCard(
+                    margin: EdgeInsets.symmetric(horizontal: edge, vertical: 4),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
                       children: filteredExtensions.asMap().entries.map((entry) {
                         final index = entry.key;
                         final ext = entry.value;
@@ -244,6 +214,7 @@ class _RepoTabState extends ConsumerState<RepoTab> {
                       }).toList(),
                     ),
                   ),
+                ),
 
                 const SliverToBoxAdapter(child: SizedBox(height: 16)),
               ],
@@ -399,56 +370,13 @@ class _RepoTabState extends ConsumerState<RepoTab> {
               overflow: TextOverflow.ellipsis,
             ),
             const SizedBox(height: 16),
-            if (context.isMornye)
-              CupertinoTextField(
-                controller: changeUrlController,
-                placeholder: context.l10n.storeNewRepoUrlLabel,
-                keyboardType: TextInputType.url,
-                autocorrect: false,
-                padding: const EdgeInsets.all(12),
-              )
-            else
-              AppTextField(
-                controller: changeUrlController,
-                outlined: true,
-                label: context.l10n.storeNewRepoUrlLabel,
-                hint: context.l10n.storeRepoUrlHint,
-                leading: const Icon(Icons.link),
-                decoration: InputDecoration(
-                  hintText: context.l10n.storeRepoUrlHint,
-                  labelText: context.l10n.storeNewRepoUrlLabel,
-                  prefixIcon: const Icon(Icons.link),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(28),
-                    borderSide: BorderSide(
-                      color: Theme.of(context).colorScheme.outlineVariant,
-                    ),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(28),
-                    borderSide: BorderSide(
-                      color: Theme.of(context).colorScheme.outlineVariant,
-                    ),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(28),
-                    borderSide: BorderSide(
-                      color: Theme.of(context).colorScheme.primary,
-                      width: 2,
-                    ),
-                  ),
-                  filled: true,
-                  fillColor: Theme.of(
-                    context,
-                  ).colorScheme.surfaceContainerHighest,
-                  contentPadding: const EdgeInsets.symmetric(
-                    horizontal: 20,
-                    vertical: 16,
-                  ),
-                ),
-                keyboardType: TextInputType.url,
-                autocorrect: false,
-              ),
+            CupertinoTextField(
+              controller: changeUrlController,
+              placeholder: context.l10n.storeNewRepoUrlLabel,
+              keyboardType: TextInputType.url,
+              autocorrect: false,
+              padding: const EdgeInsets.all(12),
+            ),
           ],
         ),
         actions: [
@@ -637,68 +565,56 @@ class _CategoryChip extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colorScheme = Theme.of(context).colorScheme;
-    if (context.isMornye) {
-      return Semantics(
-        button: true,
-        selected: isSelected,
-        label: label,
-        onTap: onTap,
-        excludeSemantics: true,
-        // Scrolls with the list over the plain page: see ExtensionRepoCard.
-        child: AppGlass.navigation(
-          radius: 24,
-          blurEnabled: ref.watch(appBlurEnabledProvider),
-          samplesBackdrop: false,
-          child: Material(
-            color: Colors.transparent,
-            child: InkWell(
-              onTap: onTap,
-              borderRadius: BorderRadius.circular(24),
-              child: Container(
-                constraints: const BoxConstraints(minHeight: 44),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 10,
-                ),
-                color: isSelected
-                    ? colorScheme.primary.withValues(alpha: 0.10)
-                    : Colors.transparent,
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                      appIconFor(icon),
-                      size: 18,
+    return Semantics(
+      button: true,
+      selected: isSelected,
+      label: label,
+      onTap: onTap,
+      excludeSemantics: true,
+      // Scrolls with the list over the plain page: see ExtensionRepoCard.
+      child: AppGlass.navigation(
+        radius: 24,
+        blurEnabled: ref.watch(appBlurEnabledProvider),
+        samplesBackdrop: false,
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            onTap: onTap,
+            borderRadius: BorderRadius.circular(24),
+            child: Container(
+              constraints: const BoxConstraints(minHeight: 44),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+              color: isSelected
+                  ? colorScheme.primary.withValues(alpha: 0.10)
+                  : Colors.transparent,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    appIconFor(icon),
+                    size: 18,
+                    color: isSelected
+                        ? colorScheme.primary
+                        : colorScheme.onSurfaceVariant,
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    label,
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: isSelected
                           ? colorScheme.primary
-                          : colorScheme.onSurfaceVariant,
+                          : colorScheme.onSurface,
+                      fontWeight: isSelected
+                          ? FontWeight.w600
+                          : FontWeight.w400,
                     ),
-                    const SizedBox(width: 8),
-                    Text(
-                      label,
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: isSelected
-                            ? colorScheme.primary
-                            : colorScheme.onSurface,
-                        fontWeight: isSelected
-                            ? FontWeight.w600
-                            : FontWeight.w400,
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           ),
         ),
-      );
-    }
-    return AppChoiceChip(
-      label: Text(label),
-      icon: Icon(icon, size: 18),
-      singleChoice: true,
-      selected: isSelected,
-      onSelected: (_) => onTap(),
+      ),
     );
   }
 }
@@ -717,7 +633,7 @@ class _RepoListSkeleton extends StatelessWidget {
   Widget build(BuildContext context) {
     final tokens = context.tokens;
     // Placeholders keep their contrast on the Material group surface.
-    final surface = context.isMornye ? null : settingsGroupColor(context);
+    final Color? surface = null;
     final buttonWidth = _storeButtonWidth(context);
     final rows = [
       for (var index = 0; index < _count; index++)
@@ -784,15 +700,9 @@ class _RepoListSkeleton extends StatelessWidget {
           ),
         ),
     ];
-    if (context.isMornye) {
-      return ExtensionRepoCard(
-        margin: EdgeInsets.fromLTRB(edge, 12, edge, 4),
-        child: Column(mainAxisSize: MainAxisSize.min, children: rows),
-      );
-    }
-    return Padding(
-      padding: const EdgeInsets.only(top: 8),
-      child: SettingsGroup(connected: true, children: rows),
+    return ExtensionRepoCard(
+      margin: EdgeInsets.fromLTRB(edge, 12, edge, 4),
+      child: Column(mainAxisSize: MainAxisSize.min, children: rows),
     );
   }
 }
@@ -871,9 +781,7 @@ class _ExtensionItem extends StatelessWidget {
       onTap: onTap,
       avatar: ExtensionAvatar(
         imageUrl: extension.iconUrl,
-        fallbackIcon: context.isMornye
-            ? appIconFor(_getCategoryIcon(extension.category))
-            : _getCategoryIcon(extension.category),
+        fallbackIcon: appIconFor(_getCategoryIcon(extension.category)),
         background: extension.isInstalled
             ? colorScheme.primaryContainer
             : colorScheme.surfaceContainerHighest,
@@ -938,76 +846,53 @@ class _ExtensionItem extends StatelessWidget {
       trailingWidth: _storeButtonWidth(context),
       trailing: isDownloading
           ? const AppLoadingIndicator(size: 24)
-          : !context.isMornye
-          ? ExpressiveButton(
-              onPressed: extension.hasUpdate
-                  ? onUpdate
-                  : extension.isInstalled
-                  ? null
-                  : onInstall,
-              outlined: extension.isInstalled && !extension.hasUpdate,
-              tonal: extension.hasUpdate,
-              icon: extension.isInstalled && !extension.hasUpdate
-                  ? const Icon(Icons.check, size: 16)
-                  : null,
-              style: FilledButton.styleFrom(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-              ),
-              child: Text(
-                extension.hasUpdate
-                    ? context.l10n.storeUpdate
-                    : extension.isInstalled
-                    ? context.l10n.storeInstalled
-                    : context.l10n.storeInstall,
-              ),
-            )
-          : extension.hasUpdate
-          ? FilledButton.tonal(
-              onPressed: onUpdate,
-              style: FilledButton.styleFrom(
-                shape: context.isMornye ? const StadiumBorder() : null,
-                padding: const EdgeInsets.symmetric(horizontal: 12),
-                minimumSize: Size(0, context.tokens.minTouchTarget),
-              ),
-              child: Text(context.l10n.storeUpdate),
-            )
-          : extension.isInstalled
-          ? OutlinedButton(
-              onPressed: null,
-              style: OutlinedButton.styleFrom(
-                shape: context.isMornye ? const StadiumBorder() : null,
-                padding: const EdgeInsets.symmetric(horizontal: 12),
-                minimumSize: Size(0, context.tokens.minTouchTarget),
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(
-                    context.isMornye ? CupertinoIcons.check_mark : Icons.check,
-                    size: 16,
-                    color: colorScheme.outline,
-                  ),
-                  SizedBox(width: tokens.gapXs),
-                  Text(
-                    context.l10n.storeInstalled,
-                    style: TextStyle(color: colorScheme.outline),
-                  ),
-                ],
-              ),
-            )
-          : FilledButton(
-              onPressed: onInstall,
-              style: FilledButton.styleFrom(
-                shape: context.isMornye ? const StadiumBorder() : null,
-                backgroundColor: context.isMornye
-                    ? colorScheme.primary.withValues(alpha: 0.12)
-                    : null,
-                foregroundColor: context.isMornye ? colorScheme.primary : null,
-                padding: const EdgeInsets.symmetric(horizontal: 12),
-                minimumSize: Size(0, context.tokens.minTouchTarget),
-              ),
-              child: Text(context.l10n.storeInstall),
-            ),
+          : (extension.hasUpdate
+                ? FilledButton.tonal(
+                    onPressed: onUpdate,
+                    style: FilledButton.styleFrom(
+                      shape: (const StadiumBorder()),
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      minimumSize: Size(0, context.tokens.minTouchTarget),
+                    ),
+                    child: Text(context.l10n.storeUpdate),
+                  )
+                : extension.isInstalled
+                ? OutlinedButton(
+                    onPressed: null,
+                    style: OutlinedButton.styleFrom(
+                      shape: (const StadiumBorder()),
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      minimumSize: Size(0, context.tokens.minTouchTarget),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          CupertinoIcons.check_mark,
+                          size: 16,
+                          color: colorScheme.outline,
+                        ),
+                        SizedBox(width: tokens.gapXs),
+                        Text(
+                          context.l10n.storeInstalled,
+                          style: TextStyle(color: colorScheme.outline),
+                        ),
+                      ],
+                    ),
+                  )
+                : FilledButton(
+                    onPressed: onInstall,
+                    style: FilledButton.styleFrom(
+                      shape: (const StadiumBorder()),
+                      backgroundColor: (colorScheme.primary.withValues(
+                        alpha: 0.12,
+                      )),
+                      foregroundColor: colorScheme.primary,
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      minimumSize: Size(0, context.tokens.minTouchTarget),
+                    ),
+                    child: Text(context.l10n.storeInstall),
+                  )),
     );
   }
 }

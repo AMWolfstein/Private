@@ -4,7 +4,6 @@ import 'package:mornye/theme/app_icons.dart';
 import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/app_icon.dart';
 import 'package:mornye/widgets/app_chrome.dart';
-import 'package:mornye/widgets/expressive_button.dart';
 
 /// Shared sheet actions follow the selected design on every platform.
 class AppActionButton extends StatelessWidget {
@@ -33,16 +32,6 @@ class AppActionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (!context.isMornye) {
-      return ExpressiveButton(
-        onPressed: onPressed,
-        icon: icon,
-        style: style,
-        outlined: outlined,
-        tonal: tonal,
-        child: label,
-      );
-    }
     final scheme = Theme.of(context).colorScheme;
     final prominent = isDestructive || !outlined;
     final foreground = onPressed == null

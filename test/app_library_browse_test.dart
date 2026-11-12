@@ -163,9 +163,7 @@ void main() {
             theme: AppTheme.build(brightness),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
-            home: Scaffold(
-              body: AppLibraryScreen(onOpenSection: opened.add),
-            ),
+            home: Scaffold(body: AppLibraryScreen(onOpenSection: opened.add)),
           ),
         ),
       );

@@ -8,7 +8,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mornye/l10n/l10n.dart';
 import 'package:mornye/screens/settings/cache_management_page.dart';
 import 'package:mornye/services/explore_cache_store.dart';
-import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/utils/string_utils.dart';
 import 'package:mornye/widgets/app_alert_dialog.dart';
@@ -52,7 +51,7 @@ void main() {
     await root.delete(recursive: true);
   });
 
-  for (final mornye in [false, true]) {
+  for (final mornye in [true]) {
     testWidgets('cache rows show sizes and confirm before clearing '
         '(Mornye: $mornye)', (tester) async {
       tester.view.physicalSize = const Size(430, 2400);
@@ -62,9 +61,7 @@ void main() {
         await tester.pumpWidget(
           ProviderScope(
             child: MaterialApp(
-              theme: mornye
-                  ? AppTheme.build(Brightness.dark)
-                  : LegacyMaterialTheme.light(),
+              theme: AppTheme.build(Brightness.dark),
               localizationsDelegates: AppLocalizations.localizationsDelegates,
               supportedLocales: AppLocalizations.supportedLocales,
               home: const CacheManagementPage(),

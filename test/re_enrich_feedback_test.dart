@@ -7,7 +7,6 @@ import 'package:mornye/l10n/l10n.dart';
 import 'package:mornye/providers/settings_provider.dart';
 import 'package:mornye/services/batch_metadata_re_enrich.dart';
 import 'package:mornye/services/library_database.dart';
-import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/app_bottom_sheet.dart';
 import 'package:mornye/widgets/re_enrich_review_sheet.dart';
@@ -23,7 +22,7 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         child: MaterialApp(
-          theme: LegacyMaterialTheme.light(),
+          theme: AppTheme.build(Brightness.light),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: Builder(
@@ -80,7 +79,7 @@ void main() {
     }
   });
 
-  for (final mornye in [false, true]) {
+  for (final mornye in [true]) {
     testWidgets(
       'large review builds nearby tracks and keeps Apply visible ($mornye)',
       (tester) async {
@@ -91,9 +90,7 @@ void main() {
         await tester.pumpWidget(
           ProviderScope(
             child: MaterialApp(
-              theme: mornye
-                  ? AppTheme.build(Brightness.light)
-                  : LegacyMaterialTheme.light(),
+              theme: AppTheme.build(Brightness.light),
               localizationsDelegates: AppLocalizations.localizationsDelegates,
               supportedLocales: AppLocalizations.supportedLocales,
               home: Scaffold(
@@ -229,9 +226,7 @@ void main() {
                 settingsProvider.overrideWith(ReEnrichTestSettings.new),
               ],
               child: MaterialApp(
-                theme: mornye
-                    ? AppTheme.build(Brightness.dark)
-                    : ThemeData(),
+                theme: mornye ? AppTheme.build(Brightness.dark) : ThemeData(),
                 localizationsDelegates: AppLocalizations.localizationsDelegates,
                 supportedLocales: AppLocalizations.supportedLocales,
                 home: Scaffold(

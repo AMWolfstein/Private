@@ -54,10 +54,7 @@ class _MornyeArtistSurfaceState extends State<AppArtistSurface> {
       _baseTheme = baseTheme;
       _basePlatform = defaultTargetPlatform;
       _innerKey = null;
-      _darkTheme = AppTheme.fromContext(
-        context,
-        brightness: Brightness.dark,
-      );
+      _darkTheme = AppTheme.fromContext(context, brightness: Brightness.dark);
       _outerTheme = _darkTheme.copyWith(
         colorScheme: _darkTheme.colorScheme.copyWith(primary: Colors.grey),
       );

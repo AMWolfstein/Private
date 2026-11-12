@@ -136,5 +136,4 @@ void main() {
     expect(leading.left, greaterThan(0));
     expect(800 - trailing.right, moreOrLessEquals(leading.left));
   });
-
 }

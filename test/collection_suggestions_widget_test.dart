@@ -8,7 +8,6 @@ import 'package:mornye/providers/library_collections_provider.dart';
 import 'package:mornye/providers/music_player_provider.dart';
 import 'package:mornye/providers/settings_provider.dart';
 import 'package:mornye/services/collection_suggestions.dart';
-import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/collection_suggestions_section.dart';
 
@@ -52,7 +51,7 @@ Widget _app(
 }) => UncontrolledProviderScope(
   container: container,
   child: MaterialApp(
-    theme: mornye ? AppTheme.build(Brightness.light) : LegacyMaterialTheme.light(),
+    theme: AppTheme.build(Brightness.light),
     localizationsDelegates: AppLocalizations.localizationsDelegates,
     supportedLocales: AppLocalizations.supportedLocales,
     home: Scaffold(body: child),
@@ -61,9 +60,7 @@ Widget _app(
 
 void main() {
   {
-    {
-
-    }
+    {}
   }
 
   testWidgets('playlist membership updates filter already loaded suggestions', (

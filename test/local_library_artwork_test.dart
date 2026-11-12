@@ -16,7 +16,6 @@ import 'package:mornye/screens/local_album_screen.dart';
 import 'package:mornye/screens/app_library_screen.dart';
 import 'package:mornye/services/downloaded_embedded_cover_resolver.dart';
 import 'package:mornye/services/library_database.dart';
-import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/album_detail_header.dart';
 import 'package:mornye/widgets/cached_cover_image.dart';
@@ -84,7 +83,7 @@ void main() {
       ),
     ],
     child: MaterialApp(
-      theme: mornye ? AppTheme.build(Brightness.light) : LegacyMaterialTheme.light(),
+      theme: AppTheme.build(Brightness.light),
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       home: home,
@@ -223,7 +222,7 @@ void main() {
     },
   );
 
-  for (final mornye in [false, true]) {
+  for (final mornye in [true]) {
     testWidgets('blank album cover keeps the scanned track cover ($mornye)', (
       tester,
     ) async {
@@ -308,9 +307,7 @@ void main() {
           tester,
           () => mornye
               ? tester
-                        .widget<AppArtistSurface>(
-                          find.byType(AppArtistSurface),
-                        )
+                        .widget<AppArtistSurface>(find.byType(AppArtistSurface))
                         .imageSource ==
                     preview
               : tester

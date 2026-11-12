@@ -17,15 +17,11 @@ import 'package:mornye/services/metadata_cover_resources.dart';
 import 'package:mornye/services/metadata_autofill_service.dart';
 import 'package:mornye/services/metadata_persistence_service.dart';
 import 'package:mornye/services/platform_bridge.dart';
-import 'package:mornye/theme/app_theme.dart';
-import 'package:mornye/theme/app_icons.dart';
 import 'package:mornye/utils/artist_utils.dart';
 import 'package:mornye/utils/logger.dart';
 import 'package:mornye/widgets/app_action_button.dart';
 import 'package:mornye/widgets/app_bottom_sheet.dart';
-import 'package:mornye/widgets/app_choice_chip.dart';
 import 'package:mornye/widgets/app_progress_indicator.dart';
-import 'package:mornye/widgets/app_icon_button.dart';
 import 'package:mornye/widgets/app_loading_indicator.dart';
 import 'package:mornye/widgets/app_snack_bar.dart';
 import 'package:mornye/widgets/lyrics_provider_picker.dart';
@@ -33,6 +29,8 @@ import 'package:mornye/widgets/metadata_candidate_tile.dart';
 import 'package:mornye/widgets/metadata_editor_fields.dart';
 import 'package:mornye/widgets/metadata_text_field.dart';
 import 'package:mornye/widgets/app_chrome.dart';
+import 'package:mornye/theme/app_icons.dart';
+import 'package:mornye/widgets/app_icon_button.dart';
 
 part 'track_metadata_edit_autofill.dart';
 part 'track_metadata_edit_cover.dart';
@@ -111,7 +109,7 @@ class _EditMetadataSheetState extends State<EditMetadataSheet> {
       context: context,
       useRootNavigator: true,
       isScrollControlled: true,
-      showDragHandle: !context.isMornye,
+      showDragHandle: false,
       builder: (sheetContext) {
         final cs = Theme.of(sheetContext).colorScheme;
         final items = options(sheetContext);
@@ -127,7 +125,7 @@ class _EditMetadataSheetState extends State<EditMetadataSheet> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // The glass carries the handle that Material's sheet draws.
-                if (sheetContext.isMornye) const AppSheetHandle(),
+                const AppSheetHandle(),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(24, 0, 24, 16),
                   child: Text(
@@ -166,14 +164,7 @@ class _EditMetadataSheetState extends State<EditMetadataSheet> {
                                 selected: isSelected(items[index]),
                                 selectedColor: cs.primary,
                                 trailing: isSelected(items[index])
-                                    ? Icon(
-                                        (checkInSheetTheme
-                                                    ? sheetContext
-                                                    : context)
-                                                .isMornye
-                                            ? CupertinoIcons.checkmark
-                                            : Icons.check_rounded,
-                                      )
+                                    ? Icon(CupertinoIcons.checkmark)
                                     : null,
                                 onTap: () =>
                                     Navigator.pop(sheetContext, items[index]),
@@ -395,12 +386,7 @@ class _EditMetadataSheetState extends State<EditMetadataSheet> {
                           child: SizedBox(
                             width: 22,
                             height: 22,
-                            child: context.isMornye
-                                ? const CupertinoActivityIndicator()
-                                : const AppLoadingIndicator(
-                                    size: 22,
-                                    strokeWidth: 2,
-                                  ),
+                            child: (const CupertinoActivityIndicator()),
                           ),
                         )
                       else

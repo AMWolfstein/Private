@@ -10,7 +10,6 @@ import 'package:material_color_utilities/hct/hct.dart';
 import 'package:material_color_utilities/quantize/quantizer_celebi.dart';
 import 'package:material_color_utilities/score/score.dart';
 import 'package:mornye/services/platform_bridge.dart';
-import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/cached_cover_image.dart';
 
 Future<List<List<int>>> _quantizePaletteInIsolate(Uint8List bytes) async {
@@ -565,7 +564,6 @@ class _CoverPaletteBuilderState extends State<CoverPaletteBuilder> {
     final brightness = Theme.of(context).brightness;
     // Material headers give black and white covers a neutral scheme. Mornye
     // keeps the tonal one and shades neutral covers from the source colour.
-    final neutral = !context.isMornye;
     if (source == null || source.isEmpty) {
       _resolveGeneration++;
       _resolvedSource = null;
@@ -577,21 +575,17 @@ class _CoverPaletteBuilderState extends State<CoverPaletteBuilder> {
     final requestGeneration = ++_resolveGeneration;
     if (_resolvedSource != source ||
         _resolvedBrightness != brightness ||
-        _resolvedNeutral != neutral) {
+        _resolvedNeutral != false) {
       _resolvedSource = source;
       _resolvedBrightness = brightness;
-      _resolvedNeutral = neutral;
-      _scheme = CoverPalette.peek(
-        source,
-        brightness,
-        neutralGrayscale: neutral,
-      );
+      _resolvedNeutral = false;
+      _scheme = CoverPalette.peek(source, brightness, neutralGrayscale: false);
     }
 
     final resolved = CoverPalette.resolve(
       source,
       brightness,
-      neutralGrayscale: neutral,
+      neutralGrayscale: false,
     );
     resolved.then((scheme) {
       if (!mounted) return;

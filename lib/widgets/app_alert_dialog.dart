@@ -1,13 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mornye/l10n/l10n.dart';
-import 'package:mornye/theme/app_motion.dart';
-import 'package:mornye/theme/app_tokens.dart';
-import 'package:mornye/theme/material_expressive.dart';
 import 'package:mornye/theme/app_theme.dart';
-import 'package:mornye/widgets/app_bottom_sheet.dart';
-import 'package:mornye/widgets/app_icon.dart';
-import 'package:mornye/widgets/expressive_button.dart';
+import 'package:mornye/theme/app_tokens.dart';
 import 'package:mornye/widgets/app_chrome.dart';
 
 /// Dialog presentation follows the selected design, including on Android.
@@ -17,53 +12,14 @@ Future<T?> showAppDialog<T>({
   bool barrierDismissible = true,
   bool useRootNavigator = true,
 }) {
-  if (context.isMornye) {
-    final navigator = Navigator.of(context, rootNavigator: useRootNavigator);
-    final themes = InheritedTheme.capture(from: context, to: navigator.context);
-    return navigator.push<T>(
-      _MornyeDialogRoute<T>(
-        context: context,
-        builder: (context) => themes.wrap(Builder(builder: builder)),
-        barrierDismissible: barrierDismissible,
-      ),
-    );
-  }
-  if (materialExpressiveEnabled(context)) {
-    // Expressive: the dialog scales in on a spatial spring while an effects
-    // spring fades it, keeping opacity within range.
-    const fallback = AppMotionSpec(Duration.zero, Curves.linear);
-    final scale = AppMotion.spatial(context, fallback);
-    final fade = AppMotion.effectsFast(context, fallback);
-    final navigator = Navigator.of(context, rootNavigator: useRootNavigator);
-    final themes = InheritedTheme.capture(from: context, to: navigator.context);
-    return showGeneralDialog<T>(
+  final navigator = Navigator.of(context, rootNavigator: useRootNavigator);
+  final themes = InheritedTheme.capture(from: context, to: navigator.context);
+  return navigator.push<T>(
+    _MornyeDialogRoute<T>(
       context: context,
+      builder: (context) => themes.wrap(Builder(builder: builder)),
       barrierDismissible: barrierDismissible,
-      barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
-      barrierColor: DialogTheme.of(context).barrierColor ?? Colors.black54,
-      useRootNavigator: useRootNavigator,
-      transitionDuration: scale.duration,
-      pageBuilder: (dialogContext, _, _) =>
-          themes.wrap(SafeArea(child: Builder(builder: builder))),
-      transitionBuilder: (context, animation, _, child) => FadeTransition(
-        opacity: animation.drive(CurveTween(curve: fade.curve)),
-        child: ScaleTransition(
-          scale: animation.drive(
-            Tween<double>(
-              begin: 0.85,
-              end: 1,
-            ).chain(CurveTween(curve: scale.curve)),
-          ),
-          child: child,
-        ),
-      ),
-    );
-  }
-  return showDialog<T>(
-    context: context,
-    builder: builder,
-    barrierDismissible: barrierDismissible,
-    useRootNavigator: useRootNavigator,
+    ),
   );
 }
 
@@ -140,11 +96,10 @@ class AppDialogSurface extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final mornye = context.isMornye;
     return Dialog(
-      backgroundColor: mornye ? Colors.transparent : backgroundColor,
-      surfaceTintColor: mornye ? Colors.transparent : null,
-      elevation: mornye ? 0 : null,
+      backgroundColor: Colors.transparent,
+      surfaceTintColor: Colors.transparent,
+      elevation: 0,
       shape: shape,
       insetPadding: EdgeInsets.symmetric(
         horizontal: context.tokens.dialogInsetH,
@@ -152,11 +107,9 @@ class AppDialogSurface extends StatelessWidget {
       ),
       child: ConstrainedBox(
         constraints: BoxConstraints(maxWidth: maxWidth),
-        child: mornye
-            ? AppGlassPanel.overlay(
-                child: SingleChildScrollView(child: child),
-              )
-            : child,
+        child: (AppGlassPanel.overlay(
+          child: SingleChildScrollView(child: child),
+        )),
       ),
     );
   }
@@ -238,23 +191,6 @@ class AppAlertDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (!context.isMornye) {
-      return AlertDialog(
-        // M3 basic dialogs are 280 to 560dp wide; without a cap, a long
-        // at the compact class, so a short question or a single field is
-        // not squeezed to the minimum.
-        constraints: BoxConstraints(
-          minWidth: 280,
-          maxWidth: appSheetDialogMaxWidth,
-        ),
-        backgroundColor: backgroundColor,
-        shape: shape,
-        icon: icon == null ? null : symbolIconWidget(icon!),
-        title: title,
-        content: content,
-        actions: actions,
-      );
-    }
     final theme = Theme.of(context);
     final primaryActions = actions.where(
       (action) =>
@@ -353,42 +289,33 @@ class AppDialogAction extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (context.isMornye) {
-      final theme = Theme.of(context);
-      final scheme = theme.colorScheme;
-      final color = onPressed == null
-          ? scheme.onSurfaceVariant
-          : isDestructive
-          ? scheme.primary
-          : scheme.onSurface;
-      return CupertinoButton(
-        onPressed: onPressed,
-        color: AppTheme.controlFill(context),
-        disabledColor: AppTheme.controlFill(context, enabled: false),
-        borderRadius: BorderRadius.circular(28),
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-        child: DefaultTextStyle(
-          textAlign: TextAlign.center,
-          style: theme.textTheme.bodyLarge!.copyWith(
-            color: color,
-            fontSize: 17,
-            fontWeight: isDestructive || isDefault || filled
-                ? FontWeight.w600
-                : FontWeight.w500,
-          ),
-          child: IconTheme(
-            data: IconThemeData(color: color, size: 20),
-            child: child,
-          ),
-        ),
-      );
-    }
-    return ExpressiveButton(
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+    final color = onPressed == null
+        ? scheme.onSurfaceVariant
+        : isDestructive
+        ? scheme.primary
+        : scheme.onSurface;
+    return CupertinoButton(
       onPressed: onPressed,
-      style: style,
-      outlined: !filled && outlined,
-      text: !filled && !outlined,
-      child: child,
+      color: AppTheme.controlFill(context),
+      disabledColor: AppTheme.controlFill(context, enabled: false),
+      borderRadius: BorderRadius.circular(28),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      child: DefaultTextStyle(
+        textAlign: TextAlign.center,
+        style: theme.textTheme.bodyLarge!.copyWith(
+          color: color,
+          fontSize: 17,
+          fontWeight: isDestructive || isDefault || filled
+              ? FontWeight.w600
+              : FontWeight.w500,
+        ),
+        child: IconTheme(
+          data: IconThemeData(color: color, size: 20),
+          child: child,
+        ),
+      ),
     );
   }
 }

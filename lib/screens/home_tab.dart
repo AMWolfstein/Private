@@ -6,14 +6,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:mornye/widgets/app_snack_bar.dart';
 import 'package:mornye/theme/app_tokens.dart';
-import 'package:mornye/theme/app_theme.dart';
-import 'package:mornye/widgets/app_switch.dart';
-import 'package:mornye/widgets/app_checkbox.dart';
 import 'package:mornye/widgets/app_content_card.dart';
-import 'package:mornye/widgets/app_choice_chip.dart';
-import 'package:mornye/widgets/app_loading_indicator.dart';
 import 'package:mornye/widgets/app_progress_indicator.dart';
-import 'package:mornye/theme/app_motion.dart';
 import 'package:mornye/widgets/app_refresh_indicator.dart';
 import 'package:mornye/widgets/app_shape.dart';
 import 'package:mornye/widgets/expressive_button.dart';
@@ -42,18 +36,15 @@ import 'package:mornye/providers/extension_provider.dart';
 import 'package:mornye/providers/recent_access_provider.dart';
 import 'package:mornye/providers/explore_provider.dart';
 import 'package:mornye/providers/home_top_picks_provider.dart';
-import 'package:mornye/providers/user_profile_provider.dart';
 import 'package:mornye/widgets/explore_featured_section.dart';
 import 'package:mornye/providers/library_counts_provider.dart';
 import 'package:mornye/providers/library_mixes_provider.dart';
 import 'package:mornye/providers/local_library_provider.dart';
 import 'package:mornye/providers/music_player_provider.dart';
 import 'package:mornye/models/unified_library_item.dart';
-import 'package:mornye/screens/equalizer_screen.dart';
 import 'package:mornye/screens/library_mix_screen.dart';
 import 'package:mornye/screens/listening_statistics_screen.dart';
 import 'package:mornye/screens/music_recognition_screen.dart';
-import 'package:mornye/screens/network_storage_screen.dart';
 import 'package:mornye/screens/now_playing_screen.dart';
 import 'package:mornye/services/library_database.dart';
 import 'package:mornye/services/listening_statistics.dart';
@@ -72,7 +63,6 @@ import 'package:mornye/services/shell_navigation_service.dart';
 import 'package:mornye/utils/adaptive_layout.dart';
 import 'package:mornye/utils/nav_bar_inset.dart';
 import 'package:mornye/utils/file_access.dart';
-import 'package:mornye/utils/home_greeting.dart';
 import 'package:mornye/screens/playlist_screen.dart';
 import 'package:mornye/screens/downloaded_album_screen.dart';
 import 'package:mornye/widgets/download_service_picker.dart';
@@ -81,7 +71,6 @@ import 'package:mornye/widgets/animation_utils.dart';
 import 'package:mornye/widgets/audio_quality_badges.dart';
 import 'package:mornye/widgets/cached_cover_image.dart';
 import 'package:mornye/widgets/extension_icon_image.dart';
-import 'package:mornye/widgets/library_mix_cover.dart';
 import 'package:mornye/widgets/player_artwork.dart';
 import 'package:mornye/widgets/error_card.dart';
 import 'package:mornye/widgets/in_library_badge.dart';
@@ -92,6 +81,9 @@ import 'package:mornye/widgets/view_queue_snackbar_action.dart';
 import 'package:mornye/widgets/profile_avatar.dart';
 import 'package:mornye/widgets/downloadable_cover.dart';
 import 'package:mornye/widgets/app_crash_banner.dart';
+import 'package:mornye/widgets/app_switch.dart';
+import 'package:mornye/widgets/app_loading_indicator.dart';
+import 'package:mornye/theme/app_motion.dart';
 
 export 'package:mornye/screens/extension_collection_screens.dart';
 
@@ -862,20 +854,6 @@ class _HomeTabState extends ConsumerState<HomeTab>
       const AppMotionSpec(Duration(milliseconds: 250), Curves.easeOut),
     );
     // Without a feed, Home gathers the player, shortcuts and Library shelves.
-    final showHomeSections =
-        _showsHome && !showFeedSurface && !showEmptyHomeState;
-    // The Material Home also greets in its header. A feed brings its own
-    // greeting, and the Mornye style keeps its navigation title.
-    final greetsInHeader = showHomeSections && !context.isMornye;
-    final greeting = greetsInHeader
-        ? homeGreeting(
-            context.l10n,
-            name: ref.watch(
-              userProfileProvider.select((p) => p.value?.name ?? ''),
-            ),
-          )
-        : null;
-
     ref.listen<String>(settingsProvider.select((s) => s.defaultSearchTab), (
       previous,
       next,
@@ -925,7 +903,7 @@ class _HomeTabState extends ConsumerState<HomeTab>
             controller: _homeScrollController,
             keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
             slivers: [
-              _buildHeaderSliver(greeting: greeting),
+              _buildHeaderSliver(),
               if (_showsHome) const SliverToBoxAdapter(child: AppCrashBanner()),
               _buildHomeIntroSliver(
                 sectionMotion: sectionMotion,
@@ -939,7 +917,7 @@ class _HomeTabState extends ConsumerState<HomeTab>
                 _buildSearchBarSliver(
                   hasResults: hasResults,
                   showExplore: showFeedSurface,
-                  greetsInHeader: greetsInHeader,
+                  greetsInHeader: false,
                 ),
               if (hasActiveSearchSurface && !showRecentAccess)
                 _buildSearchFilterSliver(
@@ -971,16 +949,14 @@ class _HomeTabState extends ConsumerState<HomeTab>
     );
   }
 
-  Widget _buildHeaderSliver({required String? greeting}) {
+  Widget _buildHeaderSliver() {
     return AppSliverHeader.tabRoot(
       alignToContent: true,
       contentInset: homeContentInset(context),
       title: widget.mode == HomeTabMode.search
           ? context.l10n.mornyeSearch
-          : greeting ?? context.l10n.homeTitle,
-      actions: context.isMornye && _showsHome
-          ? const [HomeProfileButton()]
-          : null,
+          : context.l10n.homeTitle,
+      actions: _showsHome ? const [HomeProfileButton()] : null,
     );
   }
 
@@ -1139,15 +1115,10 @@ class _HomeTabState extends ConsumerState<HomeTab>
         );
         // The feed decides whether a greeting shows; its words
         // are localized here and address the profile name.
-        final showGreeting =
-            ref.watch(exploreProvider.select((s) => s.greeting)) != null;
-        final profileName = ref.watch(
-          userProfileProvider.select((p) => p.value?.name ?? ''),
-        );
         return SliverMainAxisGroup(
           slivers: [
             // Mornye opens with Top Picks whether or not the feed follows.
-            if (context.isMornye && _HomeTopPicksSection.hasPicks(ref))
+            if (_HomeTopPicksSection.hasPicks(ref))
               SliverToBoxAdapter(
                 child: Padding(
                   padding: const EdgeInsets.only(top: 8, bottom: 12),
@@ -1156,13 +1127,7 @@ class _HomeTabState extends ConsumerState<HomeTab>
                   ),
                 ),
               ),
-            ..._buildExploreSections(
-              exploreSections,
-              showGreeting
-                  ? homeGreeting(context.l10n, name: profileName)
-                  : null,
-              colorScheme,
-            ),
+            ..._buildExploreSections(exploreSections, colorScheme),
           ],
         );
       },
@@ -1333,16 +1298,7 @@ class _HomeTabState extends ConsumerState<HomeTab>
     // The Mornye style uses the navigation title as the page identity. Keep
     // the search surface directly beneath it instead of repeating app branding
     // in the content area.
-    if (context.isMornye) return const SizedBox.shrink();
-
-    // The header carries the greeting; prompts take turns beneath it.
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 24 + homeContentInset(context)),
-      child: const Align(
-        alignment: AlignmentDirectional.centerStart,
-        child: _HomeTagline(),
-      ),
-    );
+    return const SizedBox.shrink();
   }
 
   void _onEmbeddedCoverChanged() {

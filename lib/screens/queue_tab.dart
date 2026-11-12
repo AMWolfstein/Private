@@ -15,9 +15,6 @@ import 'package:mornye/widgets/swipe_delete_dismissible.dart';
 import 'package:mornye/widgets/track_card.dart';
 import 'package:mornye/theme/app_motion.dart';
 import 'package:mornye/theme/app_tokens.dart';
-import 'package:mornye/theme/material_expressive.dart';
-import 'package:mornye/theme/app_theme.dart';
-import 'package:mornye/widgets/app_bottom_sheet.dart';
 import 'package:mornye/widgets/app_icon.dart';
 import 'package:mornye/widgets/pinned_section_sliver_list.dart';
 import 'package:mornye/widgets/app_icon_button.dart';
@@ -35,17 +32,9 @@ import 'package:mornye/widgets/local_library_artwork_builder.dart';
 import 'package:mornye/widgets/library_playlist_drag_source.dart';
 import 'package:mornye/widgets/playlist_picker_sheet.dart';
 import 'package:mornye/widgets/create_playlist_sheet.dart';
-import 'package:mornye/widgets/tool_button_group.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart' show DateFormat;
-import 'package:material_3_expressive/material_3_expressive.dart'
-    show
-        M3EButtonGroup,
-        M3EButtonGroupAction,
-        M3EButtonGroupType,
-        M3EButtonSize,
-        M3EButtonStyle;
 import 'package:mornye/providers/library_browse_provider.dart';
 import 'package:mornye/providers/library_counts_provider.dart';
 import 'package:mornye/widgets/app_shape.dart';
@@ -77,7 +66,6 @@ import 'package:mornye/services/local_track_redownload_service.dart';
 import 'package:mornye/services/batch_track_actions.dart';
 import 'package:mornye/services/downloaded_embedded_cover_resolver.dart';
 import 'package:mornye/screens/track_metadata_screen.dart';
-import 'package:mornye/screens/listening_rewind_screen.dart';
 import 'package:mornye/screens/favorite_artists_screen.dart';
 import 'package:mornye/screens/downloaded_album_screen.dart';
 import 'package:mornye/widgets/cached_cover_image.dart';
@@ -97,6 +85,7 @@ import 'package:mornye/widgets/selection_bottom_bar.dart';
 import 'package:mornye/widgets/smoothed_progress.dart';
 import 'package:mornye/widgets/two_finger_pinch_listener.dart';
 import 'package:mornye/widgets/track_lists/context_menu.dart';
+import 'package:mornye/widgets/app_bottom_sheet.dart';
 
 part 'queue_tab_helpers.dart';
 part 'queue_tab_widgets.dart';
@@ -212,10 +201,6 @@ class _QueueTabState extends ConsumerState<QueueTab> {
   String _libraryQualityLabelMode = AppSettings.libraryQualityLabelBitDepthOnly;
   final _libraryGridExtent = ValueNotifier(_libraryGridDefaultExtent);
   double? _libraryGridPinchStartExtent;
-  List<UnifiedLibraryItem>? _sectionItems;
-  String? _sectionSort;
-  String? _sectionLocale;
-  List<_LibrarySection> _cachedTrackSections = const [];
 
   /// In-memory History snapshots and counts, regrouped only when the
   /// (immutable) History list changes.
@@ -514,7 +499,7 @@ class _QueueTabState extends ConsumerState<QueueTab> {
 
   @override
   Widget build(BuildContext context) {
-    if (context.isMornye && widget.librarySection == null) {
+    if ((widget.librarySection == null)) {
       return AppLibraryScreen(
         onOpenSection: (section) => pushPage<void>(
           context,

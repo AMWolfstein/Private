@@ -19,7 +19,6 @@ import 'package:mornye/providers/settings_provider.dart';
 import 'package:mornye/screens/settings/lyrics_ai_translation_page.dart';
 import 'package:mornye/services/lyrics_ai_client.dart';
 import 'package:mornye/services/lyrics_translation.dart';
-import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/utils/lyrics_parser.dart';
 import 'package:mornye/utils/playback_seek_preview.dart';
@@ -113,9 +112,7 @@ Widget _app({
 }) => ProviderScope(
   overrides: overrides,
   child: MaterialApp(
-    theme: mornye
-        ? AppTheme.build(Brightness.dark, accent: AppAccent.blue)
-        : LegacyMaterialTheme.dark(),
+    theme: AppTheme.build(Brightness.dark, accent: AppAccent.blue),
     locale: const Locale('en'),
     localizationsDelegates: AppLocalizations.localizationsDelegates,
     supportedLocales: AppLocalizations.supportedLocales,
@@ -164,7 +161,7 @@ void main() {
   });
   tearDown(() => messenger.setMockMethodCallHandler(channel, null));
 
-  for (final mornye in [false, true]) {
+  for (final mornye in [true]) {
     testWidgets('translation mode applies on tap '
         '(mornye=$mornye)', (tester) async {
       tester.view.physicalSize = const Size(390, 800);
@@ -211,7 +208,7 @@ void main() {
     });
   }
 
-  for (final mornye in [false, true]) {
+  for (final mornye in [true]) {
     for (final pick in [false, true]) {
       testWidgets('the lyrics menu translates into '
           '${pick ? 'a picked' : 'the settings'} language ($mornye)', (
@@ -362,7 +359,7 @@ void main() {
     await tester.pumpWidget(const SizedBox.shrink());
   });
 
-  for (final mornye in [false, true]) {
+  for (final mornye in [true]) {
     testWidgets('settings save the key and test the connection ($mornye)', (
       tester,
     ) async {

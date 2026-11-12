@@ -5,20 +5,19 @@ import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:mornye/services/app_remote_config_service.dart';
-import 'package:mornye/theme/app_theme.dart';
-import 'package:mornye/utils/adaptive_layout.dart';
 import 'package:mornye/widgets/app_content_card.dart';
 import 'package:mornye/widgets/app_icon.dart';
 import 'package:mornye/widgets/app_progress_indicator.dart';
 import 'package:mornye/widgets/donate_icons.dart';
 import 'package:mornye/widgets/app_sliver_header.dart';
+import 'package:mornye/utils/adaptive_layout.dart';
 
 /// Fill of the donate cards. Material puts them on the settings group tier;
 /// Mornye keeps the tone it blends over its surface.
 Color _donateCardColor(BuildContext context) {
   final theme = Theme.of(context);
   final colorScheme = theme.colorScheme;
-  if (!context.isMornye) return colorScheme.surfaceContainer;
+
   final isDark = theme.brightness == Brightness.dark;
   return Color.alphaBlend(
     (isDark ? Colors.white : Colors.black).withValues(
@@ -283,12 +282,11 @@ class _DonateLinksCard extends StatelessWidget {
             ),
           ),
           // Material groups rows by the card alone; dividers are Mornye's.
-          if (context.isMornye)
-            Divider(
-              height: 1,
-              thickness: 1,
-              color: colorScheme.outlineVariant.withValues(alpha: 0.3),
-            ),
+          Divider(
+            height: 1,
+            thickness: 1,
+            color: colorScheme.outlineVariant.withValues(alpha: 0.3),
+          ),
           if (!config.enabled)
             Padding(
               padding: const EdgeInsets.all(20),
@@ -305,7 +303,7 @@ class _DonateLinksCard extends StatelessWidget {
                 method: config.methods[index],
                 colorScheme: colorScheme,
               ),
-              if (context.isMornye && index < config.methods.length - 1)
+              if ((index < config.methods.length - 1))
                 Divider(
                   height: 1,
                   thickness: 1,

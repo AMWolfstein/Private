@@ -19,7 +19,6 @@ import 'package:mornye/screens/library_tracks_folder_screen.dart';
 import 'package:mornye/screens/local_album_screen.dart';
 import 'package:mornye/screens/playlist_screen.dart';
 import 'package:mornye/services/library_database.dart';
-import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/theme/app_theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -154,7 +153,7 @@ void main() {
     'local album',
     'library folder',
   ]) {
-    for (final mornye in [false, true]) {
+    for (final mornye in [true]) {
       testWidgets('$page title flip leaves the page unbuilt in '
           'Mornye=$mornye', (tester) async {
         tester.view.physicalSize = const Size(430, 1000);
@@ -236,9 +235,7 @@ void main() {
           UncontrolledProviderScope(
             container: container,
             child: MaterialApp(
-              theme: mornye
-                  ? AppTheme.build(Brightness.light)
-                  : LegacyMaterialTheme.light(),
+              theme: AppTheme.build(Brightness.light),
               localizationsDelegates: AppLocalizations.localizationsDelegates,
               supportedLocales: AppLocalizations.supportedLocales,
               home: screen,

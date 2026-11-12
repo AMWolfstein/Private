@@ -512,9 +512,8 @@ class LibraryReorganizer {
   Future<void> _removeEmptyDirectories(String root, Set<String> dirs) async {
     final normalizedRoot = p.normalize(root);
     // Deepest first so parents are checked after their children.
-    final ordered =
-        dirs.map((dir) => p.normalize(dir)).toSet().toList()
-          ..sort((a, b) => b.length.compareTo(a.length));
+    final ordered = dirs.map((dir) => p.normalize(dir)).toSet().toList()
+      ..sort((a, b) => b.length.compareTo(a.length));
     for (final start in ordered) {
       var current = start;
       while (p.isWithin(normalizedRoot, current)) {

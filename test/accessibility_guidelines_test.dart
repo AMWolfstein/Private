@@ -8,7 +8,6 @@ import 'package:mornye/screens/settings/appearance_settings_page.dart';
 import 'package:mornye/screens/settings/download_settings_page.dart';
 import 'package:mornye/screens/settings/lyrics_settings_page.dart';
 import 'package:mornye/screens/settings/playback_settings_page.dart';
-import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/theme/app_theme.dart';
 
 void main() {
@@ -20,8 +19,6 @@ void main() {
     'equalizer': () => const EqualizerScreen(),
   };
   final themes = <String, ThemeData Function()>{
-    'Material light': LegacyMaterialTheme.light,
-    'Material dark': LegacyMaterialTheme.dark,
     'Mornye light': () => AppTheme.build(Brightness.light),
     'Mornye dark': () => AppTheme.build(Brightness.dark),
   };

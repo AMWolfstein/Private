@@ -1,7 +1,5 @@
 import 'dart:convert';
-import 'dart:ui' as ui;
 
-import 'package:audio_service/audio_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -10,24 +8,21 @@ import 'package:mornye/l10n/l10n.dart';
 import 'package:mornye/models/settings.dart';
 import 'package:mornye/providers/settings_provider.dart';
 import 'package:mornye/screens/settings/playback_settings_page.dart';
-import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/utils/settings_search_catalog.dart';
-import 'package:mornye/widgets/material_player_backdrop.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   test('cover style and music haptics keep their defaults', () {
     final restored = AppSettings.fromJson(const {});
-    // Unchosen, Material shows the cover full screen and Mornye a card.
+    // Unchosen, the player shows its card.
     expect(restored.playerCoverStyle, isEmpty);
-    expect(restored.playerCoverStyleFor(mornye: false), 'fullscreen');
-    expect(restored.playerCoverStyleFor(mornye: true), 'default');
-    // A choice holds in both styles.
+    expect(restored.playerCoverStyleFor(), 'default');
+    // A choice holds.
     final card = restored.copyWith(playerCoverStyle: 'default');
-    expect(card.playerCoverStyleFor(mornye: false), 'default');
+    expect(card.playerCoverStyleFor(), 'default');
     final full = restored.copyWith(playerCoverStyle: 'fullscreen');
-    expect(full.playerCoverStyleFor(mornye: true), 'fullscreen');
+    expect(full.playerCoverStyleFor(), 'fullscreen');
     expect(restored.musicHaptics, isFalse);
     expect(restored.landscapeLyricsArtwork, isFalse);
     expect(restored.autoHideLyricsControls, isTrue);
@@ -66,58 +61,7 @@ void main() {
     }
   });
 
-  testWidgets('landscape artwork is selectable, saved and searchable', (
-    tester,
-  ) async {
-    SharedPreferences.setMockInitialValues({});
-    tester.view.physicalSize = const Size(390, 844);
-    tester.view.devicePixelRatio = 1;
-    addTearDown(tester.view.reset);
-    final container = ProviderContainer(
-      overrides: [
-        initialSettingsProvider.overrideWithValue(const AppSettings()),
-      ],
-    );
-    addTearDown(container.dispose);
-    await tester.pumpWidget(
-      UncontrolledProviderScope(
-        container: container,
-        child: MaterialApp(
-          theme: LegacyMaterialTheme.light(),
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
-          supportedLocales: AppLocalizations.supportedLocales,
-          home: const PlaybackSettingsPage(),
-        ),
-      ),
-    );
-    final option = find.text('Album art beside lyrics');
-    await tester.scrollUntilVisible(
-      option,
-      200,
-      scrollable: find.byType(Scrollable).first,
-    );
-    await tester.pumpAndSettle();
-    await tester.tap(option);
-    await tester.pumpAndSettle();
-    expect(container.read(settingsProvider).landscapeLyricsArtwork, isTrue);
-    final prefs = await SharedPreferences.getInstance();
-    final restored = AppSettings.fromJson(
-      jsonDecode(prefs.getString('app_settings')!) as Map<String, dynamic>,
-    );
-    expect(restored.landscapeLyricsArtwork, isTrue);
-    final l10n = AppLocalizations.of(tester.element(option));
-    expect(
-      SettingsSearchCatalog(l10n).playback.where(
-        (entry) =>
-            entry.title == l10n.landscapeLyricsArtwork &&
-            entry.matches(SettingsSearchQuery('landscape lyrics')),
-      ),
-      hasLength(1),
-    );
-    expect(tester.takeException(), isNull);
-  });
-
-  for (final mornye in [false, true]) {
+  for (final mornye in [true]) {
     testWidgets(
       'automatic fullscreen lyrics is saved and searchable (Mornye: $mornye)',
       (tester) async {
@@ -135,9 +79,7 @@ void main() {
           UncontrolledProviderScope(
             container: container,
             child: MaterialApp(
-              theme: mornye
-                  ? AppTheme.build(Brightness.dark)
-                  : LegacyMaterialTheme.light(),
+              theme: AppTheme.build(Brightness.dark),
               localizationsDelegates: AppLocalizations.localizationsDelegates,
               supportedLocales: AppLocalizations.supportedLocales,
               home: const PlaybackSettingsPage(),
@@ -176,63 +118,4 @@ void main() {
       },
     );
   }
-
-  testWidgets('full-screen Material cover keeps the entire app bar readable', (
-    tester,
-  ) async {
-    tester.view.physicalSize = const Size(390, 844);
-    tester.view.devicePixelRatio = 1;
-    tester.view.padding = const FakeViewPadding(top: 24);
-    addTearDown(tester.view.reset);
-    const key = ValueKey('backdrop');
-    final colors = ColorScheme.fromSeed(
-      seedColor: Colors.blue,
-    ).copyWith(surface: Colors.white, surfaceContainerHighest: Colors.white);
-    await tester.pumpWidget(
-      MaterialApp(
-        home: RepaintBoundary(
-          key: key,
-          child: MaterialPlayerBackdrop(
-            mediaItem: const MediaItem(id: 'bright-cover', title: 'Track'),
-            colorScheme: colors,
-            showArtwork: true,
-          ),
-        ),
-      ),
-    );
-    await tester.pumpAndSettle();
-    final boundary = tester.renderObject<RenderRepaintBoundary>(
-      find.byKey(key),
-    );
-    await tester.runAsync(() async {
-      final image = await boundary.toImage();
-      try {
-        final bytes = (await image.toByteData(
-          format: ui.ImageByteFormat.rawRgba,
-        ))!;
-        double luminanceAt(int y) {
-          final offset = (y * image.width + 20) * 4;
-          return Color.fromARGB(
-            bytes.getUint8(offset + 3),
-            bytes.getUint8(offset),
-            bytes.getUint8(offset + 1),
-            bytes.getUint8(offset + 2),
-          ).computeLuminance();
-        }
-
-        // The shade is darkest under the status bar, eases out across the
-        // app bar, stays light enough not to hide the cover, and is gone
-        // below the bar (24 inset + 56 toolbar + 32 fade).
-        final top = luminanceAt(2);
-        final bar = luminanceAt(52);
-        final below = luminanceAt(130);
-        expect(top, lessThan(bar));
-        expect(bar, lessThan(below));
-        expect(top, greaterThan(below * 0.5));
-        expect(below, closeTo(luminanceAt(200), 0.01));
-      } finally {
-        image.dispose();
-      }
-    });
-  });
 }

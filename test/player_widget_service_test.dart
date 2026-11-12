@@ -281,7 +281,10 @@ void main() {
     player.mediaItem.add(media);
     player.playbackState.add(
       PlaybackState(
-        controls: const PlaybackNotification().controls(playing: true, item: media),
+        controls: const PlaybackNotification().controls(
+          playing: true,
+          item: media,
+        ),
       ),
     );
     await settle();

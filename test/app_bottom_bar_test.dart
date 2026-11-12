@@ -415,9 +415,7 @@ void main() {
         await tester.pump();
         await tester.pump(const Duration(milliseconds: 100));
         expect(
-          tester
-              .widget<AppTabBar>(find.byType(AppTabBar))
-              .hiddenIconIndices,
+          tester.widget<AppTabBar>(find.byType(AppTabBar)).hiddenIconIndices,
           {index == 3 ? 0 : index, 3},
         );
         await tester.pumpAndSettle();

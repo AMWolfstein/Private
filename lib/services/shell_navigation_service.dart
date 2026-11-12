@@ -11,11 +11,7 @@ class ShellNavigationService {
   static final _chromeScopes =
       <
         Object,
-        ({
-          ModalRoute<dynamic> route,
-          Brightness brightness,
-          Color? surface,
-        })
+        ({ModalRoute<dynamic> route, Brightness brightness, Color? surface})
       >{};
   static bool _chromeUpdateScheduled = false;
   static int _searchGeneration = 0;

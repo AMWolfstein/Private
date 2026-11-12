@@ -1411,7 +1411,6 @@ Set<String> _mergeVisibleHistoryKeys(
   return keys;
 }
 
-
 class _VisibleHistoryBatchExistsNotifier extends Notifier<Set<String>> {
   _VisibleHistoryBatchExistsNotifier(this.request);
 

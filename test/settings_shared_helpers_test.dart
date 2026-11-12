@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mornye/l10n/l10n.dart';
-import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/app_alert_dialog.dart';
 import 'package:mornye/widgets/app_bottom_sheet.dart';
@@ -55,8 +54,7 @@ Future<bool?> _legacyOpenSettings(BuildContext context) => showAppDialog<bool>(
   ),
 );
 
-ThemeData _theme(bool mornye) =>
-    mornye ? AppTheme.build(Brightness.light) : LegacyMaterialTheme.light();
+ThemeData _theme(bool mornye) => AppTheme.build(Brightness.light);
 
 Future<void> _pumpLauncher(
   WidgetTester tester, {
@@ -198,7 +196,7 @@ List<Object?> _sheetSnapshot(WidgetTester tester) {
 }
 
 void main() {
-  for (final mornye in [false, true]) {
+  for (final mornye in [true]) {
     final style = mornye ? 'Mornye' : 'Material';
 
     group('showAppConfirmDialog ($style)', () {
@@ -499,7 +497,6 @@ void main() {
       }
       expect(tester.takeException(), isNull);
     });
-
   }
 
   testWidgets('Mornye glass groups skip the backdrop pass', (tester) async {

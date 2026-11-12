@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:mornye/theme/app_theme.dart';
-import 'package:mornye/utils/playback_seek_preview.dart';
-import 'package:mornye/widgets/expressive_seek_track.dart';
 import 'package:mornye/widgets/app_player_slider.dart';
+import 'package:mornye/utils/playback_seek_preview.dart';
 
 /// Previews scrubbing locally and seeks once when the gesture ends.
 class PlaybackSeekSlider extends StatefulWidget {
@@ -89,71 +87,45 @@ class _PlaybackSeekSliderState extends State<PlaybackSeekSlider> {
     final durationMs = widget.duration.inMilliseconds;
     final enabled = durationMs > 0;
     final maxMs = enabled ? durationMs.toDouble() : 1.0;
-    if (context.isMornye) {
-      final currentMs = (_previewMs ?? widget.position.inMilliseconds)
-          .clamp(0, maxMs)
-          .toDouble();
-      String percentage(double milliseconds) =>
-          '${(milliseconds / maxMs * 100).clamp(0, 100).round()}%';
-      return Semantics(
-        slider: true,
-        enabled: enabled,
-        excludeSemantics: true,
-        value: percentage(currentMs),
-        increasedValue: enabled
-            ? percentage((currentMs + 5000).clamp(0, maxMs).toDouble())
-            : null,
-        decreasedValue: enabled
-            ? percentage((currentMs - 5000).clamp(0, maxMs).toDouble())
-            : null,
-        onIncrease: enabled
-            ? () => _adjust((currentMs + 5000).clamp(0, maxMs).toDouble())
-            : null,
-        onDecrease: enabled
-            ? () => _adjust((currentMs - 5000).clamp(0, maxMs).toDouble())
-            : null,
-        child: IgnorePointer(
-          ignoring: !enabled,
-          child: AppPlayerSlider(
-            activeColor:
-                SliderTheme.of(context).activeTrackColor ?? Colors.white,
-            inactiveColor:
-                SliderTheme.of(context).inactiveTrackColor ?? Colors.white12,
-            value: enabled ? currentMs : 0,
-            max: maxMs,
-            trackHeight: widget.hairline ? 2 : 6,
-            height: widget.hairline ? 10 : 44,
-            inset: widget.hairline || widget.edgeAligned
-                ? 0
-                : AppPlayerSlider.horizontalInset,
-            onChangeStart: _start,
-            onChanged: _preview,
-            onChangeEnd: _commit,
-          ),
+    final currentMs = (_previewMs ?? widget.position.inMilliseconds)
+        .clamp(0, maxMs)
+        .toDouble();
+    String percentage(double milliseconds) =>
+        '${(milliseconds / maxMs * 100).clamp(0, 100).round()}%';
+    return Semantics(
+      slider: true,
+      enabled: enabled,
+      excludeSemantics: true,
+      value: percentage(currentMs),
+      increasedValue: enabled
+          ? percentage((currentMs + 5000).clamp(0, maxMs).toDouble())
+          : null,
+      decreasedValue: enabled
+          ? percentage((currentMs - 5000).clamp(0, maxMs).toDouble())
+          : null,
+      onIncrease: enabled
+          ? () => _adjust((currentMs + 5000).clamp(0, maxMs).toDouble())
+          : null,
+      onDecrease: enabled
+          ? () => _adjust((currentMs - 5000).clamp(0, maxMs).toDouble())
+          : null,
+      child: IgnorePointer(
+        ignoring: !enabled,
+        child: AppPlayerSlider(
+          activeColor: SliderTheme.of(context).activeTrackColor ?? Colors.white,
+          inactiveColor:
+              SliderTheme.of(context).inactiveTrackColor ?? Colors.white12,
+          value: enabled ? currentMs : 0,
+          max: maxMs,
+          trackHeight: widget.hairline ? 2 : 6,
+          height: widget.hairline ? 10 : 44,
+          inset: widget.hairline || widget.edgeAligned
+              ? 0
+              : AppPlayerSlider.horizontalInset,
+          onChangeStart: _start,
+          onChanged: _preview,
+          onChangeEnd: _commit,
         ),
-      );
-    }
-    return ExpressiveSeekTrack(
-      playing:
-          widget.playing &&
-          enabled &&
-          widget.position < widget.duration &&
-          _previewMs == null,
-      child: Slider(
-        value: enabled
-            ? (_previewMs ?? widget.position.inMilliseconds.toDouble()).clamp(
-                0,
-                maxMs,
-              )
-            : 0,
-        max: maxMs,
-        // Keeps the default 48dp height around the 20dp thumb.
-        padding: widget.edgeAligned
-            ? const EdgeInsets.symmetric(vertical: 14)
-            : null,
-        onChangeStart: enabled ? _start : null,
-        onChanged: enabled ? _preview : null,
-        onChangeEnd: enabled ? _commit : null,
       ),
     );
   }

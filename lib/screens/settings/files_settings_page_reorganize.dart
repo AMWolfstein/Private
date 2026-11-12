@@ -230,9 +230,7 @@ class _ReorganizeConfirmDialog extends StatelessWidget {
                       children: [
                         // Mirrors in right-to-left layouts, unlike a text arrow.
                         AppIcon(
-                          context.isMornye
-                              ? appArrowForward
-                              : Icons.arrow_forward_rounded,
+                          appArrowForward,
                           size: arrowSize,
                           color: colorScheme.primary,
                         ),

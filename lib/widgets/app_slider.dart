@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:material_3_expressive/material_3_expressive.dart';
-import 'package:mornye/theme/material_expressive.dart';
 
 /// Settings slider with the Material 3 Expressive track and handle.
 /// Mornye and reduced motion keep the standard [Slider].
@@ -60,83 +58,16 @@ class AppSlider extends StatelessWidget {
   }
 
   Widget _buildSlider(BuildContext context) {
-    if (!materialExpressiveEnabled(context)) {
-      final slider = Slider(
-        value: value,
-        min: min,
-        max: max,
-        divisions: divisions,
-        label: label,
-        semanticFormatterCallback: semanticFormatterCallback,
-        onChanged: onChanged,
-        onChangeEnd: onChangeEnd,
-      );
-      return vertical ? RotatedBox(quarterTurns: 3, child: slider) : slider;
-    }
-    final enabled = onChanged != null;
-    final slider = MaterialExpressiveScope(
-      child: switch ((vertical, centered)) {
-        (true, true) => M3ESlider.verticalCentered(
-          value: value,
-          min: min,
-          max: max,
-          divisions: divisions,
-          label: label,
-          semanticFormatterCallback: semanticFormatterCallback,
-          trackThickness: trackThickness,
-          thumbLength: thumbLength,
-          enabled: enabled,
-          onChanged: onChanged,
-          onChangeEnd: onChangeEnd,
-        ),
-        (true, false) => M3ESlider.vertical(
-          value: value,
-          min: min,
-          max: max,
-          divisions: divisions,
-          label: label,
-          semanticFormatterCallback: semanticFormatterCallback,
-          trackThickness: trackThickness,
-          thumbLength: thumbLength,
-          enabled: enabled,
-          onChanged: onChanged,
-          onChangeEnd: onChangeEnd,
-        ),
-        (false, true) => M3ESlider.centered(
-          value: value,
-          min: min,
-          max: max,
-          divisions: divisions,
-          label: label,
-          semanticFormatterCallback: semanticFormatterCallback,
-          trackThickness: trackThickness,
-          thumbLength: thumbLength,
-          enabled: enabled,
-          onChanged: onChanged,
-          onChangeEnd: onChangeEnd,
-        ),
-        (false, false) => M3ESlider(
-          value: value,
-          min: min,
-          max: max,
-          divisions: divisions,
-          label: label,
-          semanticFormatterCallback: semanticFormatterCallback,
-          trackThickness: trackThickness,
-          thumbLength: thumbLength,
-          enabled: enabled,
-          onChanged: onChanged,
-          onChangeEnd: onChangeEnd,
-        ),
-      },
+    final slider = Slider(
+      value: value,
+      min: min,
+      max: max,
+      divisions: divisions,
+      label: label,
+      semanticFormatterCallback: semanticFormatterCallback,
+      onChanged: onChanged,
+      onChangeEnd: onChangeEnd,
     );
-    // The expressive slider lays out 44 dp across; stretch it to the 48 dp
-    // touch target the standard Slider already has.
-    return vertical
-        ? ConstrainedBox(
-            constraints: const BoxConstraints(minWidth: 48),
-            child: slider,
-          )
-        : SizedBox(height: 48, child: slider);
+    return vertical ? RotatedBox(quarterTurns: 3, child: slider) : slider;
   }
 }

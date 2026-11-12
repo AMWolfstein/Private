@@ -5,9 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mornye/controllers/player_metadata_controller.dart';
 import 'package:mornye/l10n/l10n.dart';
-import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/theme/app_theme.dart';
-import 'package:mornye/widgets/app_bottom_sheet.dart';
 import 'package:mornye/widgets/app_player_details_sheet.dart';
 import 'package:mornye/widgets/player_details_sheet.dart';
 
@@ -34,9 +32,7 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         child: MaterialApp(
-          theme: mornye
-              ? AppTheme.build(Brightness.light)
-              : LegacyMaterialTheme.light(),
+          theme: AppTheme.build(Brightness.light),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: Builder(
@@ -59,24 +55,7 @@ void main() {
     await tester.pumpAndSettle();
   }
 
-  testWidgets('Material phones open the shared sheet with its handle', (
-    tester,
-  ) async {
-    await open(tester, mornye: false);
-    final sheet = tester.widget<BottomSheet>(find.byType(BottomSheet));
-    expect(sheet.showDragHandle, isNot(true));
-    expect(find.byType(AppSheetHandle), findsOneWidget);
-    expect(find.byType(AppBottomSheet), findsOneWidget);
-    expect(find.text('Details'), findsOneWidget);
-    expect(find.text('A song · An artist'), findsOneWidget);
-    expect(find.text('An album'), findsOneWidget);
-    expect(tester.takeException(), isNull);
-  });
-
-
-  {
-
-  }
+  {}
 
   testWidgets('Mornye decodes the cover at its thumbnail size', (tester) async {
     await open(

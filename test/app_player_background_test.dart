@@ -326,10 +326,7 @@ void main() {
       textDirection: TextDirection.ltr,
       child: side(
         overlay,
-        AppPlayerBackground(
-          artUri: null,
-          artwork: artwork ? _artwork : null,
-        ),
+        AppPlayerBackground(artUri: null, artwork: artwork ? _artwork : null),
       ),
     );
     final fade = find.descendant(

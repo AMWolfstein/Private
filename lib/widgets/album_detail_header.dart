@@ -11,17 +11,12 @@ import 'package:mornye/providers/runtime_profile_provider.dart';
 import 'package:mornye/theme/app_motion.dart';
 import 'package:mornye/theme/app_tokens.dart';
 import 'package:mornye/theme/cover_palette.dart';
-import 'package:mornye/theme/material_expressive.dart';
-import 'package:mornye/theme/app_theme.dart';
-import 'package:mornye/theme/app_icons.dart';
 import 'package:mornye/widgets/app_chrome.dart';
 import 'package:mornye/widgets/app_glass_press.dart';
 import 'package:mornye/widgets/app_icon.dart';
 import 'package:mornye/widgets/app_icon_button.dart';
-import 'package:mornye/widgets/expressive_button.dart';
-import 'package:mornye/widgets/expressive_button_group.dart';
-import 'package:mornye/widgets/expressive_icon_button.dart';
 import 'package:mornye/utils/adaptive_layout.dart';
+import 'package:mornye/theme/app_icons.dart';
 import 'package:mornye/widgets/track_lists/context_menu.dart';
 import 'package:mornye/widgets/settled_blur.dart';
 import 'package:mornye/widgets/sliver_layout_info_builder.dart';
@@ -114,7 +109,7 @@ class AlbumDetailHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if ((context.isMornye && (coverBuilder != null || immersive))) {
+    if ((((coverBuilder != null || immersive)))) {
       final scheme = Theme.of(context).colorScheme;
       return HeaderPalette(
         scheme: scheme,
@@ -133,7 +128,7 @@ class AlbumDetailHeader extends StatelessWidget {
   /// Keep the toolbar at the collection scroll-view level so it stays pinned
   /// after the dynamically sized artwork and metadata have scrolled away.
   List<Widget> buildSlivers(BuildContext context) {
-    if (!context.isMornye || (coverBuilder == null && !immersive)) {
+    if (((coverBuilder == null && !immersive))) {
       return [this];
     }
     final scheme = Theme.of(context).colorScheme;
@@ -318,7 +313,7 @@ class AlbumDetailHeader extends StatelessWidget {
 
   Widget _buildAppBar(BuildContext context, ColorScheme headerScheme) {
     final tokens = context.tokens;
-    final plainArtworkHeader = context.isMornye && coverBuilder != null;
+    final plainArtworkHeader = (coverBuilder != null);
     // Controls and header content get an explicit edge inset so circular
     // actions do not touch the screen edge.
     final headerEdgeInset = detailHeaderEdgeInset(context);
@@ -327,9 +322,7 @@ class AlbumDetailHeader extends StatelessWidget {
     // keeps the familiar dark treatment — both tinted by the artwork.
     final scrimColor = headerScheme.surface;
     final onHeader = headerScheme.onSurface;
-    final expressive = materialExpressiveEnabled(context);
     final fallbackMotion = AppMotionSpec(tokens.motionFast, Curves.linear);
-    final titleSlide = AppMotion.spatial(context, fallbackMotion);
     final titleFade = AppMotion.effects(context, fallbackMotion);
     Widget toolbarTitle(bool showTitle) {
       final fading = AnimatedOpacity(
@@ -347,13 +340,7 @@ class AlbumDetailHeader extends StatelessWidget {
           overflow: TextOverflow.ellipsis,
         ),
       );
-      if (!expressive) return fading;
-      return AnimatedSlide(
-        duration: titleSlide.duration,
-        curve: titleSlide.curve,
-        offset: showTitle ? Offset.zero : const Offset(0, 0.6),
-        child: fading,
-      );
+      return fading;
     }
 
     return SliverAppBar(
@@ -375,9 +362,6 @@ class AlbumDetailHeader extends StatelessWidget {
           final showContent = collapseRatio > 0.3;
           // Expressive headers shrink and fade the hero content with the
           // scroll instead of hiding it at one threshold.
-          final contentProgress = Curves.easeOut.transform(
-            ((collapseRatio - 0.3) / 0.5).clamp(0.0, 1.0),
-          );
           final content = Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
@@ -406,9 +390,7 @@ class AlbumDetailHeader extends StatelessWidget {
                       ),
                     );
                     // Material uses the expressive extra-large corner.
-                    final coverRadius = context.isMornye
-                        ? tokens.radiusControl
-                        : 28.0;
+                    final coverRadius = tokens.radiusControl;
                     return Container(
                       width: coverSize,
                       height: coverSize,
@@ -487,23 +469,11 @@ class AlbumDetailHeader extends StatelessWidget {
                   left: 20 + headerEdgeInset,
                   right: 20 + headerEdgeInset,
                   bottom: 40,
-                  child: expressive
-                      ? IgnorePointer(
-                          ignoring: contentProgress == 0,
-                          child: Opacity(
-                            opacity: contentProgress,
-                            child: Transform.scale(
-                              scale: 0.9 + 0.1 * contentProgress,
-                              alignment: Alignment.bottomCenter,
-                              child: content,
-                            ),
-                          ),
-                        )
-                      : AnimatedOpacity(
-                          duration: tokens.motionFast,
-                          opacity: showContent ? 1.0 : 0.0,
-                          child: content,
-                        ),
+                  child: AnimatedOpacity(
+                    duration: tokens.motionFast,
+                    opacity: showContent ? 1.0 : 0.0,
+                    child: content,
+                  ),
                 ),
               ],
             ),
@@ -520,9 +490,7 @@ class AlbumDetailHeader extends StatelessWidget {
             Center(
               child: AppIconButton.filledTonal(
                 tooltip: MaterialLocalizations.of(context).backButtonTooltip,
-                icon: AppIcon(
-                  context.isMornye ? Icons.chevron_left : Icons.arrow_back,
-                ),
+                icon: AppIcon(Icons.chevron_left),
                 style: IconButton.styleFrom(
                   minimumSize: Size.square(tokens.minTouchTarget),
                   backgroundColor: headerScheme.surfaceContainerHigh.withValues(
@@ -684,68 +652,32 @@ class AlbumPlayActions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final tokens = context.tokens;
-    final scheme = HeaderPalette.of(context);
-    if (context.isMornye) {
-      return Row(
-        children: [
-          if (onDownload != null) ...[
-            HeaderCircleButton(
-              icon: Icons.download_for_offline_outlined,
-              tooltip: context.l10n.offlineSave,
-              onPressed: onDownload,
-            ),
-            const SizedBox(width: 12),
-          ],
-          Expanded(
-            child: HeaderFilledButton(
-              icon: isPlaying
-                  ? CupertinoIcons.pause_fill
-                  : CupertinoIcons.play_fill,
-              label: playLabel,
-              onPressed: onPlay,
-            ),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: _MornyeHeaderButton(
-              icon: CupertinoIcons.shuffle,
-              label: shuffleTooltip,
-              onPressed: onShuffle,
-            ),
-          ),
-        ],
-      );
-    }
-    return ExpressiveButtonGroup(
-      flexible: {onDownload == null ? 0 : 1},
-      spacing: tokens.gapMd,
-      slotWidth: tokens.minTouchTarget,
+    return Row(
       children: [
-        if (onDownload != null)
+        if (onDownload != null) ...[
           HeaderCircleButton(
             icon: Icons.download_for_offline_outlined,
             tooltip: context.l10n.offlineSave,
             onPressed: onDownload,
           ),
-        ExpressiveButton(
-          onPressed: onPlay,
-          icon: AppIcon(isPlaying ? Icons.pause : Icons.play_arrow, size: 20),
-          style: FilledButton.styleFrom(
-            backgroundColor: scheme.primary,
-            foregroundColor: scheme.onPrimary,
-            minimumSize: Size(0, tokens.minTouchTarget),
-            shape: const StadiumBorder(),
+          const SizedBox(width: 12),
+        ],
+        Expanded(
+          child: HeaderFilledButton(
+            icon: isPlaying
+                ? CupertinoIcons.pause_fill
+                : CupertinoIcons.play_fill,
+            label: playLabel,
+            onPressed: onPlay,
           ),
-          child: Text(playLabel, maxLines: 1, overflow: TextOverflow.ellipsis),
         ),
-        ExpressiveIconButton(
-          tooltip: shuffleTooltip,
-          onPressed: onShuffle,
-          icon: const AppIcon(Icons.shuffle),
-          size: tokens.minTouchTarget,
-          backgroundColor: scheme.secondaryContainer.withValues(alpha: 0.8),
-          foregroundColor: scheme.onSecondaryContainer,
+        const SizedBox(width: 12),
+        Expanded(
+          child: _MornyeHeaderButton(
+            icon: CupertinoIcons.shuffle,
+            label: shuffleTooltip,
+            onPressed: onShuffle,
+          ),
         ),
       ],
     );
@@ -770,28 +702,11 @@ class HeaderFilledButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final tokens = context.tokens;
-    final scheme = HeaderPalette.of(context);
-    if (context.isMornye) {
-      return _MornyeHeaderButton(
-        icon: appIconFor(icon),
-        label: label,
-        onPressed: onPressed,
-        prominent: !tonal,
-      );
-    }
-    return ExpressiveButton(
+    return _MornyeHeaderButton(
+      icon: appIconFor(icon),
+      label: label,
       onPressed: onPressed,
-      icon: AppIcon(icon, size: 18),
-      style: FilledButton.styleFrom(
-        backgroundColor: scheme.primary,
-        foregroundColor: scheme.onPrimary,
-        disabledBackgroundColor: scheme.primary.withValues(alpha: 0.4),
-        disabledForegroundColor: scheme.onPrimary.withValues(alpha: 0.7),
-        minimumSize: Size(0, tokens.minTouchTarget),
-        shape: const StadiumBorder(),
-      ),
-      child: Text(label, maxLines: 1, overflow: TextOverflow.ellipsis),
+      prominent: !tonal,
     );
   }
 }
@@ -830,11 +745,10 @@ class HeaderCircleButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final tokens = context.tokens;
     final scheme = HeaderPalette.of(context);
     final buttonSize = this.buttonSize;
     final iconSize = this.iconSize;
-    if (context.isMornye && HeaderActionGroup.of(context)) {
+    if (HeaderActionGroup.of(context)) {
       return IconButton(
         onPressed: onPressed,
         tooltip: tooltip,
@@ -845,78 +759,68 @@ class HeaderCircleButton extends ConsumerWidget {
         ),
       );
     }
-    if (context.isMornye) {
-      if (tonal) {
-        return Tooltip(
-          message: tooltip,
-          child: SizedBox.square(
-            dimension: math.max(buttonSize ?? 44, 48),
-            child: Center(
-              child: SizedBox.square(
-                dimension: buttonSize ?? 44,
-                child: AppGlassPress(
-                  radius: (buttonSize ?? 44) / 2,
-                  enabled: onPressed != null,
-                  child: CupertinoButton(
-                    padding: EdgeInsets.zero,
-                    minimumSize: Size.square(buttonSize ?? 44),
-                    borderRadius: BorderRadius.circular((buttonSize ?? 48) / 2),
-                    color: scheme.onSurface.withValues(
-                      alpha: scheme.brightness == Brightness.dark ? 0.10 : 0.06,
-                    ),
-                    onPressed: onPressed,
-                    child: AppIcon(
-                      appIconFor(icon),
-                      size: iconSize,
-                      color: onPressed == null
-                          ? scheme.onSurfaceVariant
-                          : iconColor ?? scheme.primary,
-                    ),
+    if (tonal) {
+      return Tooltip(
+        message: tooltip,
+        child: SizedBox.square(
+          dimension: math.max(buttonSize ?? 44, 48),
+          child: Center(
+            child: SizedBox.square(
+              dimension: buttonSize ?? 44,
+              child: AppGlassPress(
+                radius: (buttonSize ?? 44) / 2,
+                enabled: onPressed != null,
+                child: CupertinoButton(
+                  padding: EdgeInsets.zero,
+                  minimumSize: Size.square(buttonSize ?? 44),
+                  borderRadius: BorderRadius.circular((buttonSize ?? 48) / 2),
+                  color: scheme.onSurface.withValues(
+                    alpha: scheme.brightness == Brightness.dark ? 0.10 : 0.06,
+                  ),
+                  onPressed: onPressed,
+                  child: AppIcon(
+                    appIconFor(icon),
+                    size: iconSize,
+                    color: onPressed == null
+                        ? scheme.onSurfaceVariant
+                        : iconColor ?? scheme.primary,
                   ),
                 ),
               ),
             ),
           ),
-        );
-      }
-      final blurEnabled = ref.watch(appBlurEnabledProvider);
-      final button = IconButton(
-        onPressed: onPressed,
-        tooltip: tooltip,
-        icon: AppIcon(appIconFor(icon), size: iconSize),
-        style: IconButton.styleFrom(
-          minimumSize: Size.square(buttonSize ?? 44),
-          foregroundColor: iconColor ?? scheme.onSurface,
-        ),
-      );
-      return Center(
-        widthFactor: 1,
-        child: AppGlassPress(
-          radius: (buttonSize ?? 48) / 2,
-          enabled: onPressed != null,
-          child: AppGlass.navigation(
-            radius: (buttonSize ?? 48) / 2,
-            tintColor:
-                glassTintColor ??
-                (scheme.brightness == Brightness.dark
-                    ? Colors.black
-                    : Colors.white),
-            tintOpacity:
-                glassTintOpacity ??
-                (scheme.brightness == Brightness.dark ? 0.45 : 0.55),
-            blurEnabled: blurEnabled,
-            child: button,
-          ),
         ),
       );
     }
-    return ExpressiveIconButton(
+    final blurEnabled = ref.watch(appBlurEnabledProvider);
+    final button = IconButton(
       onPressed: onPressed,
-      icon: AppIcon(icon, size: iconSize),
       tooltip: tooltip,
-      size: buttonSize ?? tokens.minTouchTarget,
-      backgroundColor: scheme.surfaceContainerHighest.withValues(alpha: 0.7),
-      foregroundColor: iconColor ?? scheme.onSurfaceVariant,
+      icon: AppIcon(appIconFor(icon), size: iconSize),
+      style: IconButton.styleFrom(
+        minimumSize: Size.square(buttonSize ?? 44),
+        foregroundColor: iconColor ?? scheme.onSurface,
+      ),
+    );
+    return Center(
+      widthFactor: 1,
+      child: AppGlassPress(
+        radius: (buttonSize ?? 48) / 2,
+        enabled: onPressed != null,
+        child: AppGlass.navigation(
+          radius: (buttonSize ?? 48) / 2,
+          tintColor:
+              glassTintColor ??
+              (scheme.brightness == Brightness.dark
+                  ? Colors.black
+                  : Colors.white),
+          tintOpacity:
+              glassTintOpacity ??
+              (scheme.brightness == Brightness.dark ? 0.45 : 0.55),
+          blurEnabled: blurEnabled,
+          child: button,
+        ),
+      ),
     );
   }
 }
@@ -929,7 +833,7 @@ class HeaderMoreButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => HeaderCircleButton(
-    icon: context.isMornye ? CupertinoIcons.ellipsis : Icons.more_horiz,
+    icon: CupertinoIcons.ellipsis,
     tooltip: MaterialLocalizations.of(context).showMenuTooltip,
     onPressed: () => showContextMenu(
       context,
@@ -1050,7 +954,7 @@ class HeaderMetaItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final scheme = HeaderPalette.of(context);
     final textStyle = TextStyle(
-      color: context.isMornye ? scheme.onSurfaceVariant : scheme.onSurface,
+      color: scheme.onSurfaceVariant,
       fontSize: 13,
       fontWeight: FontWeight.w500,
     );

@@ -60,9 +60,7 @@ class LocalLastfmStore implements LastfmStore {
   }) : _preferences = preferences ?? SharedPreferences.getInstance,
        _storage =
            storage ??
-           const FlutterSecureStorage(
-             aOptions: secureStorageAndroidOptions,
-           );
+           const FlutterSecureStorage(aOptions: secureStorageAndroidOptions);
 
   static const _sessionKey = 'lastfm_session_v1';
   static const _stateKey = 'lastfm_scrobbles_v1';

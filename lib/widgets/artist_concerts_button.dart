@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mornye/l10n/l10n.dart';
 import 'package:mornye/models/artist_concert.dart';
 import 'package:mornye/screens/artist_concerts_screen.dart';
-import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/animation_utils.dart';
-import 'package:mornye/widgets/expressive_button.dart';
 
 class ArtistConcertsButton extends StatelessWidget {
   const ArtistConcertsButton({
@@ -38,18 +36,7 @@ class ArtistConcertsButton extends StatelessWidget {
       maxLines: 1,
       overflow: TextOverflow.ellipsis,
     );
-    if (!context.isMornye) {
-      return ExpressiveButton(
-        tonal: true,
-        onPressed: open,
-        icon: const Icon(Icons.confirmation_number_rounded, size: 16),
-        style: FilledButton.styleFrom(
-          minimumSize: const Size(0, 36),
-          padding: const EdgeInsets.symmetric(horizontal: 14),
-        ),
-        child: label,
-      );
-    }
+
     return TextButton.icon(
       onPressed: open,
       style: TextButton.styleFrom(

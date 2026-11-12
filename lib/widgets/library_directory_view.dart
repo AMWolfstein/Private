@@ -21,8 +21,6 @@ import 'package:mornye/services/library_directory_index.dart';
 import 'package:mornye/services/local_track_redownload_service.dart';
 import 'package:mornye/services/playable_media.dart';
 import 'package:mornye/theme/app_tokens.dart';
-import 'package:mornye/theme/app_theme.dart';
-import 'package:mornye/utils/adaptive_layout.dart';
 import 'package:mornye/utils/file_access.dart';
 import 'package:mornye/utils/nav_bar_inset.dart';
 import 'package:mornye/widgets/album_detail_header.dart';
@@ -40,6 +38,7 @@ import 'package:mornye/widgets/network_offline_actions.dart';
 import 'package:mornye/widgets/library_track_selection_bar.dart';
 import 'package:mornye/widgets/selection_bottom_bar.dart';
 import 'package:mornye/widgets/track_card.dart';
+import 'package:mornye/utils/adaptive_layout.dart';
 
 /// One Library folder: its path and counts, Play and Shuffle over every
 /// song under it, the folders inside it, then its own songs. Without
@@ -380,9 +379,8 @@ class _LibraryDirectoryViewState extends ConsumerState<LibraryDirectoryView>
     required bool summary,
   }) {
     final tokens = context.tokens;
-    final mornye = context.isMornye;
     final inset = wideListInset(context);
-    final gutter = (mornye ? 20.0 : tokens.gapLg) + inset;
+    final gutter = (20.0) + inset;
     final textTheme = Theme.of(context).textTheme;
     final colorScheme = Theme.of(context).colorScheme;
     final songsValue = folder.tracks.isEmpty
@@ -528,7 +526,7 @@ class _LibraryDirectoryViewState extends ConsumerState<LibraryDirectoryView>
           mediaItemPlaybackUiProvider(_playbackKey(item)),
         );
         return TrackCard(
-          style: context.isMornye ? TrackCardStyle.flat : TrackCardStyle.filled,
+          style: TrackCardStyle.flat,
           leading: _SongArtwork(item: item, size: context.tokens.coverList),
           leadingArtwork: true,
           title: item.trackName,
@@ -570,7 +568,7 @@ class _LibraryDirectoryViewState extends ConsumerState<LibraryDirectoryView>
 
   Widget _folderRow(LibraryDirectory parent, LibraryDirectory folder) {
     return TrackCard(
-      style: context.isMornye ? TrackCardStyle.flat : TrackCardStyle.filled,
+      style: TrackCardStyle.flat,
       leading: _FolderArtwork(folder: folder),
       leadingArtwork: folder.cover != null,
       // Top-level entries of several volumes read as their paths.

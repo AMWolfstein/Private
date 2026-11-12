@@ -10,12 +10,11 @@ import 'package:mornye/models/theme_settings.dart';
 import 'package:mornye/providers/settings_provider.dart';
 import 'package:mornye/screens/settings/playback_settings_page.dart';
 import 'package:mornye/utils/settings_search_catalog.dart';
-import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/settings_group.dart';
 
 void main() {
-  for (final mornye in [false, true]) {
+  for (final mornye in [true]) {
     testWidgets('automatic controls persist in both themes ($mornye)', (
       tester,
     ) async {
@@ -35,9 +34,7 @@ void main() {
         UncontrolledProviderScope(
           container: container,
           child: MaterialApp(
-            theme: mornye
-                ? AppTheme.build(Brightness.dark, accent: AppAccent.blue)
-                : LegacyMaterialTheme.light(),
+            theme: AppTheme.build(Brightness.dark, accent: AppAccent.blue),
             locale: const Locale('en'),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
@@ -118,9 +115,7 @@ void main() {
         UncontrolledProviderScope(
           container: container,
           child: MaterialApp(
-            theme: mornye
-                ? AppTheme.build(Brightness.dark, accent: AppAccent.blue)
-                : LegacyMaterialTheme.light(),
+            theme: AppTheme.build(Brightness.dark, accent: AppAccent.blue),
             locale: const Locale('en'),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
@@ -163,62 +158,6 @@ void main() {
         ),
         isTrue,
       );
-    });
-
-    testWidgets('Compact player is a Material option ($mornye)', (
-      tester,
-    ) async {
-      SharedPreferences.setMockInitialValues({});
-      tester.view.physicalSize = const Size(390, 844);
-      tester.view.devicePixelRatio = 1;
-      addTearDown(tester.view.reset);
-      final container = ProviderContainer(
-        overrides: [
-          initialSettingsProvider.overrideWithValue(const AppSettings()),
-        ],
-      );
-      addTearDown(container.dispose);
-      await tester.pumpWidget(
-        UncontrolledProviderScope(
-          container: container,
-          child: MaterialApp(
-            theme: mornye
-                ? AppTheme.build(Brightness.dark, accent: AppAccent.blue)
-                : LegacyMaterialTheme.light(),
-            locale: const Locale('en'),
-            localizationsDelegates: AppLocalizations.localizationsDelegates,
-            supportedLocales: AppLocalizations.supportedLocales,
-            home: const PlaybackSettingsPage(),
-          ),
-        ),
-      );
-      final compact = find.text('Compact player');
-      await tester.scrollUntilVisible(
-        compact,
-        200,
-        scrollable: find.byType(Scrollable).first,
-      );
-      await tester.pumpAndSettle();
-      final item = tester.widget<SettingsSwitchItem>(
-        find.byWidgetPredicate(
-          (widget) =>
-              widget is SettingsSwitchItem && widget.title == 'Compact player',
-        ),
-      );
-      expect(item.value, isFalse);
-      expect(item.enabled, !mornye);
-      if (!mornye) {
-        await tester.tap(compact);
-        await tester.pumpAndSettle();
-        expect(container.read(settingsProvider).compactPlayer, isTrue);
-        expect(
-          AppSettings.fromJson(
-            container.read(settingsProvider).toJson(),
-          ).compactPlayer,
-          isTrue,
-        );
-      }
-      expect(tester.takeException(), isNull);
     });
   }
 }

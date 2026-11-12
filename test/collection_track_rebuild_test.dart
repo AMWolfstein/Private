@@ -11,7 +11,6 @@ import 'package:mornye/providers/recent_access_provider.dart';
 import 'package:mornye/providers/settings_provider.dart';
 import 'package:mornye/screens/album_screen.dart';
 import 'package:mornye/screens/playlist_screen.dart';
-import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/album_detail_header.dart';
 import 'package:mornye/widgets/track_list_tile.dart';
@@ -70,7 +69,7 @@ Widget _app(ProviderContainer container, Widget child, {bool mornye = false}) =>
     UncontrolledProviderScope(
       container: container,
       child: MaterialApp(
-        theme: mornye ? AppTheme.build(Brightness.light) : LegacyMaterialTheme.light(),
+        theme: AppTheme.build(Brightness.light),
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         home: Scaffold(body: child),
@@ -149,7 +148,7 @@ void main() {
     },
   );
 
-  for (final mornye in [false, true]) {
+  for (final mornye in [true]) {
     testWidgets(
       'Love All action keeps its add/remove feedback in Mornye=$mornye',
       (tester) async {

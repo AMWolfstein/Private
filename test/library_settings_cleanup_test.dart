@@ -11,7 +11,6 @@ import 'package:mornye/providers/local_library_provider.dart';
 import 'package:mornye/providers/settings_provider.dart';
 import 'package:mornye/screens/settings/library_settings_page.dart';
 import 'package:mornye/services/library_database.dart';
-import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/app_loading_indicator.dart';
 import 'package:mornye/widgets/settings_group.dart';
@@ -107,7 +106,7 @@ Future<void> _mount(
         downloadHistoryProvider.overrideWith(() => history),
       ],
       child: MaterialApp(
-        theme: mornye ? AppTheme.build(Brightness.dark) : LegacyMaterialTheme.light(),
+        theme: AppTheme.build(Brightness.dark),
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         home: const LibrarySettingsPage(),
@@ -120,7 +119,7 @@ Future<void> _mount(
 }
 
 void main() {
-  for (final mornye in [false, true]) {
+  for (final mornye in [true]) {
     testWidgets('source shows the scan failure reason (Mornye: $mornye)', (
       tester,
     ) async {

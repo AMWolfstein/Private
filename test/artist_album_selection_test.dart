@@ -6,7 +6,6 @@ import 'package:mornye/l10n/l10n.dart';
 import 'package:mornye/models/track.dart';
 import 'package:mornye/providers/track_provider.dart';
 import 'package:mornye/screens/artist_screen.dart';
-import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/animation_utils.dart';
 import 'package:mornye/widgets/selection_bottom_bar.dart';
@@ -41,7 +40,7 @@ Future<void> _pumpArtist(
   await tester.pumpWidget(
     ProviderScope(
       child: MaterialApp(
-        theme: mornye ? AppTheme.build(Brightness.light) : LegacyMaterialTheme.light(),
+        theme: AppTheme.build(Brightness.light),
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         home: ArtistScreen(
@@ -92,14 +91,12 @@ Future<void> _disposeArtist(WidgetTester tester) async {
 }
 
 void main() {
-  tearDown(() {
-  });
+  tearDown(() {});
 
-  for (final mornye in [false, true]) {
+  for (final mornye in [true]) {
     final style = mornye ? 'Mornye' : 'Material';
 
-
-testWidgets('$style: touch long press still selects albums', (
+    testWidgets('$style: touch long press still selects albums', (
       tester,
     ) async {
       await _pumpArtist(tester, mornye: mornye);

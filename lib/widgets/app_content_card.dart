@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:material_3_expressive/material_3_expressive.dart';
-import 'package:mornye/theme/material_expressive.dart';
 import 'package:mornye/theme/app_theme.dart';
 
 /// One inline surface, matching the metadata groups and dialog controls.
@@ -39,42 +37,7 @@ class AppContentCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (!context.isMornye || !mornyeSurface) {
-      if (!context.isMornye &&
-          materialExpressiveEnabled(context) &&
-          (shape == null || shape is RoundedRectangleBorder)) {
-        final radius = shape is RoundedRectangleBorder
-            ? (shape as RoundedRectangleBorder).borderRadius.resolve(
-                Directionality.of(context),
-              )
-            : BorderRadius.circular(20);
-        return Padding(
-          padding:
-              margin ?? CardTheme.of(context).margin ?? const EdgeInsets.all(4),
-          child: MaterialExpressiveScope(
-            child: M3ECard(
-              variant: M3ECardVariant.filled,
-              padding: EdgeInsets.zero,
-              color: color,
-              elevation: elevation ?? 0,
-              // BorderSide.none would still paint as a hairline.
-              border:
-                  shape is RoundedRectangleBorder &&
-                      (shape as RoundedRectangleBorder).side.style !=
-                          BorderStyle.none
-                  ? (shape as RoundedRectangleBorder).side
-                  : null,
-              borderRadius: radius,
-              clipBehavior: onTap == null && onLongPress == null
-                  ? clipBehavior
-                  : Clip.antiAlias,
-              onPressed: onTap,
-              onLongPress: onLongPress,
-              child: Material(color: Colors.transparent, child: child),
-            ),
-          ),
-        );
-      }
+    if ((!mornyeSurface)) {
       final interactive = onTap != null || onLongPress != null;
       return Card(
         color: color,

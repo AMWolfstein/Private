@@ -6,13 +6,12 @@ import 'package:mornye/constants/app_info.dart';
 import 'package:mornye/l10n/l10n.dart';
 import 'package:mornye/screens/whats_new_screen.dart';
 import 'package:mornye/theme/app_icons.dart';
-import 'package:mornye/theme/app_theme.dart';
-import 'package:mornye/utils/adaptive_layout.dart';
 import 'package:mornye/utils/nav_bar_inset.dart';
 import 'package:mornye/widgets/animation_utils.dart';
 import 'package:mornye/widgets/settings_group.dart';
 import 'package:mornye/widgets/app_icon.dart';
 import 'package:mornye/widgets/app_sliver_header.dart';
+import 'package:mornye/utils/adaptive_layout.dart';
 
 class AboutPage extends StatelessWidget {
   const AboutPage({super.key});
@@ -268,14 +267,12 @@ class _AppHeaderCard extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     // Material sits on the settings group tier beside the groups below.
-    final cardColor = !context.isMornye
-        ? settingsGroupColor(context)
-        : isDark
+    final cardColor = (isDark
         ? Color.alphaBlend(
             Colors.white.withValues(alpha: 0.08),
             colorScheme.surface,
           )
-        : colorScheme.surfaceContainerHighest;
+        : colorScheme.surfaceContainerHighest);
 
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -533,14 +530,12 @@ class _TranslatorsSection extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    final cardColor = !context.isMornye
-        ? settingsGroupColor(context)
-        : isDark
+    final cardColor = (isDark
         ? Color.alphaBlend(
             Colors.white.withValues(alpha: 0.08),
             colorScheme.surface,
           )
-        : colorScheme.surfaceContainerHighest;
+        : colorScheme.surfaceContainerHighest);
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -651,9 +646,7 @@ class _AboutSettingsItem extends StatelessWidget {
                   height: 40,
                   child: AppIcon(
                     context.adaptiveIcon(icon),
-                    color: context.isMornye
-                        ? colorScheme.primary
-                        : colorScheme.onSurfaceVariant,
+                    color: colorScheme.primary,
                     size: 24,
                   ),
                 ),

@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:mornye/l10n/l10n.dart';
 import 'package:mornye/theme/app_tokens.dart';
-import 'package:mornye/theme/app_theme.dart';
-import 'package:mornye/widgets/app_content_card.dart';
 import 'package:mornye/widgets/app_icon.dart';
-import 'package:mornye/widgets/app_shape.dart';
 import 'package:mornye/widgets/expressive_button.dart';
+import 'package:mornye/widgets/app_content_card.dart';
 
 /// Error card shown by detail screens: a dedicated rate-limit presentation
 /// when the message looks like an HTTP 429, otherwise a generic error row.
@@ -126,19 +124,7 @@ class EmptyState extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
           children: [
-            if (context.isMornye)
-              Icon(icon, size: 64, color: colorScheme.onSurfaceVariant)
-            else
-              AppShapeBadge(
-                kind: AppShapes.badge,
-                size: 112,
-                color: colorScheme.secondaryContainer,
-                child: AppIcon(
-                  icon,
-                  size: 52,
-                  color: colorScheme.onSecondaryContainer,
-                ),
-              ),
+            Icon(icon, size: 64, color: colorScheme.onSurfaceVariant),
             SizedBox(height: tokens.gapLg),
             Text(
               title,

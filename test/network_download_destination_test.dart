@@ -99,9 +99,7 @@ void main() {
                 settingsProvider.overrideWith(() => _Settings(events)),
               ],
               child: MaterialApp(
-                theme: mornye
-                    ? AppTheme.build(Brightness.dark)
-                    : ThemeData(),
+                theme: mornye ? AppTheme.build(Brightness.dark) : ThemeData(),
                 localizationsDelegates: AppLocalizations.localizationsDelegates,
                 supportedLocales: AppLocalizations.supportedLocales,
                 home: NetworkStorageScreen(

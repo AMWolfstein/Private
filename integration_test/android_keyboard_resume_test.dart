@@ -7,7 +7,6 @@ import 'package:integration_test/integration_test.dart';
 import 'package:mornye/l10n/l10n.dart';
 import 'package:mornye/models/settings.dart';
 import 'package:mornye/providers/settings_provider.dart';
-import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/android_keyboard_lifecycle.dart';
 import 'package:mornye/widgets/app_bottom_sheet.dart';
@@ -45,7 +44,6 @@ void main() {
     );
 
     for (var cycle = 0; cycle < 4; cycle++) {
-      final mornye = cycle >= 2;
       final sheet = cycle.isOdd;
       var tapped = false;
       final lifecycle = _BackgroundRoundTrip();
@@ -65,9 +63,7 @@ void main() {
         ProviderScope(
           overrides: [settingsProvider.overrideWith(_Settings.new)],
           child: MaterialApp(
-            theme: mornye
-                ? AppTheme.build(Brightness.light)
-                : LegacyMaterialTheme.light(),
+            theme: AppTheme.build(Brightness.light),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             builder: (_, child) => AndroidKeyboardLifecycle(child: child!),

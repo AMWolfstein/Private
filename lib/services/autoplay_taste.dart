@@ -271,8 +271,6 @@ Future<_PackedTaste> _trainNativePackedTaste(
   }
 }
 
-
-
 class _Position {
   _Position(this.song, this.artist, this.weight);
   final String song, artist;

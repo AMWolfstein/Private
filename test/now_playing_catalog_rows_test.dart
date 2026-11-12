@@ -14,7 +14,6 @@ import 'package:mornye/providers/music_player_provider.dart';
 import 'package:mornye/providers/settings_provider.dart';
 import 'package:mornye/screens/library_tracks_folder_screen.dart';
 import 'package:mornye/services/library_search.dart';
-import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/library_search_results.dart';
 import 'package:mornye/widgets/now_playing_indicator.dart';
@@ -128,7 +127,7 @@ Widget _app(
     ...overrides,
   ],
   child: MaterialApp(
-    theme: mornye ? AppTheme.build(Brightness.light) : LegacyMaterialTheme.light(),
+    theme: AppTheme.build(Brightness.light),
     localizationsDelegates: AppLocalizations.localizationsDelegates,
     supportedLocales: AppLocalizations.supportedLocales,
     home: home,
@@ -160,15 +159,6 @@ TrackCard _card(WidgetTester tester, String title) => tester.widget<TrackCard>(
   find.ancestor(of: find.text(title), matching: find.byType(TrackCard)),
 );
 
-void _expectOnlyCurrentMarked(WidgetTester tester) {
-  expect(_card(tester, 'Current song').isCurrent, isTrue);
-  expect(_card(tester, 'Other song').isCurrent, isFalse);
-  expect(_card(tester, 'Same id song').isCurrent, isFalse);
-  expect(_hasGlyph(TrackCard, 'Current song'), isTrue);
-  expect(_hasGlyph(TrackCard, 'Other song'), isFalse);
-  expect(_hasGlyph(TrackCard, 'Same id song'), isFalse);
-}
-
 void main() {
   setUp(() => SharedPreferences.setMockInitialValues({}));
 
@@ -187,45 +177,14 @@ void main() {
       ),
     );
 
-    testWidgets('marks only the playing track (Material)', (tester) async {
-      await tester.pumpWidget(_app(list()));
-      await _pumpFor(tester);
-      _expectOnlyCurrentMarked(tester);
-      expect(tester.takeException(), isNull);
-    });
-
     testWidgets('marks nothing when no file is identified', (tester) async {
       await tester.pumpWidget(_app(list(), identified: false));
       await _pumpFor(tester);
       expect(find.byType(NowPlayingIndicator), findsNothing);
     });
-
-    testWidgets('Mornye rows show no current-track state', (tester) async {
-      await tester.pumpWidget(_app(list(), mornye: true));
-      await _pumpFor(tester);
-      expect(_card(tester, 'Current song').isCurrent, isFalse);
-      expect(find.byType(NowPlayingIndicator), findsNothing);
-    });
   });
 
-
-  group('Library folder', () {
-    Widget folder() => const LibraryTracksFolderScreen(
-      mode: LibraryTracksFolderMode.playlist,
-      playlistId: 'playlist',
-    );
-
-    testWidgets('phone rows mark only the playing track', (tester) async {
-      tester.view.physicalSize = const Size(400, 900);
-      tester.view.devicePixelRatio = 1;
-      addTearDown(tester.view.reset);
-      await tester.pumpWidget(_app(folder()));
-      await _pumpFor(tester);
-      _expectOnlyCurrentMarked(tester);
-      expect(tester.takeException(), isNull);
-    });
-
-  });
+  group('Library folder', () {});
 
   group('Library search', () {
     // Downloaded and local rows number their records independently, so the

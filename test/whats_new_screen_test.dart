@@ -144,7 +144,6 @@ void main() {
     expect(saved['whatsNewSeen'], AppInfo.whatsNewRelease);
   });
 
-
   testWidgets('Skip stops at Nearby devices, which waits for an answer', (
     tester,
   ) async {
@@ -297,6 +296,5 @@ void main() {
         AppInfo.whatsNewRelease,
       );
     });
-
   }
 }

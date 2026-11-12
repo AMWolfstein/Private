@@ -111,9 +111,7 @@ class _CollectionScaffoldState extends State<CollectionScaffold> {
             SliverToBoxAdapter(
               child: SizedBox(
                 key: const ValueKey('collection-selection-spacer'),
-                height: widget.isSelectionMode
-                    ? _selectionBarHeight
-                    : 32,
+                height: widget.isSelectionMode ? _selectionBarHeight : 32,
               ),
             ),
             NavBarSliverSpacer(bottomInset: widget.bottomInset),

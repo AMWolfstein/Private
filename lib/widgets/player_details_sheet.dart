@@ -3,12 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:mornye/controllers/player_metadata_controller.dart';
 import 'package:mornye/l10n/l10n.dart';
 import 'package:mornye/theme/app_motion.dart';
-import 'package:mornye/theme/app_tokens.dart';
-import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/utils/isrc_utils.dart';
-import 'package:mornye/widgets/app_bottom_sheet.dart';
 import 'package:mornye/widgets/app_player_details_sheet.dart';
-import 'package:mornye/widgets/settings_group.dart';
 
 Future<void> showPlayerDetailsSheet(
   BuildContext context,
@@ -29,20 +25,7 @@ Future<void> showPlayerDetailsSheet(
           mediaItem: mediaItem,
         ),
       );
-  if (!context.isMornye) {
-    // The shared sheet supplies the handle, shape and header on phones, and
-    final item = mediaItem;
-    final subtitle = [
-      item?.title,
-      item?.artist,
-    ].whereType<String>().where((part) => part.trim().isNotEmpty).join(' · ');
-    return showAppScrollableBottomSheet<void>(
-      context: context,
-      title: context.l10n.nowPlayingDetails,
-      subtitle: subtitle.isEmpty ? null : subtitle,
-      builder: (context, scrollController) => details(scrollController),
-    );
-  }
+
   // The Mornye details draw their own glass, handle and header.
   return showModalBottomSheet<void>(
     context: context,
@@ -104,71 +87,10 @@ class _MetadataList extends StatelessWidget {
       ),
     ].where((r) => r.$2.trim().isNotEmpty && r.$2 != '0').toList();
 
-    if (context.isMornye) {
-      return AppPlayerDetailsSheet(
-        rows: rows,
-        scrollController: scrollController,
-        mediaItem: mediaItem,
-      );
-    }
-
-    final textTheme = Theme.of(context).textTheme;
-    final tokens = context.tokens;
-
-    // The sheet header names the track, so the rows sit in one group below
-    // it instead of a titled card.
-    return ListView(
-      controller: scrollController,
-      padding: EdgeInsets.only(top: tokens.gapXs, bottom: tokens.gapXl),
-      children: [
-        if (rows.isEmpty)
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: tokens.gapXl),
-            child: Text(
-              l10n.nowPlayingNoMetadata,
-              style: textTheme.bodyMedium?.copyWith(
-                color: colorScheme.onSurfaceVariant,
-              ),
-            ),
-          )
-        else
-          SettingsGroup(
-            connected: true,
-            children: [
-              for (final (label, value) in rows)
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: tokens.rowPaddingH,
-                    vertical: tokens.rowPaddingVCompact,
-                  ),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.baseline,
-                    textBaseline: TextBaseline.alphabetic,
-                    children: [
-                      SizedBox(
-                        width: 100,
-                        child: Text(
-                          label,
-                          style: textTheme.bodySmall?.copyWith(
-                            color: colorScheme.onSurfaceVariant,
-                          ),
-                        ),
-                      ),
-                      SizedBox(width: tokens.gapSm),
-                      Expanded(
-                        child: Text(
-                          value,
-                          style: textTheme.bodyMedium?.copyWith(
-                            color: colorScheme.onSurface,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-            ],
-          ),
-      ],
+    return AppPlayerDetailsSheet(
+      rows: rows,
+      scrollController: scrollController,
+      mediaItem: mediaItem,
     );
   }
 }

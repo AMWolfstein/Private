@@ -12,11 +12,7 @@ class PreviewButton extends ConsumerWidget {
   final Track track;
   final double size;
 
-  const PreviewButton({
-    super.key,
-    required this.track,
-    this.size = 24,
-  });
+  const PreviewButton({super.key, required this.track, this.size = 24});
 
   /// The hit area is always at least 48 dp, whatever the glyph size.
   static const _constraints = BoxConstraints(minWidth: 48, minHeight: 48);

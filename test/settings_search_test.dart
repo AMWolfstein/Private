@@ -11,7 +11,6 @@ import 'package:mornye/l10n/app_localizations.dart';
 import 'package:mornye/screens/settings/about_page.dart';
 import 'package:mornye/screens/settings/settings_tab.dart';
 import 'package:mornye/services/app_remote_config_service.dart';
-import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/app_progress_indicator.dart';
 import 'package:mornye/widgets/settings_group.dart';
@@ -29,7 +28,7 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         child: MaterialApp(
-          theme: theme ?? LegacyMaterialTheme.light(),
+          theme: theme ?? AppTheme.build(Brightness.light),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: Scaffold(
@@ -63,7 +62,7 @@ void main() {
     },
   };
 
-  for (final mornye in [false, true]) {
+  for (final mornye in [true]) {
     testWidgets('support row updates cached progress after refresh ($mornye)', (
       tester,
     ) async {
@@ -77,7 +76,7 @@ void main() {
       await pumpSettings(
         tester,
         service: service,
-        theme: mornye ? AppTheme.build(Brightness.dark) : LegacyMaterialTheme.light(),
+        theme: AppTheme.build(Brightness.dark),
       );
       final support = find.byWidgetPredicate(
         (widget) =>
@@ -142,14 +141,11 @@ void main() {
     );
   });
 
-  for (final mornye in [false, true]) {
+  for (final mornye in [true]) {
     testWidgets('broad search builds only visible grouped results ($mornye)', (
       tester,
     ) async {
-      await pumpSettings(
-        tester,
-        theme: mornye ? AppTheme.build(Brightness.dark) : LegacyMaterialTheme.light(),
-      );
+      await pumpSettings(tester, theme: AppTheme.build(Brightness.dark));
       await tester.enterText(find.byType(TextField), 'a');
       await tester.pump();
       final group = tester.widget<SliverSettingsGroup>(
@@ -217,7 +213,7 @@ void main() {
 
     await tester.pumpWidget(
       MaterialApp(
-        theme: LegacyMaterialTheme.light(),
+        theme: AppTheme.build(Brightness.light),
         home: SettingsSearchHighlightScope(
           targetLabel: 'Target setting',
           child: Scaffold(

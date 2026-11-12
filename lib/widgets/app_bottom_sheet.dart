@@ -3,10 +3,9 @@ import 'package:flutter/cupertino.dart'
     show CupertinoButton, CupertinoDynamicColor, kCupertinoModalBarrierColor;
 import 'package:mornye/theme/app_motion.dart';
 import 'package:mornye/theme/app_tokens.dart';
-import 'package:mornye/theme/app_theme.dart';
-import 'package:mornye/widgets/app_icon.dart';
 import 'package:mornye/widgets/app_chrome.dart';
 import 'package:mornye/theme/app_icons.dart';
+import 'package:mornye/widgets/app_icon.dart';
 
 /// The drag handle shown at the top of every modal sheet.
 ///
@@ -373,7 +372,6 @@ Future<T?> showAppModalBottomSheet<T>({
   Color? backgroundColor,
   AppDialogSize dialogSize = AppDialogSize.medium,
 }) {
-  final mornye = context.isMornye;
   return showModalBottomSheet<T>(
     context: context,
     sheetAnimationStyle: AppMotion.surfaceEntrance(context),
@@ -384,12 +382,13 @@ Future<T?> showAppModalBottomSheet<T>({
     useSafeArea: useSafeArea,
     showDragHandle: showDragHandle,
     constraints: constraints,
-    backgroundColor: mornye ? Colors.transparent : backgroundColor,
-    barrierColor: mornye
-        ? CupertinoDynamicColor.resolve(kCupertinoModalBarrierColor, context)
-        : null,
-    elevation: mornye ? 0 : null,
-    builder: (context) => mornye && mornyeGlass
+    backgroundColor: Colors.transparent,
+    barrierColor: (CupertinoDynamicColor.resolve(
+      kCupertinoModalBarrierColor,
+      context,
+    )),
+    elevation: 0,
+    builder: (context) => mornyeGlass
         ? AppGlassPanel.overlay(child: Builder(builder: builder))
         : builder(context),
   );
@@ -439,8 +438,7 @@ class AppSheetDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final mornye = context.isMornye;
-    final radius = mornye ? _mornyeRadius : context.tokens.radiusSheet;
+    final radius = _mornyeRadius;
     final window = MediaQuery.sizeOf(context);
     final width = (window.width - _margin * 2).clamp(0.0, dialogSize.width);
     final maxHeight =
@@ -454,26 +452,15 @@ class AppSheetDialog extends StatelessWidget {
         child: child,
       ),
     );
-    if (mornye && mornyeGlass) {
+    if (mornyeGlass) {
       content = AppGlassPanel.overlay(radius: radius, child: content);
-    } else if (!mornye) {
-      // body's bar stays visible, so a cut-off list reads as scrollable.
-      content = ScrollbarTheme(
-        data: ScrollbarTheme.of(
-          context,
-        ).copyWith(thumbVisibility: const WidgetStatePropertyAll(true)),
-        child: content,
-      );
     }
     return Dialog(
       key: const ValueKey('app-sheet-dialog'),
       insetPadding: const EdgeInsets.all(_margin),
-      backgroundColor: mornye
-          ? Colors.transparent
-          : backgroundColor ??
-                Theme.of(context).colorScheme.surfaceContainerHigh,
+      backgroundColor: Colors.transparent,
       surfaceTintColor: Colors.transparent,
-      elevation: mornye ? 0 : null,
+      elevation: 0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(radius),
       ),
@@ -538,21 +525,7 @@ class AppSheetOption extends StatelessWidget {
               ? AppIcon(Icons.check, color: scheme.primary)
               : null
         : this.trailing;
-    if (!context.isMornye) {
-      return ListTile(
-        title: this.title,
-        subtitle: subtitle,
-        leading: leading == null ? null : symbolIconWidget(leading!),
-        trailing: trailing == null ? null : symbolIconWidget(trailing),
-        onTap: onTap,
-        contentPadding: contentPadding,
-        enabled: enabled,
-        // The checkmark already shows the choice; selection only feeds
-        // screen readers, so the row keeps its ordinary text color.
-        selected: selected ?? false,
-        selectedColor: scheme.onSurface,
-      );
-    }
+
     // Annotated on the title so it merges into the option's button node.
     final title = selected == null
         ? this.title

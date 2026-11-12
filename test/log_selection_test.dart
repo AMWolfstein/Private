@@ -4,14 +4,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mornye/l10n/l10n.dart';
 import 'package:mornye/screens/settings/log_screen.dart';
-import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/utils/logger.dart';
 
 import 'support/app_icon_finder.dart';
 
 void main() {
-  for (final mornye in [false, true]) {
+  for (final mornye in [true]) {
     final style = mornye ? 'Mornye' : 'Material';
     testWidgets(
       '$style logs build only nearby entries and filter the full buffer',
@@ -30,9 +29,7 @@ void main() {
         await tester.pumpWidget(
           ProviderScope(
             child: MaterialApp(
-              theme: mornye
-                  ? AppTheme.build(Brightness.light)
-                  : LegacyMaterialTheme.light(),
+              theme: AppTheme.build(Brightness.light),
               localizationsDelegates: AppLocalizations.localizationsDelegates,
               supportedLocales: AppLocalizations.supportedLocales,
               home: const LogScreen(),
@@ -86,7 +83,7 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         child: MaterialApp(
-          theme: LegacyMaterialTheme.light(),
+          theme: AppTheme.build(Brightness.light),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: const LogScreen(),

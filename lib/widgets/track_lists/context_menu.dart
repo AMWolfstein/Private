@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:mornye/theme/app_icons.dart';
-import 'package:mornye/theme/app_theme.dart';
-import 'package:mornye/widgets/app_icon.dart';
 import 'package:mornye/widgets/app_context_menu.dart';
+import 'package:mornye/widgets/app_icon.dart';
 
 /// Cupertino glyph.
 class ContextMenuAction {
@@ -48,50 +47,33 @@ Future<bool> showContextMenu(
       if (group.isNotEmpty) group,
   ];
   if (visible.isEmpty) return false;
-  final navigator = Navigator.of(context, rootNavigator: true);
-  final themes = InheritedTheme.capture(from: context, to: navigator.context);
-  if (context.isMornye) {
-    final chosen = await showMornyeContextMenu<ContextMenuAction>(
-      context: context,
-      // The layout aligns the menu's trailing edge with the anchor's, so a
-      // menu-wide anchor puts its leading edge at the pointer.
-      anchor: Rect.fromLTWH(position.dx, position.dy - 8, _mornyeMenuWidth, 0),
-      maxWidth: _mornyeMenuWidth,
-      builder: (menuContext) => AppContextMenu(
-        dense: true,
-        groups: [
-          for (final group in visible)
-            [
-              for (final action in group)
-                AppMenuAction(
-                  icon: appIconFor(action.icon),
-                  label: action.label,
-                  selected: action.checked,
-                  destructive: action.destructive,
-                  onPressed: action.onSelected == null
-                      ? null
-                      : () => Navigator.pop(menuContext, action),
-                ),
-            ],
-        ],
-      ),
-    );
-    chosen?.onSelected?.call();
-    return chosen != null;
-  }
-  var chosen = false;
-  await navigator.push(
-    _MaterialContextMenuRoute(
-      position: position,
-      groups: visible,
-      themes: themes,
-      barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
-      onChosen: () => chosen = true,
+  final chosen = await showMornyeContextMenu<ContextMenuAction>(
+    context: context,
+    // The layout aligns the menu's trailing edge with the anchor's, so a
+    // menu-wide anchor puts its leading edge at the pointer.
+    anchor: Rect.fromLTWH(position.dx, position.dy - 8, _mornyeMenuWidth, 0),
+    maxWidth: _mornyeMenuWidth,
+    builder: (menuContext) => AppContextMenu(
+      dense: true,
+      groups: [
+        for (final group in visible)
+          [
+            for (final action in group)
+              AppMenuAction(
+                icon: appIconFor(action.icon),
+                label: action.label,
+                selected: action.checked,
+                destructive: action.destructive,
+                onPressed: action.onSelected == null
+                    ? null
+                    : () => Navigator.pop(menuContext, action),
+              ),
+          ],
+      ],
     ),
   );
-  // The menu pops first and runs the chosen row after that frame.
-  await SchedulerBinding.instance.endOfFrame;
-  return chosen;
+  chosen?.onSelected?.call();
+  return chosen != null;
 }
 
 /// The center of [context]'s render box, where keyboard-opened menus appear.
@@ -107,49 +89,6 @@ Offset? contextMenuPositionBelow(BuildContext context) {
   final box = context.findRenderObject();
   if (box is! RenderBox || !box.attached || !box.hasSize) return null;
   return box.localToGlobal(box.size.bottomLeft(Offset.zero));
-}
-
-/// A full-window route that hosts a [MenuAnchor] opened at a point, so a
-/// menu can open from any item without an anchor of its own.
-class _MaterialContextMenuRoute extends PopupRoute<void> {
-  _MaterialContextMenuRoute({
-    required this.position,
-    required this.groups,
-    required this.themes,
-    required this.barrierLabel,
-    required this.onChosen,
-  });
-
-  final Offset position;
-  final List<List<ContextMenuAction>> groups;
-  final CapturedThemes themes;
-  final VoidCallback onChosen;
-
-  @override
-  final String barrierLabel;
-
-  @override
-  Color? get barrierColor => null;
-
-  // The menu closes itself on an outside tap and then pops this route.
-  @override
-  bool get barrierDismissible => false;
-
-  @override
-  Duration get transitionDuration => Duration.zero;
-
-  @override
-  Widget buildPage(
-    BuildContext context,
-    Animation<double> animation,
-    Animation<double> secondaryAnimation,
-  ) => themes.wrap(
-    _MaterialContextMenu(
-      position: position,
-      groups: groups,
-      onChosen: onChosen,
-    ),
-  );
 }
 
 class _MaterialContextMenu extends StatefulWidget {

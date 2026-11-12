@@ -2,14 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mornye/l10n/l10n.dart';
 import 'package:mornye/providers/music_player_provider.dart';
-import 'package:mornye/theme/app_motion.dart';
 import 'package:mornye/theme/app_tokens.dart';
-import 'package:mornye/theme/app_theme.dart';
-import 'package:mornye/theme/player_artwork_theme.dart';
 import 'package:mornye/widgets/animation_utils.dart';
 import 'package:mornye/widgets/app_content_card.dart';
 import 'package:mornye/widgets/now_playing_indicator.dart';
 import 'package:mornye/widgets/settings_group.dart';
+import 'package:mornye/theme/player_artwork_theme.dart';
 
 /// How a [TrackCard] paints its container.
 enum TrackCardStyle {
@@ -51,8 +49,7 @@ class TrackCardSegment extends InheritedWidget {
   final bool last;
 
   static TrackCardSegment? _of(BuildContext context) {
-    if (context.isMornye) return null;
-    return context.dependOnInheritedWidgetOfExactType<TrackCardSegment>();
+    return null;
   }
 
   /// Corners of the enclosing segment, or null outside a connected run.
@@ -156,21 +153,13 @@ class TrackCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (context.isMornye) return _buildCard(context);
-    // A selected current row keeps the app's selection fill, so a
-    // selection reads as one colour.
-    return _CurrentTrackArtworkTheme(
-      current: isCurrent && !isSelected,
-      child: Builder(builder: _buildCard),
-    );
+    return _buildCard(context);
   }
 
   Widget _buildCard(BuildContext context) {
     final tokens = context.tokens;
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    final material = !context.isMornye;
-    final current = material && isCurrent;
     final filled = style == TrackCardStyle.filled;
     final borderRadius =
         (filled ? TrackCardSegment.radiusOf(context) : null) ??
@@ -200,24 +189,10 @@ class TrackCard extends StatelessWidget {
     // Material selection and the current track use solid roles. A selected
     // current row keeps the selection fill and shows its state through the
     // shape, the glyph and the title weight.
-    final Color? cardColor;
-    final Color? contentColor;
-    if (isSelected) {
-      cardColor = material
-          ? colorScheme.secondaryContainer
-          : colorScheme.primaryContainer.withValues(alpha: 0.3);
-      contentColor = material ? colorScheme.onSecondaryContainer : null;
-    } else if (current) {
-      cardColor = colorScheme.primaryContainer;
-      contentColor = colorScheme.onPrimaryContainer;
-    } else if (style == TrackCardStyle.flat || context.isMornye) {
-      cardColor = Colors.transparent;
-      contentColor = null;
-    } else {
-      // The card theme's tone, which the expressive card does not read.
-      cardColor = theme.cardTheme.color;
-      contentColor = null;
-    }
+    final Color cardColor = isSelected
+        ? colorScheme.primaryContainer.withValues(alpha: 0.3)
+        : Colors.transparent;
+    const Color? contentColor = null;
     // Text without a colour of its own in the leading slot or the subtitle
     // takes the row's supporting colour, so it stays readable on any fill.
     final supportingStyle = TextStyle(
@@ -225,58 +200,12 @@ class TrackCard extends StatelessWidget {
     );
     // Trailing controls sit directly on the fill: their content roles take
     // its content colour, and a filled control inverts against it.
-    final trailingTheme = contentColor == null || cardColor == null
-        ? theme
-        : theme.copyWith(
-            colorScheme: colorScheme.copyWith(
-              primary: contentColor,
-              onPrimary: cardColor,
-              onSurface: contentColor,
-              onSurfaceVariant: contentColor,
-            ),
-          );
 
     // The current row's shapes morph on the spatial spring; reduced motion
     // switches them in place. A clip applies only while the row is, or is
     // leaving, the current track.
-    final shapeMotion = AppMotion.spatial(
-      context,
-      const AppMotionSpec(Duration.zero, Curves.linear),
-    );
-    final textDirection = Directionality.of(context);
-    Widget morph(
-      Widget child, {
-      required ShapeBorder from,
-      required ShapeBorder to,
-      EdgeInsets inset = EdgeInsets.zero,
-    }) => TweenAnimationBuilder<double>(
-      tween: Tween(end: current ? 1 : 0),
-      duration: shapeMotion.duration,
-      curve: shapeMotion.curve,
-      builder: (context, t, child) {
-        final progress = t.clamp(0.0, 1.0);
-        return ClipPath(
-          clipper: _InsetShapeClipper(
-            shape: ShapeBorder.lerp(from, to, progress)!,
-            inset: inset,
-            textDirection: textDirection,
-          ),
-          clipBehavior: progress > 0 ? Clip.antiAlias : Clip.none,
-          child: child,
-        );
-      },
-      child: child,
-    );
 
-    final rowLeading = material && leadingArtwork
-        ? morph(
-            leading,
-            from: RoundedRectangleBorder(
-              borderRadius: tokens.borderRadiusThumb,
-            ),
-            to: const CircleBorder(),
-          )
-        : leading;
+    final rowLeading = leading;
 
     final card = AppContentCard(
       elevation: 0,
@@ -323,9 +252,7 @@ class TrackCard extends StatelessWidget {
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: theme.textTheme.bodyLarge?.copyWith(
-                          fontWeight: current
-                              ? FontWeight.w700
-                              : FontWeight.w500,
+                          fontWeight: FontWeight.w500,
                           color: contentColor,
                         ),
                       ),
@@ -339,18 +266,12 @@ class TrackCard extends StatelessWidget {
                     ],
                   ),
                 ),
-                if (current) ...[
-                  SizedBox(width: tokens.gapSm),
-                  NowPlayingIndicator(playing: isPlaying, color: contentColor),
-                ],
+
                 if (trailing != null && !isSelectionMode) ...[
                   SizedBox(width: tokens.gapSm),
                   // Mornye rows never fill with a content colour and keep
                   // their ambient theme.
-                  if (material)
-                    Theme(data: trailingTheme, child: trailing!)
-                  else
-                    trailing!,
+                  trailing!,
                 ],
               ],
             ),
@@ -358,16 +279,7 @@ class TrackCard extends StatelessWidget {
         ],
       ),
     );
-    if (material) {
-      // The card keeps its connected-group corners; a clip inside the
-      // margin rounds the current row's ends into a pill, ripple included.
-      return morph(
-        card,
-        from: RoundedRectangleBorder(borderRadius: borderRadius),
-        to: const StadiumBorder(),
-        inset: cardMargin.resolve(textDirection),
-      );
-    }
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -444,32 +356,6 @@ class _CurrentTrackArtworkThemeState extends State<_CurrentTrackArtworkTheme> {
     artUri: widget.current ? _artUri : null,
     child: widget.child,
   );
-}
-
-/// Clips to [shape] laid out inside [inset], so a card's outer margin stays
-/// outside its silhouette.
-class _InsetShapeClipper extends CustomClipper<Path> {
-  const _InsetShapeClipper({
-    required this.shape,
-    required this.inset,
-    required this.textDirection,
-  });
-
-  final ShapeBorder shape;
-  final EdgeInsets inset;
-  final TextDirection textDirection;
-
-  @override
-  Path getClip(Size size) => shape.getOuterPath(
-    inset.deflateRect(Offset.zero & size),
-    textDirection: textDirection,
-  );
-
-  @override
-  bool shouldReclip(_InsetShapeClipper oldClipper) =>
-      shape != oldClipper.shape ||
-      inset != oldClipper.inset ||
-      textDirection != oldClipper.textDirection;
 }
 
 /// Grid counterpart of [TrackCard]: square artwork with overlays, then the

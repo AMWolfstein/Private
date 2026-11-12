@@ -12,7 +12,6 @@ import 'package:mornye/providers/settings_provider.dart';
 import 'package:mornye/screens/library_directory_screen.dart';
 import 'package:mornye/services/library_directory_index.dart';
 import 'package:mornye/services/playable_media.dart';
-import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/library_directory_view.dart';
 import 'package:mornye/widgets/library_track_selection_bar.dart';
@@ -93,7 +92,7 @@ Future<_Playback> _pump(
         playbackProvider.overrideWith(() => playback),
       ],
       child: MaterialApp(
-        theme: mornye ? AppTheme.build(Brightness.light) : LegacyMaterialTheme.light(),
+        theme: AppTheme.build(Brightness.light),
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         home: home ?? const LibraryDirectoryScreen(),
@@ -216,7 +215,6 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.widgetWithText(TrackCard, 'Album B'), findsOneWidget);
   });
-
 
   test('Folders is a default Library view', () {
     final container = ProviderContainer(

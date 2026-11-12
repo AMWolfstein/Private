@@ -5,11 +5,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mornye/l10n/l10n.dart';
 import 'package:mornye/models/theme_settings.dart';
 import 'package:mornye/providers/theme_provider.dart';
-import 'package:mornye/theme/app_theme.dart';
-import 'package:mornye/widgets/app_icon_button.dart';
 import 'package:mornye/widgets/app_slider.dart';
 import 'package:mornye/widgets/lyrics_text_scale.dart';
-import 'package:mornye/widgets/slider_value_header.dart';
+import 'package:mornye/widgets/app_icon_button.dart';
 
 class LyricsSizeSetting extends ConsumerWidget {
   const LyricsSizeSetting({super.key});
@@ -31,25 +29,18 @@ class LyricsSizeSetting extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (context.isMornye)
-            Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    context.l10n.lyricsTextSize,
-                    style: Theme.of(context).textTheme.titleMedium,
-                  ),
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  context.l10n.lyricsTextSize,
+                  style: Theme.of(context).textTheme.titleMedium,
                 ),
-                Text(percent),
-                reset,
-              ],
-            )
-          else
-            SliderValueHeader(
-              title: context.l10n.lyricsTextSize,
-              value: percent,
-              trailing: reset,
-            ),
+              ),
+              Text(percent),
+              reset,
+            ],
+          ),
           LyricsTextScale(
             child: Text(
               context.l10n.lyricsTextPreview,
@@ -105,25 +96,18 @@ class LyricsOffsetSetting extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (context.isMornye)
-            Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    context.l10n.lyricsOffset,
-                    style: Theme.of(context).textTheme.titleMedium,
-                  ),
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  context.l10n.lyricsOffset,
+                  style: Theme.of(context).textTheme.titleMedium,
                 ),
-                Text(value),
-                reset,
-              ],
-            )
-          else
-            SliderValueHeader(
-              title: context.l10n.lyricsOffset,
-              value: value,
-              trailing: reset,
-            ),
+              ),
+              Text(value),
+              reset,
+            ],
+          ),
           Text(
             context.l10n.lyricsOffsetSubtitle,
             style: Theme.of(context).textTheme.bodySmall?.copyWith(

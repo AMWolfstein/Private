@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:material_3_expressive/material_3_expressive.dart';
-import 'package:mornye/theme/material_expressive.dart';
 
 /// Task progress (downloads, scans, updates), determinate or not.
 ///
@@ -60,100 +58,24 @@ class AppProgressIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final value = this.value?.clamp(0.0, 1.0);
-    if (!materialExpressiveEnabled(context)) {
-      return _circular
-          ? CircularProgressIndicator(
-              value: value,
-              color: color,
-              backgroundColor: trackColor,
-              strokeWidth: strokeWidth,
-              strokeCap: strokeCap,
-              semanticsLabel: semanticsLabel,
-              semanticsValue: semanticsValue,
-            )
-          : LinearProgressIndicator(
-              value: value,
-              color: color,
-              backgroundColor: trackColor,
-              minHeight: minHeight,
-              borderRadius: borderRadius,
-              semanticsLabel: semanticsLabel,
-              semanticsValue: semanticsValue,
-            );
-    }
-    final scheme = Theme.of(context).colorScheme;
-    final wavy = this.wavy || value == null;
-    if (!_circular) {
-      return _scope(
-        value,
-        wavy
-            ? M3EProgressIndicator.linearWavy(
-                value: value,
-                color: color ?? scheme.primary,
-                trackColor: trackColor,
-                semanticsLabel: semanticsLabel,
-                semanticsValue: semanticsValue,
-              )
-            : M3EProgressIndicator.linear(
-                value: value,
-                linearSize: M3EProgressIndicatorSize.s,
-                strokeWidth: minHeight,
-                trackStrokeWidth: minHeight,
-                color: color ?? scheme.primary,
-                trackColor: trackColor,
-                semanticsLabel: semanticsLabel,
-                semanticsValue: semanticsValue,
-              ),
-      );
-    }
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final side = constraints.biggest.shortestSide;
-        final size = side.isFinite ? side : null;
-        return _scope(
-          value,
-          wavy
-              ? M3EProgressIndicator.circularWavy(
-                  value: value,
-                  size: size,
-                  color: color ?? scheme.primary,
-                  trackColor: trackColor,
-                  strokeWidth: strokeWidth,
-                  trackStrokeWidth: strokeWidth,
-                  semanticsLabel: semanticsLabel,
-                  semanticsValue: semanticsValue,
-                )
-              : M3EProgressIndicator.circular(
-                  value: value,
-                  size: size,
-                  color: color ?? scheme.primary,
-                  trackColor: trackColor,
-                  strokeWidth: strokeWidth,
-                  trackStrokeWidth: strokeWidth,
-                  semanticsLabel: semanticsLabel,
-                  semanticsValue: semanticsValue,
-                ),
-        );
-      },
-    );
-  }
-
-  /// The theme draws determinate waves flat near either end, where the
-  /// wave phase has no visible effect, so the ticker is muted there.
-  Widget _scope(double? value, Widget indicator) {
-    return MaterialExpressiveScope(
-      child: Builder(
-        builder: (context) {
-          final theme = M3ETheme.of(context).progressIndicatorTheme;
-          final flat =
-              value != null &&
-              (_circular
-                      ? theme.circular.amplitudeForProgress(value)
-                      : theme.linear.amplitudeForProgress(value)) <=
-                  0;
-          return TickerMode(enabled: !flat, child: indicator);
-        },
-      ),
-    );
+    return _circular
+        ? CircularProgressIndicator(
+            value: value,
+            color: color,
+            backgroundColor: trackColor,
+            strokeWidth: strokeWidth,
+            strokeCap: strokeCap,
+            semanticsLabel: semanticsLabel,
+            semanticsValue: semanticsValue,
+          )
+        : LinearProgressIndicator(
+            value: value,
+            color: color,
+            backgroundColor: trackColor,
+            minHeight: minHeight,
+            borderRadius: borderRadius,
+            semanticsLabel: semanticsLabel,
+            semanticsValue: semanticsValue,
+          );
   }
 }

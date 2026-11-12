@@ -3,10 +3,8 @@ import 'package:mornye/l10n/l10n.dart';
 import 'package:mornye/services/batch_metadata_re_enrich.dart';
 import 'package:mornye/widgets/app_bottom_sheet.dart';
 import 'package:mornye/widgets/app_alert_dialog.dart';
-import 'package:mornye/widgets/settings_group.dart';
-import 'package:mornye/widgets/app_action_button.dart';
 import 'package:mornye/widgets/app_content_card.dart';
-import 'package:mornye/theme/app_theme.dart';
+import 'package:mornye/widgets/app_action_button.dart';
 
 /// Results belong above the Library selection card and metadata sheets.
 /// A page snackbar can be painted behind either of those surfaces.
@@ -204,23 +202,13 @@ class _ReEnrichReviewContent extends StatelessWidget {
                     ),
                   ],
                 ];
-                return context.isMornye
-                    ? Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 4,
-                        ),
-                        child: AppContentCard(
-                          child: Column(children: children),
-                        ),
-                      )
-                    : SettingsGroup(
-                        connected: true,
-                        children: [
-                          for (final child in children)
-                            if (child is! Divider) child,
-                        ],
-                      );
+                return (Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 4,
+                  ),
+                  child: AppContentCard(child: Column(children: children)),
+                ));
               },
             ),
           ),

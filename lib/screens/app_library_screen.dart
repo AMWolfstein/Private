@@ -41,8 +41,7 @@ class AppLibraryScreen extends ConsumerStatefulWidget {
   final String? artist;
 
   @override
-  ConsumerState<AppLibraryScreen> createState() =>
-      _MornyeLibraryScreenState();
+  ConsumerState<AppLibraryScreen> createState() => _MornyeLibraryScreenState();
 }
 
 class _MornyeLibraryScreenState extends ConsumerState<AppLibraryScreen> {
@@ -485,10 +484,8 @@ class _MornyeLibraryScreenState extends ConsumerState<AppLibraryScreen> {
                   itemCount: _rows.length,
                   itemBuilder: (context, index) {
                     final entry = _rows[index];
-                    void open() => _openPage(
-                      AppLibraryPage.albums,
-                      artist: entry.artist,
-                    );
+                    void open() =>
+                        _openPage(AppLibraryPage.albums, artist: entry.artist);
                     return Column(
                       children: [
                         ListTile(

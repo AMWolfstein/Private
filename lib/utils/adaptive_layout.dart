@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:mornye/theme/app_theme.dart';
 
 /// Keeps touch-first tablets on the bottom navigation used by phones. A rail
 const double navigationRailBreakpoint = 1440;
@@ -153,7 +152,6 @@ double searchShelfExtentFor(
   double paneWidth, {
   required bool round,
 }) {
-  if (!context.isMornye) return searchCoverShelfExtent;
   final content = paneWidth - 2 * searchCoverEdge(context);
   final perPane = round ? 5.2 : 4.17;
   return ((content + searchCoverGap) / perPane - searchCoverGap).clamp(
@@ -193,7 +191,7 @@ double searchCoverTextHeight(BuildContext context) {
 /// The side margin of search result grids and shelves: the section titles'
 /// inset, so covers line up under them.
 double searchCoverEdge(BuildContext context) =>
-    (context.isMornye ? 20 : 16) + homeContentInset(context);
+    (20) + homeContentInset(context);
 
 /// Scales fixed sizes with the shortest screen side, clamped to [min]..[max].
 double responsiveScale({

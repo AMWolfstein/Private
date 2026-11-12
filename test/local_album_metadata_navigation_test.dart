@@ -11,7 +11,6 @@ import 'package:mornye/screens/downloaded_album_screen.dart';
 import 'package:mornye/screens/local_album_screen.dart';
 import 'package:mornye/screens/track_metadata_screen.dart';
 import 'package:mornye/services/library_database.dart';
-import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/album_track_tile.dart';
 import 'package:mornye/widgets/app_loading_indicator.dart';
@@ -29,7 +28,7 @@ class _Playback extends PlaybackController {
 }
 
 void main() {
-  for (final mornye in [false, true]) {
+  for (final mornye in [true]) {
     testWidgets('downloaded album order survives empty and reload ($mornye)', (
       tester,
     ) async {
@@ -54,9 +53,7 @@ void main() {
             }),
           ],
           child: MaterialApp(
-            theme: mornye
-                ? AppTheme.build(Brightness.light)
-                : LegacyMaterialTheme.light(),
+            theme: AppTheme.build(Brightness.light),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             home: const DownloadedAlbumScreen(
@@ -131,9 +128,7 @@ void main() {
           overrides: [playbackProvider.overrideWith(() => playback)],
           child: MaterialApp(
             navigatorKey: navigator,
-            theme: mornye
-                ? AppTheme.build(Brightness.light)
-                : LegacyMaterialTheme.light(),
+            theme: AppTheme.build(Brightness.light),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             home: LocalAlbumScreen(

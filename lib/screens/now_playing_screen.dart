@@ -18,37 +18,31 @@ import 'package:mornye/routes/now_playing_route.dart';
 import 'package:mornye/screens/equalizer_screen.dart';
 import 'package:mornye/screens/lyrics_share_screen.dart';
 import 'package:mornye/theme/app_theme.dart';
-import 'package:mornye/theme/player_artwork_theme.dart';
-import 'package:mornye/utils/file_access.dart';
 import 'package:mornye/utils/lyrics_parser.dart';
 import 'package:mornye/utils/playback_seek_preview.dart';
 import 'package:mornye/widgets/app_bottom_sheet.dart';
 import 'package:mornye/widgets/app_snack_bar.dart';
 import 'package:mornye/widgets/app_icon.dart';
 import 'package:mornye/widgets/app_icon_button.dart';
-import 'package:mornye/widgets/expressive_icon_button.dart';
 import 'package:mornye/widgets/audio_output_button.dart';
-import 'package:mornye/widgets/network_offline_actions.dart';
 import 'package:mornye/widgets/lyrics_options_button.dart';
 import 'package:mornye/widgets/lyrics_screen_awake.dart';
 import 'package:mornye/widgets/player_artwork.dart';
 import 'package:mornye/widgets/player_gesture_regions.dart';
-import 'package:mornye/widgets/player_playback_controls.dart';
-import 'package:mornye/widgets/player_queue_sheet.dart';
 import 'package:mornye/widgets/player_details_sheet.dart';
-import 'package:mornye/widgets/material_player_backdrop.dart';
-import 'package:mornye/widgets/material_player_layout.dart';
 import 'package:mornye/widgets/app_player_layout.dart';
-import 'package:mornye/widgets/player_lyrics_controls.dart';
-import 'package:mornye/widgets/player_lyrics_section.dart';
 import 'package:mornye/widgets/playlist_picker_sheet.dart';
-import 'package:mornye/widgets/settings_group.dart';
-import 'package:mornye/widgets/app_player_background.dart';
 import 'package:mornye/widgets/app_artwork_contrast.dart';
 import 'package:mornye/widgets/app_player_actions_sheet.dart';
 import 'package:mornye/widgets/app_context_menu.dart';
 import 'package:mornye/widgets/app_player_artwork.dart';
 import 'package:mornye/providers/player_motion_artwork_provider.dart';
+import 'package:mornye/utils/file_access.dart';
+import 'package:mornye/widgets/network_offline_actions.dart';
+import 'package:mornye/widgets/player_lyrics_controls.dart';
+import 'package:mornye/widgets/player_lyrics_section.dart';
+import 'package:mornye/widgets/settings_group.dart';
+import 'package:mornye/widgets/app_player_background.dart';
 
 export 'package:mornye/routes/now_playing_route.dart';
 
@@ -103,7 +97,6 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
   late final LyricsTranslationController _lyricsTranslation;
   late int _currentPage = widget.initialPage;
   bool _landscape = false;
-  bool _queueSheetShowing = false;
   String? _measuredMotionSource;
   double? _motionAspectRatio;
   String? _failedMotionSource;
@@ -181,7 +174,7 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     final size = MediaQuery.sizeOf(context);
-    _landscape = context.isMornye && size.width > size.height;
+    _landscape = (size.width > size.height);
     if (!_lyricsAutoHideLayout || MediaQuery.accessibleNavigationOf(context)) {
       _lyricsControlsHidden = false;
     }
@@ -223,28 +216,16 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
       return const SizedBox.shrink();
     }
     final mediaItem = ref.watch(currentMediaItemProvider).value;
-    final mornye = context.isMornye;
     final fullScreenCover = ref.watch(
-      settingsProvider.select(
-        (s) => s.playerCoverStyleFor(mornye: mornye) == 'fullscreen',
-      ),
+      settingsProvider.select((s) => s.playerCoverStyleFor() == 'fullscreen'),
     );
     return LyricsScreenAwake(
       visible: _currentPage == 1 && mediaItem != null,
-      child: mornye
-          ? _buildPlayer(context, mediaItem, fullScreenCover: fullScreenCover)
-          // Material takes the track's artwork scheme. The providers it needs
-          // are read above, so the scoped builder reads none.
-          : PlayerArtworkTheme(
-              artUri: mediaItem?.artUri?.toString(),
-              child: Builder(
-                builder: (context) => _buildPlayer(
-                  context,
-                  mediaItem,
-                  fullScreenCover: fullScreenCover,
-                ),
-              ),
-            ),
+      child: (_buildPlayer(
+        context,
+        mediaItem,
+        fullScreenCover: fullScreenCover,
+      )),
     );
   }
 
@@ -253,13 +234,10 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
     MediaItem? mediaItem, {
     required bool fullScreenCover,
   }) {
-    final mornye = context.isMornye;
-    final colorScheme = mornye
-        ? AppTheme.fromContext(
-            context,
-            brightness: Brightness.dark,
-          ).colorScheme
-        : Theme.of(context).colorScheme;
+    final colorScheme = (AppTheme.fromContext(
+      context,
+      brightness: Brightness.dark,
+    ).colorScheme);
 
     if (mediaItem == null) {
       return Scaffold(
@@ -274,10 +252,8 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
       );
     }
 
-    final source = mediaItem.extras?['source']?.toString() ?? '';
     final motionState =
-        mornye &&
-            ref.watch(settingsProvider.select((s) => s.motionArtworkEnabled)) &&
+        (ref.watch(settingsProvider.select((s) => s.motionArtworkEnabled))) &&
             !MediaQuery.disableAnimationsOf(context)
         ? ref.watch(
             playerMotionArtworkProvider((
@@ -299,7 +275,7 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
         motionArtwork == null || (motionRatio != null && motionRatio >= 0.95);
     // Motion artwork is always full-bleed in Mornye; still covers follow the
     // cover style setting through the same layout, as a square video would.
-    final fullBleed = mornye && (motionArtwork != null || fullScreenCover);
+    final fullBleed = ((motionArtwork != null || fullScreenCover));
     final screen = MediaQuery.sizeOf(context);
     // A still cover is cropped at the sides to reach down to the title, as
     // in the Material full-screen style; landscape keeps the square card.
@@ -309,12 +285,7 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
               ? 1.0
               : (screen.width / (screen.height * 0.56)).clamp(0.5, 1.0)
         : motionRatio;
-    final materialBackdrop = !mornye && fullScreenCover;
     // Two-pane landscape keeps its side-by-side cover over the blurred surface.
-    final materialFullScreen =
-        materialBackdrop &&
-        MediaQuery.orientationOf(context) == Orientation.portrait;
-    final overCover = materialFullScreen && _currentPage != 1;
     if (!fullBleed && _artworkForeground.value.isNotEmpty) {
       _artworkForeground.value = {};
     }
@@ -343,12 +314,11 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
     // The Mornye route moves the entire player together. A second,
     // delayed content fade would make dismissal appear to pause partway down.
     final route = ModalRoute.of(context);
-    final routeAnimation = route?.animation ?? kAlwaysCompleteAnimation;
     if (_artworkRoute != route) {
       _artworkRoute?.readArtwork = null;
       _artworkRoute = null;
     }
-    if (mornye && route is NowPlayingRoute) {
+    if ((route is NowPlayingRoute)) {
       _artworkRoute = route;
       route.readArtwork = () {
         final key = _landscape
@@ -380,178 +350,89 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
         );
       };
     }
-    final contentOpacity = mornye
-        ? kAlwaysCompleteAnimation
-        : routeAnimation.drive(
-            CurveTween(curve: const Interval(0.4, 1.0, curve: Curves.easeOut)),
-          );
+    final contentOpacity = kAlwaysCompleteAnimation;
 
-    final double? mornyeToolbarHeight = !mornye
-        ? null
-        : MediaQuery.orientationOf(context) == Orientation.landscape
-        ? 0
-        : 36;
-    final materialLandscapeArtwork =
-        !mornye &&
-        MediaQuery.orientationOf(context) == Orientation.landscape &&
-        ref.watch(settingsProvider.select((s) => s.landscapeLyricsArtwork));
+    final double mornyeToolbarHeight =
+        (MediaQuery.orientationOf(context) == Orientation.landscape ? 0 : 36);
     final player = Scaffold(
-      extendBodyBehindAppBar: materialLandscapeArtwork,
-      backgroundColor: mornye || materialBackdrop
-          ? Colors.transparent
-          : colorScheme.surface,
+      extendBodyBehindAppBar: false,
+      backgroundColor: Colors.transparent,
       appBar: _FadingAppBar(
         opacity: contentOpacity,
-        hidden: !mornye && _lyricsImmersive,
+        hidden: false,
         child: AppBar(
-          backgroundColor: mornye || materialBackdrop
-              ? Colors.transparent
-              : colorScheme.surface,
-          foregroundColor: overCover ? Colors.white : colorScheme.onSurface,
+          backgroundColor: Colors.transparent,
+          foregroundColor: colorScheme.onSurface,
           surfaceTintColor: Colors.transparent,
-          systemOverlayStyle: mornye || overCover
-              ? SystemUiOverlayStyle.light
-              : null,
-          toolbarHeight: mornyeToolbarHeight ?? kToolbarHeight,
+          systemOverlayStyle: SystemUiOverlayStyle.light,
+          toolbarHeight: mornyeToolbarHeight,
           automaticallyImplyLeading: false,
-          title: mornye
-              ? MediaQuery.orientationOf(context) == Orientation.landscape
-                    ? null
-                    : IconButton(
-                        tooltip: context.l10n.nowPlayingMinimize,
-                        onPressed: _minimize,
-                        icon: Container(
-                          width: 36,
-                          height: 5,
-                          decoration: BoxDecoration(
-                            color: Colors.white.withValues(alpha: 0.4),
-                            borderRadius: BorderRadius.circular(3),
-                          ),
-                        ),
-                      )
-              : Text(
-                  context.l10n.nowPlayingTitle,
-                  // The app theme's title style carries its own colour.
-                  style: overCover
-                      ? const TextStyle(color: Colors.white)
-                      : null,
-                ),
-          centerTitle: true,
-          leading: mornye
+          title: (MediaQuery.orientationOf(context) == Orientation.landscape
               ? null
-              : AppIconButton(
-                  key: const ValueKey('now-playing-minimize'),
-                  tooltip: _minimizeTooltip(context),
-                  color: overCover || mornye ? Colors.white : null,
-                  icon: const AppIcon(Icons.keyboard_arrow_down),
+              : IconButton(
+                  tooltip: context.l10n.nowPlayingMinimize,
                   onPressed: _minimize,
-                ),
-          actions: mornye
-              ? null
-              : [
-                  AppIconButton(
-                    tooltip: context.l10n.nowPlayingUpNext,
-                    color: overCover ? Colors.white : null,
-                    icon: const AppIcon(Icons.queue_music),
-                    onPressed: () => _showQueueSheet(context, colorScheme),
-                  ),
-                  AppIconButton(
-                    color: overCover ? Colors.white : null,
-                    tooltip: MaterialLocalizations.of(
-                      context,
-                    ).moreButtonTooltip,
-                    icon: const AppIcon(Icons.more_vert),
-                    onPressed: () => _showMoreActions(
-                      context: context,
-                      mediaItem: mediaItem,
-                      source: source,
-                      colorScheme: colorScheme,
+                  icon: Container(
+                    width: 36,
+                    height: 5,
+                    decoration: BoxDecoration(
+                      color: Colors.white.withValues(alpha: 0.4),
+                      borderRadius: BorderRadius.circular(3),
                     ),
                   ),
-                ],
+                )),
+          centerTitle: true,
+          leading: null,
+          actions: null,
         ),
       ),
       body: FadeTransition(
         opacity: contentOpacity,
         child: SafeArea(
-          top: !materialLandscapeArtwork,
+          top: true,
           child: Column(
             children: [
-              if (materialLandscapeArtwork) ...[
-                SizedBox(height: MediaQuery.viewPaddingOf(context).top),
-                PlayerLyricsControlsCollapse(
-                  key: const ValueKey('material-landscape-toolbar-space'),
-                  hidden: _lyricsImmersive,
-                  child: const SizedBox(height: kToolbarHeight),
-                ),
-              ],
               Expanded(
-                child: mornye
-                    ? NotificationListener<ScrollUpdateNotification>(
-                        onNotification: _onLyricsScroll,
-                        child: AppPlayerLayout(
-                          mediaItem: mediaItem,
-                          metadata: _trackMetadata,
-                          seekPreview: _seekPreview,
+                child: (NotificationListener<ScrollUpdateNotification>(
+                  onNotification: _onLyricsScroll,
+                  child: AppPlayerLayout(
+                    mediaItem: mediaItem,
+                    metadata: _trackMetadata,
+                    seekPreview: _seekPreview,
+                    colorScheme: colorScheme,
+                    page: _currentPage,
+                    motionArtwork: artwork(),
+                    artworkAspectRatio: artworkRatio,
+                    insetArtwork: !fullBleed,
+                    artworkTopInset: MediaQuery.paddingOf(context).top + 36,
+                    artworkKeys: (
+                      header: _artworkHeaderKey,
+                      controls: _artworkControlsKey,
+                      volume: _artworkVolumeKey,
+                      expanded: _expandedArtworkKey,
+                      compact: _compactArtworkKey,
+                    ),
+                    artworkForeground: _artworkForeground,
+                    lyricsControlsHidden: _lyricsControlsHidden,
+                    lyricsOptionsOpen: _lyricsOptionsOpen,
+                    lyricsBuilder: (showOptions) => _lyricsSection(
+                      colorScheme,
+                      isActive: _currentPage == 1,
+                      showOptions: showOptions,
+                    ),
+                    lyricsOptions: _lyricsOptionsButton(colorScheme),
+                    onPageChanged: _setMornyePage,
+                    onTrackNavigation: _showTrackNavigationMenu,
+                    onMoreActions: (buttonContext, item, anchor) =>
+                        _showMoreActions(
+                          context: buttonContext,
+                          mediaItem: item,
+                          source: item.extras?['source']?.toString() ?? '',
                           colorScheme: colorScheme,
-                          page: _currentPage,
-                          motionArtwork: artwork(),
-                          artworkAspectRatio: artworkRatio,
-                          insetArtwork: !fullBleed,
-                          artworkTopInset:
-                              MediaQuery.paddingOf(context).top + 36,
-                          artworkKeys: (
-                            header: _artworkHeaderKey,
-                            controls: _artworkControlsKey,
-                            volume: _artworkVolumeKey,
-                            expanded: _expandedArtworkKey,
-                            compact: _compactArtworkKey,
-                          ),
-                          artworkForeground: _artworkForeground,
-                          lyricsControlsHidden: _lyricsControlsHidden,
-                          lyricsOptionsOpen: _lyricsOptionsOpen,
-                          lyricsBuilder: (showOptions) => _lyricsSection(
-                            colorScheme,
-                            isActive: _currentPage == 1,
-                            showOptions: showOptions,
-                          ),
-                          lyricsOptions: _lyricsOptionsButton(colorScheme),
-                          onPageChanged: _setMornyePage,
-                          onTrackNavigation: _showTrackNavigationMenu,
-                          onMoreActions: (buttonContext, item, anchor) =>
-                              _showMoreActions(
-                                context: buttonContext,
-                                mediaItem: item,
-                                source:
-                                    item.extras?['source']?.toString() ?? '',
-                                colorScheme: colorScheme,
-                                anchor: anchor,
-                              ),
+                          anchor: anchor,
                         ),
-                      )
-                    : MaterialPlayerLayout(
-                        mediaItem: mediaItem,
-                        metadata: _trackMetadata,
-                        seekPreview: _seekPreview,
-                        colorScheme: colorScheme,
-                        showLyrics: _currentPage == 1,
-                        immersive: _lyricsImmersive,
-                        compactPlayer: ref.watch(
-                          settingsProvider.select((s) => s.compactPlayer),
-                        ),
-                        onCompactPlayerTouch: () =>
-                            _compactPlayerTouched = true,
-                        fullScreenArtwork: materialFullScreen,
-                        landscapeLyricsArtwork: ref.watch(
-                          settingsProvider.select(
-                            (s) => s.landscapeLyricsArtwork,
-                          ),
-                        ),
-                        lyricsBuilder: (_) =>
-                            _lyricsSection(colorScheme, isActive: true),
-                        onOpenQueue: () =>
-                            _showQueueSheet(context, colorScheme),
-                      ),
+                  ),
+                )),
               ),
               _autoHidingLyricsControls(
                 PlayerQueueSwipeRegion(
@@ -559,7 +440,7 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      if (mornye && !_landscape)
+                      if ((!_landscape))
                         FractionallySizedBox(
                           widthFactor: 0.72,
                           child: Row(
@@ -606,42 +487,6 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
                               ),
                             ],
                           ),
-                        )
-                      else if (!mornye)
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 28),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              // Filled pills like the shuffle and repeat
-                              // segments between them.
-                              ExpressiveIconButton(
-                                key: const ValueKey('material-lyrics-toggle'),
-                                tooltip: _currentPage == 1
-                                    ? context.l10n.nowPlayingTabPlayer
-                                    : context.l10n.nowPlayingTabLyrics,
-                                selected: _showsPage(1),
-                                width: PlayerPlaybackModeToolbar.segmentWidth,
-                                foregroundColor: _showsPage(1)
-                                    ? colorScheme.onPrimaryContainer
-                                    : colorScheme.onSurfaceVariant,
-                                backgroundColor: _showsPage(1)
-                                    ? colorScheme.primaryContainer
-                                    : colorScheme.surfaceContainerHigh,
-                                icon: const AppIcon(Icons.lyrics_outlined),
-                                onPressed: _toggleMaterialLyrics,
-                              ),
-                              PlayerPlaybackModeToolbar(
-                                colorScheme: colorScheme,
-                              ),
-                              AudioOutputButton(
-                                color: colorScheme.onSurfaceVariant,
-                                backgroundColor:
-                                    colorScheme.surfaceContainerHigh,
-                                width: PlayerPlaybackModeToolbar.segmentWidth,
-                              ),
-                            ],
-                          ),
                         ),
                     ],
                   ),
@@ -653,20 +498,7 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
         ),
       ),
     );
-    if (!mornye) {
-      if (!materialBackdrop) return _lyricsPointerListener(player);
-      return Stack(
-        fit: StackFit.expand,
-        children: [
-          MaterialPlayerBackdrop(
-            mediaItem: mediaItem,
-            colorScheme: colorScheme,
-            showArtwork: materialFullScreen && _currentPage != 1,
-          ),
-          _lyricsPointerListener(player),
-        ],
-      );
-    }
+
     return HeroMode(
       // A route Hero renders outside the panel's gradient and slide, briefly
       // exposing a detached rectangle. Keep Mornye artwork inside its panel.
@@ -733,22 +565,6 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
     child: child,
   );
 
-  void _toggleMaterialLyrics() {
-    setState(() {
-      _currentPage = _currentPage == 1 ? 0 : 1;
-      _lyricsControlsHidden = false;
-    });
-    _scheduleLyricsControlsHide();
-    if (_currentPage == 1) {
-      unawaited(
-        _trackMetadata.load(
-          ref.read(currentMediaItemProvider).value,
-          inspectUnresolvedContentUri: true,
-        ),
-      );
-    }
-  }
-
   void _toggleMornyeLyrics() {
     _setMornyePage(_currentPage == 1 ? 0 : 1);
   }
@@ -774,10 +590,7 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
   /// (its landscape player hides its own actions), and Material's portrait
   /// column or its landscape artwork beside lyrics, which shows no transport
   /// either, like Mornye's.
-  bool get _lyricsAutoHideLayout => context.isMornye
-      ? !_landscape
-      : MediaQuery.orientationOf(context) == Orientation.portrait ||
-            ref.read(settingsProvider).landscapeLyricsArtwork;
+  bool get _lyricsAutoHideLayout => (!_landscape);
 
   bool get _canAutoHideLyricsControls =>
       _lyricsAutoHideLayout &&
@@ -847,9 +660,7 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
   /// Mornye fades the controls in place; Material folds a [collapse] row
   /// away so the lyrics take its room.
   Widget _autoHidingLyricsControls(Widget child, {bool collapse = false}) =>
-      !context.isMornye && collapse
-      ? PlayerLyricsControlsCollapse(hidden: _lyricsImmersive, child: child)
-      : PlayerLyricsControlsVisibility(hidden: _lyricsImmersive, child: child);
+      (PlayerLyricsControlsVisibility(hidden: _lyricsImmersive, child: child));
 
   Widget _lyricsSection(
     ColorScheme colorScheme, {
@@ -1010,88 +821,17 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
           );
     final volumeShown = ref.read(settingsProvider).playerShowVolume;
     if (!mounted || !context.mounted) return;
-    final action = context.isMornye
-        ? await showMornyeContextMenu<String>(
-            context: context,
-            anchor: anchor,
-            preferAbove: true,
-            maxWidth: 280,
-            builder: (_) => AppPlayerActionsSheet(
-              mediaItem: mediaItem,
-              sleepTimerSubtitle: sleepTimerSubtitle,
-              volumeShown: volumeShown,
-            ),
-          )
-        : await showAppBottomSheet<String>(
-            context: context,
-            useRootNavigator: true,
-            backgroundColor: colorScheme.surfaceContainerHigh,
-            title: mediaItem.title,
-            subtitle: mediaItem.artist,
-            builder: (sheetContext) => Padding(
-              padding: const EdgeInsets.only(bottom: 16),
-              child: SettingsGroup(
-                children: [
-                  if ((mediaItem.album ?? '').trim().isNotEmpty)
-                    SettingsItem(
-                      icon: Icons.album_outlined,
-                      title: sheetContext.l10n.homeGoToAlbum,
-                      onTap: () => Navigator.of(sheetContext).pop('album'),
-                    ),
-                  SettingsItem(
-                    icon: Icons.info_outline,
-                    title: sheetContext.l10n.nowPlayingDetails,
-                    onTap: () => Navigator.of(sheetContext).pop('details'),
-                  ),
-                  SettingsItem(
-                    icon: Icons.format_quote_outlined,
-                    title: sheetContext.l10n.lyricsShareTitle,
-                    onTap: () => Navigator.of(sheetContext).pop('shareLyrics'),
-                  ),
-                  if (canSaveNetworkOfflineSource(source))
-                    SettingsItem(
-                      icon: Icons.download_for_offline_outlined,
-                      title: sheetContext.l10n.offlineSave,
-                      onTap: () =>
-                          Navigator.of(sheetContext).pop('networkOffline'),
-                    ),
-                  SettingsItem(
-                    icon: Icons.bedtime_outlined,
-                    title: sheetContext.l10n.nowPlayingSleepTimer,
-                    subtitle: sleepTimerSubtitle,
-                    onTap: () => Navigator.of(sheetContext).pop('sleepTimer'),
-                  ),
-                  SettingsItem(
-                    icon: Icons.equalizer,
-                    title: sheetContext.l10n.equalizerTitle,
-                    onTap: () => Navigator.of(sheetContext).pop('equalizer'),
-                  ),
-                  SettingsItem(
-                    icon: volumeShown
-                        ? Icons.volume_off_outlined
-                        : Icons.volume_up_outlined,
-                    title: volumeShown
-                        ? sheetContext.l10n.nowPlayingHideVolume
-                        : sheetContext.l10n.nowPlayingShowVolume,
-                    onTap: () => Navigator.of(sheetContext).pop('volume'),
-                  ),
-                  SettingsItem(
-                    icon: Icons.open_in_new,
-                    title: sheetContext.l10n.nowPlayingOpenInExternalPlayer,
-                    trailing: AppIcon(
-                      Icons.open_in_new,
-                      size: 18,
-                      color: Theme.of(
-                        sheetContext,
-                      ).colorScheme.onSurfaceVariant,
-                    ),
-                    showDivider: false,
-                    onTap: () => Navigator.of(sheetContext).pop('external'),
-                  ),
-                ],
-              ),
-            ),
-          );
+    final action = (await showMornyeContextMenu<String>(
+      context: context,
+      anchor: anchor,
+      preferAbove: true,
+      maxWidth: 280,
+      builder: (_) => AppPlayerActionsSheet(
+        mediaItem: mediaItem,
+        sleepTimerSubtitle: sleepTimerSubtitle,
+        volumeShown: volumeShown,
+      ),
+    ));
     if (!mounted || !context.mounted) return;
     switch (action) {
       case 'favorite':
@@ -1217,15 +957,7 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
   /// Opens Up Next. The Material sheet captures the theme of [context], the
   /// player's artwork scope.
   void _showQueueSheet(BuildContext context, ColorScheme colorScheme) {
-    if (context.isMornye) {
-      _setMornyePage(2);
-      return;
-    }
-    if (_queueSheetShowing) return;
-    _queueSheetShowing = true;
-    showPlayerQueueSheet(
-      context,
-      colorScheme,
-    ).whenComplete(() => _queueSheetShowing = false);
+    _setMornyePage(2);
+    return;
   }
 }

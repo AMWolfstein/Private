@@ -4,13 +4,12 @@ import 'package:mornye/l10n/l10n.dart';
 import 'package:mornye/models/artist_concert.dart';
 import 'package:mornye/screens/concert_detail_screen.dart';
 import 'package:mornye/services/shell_navigation_service.dart';
-import 'package:mornye/theme/app_theme.dart';
-import 'package:mornye/utils/adaptive_layout.dart';
 import 'package:mornye/utils/nav_bar_inset.dart';
 import 'package:mornye/widgets/album_detail_header.dart';
 import 'package:mornye/widgets/app_shape.dart';
 import 'package:mornye/widgets/cached_cover_image.dart';
 import 'package:mornye/widgets/animation_utils.dart';
+import 'package:mornye/utils/adaptive_layout.dart';
 
 class ArtistConcertsScreen extends StatefulWidget {
   const ArtistConcertsScreen({
@@ -39,17 +38,15 @@ class _ArtistConcertsScreenState extends State<ArtistConcertsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if (context.isMornye) {
-      final theme = Theme.of(context);
-      final route = ModalRoute.of(context);
-      if (route != null) {
-        ShellNavigationService.setChromeBrightness(
-          owner: this,
-          route: route,
-          brightness: theme.brightness,
-          surface: theme.colorScheme.surface,
-        );
-      }
+    final theme = Theme.of(context);
+    final route = ModalRoute.of(context);
+    if (route != null) {
+      ShellNavigationService.setChromeBrightness(
+        owner: this,
+        route: route,
+        brightness: theme.brightness,
+        surface: theme.colorScheme.surface,
+      );
     }
     return _buildPage(context);
   }

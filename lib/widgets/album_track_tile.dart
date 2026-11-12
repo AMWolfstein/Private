@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:mornye/theme/app_theme.dart';
-import 'package:mornye/l10n/l10n.dart';
 import 'package:mornye/theme/app_tokens.dart';
 import 'package:mornye/widgets/app_icon_button.dart';
 import 'package:mornye/widgets/track_card.dart';
+import 'package:mornye/l10n/l10n.dart';
 
 /// Album-style track row: track number, title/subtitle, and a trailing play
 /// button that's hidden once selection mode is active.
@@ -89,18 +88,12 @@ class AlbumTrackPlayButton extends StatelessWidget {
       tooltip: isPlaying ? context.l10n.actionPause : context.l10n.tooltipPlay,
       onPressed: onPlay,
       icon: Icon(
-        context.isMornye
-            ? (isPlaying ? CupertinoIcons.pause_fill : CupertinoIcons.play_fill)
-            : (isPlaying ? Icons.pause : Icons.play_arrow),
-        color: context.isMornye
-            ? colorScheme.primary
-            : colorScheme.onSecondaryContainer,
+        ((isPlaying ? CupertinoIcons.pause_fill : CupertinoIcons.play_fill)),
+        color: colorScheme.primary,
       ),
       style: IconButton.styleFrom(
         minimumSize: Size.square(context.tokens.minTouchTarget),
-        backgroundColor: context.isMornye
-            ? Colors.transparent
-            : colorScheme.secondaryContainer,
+        backgroundColor: Colors.transparent,
       ),
     );
   }

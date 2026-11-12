@@ -25,7 +25,6 @@ import 'package:mornye/controllers/collapsing_header_scroll_mixin.dart';
 import 'package:mornye/widgets/error_card.dart';
 import 'package:mornye/widgets/collection_suggestions_section.dart';
 import 'package:mornye/widgets/downloadable_cover.dart';
-import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/app_artist_header.dart';
 
 class PlaylistScreen extends ConsumerStatefulWidget {
@@ -242,14 +241,11 @@ class _PlaylistScreenState extends ConsumerState<PlaylistScreen>
 
   @override
   Widget build(BuildContext context) {
-    if (context.isMornye) {
-      return AppArtistSurface(
-        imageSource: _coverUrl,
-        neutralActions: true,
-        child: Builder(builder: _buildPage),
-      );
-    }
-    return _buildPage(context);
+    return AppArtistSurface(
+      imageSource: _coverUrl,
+      neutralActions: true,
+      child: Builder(builder: _buildPage),
+    );
   }
 
   Widget _buildPage(BuildContext context) {
@@ -265,28 +261,28 @@ class _PlaylistScreenState extends ConsumerState<PlaylistScreen>
     pruneSelection(ids.toSet());
 
     return CollectionScaffold(
-        scrollController: scrollController,
-        isSelectionMode: isSelectionMode,
-        onExitSelectionMode: exitSelectionMode,
-        selectionBar: _buildSelectionBottomBar(
-          context,
-          colorScheme,
-          ids,
-          bottomPadding,
-        ),
-        appBar: _buildAppBar(context, colorScheme),
-        slivers: [
-          _buildTrackList(context, colorScheme),
-          _buildPlaylistFooter(context, colorScheme),
-          if (!_isLoading && _tracks.isNotEmpty && !isSelectionMode)
-            CollectionSuggestionsSliver(
-              collectionKey:
-                  'playlist:${widget.metadataProviderId}:'
-                  '${widget.playlistId ?? widget.playlistName}',
-              tracks: _tracks,
-            ),
-        ],
-      );
+      scrollController: scrollController,
+      isSelectionMode: isSelectionMode,
+      onExitSelectionMode: exitSelectionMode,
+      selectionBar: _buildSelectionBottomBar(
+        context,
+        colorScheme,
+        ids,
+        bottomPadding,
+      ),
+      appBar: _buildAppBar(context, colorScheme),
+      slivers: [
+        _buildTrackList(context, colorScheme),
+        _buildPlaylistFooter(context, colorScheme),
+        if (!_isLoading && _tracks.isNotEmpty && !isSelectionMode)
+          CollectionSuggestionsSliver(
+            collectionKey:
+                'playlist:${widget.metadataProviderId}:'
+                '${widget.playlistId ?? widget.playlistName}',
+            tracks: _tracks,
+          ),
+      ],
+    );
   }
 
   Widget _buildAppBar(BuildContext context, ColorScheme colorScheme) {
@@ -320,7 +316,7 @@ class _PlaylistScreenState extends ConsumerState<PlaylistScreen>
 
     return AlbumDetailHeader(
       title: _playlistName,
-      immersive: context.isMornye,
+      immersive: true,
       squareArtwork: !hasMotion,
       expandedHeight: expandedHeight,
       showTitleInAppBar: false,

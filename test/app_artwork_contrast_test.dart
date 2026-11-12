@@ -244,10 +244,7 @@ void main() {
     await sample();
     final before = AppArtworkContrast.debugReadbackCount(capture);
     await sample();
-    expect(
-      AppArtworkContrast.debugReadbackCount(capture),
-      greaterThan(before),
-    );
+    expect(AppArtworkContrast.debugReadbackCount(capture), greaterThan(before));
     tickers.value = false;
     await tester.pump();
     final hidden = AppArtworkContrast.debugReadbackCount(capture);
@@ -257,20 +254,14 @@ void main() {
     tickers.value = true;
     await tester.pump();
     await sample();
-    expect(
-      AppArtworkContrast.debugReadbackCount(capture),
-      greaterThan(hidden),
-    );
+    expect(AppArtworkContrast.debugReadbackCount(capture), greaterThan(hidden));
     tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.paused);
     final paused = AppArtworkContrast.debugReadbackCount(capture);
     await sample();
     expect(AppArtworkContrast.debugReadbackCount(capture), paused);
     tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
     await sample();
-    expect(
-      AppArtworkContrast.debugReadbackCount(capture),
-      greaterThan(paused),
-    );
+    expect(AppArtworkContrast.debugReadbackCount(capture), greaterThan(paused));
     await tester.pumpWidget(const SizedBox());
   });
 

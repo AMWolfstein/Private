@@ -45,7 +45,6 @@ class _AudioOutputButtonState extends State<AudioOutputButton> {
 
   CastOutput get _output => widget.output ?? CastOutput.instance;
 
-
   Future<void> _showPicker() async {
     if (_opening) return;
     _opening = true;

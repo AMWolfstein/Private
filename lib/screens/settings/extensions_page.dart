@@ -16,8 +16,6 @@ import 'package:mornye/screens/settings/download_fallback_extensions_page.dart';
 import 'package:mornye/screens/settings/extension_detail_page.dart';
 import 'package:mornye/screens/settings/metadata_provider_priority_page.dart';
 import 'package:mornye/screens/settings/provider_priority_page.dart';
-import 'package:mornye/theme/app_theme.dart';
-import 'package:mornye/utils/adaptive_layout.dart';
 import 'package:mornye/widgets/app_action_button.dart';
 import 'package:mornye/widgets/app_bottom_sheet.dart';
 import 'package:mornye/widgets/app_icon.dart';
@@ -27,6 +25,7 @@ import 'package:mornye/widgets/settings_group.dart';
 import 'package:mornye/widgets/home_feed_region_setting.dart';
 import 'package:mornye/widgets/app_sliver_header.dart';
 import 'package:mornye/widgets/extension_health.dart';
+import 'package:mornye/utils/adaptive_layout.dart';
 
 part 'extensions_page_widgets.dart';
 
@@ -65,7 +64,7 @@ class _ExtensionsPageState extends ConsumerState<ExtensionsPage> {
       onPressed: _installExtension,
       icon: const AppIcon(Icons.add),
       label: Text(context.l10n.extensionsInstallButton),
-      outlined: context.isMornye,
+      outlined: true,
       glass: false,
       style: FilledButton.styleFrom(
         padding: const EdgeInsets.symmetric(vertical: 16),
@@ -219,13 +218,11 @@ class _ExtensionsPageState extends ConsumerState<ExtensionsPage> {
                     );
                     return Padding(
                       padding: EdgeInsets.fromLTRB(inset, 16, inset, 16),
-                      child: context.isMornye
-                          ? AppGlassPanel.overlay(
-                              radius: 28,
-                              samplesBackdrop: false,
-                              child: installButton,
-                            )
-                          : installButton,
+                      child: (AppGlassPanel.overlay(
+                        radius: 28,
+                        samplesBackdrop: false,
+                        child: installButton,
+                      )),
                     );
                   },
                 ),

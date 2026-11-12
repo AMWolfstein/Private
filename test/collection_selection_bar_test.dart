@@ -10,7 +10,7 @@ import 'package:mornye/providers/recent_access_provider.dart';
 import 'package:mornye/providers/settings_provider.dart';
 import 'package:mornye/screens/album_screen.dart';
 import 'package:mornye/screens/playlist_screen.dart';
-import 'package:mornye/theme/legacy_material_theme.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/selection_bottom_bar.dart';
 import 'package:mornye/widgets/track_list_tile.dart';
 
@@ -77,7 +77,7 @@ void main() {
         UncontrolledProviderScope(
           container: container,
           child: MaterialApp(
-            theme: LegacyMaterialTheme.light(),
+            theme: AppTheme.build(Brightness.light),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             home: album

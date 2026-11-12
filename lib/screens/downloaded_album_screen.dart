@@ -2,10 +2,6 @@ import 'dart:io';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:mornye/theme/app_tokens.dart';
-import 'package:mornye/theme/app_theme.dart';
-import 'package:mornye/theme/cover_palette.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:mornye/services/cover_cache_manager.dart';
 import 'package:mornye/services/batch_track_actions.dart';
 import 'package:mornye/models/track.dart';
@@ -44,6 +40,8 @@ import 'package:mornye/widgets/album_detail_header.dart';
 import 'package:mornye/widgets/app_artist_header.dart';
 import 'package:mornye/widgets/motion_header_banner.dart';
 import 'package:mornye/widgets/app_loading_indicator.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class DownloadedAlbumScreen extends ConsumerStatefulWidget {
   final String albumName;
@@ -186,20 +184,9 @@ class _DownloadedAlbumScreenState extends ConsumerState<DownloadedAlbumScreen>
     required int navigationIndex,
   }) async {
     final navigator = Navigator.of(context);
-    final embeddedCoverPath = context.isMornye
-        ? DownloadedEmbeddedCoverResolver.resolve(item.filePath)
-        : await DownloadedEmbeddedCoverResolver.resolveOrExtract(
-            item.filePath,
-            onChanged: _onEmbeddedCoverChanged,
-          );
     if (!mounted) return;
-    final artworkSource = embeddedCoverPath ?? item.coverUrl;
-    if (embeddedCoverPath == null && !context.isMornye) {
-      precacheCoverImage(context, item.coverUrl);
-    }
-    final backdropReady = context.isMornye
-        ? Future<void>.value()
-        : precacheMetadataBackdrop(context, artworkSource);
+
+    final backdropReady = (Future<void>.value());
     final beforeModTime =
         await DownloadedEmbeddedCoverResolver.readFileModTimeMillis(
           item.filePath,
@@ -257,14 +244,11 @@ class _DownloadedAlbumScreenState extends ConsumerState<DownloadedAlbumScreen>
     final tracks = order.tracks;
     pruneSelection(tracks.map((t) => t.id).toSet());
 
-    if (context.isMornye) {
-      return AppArtistSurface(
-        imageSource: _resolveAlbumEmbeddedCoverPath(tracks) ?? widget.coverUrl,
-        neutralActions: true,
-        child: Builder(builder: (context) => _buildPage(context, order)),
-      );
-    }
-    return _buildPage(context, order);
+    return AppArtistSurface(
+      imageSource: _resolveAlbumEmbeddedCoverPath(tracks) ?? widget.coverUrl,
+      neutralActions: true,
+      child: Builder(builder: (context) => _buildPage(context, order)),
+    );
   }
 
   Widget _buildPage(
@@ -340,7 +324,7 @@ class _DownloadedAlbumScreenState extends ConsumerState<DownloadedAlbumScreen>
     final expandedHeight = calculateExpandedHeight(context);
     final embeddedCoverPath = _resolveAlbumEmbeddedCoverPath(tracks);
     final commonQuality = _getCommonQuality(tracks, qualityLabelMode);
-    final motion = context.isMornye && !MediaQuery.disableAnimationsOf(context)
+    final motion = (!MediaQuery.disableAnimationsOf(context))
         ? ref
               .watch(
                 playerMotionArtworkProvider((
@@ -380,7 +364,7 @@ class _DownloadedAlbumScreenState extends ConsumerState<DownloadedAlbumScreen>
 
     return AlbumDetailHeader(
       title: widget.albumName,
-      immersive: context.isMornye,
+      immersive: true,
       squareArtwork: motion == null,
       expandedHeight: expandedHeight,
       showTitleInAppBar: false,
@@ -402,11 +386,9 @@ class _DownloadedAlbumScreenState extends ConsumerState<DownloadedAlbumScreen>
         builder: (header) => Text(
           widget.artistName,
           style: TextStyle(
-            color: context.isMornye
-                ? colorScheme.primary
-                : HeaderPalette.of(context).onSurfaceVariant,
+            color: colorScheme.primary,
             fontSize: context.tokens.headerSubtitleSize,
-            fontWeight: context.isMornye ? FontWeight.w400 : FontWeight.w600,
+            fontWeight: FontWeight.w400,
           ),
           textAlign: TextAlign.center,
           maxLines: 1,

@@ -10,7 +10,6 @@ import 'package:mornye/providers/library_collections_provider.dart';
 import 'package:mornye/providers/local_library_provider.dart';
 import 'package:mornye/providers/settings_provider.dart';
 import 'package:mornye/screens/library_tracks_folder_screen.dart';
-import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/collection_reorder_sliver.dart';
 import 'package:mornye/widgets/expressive_button.dart';
@@ -124,7 +123,7 @@ void main() {
           ),
         ],
         child: MaterialApp(
-          theme: mornye ? AppTheme.build(Brightness.dark) : LegacyMaterialTheme.light(),
+          theme: AppTheme.build(Brightness.dark),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: LibraryTracksFolderScreen(

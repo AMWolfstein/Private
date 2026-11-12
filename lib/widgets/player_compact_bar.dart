@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mornye/l10n/l10n.dart';
 import 'package:mornye/providers/music_player_provider.dart';
-import 'package:mornye/theme/material_expressive.dart';
 import 'package:mornye/utils/playback_seek_preview.dart';
 import 'package:mornye/utils/string_utils.dart';
 import 'package:mornye/widgets/app_icon.dart';
@@ -11,7 +10,6 @@ import 'package:mornye/widgets/app_icon_button.dart';
 import 'package:mornye/widgets/app_loading_indicator.dart';
 import 'package:mornye/widgets/audio_quality_badges.dart';
 import 'package:mornye/widgets/expressive_icon_button.dart';
-import 'package:mornye/widgets/expressive_playback_transport.dart';
 import 'package:mornye/widgets/playback_seek_slider.dart';
 
 /// Material's compact player: idle lyrics shrink the full player to this
@@ -49,54 +47,39 @@ class PlayerCompactBar extends ConsumerWidget {
     final playTooltip = playing
         ? context.l10n.actionPause
         : context.l10n.tooltipPlay;
-    final transport = materialExpressiveEnabled(context)
-        ? ExpressivePlaybackTransport(
-            colorScheme: colorScheme,
-            playing: playing,
-            loading: loading,
-            compact: true,
-            playTooltip: playTooltip,
-            previousTooltip: context.l10n.nowPlayingPreviousTrack,
-            nextTooltip: context.l10n.nowPlayingNextTrack,
-            onPlayPause: () => controller.togglePlayPause(playing),
-            onPrevious: controller.previous,
-            onNext: controller.next,
-          )
-        : Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ExpressiveIconButton(
-                iconSize: 32,
-                foregroundColor: colorScheme.onSurface,
-                tooltip: context.l10n.nowPlayingPreviousTrack,
-                icon: const Icon(Icons.skip_previous),
-                onPressed: controller.previous,
-              ),
-              const SizedBox(width: 8),
-              ExpressiveIconButton(
-                size: 56,
-                iconSize: 32,
-                selected: playing,
-                backgroundColor: colorScheme.primary,
-                foregroundColor: colorScheme.onPrimary,
-                tooltip: playTooltip,
-                icon: loading
-                    ? AppLoadingIndicator(color: colorScheme.onPrimary)
-                    : Icon(playing ? Icons.pause : Icons.play_arrow),
-                onPressed: loading
-                    ? null
-                    : () => controller.togglePlayPause(playing),
-              ),
-              const SizedBox(width: 8),
-              ExpressiveIconButton(
-                iconSize: 32,
-                foregroundColor: colorScheme.onSurface,
-                tooltip: context.l10n.nowPlayingNextTrack,
-                icon: const Icon(Icons.skip_next),
-                onPressed: controller.next,
-              ),
-            ],
-          );
+    final transport = Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        ExpressiveIconButton(
+          iconSize: 32,
+          foregroundColor: colorScheme.onSurface,
+          tooltip: context.l10n.nowPlayingPreviousTrack,
+          icon: const Icon(Icons.skip_previous),
+          onPressed: controller.previous,
+        ),
+        const SizedBox(width: 8),
+        ExpressiveIconButton(
+          size: 56,
+          iconSize: 32,
+          selected: playing,
+          backgroundColor: colorScheme.primary,
+          foregroundColor: colorScheme.onPrimary,
+          tooltip: playTooltip,
+          icon: loading
+              ? AppLoadingIndicator(color: colorScheme.onPrimary)
+              : Icon(playing ? Icons.pause : Icons.play_arrow),
+          onPressed: loading ? null : () => controller.togglePlayPause(playing),
+        ),
+        const SizedBox(width: 8),
+        ExpressiveIconButton(
+          iconSize: 32,
+          foregroundColor: colorScheme.onSurface,
+          tooltip: context.l10n.nowPlayingNextTrack,
+          icon: const Icon(Icons.skip_next),
+          onPressed: controller.next,
+        ),
+      ],
+    );
     // Time runs left to right in every language, as in the full player.
     return Directionality(
       textDirection: TextDirection.ltr,

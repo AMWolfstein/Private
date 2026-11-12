@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/playback_seek_slider.dart';
 
@@ -23,7 +22,7 @@ void main() {
       addTearDown(playing.dispose);
       await tester.pumpWidget(
         MaterialApp(
-          theme: mornye ? AppTheme.build(Brightness.dark) : LegacyMaterialTheme.dark(),
+          theme: AppTheme.build(Brightness.dark),
           home: Scaffold(
             body: Center(
               child: ValueListenableBuilder<bool>(

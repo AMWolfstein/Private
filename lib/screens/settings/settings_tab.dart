@@ -391,11 +391,10 @@ class _SettingsTabState extends ConsumerState<SettingsTab> {
     });
   }
 
-  Color _iconColorFor(_Destination destination) => context.isMornye
-      ? destination.iconColor[Theme.of(context).brightness == Brightness.dark
-            ? 300
-            : 800]!
-      : Theme.of(context).colorScheme.onSurfaceVariant;
+  Color _iconColorFor(_Destination destination) =>
+      (destination.iconColor[Theme.of(context).brightness == Brightness.dark
+          ? 300
+          : 800]!);
 
   Widget _itemFor(_Destination destination, {required bool showDivider}) {
     final goal = _monthlyGoal;
@@ -405,7 +404,7 @@ class _SettingsTabState extends ConsumerState<SettingsTab> {
       showIconInMornye: true,
       title: destination.title,
       titleTrailing: destination.beta ? const BetaBadge() : null,
-      subtitle: context.isMornye ? null : destination.subtitle,
+      subtitle: null,
       footer: destination.showDonationProgress && goal?.isVisible == true
           ? _DonationGoalProgress(goal: goal!)
           : null,
@@ -452,9 +451,9 @@ class _SettingsTabState extends ConsumerState<SettingsTab> {
 
     final margin = EdgeInsets.fromLTRB(
       tokens.gapLg + wideInset,
-      context.isMornye ? 12 : tokens.gapSm,
+      12,
       tokens.gapLg + wideInset,
-      context.isMornye ? 12 : tokens.gapSm,
+      12,
     );
 
     final List<Widget> body;

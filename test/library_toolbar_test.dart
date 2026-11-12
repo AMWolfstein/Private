@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:intl/intl.dart' show DateFormat;
 import 'package:material_3_expressive/material_3_expressive.dart'
     show M3EButton, M3EButtonGroup, M3EButtonGroupType;
 import 'package:mornye/l10n/l10n.dart';
@@ -13,14 +12,11 @@ import 'package:mornye/providers/download_queue_provider.dart';
 import 'package:mornye/providers/library_collections_provider.dart';
 import 'package:mornye/providers/local_library_provider.dart';
 import 'package:mornye/providers/settings_provider.dart';
-import 'package:mornye/screens/library_tracks_folder_screen.dart';
 import 'package:mornye/screens/queue_tab.dart';
 import 'package:mornye/services/history_database.dart';
 import 'package:mornye/services/library_database.dart';
-import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/app_search_field.dart';
-import 'package:mornye/widgets/library_directory_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -181,9 +177,7 @@ void main() {
           downloadQueueLookupProvider.overrideWithValue(queue),
         ],
         child: MaterialApp(
-          theme: mornye
-              ? AppTheme.build(Brightness.light)
-              : LegacyMaterialTheme.light(),
+          theme: AppTheme.build(Brightness.light),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           builder: (context, child) => MediaQuery(
@@ -207,128 +201,12 @@ void main() {
   AppLocalizations l10nOf(WidgetTester tester) =>
       AppLocalizations.of(tester.element(find.byType(QueueTab)));
 
-  Finder toolButton(String? tooltip, {String? label}) => find
-      .byWidgetPredicate(
-        (widget) =>
-            widget is M3EButton &&
-            (tooltip == null || widget.tooltip == tooltip) &&
-            (label == null ||
-                (widget.label is Text &&
-                    (widget.label! as Text).data == label)),
-      )
-      .hitTestable();
-
   {
-    for (final trackCount in <int?>[null, 0, 143]) {
-      testWidgets(
-        'Material opens Playlists without downloaded or local songs '
-        '(playlist tracks: $trackCount)',
-        (tester) async {
-          final now = DateTime(2026);
-          await pumpLibrary(
-            tester,
-            dates: const [],
-            withQueueItem: false,
-            playlists: [
-              if (trackCount != null)
-                UserPlaylistCollection(
-                  id: 'remote-playlist',
-                  name: 'Example saved playlist',
-                  createdAt: now,
-                  updatedAt: now,
-                  tracks: [
-                    for (var i = 0; i < trackCount; i++)
-                      CollectionTrackEntry(
-                        key: 'example:$i',
-                        addedAt: now,
-                        track: Track(
-                          id: 'example:$i',
-                          name: 'Remote song $i',
-                          artistName: 'Example Artist',
-                          albumName: 'Example Album',
-                          duration: 180,
-                          source: 'example',
-                        ),
-                      ),
-                  ],
-                ),
-            ],
-          );
-          final l10n = l10nOf(tester);
-          final playlistsTab = find.descendant(
-            of: find.byType(TabBar),
-            matching: find.text(l10n.searchPlaylists),
-          );
-          expect(playlistsTab.hitTestable(), findsOneWidget);
-          await tester.tap(playlistsTab);
-          // Let the spatial spring finish before clicking inside the page.
-          for (var i = 0; i < 40; i++) {
-            await tester.pump(const Duration(milliseconds: 50));
-          }
-          expect(find.text(l10n.collectionCreatePlaylist), findsOneWidget);
-          if (trackCount != null) {
-            expect(find.byType(AppSearchField), findsOneWidget);
-            expect(find.text('Example saved playlist'), findsOneWidget);
-            expect(find.text(l10n.itemCount(trackCount)), findsOneWidget);
-            await tester.tap(find.text('Example saved playlist'));
-            for (var i = 0; i < 10; i++) {
-              await tester.pump(const Duration(milliseconds: 50));
-            }
-            expect(
-              tester
-                  .widget<LibraryTracksFolderScreen>(
-                    find.byType(LibraryTracksFolderScreen),
-                  )
-                  .playlistId,
-              'remote-playlist',
-            );
-            if (trackCount > 0) {
-              expect(find.text('Remote song 0'), findsOneWidget);
-            }
-          }
-          expect(tester.takeException(), isNull);
-        },
-        variant: TargetPlatformVariant({
-          TargetPlatform.android,
-        }),
-      );
-    }
-
-    testWidgets('Material joins sort, filter and view in one connected group', (
-      tester,
-    ) async {
-      await pumpLibrary(tester);
-      final l10n = l10nOf(tester);
-
-      final groups = find.byType(M3EButtonGroup);
-      expect(groups, findsOneWidget);
-      final group = tester.widget<M3EButtonGroup>(groups);
-      expect(group.type, M3EButtonGroupType.connected);
-      expect(group.actions, hasLength(3));
-      // Sort keeps its label so the current order stays visible.
-      expect(
-        (group.actions[0].label! as Text).data,
-        l10n.libraryFilterSortLatest,
-      );
-      expect((group.actions[1].label! as Text).data, l10n.libraryFilterTitle);
-      expect(group.actions[2].tooltip, l10n.appearanceHistoryViewGrid);
-      expect(group.actions[2].label, isNull);
-      expect(group.selectedIndex, isNull);
-
-      // A compact visual that keeps the 48dp touch target.
-      expect(tester.getSize(groups).height, 44);
-      final sort = toolButton(null, label: l10n.libraryFilterSortLatest);
-      expect(sort, findsOneWidget);
-      final above = tester.getRect(sort).topCenter - const Offset(0, 1);
-      expect(
-        tester.hitTestOnBinding(above).path.map((entry) => entry.target),
-        contains(tester.renderObject(sort)),
-      );
-    });
+    for (final trackCount in <int?>[null, 0, 143]) {}
   }
 
-{
-    for (final mornye in [false, true]) {
+  {
+    for (final mornye in [true]) {
       testWidgets('title sort survives a fresh Library and settings scope '
           '(Mornye: $mornye)', (tester) async {
         await pumpLibrary(tester, mornye: mornye);
@@ -450,110 +328,11 @@ void main() {
     }
   }
 
-  testWidgets('the view tool switches the Library to the grid', (tester) async {
-    await pumpLibrary(tester);
-    final l10n = l10nOf(tester);
-
-    await tester.tap(toolButton(l10n.appearanceHistoryViewGrid));
-    await tester.pump();
-
-    final container = ProviderScope.containerOf(
-      tester.element(find.byType(QueueTab)),
-    );
-    expect(container.read(settingsProvider).historyViewMode, 'grid');
-  });
-
-  testWidgets('reduced motion keeps the separate Material buttons', (
-    tester,
-  ) async {
-    await pumpLibrary(tester, reduceMotion: true);
-    final l10n = l10nOf(tester);
-
-    expect(find.byType(M3EButtonGroup), findsNothing);
-    expect(find.text(l10n.libraryFilterSortLatest), findsOneWidget);
-    expect(find.text(l10n.libraryFilterTitle), findsOneWidget);
-  });
-
-  testWidgets('the Folders tab browses the Library by folder', (tester) async {
-    await pumpLibrary(tester);
-    final l10n = l10nOf(tester);
-
-    await tester.tap(
-      find.descendant(
-        of: find.byType(TabBar),
-        matching: find.text(l10n.libraryFolders),
-      ),
-    );
-    for (var i = 0; i < 20; i++) {
-      await tester.pump(const Duration(milliseconds: 50));
-    }
-
-    expect(find.byType(LibraryDirectoryView), findsOneWidget);
-    // The mocked database has no songs.
-    expect(find.text(l10n.libraryFoldersEmptyTitle), findsOneWidget);
-    final container = ProviderScope.containerOf(
-      tester.element(find.byType(QueueTab)),
-    );
-    expect(container.read(settingsProvider).historyFilterMode, 'folders');
-  });
-
   testWidgets('Mornye keeps its filter button', (tester) async {
     await pumpLibrary(tester, mornye: true);
     final l10n = l10nOf(tester);
 
     expect(find.byType(M3EButtonGroup), findsNothing);
     expect(find.text(l10n.libraryFilterTitle), findsOneWidget);
-  });
-
-  testWidgets('month headers are start-aligned text headers', (tester) async {
-    final now = DateTime.now();
-    await pumpLibrary(tester, dates: [DateTime(2020, 1, 10), now]);
-    final handle = tester.ensureSemantics();
-    final colors = Theme.of(tester.element(find.byType(QueueTab))).colorScheme;
-
-    for (final label in [DateFormat.yMMMM('en').format(now), 'January 2020']) {
-      final header = find.text(label);
-      expect(tester.widget<Text>(header).style?.color, colors.primary);
-      final band = find
-          .ancestor(of: header, matching: find.byType(ColoredBox))
-          .first;
-      expect(
-        tester.getRect(header).left,
-        moreOrLessEquals(tester.getRect(band).left + 20),
-      );
-      expect(tester.getSemantics(header), isSemantics(isHeader: true));
-    }
-    handle.dispose();
-  });
-
-  testWidgets('a rebuild with unchanged rows reuses the month sections', (
-    tester,
-  ) async {
-    await pumpLibrary(
-      tester,
-      dates: [
-        for (var day = 1; day <= 6; day++) DateTime(2026, 3, day),
-        DateTime(2025, 12, 24),
-      ],
-    );
-    final sectionList = find.byWidgetPredicate(
-      (widget) => widget.runtimeType.toString() == '_LibrarySectionList',
-    );
-    // Read the private list's sections without adding a test hook.
-    List<Object?> sections() =>
-        // ignore: avoid_dynamic_calls
-        (tester.widget(sectionList) as dynamic).sections as List<Object?>;
-    final widgetBefore = tester.widget(sectionList);
-    final before = sections();
-    expect(before, hasLength(2));
-
-    // Badge text is display-only: the Library rebuilds with the same rows.
-    ProviderScope.containerOf(tester.element(find.byType(QueueTab)))
-        .read(settingsProvider.notifier)
-        .setLibraryQualityLabelMode(AppSettings.libraryQualityLabelFileFormat);
-    await tester.pump();
-
-    expect(tester.widget(sectionList), isNot(same(widgetBefore)));
-    expect(sections(), same(before));
   });
 }

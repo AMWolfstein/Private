@@ -14,11 +14,10 @@ import 'package:mornye/widgets/app_text_field.dart';
 import 'package:mornye/widgets/app_sliver_header.dart';
 import 'package:mornye/widgets/app_bottom_sheet.dart';
 import 'package:mornye/widgets/app_alert_dialog.dart';
-import 'package:mornye/theme/app_theme.dart';
-import 'package:mornye/utils/lyrics_provider_names.dart';
 import 'package:mornye/utils/nav_bar_inset.dart';
 import 'package:mornye/widgets/lyrics_options_button.dart';
 import 'package:mornye/widgets/lyrics_size_setting.dart';
+import 'package:mornye/utils/lyrics_provider_names.dart';
 
 class LyricsSettingsPage extends ConsumerWidget {
   const LyricsSettingsPage({super.key});
@@ -49,7 +48,7 @@ class LyricsSettingsPage extends ConsumerWidget {
               children: [
                 const LyricsSizeSetting(),
                 // Lyrics blur only where the player draws it.
-                if (context.isMornye && ref.watch(appLiquidGlassProvider))
+                if (ref.watch(appLiquidGlassProvider))
                   const LyricsBlurSetting(),
                 const LyricsOffsetSetting(),
                 SettingsSwitchItem(
@@ -304,23 +303,12 @@ class LyricsSettingsPage extends ConsumerWidget {
                     child: Text(context.l10n.dialogSave),
                   ),
                 ];
-                return context.isMornye
-                    ? Wrap(
-                        alignment: WrapAlignment.end,
-                        spacing: 8,
-                        runSpacing: 8,
-                        children: actions,
-                      )
-                    : Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          actions[0],
-                          const SizedBox(width: 8),
-                          actions[1],
-                          const SizedBox(width: 8),
-                          actions[2],
-                        ],
-                      );
+                return (Wrap(
+                  alignment: WrapAlignment.end,
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: actions,
+                ));
               },
             ),
           ],

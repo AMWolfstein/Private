@@ -5,7 +5,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mornye/providers/music_player_provider.dart';
-import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/utils/lyrics_parser.dart';
 import 'package:mornye/widgets/player_lyrics.dart';
@@ -22,7 +21,7 @@ Finder _timedPaint() => find.descendant(
 void main() {
   setUp(() => SharedPreferences.setMockInitialValues({}));
 
-  for (final mornye in [false, true]) {
+  for (final mornye in [true]) {
     for (final timed in [false, true]) {
       final style = mornye ? 'Mornye' : 'Material';
       final format = timed ? 'TTML' : 'LRC';
@@ -35,9 +34,7 @@ void main() {
         addTearDown(tester.view.resetDevicePixelRatio);
         final preview = ValueNotifier<Duration?>(const Duration(seconds: 1));
         addTearDown(preview.dispose);
-        final theme = mornye
-            ? AppTheme.build(Brightness.dark)
-            : LegacyMaterialTheme.dark();
+        final theme = AppTheme.build(Brightness.dark);
         final lyrics = ParsedLyrics(
           synced: true,
           wordSynced: timed,

@@ -7,13 +7,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mornye/l10n/l10n.dart';
 import 'package:mornye/providers/music_player_provider.dart';
-import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/utils/lyrics_parser.dart';
 import 'package:mornye/widgets/player_lyrics.dart';
 
 void main() {
-  for (final mornye in [false, true]) {
+  for (final mornye in [true]) {
     for (final speed in [1.0, 1.5]) {
       testWidgets('late lyric timers catch up to playback ($mornye, $speed)', (
         tester,
@@ -24,9 +23,7 @@ void main() {
           final preview = ValueNotifier<Duration?>(null);
           addTearDown(playback.close);
           addTearDown(preview.dispose);
-          final theme = mornye
-              ? AppTheme.build(Brightness.dark)
-              : LegacyMaterialTheme.dark();
+          final theme = AppTheme.build(Brightness.dark);
           final lyrics = LyricsParser.parse('''
 [00:13.161]First phrase
 [00:26.065]Second phrase

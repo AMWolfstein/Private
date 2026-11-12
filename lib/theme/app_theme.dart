@@ -272,8 +272,7 @@ class AppTheme extends ThemeExtension<AppTheme> {
       inherit: true,
       color: foreground,
       fontFamily:
-          fontFamily ??
-          (useSystemFont ? type.textStyle.fontFamily : 'Inter'),
+          fontFamily ?? (useSystemFont ? type.textStyle.fontFamily : 'Inter'),
     );
     final display = type.navLargeTitleTextStyle.copyWith(
       inherit: true,
@@ -470,9 +469,7 @@ class AppTheme extends ThemeExtension<AppTheme> {
   );
 }
 
-extension AppThemeContext on BuildContext {
-  bool get isMornye => Theme.of(this).extension<AppTheme>() != null;
-}
+extension AppThemeContext on BuildContext {}
 
 /// its artwork-led, plain background.
 class AppSettingsTheme extends StatelessWidget {
@@ -485,7 +482,6 @@ class AppSettingsTheme extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (!context.isMornye) return child;
     final theme = Theme.of(context);
     final dark = theme.brightness == Brightness.dark;
     final background = dark ? Colors.black : const Color(0xfff2f2f7);

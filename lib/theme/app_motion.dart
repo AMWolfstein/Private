@@ -1,7 +1,6 @@
 import 'package:flutter/physics.dart';
 import 'package:flutter/widgets.dart';
 import 'package:material_3_expressive/material_3_expressive.dart';
-import 'package:mornye/theme/material_expressive.dart';
 
 /// A duration and curve pair for implicit animations.
 @immutable
@@ -51,52 +50,34 @@ class SpringCurve extends Curve {
 /// springs (opacity, color) settle without overshoot. Mornye and reduced
 /// motion keep each call site's original [AppMotionSpec].
 abstract final class AppMotion {
-  static final _spatialFast = SpringCurve(M3EMotion.expressiveSpatialFast);
-  static final _spatialDefault = SpringCurve(
-    M3EMotion.expressiveSpatialDefault,
-  );
-  static final _spatialSlow = SpringCurve(M3EMotion.expressiveSpatialSlow);
-  static final _effectsFast = SpringCurve(M3EMotion.effectsFast);
-  static final _effectsDefault = SpringCurve(M3EMotion.effectsDefault);
-
-  static AppMotionSpec _spec(SpringCurve curve) =>
-      AppMotionSpec(curve.duration, curve);
-
   /// Fast spatial spring for small components: chips, checks, buttons.
   static AppMotionSpec spatialFast(
     BuildContext context,
     AppMotionSpec fallback,
-  ) => materialExpressiveEnabled(context) ? _spec(_spatialFast) : fallback;
+  ) => fallback;
 
   /// Default spatial spring for list items, panels and content changes.
   static AppMotionSpec spatial(BuildContext context, AppMotionSpec fallback) =>
-      materialExpressiveEnabled(context) ? _spec(_spatialDefault) : fallback;
+      fallback;
 
   /// Slow spatial spring for full-screen surfaces such as the player.
   static AppMotionSpec spatialSlow(
     BuildContext context,
     AppMotionSpec fallback,
-  ) => materialExpressiveEnabled(context) ? _spec(_spatialSlow) : fallback;
+  ) => fallback;
 
   /// Fast effects spring for opacity and color.
   static AppMotionSpec effectsFast(
     BuildContext context,
     AppMotionSpec fallback,
-  ) => materialExpressiveEnabled(context) ? _spec(_effectsFast) : fallback;
+  ) => fallback;
 
   /// Default effects spring for opacity and color.
   static AppMotionSpec effects(BuildContext context, AppMotionSpec fallback) =>
-      materialExpressiveEnabled(context) ? _spec(_effectsDefault) : fallback;
+      fallback;
 
   /// Entrance for sheets and menus. The slow spatial spring is critically
   /// damped, so a surface never overshoots its own size and reveals what is
   /// behind it. Null keeps the platform transition.
-  static AnimationStyle? surfaceEntrance(BuildContext context) =>
-      materialExpressiveEnabled(context)
-      ? AnimationStyle(
-          duration: _spatialSlow.duration,
-          curve: _spatialSlow,
-          reverseDuration: const Duration(milliseconds: 200),
-        )
-      : null;
+  static AnimationStyle? surfaceEntrance(BuildContext context) => null;
 }

@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -64,9 +63,7 @@ void main() {
   final search = find.widgetWithText(ExpressiveButton, 'Search online');
 
   {
-    {
-
-    }
+    {}
   }
 
   testWidgets('no-lyrics state centers above the covered controls', (

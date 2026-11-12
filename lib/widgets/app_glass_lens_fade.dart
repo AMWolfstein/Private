@@ -57,10 +57,7 @@ class _MornyeGlassLensFadeState extends State<AppGlassLensFade> {
   double _read() {
     final position = _position;
     if (position == null || !position.hasPixels) return 1;
-    return AppGlassLensFade.opacityFor(
-      position.pixels,
-      widget.collapseExtent,
-    );
+    return AppGlassLensFade.opacityFor(position.pixels, widget.collapseExtent);
   }
 
   void _update() {

@@ -136,7 +136,6 @@ const _autoplaySessionWindow = 12;
 /// in this session), and `signal:<name>` and `follow:<name>` per signal.
 typedef AutoplayPick = ({PlayableMedia media, Map<String, double> parts});
 
-
 /// Rank once per refill, so the visible queue is the actual playback order.
 /// Songs score by how well their genres fit the listening session (the
 /// seed, the songs before it and the queued ones, newest weighing most),

@@ -10,7 +10,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mornye/models/theme_settings.dart';
 import 'package:mornye/providers/theme_provider.dart';
 import 'package:mornye/services/custom_font_service.dart';
-import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/theme/app_theme.dart';
 
 void main() {
@@ -130,13 +129,15 @@ void main() {
         ),
       );
       expect(
-        LegacyMaterialTheme.light(
+        AppTheme.build(
+          Brightness.light,
           fontFamily: 'ImportedFont_test',
         ).textTheme.bodyMedium!.fontFamily,
         'ImportedFont_test',
       );
       expect(
-        LegacyMaterialTheme.dark(
+        AppTheme.build(
+          Brightness.dark,
           fontFamily: 'ImportedFont_test',
         ).textTheme.bodyMedium!.fontFamily,
         'ImportedFont_test',

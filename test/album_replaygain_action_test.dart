@@ -8,7 +8,6 @@ import 'package:mornye/providers/download_history_provider.dart';
 import 'package:mornye/screens/downloaded_album_screen.dart';
 import 'package:mornye/screens/local_album_screen.dart';
 import 'package:mornye/services/library_database.dart';
-import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/app_alert_dialog.dart';
 import 'package:mornye/widgets/selection_bottom_bar.dart';
@@ -19,7 +18,7 @@ void main() {
   final messenger =
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
 
-  for (final mornye in [false, true]) {
+  for (final mornye in [true]) {
     for (final downloaded in [false, true]) {
       for (final remove in [false, true]) {
         testWidgets(
@@ -57,9 +56,7 @@ void main() {
                   ).overrideWith((ref) async => [item]),
                 ],
                 child: MaterialApp(
-                  theme: mornye
-                      ? AppTheme.build(Brightness.light)
-                      : LegacyMaterialTheme.light(),
+                  theme: AppTheme.build(Brightness.light),
                   localizationsDelegates:
                       AppLocalizations.localizationsDelegates,
                   supportedLocales: AppLocalizations.supportedLocales,

@@ -19,7 +19,6 @@ import 'package:mornye/screens/queue_tab.dart';
 import 'package:mornye/services/history_database.dart';
 import 'package:mornye/services/library_database.dart';
 import 'package:mornye/services/library_search.dart';
-import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/theme/app_theme.dart';
 
 class _Settings extends SettingsNotifier {
@@ -213,7 +212,7 @@ void main() {
     addTearDown(() => messenger.setMockMethodCallHandler(sqlite, null));
   });
 
-  for (final mornye in [false, true]) {
+  for (final mornye in [true]) {
     testWidgets(
       'playlist download confirms one grouped enqueue (Mornye: $mornye)',
       (tester) async {
@@ -241,9 +240,7 @@ void main() {
               ),
             ],
             child: MaterialApp(
-              theme: mornye
-                  ? AppTheme.build(Brightness.dark)
-                  : LegacyMaterialTheme.light(),
+              theme: AppTheme.build(Brightness.dark),
               localizationsDelegates: AppLocalizations.localizationsDelegates,
               supportedLocales: AppLocalizations.supportedLocales,
               home: const Scaffold(body: QueueTab(librarySection: 'playlists')),
@@ -311,9 +308,7 @@ void main() {
             downloadQueueProvider.overrideWith(_Queue.new),
           ],
           child: MaterialApp(
-            theme: mornye
-                ? AppTheme.build(Brightness.dark)
-                : LegacyMaterialTheme.light(),
+            theme: AppTheme.build(Brightness.dark),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             home: const Scaffold(body: QueueTab(librarySection: 'playlists')),
@@ -439,7 +434,7 @@ void main() {
             downloadQueueLookupProvider.overrideWithValue(queue),
           ],
           child: MaterialApp(
-            theme: LegacyMaterialTheme.light(),
+            theme: AppTheme.build(Brightness.light),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             home: Scaffold(body: QueueTab(librarySection: section)),

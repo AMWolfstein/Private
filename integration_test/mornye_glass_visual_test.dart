@@ -275,10 +275,7 @@ void main() {
       await wait(450);
       Offset tab(String label) => tester.getCenter(
         find
-            .descendant(
-              of: find.byType(AppTabBar),
-              matching: find.text(label),
-            )
+            .descendant(of: find.byType(AppTabBar), matching: find.text(label))
             .hitTestable(),
       );
       final home = tab('Home');
@@ -328,8 +325,7 @@ void main() {
         );
         for (
           var attempt = 0;
-          tester.widget<AppLiquidBackdrop>(lens).progress < 1 &&
-              attempt < 20;
+          tester.widget<AppLiquidBackdrop>(lens).progress < 1 && attempt < 20;
           attempt++
         ) {
           await wait(100);
