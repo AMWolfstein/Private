@@ -2,7 +2,7 @@
 
 - [x] M003-T001 Consolidate workflow tools and update canonical paths
 
-- [ ] M003-T002 Install portable workflow resources and preserve existing history
+- [x] M003-T002 Install portable workflow resources and preserve existing history
 
 - [ ] M003-T003 [FINAL] Verify portable setup and cumulative changes
 

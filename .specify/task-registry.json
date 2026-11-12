@@ -19,7 +19,7 @@
       "title": "Portable workflow and safe setup history"
     }
   },
-  "next_completion": 9,
+  "next_completion": 10,
   "next_mission": 4,
   "next_tor": 2,
   "tasks": {
@@ -130,13 +130,19 @@
       "title": "Consolidate workflow tools and update canonical paths"
     },
     "M003-T002": {
-      "completion": null,
+      "completion": 9,
+      "evidence": {
+        "checks": "37 helper +64 analysis tests PASS; real copied-folder setup/reuse and source history preservation PASS; links/state boundaries/base validation PASS; review PASS",
+        "result": "PASS",
+        "reviewer": "portable_bootstrap_review",
+        "round": 1
+      },
       "final": false,
       "kind": "T",
       "mission": "M003",
       "nonce": "90ed09c4a04e44eb83c02be79f015dfc",
       "record": "specs/003-portable-workflow/tasks.md",
-      "status": "reserved",
+      "status": "complete",
       "title": "Install portable workflow resources and preserve existing history"
     },
     "M003-T003": {

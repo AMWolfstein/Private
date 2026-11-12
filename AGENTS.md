@@ -1,3 +1,11 @@
+# Portable workflow entrypoint
+
+Read [workflow/README.md](workflow/README.md) before modifications; it documents
+installation/transfer and the complete shared workflow. Portable defaults live in
+workflow/assets; root .agents/.specify files are installed project configuration.
+When changing shared workflow instructions, update the corresponding default assets.
+Task registry/history/spec records are project data and must not be transferred.
+
 # Ponytail — every modification
 
 For **every modification**, first read and apply the official

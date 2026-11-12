@@ -14,6 +14,8 @@ class EnvironmentTests(unittest.TestCase):
         subprocess.run(['git','init','-q',str(self.root)],check=True)
         (self.root/'.gitignore').write_text('.work/\n')
         (self.root/'workflow/codegraph').mkdir(parents=True)
+        bootstrap_mock=mock.patch('bootstrap.prepare',return_value={'status':'PASS','project':{'history':'preserved'}})
+        bootstrap_mock.start();self.addCleanup(bootstrap_mock.stop)
 
     def test_prerequisites_refuse_unignored_or_escaped_managed_paths(self):
         self.assertIn('verified',e.prerequisites(self.root))

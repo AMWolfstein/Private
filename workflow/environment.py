@@ -115,15 +115,17 @@ def doctor(root,full=False,serena=False):
 
 
 def setup(root,serena=False,offline=False):
+    import bootstrap
+    prepared=bootstrap.prepare(root)
     prerequisites(root)
     if serena and sys.version_info<(3,11):raise ValueError('Serena requires Python 3.11+')
     before=doctor(root,serena=serena)
-    if offline:return {**before,'reused':before['status']=='PASS','offline':True,'note':'Offline mode does not install missing dependencies'}
+    if offline:return {**before,'status':'PASS' if before['status']=='PASS' and prepared['status']=='PASS' else 'INCOMPLETE','bootstrap':prepared,'reused':before['status']=='PASS','offline':True,'note':'Offline mode prepares local support/history but does not download dependencies'}
     log=registry.safe(root,'.work/workflow-setup.log');log.parent.mkdir(exist_ok=True)
     changed=False
     with registry.lock(root,timeout=1),log.open('w') as output:
         def install(argv,timeout=300):
-            done=subprocess.run(argv,cwd=root,stdout=output,stderr=subprocess.STDOUT,stdin=subprocess.DEVNULL,timeout=timeout)
+            done=subprocess.run(argv,cwd=root,stdout=output,stderr=subprocess.STDOUT,stdin=subprocess.DEVNULL,timeout=timeout,env={**os.environ,'npm_config_cache':str(registry.safe(root,'.work/npm-cache')),'PIP_CACHE_DIR':str(registry.safe(root,'.work/pip-cache'))})
             if done.returncode:raise ValueError(f'Provisioning failed ({Path(str(argv[0])).name}); inspect {log}')
         if next(item for item in before['checks'] if item['name']=='codegraph')['status']!='PASS':
             if not shutil.which('npm'):raise ValueError('Node/npm must be installed before setup')
@@ -137,7 +139,8 @@ def setup(root,serena=False,offline=False):
             if not python.is_file():install([sys.executable,'-m','venv',str(python.parent.parent)])
             verify_venv(root,python)
             install([str(python),'-m','pip','install','--disable-pip-version-check','-r',str(root/'workflow/codegraph'/requirements)]);changed=True
-    return {**doctor(root,serena=serena),'reused':not changed,'log':str(log)}
+    after=doctor(root,serena=serena)
+    return {**after,'status':'PASS' if after['status']=='PASS' and prepared['status']=='PASS' else 'INCOMPLETE','bootstrap':prepared,'reused':not changed,'log':str(log)}
 
 
 def status(root):

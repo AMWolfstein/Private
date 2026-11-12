@@ -290,6 +290,8 @@ def initialize(root,migrate=False):
                 imported(identifier,name,None,file.relative_to(root).as_posix(),record_complete(text))
                 state['next_tor']=max(state['next_tor'],int(identifier[3:])+1)
         check_data(state)
+        existing_history=safe(root,HISTORY)
+        if existing_history.exists() and existing_history.read_text(encoding='utf-8')!=history(state):raise ValueError('Existing history differs from imported records; preserve and reconcile it explicitly before init')
         for file in rewrites:safe(root,file.relative_to(root).as_posix())
         save(root,state)
         for file,text in rewrites.items():atomic(file,text)

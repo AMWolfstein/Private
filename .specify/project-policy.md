@@ -14,6 +14,15 @@ paths, including planning documents and small config/text edits. Read
 It does not replace map-first planning/task starts, required checks or the bounded
 one-commit task loop, and creates no extra task, review round or commit.
 
+## Portable installation
+
+The complete transferable tools/defaults live in workflow/. Read workflow/README.md
+for installation and all shared rules. Setup installs missing root support files,
+creates missing history and preserves existing history bytes/mtime and custom files.
+Do not transfer another project's registry/history/specs/quick records. Root .agents
+and .specify are installed/project configuration; keep workflow/assets defaults in
+sync when changing shared instructions, without overwriting project customizations.
+
 ## Preparation, identity and completion history
 
 Use `python3 workflow/work.py status` at session start; `doctor` checks
