@@ -19,7 +19,7 @@ replacing them.
 
 | File | Role |
 | --- | --- |
-| `lib/theme/dynamic_color_wrapper.dart` | `DynamicColorWrapper`, used by `lib/app.dart`. Builds the light and dark `ThemeData` for the selected style |
+| `lib/theme/app_theme_wrapper.dart` | `AppThemeWrapper`, used by `lib/app.dart`. Builds the light and dark `ThemeData` for the selected style |
 | `lib/theme/app_theme.dart` | `AppTheme.light` and `AppTheme.dark`: Material 3 component themes over a `ColorScheme` |
 | `lib/theme/app_tokens.dart` | `AppTokens`, a `ThemeExtension` with the shared radii, spacing, cover sizes and header metrics |
 | `lib/theme/mornye_theme.dart` | `AppTheme`: the Mornye `ThemeExtension`, its `ThemeData` builder, `context.isMornye`, `AppSettingsTheme` |
@@ -32,7 +32,7 @@ replacing them.
 
 ## How a Theme Is Built
 
-`DynamicColorWrapper` watches `themeProvider` and the custom font provider.
+`AppThemeWrapper` watches `themeProvider` and the custom font provider.
 
 - Material: `DynamicColorBuilder` supplies the wallpaper scheme when dynamic
   color is on; otherwise `ColorScheme.fromSeed` uses the seed color. AMOLED

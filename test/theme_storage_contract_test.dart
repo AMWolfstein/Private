@@ -29,31 +29,24 @@ void main() {
     expect(kMornyeGlassOutlinesKey, 'mornye_glass_outlines');
   });
 
-  test('a saved snapshot writes exactly the retained keys', () {
+  test('a saved snapshot writes only the retained keys', () {
     final json = const ThemeSettings(
       mornyeAccent: AppAccent.teal,
       mornyeGlassOutlines: false,
       lyricsOffsetMs: 250,
     ).toJson();
 
-    expect(
-      json.keys.toSet(),
-      {
-        kThemeModeKey,
-        kUseDynamicColorKey,
-        kSeedColorKey,
-        kUseAmoledKey,
-        kThemeStyleKey,
-        kMornyeAccentKey,
-        kUseSystemFontKey,
-        kCustomFontIdKey,
-        kCustomFontNameKey,
-        kLyricsTextScaleKey,
-        kLyricsBlurKey,
-        kLyricsOffsetKey,
-        kMornyeGlassOutlinesKey,
-      },
-    );
+    expect(json.keys.toSet(), {
+      kThemeModeKey,
+      kMornyeAccentKey,
+      kUseSystemFontKey,
+      kCustomFontIdKey,
+      kCustomFontNameKey,
+      kLyricsTextScaleKey,
+      kLyricsBlurKey,
+      kLyricsOffsetKey,
+      kMornyeGlassOutlinesKey,
+    });
     expect(json[kMornyeAccentKey], 'teal');
     expect(json[kMornyeGlassOutlinesKey], false);
     expect(json[kLyricsOffsetKey], 250);
@@ -75,20 +68,23 @@ void main() {
     expect(settings.mornyeGlassOutlines, isFalse);
   });
 
-  test('unknown or missing stored values fall back to the retained defaults', () {
-    final settings = ThemeSettings.fromJson({
-      kThemeStyleKey: 'no-such-style',
-      kMornyeAccentKey: 'magenta',
-      kThemeModeKey: 'sideways',
-    });
+  test(
+    'unknown or missing stored values fall back to the retained defaults',
+    () {
+      final settings = ThemeSettings.fromJson({
+        kThemeStyleKey: 'no-such-style',
+        kMornyeAccentKey: 'magenta',
+        kThemeModeKey: 'sideways',
+      });
 
-    expect(settings.mornyeAccent, AppAccent.blue);
-    expect(settings.themeMode, ThemeMode.system);
-    expect(settings.mornyeGlassOutlines, isTrue);
-    expect(settings.lyricsTextScale, 1);
-    expect(settings.lyricsBlur, 1);
-    expect(settings.lyricsOffsetMs, 0);
-  });
+      expect(settings.mornyeAccent, AppAccent.blue);
+      expect(settings.themeMode, ThemeMode.system);
+      expect(settings.mornyeGlassOutlines, isTrue);
+      expect(settings.lyricsTextScale, 1);
+      expect(settings.lyricsBlur, 1);
+      expect(settings.lyricsOffsetMs, 0);
+    },
+  );
 
   test('an empty install boots with the retained defaults', () async {
     final prefs = await SharedPreferences.getInstance();
@@ -103,16 +99,19 @@ void main() {
     expect(settings.lyricsOffsetMs, 0);
   });
 
-  test('the one-time accent move runs once and then keeps a stored red', () async {
-    SharedPreferences.setMockInitialValues({kMornyeAccentKey: 'red'});
-    final prefs = await SharedPreferences.getInstance();
+  test(
+    'the one-time accent move runs once and then keeps a stored red',
+    () async {
+      SharedPreferences.setMockInitialValues({kMornyeAccentKey: 'red'});
+      final prefs = await SharedPreferences.getInstance();
 
-    expect(loadBootstrapThemeSettings(prefs).mornyeAccent, AppAccent.blue);
-    expect(prefs.getBool(kMornyeAccentMovedToBlueKey), isTrue);
+      expect(loadBootstrapThemeSettings(prefs).mornyeAccent, AppAccent.blue);
+      expect(prefs.getBool(kMornyeAccentMovedToBlueKey), isTrue);
 
-    await prefs.setString(kMornyeAccentKey, 'red');
-    expect(loadBootstrapThemeSettings(prefs).mornyeAccent, AppAccent.red);
-  });
+      await prefs.setString(kMornyeAccentKey, 'red');
+      expect(loadBootstrapThemeSettings(prefs).mornyeAccent, AppAccent.red);
+    },
+  );
 
   test('a stored accent is kept once the move marker is set', () async {
     SharedPreferences.setMockInitialValues({
@@ -134,22 +133,25 @@ void main() {
     expect(loadBootstrapThemeSettings(prefs).mornyeAccent, AppAccent.blue);
   });
 
-  test('legacy theme style and colour preferences are read without changing', () async {
-    SharedPreferences.setMockInitialValues({
-      kThemeStyleKey: 'material',
-      kUseDynamicColorKey: false,
-      kSeedColorKey: 0xFFABCDEF,
-      kUseAmoledKey: true,
-      kMornyeAccentKey: 'green',
-      kMornyeAccentMovedToBlueKey: true,
-    });
-    final prefs = await SharedPreferences.getInstance();
+  test(
+    'legacy theme style and colour preferences are read without changing',
+    () async {
+      SharedPreferences.setMockInitialValues({
+        kThemeStyleKey: 'material',
+        kUseDynamicColorKey: false,
+        kSeedColorKey: 0xFFABCDEF,
+        kUseAmoledKey: true,
+        kMornyeAccentKey: 'green',
+        kMornyeAccentMovedToBlueKey: true,
+      });
+      final prefs = await SharedPreferences.getInstance();
 
-    final settings = loadBootstrapThemeSettings(prefs);
-    expect(settings.mornyeAccent, AppAccent.green);
-    expect(prefs.getString(kThemeStyleKey), 'material');
-    expect(prefs.getBool(kUseAmoledKey), isTrue);
-  });
+      final settings = loadBootstrapThemeSettings(prefs);
+      expect(settings.mornyeAccent, AppAccent.green);
+      expect(prefs.getString(kThemeStyleKey), 'material');
+      expect(prefs.getBool(kUseAmoledKey), isTrue);
+    },
+  );
 
   test('the retired glass clarity value is removed once at startup', () async {
     SharedPreferences.setMockInitialValues({'mornye_glass_clarity': 0.4});

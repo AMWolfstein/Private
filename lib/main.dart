@@ -17,7 +17,6 @@ import 'package:mornye/constants/app_info.dart';
 import 'package:mornye/controllers/extension_auth_launcher.dart';
 import 'package:mornye/l10n/supported_locales.dart';
 import 'package:mornye/models/settings.dart';
-import 'package:mornye/models/theme_settings.dart';
 import 'package:mornye/providers/download_queue_provider.dart';
 import 'package:mornye/providers/extension_provider.dart';
 import 'package:mornye/providers/local_library_provider.dart';
@@ -70,9 +69,6 @@ void main() {
         }
         await waitForActivityAttachment(binding);
       }
-      // Asked after attachment, so an app a media browser started long
-      // before it opens still reads the current wallpaper colors.
-      final dynamicColors = DynamicColors.request();
       // Awaited before runApp, which reports a failure once.
       final orientation = _initializeOrientation()..ignore();
       LicenseRegistry.addLicense(() async* {
@@ -158,10 +154,6 @@ void main() {
       final runtimeProfile = await _resolveRuntimeProfile(prefs);
       _configureImageCache(runtimeProfile);
       await orientation;
-      // Usually answered by now. The first frame then has the final theme,
-      // with no fade from the seed colors; a late answer still applies.
-      await dynamicColors.settle(const Duration(milliseconds: 100));
-
       runApp(
         ProviderScope(
           overrides: [
@@ -181,7 +173,6 @@ void main() {
               initialSafAccessLost,
             ),
             initialThemeSettingsProvider.overrideWithValue(bootstrapTheme),
-            initialDynamicColorsProvider.overrideWithValue(dynamicColors),
           ],
           child: EagerInitialization(
             child: MornyeApp(
@@ -317,7 +308,6 @@ Future<void> _startBackgroundPlayback() async {
     final dependencies = runtime.dependencies;
     runtime.configureBackgroundNotification(
       presentation: PlaybackNotification(
-        mornye: loadBootstrapThemeSettings(prefs).style == AppThemeStyle.mornye,
         favoriteLabel: l10n.trackOptionAddToLoved,
         unfavoriteLabel: l10n.trackOptionRemoveFromLoved,
         shuffleOnLabel: l10n.nowPlayingShuffleOn,

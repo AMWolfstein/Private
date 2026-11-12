@@ -7,7 +7,7 @@ import 'package:mornye/models/theme_settings.dart';
 import 'package:mornye/providers/runtime_profile_provider.dart';
 import 'package:mornye/providers/theme_provider.dart';
 import 'package:mornye/screens/settings/appearance_settings_page.dart';
-import 'package:mornye/theme/dynamic_color_wrapper.dart';
+import 'package:mornye/theme/app_theme_wrapper.dart';
 import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/app_chrome.dart';
 
@@ -40,10 +40,7 @@ void main() {
           ? const Color(0xff1c1c1e)
           : Colors.white;
       for (final accent in AppAccent.values) {
-        final scheme = AppTheme.build(
-          brightness,
-          accent: accent,
-        ).colorScheme;
+        final scheme = AppTheme.build(brightness, accent: accent).colorScheme;
         expect(
           contrast(scheme.primary, scheme.surface),
           greaterThanOrEqualTo(4.5),
@@ -80,7 +77,7 @@ void main() {
           // Low-end Android without forced blur renders flat, opaque glass.
           if (lowEnd) lowEndDeviceProvider.overrideWithValue(true),
         ],
-        child: DynamicColorWrapper(
+        child: AppThemeWrapper(
           builder: (light, dark, mode) => MaterialApp(
             theme: light,
             darkTheme: dark,
@@ -95,49 +92,11 @@ void main() {
     await tester.pumpAndSettle();
   }
 
-  testWidgets('switching theme style updates the app in place', (tester) async {
-    SharedPreferences.setMockInitialValues({});
-    final prefs = await SharedPreferences.getInstance();
-    final container = ProviderContainer(
-      overrides: [
-        initialThemeSettingsProvider.overrideWithValue(
-          loadBootstrapThemeSettings(prefs),
-        ),
-      ],
-    );
-    addTearDown(container.dispose);
-    await tester.pumpWidget(
-      UncontrolledProviderScope(
-        container: container,
-        child: DynamicColorWrapper(
-          builder: (light, dark, mode) => MaterialApp(
-            theme: light,
-            home: const Scaffold(body: TextField(key: ValueKey('app-state'))),
-          ),
-        ),
-      ),
-    );
-    final before = tester.state(find.byKey(const ValueKey('app-state')));
-
-    await container.read(themeProvider.notifier).setStyle(AppThemeStyle.mornye);
-    await tester.pumpAndSettle();
-    expect(tester.state(find.byKey(const ValueKey('app-state'))), before);
-
-    await container
-        .read(themeProvider.notifier)
-        .setStyle(AppThemeStyle.material);
-    await tester.pumpAndSettle();
-    expect(tester.state(find.byKey(const ValueKey('app-state'))), before);
-  });
-
   for (final mode in [ThemeMode.light, ThemeMode.dark]) {
     testWidgets(
       'glass outlines toggle survives restart and local themes ($mode)',
       (tester) async {
-        SharedPreferences.setMockInitialValues({
-          kThemeStyleKey: 'mornye',
-          kThemeModeKey: mode.name,
-        });
+        SharedPreferences.setMockInitialValues({kThemeModeKey: mode.name});
         final prefs = await SharedPreferences.getInstance();
         await openSettings(tester, prefs);
         final toggle = find.byKey(const ValueKey('mornye-glass-outlines'));
@@ -177,10 +136,7 @@ void main() {
     );
 
     testWidgets('the Glass Quality slider is gone ($mode)', (tester) async {
-      SharedPreferences.setMockInitialValues({
-        kThemeStyleKey: 'mornye',
-        kThemeModeKey: mode.name,
-      });
+      SharedPreferences.setMockInitialValues({kThemeModeKey: mode.name});
       final prefs = await SharedPreferences.getInstance();
       await openSettings(tester, prefs);
       expect(find.byKey(const ValueKey('mornye-glass-clarity')), findsNothing);
@@ -196,9 +152,7 @@ void main() {
       tester,
     ) async {
       SharedPreferences.setMockInitialValues({
-        kThemeStyleKey: 'mornye',
         kThemeModeKey: mode.name,
-        kSeedColorKey: 0xff123456,
         kMornyeAccentKey: 'red',
         kMornyeAccentMovedToBlueKey: true,
       });
@@ -221,7 +175,6 @@ void main() {
         AppTheme.accentColor(AppAccent.blue, theme.brightness),
       );
       expect(prefs.getString(kMornyeAccentKey), 'blue');
-      expect(prefs.getInt(kSeedColorKey), 0xff123456);
       final overlay = AppTheme.fromContext(
         tester.element(page),
         brightness: Brightness.dark,
@@ -249,66 +202,60 @@ void main() {
     });
   }
 
-  for (final style in AppThemeStyle.values) {
-    testWidgets(
-      'system font persists and restores the default ($style)',
-      (tester) async {
-        SharedPreferences.setMockInitialValues({
-          kThemeStyleKey: style.name,
-          kMornyeAccentKey: 'blue',
-          kUseDynamicColorKey: false,
-        });
-        final prefs = await SharedPreferences.getInstance();
-        await openSettings(tester, prefs);
-        final page = find.byType(AppearanceSettingsPage);
-        final original = Theme.of(
+  {
+    testWidgets('system font persists and restores the default', (
+      tester,
+    ) async {
+      SharedPreferences.setMockInitialValues({kMornyeAccentKey: 'blue'});
+      final prefs = await SharedPreferences.getInstance();
+      await openSettings(tester, prefs);
+      final page = find.byType(AppearanceSettingsPage);
+      final original = Theme.of(
+        tester.element(page),
+      ).textTheme.bodyLarge!.fontFamily;
+      final setting = find.text('Use system font');
+      await tester.scrollUntilVisible(
+        setting,
+        200,
+        scrollable: find.byType(Scrollable).first,
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(setting);
+      await tester.pumpAndSettle();
+      final theme = Theme.of(tester.element(page));
+      final systemFamily = theme.textTheme.bodyLarge!.fontFamily;
+      expect(systemFamily, isNot('Inter'));
+      expect(systemFamily, isNot('Google Sans Flex'));
+      expect(prefs.getBool(kUseSystemFontKey), isTrue);
+      {
+        final overlay = AppTheme.fromContext(
           tester.element(page),
-        ).textTheme.bodyLarge!.fontFamily;
-        final setting = find.text('Use system font');
-        await tester.scrollUntilVisible(
-          setting,
-          200,
-          scrollable: find.byType(Scrollable).first,
+          brightness: Brightness.dark,
         );
-        await tester.pumpAndSettle();
-        await tester.tap(setting);
-        await tester.pumpAndSettle();
-        final theme = Theme.of(tester.element(page));
-        final systemFamily = theme.textTheme.bodyLarge!.fontFamily;
-        expect(systemFamily, isNot('Inter'));
-        expect(systemFamily, isNot('Google Sans Flex'));
-        expect(prefs.getBool(kUseSystemFontKey), isTrue);
-        if (style == AppThemeStyle.mornye) {
-          final overlay = AppTheme.fromContext(
-            tester.element(page),
-            brightness: Brightness.dark,
-          );
-          expect(overlay.extension<AppTheme>()!.useSystemFont, isTrue);
-          expect(overlay.extension<AppTheme>()!.accent, AppAccent.blue);
-          expect(overlay.textTheme.bodyLarge!.fontFamily, systemFamily);
-        }
-        await tester.pumpWidget(const SizedBox());
-        await openSettings(tester, prefs);
-        expect(
-          Theme.of(tester.element(page)).textTheme.bodyLarge!.fontFamily,
-          systemFamily,
-        );
-        await tester.scrollUntilVisible(
-          setting,
-          200,
-          scrollable: find.byType(Scrollable).first,
-        );
-        await tester.pumpAndSettle();
-        await tester.tap(setting);
-        await tester.pumpAndSettle();
-        expect(prefs.getBool(kUseSystemFontKey), isFalse);
-        expect(
-          Theme.of(tester.element(page)).textTheme.bodyLarge!.fontFamily,
-          original,
-        );
-        expect(tester.takeException(), isNull);
-      },
-      variant: const TargetPlatformVariant({TargetPlatform.android}),
-    );
+        expect(overlay.extension<AppTheme>()!.useSystemFont, isTrue);
+        expect(overlay.extension<AppTheme>()!.accent, AppAccent.blue);
+        expect(overlay.textTheme.bodyLarge!.fontFamily, systemFamily);
+      }
+      await tester.pumpWidget(const SizedBox());
+      await openSettings(tester, prefs);
+      expect(
+        Theme.of(tester.element(page)).textTheme.bodyLarge!.fontFamily,
+        systemFamily,
+      );
+      await tester.scrollUntilVisible(
+        setting,
+        200,
+        scrollable: find.byType(Scrollable).first,
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(setting);
+      await tester.pumpAndSettle();
+      expect(prefs.getBool(kUseSystemFontKey), isFalse);
+      expect(
+        Theme.of(tester.element(page)).textTheme.bodyLarge!.fontFamily,
+        original,
+      );
+      expect(tester.takeException(), isNull);
+    }, variant: const TargetPlatformVariant({TargetPlatform.android}));
   }
 }

@@ -12,7 +12,7 @@ import 'package:mornye/providers/settings_provider.dart';
 import 'package:mornye/providers/equalizer_provider.dart';
 import 'package:mornye/services/app_navigation_service.dart';
 import 'package:mornye/services/app_orientation.dart';
-import 'package:mornye/theme/dynamic_color_wrapper.dart';
+import 'package:mornye/theme/app_theme_wrapper.dart';
 import 'package:mornye/l10n/app_localizations.dart';
 import 'package:mornye/l10n/supported_locales.dart';
 import 'package:mornye/utils/adaptive_layout.dart';
@@ -224,7 +224,7 @@ class MornyeApp extends ConsumerWidget {
 
     final locale = localeFromSetting(localeString);
 
-    return DynamicColorWrapper(
+    return AppThemeWrapper(
       builder: (lightTheme, darkTheme, themeMode) {
         return MaterialApp.router(
           title: AppInfo.appName,
