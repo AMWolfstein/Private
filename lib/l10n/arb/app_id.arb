@@ -7869,7 +7869,6 @@
   "libraryFoldersLoadFailed": "Tidak dapat membaca folder",
   "playlistEditOrder": "Ubah urutan",
   "playlistEditOrderDescription": "Seret lagu lewat pegangannya, atau sentuh lama, untuk memindahkannya.",
-  "playlistEditOrderSaved": "Urutan playlist disimpan",
   "collectionOrderSaved": "Urutan lagu disimpan",
   "collectionOrderChanged": "Koleksi ini berubah saat diedit. Silakan atur ulang urutannya.",
   "collectionOrderSaveFailed": "Urutan lagu tidak dapat disimpan. Coba lagi.",

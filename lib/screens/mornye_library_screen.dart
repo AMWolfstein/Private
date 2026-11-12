@@ -18,7 +18,6 @@ import 'package:mornye/utils/adaptive_layout.dart';
 import 'package:mornye/utils/nav_bar_inset.dart';
 import 'package:mornye/widgets/app_bottom_sheet.dart';
 import 'package:mornye/widgets/open_audio_button.dart';
-import 'package:mornye/widgets/tv_navigation.dart';
 import 'package:mornye/widgets/app_refresh_indicator.dart';
 import 'package:mornye/widgets/app_search_field.dart';
 import 'package:mornye/widgets/app_sliver_header.dart';
@@ -166,25 +165,22 @@ class _MornyeLibraryScreenState extends ConsumerState<MornyeLibraryScreen> {
         ),
       ],
     ];
-    final selected =
-        await (showAppBottomSheet<String>(
-              context: context,
-              builder: (context) => Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  for (final option in options)
-                    ListTile(
-                      title: Text(option.$2),
-                      selected: _sort == option.$1,
-                      selectedColor: Theme.of(context).colorScheme.onSurface,
-                      trailing: _sort == option.$1
-                          ? const Icon(Icons.check)
-                          : null,
-                      onTap: () => Navigator.pop(context, option.$1),
-                    ),
-                ],
-              ),
-            ));
+    final selected = await (showAppBottomSheet<String>(
+      context: context,
+      builder: (context) => Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          for (final option in options)
+            ListTile(
+              title: Text(option.$2),
+              selected: _sort == option.$1,
+              selectedColor: Theme.of(context).colorScheme.onSurface,
+              trailing: _sort == option.$1 ? const Icon(Icons.check) : null,
+              onTap: () => Navigator.pop(context, option.$1),
+            ),
+        ],
+      ),
+    ));
     if (!mounted || selected == null || selected == _sort) return;
     setState(() {
       _sort = selected;
@@ -207,25 +203,24 @@ class _MornyeLibraryScreenState extends ConsumerState<MornyeLibraryScreen> {
         Icons.help_outline,
       ),
     ];
-    final selected =
-        await (showAppBottomSheet<String>(
-              context: context,
-              builder: (context) => Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  for (final option in options)
-                    ListTile(
-                      title: Text(option.$2),
-                      selected: (_completeness ?? '') == option.$1,
-                      selectedColor: Theme.of(context).colorScheme.onSurface,
-                      trailing: (_completeness ?? '') == option.$1
-                          ? const Icon(Icons.check)
-                          : null,
-                      onTap: () => Navigator.pop(context, option.$1),
-                    ),
-                ],
-              ),
-            ));
+    final selected = await (showAppBottomSheet<String>(
+      context: context,
+      builder: (context) => Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          for (final option in options)
+            ListTile(
+              title: Text(option.$2),
+              selected: (_completeness ?? '') == option.$1,
+              selectedColor: Theme.of(context).colorScheme.onSurface,
+              trailing: (_completeness ?? '') == option.$1
+                  ? const Icon(Icons.check)
+                  : null,
+              onTap: () => Navigator.pop(context, option.$1),
+            ),
+        ],
+      ),
+    ));
     if (!mounted || selected == null || selected == (_completeness ?? '')) {
       return;
     }
@@ -588,7 +583,7 @@ class _MornyeLibraryScreenState extends ConsumerState<MornyeLibraryScreen> {
   Widget _buildAlbumTile(LibraryBrowseEntry entry, ColorScheme colors) {
     return Semantics(
       button: true,
-      child: TvTapTarget(
+      child: GestureDetector(
         behavior: HitTestBehavior.opaque,
         onTap: () => _openAlbum(entry),
         child: Column(

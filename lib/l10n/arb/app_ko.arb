@@ -8489,13 +8489,9 @@
   "@playlistEditOrderDescription": {
     "description": "Explanation at the top of the playlist reorder page"
   },
-  "playlistEditOrderSaved": "Playlist order saved",
   "collectionOrderSaved": "Song order saved",
   "collectionOrderChanged": "This collection changed while editing. Please reorder it again.",
   "collectionOrderSaveFailed": "Could not save the song order. Try again.",
-  "@playlistEditOrderSaved": {
-    "description": "Snackbar after saving a new playlist track order"
-  },
   "playlistCreateEmpty": "Empty playlist",
   "@playlistCreateEmpty": {
     "description": "Create playlist option that starts with no tracks"

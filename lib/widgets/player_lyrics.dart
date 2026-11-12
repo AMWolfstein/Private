@@ -25,7 +25,6 @@ import 'package:mornye/widgets/lyric_scroll_motion.dart';
 import 'package:mornye/widgets/lyric_gap_indicator.dart';
 import 'package:mornye/widgets/mornye_player_slider.dart';
 import 'package:mornye/widgets/lyrics_text_scale.dart';
-import 'package:mornye/widgets/tv_navigation.dart';
 
 part 'player_lyrics_line_style.dart';
 part 'player_lyrics_word_sweep.dart';
@@ -1214,7 +1213,7 @@ class _SyncedLyricsViewState extends ConsumerState<SyncedLyricsView>
                 textAlign,
                 Padding(
                   padding: _linePadding(index),
-                  child: TvTapTarget(
+                  child: GestureDetector(
                     onTap: () => ref
                         .read(musicPlayerControllerProvider)
                         .seek(_sungTime(line.time)),

@@ -41,7 +41,6 @@ import 'package:mornye/widgets/animation_utils.dart';
 import 'package:mornye/widgets/nav_destination_icons.dart';
 import 'package:mornye/widgets/settings_group.dart';
 import 'package:mornye/widgets/mini_player.dart';
-import 'package:mornye/widgets/tv_shell.dart';
 import 'package:mornye/widgets/lazy_tab_view.dart';
 import 'package:mornye/widgets/expressive_navigation_bar.dart';
 import 'package:mornye/widgets/mornye_bottom_bar.dart';
@@ -53,7 +52,6 @@ import 'package:mornye/theme/player_artwork_theme.dart';
 import 'package:mornye/widgets/selection_bottom_bar.dart';
 import 'package:mornye/utils/logger.dart';
 import 'package:mornye/utils/adaptive_layout.dart';
-import 'package:mornye/utils/android_tv.dart';
 import 'package:mornye/utils/saf_download_tree.dart';
 
 part 'main_shell_startup_prompts.dart';
@@ -90,7 +88,6 @@ int? shellIndexOfTab(
   ShellTab tab, {
   required bool mornye,
   required bool showStore,
-  required bool tv,
 }) => switch (tab) {
   ShellTab.home => 0,
   ShellTab.library => 1,
@@ -98,12 +95,7 @@ int? shellIndexOfTab(
   // Material searches from Home.
   ShellTab.search => mornye ? (showStore ? 3 : 2) : 0,
   // Mornye phones open Settings as a page, not a destination.
-  ShellTab.settings =>
-    !mornye
-        ? (showStore ? 3 : 2)
-        : tv
-        ? (showStore ? 4 : 3)
-        : null,
+  ShellTab.settings => !mornye ? (showStore ? 3 : 2) : null,
 };
 
 class MainShell extends ConsumerStatefulWidget {
@@ -174,13 +166,7 @@ class _MainShellState extends ConsumerState<MainShell>
       showStore: showStore,
     );
     final index =
-        shellIndexOfTab(
-          tab,
-          mornye: mornye,
-          showStore: showStore,
-          tv: isAndroidTv,
-        ) ??
-        0;
+        shellIndexOfTab(tab, mornye: mornye, showStore: showStore) ?? 0;
     if (index == _currentIndex) return;
     _currentIndex = index;
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -424,14 +410,12 @@ class _MainShellState extends ConsumerState<MainShell>
   }
 
   /// Phones and tablets open it as a page instead.
-  bool get _mornyeSettingsTab => context.isMornye && (isAndroidTv);
-
   int _settingsIndex(bool showStore) =>
       context.isMornye ? (showStore ? 4 : 3) : (showStore ? 3 : 2);
 
   void _onShellTabRequested(ShellTab tab) {
     // Picking a destination returns from Now Playing to the content pane.
-    if (tab == ShellTab.settings && context.isMornye && !_mornyeSettingsTab) {
+    if (tab == ShellTab.settings && context.isMornye) {
       unawaited(_openProfileSettings());
       return;
     }
@@ -491,11 +475,11 @@ class _MainShellState extends ConsumerState<MainShell>
         showRepoTab: showStore,
         showSearchTab: context.isMornye,
       );
-      if (!isAndroidTv) FocusManager.instance.primaryFocus?.unfocus();
+      FocusManager.instance.primaryFocus?.unfocus();
       // Jump directly when skipping intermediate tabs to avoid
       // sliding through them. For those jumps, keep a short fade-in
       // so the transition still feels intentional.
-      if (context.isMornye || isAndroidTv) {
+      if (context.isMornye) {
         // The glass pill owns the tab transition. Sliding/fading the whole
         // page at the same time continuously invalidates its live backdrop.
         _tabJumpTransitionController.value = 1;
@@ -620,11 +604,6 @@ class _MainShellState extends ConsumerState<MainShell>
       return;
     }
 
-    if (isAndroidTv) {
-      await SystemNavigator.pop();
-      return;
-    }
-
     final now = DateTime.now();
     if (_lastBackPress != null &&
         now.difference(_lastBackPress!) < const Duration(seconds: 2)) {
@@ -716,7 +695,6 @@ class _MainShellState extends ConsumerState<MainShell>
           heroAnimationsEnabled: heroAnimationsEnabled,
           child: const HomeTab(mode: HomeTabMode.search),
         ),
-      if (_mornyeSettingsTab) const SettingsTab(key: ValueKey('tab-settings')),
     ];
 
     final maxIndex = tabs.length - 1;
@@ -748,12 +726,10 @@ class _MainShellState extends ConsumerState<MainShell>
 
     final pageView = KeyedSubtree(
       key: _pageViewKey,
-      child: context.isMornye || isAndroidTv
+      child: context.isMornye
           ? LazyTabView(
               index: selectedDestination,
-              preloadKeys: isAndroidTv
-                  ? const {}
-                  : {const ValueKey('tab-search')},
+              preloadKeys: {const ValueKey('tab-search')},
               children: [
                 for (var index = 0; index < tabs.length; index++)
                   KeyedSubtree(
@@ -790,32 +766,6 @@ class _MainShellState extends ConsumerState<MainShell>
     // badge counts. It gets the same tab view each time, so none of them
     // rebuilds the shell or the routes of its tabs; pages read them
     // themselves.
-    if (isAndroidTv) {
-      return DownloadQueueFeedback(
-        child: BackButtonListener(
-          onBackButtonPressed: () async {
-            await _handleBackPress();
-            return true;
-          },
-          child: Scaffold(
-            body: Consumer(
-              child: SelectionOverlayHost(child: pageView),
-              builder: (context, ref, body) => TvShell(
-                destinations: _navigationDestinations(
-                  queuedCount: _watchQueuedCount(ref),
-                  repoUpdatesCount: _watchRepoUpdatesCount(ref),
-                  showStore: showStore,
-                ),
-                selectedIndex: selectedDestination,
-                onSelected: _onNavTap,
-                child: body!,
-              ),
-            ),
-          ),
-        ),
-      );
-    }
-
     final shell = SelectionOverlayHost(
       child: BackButtonListener(
         onBackButtonPressed: () async {
@@ -842,7 +792,7 @@ class _MainShellState extends ConsumerState<MainShell>
     return DownloadQueueFeedback(child: shell);
   }
 
-  /// Phone, tablet and TV destinations, with the download count on Library.
+  /// Phone and tablet destinations, with the download count on Library.
   List<NavigationDestination> _navigationDestinations({
     required int queuedCount,
     required int repoUpdatesCount,
@@ -920,11 +870,6 @@ class _MainShellState extends ConsumerState<MainShell>
         NavigationDestination(
           icon: const Icon(CupertinoIcons.search),
           label: l10n.mornyeSearch,
-        ),
-      if (context.isMornye && isAndroidTv)
-        NavigationDestination(
-          icon: const Icon(CupertinoIcons.gear_alt),
-          label: l10n.navSettings,
         ),
     ];
   }
@@ -1146,19 +1091,14 @@ class _TabNavigatorState extends State<_TabNavigator> {
   Widget build(BuildContext context) {
     return Navigator(
       key: widget.navigatorKey,
-      routeDirectionalTraversalEdgeBehavior: isAndroidTv
-          ? TraversalEdgeBehavior.parentScope
-          : TraversalEdgeBehavior.stop,
+      routeDirectionalTraversalEdgeBehavior: TraversalEdgeBehavior.stop,
       observers: [
         _chromeObserver,
         if (widget.heroAnimationsEnabled) _heroController,
         ...widget.observers,
       ],
       onGenerateInitialRoutes: (_, _) => [
-        MaterialPageRoute<void>(
-          requestFocus: !isAndroidTv,
-          builder: (_) => widget.child,
-        ),
+        MaterialPageRoute<void>(builder: (_) => widget.child),
       ],
     );
   }
