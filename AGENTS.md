@@ -14,3 +14,20 @@ For code, optimization, simplification, test-quality or coverage-gap audits, use
 [audit skill](.agents/skills/audit/SKILL.md). Review guidance is in
 [code-auditor](.agents/reviewers/code-auditor.md); it does not automatically run an
 independent reviewer. These are standalone instructions, not a task workflow.
+
+# Spec Kit planning and task execution
+
+GitHub Spec Kit v1.4.0 is installed with Codex skills. Before substantial feature
+planning/execution, read [local policy](.specify/project-policy.md) and
+[constitution](.specify/memory/constitution.md). Use `$speckit-specify`,
+`$speckit-plan`, `$speckit-tasks`, then `$speckit-implement` only when implementation
+is authorized. `$speckit-clarify`, `$speckit-analyze` and checklists are optional.
+
+The policy governs planned work: one planning commit; T000 map refresh; sequential
+T001 onwards with map refresh before subsequent tasks; implement/check/review/fix,
+three review rounds maximum; one commit per completed task; TOR### extras; final
+cumulative review/fixes in one final-task commit. Independent task reviews follow
+[task-reviewer](.agents/reviewers/task-reviewer.md). Small low-risk edits may remain
+direct. Planning-only requests never start implementation. Existing audit/navigation
+skills stay independent. See [.specify/README.md](.specify/README.md) for provenance,
+local adaptations and validation; no old work.py state machine is restored.
