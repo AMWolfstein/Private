@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Local CodeGraph CLI/SQLite adapter. No agent installer, npm download or source execution.
 
-Index only a private copy of requested inputs under WORK_MAP_CACHE. Python reads the
-resulting SQLite database in read-only mode; the bounded workflow renderer stays unchanged.
+Index only a private copy of requested inputs under CODEGRAPH_CACHE. Python reads the
+resulting SQLite database in read-only mode. This tool has no task/review pipeline.
 """
 from __future__ import annotations
 import argparse
@@ -18,9 +18,16 @@ SCHEMA = 1
 
 
 def command():
-    value = json.loads(os.environ.get('WORK_CODEGRAPH_COMMAND', '["codegraph"]'))
+    configured = os.environ.get('CODEGRAPH_COMMAND')
+    if configured is None:
+        repository = Path(__file__).resolve().parents[2]
+        for path in [Path(__file__).parent / 'node_modules/.bin/codegraph',
+                     repository / '.work/tools/node_modules/.bin/codegraph']:
+            if path.is_file():
+                return [str(path)]
+    value = json.loads(configured or '["codegraph"]')
     if not isinstance(value, list) or not value or not all(isinstance(v, str) and v for v in value):
-        raise ValueError('WORK_CODEGRAPH_COMMAND must be a JSON argv list')
+        raise ValueError('CODEGRAPH_COMMAND must be a JSON argv list')
     return value
 
 
@@ -131,9 +138,9 @@ def read_database(database, requested):
 def extract(request_path, out):
     request = json.loads(request_path.read_text())
     root = Path(request['root']).resolve()
-    cache = Path(os.environ['WORK_MAP_CACHE'])
+    cache = Path(os.environ.get('CODEGRAPH_CACHE', str(Path(__file__).resolve().parents[2] / '.work/codegraph')))
     if not cache.is_absolute():
-        raise ValueError('WORK_MAP_CACHE must be absolute')
+        raise ValueError('CODEGRAPH_CACHE must be absolute')
     cache.mkdir(parents=True, exist_ok=True)
     requested = set(request['files'])
     auxiliary = request.get('auxiliary', [])

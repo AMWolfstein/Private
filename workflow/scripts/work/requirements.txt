@@ -1,6 +1,0 @@
-# Parse-only Bash supplement, independent of Graphify. CodeGraph is installed separately.
-tree-sitter==0.25.2
-tree-sitter-bash==0.25.1
-tomli==2.2.1; python_version < "3.11"
-# Secret scanner for the optional "work.py audit --kind security" (reports type and line, never the value).
-detect-secrets==1.5.0

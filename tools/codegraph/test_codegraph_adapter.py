@@ -1,16 +1,12 @@
 """Real-engine regressions and staging/normalization boundaries; not mocked parser claims."""
 import json
 import os
-import subprocess
-import sys
 import shutil
 import tempfile
 import unittest
 from pathlib import Path
 from unittest import mock
 import codegraph_adapter as adapter
-import workmap
-import native_bindings
 
 
 class StagingTests(unittest.TestCase):
@@ -43,48 +39,11 @@ class StagingTests(unittest.TestCase):
             self.assertEqual((mirror / 'a.dart').stat().st_mtime_ns, before)
 
 
-class NormalizationTests(unittest.TestCase):
-    def test_cross_language_calls_are_rejected_and_low_scores_stay_low(self):
-        nodes = [{'id': ident, 'label': ident, 'kind': 'function', 'source_file': path, 'source_location': 'L1'}
-                 for ident, path in [('run', 'a.dart'), ('target', 'b.dart'), ('rust', 'lib.rs')]]
-        edges = [{'source': 'run', 'target': target, 'relation': 'calls', 'source_file': 'a.dart',
-                  'source_location': 'L2', 'evidence': {'confidence': 0.4}}
-                 for target in ['target', 'rust']]
-        _, kept, problems = workmap.normalize({'nodes': nodes, 'edges': edges}, {'a.dart', 'b.dart', 'lib.rs'})
-        self.assertEqual([e['target'] for e in kept], ['target'])
-        self.assertEqual(kept[0]['confidence'], 'low')
-        self.assertEqual(kept[0]['fact'], 'inferred')
-        self.assertTrue(problems)
-
-    def test_non_dart_file_imports_reach_dependency_navigation(self):
-        raw = {'nodes': [{'id': 'a', 'kind': 'file', 'label': 'main.py', 'source_file': 'main.py'},
-                         {'id': 'b', 'kind': 'file', 'label': 'helper.py', 'source_file': 'helper.py'}],
-               'edges': [{'source': 'a', 'target': 'b', 'relation': 'imports', 'source_location': 'L1'}]}
-        deps = workmap.engine_dependencies(raw, {'main.py', 'helper.py'})
-        self.assertEqual([(d['from'], d['to']) for d in deps], [('main.py', 'helper.py')])
-        self.assertEqual(deps[0]['fact'], 'inferred')
 
 
-class NativeBoundaryTests(unittest.TestCase):
-    def test_explicit_jni_macro_is_a_candidate_but_not_ordinary_call(self):
-        texts = {'Native.kt': 'package test.app\nobject Native {\n external fun openOboe(): Long\n}\n',
-                 'native.cpp': '#define JNI_AUDIO(name) Java_test_app_Native_##name\nJNIEXPORT long JNI_AUDIO(openOboe)(void *env) { return 1; }\n'}
-        symbols = [{'file': 'Native.kt', 'line': 3, 'name': 'openOboe', 'owner': 'Native'}]
-        data = native_bindings.inventory(texts, symbols)
-        self.assertEqual(data[0]['status'], 'binding-candidate')
-        self.assertEqual(data[0]['candidates'][0]['file'], 'native.cpp')
-        self.assertEqual(data[0]['fact'], 'inferred')
-
-    def test_strings_do_not_create_jni_implementations_and_uniffi_stays_unresolved(self):
-        texts = {'Native.kt': 'package test.app\nobject Native {\n external fun openOboe(): Long\n}\n',
-                 'native.cpp': 'const char *text = "Java_test_app_Native_openOboe()";\n',
-                 'lib.rs': '#[uniffi::export]\npub fn exported() {}\n'}
-        data = native_bindings.inventory(texts, [{'file': 'Native.kt', 'line': 3, 'name': 'openOboe', 'owner': 'Native'}])
-        self.assertEqual(next(n for n in data if n['kind'] == 'JNI declaration')['status'], 'unresolved-native-implementation')
-        self.assertTrue(any(n['status'] == 'unresolved-generated-binding' for n in data))
 
 
-CLI = shutil.which('codegraph')
+CLI = shutil.which(adapter.command()[0])
 
 
 @unittest.skipUnless(CLI, 'CodeGraph CLI not installed; real parser coverage not verified')
@@ -115,7 +74,7 @@ class RealCodeGraphRegressions(unittest.TestCase):
 
     @classmethod
     def environment(cls):
-        return mock.patch.dict(os.environ, {'WORK_MAP_CACHE': str(cls.cache), 'WORK_CODEGRAPH_COMMAND': json.dumps([CLI])})
+        return mock.patch.dict(os.environ, {'CODEGRAPH_CACHE': str(cls.cache), 'CODEGRAPH_COMMAND': json.dumps([CLI])})
 
     @classmethod
     def extract(cls):
@@ -151,38 +110,15 @@ class RealCodeGraphRegressions(unittest.TestCase):
         self.assertIn('res/values.xml', coverage)
 
     def test_python_import_dependency_survives_normalization(self):
-        deps = workmap.engine_dependencies(self.raw, set(self.fixture))
-        self.assertIn(('py/main.py', 'py/helper.py'), {(d['from'], d['to']) for d in deps})
+        imports = {(self.nodes[e['source']]['source_file'], self.nodes[e['target']]['source_file'])
+                   for e in self.raw['edges'] if e['relation'] == 'imports'}
+        self.assertIn(('py/main.py', 'py/helper.py'), imports)
 
-    def test_copied_workflow_context_preserves_non_dart_import_evidence(self):
-        with tempfile.TemporaryDirectory(prefix='codegraph workflow ') as temporary:
-            root = Path(temporary)
-            package = Path(__file__).resolve().parents[3]
-            shutil.copytree(package / 'workflow', root / 'workflow', ignore=shutil.ignore_patterns('__pycache__'))
-            shutil.copy2(package / 'AGENTS.md', root / 'AGENTS.md')
-            (root / '.gitignore').write_text('.work/\n__pycache__/\n')
-            for name in ['py/main.py', 'py/helper.py']:
-                target = root / name;target.parent.mkdir(parents=True, exist_ok=True)
-                target.write_text(self.fixture[name])
-            config_path = root / 'workflow/work/map.json'
-            config = json.loads(config_path.read_text());config['extractor']['command'] = [CLI]
-            config_path.write_text(json.dumps(config))
-            for args in [['git', 'init', '-q'], ['git', 'config', 'user.name', 'Test'],
-                         ['git', 'config', 'user.email', 'test@example.invalid'], ['git', 'add', '.'],
-                         ['git', 'commit', '-qm', 'fixture']]:
-                subprocess.run(args, cwd=root, check=True, capture_output=True)
-            with mock.patch.dict(os.environ, {'WORK_MAP_ADAPTER': str(workmap.ADAPTER), 'WORK_MAP_PYTHON': sys.executable}):
-                packet = workmap.context(root, '', files=['py/main.py'], budget=4000)
-                self.assertIn('py/helper.py', packet['text'])
-                self.assertIn('codegraph:resolver-import', packet['text'])
-                report = workmap.coverage_report(root)
-                self.assertEqual(report['summary']['indexed'], 2)
-                self.assertEqual(workmap.map_status(root)['state'], 'current')
 
     def test_real_rename_and_delete_leave_no_stale_symbols(self):
         # A separate mirror keeps this mutation independent of the shared parser fixtures.
         with tempfile.TemporaryDirectory() as temporary, mock.patch.dict(os.environ, {
-                'WORK_MAP_CACHE': temporary, 'WORK_CODEGRAPH_COMMAND': json.dumps([CLI])}):
+                'CODEGRAPH_CACHE': temporary, 'CODEGRAPH_COMMAND': json.dumps([CLI])}):
             req, out = Path(temporary) / 'r.json', Path(temporary) / 'o.json'
             def run(files):
                 req.write_text(json.dumps({'root': str(self.source), 'files': files}))

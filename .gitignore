@@ -96,6 +96,6 @@ NUL
 hs_err_*.log
 flutter_*.log
 
-# Workflow
+# Local analysis caches
 .work/
 __pycache__/

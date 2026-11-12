@@ -1,7 +1,0 @@
-{
-  "version": 1,
-  "port": {"applies": null, "reason": ""},
-  "bridge": {"applies": null, "reason": ""},
-  "prerequisites": [],
-  "device_checks": []
-}
