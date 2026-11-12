@@ -6,7 +6,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:mornye/theme/app_motion.dart';
 import 'package:mornye/theme/app_tokens.dart';
 import 'package:mornye/theme/app_theme.dart';
-import 'package:mornye/widgets/mornye_chrome.dart';
+import 'package:mornye/widgets/app_chrome.dart';
 import 'package:mornye/widgets/app_bottom_sheet.dart';
 import 'package:mornye/widgets/expressive_button.dart';
 import 'package:mornye/widgets/expressive_icon_button.dart';
@@ -349,7 +349,7 @@ class SelectionBottomBar extends StatelessWidget {
     const floatingMargin = 12.0;
     Widget surface(Widget content) {
       if (context.isMornye) {
-        return MornyeGlassPanel.overlay(child: content);
+        return AppGlassPanel.overlay(child: content);
       }
       final toolbar = Material(
         color: colorScheme.surfaceContainerHigh,

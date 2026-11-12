@@ -17,9 +17,9 @@ import 'package:mornye/providers/settings_provider.dart';
 import 'package:mornye/services/music_player_runtime.dart';
 import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/mini_player.dart';
-import 'package:mornye/widgets/mornye_bottom_bar.dart';
-import 'package:mornye/widgets/mornye_chrome.dart';
-import 'package:mornye/widgets/mornye_liquid_backdrop.dart';
+import 'package:mornye/widgets/app_bottom_bar.dart';
+import 'package:mornye/widgets/app_chrome.dart';
+import 'package:mornye/widgets/app_liquid_backdrop.dart';
 
 class _Settings extends SettingsNotifier {
   @override
@@ -51,7 +51,7 @@ void main() {
         picture.dispose();
       }
     });
-    final chrome = MornyeChromeController();
+    final chrome = AppChromeController();
     final selected = ValueNotifier(0);
     final runtime = MusicPlayerRuntime();
     addTearDown(() async {
@@ -81,7 +81,7 @@ void main() {
       final builder = tester.widget<AnimatedBuilder>(
         find
             .descendant(
-              of: find.byType(MornyeBottomBar),
+              of: find.byType(AppBottomBar),
               matching: find.byWidgetPredicate(
                 (widget) =>
                     widget is AnimatedBuilder &&
@@ -181,7 +181,7 @@ void main() {
             musicPlayerControllerProvider.overrideWithValue(
               MusicPlayerController(runtime: runtime),
             ),
-            mornyeGlassLevelProvider.overrideWithValue(MornyeGlassLevel.liquid),
+            appGlassLevelProvider.overrideWithValue(AppGlassLevel.liquid),
           ],
           child: MaterialApp(
             theme: AppTheme.build(brightness, glassOutlines: outlines),
@@ -207,7 +207,7 @@ void main() {
                   padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
                   child: ListenableBuilder(
                     listenable: Listenable.merge([chrome, selected]),
-                    builder: (_, _) => MornyeBottomBar(
+                    builder: (_, _) => AppBottomBar(
                       collapsed: chrome.value,
                       destinations: const [
                         NavigationDestination(
@@ -243,7 +243,7 @@ void main() {
       await tester.runAsync(() async {
         await LiquidGlassShaders.ensureLoaded();
         await ui.FragmentProgram.fromAsset(
-          'assets/shaders/mornye_selection_mask.frag',
+          'assets/shaders/app_selection_mask.frag',
         );
       });
       await wait(600);
@@ -276,7 +276,7 @@ void main() {
       Offset tab(String label) => tester.getCenter(
         find
             .descendant(
-              of: find.byType(MornyeTabBar),
+              of: find.byType(AppTabBar),
               matching: find.text(label),
             )
             .hitTestable(),
@@ -285,8 +285,8 @@ void main() {
       final search = tab('Search');
       Rect capsule() => tester.getRect(
         find.descendant(
-          of: find.byType(MornyeTabBar),
-          matching: find.byType(MornyeGlass),
+          of: find.byType(AppTabBar),
+          matching: find.byType(AppGlass),
         ),
       );
       Map<String, Rect> foreground() => {
@@ -298,13 +298,13 @@ void main() {
         }.entries) ...{
           '${entry.key}_icon': tester.getRect(
             find.descendant(
-              of: find.byType(MornyeTabBar),
+              of: find.byType(AppTabBar),
               matching: find.byIcon(entry.value),
             ),
           ),
           '${entry.key}_label': tester.getRect(
             find.descendant(
-              of: find.byType(MornyeTabBar),
+              of: find.byType(AppTabBar),
               matching: find.text(entry.key),
             ),
           ),
@@ -324,26 +324,26 @@ void main() {
         await touch.moveTo(Offset.lerp(home, search, 0.5)!);
         await wait(100);
         final lens = find.byWidgetPredicate(
-          (widget) => widget is MornyeLiquidBackdrop && widget.interaction,
+          (widget) => widget is AppLiquidBackdrop && widget.interaction,
         );
         for (
           var attempt = 0;
-          tester.widget<MornyeLiquidBackdrop>(lens).progress < 1 &&
+          tester.widget<AppLiquidBackdrop>(lens).progress < 1 &&
               attempt < 20;
           attempt++
         ) {
           await wait(100);
         }
-        expect(tester.widget<MornyeLiquidBackdrop>(lens).progress, 1);
+        expect(tester.widget<AppLiquidBackdrop>(lens).progress, 1);
         final heldCapsule = capsule();
         expect(heldCapsule.width, closeTo(restingCapsule.width * 1.025, 0.01));
         expect(heldCapsule.height, closeTo(restingCapsule.height * 1.06, 0.01));
         expect(foreground(), restingForeground);
-        final glass = tester.widget<MornyeLiquidBackdrop>(
+        final glass = tester.widget<AppLiquidBackdrop>(
           find.descendant(
-            of: find.byType(MornyeTabBar),
+            of: find.byType(AppTabBar),
             matching: find.byWidgetPredicate(
-              (widget) => widget is MornyeLiquidBackdrop && !widget.interaction,
+              (widget) => widget is AppLiquidBackdrop && !widget.interaction,
             ),
           ),
         );
@@ -382,7 +382,7 @@ void main() {
     }
     binding.reportData!['mornye_glass_visual'] = {
       'scope':
-          'Production MornyeBottomBar/MiniPlayer over '
+          'Production AppBottomBar/MiniPlayer over '
           '${flatBackdrop ? 'flat light/dark surfaces' : 'generated stripes/grid'}; '
           'paused in-memory playback and settings, no persistent data or network.',
       'captureSurface':

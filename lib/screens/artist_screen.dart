@@ -8,9 +8,9 @@ import 'package:mornye/widgets/app_icon_button.dart';
 import 'package:mornye/widgets/app_loading_indicator.dart';
 import 'package:mornye/widgets/app_progress_indicator.dart';
 import 'package:mornye/widgets/expressive_button.dart';
-import 'package:mornye/theme/mornye_icons.dart';
-import 'package:mornye/widgets/mornye_artist_header.dart';
-import 'package:mornye/widgets/mornye_chrome.dart';
+import 'package:mornye/theme/app_icons.dart';
+import 'package:mornye/widgets/app_artist_header.dart';
+import 'package:mornye/widgets/app_chrome.dart';
 import 'package:mornye/widgets/album_detail_header.dart';
 import 'package:mornye/theme/cover_palette.dart';
 import 'package:mornye/widgets/app_bottom_sheet.dart';
@@ -616,7 +616,7 @@ class _ArtistScreenState extends ConsumerState<ArtistScreen>
   @override
   Widget build(BuildContext context) {
     if (context.isMornye) {
-      return MornyeArtistSurface(
+      return AppArtistSurface(
         imageSource:
             _headerImageUrl ?? widget.headerImageUrl ?? widget.coverUrl,
         logoSource: _headerLogoUrl ?? widget.headerLogoUrl,

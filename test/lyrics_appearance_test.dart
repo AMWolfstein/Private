@@ -204,7 +204,7 @@ void main() {
       final theme = AppTheme.build(Brightness.dark);
       await tester.pumpWidget(
         ProviderScope(
-          overrides: [mornyeLiquidGlassProvider.overrideWithValue(true)],
+          overrides: [appLiquidGlassProvider.overrideWithValue(true)],
           child: MaterialApp(
             theme: theme,
             home: Scaffold(

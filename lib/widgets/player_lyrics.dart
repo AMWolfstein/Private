@@ -23,7 +23,7 @@ import 'package:mornye/widgets/lyric_blur.dart';
 import 'package:mornye/widgets/lyric_supplement_transition.dart';
 import 'package:mornye/widgets/lyric_scroll_motion.dart';
 import 'package:mornye/widgets/lyric_gap_indicator.dart';
-import 'package:mornye/widgets/mornye_player_slider.dart';
+import 'package:mornye/widgets/app_player_slider.dart';
 import 'package:mornye/widgets/lyrics_text_scale.dart';
 
 part 'player_lyrics_line_style.dart';
@@ -34,7 +34,7 @@ const _mornyeLyricFontSize = 34.0;
 /// a phone. Null keeps the text theme's size (phones and tablets).
 double? get _materialLyricFontSize => null;
 double get _materialBackgroundLyricFontSize => 18;
-const mornyeLyricsContentInset = 28.0 + MornyePlayerSlider.horizontalInset;
+const mornyeLyricsContentInset = 28.0 + AppPlayerSlider.horizontalInset;
 
 /// How much of the lyrics area's bottom the player's controls cover. The
 /// Mornye phone player lays lyrics out under its controls so they can grow
@@ -897,7 +897,7 @@ class _SyncedLyricsViewState extends ConsumerState<SyncedLyricsView>
         !highContrast &&
         blurStrength > 0 &&
         // Defocused lines are filtered on every frame while their focus eases.
-        ref.watch(mornyeLiquidGlassProvider);
+        ref.watch(appLiquidGlassProvider);
     // Line emphasis eases over most of the scroll, so the new line brightens
     // as it arrives instead of switching ahead of the movement.
     final motion = MediaQuery.disableAnimationsOf(context)

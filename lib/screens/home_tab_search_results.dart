@@ -216,7 +216,7 @@ extension _HomeTabSearchResultsUI on _HomeTabState {
                     runSpacing: 8,
                     children: HomeSearchSortOption.values.map((option) {
                       if (context.isMornye) {
-                        return MornyeFilterChip(
+                        return AppFilterChip(
                           label: _sortOptionLabel(option),
                           selected: tempSort == option,
                           onTap: () => setSheetState(() => tempSort = option),
@@ -508,7 +508,7 @@ extension _HomeTabSearchResultsUI on _HomeTabState {
             if (mornye) {
               return Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: MornyeGlassPanel.overlay(
+                child: AppGlassPanel.overlay(
                   blurEnabled: false,
                   radius: 24,
                   firstInGroup: isFirst,
@@ -853,12 +853,12 @@ extension _HomeTabSearchResultsUI on _HomeTabState {
       void select() => _selectSearchFilter(id);
 
       return context.isMornye
-          ? MornyeGlassPanel.overlay(
+          ? AppGlassPanel.overlay(
               radius: 24,
-              child: MornyeFilterChip(
+              child: AppFilterChip(
                 label: label,
                 selected: selectedFilter == id,
-                icon: icon == null ? null : mornyeIconFor(icon),
+                icon: icon == null ? null : appIconFor(icon),
                 tonal: selectedFilter == id,
                 onTap: select,
               ),

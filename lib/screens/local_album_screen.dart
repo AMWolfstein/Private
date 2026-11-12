@@ -42,7 +42,7 @@ import 'package:mornye/widgets/library_selection_playback_actions.dart';
 import 'package:mornye/widgets/local_library_artwork_builder.dart';
 import 'package:mornye/widgets/disc_separator_chip.dart';
 import 'package:mornye/widgets/album_detail_header.dart';
-import 'package:mornye/widgets/mornye_artist_header.dart';
+import 'package:mornye/widgets/app_artist_header.dart';
 import 'package:mornye/widgets/motion_header_banner.dart';
 
 class LocalAlbumScreen extends ConsumerStatefulWidget {
@@ -232,7 +232,7 @@ class _LocalAlbumScreenState extends ConsumerState<LocalAlbumScreen>
           : artworkTrack?.coverPath,
       filePath: artworkTrack?.filePath,
       builder: (context, coverPath) => context.isMornye
-          ? MornyeArtistSurface(
+          ? AppArtistSurface(
               imageSource: coverPath,
               neutralActions: true,
               child: Builder(

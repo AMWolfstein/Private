@@ -16,8 +16,8 @@ import 'package:mornye/providers/settings_provider.dart';
 import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/utils/playback_seek_preview.dart';
-import 'package:mornye/widgets/mornye_player_artwork.dart';
-import 'package:mornye/widgets/mornye_player_layout.dart';
+import 'package:mornye/widgets/app_player_artwork.dart';
+import 'package:mornye/widgets/app_player_layout.dart';
 import 'package:mornye/widgets/material_player_layout.dart';
 import 'package:mornye/widgets/player_volume_control.dart';
 
@@ -149,13 +149,13 @@ void runArtworkPerformanceTests({required bool mornye}) {
                         ),
                         onOpenQueue: () {},
                       )
-                    : MornyePlayerLayout(
+                    : AppPlayerLayout(
                         mediaItem: item,
                         metadata: metadata,
                         seekPreview: seek,
                         colorScheme: theme.colorScheme,
                         page: value,
-                        motionArtwork: MornyePlayerArtwork(mediaItem: item),
+                        motionArtwork: AppPlayerArtwork(mediaItem: item),
                         insetArtwork: true,
                         artworkTopInset: 0,
                         artworkKeys: keys,
@@ -209,7 +209,7 @@ void runArtworkPerformanceTests({required bool mornye}) {
     await probe.finish(
       metadata: {
         'fixture':
-            'Production ${mornye ? 'MornyePlayerLayout' : 'MaterialPlayerLayout'}, local 2400px static cover; '
+            'Production ${mornye ? 'AppPlayerLayout' : 'MaterialPlayerLayout'}, local 2400px static cover; '
             'synthetic lyrics/queue and no playback or persistent data',
         'style': style,
         'cache_snapshots': snapshots,

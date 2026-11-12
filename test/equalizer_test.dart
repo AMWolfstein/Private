@@ -13,8 +13,8 @@ import 'package:mornye/services/playback_equalizer.dart';
 import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/app_slider.dart';
-import 'package:mornye/widgets/mornye_chrome.dart';
-import 'package:mornye/widgets/mornye_level_slider.dart';
+import 'package:mornye/widgets/app_chrome.dart';
+import 'package:mornye/widgets/app_level_slider.dart';
 import 'package:mornye/widgets/slider_value_header.dart';
 
 class _CountedSettings extends EqualizerSettings {
@@ -101,12 +101,12 @@ void main() {
         await tester.pumpAndSettle();
         final page = tester.widget<Scaffold>(find.byType(Scaffold));
         final picker = find.byType(
-          mornye ? MornyeSegmentedControl : M3EButtonGroup,
+          mornye ? AppSegmentedControl : M3EButtonGroup,
         );
         final bandPicker = tester.widget(picker);
         Widget bass() => mornye
             ? tester
-                  .widgetList<MornyeLevelSlider>(find.byType(MornyeLevelSlider))
+                  .widgetList<AppLevelSlider>(find.byType(AppLevelSlider))
                   .firstWhere((slider) => slider.semanticLabel == 'Bass')
             : tester
                   .widgetList<AppSlider>(find.byType(AppSlider))
@@ -114,7 +114,7 @@ void main() {
         final bassSlider = bass();
         final gainSlider = mornye
             ? tester
-                  .widgetList<MornyeLevelSlider>(find.byType(MornyeLevelSlider))
+                  .widgetList<AppLevelSlider>(find.byType(AppLevelSlider))
                   .first
             : tester.widgetList<AppSlider>(find.byType(AppSlider)).first;
         for (var i = 1; i <= 20; i++) {
@@ -126,13 +126,13 @@ void main() {
           expect(tester.widget(picker), same(bandPicker));
           expect(bass(), same(bassSlider));
         }
-        if (gainSlider is MornyeLevelSlider) {
+        if (gainSlider is AppLevelSlider) {
           gainSlider.onChanged!(5);
         } else {
           (gainSlider as AppSlider).onChanged!(5);
         }
         await tester.pump();
-        if (bassSlider is MornyeLevelSlider) {
+        if (bassSlider is AppLevelSlider) {
           bassSlider.onChanged!(3);
         } else {
           (bassSlider as AppSlider).onChanged!(3);
@@ -171,7 +171,7 @@ void main() {
         }
         final bandValue = mornye
             ? tester
-                  .widgetList<MornyeLevelSlider>(find.byType(MornyeLevelSlider))
+                  .widgetList<AppLevelSlider>(find.byType(AppLevelSlider))
                   .first
                   .value
             : tester.widgetList<AppSlider>(find.byType(AppSlider)).first.value;
@@ -373,7 +373,7 @@ void main() {
         );
         await tester.pumpAndSettle();
         final picker = find.byType(
-          mornye ? MornyeSegmentedControl : M3EButtonGroup,
+          mornye ? AppSegmentedControl : M3EButtonGroup,
         );
         await tester.scrollUntilVisible(
           picker,
@@ -395,7 +395,7 @@ void main() {
         // The first slider on the page is the lowest band's fader.
         final onChanged = mornye
             ? tester
-                  .widgetList<MornyeLevelSlider>(find.byType(MornyeLevelSlider))
+                  .widgetList<AppLevelSlider>(find.byType(AppLevelSlider))
                   .first
                   .onChanged
             : tester

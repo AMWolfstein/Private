@@ -21,7 +21,7 @@ import 'package:mornye/services/playable_media.dart';
 import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/widgets/expressive_navigation_bar.dart';
-import 'package:mornye/widgets/mornye_bottom_bar.dart';
+import 'package:mornye/widgets/app_bottom_bar.dart';
 import 'package:mornye/widgets/mini_player.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -113,7 +113,7 @@ void main() {
   }
 
   bool collapsed(WidgetTester tester) =>
-      tester.widget<MornyeBottomBar>(find.byType(MornyeBottomBar)).collapsed;
+      tester.widget<AppBottomBar>(find.byType(AppBottomBar)).collapsed;
 
   testWidgets(
     'Material Home restores its viewport and navigation after the player',

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/utils/playback_seek_preview.dart';
 import 'package:mornye/widgets/expressive_seek_track.dart';
-import 'package:mornye/widgets/mornye_player_slider.dart';
+import 'package:mornye/widgets/app_player_slider.dart';
 
 /// Previews scrubbing locally and seeks once when the gesture ends.
 class PlaybackSeekSlider extends StatefulWidget {
@@ -114,7 +114,7 @@ class _PlaybackSeekSliderState extends State<PlaybackSeekSlider> {
             : null,
         child: IgnorePointer(
           ignoring: !enabled,
-          child: MornyePlayerSlider(
+          child: AppPlayerSlider(
             activeColor:
                 SliderTheme.of(context).activeTrackColor ?? Colors.white,
             inactiveColor:
@@ -125,7 +125,7 @@ class _PlaybackSeekSliderState extends State<PlaybackSeekSlider> {
             height: widget.hairline ? 10 : 44,
             inset: widget.hairline || widget.edgeAligned
                 ? 0
-                : MornyePlayerSlider.horizontalInset,
+                : AppPlayerSlider.horizontalInset,
             onChangeStart: _start,
             onChanged: _preview,
             onChangeEnd: _commit,

@@ -11,13 +11,13 @@ import 'package:mornye/services/app_remote_config_service.dart';
 import 'package:mornye/services/update_checker.dart';
 import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/theme/material_symbols.dart';
-import 'package:mornye/theme/mornye_icons.dart';
+import 'package:mornye/theme/app_icons.dart';
 import 'package:mornye/widgets/app_alert_dialog.dart';
 import 'package:mornye/widgets/app_announcement_dialog.dart';
 import 'package:mornye/widgets/app_bottom_sheet.dart';
 import 'package:mornye/widgets/app_choice_chip.dart';
 import 'package:mornye/widgets/app_icon.dart';
-import 'package:mornye/widgets/mornye_chrome.dart';
+import 'package:mornye/widgets/app_chrome.dart';
 import 'package:mornye/widgets/update_dialog.dart';
 
 Widget _app(ThemeData theme, Widget home) => ProviderScope(
@@ -143,7 +143,7 @@ void main() {
                 theme,
                 Theme(
                   data: pageTheme,
-                  child: const MornyeSettingsTheme(
+                  child: const AppSettingsTheme(
                     child: DownloadSettingsPage(),
                   ),
                 ),
@@ -155,7 +155,7 @@ void main() {
             tester.element(find.byType(DownloadSettingsPage)),
           );
           final check = mornye
-              ? mornyeIconFor(Icons.check)
+              ? appIconFor(Icons.check)
               : materialSymbolFor(Icons.check)!.icon;
           for (final (picker, initial, next) in [
             ('Output format', 'MP3', 'Opus'),
@@ -447,7 +447,7 @@ void main() {
         await tester.tap(find.text('Open'));
         await tester.pumpAndSettle();
         expect(
-          find.byType(MornyeGlassPanel),
+          find.byType(AppGlassPanel),
           mornye ? findsOneWidget : findsNothing,
         );
         expect(find.byType(M3EChip), mornye ? findsNothing : findsOneWidget);
@@ -507,7 +507,7 @@ void main() {
         await tester.pumpAndSettle();
         expect(nestedNavigator.currentState!.canPop(), isTrue);
         expect(
-          find.byType(MornyeGlassPanel),
+          find.byType(AppGlassPanel),
           mornye ? findsOneWidget : findsNothing,
         );
         expect(

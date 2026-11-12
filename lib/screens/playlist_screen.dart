@@ -26,7 +26,7 @@ import 'package:mornye/widgets/error_card.dart';
 import 'package:mornye/widgets/collection_suggestions_section.dart';
 import 'package:mornye/widgets/downloadable_cover.dart';
 import 'package:mornye/theme/app_theme.dart';
-import 'package:mornye/widgets/mornye_artist_header.dart';
+import 'package:mornye/widgets/app_artist_header.dart';
 
 class PlaylistScreen extends ConsumerStatefulWidget {
   final String playlistName;
@@ -243,7 +243,7 @@ class _PlaylistScreenState extends ConsumerState<PlaylistScreen>
   @override
   Widget build(BuildContext context) {
     if (context.isMornye) {
-      return MornyeArtistSurface(
+      return AppArtistSurface(
         imageSource: _coverUrl,
         neutralActions: true,
         child: Builder(builder: _buildPage),

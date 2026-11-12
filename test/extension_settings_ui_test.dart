@@ -12,7 +12,7 @@ import 'package:mornye/providers/settings_provider.dart';
 import 'package:mornye/screens/settings/extension_detail_page.dart';
 import 'package:mornye/screens/settings/extensions_page.dart';
 import 'package:mornye/theme/app_theme.dart';
-import 'package:mornye/widgets/mornye_chrome.dart';
+import 'package:mornye/widgets/app_chrome.dart';
 import 'package:mornye/widgets/settings_group.dart';
 import 'package:mornye/widgets/extension_icon_image.dart';
 
@@ -255,10 +255,10 @@ void main() {
               ? 'Install Extension'
               : 'Music with optional personal account access.',
         ),
-        matching: find.byType(MornyeGlass),
+        matching: find.byType(AppGlass),
       );
       expect(glass, findsOneWidget);
-      expect(tester.widget<MornyeGlass>(glass).samplesBackdrop, isFalse);
+      expect(tester.widget<AppGlass>(glass).samplesBackdrop, isFalse);
       expect(
         find.descendant(of: glass, matching: find.byType(BackdropFilter)),
         findsNothing,

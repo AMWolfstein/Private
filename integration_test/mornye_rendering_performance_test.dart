@@ -17,9 +17,9 @@ import 'package:mornye/providers/runtime_profile_provider.dart';
 import 'package:mornye/providers/settings_provider.dart';
 import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/mini_player.dart';
-import 'package:mornye/widgets/mornye_bottom_bar.dart';
-import 'package:mornye/widgets/mornye_chrome.dart';
-import 'package:mornye/widgets/mornye_liquid_backdrop.dart';
+import 'package:mornye/widgets/app_bottom_bar.dart';
+import 'package:mornye/widgets/app_chrome.dart';
+import 'package:mornye/widgets/app_liquid_backdrop.dart';
 
 import 'performance_probe.dart';
 
@@ -43,11 +43,11 @@ void main() {
       await tester.runAsync(() async {
         await LiquidGlassShaders.ensureLoaded();
         await ui.FragmentProgram.fromAsset(
-          'assets/shaders/mornye_selection_mask.frag',
+          'assets/shaders/app_selection_mask.frag',
         );
         await probe.wait(const Duration(milliseconds: 600));
       });
-      expect(find.byType(MornyeBottomBar), findsOneWidget);
+      expect(find.byType(AppBottomBar), findsOneWidget);
       expect(find.byType(MiniPlayer), findsOneWidget);
       final player = tester.state(find.byType(MiniPlayer));
 
@@ -81,7 +81,7 @@ void main() {
         await probe.measure('tab_changes', () async {
           for (final label in ['Library', 'Repo', 'Search', 'Home']) {
             final tab = find.descendant(
-              of: find.byType(MornyeTabBar),
+              of: find.byType(AppTabBar),
               matching: find.text(label),
             );
             await tester.tapAt(tester.getCenter(tab.first));
@@ -93,7 +93,7 @@ void main() {
 
       {
         await probe.measure('held_lens_drag', () async {
-          final tabs = find.byType(MornyeTabBar);
+          final tabs = find.byType(AppTabBar);
           final home = tester.getCenter(
             find.descendant(of: tabs, matching: find.text('Home')).first,
           );
@@ -103,19 +103,19 @@ void main() {
           final gesture = await tester.startGesture(home);
           await probe.wait(const Duration(milliseconds: 280));
           final lens = find.byWidgetPredicate(
-            (widget) => widget is MornyeLiquidBackdrop && widget.interaction,
+            (widget) => widget is AppLiquidBackdrop && widget.interaction,
           );
           if (ui.ImageFilter.isShaderFilterSupported) {
             // Await the final painted pose even if the emulator delays a frame.
             for (
               var attempt = 0;
-              tester.widget<MornyeLiquidBackdrop>(lens).progress < 1 &&
+              tester.widget<AppLiquidBackdrop>(lens).progress < 1 &&
                   attempt < 20;
               attempt++
             ) {
               await probe.wait(const Duration(milliseconds: 100));
             }
-            expect(tester.widget<MornyeLiquidBackdrop>(lens).progress, 1);
+            expect(tester.widget<AppLiquidBackdrop>(lens).progress, 1);
           }
           for (var step = 1; step <= 60; step++) {
             final fraction = (1 - math.cos(step / 60 * math.pi * 2)) / 2;
@@ -167,7 +167,7 @@ class _Fixture {
   final Directory directory;
   final List<Uint8List> covers;
   final Uri artUri;
-  final chrome = MornyeChromeController();
+  final chrome = AppChromeController();
   final scroll = ScrollController();
   final activeTab = ValueNotifier<int>(0);
   final media = StreamController<MediaItem?>.broadcast(sync: true);
@@ -235,7 +235,7 @@ class _Fixture {
       musicPlayerControllerProvider.overrideWithValue(MusicPlayerController()),
       lowEndDeviceProvider.overrideWithValue(false),
       backdropBlurEnabledProvider.overrideWithValue(true),
-      mornyeGlassLevelProvider.overrideWithValue(MornyeGlassLevel.liquid),
+      appGlassLevelProvider.overrideWithValue(AppGlassLevel.liquid),
     ],
     child: MaterialApp(
       theme: AppTheme.build(Brightness.dark),
@@ -291,7 +291,7 @@ class _Fixture {
             padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
             child: ListenableBuilder(
               listenable: Listenable.merge([chrome, activeTab]),
-              builder: (context, child) => MornyeBottomBar(
+              builder: (context, child) => AppBottomBar(
                 collapsed: chrome.value,
                 destinations: const [
                   NavigationDestination(icon: Icon(Icons.home), label: 'Home'),

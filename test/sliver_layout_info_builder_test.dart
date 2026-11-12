@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/album_detail_header.dart';
-import 'package:mornye/widgets/mornye_artist_header.dart';
+import 'package:mornye/widgets/app_artist_header.dart';
 import 'package:mornye/widgets/sliver_layout_info_builder.dart';
 
 /// A short header, then [sliver], in a scroll view taller than the content
@@ -231,7 +231,7 @@ void main() {
             body: CustomScrollView(
               controller: controller,
               slivers: [
-                MornyeArtistHeader(
+                AppArtistHeader(
                   name: 'Artist',
                   artwork: const ColoredBox(color: Colors.orange),
                   actions: const [],
@@ -283,7 +283,7 @@ void main() {
           builder: (context, setState) {
             rebuild = setState;
             // A new surface widget, as a page rebuild creates.
-            return MornyeArtistSurface(imageSource: null, child: action);
+            return AppArtistSurface(imageSource: null, child: action);
           },
         ),
       ),

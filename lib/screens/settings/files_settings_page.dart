@@ -9,7 +9,7 @@ import 'package:mornye/widgets/app_switch.dart';
 import 'package:mornye/widgets/app_text_field.dart';
 import 'package:mornye/widgets/app_bottom_sheet.dart';
 import 'package:mornye/widgets/app_choice_chip.dart';
-import 'package:mornye/theme/mornye_icons.dart' show mornyeArrowForward;
+import 'package:mornye/theme/app_icons.dart' show appArrowForward;
 import 'package:mornye/theme/app_theme.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path_provider/path_provider.dart';

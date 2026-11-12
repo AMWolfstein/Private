@@ -5,7 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart' show RenderProxySliver;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mornye/widgets/mornye_glass_lens_fade.dart';
+import 'package:mornye/widgets/app_glass_lens_fade.dart';
 import 'package:mornye/l10n/l10n.dart';
 import 'package:mornye/providers/runtime_profile_provider.dart';
 import 'package:mornye/theme/app_motion.dart';
@@ -13,9 +13,9 @@ import 'package:mornye/theme/app_tokens.dart';
 import 'package:mornye/theme/cover_palette.dart';
 import 'package:mornye/theme/material_expressive.dart';
 import 'package:mornye/theme/app_theme.dart';
-import 'package:mornye/theme/mornye_icons.dart';
-import 'package:mornye/widgets/mornye_chrome.dart';
-import 'package:mornye/widgets/mornye_glass_press.dart';
+import 'package:mornye/theme/app_icons.dart';
+import 'package:mornye/widgets/app_chrome.dart';
+import 'package:mornye/widgets/app_glass_press.dart';
 import 'package:mornye/widgets/app_icon.dart';
 import 'package:mornye/widgets/app_icon_button.dart';
 import 'package:mornye/widgets/expressive_button.dart';
@@ -161,7 +161,7 @@ class AlbumDetailHeader extends StatelessWidget {
     // glass of its buttons fades out as it approaches it.
     Widget fading(double? fadeExtent, Widget button) => fadeExtent == null
         ? button
-        : MornyeGlassLensFade(collapseExtent: fadeExtent, child: button);
+        : AppGlassLensFade(collapseExtent: fadeExtent, child: button);
     Widget toolbar({bool collapsed = true, double? fadeExtent}) => SliverAppBar(
       pinned: true,
       backgroundColor: collapsed ? scheme.surface : Colors.transparent,
@@ -223,7 +223,7 @@ class AlbumDetailHeader extends StatelessWidget {
             return SliverLayoutInfoBuilder(
               select: (constraints) =>
                   constraints.scrollOffset >= collapseOffset,
-              builder: (context, collapsed) => MornyeOverlayToolbar(
+              builder: (context, collapsed) => AppOverlayToolbar(
                 child: toolbar(
                   collapsed: collapsed,
                   fadeExtent: collapseOffset,
@@ -242,10 +242,10 @@ class AlbumDetailHeader extends StatelessWidget {
                         alignment: Alignment.topCenter,
                         child: SizedBox.square(
                           dimension: artworkSize,
-                          child: MornyeStretchArtwork(child: artwork),
+                          child: AppStretchArtwork(child: artwork),
                         ),
                       )
-                    : MornyeStretchArtwork(child: artwork),
+                    : AppStretchArtwork(child: artwork),
               ),
               Column(
                 children: [
@@ -553,8 +553,8 @@ class HeaderActionGroup extends InheritedWidget {
 }
 
 /// Mornye page actions grouped in one glass capsule.
-class MornyeActionCapsule extends ConsumerWidget {
-  const MornyeActionCapsule({super.key, required this.children});
+class AppActionCapsule extends ConsumerWidget {
+  const AppActionCapsule({super.key, required this.children});
 
   final List<Widget> children;
 
@@ -565,13 +565,13 @@ class MornyeActionCapsule extends ConsumerWidget {
     const radius = 22.0;
     return Center(
       widthFactor: 1,
-      child: MornyeGlassPress(
+      child: AppGlassPress(
         radius: radius,
-        child: MornyeGlass.navigation(
+        child: AppGlass.navigation(
           radius: radius,
           tintColor: dark ? Colors.black : Colors.white,
           tintOpacity: dark ? 0.45 : 0.55,
-          blurEnabled: ref.watch(mornyeBlurEnabledProvider),
+          blurEnabled: ref.watch(appBlurEnabledProvider),
           child: HeaderActionGroup(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 2),
@@ -586,8 +586,8 @@ class MornyeActionCapsule extends ConsumerWidget {
 
 /// Pulling the page down past its top enlarges the artwork from its top edge
 /// instead of stretching the layout. Shared by the album and artist headers.
-class MornyeStretchArtwork extends StatelessWidget {
-  const MornyeStretchArtwork({super.key, required this.child});
+class AppStretchArtwork extends StatelessWidget {
+  const AppStretchArtwork({super.key, required this.child});
 
   final Widget child;
 
@@ -639,8 +639,8 @@ Widget headerToolbarTitle(
 
 /// Keeps the pinned toolbar above the artwork without shifting the artwork or
 /// metadata down by the toolbar's safe-area height.
-class MornyeOverlayToolbar extends SingleChildRenderObjectWidget {
-  const MornyeOverlayToolbar({super.key, required super.child});
+class AppOverlayToolbar extends SingleChildRenderObjectWidget {
+  const AppOverlayToolbar({super.key, required super.child});
 
   @override
   RenderProxySliver createRenderObject(BuildContext context) =>
@@ -774,7 +774,7 @@ class HeaderFilledButton extends StatelessWidget {
     final scheme = HeaderPalette.of(context);
     if (context.isMornye) {
       return _MornyeHeaderButton(
-        icon: mornyeIconFor(icon),
+        icon: appIconFor(icon),
         label: label,
         onPressed: onPressed,
         prominent: !tonal,
@@ -838,7 +838,7 @@ class HeaderCircleButton extends ConsumerWidget {
       return IconButton(
         onPressed: onPressed,
         tooltip: tooltip,
-        icon: AppIcon(mornyeIconFor(icon), size: iconSize),
+        icon: AppIcon(appIconFor(icon), size: iconSize),
         style: IconButton.styleFrom(
           minimumSize: Size.square(buttonSize ?? 44),
           foregroundColor: iconColor ?? scheme.onSurface,
@@ -854,7 +854,7 @@ class HeaderCircleButton extends ConsumerWidget {
             child: Center(
               child: SizedBox.square(
                 dimension: buttonSize ?? 44,
-                child: MornyeGlassPress(
+                child: AppGlassPress(
                   radius: (buttonSize ?? 44) / 2,
                   enabled: onPressed != null,
                   child: CupertinoButton(
@@ -866,7 +866,7 @@ class HeaderCircleButton extends ConsumerWidget {
                     ),
                     onPressed: onPressed,
                     child: AppIcon(
-                      mornyeIconFor(icon),
+                      appIconFor(icon),
                       size: iconSize,
                       color: onPressed == null
                           ? scheme.onSurfaceVariant
@@ -879,11 +879,11 @@ class HeaderCircleButton extends ConsumerWidget {
           ),
         );
       }
-      final blurEnabled = ref.watch(mornyeBlurEnabledProvider);
+      final blurEnabled = ref.watch(appBlurEnabledProvider);
       final button = IconButton(
         onPressed: onPressed,
         tooltip: tooltip,
-        icon: AppIcon(mornyeIconFor(icon), size: iconSize),
+        icon: AppIcon(appIconFor(icon), size: iconSize),
         style: IconButton.styleFrom(
           minimumSize: Size.square(buttonSize ?? 44),
           foregroundColor: iconColor ?? scheme.onSurface,
@@ -891,10 +891,10 @@ class HeaderCircleButton extends ConsumerWidget {
       );
       return Center(
         widthFactor: 1,
-        child: MornyeGlassPress(
+        child: AppGlassPress(
           radius: (buttonSize ?? 48) / 2,
           enabled: onPressed != null,
-          child: MornyeGlass.navigation(
+          child: AppGlass.navigation(
             radius: (buttonSize ?? 48) / 2,
             tintColor:
                 glassTintColor ??
@@ -966,7 +966,7 @@ class _MornyeHeaderButton extends StatelessWidget {
         : scheme.primary;
     return ConstrainedBox(
       constraints: const BoxConstraints(minHeight: 50),
-      child: MornyeGlassPress(
+      child: AppGlassPress(
         radius: 28,
         enabled: onPressed != null,
         child: CupertinoButton(

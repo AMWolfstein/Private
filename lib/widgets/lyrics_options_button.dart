@@ -15,7 +15,7 @@ import 'package:mornye/widgets/app_icon_button.dart';
 import 'package:mornye/widgets/app_progress_indicator.dart';
 import 'package:mornye/widgets/app_snack_bar.dart';
 import 'package:mornye/widgets/lyrics_editor_sheet.dart';
-import 'package:mornye/widgets/mornye_context_menu.dart';
+import 'package:mornye/widgets/app_context_menu.dart';
 
 /// The localized message for a translation failure. Raw errors never reach
 /// the user.
@@ -292,12 +292,12 @@ class _LyricsOptionsButtonState extends ConsumerState<LyricsOptionsButton> {
               anchor: anchor,
               preferAbove: true,
               maxWidth: menuWidth,
-              builder: (menuContext) => MornyeContextMenu(
+              builder: (menuContext) => AppContextMenu(
                 dense: true,
                 groups: [
                   [
                     for (final (value, label, icon) in actions)
-                      MornyeMenuAction(
+                      AppMenuAction(
                         icon: icon,
                         label: label,
                         onPressed: () => Navigator.of(menuContext).pop(value),

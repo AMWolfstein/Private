@@ -38,21 +38,21 @@ import 'package:mornye/widgets/expressive_seek_track.dart';
 import 'package:mornye/widgets/player_volume_control.dart';
 import 'package:mornye/widgets/lyric_blur.dart';
 import 'package:mornye/widgets/lyric_gap_indicator.dart';
-import 'package:mornye/widgets/mornye_player_queue.dart';
-import 'package:mornye/widgets/mornye_playback_button.dart';
-import 'package:mornye/widgets/mornye_playback_time.dart';
-import 'package:mornye/widgets/mornye_player_actions_sheet.dart';
-import 'package:mornye/widgets/mornye_player_favorite_button.dart';
-import 'package:mornye/widgets/mornye_player_details_sheet.dart';
-import 'package:mornye/widgets/mornye_metadata_row.dart';
-import 'package:mornye/widgets/mornye_chrome.dart';
-import 'package:mornye/widgets/mornye_player_background.dart';
-import 'package:mornye/widgets/mornye_player_artwork.dart';
-import 'package:mornye/widgets/mornye_artwork_contrast.dart';
+import 'package:mornye/widgets/app_player_queue.dart';
+import 'package:mornye/widgets/app_playback_button.dart';
+import 'package:mornye/widgets/app_playback_time.dart';
+import 'package:mornye/widgets/app_player_actions_sheet.dart';
+import 'package:mornye/widgets/app_player_favorite_button.dart';
+import 'package:mornye/widgets/app_player_details_sheet.dart';
+import 'package:mornye/widgets/app_metadata_row.dart';
+import 'package:mornye/widgets/app_chrome.dart';
+import 'package:mornye/widgets/app_player_background.dart';
+import 'package:mornye/widgets/app_player_artwork.dart';
+import 'package:mornye/widgets/app_artwork_contrast.dart';
 import 'package:mornye/widgets/mini_player.dart';
 import 'package:mornye/widgets/material_player_layout.dart';
 import 'package:mornye/widgets/material_player_backdrop.dart';
-import 'package:mornye/widgets/mornye_player_layout.dart';
+import 'package:mornye/widgets/app_player_layout.dart';
 import 'package:mornye/widgets/player_lyrics.dart';
 import 'package:mornye/widgets/player_lyrics_controls.dart';
 import 'package:mornye/widgets/player_metadata_title.dart';
@@ -301,9 +301,9 @@ void main() {
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 900));
       final elapsed = find.byKey(const ValueKey('elapsed:first'));
-      expect(tester.widget<MornyePlaybackTime>(elapsed).seconds, 11);
+      expect(tester.widget<AppPlaybackTime>(elapsed).seconds, 11);
       await tester.pump(const Duration(seconds: 1));
-      expect(tester.widget<MornyePlaybackTime>(elapsed).seconds, 12);
+      expect(tester.widget<AppPlaybackTime>(elapsed).seconds, 12);
       await tester.pumpWidget(const SizedBox.shrink());
     });
   });
@@ -539,14 +539,14 @@ void main() {
       if (mornye) {
         expect(
           tester
-              .widget<MornyePlayerLayout>(find.byType(MornyePlayerLayout))
+              .widget<AppPlayerLayout>(find.byType(AppPlayerLayout))
               .insetArtwork,
           isFalse,
         );
         expect(
           tester
-              .widget<MornyePlayerBackground>(
-                find.byType(MornyePlayerBackground),
+              .widget<AppPlayerBackground>(
+                find.byType(AppPlayerBackground),
               )
               .artwork,
           isNotNull,
@@ -611,7 +611,7 @@ void main() {
       if (mornye) {
         expect(
           tester
-              .widget<MornyePlayerLayout>(find.byType(MornyePlayerLayout))
+              .widget<AppPlayerLayout>(find.byType(AppPlayerLayout))
               .insetArtwork,
           isTrue,
         );
@@ -727,7 +727,7 @@ void main() {
             .getCenter(
               find.byWidgetPredicate(
                 (widget) =>
-                    widget is MornyePlaybackButton &&
+                    widget is AppPlaybackButton &&
                     widget.icon == CupertinoIcons.play_fill,
               ),
             )
@@ -845,7 +845,7 @@ void main() {
     final scroll = tester.widget<ListView>(list).controller!;
     final initial = scroll.offset;
     final pause = find.widgetWithIcon(
-      MornyePlaybackButton,
+      AppPlaybackButton,
       CupertinoIcons.pause_fill,
     );
     final touch = await tester.startGesture(
@@ -897,27 +897,27 @@ void main() {
     );
     mediaItems.add(item('first'));
     await settlePlayer(tester);
-    final background = tester.widget<MornyePlayerBackground>(
-      find.byType(MornyePlayerBackground),
+    final background = tester.widget<AppPlayerBackground>(
+      find.byType(AppPlayerBackground),
     );
     final title = find.text('First').hitTestable();
     final bounds = tester.getRect(title);
-    final contrast = tester.widget<MornyeArtworkContrast>(
-      find.byType(MornyeArtworkContrast),
+    final contrast = tester.widget<AppArtworkContrast>(
+      find.byType(AppArtworkContrast),
     );
     for (final color in [Colors.black, Colors.white]) {
       contrast.onChanged({'header': color, 'controls': color, 'volume': color});
       await tester.pump();
       expect(
-        tester.widget<MornyePlayerBackground>(
-          find.byType(MornyePlayerBackground),
+        tester.widget<AppPlayerBackground>(
+          find.byType(AppPlayerBackground),
         ),
         same(background),
       );
       expect(tester.getRect(title), bounds);
       expect(
         tester
-            .widgetList<MornyePlaybackButton>(find.byType(MornyePlaybackButton))
+            .widgetList<AppPlaybackButton>(find.byType(AppPlaybackButton))
             .where(
               (button) => [
                 CupertinoIcons.backward_fill,
@@ -1105,7 +1105,7 @@ void main() {
               tester.getTopLeft(line).dy,
               closeTo(tester.getTopLeft(list).dy + focus + 16, 2),
             );
-            final label = tester.widget<MornyePlaybackTime>(
+            final label = tester.widget<AppPlaybackTime>(
               find.byKey(const ValueKey('elapsed:first')),
             );
             expect(label.seconds, seconds.floor());
@@ -1344,7 +1344,7 @@ void main() {
         final headerTop = tester.getTopLeft(find.text('Second')).dy;
         final transport = find.byWidgetPredicate(
           (widget) =>
-              widget is MornyePlaybackButton &&
+              widget is AppPlaybackButton &&
               const [
                 CupertinoIcons.play_fill,
                 CupertinoIcons.backward_fill,
@@ -1455,7 +1455,7 @@ void main() {
         final lyricsButton = findAppIcon(CupertinoIcons.quote_bubble);
         final queueButton = findAppIcon(CupertinoIcons.list_bullet);
         final play = find.widgetWithIcon(
-          MornyePlaybackButton,
+          AppPlaybackButton,
           CupertinoIcons.pause_fill,
         );
         final volume = find.byType(PlayerVolumeControl);
@@ -1912,7 +1912,7 @@ void main() {
       await tester.tap(moreButton);
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 40));
-      final panel = find.byType(MornyePlayerActionsSheet);
+      final panel = find.byType(AppPlayerActionsSheet);
       final enteringWidth = tester.getSize(panel).width;
       await settlePlayer(tester);
       expect(tester.getSize(panel).width, enteringWidth);
@@ -1964,21 +1964,21 @@ void main() {
       expect(find.text('Go to Album'), findsOneWidget);
       expect(
         find.descendant(
-          of: find.byType(MornyePlayerNavigationMenu),
+          of: find.byType(AppPlayerNavigationMenu),
           matching: find.text('Artist'),
         ),
         findsOneWidget,
       );
       expect(
         find.descendant(
-          of: find.byType(MornyePlayerNavigationMenu),
+          of: find.byType(AppPlayerNavigationMenu),
           matching: find.text('Album'),
         ),
         findsOneWidget,
       );
       await tester.tapAt(const Offset(5, 770));
       await settlePlayer(tester);
-      expect(find.byType(MornyePlayerNavigationMenu), findsNothing);
+      expect(find.byType(AppPlayerNavigationMenu), findsNothing);
       expect(tester.takeException(), isNull);
     },
   );
@@ -2010,8 +2010,8 @@ void main() {
     await settlePlayer(tester);
 
     expect(metadataReads, ['content://library/first.flac']);
-    final details = tester.widget<MornyePlayerDetailsSheet>(
-      find.byType(MornyePlayerDetailsSheet),
+    final details = tester.widget<AppPlayerDetailsSheet>(
+      find.byType(AppPlayerDetailsSheet),
     );
     expect(
       details.rows,
@@ -2057,7 +2057,7 @@ void main() {
       await settlePlayer(tester);
       await tester.tap(find.text('Details'));
       await settlePlayer(tester);
-      final sheet = find.byType(MornyePlayerDetailsSheet);
+      final sheet = find.byType(AppPlayerDetailsSheet);
       expect(sheet, findsOneWidget);
       expect(Theme.of(tester.element(sheet)).brightness, Brightness.dark);
       expect(
@@ -2065,10 +2065,10 @@ void main() {
         findsNothing,
       );
       expect(
-        find.descendant(of: sheet, matching: find.byType(MornyeGlass)),
+        find.descendant(of: sheet, matching: find.byType(AppGlass)),
         findsOneWidget,
       );
-      final titleRow = find.widgetWithText(MornyeMetadataRow, 'Title');
+      final titleRow = find.widgetWithText(AppMetadataRow, 'Title');
       expect(
         tester
             .getTopLeft(
@@ -2161,7 +2161,7 @@ void main() {
       await settlePlayer(tester);
       expect(findAppIcon(CupertinoIcons.star).hitTestable(), findsOneWidget);
       expect(
-        find.byType(MornyePlayerFavoriteButton).hitTestable(),
+        find.byType(AppPlayerFavoriteButton).hitTestable(),
         findsOneWidget,
       );
       expect(tester.takeException(), isNull);
@@ -2484,7 +2484,7 @@ void main() {
       final volume = tester.getRect(find.byType(PlayerVolumeControl));
       await tester.tap(findAppIcon(CupertinoIcons.list_bullet));
       await settlePlayer(tester, const Duration(milliseconds: 16));
-      expect(find.byType(MornyePlayerQueue), findsOneWidget);
+      expect(find.byType(AppPlayerQueue), findsOneWidget);
       expect(find.byType(BottomSheet), findsNothing);
       expect(tester.getRect(find.byType(PlayerVolumeControl)), volume);
       expect(tester.takeException(), isNull);
@@ -2493,10 +2493,10 @@ void main() {
       expect(find.text('First lyric'), findsNothing);
       await tester.pump(const Duration(milliseconds: 120));
       expect(find.text('First lyric'), findsNothing);
-      expect(find.byType(MornyePlayerQueue), findsOneWidget);
-      expect(find.byType(MornyePlayerQueue).hitTestable(), findsNothing);
+      expect(find.byType(AppPlayerQueue), findsOneWidget);
+      expect(find.byType(AppPlayerQueue).hitTestable(), findsNothing);
       await settlePlayer(tester, const Duration(milliseconds: 16));
-      expect(find.byType(MornyePlayerQueue), findsNothing);
+      expect(find.byType(AppPlayerQueue), findsNothing);
       expect(tester.getRect(find.byType(PlayerVolumeControl)), volume);
     },
   );
@@ -2517,7 +2517,7 @@ void main() {
         mediaItems.add(item('first'));
         await settlePlayer(tester);
         final pause = find.widgetWithIcon(
-          MornyePlaybackButton,
+          AppPlaybackButton,
           CupertinoIcons.pause_fill,
         );
         final pauseBounds = tester.getRect(pause);
@@ -2533,7 +2533,7 @@ void main() {
         playback.add(PlaybackState(playing: false));
         await settlePlayer(tester);
         final play = find.widgetWithIcon(
-          MornyePlaybackButton,
+          AppPlaybackButton,
           CupertinoIcons.play_fill,
         );
         final playSize = tester.getSize(findAppIcon(CupertinoIcons.play_fill));
@@ -2825,7 +2825,7 @@ void main() {
     expect(tester.takeException(), isNull);
 
     final nextButton = find.widgetWithIcon(
-      MornyePlaybackButton,
+      AppPlaybackButton,
       CupertinoIcons.forward_fill,
     );
     final nextState = tester.state(nextButton);
@@ -2867,11 +2867,11 @@ void main() {
     final remaining = find.byKey(const ValueKey('remaining:first'));
     void expectTimes(int elapsedSeconds, int remainingSeconds) {
       expect(
-        tester.widget<MornyePlaybackTime>(elapsed).seconds,
+        tester.widget<AppPlaybackTime>(elapsed).seconds,
         elapsedSeconds,
       );
       expect(
-        tester.widget<MornyePlaybackTime>(remaining).seconds,
+        tester.widget<AppPlaybackTime>(remaining).seconds,
         remainingSeconds,
       );
     }
@@ -2880,12 +2880,12 @@ void main() {
     await settlePlayer(tester);
     expectTimes(34, 146);
     final transport = tester
-        .widgetList<MornyePlaybackButton>(find.byType(MornyePlaybackButton))
+        .widgetList<AppPlaybackButton>(find.byType(AppPlaybackButton))
         .toList();
     await positionAt(34800);
     expectTimes(34, 146);
     final updatedTransport = tester
-        .widgetList<MornyePlaybackButton>(find.byType(MornyePlaybackButton))
+        .widgetList<AppPlaybackButton>(find.byType(AppPlaybackButton))
         .toList();
     for (var i = 0; i < transport.length; i++) {
       expect(updatedTransport[i], same(transport[i]));
@@ -2955,7 +2955,7 @@ void main() {
     // The header and transport do not change with the position.
     final unchanged = {
       ...tester.renderObjectList(find.text('Second')),
-      ...tester.renderObjectList(find.byType(MornyePlaybackButton)),
+      ...tester.renderObjectList(find.byType(AppPlaybackButton)),
     };
     var unchangedPaints = 0;
     var lyricBuilds = 0;
@@ -3181,11 +3181,11 @@ void main() {
       await tester.pump();
 
       void expectAttached() {
-        final panel = tester.getRect(find.byType(MornyePlayerBackground));
+        final panel = tester.getRect(find.byType(AppPlayerBackground));
         final artwork = tester.getRect(
           find.descendant(
-            of: find.byType(MornyePlayerBackground),
-            matching: find.byType(MornyePlayerArtwork),
+            of: find.byType(AppPlayerBackground),
+            matching: find.byType(AppPlayerArtwork),
           ),
         );
         expect(artwork.left, closeTo(panel.left, 0.01));
@@ -3206,7 +3206,7 @@ void main() {
         await tester.pump(const Duration(milliseconds: 40));
         expectAttached();
         expect(
-          tester.getTopLeft(find.byType(MornyePlayerBackground)).dy,
+          tester.getTopLeft(find.byType(AppPlayerBackground)).dy,
           greaterThan(0),
         );
       }
@@ -3301,8 +3301,8 @@ void main() {
         mediaItems.add(item('first'));
         await settlePlayer(tester);
         final fullCover = find.descendant(
-          of: find.byType(MornyePlayerBackground),
-          matching: find.byType(MornyePlayerArtwork),
+          of: find.byType(AppPlayerBackground),
+          matching: find.byType(AppPlayerArtwork),
         );
         final fullBounds = tester.getRect(fullCover);
         final toggle = findAppIcon(
@@ -3310,7 +3310,7 @@ void main() {
         );
         final compact = find.byKey(const ValueKey('compact-player-artwork'));
         final playback = find.widgetWithIcon(
-          MornyePlaybackButton,
+          AppPlaybackButton,
           CupertinoIcons.play_fill,
         );
         await tester.tap(toggle);
@@ -3367,11 +3367,11 @@ void main() {
         final element = tester.element(header);
         final expandedBounds = tester.getRect(header);
         final play = find.widgetWithIcon(
-          MornyePlaybackButton,
+          AppPlaybackButton,
           CupertinoIcons.play_fill,
         );
         final controlsBounds = tester.getRect(play);
-        final favorite = find.byType(MornyePlayerFavoriteButton);
+        final favorite = find.byType(AppPlayerFavoriteButton);
         final favoriteState = tester.state(favorite);
         for (var visit = 0; visit < 2; visit++) {
           await tester.tap(toggle);
@@ -3451,7 +3451,7 @@ void main() {
         );
         mediaItems.add(item('first'));
         await settlePlayer(tester);
-        final artwork = find.byType(MornyePlayerArtwork);
+        final artwork = find.byType(AppPlayerArtwork);
         final restingBounds = tester.getRect(artwork);
         final lyrics = findAppIcon(CupertinoIcons.quote_bubble);
         final compact = find.byKey(const ValueKey('compact-player-artwork'));

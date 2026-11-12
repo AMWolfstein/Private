@@ -9,7 +9,7 @@ import 'package:mornye/providers/music_player_provider.dart';
 import 'package:mornye/services/music_player_runtime.dart';
 import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/app_snack_bar.dart';
-import 'package:mornye/widgets/mornye_chrome.dart';
+import 'package:mornye/widgets/app_chrome.dart';
 import 'package:mornye/widgets/playback_feedback.dart';
 
 void main() {
@@ -53,7 +53,7 @@ void main() {
         findsOneWidget,
       );
       expect(
-        find.byType(MornyeGlassPanel),
+        find.byType(AppGlassPanel),
         mornye ? findsOneWidget : findsNothing,
       );
       await tester.pump(const Duration(seconds: 4));
@@ -157,7 +157,7 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.text(message), findsOneWidget);
       expect(
-        find.byType(MornyeGlassPanel),
+        find.byType(AppGlassPanel),
         mornye ? findsOneWidget : findsNothing,
       );
       await tester.pump(const Duration(seconds: 4));

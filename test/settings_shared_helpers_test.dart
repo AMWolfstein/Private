@@ -8,7 +8,7 @@ import 'package:mornye/widgets/app_alert_dialog.dart';
 import 'package:mornye/widgets/app_bottom_sheet.dart';
 import 'package:mornye/widgets/app_icon.dart';
 import 'package:mornye/widgets/discard_changes_dialog.dart';
-import 'package:mornye/widgets/mornye_chrome.dart';
+import 'package:mornye/widgets/app_chrome.dart';
 import 'package:mornye/widgets/settings_group.dart';
 
 // The legacy builders below are the hand-written dialogs and sheets the
@@ -510,7 +510,7 @@ void main() {
           home: const Scaffold(
             body: Column(
               children: [
-                MornyeGlassPanel(
+                AppGlassPanel(
                   key: ValueKey('panel'),
                   child: SizedBox(width: 200, height: 40),
                 ),
@@ -536,9 +536,9 @@ void main() {
 
     final group = find.descendant(
       of: find.byType(SettingsGroup),
-      matching: find.byType(MornyeGlass),
+      matching: find.byType(AppGlass),
     );
-    final glass = tester.widget<MornyeGlass>(group);
+    final glass = tester.widget<AppGlass>(group);
     expect(glass.samplesBackdrop, isFalse);
     expect(
       find.descendant(
@@ -551,11 +551,11 @@ void main() {
     // Same tint as the default panel, without filtering the flat page.
     final panelGlass = find.descendant(
       of: find.byKey(const ValueKey('panel')),
-      matching: find.byType(MornyeGlass),
+      matching: find.byType(AppGlass),
     );
     expect(fillOf(group), isNotNull);
     expect(fillOf(group)!.a, lessThan(1));
-    final panel = tester.widget<MornyeGlass>(panelGlass);
+    final panel = tester.widget<AppGlass>(panelGlass);
     expect(
       (glass.radius, glass.strongTint, glass.tintOpacity, glass.tintColor),
       (panel.radius, panel.strongTint, panel.tintOpacity, panel.tintColor),

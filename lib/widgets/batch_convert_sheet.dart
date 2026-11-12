@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/app_action_button.dart';
 import 'package:mornye/widgets/app_choice_chip.dart';
-import 'package:mornye/widgets/mornye_chrome.dart';
+import 'package:mornye/widgets/app_chrome.dart';
 import 'package:mornye/widgets/app_switch.dart';
 import 'package:mornye/widgets/app_bottom_sheet.dart';
 import 'package:mornye/l10n/l10n.dart';
@@ -320,7 +320,7 @@ class _BatchConvertSheetState extends State<BatchConvertSheet> {
   Widget _sheetSurface({required Widget child}) {
     final content = SafeArea(child: child);
     return context.isMornye
-        ? MornyeGlassPanel.overlay(child: content)
+        ? AppGlassPanel.overlay(child: content)
         : content;
   }
 
@@ -402,7 +402,7 @@ class _BatchConvertSheetState extends State<BatchConvertSheet> {
     required VoidCallback onTap,
   }) {
     if (context.isMornye) {
-      return MornyeFilterChip(
+      return AppFilterChip(
         label: label,
         selected: selected,
         onTap: onTap,

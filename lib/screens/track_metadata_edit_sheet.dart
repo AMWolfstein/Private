@@ -18,7 +18,7 @@ import 'package:mornye/services/metadata_autofill_service.dart';
 import 'package:mornye/services/metadata_persistence_service.dart';
 import 'package:mornye/services/platform_bridge.dart';
 import 'package:mornye/theme/app_theme.dart';
-import 'package:mornye/theme/mornye_icons.dart';
+import 'package:mornye/theme/app_icons.dart';
 import 'package:mornye/utils/artist_utils.dart';
 import 'package:mornye/utils/logger.dart';
 import 'package:mornye/widgets/app_action_button.dart';
@@ -32,7 +32,7 @@ import 'package:mornye/widgets/lyrics_provider_picker.dart';
 import 'package:mornye/widgets/metadata_candidate_tile.dart';
 import 'package:mornye/widgets/metadata_editor_fields.dart';
 import 'package:mornye/widgets/metadata_text_field.dart';
-import 'package:mornye/widgets/mornye_chrome.dart';
+import 'package:mornye/widgets/app_chrome.dart';
 
 part 'track_metadata_edit_autofill.dart';
 part 'track_metadata_edit_cover.dart';

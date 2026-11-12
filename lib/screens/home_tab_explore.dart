@@ -394,19 +394,19 @@ extension _HomeTabExploreUI on _HomeTabState {
         context: itemContext,
         // Featured cards can exceed the menu helper's page-size heuristic.
         anchor: anchor,
-        builder: (menuContext) => MornyeContextMenu(
+        builder: (menuContext) => AppContextMenu(
           groups: [
             [
-              MornyeMenuAction(
-                icon: mornyeIconFor(Icons.download),
+              AppMenuAction(
+                icon: appIconFor(Icons.download),
                 label: menuContext.l10n.downloadTitle,
                 onPressed: () {
                   Navigator.pop(menuContext);
                   _handleExploreTrackPrimaryAction(item);
                 },
               ),
-              MornyeMenuAction(
-                icon: mornyeIconFor(Icons.album),
+              AppMenuAction(
+                icon: appIconFor(Icons.album),
                 label: menuContext.l10n.homeGoToAlbum,
                 onPressed: () {
                   Navigator.pop(menuContext);

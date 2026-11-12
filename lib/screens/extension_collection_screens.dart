@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/error_card.dart';
-import 'package:mornye/widgets/mornye_artist_header.dart';
+import 'package:mornye/widgets/app_artist_header.dart';
 import 'package:mornye/widgets/album_detail_header.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mornye/l10n/l10n.dart';
@@ -198,13 +198,13 @@ class _ArtistLoadingScaffold extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (context.isMornye) {
-      return MornyeArtistSurface(
+      return AppArtistSurface(
         imageSource: coverUrl,
         child: Builder(
           builder: (context) => Scaffold(
             body: CustomScrollView(
               slivers: [
-                ...MornyeArtistHeader(
+                ...AppArtistHeader(
                   name: artistName,
                   showTitle: false,
                   artwork: coverUrl != null && coverUrl!.isNotEmpty

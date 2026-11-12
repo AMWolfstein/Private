@@ -25,14 +25,14 @@ final backdropBlurEnabledProvider = Provider<bool>((ref) {
 /// Flutter also reports Android's medium contrast as high contrast. Respect
 /// that request unless the user explicitly forces glass; this only controls
 /// decorative surfaces, never the inherited text or reduced-motion settings.
-final mornyeGlassContrastBlockedProvider = Provider.family<bool, bool>(
+final appGlassContrastBlockedProvider = Provider.family<bool, bool>(
   (ref, highContrast) =>
       highContrast &&
       !ref.watch(settingsProvider.select((s) => s.forceBackdropBlur)),
 );
 
 /// How much of Mornye's glass the device renders.
-enum MornyeGlassLevel {
+enum AppGlassLevel {
   /// Opaque surfaces; no backdrop sampling.
   flat,
 
@@ -43,22 +43,22 @@ enum MornyeGlassLevel {
   liquid,
 }
 
-final mornyeGlassLevelProvider = Provider<MornyeGlassLevel>((ref) {
+final appGlassLevelProvider = Provider<AppGlassLevel>((ref) {
   final lowEnd = ref.watch(lowEndDeviceProvider);
   if (!lowEnd && ref.watch(deviceSupportsLiquidGlassProvider)) {
-    return MornyeGlassLevel.liquid;
+    return AppGlassLevel.liquid;
   }
   // The user's "always use blur effects" override restores the full material.
-  if (ref.watch(backdropBlurEnabledProvider)) return MornyeGlassLevel.liquid;
-  return lowEnd ? MornyeGlassLevel.flat : MornyeGlassLevel.frosted;
+  if (ref.watch(backdropBlurEnabledProvider)) return AppGlassLevel.liquid;
+  return lowEnd ? AppGlassLevel.flat : AppGlassLevel.frosted;
 });
 
 /// Backdrop blur for Mornye surfaces (frosted or liquid).
-final mornyeBlurEnabledProvider = Provider<bool>(
-  (ref) => ref.watch(mornyeGlassLevelProvider) != MornyeGlassLevel.flat,
+final appBlurEnabledProvider = Provider<bool>(
+  (ref) => ref.watch(appGlassLevelProvider) != AppGlassLevel.flat,
 );
 
 /// Higher-quality glass and continuously filtered artwork / lyric effects.
-final mornyeLiquidGlassProvider = Provider<bool>(
-  (ref) => ref.watch(mornyeGlassLevelProvider) == MornyeGlassLevel.liquid,
+final appLiquidGlassProvider = Provider<bool>(
+  (ref) => ref.watch(appGlassLevelProvider) == AppGlassLevel.liquid,
 );

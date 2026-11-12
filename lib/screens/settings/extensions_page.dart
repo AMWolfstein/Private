@@ -22,7 +22,7 @@ import 'package:mornye/widgets/app_action_button.dart';
 import 'package:mornye/widgets/app_bottom_sheet.dart';
 import 'package:mornye/widgets/app_icon.dart';
 import 'package:mornye/widgets/app_loading_indicator.dart';
-import 'package:mornye/widgets/mornye_chrome.dart';
+import 'package:mornye/widgets/app_chrome.dart';
 import 'package:mornye/widgets/settings_group.dart';
 import 'package:mornye/widgets/home_feed_region_setting.dart';
 import 'package:mornye/widgets/app_sliver_header.dart';
@@ -220,7 +220,7 @@ class _ExtensionsPageState extends ConsumerState<ExtensionsPage> {
                     return Padding(
                       padding: EdgeInsets.fromLTRB(inset, 16, inset, 16),
                       child: context.isMornye
-                          ? MornyeGlassPanel.overlay(
+                          ? AppGlassPanel.overlay(
                               radius: 28,
                               samplesBackdrop: false,
                               child: installButton,

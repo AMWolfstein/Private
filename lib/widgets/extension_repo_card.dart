@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mornye/providers/runtime_profile_provider.dart';
 import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/app_content_card.dart';
-import 'package:mornye/widgets/mornye_chrome.dart';
+import 'package:mornye/widgets/app_chrome.dart';
 
 /// Repo cards share the Mornye glass material, including their detail pages.
 class ExtensionRepoCard extends ConsumerWidget {
@@ -37,9 +37,9 @@ class ExtensionRepoCard extends ConsumerWidget {
       padding: margin,
       // Repo pages scroll these cards over the plain page background, where a
       // backdrop blur is invisible but re-filters the whole card every frame.
-      child: MornyeGlass.navigation(
+      child: AppGlass.navigation(
         radius: 24,
-        blurEnabled: ref.watch(mornyeBlurEnabledProvider),
+        blurEnabled: ref.watch(appBlurEnabledProvider),
         samplesBackdrop: false,
         child: Material(color: Colors.transparent, child: child),
       ),

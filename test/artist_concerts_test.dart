@@ -7,7 +7,7 @@ import 'package:mornye/models/artist_concert.dart';
 import 'package:mornye/screens/artist_concerts_screen.dart';
 import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/artist_concerts_button.dart';
-import 'package:mornye/widgets/mornye_artist_header.dart';
+import 'package:mornye/widgets/app_artist_header.dart';
 
 Map<String, dynamic> event({
   String id = 'event-1',
@@ -157,7 +157,7 @@ void main() {
         Scaffold(
           body: CustomScrollView(
             slivers: [
-              MornyeArtistHeader(
+              AppArtistHeader(
                 name: 'Example Artist',
                 artwork: const SizedBox.expand(),
                 showTitle: false,

@@ -7,7 +7,7 @@ import 'package:mornye/theme/app_tokens.dart';
 import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/utils/isrc_utils.dart';
 import 'package:mornye/widgets/app_bottom_sheet.dart';
-import 'package:mornye/widgets/mornye_player_details_sheet.dart';
+import 'package:mornye/widgets/app_player_details_sheet.dart';
 import 'package:mornye/widgets/settings_group.dart';
 
 Future<void> showPlayerDetailsSheet(
@@ -105,7 +105,7 @@ class _MetadataList extends StatelessWidget {
     ].where((r) => r.$2.trim().isNotEmpty && r.$2 != '0').toList();
 
     if (context.isMornye) {
-      return MornyePlayerDetailsSheet(
+      return AppPlayerDetailsSheet(
         rows: rows,
         scrollController: scrollController,
         mediaItem: mediaItem,

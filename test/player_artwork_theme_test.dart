@@ -218,7 +218,7 @@ void main() {
           (ref) => Stream.value(PlaybackState()),
         ),
         musicPlayerControllerProvider.overrideWithValue(_Controller()),
-        mornyeLiquidGlassProvider.overrideWithValue(false),
+        appLiquidGlassProvider.overrideWithValue(false),
         backdropBlurEnabledProvider.overrideWithValue(false),
         systemVolumeProvider.overrideWith((ref) => Stream.value(0.5)),
         systemVolumeWriterProvider.overrideWithValue((value) async {}),

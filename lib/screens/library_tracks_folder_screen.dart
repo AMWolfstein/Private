@@ -17,7 +17,7 @@ import 'package:mornye/widgets/expressive_button_group.dart';
 import 'package:mornye/widgets/app_bottom_sheet.dart';
 import 'package:mornye/widgets/app_snack_bar.dart';
 import 'package:mornye/theme/app_theme.dart';
-import 'package:mornye/theme/mornye_icons.dart';
+import 'package:mornye/theme/app_icons.dart';
 import 'package:share_plus/share_plus.dart' show ShareParams, SharePlus, XFile;
 import 'package:mornye/widgets/album_detail_header.dart';
 import 'package:mornye/widgets/cached_cover_image.dart';
@@ -1012,7 +1012,7 @@ class _LibraryTracksFolderScreenState
               ),
               leading: context.isMornye
                   ? Icon(
-                      mornyeIconFor(Icons.image_outlined),
+                      appIconFor(Icons.image_outlined),
                       color: colorScheme.primary,
                     )
                   : Container(
@@ -1041,7 +1041,7 @@ class _LibraryTracksFolderScreenState
                 ),
                 leading: context.isMornye
                     ? Icon(
-                        mornyeIconFor(Icons.delete_outline),
+                        appIconFor(Icons.delete_outline),
                         color: colorScheme.primary,
                       )
                     : Container(

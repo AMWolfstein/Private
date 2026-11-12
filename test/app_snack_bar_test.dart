@@ -7,7 +7,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mornye/l10n/l10n.dart';
 import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/app_snack_bar.dart';
-import 'package:mornye/widgets/mornye_chrome.dart';
+import 'package:mornye/widgets/app_chrome.dart';
 import 'package:mornye/widgets/view_queue_snackbar_action.dart';
 import 'package:mornye/widgets/track_detail_actions.dart';
 import 'package:mornye/services/shell_navigation_service.dart';
@@ -62,7 +62,7 @@ void main() {
       await tester.pump();
       for (final elapsed in [16, 80, 250]) {
         await tester.pump(Duration(milliseconds: elapsed));
-        final rect = tester.getRect(find.byType(MornyeGlassPanel));
+        final rect = tester.getRect(find.byType(AppGlassPanel));
         final colors = await tester.runAsync(() async {
           final boundary = tester.renderObject<RenderRepaintBoundary>(
             find.byKey(capture),
@@ -175,7 +175,7 @@ void main() {
       expect(find.text('View Queue'), findsOneWidget);
       expect(find.byTooltip('Close'), findsOneWidget);
       expect(
-        find.byType(MornyeGlassPanel),
+        find.byType(AppGlassPanel),
         mornye ? findsOneWidget : findsNothing,
       );
       await tester.pump(const Duration(seconds: 3));
@@ -240,7 +240,7 @@ void main() {
         findsOneWidget,
       );
       expect(
-        find.byType(MornyeGlassPanel),
+        find.byType(AppGlassPanel),
         mornye ? findsOneWidget : findsNothing,
       );
       expect(tester.takeException(), isNull);

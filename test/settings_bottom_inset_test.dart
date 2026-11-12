@@ -38,7 +38,7 @@ void main() {
                 child: Stack(
                   fit: StackFit.expand,
                   children: [
-                    const MornyeSettingsTheme(child: FilesSettingsPage()),
+                    const AppSettingsTheme(child: FilesSettingsPage()),
                     const Positioned(
                       left: 0,
                       right: 0,

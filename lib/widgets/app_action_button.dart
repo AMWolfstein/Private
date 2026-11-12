@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:mornye/theme/mornye_icons.dart';
+import 'package:mornye/theme/app_icons.dart';
 import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/app_icon.dart';
-import 'package:mornye/widgets/mornye_chrome.dart';
+import 'package:mornye/widgets/app_chrome.dart';
 import 'package:mornye/widgets/expressive_button.dart';
 
 /// Shared sheet actions follow the selected design on every platform.
@@ -77,7 +77,7 @@ class AppActionButton extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               if (icon case Icon(:final icon?) || AppIcon(:final icon?))
-                Icon(mornyeIconFor(icon), size: 20)
+                Icon(appIconFor(icon), size: 20)
               else
                 icon,
               const SizedBox(width: 8),
@@ -90,6 +90,6 @@ class AppActionButton extends StatelessWidget {
     // These buttons sit inside glass sheets/groups; avoid another blur pass.
     return prominent || tonal || !glass
         ? action
-        : MornyeGlass.navigation(radius: 28, blurEnabled: false, child: action);
+        : AppGlass.navigation(radius: 28, blurEnabled: false, child: action);
   }
 }

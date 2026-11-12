@@ -49,7 +49,7 @@ class LyricsSettingsPage extends ConsumerWidget {
               children: [
                 const LyricsSizeSetting(),
                 // Lyrics blur only where the player draws it.
-                if (context.isMornye && ref.watch(mornyeLiquidGlassProvider))
+                if (context.isMornye && ref.watch(appLiquidGlassProvider))
                   const LyricsBlurSetting(),
                 const LyricsOffsetSetting(),
                 SettingsSwitchItem(

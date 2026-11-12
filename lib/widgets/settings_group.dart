@@ -10,8 +10,8 @@ import 'package:mornye/widgets/app_icon.dart';
 import 'package:mornye/widgets/app_switch.dart';
 import 'package:mornye/theme/app_tokens.dart';
 import 'package:mornye/theme/app_theme.dart';
-import 'package:mornye/theme/mornye_icons.dart';
-import 'package:mornye/widgets/mornye_chrome.dart';
+import 'package:mornye/theme/app_icons.dart';
+import 'package:mornye/widgets/app_chrome.dart';
 import 'package:mornye/utils/adaptive_layout.dart';
 
 /// The neutral grouped fill used in Settings, including AMOLED themes.
@@ -289,7 +289,7 @@ class SettingsGroup extends StatelessWidget {
     if (glass && context.isMornye) {
       // Groups scroll over the opaque page color, where a backdrop pass
       // filters a flat color; keep the glass tint and rim without it.
-      return inset(MornyeGlassPanel(samplesBackdrop: false, child: child));
+      return inset(AppGlassPanel(samplesBackdrop: false, child: child));
     }
 
     final expressive = materialExpressiveEnabled(context);
@@ -1037,7 +1037,7 @@ class SettingsInfoCard extends StatelessWidget {
         children: [
           if (icon != null) ...[
             AppIcon(
-              useGlass ? mornyeIconFor(icon!) : icon,
+              useGlass ? appIconFor(icon!) : icon,
               size: 20,
               color: useGlass ? colorScheme.primary : foreground,
             ),
@@ -1076,7 +1076,7 @@ class SettingsInfoCard extends StatelessWidget {
       ),
     );
     final card = useGlass
-        ? MornyeGlassPanel.overlay(child: content)
+        ? AppGlassPanel.overlay(child: content)
         : DecoratedBox(
             decoration: BoxDecoration(
               color: background,

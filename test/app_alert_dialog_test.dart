@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/app_alert_dialog.dart';
-import 'package:mornye/widgets/mornye_chrome.dart';
+import 'package:mornye/widgets/app_chrome.dart';
 
 void main() {
   for (final brightness in Brightness.values) {
@@ -67,7 +67,7 @@ void main() {
               Theme.of(bodyContext).colorScheme.onSurface,
             );
           }
-          final panel = find.byType(MornyeGlassPanel);
+          final panel = find.byType(AppGlassPanel);
           final openWidth = tester.getRect(panel).width;
           await tester.tap(find.text('Cancel'));
           await tester.pump();
@@ -131,7 +131,7 @@ void main() {
         await tester.tap(find.text('Open'));
         await tester.pumpAndSettle();
         expect(
-          find.byType(MornyeGlassPanel),
+          find.byType(AppGlassPanel),
           mornye ? findsOneWidget : findsNothing,
         );
         expect(

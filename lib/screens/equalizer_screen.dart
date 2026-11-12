@@ -25,8 +25,8 @@ import 'package:mornye/widgets/app_text_field.dart';
 import 'package:mornye/widgets/beta_badge.dart';
 import 'package:mornye/widgets/expressive_button.dart';
 import 'package:mornye/widgets/expressive_icon_button.dart';
-import 'package:mornye/widgets/mornye_chrome.dart';
-import 'package:mornye/widgets/mornye_level_slider.dart';
+import 'package:mornye/widgets/app_chrome.dart';
+import 'package:mornye/widgets/app_level_slider.dart';
 import 'package:mornye/widgets/settings_group.dart';
 import 'package:mornye/widgets/slider_value_header.dart';
 
@@ -199,7 +199,7 @@ class _EqualizerScreenState extends ConsumerState<EqualizerScreen> {
   }
 
   @override
-  Widget build(BuildContext context) => MornyeSettingsTheme(
+  Widget build(BuildContext context) => AppSettingsTheme(
     // Reached from Playback and Now Playing alike, so the page brings its own
     // inset grouped surfaces in Mornye.
     child: Builder(builder: _buildPage),

@@ -11,7 +11,7 @@ class _ExtensionOverviewSurface extends StatelessWidget {
     if (context.isMornye) {
       // The card scrolls over the plain page background, so a backdrop pass
       // would only filter a flat color.
-      return MornyeGlassPanel(samplesBackdrop: false, child: content);
+      return AppGlassPanel(samplesBackdrop: false, child: content);
     }
     return DecoratedBox(
       decoration: BoxDecoration(

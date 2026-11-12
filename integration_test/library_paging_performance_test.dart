@@ -13,7 +13,7 @@ import 'package:mornye/providers/download_history_provider.dart';
 import 'package:mornye/providers/library_browse_provider.dart';
 import 'package:mornye/providers/local_library_provider.dart';
 import 'package:mornye/providers/settings_provider.dart';
-import 'package:mornye/screens/mornye_library_screen.dart';
+import 'package:mornye/screens/app_library_screen.dart';
 import 'package:mornye/theme/app_theme.dart';
 
 import '../test/support/fixed_settings.dart';
@@ -159,7 +159,7 @@ void main() {
     }
 
     ProviderContainer container() => ProviderScope.containerOf(
-      tester.element(find.byType(MornyeLibraryScreen)),
+      tester.element(find.byType(AppLibraryScreen)),
     );
     LibraryBrowseState? current() =>
         container().read(libraryBrowseProvider(_request)).value;
@@ -212,8 +212,8 @@ void main() {
                 localizationsDelegates: AppLocalizations.localizationsDelegates,
                 supportedLocales: AppLocalizations.supportedLocales,
                 home: Scaffold(
-                  body: MornyeLibraryScreen(
-                    page: MornyeLibraryPage.albums,
+                  body: AppLibraryScreen(
+                    page: AppLibraryPage.albums,
                     onOpenSection: (_) {},
                   ),
                 ),
@@ -334,7 +334,7 @@ void main() {
             'Isolated actual SQLite schema17, 1000 two-source albums/2000 tracks, '
             '50 mirrored tracks and one unavailable source; shared decoded 384px PNG, no network.',
         'baseline':
-            'Previous growing-prefix reads through production SQL; same MornyeLibraryScreen.',
+            'Previous growing-prefix reads through production SQL; same AppLibraryScreen.',
         'paging':
             'Production AsyncNotifier and bounded page adapter; same SQL/store and UI.',
         'runs': runCounters,

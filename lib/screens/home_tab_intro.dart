@@ -1254,7 +1254,7 @@ class _HomeTopPicksShelf extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
         child: Stack(
           children: [
-            MornyeMixBanner(
+            AppMixBanner(
               seed: seed,
               title: title,
               eyebrow: eyebrow,
@@ -1285,7 +1285,7 @@ class _HomeTopPicksShelf extends StatelessWidget {
         final content = constraints.maxWidth - 2 * inset;
         final width = math.min(content - 44, 280.0);
         return SizedBox(
-          height: width / MornyeMixBanner.aspectRatio,
+          height: width / AppMixBanner.aspectRatio,
           child: ListView.separated(
             scrollDirection: Axis.horizontal,
             padding: EdgeInsets.symmetric(horizontal: inset),

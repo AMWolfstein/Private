@@ -613,7 +613,7 @@ extension _TrackMetadataCards on _TrackMetadataScreenState {
             metadata.label == 'Tidal ID' ||
             metadata.label == 'Qobuz ID';
         if (context.isMornye) {
-          return MornyeMetadataRow(
+          return AppMetadataRow(
             label: metadata.label,
             value: metadata.value,
             showDivider: metadata != items.last,

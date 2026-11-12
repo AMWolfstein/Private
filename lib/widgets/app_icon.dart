@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mornye/theme/material_symbols.dart';
-import 'package:mornye/theme/mornye_icons.dart';
+import 'package:mornye/theme/app_icons.dart';
 import 'package:mornye/theme/app_theme.dart';
 
 /// [widget] as an [AppIcon] when it is a plain [Icon], so shared components
@@ -37,7 +37,7 @@ class AppIcon extends StatelessWidget {
     this.textDirection,
   }) : _adaptive = false;
 
-  /// Uses [mornyeIconFor] when the Mornye theme is on.
+  /// Uses [appIconFor] when the Mornye theme is on.
   const AppIcon.adaptive(
     this.icon, {
     super.key,
@@ -65,7 +65,7 @@ class AppIcon extends StatelessWidget {
     final icon = this.icon;
     if (context.isMornye) {
       return Icon(
-        _adaptive && icon != null ? mornyeIconFor(icon) : icon,
+        _adaptive && icon != null ? appIconFor(icon) : icon,
         size: size,
         color: color,
         semanticLabel: semanticLabel,

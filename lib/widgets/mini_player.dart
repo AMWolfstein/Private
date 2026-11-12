@@ -31,8 +31,8 @@ import 'package:mornye/widgets/decorative_phase.dart';
 import 'package:mornye/widgets/overflow_marquee.dart';
 import 'package:mornye/widgets/player_artwork.dart';
 import 'package:mornye/widgets/settings_group.dart';
-import 'package:mornye/widgets/mornye_chrome.dart';
-import 'package:mornye/widgets/mornye_glass_press.dart';
+import 'package:mornye/widgets/app_chrome.dart';
+import 'package:mornye/widgets/app_glass_press.dart';
 
 class MiniPlayer extends ConsumerStatefulWidget {
   const MiniPlayer({super.key, this.compact = false, this.bottomPadding = 8});
@@ -212,7 +212,7 @@ class _MiniPlayerBodyState extends ConsumerState<_MiniPlayerBody> {
     final compact = mornye && widget.compact;
     // Frosted and flat glass levels run on constrained Android hardware. They
     // skip keeping a paused video decoder for the full player's motion cover.
-    final fullEffects = !mornye || ref.watch(mornyeLiquidGlassProvider);
+    final fullEffects = !mornye || ref.watch(appLiquidGlassProvider);
     // Every marquee frame re-filters the glass chrome around it, so Mornye
     // stops the title after a few passes on every glass level.
     final marqueeCycles = mornye ? 2 : null;
@@ -424,12 +424,12 @@ class _MiniPlayerBodyState extends ConsumerState<_MiniPlayerBody> {
     return mornye
         ? Padding(
             padding: EdgeInsets.only(bottom: widget.bottomPadding),
-            child: MornyeGlassPress(
+            child: AppGlassPress(
               radius: 32,
-              child: MornyeGlass.navigation(
+              child: AppGlass.navigation(
                 strongTint: true,
                 tintOpacity: AppTheme.chromeOpacity(context),
-                blurEnabled: ref.watch(mornyeBlurEnabledProvider),
+                blurEnabled: ref.watch(appBlurEnabledProvider),
                 child: swipeable,
               ),
             ),

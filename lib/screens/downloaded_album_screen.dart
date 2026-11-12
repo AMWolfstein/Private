@@ -41,7 +41,7 @@ import 'package:mornye/widgets/network_offline_actions.dart';
 import 'package:mornye/widgets/network_upload_actions.dart';
 import 'package:mornye/widgets/disc_separator_chip.dart';
 import 'package:mornye/widgets/album_detail_header.dart';
-import 'package:mornye/widgets/mornye_artist_header.dart';
+import 'package:mornye/widgets/app_artist_header.dart';
 import 'package:mornye/widgets/motion_header_banner.dart';
 import 'package:mornye/widgets/app_loading_indicator.dart';
 
@@ -258,7 +258,7 @@ class _DownloadedAlbumScreenState extends ConsumerState<DownloadedAlbumScreen>
     pruneSelection(tracks.map((t) => t.id).toSet());
 
     if (context.isMornye) {
-      return MornyeArtistSurface(
+      return AppArtistSurface(
         imageSource: _resolveAlbumEmbeddedCoverPath(tracks) ?? widget.coverUrl,
         neutralActions: true,
         child: Builder(builder: (context) => _buildPage(context, order)),

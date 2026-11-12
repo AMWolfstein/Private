@@ -92,7 +92,7 @@ void main() {
                   : LegacyMaterialTheme.light(seedColor: Colors.blue),
               localizationsDelegates: AppLocalizations.localizationsDelegates,
               supportedLocales: AppLocalizations.supportedLocales,
-              home: const MornyeSettingsTheme(
+              home: const AppSettingsTheme(
                 child: Scaffold(
                   body: SingleChildScrollView(child: AutoMixSettings()),
                 ),

@@ -12,8 +12,8 @@ import 'package:mornye/services/library_database.dart';
 import 'package:mornye/widgets/album_detail_header.dart';
 import 'package:mornye/widgets/audio_quality_badges.dart';
 import 'package:mornye/theme/app_theme.dart';
-import 'package:mornye/widgets/mornye_chrome.dart';
-import 'package:mornye/widgets/mornye_metadata_row.dart';
+import 'package:mornye/widgets/app_chrome.dart';
+import 'package:mornye/widgets/app_metadata_row.dart';
 
 void main() {
   for (final useFileUri in [false, true]) {
@@ -115,9 +115,9 @@ void main() {
         expect(find.byIcon(CupertinoIcons.back), findsOneWidget);
         expect(find.byIcon(CupertinoIcons.ellipsis), findsOneWidget);
         expect(find.byType(Card), findsNothing);
-        final row = find.widgetWithText(MornyeMetadataRow, 'Track name');
+        final row = find.widgetWithText(AppMetadataRow, 'Track name');
         expect(
-          find.ancestor(of: row, matching: find.byType(MornyeGlass)),
+          find.ancestor(of: row, matching: find.byType(AppGlass)),
           findsNothing,
         );
         expect(

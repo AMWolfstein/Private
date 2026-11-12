@@ -18,7 +18,7 @@ import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/library_mix_cover.dart';
 import 'package:mornye/widgets/library_track_selection_bar.dart';
-import 'package:mornye/widgets/mornye_mix_banner.dart';
+import 'package:mornye/widgets/app_mix_banner.dart';
 import 'package:mornye/widgets/track_card.dart';
 
 import 'support/fixed_settings.dart';
@@ -70,14 +70,14 @@ void main() {
       if (mornye) {
         expect(find.text('Top Picks for You'), findsOneWidget);
         expect(find.text('Made for You'), findsOneWidget);
-        expect(find.byType(MornyeMixBanner), findsOneWidget);
+        expect(find.byType(AppMixBanner), findsOneWidget);
         expect(find.text('Mixes for you'), findsNothing);
         // Music's Home has no tools.
         expect(find.text('Shortcuts', skipOffstage: false), findsNothing);
       } else {
         expect(find.text('Mixes for you'), findsOneWidget);
         expect(find.byType(LibraryMixCover), findsOneWidget);
-        expect(find.byType(MornyeMixBanner), findsNothing);
+        expect(find.byType(AppMixBanner), findsNothing);
       }
 
       await tester.tap(title);

@@ -6,7 +6,7 @@ import 'package:mornye/theme/app_tokens.dart';
 import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/app_icon.dart';
 import 'package:mornye/widgets/app_icon_button.dart';
-import 'package:mornye/widgets/mornye_chrome.dart';
+import 'package:mornye/widgets/app_chrome.dart';
 
 /// The standard search field used by top-level app surfaces.
 ///
@@ -42,7 +42,7 @@ class AppSearchField extends StatelessWidget {
   final FocusNode? focusNode;
   final bool autofocus;
 
-  /// See [MornyeGlass.samplesBackdrop]: false where the field scrolls over
+  /// See [AppGlass.samplesBackdrop]: false where the field scrolls over
   /// the plain page background.
   final bool samplesBackdrop;
 
@@ -133,9 +133,9 @@ class AppSearchField extends StatelessWidget {
     );
     if (!mornye) return field;
     return Consumer(
-      builder: (context, ref, child) => MornyeGlass.navigation(
+      builder: (context, ref, child) => AppGlass.navigation(
         radius: glassRadius,
-        blurEnabled: ref.watch(mornyeBlurEnabledProvider),
+        blurEnabled: ref.watch(appBlurEnabledProvider),
         samplesBackdrop: samplesBackdrop,
         child: child!,
       ),

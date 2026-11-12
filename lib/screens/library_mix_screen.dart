@@ -26,7 +26,7 @@ import 'package:mornye/widgets/collection_scaffold.dart';
 import 'package:mornye/widgets/library_mix_cover.dart';
 import 'package:mornye/widgets/library_selection_playback_actions.dart';
 import 'package:mornye/widgets/library_track_selection_bar.dart';
-import 'package:mornye/widgets/mornye_artist_header.dart';
+import 'package:mornye/widgets/app_artist_header.dart';
 import 'package:mornye/widgets/playlist_picker_sheet.dart';
 
 /// A mix's name: what it gathers, such as "Hip-Hop Mix".
@@ -121,7 +121,7 @@ class _LibraryMixScreenState extends ConsumerState<LibraryMixScreen>
   @override
   Widget build(BuildContext context) {
     if (context.isMornye) {
-      return MornyeArtistSurface(
+      return AppArtistSurface(
         imageSource: _paletteSource,
         neutralActions: true,
         child: Builder(builder: _buildPage),

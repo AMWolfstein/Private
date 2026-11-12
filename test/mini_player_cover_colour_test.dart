@@ -19,7 +19,7 @@ import 'package:mornye/theme/player_artwork_theme.dart';
 import 'package:mornye/widgets/cached_cover_image.dart';
 import 'package:mornye/widgets/mini_player.dart';
 import 'package:mornye/widgets/material_player_backdrop.dart';
-import 'package:mornye/widgets/mornye_player_background.dart';
+import 'package:mornye/widgets/app_player_background.dart';
 import 'package:mornye/widgets/player_artwork.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -44,7 +44,7 @@ Widget _player(
   overrides: [
     currentMediaItemProvider.overrideWithBuild((ref, notifier) => items),
     playbackStateProvider.overrideWith((ref) => const Stream.empty()),
-    mornyeLiquidGlassProvider.overrideWithValue(false),
+    appLiquidGlassProvider.overrideWithValue(false),
     backdropBlurEnabledProvider.overrideWithValue(false),
     settingsProvider.overrideWith(
       () => FixedSettingsNotifier(AppSettings(playerCoverStyle: coverStyle)),
@@ -231,7 +231,7 @@ void main() {
     await tester.pumpWidget(
       MaterialApp(
         theme: AppTheme.build(Brightness.dark),
-        home: MornyePlayerBackground(artUri: artUri),
+        home: AppPlayerBackground(artUri: artUri),
       ),
     );
     final dominant = HSLColor.fromColor(source!);
@@ -241,7 +241,7 @@ void main() {
                 .widget<DecoratedBox>(
                   find
                       .descendant(
-                        of: find.byType(MornyePlayerBackground),
+                        of: find.byType(AppPlayerBackground),
                         matching: find.byType(DecoratedBox),
                       )
                       .first,

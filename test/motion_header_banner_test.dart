@@ -17,7 +17,7 @@ import 'package:mornye/screens/local_album_screen.dart';
 import 'package:mornye/services/library_database.dart';
 import 'package:mornye/services/motion_artwork_store.dart';
 import 'package:mornye/theme/app_theme.dart';
-import 'package:mornye/widgets/mornye_player_artwork.dart';
+import 'package:mornye/widgets/app_player_artwork.dart';
 import 'package:mornye/widgets/motion_header_banner.dart';
 import 'package:video_player_platform_interface/video_player_platform_interface.dart';
 
@@ -316,7 +316,7 @@ void main() {
                 return ValueListenableBuilder(
                   valueListenable: show,
                   builder: (_, visible, _) => visible
-                      ? const MornyePlayerArtwork(
+                      ? const AppPlayerArtwork(
                           mediaItem: MediaItem(id: 'song', title: 'Song'),
                           videoUrl: 'file:///cover.mp4',
                         )
@@ -375,7 +375,7 @@ void main() {
                       SizedBox(
                         key: ValueKey(cover),
                         height: 100,
-                        child: const MornyePlayerArtwork(
+                        child: const AppPlayerArtwork(
                           mediaItem: MediaItem(id: 'song', title: 'Song'),
                           videoUrl: 'file:///cover.mp4',
                         ),
@@ -420,7 +420,7 @@ void main() {
         child: MaterialApp(
           home: ValueListenableBuilder(
             valueListenable: source,
-            builder: (_, url, _) => MornyePlayerArtwork(
+            builder: (_, url, _) => AppPlayerArtwork(
               mediaItem: MediaItem(id: url, title: 'Song'),
               videoUrl: url,
             ),

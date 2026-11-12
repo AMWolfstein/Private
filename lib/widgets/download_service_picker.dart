@@ -7,10 +7,10 @@ import 'package:mornye/providers/extension_provider.dart';
 import 'package:mornye/theme/app_tokens.dart';
 import 'package:mornye/providers/settings_provider.dart';
 import 'package:mornye/l10n/l10n.dart';
-import 'package:mornye/theme/mornye_icons.dart';
+import 'package:mornye/theme/app_icons.dart';
 import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/app_bottom_sheet.dart';
-import 'package:mornye/widgets/mornye_chrome.dart';
+import 'package:mornye/widgets/app_chrome.dart';
 
 class DownloadServicePicker extends ConsumerStatefulWidget {
   final String? trackName;
@@ -70,7 +70,7 @@ class DownloadServicePicker extends ConsumerStatefulWidget {
         );
         return Padding(
           padding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
-          child: MornyeGlassPanel.overlay(child: content),
+          child: AppGlassPanel.overlay(child: content),
         );
       },
     );
@@ -330,7 +330,7 @@ class _QualityOption extends StatelessWidget {
             SizedBox(
               width: 24,
               child: Icon(
-                mornyeIconFor(icon),
+                appIconFor(icon),
                 color: colorScheme.primary,
                 size: 22,
               ),

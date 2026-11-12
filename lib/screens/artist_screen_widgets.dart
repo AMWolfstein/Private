@@ -72,7 +72,7 @@ extension _ArtistScreenSections on _ArtistScreenState {
               ),
             )
           : const Center(child: Icon(CupertinoIcons.person, size: 80));
-      return MornyeArtistHeader(
+      return AppArtistHeader(
         name: widget.artistName,
         logoUrl: _headerLogoUrl ?? widget.headerLogoUrl,
         badge: _concerts.isEmpty || isSelectionMode ? null : _concertsButton(),

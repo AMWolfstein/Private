@@ -38,16 +38,16 @@ import 'package:mornye/widgets/player_queue_sheet.dart';
 import 'package:mornye/widgets/player_details_sheet.dart';
 import 'package:mornye/widgets/material_player_backdrop.dart';
 import 'package:mornye/widgets/material_player_layout.dart';
-import 'package:mornye/widgets/mornye_player_layout.dart';
+import 'package:mornye/widgets/app_player_layout.dart';
 import 'package:mornye/widgets/player_lyrics_controls.dart';
 import 'package:mornye/widgets/player_lyrics_section.dart';
 import 'package:mornye/widgets/playlist_picker_sheet.dart';
 import 'package:mornye/widgets/settings_group.dart';
-import 'package:mornye/widgets/mornye_player_background.dart';
-import 'package:mornye/widgets/mornye_artwork_contrast.dart';
-import 'package:mornye/widgets/mornye_player_actions_sheet.dart';
-import 'package:mornye/widgets/mornye_context_menu.dart';
-import 'package:mornye/widgets/mornye_player_artwork.dart';
+import 'package:mornye/widgets/app_player_background.dart';
+import 'package:mornye/widgets/app_artwork_contrast.dart';
+import 'package:mornye/widgets/app_player_actions_sheet.dart';
+import 'package:mornye/widgets/app_context_menu.dart';
+import 'package:mornye/widgets/app_player_artwork.dart';
 import 'package:mornye/providers/player_motion_artwork_provider.dart';
 
 export 'package:mornye/routes/now_playing_route.dart';
@@ -318,7 +318,7 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
     if (!fullBleed && _artworkForeground.value.isNotEmpty) {
       _artworkForeground.value = {};
     }
-    Widget artwork() => MornyePlayerArtwork(
+    Widget artwork() => AppPlayerArtwork(
       mediaItem: mediaItem,
       videoUrl: motionArtwork?.source,
       resolvingVideo: motionState?.isLoading == true,
@@ -489,7 +489,7 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
                 child: mornye
                     ? NotificationListener<ScrollUpdateNotification>(
                         onNotification: _onLyricsScroll,
-                        child: MornyePlayerLayout(
+                        child: AppPlayerLayout(
                           mediaItem: mediaItem,
                           metadata: _trackMetadata,
                           seekPreview: _seekPreview,
@@ -676,7 +676,7 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
         child: Stack(
           fit: StackFit.expand,
           children: [
-            MornyeArtworkContrast(
+            AppArtworkContrast(
               enabled: fullBleed && !_landscape && _currentPage == 0,
               continuous: motionArtwork != null,
               targets: {
@@ -688,7 +688,7 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
                 if (!mounted) return;
                 _artworkForeground.value = colors;
               },
-              child: MornyePlayerBackground(
+              child: AppPlayerBackground(
                 artUri: mediaItem.artUri,
                 squareArtwork: squareArtwork,
                 artworkAspectRatio: artworkRatio,
@@ -950,7 +950,7 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
       context: titleContext,
       preferAbove: true,
       maxWidth: 280,
-      builder: (_) => MornyePlayerNavigationMenu(mediaItem: mediaItem),
+      builder: (_) => AppPlayerNavigationMenu(mediaItem: mediaItem),
     );
     if (!mounted) return;
     if (action == 'album') {
@@ -1016,7 +1016,7 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
             anchor: anchor,
             preferAbove: true,
             maxWidth: 280,
-            builder: (_) => MornyePlayerActionsSheet(
+            builder: (_) => AppPlayerActionsSheet(
               mediaItem: mediaItem,
               sleepTimerSubtitle: sleepTimerSubtitle,
               volumeShown: volumeShown,

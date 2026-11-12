@@ -74,7 +74,7 @@ void main() {
             playbackPlayingProvider.overrideWithValue(playing),
             playbackLoadingProvider.overrideWithValue(loading),
             musicPlayerControllerProvider.overrideWithValue(controller),
-            mornyeLiquidGlassProvider.overrideWithValue(false),
+            appLiquidGlassProvider.overrideWithValue(false),
             backdropBlurEnabledProvider.overrideWithValue(false),
           ],
           child: MaterialApp(

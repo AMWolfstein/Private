@@ -545,7 +545,7 @@ extension _EditMetadataSheetAutoFill on _EditMetadataSheetState {
             children: MetadataEditorController.fieldKeys.map((key) {
               final selected = _form.autoFillFields.contains(key);
               if (context.isMornye) {
-                return MornyeFilterChip(
+                return AppFilterChip(
                   label: _fieldLabel(key),
                   selected: selected,
                   icon: selected

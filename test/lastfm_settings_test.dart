@@ -35,7 +35,7 @@ void main() {
               supportedLocales: AppLocalizations.supportedLocales,
               home: Scaffold(
                 body: SingleChildScrollView(
-                  child: MornyeSettingsTheme(
+                  child: AppSettingsTheme(
                     child: LastfmSettings(service: service),
                   ),
                 ),

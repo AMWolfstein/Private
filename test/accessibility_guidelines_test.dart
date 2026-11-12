@@ -44,7 +44,7 @@ void main() {
               localizationsDelegates: AppLocalizations.localizationsDelegates,
               supportedLocales: AppLocalizations.supportedLocales,
               home: mornye
-                  ? MornyeSettingsTheme(child: page.value())
+                  ? AppSettingsTheme(child: page.value())
                   : page.value(),
             ),
           ),

@@ -38,7 +38,7 @@ import 'package:mornye/widgets/selection_action_button.dart';
 import 'package:mornye/widgets/collection_suggestions_section.dart';
 import 'package:mornye/widgets/downloadable_cover.dart';
 import 'package:mornye/widgets/disc_separator_chip.dart';
-import 'package:mornye/widgets/mornye_artist_header.dart';
+import 'package:mornye/widgets/app_artist_header.dart';
 
 class _AlbumCache {
   static final _cache = TtlCache<({List<Track> tracks, String? description})>(
@@ -423,7 +423,7 @@ class _AlbumScreenState extends ConsumerState<AlbumScreen>
   @override
   Widget build(BuildContext context) {
     if (context.isMornye) {
-      return MornyeArtistSurface(
+      return AppArtistSurface(
         imageSource:
             widget.coverUrl ?? _headerImageUrl ?? widget.headerImageUrl,
         neutralActions: true,

@@ -15,7 +15,7 @@ import 'package:mornye/providers/library_browse_provider.dart';
 import 'package:mornye/providers/library_collections_provider.dart';
 import 'package:mornye/providers/local_library_provider.dart';
 import 'package:mornye/providers/settings_provider.dart';
-import 'package:mornye/screens/mornye_library_screen.dart';
+import 'package:mornye/screens/app_library_screen.dart';
 import 'package:mornye/services/library_collections_database.dart';
 import 'package:mornye/services/library_database.dart';
 import 'package:mornye/services/library_search.dart';
@@ -361,8 +361,8 @@ void main() {
               localizationsDelegates: AppLocalizations.localizationsDelegates,
               supportedLocales: AppLocalizations.supportedLocales,
               home: Scaffold(
-                body: MornyeLibraryScreen(
-                  page: MornyeLibraryPage.albums,
+                body: AppLibraryScreen(
+                  page: AppLibraryPage.albums,
                   onOpenSection: (_) {},
                 ),
               ),

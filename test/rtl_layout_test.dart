@@ -1,14 +1,14 @@
 import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mornye/theme/mornye_icons.dart';
+import 'package:mornye/theme/app_icons.dart';
 
 void main() {
   test('Mornye directional icons mirror in right-to-left layouts', () {
     for (final icon in [
-      mornyeIconFor(Icons.arrow_back),
-      mornyeIconFor(Icons.chevron_left),
-      mornyeArrowForward,
+      appIconFor(Icons.arrow_back),
+      appIconFor(Icons.chevron_left),
+      appArrowForward,
       CupertinoIcons.back,
       CupertinoIcons.forward,
       CupertinoIcons.right_chevron,
@@ -24,6 +24,6 @@ void main() {
       CupertinoIcons.forward.codePoint,
       CupertinoIcons.chevron_forward.codePoint,
     );
-    expect(mornyeArrowForward.codePoint, CupertinoIcons.arrow_right.codePoint);
+    expect(appArrowForward.codePoint, CupertinoIcons.arrow_right.codePoint);
   });
 }

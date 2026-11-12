@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:mornye/theme/mornye_icons.dart';
+import 'package:mornye/theme/app_icons.dart';
 import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/app_icon.dart';
-import 'package:mornye/widgets/mornye_context_menu.dart';
+import 'package:mornye/widgets/app_context_menu.dart';
 
 /// Cupertino glyph.
 class ContextMenuAction {
@@ -34,7 +34,7 @@ const double _mornyeMenuWidth = 280;
 /// Shows [groups] as a context menu at [position], in global coordinates.
 ///
 /// Material opens a [MenuAnchor] with the M3 Expressive menu container;
-/// Mornye opens the dense [MornyeContextMenu]. Empty groups are dropped and
+/// Mornye opens the dense [AppContextMenu]. Empty groups are dropped and
 /// the remaining ones are separated by dividers. The chosen action runs after
 /// the menu closes, so it can open its own dialog or sheet. The future
 /// completes after that action has started, with whether a row was chosen.
@@ -57,14 +57,14 @@ Future<bool> showContextMenu(
       // menu-wide anchor puts its leading edge at the pointer.
       anchor: Rect.fromLTWH(position.dx, position.dy - 8, _mornyeMenuWidth, 0),
       maxWidth: _mornyeMenuWidth,
-      builder: (menuContext) => MornyeContextMenu(
+      builder: (menuContext) => AppContextMenu(
         dense: true,
         groups: [
           for (final group in visible)
             [
               for (final action in group)
-                MornyeMenuAction(
-                  icon: mornyeIconFor(action.icon),
+                AppMenuAction(
+                  icon: appIconFor(action.icon),
                   label: action.label,
                   selected: action.checked,
                   destructive: action.destructive,

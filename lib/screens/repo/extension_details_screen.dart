@@ -8,7 +8,7 @@ import 'package:mornye/providers/extension_provider.dart';
 import 'package:mornye/utils/adaptive_layout.dart';
 import 'package:mornye/utils/nav_bar_inset.dart';
 import 'package:mornye/theme/app_theme.dart';
-import 'package:mornye/theme/mornye_icons.dart';
+import 'package:mornye/theme/app_icons.dart';
 import 'package:mornye/widgets/extension_repo_card.dart';
 import 'package:mornye/widgets/app_alert_dialog.dart';
 import 'package:mornye/widgets/app_icon_button.dart';
@@ -158,7 +158,7 @@ class _ExtensionDetailsScreenState
       color: colorScheme.surfaceContainerHighest,
       child: Icon(
         context.isMornye
-            ? mornyeIconFor(_getCategoryIcon(ext.category))
+            ? appIconFor(_getCategoryIcon(ext.category))
             : _getCategoryIcon(ext.category),
         size: size,
         color: colorScheme.onSurfaceVariant,

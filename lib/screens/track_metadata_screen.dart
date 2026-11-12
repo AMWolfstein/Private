@@ -69,11 +69,11 @@ import 'package:mornye/utils/re_enrich_release_policy.dart';
 import 'package:mornye/utils/saf_display_path.dart';
 import 'package:mornye/theme/cover_palette.dart' show HeaderPalette;
 import 'package:mornye/theme/app_theme.dart';
-import 'package:mornye/theme/mornye_icons.dart';
+import 'package:mornye/theme/app_icons.dart';
 import 'package:mornye/widgets/album_detail_header.dart'
     show HeaderMetaRow, HeaderMetaItem, HeaderCircleButton, HeaderFilledButton;
-import 'package:mornye/widgets/mornye_context_menu.dart';
-import 'package:mornye/widgets/mornye_metadata_row.dart';
+import 'package:mornye/widgets/app_context_menu.dart';
+import 'package:mornye/widgets/app_metadata_row.dart';
 import 'package:mornye/widgets/player_artwork.dart';
 import 'package:mornye/widgets/audio_analysis_widget.dart';
 import 'package:mornye/widgets/hires_check_card.dart';
@@ -94,7 +94,7 @@ import 'package:mornye/screens/track_metadata_edit_sheet.dart';
 part 'track_metadata_screen_cover.dart';
 part 'track_metadata_screen_display.dart';
 part 'track_metadata_screen_menu.dart';
-part 'track_metadata_mornye.dart';
+part 'track_metadata_layout.dart';
 
 part 'track_metadata_cards.dart';
 part 'track_metadata_lyrics.dart';
@@ -1022,7 +1022,7 @@ class _MetadataOptionTile extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 16),
-            Icon(mornyeIconFor(option.icon), color: iconColor, size: 22),
+            Icon(appIconFor(option.icon), color: iconColor, size: 22),
           ],
         ),
       );

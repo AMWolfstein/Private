@@ -470,13 +470,13 @@ class AppTheme extends ThemeExtension<AppTheme> {
   );
 }
 
-extension MornyeThemeContext on BuildContext {
+extension AppThemeContext on BuildContext {
   bool get isMornye => Theme.of(this).extension<AppTheme>() != null;
 }
 
 /// its artwork-led, plain background.
-class MornyeSettingsTheme extends StatelessWidget {
-  const MornyeSettingsTheme({super.key, required this.child});
+class AppSettingsTheme extends StatelessWidget {
+  const AppSettingsTheme({super.key, required this.child});
 
   final Widget child;
 

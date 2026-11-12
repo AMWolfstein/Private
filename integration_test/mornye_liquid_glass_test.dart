@@ -8,9 +8,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:liquid_glass_easy/liquid_glass_easy.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:mornye/widgets/mornye_liquid_backdrop.dart';
-import 'package:mornye/widgets/mornye_chrome.dart';
-import 'package:mornye/widgets/mornye_selection_pill.dart';
+import 'package:mornye/widgets/app_liquid_backdrop.dart';
+import 'package:mornye/widgets/app_chrome.dart';
+import 'package:mornye/widgets/app_selection_pill.dart';
 import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/providers/runtime_profile_provider.dart';
 
@@ -28,7 +28,7 @@ void main() {
             key: capture,
             child: SizedBox(
               width: 360,
-              child: MornyeSelectionPill(
+              child: AppSelectionPill(
                 labels: const ['Home', 'Library', 'Repo', 'Search'],
                 selectedIndex: 0,
                 onChanged: (_) {},
@@ -48,18 +48,18 @@ void main() {
     await tester.runAsync(() async {
       await LiquidGlassShaders.ensureLoaded();
       await ui.FragmentProgram.fromAsset(
-        'assets/shaders/mornye_selection_mask.frag',
+        'assets/shaders/app_selection_mask.frag',
       );
     });
     await tester.pumpAndSettle();
-    final row = tester.getRect(find.byType(MornyeSelectionPill));
+    final row = tester.getRect(find.byType(AppSelectionPill));
     final gesture = await tester.startGesture(
       row.topLeft + const Offset(45, 32),
     );
     await gesture.moveTo(row.topLeft + const Offset(90, 32));
     await tester.pump();
     final lens = find.byWidgetPredicate(
-      (widget) => widget is MornyeLiquidBackdrop && widget.interaction,
+      (widget) => widget is AppLiquidBackdrop && widget.interaction,
     );
     for (final duration in [
       const Duration(milliseconds: 60),
@@ -155,7 +155,7 @@ void main() {
                         child: RepaintBoundary(
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(40),
-                            child: MornyeLiquidBackdrop(
+                            child: AppLiquidBackdrop(
                               borderRadius: BorderRadius.circular(40),
                               blurSigma: 2,
                               child: const Center(
@@ -230,7 +230,7 @@ void main() {
     final changes = <int>[];
     final theme = AppTheme.build(Brightness.dark);
     final lens = find.byWidgetPredicate(
-      (widget) => widget is MornyeLiquidBackdrop && widget.interaction,
+      (widget) => widget is AppLiquidBackdrop && widget.interaction,
     );
     await tester.pumpWidget(
       ProviderScope(
@@ -272,7 +272,7 @@ void main() {
                   right: 16,
                   bottom: 40,
                   child: StatefulBuilder(
-                    builder: (context, setState) => MornyeTabBar(
+                    builder: (context, setState) => AppTabBar(
                       destinations: const [
                         NavigationDestination(
                           icon: Icon(Icons.home),
@@ -310,7 +310,7 @@ void main() {
     final pill = find.descendant(
       of: find
           .descendant(
-            of: find.byType(MornyeSelectionPill),
+            of: find.byType(AppSelectionPill),
             matching: find.byType(AnimatedAlign),
           )
           .first,
@@ -321,7 +321,7 @@ void main() {
       matching: find.byType(DecoratedBox),
     );
     final icons = find.descendant(
-      of: find.byType(MornyeSelectionPill),
+      of: find.byType(AppSelectionPill),
       matching: find.byType(Icon),
     );
     final iconSizes = [for (final icon in icons.evaluate()) icon.size];
@@ -339,7 +339,7 @@ void main() {
     await tester.pump(const Duration(milliseconds: 60));
     expectSingleContour();
     await tester.pumpAndSettle();
-    expect(tester.widget<MornyeLiquidBackdrop>(lens).progress, 1);
+    expect(tester.widget<AppLiquidBackdrop>(lens).progress, 1);
     expect(find.byType(LiquidGlassLens), findsNWidgets(2));
     expectSingleContour();
     final heldRestingDecoration =
@@ -353,7 +353,7 @@ void main() {
         tester.getBottomRight(lens).dx - tester.getTopLeft(lens).dx;
     expect(heldWidth, greaterThan(tester.getSize(pill).width * 1.2));
     await tester.pump(const Duration(seconds: 1));
-    expect(tester.widget<MornyeLiquidBackdrop>(lens).progress, 1);
+    expect(tester.widget<AppLiquidBackdrop>(lens).progress, 1);
     expect(changes, isEmpty);
     for (final fraction in [0.35, 0.45, 0.85, 1.2, 1.1, 0.9, 1.5]) {
       final position = Offset(
@@ -386,7 +386,7 @@ void main() {
     expectSingleContour();
     await tester.pumpAndSettle();
     expect(changes, [2]);
-    expect(tester.widget<MornyeLiquidBackdrop>(lens).progress, 0);
+    expect(tester.widget<AppLiquidBackdrop>(lens).progress, 0);
     expectSingleContour();
     expect(find.byType(LiquidGlassLens), findsOneWidget);
     final cancel = await tester.startGesture(

@@ -37,7 +37,7 @@ class _ThemePreviewCard extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 20),
-                MornyeTabBar(
+                AppTabBar(
                   destinations: [
                     NavigationDestination(
                       icon: const AppIcon(Icons.home_outlined),
@@ -418,7 +418,7 @@ class _ThemeModeSelector extends StatelessWidget {
       };
       return Padding(
         padding: const EdgeInsets.all(12),
-        child: MornyeSegmentedControl(
+        child: AppSegmentedControl(
           labels: labels.values.toList(),
           selectedIndex: labels.keys.toList().indexOf(currentMode),
           onChanged: (index) => onChanged(labels.keys.elementAt(index)),

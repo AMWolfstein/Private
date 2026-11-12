@@ -83,7 +83,7 @@ import 'package:mornye/screens/downloaded_album_screen.dart';
 import 'package:mornye/widgets/cached_cover_image.dart';
 import 'package:mornye/screens/library_tracks_folder_screen.dart';
 import 'package:mornye/screens/local_album_screen.dart';
-import 'package:mornye/screens/mornye_library_screen.dart';
+import 'package:mornye/screens/app_library_screen.dart';
 import 'package:mornye/controllers/clickable_metadata.dart';
 import 'package:mornye/controllers/completion_bridge_tracker.dart';
 import 'package:mornye/controllers/local_track_batch_actions.dart';
@@ -515,7 +515,7 @@ class _QueueTabState extends ConsumerState<QueueTab> {
   @override
   Widget build(BuildContext context) {
     if (context.isMornye && widget.librarySection == null) {
-      return MornyeLibraryScreen(
+      return AppLibraryScreen(
         onOpenSection: (section) => pushPage<void>(
           context,
           (_) => Scaffold(body: QueueTab(librarySection: section)),
@@ -959,8 +959,8 @@ class _QueueTabState extends ConsumerState<QueueTab> {
                           onOpenArtist: (artist) => pushPage<void>(
                             context,
                             (_) => Scaffold(
-                              body: MornyeLibraryScreen(
-                                page: MornyeLibraryPage.albums,
+                              body: AppLibraryScreen(
+                                page: AppLibraryPage.albums,
                                 artist: artist,
                                 onOpenSection: (_) {},
                               ),

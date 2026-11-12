@@ -13,7 +13,7 @@ import 'package:mornye/providers/download_history_provider.dart';
 import 'package:mornye/providers/library_browse_provider.dart';
 import 'package:mornye/providers/settings_provider.dart';
 import 'package:mornye/screens/local_album_screen.dart';
-import 'package:mornye/screens/mornye_library_screen.dart';
+import 'package:mornye/screens/app_library_screen.dart';
 import 'package:mornye/services/downloaded_embedded_cover_resolver.dart';
 import 'package:mornye/services/library_database.dart';
 import 'package:mornye/theme/legacy_material_theme.dart';
@@ -21,7 +21,7 @@ import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/album_detail_header.dart';
 import 'package:mornye/widgets/cached_cover_image.dart';
 import 'package:mornye/widgets/local_library_artwork_builder.dart';
-import 'package:mornye/widgets/mornye_artist_header.dart';
+import 'package:mornye/widgets/app_artist_header.dart';
 
 import 'support/fixed_settings.dart';
 
@@ -259,7 +259,7 @@ void main() {
       expect(
         mornye
             ? tester
-                  .widget<MornyeArtistSurface>(find.byType(MornyeArtistSurface))
+                  .widget<AppArtistSurface>(find.byType(AppArtistSurface))
                   .imageSource
             : tester
                   .widget<AlbumDetailHeader>(find.byType(AlbumDetailHeader))
@@ -308,8 +308,8 @@ void main() {
           tester,
           () => mornye
               ? tester
-                        .widget<MornyeArtistSurface>(
-                          find.byType(MornyeArtistSurface),
+                        .widget<AppArtistSurface>(
+                          find.byType(AppArtistSurface),
                         )
                         .imageSource ==
                     preview
@@ -357,8 +357,8 @@ void main() {
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             home: Scaffold(
-              body: MornyeLibraryScreen(
-                page: MornyeLibraryPage.albums,
+              body: AppLibraryScreen(
+                page: AppLibraryPage.albums,
                 onOpenSection: (_) {},
               ),
             ),

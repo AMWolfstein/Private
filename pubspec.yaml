@@ -133,7 +133,7 @@ flutter:
   generate: true
 
   shaders:
-    - assets/shaders/mornye_selection_mask.frag
+    - assets/shaders/app_selection_mask.frag
 
   assets:
     - LICENSE

@@ -8,7 +8,7 @@ import 'package:mornye/l10n/l10n.dart';
 import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/app_bottom_sheet.dart';
-import 'package:mornye/widgets/mornye_player_details_sheet.dart';
+import 'package:mornye/widgets/app_player_details_sheet.dart';
 import 'package:mornye/widgets/player_details_sheet.dart';
 
 const _item = MediaItem(
@@ -86,7 +86,7 @@ void main() {
     );
     final image = tester.widget<Image>(
       find.descendant(
-        of: find.byType(MornyePlayerDetailsSheet),
+        of: find.byType(AppPlayerDetailsSheet),
         matching: find.byType(Image),
       ),
     );

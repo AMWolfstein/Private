@@ -17,7 +17,7 @@ import 'package:mornye/theme/cover_palette.dart';
 import 'package:mornye/widgets/app_bottom_sheet.dart';
 import 'package:mornye/widgets/app_content_card.dart';
 import 'package:mornye/widgets/app_search_field.dart';
-import 'package:mornye/widgets/mornye_chrome.dart';
+import 'package:mornye/widgets/app_chrome.dart';
 import 'package:mornye/widgets/app_sliver_header.dart';
 import 'package:mornye/widgets/collection_scaffold.dart';
 import 'package:mornye/widgets/selection_action_button.dart';
@@ -216,7 +216,7 @@ void main() {
                   body: Directionality(
                     textDirection: direction,
                     child: StatefulBuilder(
-                      builder: (context, setState) => MornyeSegmentedControl(
+                      builder: (context, setState) => AppSegmentedControl(
                         labels: const ['System', 'Light', 'Dark'],
                         selectedIndex: selected,
                         onChanged: (index) => setState(() => selected = index),
@@ -255,7 +255,7 @@ void main() {
               data: const MediaQueryData(disableAnimations: true),
               child: Scaffold(
                 body: StatefulBuilder(
-                  builder: (context, setState) => MornyeSegmentedControl(
+                  builder: (context, setState) => AppSegmentedControl(
                     labels: const ['System', 'Light', 'Dark'],
                     selectedIndex: selected,
                     onChanged: (index) => setState(() => selected = index),
@@ -308,7 +308,7 @@ void main() {
         ),
       );
 
-      expect(find.byType(MornyeGlass), findsOneWidget);
+      expect(find.byType(AppGlass), findsOneWidget);
       await tester.tap(find.byType(TextField));
       await tester.enterText(find.byType(TextField), 'Album');
       await tester.testTextInput.receiveAction(TextInputAction.search);

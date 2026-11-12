@@ -177,7 +177,7 @@ extension _TrackMetadataMenu on _TrackMetadataScreenState {
       final options = _menuOptions(screenContext, ref, colorScheme, l10n);
 
       if (sheetContext.isMornye) {
-        final groups = <List<MornyeMenuAction>>[];
+        final groups = <List<AppMenuAction>>[];
         for (final option in options) {
           if (option.icon == Icons.share_outlined) {
             continue;
@@ -186,8 +186,8 @@ extension _TrackMetadataMenu on _TrackMetadataScreenState {
             groups.add([]);
           }
           groups.last.add(
-            MornyeMenuAction(
-              icon: mornyeIconFor(option.icon),
+            AppMenuAction(
+              icon: appIconFor(option.icon),
               label: option.label,
               destructive: option.destructive,
               onPressed: () =>
@@ -195,10 +195,10 @@ extension _TrackMetadataMenu on _TrackMetadataScreenState {
             ),
           );
         }
-        return MornyeContextMenu(
+        return AppContextMenu(
           quickActions: [
             if (_fileExists) ...[
-              MornyeMenuAction(
+              AppMenuAction(
                 icon: CupertinoIcons.play_fill,
                 label: l10n.trackMetadataPlay,
                 onPressed: () => _closeOptionsMenuAndRun(
@@ -208,7 +208,7 @@ extension _TrackMetadataMenu on _TrackMetadataScreenState {
               ),
             ],
             if (!_isNetworkItem)
-              MornyeMenuAction(
+              AppMenuAction(
                 icon: CupertinoIcons.share_solid,
                 label: l10n.trackMetadataShare,
                 onPressed: () => _closeOptionsMenuAndRun(

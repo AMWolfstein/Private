@@ -8,7 +8,7 @@ import 'package:mornye/providers/system_volume_provider.dart';
 import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/app_icon.dart';
 import 'package:mornye/widgets/app_slider.dart';
-import 'package:mornye/widgets/mornye_player_slider.dart';
+import 'package:mornye/widgets/app_player_slider.dart';
 import 'package:mornye/utils/logger.dart';
 import 'package:mornye/services/music_playback_deck.dart';
 
@@ -114,7 +114,7 @@ class _PlayerVolumeControlState extends ConsumerState<PlayerVolumeControl> {
                         ignoring: volume == null,
                         child: Opacity(
                           opacity: volume == null ? 0.4 : 1,
-                          child: MornyePlayerSlider(
+                          child: AppPlayerSlider(
                             value: value,
                             activeColor: widget.foreground.withValues(
                               alpha: 0.70,

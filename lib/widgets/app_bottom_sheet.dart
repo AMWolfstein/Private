@@ -5,8 +5,8 @@ import 'package:mornye/theme/app_motion.dart';
 import 'package:mornye/theme/app_tokens.dart';
 import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/app_icon.dart';
-import 'package:mornye/widgets/mornye_chrome.dart';
-import 'package:mornye/theme/mornye_icons.dart';
+import 'package:mornye/widgets/app_chrome.dart';
+import 'package:mornye/theme/app_icons.dart';
 
 /// The drag handle shown at the top of every modal sheet.
 ///
@@ -390,7 +390,7 @@ Future<T?> showAppModalBottomSheet<T>({
         : null,
     elevation: mornye ? 0 : null,
     builder: (context) => mornye && mornyeGlass
-        ? MornyeGlassPanel.overlay(child: Builder(builder: builder))
+        ? AppGlassPanel.overlay(child: Builder(builder: builder))
         : builder(context),
   );
 }
@@ -455,7 +455,7 @@ class AppSheetDialog extends StatelessWidget {
       ),
     );
     if (mornye && mornyeGlass) {
-      content = MornyeGlassPanel.overlay(radius: radius, child: content);
+      content = AppGlassPanel.overlay(radius: radius, child: content);
     } else if (!mornye) {
       // body's bar stays visible, so a cut-off list reads as scrollable.
       content = ScrollbarTheme(
@@ -569,7 +569,7 @@ class AppSheetOption extends StatelessWidget {
       };
       if (icon != null) {
         return Icon(
-          mornyeIconFor(icon),
+          appIconFor(icon),
           size: size,
           color: enabled ? color ?? scheme.primary : theme.disabledColor,
         );

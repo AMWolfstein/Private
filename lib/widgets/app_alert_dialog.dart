@@ -8,7 +8,7 @@ import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/app_bottom_sheet.dart';
 import 'package:mornye/widgets/app_icon.dart';
 import 'package:mornye/widgets/expressive_button.dart';
-import 'package:mornye/widgets/mornye_chrome.dart';
+import 'package:mornye/widgets/app_chrome.dart';
 
 /// Dialog presentation follows the selected design, including on Android.
 Future<T?> showAppDialog<T>({
@@ -153,7 +153,7 @@ class AppDialogSurface extends StatelessWidget {
       child: ConstrainedBox(
         constraints: BoxConstraints(maxWidth: maxWidth),
         child: mornye
-            ? MornyeGlassPanel.overlay(
+            ? AppGlassPanel.overlay(
                 child: SingleChildScrollView(child: child),
               )
             : child,
@@ -273,7 +273,7 @@ class AppAlertDialog extends StatelessWidget {
       insetPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 320),
-        child: MornyeGlassPanel.overlay(
+        child: AppGlassPanel.overlay(
           child: Padding(
             padding: const EdgeInsets.all(16),
             child: Column(

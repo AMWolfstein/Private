@@ -24,7 +24,7 @@ import 'package:mornye/services/user_profile_store.dart';
 import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/app_search_field.dart';
 import 'package:mornye/widgets/lazy_tab_view.dart';
-import 'package:mornye/widgets/mornye_chrome.dart';
+import 'package:mornye/widgets/app_chrome.dart';
 
 import 'performance_probe.dart';
 
@@ -266,7 +266,7 @@ void main() {
       for (final value in [0, 1, 2, 3, 0]) {
         await tester.tap(
           find.descendant(
-            of: find.byType(MornyeTabBar),
+            of: find.byType(AppTabBar),
             matching: find.text(
               ['Home', 'Library', 'Search', 'Downloads'][value],
             ),
@@ -293,7 +293,7 @@ void main() {
     await probe.finish(
       metadata: {
         'scope':
-            'Production QueueTab, MornyeLibraryScreen, HomeTab, LazyTabView and MornyeTabBar; synthetic provider data, no artwork/network/database/IME.',
+            'Production QueueTab, AppLibraryScreen, HomeTab, LazyTabView and AppTabBar; synthetic provider data, no artwork/network/database/IME.',
         'trackCount': _tracks.length,
         'albumCount': _albums.length,
         'queueCount': 2000,
@@ -328,7 +328,7 @@ class _Tabs extends StatelessWidget {
           QueueTab(key: ValueKey('downloads'), librarySection: 'downloads'),
         ],
       ),
-      bottomNavigationBar: MornyeTabBar(
+      bottomNavigationBar: AppTabBar(
         destinations: const [
           NavigationDestination(icon: Icon(Icons.home), label: 'Home'),
           NavigationDestination(

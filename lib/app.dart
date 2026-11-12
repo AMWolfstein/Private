@@ -18,7 +18,7 @@ import 'package:mornye/l10n/supported_locales.dart';
 import 'package:mornye/utils/adaptive_layout.dart';
 import 'package:mornye/widgets/android_keyboard_lifecycle.dart';
 import 'package:mornye/widgets/app_snack_bar.dart';
-import 'package:mornye/widgets/mornye_glass_preparation.dart';
+import 'package:mornye/widgets/app_glass_preparation.dart';
 import 'package:mornye/widgets/playback_feedback.dart';
 
 String initialLocationForAppState({
@@ -199,7 +199,7 @@ class _AppMediaQuery extends StatelessWidget {
     final mediaQuery = MediaQuery.of(context);
     return MediaQuery(
       data: mediaQuery.copyWith(displayFeatures: const []),
-      child: MornyeGlassPreparation(child: AdaptiveUiScaler(child: child)),
+      child: AppGlassPreparation(child: AdaptiveUiScaler(child: child)),
     );
   }
 }

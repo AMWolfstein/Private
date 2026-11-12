@@ -9,7 +9,7 @@ import 'package:mornye/providers/theme_provider.dart';
 import 'package:mornye/screens/settings/appearance_settings_page.dart';
 import 'package:mornye/theme/dynamic_color_wrapper.dart';
 import 'package:mornye/theme/app_theme.dart';
-import 'package:mornye/widgets/mornye_chrome.dart';
+import 'package:mornye/widgets/app_chrome.dart';
 
 void main() {
   test(
@@ -87,7 +87,7 @@ void main() {
             themeMode: mode,
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
-            home: const MornyeSettingsTheme(child: AppearanceSettingsPage()),
+            home: const AppSettingsTheme(child: AppearanceSettingsPage()),
           ),
         ),
       ),
@@ -161,7 +161,7 @@ void main() {
         await tester.tap(find.text('Glass outlines'));
         await tester.pumpAndSettle();
         expect(prefs.getBool(kMornyeGlassOutlinesKey), isTrue);
-        final picker = find.byType(MornyeSegmentedControl);
+        final picker = find.byType(AppSegmentedControl);
         await tester.scrollUntilVisible(
           picker,
           200,

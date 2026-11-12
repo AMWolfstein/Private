@@ -15,7 +15,7 @@ import 'package:mornye/controllers/local_playback.dart';
 import 'package:mornye/utils/service_track_link.dart';
 import 'package:mornye/widgets/track_lists/context_menu.dart';
 import 'package:mornye/widgets/playlist_picker_sheet.dart';
-import 'package:mornye/widgets/mornye_context_menu.dart';
+import 'package:mornye/widgets/app_context_menu.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:mornye/widgets/app_icon.dart';
 import 'package:mornye/widgets/app_icon_button.dart';
@@ -117,9 +117,9 @@ class _TrackOptionsSheet extends ConsumerWidget {
 
     if (context.isMornye) {
       final l10n = context.l10n;
-      return MornyeContextMenu(
+      return AppContextMenu(
         quickActions: [
-          MornyeMenuAction(
+          AppMenuAction(
             icon: CupertinoIcons.arrow_down_circle_fill,
             label: l10n.dialogDownload,
             onPressed: () {
@@ -128,13 +128,13 @@ class _TrackOptionsSheet extends ConsumerWidget {
               downloadSingleTrack(root, ref, track);
             },
           ),
-          MornyeMenuAction(
+          AppMenuAction(
             icon: CupertinoIcons.star_fill,
             label: isLoved ? l10n.mornyeFavorited : l10n.mornyeFavorite,
             selected: isLoved,
             onPressed: () => _toggleCollection(context, ref, wishlist: false),
           ),
-          MornyeMenuAction(
+          AppMenuAction(
             icon: CupertinoIcons.share_solid,
             label: l10n.trackMetadataShare,
             onPressed: () {
@@ -161,26 +161,26 @@ class _TrackOptionsSheet extends ConsumerWidget {
         groups: [
           [
             if (qualityVariantAction == QualityVariantMenuAction.playLocal)
-              MornyeMenuAction(
+              AppMenuAction(
                 icon: CupertinoIcons.play,
                 label: l10n.trackMetadataPlay,
                 onPressed: () => _playLocal(context, ref),
               ),
             if (qualityVariantAction ==
                 QualityVariantMenuAction.downloadAnotherQuality)
-              MornyeMenuAction(
+              AppMenuAction(
                 icon: CupertinoIcons.arrow_down_circle,
                 label: l10n.trackOptionDownloadQualityVariant,
                 onPressed: () => _downloadQualityVariant(context, ref),
               ),
-            MornyeMenuAction(
+            AppMenuAction(
               icon: CupertinoIcons.square_stack,
               label: l10n.homeGoToAlbum,
               onPressed: () => _goToAlbum(context),
             ),
           ],
           [
-            MornyeMenuAction(
+            AppMenuAction(
               icon: CupertinoIcons.text_badge_plus,
               label: l10n.collectionAddToPlaylist,
               onPressed: () {
@@ -189,7 +189,7 @@ class _TrackOptionsSheet extends ConsumerWidget {
                 showAddTrackToPlaylistSheet(root, ref, track);
               },
             ),
-            MornyeMenuAction(
+            AppMenuAction(
               icon: isInWishlist
                   ? CupertinoIcons.checkmark_circle
                   : CupertinoIcons.add_circled,
@@ -200,24 +200,24 @@ class _TrackOptionsSheet extends ConsumerWidget {
             ),
           ],
           [
-            MornyeMenuAction(
+            AppMenuAction(
               icon: CupertinoIcons.doc_on_doc,
               label: l10n.trackOptionCopyTrackName,
               onPressed: () => _copyText(context, track.name),
             ),
-            MornyeMenuAction(
+            AppMenuAction(
               icon: CupertinoIcons.person,
               label: l10n.trackOptionCopyArtist,
               onPressed: () => _copyText(context, track.artistName),
             ),
-            MornyeMenuAction(
+            AppMenuAction(
               icon: CupertinoIcons.doc_on_doc,
               label: l10n.trackOptionCopyTrackAndArtist,
               onPressed: () =>
                   _copyText(context, '${track.name} - ${track.artistName}'),
             ),
             if (link != null)
-              MornyeMenuAction(
+              AppMenuAction(
                 icon: CupertinoIcons.link,
                 label: l10n.trackOptionCopyLink(link.serviceName),
                 onPressed: () => _copyLink(context, link),

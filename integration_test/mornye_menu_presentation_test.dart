@@ -10,9 +10,9 @@ import 'package:path_provider/path_provider.dart';
 import 'package:mornye/providers/runtime_profile_provider.dart';
 import 'package:mornye/services/custom_font_service.dart';
 import 'package:mornye/theme/app_theme.dart';
-import 'package:mornye/widgets/mornye_chrome.dart';
-import 'package:mornye/widgets/mornye_context_menu.dart';
-import 'package:mornye/widgets/mornye_glass_preparation.dart';
+import 'package:mornye/widgets/app_chrome.dart';
+import 'package:mornye/widgets/app_context_menu.dart';
+import 'package:mornye/widgets/app_glass_preparation.dart';
 
 import 'performance_probe.dart';
 
@@ -43,14 +43,14 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [
-            mornyeGlassLevelProvider.overrideWithValue(MornyeGlassLevel.liquid),
-            mornyeBlurEnabledProvider.overrideWithValue(true),
+            appGlassLevelProvider.overrideWithValue(AppGlassLevel.liquid),
+            appBlurEnabledProvider.overrideWithValue(true),
           ],
           child: MaterialApp(
             theme: AppTheme.build(brightness, fontFamily: family),
             builder: (_, child) => RepaintBoundary(
               key: capture,
-              child: MornyeGlassPreparation(child: child!),
+              child: AppGlassPreparation(child: child!),
             ),
             home: Scaffold(
               body: Stack(
@@ -89,14 +89,14 @@ void main() {
                         onPressed: () => showMornyeContextMenu<void>(
                           context: context,
                           anchor: mornyeMenuAnchor(button.currentContext!),
-                          builder: (menuContext) => MornyeContextMenu(
+                          builder: (menuContext) => AppContextMenu(
                             quickActions: [
-                              MornyeMenuAction(
+                              AppMenuAction(
                                 icon: Icons.favorite_border,
                                 label: 'Favorite',
                                 onPressed: () {},
                               ),
-                              MornyeMenuAction(
+                              AppMenuAction(
                                 icon: Icons.share_outlined,
                                 label: 'Share',
                                 onPressed: () {},
@@ -104,25 +104,25 @@ void main() {
                             ],
                             groups: [
                               [
-                                MornyeMenuAction(
+                                AppMenuAction(
                                   icon: Icons.queue_music,
                                   label: 'Add to playlist',
                                   onPressed: () {},
                                 ),
-                                MornyeMenuAction(
+                                AppMenuAction(
                                   icon: Icons.album_outlined,
                                   label: 'Go to album',
                                   subtitle: 'Example album',
                                   onPressed: () {},
                                 ),
-                                MornyeMenuAction(
+                                AppMenuAction(
                                   icon: Icons.person_outline,
                                   label: 'Go to artist',
                                   onPressed: () {},
                                 ),
                               ],
                               [
-                                MornyeMenuAction(
+                                AppMenuAction(
                                   icon: Icons.close,
                                   label: 'Close',
                                   onPressed: () => Navigator.pop(menuContext),
@@ -172,7 +172,7 @@ void main() {
         if (captureOpening) {
           await probe.wait(const Duration(milliseconds: 64));
           final menu = tester.renderObject<RenderBox>(
-            find.byType(MornyeContextMenu),
+            find.byType(AppContextMenu),
           );
           final width =
               (menu.localToGlobal(Offset(menu.size.width, 0)) -
@@ -181,20 +181,20 @@ void main() {
           expect(width, lessThan(menu.size.width));
           expect(
             tester
-                .widget<MornyeGlassPanel>(find.byType(MornyeGlassPanel))
+                .widget<AppGlassPanel>(find.byType(AppGlassPanel))
                 .glassProgress,
             1,
           );
           await captureMenu('opening');
         }
         await probe.wait(const Duration(milliseconds: 450));
-        expect(find.byType(MornyeContextMenu), findsOneWidget);
+        expect(find.byType(AppContextMenu), findsOneWidget);
       }
 
       Future<void> close() async {
         await tester.tap(find.text('Close'));
         await probe.wait(const Duration(milliseconds: 450));
-        expect(find.byType(MornyeContextMenu), findsNothing);
+        expect(find.byType(AppContextMenu), findsNothing);
       }
 
       await probe.measure('open_close', () async {
@@ -202,7 +202,7 @@ void main() {
         await close();
       });
       await open(captureOpening: true);
-      final menuContext = tester.element(find.byType(MornyeContextMenu));
+      final menuContext = tester.element(find.byType(AppContextMenu));
       expect(Theme.of(menuContext).textTheme.bodyLarge?.fontFamily, family);
       await captureMenu('settled');
       await close();

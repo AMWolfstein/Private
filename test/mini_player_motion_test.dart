@@ -73,7 +73,7 @@ Widget _player({
     playbackStateProvider.overrideWith((ref) => const Stream.empty()),
     playbackPlayingProvider.overrideWithValue(playing),
     playbackPositionProvider.overrideWithValue(const Duration(minutes: 1)),
-    mornyeLiquidGlassProvider.overrideWithValue(false),
+    appLiquidGlassProvider.overrideWithValue(false),
     backdropBlurEnabledProvider.overrideWithValue(false),
   ],
   child: MaterialApp(

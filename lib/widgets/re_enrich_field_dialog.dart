@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:mornye/theme/mornye_icons.dart';
+import 'package:mornye/theme/app_icons.dart';
 import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/app_action_button.dart';
 import 'package:mornye/widgets/app_checkbox.dart';
@@ -396,7 +396,7 @@ class _ReEnrichFieldSheetState extends State<_ReEnrichFieldSheet> {
         onPressed: select,
         child: Row(
           children: [
-            Icon(mornyeIconFor(icon), color: scheme.primary, size: 24),
+            Icon(appIconFor(icon), color: scheme.primary, size: 24),
             const SizedBox(width: 16),
             Expanded(
               child: Column(
@@ -466,7 +466,7 @@ class _ReEnrichFieldSheetState extends State<_ReEnrichFieldSheet> {
             ),
             if (icon != null)
               Icon(
-                mornyeIconFor(icon),
+                appIconFor(icon),
                 color: scheme.onSurfaceVariant,
                 size: 20,
               ),

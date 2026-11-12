@@ -117,7 +117,7 @@ extension _ArtistScreenDiscography on _ArtistScreenState {
                 sheetContext,
                 brightness: Brightness.dark,
               ),
-              child: MornyeGlassPanel(
+              child: AppGlassPanel(
                 tintOpacity: 0.78,
                 child: Builder(builder: buildSheet),
               ),
@@ -403,7 +403,7 @@ class _DiscographyOptionTile extends StatelessWidget {
                   ),
                   const SizedBox(width: 16),
                   Icon(
-                    mornyeIconFor(icon),
+                    appIconFor(icon),
                     size: 22,
                     color: colorScheme.onSurface,
                   ),

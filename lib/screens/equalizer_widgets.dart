@@ -341,7 +341,7 @@ class _BandEditor extends ConsumerWidget {
     if (context.isMornye) {
       return Semantics(
         label: context.l10n.equalizerBands,
-        child: MornyeSegmentedControl(
+        child: AppSegmentedControl(
           labels: [for (final value in counts) '$value'],
           selectedIndex: counts.indexOf(count),
           onChanged: select,
@@ -550,7 +550,7 @@ class _BandFader extends StatelessWidget {
         SizedBox(
           height: height,
           child: mornye
-              ? MornyeLevelSlider(
+              ? AppLevelSlider(
                   vertical: true,
                   value: gain,
                   min: -15,
@@ -708,7 +708,7 @@ class _SliderTile extends ConsumerWidget {
                   ),
           ),
           if (mornye)
-            MornyeLevelSlider(
+            AppLevelSlider(
               value: value.clamp(min, max),
               min: min,
               max: max,

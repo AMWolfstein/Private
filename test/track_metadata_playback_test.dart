@@ -15,7 +15,7 @@ import 'package:mornye/services/library_database.dart';
 import 'package:mornye/services/music_player_service.dart';
 import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/theme/app_theme.dart';
-import 'package:mornye/widgets/mornye_context_menu.dart';
+import 'package:mornye/widgets/app_context_menu.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class _Settings extends SettingsNotifier {
@@ -129,7 +129,7 @@ void main() {
               await tester.pumpAndSettle();
               await tester.tap(
                 find.descendant(
-                  of: find.byType(MornyeContextMenu),
+                  of: find.byType(AppContextMenu),
                   matching: find.text('Play'),
                 ),
               );

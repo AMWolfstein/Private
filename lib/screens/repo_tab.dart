@@ -20,8 +20,8 @@ import 'package:mornye/utils/adaptive_layout.dart';
 import 'package:mornye/utils/nav_bar_inset.dart';
 import 'package:mornye/providers/runtime_profile_provider.dart';
 import 'package:mornye/theme/app_theme.dart';
-import 'package:mornye/theme/mornye_icons.dart';
-import 'package:mornye/widgets/mornye_chrome.dart';
+import 'package:mornye/theme/app_icons.dart';
+import 'package:mornye/widgets/app_chrome.dart';
 import 'package:mornye/widgets/extension_repo_card.dart';
 import 'package:mornye/widgets/app_choice_chip.dart';
 import 'package:mornye/widgets/expressive_button.dart';
@@ -645,9 +645,9 @@ class _CategoryChip extends ConsumerWidget {
         onTap: onTap,
         excludeSemantics: true,
         // Scrolls with the list over the plain page: see ExtensionRepoCard.
-        child: MornyeGlass.navigation(
+        child: AppGlass.navigation(
           radius: 24,
-          blurEnabled: ref.watch(mornyeBlurEnabledProvider),
+          blurEnabled: ref.watch(appBlurEnabledProvider),
           samplesBackdrop: false,
           child: Material(
             color: Colors.transparent,
@@ -667,7 +667,7 @@ class _CategoryChip extends ConsumerWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Icon(
-                      mornyeIconFor(icon),
+                      appIconFor(icon),
                       size: 18,
                       color: isSelected
                           ? colorScheme.primary
@@ -872,7 +872,7 @@ class _ExtensionItem extends StatelessWidget {
       avatar: ExtensionAvatar(
         imageUrl: extension.iconUrl,
         fallbackIcon: context.isMornye
-            ? mornyeIconFor(_getCategoryIcon(extension.category))
+            ? appIconFor(_getCategoryIcon(extension.category))
             : _getCategoryIcon(extension.category),
         background: extension.isInstalled
             ? colorScheme.primaryContainer

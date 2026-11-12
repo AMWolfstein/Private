@@ -43,10 +43,10 @@ import 'package:mornye/widgets/settings_group.dart';
 import 'package:mornye/widgets/mini_player.dart';
 import 'package:mornye/widgets/lazy_tab_view.dart';
 import 'package:mornye/widgets/expressive_navigation_bar.dart';
-import 'package:mornye/widgets/mornye_bottom_bar.dart';
+import 'package:mornye/widgets/app_bottom_bar.dart';
 import 'package:mornye/widgets/app_icon.dart';
 import 'package:mornye/widgets/app_loading_indicator.dart';
-import 'package:mornye/widgets/mornye_chrome.dart';
+import 'package:mornye/widgets/app_chrome.dart';
 import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/theme/player_artwork_theme.dart';
 import 'package:mornye/widgets/selection_bottom_bar.dart';
@@ -108,7 +108,7 @@ class MainShell extends ConsumerStatefulWidget {
 class _MainShellState extends ConsumerState<MainShell>
     with SingleTickerProviderStateMixin, WidgetsBindingObserver {
   int _currentIndex = 0;
-  final _mornyeChrome = MornyeChromeController();
+  final _mornyeChrome = AppChromeController();
   // Preserves the tab view element (and its kept-alive tabs) when the body
   // structure swaps between rail and bottom-bar layouts on rotation.
   final GlobalKey _pageViewKey = GlobalKey();
@@ -809,7 +809,7 @@ class _MainShellState extends ConsumerState<MainShell>
       ),
       NavigationDestination(
         icon: context.isMornye
-            ? MornyeNavigationIcon(
+            ? AppNavigationIcon(
                 icon: CupertinoIcons.square_stack_fill,
                 badgeCount: queuedCount,
               )
@@ -836,7 +836,7 @@ class _MainShellState extends ConsumerState<MainShell>
       if (showStore)
         NavigationDestination(
           icon: context.isMornye
-              ? MornyeNavigationIcon(
+              ? AppNavigationIcon(
                   icon: CupertinoIcons.square_grid_2x2,
                   badgeCount: repoUpdatesCount,
                 )
@@ -975,7 +975,7 @@ class _MainShellState extends ConsumerState<MainShell>
                         ? const MiniPlayer()
                         : ValueListenableBuilder<bool>(
                             valueListenable: _mornyeChrome,
-                            builder: (context, collapsed, _) => MornyeBottomBar(
+                            builder: (context, collapsed, _) => AppBottomBar(
                               collapsed:
                                   canMinimizeChrome &&
                                   collapsed &&
@@ -985,7 +985,7 @@ class _MainShellState extends ConsumerState<MainShell>
                               onSelected: _onNavTap,
                               onHome: () => _onNavTap(0),
                               onSearch: ShellNavigationService.requestSearch,
-                              blurEnabled: ref.watch(mornyeBlurEnabledProvider),
+                              blurEnabled: ref.watch(appBlurEnabledProvider),
                             ),
                           ),
                   ),

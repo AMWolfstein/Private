@@ -15,7 +15,7 @@ import 'package:mornye/widgets/app_bottom_sheet.dart';
 import 'package:mornye/widgets/app_loading_indicator.dart';
 import 'package:mornye/widgets/expressive_button.dart';
 import 'package:mornye/widgets/cached_cover_image.dart';
-import 'package:mornye/widgets/mornye_chrome.dart';
+import 'package:mornye/widgets/app_chrome.dart';
 
 final _log = AppLogger('PlaylistPicker');
 
@@ -52,7 +52,7 @@ Future<void> showAddTracksToPlaylistSheet(
         preserveOccurrences: preserveOccurrences,
       );
       return sheetContext.isMornye
-          ? MornyeGlassPanel(tintOpacity: 0.78, child: content)
+          ? AppGlassPanel(tintOpacity: 0.78, child: content)
           : content;
     },
   );

@@ -21,9 +21,9 @@ import 'package:mornye/widgets/automix_status_badge.dart';
 import 'package:mornye/widgets/expressive_button_group.dart';
 import 'package:mornye/widgets/expressive_icon_button.dart';
 import 'package:mornye/widgets/expressive_playback_transport.dart';
-import 'package:mornye/widgets/mornye_playback_button.dart';
-import 'package:mornye/widgets/mornye_playback_time.dart';
-import 'package:mornye/widgets/mornye_player_slider.dart';
+import 'package:mornye/widgets/app_playback_button.dart';
+import 'package:mornye/widgets/app_playback_time.dart';
+import 'package:mornye/widgets/app_player_slider.dart';
 import 'package:mornye/widgets/playback_seek_slider.dart';
 import 'package:mornye/widgets/playback_time_builder.dart';
 
@@ -141,7 +141,7 @@ class PlayerPlaybackControls extends ConsumerWidget {
                             horizontal: edgeAligned
                                 ? 0
                                 : mornye
-                                ? MornyePlayerSlider.horizontalInset
+                                ? AppPlayerSlider.horizontalInset
                                 : 12,
                           ),
                           child: PlaybackTimeBuilder(
@@ -153,7 +153,7 @@ class PlayerPlaybackControls extends ConsumerWidget {
                             builder: (context, elapsedSeconds) => Row(
                               children: [
                                 if (mornye)
-                                  MornyePlaybackTime(
+                                  AppPlaybackTime(
                                     key: ValueKey('elapsed:$mediaId'),
                                     seconds: elapsedSeconds,
                                     style: timeStyle,
@@ -165,7 +165,7 @@ class PlayerPlaybackControls extends ConsumerWidget {
                                   ),
                                 Expanded(child: Center(child: quality)),
                                 if (mornye)
-                                  MornyePlaybackTime(
+                                  AppPlaybackTime(
                                     key: ValueKey('remaining:$mediaId'),
                                     // Subtract whole seconds so both labels roll together,
                                     // even when the track duration includes milliseconds.
@@ -252,7 +252,7 @@ class PlayerPlaybackControls extends ConsumerWidget {
                       colorScheme: colorScheme,
                     ),
                   if (mornye)
-                    MornyePlaybackButton(
+                    AppPlaybackButton(
                       icon: CupertinoIcons.backward_fill,
                       color: colorScheme.onSurface,
                       iconSize: skipSize,
@@ -268,7 +268,7 @@ class PlayerPlaybackControls extends ConsumerWidget {
                       onPressed: controller.previous,
                     ),
                   if (mornye)
-                    MornyePlaybackButton(
+                    AppPlaybackButton(
                       icon: isPlaying
                           ? CupertinoIcons.pause_fill
                           : CupertinoIcons.play_fill,
@@ -303,7 +303,7 @@ class PlayerPlaybackControls extends ConsumerWidget {
                           : () => controller.togglePlayPause(isPlaying),
                     ),
                   if (mornye)
-                    MornyePlaybackButton(
+                    AppPlaybackButton(
                       icon: CupertinoIcons.forward_fill,
                       color: colorScheme.onSurface,
                       iconSize: skipSize,

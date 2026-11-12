@@ -385,8 +385,8 @@ extension _QueueTabSections on _QueueTabState {
         void openArtist(String artist) => pushPage<void>(
           context,
           (_) => Scaffold(
-            body: MornyeLibraryScreen(
-              page: MornyeLibraryPage.albums,
+            body: AppLibraryScreen(
+              page: AppLibraryPage.albums,
               artist: artist,
               onOpenSection: (_) {},
             ),

@@ -373,7 +373,7 @@ class _SettingsTabState extends ConsumerState<SettingsTab> {
         : SettingsSearchHighlightScope(targetLabel: targetLabel, child: page);
     await Navigator.of(
       context,
-    ).push(slidePageRoute<void>(page: MornyeSettingsTheme(child: destination)));
+    ).push(slidePageRoute<void>(page: AppSettingsTheme(child: destination)));
     if (!mounted) return;
 
     if (page is DonatePage) {
@@ -510,7 +510,7 @@ class _SettingsTabState extends ConsumerState<SettingsTab> {
             ];
     }
 
-    return MornyeSettingsTheme(
+    return AppSettingsTheme(
       child: CustomScrollView(
         slivers: [
           if (widget.asPage)

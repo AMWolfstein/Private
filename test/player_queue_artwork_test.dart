@@ -10,7 +10,7 @@ import 'package:mornye/l10n/l10n.dart';
 import 'package:mornye/providers/music_player_provider.dart';
 import 'package:mornye/providers/settings_provider.dart';
 import 'package:mornye/services/downloaded_embedded_cover_resolver.dart';
-import 'package:mornye/widgets/mornye_player_queue.dart';
+import 'package:mornye/widgets/app_player_queue.dart';
 import 'package:mornye/widgets/player_artwork.dart';
 import 'package:mornye/widgets/player_queue_artwork.dart';
 import 'package:mornye/widgets/player_queue_sheet.dart';
@@ -113,7 +113,7 @@ void main() {
           supportedLocales: AppLocalizations.supportedLocales,
           home: Scaffold(
             body: mornye
-                ? MornyePlayerQueue(colorScheme: scheme)
+                ? AppPlayerQueue(colorScheme: scheme)
                 : PlayerQueueSheet(
                     colorScheme: scheme,
                     scrollController: scroll,

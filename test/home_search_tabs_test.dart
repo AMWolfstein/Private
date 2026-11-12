@@ -21,8 +21,8 @@ import 'package:mornye/theme/legacy_material_theme.dart';
 import 'package:mornye/widgets/animation_utils.dart';
 import 'package:mornye/widgets/app_search_field.dart';
 import 'package:mornye/widgets/lazy_tab_view.dart';
-import 'package:mornye/widgets/mornye_chrome.dart';
-import 'package:mornye/widgets/mornye_context_menu.dart';
+import 'package:mornye/widgets/app_chrome.dart';
+import 'package:mornye/widgets/app_context_menu.dart';
 
 void main() {
   {
@@ -459,7 +459,7 @@ void main() {
 
           expect(find.text('Download'), findsOneWidget);
           expect(find.text('Go to Album'), findsOneWidget);
-          final menu = tester.getRect(find.byType(MornyeContextMenu));
+          final menu = tester.getRect(find.byType(AppContextMenu));
           if (anchor.bottom + 8 + menu.height > size.height - 16 &&
               anchor.top - menu.height - 8 < 16) {
             // A tall featured card can leave no room on either side. The menu
@@ -480,7 +480,7 @@ void main() {
           expect(menu.bottom, lessThanOrEqualTo(size.height - 16));
           await tester.tapAt(const Offset(5, 5));
           await tester.pumpAndSettle();
-          expect(find.byType(MornyeContextMenu), findsNothing);
+          expect(find.byType(AppContextMenu), findsNothing);
         }
         expect(tester.takeException(), isNull);
       },
@@ -711,7 +711,7 @@ void main() {
           find.descendant(
             of: find.ancestor(
               of: find.text('Found $itemType 0'),
-              matching: find.byType(MornyeGlassPanel),
+              matching: find.byType(AppGlassPanel),
             ),
             matching: find.byType(BackdropFilter),
           ),
@@ -730,7 +730,7 @@ void main() {
           find.descendant(
             of: find.ancestor(
               of: find.text('Found $itemType 119'),
-              matching: find.byType(MornyeGlassPanel),
+              matching: find.byType(AppGlassPanel),
             ),
             matching: find.byType(BackdropFilter),
           ),
