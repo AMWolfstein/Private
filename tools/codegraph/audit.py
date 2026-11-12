@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Report-only compiler diagnostics for dead-code, optimization and simplification scans."""
+"""Report-only code, test-quality and coverage-gap audit; no automatic fixes or test execution."""
 from __future__ import annotations
 import argparse
 from datetime import datetime, timezone
@@ -53,7 +53,7 @@ def parse_cargo_json(output: str, root: Path, tool: dict) -> list[dict]:
     return found
 
 
-def select_files(root, config, languages, paths, base=None):
+def select_files(root, config, languages, paths, base=None, include_tests=False):
     unknown = set(languages) - set(config['languages'])
     if unknown: raise ValueError(f'Unknown languages: {sorted(unknown)}')
     argv = ['git','-C',str(root)]
@@ -71,12 +71,18 @@ def select_files(root, config, languages, paths, base=None):
         if prefixes and not any(prefix=='.' or path==prefix or path.startswith(prefix+'/') for prefix in prefixes): continue
         language = next((name for name, data in config['languages'].items() if Path(path).suffix in data['extensions']),None)
         if not language or (languages and language not in languages): continue
-        if any(fnmatch.fnmatchcase(path,p) for p in config['languages'][language].get('tests',[])): continue
+        if not include_tests and is_test(config,path): continue
         if not (root/path).is_file(): continue
         if (root/path).is_symlink() or not (root/path).resolve().is_relative_to(root): raise ValueError(f'Unsafe input: {path}')
         if any(fnmatch.fnmatchcase(path,p) for p in config['protected']): protected.append(path);continue
         result.setdefault(language,[]).append(path)
     return result, protected
+
+
+def is_test(config,path):
+    return any(Path(path).suffix in language['extensions'] and
+               any(fnmatch.fnmatchcase(path,pattern) for pattern in language.get('tests',[]))
+               for language in config['languages'].values())
 
 
 def classify(found, categories, kind, language):
@@ -110,30 +116,59 @@ def run_tool(root, language, tool, members, kind, log):
                    'scope_note':'Runner may analyze additional files; findings below are filtered to the selected scope'}
 
 
-def scan(root, kind='code', languages=(), paths=(), base=None):
+def scan(root, kind='all', languages=(), paths=(), base=None):
     root=root.resolve()
     if not (languages or paths or base): raise ValueError('Choose --lang, --path, --base or --all')
     config=json.loads(Path(__file__).with_name('audit-config.json').read_text())
-    if kind!='code' and kind not in config['categories']: raise ValueError('Unknown audit kind')
-    files,protected=select_files(root,config,languages,paths,base)
+    if kind not in ('all','code','tests','gaps') and kind not in config['categories']: raise ValueError('Unknown audit kind')
+    include_tests=kind in ('all','tests','gaps')
+    files,protected=select_files(root,config,languages,paths,base,include_tests=include_tests)
+    source_files={language:[p for p in members if not is_test(config,p)] for language,members in files.items()}
+    source_files={language:members for language,members in source_files.items() if members}
+    if kind=='gaps': files=source_files
+    if kind=='tests':
+        files={language:[p for p in members if is_test(config,p) or language=='rust'] for language,members in files.items()}
+        files={language:members for language,members in files.items() if members}
     directory=root/'.work/audit'/kind;directory.mkdir(parents=True,exist_ok=True)
     findings=[];tools={}
-    for language,members in files.items():
-        found,tools[language]=run_tool(root,language,config['tools'].get(language),members,kind,directory/f'{language}.log')
-        selected=set(members)
-        findings.extend(classify([f for f in found if f['path'] in selected],config['categories'],kind,language))
+    if kind not in ('tests','gaps'):
+        for language,members in files.items():
+            found,tools[language]=run_tool(root,language,config['tools'].get(language),members,'code' if kind=='all' else kind,directory/f'{language}.log')
+            selected=set(members)
+            findings.extend(classify([f for f in found if f['path'] in selected],config['categories'],'code' if kind=='all' else kind,language))
+    if kind in ('all','tests','gaps'):
+        import test_checks
+        if kind in ('all','tests'):
+            found,tools['test-quality']=test_checks.inspect_tests(root,files,config['languages'],lambda path:is_test(config,path))
+            findings.extend(found)
+        if kind in ('all','gaps'):
+            all_files,_=select_files(root,config,[],['.'],include_tests=True)
+            tests=[p for members in all_files.values() for p in members if is_test(config,p)]
+            # Inline Rust tests are also reference evidence for other source files.
+            tests += [p for p in all_files.get('rust',[]) if not is_test(config,p) and '#[test' in (root/p).read_text(errors='replace')]
+            found,tools['test-references']=test_checks.direct_gaps(root,source_files,tests)
+            findings.extend(found)
+            found,statuses=test_checks.inspect_coverage(root,source_files,config.get('coverage',{}))
+            findings.extend(found)
+            tools.update({f'coverage-{language}':status for language,status in statuses.items()})
     gaps=[name for name,tool in tools.items() if tool['status']!='RAN']
+    if kind=='tests' and not tools.get('test-quality',{}).get('tests_read') and not gaps: files={}
+    categories=list(config['categories'])+['tests','gaps'] if kind=='all' else list(config['categories']) if kind=='code' else [kind]
+    counts={category:sum(category in finding['categories'] for finding in findings) for category in categories}
     result={'status':'NO_FILES' if not files else 'INCOMPLETE' if gaps else 'FINDINGS' if findings else 'PASS',
             'kind':kind,'at':datetime.now(timezone.utc).isoformat(),'scope':{'languages':list(languages),'paths':list(paths),'base':base},
-            'file_list':files,'protected_skipped':protected,'tools':tools,'gaps':gaps,'findings':findings,
+            'by_category':counts,'file_list':files,'protected_skipped':protected,'tools':tools,'gaps':gaps,'findings':findings,
             'limits':config['notes']+['No source files are modified. Compiler tools can write build caches and execute build scripts.',
              'A clean report is not proof that all dead code has been found. Only emitted, allowlisted diagnostics are classified.',
              'Compiler errors make coverage incomplete. Dart suggestions depend on the enabled analyzer lints.',
+             'Test-quality/direct-reference hints are not proof of redundancy or missing behavior tests.',
+             'Existing LCOV can be stale or restricted to a subset of tests; no tests are executed automatically.',
              'Validate cross-language references and behavior before applying any suggestion.']}
     (directory/'report.json').write_text(json.dumps(result,indent=2)+'\n')
     lines=[f'# Code scan: {kind}', '', f'Status: {result["status"]}', '',
            f'Files: {sum(map(len,files.values()))}; findings: {len(findings)}; protected: {len(protected)}.', '', '## Tools', '']
     lines += [f'- {name}: {tool["status"]} — {tool.get("reason",str(tool.get("command")))}' for name,tool in tools.items()]
+    lines += ['', '## Categories', '']+[f'- {name}: {count}' for name,count in counts.items()]
     lines += ['', '## Candidates requiring verification', '']
     lines += [f'- `{f["path"]}:{f["line"]}` [{f["code"]}] ({", ".join(f["categories"])}) {f["message"]}' for f in findings] or ['None reported in this scope.']
     lines += ['', '## Limits', '']+[f'- {note}' for note in result['limits']]
@@ -143,7 +178,7 @@ def scan(root, kind='code', languages=(), paths=(), base=None):
 
 def configure_parser(p, include_root=True):
     if include_root: p.add_argument('--root',type=Path,default=Path.cwd())
-    p.add_argument('--kind',choices=['code','dead-code','optimization','simplifier'],default='code')
+    p.add_argument('--kind',choices=['all','code','dead-code','optimization','simplifier','tests','gaps'],default='all')
     p.add_argument('--lang',nargs='+',default=[])
     p.add_argument('--path',action='append',default=[])
     p.add_argument('--base');p.add_argument('--all',action='store_true')
@@ -151,7 +186,7 @@ def configure_parser(p, include_root=True):
 
 
 def execute(args):
-    result,report=scan(args.root,args.kind,args.lang,args.path or (['.'] if args.all else []),args.base)
+    result,report=scan(args.root,args.kind,args.lang,args.path or (['.'] if args.all or not (args.lang or args.base) else []),args.base)
     print(json.dumps({'status':result['status'],'findings':len(result['findings']),'gaps':result['gaps'],'report':str(report)}))
     return 2 if result['status'] in ('INCOMPLETE','NO_FILES') else 1 if result['findings'] else 0
 

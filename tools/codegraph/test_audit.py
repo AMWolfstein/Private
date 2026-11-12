@@ -61,7 +61,7 @@ class AuditTests(unittest.TestCase):
         found=[{'path':'lib/main.dart','line':1,'code':'unused_import','message':'candidate'}]
         def run(root,language,*args):return (found,{'status':'RAN'}) if language=='dart' else ([],{'status':'UNAVAILABLE'})
         with mock.patch.object(audit,'run_tool',side_effect=run):
-            result,report=audit.scan(self.root,paths=['.'])
+            result,report=audit.scan(self.root,kind='code',paths=['.'])
         self.assertEqual(result['status'],'INCOMPLETE');self.assertEqual(result['gaps'],['kotlin'])
         self.assertEqual(len(result['findings']),1);self.assertTrue(report.is_file())
         self.assertEqual((self.root/'lib/main.dart').read_text(),'void main() {}')

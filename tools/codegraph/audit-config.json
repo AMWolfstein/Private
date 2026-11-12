@@ -14,7 +14,8 @@
         ".rs"
       ],
       "tests": [
-        "*/tests/*"
+        "*/tests/*",
+        "tests/*"
       ]
     },
     "kotlin": {
@@ -35,7 +36,12 @@
         ".h",
         ".hpp"
       ],
-      "tests": []
+      "tests": [
+        "tests/*",
+        "*/tests/*",
+        "*_test.cpp",
+        "test_*.cpp"
+      ]
     },
     "java": {
       "extensions": [
@@ -157,5 +163,17 @@
     "Curated diagnostic allowlists, not exhaustive proof of dead code or performance gains.",
     "Optimization hints require measurement; simplifications require behavior verification.",
     "Generated and vendored paths are protected. Kotlin/C++ have no configured diagnostic runner."
-  ]
+  ],
+  "coverage": {
+    "dart": {
+      "lcov": "coverage/lcov.info",
+      "cwd": ".",
+      "produce": "flutter test --coverage"
+    },
+    "rust": {
+      "lcov": "rust_backend/target/lcov.info",
+      "cwd": "rust_backend",
+      "produce": "cargo +1.99.1 llvm-cov --workspace --locked --lcov --output-path target/lcov.info (from rust_backend, optional cargo-llvm-cov required)"
+    }
+  }
 }

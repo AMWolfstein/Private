@@ -1,12 +1,11 @@
 ---
 name: audit
-description: "Inspect a requested scope for dead code, optimization opportunities and behavior-preserving simplifications using standalone diagnostic scans and verified source evidence. Report only unless implementation was requested."
+description: "Inspect a requested scope for dead code, optimization, simplification, test quality and coverage gaps using standalone diagnostic scans and verified source evidence. Report only unless implementation was requested."
 ---
 
 # Code audit
 
-Use for requests to find dead code, performance opportunities or simpler equivalent
-code. Follow the owner's scope and current instructions. This skill creates no
+Use for requests to audit code, performance, simplification, tests or coverage gaps. Follow the owner's scope and current instructions. This skill creates no
 plan, tasks, review gate or automatic commit/push requirement.
 
 ## Choose and scan the scope
@@ -14,15 +13,17 @@ plan, tasks, review gate or automatic commit/push requirement.
 Run from the repository root with its Flutter/Rust toolchains available:
 
 ```sh
-python3 tools/codegraph/code_tools.py audit --kind code --lang dart
+python3 tools/codegraph/code_tools.py audit --lang dart
 python3 tools/codegraph/code_tools.py audit --kind dead-code --lang rust
 python3 tools/codegraph/code_tools.py audit --kind optimization --path lib/services
 python3 tools/codegraph/code_tools.py audit --kind simplifier --lang dart --base HEAD~1
 ```
 
-`code` combines the three categories. Choose language(s), repeat `--path` for
-files/directories, or use `--base REV`; filters intersect. Use `--all` only for a
-requested repository-wide scan. Do not silently narrow a full-repository request.
+`audit` defaults to `--kind all`: code diagnostics, test quality and coverage-gap
+hints in one report. `--kind code` selects only dead-code/optimization/simplifier;
+`--kind tests` or `--kind gaps` isolates those checks. With no scope options the
+CLI scans the checkout; narrow using languages, repeated `--path`, or `--base REV`.
+Filters intersect. Do not silently narrow a repository-wide request.
 Check that example paths/revisions exist before using them.
 
 Read `.work/audit/<kind>/report.json`, `report.md` and the relevant runner logs.
@@ -36,7 +37,7 @@ the invoked features/targets. The allowlists are not exhaustive.
 See [tool documentation](../../../tools/codegraph/README.md) and
 [audit configuration](../../../tools/codegraph/audit-config.json). These commands
 write reports/build caches, do not fix sources, and may run Cargo build scripts.
-No security, leak, test-gap or redundant-test CLI was restored; do not invent one.
+No security or leak CLI was restored; do not invent one.
 
 ## Verify the evidence
 
@@ -71,6 +72,27 @@ behavior, side effects, nullability, exceptions and lifecycle stay equivalent.
 Style preferences, arbitrary length thresholds and fewer lines alone are not
 findings. Read existing tests before recommending new ones.
 
+## Test quality and behavioral gaps
+
+Test checks report exact-body duplicate candidates and tests without recognized
+assertions. Read setup, fixtures, parameters, expected exceptions and assertion
+helpers before deciding. Keep regression, migration, serialization, backup and
+native-boundary contract tests unless equivalent protection is demonstrated.
+Similar bodies alone never authorize deleting tests. Custom/multiline test syntax
+and unsupported languages are explicit partial inspection, not clean results.
+
+Gap checks look for direct test references (across the discovered test corpus,
+even when source scope is narrow) and read existing LCOV. They do not run tests or
+produce coverage. A source can be exercised indirectly; a covered line can still
+lack useful assertions. Read existing tests before proposing additions. Name the
+behavior, regression and expected assertions, not a percentage target.
+
+Missing/malformed/older LCOV yields incomplete evidence. Reports list the supplied
+coverage file/time; even a newer file does not establish matching source revision,
+configuration or full-suite coverage. Do not claim current behavioral coverage
+from it alone. Generating coverage or editing tests is separate requested work,
+not an automatic side effect of the audit.
+
 ## Review and action
 
 Use the [code-auditor instructions](../../reviewers/code-auditor.md) when a reviewer
@@ -88,7 +110,7 @@ Commit/push only as authorized by the task; this skill imposes no task loop.
 ## Report
 
 State scope, tools/configurations actually checked, findings with file/line,
-evidence, confidence and suggested validation. Separate dead code, optimization
-and simplification. Include retained candidates, reasons, unverified areas and
+evidence, confidence and suggested validation. Separate dead code, optimization,
+simplification, test quality and coverage gaps. Include retained candidates, reasons, unverified areas and
 coverage gaps. If edits were authorized, list changes and actual check results.
 Zero findings is valid; never claim exhaustive absence from a limited scan.

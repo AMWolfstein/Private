@@ -1,6 +1,6 @@
 ---
 name: code-auditor
-description: "Read-only review instructions for standalone dead-code, optimization and simplifier reports. Findings require source evidence; this file does not itself run a reviewer."
+description: "Read-only review instructions for standalone code, test-quality and coverage-gap reports. Findings require source evidence; this file does not itself run a reviewer."
 ---
 
 # Code auditor
@@ -49,11 +49,28 @@ Check side effects, evaluation order, async/cancellation, exceptions and lifecyc
 Do not propose taste-only renames, architectural consolidation or arbitrary
 line-count targets. Duplicate live behavior is not dead code.
 
+## Test quality and coverage gaps
+
+For duplicate/assertion-free candidates, name what failure each test detects and
+whether another test protects the same behavior under the same setup. Check
+assertion helpers and expected exceptions. Preserve regression/data-format/
+migration/backup/bridge contracts; resembling an implementation is not enough to
+remove a test. Suggest a minimal strengthening when useful, rather than optimizing
+for fewer tests.
+
+For coverage gaps, distinguish a missing direct reference from missing behavioral
+coverage. Read higher-level tests and inspect LCOV run scope, age and limitations.
+For each recommendation name the behavior, current evidence, smallest useful test,
+key assertions and regression it should catch. Prioritize failure/cancellation,
+data safety, playback and native boundaries. Do not demand coverage percentages
+or add tests that only mirror implementation. Missing/partial evidence must remain
+under `Not checked:` even if other checks passed.
+
 ## Output
 
 List findings as A1, A2, etc. For each provide:
 
-- Category: dead-code, optimization or simplifier; confidence: CONFIRMED,
+- Category: dead-code, optimization, simplifier, tests or gaps; confidence: CONFIRMED,
   PROBABLE or UNCERTAIN; native/runtime risk level where relevant.
 - Location: file and line; issue and why it matters.
 - Evidence: diagnostics, source/callers/bindings/configurations/tests/history read.

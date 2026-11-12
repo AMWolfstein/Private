@@ -155,7 +155,7 @@ def main():
     up = sub.add_parser('update');up.add_argument('--paths', nargs='+')
     q = sub.add_parser('query');q.add_argument('--file');q.add_argument('--symbol');q.add_argument('--limit', type=int, default=50)
     import audit
-    audit.configure_parser(sub.add_parser('audit', help='Report-only dead-code/optimization/simplifier scans'), include_root=False)
+    audit.configure_parser(sub.add_parser('audit', help='Report-only code, test-quality and coverage-gap scans'), include_root=False)
     s = sub.add_parser('serena', help='Optional semantic query on the private indexed mirror')
     s.add_argument('operation', choices=['symbols', 'definition', 'references', 'version'])
     s.add_argument('--file');s.add_argument('--symbol');s.add_argument('--timeout', type=float, default=120)

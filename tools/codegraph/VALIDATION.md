@@ -44,3 +44,18 @@ independent agent review was run for this change.
 - Rust runner was tested with mocked process output; no live Cargo audit or
   Kotlin/Java/C++ compiler audit was run in this restoration. Cross-language
   bindings are retained as evidence to investigate, not deletion authorization.
+
+## Combined test-quality and coverage-gap audit
+
+- Standalone suite: **50 passed, 0 failed, 0 skipped**. Added coverage for combined
+  dispatch, test-only scans, Rust inline/JUnit expected-exception handling,
+  comment/string false positives, duplicate-body hints, source/test scope
+  separation, unsupported syntax, missing/stale/malformed LCOV and repeated-record
+  hit aggregation.
+- Real combined CLI smoke used an isolated Dart fixture and supplied LCOV:
+  FINDINGS, with 1 dead-code, 1 optimization, 1 simplifier, 1 test-quality and 2
+  coverage-gap candidates in one report. The fixture's tests were inspected, not
+  executed. No application tests or APK builds were run for this tooling change.
+- No live full-repository audit, Cargo run or new coverage generation was performed.
+  Missing coverage and partially recognized test syntax remain explicit limitations;
+  existing LCOV never establishes current full behavioral coverage by itself.

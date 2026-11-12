@@ -119,8 +119,15 @@ are separate because SDK/server availability varies by machine.
 
 ## Dead code, optimization and simplification scans
 
-The former `work.py audit --kind code` is available independently, without
-workflow tasks or automatic fixes:
+The default audit combines code, test quality and coverage gaps in one report,
+without workflow tasks, automatic fixes or test execution:
+
+```sh
+python3 tools/codegraph/code_tools.py audit
+python3 tools/codegraph/code_tools.py audit --lang dart
+```
+
+Specific scans remain available:
 
 ```sh
 python3 tools/codegraph/code_tools.py audit --kind code --lang dart
@@ -129,8 +136,11 @@ python3 tools/codegraph/code_tools.py audit --kind optimization --lang dart
 python3 tools/codegraph/code_tools.py audit --kind simplifier --lang dart
 ```
 
-`code` combines all three categories. Choose `--lang`, repeat `--path` for file or
-folder scopes, use `--base REV` for changed files, or explicitly choose `--all`.
+Default `--kind all` combines all five categories. `--kind code` selects the three
+code categories; `--kind tests` selects test quality; `--kind gaps` selects coverage
+hints. With no scope flags the CLI scans the checkout. Choose `--lang`, repeat
+`--path` for file/folder scopes, or use `--base REV` for changed files. `--all`
+explicitly selects the checkout scope; it is distinct from `--kind all`.
 Filters intersect. Reports and full runner logs go under ignored
 `.work/audit/<kind>/report.md` and `report.json`; another scan of the same kind
 replaces those files. Do not run the same kind concurrently in one checkout.
@@ -146,15 +156,15 @@ do not fix application sources. Activate the repository's Flutter/Rust toolchain
 before running. No APK is built by this command.
 
 `audit-config.json` contains the curated diagnostic categories and protected
-paths. Generated/vendor code and configured test paths are excluded. Suggestions
+paths. Generated/vendor code is protected. Source-only code kinds exclude test
+paths; the combined default includes them and Rust inline tests. Suggestions
 are **review candidates**, not safe automatic deletions or measured speedups.
 Dart suggestions depend on enabled analyzer lints; the allowlists are not an
 exhaustive optimizer/simplifier. Native runtime references and alternate Cargo
 features still require separate verification. Kotlin/Java/C++ diagnostic runners
 are currently unconfigured and yield explicit coverage gaps when selected.
 
-Exit status: `0` means no selected allowlisted diagnostics were emitted by the
-available runners; `1` means candidates were found; `2` means incomplete coverage,
+Exit status: `0` means no selected diagnostics or heuristic findings were emitted; `1` means candidates were found; `2` means incomplete coverage,
 no matching files, or invalid invocation. Findings do not make an incomplete scan
 complete. Compilation errors or nonzero commands without usable diagnostics never
 produce a clean result. A clean scan does not establish that no dead code remains.
@@ -169,3 +179,22 @@ provides optional read-only review guidance. Root AGENTS.md links these explicit
 automatic skill discovery depends on the agent. None restores planning/tasks,
 review gates or automatic commits/pushes. Written prompts alone are not independent
 reviews, and findings never authorize speculative deletion.
+
+
+### Test quality and coverage inputs
+
+Test inspection checks literal Dart, Rust inline/integration, Kotlin and Java test
+bodies for missing recognized assertions and exact-body duplicates. These are
+review hints: helper assertions, expected exceptions, fixtures and parameters may
+change the conclusion. Custom/parameterized/multiline syntax and C++ test bodies
+are not fully supported and produce partial-inspection notices. Tests are never
+automatically deleted or rewritten.
+
+Gap inspection searches the discovered test corpus beyond the selected source
+scope for direct name references, then reads existing `coverage/lcov.info` for
+Dart and `rust_backend/target/lcov.info` for Rust. Paths/production suggestions are
+in `audit-config.json`. No tests or coverage jobs run automatically. Missing,
+malformed or older coverage produces INCOMPLETE/PARTIAL evidence. Repeated LCOV
+records aggregate hits; a run's exclusions and source revision are not verified.
+Indirect tests and assertions must be inspected manually before adding tests or
+claiming a behavioral gap. Other languages have explicit missing coverage inputs.
