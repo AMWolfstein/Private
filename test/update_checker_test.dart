@@ -344,7 +344,7 @@ void main() {
     },
   );
 
-  for (final mornye in [false, true]) {
+  for (final mornye in [true]) {
     testWidgets(
       'freshly discovered release opens the update dialog ($mornye)',
       (tester) async {

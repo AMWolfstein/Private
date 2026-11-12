@@ -35,8 +35,6 @@ import 'package:mornye/widgets/app_player_background.dart';
 import 'package:mornye/widgets/app_player_artwork.dart';
 import 'package:mornye/widgets/app_artwork_contrast.dart';
 import 'package:mornye/widgets/mini_player.dart';
-import 'package:mornye/widgets/material_player_layout.dart';
-import 'package:mornye/widgets/material_player_backdrop.dart';
 import 'package:mornye/widgets/app_player_layout.dart';
 import 'package:mornye/widgets/player_lyrics.dart';
 import 'package:mornye/widgets/player_lyrics_controls.dart';
@@ -357,13 +355,6 @@ void main() {
     );
   }
 
-  for (final (size, textScale) in [
-    (const Size(844, 390), 1.0),
-    (const Size(720, 320), 1.0),
-    (const Size(640, 360), 1.0),
-    (const Size(1280, 720), 1.6),
-  ]) {}
-
   for (final mornye in [true]) {
     testWidgets('cover style switches live and survives rotation ($mornye)', (
       tester,
@@ -395,63 +386,14 @@ void main() {
               .artwork,
           isNotNull,
         );
-      } else {
-        expect(find.byType(MaterialPlayerBackdrop), findsOneWidget);
-        expect(
-          tester
-              .widget<MaterialPlayerLayout>(find.byType(MaterialPlayerLayout))
-              .fullScreenArtwork,
-          isTrue,
-        );
       }
       tester.view.physicalSize = const Size(844, 390);
       await settlePlayer(tester);
-      if (!mornye) {
-        expect(find.byType(MaterialPlayerBackdrop), findsOneWidget);
-        expect(
-          tester
-              .widget<MaterialPlayerBackdrop>(
-                find.byType(MaterialPlayerBackdrop),
-              )
-              .showArtwork,
-          isFalse,
-        );
-        expect(
-          tester
-              .widget<MaterialPlayerLayout>(find.byType(MaterialPlayerLayout))
-              .fullScreenArtwork,
-          isFalse,
-        );
-        final playerScaffold = tester.widget<Scaffold>(
-          find.descendant(
-            of: find.byType(NowPlayingScreen),
-            matching: find.byType(Scaffold),
-          ),
-        );
-        expect(playerScaffold.backgroundColor, Colors.transparent);
-        final playerAppBar = tester.widget<AppBar>(
-          find.descendant(
-            of: find.byType(NowPlayingScreen),
-            matching: find.byType(AppBar),
-          ),
-        );
-        expect(playerAppBar.backgroundColor, Colors.transparent);
-        final lyricsToggle = find.byKey(
-          const ValueKey('material-lyrics-toggle'),
-        );
-        await tester.tap(lyricsToggle);
-        await settlePlayer(tester);
-        expect(find.byType(SyncedLyricsView), findsOneWidget);
-        expect(find.byType(MaterialPlayerBackdrop), findsOneWidget);
-        await tester.tap(lyricsToggle);
-        await settlePlayer(tester);
-      }
       expect(tester.takeException(), isNull);
       tester.view.physicalSize = const Size(390, 844);
       await settlePlayer(tester);
       container.read(settingsProvider.notifier).setPlayerCoverStyle('default');
       await settlePlayer(tester);
-      expect(find.byType(MaterialPlayerBackdrop), findsNothing);
       if (mornye) {
         expect(
           tester
@@ -1451,10 +1393,10 @@ void main() {
     }
   }
 
-  for (final landscape in [false, true]) {}
+  for (final _ in [false, true]) {}
 
-  for (final size in [const Size(852, 393), const Size(960, 432)]) {
-    for (final reducedMotion in [false, true]) {}
+  for (final _ in [const Size(852, 393), const Size(960, 432)]) {
+    for (final _ in [false, true]) {}
   }
 
   testWidgets(
@@ -1806,7 +1748,7 @@ void main() {
     },
   );
 
-  for (final layout in ['material', 'portrait', 'landscape']) {}
+  for (final _ in ['material', 'portrait', 'landscape']) {}
 
   testWidgets('Mornye lyrics stay blurred until playback starts', (
     tester,
@@ -2029,15 +1971,15 @@ void main() {
     );
   }
 
-  for (final width in [320.0, 430.0]) {}
+  for (final _ in [320.0, 430.0]) {}
 
-  for (final size in [
+  for (final _ in [
     const Size(320, 568),
     const Size(430, 932),
     const Size(852, 393),
   ]) {}
 
-  for (final width in [320.0, 430.0]) {}
+  for (final _ in [320.0, 430.0]) {}
 
   testWidgets('Mornye player renders Apple-style transport controls', (
     tester,

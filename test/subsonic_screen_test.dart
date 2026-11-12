@@ -33,7 +33,7 @@ class _Server extends NetworkStorageService {
 
 void main() {
   for (final platform in [TargetPlatform.android]) {
-    for (final mornye in [false, true]) {
+    for (final mornye in [true]) {
       for (final largeText in [false, true]) {
         testWidgets(
           'Subsonic form and browsing on $platform Mornye=$mornye largeText=$largeText',

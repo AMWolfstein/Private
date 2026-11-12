@@ -12,12 +12,10 @@ import 'package:mornye/providers/library_search_provider.dart';
 import 'package:mornye/providers/local_library_provider.dart';
 import 'package:mornye/providers/music_player_provider.dart';
 import 'package:mornye/providers/settings_provider.dart';
-import 'package:mornye/screens/library_tracks_folder_screen.dart';
 import 'package:mornye/services/library_search.dart';
 import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/library_search_results.dart';
 import 'package:mornye/widgets/now_playing_indicator.dart';
-import 'package:mornye/widgets/track_card.dart';
 import 'package:mornye/widgets/track_list_tile.dart';
 
 import 'support/fixed_settings.dart';
@@ -145,19 +143,6 @@ Future<void> _pumpFor(
     await tester.pump(step);
   }
 }
-
-/// Whether the row of type [row] that shows [title] carries the glyph.
-bool _hasGlyph(Type row, String title) => find
-    .descendant(
-      of: find.ancestor(of: find.text(title), matching: find.byType(row)).first,
-      matching: find.byType(NowPlayingIndicator),
-    )
-    .evaluate()
-    .isNotEmpty;
-
-TrackCard _card(WidgetTester tester, String title) => tester.widget<TrackCard>(
-  find.ancestor(of: find.text(title), matching: find.byType(TrackCard)),
-);
 
 void main() {
   setUp(() => SharedPreferences.setMockInitialValues({}));

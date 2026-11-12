@@ -185,7 +185,7 @@ void main() {
     expect(find.text('A Home that learns'), findsOne);
   });
 
-  for (final mornye in [false, true]) {
+  for (final mornye in [true]) {
     final style = mornye ? 'Mornye' : 'Material';
 
     Future<ProviderContainer> openTour(

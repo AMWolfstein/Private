@@ -61,7 +61,7 @@ class _Library extends LocalLibraryNotifier {
 }
 
 void main() {
-  for (final mornye in [false, true]) {
+  for (final mornye in [true]) {
     for (final protocol in [NetworkProtocol.smb, NetworkProtocol.webdav]) {
       testWidgets(
         'adds selected folder and starts Library scan ($mornye, $protocol)',

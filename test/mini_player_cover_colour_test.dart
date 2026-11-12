@@ -23,7 +23,6 @@ import 'support/fixed_settings.dart';
 Widget _player(
   Stream<MediaItem?> items, {
   ValueListenable<bool>? shown,
-  bool mornye = true,
   String coverStyle = 'default',
 }) => ProviderScope(
   overrides: [
@@ -88,7 +87,7 @@ Future<Color?> _settledColor(WidgetTester tester, File cover) async {
 void main() {
   setUp(() => SharedPreferences.setMockInitialValues({}));
 
-  for (final coverStyle in ['default', 'fullscreen']) {}
+  for (final _ in ['default', 'fullscreen']) {}
 
   testWidgets('Mornye mini player resolves the cover colour on track change', (
     tester,

@@ -97,7 +97,7 @@ void main() {
     );
   });
 
-  for (final mornye in [true, false]) {
+  for (final mornye in [true]) {
     testWidgets(
       'concert badge opens a generic schedule and back restores artist ($mornye)',
       (tester) async {

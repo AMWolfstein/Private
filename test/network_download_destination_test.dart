@@ -87,7 +87,7 @@ void main() {
       expect(DownloadItem.fromJson(legacy).networkDownloadFolder, '');
     },
   );
-  for (final mornye in [false, true]) {
+  for (final mornye in [true]) {
     for (final fail in [false, true]) {
       testWidgets(
         'download folder checks write access before saving ($mornye, $fail)',

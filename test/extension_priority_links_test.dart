@@ -47,7 +47,7 @@ void main() {
       DownloadFallbackExtensionsPage,
     ),
   ];
-  for (final mornye in [false, true]) {
+  for (final mornye in [true]) {
     for (final (enabled, download, metadata) in [
       (true, true, true),
       (false, true, true),

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mornye/controllers/extension_auth_launcher.dart';
 import 'package:mornye/l10n/app_localizations.dart';
@@ -21,11 +22,13 @@ void main() {
   });
 
   Future<void> showApp(WidgetTester tester) => tester.pumpWidget(
-    MaterialApp(
-      navigatorKey: AppNavigationService.rootNavigatorKey,
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
-      supportedLocales: AppLocalizations.supportedLocales,
-      home: const Scaffold(body: Text('Library')),
+    ProviderScope(
+      child: MaterialApp(
+        navigatorKey: AppNavigationService.rootNavigatorKey,
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        home: const Scaffold(body: Text('Library')),
+      ),
     ),
   );
 

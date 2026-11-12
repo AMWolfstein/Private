@@ -22,7 +22,7 @@ class _LoadingRepo extends RepoNotifier {
 
 void main() {
   for (final width in [320.0, 1024.0]) {
-    for (final brightness in Brightness.values) {}
+    for (final _ in Brightness.values) {}
 
     for (final mornye in [true]) {
       testWidgets('store skeleton fits at $width with Mornye=$mornye', (

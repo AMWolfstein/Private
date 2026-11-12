@@ -290,7 +290,7 @@ void main() {
     },
   );
 
-  for (final mornye in [false, true]) {
+  for (final mornye in [true]) {
     testWidgets('country picker saves a country with either theme ($mornye)', (
       tester,
     ) async {

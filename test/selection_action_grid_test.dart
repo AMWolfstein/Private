@@ -18,7 +18,7 @@ Widget _app(bool mornye, Widget child) => ProviderScope(
 );
 
 void main() {
-  for (final mornye in [false, true]) {
+  for (final mornye in [true]) {
     for (final (width, columns, itemWidth) in [
       (360.0, 2, 176.0),
       (960.0, 3, 944 / 3),

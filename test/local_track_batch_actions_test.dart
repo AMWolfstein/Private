@@ -420,6 +420,9 @@ void main() {
             null,
           ),
         );
+        tester.view.physicalSize = const Size(1000, 2000);
+        tester.view.devicePixelRatio = 1;
+        addTearDown(tester.view.reset);
         await tester.pumpWidget(
           ProviderScope(
             overrides: [

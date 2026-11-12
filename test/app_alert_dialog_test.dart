@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mornye/l10n/app_localizations.dart';
 import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/app_alert_dialog.dart';
 import 'package:mornye/widgets/app_chrome.dart';
@@ -15,6 +16,8 @@ void main() {
           await tester.pumpWidget(
             ProviderScope(
               child: MaterialApp(
+                localizationsDelegates: AppLocalizations.localizationsDelegates,
+                supportedLocales: AppLocalizations.supportedLocales,
                 theme: AppTheme.build(brightness),
                 builder: (context, child) => MediaQuery(
                   data: MediaQuery.of(
@@ -86,7 +89,7 @@ void main() {
     }
   }
 
-  for (final mornye in [true, false]) {
+  for (final mornye in [true]) {
     testWidgets(
       'confirmation preserves cancel and confirm results (Mornye: $mornye)',
       (tester) async {
@@ -94,6 +97,8 @@ void main() {
         await tester.pumpWidget(
           ProviderScope(
             child: MaterialApp(
+              localizationsDelegates: AppLocalizations.localizationsDelegates,
+              supportedLocales: AppLocalizations.supportedLocales,
               theme: mornye ? AppTheme.build(Brightness.dark) : ThemeData(),
               home: Builder(
                 builder: (context) => Scaffold(
@@ -185,6 +190,8 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         child: MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
           theme: AppTheme.build(Brightness.light),
           home: MediaQuery(
             data: const MediaQueryData(textScaler: TextScaler.linear(1.5)),

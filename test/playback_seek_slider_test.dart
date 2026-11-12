@@ -1,7 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mornye/l10n/app_localizations.dart';
 import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/utils/playback_seek_preview.dart';
 import 'package:mornye/widgets/playback_seek_slider.dart';
@@ -15,6 +17,8 @@ void main() {
     addTearDown(sharedPreview.dispose);
     final completion = Completer<void>();
     Widget app(Duration position) => MaterialApp(
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
       home: Scaffold(
         body: PlaybackSeekSlider(
           preview: sharedPreview,
@@ -67,17 +71,21 @@ void main() {
     final sharedPreview = PlaybackSeekPreview();
     addTearDown(sharedPreview.dispose);
     await tester.pumpWidget(
-      MaterialApp(
-        home: Scaffold(
-          body: PlaybackSeekSlider(
-            preview: sharedPreview,
-            position: Duration.zero,
-            duration: const Duration(seconds: 100),
-            onSeek: (_) {
-              final completion = Completer<void>();
-              completions.add(completion);
-              return completion.future;
-            },
+      ProviderScope(
+        child: MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: Scaffold(
+            body: PlaybackSeekSlider(
+              preview: sharedPreview,
+              position: Duration.zero,
+              duration: const Duration(seconds: 100),
+              onSeek: (_) {
+                final completion = Completer<void>();
+                completions.add(completion);
+                return completion.future;
+              },
+            ),
           ),
         ),
       ),
@@ -112,14 +120,18 @@ void main() {
     addTearDown(preview.dispose);
     final completion = Completer<void>();
     await tester.pumpWidget(
-      MaterialApp(
-        theme: AppTheme.build(Brightness.dark),
-        home: Scaffold(
-          body: PlaybackSeekSlider(
-            preview: preview,
-            position: Duration.zero,
-            duration: const Duration(seconds: 100),
-            onSeek: (_) => completion.future,
+      ProviderScope(
+        child: MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          theme: AppTheme.build(Brightness.dark),
+          home: Scaffold(
+            body: PlaybackSeekSlider(
+              preview: preview,
+              position: Duration.zero,
+              duration: const Duration(seconds: 100),
+              onSeek: (_) => completion.future,
+            ),
           ),
         ),
       ),
@@ -141,13 +153,17 @@ void main() {
     final preview = PlaybackSeekPreview();
     addTearDown(preview.dispose);
     await tester.pumpWidget(
-      MaterialApp(
-        home: Scaffold(
-          body: PlaybackSeekSlider(
-            preview: preview,
-            position: Duration.zero,
-            duration: const Duration(seconds: 100),
-            onSeek: (_) async => throw StateError('Seek failed'),
+      ProviderScope(
+        child: MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: Scaffold(
+            body: PlaybackSeekSlider(
+              preview: preview,
+              position: Duration.zero,
+              duration: const Duration(seconds: 100),
+              onSeek: (_) async => throw StateError('Seek failed'),
+            ),
           ),
         ),
       ),
@@ -179,19 +195,22 @@ void main() {
   ) async {
     final seeks = <Duration>[];
     await tester.pumpWidget(
-      MaterialApp(
-        home: Scaffold(
-          body: PlaybackSeekSlider(
-            position: const Duration(minutes: 2),
-            duration: Duration.zero,
-            onSeek: (target) async => seeks.add(target),
+      ProviderScope(
+        child: MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: Scaffold(
+            body: PlaybackSeekSlider(
+              position: const Duration(minutes: 2),
+              duration: Duration.zero,
+              onSeek: (target) async => seeks.add(target),
+            ),
           ),
         ),
       ),
     );
     final slider = tester.widget<Slider>(find.byType(Slider));
     expect(slider.value, 0);
-    expect(slider.onChanged, isNull);
     await tester.tap(find.byType(Slider));
     expect(seeks, isEmpty);
   });

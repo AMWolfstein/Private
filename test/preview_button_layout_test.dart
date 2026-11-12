@@ -1,4 +1,5 @@
 import 'package:audio_service/audio_service.dart';
+import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -164,7 +165,7 @@ void main() {
     );
     await tester.pump();
 
-    expectCenteredHitbox(tester, Icons.more_vert);
+    expectCenteredHitbox(tester, CupertinoIcons.ellipsis);
   });
 
   testWidgets('track options expose Go to Album for album tracks', (
@@ -186,11 +187,11 @@ void main() {
       ),
     );
 
-    await tester.tap(findAppIcon(Icons.more_vert));
+    await tester.tap(find.byIcon(CupertinoIcons.ellipsis));
     await tester.pumpAndSettle();
 
     expect(find.text('Go to Album'), findsOneWidget);
-    expect(findAppIcon(Icons.album_outlined), findsOneWidget);
+    expect(find.byIcon(CupertinoIcons.square_stack), findsOneWidget);
   });
 
   testWidgets(
@@ -214,11 +215,11 @@ void main() {
         ),
       );
 
-      await tester.tap(findAppIcon(Icons.more_vert));
+      await tester.tap(find.byIcon(CupertinoIcons.ellipsis));
       await tester.pumpAndSettle();
 
       expect(find.text('Go to Album'), findsOneWidget);
-      expect(findAppIcon(Icons.album_outlined), findsOneWidget);
+      expect(find.byIcon(CupertinoIcons.square_stack), findsOneWidget);
     },
   );
 }

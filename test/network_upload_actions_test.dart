@@ -63,7 +63,7 @@ void main() {
     await tester.pumpAndSettle();
   }
 
-  for (final mornye in [false, true]) {
+  for (final mornye in [true]) {
     testWidgets('songs on this device offer the upload ($mornye)', (
       tester,
     ) async {
@@ -95,7 +95,7 @@ void main() {
     expect(find.byTooltip(label), findsNothing);
   });
 
-  for (final mornye in [false, true]) {
+  for (final mornye in [true]) {
     testWidgets('the folder browser returns the chosen folder ($mornye)', (
       tester,
     ) async {

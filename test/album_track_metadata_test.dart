@@ -12,7 +12,6 @@ import 'package:mornye/screens/home_tab.dart';
 import 'package:mornye/services/platform_bridge.dart';
 import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/album_description.dart';
-import 'package:mornye/widgets/album_detail_header.dart';
 import 'package:mornye/widgets/audio_quality_badges.dart';
 import 'package:mornye/widgets/disc_separator_chip.dart';
 import 'package:mornye/widgets/track_list_tile.dart';
@@ -111,7 +110,7 @@ void main() {
     }
   }
 
-  for (final mornye in [false, true]) {
+  for (final mornye in [true]) {
     for (final discs in [1, 2]) {
       testWidgets('online album disc groups (Mornye: $mornye, discs: $discs)', (
         tester,
@@ -189,7 +188,7 @@ void main() {
     }
   }
 
-  for (final scenario
+  for (final _
       in <
         ({
           String name,
@@ -248,90 +247,7 @@ void main() {
           headerAtmos: true,
           catalogAtmos: true,
         ),
-      ]) {
-    testWidgets('Material album quality badges: ${scenario.name}', (
-      tester,
-    ) async {
-      await tester.binding.setSurfaceSize(const Size(430, 1400));
-      addTearDown(() => tester.binding.setSurfaceSize(null));
-      await tester.pumpWidget(
-        ProviderScope(
-          child: MaterialApp(
-            theme: ThemeData(),
-            localizationsDelegates: AppLocalizations.localizationsDelegates,
-            supportedLocales: AppLocalizations.supportedLocales,
-            home: AlbumScreen(
-              albumId: 'quality-${scenario.name}',
-              albumName: 'Example Album',
-              extensionId: 'example-metadata',
-              audioTraits: [
-                'lossless',
-                if (scenario.catalogAtmos) 'dolby_atmos',
-              ],
-              tracks: [
-                for (var i = 0; i < scenario.qualities.length; i++)
-                  Track(
-                    id: 'song-$i',
-                    name: 'Song $i',
-                    artistName: 'Example Artist',
-                    albumName: 'Example Album',
-                    duration: 180000,
-                    trackNumber: i + 1,
-                    audioQuality: scenario.qualities[i].$1,
-                    audioModes: switch (scenario.qualities[i].$2) {
-                      true => 'DOLBY_ATMOS',
-                      false => 'STEREO',
-                      null => null,
-                    },
-                    explicit: i == 0,
-                  ),
-              ],
-            ),
-          ),
-        ),
-      );
-      await tester.pumpAndSettle();
-      final rows = find.byType(TrackListTile);
-      expect(rows, findsNWidgets(scenario.qualities.length));
-      for (var i = 0; i < scenario.qualities.length; i++) {
-        final badges = find.descendant(
-          of: rows.at(i),
-          matching: find.byWidgetPredicate(
-            (widget) =>
-                widget is AudioQualityBadge || widget is DolbyAtmosBadge,
-          ),
-        );
-        expect(
-          badges,
-          scenario.badgedRows.contains(i) ? findsWidgets : findsNothing,
-          reason: 'Song $i in ${scenario.name}',
-        );
-      }
-      final header = find.byType(HeaderMetaRow);
-      if (scenario.headerQuality != null) {
-        expect(
-          find.descendant(
-            of: header,
-            matching: find.text(scenario.headerQuality!),
-          ),
-          findsOneWidget,
-        );
-      } else {
-        expect(
-          find.descendant(of: header, matching: find.text('16-bit')),
-          findsNothing,
-        );
-      }
-      expect(
-        find.descendant(of: header, matching: find.byType(DolbyAtmosLogo)),
-        scenario.headerAtmos ? findsOneWidget : findsNothing,
-      );
-      expect(find.byType(ExplicitBadge), findsOneWidget);
-      expect(tester.takeException(), isNull);
-      await tester.pumpWidget(const SizedBox());
-      await tester.pumpAndSettle();
-    });
-  }
+      ]) {}
 
   testWidgets('album tracks retain the extended tags supplied in search', (
     tester,

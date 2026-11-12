@@ -54,7 +54,7 @@ void main() {
   final messenger =
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
 
-  for (final includeLocal in [false, true]) {}
+  for (final _ in [false, true]) {}
 
   for (final mornye in [true]) {
     testWidgets(

@@ -1,20 +1,20 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mornye/l10n/l10n.dart';
 import 'package:mornye/providers/download_history_provider.dart';
 import 'package:mornye/providers/extension_provider.dart';
 import 'package:mornye/screens/track_metadata_screen.dart';
 import 'package:mornye/services/platform_bridge.dart';
-import 'package:mornye/widgets/app_choice_chip.dart';
-
-import 'support/app_icon_finder.dart';
+import 'package:mornye/widgets/app_chrome.dart';
 
 class _Extensions extends ExtensionNotifier {
   @override
@@ -75,7 +75,7 @@ void main() {
     'download failure',
   ]) {
     testWidgets('cover auto-fill resolves $scenario', (tester) async {
-      tester.view.physicalSize = const Size(900, 1800);
+      tester.view.physicalSize = const Size(1280, 3000);
       tester.view.devicePixelRatio = 1;
       addTearDown(tester.view.resetPhysicalSize);
       addTearDown(tester.view.resetDevicePixelRatio);
@@ -147,6 +147,7 @@ void main() {
         ProviderScope(
           overrides: [extensionProvider.overrideWith(_Extensions.new)],
           child: MaterialApp(
+            theme: AppTheme.build(Brightness.light),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             home: TrackMetadataScreen(
@@ -165,7 +166,7 @@ void main() {
         ),
       );
       await tester.pumpAndSettle();
-      await tester.tap(findAppIcon(Icons.more_vert));
+      await tester.tap(find.byIcon(CupertinoIcons.ellipsis));
       await tester.pumpAndSettle();
       expect(find.text('Edit audio file'), findsNothing);
       expect(find.text('Similar songs in Library'), findsNothing);
@@ -176,7 +177,7 @@ void main() {
       await tester.pumpAndSettle();
       await tester.tap(find.text('None'));
       await tester.pump();
-      await tester.tap(find.widgetWithText(AppChoiceChip, 'Cover Art'));
+      await tester.tap(find.widgetWithText(AppFilterChip, 'Cover Art'));
       await tester.pump();
       if (scenario == 'selected provider album') {
         await tester.tap(find.text('Automatic (provider priority)'));

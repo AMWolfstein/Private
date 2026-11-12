@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_3_expressive/material_3_expressive.dart'
-    show M3EButton, M3EButtonGroup, M3EButtonGroupType;
+    show M3EButtonGroup;
 import 'package:mornye/l10n/l10n.dart';
 import 'package:mornye/models/download_item.dart';
 import 'package:mornye/models/settings.dart';
@@ -202,7 +202,7 @@ void main() {
       AppLocalizations.of(tester.element(find.byType(QueueTab)));
 
   {
-    for (final trackCount in <int?>[null, 0, 143]) {}
+    for (final _ in <int?>[null, 0, 143]) {}
   }
 
   {

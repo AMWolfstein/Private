@@ -36,7 +36,7 @@ Future<void> _dismissSnackBars(WidgetTester tester) async {
 }
 
 void main() {
-  for (final mornye in [false, true]) {
+  for (final mornye in [true]) {
     final style = mornye ? 'Mornye' : 'Material';
 
     for (final (platform, size) in [('tablet', _tablet)]) {

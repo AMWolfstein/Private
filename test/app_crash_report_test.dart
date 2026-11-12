@@ -287,7 +287,7 @@ void main() {
     },
   );
 
-  for (final mornye in [false, true]) {
+  for (final mornye in [true]) {
     testWidgets('Home crash card copies full report and dismisses ($mornye)', (
       tester,
     ) async {

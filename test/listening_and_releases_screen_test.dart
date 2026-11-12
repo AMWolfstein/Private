@@ -14,7 +14,7 @@ import 'package:mornye/widgets/player_artwork.dart';
 import 'support/fixed_settings.dart';
 
 void main() {
-  for (final mornye in [false, true]) {
+  for (final mornye in [true]) {
     Widget app(Widget page) => MaterialApp(
       theme: mornye ? AppTheme.build(Brightness.dark) : ThemeData(),
       localizationsDelegates: AppLocalizations.localizationsDelegates,

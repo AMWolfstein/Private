@@ -13,7 +13,6 @@ import 'package:mornye/services/downloaded_embedded_cover_resolver.dart';
 import 'package:mornye/widgets/app_player_queue.dart';
 import 'package:mornye/widgets/player_artwork.dart';
 import 'package:mornye/widgets/player_queue_artwork.dart';
-import 'package:mornye/widgets/player_queue_sheet.dart';
 
 import 'support/fixed_settings.dart';
 
@@ -66,7 +65,7 @@ void main() {
     expect(ready(), isTrue);
   }
 
-  for (final mornye in [false, true]) {
+  for (final mornye in [true]) {
     testWidgets('queued phone files recover covers before playback ($mornye)', (
       tester,
     ) async {
@@ -111,15 +110,7 @@ void main() {
         child: MaterialApp(
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
-          home: Scaffold(
-            body: mornye
-                ? AppPlayerQueue(colorScheme: scheme)
-                : PlayerQueueSheet(
-                    colorScheme: scheme,
-                    scrollController: scroll,
-                    embedded: true,
-                  ),
-          ),
+          home: Scaffold(body: AppPlayerQueue(colorScheme: scheme)),
         ),
       );
       await tester.runAsync(() async {

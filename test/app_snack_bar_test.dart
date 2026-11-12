@@ -108,7 +108,7 @@ void main() {
     });
   }
 
-  for (final mornye in [true, false]) {
+  for (final mornye in [true]) {
     testWidgets(
       'new messages replace old ones and still dismiss (Mornye: $mornye)',
       (tester) async {

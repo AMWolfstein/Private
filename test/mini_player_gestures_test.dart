@@ -223,7 +223,7 @@ void main() {
     });
 
     if (!configuration.mornye) {
-      for (final dx in [-100.0, 100.0]) {}
+      for (final _ in [-100.0, 100.0]) {}
     } else {
       testWidgets(
         '${configuration.name}: paused swipes keep track navigation',

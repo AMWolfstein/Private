@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mornye/widgets/app_alert_dialog.dart';
 import 'package:mornye/l10n/app_localizations.dart';
 import 'package:mornye/models/unified_library_item.dart';
 import 'package:mornye/models/library_database_models.dart';
@@ -10,7 +11,7 @@ import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/app_action_button.dart';
 
 void main() {
-  for (final mornye in [false, true]) {
+  for (final mornye in [true]) {
     testWidgets('mixed batch retains the 48 kHz option ($mornye)', (
       tester,
     ) async {
@@ -84,7 +85,7 @@ void main() {
       await tester.tap(convertButton);
       await tester.pumpAndSettle();
 
-      expect(find.byType(AlertDialog), findsOneWidget);
+      expect(find.byType(AppAlertDialog), findsOneWidget);
       expect(
         find.textContaining('Original files will be deleted'),
         findsOneWidget,

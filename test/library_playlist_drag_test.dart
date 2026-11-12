@@ -1,3 +1,3 @@
 void main() {
-  for (final grid in [false, true]) {}
+  for (final _ in [false, true]) {}
 }

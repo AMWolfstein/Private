@@ -1,6 +1,9 @@
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mornye/l10n/app_localizations.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/player_queue_dismissible.dart';
 import 'package:mornye/widgets/player_track_swipe.dart';
 
@@ -17,50 +20,53 @@ void main() {
         var index = 0;
         final selected = <int>[];
         await tester.pumpWidget(
-          MaterialApp(
-            home: MediaQuery(
-              data: MediaQueryData(disableAnimations: reducedMotion),
-              child: StatefulBuilder(
-                builder: (context, setState) {
-                  return PlayerTrackSwipe(
-                    queue: queue,
-                    currentIndex: index,
-                    onSelected: (item) async {
-                      selected.add(queue.indexOf(item));
-                      setState(() => index = queue.indexOf(item));
-                    },
-                    child: Scaffold(
-                      body: Center(
-                        child: SizedBox(
-                          width: 300,
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              const PlayerTrackSwipeRegion(
-                                child: SizedBox(
-                                  key: ValueKey('cover'),
-                                  width: 200,
-                                  height: 200,
-                                  child: ColoredBox(color: Colors.black),
+          ProviderScope(
+            child: MaterialApp(
+              home: MediaQuery(
+                data: MediaQueryData(disableAnimations: reducedMotion),
+                child: StatefulBuilder(
+                  builder: (context, setState) {
+                    return PlayerTrackSwipe(
+                      queue: queue,
+                      currentIndex: index,
+                      onSelected: (item) async {
+                        selected.add(queue.indexOf(item));
+                        setState(() => index = queue.indexOf(item));
+                      },
+                      child: Scaffold(
+                        body: Center(
+                          child: SizedBox(
+                            width: 300,
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const PlayerTrackSwipeRegion(
+                                  child: SizedBox(
+                                    key: ValueKey('cover'),
+                                    width: 200,
+                                    height: 200,
+                                    child: ColoredBox(color: Colors.black),
+                                  ),
                                 ),
-                              ),
-                              PlayerTrackSwipeTitles(
-                                current: queue[index],
-                                builder: (item) => Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(item.title),
-                                    Text(item.artist!),
-                                  ],
+                                PlayerTrackSwipeTitles(
+                                  current: queue[index],
+                                  builder: (item) => Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(item.title),
+                                      Text(item.artist!),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  );
-                },
+                    );
+                  },
+                ),
               ),
             ),
           ),
@@ -113,25 +119,27 @@ void main() {
     final builds = <String, int>{};
     final selected = <MediaItem>[];
     await tester.pumpWidget(
-      MaterialApp(
-        home: Scaffold(
-          body: Center(
-            child: SizedBox(
-              width: 300,
-              child: PlayerTrackSwipe(
-                queue: queue,
-                currentIndex: 1,
-                onSelected: (item) async => selected.add(item),
-                child: PlayerTrackSwipeTitles(
-                  current: queue[1],
-                  builder: (item) {
-                    builds.update(
-                      item.id,
-                      (count) => count + 1,
-                      ifAbsent: () => 1,
-                    );
-                    return Text(item.title);
-                  },
+      ProviderScope(
+        child: MaterialApp(
+          home: Scaffold(
+            body: Center(
+              child: SizedBox(
+                width: 300,
+                child: PlayerTrackSwipe(
+                  queue: queue,
+                  currentIndex: 1,
+                  onSelected: (item) async => selected.add(item),
+                  child: PlayerTrackSwipeTitles(
+                    current: queue[1],
+                    builder: (item) {
+                      builds.update(
+                        item.id,
+                        (count) => count + 1,
+                        ifAbsent: () => 1,
+                      );
+                      return Text(item.title);
+                    },
+                  ),
                 ),
               ),
             ),
@@ -187,37 +195,39 @@ void main() {
     late StateSetter rebuild;
     final builds = <String, int>{};
     await tester.pumpWidget(
-      MaterialApp(
-        home: StatefulBuilder(
-          builder: (context, setState) {
-            rebuild = setState;
-            return Scaffold(
-              body: Center(
-                child: SizedBox(
-                  width: width,
-                  child: PlayerTrackSwipe(
-                    queue: entries,
-                    currentIndex: 1,
-                    onSelected: (_) async {},
-                    child: PlayerTrackSwipeTitles(
-                      current: entries[1],
-                      builder: (item) {
-                        builds.update(
-                          item.id,
-                          (count) => count + 1,
-                          ifAbsent: () => 1,
-                        );
-                        return Text(
-                          '${item.title} $label',
-                          style: TextStyle(color: color),
-                        );
-                      },
+      ProviderScope(
+        child: MaterialApp(
+          home: StatefulBuilder(
+            builder: (context, setState) {
+              rebuild = setState;
+              return Scaffold(
+                body: Center(
+                  child: SizedBox(
+                    width: width,
+                    child: PlayerTrackSwipe(
+                      queue: entries,
+                      currentIndex: 1,
+                      onSelected: (_) async {},
+                      child: PlayerTrackSwipeTitles(
+                        current: entries[1],
+                        builder: (item) {
+                          builds.update(
+                            item.id,
+                            (count) => count + 1,
+                            ifAbsent: () => 1,
+                          );
+                          return Text(
+                            '${item.title} $label',
+                            style: TextStyle(color: color),
+                          );
+                        },
+                      ),
                     ),
                   ),
                 ),
-              ),
-            );
-          },
+              );
+            },
+          ),
         ),
       ),
     );
@@ -275,25 +285,30 @@ void main() {
   testWidgets('queue left swipe removes just that occurrence', (tester) async {
     final entries = [queue[0], queue[0].copyWith(), queue[1]];
     await tester.pumpWidget(
-      MaterialApp(
-        home: StatefulBuilder(
-          builder: (context, setState) => Scaffold(
-            body: Column(
-              children: [
-                for (final item in entries)
-                  PlayerQueueDismissible(
-                    key: ObjectKey(item),
-                    enabled: !identical(item, entries.first),
-                    onRemove: () => setState(() {
-                      entries.removeWhere((entry) => identical(entry, item));
-                    }),
-                    child: SizedBox(
-                      width: 320,
-                      height: 64,
-                      child: Text(item.title),
+      ProviderScope(
+        child: MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          theme: AppTheme.build(Brightness.light),
+          home: StatefulBuilder(
+            builder: (context, setState) => Scaffold(
+              body: Column(
+                children: [
+                  for (final item in entries)
+                    PlayerQueueDismissible(
+                      key: ObjectKey(item),
+                      enabled: !identical(item, entries.first),
+                      onRemove: () => setState(() {
+                        entries.removeWhere((entry) => identical(entry, item));
+                      }),
+                      child: SizedBox(
+                        width: 320,
+                        height: 64,
+                        child: Text(item.title),
+                      ),
                     ),
-                  ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

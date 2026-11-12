@@ -99,5 +99,5 @@ void main() {
 
   {}
 
-  for (final reducedMotion in [false, true]) {}
+  for (final _ in [false, true]) {}
 }

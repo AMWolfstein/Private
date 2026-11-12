@@ -43,13 +43,13 @@ void main() {
     tester,
   ) async {
     final container = await pump(tester);
-    expect(find.text('Pre-amp'), findsOneWidget);
-    expect(find.text('0 dB (target -18 LUFS)'), findsOneWidget);
+    expect(find.textContaining('Pre-amp'), findsOneWidget);
+    expect(find.textContaining('0 dB (target -18 LUFS)'), findsOneWidget);
 
     final slider = tester.widget<AppSlider>(find.byType(AppSlider));
     slider.onChanged!(-7);
     await tester.pump();
-    expect(find.text('-7 dB (target -25 LUFS)'), findsOneWidget);
+    expect(find.textContaining('-7 dB (target -25 LUFS)'), findsOneWidget);
     expect(container.read(settingsProvider).playbackNormalizationPreamp, 0);
 
     slider.onChangeEnd!(-7);

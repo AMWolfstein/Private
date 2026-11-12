@@ -1,16 +1,16 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mornye/theme/app_theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mornye/l10n/l10n.dart';
 import 'package:mornye/providers/download_history_provider.dart';
 import 'package:mornye/screens/track_metadata_screen.dart';
 import 'package:mornye/widgets/app_alert_dialog.dart';
-
-import 'support/app_icon_finder.dart';
 
 class _History extends DownloadHistoryNotifier {
   _History(this._item);
@@ -60,6 +60,9 @@ void main() {
     testWidgets('metadata displays only saved ReplayGain (tags=$hasTags)', (
       tester,
     ) async {
+      tester.view.physicalSize = const Size(1280, 3000);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.reset);
       SharedPreferences.setMockInitialValues({});
       final metadata = hasTags
           ? {
@@ -117,6 +120,7 @@ void main() {
             downloadHistoryProvider.overrideWith(() => _History(item)),
           ],
           child: MaterialApp(
+            theme: AppTheme.build(Brightness.light),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             home: TrackMetadataScreen(item: item),
@@ -148,7 +152,7 @@ void main() {
         expect(find.text(text), hasTags ? findsOneWidget : findsNothing);
       }
       Future<void> openRemoval() async {
-        await tester.tap(findAppIcon(Icons.more_vert));
+        await tester.tap(find.byIcon(CupertinoIcons.ellipsis));
         await tester.pumpAndSettle();
         expect(find.text('Edit audio file'), findsNothing);
         expect(find.text('Similar songs in Library'), findsNothing);

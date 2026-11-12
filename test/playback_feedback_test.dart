@@ -13,7 +13,7 @@ import 'package:mornye/widgets/app_chrome.dart';
 import 'package:mornye/widgets/playback_feedback.dart';
 
 void main() {
-  for (final mornye in [false, true]) {
+  for (final mornye in [true]) {
     testWidgets('playback errors show themed feedback (Mornye: $mornye)', (
       tester,
     ) async {

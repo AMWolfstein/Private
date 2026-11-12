@@ -146,7 +146,7 @@ void main() {
     expect(find.textContaining('private-host'), findsNothing);
     expect(await service.connections(), isEmpty);
   });
-  for (final mornye in [false, true]) {
+  for (final mornye in [true]) {
     for (final failure in ['listing', 'save']) {
       testWidgets(
         'HTTP reports $failure failure separately (Mornye: $mornye)',

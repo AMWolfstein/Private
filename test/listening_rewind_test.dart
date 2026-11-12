@@ -377,7 +377,7 @@ void main() {
     );
   });
 
-  for (final mornye in [false, true]) {
+  for (final mornye in [true]) {
     testWidgets('Rewind story steps through highlights ($mornye)', (
       tester,
     ) async {
@@ -553,7 +553,7 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  for (final mornye in [false, true]) {
+  for (final mornye in [true]) {
     testWidgets('yearly slides fit landscape with large text ($mornye)', (
       tester,
     ) async {

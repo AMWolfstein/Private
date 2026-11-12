@@ -36,7 +36,7 @@ void main() {
     }
     await storage.dispose();
   });
-  for (final mornye in [false, true]) {
+  for (final mornye in [true]) {
     for (final protocol in NetworkProtocol.values) {
       testWidgets('network delete capability: $protocol (Mornye=$mornye)', (
         tester,

@@ -35,7 +35,7 @@ void main() {
   });
   tearDownAll(() async => cache.delete(recursive: true));
 
-  for (final mornye in [false, true]) {
+  for (final mornye in [true]) {
     testWidgets(
       'open details refresh after an edit and deletion (Mornye=$mornye)',
       (tester) async {

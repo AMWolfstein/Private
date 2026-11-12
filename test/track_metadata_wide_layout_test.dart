@@ -7,7 +7,7 @@ import 'package:mornye/services/library_database.dart';
 import 'package:mornye/theme/app_theme.dart';
 
 void main() {
-  for (final mornye in [false, true]) {
+  for (final mornye in [true]) {
     for (final (width, twoColumns) in [(1400.0, true), (800.0, false)]) {
       testWidgets('metadata cards at ${width.toInt()} wide use '
           '${twoColumns ? 'two columns' : 'one column'} (Mornye=$mornye)', (

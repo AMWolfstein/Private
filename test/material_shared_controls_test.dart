@@ -261,5 +261,5 @@ void main() {
     expect(longPresses, 1);
   });
 
-  for (final reduced in [false, true]) {}
+  for (final _ in [false, true]) {}
 }
