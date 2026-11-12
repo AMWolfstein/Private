@@ -11,10 +11,16 @@
       "nonce": "ca7d58f7d20846b9b5524488fb471448",
       "path": "specs/002-workflow-lifecycle",
       "title": "M002 — Workflow lifecycle tasks"
+    },
+    "M003": {
+      "next_task": 4,
+      "nonce": "de3d24f0eb124fe89900f546773b9161",
+      "path": "specs/003-portable-workflow",
+      "title": "Portable workflow and safe setup history"
     }
   },
   "next_completion": 8,
-  "next_mission": 3,
+  "next_mission": 4,
   "next_tor": 2,
   "tasks": {
     "M001-T001": {
@@ -106,6 +112,36 @@
       "record": "specs/002-workflow-lifecycle/tasks.md",
       "status": "complete",
       "title": "Verify all lifecycle, identity and history changes cumulatively."
+    },
+    "M003-T001": {
+      "completion": null,
+      "final": false,
+      "kind": "T",
+      "mission": "M003",
+      "nonce": "4bacbb15b402424ab2eaf30d4974a5f2",
+      "record": "specs/003-portable-workflow/tasks.md",
+      "status": "reserved",
+      "title": "Consolidate workflow tools and update canonical paths"
+    },
+    "M003-T002": {
+      "completion": null,
+      "final": false,
+      "kind": "T",
+      "mission": "M003",
+      "nonce": "90ed09c4a04e44eb83c02be79f015dfc",
+      "record": "specs/003-portable-workflow/tasks.md",
+      "status": "reserved",
+      "title": "Install portable workflow resources and preserve existing history"
+    },
+    "M003-T003": {
+      "completion": null,
+      "final": true,
+      "kind": "T",
+      "mission": "M003",
+      "nonce": "703ccc1bd83243788e8843656db64d23",
+      "record": "specs/003-portable-workflow/tasks.md",
+      "status": "reserved",
+      "title": "Verify portable setup and cumulative changes"
     },
     "TOR001": {
       "completion": 4,
