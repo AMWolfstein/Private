@@ -43,3 +43,16 @@ or map-only commit is generated. The active task-template resolver was exercised
 successfully; generated structure, policy/skill consistency, links and diff checks
 passed. This update changes instructions/templates only; no application/tool source
 changed and the tool regression suite was not unnecessarily repeated.
+
+## Map-first planning
+
+The policy and all nine Spec Kit skill notices now require map update/coverage
+inspection before repository investigation or technical plan/task drafting. A local
+plan-template override records baseline, scope, queries/source/boundaries, planning
+consequences and unresolved/manual-fallback evidence. The actual plan and task
+resolvers selected their overrides successfully; evidence precedes technical
+context. Links and instruction consistency passed. Task-start refresh remains
+separate and mandatory. This instruction/template-only update did not run a
+feature-planning session, change application/tool source, build APKs or unnecessarily
+repeat the existing tool tests. The rule is an agent instruction, not a new runtime
+fingerprint/enforcement engine.

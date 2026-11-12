@@ -29,6 +29,18 @@ ignored `.specify/feature.json` local feature pointer is absent on another check
 The feature path does not require renaming the current branch. Do not create a
 feature for this installation or reapply archived plans automatically.
 
+## Map-first planning
+
+Before investigating the repository or drafting a technical plan/tasks, update the
+map and inspect its scope/coverage. Query relevant files/symbols, then read related
+source, native registrations, configuration and tests. Record a Repository evidence
+section in plan.md; the local plan-template override includes the required fields.
+Reuse this map across the same planning session while source is unchanged. Refresh
+on source changes/new sessions, not every command. If generation fails or coverage
+is incomplete, disclose it and manually verify relevant source instead of guessing.
+No extra task/commit/approval or fingerprint gate is added. Task-start map refresh
+is a separate rule and remains mandatory for every T/TOR/final task.
+
 ## Owner's execution rules
 
 - One commit for all completed planning artifacts. Planning-only means stop there.
@@ -53,7 +65,8 @@ work.py state machine, fingerprint gate or old workflow tasks are restored.
 
 Official templates and six Bash scripts are retained. All nine generated skill
 files identify the local policy precedence. `speckit-implement` is adapted for the
-bounded per-task loop. Task generation uses
+bounded per-task loop. Planning uses [the evidence-aware override](templates/overrides/plan-template.md).
+Task generation uses
 [the local override](templates/overrides/tasks-template.md), preserving the stock
 upstream task template for provenance. The constitution is initialized for this
 Android repository. A read-only [task reviewer](../.agents/reviewers/task-reviewer.md)

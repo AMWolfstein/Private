@@ -19,6 +19,14 @@ parallel task execution, or unbounded implement/converge cycles. A planning-only
 request must not start implementation. The retained audit/navigation skills stay
 standalone. These additions are local adaptations, not upstream GitHub requirements.
 
+For planning, follow the **Map-first planning** section of project-policy.md:
+refresh/inspect the map before repository investigation or technical plan/task
+drafting, query it and read the related source, and record repository evidence in
+plan.md. Reuse that map across planning skills while source is unchanged; refresh
+after source changes or at a new planning session. If map generation/coverage is
+limited, disclose it and use verified manual source tracing; never invent coverage.
+This does not replace the mandatory map refresh at the start of every task.
+
 
 
 ## User Input

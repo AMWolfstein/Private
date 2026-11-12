@@ -11,7 +11,12 @@ the basis of missing static references. Keep generated/vendor code protected.
 
 Use GitHub Spec Kit spec → plan → tasks for substantial/high-risk changes or when
 requested. Small isolated low-risk edits may take the direct path. Planning-only
-requests stop at the plan. Completed planning artifacts form one commit.
+requests stop at the plan. Before repository investigation/technical planning,
+refresh and inspect the map, use its queries and read the relevant source/build
+boundaries. Record repository evidence/limitations in plan.md; reuse the map while
+source stays unchanged during that planning session. On missing coverage, disclose
+it and use verified manual source evidence rather than assumptions. Completed
+planning artifacts form one commit.
 
 ## III. One task, one reviewed commit
 
@@ -42,4 +47,4 @@ Owner instructions override this constitution; it and project-policy.md override
 conflicting upstream examples, parallel markers and converge defaults. Amend
 policy only for an actual agreed change, not to evade a failed check/review.
 
-**Version**: 1.0.1 | **Ratified**: 2026-11-12 | **Last amended**: 2026-11-12
+**Version**: 1.0.2 | **Ratified**: 2026-11-12 | **Last amended**: 2026-11-12

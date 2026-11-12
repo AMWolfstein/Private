@@ -3,6 +3,10 @@
 Input: spec.md, plan.md and necessary supporting design artifacts in this directory.
 Follow `.specify/project-policy.md`. Replace all bracketed examples before committing.
 This is a planning artifact, not authorization to start implementation.
+Read plan.md's Repository evidence before choosing task paths/dependencies/checks.
+Reuse that session's inspected map while source is unchanged; refresh if source
+changed or no planning-session map was inspected. Disclose/manual-trace uncovered
+areas instead of inventing repository facts.
 
 ## Execution rules
 

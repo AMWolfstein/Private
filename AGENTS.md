@@ -23,6 +23,12 @@ planning/execution, read [local policy](.specify/project-policy.md) and
 `$speckit-plan`, `$speckit-tasks`, then `$speckit-implement` only when implementation
 is authorized. `$speckit-clarify`, `$speckit-analyze` and checklists are optional.
 
+Start each planning session by updating/inspecting the map before repository
+investigation or technical plan/task drafting. Use its queries and read related
+source/configurations; record evidence and limitations in plan.md. Reuse the map
+across planning skills while source stays unchanged. If generation/coverage fails,
+disclose it and rely only on verified manual tracing for the affected scope.
+
 The policy governs planned work: one planning commit; sequential tasks from T001;
 map refresh first in every task, including TOR and final review; implement/check/review/fix,
 three review rounds maximum; one commit per completed task; TOR### extras; final

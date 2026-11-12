@@ -15,6 +15,41 @@ playback, native bindings, migrations and substantial theme changes use Spec Kit
 Always plan when explicitly requested. If scope grows, stop the quick path and
 prepare a coherent plan before continuing implementation.
 
+## Map-first planning
+
+At the start of a planning session, after reading the owner's request and these
+instructions but **before repository investigation or drafting the technical
+plan/tasks**, run `python3 tools/codegraph/code_tools.py update`. Inspect the
+recorded input scope, exclusions and source/resource/native coverage. Do not use a
+limited `update --paths` snapshot as evidence of complete project coverage.
+
+Use `query --file PATH` and `query --symbol NAME` to identify relevant existing
+components, dependencies, callers, resources and native/runtime boundary candidates.
+Then read the referenced source, registrations/build configurations and tests before
+choosing architecture, exact affected paths or validation commands. The map guides
+investigation; it does not replace requirements, source reading or runtime evidence.
+Do not generate a generic plan while ignoring the current repository evidence.
+
+Reuse the same map through specify/clarify/plan/tasks/analyze in that session while
+the source is unchanged. Do not refresh just because another planning skill was
+invoked or a read was performed. Refresh after source changes or when starting a
+new planning session. No fingerprint/freshness gate is introduced.
+
+Record a concise **Repository evidence** section in plan.md: baseline commit, map
+update outcome, actual scope/coverage/exclusions, relevant queries/files/boundaries
+read, and unresolved limitations. Include the implications for task paths and checks.
+Keep graph/cache files ignored; the evidence is part of the single planning commit,
+not a separate map task, task number, map-only commit or approval step.
+
+If update fails or coverage is incomplete, state the failure/gaps and trace the
+relevant source/build/runtime paths manually where possible. Base the plan only on
+verified facts; mark unresolved assumptions/open questions and their validation
+needs explicitly. Never silently rely on an old map or treat missing edges as proof
+of dead code. Planning can continue on independently verified areas; it must not
+claim unseen areas are understood. This planning fallback does not change the
+existing task-start rule: each implementation/TOR/final task still refreshes first
+and reports a failed task-start refresh before proceeding with that task.
+
 ## One planning commit
 
 Use `$speckit-specify`, `$speckit-plan` and `$speckit-tasks`, optionally clarify or
