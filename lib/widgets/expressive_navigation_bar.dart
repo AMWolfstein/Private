@@ -1,35 +1,5 @@
 import 'package:flutter/material.dart';
 
-class ExpressiveNavigationBar extends StatelessWidget {
-  const ExpressiveNavigationBar({
-    super.key,
-    required this.destinations,
-    required this.selectedIndex,
-    required this.onDestinationSelected,
-    required this.backgroundColor,
-    this.isTablet = false,
-  });
-
-  final List<NavigationDestination> destinations;
-  final int selectedIndex;
-  final ValueChanged<int> onDestinationSelected;
-  final Color backgroundColor;
-  final bool isTablet;
-
-  @override
-  Widget build(BuildContext context) {
-    return NavigationBar(
-      selectedIndex: selectedIndex,
-      onDestinationSelected: onDestinationSelected,
-      animationDuration: Duration.zero,
-      elevation: 0,
-      height: isTablet ? 72 : 64,
-      backgroundColor: backgroundColor,
-      destinations: destinations,
-    );
-  }
-}
-
 /// Side navigation for wide layouts: the collapsed Material 3 Expressive
 /// rail, with labels under the icons and a pill indicator that springs
 /// between destinations. Reduced motion keeps Flutter's [NavigationRail].
