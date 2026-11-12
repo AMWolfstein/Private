@@ -212,142 +212,136 @@ void main() {
     addTearDown(() => messenger.setMockMethodCallHandler(sqlite, null));
   });
 
-  for (final mornye in [true]) {
-    testWidgets(
-      'playlist download confirms one grouped enqueue (Mornye: $mornye)',
-      (tester) async {
-        tester.view.physicalSize = const Size(800, 1200);
-        tester.view.devicePixelRatio = 1;
-        addTearDown(tester.view.reset);
-        final calls = <List<DownloadQueueBatch>>[];
-        final services = <String>[];
-        await tester.pumpWidget(
-          ProviderScope(
-            overrides: [
-              settingsProvider.overrideWith(_DownloadSettings.new),
-              extensionProvider.overrideWith(_DownloadExtensions.new),
-              downloadHistoryProvider.overrideWith(() => history),
-              localLibraryProvider.overrideWith(() => local),
-              libraryCollectionsProvider.overrideWith(
-                () => _SelectionCollections((_) {}, withTracks: true),
-              ),
-              downloadQueueProvider.overrideWith(
-                () => _BatchQueue((batches, service, quality) {
-                  calls.add(batches);
-                  services.add(service);
-                  expect(quality, isNull);
-                }),
-              ),
-            ],
-            child: MaterialApp(
-              theme: AppTheme.build(Brightness.dark),
-              localizationsDelegates: AppLocalizations.localizationsDelegates,
-              supportedLocales: AppLocalizations.supportedLocales,
-              home: const Scaffold(body: QueueTab(librarySection: 'playlists')),
-            ),
+  testWidgets('playlist download confirms one grouped enqueue (Mornye: true)', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(800, 1200);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    final calls = <List<DownloadQueueBatch>>[];
+    final services = <String>[];
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          settingsProvider.overrideWith(_DownloadSettings.new),
+          extensionProvider.overrideWith(_DownloadExtensions.new),
+          downloadHistoryProvider.overrideWith(() => history),
+          localLibraryProvider.overrideWith(() => local),
+          libraryCollectionsProvider.overrideWith(
+            () => _SelectionCollections((_) {}, withTracks: true),
           ),
-        );
-        await tester.pumpAndSettle();
-        final l10n = AppLocalizations.of(tester.element(find.byType(QueueTab)));
-        await tester.ensureVisible(find.text('First'));
-        await tester.longPress(find.text('First'));
-        await tester.pumpAndSettle();
-        await tester.ensureVisible(find.text('Second'));
-        await tester.tap(find.text('Second'));
-        await tester.pumpAndSettle();
-        await tester.tap(find.text(l10n.bulkDownloadPlaylistsButton(2)));
-        await tester.pumpAndSettle();
-        expect(
-          find.text(l10n.dialogDownloadPlaylistsMessage(3, 2)),
-          findsOneWidget,
-        );
-        await tester.tap(find.text(l10n.dialogCancel));
-        await tester.pumpAndSettle();
-        expect(calls, isEmpty);
-        await tester.tap(find.text(l10n.bulkDownloadPlaylistsButton(2)));
-        await tester.pumpAndSettle();
-        await tester.tap(find.text(l10n.dialogDownload));
-        await tester.pumpAndSettle();
-        expect(calls, hasLength(1));
-        expect(services, ['example']);
-        expect(calls.single.map((batch) => batch.playlistName), [
-          'First',
-          'Second',
-        ]);
-        expect(
-          calls.single.map(
-            (batch) => batch.tracks.map((track) => track.id).toList(),
+          downloadQueueProvider.overrideWith(
+            () => _BatchQueue((batches, service, quality) {
+              calls.add(batches);
+              services.add(service);
+              expect(quality, isNull);
+            }),
           ),
-          [
-            ['First-0'],
-            ['Second-0', 'Second-1'],
-          ],
-        );
-        expect(find.text(l10n.snackbarAddedTracksToQueue(3)), findsOneWidget);
-        expect(find.text(l10n.bulkDownloadPlaylistsButton(2)), findsNothing);
-        expect(tester.takeException(), isNull);
-      },
-    );
-
-    testWidgets('playlist selection confirms one deletion (Mornye: $mornye)', (
-      tester,
-    ) async {
-      tester.view.physicalSize = const Size(800, 1200);
-      tester.view.devicePixelRatio = 1;
-      addTearDown(tester.view.reset);
-      final calls = <List<String>>[];
-      await tester.pumpWidget(
-        ProviderScope(
-          overrides: [
-            settingsProvider.overrideWith(_Settings.new),
-            downloadHistoryProvider.overrideWith(() => history),
-            localLibraryProvider.overrideWith(() => local),
-            libraryCollectionsProvider.overrideWith(
-              () => _SelectionCollections(calls.add),
-            ),
-            downloadQueueProvider.overrideWith(_Queue.new),
-          ],
-          child: MaterialApp(
-            theme: AppTheme.build(Brightness.dark),
-            localizationsDelegates: AppLocalizations.localizationsDelegates,
-            supportedLocales: AppLocalizations.supportedLocales,
-            home: const Scaffold(body: QueueTab(librarySection: 'playlists')),
-          ),
+        ],
+        child: MaterialApp(
+          theme: AppTheme.build(Brightness.dark),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: const Scaffold(body: QueueTab(librarySection: 'playlists')),
         ),
-      );
-      await tester.pumpAndSettle();
-      final l10n = AppLocalizations.of(tester.element(find.byType(QueueTab)));
-      await tester.ensureVisible(find.text('First'));
-      await tester.longPress(find.text('First'));
-      await tester.pumpAndSettle();
-      await tester.ensureVisible(find.text('Second'));
-      await tester.tap(find.text('Second'));
-      await tester.pumpAndSettle();
-      await tester.tap(find.text(l10n.selectionDeletePlaylistsCount(2)));
-      await tester.pumpAndSettle();
-      expect(
-        find.text(l10n.collectionDeletePlaylistsMessage(2)),
-        findsOneWidget,
-      );
-      await tester.tap(find.text(l10n.dialogCancel));
-      await tester.pumpAndSettle();
-      expect(calls, isEmpty);
-      expect(find.text('First'), findsOneWidget);
-      await tester.tap(find.text(l10n.selectionDeletePlaylistsCount(2)));
-      await tester.pumpAndSettle();
-      await tester.tap(find.text(l10n.dialogDelete));
-      await tester.pumpAndSettle();
-      expect(calls, [
-        ['First', 'Second'],
-      ]);
-      expect(find.text('First'), findsNothing);
-      expect(find.text('Second'), findsNothing);
-      expect(find.text('Keep'), findsOneWidget);
-      expect(find.text(l10n.selectionDeletePlaylistsCount(2)), findsNothing);
-      expect(find.text(l10n.collectionPlaylistsDeleted(2)), findsOneWidget);
-      expect(tester.takeException(), isNull);
-    });
-  }
+      ),
+    );
+    await tester.pumpAndSettle();
+    final l10n = AppLocalizations.of(tester.element(find.byType(QueueTab)));
+    await tester.ensureVisible(find.text('First'));
+    await tester.longPress(find.text('First'));
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(find.text('Second'));
+    await tester.tap(find.text('Second'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text(l10n.bulkDownloadPlaylistsButton(2)));
+    await tester.pumpAndSettle();
+    expect(
+      find.text(l10n.dialogDownloadPlaylistsMessage(3, 2)),
+      findsOneWidget,
+    );
+    await tester.tap(find.text(l10n.dialogCancel));
+    await tester.pumpAndSettle();
+    expect(calls, isEmpty);
+    await tester.tap(find.text(l10n.bulkDownloadPlaylistsButton(2)));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text(l10n.dialogDownload));
+    await tester.pumpAndSettle();
+    expect(calls, hasLength(1));
+    expect(services, ['example']);
+    expect(calls.single.map((batch) => batch.playlistName), [
+      'First',
+      'Second',
+    ]);
+    expect(
+      calls.single.map(
+        (batch) => batch.tracks.map((track) => track.id).toList(),
+      ),
+      [
+        ['First-0'],
+        ['Second-0', 'Second-1'],
+      ],
+    );
+    expect(find.text(l10n.snackbarAddedTracksToQueue(3)), findsOneWidget);
+    expect(find.text(l10n.bulkDownloadPlaylistsButton(2)), findsNothing);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('playlist selection confirms one deletion (Mornye: true)', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(800, 1200);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    final calls = <List<String>>[];
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          settingsProvider.overrideWith(_Settings.new),
+          downloadHistoryProvider.overrideWith(() => history),
+          localLibraryProvider.overrideWith(() => local),
+          libraryCollectionsProvider.overrideWith(
+            () => _SelectionCollections(calls.add),
+          ),
+          downloadQueueProvider.overrideWith(_Queue.new),
+        ],
+        child: MaterialApp(
+          theme: AppTheme.build(Brightness.dark),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: const Scaffold(body: QueueTab(librarySection: 'playlists')),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    final l10n = AppLocalizations.of(tester.element(find.byType(QueueTab)));
+    await tester.ensureVisible(find.text('First'));
+    await tester.longPress(find.text('First'));
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(find.text('Second'));
+    await tester.tap(find.text('Second'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text(l10n.selectionDeletePlaylistsCount(2)));
+    await tester.pumpAndSettle();
+    expect(find.text(l10n.collectionDeletePlaylistsMessage(2)), findsOneWidget);
+    await tester.tap(find.text(l10n.dialogCancel));
+    await tester.pumpAndSettle();
+    expect(calls, isEmpty);
+    expect(find.text('First'), findsOneWidget);
+    await tester.tap(find.text(l10n.selectionDeletePlaylistsCount(2)));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text(l10n.dialogDelete));
+    await tester.pumpAndSettle();
+    expect(calls, [
+      ['First', 'Second'],
+    ]);
+    expect(find.text('First'), findsNothing);
+    expect(find.text('Second'), findsNothing);
+    expect(find.text('Keep'), findsOneWidget);
+    expect(find.text(l10n.selectionDeletePlaylistsCount(2)), findsNothing);
+    expect(find.text(l10n.collectionPlaylistsDeleted(2)), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
 
   test(
     'search and browse stop observing the local index when disabled',

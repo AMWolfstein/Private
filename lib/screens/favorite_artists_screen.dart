@@ -78,7 +78,7 @@ class FavoriteArtistsScreen extends ConsumerWidget {
               sliver: SliverList.separated(
                 itemCount: artists.length,
                 // Material lists separate rows by space; dividers are Mornye's.
-                separatorBuilder: (_, _) => (const Divider(height: 1)),
+                separatorBuilder: (_, _) => const Divider(height: 1),
                 itemBuilder: (context, index) {
                   final artist = artists[index];
                   return ListTile(

@@ -419,12 +419,12 @@ class _NetworkStorageScreenState extends ConsumerState<NetworkStorageScreen> {
                             ),
                             label: Text(
                               _added
-                                  ? (_subsonic
+                                  ? _subsonic
                                         ? context.l10n.subsonicLibraryAdded
-                                        : context.l10n.networkLibraryAdded)
-                                  : (_subsonic
-                                        ? context.l10n.subsonicAddToLibrary
-                                        : context.l10n.networkAddToLibrary),
+                                        : context.l10n.networkLibraryAdded
+                                  : _subsonic
+                                  ? context.l10n.subsonicAddToLibrary
+                                  : context.l10n.networkAddToLibrary,
                             ),
                             tonal: true,
                           ),
@@ -556,9 +556,9 @@ class _NetworkStorageScreenState extends ConsumerState<NetworkStorageScreen> {
                         child: Material(
                           color: settingsGroupColor(context),
                           borderRadius: BorderRadius.vertical(
-                            top: Radius.circular(index == 0 ? (28) : 0),
+                            top: Radius.circular(index == 0 ? 28 : 0),
                             bottom: Radius.circular(
-                              index == visible.length - 1 ? (28) : 0,
+                              index == visible.length - 1 ? 28 : 0,
                             ),
                           ),
                           clipBehavior: Clip.antiAlias,
@@ -968,7 +968,7 @@ class _NetworkConnectionFormState extends State<_NetworkConnectionForm> {
 PageRoute<T> _networkRoute<T>(
   BuildContext context, {
   required WidgetBuilder builder,
-}) => (CupertinoPageRoute<T>(builder: builder));
+}) => CupertinoPageRoute<T>(builder: builder);
 
 /// Browses [connection] for a folder to upload into: the folder's
 /// `network://` source, or null when the person goes back.
@@ -1030,7 +1030,7 @@ class _NetworkIconAction extends StatelessWidget {
   final VoidCallback? onPressed;
 
   @override
-  Widget build(BuildContext context) => (Tooltip(
+  Widget build(BuildContext context) => Tooltip(
     message: tooltip,
     child: CupertinoButton(
       onPressed: onPressed,
@@ -1044,7 +1044,7 @@ class _NetworkIconAction extends StatelessWidget {
             : Theme.of(context).colorScheme.primary,
       ),
     ),
-  ));
+  );
 }
 
 class _NetworkProgress extends StatelessWidget {

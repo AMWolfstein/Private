@@ -938,9 +938,7 @@ class _SyncedLyricsViewState extends ConsumerState<SyncedLyricsView>
             0.0,
             double.infinity,
           );
-          final lyricScale = (layoutWidth > 0)
-              ? contentWidth / layoutWidth
-              : 1.0;
+          final lyricScale = layoutWidth > 0 ? contentWidth / layoutWidth : 1.0;
           final previousExtents = _lineExtents;
           final previousScrollAnchor =
               previousExtents != null && _scroll.hasClients
@@ -1020,7 +1018,7 @@ class _SyncedLyricsViewState extends ConsumerState<SyncedLyricsView>
           final topPadding = _focusInset;
           // Leave enough trailing space for the final line to reach the same
           // upper focus position as every other line.
-          final bottomPadding = (_lineExtents!.isNotEmpty)
+          final bottomPadding = _lineExtents!.isNotEmpty
               ? (constraints.maxHeight - _lineExtents!.last - topPadding).clamp(
                   topPadding,
                   double.infinity,
@@ -1206,7 +1204,7 @@ class _SyncedLyricsViewState extends ConsumerState<SyncedLyricsView>
                       duration: motion,
                       curve: Curves.easeOutCubic,
                       child: AnimatedOpacity(
-                        opacity: ((isActive || highContrast ? 1 : 0.48)),
+                        opacity: (isActive || highContrast ? 1 : 0.48),
                         duration: motion,
                         curve: Curves.easeInOutCubic,
                         child: content,

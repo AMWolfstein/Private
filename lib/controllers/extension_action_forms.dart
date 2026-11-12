@@ -240,7 +240,7 @@ class _AccountFormDialogState extends State<_AccountFormDialog> {
         : TextInputType.text;
     Widget input;
     if (field['type'] == 'select') {
-      input = (CupertinoButton(
+      input = CupertinoButton(
         onPressed: () => _chooseOption(field),
         color: AppTheme.controlFill(context),
         borderRadius: BorderRadius.circular(12),
@@ -257,7 +257,7 @@ class _AccountFormDialogState extends State<_AccountFormDialog> {
             ),
           ],
         ),
-      ));
+      );
     } else {
       input = FormField<String>(
         validator: (value) => _validate(field, value),

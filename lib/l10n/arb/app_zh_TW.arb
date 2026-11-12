@@ -388,14 +388,6 @@
   "@appearanceThemeDark": {
     "description": "Dark theme"
   },
-  "appearanceDynamicColor": "動態配色",
-  "@appearanceDynamicColor": {
-    "description": "Material You dynamic colors"
-  },
-  "appearanceDynamicColorSubtitle": "使用桌布配色",
-  "@appearanceDynamicColorSubtitle": {
-    "description": "Subtitle for dynamic color"
-  },
   "appearanceHistoryView": "檢視方式",
   "@appearanceHistoryView": {
     "description": "Layout style for history"
@@ -2443,14 +2435,6 @@
   "downloadFrom": "Download From",
   "@downloadFrom": {
     "description": "Label - download source"
-  },
-  "appearanceAmoledDark": "AMOLED Dark",
-  "@appearanceAmoledDark": {
-    "description": "Theme option - pure black"
-  },
-  "appearanceAmoledDarkSubtitle": "Pure black background",
-  "@appearanceAmoledDarkSubtitle": {
-    "description": "Subtitle for AMOLED dark"
   },
   "appearanceHeroAnimations": "Hero animations",
   "@appearanceHeroAnimations": {
@@ -7081,11 +7065,6 @@
   "@lyricsAiErrorNoLyrics": {
     "description": "AI translation error when the lyrics have no translatable lines"
   },
-  "nowPlayingLibraryEmpty": "Your library is empty",
-  "@nowPlayingLibraryEmpty": {
-    "description": "Snackbar when shuffle library is requested but library has no tracks"
-  },
-  "nowPlayingShuffleLibraryFailed": "Could not shuffle library: {error}",
   "@nowPlayingShuffleLibraryFailed": {
     "description": "Snackbar when shuffling the library fails",
     "placeholders": {
@@ -7697,19 +7676,6 @@
   "profileRemovePhoto": "Remove photo",
   "profilePhotoError": "Choose a valid image smaller than 20 MB.",
   "profileSaveError": "Could not save your profile. Please try again.",
-  "homeGreetingMorning1": "Good morning",
-  "homeGreetingMorning2": "Rise and shine",
-  "homeGreetingMorning3": "Fresh start",
-  "homeGreetingAfternoon1": "Good afternoon",
-  "homeGreetingAfternoon2": "Afternoon groove",
-  "homeGreetingAfternoon3": "Keep the vibe going",
-  "homeGreetingEvening1": "Good evening",
-  "homeGreetingEvening2": "Time to unwind",
-  "homeGreetingEvening3": "Golden hour",
-  "homeGreetingNight1": "Good night",
-  "homeGreetingNight2": "Late-night session",
-  "homeGreetingNight3": "Quiet hours",
-  "homeGreetingNamed": "{greeting}, {name}",
   "@homeGreetingNamed": {
     "description": "Home greeting followed by the first name from the user's profile",
     "placeholders": {
@@ -7720,15 +7686,6 @@
         "type": "String"
       }
     }
-  },
-  "homeTaglineListening": "What are we listening to?",
-  "@homeTaglineListening": {
-    "description": "Rotating Home prompt under the greeting"
-  },
-  "homeTaglineLink": "Got a link? Drop it in the search",
-  "homeTaglineDiscover": "Find your next favorite album",
-  "@homeTaglineDiscover": {
-    "description": "Rotating Home prompt under the greeting"
   },
   "homeContinueListening": "Continue listening",
   "@homeContinueListening": {

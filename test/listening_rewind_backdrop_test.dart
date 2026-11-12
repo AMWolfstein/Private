@@ -13,7 +13,6 @@ import 'package:mornye/screens/listening_rewind_screen.dart';
 import 'package:mornye/services/listening_rewind.dart';
 import 'package:mornye/services/listening_statistics.dart';
 import 'package:mornye/theme/app_theme.dart';
-import 'package:mornye/widgets/app_shape.dart';
 import 'package:mornye/widgets/cached_cover_image.dart';
 import 'package:mornye/widgets/decorative_phase.dart';
 import 'package:mornye/widgets/settled_blur.dart';
@@ -248,61 +247,49 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  for (final mornye in [true]) {
-    testWidgets(
-      'the backdrop drift moves at 30 Hz on the same clock ($mornye)',
-      (tester) async {
-        await open(tester, mornye: mornye);
-        // The Ken Burns zoom (Mornye) or the largest shape's pulse (Material).
-        final transform = mornye
-            ? find
-                  .ancestor(
-                    of: find.byType(SettledBlur),
-                    matching: find.byType(Transform),
-                  )
-                  .first
-            : find
-                  .ancestor(
-                    of: find.byType(AppShapeBadge).first,
-                    matching: find.byType(Transform),
-                  )
-                  .first;
-        // Drift phase in [0, 1) of the 24 s loop from the drawn scale.
-        double phase() {
-          final scale = tester.widget<Transform>(transform).transform[0];
-          return mornye
-              ? math.asin((scale - 1.15) / 0.06) / (2 * math.pi)
-              : math.asin((scale - 1) / 0.05) / (4 * math.pi);
-        }
+  testWidgets('the backdrop drift moves at 30 Hz on the same clock (true)', (
+    tester,
+  ) async {
+    await open(tester, mornye: true);
+    // The Ken Burns zoom (Mornye) or the largest shape's pulse (Material).
+    final transform = find
+        .ancestor(
+          of: find.byType(SettledBlur),
+          matching: find.byType(Transform),
+        )
+        .first;
+    // Drift phase in [0, 1) of the 24 s loop from the drawn scale.
+    double phase() {
+      final scale = tester.widget<Transform>(transform).transform[0];
+      return math.asin((scale - 1.15) / 0.06) / (2 * math.pi);
+    }
 
-        const step = Duration(microseconds: 8333);
-        var elapsed = Duration.zero;
-        var changes = 0;
-        var previous = phase();
-        for (var i = 0; i < 120; i++) {
-          await tester.pump(step);
-          elapsed += step;
-          final value = phase();
-          if (value != previous) changes++;
-          previous = value;
-          // Where the drift was 0 to 34 ms (one decorative tick) earlier.
-          final at = value * 24e6;
-          expect(at, lessThanOrEqualTo(elapsed.inMicroseconds + 1));
-          expect(
-            at,
-            greaterThanOrEqualTo(
-              elapsed.inMicroseconds -
-                  DecorativePhase.interval.inMicroseconds -
-                  step.inMicroseconds,
-            ),
-          );
-        }
-        // The old vsync drift changed on all 120 frames of the 120 Hz second.
-        expect(changes, inInclusiveRange(28, 30));
-        expect(tester.takeException(), isNull);
-      },
-    );
-  }
+    const step = Duration(microseconds: 8333);
+    var elapsed = Duration.zero;
+    var changes = 0;
+    var previous = phase();
+    for (var i = 0; i < 120; i++) {
+      await tester.pump(step);
+      elapsed += step;
+      final value = phase();
+      if (value != previous) changes++;
+      previous = value;
+      // Where the drift was 0 to 34 ms (one decorative tick) earlier.
+      final at = value * 24e6;
+      expect(at, lessThanOrEqualTo(elapsed.inMicroseconds + 1));
+      expect(
+        at,
+        greaterThanOrEqualTo(
+          elapsed.inMicroseconds -
+              DecorativePhase.interval.inMicroseconds -
+              step.inMicroseconds,
+        ),
+      );
+    }
+    // The old vsync drift changed on all 120 frames of the 120 Hz second.
+    expect(changes, inInclusiveRange(28, 30));
+    expect(tester.takeException(), isNull);
+  });
 
   testWidgets('the drift clock stops while paused, hidden, still or closed', (
     tester,

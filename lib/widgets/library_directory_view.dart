@@ -276,7 +276,9 @@ class _LibraryDirectoryViewState extends ConsumerState<LibraryDirectoryView>
     final key = widget.folderKey;
     final folder = index == null
         ? null
-        : (key == null ? index.root : index[key]);
+        : key == null
+        ? index.root
+        : index[key];
     final title = key == null || folder == null
         ? context.l10n.libraryFolders
         : folder.name;

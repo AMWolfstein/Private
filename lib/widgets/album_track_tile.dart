@@ -88,7 +88,7 @@ class AlbumTrackPlayButton extends StatelessWidget {
       tooltip: isPlaying ? context.l10n.actionPause : context.l10n.tooltipPlay,
       onPressed: onPlay,
       icon: Icon(
-        ((isPlaying ? CupertinoIcons.pause_fill : CupertinoIcons.play_fill)),
+        isPlaying ? CupertinoIcons.pause_fill : CupertinoIcons.play_fill,
         color: colorScheme.primary,
       ),
       style: IconButton.styleFrom(

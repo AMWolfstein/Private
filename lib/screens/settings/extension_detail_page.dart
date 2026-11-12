@@ -154,11 +154,11 @@ class _ExtensionDetailPageState extends ConsumerState<ExtensionDetailPage> {
                                               error,
                                               stackTrace,
                                             ) => AppIcon(
-                                              ((hasError
+                                              hasError
                                                   ? CupertinoIcons
                                                         .exclamationmark_circle
                                                   : CupertinoIcons
-                                                        .square_grid_2x2)),
+                                                        .square_grid_2x2,
                                               size: 28,
                                               color: hasError
                                                   ? colorScheme.error
@@ -168,10 +168,10 @@ class _ExtensionDetailPageState extends ConsumerState<ExtensionDetailPage> {
                                       ),
                                     )
                                   : AppIcon(
-                                      ((hasError
+                                      hasError
                                           ? CupertinoIcons
                                                 .exclamationmark_circle
-                                          : CupertinoIcons.square_grid_2x2)),
+                                          : CupertinoIcons.square_grid_2x2,
                                       size: 28,
                                       color: hasError
                                           ? colorScheme.error

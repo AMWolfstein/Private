@@ -168,7 +168,14 @@ void main() {
         expect(events, isNot(contains('exit')));
       } else {
         expect(failure, isNull);
-        expect(result, mode == 'cancel' ? null : (mode == 'none' ? 0 : 2));
+        expect(
+          result,
+          mode == 'cancel'
+              ? null
+              : mode == 'none'
+              ? 0
+              : 2,
+        );
         if (mode == 'cancel') {
           expect(events, isEmpty);
         } else if (mode == 'leave') {

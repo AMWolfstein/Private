@@ -70,9 +70,9 @@ extension _QueueTabNavigation on _QueueTabState {
     String? art;
     if (cover.isNotEmpty) {
       art =
-          (cover.startsWith('http') ||
+          cover.startsWith('http') ||
               cover.startsWith('content://') ||
-              cover.startsWith('file://'))
+              cover.startsWith('file://')
           ? cover
           : Uri.file(cover).toString();
     }
@@ -107,7 +107,7 @@ extension _QueueTabNavigation on _QueueTabState {
     final navigator = Navigator.of(context);
     if (!mounted) return;
 
-    final backdropReady = (Future<void>.value());
+    final backdropReady = Future<void>.value();
     _searchFocusNode.unfocus();
     final beforeModTime = await _readFileModTimeMillis(historyItem.filePath);
     await backdropReady;
@@ -141,7 +141,7 @@ extension _QueueTabNavigation on _QueueTabState {
     final navigator = Navigator.of(context);
     if (!mounted) return;
 
-    final backdropReady = (Future<void>.value());
+    final backdropReady = Future<void>.value();
     _searchFocusNode.unfocus();
     final beforeModTime = await _readFileModTimeMillis(item.filePath);
     await backdropReady;

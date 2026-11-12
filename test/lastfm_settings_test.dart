@@ -9,69 +9,67 @@ import 'package:mornye/widgets/settings_group.dart';
 import 'support/lastfm_fakes.dart';
 
 void main() {
-  for (final mornye in [true]) {
-    testWidgets(
-      'Last.fm account and playback controls follow the selected style ($mornye)',
-      (tester) async {
-        final store = MemoryLastfmStore()..session = null;
-        final api = FakeLastfmApi();
-        final opened = <Uri>[];
-        final service = LastfmService(
-          api: api,
-          store: store,
-          openBrowser: (url) async {
-            opened.add(url);
-            return true;
-          },
-        );
-        try {
-          await tester.pumpWidget(
-            MaterialApp(
-              theme: AppTheme.build(Brightness.dark),
-              localizationsDelegates: AppLocalizations.localizationsDelegates,
-              supportedLocales: AppLocalizations.supportedLocales,
-              home: Scaffold(
-                body: SingleChildScrollView(
-                  child: AppSettingsTheme(
-                    child: LastfmSettings(service: service),
-                  ),
+  testWidgets(
+    'Last.fm account and playback controls follow the selected style (true)',
+    (tester) async {
+      final store = MemoryLastfmStore()..session = null;
+      final api = FakeLastfmApi();
+      final opened = <Uri>[];
+      final service = LastfmService(
+        api: api,
+        store: store,
+        openBrowser: (url) async {
+          opened.add(url);
+          return true;
+        },
+      );
+      try {
+        await tester.pumpWidget(
+          MaterialApp(
+            theme: AppTheme.build(Brightness.dark),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: Scaffold(
+              body: SingleChildScrollView(
+                child: AppSettingsTheme(
+                  child: LastfmSettings(service: service),
                 ),
               ),
             ),
-          );
-          await tester.pumpAndSettle();
-          await tester.tap(find.text('Connect Last.fm'));
-          await tester.pumpAndSettle();
-          expect(opened.single.host, 'www.last.fm');
-          expect(find.text('Finish connecting'), findsOneWidget);
-          await tester.tap(find.text('Finish connecting'));
-          await tester.pumpAndSettle();
-          expect(find.text('listener'), findsOneWidget);
-          expect(find.text('Disconnect Last.fm'), findsOneWidget);
-          final switches = tester
-              .widgetList<SettingsSwitchItem>(find.byType(SettingsSwitchItem))
-              .toList();
-          expect(switches.map((widget) => widget.title), [
-            'Scrobbling',
-            'Show Now Playing',
-          ]);
-          switches.first.onChanged!(false);
-          await tester.pumpAndSettle();
-          expect(service.enabled, isFalse);
-          await tester.tap(find.text('Disconnect Last.fm'));
-          await tester.pumpAndSettle();
-          expect(find.text('Connect Last.fm'), findsOneWidget);
-          expect(store.session, isNull);
-          expect(tester.takeException(), isNull);
-        } finally {
-          await tester.pumpWidget(const SizedBox.shrink());
-          final closing = service.close();
-          await tester.pump();
-          await closing;
-        }
-      },
-    );
-  }
+          ),
+        );
+        await tester.pumpAndSettle();
+        await tester.tap(find.text('Connect Last.fm'));
+        await tester.pumpAndSettle();
+        expect(opened.single.host, 'www.last.fm');
+        expect(find.text('Finish connecting'), findsOneWidget);
+        await tester.tap(find.text('Finish connecting'));
+        await tester.pumpAndSettle();
+        expect(find.text('listener'), findsOneWidget);
+        expect(find.text('Disconnect Last.fm'), findsOneWidget);
+        final switches = tester
+            .widgetList<SettingsSwitchItem>(find.byType(SettingsSwitchItem))
+            .toList();
+        expect(switches.map((widget) => widget.title), [
+          'Scrobbling',
+          'Show Now Playing',
+        ]);
+        switches.first.onChanged!(false);
+        await tester.pumpAndSettle();
+        expect(service.enabled, isFalse);
+        await tester.tap(find.text('Disconnect Last.fm'));
+        await tester.pumpAndSettle();
+        expect(find.text('Connect Last.fm'), findsOneWidget);
+        expect(store.session, isNull);
+        expect(tester.takeException(), isNull);
+      } finally {
+        await tester.pumpWidget(const SizedBox.shrink());
+        final closing = service.close();
+        await tester.pump();
+        await closing;
+      }
+    },
+  );
 
   testWidgets(
     'unconfigured builds explain availability without exposing developer fields',

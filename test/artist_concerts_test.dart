@@ -97,39 +97,37 @@ void main() {
     );
   });
 
-  for (final mornye in [true]) {
-    testWidgets(
-      'concert badge opens a generic schedule and back restores artist ($mornye)',
-      (tester) async {
-        final concerts = ArtistConcert.parseList([event()]);
-        await tester.pumpWidget(
-          app(
-            Scaffold(
-              body: Center(
-                child: ArtistConcertsButton(
-                  artistName: 'Example Artist',
-                  concerts: concerts,
-                ),
+  testWidgets(
+    'concert badge opens a generic schedule and back restores artist (true)',
+    (tester) async {
+      final concerts = ArtistConcert.parseList([event()]);
+      await tester.pumpWidget(
+        app(
+          Scaffold(
+            body: Center(
+              child: ArtistConcertsButton(
+                artistName: 'Example Artist',
+                concerts: concerts,
               ),
             ),
-            mornye: mornye,
           ),
-        );
-        await tester.tap(find.text('Upcoming Concerts'));
-        await tester.pumpAndSettle();
-        expect(find.byType(ArtistConcertsScreen), findsOneWidget);
-        expect(find.text('Example Artist'), findsOneWidget);
-        expect(find.text('All Upcoming Concerts'), findsOneWidget);
-        expect(find.text('Example City, Region'), findsOneWidget);
-        expect(find.text('6'), findsOneWidget);
-        expect(find.textContaining('21:00'), findsOneWidget);
-        await tester.tap(find.byTooltip('Back'));
-        await tester.pumpAndSettle();
-        expect(find.byType(ArtistConcertsScreen), findsNothing);
-        expect(find.byType(ArtistConcertsButton), findsOneWidget);
-      },
-    );
-  }
+          mornye: true,
+        ),
+      );
+      await tester.tap(find.text('Upcoming Concerts'));
+      await tester.pumpAndSettle();
+      expect(find.byType(ArtistConcertsScreen), findsOneWidget);
+      expect(find.text('Example Artist'), findsOneWidget);
+      expect(find.text('All Upcoming Concerts'), findsOneWidget);
+      expect(find.text('Example City, Region'), findsOneWidget);
+      expect(find.text('6'), findsOneWidget);
+      expect(find.textContaining('21:00'), findsOneWidget);
+      await tester.tap(find.byTooltip('Back'));
+      await tester.pumpAndSettle();
+      expect(find.byType(ArtistConcertsScreen), findsNothing);
+      expect(find.byType(ArtistConcertsButton), findsOneWidget);
+    },
+  );
 
   testWidgets('artist without concerts has no badge', (tester) async {
     await tester.pumpWidget(

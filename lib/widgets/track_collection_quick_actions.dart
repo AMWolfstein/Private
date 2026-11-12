@@ -229,12 +229,12 @@ class _TrackOptionsSheet extends ConsumerWidget {
     if (!root.mounted) return;
     final l10n = root.l10n;
     final message = wishlist
-        ? (added
+        ? added
               ? l10n.collectionAddedToWishlist(track.name)
-              : l10n.collectionRemovedFromWishlist(track.name))
-        : (added
-              ? l10n.collectionAddedToLoved(track.name)
-              : l10n.collectionRemovedFromLoved(track.name));
+              : l10n.collectionRemovedFromWishlist(track.name)
+        : added
+        ? l10n.collectionAddedToLoved(track.name)
+        : l10n.collectionRemovedFromLoved(track.name);
     ScaffoldMessenger.of(root).showSnackBar(SnackBar(content: Text(message)));
   }
 

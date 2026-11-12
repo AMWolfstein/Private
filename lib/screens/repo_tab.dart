@@ -846,53 +846,51 @@ class _ExtensionItem extends StatelessWidget {
       trailingWidth: _storeButtonWidth(context),
       trailing: isDownloading
           ? const AppLoadingIndicator(size: 24)
-          : (extension.hasUpdate
-                ? FilledButton.tonal(
-                    onPressed: onUpdate,
-                    style: FilledButton.styleFrom(
-                      shape: (const StadiumBorder()),
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
-                      minimumSize: Size(0, context.tokens.minTouchTarget),
-                    ),
-                    child: Text(context.l10n.storeUpdate),
-                  )
-                : extension.isInstalled
-                ? OutlinedButton(
-                    onPressed: null,
-                    style: OutlinedButton.styleFrom(
-                      shape: (const StadiumBorder()),
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
-                      minimumSize: Size(0, context.tokens.minTouchTarget),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          CupertinoIcons.check_mark,
-                          size: 16,
-                          color: colorScheme.outline,
-                        ),
-                        SizedBox(width: tokens.gapXs),
-                        Text(
-                          context.l10n.storeInstalled,
-                          style: TextStyle(color: colorScheme.outline),
-                        ),
-                      ],
-                    ),
-                  )
-                : FilledButton(
-                    onPressed: onInstall,
-                    style: FilledButton.styleFrom(
-                      shape: (const StadiumBorder()),
-                      backgroundColor: (colorScheme.primary.withValues(
-                        alpha: 0.12,
-                      )),
-                      foregroundColor: colorScheme.primary,
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
-                      minimumSize: Size(0, context.tokens.minTouchTarget),
-                    ),
-                    child: Text(context.l10n.storeInstall),
-                  )),
+          : extension.hasUpdate
+          ? FilledButton.tonal(
+              onPressed: onUpdate,
+              style: FilledButton.styleFrom(
+                shape: (const StadiumBorder()),
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                minimumSize: Size(0, context.tokens.minTouchTarget),
+              ),
+              child: Text(context.l10n.storeUpdate),
+            )
+          : extension.isInstalled
+          ? OutlinedButton(
+              onPressed: null,
+              style: OutlinedButton.styleFrom(
+                shape: (const StadiumBorder()),
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                minimumSize: Size(0, context.tokens.minTouchTarget),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    CupertinoIcons.check_mark,
+                    size: 16,
+                    color: colorScheme.outline,
+                  ),
+                  SizedBox(width: tokens.gapXs),
+                  Text(
+                    context.l10n.storeInstalled,
+                    style: TextStyle(color: colorScheme.outline),
+                  ),
+                ],
+              ),
+            )
+          : FilledButton(
+              onPressed: onInstall,
+              style: FilledButton.styleFrom(
+                shape: (const StadiumBorder()),
+                backgroundColor: (colorScheme.primary.withValues(alpha: 0.12)),
+                foregroundColor: colorScheme.primary,
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                minimumSize: Size(0, context.tokens.minTouchTarget),
+              ),
+              child: Text(context.l10n.storeInstall),
+            ),
     );
   }
 }

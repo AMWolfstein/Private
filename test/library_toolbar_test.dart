@@ -206,126 +206,71 @@ void main() {
   }
 
   {
-    for (final mornye in [true]) {
-      testWidgets('title sort survives a fresh Library and settings scope '
-          '(Mornye: $mornye)', (tester) async {
-        await pumpLibrary(tester, mornye: mornye);
-        final l10n = l10nOf(tester);
-        await tester.tap(
-          find
-              .text(
-                mornye ? l10n.libraryFilterTitle : l10n.libraryFilterSortLatest,
-              )
-              .hitTestable(),
-        );
-        for (var i = 0; i < 10; i++) {
-          await tester.pump(const Duration(milliseconds: 50));
-        }
-        final choice = find.text(l10n.searchSortTitleAZ);
-        await tester.ensureVisible(choice);
-        await tester.pump(const Duration(milliseconds: 300));
-        await tester.tap(choice);
-        if (mornye) {
-          await tester.ensureVisible(find.text(l10n.libraryFilterApply));
-          await tester.pump(const Duration(milliseconds: 300));
-          await tester.tap(find.text(l10n.libraryFilterApply));
-        }
-        for (var i = 0; i < 10; i++) {
-          await tester.pump(const Duration(milliseconds: 50));
-        }
-        final preferences = await SharedPreferences.getInstance();
-        expect(loadBootstrapSettings(preferences).historySortMode, 'a-z');
-        await tester.pumpWidget(const SizedBox.shrink());
-        queries.clear();
-        await pumpLibrary(tester, mornye: mornye);
-        final container = ProviderScope.containerOf(
-          tester.element(find.byType(QueueTab)),
-        );
-        expect(container.read(settingsProvider).historySortMode, 'a-z');
-        expect(
-          queries.any((sql) => sql.contains('ORDER BY sort_track ASC')),
-          isTrue,
-        );
-        if (!mornye) {
-          expect(
-            find.text(l10n.searchSortTitleAZ).hitTestable(),
-            findsOneWidget,
-          );
-          expect(find.text(l10n.libraryFilterSortLatest), findsNothing);
-        }
-        expect(tester.takeException(), isNull);
-      });
+    testWidgets('title sort survives a fresh Library and settings scope '
+        '(Mornye: true)', (tester) async {
+      await pumpLibrary(tester, mornye: true);
+      final l10n = l10nOf(tester);
+      await tester.tap(find.text(l10n.libraryFilterTitle).hitTestable());
+      for (var i = 0; i < 10; i++) {
+        await tester.pump(const Duration(milliseconds: 50));
+      }
+      final choice = find.text(l10n.searchSortTitleAZ);
+      await tester.ensureVisible(choice);
+      await tester.pump(const Duration(milliseconds: 300));
+      await tester.tap(choice);
+      await tester.ensureVisible(find.text(l10n.libraryFilterApply));
+      await tester.pump(const Duration(milliseconds: 300));
+      await tester.tap(find.text(l10n.libraryFilterApply));
+      for (var i = 0; i < 10; i++) {
+        await tester.pump(const Duration(milliseconds: 50));
+      }
+      final preferences = await SharedPreferences.getInstance();
+      expect(loadBootstrapSettings(preferences).historySortMode, 'a-z');
+      await tester.pumpWidget(const SizedBox.shrink());
+      queries.clear();
+      await pumpLibrary(tester, mornye: true);
+      final container = ProviderScope.containerOf(
+        tester.element(find.byType(QueueTab)),
+      );
+      expect(container.read(settingsProvider).historySortMode, 'a-z');
+      expect(
+        queries.any((sql) => sql.contains('ORDER BY sort_track ASC')),
+        isTrue,
+      );
 
-      testWidgets('size sort applies from the Library menu '
-          '(Mornye: $mornye)', (tester) async {
-        await pumpLibrary(tester, mornye: mornye);
-        final l10n = l10nOf(tester);
-        // The search field scrolls with the page over its plain background.
-        expect(
-          find.descendant(
-            of: find.byType(AppSearchField),
-            matching: find.byType(BackdropFilter),
-          ),
-          findsNothing,
-        );
-        await tester.tap(
-          find
-              .text(
-                mornye ? l10n.libraryFilterTitle : l10n.libraryFilterSortLatest,
-              )
-              .hitTestable(),
-        );
-        for (var i = 0; i < 10; i++) {
-          await tester.pump(const Duration(milliseconds: 50));
-        }
-        if (mornye) {
-          await tester.ensureVisible(
-            find.text(l10n.libraryFilterSortSizeLargest),
-          );
-        }
-        expect(find.text(l10n.libraryFilterSortSizeLargest), findsOneWidget);
-        expect(find.text(l10n.libraryFilterSortSizeSmallest), findsOneWidget);
-        await tester.tap(find.text(l10n.libraryFilterSortSizeLargest));
-        if (mornye) {
-          await tester.ensureVisible(find.text(l10n.libraryFilterApply));
-          await tester.tap(find.text(l10n.libraryFilterApply));
-        }
-        for (var i = 0; i < 10; i++) {
-          await tester.pump(const Duration(milliseconds: 50));
-        }
-        expect(queries.any((sql) => sql.contains('sort_size DESC')), isTrue);
-        expect(find.text(l10n.libraryFilterSortSizeSmallest), findsNothing);
-        if (!mornye) {
-          await tester.tap(
-            find.descendant(
-              of: find.byType(TabBar),
-              matching: find.text(l10n.searchPlaylists),
-            ),
-          );
-          for (var i = 0; i < 40; i++) {
-            await tester.pump(const Duration(milliseconds: 50));
-          }
-          final preferences = await SharedPreferences.getInstance();
-          expect(
-            loadBootstrapSettings(preferences).historySortMode,
-            'size-desc',
-          );
-          await tester.tap(
-            find
-                .descendant(of: find.byType(TabBar), matching: find.byType(Tab))
-                .first,
-          );
-          for (var i = 0; i < 40; i++) {
-            await tester.pump(const Duration(milliseconds: 50));
-          }
-          expect(
-            find.text(l10n.libraryFilterSortSizeLargest).hitTestable(),
-            findsOneWidget,
-          );
-        }
-        expect(tester.takeException(), isNull);
-      });
-    }
+      expect(tester.takeException(), isNull);
+    });
+
+    testWidgets('size sort applies from the Library menu '
+        '(Mornye: true)', (tester) async {
+      await pumpLibrary(tester, mornye: true);
+      final l10n = l10nOf(tester);
+      // The search field scrolls with the page over its plain background.
+      expect(
+        find.descendant(
+          of: find.byType(AppSearchField),
+          matching: find.byType(BackdropFilter),
+        ),
+        findsNothing,
+      );
+      await tester.tap(find.text(l10n.libraryFilterTitle).hitTestable());
+      for (var i = 0; i < 10; i++) {
+        await tester.pump(const Duration(milliseconds: 50));
+      }
+      await tester.ensureVisible(find.text(l10n.libraryFilterSortSizeLargest));
+      expect(find.text(l10n.libraryFilterSortSizeLargest), findsOneWidget);
+      expect(find.text(l10n.libraryFilterSortSizeSmallest), findsOneWidget);
+      await tester.tap(find.text(l10n.libraryFilterSortSizeLargest));
+      await tester.ensureVisible(find.text(l10n.libraryFilterApply));
+      await tester.tap(find.text(l10n.libraryFilterApply));
+      for (var i = 0; i < 10; i++) {
+        await tester.pump(const Duration(milliseconds: 50));
+      }
+      expect(queries.any((sql) => sql.contains('sort_size DESC')), isTrue);
+      expect(find.text(l10n.libraryFilterSortSizeSmallest), findsNothing);
+
+      expect(tester.takeException(), isNull);
+    });
   }
 
   testWidgets('Mornye keeps its filter button', (tester) async {

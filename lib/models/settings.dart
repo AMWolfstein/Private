@@ -619,15 +619,15 @@ class AppSettings {
           useExtensionProviders ?? this.useExtensionProviders,
       downloadFallbackExtensionIds: clearDownloadFallbackExtensionIds
           ? null
-          : (downloadFallbackExtensionIds ?? this.downloadFallbackExtensionIds),
+          : downloadFallbackExtensionIds ?? this.downloadFallbackExtensionIds,
       searchProvider: clearSearchProvider
           ? null
-          : (searchProvider ?? this.searchProvider),
+          : searchProvider ?? this.searchProvider,
       defaultSearchTab: defaultSearchTab ?? this.defaultSearchTab,
       searchViewMode: searchViewMode ?? this.searchViewMode,
       homeFeedProvider: clearHomeFeedProvider
           ? null
-          : (homeFeedProvider ?? this.homeFeedProvider),
+          : homeFeedProvider ?? this.homeFeedProvider,
       separateSingles: separateSingles ?? this.separateSingles,
       singleFilenameFormat: singleFilenameFormat ?? this.singleFilenameFormat,
       albumFolderStructure: albumFolderStructure ?? this.albumFolderStructure,

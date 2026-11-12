@@ -93,40 +93,36 @@ Future<void> _disposeArtist(WidgetTester tester) async {
 void main() {
   tearDown(() {});
 
-  for (final mornye in [true]) {
-    final style = mornye ? 'Mornye' : 'Material';
+  final style = 'Mornye';
 
-    testWidgets('$style: touch long press still selects albums', (
-      tester,
-    ) async {
-      await _pumpArtist(tester, mornye: mornye);
-      await tester.longPress(_card(2));
-      await tester.pumpAndSettle();
-      _expectSelection(tester, {2});
-      await tester.tap(_card(3));
-      await tester.pumpAndSettle();
-      _expectSelection(tester, {2, 3});
-      await _disposeArtist(tester);
-    });
+  testWidgets('$style: touch long press still selects albums', (tester) async {
+    await _pumpArtist(tester, mornye: true);
+    await tester.longPress(_card(2));
+    await tester.pumpAndSettle();
+    _expectSelection(tester, {2});
+    await tester.tap(_card(3));
+    await tester.pumpAndSettle();
+    _expectSelection(tester, {2, 3});
+    await _disposeArtist(tester);
+  });
 
-    testWidgets('$style: select all toggle clears but keeps selection mode', (
-      tester,
-    ) async {
-      await _pumpArtist(tester, mornye: mornye);
-      await tester.longPress(_card(2));
-      await tester.pumpAndSettle();
-      SelectionBottomBar bar() =>
-          tester.widget<SelectionBottomBar>(find.byType(SelectionBottomBar));
-      expect(bar().allSelected, isFalse);
-      bar().onToggleSelectAll();
-      await tester.pumpAndSettle();
-      _expectSelection(tester, {0, 1, 2, 3, 4});
-      expect(bar().allSelected, isTrue);
-      bar().onToggleSelectAll();
-      await tester.pumpAndSettle();
-      _expectSelection(tester, {});
-      expect(bar().allSelected, isFalse);
-      await _disposeArtist(tester);
-    });
-  }
+  testWidgets('$style: select all toggle clears but keeps selection mode', (
+    tester,
+  ) async {
+    await _pumpArtist(tester, mornye: true);
+    await tester.longPress(_card(2));
+    await tester.pumpAndSettle();
+    SelectionBottomBar bar() =>
+        tester.widget<SelectionBottomBar>(find.byType(SelectionBottomBar));
+    expect(bar().allSelected, isFalse);
+    bar().onToggleSelectAll();
+    await tester.pumpAndSettle();
+    _expectSelection(tester, {0, 1, 2, 3, 4});
+    expect(bar().allSelected, isTrue);
+    bar().onToggleSelectAll();
+    await tester.pumpAndSettle();
+    _expectSelection(tester, {});
+    expect(bar().allSelected, isFalse);
+    await _disposeArtist(tester);
+  });
 }

@@ -324,10 +324,10 @@ class SliverSettingsGroup extends StatelessWidget {
       itemBuilder: (context, index) {
         final first = index == 0;
         final last = index == itemCount - 1;
-        final radius = (BorderRadius.vertical(
+        final radius = BorderRadius.vertical(
           top: first ? const Radius.circular(28) : Radius.zero,
           bottom: last ? const Radius.circular(28) : Radius.zero,
-        ));
+        );
         final row = Material(
           color: settingsGroupColor(context),
           clipBehavior: Clip.antiAlias,
@@ -430,7 +430,7 @@ class SettingsItem extends StatelessWidget {
                             const SizedBox(height: 2),
                             Text(
                               subtitle!,
-                              style: ((Theme.of(context).textTheme.bodySmall))
+                              style: (Theme.of(context).textTheme.bodySmall)
                                   ?.copyWith(
                                     color: colorScheme.onSurfaceVariant,
                                   ),
@@ -693,9 +693,7 @@ class SettingsChoiceChip extends StatelessWidget {
     }
 
     final chip = Material(
-      color: isSelected
-          ? (colorScheme.surfaceContainerHighest)
-          : unselectedColor,
+      color: isSelected ? colorScheme.surfaceContainerHighest : unselectedColor,
       borderRadius: borderRadius,
       child: Semantics(
         button: true,

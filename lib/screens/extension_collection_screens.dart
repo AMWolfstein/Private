@@ -308,13 +308,13 @@ class _ExtensionAlbumScreenState extends ConsumerState<ExtensionAlbumScreen> {
         _artistName = artistName;
         _albumType = albumType;
         _albumTotalTracks = totalTracks;
-        _headerVideoUrl = (headerVideo != null && headerVideo.isNotEmpty)
+        _headerVideoUrl = headerVideo != null && headerVideo.isNotEmpty
             ? headerVideo
             : _headerVideoUrl;
-        _headerImageUrl = (headerImage != null && headerImage.isNotEmpty)
+        _headerImageUrl = headerImage != null && headerImage.isNotEmpty
             ? headerImage
             : _headerImageUrl;
-        _audioTraits = (audioTraits != null && audioTraits.isNotEmpty)
+        _audioTraits = audioTraits != null && audioTraits.isNotEmpty
             ? audioTraits
             : _audioTraits;
         _isLoading = false;
@@ -459,7 +459,7 @@ class _ExtensionPlaylistScreenState
 
       setState(() {
         _tracks = tracks;
-        _headerVideoUrl = (headerVideo != null && headerVideo.isNotEmpty)
+        _headerVideoUrl = headerVideo != null && headerVideo.isNotEmpty
             ? headerVideo
             : _headerVideoUrl;
         _isLoading = false;

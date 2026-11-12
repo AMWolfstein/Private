@@ -290,37 +290,35 @@ void main() {
     },
   );
 
-  for (final mornye in [true]) {
-    testWidgets('country picker saves a country with either theme ($mornye)', (
-      tester,
-    ) async {
-      await tester.pumpWidget(
-        ProviderScope(
-          overrides: [
-            settingsProvider.overrideWith(_Settings.new),
-            extensionProvider.overrideWith(_Extensions.new),
-          ],
-          child: MaterialApp(
-            locale: const Locale('en'),
-            localizationsDelegates: AppLocalizations.localizationsDelegates,
-            supportedLocales: AppLocalizations.supportedLocales,
-            theme: mornye ? AppTheme.build(Brightness.dark) : ThemeData(),
-            builder: (_, child) => AppScaffoldMessenger(child: child!),
-            home: const Scaffold(
-              body: SettingsGroup(children: [HomeFeedRegionSetting()]),
-            ),
+  testWidgets('country picker saves a country with either theme (true)', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          settingsProvider.overrideWith(_Settings.new),
+          extensionProvider.overrideWith(_Extensions.new),
+        ],
+        child: MaterialApp(
+          locale: const Locale('en'),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          theme: AppTheme.build(Brightness.dark),
+          builder: (_, child) => AppScaffoldMessenger(child: child!),
+          home: const Scaffold(
+            body: SettingsGroup(children: [HomeFeedRegionSetting()]),
           ),
         ),
-      );
-      await tester.pumpAndSettle();
-      expect(find.text('United States · Example Music'), findsOneWidget);
-      await tester.tap(find.text('Home feed country'));
-      await tester.pumpAndSettle();
-      await tester.tap(find.text('Japan'));
-      await tester.pumpAndSettle();
-      expect(writes.single['market'], 'jp');
-      expect(find.text('Japan · Example Music'), findsOneWidget);
-      expect(tester.takeException(), isNull);
-    });
-  }
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('United States · Example Music'), findsOneWidget);
+    await tester.tap(find.text('Home feed country'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Japan'));
+    await tester.pumpAndSettle();
+    expect(writes.single['market'], 'jp');
+    expect(find.text('Japan · Example Music'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
 }

@@ -498,7 +498,9 @@ class AppPlayerLayout extends ConsumerWidget {
   }) {
     final progress = compactProgress ?? (compact ? 1.0 : 0.0);
     final actionSize = compactProgress == null
-        ? (page == 0 ? 24.0 : _mornyeCompactIconSize)
+        ? page == 0
+              ? 24.0
+              : _mornyeCompactIconSize
         : 24 + (_mornyeCompactIconSize - 24) * progress;
     return Builder(
       builder: (context) => Row(

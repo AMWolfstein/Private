@@ -25,57 +25,55 @@ import 'package:mornye/widgets/app_context_menu.dart';
 
 void main() {
   {
-    for (final mornye in [true]) {
-      testWidgets('Home keeps Resume without a player '
-          '(Mornye: $mornye)', (tester) async {
-        tester.platformDispatcher.accessibilityFeaturesTestValue =
-            const FakeAccessibilityFeatures(disableAnimations: true);
-        addTearDown(
-          tester.platformDispatcher.clearAccessibilityFeaturesTestValue,
-        );
-        tester.view.physicalSize = const Size(430, 932);
-        tester.view.devicePixelRatio = 1;
-        addTearDown(tester.view.reset);
-        final controller = _ResumeController();
-        await _pumpStartupHome(
-          tester,
-          _StartupExtensions(),
-          _StartupExplore(),
-          mornye: mornye,
-          feedDisabled: true,
-          resume: const (
-            media: PlayableMedia(
-              id: 'saved-song',
-              source: '/saved.flac',
-              title: 'Last session',
-              artist: 'Saved artist',
-              duration: Duration(minutes: 3),
-            ),
-            position: Duration(seconds: 23),
+    testWidgets('Home keeps Resume without a player '
+        '(Mornye: true)', (tester) async {
+      tester.platformDispatcher.accessibilityFeaturesTestValue =
+          const FakeAccessibilityFeatures(disableAnimations: true);
+      addTearDown(
+        tester.platformDispatcher.clearAccessibilityFeaturesTestValue,
+      );
+      tester.view.physicalSize = const Size(430, 932);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.reset);
+      final controller = _ResumeController();
+      await _pumpStartupHome(
+        tester,
+        _StartupExtensions(),
+        _StartupExplore(),
+        mornye: true,
+        feedDisabled: true,
+        resume: const (
+          media: PlayableMedia(
+            id: 'saved-song',
+            source: '/saved.flac',
+            title: 'Last session',
+            artist: 'Saved artist',
+            duration: Duration(minutes: 3),
           ),
-          controller: controller,
-          recentlyPlayed: Future.value(const <HomeRepeatTrack>[]),
-        );
-        await tester.pumpAndSettle();
-        expect(find.text('Continue listening'), findsOneWidget);
-        expect(find.text('Last session'), findsOneWidget);
-        expect(find.text('Saved artist'), findsOneWidget);
-        expect(
-          tester
-              .widget<LinearProgressIndicator>(
-                find.byType(LinearProgressIndicator),
-              )
-              .value,
-          closeTo(23 / 180, 0.001),
-        );
-        await tester.tap(find.byTooltip('Play'));
-        await tester.pumpAndSettle();
-        expect(controller.resumes, 1);
-        expect(tester.takeException(), isNull);
-        await tester.pumpWidget(const SizedBox());
-        await tester.pumpAndSettle();
-      });
-    }
+          position: Duration(seconds: 23),
+        ),
+        controller: controller,
+        recentlyPlayed: Future.value(const <HomeRepeatTrack>[]),
+      );
+      await tester.pumpAndSettle();
+      expect(find.text('Continue listening'), findsOneWidget);
+      expect(find.text('Last session'), findsOneWidget);
+      expect(find.text('Saved artist'), findsOneWidget);
+      expect(
+        tester
+            .widget<LinearProgressIndicator>(
+              find.byType(LinearProgressIndicator),
+            )
+            .value,
+        closeTo(23 / 180, 0.001),
+      );
+      await tester.tap(find.byTooltip('Play'));
+      await tester.pumpAndSettle();
+      expect(controller.resumes, 1);
+      expect(tester.takeException(), isNull);
+      await tester.pumpWidget(const SizedBox());
+      await tester.pumpAndSettle();
+    });
   }
 
   for (final result in ['nothing played', 'load error']) {
@@ -121,68 +119,61 @@ void main() {
   }
 
   {
-    for (final mornye in [true]) {
-      testWidgets('Home keeps its feed layout through slow startup '
-          '(Mornye: $mornye)', (tester) async {
-        tester.view.physicalSize = const Size(430, 932);
-        tester.view.devicePixelRatio = 1;
-        addTearDown(tester.view.reset);
-        final extensions = _StartupExtensions();
-        final explore = _StartupExplore();
-        await _pumpStartupHome(tester, extensions, explore, mornye: mornye);
+    testWidgets('Home keeps its feed layout through slow startup '
+        '(Mornye: true)', (tester) async {
+      tester.view.physicalSize = const Size(430, 932);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.reset);
+      final extensions = _StartupExtensions();
+      final explore = _StartupExplore();
+      await _pumpStartupHome(tester, extensions, explore, mornye: true);
 
-        expect(find.text('Shortcuts'), findsNothing);
-        expect(find.byType(ShimmerLoading), findsOneWidget);
-        // Artwork placeholders stay square: a card's side padding narrows
-        // them, so their height must shrink with it.
-        final artwork = find
-            .byType(SkeletonBox)
-            .evaluate()
-            .map((element) => element.size!)
-            .where((size) => size.height > 40)
-            .toList();
-        expect(artwork, isNotEmpty);
-        for (final size in artwork) {
-          expect(size.width, size.height);
-        }
-        final searchRect = mornye
-            ? null
-            : tester.getRect(find.byType(TextField));
-        await tester.pump(const Duration(seconds: 3));
-        expect(find.text('Shortcuts'), findsNothing);
+      expect(find.text('Shortcuts'), findsNothing);
+      expect(find.byType(ShimmerLoading), findsOneWidget);
+      // Artwork placeholders stay square: a card's side padding narrows
+      // them, so their height must shrink with it.
+      final artwork = find
+          .byType(SkeletonBox)
+          .evaluate()
+          .map((element) => element.size!)
+          .where((size) => size.height > 40)
+          .toList();
+      expect(artwork, isNotEmpty);
+      for (final size in artwork) {
+        expect(size.width, size.height);
+      }
+      final searchRect = null;
+      await tester.pump(const Duration(seconds: 3));
+      expect(find.text('Shortcuts'), findsNothing);
 
-        extensions.update(
-          const ExtensionState(
-            extensions: [_feedExtension],
-            isInitialized: true,
-          ),
-        );
-        await tester.pump();
-        await tester.pump(const Duration(seconds: 3));
-        expect(find.text('Shortcuts'), findsNothing);
-        expect(find.byType(ShimmerLoading), findsOneWidget);
+      extensions.update(
+        const ExtensionState(extensions: [_feedExtension], isInitialized: true),
+      );
+      await tester.pump();
+      await tester.pump(const Duration(seconds: 3));
+      expect(find.text('Shortcuts'), findsNothing);
+      expect(find.byType(ShimmerLoading), findsOneWidget);
 
-        explore.update(
-          const ExploreState(
-            sections: [
-              ExploreSection(
-                uri: 'example:featured',
-                title: 'Featured albums',
-                items: [],
-              ),
-            ],
-          ),
-        );
-        await tester.pump();
-        expect(find.text('Featured albums'), findsOneWidget);
-        expect(find.text('Shortcuts'), findsNothing);
-        expect(find.byType(ShimmerLoading), findsNothing);
-        if (searchRect != null) {
-          expect(tester.getRect(find.byType(TextField)), searchRect);
-        }
-        expect(tester.takeException(), isNull);
-      });
-    }
+      explore.update(
+        const ExploreState(
+          sections: [
+            ExploreSection(
+              uri: 'example:featured',
+              title: 'Featured albums',
+              items: [],
+            ),
+          ],
+        ),
+      );
+      await tester.pump();
+      expect(find.text('Featured albums'), findsOneWidget);
+      expect(find.text('Shortcuts'), findsNothing);
+      expect(find.byType(ShimmerLoading), findsNothing);
+      if (searchRect != null) {
+        expect(tester.getRect(find.byType(TextField)), searchRect);
+      }
+      expect(tester.takeException(), isNull);
+    });
   }
 
   for (final (mornye, result) in [
@@ -237,23 +228,21 @@ void main() {
     });
   }
 
-  for (final mornye in [true]) {
-    testWidgets(
-      'Home with its feed disabled skips startup loading (Mornye=$mornye)',
-      (tester) async {
-        await _pumpStartupHome(
-          tester,
-          _StartupExtensions(),
-          _StartupExplore(),
-          mornye: mornye,
-          feedDisabled: true,
-        );
-        expect(find.text('Shortcuts'), mornye ? findsNothing : findsOneWidget);
-        expect(find.byType(ShimmerLoading), findsNothing);
-        expect(tester.takeException(), isNull);
-      },
-    );
-  }
+  testWidgets(
+    'Home with its feed disabled skips startup loading (Mornye=true)',
+    (tester) async {
+      await _pumpStartupHome(
+        tester,
+        _StartupExtensions(),
+        _StartupExplore(),
+        mornye: true,
+        feedDisabled: true,
+      );
+      expect(find.text('Shortcuts'), findsNothing);
+      expect(find.byType(ShimmerLoading), findsNothing);
+      expect(tester.takeException(), isNull);
+    },
+  );
 
   testWidgets('Home can show restored feed content before extensions finish', (
     tester,

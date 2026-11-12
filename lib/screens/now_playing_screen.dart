@@ -174,7 +174,7 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     final size = MediaQuery.sizeOf(context);
-    _landscape = (size.width > size.height);
+    _landscape = size.width > size.height;
     if (!_lyricsAutoHideLayout || MediaQuery.accessibleNavigationOf(context)) {
       _lyricsControlsHidden = false;
     }
@@ -234,10 +234,10 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
     MediaItem? mediaItem, {
     required bool fullScreenCover,
   }) {
-    final colorScheme = (AppTheme.fromContext(
+    final colorScheme = AppTheme.fromContext(
       context,
       brightness: Brightness.dark,
-    ).colorScheme);
+    ).colorScheme;
 
     if (mediaItem == null) {
       return Scaffold(
@@ -275,7 +275,7 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
         motionArtwork == null || (motionRatio != null && motionRatio >= 0.95);
     // Motion artwork is always full-bleed in Mornye; still covers follow the
     // cover style setting through the same layout, as a square video would.
-    final fullBleed = ((motionArtwork != null || fullScreenCover));
+    final fullBleed = motionArtwork != null || fullScreenCover;
     final screen = MediaQuery.sizeOf(context);
     // A still cover is cropped at the sides to reach down to the title, as
     // in the Material full-screen style; landscape keeps the square card.
@@ -318,7 +318,7 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
       _artworkRoute?.readArtwork = null;
       _artworkRoute = null;
     }
-    if ((route is NowPlayingRoute)) {
+    if (route is NowPlayingRoute) {
       _artworkRoute = route;
       route.readArtwork = () {
         final key = _landscape
@@ -353,7 +353,7 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
     final contentOpacity = kAlwaysCompleteAnimation;
 
     final double mornyeToolbarHeight =
-        (MediaQuery.orientationOf(context) == Orientation.landscape ? 0 : 36);
+        MediaQuery.orientationOf(context) == Orientation.landscape ? 0 : 36;
     final player = Scaffold(
       extendBodyBehindAppBar: false,
       backgroundColor: Colors.transparent,
@@ -440,7 +440,7 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      if ((!_landscape))
+                      if (!_landscape)
                         FractionallySizedBox(
                           widthFactor: 0.72,
                           child: Row(
@@ -590,7 +590,7 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
   /// (its landscape player hides its own actions), and Material's portrait
   /// column or its landscape artwork beside lyrics, which shows no transport
   /// either, like Mornye's.
-  bool get _lyricsAutoHideLayout => (!_landscape);
+  bool get _lyricsAutoHideLayout => !_landscape;
 
   bool get _canAutoHideLyricsControls =>
       _lyricsAutoHideLayout &&
@@ -660,7 +660,7 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
   /// Mornye fades the controls in place; Material folds a [collapse] row
   /// away so the lyrics take its room.
   Widget _autoHidingLyricsControls(Widget child, {bool collapse = false}) =>
-      (PlayerLyricsControlsVisibility(hidden: _lyricsImmersive, child: child));
+      PlayerLyricsControlsVisibility(hidden: _lyricsImmersive, child: child);
 
   Widget _lyricsSection(
     ColorScheme colorScheme, {
@@ -821,7 +821,7 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
           );
     final volumeShown = ref.read(settingsProvider).playerShowVolume;
     if (!mounted || !context.mounted) return;
-    final action = (await showMornyeContextMenu<String>(
+    final action = await showMornyeContextMenu<String>(
       context: context,
       anchor: anchor,
       preferAbove: true,
@@ -831,7 +831,7 @@ class _NowPlayingScreenState extends ConsumerState<NowPlayingScreen> {
         sleepTimerSubtitle: sleepTimerSubtitle,
         volumeShown: volumeShown,
       ),
-    ));
+    );
     if (!mounted || !context.mounted) return;
     switch (action) {
       case 'favorite':

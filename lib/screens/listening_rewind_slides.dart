@@ -487,7 +487,7 @@ class _RewindBackdropState extends State<_RewindBackdrop> {
           final to = math.min(from + 1, last);
           final blend = page - from;
           final t = _ambient.value * 2 * math.pi;
-          return (_mornye(from, to, blend, t));
+          return _mornye(from, to, blend, t);
         },
       ),
     ),

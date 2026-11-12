@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:material_3_expressive/material_3_expressive.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mornye/l10n/l10n.dart';
 import 'package:mornye/models/equalizer_settings.dart';
@@ -70,115 +69,98 @@ void main() {
     expect(savedPreamp(), -5);
   });
 
-  for (final mornye in [true]) {
-    testWidgets(
-      'EQ drags retain unrelated controls and current edits ($mornye)',
-      (tester) async {
-        tester.view.physicalSize = const Size(1200, 3000);
-        tester.view.devicePixelRatio = 1;
-        addTearDown(tester.view.reset);
-        final container = ProviderContainer();
-        addTearDown(container.dispose);
-        await tester.pumpWidget(
-          UncontrolledProviderScope(
-            container: container,
-            child: MaterialApp(
-              theme: AppTheme.build(Brightness.dark),
-              localizationsDelegates: AppLocalizations.localizationsDelegates,
-              supportedLocales: AppLocalizations.supportedLocales,
-              home: const EqualizerScreen(),
-            ),
-          ),
-        );
-        await tester.pumpAndSettle();
-        final notifier = container.read(equalizerProvider.notifier);
-        notifier.update(
-          container.read(equalizerProvider).settings.copyWith(preamp: -1),
-        );
-        await tester.pumpAndSettle();
-        final page = tester.widget<Scaffold>(find.byType(Scaffold));
-        final picker = find.byType(
-          mornye ? AppSegmentedControl : M3EButtonGroup,
-        );
-        final bandPicker = tester.widget(picker);
-        Widget bass() => mornye
-            ? tester
-                  .widgetList<AppLevelSlider>(find.byType(AppLevelSlider))
-                  .firstWhere((slider) => slider.semanticLabel == 'Bass')
-            : tester
-                  .widgetList<AppSlider>(find.byType(AppSlider))
-                  .firstWhere((slider) => slider.semanticLabel == 'Bass');
-        final bassSlider = bass();
-        final gainSlider = mornye
-            ? tester
-                  .widgetList<AppLevelSlider>(find.byType(AppLevelSlider))
-                  .first
-            : tester.widgetList<AppSlider>(find.byType(AppSlider)).first;
-        for (var i = 1; i <= 20; i++) {
-          notifier.update(
-            container.read(equalizerProvider).settings.copyWith(preamp: -i / 2),
-          );
-          await tester.pump(const Duration(milliseconds: 16));
-          expect(tester.widget<Scaffold>(find.byType(Scaffold)), same(page));
-          expect(tester.widget(picker), same(bandPicker));
-          expect(bass(), same(bassSlider));
-        }
-        if (gainSlider is AppLevelSlider) {
-          gainSlider.onChanged!(5);
-        } else {
-          (gainSlider as AppSlider).onChanged!(5);
-        }
-        await tester.pump();
-        if (bassSlider is AppLevelSlider) {
-          bassSlider.onChanged!(3);
-        } else {
-          (bassSlider as AppSlider).onChanged!(3);
-        }
-        await tester.pump();
-        final settings = container.read(equalizerProvider).settings;
-        expect(settings.preamp, -10);
-        expect(settings.gains.first, 5);
-        expect(settings.bass, 3);
-        expect(playbackEqualizer.value, same(settings));
-        notifier.update(const EqualizerSettings());
-        await tester.pumpAndSettle();
-        notifier.importPreset(
-          jsonEncode({
-            'format': 'mornye-equalizer',
-            'version': 1,
-            'name': 'Signed zero',
-            'settings': EqualizerSettings(
-              gains: List.filled(10, -0.0),
-              preamp: -0.0,
-              bass: -0.0,
-              treble: -0.0,
-              balance: -0.0,
-            ).toJson(),
-          }),
-        );
-        await tester.pumpAndSettle();
-        final headers = tester.widgetList<SliderValueHeader>(
-          find.byType(SliderValueHeader),
-        );
-        for (final title in ['Preamp', 'Bass', 'Treble', 'Balance']) {
-          expect(
-            headers.firstWhere((header) => header.title == title).value,
-            title == 'Balance' ? '−0%' : '−0.0 dB',
-          );
-        }
-        final bandValue = mornye
-            ? tester
-                  .widgetList<AppLevelSlider>(find.byType(AppLevelSlider))
-                  .first
-                  .value
-            : tester.widgetList<AppSlider>(find.byType(AppSlider)).first.value;
-        expect(bandValue.isNegative, isTrue);
-        expect(tester.takeException(), isNull);
-        await tester.pumpWidget(const SizedBox.shrink());
-        await tester.pump(const Duration(milliseconds: 350));
-      },
+  testWidgets('EQ drags retain unrelated controls and current edits (true)', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(1200, 3000);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    final container = ProviderContainer();
+    addTearDown(container.dispose);
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: container,
+        child: MaterialApp(
+          theme: AppTheme.build(Brightness.dark),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: const EqualizerScreen(),
+        ),
+      ),
     );
-  }
+    await tester.pumpAndSettle();
+    final notifier = container.read(equalizerProvider.notifier);
+    notifier.update(
+      container.read(equalizerProvider).settings.copyWith(preamp: -1),
+    );
+    await tester.pumpAndSettle();
+    final page = tester.widget<Scaffold>(find.byType(Scaffold));
+    final picker = find.byType(AppSegmentedControl);
+    final bandPicker = tester.widget(picker);
+    Widget bass() => tester
+        .widgetList<AppLevelSlider>(find.byType(AppLevelSlider))
+        .firstWhere((slider) => slider.semanticLabel == 'Bass');
+    final bassSlider = bass();
+    final gainSlider = tester
+        .widgetList<AppLevelSlider>(find.byType(AppLevelSlider))
+        .first;
+    for (var i = 1; i <= 20; i++) {
+      notifier.update(
+        container.read(equalizerProvider).settings.copyWith(preamp: -i / 2),
+      );
+      await tester.pump(const Duration(milliseconds: 16));
+      expect(tester.widget<Scaffold>(find.byType(Scaffold)), same(page));
+      expect(tester.widget(picker), same(bandPicker));
+      expect(bass(), same(bassSlider));
+    }
+    gainSlider.onChanged!(5);
+    await tester.pump();
+    if (bassSlider is AppLevelSlider) {
+      bassSlider.onChanged!(3);
+    } else {
+      (bassSlider as AppSlider).onChanged!(3);
+    }
+    await tester.pump();
+    final settings = container.read(equalizerProvider).settings;
+    expect(settings.preamp, -10);
+    expect(settings.gains.first, 5);
+    expect(settings.bass, 3);
+    expect(playbackEqualizer.value, same(settings));
+    notifier.update(const EqualizerSettings());
+    await tester.pumpAndSettle();
+    notifier.importPreset(
+      jsonEncode({
+        'format': 'mornye-equalizer',
+        'version': 1,
+        'name': 'Signed zero',
+        'settings': EqualizerSettings(
+          gains: List.filled(10, -0.0),
+          preamp: -0.0,
+          bass: -0.0,
+          treble: -0.0,
+          balance: -0.0,
+        ).toJson(),
+      }),
+    );
+    await tester.pumpAndSettle();
+    final headers = tester.widgetList<SliderValueHeader>(
+      find.byType(SliderValueHeader),
+    );
+    for (final title in ['Preamp', 'Bass', 'Treble', 'Balance']) {
+      expect(
+        headers.firstWhere((header) => header.title == title).value,
+        title == 'Balance' ? '−0%' : '−0.0 dB',
+      );
+    }
+    final bandValue = tester
+        .widgetList<AppLevelSlider>(find.byType(AppLevelSlider))
+        .first
+        .value;
+    expect(bandValue.isNegative, isTrue);
+    expect(tester.takeException(), isNull);
+    await tester.pumpWidget(const SizedBox.shrink());
+    await tester.pump(const Duration(milliseconds: 350));
+  });
 
   test('band resampling preserves flat curves and center gains', () {
     for (final count in EqualizerSettings.bandCounts) {
@@ -340,91 +322,82 @@ void main() {
     expect(restored.read(equalizerProvider).presets.length, 3);
   });
 
-  for (final mornye in [true]) {
-    testWidgets(
-      'EQ editing and dialogs fit a narrow screen with large text ($mornye)',
-      (tester) async {
-        tester.view.physicalSize = const Size(320, 720);
-        tester.view.devicePixelRatio = 1;
-        addTearDown(tester.view.reset);
-        final container = ProviderContainer();
-        addTearDown(container.dispose);
-        await tester.pumpWidget(
-          UncontrolledProviderScope(
-            container: container,
-            child: MaterialApp(
-              theme: AppTheme.build(Brightness.dark),
-              localizationsDelegates: AppLocalizations.localizationsDelegates,
-              supportedLocales: AppLocalizations.supportedLocales,
-              builder: (context, child) => MediaQuery(
-                data: MediaQuery.of(
-                  context,
-                ).copyWith(textScaler: const TextScaler.linear(1.8)),
-                child: child!,
-              ),
-              home: const EqualizerScreen(),
+  testWidgets(
+    'EQ editing and dialogs fit a narrow screen with large text (true)',
+    (tester) async {
+      tester.view.physicalSize = const Size(320, 720);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.reset);
+      final container = ProviderContainer();
+      addTearDown(container.dispose);
+      await tester.pumpWidget(
+        UncontrolledProviderScope(
+          container: container,
+          child: MaterialApp(
+            theme: AppTheme.build(Brightness.dark),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            builder: (context, child) => MediaQuery(
+              data: MediaQuery.of(
+                context,
+              ).copyWith(textScaler: const TextScaler.linear(1.8)),
+              child: child!,
             ),
+            home: const EqualizerScreen(),
           ),
-        );
-        await tester.pumpAndSettle();
-        final picker = find.byType(
-          mornye ? AppSegmentedControl : M3EButtonGroup,
-        );
-        await tester.scrollUntilVisible(
-          picker,
-          150,
-          scrollable: find.byType(Scrollable).first,
-        );
-        await tester.pumpAndSettle();
-        // The picker sits on an opaque group card.
-        expect(
-          find.descendant(of: picker, matching: find.byType(BackdropFilter)),
-          findsNothing,
-        );
-        await tester.tap(
-          find.descendant(of: picker, matching: find.text('31')).first,
-        );
-        await tester.pumpAndSettle();
-        expect(container.read(equalizerProvider).settings.gains.length, 31);
-        expect(tester.takeException(), isNull);
-        // The first slider on the page is the lowest band's fader.
-        final onChanged = mornye
-            ? tester
-                  .widgetList<AppLevelSlider>(find.byType(AppLevelSlider))
-                  .first
-                  .onChanged
-            : tester
-                  .widgetList<AppSlider>(find.byType(AppSlider))
-                  .first
-                  .onChanged;
-        onChanged!(5);
-        await tester.pump();
-        expect(container.read(equalizerProvider).settings.gains.first, 5);
-        // Drags over the vertical faders adjust gains instead of scrolling.
-        tester
-            .state<ScrollableState>(find.byType(Scrollable).first)
-            .position
-            .jumpTo(0);
-        await tester.pumpAndSettle();
-        final save = find.text('Save preset');
-        await tester.scrollUntilVisible(
-          save,
-          150,
-          scrollable: find.byType(Scrollable).first,
-        );
-        await tester.pumpAndSettle();
-        await tester.tap(save);
-        await tester.pumpAndSettle();
-        await tester.enterText(find.byType(EditableText), 'My headphones');
-        await tester.tap(find.text('Save').last);
-        await tester.pumpAndSettle();
-        expect(
-          container.read(equalizerProvider).presets.single.name,
-          'My headphones',
-        );
-        expect(tester.takeException(), isNull);
-        await tester.pumpWidget(const SizedBox.shrink());
-      },
-    );
-  }
+        ),
+      );
+      await tester.pumpAndSettle();
+      final picker = find.byType(AppSegmentedControl);
+      await tester.scrollUntilVisible(
+        picker,
+        150,
+        scrollable: find.byType(Scrollable).first,
+      );
+      await tester.pumpAndSettle();
+      // The picker sits on an opaque group card.
+      expect(
+        find.descendant(of: picker, matching: find.byType(BackdropFilter)),
+        findsNothing,
+      );
+      await tester.tap(
+        find.descendant(of: picker, matching: find.text('31')).first,
+      );
+      await tester.pumpAndSettle();
+      expect(container.read(equalizerProvider).settings.gains.length, 31);
+      expect(tester.takeException(), isNull);
+      // The first slider on the page is the lowest band's fader.
+      final onChanged = tester
+          .widgetList<AppLevelSlider>(find.byType(AppLevelSlider))
+          .first
+          .onChanged;
+      onChanged!(5);
+      await tester.pump();
+      expect(container.read(equalizerProvider).settings.gains.first, 5);
+      // Drags over the vertical faders adjust gains instead of scrolling.
+      tester
+          .state<ScrollableState>(find.byType(Scrollable).first)
+          .position
+          .jumpTo(0);
+      await tester.pumpAndSettle();
+      final save = find.text('Save preset');
+      await tester.scrollUntilVisible(
+        save,
+        150,
+        scrollable: find.byType(Scrollable).first,
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(save);
+      await tester.pumpAndSettle();
+      await tester.enterText(find.byType(EditableText), 'My headphones');
+      await tester.tap(find.text('Save').last);
+      await tester.pumpAndSettle();
+      expect(
+        container.read(equalizerProvider).presets.single.name,
+        'My headphones',
+      );
+      expect(tester.takeException(), isNull);
+      await tester.pumpWidget(const SizedBox.shrink());
+    },
+  );
 }

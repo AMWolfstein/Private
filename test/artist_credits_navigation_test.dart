@@ -9,36 +9,34 @@ import 'package:mornye/theme/app_theme.dart';
 void main() {
   setUp(() => SharedPreferences.setMockInitialValues({}));
 
-  for (final mornye in [true]) {
-    testWidgets('artist picker offers each featured credit ($mornye)', (
-      tester,
-    ) async {
-      await tester.pumpWidget(
-        ProviderScope(
-          child: MaterialApp(
-            theme: mornye ? AppTheme.build(Brightness.dark) : ThemeData(),
-            localizationsDelegates: AppLocalizations.localizationsDelegates,
-            supportedLocales: AppLocalizations.supportedLocales,
-            home: Builder(
-              builder: (context) => Scaffold(
-                body: TextButton(
-                  onPressed: () => navigateToArtistCredits(
-                    context,
-                    artistNames: 'First Artist featured Second Artist',
-                  ),
-                  child: const Text('Artists'),
+  testWidgets('artist picker offers each featured credit (true)', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      ProviderScope(
+        child: MaterialApp(
+          theme: AppTheme.build(Brightness.dark),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: Builder(
+            builder: (context) => Scaffold(
+              body: TextButton(
+                onPressed: () => navigateToArtistCredits(
+                  context,
+                  artistNames: 'First Artist featured Second Artist',
                 ),
+                child: const Text('Artists'),
               ),
             ),
           ),
         ),
-      );
-      await tester.tap(find.text('Artists'));
-      await tester.pumpAndSettle();
-      expect(find.text('First Artist'), findsOneWidget);
-      expect(find.text('Second Artist'), findsOneWidget);
-      expect(tester.takeException(), isNull);
-      await tester.pumpWidget(const SizedBox());
-    });
-  }
+      ),
+    );
+    await tester.tap(find.text('Artists'));
+    await tester.pumpAndSettle();
+    expect(find.text('First Artist'), findsOneWidget);
+    expect(find.text('Second Artist'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+    await tester.pumpWidget(const SizedBox());
+  });
 }

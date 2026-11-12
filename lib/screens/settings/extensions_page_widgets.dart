@@ -150,7 +150,7 @@ class _SearchProviderSelector extends ConsumerWidget {
     final hasAnyProvider = searchProviders.isNotEmpty;
 
     final resolvedProviderId =
-        (settings.searchProvider != null && settings.searchProvider!.isNotEmpty)
+        settings.searchProvider != null && settings.searchProvider!.isNotEmpty
         ? settings.searchProvider!
         : searchProviders.firstOrNull?.id;
     String currentProviderName = context.l10n.optionsPrimaryProviderSubtitle;
@@ -294,8 +294,8 @@ class _HomeFeedProviderSelector extends ConsumerWidget {
               title: Text(ctx.l10n.extensionsHomeFeedAuto),
               subtitle: Text(ctx.l10n.extensionsHomeFeedAutoSubtitle),
               trailing:
-                  (settings.homeFeedProvider == null ||
-                      settings.homeFeedProvider!.isEmpty)
+                  settings.homeFeedProvider == null ||
+                      settings.homeFeedProvider!.isEmpty
                   ? AppIcon(Icons.check_circle, color: colorScheme.primary)
                   : AppIcon(Icons.circle_outlined, color: colorScheme.outline),
               onTap: () {

@@ -13,10 +13,9 @@ Iterable<(String, TextStyle, List<LyricWord>, bool)> _lyricSupplements(
     yield (
       text,
       base.copyWith(
-        fontSize:
-            (((translation ? 18.0 : 22.0))) * (line.isBackground ? 0.8 : 1),
+        fontSize: (translation ? 18.0 : 22.0) * (line.isBackground ? 0.8 : 1),
         height: 1.35,
-        fontWeight: ((translation ? FontWeight.w600 : FontWeight.bold)),
+        fontWeight: (translation ? FontWeight.w600 : FontWeight.bold),
       ),
       translation ? line.translationWords : line.romanizationWords,
       translation,

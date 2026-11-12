@@ -388,14 +388,6 @@
   "@appearanceThemeDark": {
     "description": "Dark theme"
   },
-  "appearanceDynamicColor": "动态色彩",
-  "@appearanceDynamicColor": {
-    "description": "Material You dynamic colors"
-  },
-  "appearanceDynamicColorSubtitle": "使用壁纸的颜色",
-  "@appearanceDynamicColorSubtitle": {
-    "description": "Subtitle for dynamic color"
-  },
   "appearanceHistoryView": "历史记录",
   "@appearanceHistoryView": {
     "description": "Layout style for history"
@@ -2443,14 +2435,6 @@
   "downloadFrom": "下载自",
   "@downloadFrom": {
     "description": "Label - download source"
-  },
-  "appearanceAmoledDark": "AMOLED深色",
-  "@appearanceAmoledDark": {
-    "description": "Theme option - pure black"
-  },
-  "appearanceAmoledDarkSubtitle": "纯黑背景，OLED 屏更省电，黑得深邃。",
-  "@appearanceAmoledDarkSubtitle": {
-    "description": "Subtitle for AMOLED dark"
   },
   "appearanceHeroAnimations": "Hero动画",
   "@appearanceHeroAnimations": {
@@ -7081,11 +7065,6 @@
   "@lyricsAiErrorNoLyrics": {
     "description": "AI translation error when the lyrics have no translatable lines"
   },
-  "nowPlayingLibraryEmpty": "你的乐库为空",
-  "@nowPlayingLibraryEmpty": {
-    "description": "Snackbar when shuffle library is requested but library has no tracks"
-  },
-  "nowPlayingShuffleLibraryFailed": "无法随机播放乐库：{error}",
   "@nowPlayingShuffleLibraryFailed": {
     "description": "Snackbar when shuffling the library fails",
     "placeholders": {
@@ -7697,19 +7676,6 @@
   "profileRemovePhoto": "删除照片",
   "profilePhotoError": "请选择小于20MB的有效图片。",
   "profileSaveError": "无法保存你的个人资料，请重试。",
-  "homeGreetingMorning1": "早上好",
-  "homeGreetingMorning2": "新的一天",
-  "homeGreetingMorning3": "全新开始",
-  "homeGreetingAfternoon1": "下午好",
-  "homeGreetingAfternoon2": "午后律动",
-  "homeGreetingAfternoon3": "保持氛围",
-  "homeGreetingEvening1": "晚上好",
-  "homeGreetingEvening2": "放松时刻",
-  "homeGreetingEvening3": "黄金时光",
-  "homeGreetingNight1": "晚安",
-  "homeGreetingNight2": "深夜时光",
-  "homeGreetingNight3": "安静时刻",
-  "homeGreetingNamed": "{greeting}，{name}",
   "@homeGreetingNamed": {
     "description": "Home greeting followed by the first name from the user's profile",
     "placeholders": {
@@ -7720,15 +7686,6 @@
         "type": "String"
       }
     }
-  },
-  "homeTaglineListening": "我们在听什么？",
-  "@homeTaglineListening": {
-    "description": "Rotating Home prompt under the greeting"
-  },
-  "homeTaglineLink": "有链接？粘贴到搜索框",
-  "homeTaglineDiscover": "发现你的下一张最爱专辑",
-  "@homeTaglineDiscover": {
-    "description": "Rotating Home prompt under the greeting"
   },
   "homeContinueListening": "继续收听",
   "@homeContinueListening": {

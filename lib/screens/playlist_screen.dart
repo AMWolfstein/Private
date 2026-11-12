@@ -224,8 +224,7 @@ class _PlaylistScreenState extends ConsumerState<PlaylistScreen>
         _resolvedPlaylistName = resolvedPlaylistName;
         _resolvedCoverUrl = (playlistInfo?['images'] ?? owner?['images'])
             ?.toString();
-        _resolvedHeaderVideoUrl =
-            (headerVideo != null && headerVideo.isNotEmpty)
+        _resolvedHeaderVideoUrl = headerVideo != null && headerVideo.isNotEmpty
             ? headerVideo
             : _resolvedHeaderVideoUrl;
         _isLoading = false;

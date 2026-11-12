@@ -369,7 +369,7 @@ class _ExtensionDetailsScreenState
           runSpacing: 8,
           children: ext.tags
               .map(
-                (tag) => (ExtensionRepoCard(
+                (tag) => ExtensionRepoCard(
                   margin: EdgeInsets.zero,
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
@@ -381,7 +381,7 @@ class _ExtensionDetailsScreenState
                       style: Theme.of(context).textTheme.bodySmall,
                     ),
                   ),
-                )),
+                ),
               )
               .toList(),
         ),
@@ -685,7 +685,7 @@ class _MetadataRow extends StatelessWidget {
           ),
         ),
         // Material groups rows by the card alone; dividers are Mornye's.
-        if ((!isLast))
+        if (!isLast)
           Divider(
             height: 1,
             thickness: 1,
@@ -734,16 +734,16 @@ class _CapabilityRow extends StatelessWidget {
                 ),
               ),
               Icon(
-                ((enabled
+                enabled
                     ? CupertinoIcons.check_mark_circled
-                    : CupertinoIcons.clear_circled)),
+                    : CupertinoIcons.clear_circled,
                 size: 20,
                 color: enabled ? colorScheme.primary : colorScheme.outline,
               ),
             ],
           ),
         ),
-        if ((!isLast))
+        if (!isLast)
           Divider(
             height: 1,
             thickness: 1,

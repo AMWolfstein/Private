@@ -356,7 +356,7 @@ class _WordHighlightedLyricLineState
     bool lift = true,
   }) {
     final highlightedColor = widget.colorScheme.onSurface;
-    final pendingColor = (Colors.white.withValues(alpha: 0.4));
+    final pendingColor = Colors.white.withValues(alpha: 0.4);
     return _SweepingTimedLyricText(
       segments: [for (final word in words) word.text],
       starts: [for (final word in words) word.time],

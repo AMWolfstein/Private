@@ -1,5 +1,4 @@
 import 'dart:io' show Platform;
-import 'dart:math' as math;
 
 import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter/material.dart';
@@ -215,7 +214,9 @@ class _WhatsNewScreenState extends ConsumerState<WhatsNewScreen> {
                       child: ExpressiveButton(
                         // Gated, the main button asks instead of moving on.
                         onPressed: gated
-                            ? (_askingNearby ? null : _allowNearby)
+                            ? _askingNearby
+                                  ? null
+                                  : _allowNearby
                             : () => _next(pages.length),
                         icon: gated
                             ? Icon(context.adaptiveIcon(Icons.wifi))
@@ -599,12 +600,6 @@ class _TourHeroState extends State<_TourHero> with TickerProviderStateMixin {
     vsync: this,
     duration: const Duration(milliseconds: 700),
   );
-  late final _morph = AnimationController(
-    vsync: this,
-    duration: const Duration(milliseconds: 650),
-    value: 1,
-  );
-  final int _turns = 0;
   bool _started = false;
 
   @override
@@ -616,21 +611,13 @@ class _TourHeroState extends State<_TourHero> with TickerProviderStateMixin {
       _entrance.value = 1;
       return;
     }
-    // One unprompted morph shows the shape can change.
-    _entrance.forward().whenComplete(() {
-      if (mounted) _next();
-    });
+    _entrance.forward();
   }
 
   @override
   void dispose() {
     _entrance.dispose();
-    _morph.dispose();
     super.dispose();
-  }
-
-  void _next() {
-    return;
   }
 
   @override
@@ -652,23 +639,14 @@ class _TourHeroState extends State<_TourHero> with TickerProviderStateMixin {
     // Decorative: tapping to morph is a small extra, not a control.
     return ExcludeSemantics(
       child: AnimatedBuilder(
-        animation: Listenable.merge([_entrance, _morph]),
+        animation: _entrance,
         child: glyph,
         builder: (context, glyph) {
           final t = Curves.elasticOut.transform(_entrance.value);
-          final morph = Curves.easeInOutCubicEmphasized.transform(_morph.value);
-          // Each morph adds an eighth of a turn, settling with a spring.
-          final turn =
-              (_turns - 1 + Curves.elasticOut.transform(_morph.value)) *
-              math.pi /
-              4;
           final shape = GestureDetector(
-            onTap: () {
-              HapticFeedback.selectionClick();
-              _next();
-            },
+            onTap: HapticFeedback.selectionClick,
             child: Transform.rotate(
-              angle: (1 - t) * -0.35 + turn,
+              angle: (1 - t) * -0.35,
               child: Transform.scale(
                 scale: 0.6 + 0.4 * t,
                 child: SizedBox.square(
@@ -677,14 +655,10 @@ class _TourHeroState extends State<_TourHero> with TickerProviderStateMixin {
                     painter: _MorphPainter(
                       morph: null,
                       kind: M3EShapeKind.circle,
-                      progress: morph,
+                      progress: 1,
                       color: scheme.primaryContainer,
                     ),
-                    // Keep the glyph upright while the shape turns.
-                    child: Transform.rotate(
-                      angle: -turn,
-                      child: Center(child: glyph),
-                    ),
+                    child: Center(child: glyph),
                   ),
                 ),
               ),

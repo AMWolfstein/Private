@@ -568,7 +568,7 @@ extension _EditMetadataSheetAutoFill on _EditMetadataSheetState {
             width: double.infinity,
             child: AppActionButton(
               glass: false,
-              onPressed: (_fetching || _saving || _form.autoFillFields.isEmpty)
+              onPressed: _fetching || _saving || _form.autoFillFields.isEmpty
                   ? null
                   : _fetchAutoFillPreview,
               style: FilledButton.styleFrom(
@@ -604,7 +604,7 @@ extension _EditMetadataSheetAutoFill on _EditMetadataSheetState {
               outlined: true,
               glass: false,
               tonal: true,
-              onPressed: (_fetching || _fetchingMusicBrainz || _saving)
+              onPressed: _fetching || _fetchingMusicBrainz || _saving
                   ? null
                   : _fetchFromMusicBrainz,
               style: OutlinedButton.styleFrom(
@@ -729,7 +729,7 @@ extension _EditMetadataSheetAutoFill on _EditMetadataSheetState {
             child: AppActionButton(
               outlined: true,
               glass: false,
-              onPressed: (_fetching || _saving) ? null : _applyAutoFillPreview,
+              onPressed: _fetching || _saving ? null : _applyAutoFillPreview,
               icon: const Icon(Icons.check),
               label: Text(context.l10n.editMetadataAutoFillApply),
             ),

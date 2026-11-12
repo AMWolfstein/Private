@@ -229,11 +229,11 @@ class _LocalAlbumScreenState extends ConsumerState<LocalAlbumScreen>
           ? albumCover
           : artworkTrack?.coverPath,
       filePath: artworkTrack?.filePath,
-      builder: (context, coverPath) => (AppArtistSurface(
+      builder: (context, coverPath) => AppArtistSurface(
         imageSource: coverPath,
         neutralActions: true,
         child: Builder(builder: (context) => _buildPage(context, coverPath)),
-      )),
+      ),
     );
   }
 
@@ -311,7 +311,7 @@ class _LocalAlbumScreenState extends ConsumerState<LocalAlbumScreen>
     String? coverPath,
   ) {
     final expandedHeight = calculateExpandedHeight(context);
-    final motion = (!MediaQuery.disableAnimationsOf(context))
+    final motion = !MediaQuery.disableAnimationsOf(context)
         ? ref
               .watch(
                 playerMotionArtworkProvider((

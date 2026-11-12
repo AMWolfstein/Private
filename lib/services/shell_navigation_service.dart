@@ -62,7 +62,12 @@ class ShellNavigationService {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (generation != _searchGeneration ||
           !identical(owner, _tabSelectionOwner) ||
-          _currentTabIndex != (_showSearchTab ? (_showRepoTab ? 3 : 2) : 0)) {
+          _currentTabIndex !=
+              (_showSearchTab
+                  ? _showRepoTab
+                        ? 3
+                        : 2
+                  : 0)) {
         return;
       }
       final navigatorKey = _showSearchTab

@@ -230,8 +230,7 @@ extension _EditMetadataSheetCover on _EditMetadataSheetState {
                         _selectedCoverName ==
                             EditMetadataSheet._onlineCoverSentinel
                         ? context.l10n.trackCoverOnline
-                        : (_selectedCoverName ??
-                              context.l10n.trackCoverSelected),
+                        : _selectedCoverName ?? context.l10n.trackCoverSelected,
                   ),
                 ),
             ],

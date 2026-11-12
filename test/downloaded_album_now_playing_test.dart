@@ -27,113 +27,109 @@ class _History extends DownloadHistoryNotifier {
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  for (final mornye in [true]) {
-    testWidgets('downloaded album rows follow playback (mornye: $mornye)', (
-      tester,
-    ) async {
-      SharedPreferences.setMockInitialValues({});
-      tester.view.physicalSize = const Size(430, 1200);
-      tester.view.devicePixelRatio = 1;
-      addTearDown(tester.view.reset);
-      final cache = Directory.systemTemp.createTempSync('album_now_playing_');
-      DownloadedEmbeddedCoverResolver.setPersistentCacheDirectoryForTesting(
-        cache,
-      );
-      addTearDown(() async {
-        await tester.pumpWidget(const SizedBox.shrink());
-        await tester.runAsync(() async {
-          await DownloadedEmbeddedCoverResolver.resetMemoryStateForTesting();
-          DownloadedEmbeddedCoverResolver.setPersistentCacheDirectoryForTesting(
-            null,
-          );
-          await cache.delete(recursive: true);
-        });
+  testWidgets('downloaded album rows follow playback (mornye: true)', (
+    tester,
+  ) async {
+    SharedPreferences.setMockInitialValues({});
+    tester.view.physicalSize = const Size(430, 1200);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    final cache = Directory.systemTemp.createTempSync('album_now_playing_');
+    DownloadedEmbeddedCoverResolver.setPersistentCacheDirectoryForTesting(
+      cache,
+    );
+    addTearDown(() async {
+      await tester.pumpWidget(const SizedBox.shrink());
+      await tester.runAsync(() async {
+        await DownloadedEmbeddedCoverResolver.resetMemoryStateForTesting();
+        DownloadedEmbeddedCoverResolver.setPersistentCacheDirectoryForTesting(
+          null,
+        );
+        await cache.delete(recursive: true);
       });
+    });
 
-      await tester.pumpWidget(
-        ProviderScope(
-          overrides: [
-            settingsProvider.overrideWith(ReEnrichTestSettings.new),
-            downloadHistoryProvider.overrideWith(_History.new),
-            downloadedAlbumTracksProvider(
-              const DownloadedAlbumTracksRequest(
-                albumName: 'Album',
-                artistName: 'Artist',
-              ),
-            ).overrideWith(
-              (ref) async => [
-                for (final (index, id) in ['first', 'second'].indexed)
-                  DownloadHistoryItem(
-                    id: id,
-                    trackName: id == 'first' ? 'First' : 'Second',
-                    artistName: 'Artist',
-                    albumName: 'Album',
-                    filePath: '/music/$id.flac',
-                    service: 'example-provider',
-                    downloadedAt: DateTime(2026),
-                    trackNumber: index + 1,
-                    duration: 180,
-                  ),
-              ],
-            ),
-            currentMediaItemProvider.overrideWithBuild(
-              (ref, notifier) =>
-                  Stream.value(const MediaItem(id: 'second', title: 'Second')),
-            ),
-            playbackPlayingProvider.overrideWith((ref) => true),
-            playbackLoadingProvider.overrideWith((ref) => false),
-          ],
-          child: MaterialApp(
-            theme: AppTheme.build(Brightness.light),
-            localizationsDelegates: AppLocalizations.localizationsDelegates,
-            supportedLocales: AppLocalizations.supportedLocales,
-            home: const DownloadedAlbumScreen(
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          settingsProvider.overrideWith(ReEnrichTestSettings.new),
+          downloadHistoryProvider.overrideWith(_History.new),
+          downloadedAlbumTracksProvider(
+            const DownloadedAlbumTracksRequest(
               albumName: 'Album',
               artistName: 'Artist',
             ),
+          ).overrideWith(
+            (ref) async => [
+              for (final (index, id) in ['first', 'second'].indexed)
+                DownloadHistoryItem(
+                  id: id,
+                  trackName: id == 'first' ? 'First' : 'Second',
+                  artistName: 'Artist',
+                  albumName: 'Album',
+                  filePath: '/music/$id.flac',
+                  service: 'example-provider',
+                  downloadedAt: DateTime(2026),
+                  trackNumber: index + 1,
+                  duration: 180,
+                ),
+            ],
+          ),
+          currentMediaItemProvider.overrideWithBuild(
+            (ref, notifier) =>
+                Stream.value(const MediaItem(id: 'second', title: 'Second')),
+          ),
+          playbackPlayingProvider.overrideWith((ref) => true),
+          playbackLoadingProvider.overrideWith((ref) => false),
+        ],
+        child: MaterialApp(
+          theme: AppTheme.build(Brightness.light),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: const DownloadedAlbumScreen(
+            albumName: 'Album',
+            artistName: 'Artist',
           ),
         ),
+      ),
+    );
+    // The current row's glyph loops, so pump in bounded steps. Real file
+    // IO from the cover lookups needs real time between the frames, or the
+    // teardown waits for it forever.
+    for (var i = 0; i < 20; i++) {
+      await tester.runAsync(
+        () => Future<void>.delayed(const Duration(milliseconds: 5)),
       );
-      // The current row's glyph loops, so pump in bounded steps. Real file
-      // IO from the cover lookups needs real time between the frames, or the
-      // teardown waits for it forever.
-      for (var i = 0; i < 20; i++) {
-        await tester.runAsync(
-          () => Future<void>.delayed(const Duration(milliseconds: 5)),
-        );
-        await tester.pump(const Duration(milliseconds: 50));
-      }
+      await tester.pump(const Duration(milliseconds: 50));
+    }
 
-      Finder row(String title) => find.byWidgetPredicate(
-        (widget) => widget is AlbumTrackTile && widget.trackName == title,
-      );
-      expect(row('Second'), findsOneWidget);
-      expect(tester.widget<AlbumTrackTile>(row('Second')).isCurrent, isTrue);
-      expect(tester.widget<AlbumTrackTile>(row('First')).isCurrent, isFalse);
-      expect(
-        find.descendant(of: row('Second'), matching: find.byTooltip('Pause')),
-        findsOneWidget,
-      );
-      expect(
-        find.descendant(of: row('First'), matching: find.byTooltip('Play')),
-        findsOneWidget,
-      );
-      expect(
-        find.descendant(
-          of: row('Second'),
-          matching: find.byType(NowPlayingIndicator),
-        ),
-        mornye ? findsNothing : findsOneWidget,
-      );
-      expect(
-        find.descendant(
-          of: row('Second'),
-          matching: findAppIcon(
-            mornye ? CupertinoIcons.pause_fill : Icons.pause,
-          ),
-        ),
-        findsOneWidget,
-      );
-    });
-  }
+    Finder row(String title) => find.byWidgetPredicate(
+      (widget) => widget is AlbumTrackTile && widget.trackName == title,
+    );
+    expect(row('Second'), findsOneWidget);
+    expect(tester.widget<AlbumTrackTile>(row('Second')).isCurrent, isTrue);
+    expect(tester.widget<AlbumTrackTile>(row('First')).isCurrent, isFalse);
+    expect(
+      find.descendant(of: row('Second'), matching: find.byTooltip('Pause')),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(of: row('First'), matching: find.byTooltip('Play')),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(
+        of: row('Second'),
+        matching: find.byType(NowPlayingIndicator),
+      ),
+      findsNothing,
+    );
+    expect(
+      find.descendant(
+        of: row('Second'),
+        matching: findAppIcon(CupertinoIcons.pause_fill),
+      ),
+      findsOneWidget,
+    );
+  });
 }

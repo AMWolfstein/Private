@@ -303,7 +303,7 @@ class _DonateLinksCard extends StatelessWidget {
                 method: config.methods[index],
                 colorScheme: colorScheme,
               ),
-              if ((index < config.methods.length - 1))
+              if (index < config.methods.length - 1)
                 Divider(
                   height: 1,
                   thickness: 1,

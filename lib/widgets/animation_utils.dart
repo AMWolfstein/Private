@@ -743,12 +743,12 @@ class HomeSearchSkeleton extends StatelessWidget {
   /// A section title and its trailing action, inset like the loaded header.
   static Widget _headerSkeleton(BuildContext context, double width) {
     return Padding(
-      padding: ((const EdgeInsetsDirectional.fromSTEB(
+      padding: (const EdgeInsetsDirectional.fromSTEB(
         20,
         16,
         12,
         10,
-      ))).add(EdgeInsets.symmetric(horizontal: wideListInset(context))),
+      )).add(EdgeInsets.symmetric(horizontal: wideListInset(context))),
       child: ShimmerLoading(
         child: Row(
           children: [
@@ -805,9 +805,9 @@ class HomeSearchSkeleton extends StatelessWidget {
     });
     // Material uses the result groups' own container tier; Mornye's glass
     // results keep a faint neutral wash.
-    final groupColor = (colorScheme.surfaceContainerHighest.withValues(
+    final groupColor = colorScheme.surfaceContainerHighest.withValues(
       alpha: 0.3,
-    ));
+    );
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -856,7 +856,7 @@ class _CoverCellSkeleton extends StatelessWidget {
         SkeletonBox(
           width: extent,
           height: extent,
-          borderRadius: round ? extent / 2 : (8),
+          borderRadius: round ? extent / 2 : 8,
         ),
         const SizedBox(height: 8),
         SkeletonBox(

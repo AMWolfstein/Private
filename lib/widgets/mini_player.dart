@@ -62,7 +62,7 @@ class _MiniPlayerState extends ConsumerState<MiniPlayer> {
   // The Mornye full player shades itself from the cover's source colour;
   // resolving it with the track lets the player open on its final colour.
   void _warmCoverColour(Uri? artUri) {
-    if ((artUri == _warmedArtUri)) return;
+    if (artUri == _warmedArtUri) return;
     _warmedArtUri = artUri;
     final source = artUri?.toString();
     if (source != null && source.isNotEmpty) {
@@ -277,9 +277,9 @@ class _MiniPlayerBodyState extends ConsumerState<_MiniPlayerBody> {
                               strokeWidth: 2.5,
                             )
                           : AppIcon(
-                              ((isPlaying
+                              isPlaying
                                   ? CupertinoIcons.pause_fill
-                                  : CupertinoIcons.play_fill)),
+                                  : CupertinoIcons.play_fill,
                             ),
                       onPressed: isLoading
                           ? null
@@ -321,7 +321,7 @@ class _MiniPlayerBodyState extends ConsumerState<_MiniPlayerBody> {
         child: surface,
       ),
     );
-    return (Padding(
+    return Padding(
       padding: EdgeInsets.only(bottom: widget.bottomPadding),
       child: AppGlassPress(
         radius: 32,
@@ -332,7 +332,7 @@ class _MiniPlayerBodyState extends ConsumerState<_MiniPlayerBody> {
           child: swipeable,
         ),
       ),
-    ));
+    );
   }
 }
 

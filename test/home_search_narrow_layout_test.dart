@@ -77,22 +77,20 @@ void main() {
     ('portrait tablet', const Size(800, 1280)),
     ('narrow tablet window', const Size(820, 1400)),
   ]) {
-    for (final mornye in [true]) {
-      final key = '$name ${mornye ? 'Mornye' : 'Material'}';
-      testWidgets('Search results on a $key paint the base layout', (
-        tester,
-      ) async {
-        await pumpSearchFixture(tester, size: size, mornye: mornye);
-        expect(find.text('Found artist 0'), findsOneWidget);
-        expect(find.byType(SliverGrid), findsNothing);
+    final key = '$name ${'Mornye'}';
+    testWidgets('Search results on a $key paint the base layout', (
+      tester,
+    ) async {
+      await pumpSearchFixture(tester, size: size, mornye: true);
+      expect(find.text('Found artist 0'), findsOneWidget);
+      expect(find.byType(SliverGrid), findsNothing);
 
-        final fingerprint = _paintFingerprint(tester);
-        final hash = sha1.convert(utf8.encode(fingerprint)).toString();
-        final expected = _baseFingerprints[key];
-        if (hash != expected) debugPrint('$key: $hash\n$fingerprint');
-        expect(hash, expected);
-        expect(tester.takeException(), isNull);
-      });
-    }
+      final fingerprint = _paintFingerprint(tester);
+      final hash = sha1.convert(utf8.encode(fingerprint)).toString();
+      final expected = _baseFingerprints[key];
+      if (hash != expected) debugPrint('$key: $hash\n$fingerprint');
+      expect(hash, expected);
+      expect(tester.takeException(), isNull);
+    });
   }
 }

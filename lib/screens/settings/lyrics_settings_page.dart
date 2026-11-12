@@ -303,12 +303,12 @@ class LyricsSettingsPage extends ConsumerWidget {
                     child: Text(context.l10n.dialogSave),
                   ),
                 ];
-                return (Wrap(
+                return Wrap(
                   alignment: WrapAlignment.end,
                   spacing: 8,
                   runSpacing: 8,
                   children: actions,
-                ));
+                );
               },
             ),
           ],

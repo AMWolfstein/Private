@@ -44,11 +44,7 @@ class SpringCurve extends Curve {
       _simulation.x(t * duration.inMicroseconds / 1e6);
 }
 
-/// Material 3 Expressive motion for the Material theme.
-///
-/// Spatial springs (position, size, scale) overshoot slightly; effects
-/// springs (opacity, color) settle without overshoot. Mornye and reduced
-/// motion keep each call site's original [AppMotionSpec].
+/// Motion presets. Each preset returns the call site's own [AppMotionSpec].
 abstract final class AppMotion {
   /// Fast spatial spring for small components: chips, checks, buttons.
   static AppMotionSpec spatialFast(

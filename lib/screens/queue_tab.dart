@@ -499,7 +499,7 @@ class _QueueTabState extends ConsumerState<QueueTab> {
 
   @override
   Widget build(BuildContext context) {
-    if ((widget.librarySection == null)) {
+    if (widget.librarySection == null) {
       return AppLibraryScreen(
         onOpenSection: (section) => pushPage<void>(
           context,

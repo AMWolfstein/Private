@@ -340,13 +340,13 @@ class _HomeSections extends ConsumerWidget {
     final showContinue = hasMediaItem || hasResume;
 
     final recentlyPlayed =
-        (ref.watch(homeRecentlyPlayedProvider.select((s) => s.value)) ??
-        const <HomeRepeatTrack>[]);
+        ref.watch(homeRecentlyPlayedProvider.select((s) => s.value)) ??
+        const <HomeRepeatTrack>[];
     // The card only stands in once nothing was played: while the shelf
     // loads, it would show and then give way to Recently Played.
-    final recentlyPlayedLoading = (ref.watch(
+    final recentlyPlayedLoading = ref.watch(
       homeRecentlyPlayedProvider.select((s) => !s.hasValue && !s.hasError),
-    ));
+    );
     final hasTopPicks = _HomeTopPicksSection.hasPicks(ref);
     final sections = <Widget>[
       if (hasTopPicks) _HomeTopPicksSection(inset: inset),

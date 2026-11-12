@@ -98,7 +98,7 @@ class _DownloadedAlbumScreenState extends ConsumerState<DownloadedAlbumScreen>
     final order = AlbumTrackOrder(
       allItems.where((item) {
         final itemArtist =
-            (item.albumArtist != null && item.albumArtist!.isNotEmpty)
+            item.albumArtist != null && item.albumArtist!.isNotEmpty
             ? item.albumArtist!
             : item.artistName;
         final itemKey =
@@ -186,7 +186,7 @@ class _DownloadedAlbumScreenState extends ConsumerState<DownloadedAlbumScreen>
     final navigator = Navigator.of(context);
     if (!mounted) return;
 
-    final backdropReady = (Future<void>.value());
+    final backdropReady = Future<void>.value();
     final beforeModTime =
         await DownloadedEmbeddedCoverResolver.readFileModTimeMillis(
           item.filePath,
@@ -324,7 +324,7 @@ class _DownloadedAlbumScreenState extends ConsumerState<DownloadedAlbumScreen>
     final expandedHeight = calculateExpandedHeight(context);
     final embeddedCoverPath = _resolveAlbumEmbeddedCoverPath(tracks);
     final commonQuality = _getCommonQuality(tracks, qualityLabelMode);
-    final motion = (!MediaQuery.disableAnimationsOf(context))
+    final motion = !MediaQuery.disableAnimationsOf(context)
         ? ref
               .watch(
                 playerMotionArtworkProvider((

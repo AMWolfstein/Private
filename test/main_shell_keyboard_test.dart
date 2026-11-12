@@ -110,21 +110,19 @@ void main() {
   bool collapsed(WidgetTester tester) =>
       tester.widget<AppBottomBar>(find.byType(AppBottomBar)).collapsed;
 
-  for (final mornye in [true]) {
-    testWidgets('external mode hides Home playback and mini player ($mornye)', (
-      tester,
-    ) async {
-      await pumpShell(tester, mornye: mornye, externalPlayer: true);
-      await tester.pump(const Duration(milliseconds: 400));
-      expect(find.text('Continue Listening'), findsNothing);
-      expect(find.text('Old internal song'), findsNothing);
-      expect(find.text('Saved song'), findsNothing);
-      for (final player in find.byType(MiniPlayer).evaluate()) {
-        expect(tester.getSize(find.byWidget(player.widget)).height, 0);
-      }
-      expect(tester.takeException(), isNull);
-    });
-  }
+  testWidgets('external mode hides Home playback and mini player (true)', (
+    tester,
+  ) async {
+    await pumpShell(tester, mornye: true, externalPlayer: true);
+    await tester.pump(const Duration(milliseconds: 400));
+    expect(find.text('Continue Listening'), findsNothing);
+    expect(find.text('Old internal song'), findsNothing);
+    expect(find.text('Saved song'), findsNothing);
+    for (final player in find.byType(MiniPlayer).evaluate()) {
+      expect(tester.getSize(find.byWidget(player.widget)).height, 0);
+    }
+    expect(tester.takeException(), isNull);
+  });
 
   void scrollHome(WidgetTester tester, {required double pixels}) {
     ScrollUpdateNotification(

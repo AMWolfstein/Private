@@ -17,7 +17,6 @@ import 'package:mornye/screens/app_library_screen.dart';
 import 'package:mornye/services/downloaded_embedded_cover_resolver.dart';
 import 'package:mornye/services/library_database.dart';
 import 'package:mornye/theme/app_theme.dart';
-import 'package:mornye/widgets/album_detail_header.dart';
 import 'package:mornye/widgets/cached_cover_image.dart';
 import 'package:mornye/widgets/local_library_artwork_builder.dart';
 import 'package:mornye/widgets/app_artist_header.dart';
@@ -222,21 +221,64 @@ void main() {
     },
   );
 
-  for (final mornye in [true]) {
-    testWidgets('blank album cover keeps the scanned track cover ($mornye)', (
+  testWidgets('blank album cover keeps the scanned track cover (true)', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(430, 1200);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    await tester.runAsync(() async {
+      await scannedCover.writeAsBytes(png);
+      await tester.pumpWidget(
+        app(
+          LocalAlbumScreen(
+            albumName: 'Album',
+            artistName: 'Artist',
+            coverPath: '   ',
+            tracks: [
+              LocalLibraryItem(
+                id: 'song',
+                trackName: 'Song',
+                artistName: 'Artist',
+                albumName: 'Album',
+                filePath: audio.path,
+                coverPath: scannedCover.path,
+                scannedAt: DateTime(2026),
+              ),
+            ],
+          ),
+          mornye: true,
+        ),
+      );
+      await tester.pumpAndSettle();
+    });
+    await tester.pumpAndSettle();
+    expect(
+      tester
+          .widget<AppArtistSurface>(find.byType(AppArtistSurface))
+          .imageSource,
+      scannedCover.path,
+    );
+    expect(extractions, 0);
+    expect(tester.takeException(), isNull);
+  });
+
+  for (final stale in [false, true]) {
+    testWidgets('album header recovers artwork (true, stale: $stale)', (
       tester,
     ) async {
       tester.view.physicalSize = const Size(430, 1200);
       tester.view.devicePixelRatio = 1;
       addTearDown(tester.view.reset);
+      // The player has already recovered artwork, as in the tester report.
+      final preview = await playerPreview(tester);
       await tester.runAsync(() async {
-        await scannedCover.writeAsBytes(png);
         await tester.pumpWidget(
           app(
             LocalAlbumScreen(
               albumName: 'Album',
               artistName: 'Artist',
-              coverPath: '   ',
+              coverPath: stale ? scannedCover.path : null,
               tracks: [
                 LocalLibraryItem(
                   id: 'song',
@@ -244,83 +286,28 @@ void main() {
                   artistName: 'Artist',
                   albumName: 'Album',
                   filePath: audio.path,
-                  coverPath: scannedCover.path,
+                  coverPath: stale ? scannedCover.path : null,
                   scannedAt: DateTime(2026),
                 ),
               ],
             ),
-            mornye: mornye,
+            mornye: true,
           ),
         );
         await tester.pumpAndSettle();
       });
       await tester.pumpAndSettle();
-      expect(
-        mornye
-            ? tester
-                  .widget<AppArtistSurface>(find.byType(AppArtistSurface))
-                  .imageSource
-            : tester
-                  .widget<AlbumDetailHeader>(find.byType(AlbumDetailHeader))
-                  .paletteSource,
-        scannedCover.path,
+      await pumpUntil(
+        tester,
+        () =>
+            tester
+                .widget<AppArtistSurface>(find.byType(AppArtistSurface))
+                .imageSource ==
+            preview,
       );
-      expect(extractions, 0);
+      expect(extractions, 1);
       expect(tester.takeException(), isNull);
     });
-
-    for (final stale in [false, true]) {
-      testWidgets('album header recovers artwork ($mornye, stale: $stale)', (
-        tester,
-      ) async {
-        tester.view.physicalSize = const Size(430, 1200);
-        tester.view.devicePixelRatio = 1;
-        addTearDown(tester.view.reset);
-        // The player has already recovered artwork, as in the tester report.
-        final preview = await playerPreview(tester);
-        await tester.runAsync(() async {
-          await tester.pumpWidget(
-            app(
-              LocalAlbumScreen(
-                albumName: 'Album',
-                artistName: 'Artist',
-                coverPath: stale ? scannedCover.path : null,
-                tracks: [
-                  LocalLibraryItem(
-                    id: 'song',
-                    trackName: 'Song',
-                    artistName: 'Artist',
-                    albumName: 'Album',
-                    filePath: audio.path,
-                    coverPath: stale ? scannedCover.path : null,
-                    scannedAt: DateTime(2026),
-                  ),
-                ],
-              ),
-              mornye: mornye,
-            ),
-          );
-          await tester.pumpAndSettle();
-        });
-        await tester.pumpAndSettle();
-        await pumpUntil(
-          tester,
-          () => mornye
-              ? tester
-                        .widget<AppArtistSurface>(find.byType(AppArtistSurface))
-                        .imageSource ==
-                    preview
-              : tester
-                        .widget<AlbumDetailHeader>(
-                          find.byType(AlbumDetailHeader),
-                        )
-                        .paletteSource ==
-                    preview,
-        );
-        expect(extractions, 1);
-        expect(tester.takeException(), isNull);
-      });
-    }
   }
 
   testWidgets('Mornye album grid replaces a stale scan path', (tester) async {

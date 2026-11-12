@@ -89,41 +89,39 @@ void main() {
         .load();
   });
 
-  for (final mornye in [true]) {
-    testWidgets('create playlist offers three sources (Mornye: $mornye)', (
-      tester,
-    ) async {
-      final collections = _Collections();
-      await tester.pumpWidget(
-        _app(
-          Consumer(
-            builder: (context, ref, _) => Scaffold(
-              body: TextButton(
-                onPressed: () => showCreatePlaylistSheet(context, ref),
-                child: const Text('create'),
-              ),
+  testWidgets('create playlist offers three sources (Mornye: true)', (
+    tester,
+  ) async {
+    final collections = _Collections();
+    await tester.pumpWidget(
+      _app(
+        Consumer(
+          builder: (context, ref, _) => Scaffold(
+            body: TextButton(
+              onPressed: () => showCreatePlaylistSheet(context, ref),
+              child: const Text('create'),
             ),
           ),
-          collections,
-          mornye: mornye,
         ),
-      );
-      await tester.tap(find.text('create'));
-      await tester.pumpAndSettle();
-      for (final title in [
-        'Empty playlist',
-        'From a folder',
-        'Import playlist file',
-      ]) {
-        expect(find.text(title), findsOneWidget);
-      }
+        collections,
+        mornye: true,
+      ),
+    );
+    await tester.tap(find.text('create'));
+    await tester.pumpAndSettle();
+    for (final title in [
+      'Empty playlist',
+      'From a folder',
+      'Import playlist file',
+    ]) {
+      expect(find.text(title), findsOneWidget);
+    }
 
-      await tester.tap(find.text('Empty playlist'));
-      await tester.pumpAndSettle();
-      await tester.enterText(find.byType(EditableText), 'Evening');
-      await tester.tap(find.text('Create'));
-      await tester.pumpAndSettle();
-      expect(collections.createdNames, ['Evening']);
-    });
-  }
+    await tester.tap(find.text('Empty playlist'));
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byType(EditableText), 'Evening');
+    await tester.tap(find.text('Create'));
+    await tester.pumpAndSettle();
+    expect(collections.createdNames, ['Evening']);
+  });
 }

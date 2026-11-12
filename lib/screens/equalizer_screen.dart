@@ -125,11 +125,11 @@ class _EqualizerScreenState extends ConsumerState<EqualizerScreen> {
                   selected: preset == selected,
                   leading: null,
                   trailing:
-                      ((preset == selected)) || state.presets.contains(preset)
+                      (preset == selected) || state.presets.contains(preset)
                       ? Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            if ((preset == selected))
+                            if (preset == selected)
                               AppIcon(
                                 Icons.check,
                                 color: Theme.of(context).colorScheme.primary,

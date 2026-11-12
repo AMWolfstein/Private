@@ -37,7 +37,7 @@ class AppContentCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if ((!mornyeSurface)) {
+    if (!mornyeSurface) {
       final interactive = onTap != null || onLongPress != null;
       return Card(
         color: color,

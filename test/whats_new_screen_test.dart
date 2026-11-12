@@ -185,116 +185,112 @@ void main() {
     expect(find.text('A Home that learns'), findsOne);
   });
 
-  for (final mornye in [true]) {
-    final style = mornye ? 'Mornye' : 'Material';
+  final style = 'Mornye';
 
-    Future<ProviderContainer> openTour(
-      WidgetTester tester, {
-      double textScale = 1,
-    }) async {
-      final container = ProviderContainer(
-        overrides: [
-          settingsProvider.overrideWith(
-            () => _Settings(_updated, _Preferences()),
+  Future<ProviderContainer> openTour(
+    WidgetTester tester, {
+    double textScale = 1,
+  }) async {
+    final container = ProviderContainer(
+      overrides: [
+        settingsProvider.overrideWith(
+          () => _Settings(_updated, _Preferences()),
+        ),
+      ],
+    );
+    addTearDown(container.dispose);
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: container,
+        child: MaterialApp(
+          theme: AppTheme.build(Brightness.light),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          builder: (context, child) => MediaQuery(
+            data: MediaQuery.of(
+              context,
+            ).copyWith(textScaler: TextScaler.linear(textScale)),
+            child: child!,
           ),
-        ],
-      );
-      addTearDown(container.dispose);
-      await tester.pumpWidget(
-        UncontrolledProviderScope(
-          container: container,
-          child: MaterialApp(
-            theme: mornye ? AppTheme.build(Brightness.light) : ThemeData(),
-            localizationsDelegates: AppLocalizations.localizationsDelegates,
-            supportedLocales: AppLocalizations.supportedLocales,
-            builder: (context, child) => MediaQuery(
-              data: MediaQuery.of(
-                context,
-              ).copyWith(textScaler: TextScaler.linear(textScale)),
-              child: child!,
-            ),
-            home: Builder(
-              builder: (context) => TextButton(
-                onPressed: () => Navigator.of(context).push(
-                  MaterialPageRoute<void>(
-                    builder: (_) => const WhatsNewScreen(),
-                  ),
-                ),
-                child: const Text('about'),
+          home: Builder(
+            builder: (context) => TextButton(
+              onPressed: () => Navigator.of(context).push(
+                MaterialPageRoute<void>(builder: (_) => const WhatsNewScreen()),
               ),
+              child: const Text('about'),
             ),
           ),
         ),
-      );
-      await tester.tap(find.text('about'));
-      await tester.pumpAndSettle();
-      return container;
-    }
-
-    testWidgets('$style tour pages through to Done and closes', (tester) async {
-      tester.view.physicalSize = const Size(390, 844);
-      tester.view.devicePixelRatio = 1;
-      addTearDown(tester.view.resetPhysicalSize);
-      addTearDown(tester.view.resetDevicePixelRatio);
-      final container = await openTour(tester);
-
-      expect(find.text('Mornye ${AppInfo.whatsNewRelease} is here'), findsOne);
-      expect(find.text('Skip for now'), findsOne);
-      for (final title in [
-        'A Home that learns',
-        'Player and lyrics',
-        'Library and search',
-      ]) {
-        await tester.tap(find.text('Continue'));
-        await tester.pumpAndSettle();
-        expect(find.text(title), findsWidgets);
-      }
-      // Back steps to the previous page before it leaves the tour.
-      await tester.binding.handlePopRoute();
-      await tester.pumpAndSettle();
-      expect(find.text('Player and lyrics'), findsWidgets);
-      await tester.tap(find.text('Continue'));
-      await tester.pumpAndSettle();
-      await tester.tap(find.text('Continue'));
-      await tester.pumpAndSettle();
-      expect(find.text('Faster everywhere'), findsWidgets);
-      expect(find.text('Continue'), findsNothing);
-      expect(container.read(settingsProvider).whatsNewSeen, isEmpty);
-
-      await tester.tap(find.text('Start listening'));
-      await tester.pumpAndSettle();
-      expect(find.byType(WhatsNewScreen), findsNothing);
-      expect(find.text('about'), findsOne);
-      expect(
-        container.read(settingsProvider).whatsNewSeen,
-        AppInfo.whatsNewRelease,
-      );
-      expect(tester.takeException(), isNull);
-    });
-
-    testWidgets('$style tour skips at once and fits a small phone', (
-      tester,
-    ) async {
-      tester.view.physicalSize = const Size(320, 568);
-      tester.view.devicePixelRatio = 1;
-      addTearDown(tester.view.resetPhysicalSize);
-      addTearDown(tester.view.resetDevicePixelRatio);
-      final container = await openTour(tester, textScale: 1.6);
-      for (var page = 0; page < 4; page++) {
-        expect(tester.takeException(), isNull);
-        await tester.tap(find.text('Continue'));
-        await tester.pumpAndSettle();
-      }
-      expect(tester.takeException(), isNull);
-      await tester.binding.handlePopRoute();
-      await tester.pumpAndSettle();
-      await tester.tap(find.text('Skip for now'));
-      await tester.pumpAndSettle();
-      expect(find.byType(WhatsNewScreen), findsNothing);
-      expect(
-        container.read(settingsProvider).whatsNewSeen,
-        AppInfo.whatsNewRelease,
-      );
-    });
+      ),
+    );
+    await tester.tap(find.text('about'));
+    await tester.pumpAndSettle();
+    return container;
   }
+
+  testWidgets('$style tour pages through to Done and closes', (tester) async {
+    tester.view.physicalSize = const Size(390, 844);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    final container = await openTour(tester);
+
+    expect(find.text('Mornye ${AppInfo.whatsNewRelease} is here'), findsOne);
+    expect(find.text('Skip for now'), findsOne);
+    for (final title in [
+      'A Home that learns',
+      'Player and lyrics',
+      'Library and search',
+    ]) {
+      await tester.tap(find.text('Continue'));
+      await tester.pumpAndSettle();
+      expect(find.text(title), findsWidgets);
+    }
+    // Back steps to the previous page before it leaves the tour.
+    await tester.binding.handlePopRoute();
+    await tester.pumpAndSettle();
+    expect(find.text('Player and lyrics'), findsWidgets);
+    await tester.tap(find.text('Continue'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Continue'));
+    await tester.pumpAndSettle();
+    expect(find.text('Faster everywhere'), findsWidgets);
+    expect(find.text('Continue'), findsNothing);
+    expect(container.read(settingsProvider).whatsNewSeen, isEmpty);
+
+    await tester.tap(find.text('Start listening'));
+    await tester.pumpAndSettle();
+    expect(find.byType(WhatsNewScreen), findsNothing);
+    expect(find.text('about'), findsOne);
+    expect(
+      container.read(settingsProvider).whatsNewSeen,
+      AppInfo.whatsNewRelease,
+    );
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('$style tour skips at once and fits a small phone', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(320, 568);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    final container = await openTour(tester, textScale: 1.6);
+    for (var page = 0; page < 4; page++) {
+      expect(tester.takeException(), isNull);
+      await tester.tap(find.text('Continue'));
+      await tester.pumpAndSettle();
+    }
+    expect(tester.takeException(), isNull);
+    await tester.binding.handlePopRoute();
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Skip for now'));
+    await tester.pumpAndSettle();
+    expect(find.byType(WhatsNewScreen), findsNothing);
+    expect(
+      container.read(settingsProvider).whatsNewSeen,
+      AppInfo.whatsNewRelease,
+    );
+  });
 }

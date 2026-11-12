@@ -122,7 +122,7 @@ class _HiResCheckCardState extends State<HiResCheckCard> {
                     height: 20,
                     child: (const CupertinoActivityIndicator()),
                   )
-                else if (((result != null || _error != null)))
+                else if (result != null || _error != null)
                   Tooltip(
                     message: l10n.audioAnalysisRescan,
                     child: CupertinoButton(

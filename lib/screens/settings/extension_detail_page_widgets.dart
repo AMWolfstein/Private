@@ -152,9 +152,9 @@ class _CapabilityItem extends StatelessWidget {
                 ),
               ),
               AppIcon(
-                ((enabled
+                enabled
                     ? CupertinoIcons.check_mark_circled_solid
-                    : CupertinoIcons.xmark_circle)),
+                    : CupertinoIcons.xmark_circle,
                 color: colorScheme.primary,
               ),
             ],

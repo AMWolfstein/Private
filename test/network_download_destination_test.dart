@@ -87,58 +87,54 @@ void main() {
       expect(DownloadItem.fromJson(legacy).networkDownloadFolder, '');
     },
   );
-  for (final mornye in [true]) {
-    for (final fail in [false, true]) {
-      testWidgets(
-        'download folder checks write access before saving ($mornye, $fail)',
-        (tester) async {
-          final events = <String>[];
-          await tester.pumpWidget(
-            ProviderScope(
-              overrides: [
-                settingsProvider.overrideWith(() => _Settings(events)),
-              ],
-              child: MaterialApp(
-                theme: mornye ? AppTheme.build(Brightness.dark) : ThemeData(),
-                localizationsDelegates: AppLocalizations.localizationsDelegates,
-                supportedLocales: AppLocalizations.supportedLocales,
-                home: NetworkStorageScreen(
-                  service: _Storage(events, fail),
-                  path: 'Albums/',
-                  connection: const NetworkConnection(
-                    id: 'nas',
-                    name: 'NAS',
-                    protocol: NetworkProtocol.smb,
-                    address: 'smb://nas/Music/',
-                  ),
+  for (final fail in [false, true]) {
+    testWidgets(
+      'download folder checks write access before saving (true, $fail)',
+      (tester) async {
+        final events = <String>[];
+        await tester.pumpWidget(
+          ProviderScope(
+            overrides: [settingsProvider.overrideWith(() => _Settings(events))],
+            child: MaterialApp(
+              theme: AppTheme.build(Brightness.dark),
+              localizationsDelegates: AppLocalizations.localizationsDelegates,
+              supportedLocales: AppLocalizations.supportedLocales,
+              home: NetworkStorageScreen(
+                service: _Storage(events, fail),
+                path: 'Albums/',
+                connection: const NetworkConnection(
+                  id: 'nas',
+                  name: 'NAS',
+                  protocol: NetworkProtocol.smb,
+                  address: 'smb://nas/Music/',
                 ),
               ),
             ),
-          );
-          await tester.pumpAndSettle();
-          final button = find.widgetWithText(
-            AppActionButton,
-            'Download to this folder',
-          );
-          await tester.ensureVisible(button);
-          await tester.tap(button);
-          await tester.pumpAndSettle();
-          expect(events, [
-            'check:network://nas/Albums/',
-            if (!fail) 'save:network://nas/Albums/',
-          ]);
+          ),
+        );
+        await tester.pumpAndSettle();
+        final button = find.widgetWithText(
+          AppActionButton,
+          'Download to this folder',
+        );
+        await tester.ensureVisible(button);
+        await tester.tap(button);
+        await tester.pumpAndSettle();
+        expect(events, [
+          'check:network://nas/Albums/',
+          if (!fail) 'save:network://nas/Albums/',
+        ]);
+        expect(
+          find.text('Selected download destination'),
+          fail ? findsNothing : findsOneWidget,
+        );
+        if (fail) {
           expect(
-            find.text('Selected download destination'),
-            fail ? findsNothing : findsOneWidget,
+            find.textContaining('Could not write to this folder.'),
+            findsOneWidget,
           );
-          if (fail) {
-            expect(
-              find.textContaining('Could not write to this folder.'),
-              findsOneWidget,
-            );
-          }
-        },
-      );
-    }
+        }
+      },
+    );
   }
 }

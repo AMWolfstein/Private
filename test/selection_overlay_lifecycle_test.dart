@@ -25,111 +25,107 @@ Widget _app(ThemeData theme, GlobalKey<NavigatorState> navigator) {
 }
 
 void main() {
-  for (final mornye in [true]) {
-    final name = mornye ? 'Mornye' : 'Material';
-    final theme = AppTheme.build(Brightness.light);
+  final name = 'Mornye';
+  final theme = AppTheme.build(Brightness.light);
 
-    testWidgets('$name: leaving a collection removes its selection bar', (
-      tester,
-    ) async {
-      final navigator = GlobalKey<NavigatorState>();
-      final scroll = ScrollController();
-      addTearDown(scroll.dispose);
-      await tester.pumpWidget(_app(theme, navigator));
-      navigator.currentState!.push(
-        MaterialPageRoute<void>(
-          builder: (_) => CollectionScaffold(
-            scrollController: scroll,
-            isSelectionMode: true,
-            onExitSelectionMode: () {},
-            appBar: const SliverAppBar(title: Text('Album')),
-            slivers: const [],
-            selectionBar: const Text('Delete 1 track'),
-          ),
+  testWidgets('$name: leaving a collection removes its selection bar', (
+    tester,
+  ) async {
+    final navigator = GlobalKey<NavigatorState>();
+    final scroll = ScrollController();
+    addTearDown(scroll.dispose);
+    await tester.pumpWidget(_app(theme, navigator));
+    navigator.currentState!.push(
+      MaterialPageRoute<void>(
+        builder: (_) => CollectionScaffold(
+          scrollController: scroll,
+          isSelectionMode: true,
+          onExitSelectionMode: () {},
+          appBar: const SliverAppBar(title: Text('Album')),
+          slivers: const [],
+          selectionBar: const Text('Delete 1 track'),
         ),
-      );
-      await tester.pumpAndSettle();
-      expect(find.text('Delete 1 track'), findsOneWidget);
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('Delete 1 track'), findsOneWidget);
 
-      navigator.currentState!.pop();
-      await tester.pumpAndSettle();
+    navigator.currentState!.pop();
+    await tester.pumpAndSettle();
 
-      expect(tester.takeException(), isNull);
-      expect(find.text('Library'), findsOneWidget);
-      expect(find.text('Delete 1 track'), findsNothing);
-    });
+    expect(tester.takeException(), isNull);
+    expect(find.text('Library'), findsOneWidget);
+    expect(find.text('Delete 1 track'), findsNothing);
+  });
 
-    testWidgets('$name: an empty album removes its old selection bar', (
-      tester,
-    ) async {
-      final navigator = GlobalKey<NavigatorState>();
-      final scroll = ScrollController();
-      final hasTracks = ValueNotifier(true);
-      addTearDown(scroll.dispose);
-      addTearDown(hasTracks.dispose);
-      await tester.pumpWidget(_app(theme, navigator));
-      navigator.currentState!.push(
-        MaterialPageRoute<void>(
-          builder: (_) => ValueListenableBuilder<bool>(
-            valueListenable: hasTracks,
-            builder: (_, hasTracks, _) => hasTracks
-                ? CollectionScaffold(
-                    scrollController: scroll,
-                    isSelectionMode: true,
-                    onExitSelectionMode: () {},
-                    appBar: const SliverAppBar(title: Text('Album')),
-                    slivers: const [],
-                    selectionBar: const Text('Delete 1 track'),
-                  )
-                : const Scaffold(body: Text('No tracks found for this album')),
-          ),
+  testWidgets('$name: an empty album removes its old selection bar', (
+    tester,
+  ) async {
+    final navigator = GlobalKey<NavigatorState>();
+    final scroll = ScrollController();
+    final hasTracks = ValueNotifier(true);
+    addTearDown(scroll.dispose);
+    addTearDown(hasTracks.dispose);
+    await tester.pumpWidget(_app(theme, navigator));
+    navigator.currentState!.push(
+      MaterialPageRoute<void>(
+        builder: (_) => ValueListenableBuilder<bool>(
+          valueListenable: hasTracks,
+          builder: (_, hasTracks, _) => hasTracks
+              ? CollectionScaffold(
+                  scrollController: scroll,
+                  isSelectionMode: true,
+                  onExitSelectionMode: () {},
+                  appBar: const SliverAppBar(title: Text('Album')),
+                  slivers: const [],
+                  selectionBar: const Text('Delete 1 track'),
+                )
+              : const Scaffold(body: Text('No tracks found for this album')),
         ),
-      );
-      await tester.pumpAndSettle();
-      expect(find.text('Delete 1 track'), findsOneWidget);
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('Delete 1 track'), findsOneWidget);
 
-      hasTracks.value = false;
-      await tester.pumpAndSettle();
+    hasTracks.value = false;
+    await tester.pumpAndSettle();
 
-      expect(tester.takeException(), isNull);
-      expect(find.text('No tracks found for this album'), findsOneWidget);
-      expect(find.text('Delete 1 track'), findsNothing);
-      navigator.currentState!.pop();
-      await tester.pumpAndSettle();
-      expect(find.text('Library'), findsOneWidget);
-    });
+    expect(tester.takeException(), isNull);
+    expect(find.text('No tracks found for this album'), findsOneWidget);
+    expect(find.text('Delete 1 track'), findsNothing);
+    navigator.currentState!.pop();
+    await tester.pumpAndSettle();
+    expect(find.text('Library'), findsOneWidget);
+  });
 
-    testWidgets(
-      '$name: leaving Songs clears the bar and allows selecting again',
-      (tester) async {
-        final navigator = GlobalKey<NavigatorState>();
-        await tester.pumpWidget(_app(theme, navigator));
-        for (var visit = 0; visit < 2; visit++) {
-          navigator.currentState!.push(
-            MaterialPageRoute<void>(
-              builder: (_) => const _SongsSelectionPage(),
-            ),
-          );
+  testWidgets(
+    '$name: leaving Songs clears the bar and allows selecting again',
+    (tester) async {
+      final navigator = GlobalKey<NavigatorState>();
+      await tester.pumpWidget(_app(theme, navigator));
+      for (var visit = 0; visit < 2; visit++) {
+        navigator.currentState!.push(
+          MaterialPageRoute<void>(builder: (_) => const _SongsSelectionPage()),
+        );
+        await tester.pumpAndSettle();
+        await tester.longPress(find.text('Song'));
+        await tester.pumpAndSettle();
+        expect(find.byType(SelectionBottomBar), findsOneWidget);
+
+        if (visit == 1) {
+          await tester.tap(find.byTooltip('Close'));
           await tester.pumpAndSettle();
-          await tester.longPress(find.text('Song'));
-          await tester.pumpAndSettle();
-          expect(find.byType(SelectionBottomBar), findsOneWidget);
-
-          if (visit == 1) {
-            await tester.tap(find.byTooltip('Close'));
-            await tester.pumpAndSettle();
-            expect(find.byType(SelectionBottomBar), findsNothing);
-          }
-          await tester.tap(find.byTooltip('Back'));
-          await tester.pumpAndSettle();
-
-          expect(tester.takeException(), isNull);
-          expect(find.text('Library'), findsOneWidget);
           expect(find.byType(SelectionBottomBar), findsNothing);
         }
-      },
-    );
-  }
+        await tester.tap(find.byTooltip('Back'));
+        await tester.pumpAndSettle();
+
+        expect(tester.takeException(), isNull);
+        expect(find.text('Library'), findsOneWidget);
+        expect(find.byType(SelectionBottomBar), findsNothing);
+      }
+    },
+  );
 }
 
 // Songs owns a controller directly and hides it in dispose, whereas album

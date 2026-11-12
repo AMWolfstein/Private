@@ -60,61 +60,56 @@ void main() {
     }
   });
 
-  for (final mornye in [true]) {
-    testWidgets(
-      'automatic fullscreen lyrics is saved and searchable (Mornye: $mornye)',
-      (tester) async {
-        SharedPreferences.setMockInitialValues({});
-        tester.view.physicalSize = const Size(390, 844);
-        tester.view.devicePixelRatio = 1;
-        addTearDown(tester.view.reset);
-        final container = ProviderContainer(
-          overrides: [
-            initialSettingsProvider.overrideWithValue(const AppSettings()),
-          ],
-        );
-        addTearDown(container.dispose);
-        await tester.pumpWidget(
-          UncontrolledProviderScope(
-            container: container,
-            child: MaterialApp(
-              theme: AppTheme.build(Brightness.dark),
-              localizationsDelegates: AppLocalizations.localizationsDelegates,
-              supportedLocales: AppLocalizations.supportedLocales,
-              home: const PlaybackSettingsPage(),
-            ),
+  testWidgets(
+    'automatic fullscreen lyrics is saved and searchable (Mornye: true)',
+    (tester) async {
+      SharedPreferences.setMockInitialValues({});
+      tester.view.physicalSize = const Size(390, 844);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.reset);
+      final container = ProviderContainer(
+        overrides: [
+          initialSettingsProvider.overrideWithValue(const AppSettings()),
+        ],
+      );
+      addTearDown(container.dispose);
+      await tester.pumpWidget(
+        UncontrolledProviderScope(
+          container: container,
+          child: MaterialApp(
+            theme: AppTheme.build(Brightness.dark),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: const PlaybackSettingsPage(),
           ),
-        );
-        final option = find.byKey(const ValueKey('auto-hide-lyrics-controls'));
-        await tester.scrollUntilVisible(
-          option,
-          200,
-          scrollable: find.byType(Scrollable).first,
-        );
-        await tester.pumpAndSettle();
-        expect(container.read(settingsProvider).autoHideLyricsControls, isTrue);
-        await tester.tap(option);
-        await tester.pumpAndSettle();
-        expect(
-          container.read(settingsProvider).autoHideLyricsControls,
-          isFalse,
-        );
-        final prefs = await SharedPreferences.getInstance();
-        final restored = AppSettings.fromJson(
-          jsonDecode(prefs.getString('app_settings')!) as Map<String, dynamic>,
-        );
-        expect(restored.autoHideLyricsControls, isFalse);
-        final l10n = AppLocalizations.of(tester.element(option));
-        expect(
-          SettingsSearchCatalog(l10n).playback.where(
-            (entry) =>
-                entry.title == l10n.autoHideLyricsControls &&
-                entry.matches(SettingsSearchQuery('fullscreen lyrics')),
-          ),
-          hasLength(1),
-        );
-        expect(tester.takeException(), isNull);
-      },
-    );
-  }
+        ),
+      );
+      final option = find.byKey(const ValueKey('auto-hide-lyrics-controls'));
+      await tester.scrollUntilVisible(
+        option,
+        200,
+        scrollable: find.byType(Scrollable).first,
+      );
+      await tester.pumpAndSettle();
+      expect(container.read(settingsProvider).autoHideLyricsControls, isTrue);
+      await tester.tap(option);
+      await tester.pumpAndSettle();
+      expect(container.read(settingsProvider).autoHideLyricsControls, isFalse);
+      final prefs = await SharedPreferences.getInstance();
+      final restored = AppSettings.fromJson(
+        jsonDecode(prefs.getString('app_settings')!) as Map<String, dynamic>,
+      );
+      expect(restored.autoHideLyricsControls, isFalse);
+      final l10n = AppLocalizations.of(tester.element(option));
+      expect(
+        SettingsSearchCatalog(l10n).playback.where(
+          (entry) =>
+              entry.title == l10n.autoHideLyricsControls &&
+              entry.matches(SettingsSearchQuery('fullscreen lyrics')),
+        ),
+        hasLength(1),
+      );
+      expect(tester.takeException(), isNull);
+    },
+  );
 }

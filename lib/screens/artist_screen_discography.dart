@@ -105,13 +105,13 @@ extension _ArtistScreenDiscography on _ArtistScreenState {
       isScrollControlled: true,
       // The sheet forces the dark theme on its own glass.
       mornyeGlass: false,
-      builder: (sheetContext) => (Theme(
+      builder: (sheetContext) => Theme(
         data: AppTheme.fromContext(sheetContext, brightness: Brightness.dark),
         child: AppGlassPanel(
           tintOpacity: 0.78,
           child: Builder(builder: buildSheet),
         ),
-      )),
+      ),
     );
   }
 

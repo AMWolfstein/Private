@@ -572,7 +572,7 @@ class _SliderTile extends ConsumerWidget {
     );
     return SettingsSearchTarget(
       label: title,
-      child: (!last)
+      child: !last
           ? Column(
               mainAxisSize: MainAxisSize.min,
               children: [

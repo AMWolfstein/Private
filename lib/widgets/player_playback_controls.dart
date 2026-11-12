@@ -63,10 +63,16 @@ class PlayerPlaybackControls extends ConsumerWidget {
     final showModes = showPlaybackModes && (edgeAligned);
     final skipSize = wideMornye ? 30.0 : 40.0;
     final playPauseSize = wideMornye
-        ? (isPlaying ? 34.0 : 32.0)
+        ? isPlaying
+              ? 34.0
+              : 32.0
         : compact
-        ? (isPlaying ? 44.0 : 40.0)
-        : (isPlaying ? 60.0 : 54.0);
+        ? isPlaying
+              ? 44.0
+              : 40.0
+        : isPlaying
+        ? 60.0
+        : 54.0;
     final timeStyle = Theme.of(
       context,
     ).textTheme.bodySmall?.copyWith(color: colorScheme.onSurfaceVariant);
@@ -170,7 +176,11 @@ class PlayerPlaybackControls extends ConsumerWidget {
           SizedBox(height: compact ? 8 : transportTopPadding + (0)),
           Padding(
             padding: EdgeInsets.symmetric(
-              horizontal: (!edgeAligned) ? (compact ? 16 : 32) : 0,
+              horizontal: !edgeAligned
+                  ? compact
+                        ? 16
+                        : 32
+                  : 0,
             ),
             child: Row(
               // Edge to edge, the shuffle and repeat buttons line up with

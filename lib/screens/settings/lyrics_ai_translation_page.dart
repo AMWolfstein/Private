@@ -469,7 +469,7 @@ class _TextSheetBodyState extends State<_TextSheetBody> {
             onPressed: _paste,
           )
         : null;
-    final field = (CupertinoTextField(
+    final field = CupertinoTextField(
       controller: _controller,
       autofocus: true,
       obscureText: widget.secret,
@@ -490,7 +490,7 @@ class _TextSheetBodyState extends State<_TextSheetBody> {
       style: theme.textTheme.bodyLarge,
       suffix: paste,
       onSubmitted: widget.multiline ? null : (_) => _save(),
-    ));
+    );
     final actions = [
       if (widget.clearable)
         AppDialogAction(
@@ -517,7 +517,7 @@ class _TextSheetBodyState extends State<_TextSheetBody> {
         children: [
           field,
           // Material fields show the error themselves.
-          if ((_error != null))
+          if (_error != null)
             Padding(
               padding: const EdgeInsetsDirectional.only(start: 4, top: 6),
               child: Text(

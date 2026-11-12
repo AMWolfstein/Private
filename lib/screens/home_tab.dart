@@ -976,7 +976,7 @@ class _HomeTabState extends ConsumerState<HomeTab>
         alignment: AlignmentDirectional.topStart,
         duration: sectionMotion.duration,
         curve: sectionMotion.curve,
-        child: (hasResults || showExplore || !_showsHome)
+        child: hasResults || showExplore || !_showsHome
             ? const SizedBox.shrink()
             : _buildHomeIntro(
                 colorScheme: colorScheme,
@@ -997,13 +997,13 @@ class _HomeTabState extends ConsumerState<HomeTab>
         // Centered with the search results on tablets.
         padding: EdgeInsets.fromLTRB(
           16 + homeContentInset(context),
-          (hasResults || showExplore)
+          hasResults || showExplore
               ? 8
               : greetsInHeader
               ? 20
               : 32,
           16 + homeContentInset(context),
-          (hasResults || showExplore) ? 8 : 16,
+          hasResults || showExplore ? 8 : 16,
         ),
         child: _buildSearchBar(),
       ),
@@ -1096,11 +1096,11 @@ class _HomeTabState extends ConsumerState<HomeTab>
         duration: sectionMotion.duration,
         curve: sectionMotion.curve,
         child:
-            (!_showsHome ||
+            !_showsHome ||
                 hasResults ||
                 showRecentAccess ||
                 showExplore ||
-                showEmptyHomeState)
+                showEmptyHomeState
             ? const SizedBox.shrink()
             : _HomeSections(inset: 16 + homeContentInset(context)),
       ),

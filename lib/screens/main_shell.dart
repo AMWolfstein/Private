@@ -361,11 +361,11 @@ class _MainShellState extends ConsumerState<MainShell>
   }
 
   /// Phones and tablets open it as a page instead.
-  int _settingsIndex(bool showStore) => ((showStore ? 4 : 3));
+  int _settingsIndex(bool showStore) => showStore ? 4 : 3;
 
   void _onShellTabRequested(ShellTab tab) {
     // Picking a destination returns from Now Playing to the content pane.
-    if ((tab == ShellTab.settings)) {
+    if (tab == ShellTab.settings) {
       unawaited(_openProfileSettings());
       return;
     }
@@ -374,7 +374,7 @@ class _MainShellState extends ConsumerState<MainShell>
     );
     final index = switch (tab) {
       ShellTab.home => 0,
-      ShellTab.search => ((showStore ? 3 : 2)),
+      ShellTab.search => (showStore ? 3 : 2),
       ShellTab.library => 1,
       ShellTab.repository => showStore ? 2 : null,
       ShellTab.settings => _settingsIndex(showStore),
@@ -473,7 +473,7 @@ class _MainShellState extends ConsumerState<MainShell>
     if (!mounted) return;
 
     final trackState = ref.read(trackProvider);
-    final isSearchTab = _currentIndex == (((showStore ? 3 : 2)));
+    final isSearchTab = _currentIndex == (showStore ? 3 : 2);
 
     if (isSearchTab &&
         trackState.isShowingRecentAccess &&
@@ -541,7 +541,7 @@ class _MainShellState extends ConsumerState<MainShell>
     if (index == 0) return _homeTabNavigatorKey.currentState;
     if (index == 1) return _libraryTabNavigatorKey.currentState;
     if (showStore && index == 2) return _repoTabNavigatorKey.currentState;
-    if ((index == (showStore ? 3 : 2))) {
+    if (index == (showStore ? 3 : 2)) {
       return _searchTabNavigatorKey.currentState;
     }
     return null;
@@ -751,7 +751,7 @@ class _MainShellState extends ConsumerState<MainShell>
     // rail, portrait tablets keep the bottom bar. Mornye keeps a bottom tab
     // bar on tablets, compact and centered once the window is expanded, and
     final useNavigationRail = useNavigationRailForWidth(screenSize.width);
-    final compactMornyeChrome = (screenSize.width >= expandedLayoutBreakpoint);
+    final compactMornyeChrome = screenSize.width >= expandedLayoutBreakpoint;
     final canMinimizeChrome = _canMinimizeChromeAt(
       screenSize.width,
       MediaQuery.textScalerOf(context),

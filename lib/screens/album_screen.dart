@@ -250,13 +250,13 @@ class _AlbumScreenState extends ConsumerState<AlbumScreen>
         _artistId = artistId;
         _albumType = albumType;
         _albumTotalTracks = totalTracks;
-        _headerVideoUrl = (headerVideo != null && headerVideo.isNotEmpty)
+        _headerVideoUrl = headerVideo != null && headerVideo.isNotEmpty
             ? headerVideo
             : _headerVideoUrl;
-        _headerImageUrl = (headerImage != null && headerImage.isNotEmpty)
+        _headerImageUrl = headerImage != null && headerImage.isNotEmpty
             ? headerImage
             : _headerImageUrl;
-        _audioTraits = (audioTraits != null && audioTraits.isNotEmpty)
+        _audioTraits = audioTraits != null && audioTraits.isNotEmpty
             ? audioTraits
             : _audioTraits;
         _error = null;
@@ -282,7 +282,7 @@ class _AlbumScreenState extends ConsumerState<AlbumScreen>
       _qualitySeparators,
       '',
     ),
-    (track.audioModes?.trim().isEmpty ?? true) ? null : track.isDolbyAtmos,
+    track.audioModes?.trim().isEmpty ?? true ? null : track.isDolbyAtmos,
   );
 
   List<Widget> _audioTraitInline({Track? commonQualityTrack}) {
@@ -492,7 +492,7 @@ class _AlbumScreenState extends ConsumerState<AlbumScreen>
     final artistName =
         widget.artistName ??
         (tracks.isNotEmpty
-            ? (tracks.first.albumArtist ?? tracks.first.artistName)
+            ? tracks.first.albumArtist ?? tracks.first.artistName
             : null);
     final releaseDate = tracks.isNotEmpty ? tracks.first.releaseDate : null;
 
@@ -575,7 +575,7 @@ class _AlbumScreenState extends ConsumerState<AlbumScreen>
                 color: colorScheme.onSurfaceVariant,
               ),
             ),
-      subtitle: (artistName != null && artistName.isNotEmpty)
+      subtitle: artistName != null && artistName.isNotEmpty
           ? Builder(
               builder: (header) => ClickableArtistName(
                 artistName: artistName,

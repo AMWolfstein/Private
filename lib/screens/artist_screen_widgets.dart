@@ -419,7 +419,7 @@ extension _ArtistScreenSections on _ArtistScreenState {
             ),
           ),
         );
-        if ((!separated)) return row;
+        if (!separated) return row;
         return Stack(
           children: [
             row,

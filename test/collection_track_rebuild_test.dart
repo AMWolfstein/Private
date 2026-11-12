@@ -148,119 +148,113 @@ void main() {
     },
   );
 
-  for (final mornye in [true]) {
-    testWidgets(
-      'Love All action keeps its add/remove feedback in Mornye=$mornye',
-      (tester) async {
-        final collections = _Collections();
-        final container = ProviderContainer(
-          overrides: [
-            libraryCollectionsProvider.overrideWith(() => collections),
-          ],
-        );
-        addTearDown(container.dispose);
-        await tester.pumpWidget(
-          _app(
-            container,
-            Consumer(
-              builder: (context, ref, _) => TextButton(
-                onPressed: () => loveAllTracks(context, ref, [_track]),
-                child: const Text('Apply'),
-              ),
-            ),
-            mornye: mornye,
-          ),
-        );
-        await tester.tap(find.text('Apply'));
-        await tester.pumpAndSettle();
-        final context = tester.element(find.text('Apply'));
-        expect(
-          find.text(context.l10n.snackbarAddedTracksToLoved(1)),
-          findsOneWidget,
-        );
-        ScaffoldMessenger.of(context).removeCurrentSnackBar();
-        await tester.pumpAndSettle();
-        await tester.tap(find.text('Apply'));
-        await tester.pumpAndSettle();
-        expect(
-          find.text(context.l10n.snackbarRemovedTracksFromLoved(1)),
-          findsOneWidget,
-        );
-        expect(collections._batchCalls, 2);
-        expect(tester.takeException(), isNull);
-      },
+  testWidgets('Love All action keeps its add/remove feedback in Mornye=true', (
+    tester,
+  ) async {
+    final collections = _Collections();
+    final container = ProviderContainer(
+      overrides: [libraryCollectionsProvider.overrideWith(() => collections)],
     );
-
-    for (final album in [false, true]) {
-      testWidgets('Love All isolates the $album page in Mornye=$mornye', (
-        tester,
-      ) async {
-        tester.view.physicalSize = const Size(430, 1000);
-        tester.view.devicePixelRatio = 1;
-        addTearDown(tester.view.reset);
-        final collections = _Collections();
-        final container = ProviderContainer(
-          overrides: [
-            settingsProvider.overrideWith(FixedSettingsNotifier.new),
-            libraryCollectionsProvider.overrideWith(() => collections),
-            recentAccessProvider.overrideWith(_Recent.new),
-            currentMediaItemProvider.overrideWithBuild(
-              (ref, notifier) => Stream.value(null),
-            ),
-            downloadQueueLookupProvider.overrideWithValue(
-              const DownloadQueueLookup.empty(),
-            ),
-            downloadHistoryVisibleBatchExistsProvider.overrideWith(
-              (ref, request) => const <String>{},
-            ),
-          ],
-        );
-        addTearDown(container.dispose);
-        await tester.pumpWidget(
-          _app(
-            container,
-            album
-                ? const AlbumScreen(
-                    albumId: 'example-album',
-                    albumName: 'Example album',
-                    tracks: [_track],
-                  )
-                : const PlaylistScreen(
-                    playlistName: 'Example playlist',
-                    tracks: [_track],
-                  ),
-            mornye: mornye,
+    addTearDown(container.dispose);
+    await tester.pumpWidget(
+      _app(
+        container,
+        Consumer(
+          builder: (context, ref, _) => TextButton(
+            onPressed: () => loveAllTracks(context, ref, [_track]),
+            child: const Text('Apply'),
           ),
-        );
-        await tester.pumpAndSettle();
-        var pageBuilds = 0;
-        var actionBuilds = 0;
-        final previous = debugOnRebuildDirtyWidget;
-        debugOnRebuildDirtyWidget = (element, builtOnce) {
-          previous?.call(element, builtOnce);
-          if (element.widget is AlbumScreen ||
-              element.widget is PlaylistScreen) {
-            pageBuilds++;
-          }
-          if (element.widget is HeaderCircleButton) actionBuilds++;
-        };
-        addTearDown(() => debugOnRebuildDirtyWidget = previous);
-        collections.publishWishlist();
-        await tester.pumpAndSettle();
-        expect(pageBuilds, 0);
-        expect(actionBuilds, 0);
-        collections.publishLoved();
-        await tester.pumpAndSettle();
-        expect(pageBuilds, 0);
-        expect(actionBuilds, greaterThan(0));
-        final context = tester.element(find.byType(HeaderCircleButton).first);
-        expect(
-          find.byTooltip(context.l10n.trackOptionRemoveFromLoved),
-          findsWidgets,
-        );
-        expect(tester.takeException(), isNull);
-        await tester.pumpWidget(const SizedBox());
-      });
-    }
+        ),
+        mornye: true,
+      ),
+    );
+    await tester.tap(find.text('Apply'));
+    await tester.pumpAndSettle();
+    final context = tester.element(find.text('Apply'));
+    expect(
+      find.text(context.l10n.snackbarAddedTracksToLoved(1)),
+      findsOneWidget,
+    );
+    ScaffoldMessenger.of(context).removeCurrentSnackBar();
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Apply'));
+    await tester.pumpAndSettle();
+    expect(
+      find.text(context.l10n.snackbarRemovedTracksFromLoved(1)),
+      findsOneWidget,
+    );
+    expect(collections._batchCalls, 2);
+    expect(tester.takeException(), isNull);
+  });
+
+  for (final album in [false, true]) {
+    testWidgets('Love All isolates the $album page in Mornye=true', (
+      tester,
+    ) async {
+      tester.view.physicalSize = const Size(430, 1000);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.reset);
+      final collections = _Collections();
+      final container = ProviderContainer(
+        overrides: [
+          settingsProvider.overrideWith(FixedSettingsNotifier.new),
+          libraryCollectionsProvider.overrideWith(() => collections),
+          recentAccessProvider.overrideWith(_Recent.new),
+          currentMediaItemProvider.overrideWithBuild(
+            (ref, notifier) => Stream.value(null),
+          ),
+          downloadQueueLookupProvider.overrideWithValue(
+            const DownloadQueueLookup.empty(),
+          ),
+          downloadHistoryVisibleBatchExistsProvider.overrideWith(
+            (ref, request) => const <String>{},
+          ),
+        ],
+      );
+      addTearDown(container.dispose);
+      await tester.pumpWidget(
+        _app(
+          container,
+          album
+              ? const AlbumScreen(
+                  albumId: 'example-album',
+                  albumName: 'Example album',
+                  tracks: [_track],
+                )
+              : const PlaylistScreen(
+                  playlistName: 'Example playlist',
+                  tracks: [_track],
+                ),
+          mornye: true,
+        ),
+      );
+      await tester.pumpAndSettle();
+      var pageBuilds = 0;
+      var actionBuilds = 0;
+      final previous = debugOnRebuildDirtyWidget;
+      debugOnRebuildDirtyWidget = (element, builtOnce) {
+        previous?.call(element, builtOnce);
+        if (element.widget is AlbumScreen || element.widget is PlaylistScreen) {
+          pageBuilds++;
+        }
+        if (element.widget is HeaderCircleButton) actionBuilds++;
+      };
+      addTearDown(() => debugOnRebuildDirtyWidget = previous);
+      collections.publishWishlist();
+      await tester.pumpAndSettle();
+      expect(pageBuilds, 0);
+      expect(actionBuilds, 0);
+      collections.publishLoved();
+      await tester.pumpAndSettle();
+      expect(pageBuilds, 0);
+      expect(actionBuilds, greaterThan(0));
+      final context = tester.element(find.byType(HeaderCircleButton).first);
+      expect(
+        find.byTooltip(context.l10n.trackOptionRemoveFromLoved),
+        findsWidgets,
+      );
+      expect(tester.takeException(), isNull);
+      await tester.pumpWidget(const SizedBox());
+    });
   }
 }

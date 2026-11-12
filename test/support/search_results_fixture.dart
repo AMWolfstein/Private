@@ -195,9 +195,9 @@ Future<void> pumpSearchFixture(
       child: MaterialApp(
         theme: mornye
             ? AppTheme.build(brightness)
-            : (brightness == Brightness.dark
-                  ? AppTheme.build(Brightness.dark)
-                  : AppTheme.build(Brightness.light)),
+            : brightness == Brightness.dark
+            ? AppTheme.build(Brightness.dark)
+            : AppTheme.build(Brightness.light),
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         builder: (context, child) =>

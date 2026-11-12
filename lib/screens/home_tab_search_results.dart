@@ -538,7 +538,7 @@ extension _HomeTabSearchResultsUI on _HomeTabState {
             ),
           ),
         ),
-      if ((viewToggle != null))
+      if (viewToggle != null)
         AppIconButton(
           tooltip: viewToggle.tooltip,
           icon: IconTheme(
@@ -560,7 +560,7 @@ extension _HomeTabSearchResultsUI on _HomeTabState {
     VoidCallback? onShowAll,
   }) {
     // The title and chevron both open the section's complete results.
-    if ((onShowAll != null)) {
+    if (onShowAll != null) {
       return SliverToBoxAdapter(
         child: Padding(
           padding: const EdgeInsetsDirectional.fromSTEB(
@@ -614,12 +614,12 @@ extension _HomeTabSearchResultsUI on _HomeTabState {
     return SliverToBoxAdapter(
       child: Padding(
         // Aligned with the clamped result list below on wide screens.
-        padding: ((const EdgeInsetsDirectional.fromSTEB(
+        padding: (const EdgeInsetsDirectional.fromSTEB(
           20,
           16,
           12,
           10,
-        ))).add(EdgeInsets.symmetric(horizontal: homeContentInset(context))),
+        )).add(EdgeInsets.symmetric(horizontal: homeContentInset(context))),
         child: Row(
           children: [
             Expanded(
@@ -798,7 +798,7 @@ extension _HomeTabSearchResultsUI on _HomeTabState {
     Widget filterChip(String id, String label, {IconData? icon}) {
       void select() => _selectSearchFilter(id);
 
-      return (AppGlassPanel.overlay(
+      return AppGlassPanel.overlay(
         radius: 24,
         child: AppFilterChip(
           label: label,
@@ -807,7 +807,7 @@ extension _HomeTabSearchResultsUI on _HomeTabState {
           tonal: selectedFilter == id,
           onTap: select,
         ),
-      ));
+      );
     }
 
     final chips = [

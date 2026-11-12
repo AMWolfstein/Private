@@ -49,7 +49,7 @@ Future<void> showAddTracksToPlaylistSheet(
         playlistNamePrefill: playlistNamePrefill,
         preserveOccurrences: preserveOccurrences,
       );
-      return (AppGlassPanel(tintOpacity: 0.78, child: content));
+      return AppGlassPanel(tintOpacity: 0.78, child: content);
     },
   );
 }

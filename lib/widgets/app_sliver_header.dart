@@ -98,13 +98,13 @@ class AppSliverHeader extends StatelessWidget {
               padding: EdgeInsetsDirectional.only(start: edgeInset),
               child:
                   leading ??
-                  ((AppIconButton(
+                  (AppIconButton(
                     tooltip: MaterialLocalizations.of(
                       context,
                     ).backButtonTooltip,
                     icon: const AppIcon(Icons.chevron_left),
                     onPressed: () => Navigator.pop(context),
-                  ))),
+                  )),
             )
           : null,
       actionsPadding: EdgeInsetsDirectional.only(end: edgeInset),

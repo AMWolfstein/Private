@@ -309,7 +309,7 @@ class _BatchConvertSheetState extends State<BatchConvertSheet> {
 
   Widget _sheetSurface({required Widget child}) {
     final content = SafeArea(child: child);
-    return (AppGlassPanel.overlay(child: content));
+    return AppGlassPanel.overlay(child: content);
   }
 
   Widget _card(ColorScheme cs, {required Widget child}) {

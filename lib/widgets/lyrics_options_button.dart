@@ -285,7 +285,7 @@ class _LyricsOptionsButtonState extends ConsumerState<LyricsOptionsButton> {
         if (painter.width + 80 > menuWidth) menuWidth = painter.width + 80;
         painter.dispose();
       }
-      action = (await showMornyeContextMenu<String>(
+      action = await showMornyeContextMenu<String>(
         context: buttonContext,
         anchor: anchor,
         preferAbove: true,
@@ -303,7 +303,7 @@ class _LyricsOptionsButtonState extends ConsumerState<LyricsOptionsButton> {
             ],
           ],
         ),
-      ));
+      );
       if (!mounted) return;
       final notifier = ref.read(settingsProvider.notifier);
       switch (action) {

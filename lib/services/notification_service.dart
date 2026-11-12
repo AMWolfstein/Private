@@ -267,7 +267,7 @@ class NotificationService {
   }) async {
     if (!_isInitialized) await initialize();
 
-    final percentage = total > 0 ? (progress * 100 ~/ total) : 0;
+    final percentage = total > 0 ? progress * 100 ~/ total : 0;
 
     await _showSafely(
       id: downloadProgressId,
@@ -306,14 +306,14 @@ class NotificationService {
     String title;
     if (alreadyInLibrary) {
       title = completedCount != null && totalCount != null
-          ? (_l10n?.notifAlreadyInLibraryCount(completedCount, totalCount) ??
-                'Already in Library ($completedCount/$totalCount)')
-          : (_l10n?.notifAlreadyInLibrary ?? 'Already in Library');
+          ? _l10n?.notifAlreadyInLibraryCount(completedCount, totalCount) ??
+                'Already in Library ($completedCount/$totalCount)'
+          : _l10n?.notifAlreadyInLibrary ?? 'Already in Library';
     } else {
       title = completedCount != null && totalCount != null
-          ? (_l10n?.notifDownloadCompleteCount(completedCount, totalCount) ??
-                'Download Complete ($completedCount/$totalCount)')
-          : (_l10n?.notifDownloadComplete ?? 'Download Complete');
+          ? _l10n?.notifDownloadCompleteCount(completedCount, totalCount) ??
+                'Download Complete ($completedCount/$totalCount)'
+          : _l10n?.notifDownloadComplete ?? 'Download Complete';
     }
 
     await _showSafely(
@@ -337,14 +337,14 @@ class NotificationService {
     );
 
     final title = failedCount > 0
-        ? (_l10n?.notifDownloadsFinished(completedCount, failedCount) ??
-              'Downloads Finished ($completedCount done, $failedCount failed)')
-        : (_l10n?.notifAllDownloadsComplete ?? 'All Downloads Complete');
+        ? _l10n?.notifDownloadsFinished(completedCount, failedCount) ??
+              'Downloads Finished ($completedCount done, $failedCount failed)'
+        : _l10n?.notifAllDownloadsComplete ?? 'All Downloads Complete';
     final body = failedCount > 0
-        ? (_l10n?.notifDownloadsFinishedBody(completedCount, failedCount) ??
-              '$completedCount downloaded, $failedCount failed')
-        : (_l10n?.notifTracksDownloadedSuccess(completedCount) ??
-              '$completedCount tracks downloaded successfully');
+        ? _l10n?.notifDownloadsFinishedBody(completedCount, failedCount) ??
+              '$completedCount downloaded, $failedCount failed'
+        : _l10n?.notifTracksDownloadedSuccess(completedCount) ??
+              '$completedCount tracks downloaded successfully';
 
     await _showSafely(
       id: downloadProgressId,
@@ -428,15 +428,15 @@ class NotificationService {
     final hasTotal = totalFiles > 0;
     final percentage = hasTotal ? progress.clamp(0.0, 100.0).round() : -1;
     final progressBody = hasTotal
-        ? (_l10n?.notifLibraryScanProgressWithTotal(
+        ? _l10n?.notifLibraryScanProgressWithTotal(
                 scannedFiles,
                 totalFiles,
                 percentage,
               ) ??
-              '$scannedFiles/$totalFiles files • $percentage%')
-        : (_l10n?.notifLibraryScanProgressNoTotal(scannedFiles) ??
-              '$scannedFiles files scanned');
-    final body = (currentFile != null && currentFile.isNotEmpty)
+              '$scannedFiles/$totalFiles files • $percentage%'
+        : _l10n?.notifLibraryScanProgressNoTotal(scannedFiles) ??
+              '$scannedFiles files scanned';
+    final body = currentFile != null && currentFile.isNotEmpty
         ? '$progressBody\n$currentFile'
         : progressBody;
     final title = _l10n?.notifScanningLibrary ?? 'Scanning local library';
@@ -535,7 +535,7 @@ class NotificationService {
   }) async {
     if (!_isInitialized) await initialize();
 
-    final percentage = total > 0 ? (received * 100 ~/ total) : 0;
+    final percentage = total > 0 ? received * 100 ~/ total : 0;
     final receivedMB = formatMegabytes(received);
     final totalMB = formatMegabytes(total);
     final title =

@@ -392,9 +392,9 @@ class _SettingsTabState extends ConsumerState<SettingsTab> {
   }
 
   Color _iconColorFor(_Destination destination) =>
-      (destination.iconColor[Theme.of(context).brightness == Brightness.dark
+      destination.iconColor[Theme.of(context).brightness == Brightness.dark
           ? 300
-          : 800]!);
+          : 800]!;
 
   Widget _itemFor(_Destination destination, {required bool showDivider}) {
     final goal = _monthlyGoal;

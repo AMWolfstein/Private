@@ -134,7 +134,7 @@ class _FilesSettingsPageState extends ConsumerState<FilesSettingsPage> {
                   icon: Icons.folder_outlined,
                   title: context.l10n.downloadDirectory,
                   subtitle: settings.downloadDirectory.isEmpty
-                      ? ('Download/Mornye')
+                      ? 'Download/Mornye'
                       : settings.downloadDirectory,
                   onTap: () => _pickDirectory(context, ref),
                   showDivider: false,

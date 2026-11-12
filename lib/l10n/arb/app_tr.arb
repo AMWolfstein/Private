@@ -388,14 +388,6 @@
   "@appearanceThemeDark": {
     "description": "Dark theme"
   },
-  "appearanceDynamicColor": "Dinamik Renk",
-  "@appearanceDynamicColor": {
-    "description": "Material You dynamic colors"
-  },
-  "appearanceDynamicColorSubtitle": "Duvar kağıdının renklerini kullan",
-  "@appearanceDynamicColorSubtitle": {
-    "description": "Subtitle for dynamic color"
-  },
   "appearanceHistoryView": "Geçmiş Düzeni",
   "@appearanceHistoryView": {
     "description": "Layout style for history"
@@ -2443,14 +2435,6 @@
   "downloadFrom": "İndirme Kaynağı",
   "@downloadFrom": {
     "description": "Label - download source"
-  },
-  "appearanceAmoledDark": "AMOLED Koyu",
-  "@appearanceAmoledDark": {
-    "description": "Theme option - pure black"
-  },
-  "appearanceAmoledDarkSubtitle": "Saf siyah arka plan",
-  "@appearanceAmoledDarkSubtitle": {
-    "description": "Subtitle for AMOLED dark"
   },
   "appearanceHeroAnimations": "Hero animasyonları",
   "@appearanceHeroAnimations": {
@@ -7081,11 +7065,6 @@
   "@lyricsAiErrorNoLyrics": {
     "description": "AI translation error when the lyrics have no translatable lines"
   },
-  "nowPlayingLibraryEmpty": "Kitaplığınız boş",
-  "@nowPlayingLibraryEmpty": {
-    "description": "Snackbar when shuffle library is requested but library has no tracks"
-  },
-  "nowPlayingShuffleLibraryFailed": "Kitaplık karıştırılamadı: {error}",
   "@nowPlayingShuffleLibraryFailed": {
     "description": "Snackbar when shuffling the library fails",
     "placeholders": {
@@ -7697,19 +7676,6 @@
   "profileRemovePhoto": "Fotoğrafı kaldır",
   "profilePhotoError": "20 MB'tan küçük geçerli bir görsel seçin.",
   "profileSaveError": "Profiliniz kaydedilemedi. Lütfen tekrar deneyin.",
-  "homeGreetingMorning1": "Günaydın",
-  "homeGreetingMorning2": "Güne enerjik başla",
-  "homeGreetingMorning3": "Yeni bir başlangıç",
-  "homeGreetingAfternoon1": "İyi günler",
-  "homeGreetingAfternoon2": "Öğleden sonra ritmi",
-  "homeGreetingAfternoon3": "Keyfi sürdür",
-  "homeGreetingEvening1": "İyi akşamlar",
-  "homeGreetingEvening2": "Rahatlamanın zamanı",
-  "homeGreetingEvening3": "Altın saat",
-  "homeGreetingNight1": "İyi geceler",
-  "homeGreetingNight2": "Gece seansı",
-  "homeGreetingNight3": "Sessiz saatler",
-  "homeGreetingNamed": "{greeting}, {name}",
   "@homeGreetingNamed": {
     "description": "Home greeting followed by the first name from the user's profile",
     "placeholders": {
@@ -7720,15 +7686,6 @@
         "type": "String"
       }
     }
-  },
-  "homeTaglineListening": "Ne dinliyoruz?",
-  "@homeTaglineListening": {
-    "description": "Rotating Home prompt under the greeting"
-  },
-  "homeTaglineLink": "Bir bağlantın mı var? Aramaya bırak",
-  "homeTaglineDiscover": "Bir sonraki favori albümünü bul",
-  "@homeTaglineDiscover": {
-    "description": "Rotating Home prompt under the greeting"
   },
   "homeContinueListening": "Dinlemeye devam et",
   "@homeContinueListening": {

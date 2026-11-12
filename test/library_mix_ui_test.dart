@@ -15,7 +15,6 @@ import 'package:mornye/screens/home_tab.dart';
 import 'package:mornye/screens/library_mix_screen.dart';
 import 'package:mornye/services/library_mixes.dart';
 import 'package:mornye/theme/app_theme.dart';
-import 'package:mornye/widgets/library_mix_cover.dart';
 import 'package:mornye/widgets/library_track_selection_bar.dart';
 import 'package:mornye/widgets/app_mix_banner.dart';
 import 'package:mornye/widgets/track_card.dart';
@@ -49,89 +48,77 @@ final _mix = LibraryMixView(
 );
 
 void main() {
-  for (final mornye in [true]) {
-    testWidgets('Home lists the mixes and opens one '
-        '(Mornye: $mornye)', (tester) async {
-      tester.view.physicalSize = const Size(430, 932);
-      tester.view.devicePixelRatio = 1;
-      addTearDown(tester.view.reset);
-      await _pumpHome(tester, mornye: mornye, mixes: [_mix]);
+  testWidgets('Home lists the mixes and opens one '
+      '(Mornye: true)', (tester) async {
+    tester.view.physicalSize = const Size(430, 932);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    await _pumpHome(tester, mornye: true, mixes: [_mix]);
 
-      final title = find.text('Hip-Hop Mix');
-      await tester.scrollUntilVisible(
-        title,
-        200,
-        scrollable: find.byType(Scrollable).first,
-      );
-      // Rows take taps again once the scroll comes to rest.
-      await tester.pump(const Duration(seconds: 1));
-      expect(find.text('Tyler, The Creator and Frank Ocean'), findsOneWidget);
-      if (mornye) {
-        expect(find.text('Top Picks for You'), findsOneWidget);
-        expect(find.text('Made for You'), findsOneWidget);
-        expect(find.byType(AppMixBanner), findsOneWidget);
-        expect(find.text('Mixes for you'), findsNothing);
-        // Music's Home has no tools.
-        expect(find.text('Shortcuts', skipOffstage: false), findsNothing);
-      } else {
-        expect(find.text('Mixes for you'), findsOneWidget);
-        expect(find.byType(LibraryMixCover), findsOneWidget);
-        expect(find.byType(AppMixBanner), findsNothing);
-      }
+    final title = find.text('Hip-Hop Mix');
+    await tester.scrollUntilVisible(
+      title,
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
+    // Rows take taps again once the scroll comes to rest.
+    await tester.pump(const Duration(seconds: 1));
+    expect(find.text('Tyler, The Creator and Frank Ocean'), findsOneWidget);
+    expect(find.text('Top Picks for You'), findsOneWidget);
+    expect(find.text('Made for You'), findsOneWidget);
+    expect(find.byType(AppMixBanner), findsOneWidget);
+    expect(find.text('Mixes for you'), findsNothing);
+    // Music's Home has no tools.
+    expect(find.text('Shortcuts', skipOffstage: false), findsNothing);
 
-      await tester.tap(title);
-      await tester.pump();
-      await tester.pump(const Duration(milliseconds: 600));
-      expect(find.byType(LibraryMixScreen), findsOneWidget);
-      expect(find.text('Hip-Hop Mix'), findsWidgets);
-      expect(find.textContaining('Made from your Library'), findsOneWidget);
-      expect(find.text('Song 0'), findsOneWidget);
-      expect(find.byType(TrackCard), findsWidgets);
-      expect(find.byTooltip('Save as playlist'), findsOneWidget);
-      expect(tester.takeException(), isNull);
-    });
-  }
+    await tester.tap(title);
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 600));
+    expect(find.byType(LibraryMixScreen), findsOneWidget);
+    expect(find.text('Hip-Hop Mix'), findsWidgets);
+    expect(find.textContaining('Made from your Library'), findsOneWidget);
+    expect(find.text('Song 0'), findsOneWidget);
+    expect(find.byType(TrackCard), findsWidgets);
+    expect(find.byTooltip('Save as playlist'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
 
-  for (final mornye in [true]) {
-    testWidgets('a long press on a phone row selects songs for the Library '
-        'actions (Mornye: $mornye)', (tester) async {
-      tester.view.physicalSize = const Size(430, 932);
-      tester.view.devicePixelRatio = 1;
-      addTearDown(tester.view.reset);
-      await _pumpMix(tester, mornye: mornye);
-      expect(find.byType(LibraryTrackSelectionBar), findsNothing);
+  testWidgets('a long press on a phone row selects songs for the Library '
+      'actions (Mornye: true)', (tester) async {
+    tester.view.physicalSize = const Size(430, 932);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    await _pumpMix(tester, mornye: true);
+    expect(find.byType(LibraryTrackSelectionBar), findsNothing);
 
-      final first = find.text('Song 0');
-      await tester.scrollUntilVisible(
-        first,
-        200,
-        scrollable: find.byType(Scrollable).first,
-      );
-      await tester.pump(const Duration(seconds: 1));
-      await tester.longPress(first);
-      await tester.pump();
-      await tester.pump(const Duration(milliseconds: 400));
-      expect(find.byType(LibraryTrackSelectionBar), findsOneWidget);
-      expect(find.text('1 selected'), findsOneWidget);
-      final cards = tester
-          .widgetList<TrackCard>(find.byType(TrackCard))
-          .toList();
-      expect(cards.first.isSelectionMode, isTrue);
-      expect(cards.first.isSelected, isTrue);
+    final first = find.text('Song 0');
+    await tester.scrollUntilVisible(
+      first,
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.pump(const Duration(seconds: 1));
+    await tester.longPress(first);
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 400));
+    expect(find.byType(LibraryTrackSelectionBar), findsOneWidget);
+    expect(find.text('1 selected'), findsOneWidget);
+    final cards = tester.widgetList<TrackCard>(find.byType(TrackCard)).toList();
+    expect(cards.first.isSelectionMode, isTrue);
+    expect(cards.first.isSelected, isTrue);
 
-      // In selection mode a tap adds the song instead of playing it. The
-      // bar follows a frame later, from its overlay.
-      await tester.tap(find.text('Song 1'));
-      await tester.pump();
-      await tester.pump();
-      expect(find.text('2 selected'), findsOneWidget);
-      await tester.tap(find.text('Song 1'));
-      await tester.pump();
-      await tester.pump();
-      expect(find.text('1 selected'), findsOneWidget);
-      expect(tester.takeException(), isNull);
-    });
-  }
+    // In selection mode a tap adds the song instead of playing it. The
+    // bar follows a frame later, from its overlay.
+    await tester.tap(find.text('Song 1'));
+    await tester.pump();
+    await tester.pump();
+    expect(find.text('2 selected'), findsOneWidget);
+    await tester.tap(find.text('Song 1'));
+    await tester.pump();
+    await tester.pump();
+    expect(find.text('1 selected'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
 
   testWidgets('mixes wait until startup settles', (tester) async {
     final container = ProviderContainer();

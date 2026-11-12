@@ -66,7 +66,11 @@ class _SetupScreenState extends ConsumerState<SetupScreen>
   bool _isLoading = false;
   int _androidSdkVersion = 0;
 
-  int get _totalSteps => _androidSdkVersion >= 33 ? (_asksNearby ? 6 : 5) : 4;
+  int get _totalSteps => _androidSdkVersion >= 33
+      ? _asksNearby
+            ? 6
+            : 5
+      : 4;
 
   /// Android 17 asks for Nearby devices before LAN access, which network
   /// storage needs. Earlier releases allow it without asking.

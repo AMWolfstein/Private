@@ -36,115 +36,108 @@ void main() {
     }
     await storage.dispose();
   });
-  for (final mornye in [true]) {
-    for (final protocol in NetworkProtocol.values) {
-      testWidgets('network delete capability: $protocol (Mornye=$mornye)', (
-        tester,
-      ) async {
-        final item = LocalLibraryItem(
-          id: 'network://delete-${protocol.name}/track.flac',
-          filePath: 'network://delete-${protocol.name}/track.flac',
-          trackName: 'Network track',
-          artistName: 'Artist',
-          albumName: 'Album',
-          scannedAt: DateTime(2026),
-        );
-        await tester.pumpWidget(
-          ProviderScope(
-            child: MaterialApp(
-              theme: mornye
-                  ? AppTheme.build(Brightness.dark)
-                  : ThemeData.dark(useMaterial3: true),
-              localizationsDelegates: AppLocalizations.localizationsDelegates,
-              supportedLocales: AppLocalizations.supportedLocales,
-              home: TrackMetadataScreen(localItem: item),
-            ),
+  for (final protocol in NetworkProtocol.values) {
+    testWidgets('network delete capability: $protocol (Mornye=true)', (
+      tester,
+    ) async {
+      final item = LocalLibraryItem(
+        id: 'network://delete-${protocol.name}/track.flac',
+        filePath: 'network://delete-${protocol.name}/track.flac',
+        trackName: 'Network track',
+        artistName: 'Artist',
+        albumName: 'Album',
+        scannedAt: DateTime(2026),
+      );
+      await tester.pumpWidget(
+        ProviderScope(
+          child: MaterialApp(
+            theme: AppTheme.build(Brightness.dark),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: TrackMetadataScreen(localItem: item),
           ),
-        );
-        await tester.pump();
-        await tester.pump(const Duration(milliseconds: 300));
-        await tester.tap(find.byTooltip('Show menu'));
+        ),
+      );
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 300));
+      await tester.tap(find.byTooltip('Show menu'));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 500));
+      if (protocol == NetworkProtocol.http ||
+          protocol == NetworkProtocol.subsonic) {
+        expect(find.text('Delete'), findsNothing);
+        expect(find.text('Edit Metadata'), findsNothing);
+      } else {
+        expect(find.text('Delete'), findsWidgets);
+        expect(find.text('Edit Metadata'), findsWidgets);
+        await tester.ensureVisible(find.text('Delete').last);
+        await tester.tap(find.text('Delete').last);
         await tester.pump();
         await tester.pump(const Duration(milliseconds: 500));
-        if (protocol == NetworkProtocol.http ||
-            protocol == NetworkProtocol.subsonic) {
-          expect(find.text('Delete'), findsNothing);
-          expect(find.text('Edit Metadata'), findsNothing);
-        } else {
-          expect(find.text('Delete'), findsWidgets);
-          expect(find.text('Edit Metadata'), findsWidgets);
-          await tester.ensureVisible(find.text('Delete').last);
-          await tester.tap(find.text('Delete').last);
-          await tester.pump();
-          await tester.pump(const Duration(milliseconds: 500));
-          await tester.pump(const Duration(milliseconds: 500));
-          expect(
-            find.textContaining(
-              'permanently delete the file from your network storage',
-            ),
-            findsOneWidget,
-          );
-          await tester.tap(find.text('Cancel'));
-          await tester.pump();
-          await tester.pump(const Duration(milliseconds: 500));
-          expect(find.byType(TrackMetadataScreen), findsOneWidget);
-          expect(
-            find.textContaining(
-              'permanently delete the file from your network storage',
-            ),
-            findsNothing,
-          );
-        }
-        expect(tester.takeException(), isNull);
-        await tester.pumpWidget(const SizedBox());
-      });
-    }
-    for (final format in ['flac', 'wav', 'mp3']) {
-      testWidgets(
-        'network $format exposes supported analysers (Mornye=$mornye)',
-        (tester) async {
-          final item = LocalLibraryItem(
-            id: 'network://fixture/track.$format',
-            filePath: 'network://fixture/track.$format',
-            trackName: 'Network track',
-            artistName: 'Artist',
-            albumName: 'Album',
-            scannedAt: DateTime(2026),
-          );
-          await tester.pumpWidget(
-            ProviderScope(
-              child: MaterialApp(
-                theme: mornye
-                    ? AppTheme.build(Brightness.dark)
-                    : ThemeData.dark(useMaterial3: true),
-                localizationsDelegates: AppLocalizations.localizationsDelegates,
-                supportedLocales: AppLocalizations.supportedLocales,
-                home: TrackMetadataScreen(localItem: item),
-              ),
-            ),
-          );
-          await tester.pump();
-          await tester.pump(const Duration(milliseconds: 300));
-          await tester.scrollUntilVisible(
-            find.byType(AudioAnalysisCard),
-            300,
-            scrollable: find.byType(Scrollable).first,
-          );
-          expect(find.byType(AudioAnalysisCard), findsOneWidget);
-          expect(
-            tester
-                .widget<AudioAnalysisCard>(find.byType(AudioAnalysisCard))
-                .filePath,
-            item.filePath,
-          );
-          expect(
-            find.byType(HiResCheckCard),
-            format == 'mp3' ? findsNothing : findsOneWidget,
-          );
-          expect(tester.takeException(), isNull);
-          await tester.pumpWidget(const SizedBox());
-        },
+        await tester.pump(const Duration(milliseconds: 500));
+        expect(
+          find.textContaining(
+            'permanently delete the file from your network storage',
+          ),
+          findsOneWidget,
+        );
+        await tester.tap(find.text('Cancel'));
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 500));
+        expect(find.byType(TrackMetadataScreen), findsOneWidget);
+        expect(
+          find.textContaining(
+            'permanently delete the file from your network storage',
+          ),
+          findsNothing,
+        );
+      }
+      expect(tester.takeException(), isNull);
+      await tester.pumpWidget(const SizedBox());
+    });
+  }
+  for (final format in ['flac', 'wav', 'mp3']) {
+    testWidgets('network $format exposes supported analysers (Mornye=true)', (
+      tester,
+    ) async {
+      final item = LocalLibraryItem(
+        id: 'network://fixture/track.$format',
+        filePath: 'network://fixture/track.$format',
+        trackName: 'Network track',
+        artistName: 'Artist',
+        albumName: 'Album',
+        scannedAt: DateTime(2026),
       );
-    }
+      await tester.pumpWidget(
+        ProviderScope(
+          child: MaterialApp(
+            theme: AppTheme.build(Brightness.dark),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: TrackMetadataScreen(localItem: item),
+          ),
+        ),
+      );
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 300));
+      await tester.scrollUntilVisible(
+        find.byType(AudioAnalysisCard),
+        300,
+        scrollable: find.byType(Scrollable).first,
+      );
+      expect(find.byType(AudioAnalysisCard), findsOneWidget);
+      expect(
+        tester
+            .widget<AudioAnalysisCard>(find.byType(AudioAnalysisCard))
+            .filePath,
+        item.filePath,
+      );
+      expect(
+        find.byType(HiResCheckCard),
+        format == 'mp3' ? findsNothing : findsOneWidget,
+      );
+      expect(tester.takeException(), isNull);
+      await tester.pumpWidget(const SizedBox());
+    });
   }
 }

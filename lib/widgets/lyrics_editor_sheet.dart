@@ -523,13 +523,13 @@ class _LyricsEditorSheetState extends ConsumerState<LyricsEditorSheet> {
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                (AppActionButton(
+                AppActionButton(
                   outlined: true,
                   glass: false,
                   onPressed: _saving ? null : _close,
                   icon: const SizedBox.shrink(),
                   label: Text(l10n.dialogCancel),
-                )),
+                ),
                 const SizedBox(width: 8),
                 AppActionButton(
                   key: const ValueKey('lyrics-editor-save'),
@@ -555,13 +555,13 @@ class _LyricsEditorSheetState extends ConsumerState<LyricsEditorSheet> {
     required IconData icon,
     required String label,
     required VoidCallback onPressed,
-  }) => (AppActionButton(
+  }) => AppActionButton(
     outlined: true,
     glass: false,
     onPressed: onPressed,
     icon: AppIcon(icon),
     label: Text(label),
-  ));
+  );
 }
 
 /// One line: its time, which plays from there, the text field, and the

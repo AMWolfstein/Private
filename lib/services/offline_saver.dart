@@ -234,7 +234,7 @@ class OfflineSaver {
 
   /// `Album artist/Album`, or the artist alone without an album.
   static String relativeDirFor(LocalLibraryItem item) {
-    final artist = (item.albumArtist?.trim().isNotEmpty ?? false)
+    final artist = item.albumArtist?.trim().isNotEmpty ?? false
         ? item.albumArtist!
         : item.artistName;
     final album = item.albumName.trim();

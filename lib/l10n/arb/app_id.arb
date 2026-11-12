@@ -375,14 +375,6 @@
   "@appearanceThemeDark": {
     "description": "Dark theme"
   },
-  "appearanceDynamicColor": "Warna Dinamis",
-  "@appearanceDynamicColor": {
-    "description": "Material You dynamic colors"
-  },
-  "appearanceDynamicColorSubtitle": "Gunakan warna dari wallpapermu",
-  "@appearanceDynamicColorSubtitle": {
-    "description": "Subtitle for dynamic color"
-  },
   "appearanceHistoryView": "Tampilan Koleksi",
   "@appearanceHistoryView": {
     "description": "Layout style for history"
@@ -2391,14 +2383,6 @@
   "downloadFrom": "Download Dari",
   "@downloadFrom": {
     "description": "Label - download source"
-  },
-  "appearanceAmoledDark": "AMOLED Gelap",
-  "@appearanceAmoledDark": {
-    "description": "Theme option - pure black"
-  },
-  "appearanceAmoledDarkSubtitle": "Latar belakang hitam murni",
-  "@appearanceAmoledDarkSubtitle": {
-    "description": "Subtitle for AMOLED dark"
   },
   "appearanceHeroAnimations": "Transisi halus",
   "@appearanceHeroAnimations": {
@@ -6728,11 +6712,6 @@
   "@nowPlayingNoLyricsOnline": {
     "description": "Empty state after an online lyrics search for the playing track found nothing"
   },
-  "nowPlayingLibraryEmpty": "Koleksi Anda kosong",
-  "@nowPlayingLibraryEmpty": {
-    "description": "Snackbar when shuffle library is requested but library has no tracks"
-  },
-  "nowPlayingShuffleLibraryFailed": "Tidak dapat mengacak koleksi: {error}",
   "@nowPlayingShuffleLibraryFailed": {
     "description": "Snackbar when shuffling the library fails",
     "placeholders": {
@@ -7282,19 +7261,6 @@
   "profileRemovePhoto": "Hapus foto",
   "profilePhotoError": "Pilih foto yang di bawah 20MB.",
   "profileSaveError": "Tidak dapat menyimpan profil Anda. Coba lagi.",
-  "homeGreetingMorning1": "Selamat pagi",
-  "homeGreetingMorning2": "Pagi yang cerah",
-  "homeGreetingMorning3": "Awali harimu",
-  "homeGreetingAfternoon1": "Selamat siang",
-  "homeGreetingAfternoon2": "Siang yang santai",
-  "homeGreetingAfternoon3": "Tetap semangat",
-  "homeGreetingEvening1": "Selamat malam",
-  "homeGreetingEvening2": "Waktunya rileks",
-  "homeGreetingEvening3": "Senja yang syahdu",
-  "homeGreetingNight1": "Selamat malam",
-  "homeGreetingNight2": "Teman begadang",
-  "homeGreetingNight3": "Malam yang tenang",
-  "homeGreetingNamed": "{greeting}, {name}",
   "@homeGreetingNamed": {
     "description": "Home greeting followed by the first name from the user's profile",
     "placeholders": {
@@ -7305,15 +7271,6 @@
         "type": "String"
       }
     }
-  },
-  "homeTaglineListening": "Mau dengar apa hari ini?",
-  "@homeTaglineListening": {
-    "description": "Rotating Home prompt under the greeting"
-  },
-  "homeTaglineLink": "Punya link? Tempel saja di pencarian",
-  "homeTaglineDiscover": "Temukan album favoritmu berikutnya",
-  "@homeTaglineDiscover": {
-    "description": "Rotating Home prompt under the greeting"
   },
   "homeContinueListening": "Lanjutkan mendengarkan",
   "@homeContinueListening": {

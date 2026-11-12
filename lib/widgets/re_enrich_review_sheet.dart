@@ -202,13 +202,13 @@ class _ReEnrichReviewContent extends StatelessWidget {
                     ),
                   ],
                 ];
-                return (Padding(
+                return Padding(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 16,
                     vertical: 4,
                   ),
                   child: AppContentCard(child: Column(children: children)),
-                ));
+                );
               },
             ),
           ),

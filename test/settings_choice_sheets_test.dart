@@ -95,69 +95,67 @@ final _Sheet _lyrics = (
 );
 
 void main() {
-  for (final mornye in [true]) {
-    for (final (page, sheet) in [
-      for (final sheet in _library) (const LibrarySettingsPage(), sheet),
-      (const LyricsSettingsPage(), _lyrics),
-    ]) {
-      final (row, values, icons, setting) = sheet;
-      final current = setting(_settings);
-      testWidgets('${page.runtimeType} $current sheet (Mornye: $mornye)', (
-        tester,
-      ) async {
-        SharedPreferences.setMockInitialValues({});
-        tester.view.physicalSize = const Size(430, 1000);
-        tester.view.devicePixelRatio = 1;
-        addTearDown(tester.view.reset);
-        await tester.pumpWidget(
-          ProviderScope(
-            overrides: [
-              settingsProvider.overrideWith(
-                () => FixedSettingsNotifier(_settings),
-              ),
-              localLibraryProvider.overrideWith(_Library.new),
-              extensionProvider.overrideWith(_Extensions.new),
-            ],
-            child: MaterialApp(
-              theme: AppTheme.build(Brightness.dark),
-              localizationsDelegates: AppLocalizations.localizationsDelegates,
-              supportedLocales: AppLocalizations.supportedLocales,
-              home: page,
+  for (final (page, sheet) in [
+    for (final sheet in _library) (const LibrarySettingsPage(), sheet),
+    (const LyricsSettingsPage(), _lyrics),
+  ]) {
+    final (row, values, icons, setting) = sheet;
+    final current = setting(_settings);
+    testWidgets('${page.runtimeType} $current sheet (Mornye: true)', (
+      tester,
+    ) async {
+      SharedPreferences.setMockInitialValues({});
+      tester.view.physicalSize = const Size(430, 1000);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.reset);
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            settingsProvider.overrideWith(
+              () => FixedSettingsNotifier(_settings),
             ),
+            localLibraryProvider.overrideWith(_Library.new),
+            extensionProvider.overrideWith(_Extensions.new),
+          ],
+          child: MaterialApp(
+            theme: AppTheme.build(Brightness.dark),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: page,
           ),
-        );
-        await tester.pumpAndSettle();
-        final context = tester.element(find.byWidget(page));
-        final rowFinder = find.byWidgetPredicate(
-          (w) => w is SettingsItem && w.title == row(context.l10n),
-        );
-        await tester.scrollUntilVisible(rowFinder, 200);
-        await tester.pumpAndSettle();
-        await tester.tap(rowFinder);
-        await tester.pumpAndSettle();
+        ),
+      );
+      await tester.pumpAndSettle();
+      final context = tester.element(find.byWidget(page));
+      final rowFinder = find.byWidgetPredicate(
+        (w) => w is SettingsItem && w.title == row(context.l10n),
+      );
+      await tester.scrollUntilVisible(rowFinder, 200);
+      await tester.pumpAndSettle();
+      await tester.tap(rowFinder);
+      await tester.pumpAndSettle();
 
-        final shown = tester
-            .widgetList<AppSheetOption>(find.byType(AppSheetOption))
-            .toList();
-        expect(
-          [
-            for (final o in shown)
-              ((o.leading! as AppIcon).icon, o.selected, o.subtitle != null),
-          ],
-          [
-            for (final (i, value) in values.indexed)
-              (icons[i], value == current, page is LyricsSettingsPage),
-          ],
-        );
+      final shown = tester
+          .widgetList<AppSheetOption>(find.byType(AppSheetOption))
+          .toList();
+      expect(
+        [
+          for (final o in shown)
+            ((o.leading! as AppIcon).icon, o.selected, o.subtitle != null),
+        ],
+        [
+          for (final (i, value) in values.indexed)
+            (icons[i], value == current, page is LyricsSettingsPage),
+        ],
+      );
 
-        final pick = values.last == current ? 0 : values.length - 1;
-        await tester.tap(find.byWidget(shown[pick]));
-        await tester.pumpAndSettle();
-        expect(find.byType(AppSheetOption), findsNothing);
-        final container = ProviderScope.containerOf(context);
-        expect(setting(container.read(settingsProvider)), values[pick]);
-        expect(tester.takeException(), isNull);
-      });
-    }
+      final pick = values.last == current ? 0 : values.length - 1;
+      await tester.tap(find.byWidget(shown[pick]));
+      await tester.pumpAndSettle();
+      expect(find.byType(AppSheetOption), findsNothing);
+      final container = ProviderScope.containerOf(context);
+      expect(setting(container.read(settingsProvider)), values[pick]);
+      expect(tester.takeException(), isNull);
+    });
   }
 }

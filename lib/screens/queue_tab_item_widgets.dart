@@ -683,10 +683,10 @@ extension _QueueTabItemWidgets on _QueueTabState {
           );
         }
       }
-      final bgColor = (isDownloaded && !isLocal)
+      final bgColor = isDownloaded && !isLocal
           ? colorScheme.surfaceContainerHighest
           : colorScheme.secondaryContainer;
-      final fgColor = (isDownloaded && !isLocal)
+      final fgColor = isDownloaded && !isLocal
           ? colorScheme.onSurfaceVariant
           : colorScheme.onSecondaryContainer;
       return Container(

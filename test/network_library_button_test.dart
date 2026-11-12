@@ -61,56 +61,54 @@ class _Library extends LocalLibraryNotifier {
 }
 
 void main() {
-  for (final mornye in [true]) {
-    for (final protocol in [NetworkProtocol.smb, NetworkProtocol.webdav]) {
-      testWidgets(
-        'adds selected folder and starts Library scan ($mornye, $protocol)',
-        (tester) async {
-          final events = <String>[];
-          final connection = NetworkConnection(
-            id: 'nas',
-            name: 'Home NAS',
-            protocol: protocol,
-            address: protocol == NetworkProtocol.smb
-                ? 'smb://nas/Music/'
-                : 'https://nas/Music/',
-          );
-          await tester.pumpWidget(
-            ProviderScope(
-              overrides: [
-                localLibraryProvider.overrideWith(() => _Library(events)),
-                settingsProvider.overrideWith(_Settings.new),
-              ],
-              child: MaterialApp(
-                theme: mornye ? AppTheme.build(Brightness.dark) : ThemeData(),
-                localizationsDelegates: AppLocalizations.localizationsDelegates,
-                supportedLocales: AppLocalizations.supportedLocales,
-                home: NetworkStorageScreen(
-                  connection: connection,
-                  path: 'Albums/',
-                  service: _Storage(),
-                ),
+  for (final protocol in [NetworkProtocol.smb, NetworkProtocol.webdav]) {
+    testWidgets(
+      'adds selected folder and starts Library scan (true, $protocol)',
+      (tester) async {
+        final events = <String>[];
+        final connection = NetworkConnection(
+          id: 'nas',
+          name: 'Home NAS',
+          protocol: protocol,
+          address: protocol == NetworkProtocol.smb
+              ? 'smb://nas/Music/'
+              : 'https://nas/Music/',
+        );
+        await tester.pumpWidget(
+          ProviderScope(
+            overrides: [
+              localLibraryProvider.overrideWith(() => _Library(events)),
+              settingsProvider.overrideWith(_Settings.new),
+            ],
+            child: MaterialApp(
+              theme: AppTheme.build(Brightness.dark),
+              localizationsDelegates: AppLocalizations.localizationsDelegates,
+              supportedLocales: AppLocalizations.supportedLocales,
+              home: NetworkStorageScreen(
+                connection: connection,
+                path: 'Albums/',
+                service: _Storage(),
               ),
             ),
-          );
-          await tester.pumpAndSettle();
-          await tester.tap(
-            find.widgetWithText(AppActionButton, 'Add folder to Library'),
-          );
-          await tester.pumpAndSettle();
-          expect(events, ['network://nas/Albums/', 'scan:nas-folder']);
-          expect(find.text('Folder added to Library'), findsOneWidget);
-          final container = ProviderScope.containerOf(
-            tester.element(find.byType(NetworkStorageScreen)),
-          );
-          expect(container.read(settingsProvider).localLibraryEnabled, true);
-          expect(
-            container.read(localLibraryProvider).sources.single.displayName,
-            'Home NAS / Albums',
-          );
-          expect(tester.takeException(), isNull);
-        },
-      );
-    }
+          ),
+        );
+        await tester.pumpAndSettle();
+        await tester.tap(
+          find.widgetWithText(AppActionButton, 'Add folder to Library'),
+        );
+        await tester.pumpAndSettle();
+        expect(events, ['network://nas/Albums/', 'scan:nas-folder']);
+        expect(find.text('Folder added to Library'), findsOneWidget);
+        final container = ProviderScope.containerOf(
+          tester.element(find.byType(NetworkStorageScreen)),
+        );
+        expect(container.read(settingsProvider).localLibraryEnabled, true);
+        expect(
+          container.read(localLibraryProvider).sources.single.displayName,
+          'Home NAS / Albums',
+        );
+        expect(tester.takeException(), isNull);
+      },
+    );
   }
 }

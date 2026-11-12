@@ -24,37 +24,35 @@ void main() {
   for (final width in [320.0, 1024.0]) {
     for (final _ in Brightness.values) {}
 
-    for (final mornye in [true]) {
-      testWidgets('store skeleton fits at $width with Mornye=$mornye', (
-        tester,
-      ) async {
-        tester.view.physicalSize = Size(width, 1200);
-        tester.view.devicePixelRatio = 1;
-        addTearDown(tester.view.reset);
-        const paths = MethodChannel('plugins.flutter.io/path_provider');
-        final messenger =
-            TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
-        messenger.setMockMethodCallHandler(
-          paths,
-          (_) async => '/tmp/mornye-loading-test',
-        );
-        addTearDown(() => messenger.setMockMethodCallHandler(paths, null));
-        await tester.pumpWidget(
-          ProviderScope(
-            overrides: [repoProvider.overrideWith(_LoadingRepo.new)],
-            child: MaterialApp(
-              theme: AppTheme.build(Brightness.dark),
-              localizationsDelegates: AppLocalizations.localizationsDelegates,
-              supportedLocales: AppLocalizations.supportedLocales,
-              home: const RepoTab(),
-            ),
+    testWidgets('store skeleton fits at $width with Mornye=true', (
+      tester,
+    ) async {
+      tester.view.physicalSize = Size(width, 1200);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.reset);
+      const paths = MethodChannel('plugins.flutter.io/path_provider');
+      final messenger =
+          TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
+      messenger.setMockMethodCallHandler(
+        paths,
+        (_) async => '/tmp/mornye-loading-test',
+      );
+      addTearDown(() => messenger.setMockMethodCallHandler(paths, null));
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [repoProvider.overrideWith(_LoadingRepo.new)],
+          child: MaterialApp(
+            theme: AppTheme.build(Brightness.dark),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: const RepoTab(),
           ),
-        );
-        await tester.pump(const Duration(milliseconds: 100));
-        expect(find.byType(ExtensionRow), findsWidgets);
-        expect(tester.takeException(), isNull);
-        await tester.pumpWidget(const SizedBox.shrink());
-      });
-    }
+        ),
+      );
+      await tester.pump(const Duration(milliseconds: 100));
+      expect(find.byType(ExtensionRow), findsWidgets);
+      expect(tester.takeException(), isNull);
+      await tester.pumpWidget(const SizedBox.shrink());
+    });
   }
 }

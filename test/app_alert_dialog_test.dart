@@ -89,96 +89,84 @@ void main() {
     }
   }
 
-  for (final mornye in [true]) {
-    testWidgets(
-      'confirmation preserves cancel and confirm results (Mornye: $mornye)',
-      (tester) async {
-        bool? result;
-        await tester.pumpWidget(
-          ProviderScope(
-            child: MaterialApp(
-              localizationsDelegates: AppLocalizations.localizationsDelegates,
-              supportedLocales: AppLocalizations.supportedLocales,
-              theme: mornye ? AppTheme.build(Brightness.dark) : ThemeData(),
-              home: Builder(
-                builder: (context) => Scaffold(
-                  body: TextButton(
-                    child: const Text('Open'),
-                    onPressed: () async {
-                      result = await showAppDialog<bool>(
-                        context: context,
-                        builder: (context) => AppAlertDialog(
-                          title: const Text('Remove extension'),
-                          content: const Text('Remove this example extension?'),
-                          actions: [
-                            AppDialogAction(
-                              isDefault: true,
-                              onPressed: () => Navigator.pop(context, false),
-                              child: const Text('Cancel'),
-                            ),
-                            AppDialogAction(
-                              filled: true,
-                              isDestructive: true,
-                              onPressed: () => Navigator.pop(context, true),
-                              child: const Text('Remove'),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
+  testWidgets(
+    'confirmation preserves cancel and confirm results (Mornye: true)',
+    (tester) async {
+      bool? result;
+      await tester.pumpWidget(
+        ProviderScope(
+          child: MaterialApp(
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            theme: AppTheme.build(Brightness.dark),
+            home: Builder(
+              builder: (context) => Scaffold(
+                body: TextButton(
+                  child: const Text('Open'),
+                  onPressed: () async {
+                    result = await showAppDialog<bool>(
+                      context: context,
+                      builder: (context) => AppAlertDialog(
+                        title: const Text('Remove extension'),
+                        content: const Text('Remove this example extension?'),
+                        actions: [
+                          AppDialogAction(
+                            isDefault: true,
+                            onPressed: () => Navigator.pop(context, false),
+                            child: const Text('Cancel'),
+                          ),
+                          AppDialogAction(
+                            filled: true,
+                            isDestructive: true,
+                            onPressed: () => Navigator.pop(context, true),
+                            child: const Text('Remove'),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
                 ),
               ),
             ),
           ),
-        );
+        ),
+      );
 
-        await tester.tap(find.text('Open'));
-        await tester.pumpAndSettle();
-        expect(
-          find.byType(AppGlassPanel),
-          mornye ? findsOneWidget : findsNothing,
-        );
-        expect(
-          find.byType(AlertDialog),
-          mornye ? findsNothing : findsOneWidget,
-        );
-        if (mornye) {
-          final remove = find.widgetWithText(CupertinoButton, 'Remove');
-          final cancel = find.widgetWithText(CupertinoButton, 'Cancel');
-          expect(
-            tester.getRect(remove).bottom,
-            lessThan(tester.getRect(cancel).top),
-          );
-          expect(tester.getRect(remove).width, tester.getRect(cancel).width);
-          expect(
-            DefaultTextStyle.of(
-              tester.element(find.text('Remove')),
-            ).style.color,
-            AppTheme.build(Brightness.dark).colorScheme.primary,
-          );
-          expect(find.byType(CupertinoAlertDialog), findsNothing);
-          expect(find.byType(FilledButton), findsNothing);
-        }
-        await tester.tap(find.text('Cancel'));
-        await tester.pumpAndSettle();
-        expect(result, isFalse);
+      await tester.tap(find.text('Open'));
+      await tester.pumpAndSettle();
+      expect(find.byType(AppGlassPanel), findsOneWidget);
+      expect(find.byType(AlertDialog), findsNothing);
+      final remove = find.widgetWithText(CupertinoButton, 'Remove');
+      final cancel = find.widgetWithText(CupertinoButton, 'Cancel');
+      expect(
+        tester.getRect(remove).bottom,
+        lessThan(tester.getRect(cancel).top),
+      );
+      expect(tester.getRect(remove).width, tester.getRect(cancel).width);
+      expect(
+        DefaultTextStyle.of(tester.element(find.text('Remove'))).style.color,
+        AppTheme.build(Brightness.dark).colorScheme.primary,
+      );
+      expect(find.byType(CupertinoAlertDialog), findsNothing);
+      expect(find.byType(FilledButton), findsNothing);
+      await tester.tap(find.text('Cancel'));
+      await tester.pumpAndSettle();
+      expect(result, isFalse);
 
-        await tester.tap(find.text('Open'));
-        await tester.pumpAndSettle();
-        await tester.tap(find.text('Remove'));
-        await tester.pumpAndSettle();
-        expect(result, isTrue);
+      await tester.tap(find.text('Open'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Remove'));
+      await tester.pumpAndSettle();
+      expect(result, isTrue);
 
-        await tester.tap(find.text('Open'));
-        await tester.pumpAndSettle();
-        await tester.tapAt(const Offset(10, 10));
-        await tester.pumpAndSettle();
-        expect(result, isNull);
-        expect(tester.takeException(), isNull);
-      },
-    );
-  }
+      await tester.tap(find.text('Open'));
+      await tester.pumpAndSettle();
+      await tester.tapAt(const Offset(10, 10));
+      await tester.pumpAndSettle();
+      expect(result, isNull);
+      expect(tester.takeException(), isNull);
+    },
+  );
 
   testWidgets('glass confirmation keeps actions reachable with long text', (
     tester,

@@ -109,7 +109,7 @@ class AlbumDetailHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if ((((coverBuilder != null || immersive)))) {
+    if (coverBuilder != null || immersive) {
       final scheme = Theme.of(context).colorScheme;
       return HeaderPalette(
         scheme: scheme,
@@ -128,7 +128,7 @@ class AlbumDetailHeader extends StatelessWidget {
   /// Keep the toolbar at the collection scroll-view level so it stays pinned
   /// after the dynamically sized artwork and metadata have scrolled away.
   List<Widget> buildSlivers(BuildContext context) {
-    if (((coverBuilder == null && !immersive))) {
+    if (coverBuilder == null && !immersive) {
       return [this];
     }
     final scheme = Theme.of(context).colorScheme;
@@ -313,7 +313,7 @@ class AlbumDetailHeader extends StatelessWidget {
 
   Widget _buildAppBar(BuildContext context, ColorScheme headerScheme) {
     final tokens = context.tokens;
-    final plainArtworkHeader = (coverBuilder != null);
+    final plainArtworkHeader = coverBuilder != null;
     // Controls and header content get an explicit edge inset so circular
     // actions do not touch the screen edge.
     final headerEdgeInset = detailHeaderEdgeInset(context);
