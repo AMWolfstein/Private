@@ -65,3 +65,28 @@ local setup safety/idempotence, required-vs-optional probes, interpreter routing
 canonical IDs/history instructions and CI base protection. Unverified: remote CI,
 branch protection, Windows provisioning, optional Serena actual installation and
 application/device/ABI builds. Helper completion follows this PASS in the same commit.
+
+## M002-T003 [FINAL] — cumulative verification (review pending)
+
+First action: full map refresh PASS (.work/M002-T003-map.log), 1,787 indexed sources,
+36,813 symbols, 128,517 relationships; no partial/unindexed graph records. Inspected
+full changes from 97758f89, actual helper/schema/template callers and GitHub check.
+Final small portability fix: CLI JSON uses ASCII escaping for non-UTF8 output hosts,
+while persisted names/evidence stay UTF-8; added Arabic/emoji title round-trip test.
+
+Final suites: 26 helper tests and 64 analysis tests PASS, no failures/skips. Real
+setup/install + idempotent reuse, full doctor and status passed; registry validates
+against pre-registry and prior registry bases. Executed the exact GitHub integrity
+shell locally against current HEAD, PASS (.work/M002-T003-ci.json); active task
+resolver selects allocator-aware template, links/JSON/diff/app-source checks PASS.
+Root history is only completed full IDs/names. No app changes, APK, native/device
+build, global agent configuration or actual optional Serena provisioning occurred.
+Remote GitHub execution/branch protection/Windows remain unverified. Locks protect
+one checkout only; divergent clones require reconciliation and base validation.
+
+M002-T003 independent cumulative review round 1: lifecycle_final_review PASS, no
+remaining actionable findings. Reviewed the entire change, 26+64 passing tests,
+real local setup/reuse/full doctor and CI-equivalent validation. Final completion
+and root history update follow this PASS through the helper in the same final
+commit. No remote CI success or branch-protection change is claimed. Prior commits:
+planning 20aa81b5, M002-T001 fa169784, M002-T002 8cf9d733. Owner authorizes push.

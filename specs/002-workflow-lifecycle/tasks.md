@@ -17,7 +17,7 @@ results) → one completion commit. No APK/application code edits.
     routing and history completion on every task; required capabilities fail clearly.
   - Checks: full tool suites, real doctor/setup/validate/status, local CI-equivalent
     checks and independent review. Depends: M002-T001.
-- [ ] M002-T003 [FINAL] Verify all lifecycle, identity and history changes cumulatively.
+- [x] M002-T003 [FINAL] Verify all lifecycle, identity and history changes cumulatively.
   - Paths: all changed feature files as necessary; task log/checkbox/history.
   - Acceptance: cumulative review passes, no unreported limitations or app edits.
   - Checks: map refresh, full feasible tool checks, real helper smoke, source/diff

@@ -155,3 +155,10 @@ class RegistryTests(unittest.TestCase):
             text='- [ ] M001-TABC Invalid\n';file.write_text(text)
             with self.assertRaises(ValueError):r.initialize(root,True)
             self.assertFalse((root/r.REGISTRY).exists());self.assertEqual(file.read_text(),text)
+
+    def test_unicode_task_titles_and_review_evidence_roundtrip_in_utf8_records(self):
+        name='تعديل زر التشغيل 🎵';identifier=r.reserve(self.root,name)['id']
+        r.complete(self.root,identifier,'مراجع مستقل',1,'فحوصات PASS')
+        self.assertIn(name,(self.root/r.HISTORY).read_text(encoding='utf-8'))
+        self.assertEqual(r.load(self.root)['tasks'][identifier]['title'],name)
+        r.validate(self.root)

@@ -41,8 +41,8 @@ def main():
         else:
             with registry.lock(root):state=registry.load(root);registry.save(root,state)
             result={'status':'PASS','history':registry.HISTORY}
-        print(json.dumps(result,ensure_ascii=False));return 2 if result.get('status')=='INCOMPLETE' else 0
+        print(json.dumps(result));return 2 if result.get('status')=='INCOMPLETE' else 0
     except (ValueError,KeyError,TypeError,OSError,subprocess.CalledProcessError) as error:
-        print(json.dumps({'status':'ERROR','error':str(error)},ensure_ascii=False),file=sys.stderr);return 2
+        print(json.dumps({'status':'ERROR','error':str(error)}),file=sys.stderr);return 2
 
 if __name__=='__main__':raise SystemExit(main())

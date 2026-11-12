@@ -13,7 +13,7 @@
       "title": "M002 — Workflow lifecycle tasks"
     }
   },
-  "next_completion": 7,
+  "next_completion": 8,
   "next_mission": 3,
   "next_tor": 2,
   "tasks": {
@@ -92,14 +92,19 @@
       "title": "Restore environment lifecycle and integrate portable instructions/CI."
     },
     "M002-T003": {
-      "completion": null,
-      "evidence": {},
+      "completion": 7,
+      "evidence": {
+        "checks": "26 helper + 64 analysis tests PASS; setup/reuse/full doctor/status/base and exact CI validation PASS; cumulative review PASS",
+        "result": "PASS",
+        "reviewer": "lifecycle_final_review",
+        "round": 1
+      },
       "final": true,
       "kind": "T",
       "mission": "M002",
       "nonce": "acd484b3007840e9babd1f6d06cb6146",
       "record": "specs/002-workflow-lifecycle/tasks.md",
-      "status": "reserved",
+      "status": "complete",
       "title": "Verify all lifecycle, identity and history changes cumulatively."
     },
     "TOR001": {
