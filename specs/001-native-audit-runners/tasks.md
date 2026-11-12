@@ -18,7 +18,7 @@ uses checks → independent review/fix (three results maximum) → one commit. N
     categories and status retain limitations; existing combined audit preserved.
   - Checks: full tool tests; live selected native-language audit; scope/diff checks;
     independent task review. Depends: T001.
-- [ ] T003 [FINAL] Review the cumulative native-audit change and resolve findings.
+- [x] T003 [FINAL] Review the cumulative native-audit change and resolve findings.
   - Paths: all T001/T002 files and feature records as required by final findings.
   - Acceptance: cumulative spec/plan review passes; actual validation/limitations
     recorded, source tree clean and application sources unchanged.

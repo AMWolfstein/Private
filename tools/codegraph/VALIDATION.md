@@ -90,3 +90,11 @@ known compilation/coverage/test-syntax gaps. Java had 36 selected diagnostics
 had zero selected-file diagnostics. The 50 raw clang diagnostics came from included
 dependency headers and were correctly excluded from selected application findings.
 Full suite after this correction: 64 passed, 0 failed/skipped.
+
+Independent reviews: T001 passed round 2 after database-name correction; T002
+passed round 2 after effective test-source checking; T003 cumulative review passed
+round 1 with no further fixes. Final map refresh succeeded (1,782 indexed sources,
+36,693 symbols, 128,178 relationships). This map coverage is not a native runtime
+reachability guarantee. Cumulative JSON/links/whitespace and application-source
+boundary checks passed. Actual classified diagnostic details remain in ignored
+.work/audit/all/; the full combined result is intentionally INCOMPLETE as explained.
