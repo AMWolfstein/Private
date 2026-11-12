@@ -158,3 +158,14 @@ available runners; `1` means candidates were found; `2` means incomplete coverag
 no matching files, or invalid invocation. Findings do not make an incomplete scan
 complete. Compilation errors or nonzero commands without usable diagnostics never
 produce a clean result. A clean scan does not establish that no dead code remains.
+
+
+## Agent instructions
+
+[Code navigation](../../.agents/skills/code-navigation/SKILL.md) describes graph
+and Serena use; [audit](../../.agents/skills/audit/SKILL.md) covers report-only
+scans and source verification. [Code-auditor](../../.agents/reviewers/code-auditor.md)
+provides optional read-only review guidance. Root AGENTS.md links these explicitly;
+automatic skill discovery depends on the agent. None restores planning/tasks,
+review gates or automatic commits/pushes. Written prompts alone are not independent
+reviews, and findings never authorize speculative deletion.
