@@ -44,13 +44,13 @@ is a separate rule and remains mandatory for every T/TOR/final task.
 ## Owner's execution rules
 
 - One commit for all completed planning artifacts. Planning-only means stop there.
-- Tasks start at T001. The first action of every task, including TOR and [FINAL],
+- Mission tasks are allocated as M###-T### (local T counter starts at 001). The first action of every task, including TOR and [FINAL],
   is map refresh; no dedicated map task or map-only commit exists. A failed refresh
   stops the task with an explicit limitation.
 - Sequential task → checks → independent review → fixes/revalidation/review.
   Maximum three review results; stop/report if the third still is not PASS.
 - One commit per completed task including its fixes/log/checkbox; no interim commits.
-- Owner-requested extras become TOR### with the same loop and one commit each.
+- Owner-requested feature extras use M###-TOR### from the global TOR pool, with the same loop and one commit each.
 - The last task reviews the cumulative T/TOR change; all final fixes/evidence are
   one final-task commit, with the same review limit.
 - No automatic feature implementation from a planning request, no repeated approval
@@ -101,3 +101,17 @@ under ignored `.work/specify-cli/` using the pinned upstream source.
 See [validation evidence](VALIDATION.md) for the actual scaffold smoke tests and
 retained analysis-tool regression results. No feature tasks or APK builds are
 executed just by installing this setup.
+
+
+## Preparation, identities and root history
+
+[Workflow helpers](../tools/workflow/README.md) provide status, doctor and setup
+for current tools. Use the allocator for every mission/task ID; no handwritten
+numbers. Ordinary IDs are M###-T###; M###-TOR### and standalone TOR### share one
+global TOR counter. The tracked registry preserves unfinished reservations too.
+After actual checks/independent PASS, task complete updates the canonical record,
+registry and root [TASK_HISTORY.md](../TASK_HISTORY.md). Include these in the same
+planning/task commit as appropriate; pending tasks never appear as completed.
+Validate before commit/push. Same-checkout locks do not serialize disconnected
+clones: reconcile Git state and pass base-preservation validation. GitHub integrity
+checks detect conflicts; external branch protection makes them merge requirements.

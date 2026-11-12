@@ -21,6 +21,23 @@ including independent review; self-review cannot substitute for its PASS. Explai
 briefly. The same root instructions apply regardless of agent or machine.
 Installation details and limitations: [tools/ponytail](tools/ponytail/README.md).
 
+# Workflow preparation and identity
+
+At session start run `python3 tools/workflow/work.py status`. On a new/unprepared
+machine run `doctor`; use `setup` for missing local analysis packages (optional
+`--with-serena`). `doctor --full` checks app tool availability. Activate SDK/JDK/
+Rust separately; setup never changes application dependencies or builds APKs.
+See [workflow helpers](tools/workflow/README.md). No source fingerprints are used.
+
+Reserve all mission/task IDs with that helper, never by hand. Missions are M###;
+regular tasks M###-T###. Standalone TOR### and nested M###-TOR### share one global
+TOR counter: no reused number even with a different prefix. After actual checks
+and independent PASS, run `task complete`, then `validate`; include the registry,
+record and root [TASK_HISTORY.md](TASK_HISTORY.md) in the same task commit. History
+contains completed IDs/names only. Reconcile latest Git state before reservations
+or publishing; local locks do not serialize disconnected clones. CI checks detect
+inconsistent/reassigned reservations; do not bypass them.
+
 # Repository tools
 
 Standalone code-navigation tools live in [tools/codegraph/README.md](tools/codegraph/README.md).
@@ -54,9 +71,9 @@ source/configurations; record evidence and limitations in plan.md. Reuse the map
 across planning skills while source stays unchanged. If generation/coverage fails,
 disclose it and rely only on verified manual tracing for the affected scope.
 
-The policy governs planned work: one planning commit; sequential tasks from T001;
+The policy governs planned work: one planning commit; allocated mission tasks M###-T###;
 map refresh first in every task, including TOR and final review; implement/check/review/fix,
-three review rounds maximum; one commit per completed task; TOR### extras; final
+three review rounds maximum; one commit per completed task; globally numbered M###-TOR### extras; final
 cumulative review/fixes in one final-task commit. Independent task reviews follow
 [task-reviewer](.agents/reviewers/task-reviewer.md). For a small low-risk modification,
 use [quick-task](.agents/skills/quick-task/SKILL.md): TOR### immediately, no spec/plan,

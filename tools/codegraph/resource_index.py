@@ -83,7 +83,12 @@ _CAPABILITIES = {}
 
 def shell_python():
     override = os.environ.get('CODEGRAPH_SHELL_PYTHON')
-    return shlex.split(override) if override else [sys.executable]
+    if override:return shlex.split(override)
+    root=Path(__file__).resolve().parents[2]
+    for name in ['code-tools-python','python']:
+        candidate=root/'.work'/name/('Scripts/python.exe' if os.name=='nt' else 'bin/python')
+        if candidate.is_file():return [str(candidate)]
+    return [sys.executable]
 
 
 def capabilities(command=None):

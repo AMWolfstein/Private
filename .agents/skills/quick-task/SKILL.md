@@ -14,11 +14,12 @@ Read-only questions/audits/navigation and Git-only fetch/push do not create task
    scope/coverage before task analysis or edits. A failed refresh stops this task;
    record/report the limitation rather than substituting an old map. Keep caches
    ignored. Reuse the map for unchanged-code inspection during this task.
-2. Allocate the next unused TOR###. Check standalone `.specify/quick-tasks/` records
-   and actual TOR checkboxes in feature tasks (not example text); never overwrite
-   an existing ID. If continuing the same unfinished task, reuse its ID and review
-   count, not a new number to bypass a failure.
-3. No active authorized feature: create `.specify/quick-tasks/TOR###.md` from
+2. Use `python3 tools/workflow/work.py task reserve --title "Concrete task name"`
+   for a standalone task. For an active-feature extra add `--mission M### --tor`.
+   Use its returned ID/path: the shared TOR pool forbids reusing a number across
+   standalone and nested IDs. Never assign an ID by hand. Reconcile latest Git
+   registry first. For the same unfinished task reuse its ID/review count.
+3. No active authorized feature: fill the allocated `.specify/quick-tasks/TOR###.md` using
    `.specify/templates/quick-task-template.md`. Fill only the concrete request,
    baseline, expected paths, acceptance, checks, map evidence and review outcomes.
    If this is an owner-requested extra inside an active authorized feature, record
@@ -35,8 +36,9 @@ Read-only questions/audits/navigation and Git-only fetch/push do not create task
    3 remains NEEDS_FIXES/BLOCKED stop and report remaining issues/uncommitted state.
    Do not begin round 4, reset the count or claim self-review is independent PASS.
    If essential review/tooling is unavailable, report the blocker; do not mark done.
-7. After acceptance/checks/review pass, mark the record complete and commit all
-   task edits and that record together once. No separate task-creation, map-update,
+7. After acceptance/checks/independent review pass, run `python3 tools/workflow/work.py
+   task complete ACTUAL_ID --reviewer NAME --round N --checks "actual results"`,
+   then `validate`. Commit edits, record, registry and TASK_HISTORY.md together once. No separate task-creation, map-update,
    WIP, fix, review or final-review commit. Do not guess the commit's own hash in
    its record; Git history supplies it. Push only when authorized.
 

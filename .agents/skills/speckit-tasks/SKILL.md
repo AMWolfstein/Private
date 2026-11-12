@@ -257,3 +257,15 @@ When the requested planning phase is complete, commit spec.md, plan.md, tasks.md
 necessary supporting artifacts and initial task-log.md together once. Do not
 commit the preceding specify/plan stages separately or start implementation for
 a planning-only request. Actual source changes await implementation authorization.
+
+
+## Canonical task reservation and history
+
+Reserve every task through `python3 tools/workflow/work.py task reserve --mission
+ACTUAL_MISSION --title "Concrete outcome"` and use the generated M###-T### checkbox.
+Use --final for the last cumulative review. Do not copy unqualified T001 or M###
+examples as real IDs. Preserve the reserved title and fill paths/checks/details
+around its checkbox. M###-TOR### extras use --tor with the same global TOR pool as
+standalone tasks. Include registry/history projections in the single planning
+commit; no task enters history before actual completion. Existing reservations
+are reused when resuming, not regenerated.

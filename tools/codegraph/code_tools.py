@@ -173,7 +173,8 @@ def main():
             parser.error(str(error))
     else:
         import sys
-        command = [os.environ.get('SERENA_PYTHON', sys.executable), str(Path(__file__).with_name('serena_adapter.py')),
+        managed=root/'.work/serena-python'/('Scripts/python.exe' if os.name=='nt' else 'bin/python')
+        command = [os.environ.get('SERENA_PYTHON') or (str(managed) if managed.is_file() else sys.executable), str(Path(__file__).with_name('serena_adapter.py')),
                    args.operation, '--project', str(root / '.work/codegraph/index/source'), '--timeout', str(args.timeout)]
         if args.file: command += ['--file', args.file]
         if args.symbol: command += ['--symbol', args.symbol]

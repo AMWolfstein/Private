@@ -35,3 +35,33 @@ M002-T001 independent review round 2: lifecycle_registry_review PASS. Registry,
 source records/history, malformed-ID rejection and 16 test results reviewed.
 Completion below uses the helper; all allocator/history/migration/record changes
 are committed once together, with no separate history-only completion commit.
+
+## M002-T002 — environment/integration (review pending)
+
+First action: full map refresh passed (.work/M002-T002-map.log): 1,785 indexed
+sources, 36,763 symbols and 128,385 relationships, no partial/unindexed source
+records. Implemented status/doctor/setup for current pinned core tools, explicit
+optional Serena, full app-tool availability checks and automatic managed-parser/
+semantic-interpreter discovery. Installs are confined to ignored local environments;
+venv prefix is verified before pip to prevent global installs through a false venv.
+
+Real setup PASS (installed managed parser venv); second setup PASS/reused=true.
+Real doctor --full PASS for required core and available Dart/Rust-Clippy/JDK25/
+Android/clang/database prerequisites; optional Serena provisioning not requested,
+and no language-server SDK/device/build success is claimed. Real status and
+validate against both pre-registry and T001 bases PASS. Tests: 25 helper tests PASS,
+64 existing analysis tests PASS with automatic parser discovery (no override).
+An initial offline-setup test mock intercepted its own Git preflight; corrected
+that fixture isolation, then the full suite passed.
+
+Updated portable policies/skills/templates for allocator use, helper completion,
+root history and full mission-prefixed IDs. Added dependency-free GitHub integrity
+CI with base preservation. Local CI-equivalent validation, JSON/links/diff/app-source
+boundary checks PASS. No application/native files or existing build CI changed.
+The new CI has not yet executed remotely; branch-protection settings remain external.
+
+M002-T002 independent review round 1: lifecycle_environment_review PASS. Reviewed
+local setup safety/idempotence, required-vs-optional probes, interpreter routing,
+canonical IDs/history instructions and CI base protection. Unverified: remote CI,
+branch protection, Windows provisioning, optional Serena actual installation and
+application/device/ABI builds. Helper completion follows this PASS in the same commit.

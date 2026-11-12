@@ -10,8 +10,8 @@ areas instead of inventing repository facts.
 
 ## Execution rules
 
-Sequential tasks, starting at T001; no parallel markers. One planning commit
-contains this list. The **first action in every task**, including T001, TOR### and
+Sequential tasks, using allocated M###-T### IDs; no parallel markers. One planning commit
+contains this list. The **first action in every task**, including the first task, nested/standalone TOR and
 [FINAL], is `python3 tools/codegraph/code_tools.py update`. Inspect its scope and
 coverage before task analysis or edits; stop/report if refresh fails. There is no
 dedicated map task or map-only commit. Keep `.work/` ignored and record concise
@@ -22,24 +22,27 @@ pass. Add owner extras as TOR### before [FINAL]. The last task reviews all T/TOR
 
 ## Implementation
 
-- [ ] T001 [US1] [Concrete first outcome and exact affected source/test paths]
+[Reserve the first task with tools/workflow/work.py task reserve --mission
+ACTUAL_MISSION --title "Concrete outcome"; use its actual checkbox/ID here.
+Do not commit example IDs as real tasks.]
   - Start: refresh the map first, inspect coverage and relevant boundaries.
   - Acceptance: [observable behavior/result].
   - Validation: [actual targeted commands and baseline expectations].
   - Dependencies: planning commit.
 
-[Add T002 onwards as needed, with the same start/outcome/paths/checks/dependencies.
+[Reserve additional M###-T### tasks as needed, with the same start/outcome/paths/checks/dependencies.
 Every task begins with its own map refresh, within that task's single commit.]
 
 ## Owner extras
 
-[Initially none. Insert TOR001, TOR002, etc. here or in the required dependency
+[Initially none. Reserve M###-TOR### extras from the global TOR pool here or in the required dependency
 position, always before the final task. Use the same first-action map refresh,
 acceptance/paths/checks and review/commit rules. Do not invent extras during planning.]
 
 ## Final cumulative review
 
-- [ ] T[NNN] [FINAL] Review all completed T/TOR changes against spec.md and plan.md.
+[Reserve the final task with --final; use its allocated M###-T### [FINAL]
+checkbox here. Review all completed mission tasks/extras against spec.md/plan.md.]
   - Start: refresh the map first and inspect its coverage/boundaries.
   - Acceptance: cumulative review passes; all relevant actionable findings resolved.
   - Paths: all files changed for this feature plus `task-log.md`, `tasks.md`.
@@ -54,3 +57,6 @@ acceptance/paths/checks and review/commit rules. Do not invent extras during pla
 Log task/map/review/check outcomes in `task-log.md`. Only mark a task complete after
 its required checks/review pass. Stop and notify the owner after a third dirty
 review; do not start a fourth round or silently skip findings.
+
+After real independent PASS and checks, use task complete and validate. Include
+registry, root TASK_HISTORY.md and the task record in the same task commit.

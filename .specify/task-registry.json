@@ -13,7 +13,7 @@
       "title": "M002 — Workflow lifecycle tasks"
     }
   },
-  "next_completion": 6,
+  "next_completion": 7,
   "next_mission": 3,
   "next_tor": 2,
   "tasks": {
@@ -76,14 +76,19 @@
       "title": "Implement registry, allocator, completion history and integrity tests."
     },
     "M002-T002": {
-      "completion": null,
-      "evidence": {},
+      "completion": 6,
+      "evidence": {
+        "checks": "25 helper tests and 64 analysis tests PASS; real setup/reuse, full doctor, status and base validation PASS",
+        "result": "PASS",
+        "reviewer": "lifecycle_environment_review",
+        "round": 1
+      },
       "final": false,
       "kind": "T",
       "mission": "M002",
       "nonce": "21d20b890f2f4a2f8492845947f525c9",
       "record": "specs/002-workflow-lifecycle/tasks.md",
-      "status": "reserved",
+      "status": "complete",
       "title": "Restore environment lifecycle and integrate portable instructions/CI."
     },
     "M002-T003": {

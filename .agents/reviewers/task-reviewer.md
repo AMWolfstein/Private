@@ -12,6 +12,10 @@ baseline/current diff, task ID and round number (1–3). Read adjacent callers,
 contracts, tests and relevant build configurations only as needed to verify it.
 Do not edit files, run builds or start more agents. Read-only inspection is allowed.
 
+Verify canonical allocated IDs (M###-T###, M###-TOR### or TOR###) and task-record
+consistency; root history must contain only completed names/IDs. For the current
+pre-completion task inspect acceptance/check/review evidence; its helper-driven
+completion/history update follows a PASS and belongs in the same commit.
 Verify that map refresh was the first task action and that its scope/coverage
 evidence was recorded. Apply `.agents/skills/ponytail-review/SKILL.md` within this same review round;
 correctness and safety precede fewer lines. Review correctness, scope, behavior, regression protection

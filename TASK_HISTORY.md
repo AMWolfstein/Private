@@ -5,3 +5,4 @@
 - M001-T003 — Review the cumulative native-audit change and resolve findings.
 - TOR001 — Direct TOR loop for small modifications
 - M002-T001 — Implement registry, allocator, completion history and integrity tests.
+- M002-T002 — Restore environment lifecycle and integrate portable instructions/CI.

@@ -10,7 +10,7 @@ results) → one completion commit. No APK/application code edits.
     race-safe reservations, canonical records/history and base-preservation checks.
   - Checks: isolated allocator/concurrency/migration/integrity tests; real validate;
     independent review. Depends: planning commit.
-- [ ] M002-T002 Restore environment lifecycle and integrate portable instructions/CI.
+- [x] M002-T002 Restore environment lifecycle and integrate portable instructions/CI.
   - Paths: tools/workflow environment/CLI/tests/README; tool interpreter discovery;
     .agents/.specify instructions/templates; .github integrity workflow; records.
   - Acceptance: honest status/doctor/setup, local pinned installs, allocator-based

@@ -12,6 +12,7 @@
 
 ## Repository evidence (required before technical planning)
 
+- **Mission ID**: [actual M### allocated for this feature path]
 - **Baseline commit**: [actual Git commit inspected]
 - **Planning-start map update**: [command/outcome; missing tools/errors if any]
 - **Map scope and coverage**: [actual input region, exclusions and unsupported areas;

@@ -20,14 +20,17 @@ planning artifacts form one commit.
 
 ## III. One task, one reviewed commit
 
-Follow [project policy](../project-policy.md): tasks start at T001; the first
+Follow [project policy](../project-policy.md): missions/tasks use allocated M###-T### IDs; the first
 action of every task (including TOR and final review) is map refresh, followed by
 sequential implementation/check/review/fix
 loops and one commit after each task passes. After three unsuccessful review
-rounds stop and report. Extras are TOR###. The final task reviews the cumulative
+rounds stop and report. Feature extras are M###-TOR###; their numeric TOR pool is shared with standalone TOR###. The final task reviews the cumulative
 change and contains all its fixes in one commit. A standalone small TOR follows
 the same map/check/independent-review/three-result/one-commit loop using a short
 record in `.specify/quick-tasks/`, with no separate final task or planning commit.
+Reserve identities through tools/workflow/work.py, never by hand. After real
+checks/review PASS use its completion helper to update registry/record and root
+TASK_HISTORY.md together in the task commit. Reserved IDs are never reused.
 
 ## IV. Honest verification
 
@@ -54,4 +57,4 @@ Owner instructions override this constitution; it and project-policy.md override
 conflicting upstream examples, parallel markers and converge defaults. Amend
 policy only for an actual agreed change, not to evade a failed check/review.
 
-**Version**: 1.0.4 | **Ratified**: 2026-11-12 | **Last amended**: 2026-11-12
+**Version**: 1.1.0 | **Ratified**: 2026-11-12 | **Last amended**: 2026-11-12

@@ -14,6 +14,31 @@ paths, including planning documents and small config/text edits. Read
 It does not replace map-first planning/task starts, required checks or the bounded
 one-commit task loop, and creates no extra task, review round or commit.
 
+## Preparation, identity and completion history
+
+Use `python3 tools/workflow/work.py status` at session start; `doctor` checks
+required workflow tools and optional app capabilities. `setup` installs pinned
+local analysis dependencies; app SDK/JDK/Cargo/NDK setup stays explicit. No legacy
+fingerprint or task-execution engine is reinstated.
+
+Use `mission new --title ... --path specs/<feature>` once for a feature, then
+`task reserve --mission M### --title ...` for each ordinary task, `--final` for its
+final review, or `--tor` for a feature extra. Without --mission, task reserve creates
+a standalone TOR record. Never derive IDs from folder names or write them by hand.
+Use the actual allocator output: M###-T###, M###-TOR### or standalone TOR###. TOR
+numbers share one global pool across all prefixes, including reserved unfinished
+work. `init` cannot reset an existing registry. Fetch/reconcile latest registry
+before allocation or publishing; same-checkout locks are not a remote allocator.
+
+After checks/independent PASS, `task complete ID --reviewer NAME --round N --checks
+"actual results"` records completion, updates checkbox/status and regenerates root
+TASK_HISTORY.md. Run validate and commit registry/history/task evidence with that
+same task's code. History contains names/full IDs only; never manually append or
+fabricate completed tasks. Completion records declarations, not proof a reviewer ran.
+Validation/CI checks uniqueness, canonical records, history and base preservation;
+make the GitHub check required externally to prohibit merges, not merely report it.
+See tools/workflow/README.md for CLI details, crash recovery and distributed limits.
+
 ## When to plan
 
 Small, isolated, low-risk edits use a direct **TOR### task**, not the former
@@ -32,12 +57,11 @@ prepare a coherent plan before continuing implementation.
 Store independent small tasks in `.specify/quick-tasks/TOR###.md`, outside feature
 specs, using `.specify/templates/quick-task-template.md`. Include the request,
 baseline, expected paths, acceptance/checks, map result, review rounds and completion
-in that single short record. Choose the next unused TOR number after checking
-standalone records and actual feature-task checkboxes; examples are not allocated
-IDs. Never overwrite a record or restart review counting by creating another ID.
+in that single short record. Obtain the next global TOR number from `task reserve --title ...`; never
+allocate by scanning examples or modifying counters manually. Never overwrite a record or restart review counting by creating another ID.
 
-No plan/spec, feature pointer or task-creation commit is needed. Commit the record
-and task changes together only after checks/independent review pass. Missing review
+No plan/spec, feature pointer or task-creation commit is needed. Run the completion helper after checks/independent PASS, then commit registry,
+history, record and task changes together once. Missing review
 capability is a blocker, not self-review permission. The existing three-round cap
 applies. There is no additional final task or completion-only commit for one
 standalone TOR; its review checks the entire small change.
@@ -105,8 +129,8 @@ is a single setup change, not a new feature plan to execute retrospectively.
 Generate sequential checkbox tasks with an outcome, exact affected paths,
 validation commands and dependencies. Do not use `[P]` parallel markers.
 
-1. Number implementation tasks from **T001**. There is no dedicated map task.
-   At the start of **every task**, including T001, TOR### and [FINAL], the first
+1. Reserve regular task IDs as **M###-T###** using the helper. There is no dedicated map task.
+   At the start of **every task**, including the first M###-T001, any TOR and [FINAL], the first
    action is `python3 tools/codegraph/code_tools.py update`, before task analysis,
    implementation edits, validation or review.
 2. Inspect refresh scope/coverage and the relevant entry points, affected files
@@ -129,8 +153,8 @@ validation commands and dependencies. Do not use `[P]` parallel markers.
    validation evidence and current uncommitted state. Do not start round 4,
    reset the counter or move to the next task. No automatic approval request is
    needed between successful tasks.
-6. Mark the task complete only after its checks and review pass. Commit the task's
-   code, tests, log/review outcome and checkbox **together in one commit**. Do not
+6. Run `task complete` only after its checks and independent review pass. Commit the task's
+   code, tests, registry/history, log/review outcome and checkbox **together in one commit**. Do not
    make WIP, separate fix, review-only or map-only commits for that task. Do not
    amend unrelated history or use broad staging that includes unrelated changes.
    Preserve unrelated working-tree changes. A failed task is not a completed task.
@@ -139,8 +163,8 @@ validation commands and dependencies. Do not use `[P]` parallel markers.
 
 ## Owner-requested extras
 
-When the owner introduces work outside the planned tasks, add the next unique
-**TOR001**, **TOR002**, etc. Describe acceptance/paths/checks in tasks.md and run it
+When the owner introduces work outside the planned tasks, reserve the next global TOR number through `task reserve --mission M### --tor`,
+yielding **M###-TOR###** (not a reused per-feature TOR001). Describe acceptance/paths/checks in tasks.md and run it
 through the same map/implementation/review/three-round/one-commit loop. Include its
 new task/log text in the TOR commit; no separate planning commit is needed for the
 extra. Place it before the final task. If a task is already in progress, preserve

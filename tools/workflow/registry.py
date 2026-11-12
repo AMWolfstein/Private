@@ -129,7 +129,7 @@ def check_data(state):
 
 
 def load(root):
-    state=json.loads(safe(root,REGISTRY).read_text(),object_pairs_hook=unique)
+    state=json.loads(safe(root,REGISTRY).read_text(encoding='utf-8'),object_pairs_hook=unique)
     check_data(state);return state
 
 
@@ -148,7 +148,7 @@ def record_complete(text):
 def record_rows(root,state):
     seen={}
     for relative in sorted({t['record'] for t in state['tasks'].values()}):
-        text=safe(root,relative).read_text()
+        text=safe(root,relative).read_text(encoding='utf-8')
         if relative.endswith('/tasks.md'):
             for check,identifier,name in rows(text):
                 if identifier in seen:raise ValueError(f'Duplicate task checkbox: {identifier}')
@@ -166,13 +166,13 @@ def record_rows(root,state):
     # Detect standalone/feature files created outside the allocator too.
     paths={p.relative_to(root).as_posix() for p in (root/'.specify/quick-tasks').glob('TOR*.md')}
     for file in (root/'specs').glob('*/tasks.md'):
-        if rows(file.read_text()):paths.add(file.relative_to(root).as_posix())
+        if rows(file.read_text(encoding='utf-8')):paths.add(file.relative_to(root).as_posix())
     if paths!={t['record'] for t in state['tasks'].values()}:raise ValueError('Task files exist outside registered record paths')
 
 
 def _validate(root,base=None):
     state=load(root);record_rows(root,state)
-    if safe(root,HISTORY).read_text()!=history(state):raise ValueError('TASK_HISTORY.md is not synchronized; run history')
+    if safe(root,HISTORY).read_text(encoding='utf-8')!=history(state):raise ValueError('TASK_HISTORY.md is not synchronized; run history')
     if base:
         if not re.fullmatch(r'[0-9a-fA-F]{7,40}',base):raise ValueError('Base must be a Git commit SHA')
         subprocess.run(['git','rev-parse','--verify',base+'^{commit}'],cwd=root,check=True,capture_output=True)
@@ -231,7 +231,7 @@ def reserve(root,name,mission=None,tor=False,final=False):
         state['tasks'][identifier]=entry
         row=f'- [ ] {identifier} '+('[FINAL] ' if final else '')+name+'\n'
         if mission:
-            content=target.read_text() if target.exists() else f'# {mission} tasks\n\n'
+            content=target.read_text(encoding='utf-8') if target.exists() else f'# {mission} tasks\n\n'
             if existing:
                 marker=next(i for i,t in state['tasks'].items() if t is not entry and t['mission']==mission and t.get('final'))
                 position=content.index(f'- [ ] {marker} ');content=content[:position]+row+content[position:]
@@ -249,7 +249,7 @@ def complete(root,identifier,reviewer,round_number,checks):
         task=state['tasks'][identifier]
         if task['status']!='reserved':raise ValueError('Task already completed')
         if task.get('final') and any(t['status']!='complete' for i,t in state['tasks'].items() if t['mission']==task['mission'] and i!=identifier):raise ValueError('Final task has unfinished dependencies')
-        target=safe(root,task['record']);content=target.read_text()
+        target=safe(root,task['record']);content=target.read_text(encoding='utf-8')
         if task['mission']:content=content.replace(f'- [ ] {identifier} ',f'- [x] {identifier} ',1)
         else:content=content.replace('- Status: IN_PROGRESS','- Status: COMPLETE',1)
         task.update(status='complete',completion=state['next_completion'],evidence={'reviewer':reviewer,'round':round_number,'checks':checks,'result':'PASS'})
@@ -267,7 +267,7 @@ def initialize(root,migrate=False):
             if done:state['next_completion']+=1
         if migrate:
             for file in sorted((root/'specs').glob('*/tasks.md')):
-                content=file.read_text();items=rows(content)
+                content=file.read_text(encoding='utf-8');items=rows(content)
                 if not items:continue
                 m=f'M{state["next_mission"]:03d}';state['next_mission']+=1
                 record=file.relative_to(root).as_posix();name=content.splitlines()[0].lstrip('# ').removeprefix('Tasks: ')
@@ -283,7 +283,7 @@ def initialize(root,migrate=False):
                     content=re.sub(r'(?<![\w-])'+re.escape(old)+r'(?!\d)',identifier,content)
                 rewrites[file]=content
             for file in sorted((root/'.specify/quick-tasks').glob('TOR*.md')):
-                text=file.read_text();match=re.match(r'^# (TOR\d+) — (.+)\n',text)
+                text=file.read_text(encoding='utf-8');match=re.match(r'^# (TOR\d+) — (.+)\n',text)
                 if not match:raise ValueError('Invalid standalone task during migration')
                 identifier,name=match.groups()
                 if identifier in state['tasks']:raise ValueError('Duplicate imported TOR')

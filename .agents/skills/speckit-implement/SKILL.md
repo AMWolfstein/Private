@@ -54,7 +54,7 @@ current Git branch name. Preserve unrelated changes.
 1. Confirm completed planning artifacts are committed together once. If only a
    plan was requested, stop there. Otherwise identify the first unfinished task;
    do not restart completed tasks or rebuild the plan for each task.
-2. At the start of **every** task, beginning with T001 and including every TOR
+2. At the start of **every** allocated task, beginning with M###-T001 and including every TOR
    and [FINAL] task, first run `python3 tools/codegraph/code_tools.py update`.
    Inspect its scope/coverage and relevant architecture/boundary evidence before
    task analysis or edits. If the refresh fails, stop this task and report the
@@ -69,10 +69,11 @@ current Git branch name. Preserve unrelated changes.
    result in `task-log.md`. Three review results maximum per task; after a third
    NEEDS_FIXES/BLOCKED result stop and notify the owner with remaining issues.
    Never hide an unavailable independent reviewer behind a self-review PASS.
-6. After checks/review pass, mark the task complete and commit code, tests,
-   task-log and checkbox together exactly once. No intermediate WIP/fix/review
+6. After checks/review pass, run `python3 tools/workflow/work.py task complete ACTUAL_ID --reviewer NAME
+   --round N --checks "actual check results"`, then validate. Commit code, tests,
+   registry, TASK_HISTORY.md, task-log and checkbox together exactly once. No intermediate WIP/fix/review
    commits. Continue sequentially to the next task; no parallel `[P]` execution.
-7. Owner extras outside the plan become unique TOR### tasks, executed through
+7. Owner extras use `task reserve --mission ACTUAL_MISSION --tor` to become globally numbered M###-TOR### tasks, executed through
    the same loop and committed once each before [FINAL]. Do not reset existing
    review counters or silently expand the current task.
 8. Execute the final cumulative-review task last. Review all T/TOR changes against
