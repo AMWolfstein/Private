@@ -320,7 +320,6 @@
   "@extensionsDisabled": {
     "description": "Extension status - inactive"
   },
-  "extensionsVersion": "版本 {version}",
   "@extensionsVersion": {
     "description": "Extension version display",
     "placeholders": {
@@ -5027,7 +5026,6 @@
   "@queueRateLimitMessage": {
     "description": "Explanation shown on a failed queue item when the download service rate limits requests"
   },
-  "appearanceSelectAccentColor": "Select accent color {hex}",
   "@appearanceSelectAccentColor": {
     "description": "Accessibility label for picking an accent color",
     "placeholders": {
@@ -5803,10 +5801,6 @@
   "libraryBuiltInPreviewPlayerSubtitle": "Play your music right inside Mornye",
   "@libraryBuiltInPreviewPlayerSubtitle": {
     "description": "Subtitle for built-in preview player option"
-  },
-  "nowPlayingTitle": "Now Playing",
-  "@nowPlayingTitle": {
-    "description": "Title for the now playing screen"
   },
   "nowPlayingNothingPlaying": "Nothing is playing",
   "@nowPlayingNothingPlaying": {

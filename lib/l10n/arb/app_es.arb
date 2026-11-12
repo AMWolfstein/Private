@@ -202,7 +202,6 @@
   "@extensionsDisabled": {
     "description": "Extension status - inactive"
   },
-  "extensionsVersion": "Version {version}",
   "@extensionsVersion": {
     "description": "Extension version display",
     "placeholders": {

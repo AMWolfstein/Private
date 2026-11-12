@@ -225,7 +225,6 @@
   "@nowPlayingVolume": {
     "description": "System volume control label in the Mornye player"
   },
-  "appearanceStyle": "Gaya Aplikasi",
   "appearanceAccentRed": "Merah (default)",
   "appearanceAccentOrange": "Oranye",
   "appearanceAccentGreen": "Hijau",
@@ -237,9 +236,6 @@
   "appearanceGlassOutlinesSubtitle": "Tampilkan garis dekoratif di tepi kaca Mornye. Mematikannya tetap mempertahankan blur dan pembiasan.",
   "appearanceUseSystemFont": "Gunakan font sistem",
   "appearanceUseSystemFontSubtitle": "Menggunakan font default perangkat untuk aplikasi.",
-  "@appearanceStyle": {
-    "description": "Appearance section for choosing the app visual style"
-  },
   "@@locale": "id",
   "@@last_modified": "2026-04-28",
   "appName": "Mornye",
@@ -640,7 +636,6 @@
   "@extensionsDisabled": {
     "description": "Extension status - inactive"
   },
-  "extensionsVersion": "Versi {version}",
   "@extensionsVersion": {
     "description": "Extension version display",
     "placeholders": {
@@ -5831,7 +5826,6 @@
   "@queueRateLimitMessage": {
     "description": "Explanation shown on a failed queue item when the download service rate limits requests"
   },
-  "appearanceSelectAccentColor": "Pilih warna aksen {hex}",
   "@appearanceSelectAccentColor": {
     "description": "Accessibility label for picking an accent color",
     "placeholders": {
@@ -6608,10 +6602,6 @@
   "@libraryBuiltInPreviewPlayerSubtitle": {
     "description": "Subtitle for built-in preview player option"
   },
-  "nowPlayingTitle": "Sedang Memutar",
-  "@nowPlayingTitle": {
-    "description": "Title for the now playing screen"
-  },
   "nowPlayingNothingPlaying": "Tidak memutar apapun",
   "@nowPlayingNothingPlaying": {
     "description": "Empty state when no track is currently playing"
@@ -7337,7 +7327,6 @@
   "@homeOnRepeat": {
     "description": "Home section header for the most played tracks of the last four weeks"
   },
-  "homeShortcuts": "Pintasan",
   "artistUpcomingConcerts": "Konser Mendatang",
   "artistAllUpcomingConcerts": "Semua Konser Mendatang",
   "artistNoUpcomingConcerts": "Tiada konser mendatang.",
@@ -7668,7 +7657,6 @@
   "equalizerEffectivePreamp": "Gain input setelah headroom",
   "equalizerDeletePreset": "Hapus preset",
   "equalizerCustom": "Kustom",
-  "equalizerManagePresets": "Kelola preset",
   "lyricsShareTitle": "Bagikan lirik",
   "@lyricsShareTitle": {
     "description": "Screen that turns selected lyric lines into an image for stories"

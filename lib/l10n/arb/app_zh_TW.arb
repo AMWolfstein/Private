@@ -209,7 +209,6 @@
   "@nowPlayingVolume": {
     "description": "System volume control label in the Mornye player"
   },
-  "appearanceStyle": "App Style",
   "appearanceAccentRed": "Red (default)",
   "appearanceAccentOrange": "Orange",
   "appearanceAccentGreen": "Green",
@@ -221,9 +220,6 @@
   "appearanceGlassOutlinesSubtitle": "Show decorative edges around Mornye glass. Turning this off keeps blur and refraction.",
   "appearanceUseSystemFont": "Use system font",
   "appearanceUseSystemFontSubtitle": "Use your device’s default typeface for app text.",
-  "@appearanceStyle": {
-    "description": "Appearance section for choosing the app visual style"
-  },
   "@@locale": "zh_TW",
   "@@last_modified": "2026-04-28",
   "appName": "Mornye",
@@ -653,7 +649,6 @@
   "@extensionsDisabled": {
     "description": "Extension status - inactive"
   },
-  "extensionsVersion": "版本 {version}",
   "@extensionsVersion": {
     "description": "Extension version display",
     "placeholders": {
@@ -5909,7 +5904,6 @@
   "@queueRateLimitMessage": {
     "description": "Explanation shown on a failed queue item when the download service rate limits requests"
   },
-  "appearanceSelectAccentColor": "Select accent color {hex}",
   "@appearanceSelectAccentColor": {
     "description": "Accessibility label for picking an accent color",
     "placeholders": {
@@ -6685,10 +6679,6 @@
   "libraryBuiltInPreviewPlayerSubtitle": "Play your music right inside Mornye",
   "@libraryBuiltInPreviewPlayerSubtitle": {
     "description": "Subtitle for built-in preview player option"
-  },
-  "nowPlayingTitle": "Now Playing",
-  "@nowPlayingTitle": {
-    "description": "Title for the now playing screen"
   },
   "nowPlayingNothingPlaying": "Nothing is playing",
   "@nowPlayingNothingPlaying": {
@@ -7752,11 +7742,6 @@
   "@homeOnRepeat": {
     "description": "Home section header for the most played tracks of the last four weeks"
   },
-  "homeShortcuts": "Shortcuts",
-  "homeMixesForYou": "Mixes for you",
-  "@homeMixesForYou": {
-    "description": "Home section header for daily mixes made from the user's own Library songs"
-  },
   "homeMixFavoritesTitle": "Favorites Mix",
   "@homeMixFavoritesTitle": {
     "description": "Title of the daily mix of the user's most played songs and songs like them"
@@ -8259,7 +8244,6 @@
   "equalizerEffectivePreamp": "Input gain after headroom",
   "equalizerDeletePreset": "Delete preset",
   "equalizerCustom": "Custom",
-  "equalizerManagePresets": "Manage presets",
   "lyricsShareTitle": "Share lyrics",
   "@lyricsShareTitle": {
     "description": "Screen that turns selected lyric lines into an image for stories"

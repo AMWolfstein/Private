@@ -209,7 +209,6 @@
   "@nowPlayingVolume": {
     "description": "System volume control label in the Mornye player"
   },
-  "appearanceStyle": "앱 스타일",
   "appearanceAccentRed": "빨간색 (기본값)",
   "appearanceAccentOrange": "주황색",
   "appearanceAccentGreen": "초록색",
@@ -221,9 +220,6 @@
   "appearanceGlassOutlinesSubtitle": "Mornye 글래스 주변에 장식적인 테두리를 표시합니다. 이 기능을 비활성화하면 블러 효과와 굴절 효과는 유지됩니다",
   "appearanceUseSystemFont": "시스템 글꼴 사용",
   "appearanceUseSystemFontSubtitle": "앱 텍스트에 기기 기본 글꼴을 사용합니다",
-  "@appearanceStyle": {
-    "description": "Appearance section for choosing the app visual style"
-  },
   "@@locale": "ko",
   "@@last_modified": "2026-04-28",
   "appName": "Mornye",
@@ -653,7 +649,6 @@
   "@extensionsDisabled": {
     "description": "Extension status - inactive"
   },
-  "extensionsVersion": "버전 {version}",
   "@extensionsVersion": {
     "description": "Extension version display",
     "placeholders": {
@@ -5909,7 +5904,6 @@
   "@queueRateLimitMessage": {
     "description": "Explanation shown on a failed queue item when the download service rate limits requests"
   },
-  "appearanceSelectAccentColor": "강조 색상 {hex} 선택",
   "@appearanceSelectAccentColor": {
     "description": "Accessibility label for picking an accent color",
     "placeholders": {
@@ -6685,10 +6679,6 @@
   "libraryBuiltInPreviewPlayerSubtitle": "Mornye에서 바로 음악을 재생합니다",
   "@libraryBuiltInPreviewPlayerSubtitle": {
     "description": "Subtitle for built-in preview player option"
-  },
-  "nowPlayingTitle": "현재 재생 중",
-  "@nowPlayingTitle": {
-    "description": "Title for the now playing screen"
   },
   "nowPlayingNothingPlaying": "재생 중인 노래가 없음",
   "@nowPlayingNothingPlaying": {
@@ -7752,11 +7742,6 @@
   "@homeOnRepeat": {
     "description": "Home section header for the most played tracks of the last four weeks"
   },
-  "homeShortcuts": "바로가기",
-  "homeMixesForYou": "Mixes for you",
-  "@homeMixesForYou": {
-    "description": "Home section header for daily mixes made from the user's own Library songs"
-  },
   "homeMixFavoritesTitle": "Favorites Mix",
   "@homeMixFavoritesTitle": {
     "description": "Title of the daily mix of the user's most played songs and songs like them"
@@ -8259,7 +8244,6 @@
   "equalizerEffectivePreamp": "헤드룸 후 입력 게인",
   "equalizerDeletePreset": "프레셋 삭제",
   "equalizerCustom": "사용자 정의",
-  "equalizerManagePresets": "프리셋 관리",
   "lyricsShareTitle": "가사 공유",
   "@lyricsShareTitle": {
     "description": "Screen that turns selected lyric lines into an image for stories"

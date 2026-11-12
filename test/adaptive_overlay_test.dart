@@ -10,7 +10,6 @@ import 'package:mornye/screens/settings/download_settings_page.dart';
 import 'package:mornye/services/app_remote_config_service.dart';
 import 'package:mornye/services/update_checker.dart';
 import 'package:mornye/theme/app_theme.dart';
-import 'package:mornye/theme/material_symbols.dart';
 import 'package:mornye/theme/app_icons.dart';
 import 'package:mornye/widgets/app_alert_dialog.dart';
 import 'package:mornye/widgets/app_announcement_dialog.dart';
@@ -152,9 +151,7 @@ void main() {
           final container = ProviderScope.containerOf(
             tester.element(find.byType(DownloadSettingsPage)),
           );
-          final check = mornye
-              ? appIconFor(Icons.check)
-              : materialSymbolFor(Icons.check)!.icon;
+          final check = appIconFor(Icons.check);
           for (final (picker, initial, next) in [
             ('Output format', 'MP3', 'Opus'),
             ('Output quality', '320 kbps', '160 kbps'),

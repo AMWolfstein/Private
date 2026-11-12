@@ -209,7 +209,6 @@
   "@nowPlayingVolume": {
     "description": "System volume control label in the Mornye player"
   },
-  "appearanceStyle": "Phong cách giao diện",
   "appearanceAccentRed": "Đỏ (mặc định)",
   "appearanceAccentOrange": "Cam",
   "appearanceAccentGreen": "Xanh lá",
@@ -221,9 +220,6 @@
   "appearanceGlassOutlinesSubtitle": "Hiển thị đường viền trang trí quanh các khung kính của Mornye. Khi tắt, hiệu ứng làm mờ và khúc xạ vẫn được giữ nguyên.",
   "appearanceUseSystemFont": "Dùng phông chữ hệ thống",
   "appearanceUseSystemFontSubtitle": "Sử dụng kiểu chữ mặc định của thiết bị cho toàn bộ văn bản trong ứng dụng.",
-  "@appearanceStyle": {
-    "description": "Appearance section for choosing the app visual style"
-  },
   "@@locale": "vi",
   "@@last_modified": "2026-04-28",
   "appName": "Mornye",
@@ -653,7 +649,6 @@
   "@extensionsDisabled": {
     "description": "Extension status - inactive"
   },
-  "extensionsVersion": "Phiên bản {version}",
   "@extensionsVersion": {
     "description": "Extension version display",
     "placeholders": {
@@ -5909,7 +5904,6 @@
   "@queueRateLimitMessage": {
     "description": "Explanation shown on a failed queue item when the download service rate limits requests"
   },
-  "appearanceSelectAccentColor": "Chọn màu nhấn {hex}",
   "@appearanceSelectAccentColor": {
     "description": "Accessibility label for picking an accent color",
     "placeholders": {
@@ -6685,10 +6679,6 @@
   "libraryBuiltInPreviewPlayerSubtitle": "Phát nhạc của bạn ngay trong Mornye",
   "@libraryBuiltInPreviewPlayerSubtitle": {
     "description": "Subtitle for built-in preview player option"
-  },
-  "nowPlayingTitle": "Đang phát",
-  "@nowPlayingTitle": {
-    "description": "Title for the now playing screen"
   },
   "nowPlayingNothingPlaying": "Hiện không có bài hát nào đang phát",
   "@nowPlayingNothingPlaying": {
@@ -7752,11 +7742,6 @@
   "@homeOnRepeat": {
     "description": "Home section header for the most played tracks of the last four weeks"
   },
-  "homeShortcuts": "Phím tắt",
-  "homeMixesForYou": "Mixes for you",
-  "@homeMixesForYou": {
-    "description": "Home section header for daily mixes made from the user's own Library songs"
-  },
   "homeMixFavoritesTitle": "Favorites Mix",
   "@homeMixFavoritesTitle": {
     "description": "Title of the daily mix of the user's most played songs and songs like them"
@@ -8259,7 +8244,6 @@
   "equalizerEffectivePreamp": "Mức khuếch đại đầu vào sau Headroom",
   "equalizerDeletePreset": "Xóa cấu hình",
   "equalizerCustom": "Tùy chỉnh",
-  "equalizerManagePresets": "Quản lý cấu hình",
   "lyricsShareTitle": "Chia sẻ lời bài hát",
   "@lyricsShareTitle": {
     "description": "Screen that turns selected lyric lines into an image for stories"

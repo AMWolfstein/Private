@@ -209,7 +209,6 @@
   "@nowPlayingVolume": {
     "description": "System volume control label in the Mornye player"
   },
-  "appearanceStyle": "Uygulama stili",
   "appearanceAccentRed": "Kırmızı (varsayılan)",
   "appearanceAccentOrange": "Turuncu",
   "appearanceAccentGreen": "Yeşil",
@@ -221,9 +220,6 @@
   "appearanceGlassOutlinesSubtitle": "Mornye camı çevresinde dekoratif kenarlıklar gösterir. Kapatıldığında bulanıklık ve kırılma korunur.",
   "appearanceUseSystemFont": "Sistem yazı tipini kullan",
   "appearanceUseSystemFontSubtitle": "Uygulama metinleri için cihazınızın varsayılan yazı tipini kullanın.",
-  "@appearanceStyle": {
-    "description": "Appearance section for choosing the app visual style"
-  },
   "@@locale": "tr",
   "@@last_modified": "2026-04-28",
   "appName": "Mornye",
@@ -653,7 +649,6 @@
   "@extensionsDisabled": {
     "description": "Extension status - inactive"
   },
-  "extensionsVersion": "Versiyon {version}",
   "@extensionsVersion": {
     "description": "Extension version display",
     "placeholders": {
@@ -5909,7 +5904,6 @@
   "@queueRateLimitMessage": {
     "description": "Explanation shown on a failed queue item when the download service rate limits requests"
   },
-  "appearanceSelectAccentColor": "Vurgu rengini seç {hex}",
   "@appearanceSelectAccentColor": {
     "description": "Accessibility label for picking an accent color",
     "placeholders": {
@@ -6685,10 +6679,6 @@
   "libraryBuiltInPreviewPlayerSubtitle": "Müziğinizi doğrudan Mornye içinde çalın",
   "@libraryBuiltInPreviewPlayerSubtitle": {
     "description": "Subtitle for built-in preview player option"
-  },
-  "nowPlayingTitle": "Şimdi çalıyor",
-  "@nowPlayingTitle": {
-    "description": "Title for the now playing screen"
   },
   "nowPlayingNothingPlaying": "Hiçbir şey çalmıyor",
   "@nowPlayingNothingPlaying": {
@@ -7752,11 +7742,6 @@
   "@homeOnRepeat": {
     "description": "Home section header for the most played tracks of the last four weeks"
   },
-  "homeShortcuts": "Kısayollar",
-  "homeMixesForYou": "Size özel mix'ler",
-  "@homeMixesForYou": {
-    "description": "Home section header for daily mixes made from the user's own Library songs"
-  },
   "homeMixFavoritesTitle": "Favoriler Mix'i",
   "@homeMixFavoritesTitle": {
     "description": "Title of the daily mix of the user's most played songs and songs like them"
@@ -8259,7 +8244,6 @@
   "equalizerEffectivePreamp": "Headroom sonrası giriş kazancı",
   "equalizerDeletePreset": "Ön ayarı sil",
   "equalizerCustom": "Özel",
-  "equalizerManagePresets": "Ön ayarları yönet",
   "lyricsShareTitle": "Şarkı sözlerini paylaş",
   "@lyricsShareTitle": {
     "description": "Screen that turns selected lyric lines into an image for stories"
