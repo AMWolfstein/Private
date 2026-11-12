@@ -8,3 +8,5 @@
 - Design round1: independent goldfish-reader and design-critic both CLEAN, no findings. Source code unchanged. The second fresh round is still required.
 
 - Design round2: fresh reader and critic both CLEAN, no findings. Preparing one documentation-only planning checkpoint; all T001..T008 remain unstarted and unchecked. This metadata checkpoint does not authorize application implementation. No push/APK.
+
+- 2026-11-12T02:57:00+00:00: T001 reviewed and ready; implementation, fixes and records belong in one Git commit.

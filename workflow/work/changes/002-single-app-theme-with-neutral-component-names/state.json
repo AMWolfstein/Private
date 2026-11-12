@@ -38,7 +38,50 @@
   "workflow_version": 2,
   "execution": {
     "active": null,
-    "tasks": {}
+    "tasks": {
+      "T001": {
+        "status": "done",
+        "head": "b30ac6a9f8b8fac0f50726df48c5dcbe2158a15f",
+        "base": "b30ac6a9f8b8fac0f50726df48c5dcbe2158a15f",
+        "declaration": "T001 Pin retained theme visual/interaction, preference migration and cold/headless bootstrap behavior before edits (FR-003, FR-004, FR-006, FR-007) — check: auto",
+        "cycle": 1,
+        "reviews": [
+          {
+            "cycle": 1,
+            "round": 1,
+            "result": "clean",
+            "reviewer": "self-review (no independent reviewer started)",
+            "note": "Tests pin stored keys, defaults, legacy input and the one-time accent move; no production code changed; analyze and dart-tests PASS",
+            "path": ".work/review/002-single-app-theme-with-neutral-component-names-T001-r1.md",
+            "fingerprint": "39525107ca2f2abd1825949b2fc5c94da7568bff",
+            "identity": "3a8e02cdf23f42407ea15d2b8c7d144bd0834fddb76937b8aa7395379cbd4780",
+            "at": "2026-11-12T02:57:00+00:00",
+            "commit_fingerprint": "39525107ca2f2abd1825949b2fc5c94da7568bff"
+          }
+        ],
+        "checks": {
+          "status": "PASS",
+          "identity": "3a8e02cdf23f42407ea15d2b8c7d144bd0834fddb76937b8aa7395379cbd4780",
+          "fingerprint": "39525107ca2f2abd1825949b2fc5c94da7568bff",
+          "ids": [
+            "analyze",
+            "dart-tests"
+          ],
+          "extra": []
+        },
+        "commit_parent": "b30ac6a9f8b8fac0f50726df48c5dcbe2158a15f",
+        "transaction": "a16ddd0273854ab7914d050339d8e57a",
+        "record_hashes": {
+          "tasks.md": "f95eeab6104e42ba4fb9ddc31eb3cf5b59df5b1500cb7b56453da31ad51bab5f",
+          "spec.md": "adf24cc3c7d50e586a6c8eae7af49967a0c477949976bd8099dab19f83e629d4",
+          "assurance.json": "47dc1090568c5944004f6aa259fc3c66b8ff99e5cabd66179ffeaac9314a0594",
+          "findings.md": "4f041e56aa96a67c60d481e261f638e24cc809c1294257bdb9bd34cfd8810353",
+          "plan.md": "428ad039f0b1df779987a90b0add6bdddcaef9b7f267202737f61bde4b43bb41",
+          "log.md": "49aea81962ae818448f4ee87e93050e34c4ae10c21555ff31acbadef23b09454",
+          "inventory.md": "78bf58bc03d14a044d4a3254f0b0e4e3df6bb106c34b84618c45623f03c031ac"
+        }
+      }
+    }
   },
   "planning": {
     "parent": "20ff0a7c6c4c7466748e16bef1256940790a8707",
