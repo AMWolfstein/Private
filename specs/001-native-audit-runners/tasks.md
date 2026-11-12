@@ -3,7 +3,7 @@
 All tasks begin with CodeGraph refresh and scope/coverage inspection. Every task
 uses checks → independent review/fix (three results maximum) → one commit. No APK.
 
-- [ ] T001 Implement native diagnostic adapters and focused tests.
+- [x] T001 Implement native diagnostic adapters and focused tests.
   - Paths: tools/codegraph/native_audit.py, android-audit.init.gradle,
     test_native_audit.py; task log and this checkbox.
   - Acceptance: fresh contained Android Lint parsing and safe shared runner;
