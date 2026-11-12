@@ -10,7 +10,7 @@ Verified:
   configuration or application dependency installation.
 - `bash -n` passed for all six installed Bash scripts.
 - Isolated temporary Git repository: create a feature/spec, set up plan, resolve
-  tasks through the local override (T000 and final-review shape), validate required
+  tasks through the local override (the original map-task and final-review shape), validate required
   spec/plan/tasks artifacts, select a feature explicitly, and fail clearly with a
   missing feature pointer. The scripts did not change the temporary Git branch.
 - Local template override was selected while the official task template remained
@@ -34,3 +34,12 @@ Limitations:
 - No Android build, APK, device test or new language-server provisioning occurred.
   Baseline application tests/builds were not rerun for this instruction/scaffold
   change.
+
+## Map refresh at every task start
+
+The local rule now starts task numbering at T001 and refreshes the map as the
+first action of every task, including TOR and final review. No dedicated map task
+or map-only commit is generated. The active task-template resolver was exercised
+successfully; generated structure, policy/skill consistency, links and diff checks
+passed. This update changes instructions/templates only; no application/tool source
+changed and the tool regression suite was not unnecessarily repeated.

@@ -32,8 +32,9 @@ feature for this installation or reapply archived plans automatically.
 ## Owner's execution rules
 
 - One commit for all completed planning artifacts. Planning-only means stop there.
-- T000 updates the CodeGraph map and commits its completion/evidence once.
-- T001 implements/checks/reviews; every later task starts with a map refresh.
+- Tasks start at T001. The first action of every task, including TOR and [FINAL],
+  is map refresh; no dedicated map task or map-only commit exists. A failed refresh
+  stops the task with an explicit limitation.
 - Sequential task → checks → independent review → fixes/revalidation/review.
   Maximum three review results; stop/report if the third still is not PASS.
 - One commit per completed task including its fixes/log/checkbox; no interim commits.

@@ -12,7 +12,7 @@ metadata:
 Before using this skill, read `.specify/project-policy.md` and
 `.specify/memory/constitution.md`. The owner's current instructions take priority.
 The local policy overrides conflicting upstream defaults: one planning commit,
-T000 map refresh, sequential task/review/fix loops, at most three review rounds,
+map refresh first in every task, sequential task/review/fix loops, at most three review rounds,
 one commit per completed task, TOR### extras and one final cumulative-review task.
 Do not add approval gates, automatic commits at intermediate planning stages,
 parallel task execution, or unbounded implement/converge cycles. A planning-only
@@ -230,9 +230,10 @@ Every task MUST strictly follow this format:
 
 ## Local planning completion (overrides upstream examples)
 
-Use `.specify/templates/overrides/tasks-template.md`: T000 first, then T001 and
+Use `.specify/templates/overrides/tasks-template.md`: start at T001 with
 sequential outcome-based tasks, followed by exactly one final cumulative-review
-task. Do not emit `[P]` parallel markers or parallel execution examples; record
+task. Every task starts with map refresh as its first action, including TOR and
+[FINAL]; never generate a dedicated map task. Do not emit `[P]` parallel markers or parallel execution examples; record
 sequential dependencies instead. Leave TOR### extras absent until requested.
 For each task name acceptance, affected paths and actual validation commands.
 Create `task-log.md` with the baseline commit and empty review/check entries for

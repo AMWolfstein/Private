@@ -23,8 +23,8 @@ planning/execution, read [local policy](.specify/project-policy.md) and
 `$speckit-plan`, `$speckit-tasks`, then `$speckit-implement` only when implementation
 is authorized. `$speckit-clarify`, `$speckit-analyze` and checklists are optional.
 
-The policy governs planned work: one planning commit; T000 map refresh; sequential
-T001 onwards with map refresh before subsequent tasks; implement/check/review/fix,
+The policy governs planned work: one planning commit; sequential tasks from T001;
+map refresh first in every task, including TOR and final review; implement/check/review/fix,
 three review rounds maximum; one commit per completed task; TOR### extras; final
 cumulative review/fixes in one final-task commit. Independent task reviews follow
 [task-reviewer](.agents/reviewers/task-reviewer.md). Small low-risk edits may remain

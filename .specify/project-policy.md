@@ -36,15 +36,19 @@ is a single setup change, not a new feature plan to execute retrospectively.
 Generate sequential checkbox tasks with an outcome, exact affected paths,
 validation commands and dependencies. Do not use `[P]` parallel markers.
 
-1. **T000** is always map refresh/architecture orientation, not feature edits.
-   Run `python3 tools/codegraph/code_tools.py update`, inspect scope/coverage and
-   relevant boundaries. Put its concise evidence and completed checkbox into the
-   task log/tasks.md and make one T000 commit. The map remains ignored in `.work/`.
-2. **T001** reads its requirement and T000 map, implements only that task, runs
-   relevant checks, then enters review. Do not re-scan unchanged code repeatedly.
-3. Before **every task after T001**, including TOR tasks and the final task,
-   refresh the map and use it to select affected paths/boundaries. Record the
-   result with that task; this is not a separate map-update commit.
+1. Number implementation tasks from **T001**. There is no dedicated map task.
+   At the start of **every task**, including T001, TOR### and [FINAL], the first
+   action is `python3 tools/codegraph/code_tools.py update`, before task analysis,
+   implementation edits, validation or review.
+2. Inspect refresh scope/coverage and the relevant entry points, affected files
+   and native/runtime boundaries. Use the refreshed map to guide that task.
+   If refresh fails, stop the task and report the limitation; never silently
+   substitute a stale map or claim complete coverage.
+3. Record concise refresh evidence with the task in `task-log.md`. Keep map/cache
+   outputs ignored under `.work/`. The refresh belongs to the task's single
+   commit; it creates neither a separate task nor a map-only commit. Reuse the
+   map while inspecting unchanged files within that task; refresh again if source
+   edits make later map-based conclusions stale.
 4. For each implementation task: implement → validate → review → fix/revalidate
    if needed → review again. Use an independent read-only reviewer when available,
    following `.agents/reviewers/task-reviewer.md`. If it is unavailable, state that

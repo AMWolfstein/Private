@@ -12,7 +12,7 @@ metadata:
 Before using this skill, read `.specify/project-policy.md` and
 `.specify/memory/constitution.md`. The owner's current instructions take priority.
 The local policy overrides conflicting upstream defaults: one planning commit,
-T000 map refresh, sequential task/review/fix loops, at most three review rounds,
+map refresh first in every task, sequential task/review/fix loops, at most three review rounds,
 one commit per completed task, TOR### extras and one final cumulative-review task.
 Do not add approval gates, automatic commits at intermediate planning stages,
 parallel task execution, or unbounded implement/converge cycles. A planning-only
@@ -35,11 +35,13 @@ current Git branch name. Preserve unrelated changes.
 1. Confirm completed planning artifacts are committed together once. If only a
    plan was requested, stop there. Otherwise identify the first unfinished task;
    do not restart completed tasks or rebuild the plan for each task.
-2. T000 refreshes CodeGraph and records architecture/coverage evidence in the
-   task log. Review that result; its completion/log/checkbox are one T000 commit.
-3. T001 uses the T000 map. Refresh the map at the start of every later task,
-   including TOR and [FINAL], and inspect relevant symbols/boundaries. Keep cache
-   outputs ignored. Do not create a separate map-update commit.
+2. At the start of **every** task, beginning with T001 and including every TOR
+   and [FINAL] task, first run `python3 tools/codegraph/code_tools.py update`.
+   Inspect its scope/coverage and relevant architecture/boundary evidence before
+   task analysis or edits. If the refresh fails, stop this task and report the
+   limitation; do not silently use an old map.
+3. Record concise refresh evidence with the task. The map stays ignored in
+   `.work/`; no dedicated map task or map-only commit is created.
 4. Read acceptance criteria and exact paths. Implement only the current task.
    Format/check/test affected code using actual project commands. Compare failures
    with the baseline and report unavailable coverage. No APK without authorization.

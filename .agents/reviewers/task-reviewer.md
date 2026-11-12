@@ -9,8 +9,9 @@ baseline/current diff, task ID and round number (1–3). Read adjacent callers,
 contracts, tests and relevant build configurations only as needed to verify it.
 Do not edit files, run builds or start more agents. Read-only inspection is allowed.
 
-Review correctness, scope, behavior, regression protection and the validation that
-actually ran. For [FINAL], review the entire cumulative T/TOR diff against the
+Verify that map refresh was the first task action and that its scope/coverage
+evidence was recorded. Review correctness, scope, behavior, regression protection
+and the validation that actually ran. For [FINAL], review the entire cumulative T/TOR diff against the
 planned acceptance criteria, not only the final edits. CodeGraph/Serena evidence
 and compiler diagnostics do not replace inspection of runtime/native boundaries.
 Do not invent clean coverage or treat unavailable tools as successful checks.

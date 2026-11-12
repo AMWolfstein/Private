@@ -12,7 +12,7 @@ metadata:
 Before using this skill, read `.specify/project-policy.md` and
 `.specify/memory/constitution.md`. The owner's current instructions take priority.
 The local policy overrides conflicting upstream defaults: one planning commit,
-T000 map refresh, sequential task/review/fix loops, at most three review rounds,
+map refresh first in every task, sequential task/review/fix loops, at most three review rounds,
 one commit per completed task, TOR### extras and one final cumulative-review task.
 Do not add approval gates, automatic commits at intermediate planning stages,
 parallel task execution, or unbounded implement/converge cycles. A planning-only
