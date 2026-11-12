@@ -29,3 +29,18 @@ The saved map is local and ignored. Updating code does not automatically refresh
 it. Structural coverage and inferred links do not prove runtime reachability,
 correct ABI linkage or absence of dead code. A self-review was performed; no
 independent agent review was run for this change.
+
+## Restored code scans
+
+- Full standalone suite after restoring scans: **40 passed, 0 failed, 0 skipped**.
+- Real combined Dart scan of `lib/models/theme_settings.dart`: PASS, no selected
+  diagnostics. This was a single-file smoke check, not a repository-wide audit.
+- Real analyzer positive-control fixture, isolated under ignored `.work`:
+  `unused_local_variable` classified as dead-code, `unnecessary_new` as simplifier,
+  and `prefer_const_constructors` as optimization; overall status FINDINGS.
+- Tests verify generated/vendor/test exclusions, scope containment, category
+  separation, compiler-error handling, unavailable coverage, JSON parsing,
+  report-only behavior and Rust's explicit 1.99.1/locked Clippy command.
+- Rust runner was tested with mocked process output; no live Cargo audit or
+  Kotlin/Java/C++ compiler audit was run in this restoration. Cross-language
+  bindings are retained as evidence to investigate, not deletion authorization.

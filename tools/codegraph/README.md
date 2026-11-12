@@ -116,3 +116,45 @@ Tests include real CodeGraph parsing/incremental synchronization, resource/Bash
 regressions, JNI false positives, input containment, navigation and the Serena read
 allowlist. Missing real tools produce explicit skips. Real Serena/LSP smoke checks
 are separate because SDK/server availability varies by machine.
+
+## Dead code, optimization and simplification scans
+
+The former `work.py audit --kind code` is available independently, without
+workflow tasks or automatic fixes:
+
+```sh
+python3 tools/codegraph/code_tools.py audit --kind code --lang dart
+python3 tools/codegraph/code_tools.py audit --kind dead-code --lang dart rust
+python3 tools/codegraph/code_tools.py audit --kind optimization --lang dart
+python3 tools/codegraph/code_tools.py audit --kind simplifier --lang dart
+```
+
+`code` combines all three categories. Choose `--lang`, repeat `--path` for file or
+folder scopes, use `--base REV` for changed files, or explicitly choose `--all`.
+Filters intersect. Reports and full runner logs go under ignored
+`.work/audit/<kind>/report.md` and `report.json`; another scan of the same kind
+replaces those files. Do not run the same kind concurrently in one checkout.
+Standalone equivalent: `python3 tools/codegraph/audit.py` with the same options.
+
+Dart uses `dart analyze --format=machine`. Rust uses explicit `cargo +1.99.1`
+from `rust_backend`, with `--workspace --all-targets --locked`; dead-code scans
+use `check`, while combined/optimization/simplifier scans use `clippy` with perf,
+complexity and style lint groups. Compiler runners may analyze more files than
+the selected scope; reported candidates are filtered to selected files. These
+runners may write build caches and Cargo may execute crate build scripts; they
+do not fix application sources. Activate the repository's Flutter/Rust toolchains
+before running. No APK is built by this command.
+
+`audit-config.json` contains the curated diagnostic categories and protected
+paths. Generated/vendor code and configured test paths are excluded. Suggestions
+are **review candidates**, not safe automatic deletions or measured speedups.
+Dart suggestions depend on enabled analyzer lints; the allowlists are not an
+exhaustive optimizer/simplifier. Native runtime references and alternate Cargo
+features still require separate verification. Kotlin/Java/C++ diagnostic runners
+are currently unconfigured and yield explicit coverage gaps when selected.
+
+Exit status: `0` means no selected allowlisted diagnostics were emitted by the
+available runners; `1` means candidates were found; `2` means incomplete coverage,
+no matching files, or invalid invocation. Findings do not make an incomplete scan
+complete. Compilation errors or nonzero commands without usable diagnostics never
+produce a clean result. A clean scan does not establish that no dead code remains.

@@ -154,6 +154,8 @@ def main():
     sub = parser.add_subparsers(dest='command', required=True)
     up = sub.add_parser('update');up.add_argument('--paths', nargs='+')
     q = sub.add_parser('query');q.add_argument('--file');q.add_argument('--symbol');q.add_argument('--limit', type=int, default=50)
+    import audit
+    audit.configure_parser(sub.add_parser('audit', help='Report-only dead-code/optimization/simplifier scans'), include_root=False)
     s = sub.add_parser('serena', help='Optional semantic query on the private indexed mirror')
     s.add_argument('operation', choices=['symbols', 'definition', 'references', 'version'])
     s.add_argument('--file');s.add_argument('--symbol');s.add_argument('--timeout', type=float, default=120)
@@ -164,6 +166,11 @@ def main():
     elif args.command == 'query':
         if not (args.file or args.symbol) or args.limit < 1: parser.error('query needs --file or --symbol and a positive --limit')
         print(json.dumps(query(json.loads((root / '.work/codegraph/map.json').read_text()),args.file,args.symbol,args.limit), indent=2))
+    elif args.command == 'audit':
+        try:
+            raise SystemExit(audit.execute(args))
+        except (ValueError, OSError, subprocess.CalledProcessError) as error:
+            parser.error(str(error))
     else:
         import sys
         command = [os.environ.get('SERENA_PYTHON', sys.executable), str(Path(__file__).with_name('serena_adapter.py')),

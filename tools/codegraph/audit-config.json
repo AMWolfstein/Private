@@ -1,0 +1,161 @@
+{
+  "languages": {
+    "dart": {
+      "extensions": [
+        ".dart"
+      ],
+      "tests": [
+        "test/*",
+        "integration_test/*"
+      ]
+    },
+    "rust": {
+      "extensions": [
+        ".rs"
+      ],
+      "tests": [
+        "*/tests/*"
+      ]
+    },
+    "kotlin": {
+      "extensions": [
+        ".kt",
+        ".kts"
+      ],
+      "tests": [
+        "*/src/test/*",
+        "*/src/androidTest/*"
+      ]
+    },
+    "cpp": {
+      "extensions": [
+        ".cpp",
+        ".cc",
+        ".c",
+        ".h",
+        ".hpp"
+      ],
+      "tests": []
+    },
+    "java": {
+      "extensions": [
+        ".java"
+      ],
+      "tests": [
+        "*/src/test/*",
+        "*/src/androidTest/*"
+      ]
+    }
+  },
+  "protected": [
+    "third_party/*",
+    "rust_backend/vendor/*",
+    "rust_backend/target/*",
+    "*.g.dart",
+    "*.freezed.dart",
+    "lib/l10n/app_localizations*.dart"
+  ],
+  "categories": {
+    "dead-code": {
+      "dart": [
+        "unused_import",
+        "unused_shown_name",
+        "duplicate_import",
+        "unnecessary_import",
+        "unused_element",
+        "unused_element_parameter",
+        "unused_field",
+        "unused_local_variable",
+        "unused_catch_clause",
+        "unused_catch_stack",
+        "unused_label",
+        "unreachable_from_main",
+        "dead_code",
+        "dead_code_catch_following_catch",
+        "dead_code_on_catch_subtype"
+      ],
+      "rust": [
+        "dead_code",
+        "unused_imports",
+        "unused_variables",
+        "unused_mut",
+        "unused_assignments",
+        "unused_macros",
+        "unreachable_code",
+        "unreachable_patterns"
+      ]
+    },
+    "optimization": {
+      "dart": [
+        "prefer_const_constructors",
+        "prefer_const_literals_to_create_immutables",
+        "prefer_const_declarations"
+      ],
+      "rust": [
+        "clippy::useless_vec",
+        "clippy::slow_vector_initialization",
+        "clippy::manual_memcpy",
+        "clippy::vec_init_then_push"
+      ]
+    },
+    "simplifier": {
+      "dart": [
+        "unnecessary_new",
+        "unnecessary_this",
+        "unnecessary_lambdas",
+        "unnecessary_null_checks",
+        "unnecessary_parenthesis",
+        "unnecessary_null_in_if_null_operators",
+        "unnecessary_to_list_in_spreads",
+        "prefer_if_null_operators",
+        "prefer_null_aware_operators",
+        "prefer_is_empty",
+        "prefer_is_not_empty"
+      ],
+      "rust": [
+        "clippy::needless_borrow",
+        "clippy::redundant_closure",
+        "clippy::collapsible_if",
+        "clippy::let_and_return",
+        "clippy::needless_return",
+        "clippy::unnecessary_lazy_evaluations",
+        "clippy::manual_unwrap_or_default",
+        "clippy::unnecessary_map_or"
+      ]
+    }
+  },
+  "tools": {
+    "dart": {
+      "run": [
+        "dart",
+        "analyze",
+        "--format=machine"
+      ],
+      "parser": "dart-machine",
+      "cwd": ".",
+      "timeout": 1800
+    },
+    "rust": {
+      "run": [
+        "cargo",
+        "+1.99.1",
+        "check",
+        "--workspace",
+        "--all-targets",
+        "--locked",
+        "--message-format=json"
+      ],
+      "parser": "cargo-json",
+      "cwd": "rust_backend",
+      "timeout": 2400
+    },
+    "kotlin": null,
+    "cpp": null,
+    "java": null
+  },
+  "notes": [
+    "Curated diagnostic allowlists, not exhaustive proof of dead code or performance gains.",
+    "Optimization hints require measurement; simplifications require behavior verification.",
+    "Generated and vendored paths are protected. Kotlin/C++ have no configured diagnostic runner."
+  ]
+}
