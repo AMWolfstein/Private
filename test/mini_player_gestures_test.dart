@@ -41,9 +41,8 @@ void main() {
   setUp(() => SharedPreferences.setMockInitialValues({}));
 
   for (final configuration in [
-    (name: 'Material', mornye: false, compact: false),
-    (name: 'Mornye', mornye: true, compact: false),
-    (name: 'Mornye compact', mornye: true, compact: true),
+    (name: 'Mini player', compact: false),
+    (name: 'Compact mini player', compact: true),
   ]) {
     Future<_Controller> pumpPlayer(
       WidgetTester tester, {
@@ -222,27 +221,22 @@ void main() {
       expect(tester.takeException(), isNull);
     });
 
-    if (!configuration.mornye) {
-      for (final _ in [-100.0, 100.0]) {}
-    } else {
-      testWidgets(
-        '${configuration.name}: paused swipes keep track navigation',
-        (tester) async {
-          final controller = await pumpPlayer(tester);
-          for (final dx in [-100.0, 100.0]) {
-            await tester.timedDrag(
-              find.text('Song'),
-              Offset(dx, 0),
-              const Duration(milliseconds: 600),
-            );
-            await tester.pumpAndSettle();
-          }
-          expect(controller.calls, ['next', 'previous']);
-          expect(find.text('Song'), findsOneWidget);
-          expect(tester.takeException(), isNull);
-        },
-      );
-    }
+    testWidgets('${configuration.name}: paused swipes keep track navigation', (
+      tester,
+    ) async {
+      final controller = await pumpPlayer(tester);
+      for (final dx in [-100.0, 100.0]) {
+        await tester.timedDrag(
+          find.text('Song'),
+          Offset(dx, 0),
+          const Duration(milliseconds: 600),
+        );
+        await tester.pumpAndSettle();
+      }
+      expect(controller.calls, ['next', 'previous']);
+      expect(find.text('Song'), findsOneWidget);
+      expect(tester.takeException(), isNull);
+    });
 
     testWidgets('${configuration.name}: Home carousel and playback buttons '
         'keep their own gestures', (tester) async {

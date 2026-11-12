@@ -104,7 +104,7 @@ void main() {
   setUp(() => SharedPreferences.setMockInitialValues({}));
   for (final aiRomaji in [false, true]) {
     testWidgets('translation and pronunciation share pause/seek clock '
-        '(mornye=true, ai=$aiRomaji)', (tester) async {
+        '(ai=$aiRomaji)', (tester) async {
       tester.view.physicalSize = const Size(390, 800);
       tester.view.devicePixelRatio = 1;
       addTearDown(tester.view.resetPhysicalSize);

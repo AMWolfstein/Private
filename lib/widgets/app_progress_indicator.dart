@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 
 /// Task progress (downloads, scans, updates), determinate or not.
 ///
-/// The Material theme draws the expressive wavy indicators. Mornye and
-/// reduced motion keep Flutter's flat indicators with the same parameters.
+/// Flutter's flat indicators.
 class AppProgressIndicator extends StatelessWidget {
   const AppProgressIndicator.linear({
     super.key,

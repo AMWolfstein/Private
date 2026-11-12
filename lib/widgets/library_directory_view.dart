@@ -530,15 +530,12 @@ class _LibraryDirectoryViewState extends ConsumerState<LibraryDirectoryView>
         return TrackCard(
           style: TrackCardStyle.flat,
           leading: _SongArtwork(item: item, size: context.tokens.coverList),
-          leadingArtwork: true,
           title: item.trackName,
           subtitle: Text(
             [item.artistName, ?quality].join(' · '),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
-          isCurrent: playback.isCurrent,
-          isPlaying: playback.isPlaying,
           trailing: AppIconButton(
             tooltip: playback.isPlaying
                 ? context.l10n.actionPause
@@ -572,8 +569,6 @@ class _LibraryDirectoryViewState extends ConsumerState<LibraryDirectoryView>
     return TrackCard(
       style: TrackCardStyle.flat,
       leading: _FolderArtwork(folder: folder),
-      leadingArtwork: folder.cover != null,
-      // Top-level entries of several volumes read as their paths.
       title: parent.key.isEmpty ? folder.path : folder.name,
       subtitle: Text(
         _summary(folder),

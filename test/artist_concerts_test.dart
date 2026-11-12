@@ -22,16 +22,15 @@ Map<String, dynamic> event({
   'url': 'https://example.com/events/$id',
 };
 
-Widget app(Widget child, {bool mornye = true, String language = 'en'}) =>
-    ProviderScope(
-      child: MaterialApp(
-        theme: mornye ? AppTheme.build(Brightness.light) : ThemeData(),
-        locale: Locale(language),
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        supportedLocales: AppLocalizations.supportedLocales,
-        home: child,
-      ),
-    );
+Widget app(Widget child, {String language = 'en'}) => ProviderScope(
+  child: MaterialApp(
+    theme: AppTheme.build(Brightness.light),
+    locale: Locale(language),
+    localizationsDelegates: AppLocalizations.localizationsDelegates,
+    supportedLocales: AppLocalizations.supportedLocales,
+    home: child,
+  ),
+);
 
 void main() {
   setUpAll(() async {
@@ -111,7 +110,6 @@ void main() {
               ),
             ),
           ),
-          mornye: true,
         ),
       );
       await tester.tap(find.text('Upcoming Concerts'));

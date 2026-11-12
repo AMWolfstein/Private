@@ -44,19 +44,16 @@ class _Collections extends LibraryCollectionsNotifier {
   }
 }
 
-Widget _app(
-  ProviderContainer container,
-  Widget child, {
-  required bool mornye,
-}) => UncontrolledProviderScope(
-  container: container,
-  child: MaterialApp(
-    theme: AppTheme.build(Brightness.light),
-    localizationsDelegates: AppLocalizations.localizationsDelegates,
-    supportedLocales: AppLocalizations.supportedLocales,
-    home: Scaffold(body: child),
-  ),
-);
+Widget _app(ProviderContainer container, Widget child) =>
+    UncontrolledProviderScope(
+      container: container,
+      child: MaterialApp(
+        theme: AppTheme.build(Brightness.light),
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        home: Scaffold(body: child),
+      ),
+    );
 
 void main() {
   {
@@ -93,7 +90,6 @@ void main() {
             ),
           ],
         ),
-        mornye: false,
       ),
     );
     await tester.pumpAndSettle();

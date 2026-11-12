@@ -59,7 +59,6 @@ void main() {
 
   Future<void> openCard(
     WidgetTester tester, {
-    bool mornye = true,
     Brightness brightness = Brightness.light,
     double textScale = 1,
     String path = '/music/track.flac',
@@ -69,11 +68,7 @@ void main() {
     addTearDown(tester.view.reset);
     await tester.pumpWidget(
       MaterialApp(
-        theme: mornye
-            ? AppTheme.build(brightness)
-            : brightness == Brightness.light
-            ? AppTheme.build(Brightness.light)
-            : AppTheme.build(Brightness.dark),
+        theme: AppTheme.build(brightness),
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         locale: const Locale('en'),
@@ -109,11 +104,11 @@ void main() {
   }
 
   for (final brightness in Brightness.values) {
-    final name = '${'mornye'}-${brightness.name}';
+    final name = brightness.name;
     testWidgets('centered action and neutral bandwidth result ($name)', (
       tester,
     ) async {
-      await openCard(tester, mornye: true, brightness: brightness);
+      await openCard(tester, brightness: brightness);
       await tester.pumpAndSettle();
       final button = find.ancestor(
         of: find.text('Check'),
@@ -148,7 +143,7 @@ void main() {
   }
 
   testWidgets('large text stays readable', (tester) async {
-    await openCard(tester, mornye: true, textScale: 2);
+    await openCard(tester, textScale: 2);
     await tester.tap(find.text('Check'));
     await tester.pumpAndSettle();
     await tester.scrollUntilVisible(

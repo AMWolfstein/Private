@@ -100,7 +100,6 @@ void main() {
 
   Future<_Collections> open(
     WidgetTester tester, {
-    bool mornye = false,
     LibraryTracksFolderMode mode = LibraryTracksFolderMode.loved,
   }) async {
     tester.view.physicalSize = const Size(430, 1000);

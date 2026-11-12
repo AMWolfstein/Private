@@ -67,7 +67,7 @@ void main() {
   testWidgets('Production screens with deterministic 2000-track data', (
     tester,
   ) async {
-    final probe = PerformanceProbe(binding, tester, suite: 'mornye_screens');
+    final probe = PerformanceProbe(binding, tester, suite: 'screens');
     final preferences = (await tester.runAsync(SharedPreferences.getInstance))!;
     final settingsBefore = preferences.getString('app_settings');
     const databaseChannel = MethodChannel('com.tekartik.sqflite');

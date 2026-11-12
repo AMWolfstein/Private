@@ -36,7 +36,6 @@ void main() {
     WidgetTester tester, {
     required List<UnifiedLibraryItem> items,
     required List<NetworkConnection> writable,
-    bool mornye = false,
   }) async {
     await tester.pumpWidget(
       ProviderScope(
@@ -46,7 +45,7 @@ void main() {
           ),
         ],
         child: MaterialApp(
-          theme: mornye ? AppTheme.build(Brightness.dark) : ThemeData(),
+          theme: AppTheme.build(Brightness.dark),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: Scaffold(
@@ -68,7 +67,6 @@ void main() {
       tester,
       items: [song('/music/a.flac'), song('network://nas/b.flac')],
       writable: [nas],
-      mornye: true,
     );
     expect(find.text(label), findsOneWidget);
     expect(find.byTooltip(label), findsOneWidget);

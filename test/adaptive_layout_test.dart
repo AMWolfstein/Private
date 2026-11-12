@@ -11,17 +11,6 @@ void main() {
     });
   });
 
-  group('adaptive navigation (Material)', () {
-    test('switches to the rail at the expanded window class', () {
-      expect(useMaterialNavigationRailForWidth(390), isFalse);
-      expect(useMaterialNavigationRailForWidth(683), isFalse);
-      expect(
-        useMaterialNavigationRailForWidth(expandedLayoutBreakpoint),
-        isTrue,
-      );
-    });
-  });
-
   group('wide content', () {
     test('fills compact widths and centers at the reading width', () {
       expect(wideInsetForWidth(640), 0);

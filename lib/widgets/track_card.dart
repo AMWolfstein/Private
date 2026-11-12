@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mornye/l10n/l10n.dart';
-import 'package:mornye/providers/music_player_provider.dart';
 import 'package:mornye/theme/app_tokens.dart';
 import 'package:mornye/widgets/animation_utils.dart';
 import 'package:mornye/widgets/app_content_card.dart';
-import 'package:mornye/widgets/now_playing_indicator.dart';
 import 'package:mornye/widgets/settings_group.dart';
-import 'package:mornye/theme/player_artwork_theme.dart';
 
 /// How a [TrackCard] paints its container.
 enum TrackCardStyle {
@@ -21,8 +17,8 @@ enum TrackCardStyle {
   flat,
 }
 
-/// Marks a filled [TrackCard] as one row of a run of cards, so the Material
-/// theme draws the run as an expressive connected list: 2dp apart, large
+/// Marks a filled [TrackCard] as one row of a run of cards, so the run
+/// draws as a connected list: 2dp apart, large
 /// corners at the ends of the run and small corners between rows.
 class TrackCardSegment extends InheritedWidget {
   const TrackCardSegment({
@@ -99,9 +95,6 @@ class TrackCard extends StatelessWidget {
     this.onTap,
     this.onLongPress,
     this.margin,
-    this.isCurrent = false,
-    this.isPlaying = false,
-    this.leadingArtwork = false,
   });
 
   /// Track number, cover art, or anything else that identifies the row.
@@ -119,9 +112,7 @@ class TrackCard extends StatelessWidget {
   final Widget? subtitle;
 
   /// Hidden while [isSelectionMode] is active, so the row cannot be acted on
-  /// while the user is picking items. On a filled Material row it reads a
-  /// scheme whose `primary`, `onSurface` and `onSurfaceVariant` are the
-  /// fill's content colour, so build its colours inside it.
+  /// while the user is picking items.
   final Widget? trailing;
 
   /// Painted behind the content, clipped to the card. Used for the queue's
@@ -137,19 +128,6 @@ class TrackCard extends StatelessWidget {
   /// Overrides the default outer margin. Prefer the default so track lists stay
   /// aligned with each other.
   final EdgeInsetsGeometry? margin;
-
-  /// The row is the player's current track. The Material style fills it with
-  /// `primaryContainer` of the track's artwork scheme ([PlayerArtworkTheme]),
-  /// rounds its ends into a pill and shows a [NowPlayingIndicator] before
-  /// [trailing]. Mornye ignores it.
-  final bool isCurrent;
-
-  /// The current track is playing, so the indicator moves.
-  final bool isPlaying;
-
-  /// [leading] is square artwork, which the Material style rounds toward a
-  /// circle while the row is current.
-  final bool leadingArtwork;
 
   @override
   Widget build(BuildContext context) {
@@ -167,7 +145,7 @@ class TrackCard extends StatelessWidget {
     final segmentMargin = filled ? TrackCardSegment.marginOf(context) : null;
     // The two styles carry their own outer margin so no call site has to
     // repeat it: flat rows sit tight inside a collection list, filled cards
-    // get the Material list margin.
+    // get the list margin.
     final cardMargin =
         margin ??
         segmentMargin ??
@@ -186,9 +164,6 @@ class TrackCard extends StatelessWidget {
           )
         : EdgeInsetsDirectional.all(tokens.gapMd);
 
-    // Material selection and the current track use solid roles. A selected
-    // current row keeps the selection fill and shows its state through the
-    // shape, the glyph and the title weight.
     final Color cardColor = isSelected
         ? colorScheme.primaryContainer.withValues(alpha: 0.3)
         : Colors.transparent;
@@ -198,13 +173,6 @@ class TrackCard extends StatelessWidget {
     final supportingStyle = TextStyle(
       color: contentColor ?? colorScheme.onSurfaceVariant,
     );
-    // Trailing controls sit directly on the fill: their content roles take
-    // its content colour, and a filled control inverts against it.
-
-    // The current row's shapes morph on the spatial spring; reduced motion
-    // switches them in place. A clip applies only while the row is, or is
-    // leaving, the current track.
-
     final rowLeading = leading;
 
     final card = AppContentCard(
@@ -269,8 +237,6 @@ class TrackCard extends StatelessWidget {
 
                 if (trailing != null && !isSelectionMode) ...[
                   SizedBox(width: tokens.gapSm),
-                  // Mornye rows never fill with a content colour and keep
-                  // their ambient theme.
                   trailing!,
                 ],
               ],
@@ -294,68 +260,6 @@ class TrackCard extends StatelessWidget {
       ],
     );
   }
-}
-
-/// Gives the current Material row the colour scheme of the playing track's
-/// artwork, like the mini player; other rows keep the app scheme. It stays
-/// in the tree either way, so the row's shape morph and ripple survive the
-/// switch, and it reads the player only while the row is current, so rows
-/// outside a [ProviderScope] still build.
-class _CurrentTrackArtworkTheme extends StatefulWidget {
-  const _CurrentTrackArtworkTheme({required this.current, required this.child});
-
-  final bool current;
-  final Widget child;
-
-  @override
-  State<_CurrentTrackArtworkTheme> createState() =>
-      _CurrentTrackArtworkThemeState();
-}
-
-class _CurrentTrackArtworkThemeState extends State<_CurrentTrackArtworkTheme> {
-  ProviderSubscription<String?>? _subscription;
-  String? _artUri;
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    _listen();
-  }
-
-  @override
-  void didUpdateWidget(_CurrentTrackArtworkTheme oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (oldWidget.current != widget.current) _listen();
-  }
-
-  @override
-  void dispose() {
-    _subscription?.close();
-    super.dispose();
-  }
-
-  void _listen() {
-    if (!widget.current) {
-      _subscription?.close();
-      _subscription = null;
-      _artUri = null;
-      return;
-    }
-    if (_subscription != null) return;
-    _subscription = ProviderScope.containerOf(context, listen: false).listen(
-      currentMediaItemProvider.select((item) => item.value?.artUri?.toString()),
-      (_, artUri) {
-        if (mounted) setState(() => _artUri = artUri);
-      },
-    );
-    _artUri = _subscription!.read();
-  }
-
-  @override
-  Widget build(BuildContext context) => PlayerArtworkTheme(
-    artUri: widget.current ? _artUri : null,
-    child: widget.child,
-  );
 }
 
 /// Grid counterpart of [TrackCard]: square artwork with overlays, then the

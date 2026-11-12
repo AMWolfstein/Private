@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:material_3_expressive/material_3_expressive.dart';
 
-/// Expressive shapes used across the Material theme.
+/// Expressive shapes used across the app.
 abstract final class AppShapes {
   /// Artist portraits, from list thumbnails to profile headers.
   static const artist = M3EShapeKind.cookie9Sided;
@@ -11,9 +11,7 @@ abstract final class AppShapes {
   static const brand = M3EShapeKind.cookie12Sided;
 }
 
-/// Clips [child] to an expressive [kind] on the Material theme.
-///
-/// Mornye keeps its own geometry: [fallbackRadius], or an oval when null.
+/// Clips [child] to an expressive [kind] with [fallbackRadius], or an oval when null.
 class AppShapeClip extends StatelessWidget {
   const AppShapeClip({
     super.key,

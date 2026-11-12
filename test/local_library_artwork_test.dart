@@ -73,7 +73,7 @@ void main() {
     await directory.delete(recursive: true);
   });
 
-  Widget app(Widget home, {bool mornye = false}) => ProviderScope(
+  Widget app(Widget home) => ProviderScope(
     overrides: [
       settingsProvider.overrideWith(
         () => FixedSettingsNotifier(
@@ -247,7 +247,6 @@ void main() {
               ),
             ],
           ),
-          mornye: true,
         ),
       );
       await tester.pumpAndSettle();
@@ -291,7 +290,6 @@ void main() {
                 ),
               ],
             ),
-            mornye: true,
           ),
         );
         await tester.pumpAndSettle();

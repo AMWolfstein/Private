@@ -48,8 +48,6 @@ class AlbumTrackTile extends StatelessWidget {
       style: TrackCardStyle.flat,
       isSelectionMode: isSelectionMode,
       isSelected: isSelected,
-      isCurrent: isCurrent,
-      isPlaying: isPlaying,
       onTap: isSelectionMode ? onToggleSelection : onOpen,
       onLongPress: isSelectionMode ? null : onEnterSelectionMode,
       leading: SizedBox(

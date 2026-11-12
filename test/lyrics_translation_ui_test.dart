@@ -105,20 +105,17 @@ http.Response _translated(http.Request request, String prefix) {
   );
 }
 
-Widget _app({
-  required bool mornye,
-  required List<Override> overrides,
-  required Widget home,
-}) => ProviderScope(
-  overrides: overrides,
-  child: MaterialApp(
-    theme: AppTheme.build(Brightness.dark, accent: AppAccent.blue),
-    locale: const Locale('en'),
-    localizationsDelegates: AppLocalizations.localizationsDelegates,
-    supportedLocales: AppLocalizations.supportedLocales,
-    home: home,
-  ),
-);
+Widget _app({required List<Override> overrides, required Widget home}) =>
+    ProviderScope(
+      overrides: overrides,
+      child: MaterialApp(
+        theme: AppTheme.build(Brightness.dark, accent: AppAccent.blue),
+        locale: const Locale('en'),
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        home: home,
+      ),
+    );
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -161,14 +158,12 @@ void main() {
   });
   tearDown(() => messenger.setMockMethodCallHandler(channel, null));
 
-  testWidgets('translation mode applies on tap '
-      '(mornye=true)', (tester) async {
+  testWidgets('translation mode applies on tap', (tester) async {
     tester.view.physicalSize = const Size(390, 800);
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.reset);
     await tester.pumpWidget(
       _app(
-        mornye: true,
         overrides: [
           initialSettingsProvider.overrideWithValue(const AppSettings()),
           lyricsAiKeyStoreProvider.overrideWithValue(MemoryLyricsAiKeyStore()),
@@ -221,7 +216,6 @@ void main() {
       final requests = <http.Request>[];
       await tester.pumpWidget(
         _app(
-          mornye: true,
           overrides: [
             initialSettingsProvider.overrideWithValue(
               AppSettings(
@@ -322,7 +316,6 @@ void main() {
     addTearDown(preview.dispose);
     await tester.pumpWidget(
       _app(
-        mornye: false,
         overrides: [
           playbackStateProvider.overrideWith((ref) => playback.stream),
           musicPlayerControllerProvider.overrideWith(
@@ -358,7 +351,6 @@ void main() {
     var status = 200;
     await tester.pumpWidget(
       _app(
-        mornye: true,
         overrides: [
           initialSettingsProvider.overrideWithValue(const AppSettings()),
           lyricsAiKeyStoreProvider.overrideWithValue(keys),

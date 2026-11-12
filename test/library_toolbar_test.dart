@@ -130,7 +130,6 @@ void main() {
 
   Future<void> pumpLibrary(
     WidgetTester tester, {
-    bool mornye = false,
     bool reduceMotion = false,
     List<DateTime>? dates,
     List<UserPlaylistCollection> playlists = const [],
@@ -187,7 +186,7 @@ void main() {
             child: child!,
           ),
           // Mornye opens Songs as a section page from its Library root.
-          home: Scaffold(body: QueueTab(librarySection: mornye ? 'all' : null)),
+          home: Scaffold(body: QueueTab(librarySection: 'all')),
         ),
       ),
     );
@@ -201,14 +200,12 @@ void main() {
   AppLocalizations l10nOf(WidgetTester tester) =>
       AppLocalizations.of(tester.element(find.byType(QueueTab)));
 
-  {
-    for (final _ in <int?>[null, 0, 143]) {}
-  }
+  {}
 
   {
     testWidgets('title sort survives a fresh Library and settings scope '
         '(Mornye: true)', (tester) async {
-      await pumpLibrary(tester, mornye: true);
+      await pumpLibrary(tester);
       final l10n = l10nOf(tester);
       await tester.tap(find.text(l10n.libraryFilterTitle).hitTestable());
       for (var i = 0; i < 10; i++) {
@@ -228,7 +225,7 @@ void main() {
       expect(loadBootstrapSettings(preferences).historySortMode, 'a-z');
       await tester.pumpWidget(const SizedBox.shrink());
       queries.clear();
-      await pumpLibrary(tester, mornye: true);
+      await pumpLibrary(tester);
       final container = ProviderScope.containerOf(
         tester.element(find.byType(QueueTab)),
       );
@@ -243,7 +240,7 @@ void main() {
 
     testWidgets('size sort applies from the Library menu '
         '(Mornye: true)', (tester) async {
-      await pumpLibrary(tester, mornye: true);
+      await pumpLibrary(tester);
       final l10n = l10nOf(tester);
       // The search field scrolls with the page over its plain background.
       expect(
@@ -274,7 +271,7 @@ void main() {
   }
 
   testWidgets('Keeps its filter button', (tester) async {
-    await pumpLibrary(tester, mornye: true);
+    await pumpLibrary(tester);
     final l10n = l10nOf(tester);
 
     expect(find.byType(M3EButtonGroup), findsNothing);

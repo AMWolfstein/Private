@@ -7,7 +7,7 @@ const double _trackMetadataTwoColumnMinWidth = 960;
 /// The content width for a window [width]: the reading width on phones and
 double _trackMetadataContentMaxWidth(double width) =>
     width >= _trackMetadataTwoColumnMinWidth + 32
-    ? math.min(width, materialContentMaxWidth)
+    ? math.min(width, largeWindowContentMaxWidth)
     : adaptiveContentMaxWidth(width);
 
 extension _TrackMetadataCards on _TrackMetadataScreenState {

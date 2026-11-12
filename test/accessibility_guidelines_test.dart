@@ -19,8 +19,8 @@ void main() {
     'equalizer': () => const EqualizerScreen(),
   };
   final themes = <String, ThemeData Function()>{
-    'Mornye light': () => AppTheme.build(Brightness.light),
-    'Mornye dark': () => AppTheme.build(Brightness.dark),
+    'light': () => AppTheme.build(Brightness.light),
+    'dark': () => AppTheme.build(Brightness.dark),
   };
 
   for (final page in pages.entries) {
@@ -33,16 +33,13 @@ void main() {
         tester.view.devicePixelRatio = 1;
         addTearDown(tester.view.reset);
         final handle = tester.ensureSemantics();
-        final mornye = theme.key.startsWith('Mornye');
         await tester.pumpWidget(
           ProviderScope(
             child: MaterialApp(
               theme: theme.value(),
               localizationsDelegates: AppLocalizations.localizationsDelegates,
               supportedLocales: AppLocalizations.supportedLocales,
-              home: mornye
-                  ? AppSettingsTheme(child: page.value())
-                  : page.value(),
+              home: AppSettingsTheme(child: page.value()),
             ),
           ),
         );

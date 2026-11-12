@@ -54,17 +54,16 @@ Future<bool?> _legacyOpenSettings(BuildContext context) => showAppDialog<bool>(
   ),
 );
 
-ThemeData _theme(bool mornye) => AppTheme.build(Brightness.light);
+ThemeData _theme() => AppTheme.build(Brightness.light);
 
 Future<void> _pumpLauncher(
   WidgetTester tester, {
-  required bool mornye,
   required void Function(BuildContext context) onOpen,
 }) async {
   await tester.pumpWidget(
     ProviderScope(
       child: MaterialApp(
-        theme: _theme(mornye),
+        theme: _theme(),
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         home: Builder(
@@ -107,14 +106,12 @@ List<Object?> _dialogSnapshot(WidgetTester tester) {
 
 Future<(List<Object?>, Object?)> _runDialog<T>(
   WidgetTester tester, {
-  required bool mornye,
   required Future<T> Function(BuildContext context) open,
   required Future<void> Function() close,
 }) async {
   Object? result = #pending;
   await _pumpLauncher(
     tester,
-    mornye: mornye,
     onOpen: (context) async => result = await open(context),
   );
   await tester.tap(find.text('Open'));
@@ -230,13 +227,11 @@ void main() {
         for (final MapEntry(key: how, value: close) in closes.entries) {
           final (before, legacyResult) = await _runDialog(
             tester,
-            mornye: true,
             open: legacy,
             close: close,
           );
           final (after, helperResult) = await _runDialog(
             tester,
-            mornye: true,
             open: helper,
             close: close,
           );
@@ -258,7 +253,6 @@ void main() {
         final errorStyle = FilledButton.styleFrom(backgroundColor: Colors.red);
         await _pumpLauncher(
           tester,
-          mornye: true,
           onOpen: (context) => showAppConfirmDialog(
             context,
             title: 'Title',
@@ -301,7 +295,7 @@ void main() {
       testWidgets('errorConfirm follows the dialog theme (filled=$filled)', (
         tester,
       ) async {
-        final base = _theme(true);
+        final base = _theme();
         final theme = ValueNotifier(base);
         addTearDown(theme.dispose);
         await tester.pumpWidget(
@@ -358,7 +352,6 @@ void main() {
       bool? result;
       await _pumpLauncher(
         tester,
-        mornye: true,
         onOpen: (context) async => result = await showAppConfirmDialog(
           context,
           title: 'Title',
@@ -390,7 +383,6 @@ void main() {
           String? picked;
           await _pumpLauncher(
             tester,
-            mornye: true,
             onOpen: (context) => useHelper
                 ? showAppChoiceSheet(
                     context: context,
@@ -437,7 +429,7 @@ void main() {
               await tester.pumpWidget(
                 ProviderScope(
                   child: MaterialApp(
-                    theme: _theme(true),
+                    theme: _theme(),
                     home: MediaQuery(
                       data: MediaQueryData(
                         size: Size(width, 900),

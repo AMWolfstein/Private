@@ -63,4 +63,22 @@ void main() {
     }
     expect(hits, isEmpty);
   });
+
+  test('no helper or loop still switches between two designs', () {
+    // A bare `mornye` identifier was the old design flag. Strings, imports,
+    // scheme names and package paths are excluded by requiring a code use.
+    final flag = RegExp(
+      r'(\bbool mornye\b|\bmornye:\s|\bfinal mornye\b|\bmornye \?|\(mornye\b|!mornye\b)',
+    );
+    final hits = <String>{};
+    for (final root in ['lib', 'test', 'integration_test']) {
+      for (final entity in Directory(root).listSync(recursive: true)) {
+        if (entity is! File || !entity.path.endsWith('.dart')) continue;
+        if (entity.path.endsWith('theme_residual_test.dart')) continue;
+        final text = entity.readAsStringSync();
+        if (flag.hasMatch(text)) hits.add(entity.path);
+      }
+    }
+    expect(hits, isEmpty);
+  });
 }

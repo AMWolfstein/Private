@@ -79,9 +79,6 @@ class TrackListTile extends ConsumerWidget {
       style: TrackCardStyle.flat,
       isSelectionMode: isSelectionMode,
       isSelected: isSelected,
-      isCurrent: false,
-      isPlaying: false,
-      leadingArtwork: leadingArtwork,
       leading: leading,
       title: track.name,
       subtitle: TrackMetadataBadgesLine(

@@ -141,7 +141,6 @@ class _LibraryMixScreenState extends ConsumerState<LibraryMixScreen>
               );
               return TrackCard(
                 style: TrackCardStyle.flat,
-                leadingArtwork: true,
                 leading: ClipRRect(
                   borderRadius: BorderRadius.circular(tokens.radiusThumb),
                   child: LibraryItemArtwork(
@@ -155,11 +154,8 @@ class _LibraryMixScreenState extends ConsumerState<LibraryMixScreen>
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
-                isCurrent: playback.isCurrent,
-                isPlaying: playback.isPlaying,
                 isSelectionMode: isSelectionMode,
                 isSelected: selectedIds.contains(item.id),
-                // A long press selects, as on the album pages.
                 onTap: isSelectionMode
                     ? () => toggleSelection(item.id)
                     : playback.isCurrent

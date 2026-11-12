@@ -28,11 +28,7 @@ void main() {
   const focused = bool.fromEnvironment('MORNYE_GLASS_FOCUS');
   {
     testWidgets('Real rendering at fixed Clear glass', (tester) async {
-      final probe = PerformanceProbe(
-        binding,
-        tester,
-        suite: 'mornye_chrome_clear',
-      );
+      final probe = PerformanceProbe(binding, tester, suite: 'chrome_clear');
       final fixture = (await tester.runAsync(_Fixture.create))!;
       addTearDown(() async {
         await tester.pumpWidget(const SizedBox.shrink());

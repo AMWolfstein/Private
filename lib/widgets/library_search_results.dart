@@ -431,9 +431,6 @@ class _LibrarySearchResultsState extends ConsumerState<LibrarySearchResults> {
       ),
       title: hit.title,
       subtitle: Text(subtitle, maxLines: 2, overflow: TextOverflow.ellipsis),
-      isCurrent: playback?.isCurrent ?? false,
-      isPlaying: playback?.isPlaying ?? false,
-      leadingArtwork: song,
       trailing: song
           ? AppIconButton(
               tooltip: playback?.isPlaying ?? false
@@ -452,8 +449,6 @@ class _LibrarySearchResultsState extends ConsumerState<LibrarySearchResults> {
                   : () => _open(hit, play: true),
             )
           : const Icon(Icons.chevron_right),
-      // Long-press selects songs for the Library batch actions; while
-      // selecting, song taps toggle and other results stay inert.
       isSelectionMode: song && _selecting,
       isSelected: song && _selected.containsKey(_itemId(hit)),
       onTap: !_selecting

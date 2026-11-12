@@ -66,19 +66,18 @@ class _Collections extends LibraryCollectionsNotifier {
   }
 }
 
-Widget _app(Widget home, _Collections collections, {required bool mornye}) =>
-    ProviderScope(
-      overrides: [
-        settingsProvider.overrideWith(_Settings.new),
-        libraryCollectionsProvider.overrideWith(() => collections),
-      ],
-      child: MaterialApp(
-        theme: mornye ? AppTheme.build(Brightness.light) : ThemeData(),
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        supportedLocales: AppLocalizations.supportedLocales,
-        home: home,
-      ),
-    );
+Widget _app(Widget home, _Collections collections) => ProviderScope(
+  overrides: [
+    settingsProvider.overrideWith(_Settings.new),
+    libraryCollectionsProvider.overrideWith(() => collections),
+  ],
+  child: MaterialApp(
+    theme: AppTheme.build(Brightness.light),
+    localizationsDelegates: AppLocalizations.localizationsDelegates,
+    supportedLocales: AppLocalizations.supportedLocales,
+    home: home,
+  ),
+);
 
 void main() {
   setUp(() => SharedPreferences.setMockInitialValues({}));
@@ -102,7 +101,6 @@ void main() {
           ),
         ),
         collections,
-        mornye: true,
       ),
     );
     await tester.tap(find.text('create'));

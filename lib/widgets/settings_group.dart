@@ -736,9 +736,7 @@ class SettingsSegmentOption<T> {
 
 /// Single-select row of two to four related options that fits on one line.
 ///
-/// Material 3 Expressive replaces the segmented button with a connected
-/// button group spanning the row; reduced motion keeps the static
-/// [SegmentedButton]. Mornye keeps its equal-width chips. Option sets that
+/// Options are equal-width chips. Option sets that
 /// wrap belong in a [SettingsChoiceGrid] instead.
 class SettingsSegmentedChoice<T> extends StatelessWidget {
   const SettingsSegmentedChoice({
@@ -827,7 +825,7 @@ class SettingsInfoCard extends StatelessWidget {
 
   final EdgeInsetsGeometry? margin;
 
-  /// Uses the shared glass surface in the app without changing Material cards.
+  /// Uses the shared glass surface in the app on the card.
   final bool glass;
 
   @override
@@ -836,8 +834,6 @@ class SettingsInfoCard extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
-    // Material uses the solid container with its paired on-color, so the
-    // text keeps its contrast; Mornye keeps its softer fills.
     final (background, foreground) = switch (tone) {
       SettingsInfoTone.neutral => (
         (colorScheme.surfaceContainerHighest.withValues(alpha: 0.5)),

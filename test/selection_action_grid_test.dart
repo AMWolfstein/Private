@@ -6,9 +6,9 @@ import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/widgets/library_track_selection_bar.dart';
 import 'package:mornye/widgets/selection_action_button.dart';
 
-Widget _app(bool mornye, Widget child) => ProviderScope(
+Widget _app(Widget child) => ProviderScope(
   child: MaterialApp(
-    theme: mornye ? AppTheme.build(Brightness.dark) : ThemeData(),
+    theme: AppTheme.build(Brightness.dark),
     localizationsDelegates: AppLocalizations.localizationsDelegates,
     supportedLocales: AppLocalizations.supportedLocales,
     home: Scaffold(
@@ -32,7 +32,6 @@ void main() {
       var tapped = -1;
       await tester.pumpWidget(
         _app(
-          true,
           Builder(
             builder: (context) => SelectionActionGrid(
               children: [
@@ -79,7 +78,6 @@ void main() {
       converted = false;
       await tester.pumpWidget(
         _app(
-          true,
           LibraryTrackSelectionBar(
             selectedCount: selectedCount,
             allSelected: false,

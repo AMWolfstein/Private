@@ -171,7 +171,7 @@ void main() {
     expect(editable.scrollPadding, const EdgeInsets.only(bottom: 120));
   });
 
-  for (final variant in ['expressive', 'reduced', 'mornye']) {
+  for (final variant in ['default', 'reduced']) {
     testWidgets(
       'playlist dialog validates and submits with the keyboard ($variant)',
       (tester) async {
@@ -219,7 +219,7 @@ void main() {
                 child: const Text('Open playlist'),
               ),
             ),
-            theme: variant == 'mornye' ? AppTheme.build(Brightness.dark) : null,
+            theme: AppTheme.build(Brightness.dark),
             reduceMotion: variant == 'reduced',
           ),
         );
@@ -260,6 +260,4 @@ void main() {
     expect(taps, 1);
     expect(longPresses, 1);
   });
-
-  for (final _ in [false, true]) {}
 }

@@ -59,13 +59,9 @@ String _paintFingerprint(WidgetTester tester) {
 /// A deliberate change to
 /// the phone rows records new values; the failure prints the fingerprint.
 const _baseFingerprints = {
-  'phone Material': 'c975d61edc1fef90079a8ac06bf1a8c5307ac43b',
   'phone': '04f6e198f1bfab62707f15e38e5fdd28fc0a4c6e',
-  'landscape phone Material': '88fd46463538cd4b3d728743a1174612da7a9731',
   'landscape phone': '6a18a9afcec7f8f4cb58f54a81ed344ba0137d51',
-  'portrait tablet Material': '94d41e2ff5146d50d53d7b50f33ec371b88fc11f',
   'portrait tablet': '23708c51cffa085a8a0a1248e552ceac7ef718e8',
-  'narrow tablet window Material': 'b6100a1f1a4c5b744139bc06e924b7a12d498ac5',
   'narrow tablet window': '22a9b32e5c4574ad57bfe681332310be029910a8',
 };
 
@@ -80,7 +76,7 @@ void main() {
     testWidgets('Search results on a $key paint the base layout', (
       tester,
     ) async {
-      await pumpSearchFixture(tester, size: size, mornye: true);
+      await pumpSearchFixture(tester, size: size);
       expect(find.text('Found artist 0'), findsOneWidget);
       expect(find.byType(SliverGrid), findsNothing);
 

@@ -115,7 +115,6 @@ List<Override> _overrides({MediaItem? current, required bool identified}) => [
 
 Widget _app(
   Widget home, {
-  bool mornye = false,
   MediaItem? current,
   bool identified = true,
   List<Override> overrides = const [],
@@ -218,12 +217,7 @@ void main() {
 
     testWidgets('Rows show no current-track state', (tester) async {
       await tester.pumpWidget(
-        _app(
-          results(),
-          mornye: true,
-          current: current,
-          overrides: searchOverrides,
-        ),
+        _app(results(), current: current, overrides: searchOverrides),
       );
       await _pumpFor(tester);
       expect(find.byType(NowPlayingIndicator), findsNothing);

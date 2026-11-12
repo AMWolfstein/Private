@@ -31,18 +31,15 @@ class _Collections extends LibraryCollectionsNotifier {
   LibraryCollectionsState build() => LibraryCollectionsState(isLoaded: true);
 }
 
-void main() => runArtworkPerformanceTests(mornye: true);
+void main() => runArtworkPerformanceTests();
 
 /// The same source image and panel gestures exercise both player layouts.
-void runArtworkPerformanceTests({required bool mornye}) {
+void runArtworkPerformanceTests() {
   final binding = PerformanceTestBinding.ensureInitialized();
-  final style = mornye ? 'mornye' : 'material';
-  testWidgets('$style player panel transitions and artwork cache', (
-    tester,
-  ) async {
-    final probe = PerformanceProbe(binding, tester, suite: '$style-artwork');
+  testWidgets('Player panel transitions and artwork cache', (tester) async {
+    final probe = PerformanceProbe(binding, tester, suite: 'artwork');
     final directory = await tester.runAsync(getTemporaryDirectory);
-    final cover = File('${directory!.path}/$style-performance-cover.png');
+    final cover = File('${directory!.path}/performance-cover.png');
     await tester.runAsync(() async {
       final recorder = ui.PictureRecorder();
       final canvas = Canvas(recorder);
@@ -171,14 +168,12 @@ void runArtworkPerformanceTests({required bool mornye}) {
         await probe.wait(const Duration(milliseconds: 500));
       }
     });
-    if (mornye) {
-      await probe.measure('player_lyrics_queue_transitions', () async {
-        for (final value in [1, 0, 2, 0]) {
-          page.value = value;
-          await probe.wait(const Duration(milliseconds: 500));
-        }
-      });
-    }
+    await probe.measure('player_lyrics_queue_transitions', () async {
+      for (final value in [1, 0, 2, 0]) {
+        page.value = value;
+        await probe.wait(const Duration(milliseconds: 500));
+      }
+    });
     snapshots['after_panels'] = snapshot();
     // Allow the queue's small thumbnail, but not a second full-size decode.
     expect(
@@ -193,7 +188,6 @@ void runArtworkPerformanceTests({required bool mornye}) {
         'fixture':
             'Production AppPlayerLayout, local 2400px static cover; '
             'synthetic lyrics/queue and no playback or persistent data',
-        'style': style,
         'cache_snapshots': snapshots,
       },
     );

@@ -79,12 +79,7 @@ class _Extensions extends ExtensionNotifier {
 }
 
 void main() {
-  for (final (qualityCount, mornye) in [
-    (3, false),
-    (16, false),
-    (3, true),
-    (16, true),
-  ]) {
+  for (final qualityCount in [3, 16]) {
     testWidgets('picker fits $qualityCount options and dismisses', (
       tester,
     ) async {
@@ -99,9 +94,7 @@ void main() {
             settingsProvider.overrideWith(FixedSettingsNotifier.new),
           ],
           child: MaterialApp(
-            theme: mornye
-                ? AppTheme.build(Brightness.dark)
-                : ThemeData(platform: TargetPlatform.android),
+            theme: AppTheme.build(Brightness.dark),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             home: Scaffold(

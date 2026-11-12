@@ -86,7 +86,6 @@ Finder get _findMovedRow => find.byWidgetPredicate(
 
 Future<void> _mount(
   WidgetTester tester, {
-  required bool mornye,
   required _Library library,
   required _History history,
 }) async {
@@ -137,12 +136,7 @@ void main() {
       ),
       () async => 0,
     );
-    await _mount(
-      tester,
-      mornye: true,
-      library: library,
-      history: _History(0, () async => 0),
-    );
+    await _mount(tester, library: library, history: _History(0, () async => 0));
     // The folder rows sit above the actions the setup scrolled to.
     await tester.drag(find.byType(Scrollable).first, const Offset(0, 3000));
     await tester.pumpAndSettle();
@@ -156,12 +150,7 @@ void main() {
     tester,
   ) async {
     final library = _RetryLibrary();
-    await _mount(
-      tester,
-      mornye: true,
-      library: library,
-      history: _History(0, () async => 0),
-    );
+    await _mount(tester, library: library, history: _History(0, () async => 0));
     await tester.scrollUntilVisible(find.text('Retry'), -300);
     await tester.pumpAndSettle();
     expect(find.textContaining('Library could not be loaded'), findsOneWidget);
@@ -181,7 +170,6 @@ void main() {
     var downloadCalls = 0;
     await _mount(
       tester,
-      mornye: true,
       library: _Library(LocalLibraryState(), () {
         localCalls++;
         return localDone.future;
@@ -221,7 +209,6 @@ void main() {
     var downloadCalls = 0;
     await _mount(
       tester,
-      mornye: true,
       library: _Library(LocalLibraryState(totalCount: 1), () async {
         calls++;
         if (calls == 1) throw StateError('cleanup failed');
@@ -254,7 +241,6 @@ void main() {
     var cleanupCalls = 0;
     await _mount(
       tester,
-      mornye: true,
       library: _Library(LocalLibraryState(), () async {
         cleanupCalls++;
         return 0;
@@ -303,7 +289,6 @@ void main() {
   testWidgets('Find Moved Downloads reports errors', (tester) async {
     await _mount(
       tester,
-      mornye: true,
       library: _Library(LocalLibraryState(), () async => 0),
       history: _History(
         1,
@@ -323,7 +308,6 @@ void main() {
   testWidgets('Find Moved Downloads needs downloads', (tester) async {
     await _mount(
       tester,
-      mornye: true,
       library: _Library(LocalLibraryState(totalCount: 4), () async => 0),
       history: _History(0, () async => 0),
     );
@@ -336,7 +320,6 @@ void main() {
   testWidgets('cleanup stays available for hidden source rows', (tester) async {
     await _mount(
       tester,
-      mornye: true,
       library: _Library(
         LocalLibraryState(
           sources: const [
@@ -370,7 +353,6 @@ void main() {
     });
     await _mount(
       tester,
-      mornye: true,
       library: library,
       history: _History(1, () async {
         downloadCalls++;

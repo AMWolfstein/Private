@@ -53,7 +53,7 @@ void main() {
     tester.view.physicalSize = const Size(430, 932);
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.reset);
-    await _pumpHome(tester, mornye: true, mixes: [_mix]);
+    await _pumpHome(tester, mixes: [_mix]);
 
     final title = find.text('Hip-Hop Mix');
     await tester.scrollUntilVisible(
@@ -88,7 +88,7 @@ void main() {
     tester.view.physicalSize = const Size(430, 932);
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.reset);
-    await _pumpMix(tester, mornye: true);
+    await _pumpMix(tester);
     expect(find.byType(LibraryTrackSelectionBar), findsNothing);
 
     final first = find.text('Song 0');
@@ -252,7 +252,7 @@ void main() {
   });
 }
 
-Future<void> _pumpMix(WidgetTester tester, {required bool mornye}) async {
+Future<void> _pumpMix(WidgetTester tester) async {
   await tester.pumpWidget(
     ProviderScope(
       overrides: [
@@ -275,7 +275,6 @@ Future<void> _pumpMix(WidgetTester tester, {required bool mornye}) async {
 
 Future<void> _pumpHome(
   WidgetTester tester, {
-  required bool mornye,
   List<LibraryMixView> mixes = const [],
   Future<List<LibraryMixView>> Function(Ref ref)? mixesProvider,
   void Function(ProviderContainer container)? onContainer,
@@ -309,9 +308,7 @@ Future<void> _pumpHome(
           theme: AppTheme.build(Brightness.dark),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
-          home: HomeTab(
-            mode: mornye ? HomeTabMode.browse : HomeTabMode.combined,
-          ),
+          home: HomeTab(mode: HomeTabMode.browse),
         ),
       ),
     ),

@@ -49,7 +49,6 @@ void main() {
       await pumpSearchFixture(
         tester,
         size: size,
-        mornye: true,
         settings: _grid,
         results: results,
         filters: searchFixtureAllFilters,
@@ -115,7 +114,6 @@ void main() {
     await pumpSearchFixture(
       tester,
       size: _tablet,
-      mornye: true,
       settings: _grid,
       results: results,
       filters: searchFixtureCollectionFilters,

@@ -87,8 +87,6 @@ Future<Color?> _settledColor(WidgetTester tester, File cover) async {
 void main() {
   setUp(() => SharedPreferences.setMockInitialValues({}));
 
-  for (final _ in ['default', 'fullscreen']) {}
-
   testWidgets('Mini player resolves the cover colour on track change', (
     tester,
   ) async {

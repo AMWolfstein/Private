@@ -1360,11 +1360,7 @@ void main() {
     });
   }
 
-  for (final _ in [false, true]) {}
-
-  for (final _ in [const Size(852, 393), const Size(960, 432)]) {
-    for (final _ in [false, true]) {}
-  }
+  for (final _ in [const Size(852, 393), const Size(960, 432)]) {}
 
   testWidgets(
     'accessible navigation keeps lyric controls available while idle',
@@ -1713,8 +1709,6 @@ void main() {
     },
   );
 
-  for (final _ in ['material', 'portrait', 'landscape']) {}
-
   testWidgets('Lyrics stay blurred until playback starts', (tester) async {
     final playback = StreamController<PlaybackState>();
     addTearDown(playback.close);
@@ -1934,15 +1928,11 @@ void main() {
     );
   }
 
-  for (final _ in [320.0, 430.0]) {}
-
   for (final _ in [
     const Size(320, 568),
     const Size(430, 932),
     const Size(852, 393),
   ]) {}
-
-  for (final _ in [320.0, 430.0]) {}
 
   testWidgets('Player renders Apple-style transport controls', (tester) async {
     await pumpNowPlaying(tester, theme: AppTheme.build(Brightness.light));
@@ -2349,7 +2339,7 @@ void main() {
       tester,
       theme: AppTheme.build(Brightness.dark),
       size: const Size(393, 852),
-      // Paused, so the Material progress bar lets the frames settle.
+      // Paused, so the progress bar lets the frames settle.
       wrapPlayer: (_) => const Scaffold(
         body: Align(
           alignment: Alignment.bottomCenter,
@@ -3640,8 +3630,6 @@ void main() {
     expect(find.byType(PlayerVolumeControl), findsNothing);
     expect(tester.takeException(), isNull);
   });
-
-  // Behaviour kept from the retired Material-driven versions.
 
   testWidgets('Now Playing menu exposes Go to Album when album is known', (
     tester,

@@ -419,7 +419,7 @@ void main() {
   });
 
   test(
-    'Material notification shuffle toggles queue order without restarting audio',
+    'Notification shuffle toggles queue order without restarting audio',
     () async {
       configurePlaybackNotification(
         presentation: const PlaybackNotification(),
@@ -706,7 +706,7 @@ void main() {
     },
   );
 
-  test('Material favorites refresh without a UI rebuild', () async {
+  test('Notification favorites refresh without a UI rebuild', () async {
     var loved = false;
     configurePlaybackNotification(
       presentation: const PlaybackNotification(

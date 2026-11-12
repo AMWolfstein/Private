@@ -1193,9 +1193,6 @@ class _CollectionTrackTile extends ConsumerWidget {
       style: TrackCardStyle.flat,
       isSelectionMode: isSelectionMode,
       isSelected: isSelected,
-      isCurrent: false,
-      isPlaying: false,
-      leadingArtwork: true,
       leading: HeroMode(
         enabled: heroTag != null,
         child: Builder(
@@ -1227,8 +1224,6 @@ class _CollectionTrackTile extends ConsumerWidget {
           ],
         ],
       ),
-      // The button reads its colours inside the row, which follow the fill
-      // of the current track.
       trailing: isInHistory || isInLocalLibrary
           ? Builder(
               builder: (context) {

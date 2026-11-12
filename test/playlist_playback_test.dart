@@ -220,7 +220,6 @@ class _History extends DownloadHistoryNotifier {
 }
 
 Widget _selectionApp({
-  required bool mornye,
   required _Player player,
   required _Playback playback,
   _Library? library,
@@ -324,7 +323,6 @@ void main() {
     final history = _History();
     await tester.pumpWidget(
       _selectionApp(
-        mornye: true,
         player: _Player(),
         playback: playback,
         library: library,
@@ -383,7 +381,7 @@ void main() {
     final playback = _Playback()..paths.clear();
     playback.paths['First'] = '/album.cue#track01';
     await tester.pumpWidget(
-      _selectionApp(mornye: true, player: _Player(), playback: playback),
+      _selectionApp(player: _Player(), playback: playback),
     );
     await _selectAllTracks(tester);
     expect(
@@ -406,7 +404,6 @@ void main() {
     addTearDown(tester.view.reset);
     await tester.pumpWidget(
       _selectionApp(
-        mornye: true,
         player: _Player(),
         playback: _Playback(),
         internalPlayer: false,

@@ -64,9 +64,8 @@ void main() {
       ]);
       final blue = await write('blue.png', const [Colors.blue]);
 
-      // No pixel clears Score's chroma filter, so the tonal scheme takes
-      // Material's fallback hue. Mornye keeps it and shades from the source
-      // colour instead.
+      // No pixel clears Score's chroma filter, so the palette keeps the
+      // source colour and shades from it instead of the fallback hue.
       tonal = (await CoverPalette.resolve(gray, Brightness.dark))!;
       expect(_chroma(tonal.primary), greaterThan(12));
       neutral = (await CoverPalette.resolve(

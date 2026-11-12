@@ -26,7 +26,6 @@ final _albums = [
 
 Future<void> _pumpArtist(
   WidgetTester tester, {
-  required bool mornye,
   List<ArtistAlbum>? albums,
 }) async {
   SharedPreferences.setMockInitialValues({});
@@ -96,7 +95,7 @@ void main() {
   final style = 'Mornye';
 
   testWidgets('$style: touch long press still selects albums', (tester) async {
-    await _pumpArtist(tester, mornye: true);
+    await _pumpArtist(tester);
     await tester.longPress(_card(2));
     await tester.pumpAndSettle();
     _expectSelection(tester, {2});
@@ -109,7 +108,7 @@ void main() {
   testWidgets('$style: select all toggle clears but keeps selection mode', (
     tester,
   ) async {
-    await _pumpArtist(tester, mornye: true);
+    await _pumpArtist(tester);
     await tester.longPress(_card(2));
     await tester.pumpAndSettle();
     SelectionBottomBar bar() =>

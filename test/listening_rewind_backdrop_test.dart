@@ -135,7 +135,7 @@ void main() {
     tickers.dispose();
   });
 
-  Future<void> open(WidgetTester tester, {required bool mornye}) async {
+  Future<void> open(WidgetTester tester) async {
     tester.view.physicalSize = _size;
     tester.view.devicePixelRatio = _pixelRatio;
     addTearDown(tester.view.reset);
@@ -160,7 +160,7 @@ void main() {
           listeningRewindProvider.overrideWith((ref, period) async => rewind),
         ],
         child: MaterialApp(
-          theme: mornye ? AppTheme.build(Brightness.dark) : ThemeData(),
+          theme: AppTheme.build(Brightness.dark),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           builder: (context, child) => ListenableBuilder(
@@ -199,7 +199,7 @@ void main() {
   testWidgets('Blurs each slide cover once while it zooms and swipes', (
     tester,
   ) async {
-    await open(tester, mornye: true);
+    await open(tester);
     var frames = 0;
     var liveFrames = 0;
     final images = Set<ui.Image>.identity();
@@ -250,8 +250,8 @@ void main() {
   testWidgets('the backdrop drift moves at 30 Hz on the same clock', (
     tester,
   ) async {
-    await open(tester, mornye: true);
-    // The Ken Burns zoom (Mornye) or the largest shape's pulse (Material).
+    await open(tester);
+    // The Ken Burns zoom.
     final transform = find
         .ancestor(
           of: find.byType(SettledBlur),
@@ -294,7 +294,7 @@ void main() {
   testWidgets('the drift clock stops while paused, hidden, still or closed', (
     tester,
   ) async {
-    await open(tester, mornye: false);
+    await open(tester);
     expect(DecorativePhase.debugClockRunning, isTrue);
 
     tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.paused);
@@ -323,7 +323,7 @@ void main() {
   testWidgets('story progress redraws at 30 Hz without a vsync ticker', (
     tester,
   ) async {
-    await open(tester, mornye: false);
+    await open(tester);
     await tester.pump(const Duration(milliseconds: 1600));
     expect(tester.binding.transientCallbackCount, 0);
 
@@ -341,7 +341,7 @@ void main() {
   });
 
   testWidgets('auto-advance keeps its six-second deadline', (tester) async {
-    await open(tester, mornye: false);
+    await open(tester);
     await tester.pump(const Duration(milliseconds: 5999));
     expect(pages(tester).page, 0);
     expect(pages(tester).position.isScrollingNotifier.value, isFalse);
@@ -355,7 +355,7 @@ void main() {
   testWidgets('holding pauses elapsed time and resumes the remaining time', (
     tester,
   ) async {
-    await open(tester, mornye: false);
+    await open(tester);
     await tester.pump(const Duration(seconds: 1));
     final gesture = await tester.startGesture(
       tester.getRect(find.byType(PageView)).center,
@@ -378,7 +378,7 @@ void main() {
     testWidgets('hidden stories catch up on return ($background)', (
       tester,
     ) async {
-      await open(tester, mornye: false);
+      await open(tester);
       await tester.pump(const Duration(seconds: 1));
       if (background) {
         tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.paused);
@@ -407,7 +407,7 @@ void main() {
   testWidgets('reduced motion stops advance and restarts from six seconds', (
     tester,
   ) async {
-    await open(tester, mornye: false);
+    await open(tester);
     await tester.pump(const Duration(seconds: 1));
     reduced.value = true;
     await tester.pump();
@@ -427,7 +427,7 @@ void main() {
     tester,
   ) async {
     reduced.value = true;
-    await open(tester, mornye: true);
+    await open(tester);
     final temporary = Directory('${directory.path}/share')..createSync();
     final messenger =
         TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;

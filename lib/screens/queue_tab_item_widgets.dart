@@ -978,9 +978,6 @@ extension _QueueTabItemWidgets on _QueueTabState {
     Widget card({bool current = false, bool playing = false}) => TrackCard(
       isSelectionMode: _isSelectionMode,
       isSelected: isSelected,
-      isCurrent: current,
-      isPlaying: playing,
-      leadingArtwork: true,
       onTap: _isSelectionMode ? () => _toggleSelection(item.id) : open,
       onLongPress: playlistDragEnabled
           ? null

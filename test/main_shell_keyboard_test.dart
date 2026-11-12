@@ -43,7 +43,6 @@ void main() {
 
   Future<ValueNotifier<Locale>> pumpShell(
     WidgetTester tester, {
-    bool mornye = true,
     bool externalPlayer = false,
     bool search = false,
     Stream<MediaItem?>? media,
@@ -113,7 +112,7 @@ void main() {
   testWidgets('external mode hides Home playback and mini player', (
     tester,
   ) async {
-    await pumpShell(tester, mornye: true, externalPlayer: true);
+    await pumpShell(tester, externalPlayer: true);
     await tester.pump(const Duration(milliseconds: 400));
     expect(find.text('Continue Listening'), findsNothing);
     expect(find.text('Old internal song'), findsNothing);

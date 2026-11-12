@@ -42,7 +42,7 @@ class _CollectionEntry {
       _CollectionEntry._(_CollectionEntryType.playlist, index);
 }
 
-/// Library page switcher on Material: primary tabs, since the pages are
+/// Library page switcher: primary tabs, since the pages are
 /// views of one collection rather than filters. Counts trail each label.
 class _LibraryPageTabs extends StatefulWidget {
   const _LibraryPageTabs({

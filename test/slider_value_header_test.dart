@@ -14,11 +14,7 @@ import 'package:mornye/widgets/slider_value_header.dart';
 void main() {
   setUp(() => SharedPreferences.setMockInitialValues({}));
 
-  Future<ProviderContainer> pump(
-    WidgetTester tester,
-    Widget child, {
-    bool mornye = false,
-  }) async {
+  Future<ProviderContainer> pump(WidgetTester tester, Widget child) async {
     final container = ProviderContainer(
       overrides: [
         initialSettingsProvider.overrideWithValue(
@@ -46,7 +42,7 @@ void main() {
     return container;
   }
 
-  /// The tonal pill around [value], if Material drew one.
+  /// The tonal pill around [value], if one is drawn.
   ShapeDecoration? pill(WidgetTester tester, String value) {
     final boxes = find.ancestor(
       of: find.text(value),
@@ -61,7 +57,6 @@ void main() {
     await pump(
       tester,
       const SliderValueHeader(title: 'Strength', value: '40%'),
-      mornye: true,
     );
     expect(find.text('40%'), findsOneWidget);
     expect(pill(tester, '40%'), isNull);
@@ -77,7 +72,6 @@ void main() {
           AutoMixSettings(),
         ],
       ),
-      mornye: true,
     );
     expect(find.text('Sensitivity: 50%'), findsOneWidget);
     expect(find.text('Pre-amp: 0 dB (target -18 LUFS)'), findsOneWidget);

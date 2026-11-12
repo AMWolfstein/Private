@@ -3,8 +3,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mornye/widgets/animation_utils.dart';
 
 void main() {
-  for (final _ in [false, true]) {}
-
   testWidgets('reduced motion shows list content immediately', (tester) async {
     await tester.pumpWidget(
       const MaterialApp(

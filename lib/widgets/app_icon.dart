@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mornye/theme/app_icons.dart';
 
 /// [widget] as an [AppIcon] when it is a plain [Icon], so shared components
-/// can adopt Material Symbols without changing every caller.
+/// can adopt Cupertino glyphs without changing every caller.
 Widget symbolIconWidget(Widget widget) {
   if (widget case Icon(:final icon?)) {
     return AppIcon(
@@ -19,10 +19,8 @@ Widget symbolIconWidget(Widget widget) {
   return widget;
 }
 
-/// [Icon] that draws the Material theme with rounded Material Symbols.
-///
-/// Mornye keeps [icon] unchanged, or its Cupertino counterpart with
-/// [AppIcon.adaptive]. Icons without a symbol fall back to [icon].
+/// [Icon] that keeps [icon] unchanged, or draws its Cupertino counterpart
+/// with [AppIcon.adaptive].
 class AppIcon extends StatelessWidget {
   const AppIcon(
     this.icon, {
@@ -35,7 +33,7 @@ class AppIcon extends StatelessWidget {
     this.textDirection,
   }) : _adaptive = false;
 
-  /// Uses [appIconFor] when the Mornye theme is on.
+  /// Uses [appIconFor].
   const AppIcon.adaptive(
     this.icon, {
     super.key,

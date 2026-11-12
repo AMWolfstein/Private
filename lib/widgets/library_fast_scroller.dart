@@ -310,7 +310,6 @@ class _LibraryFastScrollerState extends State<LibraryFastScroller> {
                                 child: _Bubble(
                                   key: const ValueKey('library-scroll-bubble'),
                                   label: label,
-                                  mornye: true,
                                   motion: motion,
                                 ),
                               ),
@@ -367,18 +366,11 @@ class _BubbleLayout extends SingleChildLayoutDelegate {
       rtl != oldDelegate.rtl;
 }
 
-/// The section bubble beside the thumb. Material uses a container-colored
-/// shape pointing at the thumb; Mornye a plain rounded tile.
+/// The section bubble beside the thumb: a plain rounded tile.
 class _Bubble extends StatelessWidget {
-  const _Bubble({
-    super.key,
-    required this.label,
-    required this.mornye,
-    required this.motion,
-  });
+  const _Bubble({super.key, required this.label, required this.motion});
 
   final String label;
-  final bool mornye;
   final AppMotionSpec motion;
 
   @override
@@ -398,20 +390,10 @@ class _Bubble extends StatelessWidget {
         constraints: const BoxConstraints(minWidth: 72, minHeight: 72),
         child: DecoratedBox(
           decoration: ShapeDecoration(
-            color: mornye
-                ? colors.surfaceContainerHighest
-                : colors.primaryContainer,
+            color: colors.surfaceContainerHighest,
             shadows: kElevationToShadow[2],
             shape: RoundedRectangleBorder(
-              borderRadius: mornye
-                  ? BorderRadius.circular(18)
-                  // The sharp corner points at the thumb.
-                  : const BorderRadiusDirectional.only(
-                      topStart: Radius.circular(36),
-                      topEnd: Radius.circular(36),
-                      bottomStart: Radius.circular(36),
-                      bottomEnd: Radius.circular(6),
-                    ),
+              borderRadius: BorderRadius.circular(18),
             ),
           ),
           child: Padding(
@@ -429,9 +411,7 @@ class _Bubble extends StatelessWidget {
                               : Theme.of(context).textTheme.titleMedium)
                           ?.copyWith(
                             fontWeight: FontWeight.w700,
-                            color: mornye
-                                ? colors.onSurface
-                                : colors.onPrimaryContainer,
+                            color: colors.onSurface,
                           ),
                 ),
               ),

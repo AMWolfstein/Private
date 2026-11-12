@@ -155,7 +155,7 @@ void main() {
     );
     final cover = _seeded(Colors.teal);
 
-    Widget app(Widget home, {required bool mornye}) => ProviderScope(
+    Widget app(Widget home) => ProviderScope(
       overrides: [
         currentMediaItemProvider.overrideWithBuild(
           (ref, notifier) => Stream.value(track),
@@ -194,7 +194,7 @@ void main() {
     ]) {
       testWidgets('the $name keeps its own theme', (tester) async {
         palette.cached[_coverA] = cover;
-        await tester.pumpWidget(app(home, mornye: true));
+        await tester.pumpWidget(app(home));
         await tester.pumpAndSettle();
         expect(find.byType(PlayerArtworkTheme), findsNothing);
         expect(palette.requests, isEmpty);

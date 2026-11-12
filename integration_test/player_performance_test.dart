@@ -1,12 +1,12 @@
-import 'material_performance_test.dart' as material;
 import 'app_artwork_performance_test.dart' as artwork;
 import 'app_lyrics_performance_test.dart' as lyrics;
+import 'app_seek_performance_test.dart' as seek;
 import 'performance_probe.dart';
 
-/// Compare both player styles with one build and identical shared fixtures.
+/// Runs the player's seek, artwork and lyrics scenarios in one build.
 void main() {
   PerformanceTestBinding.ensureInitialized();
-  material.main();
+  seek.main();
   artwork.main();
   lyrics.main();
 }

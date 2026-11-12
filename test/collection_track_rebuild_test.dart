@@ -65,7 +65,7 @@ class _Recent extends RecentAccessNotifier {
   }) {}
 }
 
-Widget _app(ProviderContainer container, Widget child, {bool mornye = false}) =>
+Widget _app(ProviderContainer container, Widget child) =>
     UncontrolledProviderScope(
       container: container,
       child: MaterialApp(
@@ -165,7 +165,6 @@ void main() {
             child: const Text('Apply'),
           ),
         ),
-        mornye: true,
       ),
     );
     await tester.tap(find.text('Apply'));
@@ -223,7 +222,6 @@ void main() {
                   playlistName: 'Example playlist',
                   tracks: [_track],
                 ),
-          mornye: true,
         ),
       );
       await tester.pumpAndSettle();

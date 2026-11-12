@@ -12,10 +12,6 @@ const double defaultWideContentMaxWidth = 840;
 bool useNavigationRailForWidth(double width) =>
     width >= navigationRailBreakpoint;
 
-/// The Material theme follows Material's expanded window class.
-bool useMaterialNavigationRailForWidth(double width) =>
-    width >= expandedLayoutBreakpoint;
-
 /// Explicit horizontal safe spacing for controls drawn in full-bleed detail
 /// headers. Filled expressive circles need breathing room from the device edge.
 double detailHeaderEdgeInset(BuildContext context) => 8;
@@ -110,7 +106,7 @@ double homeContentInset(BuildContext context) => wideListInset(context);
 
 /// The M3 large window class starts at 1200dp; the extra 80dp leaves room
 /// for the navigation rail, since the inset is measured on the window width.
-const double materialContentMaxWidth = 1280;
+const double largeWindowContentMaxWidth = 1280;
 
 /// Discography cover geometry shared by loaded cards and loading placeholders.
 double artistAlbumTileSize(BuildContext context) {

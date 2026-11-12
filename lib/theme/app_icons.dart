@@ -223,6 +223,6 @@ IconData _cupertinoFor(IconData icon) {
 }
 
 extension AppIconContext on BuildContext {
-  /// [icon] as-is, or its Cupertino counterpart when the Mornye theme is on.
+  /// The Cupertino counterpart of [icon], when it has one.
   IconData adaptiveIcon(IconData icon) => appIconFor(icon);
 }

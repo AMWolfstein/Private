@@ -40,7 +40,6 @@ void main() {
         tester,
         _StartupExtensions(),
         _StartupExplore(),
-        mornye: true,
         feedDisabled: true,
         resume: const (
           media: PlayableMedia(
@@ -126,7 +125,7 @@ void main() {
       addTearDown(tester.view.reset);
       final extensions = _StartupExtensions();
       final explore = _StartupExplore();
-      await _pumpStartupHome(tester, extensions, explore, mornye: true);
+      await _pumpStartupHome(tester, extensions, explore);
 
       expect(find.text('Shortcuts'), findsNothing);
       expect(find.byType(ShimmerLoading), findsOneWidget);
@@ -176,20 +175,16 @@ void main() {
     });
   }
 
-  for (final (mornye, result) in [
-    for (final mornye in [true])
-      for (final result in [
-        'no extensions',
-        'initialization error',
-        'feed error',
-        'empty feed',
-      ])
-        (mornye, result),
+  for (final result in [
+    'no extensions',
+    'initialization error',
+    'feed error',
+    'empty feed',
   ]) {
     testWidgets('Home leaves startup loading after $result', (tester) async {
       final extensions = _StartupExtensions();
       final explore = _StartupExplore();
-      await _pumpStartupHome(tester, extensions, explore, mornye: mornye);
+      await _pumpStartupHome(tester, extensions, explore);
       expect(find.byType(ShimmerLoading), findsOneWidget);
       extensions.update(
         ExtensionState(
@@ -211,17 +206,8 @@ void main() {
       await tester.pump();
       await tester.pumpAndSettle();
       expect(find.byType(ShimmerLoading), findsNothing);
-      final showsSetupPrompt =
-          !mornye &&
-          (result == 'no extensions' || result == 'initialization error');
-      expect(
-        find.text('No search providers yet'),
-        showsSetupPrompt ? findsOneWidget : findsNothing,
-      );
-      expect(
-        find.text('Shortcuts'),
-        !mornye && !showsSetupPrompt ? findsOneWidget : findsNothing,
-      );
+      expect(find.text('No search providers yet'), findsNothing);
+      expect(find.text('Shortcuts'), findsNothing);
       expect(tester.takeException(), isNull);
     });
   }
@@ -233,7 +219,6 @@ void main() {
       tester,
       _StartupExtensions(),
       _StartupExplore(),
-      mornye: true,
       feedDisabled: true,
     );
     expect(find.text('Shortcuts'), findsNothing);
@@ -781,7 +766,6 @@ Future<void> _pumpStartupHome(
   WidgetTester tester,
   _StartupExtensions extensions,
   _StartupExplore explore, {
-  bool mornye = true,
   bool feedDisabled = false,
   ValueNotifier<bool>? homeVisible,
   PageController? pages,
@@ -821,7 +805,7 @@ Future<void> _pumpStartupHome(
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       home: homeVisible == null
-          ? HomeTab(mode: mornye ? HomeTabMode.browse : HomeTabMode.combined)
+          ? HomeTab(mode: HomeTabMode.browse)
           : ValueListenableBuilder(
               valueListenable: homeVisible,
               builder: (context, visible, _) => PageView(
@@ -831,7 +815,7 @@ Future<void> _pumpStartupHome(
                     enabled: visible,
                     child: HomeTab(
                       key: const ValueKey('home'),
-                      mode: mornye ? HomeTabMode.browse : HomeTabMode.combined,
+                      mode: HomeTabMode.browse,
                     ),
                   ),
                   const Scaffold(key: ValueKey('other')),

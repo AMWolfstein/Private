@@ -54,12 +54,12 @@ Color? _sourceColorOf(Uint8List? straight) =>
 
 /// Whether a cover whose [coverSourceColor] is [source] reads as black and
 /// white: its HCT chroma is at most 12. Score would still pick a seed hue for
-/// it (or Material's blue fallback), which tints the whole scheme.
+/// it (or the library's blue fallback), which tints the whole scheme.
 bool isNearGrayscaleCover(Color source) =>
     Hct.fromInt(source.toARGB32()).chroma <= 12;
 
 /// Colour scheme derived from cover art, used to theme detail-screen headers
-/// and the Material player surfaces (`PlayerArtworkTheme`).
+/// and the player surfaces (`PlayerArtworkTheme`).
 ///
 /// The generated scheme follows app brightness and supplies contrasting
 /// on-colours for the artwork-derived surface.
@@ -114,8 +114,8 @@ class CoverPalette {
   /// Cached scheme for [source], or null when it has not been resolved yet.
   ///
   /// With [neutralGrayscale], a near-grayscale cover ([isNearGrayscaleCover])
-  /// gets a monochrome scheme instead of a tinted one. Material surfaces opt
-  /// in; Mornye derives its own neutral shading from [sourceColor].
+  /// gets a monochrome scheme instead of a tinted one. Callers that shade
+  /// neutral covers themselves derive that from [sourceColor] instead.
   static ColorScheme? peek(
     String source,
     Brightness brightness, {
@@ -128,7 +128,7 @@ class CoverPalette {
   static ColorScheme? _neutralFor(ColorScheme? scheme) =>
       scheme == null ? null : _neutralSchemes[scheme] ?? scheme;
 
-  /// Average cover colour before Material's accent selection or tonal mapping.
+  /// Average cover colour before accent selection or tonal mapping.
   /// Near-monochrome covers stay neutral instead of acquiring a seed hue.
   static Color? sourceColor(String source, Brightness brightness) =>
       _sourceColors[_sourceKeys['${_source(source)}|${brightness.name}']];
@@ -562,8 +562,8 @@ class _CoverPaletteBuilderState extends State<CoverPaletteBuilder> {
   void _maybeResolve() {
     final source = widget.imageSource;
     final brightness = Theme.of(context).brightness;
-    // Material headers give black and white covers a neutral scheme. Mornye
-    // keeps the tonal one and shades neutral covers from the source colour.
+    // Headers keep the tonal scheme and shade neutral covers from the source
+    // colour.
     if (source == null || source.isEmpty) {
       _resolveGeneration++;
       _resolvedSource = null;

@@ -21,14 +21,13 @@ void main() {
 
   Future<void> showHost(
     WidgetTester tester,
-    Future<void> Function(BuildContext) action, {
-    bool mornye = false,
-  }) {
+    Future<void> Function(BuildContext) action,
+  ) {
     return tester.pumpWidget(
       ProviderScope(
         overrides: [settingsProvider.overrideWith(FixedSettingsNotifier.new)],
         child: MaterialApp(
-          theme: mornye ? AppTheme.build(Brightness.dark) : ThemeData(),
+          theme: AppTheme.build(Brightness.dark),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: Scaffold(
@@ -100,7 +99,7 @@ void main() {
         'example.account',
         'connectAccount',
       );
-    }, mornye: true);
+    });
     await tester.tap(find.text('Connect'));
     await tester.pumpAndSettle();
     expect(find.text('Connect your account'), findsOneWidget);

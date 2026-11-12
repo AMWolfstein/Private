@@ -157,7 +157,6 @@ class SearchFixtureResults extends TrackNotifier {
 Future<void> pumpSearchFixture(
   WidgetTester tester, {
   required Size size,
-  required bool mornye,
   Brightness brightness = Brightness.dark,
   SearchFixtureResults? results,
   List<SearchFilter> filters = const [],
@@ -193,11 +192,7 @@ Future<void> pumpSearchFixture(
         trackProvider.overrideWith(() => results ?? SearchFixtureResults()),
       ],
       child: MaterialApp(
-        theme: mornye
-            ? AppTheme.build(brightness)
-            : brightness == Brightness.dark
-            ? AppTheme.build(Brightness.dark)
-            : AppTheme.build(Brightness.light),
+        theme: AppTheme.build(brightness),
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         builder: (context, child) =>

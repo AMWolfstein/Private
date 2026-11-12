@@ -68,7 +68,6 @@ Future<_Playback> _pump(
   LibraryDirectoryIndex? index,
   UnifiedLibraryItem Function(String id) song = _item,
   Widget? home,
-  bool mornye = false,
 }) async {
   tester.view.physicalSize = const Size(1000, 1600);
   tester.view.devicePixelRatio = 1;
@@ -206,7 +205,7 @@ void main() {
   });
 
   testWidgets('Lists folders and songs as flat rows', (tester) async {
-    await _pump(tester, mornye: true);
+    await _pump(tester);
 
     final rows = tester.widgetList<TrackCard>(find.byType(TrackCard));
     expect(rows, isNotEmpty);

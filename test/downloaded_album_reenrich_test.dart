@@ -54,8 +54,6 @@ void main() {
   final messenger =
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
 
-  for (final _ in [false, true]) {}
-
   testWidgets(
     'downloaded album re-enrich restores selection on cancel and updates only selected files',
     (tester) async {

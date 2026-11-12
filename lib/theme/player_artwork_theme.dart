@@ -15,15 +15,14 @@ class PlayerArtworkPalette {
       CoverPalette.resolve(source, brightness, neutralGrayscale: true);
 }
 
-/// Gives a Material player surface the colour scheme of the current track's
+/// Gives a player surface the colour scheme of the current track's
 /// artwork through a local [Theme], so the app chrome around it keeps the
 /// image the same way.
 ///
 /// A cover whose scheme is cached shows it from the first frame. While the
 /// next cover's scheme resolves, the previous one stays; then the whole
 /// scheme moves at once on the effects spring, or swaps under reduced
-/// motion. Tracks without readable artwork use the app scheme. With AMOLED
-/// on, the page background stays pure black.
+/// motion. Tracks without readable artwork use the app scheme.
 class PlayerArtworkTheme extends StatefulWidget {
   const PlayerArtworkTheme({
     super.key,
@@ -143,21 +142,9 @@ class _PlayerArtworkThemeState extends State<PlayerArtworkTheme>
       ..forward(from: 0);
   }
 
-  /// AMOLED dark mode paints the app's page background pure black.
-  static bool _isAmoled(ThemeData base) =>
-      base.brightness == Brightness.dark &&
-      base.colorScheme.surface == Colors.black;
-
   ThemeData _themeFor(ThemeData base) {
     final artwork = _artwork;
-    final target = artwork == null
-        ? base.colorScheme
-        : _isAmoled(base)
-        ? artwork.copyWith(
-            surface: Colors.black,
-            surfaceContainerLowest: Colors.black,
-          )
-        : artwork;
+    final target = artwork ?? base.colorScheme;
     final from = _from;
     final progress = _controller.value;
     final scheme = from == null || progress >= 1
