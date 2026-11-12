@@ -158,6 +158,12 @@ class TaskLoop:
             raise Blocked(f'{ident}: committed code differs from the clean review')
         return True
 
+    def _checkpoint_at(self, commit: str, prefix: str):
+        try:
+            return json.loads(git(self.root, 'show', f'{commit}:{prefix}state.json')).get('planning')
+        except (Blocked, ValueError):
+            return None
+
     def _planning_committed(self):
         if self.state['size'] == 'small':
             return
@@ -168,16 +174,17 @@ class TaskLoop:
         if not commits:
             raise Blocked('planning is not committed')
         prefix = self.folder.relative_to(self.root).as_posix() + '/'
-        checkpoint = json.loads(git(self.root, 'show', f'{commits[0]}:{prefix}state.json'))
-        if checkpoint.get('planning') != self.state['planning']:
+        # The checkpoint is the commit that records this planning transaction. Other changes may have
+        # landed between the planning parent and it, so the first commit in the range is not enough.
+        commit = next((c for c in commits if self._checkpoint_at(c, prefix) == self.state['planning']), None)
+        if commit is None:
             raise Blocked('the prepared planning checkpoint was not committed')
-        required = ('spec.md', 'plan.md', 'tasks.md', 'findings.md', 'log.md', 'assurance.json')
-        for name in required:
-            content = git(self.root, 'show', f'{commits[0]}:{prefix}{name}')
-            expected = checkpoint['planning'].get('record_hashes', {}).get(name)
+        for name in ('spec.md', 'plan.md', 'tasks.md', 'findings.md', 'log.md', 'assurance.json'):
+            content = git(self.root, 'show', f'{commit}:{prefix}{name}')
+            expected = self.state['planning'].get('record_hashes', {}).get(name)
             if expected and hashlib.sha256(content.encode('utf-8', errors='surrogateescape')).hexdigest() != expected:
                 raise Blocked('planning artifact differs from its checkpoint: ' + name)
-        paths = git(self.root, 'diff', '--name-only', parent, commits[0]).splitlines()
+        paths = git(self.root, 'diff', '--name-only', f'{commit}^', commit).splitlines()
         if not paths or any(not p.startswith(prefix) for p in paths):
             raise Blocked('planning checkpoint must contain only its planning artifacts')
 

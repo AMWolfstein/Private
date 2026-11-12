@@ -20,7 +20,7 @@
         "status": "active",
         "head": "45e9aefc7a12cf3f67d99abc765f93deebdea908",
         "base": "20ff0a7c6c4c7466748e16bef1256940790a8707",
-        "declaration": "T001 [FINAL] Remove iOS, macOS and desktop remnants \u2014 check: auto",
+        "declaration": "T001 [FINAL] Remove iOS, macOS and desktop remnants — check: auto",
         "cycle": 1,
         "reviews": [],
         "checks": {
@@ -39,5 +39,10 @@
         }
       }
     }
+  },
+  "closed": {
+    "reason": "owner override: change closed by owner instruction; its iOS/macOS/desktop removal and Android TV follow-up are already committed (45e9aef, 1eb8a4df); T001 review loop not completed",
+    "at": "2026-11-12T00:44:11.878313+00:00",
+    "by": "owner"
   }
 }
