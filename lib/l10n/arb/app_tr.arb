@@ -8489,13 +8489,9 @@
   "@playlistEditOrderDescription": {
     "description": "Explanation at the top of the playlist reorder page"
   },
-  "playlistEditOrderSaved": "Çalma listesi sırası kaydedildi",
   "collectionOrderSaved": "Şarkı sırası kaydedildi",
   "collectionOrderChanged": "Bu koleksiyon düzenleme sırasında değişti. Lütfen yeniden sıralayın.",
   "collectionOrderSaveFailed": "Şarkı sırası kaydedilemedi. Tekrar deneyin.",
-  "@playlistEditOrderSaved": {
-    "description": "Snackbar after saving a new playlist track order"
-  },
   "playlistCreateEmpty": "Boş çalma listesi",
   "@playlistCreateEmpty": {
     "description": "Create playlist option that starts with no tracks"

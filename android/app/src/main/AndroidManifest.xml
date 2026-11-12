@@ -3,8 +3,6 @@
     package="com.zarz.mornye">
 
     <uses-feature android:name="android.hardware.usb.host" android:required="false" />
-    <uses-feature android:name="android.software.leanback" android:required="false" />
-    <uses-feature android:name="android.hardware.touchscreen" android:required="false" />
 
     <!-- Song identification listens only while its screen is open, so the
          microphone never runs from a foreground service. -->
@@ -36,7 +34,6 @@
         android:label="Mornye Local"
         android:name=".MornyeApplication"
         android:icon="@mipmap/ic_launcher"
-        android:banner="@drawable/tv_banner"
         android:allowBackup="false"
         android:fullBackupContent="@xml/backup_rules_legacy"
         android:dataExtractionRules="@xml/backup_rules"
@@ -68,7 +65,6 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
-                <category android:name="android.intent.category.LEANBACK_LAUNCHER"/>
             </intent-filter>
 
             <!-- Local audio grants are imported asynchronously by AudioOpenBridge. -->

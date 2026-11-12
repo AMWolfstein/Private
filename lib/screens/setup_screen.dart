@@ -26,7 +26,6 @@ import 'package:mornye/l10n/l10n.dart';
 import 'package:mornye/constants/language_choices.dart';
 import 'package:mornye/services/platform_bridge.dart';
 import 'package:mornye/utils/adaptive_layout.dart';
-import 'package:mornye/utils/android_tv.dart';
 import 'package:mornye/widgets/scroll_edge_fade.dart';
 import 'package:mornye/utils/logger.dart';
 
@@ -70,18 +69,12 @@ class _SetupScreenState extends ConsumerState<SetupScreen>
   bool _isLoading = false;
   int _androidSdkVersion = 0;
 
-  int get _totalSteps => isAndroidTv
-      ? 3
-      : _androidSdkVersion >= 33
-      ? (_asksNearby ? 6 : 5)
-      : 4;
+  int get _totalSteps => _androidSdkVersion >= 33 ? (_asksNearby ? 6 : 5) : 4;
 
   /// Android 17 asks for Nearby devices before LAN access, which network
   /// storage needs. Earlier releases allow it without asking.
   bool get _asksNearby =>
-      _platform == TargetPlatform.android &&
-      !isAndroidTv &&
-      _androidSdkVersion >= 37;
+      _platform == TargetPlatform.android && _androidSdkVersion >= 37;
 
   void _setState(VoidCallback fn) => setState(fn);
 
@@ -123,9 +116,6 @@ class _SetupScreenState extends ConsumerState<SetupScreen>
         _selectedTreeUri = draft['treeUri'] as String?;
         _notificationPermissionSkipped = draft['skipNotifications'] == true;
         _nearbyRefused = draft['nearbyRefused'] == true;
-      }
-      if (isAndroidTv) {
-        _selectedDirectory ??= await _getDefaultDirectory();
       }
       await _checkInitialPermissions();
       if (_platform == TargetPlatform.android) await _restoreSelectedFolder();
@@ -189,15 +179,6 @@ class _SetupScreenState extends ConsumerState<SetupScreen>
   }
 
   Future<void> _checkInitialPermissions() async {
-    if (isAndroidTv) {
-      if (mounted) {
-        setState(() {
-          _storagePermissionGranted = true;
-          _notificationPermissionGranted = true;
-        });
-      }
-      return;
-    }
     if (_platform == TargetPlatform.android) {
       final storageGranted = await _hasAndroidStoragePermission();
 
@@ -433,10 +414,6 @@ class _SetupScreenState extends ConsumerState<SetupScreen>
   }
 
   Future<String> _getDefaultDirectory() async {
-    if (isAndroidTv) {
-      final appDir = await getApplicationDocumentsDirectory();
-      return '${appDir.path}/Mornye';
-    }
     if (_platform == TargetPlatform.android) {
       final downloadDir = Directory('/storage/emulated/0/Download/Mornye');
       try {
@@ -536,9 +513,6 @@ class _SetupScreenState extends ConsumerState<SetupScreen>
 
     final logicStep = step - 2;
 
-    if (isAndroidTv) {
-      return logicStep == 0 && _selectedDirectory != null;
-    }
     if (_androidSdkVersion >= 33) {
       // Nearby devices, when asked, comes before the folder.
       final folderStep = _asksNearby ? 3 : 2;
@@ -674,9 +648,8 @@ class _SetupScreenState extends ConsumerState<SetupScreen>
             children: [
               _buildWelcomeStep(colorScheme),
               _buildLanguageStep(colorScheme),
-              if (!isAndroidTv) _buildStorageStep(colorScheme),
-              if (_androidSdkVersion >= 33 && !isAndroidTv)
-                _buildNotificationStep(colorScheme),
+              _buildStorageStep(colorScheme),
+              if (_androidSdkVersion >= 33) _buildNotificationStep(colorScheme),
               if (_asksNearby) _buildNearbyStep(colorScheme),
               _buildDirectoryStep(colorScheme),
             ],

@@ -4,7 +4,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mornye/theme/app_theme.dart';
 import 'package:mornye/theme/mornye_theme.dart';
-import 'package:mornye/utils/android_tv.dart';
 import 'package:mornye/widgets/android_keyboard_lifecycle.dart';
 
 void _setLifecycle(AppLifecycleState state) {
@@ -30,7 +29,6 @@ void _setLifecycle(AppLifecycleState state) {
 void main() {
   tearDown(() {
     debugDefaultTargetPlatformOverride = null;
-    debugAndroidTvOverride = null;
   });
 
   for (final mornye in [false, true]) {
@@ -93,9 +91,7 @@ void main() {
     );
   }
 
-  {
-
-  }
+  {}
 
   testWidgets('disposing the wrapper removes its lifecycle observer', (
     tester,

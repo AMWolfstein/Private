@@ -18,7 +18,6 @@ import 'package:mornye/providers/settings_provider.dart';
 import 'package:mornye/services/local_network_access.dart';
 import 'package:mornye/theme/mornye_icons.dart';
 import 'package:mornye/theme/mornye_theme.dart';
-import 'package:mornye/utils/android_tv.dart';
 import 'package:mornye/widgets/app_icon_button.dart';
 import 'package:mornye/widgets/app_shape.dart';
 import 'package:mornye/widgets/expressive_button.dart';
@@ -53,7 +52,6 @@ class _WhatsNewScreenState extends ConsumerState<WhatsNewScreen> {
   @override
   void initState() {
     super.initState();
-    if (isAndroidTv) return;
     _localNetwork.isGranted().then((granted) {
       if (mounted && !granted) setState(() => _asksNearby = true);
     }, onError: (_) {});
@@ -303,7 +301,7 @@ List<WhatsNewHighlight> whatsNewHighlights(
   AppLocalizations l10n, {
   bool nearbyDevices = false,
 }) {
-  final showAndroidAuto = Platform.isAndroid && !isAndroidTv;
+  final showAndroidAuto = Platform.isAndroid;
   final sections = [
     WhatsNewHighlight(
       icon: Icons.auto_awesome,
