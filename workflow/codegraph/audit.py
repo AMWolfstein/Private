@@ -181,7 +181,7 @@ def scan(root, kind='all', languages=(), paths=(), base=None):
         # Android Lint is a whole variant analysis: share one run across JVM languages.
         jvm={language:members for language,members in files.items()
              if (config['tools'].get(language) or {}).get('runner')=='android-lint'}
-        jvm_results={}
+        jvm_results={};jvm_resources=[];jvm_resource_status={}
         if jvm:
             import native_audit
             first=next(iter(jvm));tool=config['tools'][first]
@@ -201,6 +201,12 @@ def scan(root, kind='all', languages=(), paths=(), base=None):
                 if uncovered and status['status']=='RAN': status['status']='PARTIAL'
                 selected=set(members)-set(uncovered)
                 jvm_results[language]=([f for f in found if f['path'] in selected],status)
+            # Lint reports resource diagnostics against res/ paths, which are not
+            # language sources. Keep them instead of dropping them with the
+            # per-language file filter; attribute them once to the shared run.
+            prefixes=[f'{prefix}res/' for prefix in tool.get('source_roots',[]) if prefix.endswith('/')]
+            jvm_resources=[f for f in found if any(f['path'].startswith(prefix) for prefix in prefixes)]
+            jvm_resource_status={**shared,'source_roots':tool.get('source_roots',[])}
         for language,members in files.items():
             found,tools[language]=jvm_results[language] if language in jvm_results else run_tool(
                 root,language,config['tools'].get(language),members,'code' if kind=='all' else kind,directory/f'{language}.log')
@@ -211,6 +217,13 @@ def scan(root, kind='all', languages=(), paths=(), base=None):
             tools[language]['classified_findings']=len(accepted)
             tools[language]['unclassified_diagnostics']=len(scoped)-len(accepted)
             findings.extend(accepted)
+        if jvm_resources:
+            language=next(iter(jvm))
+            accepted=classify(jvm_resources,config['categories'],'code' if kind=='all' else kind,language)
+            findings.extend(accepted)
+            tools['android-resources']={**jvm_resource_status,'selected_diagnostics':len(jvm_resources),
+                                        'classified_findings':len(accepted),
+                                        'unclassified_diagnostics':len(jvm_resources)-len(accepted)}
     if kind in ('all','tests','gaps'):
         import test_checks
         if kind in ('all','tests'):

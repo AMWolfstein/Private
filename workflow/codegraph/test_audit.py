@@ -97,6 +97,18 @@ class AuditTests(unittest.TestCase):
         self.assertEqual(result['tools']['kotlin']['status'],'PARTIAL')
         self.assertEqual(result['tools']['kotlin']['uncovered_files'],['android/app/src/release/kotlin/Release.kt'])
 
+    def test_android_resource_diagnostics_survive_the_jvm_file_filter(self):
+        self.write('android/app/src/main/kotlin/Main.kt','class Main')
+        self.write('android/app/src/main/res/drawable/tv_logo.png','x')
+        output=[{'path':'android/app/src/main/kotlin/Main.kt','line':1,'code':'ObsoleteSdkInt','message':'folder'},
+                {'path':'android/app/src/main/res/drawable/tv_logo.png','line':0,'code':'UnusedResources','message':'unused'}]
+        with mock.patch('native_audit.run_android',return_value=(output,{'status':'RAN'})):
+            result,_=audit.scan(self.root,kind='dead-code',languages=['kotlin'])
+        self.assertEqual(sorted(f['code'] for f in result['findings']),['ObsoleteSdkInt','UnusedResources'])
+        self.assertEqual(result['tools']['android-resources']['status'],'RAN')
+        self.assertEqual(result['tools']['android-resources']['selected_diagnostics'],1)
+        self.assertEqual(result['status'],'FINDINGS')
+
     def test_gradle_kotlin_dsl_is_not_reported_as_uncovered_kotlin(self):
         self.write('android/build.gradle.kts','plugins {}')
         self.write('android/app/src/main/kotlin/Main.kt','class Main')
