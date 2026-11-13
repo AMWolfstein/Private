@@ -6,8 +6,10 @@ from datetime import datetime, timezone
 import fnmatch
 import json
 from pathlib import Path
+import re
 import subprocess
 import codegraph_adapter
+import toolchains
 
 def parse_dart_machine(output: str, root: Path, tool: dict) -> list[dict]:
     """dart analyze --format=machine: SEVERITY|TYPE|CODE|path|line|column|length|message."""
@@ -50,6 +52,37 @@ def parse_cargo_json(output: str, root: Path, tool: dict) -> list[dict]:
             seen.add(key)
             found.append({'path': relative, 'line': span['line_start'], 'code': code,
                           'message': message.get('message', ''), 'severity': message.get('level', '')})
+    return found
+
+
+def parse_ruff_json(output: str, root: Path, tool: dict) -> list[dict]:
+    """ruff check --output-format=json: a list of violations with location/code."""
+    base = (root / tool.get('cwd', '.')).resolve()
+    try: data = json.loads(output or '[]')
+    except ValueError: return []
+    found = []
+    for item in data if isinstance(data, list) else []:
+        path = Path(item.get('filename', ''))
+        try: relative = (path if path.is_absolute() else base / path).resolve().relative_to(root.resolve()).as_posix()
+        except (ValueError, OSError): continue
+        location = item.get('location') or {}
+        found.append({'path': relative, 'line': int(location.get('row') or 1), 'code': item.get('code') or 'ruff',
+                      'message': item.get('message', ''), 'severity': 'warning'})
+    return found
+
+def parse_shellcheck_json(output: str, root: Path, tool: dict) -> list[dict]:
+    """shellcheck --format=json1: {'comments': [{file, line, level, code, message}]}."""
+    base = (root / tool.get('cwd', '.')).resolve()
+    try: data = json.loads(output or '{}')
+    except ValueError: return []
+    found = []
+    comments = data.get('comments', []) if isinstance(data, dict) else []
+    for item in comments:
+        path = Path(item.get('file', ''))
+        try: relative = (path if path.is_absolute() else base / path).resolve().relative_to(root.resolve()).as_posix()
+        except (ValueError, OSError): continue
+        found.append({'path': relative, 'line': int(item.get('line') or 1), 'code': f'SC{item.get("code")}',
+                      'message': item.get('message', ''), 'severity': item.get('level', 'warning')})
     return found
 
 
@@ -104,19 +137,26 @@ def run_tool(root, language, tool, members, kind, log):
         return native_audit.run_android(root,tool,log)
     argv=list(tool['run'])
     if language=='dart' and len(members)==1: argv.append(members[0])
+    if tool.get('append_files'): argv += members[:200]
     if language=='rust' and kind!='dead-code':
         argv[2]='clippy'
         argv += ['--','-W','clippy::perf','-W','clippy::complexity','-W','clippy::style']
+    if language=='rust':
+        # The repository pin wins over the configured default toolchain.
+        channel=toolchains.rust_channel(root)
+        if channel: argv=[f'+{channel}' if re.fullmatch(r'\+\S+',argument) else argument for argument in argv]
     try:
         done=subprocess.run(argv,cwd=root/tool['cwd'],capture_output=True,text=True,errors='replace',
                             stdin=subprocess.DEVNULL,timeout=tool['timeout'])
     except (OSError,subprocess.TimeoutExpired) as error:
         return [], {'status':'INCOMPLETE','command':argv,'reason':str(error)}
     log.write_text(done.stdout+'\n--- stderr ---\n'+done.stderr)
-    parser={'dart-machine':parse_dart_machine,'cargo-json':parse_cargo_json}[tool['parser']]
+    parser={'dart-machine':parse_dart_machine,'cargo-json':parse_cargo_json,
+            'ruff-json':parse_ruff_json,'shellcheck-json':parse_shellcheck_json}[tool['parser']]
     found=parser(done.stdout,root,tool)
     errors=sum(f.get('severity')=='error' for f in found)
-    failed=errors>0 or (done.returncode!=0 and (language!='dart' or not found))
+    accepted=set(tool.get('findings_exit_codes',[0]))
+    failed=errors>0 or (done.returncode not in accepted and (language!='dart' or not found))
     return found, {'status':'INCOMPLETE' if failed else 'RAN','command':argv,'exit_code':done.returncode,
                    'diagnostics':len(found),'errors':errors,'log':str(log),
                    'scope_note':'Runner may analyze additional files; findings below are filtered to the selected scope'}

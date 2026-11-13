@@ -31,9 +31,11 @@ Same-kind scans overwrite earlier reports: save evidence locally if comparing ru
 Exit 0 means no selected allowlisted diagnostics, 1 means candidates, and 2 means
 incomplete coverage/no matching files/invalid invocation. An unavailable tool or
 compiler failure is a limitation, not a clean scan. Kotlin/Java share one Android
-Lint run for the configured variant/source roots; Gradle scripts/other source sets
-remain uncovered. C++ uses clang-tidy and an actual compilation database; missing
-commands/headers/toolchains are explicit gaps. Dart depends on enabled lints;
+Lint run for the configured variant/source roots, using the Gradle wrapper or the
+`gradle` on PATH; Gradle scripts/other source sets remain uncovered. C++ uses
+clang-tidy and an actual compilation database; missing
+commands/headers/toolchains are explicit gaps. Python/shell use ruff/shellcheck and
+stay `UNAVAILABLE` until installed. Dart depends on enabled lints;
 Cargo checks only the invoked features/targets. The allowlists are not exhaustive.
 
 See [tool documentation](../../../workflow/codegraph/README.md) and

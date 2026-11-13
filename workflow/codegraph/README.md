@@ -146,10 +146,14 @@ Filters intersect. Reports and full runner logs go under ignored
 replaces those files. Do not run the same kind concurrently in one checkout.
 Standalone equivalent: `python3 workflow/codegraph/audit.py` with the same options.
 
-Dart uses `dart analyze --format=machine`. Rust uses explicit `cargo +1.99.1`
-from `rust_backend`, with `--workspace --all-targets --locked`; dead-code scans
+Dart uses `dart analyze --format=machine`. Rust uses explicit `cargo +<channel>`
+from `rust_backend` (the channel is read from `rust_backend/rust-toolchain.toml`),
+with `--workspace --all-targets --locked`; dead-code scans
 use `check`, while combined/optimization/simplifier scans use `clippy` with perf,
-complexity and style lint groups. Compiler runners may analyze more files than
+complexity and style lint groups. Python uses `ruff check --output-format=json`
+and shell uses `shellcheck --format=json1` on the selected files; both report
+`UNAVAILABLE` until installed, and their unclassified checks stay gaps. Compiler
+runners may analyze more files than
 the selected scope; reported candidates are filtered to selected files. These
 runners may write build caches and Cargo may execute crate build scripts; they
 do not fix application sources. Activate the repository's Flutter/Rust toolchains
@@ -159,9 +163,9 @@ before running. No APK is built by this command.
 paths. Generated/vendor code is protected. Source-only code kinds exclude test
 paths; the combined default includes them and Rust inline tests. Suggestions
 are **review candidates**, not safe automatic deletions or measured speedups.
-Dart suggestions depend on enabled analyzer lints; the allowlists are not an
-exhaustive optimizer/simplifier. Native runtime references and alternate Cargo
-features still require separate verification. Kotlin/Java use shared Android Lint; C++ uses clang-tidy with actual compilation
+Dart suggestions depend on enabled analyzer lints: the allowlists name lints this
+project enables (`flutter_lints` plus `analysis_options.yaml`), so a disabled lint
+never appears. Kotlin/Java use shared Android Lint; C++ uses clang-tidy with actual compilation
 commands. These provide configuration-specific diagnostics, not exhaustive unused
 public-symbol/reachability detection.
 
@@ -212,7 +216,10 @@ python3 workflow/codegraph/code_tools.py audit --kind optimization --lang cpp --
 Activate the project's JDK 25, Flutter, Android SDK and NDK environment first.
 Kotlin/Java share one `:app:lintDebug` Gradle invocation, using a checked-in init
 script to configure all warnings, enable test-source checking and write fresh
-absolute XML output in memory. The effective test-source setting is logged and
+absolute XML output in memory. The tracked `android/gradlew` is used when present,
+otherwise the `gradle` on PATH (this repository tracks only the wrapper
+properties); none present is `UNAVAILABLE`, never a clean result. Gradle Kotlin
+DSL (`.kts`) is not analyzed. The effective test-source setting is logged and
 verified; missing/false confirmation makes coverage INCOMPLETE. App
 Gradle sources are unchanged. A private per-run report path prevents stale-report
 reuse; logs stream to `.work/audit/<kind>/android.log`. First use can compile Rust,

@@ -59,8 +59,20 @@ class NativeAuditTests(unittest.TestCase):
             _,status=native.run_android(self.root,{},self.log)
         self.assertEqual(status['status'],'INCOMPLETE')
         (self.root/'android/gradlew').unlink()
-        _,status=native.run_android(self.root,{},self.log)
+        with mock.patch.object(native.shutil,'which',return_value=None):
+            _,status=native.run_android(self.root,{},self.log)
         self.assertEqual(status['status'],'UNAVAILABLE')
+
+    def test_gradle_on_path_replaces_an_untracked_wrapper(self):
+        (self.root/'android/gradlew').unlink()
+        def process(argv,**kwargs):
+            Path(next(a.split('=',1)[1] for a in argv if a.startswith('-Dmornye.audit.report='))).write_text(self.xml())
+            kwargs['stdout'].write('MORNYE_AUDIT_LINT checkTestSources=true\n')
+            self.assertEqual(argv[0],'/usr/bin/gradle')
+            return subprocess.CompletedProcess(argv,0,'','')
+        with mock.patch.object(native.shutil,'which',return_value='/usr/bin/gradle'),mock.patch.object(native.subprocess,'run',side_effect=process):
+            found,status=native.run_android(self.root,{},self.log)
+        self.assertEqual(status['status'],'RAN');self.assertEqual(len(found),1)
 
     def database(self):
         source=self.root/'main.cpp';source.write_text('int a;')

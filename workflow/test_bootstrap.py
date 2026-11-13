@@ -102,3 +102,14 @@ class BootstrapTests(unittest.TestCase):
         with self.assertRaises(ValueError):r.initialize(self.root,migrate=True)
         self.assertEqual(file.read_bytes(),b'Owner history must survive\n')
         self.assertFalse((self.root/r.REGISTRY).exists())
+
+    def test_shared_instruction_assets_match_the_installed_copies(self):
+        repository=Path(b.__file__).resolve().parents[1];assets=Path(b.__file__).with_name('assets')
+        drifted=[]
+        for source in sorted(assets.rglob('*')):
+            if not source.is_file():continue
+            relative=source.relative_to(assets).as_posix()
+            if not (relative.startswith('.agents/') or relative=='.github/workflows/workflow-integrity.yml'):continue
+            installed=repository/relative
+            if not installed.is_file() or installed.read_bytes()!=source.read_bytes():drifted.append(relative)
+        self.assertEqual(drifted,[])

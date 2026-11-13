@@ -71,10 +71,13 @@ python3 workflow/work.py validate
 numbers and registry/history consistency. `doctor` checks Git/root/ignored paths,
 Node/npm, CodeGraph 1.6.2 and real pinned Bash/TOML parsing. `--with-serena` makes
 optional semantic packages required. Core PASS does not mean an application build
-or device test passed. `--full` also checks app-tool availability, not execution.
+or device test passed. `--full` also checks app-tool availability
+(Dart, Rust, JDK, Android, clang-tidy, ruff, shellcheck), not execution.
 
-Analysis defaults currently target this project's Flutter/Dart, Rust 1.99.1,
-Android JDK 25/SDK/NDK and source roots. **Adapt `codegraph/audit-config.json`,
+Analysis defaults currently target this project's Flutter/Dart, Rust, Android
+JDK/SDK/NDK, Kotlin/Java, C/C++, Python and Bash sources. Toolchain versions are
+read from `rust_backend/rust-toolchain.toml`, `android/app/build.gradle.kts` and
+`.fvmrc`; **adapt `codegraph/audit-config.json`,
 project constitution and platform probes for another project's actual architecture.**
 No SDK/JDK/Rust installation or all-language coverage is inferred from copying files.
 A new project with different languages/build variants needs its own analysis adapters.
@@ -202,8 +205,8 @@ python3 workflow/codegraph/code_tools.py audit --kind tests --path test
 
 Default audit combines dead-code, optimization, simplifier, test-quality and
 coverage-gap hints. It never fixes sources or executes app tests automatically.
-Dart analyzer, explicit Rust Cargo/Clippy, shared Kotlin/Java Android Lint and real
-C++ clang-tidy configuration are documented in
+Dart analyzer, explicit Rust Cargo/Clippy, shared Kotlin/Java Android Lint, real
+C++ clang-tidy, Python ruff and Bash shellcheck configuration are documented in
 [analysis README](codegraph/README.md). Missing compile commands, LCOV, toolchains,
 unsupported syntax/configurations remain INCOMPLETE/PARTIAL, not clean results.
 Read [audit skill](../.agents/skills/audit/SKILL.md) before interpreting suggestions;
@@ -250,6 +253,9 @@ same-kind audits or map updates/Serena queries against one output/mirror.
 ## Maintaining this folder and verification
 
 Keep portable defaults in `workflow/assets/` aligned with shared instruction changes.
+The unit tests fail when the installed `.agents/` instructions or
+`workflow-integrity.yml` differ from `workflow/assets/`; project-data and policy
+files are excluded from that check.
 Project-specific root files survive setup; review upgrades instead of force-copying
 over custom files. Package manifests/requirements are pinned; third-party provenance
 and licenses are retained under codegraph/ponytail and installed Spec Kit metadata.

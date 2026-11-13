@@ -40,16 +40,25 @@ def parse_lint(report,root):
     return findings,internal
 
 
+def gradle_entry(android):
+    """The project wrapper when tracked, otherwise the gradle on PATH (this repo tracks only the properties)."""
+    wrapper=android/'gradlew'
+    if wrapper.is_file():return ['bash',str(wrapper.resolve())]
+    executable=shutil.which('gradle')
+    return [executable] if executable else None
+
+
 def run_android(root,tool,log):
     """Run once for Kotlin/Java; a private report path prevents stale XML reuse."""
-    android=root/tool.get('cwd','android');wrapper=android/'gradlew'
-    if not wrapper.is_file():return [],{'status':'UNAVAILABLE','reason':'Android Gradle wrapper missing; no APK is generated to create it'}
+    android=root/tool.get('cwd','android')
+    entry=gradle_entry(android)
+    if not entry:return [],{'status':'UNAVAILABLE','reason':'No Android Gradle wrapper or gradle executable; no APK is generated to create a wrapper'}
     variant=tool.get('variant','Debug')
     if not re.fullmatch(r'[A-Za-z][A-Za-z0-9]*',variant):raise ValueError('Invalid Android variant')
     log.parent.mkdir(parents=True,exist_ok=True)
     with tempfile.TemporaryDirectory(prefix='lint-',dir=log.parent) as temporary:
         report=Path(temporary).resolve()/'lint.xml'
-        command=['bash',str(wrapper.resolve()),f':app:lint{variant}','--console=plain','--no-configuration-cache',
+        command=[*entry,f':app:lint{variant}','--console=plain','--no-configuration-cache',
                  '--init-script',str(Path(__file__).with_name('android-audit.init.gradle').resolve()),
                  f'-Dmornye.audit.report={report}']
         try:

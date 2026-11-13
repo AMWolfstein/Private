@@ -121,8 +121,16 @@ jobs:
           ffmpeg -version
           ffprobe -version
 
-      - name: Run tests
-        run: flutter test
+      - name: Run tests with coverage
+        run: flutter test --coverage
+
+      - name: Upload Dart coverage
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: dart-coverage-${{ github.sha }}
+          if-no-files-found: warn
+          retention-days: 14
+          path: coverage/lcov.info
 
       - name: Run the memory tests with the VM service
         run: >-

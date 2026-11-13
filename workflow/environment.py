@@ -35,6 +35,15 @@ def prerequisites(root):
     return 'Git root, Python and ignored/confined managed paths verified'
 
 
+def toolchains():
+    """Pin readers shared with the codegraph tools, without leaving that folder on sys.path."""
+    sys.path.insert(0,str(Path(__file__).with_name('codegraph')))
+    try:
+        import toolchains as pins
+        return pins
+    finally:sys.path.pop(0)
+
+
 def verify_venv(root,python):
     expected=python.parent.parent.resolve()
     actual=Path(json.loads(run([str(python),'-c','import json,sys; print(json.dumps(sys.prefix))'],root))).resolve()
@@ -81,20 +90,25 @@ def doctor(root,full=False,serena=False):
     check('serena',semantic,required=serena)
     check('dart',lambda:run(['dart','--version'],root),required=full)
     def rust():
+        channel=toolchains().rust_channel(root)
+        if not channel:raise ValueError('rust_backend/rust-toolchain.toml pins no Rust channel')
         installed=run(['rustup','toolchain','list'],root)
-        if not any(line.split()[0].startswith('1.99.1-') or line.split()[0]=='1.99.1' for line in installed.splitlines()):raise ValueError('Rust 1.99.1 not installed; doctor never installs toolchains')
-        return run(['cargo','+1.99.1','clippy','--version'],root)
+        if not any(line.split() and line.split()[0].startswith(channel) for line in installed.splitlines()):raise ValueError(f'Rust {channel} not installed; doctor never installs toolchains')
+        return run(['cargo',f'+{channel}','clippy','--version'],root)
     check('rust-clippy',rust,required=full)
     def java():
+        version=toolchains().jdk_version(root)
+        if not version:raise ValueError('android/app/build.gradle.kts pins no JavaVersion')
         output=run(['java','-version'],root)
-        if not re.search(r'version "25(?:[.\"]|$)|openjdk 25\b',output):raise ValueError('Activate the repository-required JDK 25')
-        return 'JDK 25 available'
+        if not re.search(rf'version "{version}(?:[."]|$)|openjdk {version}\b',output):raise ValueError(f'Activate the repository-required JDK {version}')
+        return f'JDK {version} available'
     check('java',java,required=full)
     def android():
         sdk=os.environ.get('ANDROID_HOME') or os.environ.get('ANDROID_SDK_ROOT')
         if not sdk or not Path(sdk).is_dir():raise ValueError('Android SDK not configured')
-        if not (root/'android/gradlew').is_file():raise ValueError('Android wrapper absent; setup does not build APKs to generate it')
-        return {'sdk':sdk,'wrapper':'present','note':'Build compatibility/variant coverage not verified by doctor'}
+        wrapper=(root/'android/gradlew').is_file()
+        if not wrapper and not shutil.which('gradle'):raise ValueError('No android/gradlew and no gradle executable; setup does not build APKs to create one')
+        return {'sdk':sdk,'gradle':'wrapper' if wrapper else 'path','note':'Build compatibility/variant coverage not verified by doctor'}
     check('android',android,required=full)
     def cpp():
         sys.path.insert(0,str(root/'workflow/codegraph'))
@@ -109,6 +123,8 @@ def doctor(root,full=False,serena=False):
             return {'version':version,'database':str(database),'note':'Compiler/header/ABI coverage is checked by audit, not doctor'}
         finally:sys.path.pop(0)
     check('clang-tidy/database',cpp,required=full)
+    check('ruff',lambda:run(['ruff','--version'],root),required=full)
+    check('shellcheck',lambda:run(['shellcheck','--version'],root),required=full)
     return {'status':'PASS' if all(item['status']=='PASS' for item in checks) else 'INCOMPLETE','checks':checks,'optional':optional,
             'scope':'Workflow core; --full additionally requires app tool availability, --with-serena requires optional semantic packages. Availability is not a successful app build or full audit.',
             'hint':'Run setup for local analysis packages; activate platform toolchains separately. No toolchains/downloads/builds are launched by doctor.'}
